@@ -46,7 +46,7 @@ public class IfCustomizer extends javax.swing.JPanel {
         
         initComponents();
 
-        jComboBox2.setModel(new DefaultComboBoxModel(If.scopes));
+        jComboBox2.setModel(new DefaultComboBoxModel<>(If.scopes));
         jComboBox2.setSelectedIndex(iF.getScopeIndex());
     }
     
@@ -105,7 +105,7 @@ public class IfCustomizer extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
 
@@ -191,7 +191,7 @@ public class IfCustomizer extends javax.swing.JPanel {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

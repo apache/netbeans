@@ -32,10 +32,6 @@
         <folder name="text">
             <folder name="x-groovy">
                 <folder name="Popup">
-                    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
-                        <attr name="position" intvalue="1750"/>
-                    </file>
                     <file name="org-netbeans-modules-gsf-testrunner-TestMethodRunnerAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/CommonTestRunner/org-netbeans-modules-gsf-testrunner-TestMethodRunnerAction.instance"/>
                         <attr name="position" intvalue="850"/>
@@ -45,13 +41,7 @@
                         <attr name="position" intvalue="860"/>
                     </file>
                 </folder>
-                <folder name="GlyphGutterActions">
-                    <file name="org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
-                        <attr name="position" intvalue="500"/>
-                    </file>
-                </folder>
             </folder>
         </folder>
-    </folder>  
+    </folder>
 </filesystem>

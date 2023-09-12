@@ -115,7 +115,7 @@
   <p>
    Needed for working with projects in the IDE.
   </p>
-  <api name="RecentProjects" group="java" type="export" category="friend" url="http://www.netbeans.org/issues/show_bug.cgi?id=57073" >
+  <api name="RecentProjects" group="java" type="export" category="friend" url="https://bz.apache.org/netbeans/show_bug.cgi?id=57073" >
     <p>
      API can be used to get list of information about recently opened projects 
      in IDE. API provides project display name, icon and URL of project folder 
@@ -139,7 +139,7 @@
  <answer id="arch-what">
   <p>
    General user interface implementation for the project system. <a
-   href="http://projects.netbeans.org/buildsys/build-sys-ui-spec.html">UI
+   href="https://netbeans.apache.org/projects/buildsys/build-sys-ui-spec.html">UI
    Specification</a>
   </p>
  </answer>
@@ -387,7 +387,7 @@
         </question>
 -->
  <answer id="deploy-packages">
-  <api name="RecentProjects" group="java" type="export" category="friend" url="http://www.netbeans.org/issues/show_bug.cgi?id=57073" >
+  <api name="RecentProjects" group="java" type="export" category="friend" url="https://bz.apache.org/netbeans/show_bug.cgi?id=57073" >
     <p>
      There is package org.netbeans.modules.project.ui.api which is public and exposed
      as friend API.

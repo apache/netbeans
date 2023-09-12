@@ -34,9 +34,9 @@ import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.modules.j2ee.common.ClasspathUtil;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.api.JsfComponentUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
 import org.netbeans.modules.web.jsf.spi.components.JsfComponentCustomizer;
 import org.netbeans.modules.web.jsf.spi.components.JsfComponentImplementation;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.primefaces.ui.PrimefacesCustomizerPanel;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -110,8 +110,8 @@ public class PrimefacesImplementation implements JsfComponentImplementation {
     }
 
     @Override
-    public Set<JSFVersion> getJsfVersion() {
-        return EnumSet.of(JSFVersion.JSF_2_0, JSFVersion.JSF_2_1, JSFVersion.JSF_2_2);
+    public Set<JsfVersion> getJsfVersion() {
+        return EnumSet.of(JsfVersion.JSF_2_0, JsfVersion.JSF_2_1, JsfVersion.JSF_2_2);
     }
 
     @Override

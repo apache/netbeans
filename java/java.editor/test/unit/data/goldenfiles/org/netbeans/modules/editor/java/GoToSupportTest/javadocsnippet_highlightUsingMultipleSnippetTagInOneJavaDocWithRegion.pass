@@ -1,24 +1,20 @@
-<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>highlightUsingSubstringRegexAndType</b>()</pre><p><div id="snippet1" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet1">Copy</a></div>
-<pre><code>   public static void main(String... substring) {
-       for (var regex : substring) {
-           if (!arg.isBlank()) {
-                System.out.println("<i>i</i><i>t</i><i>a</i><i>l</i><i>i</i><i>c</i>");     
-                System.out.println("<b>b</b><b>o</b><b>l</b><b>d</b>");       
-                System.out.println("<span style="background-color:yellow;">h</span><span style="background-color:yellow;">i</span><span style="background-color:yellow;">g</span><span style="background-color:yellow;">h</span><span style="background-color:yellow;">l</span><span style="background-color:yellow;">i</span><span style="background-color:yellow;">g</span><span style="background-color:yellow;">h</span><span style="background-color:yellow;">t</span>");  
- 
-                System.out.println("italic and <span style="background-color:yellow;">h</span><span style="background-color:yellow;">i</span><span style="background-color:yellow;">g</span><span style="background-color:yellow;">h</span><span style="background-color:yellow;">l</span><span style="background-color:yellow;">i</span><span style="background-color:yellow;">g</span><span style="background-color:yellow;">h</span><span style="background-color:yellow;">t</span> and bold");
- 
-                System.out.println("<span style="background-color:yellow;">i</span><span style="background-color:yellow;">t</span><span style="background-color:yellow;">a</span><span style="background-color:yellow;">l</span><span style="background-color:yellow;">i</span><span style="background-color:yellow;">c</span><span style="background-color:yellow;">-</span><span style="background-color:yellow;">c</span><span style="background-color:yellow;">u</span><span style="background-color:yellow;">m</span><span style="background-color:yellow;">-</span><span style="background-color:yellow;">h</span><span style="background-color:yellow;">i</span><span style="background-color:yellow;">g</span><span style="background-color:yellow;">h</span><span style="background-color:yellow;">l</span><span style="background-color:yellow;">i</span><span style="background-color:yellow;">g</span><span style="background-color:yellow;">h</span><span style="background-color:yellow;">t</span><span style="background-color:yellow;">-</span><span style="background-color:yellow;">c</span><span style="background-color:yellow;">u</span><span style="background-color:yellow;">m</span><span style="background-color:yellow;">-</span><span style="background-color:yellow;">b</span><span style="background-color:yellow;">o</span><span style="background-color:yellow;">l</span><span style="background-color:yellow;">d</span>");
-                System.out.println("Highlight all "+ <b>s</b><b>u</b><b>b</b><b>s</b><b>t</b><b>r</b><b>i</b><b>n</b><b>g</b> + ":" + "sub<b>s</b><b>u</b><b>b</b><b>s</b><b>t</b><b>r</b><b>i</b><b>n</b><b>g</b>string");
-
-                System.out.println("no mark up tag");//to-do
- 
-                System.out.println("Highlight/bold/italic all "+ <b>s</b><b>u</b><b>b</b><b>s</b><b>t</b><b>r</b><b>i</b><b>n</b><b>g</b> + ":" + "sub<b>s</b><b>u</b><b>b</b><b>s</b><b>t</b><b>r</b><b>i</b><b>n</b><b>g</b>string");
-                System.out.println("Highlight all regular exp :<b>r</b><b>e</b><b>g</b><b>e</b><b>x</b>:"+ <b>r</b><b>e</b><b>g</b><b>e</b><b>x</b> + " :" + "regexregex" +" <b>r</b><b>e</b><b>g</b><b>e</b><b>x</b> ");
- 
-                System.out.println("Highlight/bold/italic all regular exp :<span style="background-color:yellow;">r</span><span style="background-color:yellow;">e</span><span style="background-color:yellow;">g</span><span style="background-color:yellow;">e</span><span style="background-color:yellow;">x</span>:"+ <span style="background-color:yellow;">r</span><span style="background-color:yellow;">e</span><span style="background-color:yellow;">g</span><span style="background-color:yellow;">e</span><span style="background-color:yellow;">x</span> + ":" + "regexregex"+" <span style="background-color:yellow;">r</span><span style="background-color:yellow;">e</span><span style="background-color:yellow;">g</span><span style="background-color:yellow;">e</span><span style="background-color:yellow;">x</span> ");
- }
- }
+<html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>highlightUsingMultipleSnippetTagInOneJavaDocWithRegion</b>()</pre><p><div id="snippet1" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet1">Copy</a></div>
+<pre><code>   public static void main(String... args) {
+       for (var <b>a</b><b>r</b><b>g</b> : <b>a</b><b>r</b><b>g</b>s) {                 
+           if (!<b>a</b><b>r</b><b>g</b>.isBlank<b>a</b><b>r</b><b>g</b>()) {
+               System.out.println(<b>a</b><b>r</b><b>g</b>);
+           }
+       }                                      
+   }
+   
+</code></pre></div>
+  <div id="snippet2" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet2">Copy</a></div>
+<pre><code>   public static void main(String... args) {
+       for (var <b>a</b><b>r</b><b>g</b> : args) {                 
+           if (!<b>a</b><b>r</b><b>g</b>.isBlankarg()) {
+               System.out.println(<b>a</b><b>r</b><b>g</b>);
+           }
+       }                                      
  }
  
 </code></pre></div><p>

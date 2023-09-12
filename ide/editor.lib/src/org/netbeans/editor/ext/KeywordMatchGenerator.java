@@ -133,7 +133,7 @@ public class KeywordMatchGenerator {
 
     /** Parse the keywords from a string */
     private void parseKeywords(String s) {
-        ArrayList keyList = new ArrayList();
+        ArrayList<String> keyList = new ArrayList<>();
         StringTokenizer strTok = new StringTokenizer(s);
 
         try {
@@ -188,7 +188,7 @@ public class KeywordMatchGenerator {
     * called with the full range of keywords and offset equal to zero.
     * It recursively calls itself to scan the subgroups.
     * @param indFrom index in kwds[] where the subgroup of keywords starts
-    * @pararm indTo index in kwds[] where the subgroup of keywords ends
+    * @param indTo index in kwds[] where the subgroup of keywords ends
     * @param offset current horizontal offset. It's incremented as the subgroups
     *   are recognized. All the characters prior to offset index are the same
     *   in all keywords in the group.

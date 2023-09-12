@@ -77,7 +77,6 @@ import org.netbeans.modules.j2ee.persistence.wizard.unit.PersistenceUnitWizardPa
 import org.netbeans.modules.web.api.webmodule.ExtenderController;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
-import org.netbeans.modules.web.beans.CdiUtil;
 import org.netbeans.modules.web.jsf.JSFFrameworkProvider;
 import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.JsfPreferences;
@@ -85,12 +84,13 @@ import org.netbeans.modules.web.jsf.JsfTemplateUtils;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.Application;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModel;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle;
 import org.netbeans.modules.web.jsf.impl.facesmodel.JSFConfigModelUtilities;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.jsf.palette.items.FromEntityBase;
 import org.netbeans.modules.web.jsf.wizards.JSFConfigurationPanel.PreferredLanguage;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.spi.webmodule.WebModuleExtender;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -632,8 +632,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     private static boolean isCdiEnabled(Project project) {
-        CdiUtil cdiUtil = project.getLookup().lookup(CdiUtil.class);
-        return (cdiUtil == null) ? false : cdiUtil.isCdiEnabled();
+        org.netbeans.modules.jakarta.web.beans.CdiUtil jakartaCdiUtil = project.getLookup().lookup(org.netbeans.modules.jakarta.web.beans.CdiUtil.class);
+        if(jakartaCdiUtil != null && jakartaCdiUtil.isCdiEnabled()) {
+            return true;
+        }
+        org.netbeans.modules.web.beans.CdiUtil javaxCdiUtil = project.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
+        if(javaxCdiUtil != null && javaxCdiUtil.isCdiEnabled()) {
+            return true;
+        }
+        return false;
     }
 
     private static ResourceBundle findBundle(JSFConfigModel model, ResourceBundle rb) {
@@ -764,10 +771,10 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         HelpCtx helpCtx;
 
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
-        JSFVersion jsfVersion = JSFVersion.forWebModule(wm);
+        JsfVersion jsfVersion = JsfVersionUtils.forWebModule(wm);
 
         if (wm.getJ2eeProfile() != null && wm.getJ2eeProfile().isAtLeast(Profile.JAVA_EE_6_WEB)
-                || (jsfVersion != null && jsfVersion.isAtLeast(JSFVersion.JSF_2_0))) {
+                || (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_2_0))) {
             wizard.putProperty(JSF2_GENERATOR_PROPERTY, "true");
             helpCtx = new HelpCtx("persistence_entity_selection_javaee6");  //NOI18N
         } else {

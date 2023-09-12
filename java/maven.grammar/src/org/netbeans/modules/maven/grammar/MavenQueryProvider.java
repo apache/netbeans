@@ -56,7 +56,7 @@ public final class MavenQueryProvider extends GrammarQueryManager {
         if (getGrammar(ctx) != null) {
             Enumeration<Node> en = ctx.getDocumentChildren();
             while (en.hasMoreElements()) {
-                Node next = (Node)en.nextElement();
+                Node next = en.nextElement();
                 if (next.getNodeType() == Node.ELEMENT_NODE) {
                     return Collections.enumeration(Collections.singletonList(next));
                 }

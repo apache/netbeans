@@ -91,6 +91,7 @@ public class DBSchemaFileList {
 
     private final class DBSchemaComparator implements Comparator {
 
+        @Override
         public int compare(Object o1, Object o2) {
             FileObject f1 = (FileObject)o1;
             FileObject f2 = (FileObject)o2;

@@ -15,8 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-AFE52C6947D9939170DA7989612CEF544115511A com.fasterxml.jackson.core:jackson-core:2.12.0
-EA6945874602654E5B265A570547CEB3423168BE com.fasterxml.jackson.core:jackson-databind:2.12.0
-A27BF93EC3EB19801226514F5D038C6DEAF46001 com.fasterxml.jackson.core:jackson-annotations:2.12.0
-D4F8BBE668A1A4E649FE0706253BAD6F3A44E005 com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.0
-9103E86B58FFCE5A2C8DABD4066D44721D548764 com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.12.0
+136F77AB424F302C9E27230B4482E8000E142EDF com.fasterxml.jackson.core:jackson-annotations:2.13.5
+0D07C97D3DE9EA658CAF1FF1809FD9DE930A286A com.fasterxml.jackson.core:jackson-core:2.13.5
+AA95E46DBC32454F3983221D420E78EF19DDF844 com.fasterxml.jackson.core:jackson-databind:2.13.5
+76F77A8427BF8F387CFDAE5773CC5BEC8CC4F604 com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.13.5
+8BA3B868E81D7FC6EAD686BD2353859B111D9EAF com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.5
+5A2A6083A13D550F5FC2E1490CDB5952CDBD391C com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.13.5

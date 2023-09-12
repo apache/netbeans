@@ -1,0 +1,20 @@
+Code completion result for source line:
+$this->|publicEnumMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateEnumMethod()             [PRIVATE]  \Enum1\Simple
+METHOD     privateStaticEnumMethod()       [PRIVATE,  \Enum1\Simple
+METHOD     privateStaticTraitMethod()      [PRIVATE,  \Enum1\TestTrait
+METHOD     privateTraitMethod()            [PRIVATE]  \Enum1\TestTrait
+METHOD     protectedEnumMethod()           [PROTECTE  \Enum1\Simple
+METHOD     protectedStaticEnumMethod()     [PROTECTE  \Enum1\Simple
+METHOD     protectedStaticTraitMethod()    [PROTECTE  \Enum1\TestTrait
+METHOD     protectedTraitMethod()          [PROTECTE  \Enum1\TestTrait
+METHOD     publicEnumMethod()              [PUBLIC]   \Enum1\Simple
+METHOD     publicInterfaceMethod()         [PUBLIC]   \Enum1\Simple
+METHOD     publicStaticEnumMethod()        [STATIC]   \Enum1\Simple
+METHOD     publicStaticInterfaceMethod()   [STATIC]   \Enum1\Simple
+METHOD     publicStaticTraitMethod()       [STATIC]   \Enum1\TestTrait
+METHOD     publicTraitMethod()             [PUBLIC]   \Enum1\TestTrait
+METHOD     testEnum()                      [PUBLIC]   \Enum1\Simple
+------------------------------------
+VARIABLE   string name                                \Enum1\Simple

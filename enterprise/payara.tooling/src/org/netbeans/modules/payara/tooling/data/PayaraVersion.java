@@ -536,6 +536,16 @@ public enum PayaraVersion implements PayaraPlatformVersionAPI {
     public boolean isEE8Supported() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    @Override
+    public boolean isEE9Supported() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public boolean isEE10Supported() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @Override
     public boolean equalsMajorMinor(PayaraPlatformVersionAPI version) {

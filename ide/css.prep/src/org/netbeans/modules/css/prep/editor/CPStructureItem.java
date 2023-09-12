@@ -46,7 +46,7 @@ public abstract class CPStructureItem implements StructureItem {
         this.handle = element.getHandle();
         this.range = element.getRange();
 
-        this.cslHandle = new CPCslElementHandle(handle.getFile(), handle.getName());
+        this.cslHandle = new CPCslElementHandle(handle.getFile(), handle.getName(), element.getRange(), element.getType());
     }
 
     @Override

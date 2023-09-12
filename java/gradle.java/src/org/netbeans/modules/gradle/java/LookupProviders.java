@@ -38,7 +38,6 @@ public class LookupProviders {
                 Project project = baseContext.lookup(Project.class);
                 return Lookups.fixed(
                         new GradleJavaDebuggerImpl(project),
-                        new GradleJavaProjectProblemProvider(project),
                         new GradleJavaTokenProvider(project),
                         new RecommendedPrivilegedTemplatesImpl(),
                         new SourceGroupResourceWatchList(project)

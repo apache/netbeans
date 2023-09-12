@@ -76,9 +76,7 @@ public class ProjectUpgrader {
             }
         }
         if (toRemove != null) {
-            for (String key : toRemove) {
-                properties.remove(key);
-            }
+            properties.keySet().removeAll(toRemove);
         }
         if (toAdd != null) {
             properties.putAll(toAdd);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.103.0
+#Version 1.110.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -195,6 +195,12 @@ meth public abstract boolean equals(java.lang.Object)
 meth public abstract int hashCode()
 meth public abstract java.util.concurrent.Future<org.netbeans.spi.project.ui.ProjectProblemsProvider$Result> resolve()
 
+CLSS public abstract interface org.netbeans.spi.project.ui.ProjectProblemsImplementation
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> showAlert(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> showCustomizer(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
 CLSS public abstract interface org.netbeans.spi.project.ui.ProjectProblemsProvider
 fld public final static java.lang.String PROP_PROBLEMS = "problems"
 innr public final static !enum Severity
@@ -358,6 +364,7 @@ CLSS public abstract interface static !annotation org.netbeans.spi.project.ui.su
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD])
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault int position()
+meth public abstract !hasdefault java.lang.String parentPath()
 meth public abstract java.lang.String[] projectType()
 
 CLSS public org.netbeans.spi.project.ui.support.NodeFactorySupport

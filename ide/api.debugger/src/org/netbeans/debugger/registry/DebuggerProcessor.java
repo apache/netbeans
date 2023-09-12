@@ -66,6 +66,7 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
     public @Override Set<String> getSupportedAnnotationTypes() {
         return new HashSet<String>(Arrays.asList(
             ActionsProvider.Registration.class.getCanonicalName(),
+            ActionsProvider.Registrations.class.getCanonicalName(),
             DebuggerEngineProvider.Registration.class.getCanonicalName(),
             SessionProvider.Registration.class.getCanonicalName(),
             LazyActionsManagerListener.Registration.class.getCanonicalName(),
@@ -315,7 +316,7 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
             case CLASS: {
                 TypeElement te = (TypeElement) e;
                 TypeMirror superType = te.getSuperclass();
-                if (superType.getKind().equals(TypeKind.NONE)) {
+                if (superType.getKind() == TypeKind.NONE) {
                     return false;
                 } else {
                     e = ((DeclaredType) superType).asElement();
@@ -329,7 +330,7 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
             }
             case METHOD: {
                 TypeMirror retType = ((ExecutableElement) e).getReturnType();
-                if (retType.getKind().equals(TypeKind.NONE)) {
+                if (retType.getKind() == TypeKind.NONE) {
                     return false;
                 } else {
                     e = ((DeclaredType) retType).asElement();
@@ -372,7 +373,7 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
             }
             case METHOD: {
                 TypeMirror retType = ((ExecutableElement) e).getReturnType();
-                if (retType.getKind().equals(TypeKind.NONE)) {
+                if (retType.getKind() == TypeKind.NONE) {
                     return false;
                 } else {
                     TypeElement te = (TypeElement) ((DeclaredType) retType).asElement();
@@ -443,7 +444,7 @@ public class DebuggerProcessor extends LayerGeneratingProcessor {
             }
             case METHOD: {
                 TypeMirror retType = ((ExecutableElement) e).getReturnType();
-                if (retType.getKind().equals(TypeKind.NONE)) {
+                if (retType.getKind() == TypeKind.NONE) {
                     return typeMirrors;
                 } else {
                     TypeElement te = (TypeElement) ((DeclaredType) retType).asElement();

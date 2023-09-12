@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.db;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import java.net.URL;
 import java.sql.DatabaseMetaData;
@@ -36,20 +37,24 @@ import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
+import org.netbeans.modules.java.lsp.server.input.InputBoxStep;
+import org.netbeans.modules.java.lsp.server.input.InputCallbackParams;
+import org.netbeans.modules.java.lsp.server.input.InputService;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
-import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.QuickPickStep;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
-import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -58,6 +63,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Jan Horvath
  */
 @NbBundle.Messages({
+    "MSG_AddDBConnection=Add Database Connection",
     "MSG_EnterDbUrl=Enter DB URL",
     "MSG_EnterUsername=Enter Username",
     "MSG_EnterPassword=Enter Password",
@@ -90,47 +96,60 @@ public class DBAddConnection extends CodeActionsProvider {
 
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!DB_ADD_CONNECTION.equals(command)) {
+        InputService.Registry inputServiceRegistry = Lookup.getDefault().lookup(InputService.Registry.class);
+        if (inputServiceRegistry == null) {
             return null;
         }
         
-        String userId = null;
-        String dbUrl = null;
-        String driverClass = null;
-        if (arguments != null && arguments.size() > 0) {
-            final Map m = gson.fromJson((JsonObject) arguments.get(0), Map.class);
-            if (m != null) {
-                userId = (String) m.get(USER_ID);
-                dbUrl = (String) m.get(DB_URL);
-                driverClass = (String) m.get(DRIVER);
-            }
+        if (arguments != null && !arguments.isEmpty()) {
+            final Map m = arguments.get(0) instanceof JsonNull ? Collections.emptyMap() : gson.fromJson((JsonObject) arguments.get(0), Map.class);
+            String userId = m != null ? (String) m.get(USER_ID) : null;
+            String password = m != null ? (String) m.get(PASSWORD) : null;
+            String dbUrl = m != null ? (String) m.get(DB_URL) : null;
+            String driverClass = m != null ? (String) m.get(DRIVER) : null;
             if (dbUrl != null && driverClass != null) {
 
-                JDBCDriver[] driver = JDBCDriverManager.getDefault().getDrivers(driverClass); //NOI18N
+                JDBCDriver[] driver = JDBCDriverManager.getDefault().getDrivers(driverClass);
                 if (driver != null && driver.length > 0) {
-                    CompletableFuture<String> usernameFuture = userId != null ? CompletableFuture.completedFuture(userId) : client.showInputBox(new ShowInputBoxParams(
-                            Bundle.MSG_EnterUsername(), userId));
-
-                    usernameFuture.thenAccept((username) -> { //NOI18N
-                        if (username == null) {
-                            return;
-                        }
-                        String password = (String) m.get(PASSWORD);
-                        CompletableFuture<String> passwordFuture = password != null ? CompletableFuture.completedFuture(password) : client.showInputBox(new ShowInputBoxParams(
-                                Bundle.MSG_EnterPassword(), "", true));
-                        passwordFuture.thenAccept((p) -> { //NOI18N
-                            if (p == null) {
-                                return;
+                    if (userId == null || password == null) {
+                        String inputId = inputServiceRegistry.registerInput(param -> {
+                            int totalSteps = 2;
+                            switch (param.getStep()) {
+                                case 1:
+                                    String userIdVal = userId != null ? userId : "";
+                                    return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, USER_ID, Bundle.MSG_EnterUsername(), userIdVal)));
+                                case 2:
+                                    Map<String, Either<List<QuickPickItem>, String>> data = param.getData();
+                                    Either<List<QuickPickItem>, String> userData = data.get(USER_ID);
+                                    if (userData != null) {
+                                        String passwordVal = password != null ? password : "";
+                                        return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, PASSWORD, null, Bundle.MSG_EnterPassword(), passwordVal, true)));
+                                    }
+                                    return CompletableFuture.completedFuture(null);
+                                default:
+                                    return CompletableFuture.completedFuture(null);
                             }
-                            DatabaseConnection dbconn = DatabaseConnection.create(driver[0], (String) m.get(DB_URL), username, (String) m.get(SCHEMA), p, true, (String) m.get(DISPLAY_NAME));
+                        });
+                        client.showMultiStepInput(new ShowMutliStepInputParams(inputId, Bundle.MSG_AddDBConnection())).thenAccept(result -> {
+                            Either<List<QuickPickItem>, String> userData = result.get(USER_ID);
+                            Either<List<QuickPickItem>, String> passwordData = result.get(PASSWORD);
+                            DatabaseConnection dbconn = DatabaseConnection.create(driver[0], dbUrl, userData.getRight(), (String) m.get(SCHEMA), passwordData.getRight(), true, (String) m.get(DISPLAY_NAME));
                             try {
                                 ConnectionManager.getDefault().addConnection(dbconn);
+                                client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
                             } catch (DatabaseException ex) {
                                 client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                             }
                         });
-                    });
-                    client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
+                    } else {
+                        DatabaseConnection dbconn = DatabaseConnection.create(driver[0], dbUrl, userId, (String) m.get(SCHEMA), password, true, (String) m.get(DISPLAY_NAME));
+                        try {
+                            ConnectionManager.getDefault().addConnection(dbconn);
+                            client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
+                        } catch (DatabaseException ex) {
+                            client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                        }
+                    }
                 }
                 return CompletableFuture.completedFuture(null);
             }
@@ -149,77 +168,120 @@ public class DBAddConnection extends CodeActionsProvider {
                 }
             }
         }
-
-        return client.showQuickPick(new ShowQuickPickParams(Bundle.MSG_SelectDriver(), false, items))
-                .thenApply(selectedItems -> {
-                    if (selectedItems == null) {
-                        return null;
-                    }
-                    if (!selectedItems.isEmpty()) {
-                        int i = ((Double) selectedItems.get(0).getUserData()).intValue();
-                        JDBCDriver driver = drivers[i];
-                        String urlTemplate = driver.getClassName() != null ? urlTemplates.get(driver.getClassName()) : "";
-                        if (urlTemplate == null) {
-                            urlTemplate = "";
-                        }
-                        client.showInputBox(new ShowInputBoxParams(
-                                Bundle.MSG_EnterDbUrl(), urlTemplate)).thenAccept((u) -> {
-                            if (u == null) {
-                                return;
-                            }
-                            client.showInputBox(new ShowInputBoxParams(
-                                    Bundle.MSG_EnterUsername(), "")).thenAccept((username) -> { //NOI18N
-                                if (username == null) {
-                                    return;
+        if (items.isEmpty()) {
+            client.showMessage(new MessageParams(MessageType.Error, Bundle.MSG_DriverNotFound()));
+        } else {
+            List<String> schemas = new ArrayList<>();
+            String inputId = inputServiceRegistry.registerInput(new InputService.Callback() {
+                @Override
+                public CompletableFuture<Either<QuickPickStep, InputBoxStep>> step(InputCallbackParams params) {
+                    Map<String, Either<List<QuickPickItem>, String>> data = params.getData();
+                    int totalSteps = 4;
+                    switch (params.getStep()) {
+                        case 1:
+                            return CompletableFuture.completedFuture(Either.forLeft(new QuickPickStep(totalSteps, DRIVER, Bundle.MSG_SelectDriver(), items)));
+                        case 2: {
+                            Either<List<QuickPickItem>,String> driverData = data.get(DRIVER);
+                            if (driverData != null && !driverData.getLeft().isEmpty()) {
+                                int i = ((Double) driverData.getLeft().get(0).getUserData()).intValue();
+                                JDBCDriver driver = drivers[i];
+                                String urlTemplate = driver.getClassName() != null ? urlTemplates.get(driver.getClassName()) : "";
+                                if (urlTemplate == null) {
+                                    urlTemplate = "";
                                 }
-                                client.showInputBox(new ShowInputBoxParams(
-                                        Bundle.MSG_EnterPassword(), "", true)).thenAccept((password) -> { //NOI18N
-                                    if (password == null) {
-                                        return;
-                                    }
-                                    DatabaseConnection dbconn = DatabaseConnection.create(driver, u, username, null, password, true);
-                                    try {
-                                        ConnectionManager.getDefault().addConnection(dbconn);
-                                        List<String> schemas = getSchemas(dbconn);
-                                        if (schemas.isEmpty()) {
-                                            client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
-                                        } else {
-                                            List<QuickPickItem> schemaItems = schemas.stream().map(schema -> new QuickPickItem(schema)).collect(Collectors.toList());
-                                            client.showQuickPick(new ShowQuickPickParams(Bundle.MSG_SelectSchema(), schemaItems)).thenAccept((s) -> {
-                                                if (s == null) {
-                                                    try {
-                                                        // Command was interrupted, we don't want the connection to be added
-                                                        ConnectionManager.getDefault().removeConnection(dbconn);
-                                                    } catch (DatabaseException ex) {
-                                                        StatusDisplayer.getDefault().setStatusText(ex.getMessage());
-                                                    }
-                                                    return;
-                                                }
-                                                String schema = s.get(0).getLabel();
-                                                DatabaseConnection dbconn1 = DatabaseConnection.create(driver, u, username, schema, password, true);
-                                                try {
-                                                    ConnectionManager.getDefault().removeConnection(dbconn);
-                                                    ConnectionManager.getDefault().addConnection(dbconn1);
-                                                } catch (DatabaseException ex) {
-                                                    client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                                                    return;
-                                                }
-                                                client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
-                                            });
-                                        }
-                                    } catch (SQLException | DatabaseException ex) {
-                                        client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                                    } 
-                                });
-                            });
-
-                        });
-
-                    } else {
-                        client.showMessage(new MessageParams(MessageType.Error, Bundle.MSG_DriverNotFound()));
+                                return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, DB_URL, Bundle.MSG_EnterDbUrl(), urlTemplate)));
+                            }
+                            return CompletableFuture.completedFuture(null);
+                        }
+                        case 3: {
+                            Either<List<QuickPickItem>,String> urlData = data.get(DB_URL);
+                            if (urlData != null && !urlData.getRight().isEmpty()) {
+                                return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, USER_ID, Bundle.MSG_EnterUsername(), "")));
+                            }
+                            return CompletableFuture.completedFuture(null);
+                        }
+                        case 4: {
+                            Either<List<QuickPickItem>,String> userData = data.get(USER_ID);
+                            if (userData != null && !userData.getRight().isEmpty()) {
+                                return CompletableFuture.completedFuture(Either.forRight(new InputBoxStep(totalSteps, PASSWORD, null, Bundle.MSG_EnterPassword(), "", true)));
+                            }
+                            return CompletableFuture.completedFuture(null);
+                        }
+                        case 5: {
+                            Either<List<QuickPickItem>,String> passwordData = data.get(PASSWORD);
+                            if (passwordData != null) {
+                                if (schemas.isEmpty()) {
+                                    client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
+                                    return CompletableFuture.completedFuture(null);
+                                } else {
+                                    List<QuickPickItem> schemaItems = schemas.stream().map(schema -> new QuickPickItem(schema)).collect(Collectors.toList());
+                                    return CompletableFuture.completedFuture(Either.forLeft(new QuickPickStep(totalSteps + 1, SCHEMA, Bundle.MSG_SelectSchema(), schemaItems)));
+                                }
+                            }
+                            return CompletableFuture.completedFuture(null);
+                        }
+                        default:
+                            return CompletableFuture.completedFuture(null);
                     }
-                    return null;
-                });
+                }
+
+                @Override
+                public CompletableFuture<String> validate(InputCallbackParams params) {
+                    Map<String, Either<List<QuickPickItem>, String>> data = params.getData();
+                    switch (params.getStep()) {
+                        case 4:
+                            Either<List<QuickPickItem>,String> passwordData = data.get(PASSWORD);
+                            if (passwordData != null) {
+                                Either<List<QuickPickItem>,String> driverData = data.get(DRIVER);
+                                Either<List<QuickPickItem>,String> urlData = data.get(DB_URL);
+                                Either<List<QuickPickItem>,String> userData = data.get(USER_ID);
+                                int i = ((Double) driverData.getLeft().get(0).getUserData()).intValue();
+                                JDBCDriver driver = drivers[i];
+                                boolean failed = true;
+
+                                schemas.clear();
+                                DatabaseConnection dbconn = DatabaseConnection.create(driver, urlData.getRight(), userData.getRight(), null, passwordData.getRight(), true);
+                                try {
+                                    ConnectionManager.getDefault().addConnection(dbconn);
+                                    schemas.addAll(getSchemas(dbconn));
+                                    failed = false;
+                                } catch(DatabaseException | SQLException ex) {
+                                    return CompletableFuture.completedFuture(ex.getMessage());
+                                } finally {
+                                    try {
+                                        if (failed || !schemas.isEmpty()) {
+                                            ConnectionManager.getDefault().removeConnection(dbconn);
+                                        }
+                                    } catch (DatabaseException ex) {}
+                                }
+                            }
+                            break;
+                    }
+                    return CompletableFuture.completedFuture(null);
+                }
+            });
+            return client.showMultiStepInput(new ShowMutliStepInputParams(inputId, Bundle.MSG_AddDBConnection())).thenApply(result -> {
+                Either<List<QuickPickItem>,String> driverData = result.get(DRIVER);
+                Either<List<QuickPickItem>,String> urlData = result.get(DB_URL);
+                Either<List<QuickPickItem>,String> userData = result.get(USER_ID);
+                Either<List<QuickPickItem>,String> passwordData = result.get(PASSWORD);
+                Either<List<QuickPickItem>,String> schemaData = result.get(SCHEMA);
+                if (driverData != null && urlData != null && userData != null && passwordData != null && schemaData != null && !schemaData.getLeft().isEmpty()) {
+                    int i = ((Double) driverData.getLeft().get(0).getUserData()).intValue();
+                    JDBCDriver driver = drivers[i];
+                    String schema = schemaData.getLeft().get(0).getLabel();
+                    DatabaseConnection dbconn = DatabaseConnection.create(driver, urlData.getRight(), userData.getRight(), schema, passwordData.getRight(), true);
+                    try {
+                        ConnectionManager.getDefault().addConnection(dbconn);
+                    } catch (DatabaseException ex) {
+                        client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                    }
+                    client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
+                }
+                return null;
+            });
+        }
+        return null;
     }
 
     private static List<String> getSchemas(DatabaseConnection dbconn) throws SQLException, DatabaseException {

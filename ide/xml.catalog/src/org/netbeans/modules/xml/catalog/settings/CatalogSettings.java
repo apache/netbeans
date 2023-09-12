@@ -67,6 +67,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author  Petr Kuzel
  */
+@Deprecated
 @ServiceProvider(service = CatalogSettings.class)
 public final class CatalogSettings implements Externalizable {
 

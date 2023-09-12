@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -40,6 +42,8 @@ import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.common.api.LexerUtils;
+import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -50,24 +54,6 @@ import org.openide.filesystems.FileUtil;
  */
 public class CompositeComponentModel extends JsfPageModel {
 
-//    private static enum MavenProjectStandartDirectories {
-//        
-//        SOURCES("src/main/java"), //NOI18N
-//        RESOURCES("src/main/resources"), //NOI18N
-//        CONFIG("src/main/config"), //NOI18N
-//        WEBAPP("src/main/webapp"); //NOI18N
-//        
-//        private String path;
-//
-//        private MavenProjectStandartDirectories(String path) {
-//            this.path = path;
-//        }
-//        
-//        public String getPath() {
-//            return path;
-//        }
-//        
-//    }
     private static final Logger LOGGER = Logger.getLogger(CompositeComponentModel.class.getSimpleName());
     
     //index keys
@@ -205,7 +191,7 @@ public class CompositeComponentModel extends JsfPageModel {
         dsb.append(encode(interfaceShortDescription != null ? interfaceShortDescription : NOT_AVAILABLE_VALUE));
         document.addPair(INTERFACE_DESCRIPTION_KEY, dsb.toString(), false, true);
 
-        return LibraryUtils.getCompositeLibraryURL(libraryName, true); // the return value looks to be used nowhere
+        return LibraryUtils.getCompositeLibraryURL(libraryName, JsfVersion.JSF_4_0); // the return value looks to be used nowhere
     }
 
     private String getLibraryPath() {
@@ -278,18 +264,6 @@ public class CompositeComponentModel extends JsfPageModel {
             folder = folder.getParent();
         } while (folder != null);
 
-
-//        //look into the standart maven project locations
-//        //src/main/webapp is covered by the 
-//        Project project = FileOwnerQuery.getOwner(file);
-//        if(project != null) {
-//            FileObject projectRoot = project.getProjectDirectory();
-//            FileObject resources = projectRoot.getFileObject("src/main/resources");
-//            if(FileUtil.isParentOf(resources, file)) {
-//                return resources;
-//            }
-//        }
-//        
         return null;
     }
 
@@ -302,13 +276,16 @@ public class CompositeComponentModel extends JsfPageModel {
 
         @Override
         public JsfPageModel getModel(HtmlParserResult result) {
-            Node node = result.root(LibraryUtils.COMPOSITE_LIBRARY_NS);
-            if (node == null || node.children().isEmpty()) {
-                node = result.root(LibraryUtils.COMPOSITE_LIBRARY_LEGACY_NS);
-            }
-            if (node == null) {
+            Optional<Node> compositeLibraryNode = DefaultLibraryInfo.COMPOSITE.getValidNamespaces().stream()
+                    .map(result::root)
+                    .filter(Objects::nonNull)
+                    .filter(node -> !node.children().isEmpty())
+                    .findFirst();
+
+            if (compositeLibraryNode.isEmpty()) {
                 return null; //no composite library declaration
             }
+            Node node = compositeLibraryNode.get();
             FileObject file = result.getSnapshot().getSource().getFileObject();
 
             //check whether the file lies in appropriate library folder

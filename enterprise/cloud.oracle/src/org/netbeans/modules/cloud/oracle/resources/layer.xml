@@ -32,5 +32,160 @@
             <attr name="instanceOf" stringvalue="org.netbeans.spi.server.ServerWizardProvider"/>
             <attr name="displayName" stringvalue="Oracle Cloud"/>
         </file>
+        
+        <folder name="Oracle">
+            <folder name="Compartment">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-adm-KnowledgeBaseNode-listKnowledgeBases.instance">
+                        <!--org.netbeans.modules.cloud.oracle.adm.KnowledgeBaseNode.listKnowledgeBases()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.adm.KnowledgeBaseNode.listKnowledgeBases" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-compartment-CompartmentNode-getCompartments.instance">
+                        <!--org.netbeans.modules.cloud.oracle.compartment.CompartmentNode.getCompartments()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compartment.CompartmentNode.getCompartments" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-database-DatabaseNode-getDatabases.instance">
+                        <!--org.netbeans.modules.cloud.oracle.database.DatabaseNode.getDatabases()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.database.DatabaseNode.getDatabases" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-devops-DevopsProjectNode-listDevopsProjects.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode.listDevopsProjects()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode.listDevopsProjects" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-compartment-CompartmentNode-createNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.compartment.CompartmentNode.createNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compartment.CompartmentNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="DevopsProject">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-devops-BuildPipelineNode-listDevopsPipelines.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.BuildPipelineNode.listDevopsPipelines()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.BuildPipelineNode.listDevopsPipelines" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-devops-BuildRunNode-listBuildRuns.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.BuildRunNode.listBuildRuns()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.BuildRunNode.listBuildRuns" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-devops-DeployArtifactNode-listDeployArtifacts.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.DeployArtifactNode.listDeployArtifacts()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.DeployArtifactNode.listDeployArtifacts" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-devops-RepositoryNode-listRepositories.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.RepositoryNode.listRepositories()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.RepositoryNode.listRepositories" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-devops-DevopsProjectNode-createNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode.createNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="BuildPipeline">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-devops-BuildPipelineNode-createNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.BuildPipelineNode.createNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.BuildPipelineNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="Tenancy">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-compartment-CompartmentNode-getCompartments.instance">
+                        <!--org.netbeans.modules.cloud.oracle.compartment.CompartmentNode.getCompartments()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.compartment.CompartmentNode.getCompartments" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="BuildPipelineFolder">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-devops-BuildPipelineNode-expandRepositories.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.BuildPipelineNode.expandRepositories()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.BuildPipelineNode.expandRepositories" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-devops-BuildPipelineNode-createFolderNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.BuildPipelineNode.createFolderNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.BuildPipelineNode.createFolderNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="BuildRunFolder">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-devops-BuildRunNode-expandBuildRuns.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.BuildRunNode.expandBuildRuns()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.BuildRunNode.expandBuildRuns" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-devops-BuildRunNode-createFolderNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.BuildRunNode.createFolderNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.BuildRunNode.createFolderNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="DeployArtifactFolder">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-devops-DeployArtifactNode-expandRepositories.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.DeployArtifactNode.expandRepositories()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.DeployArtifactNode.expandRepositories" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-devops-DeployArtifactNode-createFolderNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.DeployArtifactNode.createFolderNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.DeployArtifactNode.createFolderNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="RepositoryFolder">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-devops-RepositoryNode-expandRepositories.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.RepositoryNode.expandRepositories()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.RepositoryNode.expandRepositories" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-devops-RepositoryNode-createFolderNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.RepositoryNode.createFolderNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.RepositoryNode.createFolderNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="KnowledgeBase">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-adm-KnowledgeBaseNode-createNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.adm.KnowledgeBaseNode.createNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.adm.KnowledgeBaseNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="Databases">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-database-DatabaseNode-createNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.database.DatabaseNode.createNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.database.DatabaseNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="BuildRun">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-devops-BuildRunNode-createNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.BuildRunNode.createNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.BuildRunNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="DeployArtifact">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-devops-DeployArtifactNode-createNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.DeployArtifactNode.createNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.DeployArtifactNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="Repository">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-devops-RepositoryNode-createNode.instance">
+                        <!--org.netbeans.modules.cloud.oracle.devops.RepositoryNode.createNode()-->
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.RepositoryNode.createNode" name="instanceCreate"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
     </folder>
 </filesystem>

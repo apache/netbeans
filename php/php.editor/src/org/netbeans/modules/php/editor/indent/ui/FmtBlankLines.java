@@ -49,7 +49,7 @@ public class FmtBlankLines extends javax.swing.JPanel {
     @StaticResource
     private static final String PREVIEW_FILE = "org/netbeans/modules/php/editor/indent/ui/BlankLines.php"; // NOI18N
     private static final Logger LOGGER = Logger.getLogger(FmtBlankLines.class.getName());
-    private static final long serialVersionUID = 4840268133695676380L;
+    private static final long serialVersionUID = 4919823026214465409L;
 
     public FmtBlankLines() {
         initComponents();
@@ -58,12 +58,14 @@ public class FmtBlankLines extends javax.swing.JPanel {
         aNamespaceField.putClientProperty(OPTION_ID, BLANK_LINES_AFTER_NAMESPACE);
         bUseField.putClientProperty(OPTION_ID, BLANK_LINES_BEFORE_USE);
         aUseField.putClientProperty(OPTION_ID, BLANK_LINES_AFTER_USE);
+        betweenUseTypesField.putClientProperty(OPTION_ID, BLANK_LINES_BETWEEN_USE_TYPES);
         bUseTraitField.putClientProperty(OPTION_ID, BLANK_LINES_BEFORE_USE_TRAIT);
         bClassField.putClientProperty(OPTION_ID, BLANK_LINES_BEFORE_CLASS);
         aClassField.putClientProperty(OPTION_ID, BLANK_LINES_AFTER_CLASS);
         aClassHeaderField.putClientProperty(OPTION_ID, BLANK_LINES_AFTER_CLASS_HEADER);
         bFieldsField.putClientProperty(OPTION_ID, BLANK_LINES_BEFORE_FIELDS);
         betweenFields.putClientProperty(OPTION_ID, BLANK_LINES_BETWEEN_FIELDS);
+        endOfFileCheckBox.putClientProperty(OPTION_ID, BLANK_LINES_EOF);
         cbGroupFields.putClientProperty(OPTION_ID, BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES);
         aFieldsField.putClientProperty(OPTION_ID, BLANK_LINES_AFTER_FIELDS);
         bMethodsField.putClientProperty(OPTION_ID, BLANK_LINES_BEFORE_FUNCTION);
@@ -79,6 +81,7 @@ public class FmtBlankLines extends javax.swing.JPanel {
         aNamespaceField.addKeyListener(new NumericKeyListener());
         bUseField.addKeyListener(new NumericKeyListener());
         aUseField.addKeyListener(new NumericKeyListener());
+        betweenUseTypesField.addKeyListener(new NumericKeyListener());
         bUseTraitField.addKeyListener(new NumericKeyListener());
         bClassField.addKeyListener(new NumericKeyListener());
         aClassField.addKeyListener(new NumericKeyListener());
@@ -158,6 +161,9 @@ public class FmtBlankLines extends javax.swing.JPanel {
         bUseTraitField = new JTextField();
         maxPreservedBlankField = new JTextField();
         maxPreservedBlankLabel = new JLabel();
+        betweenUseTypesLabel = new JLabel();
+        betweenUseTypesField = new JTextField();
+        endOfFileCheckBox = new JCheckBox();
 
         setName(NbBundle.getMessage(FmtBlankLines.class, "LBL_BlankLines")); // NOI18N
         setOpaque(false);
@@ -256,6 +262,14 @@ public class FmtBlankLines extends javax.swing.JPanel {
 
         Mnemonics.setLocalizedText(maxPreservedBlankLabel, NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.maxPreservedBlankLabel.text")); // NOI18N
 
+        betweenUseTypesLabel.setLabelFor(betweenUseTypesField);
+        Mnemonics.setLocalizedText(betweenUseTypesLabel, NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.betweenUseTypesLabel.text")); // NOI18N
+
+        betweenUseTypesField.setColumns(5);
+        betweenUseTypesField.setText(NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.betweenUseTypesField.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(endOfFileCheckBox, NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.endOfFileCheckBox.text")); // NOI18N
+
         GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -289,21 +303,22 @@ public class FmtBlankLines extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
                                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(aMethodsField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(bMethodsField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(aFieldsField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(bFunctionEndField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(betweenFields, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(bFieldsField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(aClassField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(bClassEndField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(aClassHeaderField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(bClassField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(aUseField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(bUseField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(aNamespaceField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(bNamespaceField, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(aMethodsField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(bMethodsField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(aFieldsField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(bFunctionEndField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(betweenFields, GroupLayout.Alignment.LEADING)
+                                        .addComponent(bFieldsField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(aClassField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(bClassEndField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(aClassHeaderField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(bClassField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(aUseField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(bUseField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(aNamespaceField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(bNamespaceField, GroupLayout.Alignment.LEADING)
+                                        .addComponent(betweenUseTypesField, GroupLayout.Alignment.LEADING))
                                     .addComponent(aOpenPHPTagField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                     .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                         .addComponent(bClosePHPTagField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -313,7 +328,9 @@ public class FmtBlankLines extends javax.swing.JPanel {
                                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                     .addComponent(maxPreservedBlankField)
                                     .addComponent(bUseTraitField)))))
-                    .addComponent(cbGroupFields, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbGroupFields, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(betweenUseTypesLabel)
+                    .addComponent(endOfFileCheckBox))
                 .addContainerGap())
         );
 
@@ -325,7 +342,7 @@ public class FmtBlankLines extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(bNamespaceField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(bNamespaceLabel))
-                .addGap(4, 4, 4)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(aNamespaceField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(aNamespaceLabel))
@@ -335,9 +352,13 @@ public class FmtBlankLines extends javax.swing.JPanel {
                     .addComponent(bUseLabel))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(betweenUseTypesLabel)
+                    .addComponent(betweenUseTypesField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(aUseField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(aUseLabel))
-                .addGap(4, 4, 4)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(bClassField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(bClassLabel))
@@ -398,6 +419,8 @@ public class FmtBlankLines extends javax.swing.JPanel {
                     .addComponent(maxPreservedBlankLabel)
                     .addComponent(maxPreservedBlankField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(endOfFileCheckBox)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbGroupFields, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -457,6 +480,7 @@ public class FmtBlankLines extends javax.swing.JPanel {
         aUseLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.aUseLabel.AccessibleContext.accessibleDescription")); // NOI18N
         maxPreservedBlankLabel.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.maxPreservedBlankLabel.AccessibleContext.accessibleName")); // NOI18N
         maxPreservedBlankLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.maxPreservedBlankLabel.AccessibleContext.accessibleDescription")); // NOI18N
+        betweenUseTypesLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.betweenUseTypesLabel.AccessibleContext.accessibleDescription")); // NOI18N
 
         scrollPane1.setViewportView(jPanel1);
         jPanel1.getAccessibleContext().setAccessibleName(NbBundle.getMessage(FmtBlankLines.class, "FmtBlankLines.jPanel1.AccessibleContext.accessibleName")); // NOI18N
@@ -508,7 +532,10 @@ public class FmtBlankLines extends javax.swing.JPanel {
     private JLabel bUseTraitLabel;
     private JTextField betweenFields;
     private JLabel betweenFieldsLabel;
+    private JTextField betweenUseTypesField;
+    private JLabel betweenUseTypesLabel;
     private JCheckBox cbGroupFields;
+    private JCheckBox endOfFileCheckBox;
     private JPanel jPanel1;
     private JTextField maxPreservedBlankField;
     private JLabel maxPreservedBlankLabel;

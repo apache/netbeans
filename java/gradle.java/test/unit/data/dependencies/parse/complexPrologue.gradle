@@ -1,0 +1,90 @@
+// This file should contain complex structures to fool the parser before the
+// real dependencies {} block. Collect the most weird things including
+// conditional or scripted dependencies here.
+
+/*
+    Ignored dependency
+    
+    dependencies {
+    }
+
+*/
+plugins {
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+    id "com.github.johnrengelman.shadow" version "4.0.2"
+    id "jp.classmethod.aws.lambda" version "0.38"
+    id "groovy"
+    id "application"
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://jcenter.bintray.com" }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'io.micronaut:micronaut-bom:1.1.0'
+    }
+}
+
+configurations {
+    // for dependencies that are needed for development only
+    developmentOnly
+}
+
+test.classpath += configurations.developmentOnly
+shadowJar {
+    transform(com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer)
+}
+tasks.withType(GroovyCompile) {
+    groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+}
+
+shadowJar {
+    mergeServiceFiles()
+}
+
+run.classpath += configurations.developmentOnly
+run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')
+
+mainClassName = "example.HelloWorldFunction"
+applicationDefaultJvmArgs = [""]
+ignoredDeps1 = "dependencies { }"
+ignoredDeps2 = 'dependencies { }'
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+if (new File("${System.getProperty("user.home")}/.aws/credentials").exists()) {
+    task deploy(type: jp.classmethod.aws.gradle.lambda.AWSLambdaMigrateFunctionTask, dependsOn: shadowJar) {
+        functionName = "hello-world"
+        handler = "example.HelloWorldFunction::hello"
+        role = "arn:aws:iam::${aws.accountId}:role/lambda_basic_execution"
+        runtime = com.amazonaws.services.lambda.model.Runtime.Java8
+        zipFile = shadowJar.archivePath
+        memorySize = 256
+        timeout = 60
+    }
+
+}
+
+task invoke(type: jp.classmethod.aws.gradle.lambda.AWSLambdaInvokeTask) {
+    functionName = "hello-world"
+    invocationType = com.amazonaws.services.lambda.model.InvocationType.RequestResponse
+    payload = '{"name":"Fred"}'
+    doLast {
+        println "Lambda function result: " + new String(invokeResult.payload.array(), "UTF-8")
+    }
+}
+
+dependencies {
+    runtimeOnly('org.hibernate:hibernate:3.0.5') {
+        transitive = true
+    }
+    runtimeOnly group: 'org.hibernate', name: 'hibernate', version: '3.0.5', transitive: true
+}
+

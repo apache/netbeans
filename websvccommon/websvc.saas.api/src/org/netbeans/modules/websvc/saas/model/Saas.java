@@ -324,7 +324,7 @@ public class Saas implements Comparable<Saas> {
     }
 
     /**
-     * @eturns absolute paths to all library jars, generated or 
+     * @return absolute paths to all library jars, generated or
      * provided by vendor module.  Generated
      */
     public List<FileObject> getLibraryJars() {

@@ -21,6 +21,7 @@ package org.netbeans.modules.xml.catalog;
 import java.util.*;
 import java.io.*;
 import java.net.URL;
+import javax.xml.transform.Source;
 
 import org.xml.sax.*;
 import org.netbeans.modules.xml.catalog.spi.*;
@@ -28,7 +29,6 @@ import org.netbeans.modules.xml.catalog.lib.*;
 import org.netbeans.modules.xml.catalog.settings.CatalogSettings;
 
 import org.netbeans.api.xml.services.*;
-import org.openide.util.Lookup;
 import javax.xml.transform.URIResolver;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -51,38 +51,40 @@ public class CatalogEntityResolver extends UserCatalog implements EntityResolver
     public CatalogEntityResolver() {
     }
 
+    @Override
     public EntityResolver getEntityResolver() {
         return this;
     }
-    
+
     /**
      * User's JAXP/TrAX <code>URIResolver</code>.
      * @return URIResolver or <code>null</code> if not supported.
      */
+    @Override
     public URIResolver getURIResolver() {
         return this;
     }
-    
+
     // SAX interface method implementation
-    public InputSource resolveEntity(String publicId,String systemId) 
+    @Override
+    public InputSource resolveEntity(String publicId,String systemId)
         throws SAXException, IOException {
-        InputSource result = null;            
-        Iterator it = null;
-        
+        InputSource result = null;
+
         // try to use full featured entiry resolvers
-        
-        
+
+
         CatalogSettings mounted = CatalogSettings.getDefault();
         if (mounted != null) {
-            it = mounted.getCatalogs( new Class[] {EntityResolver.class});
+            Iterator it = mounted.getCatalogs( new Class[] {EntityResolver.class});
 
             while (it.hasNext()) {
                 EntityResolver next = (EntityResolver) it.next();
                 result = next.resolveEntity(publicId, systemId);
                 if (result != null) break;
             }
-        
-            // fallback to ordinaly readers        
+
+            // fallback to ordinaly readers
 
             if (result == null && publicId != null) {
 
@@ -96,7 +98,7 @@ public class CatalogEntityResolver extends UserCatalog implements EntityResolver
                         break;
                     }
                 }
-            }        
+            }
         // return result (null is allowed)
         }
 
@@ -118,16 +120,17 @@ public class CatalogEntityResolver extends UserCatalog implements EntityResolver
             }
         }
         return result;
-        
+
     }
-    
+
     /**
      * Return all known public IDs.
      */
+    @Override
     public Iterator getPublicIDs() {
-        
+
         IteratorIterator ret = new IteratorIterator();
-        
+
         CatalogSettings mounted = CatalogSettings.getDefault();
         Iterator it = mounted.getCatalogs( new Class[] {CatalogReader.class});
 
@@ -138,50 +141,46 @@ public class CatalogEntityResolver extends UserCatalog implements EntityResolver
                 ret.add(ids);
             }
         }
-        
+
         return ret;
-    }    
+    }
 
-    public javax.xml.transform.Source resolve(String publicId, String systemId) 
+    @Override
+    public Source resolve(String href, String base)
         throws javax.xml.transform.TransformerException {
-            
-        //throws SAXException, IOException {
 
-        javax.xml.transform.Source result = null;            
-        
-        // try to use full featured entiry resolvers
-        
+        Source result = null;
+
         CatalogSettings mounted = CatalogSettings.getDefault();
 
-        if (publicId != null) {
-            
+        if (href != null) {
+
             Iterator it = mounted.getCatalogs(new Class[] {CatalogReader.class});
 
             while (it.hasNext()) {
                 CatalogReader next = (CatalogReader) it.next();
                 try {
-                    String sid=null;
-                    if (publicId.startsWith("urn:publicid:")) { //NOI18N
+                    String sid;
+                    if (href.startsWith("urn:publicid:")) { //NOI18N
                         // resolving publicId from catalog
-                        String urn = publicId.substring(13);
-                        sid=next.resolvePublic(URNtoPublic(urn));
-                    } else sid = next.resolveURI(publicId);
+                        String urn = href.substring(13);
+                        sid = next.resolvePublic(URNtoPublic(urn));
+                    } else {
+                        sid = next.resolveURI(href);
+                    }
                     if (sid != null) {
-                        javax.xml.transform.Source source =  new javax.xml.transform.sax.SAXSource();
+                        javax.xml.transform.Source source = new javax.xml.transform.sax.SAXSource();
                         source.setSystemId(sid);
-                        result=source;
+                        result = source;
                         break;
                     }
                 } catch (java.lang.Error error) {}
             }
         }
-        
-        // return result (null is allowed)
 
-        //if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("CatalogEntityResolver:PublicID: " + publicId + ", " + systemId + " => " + (result == null ? "null" : result.getSystemId())); // NOI18N
-        return result;        
+        return result;
     }
-    
+
     /** Conversion of URN string to public identifier
      *  see : http://www.faqs.org/rfcs/rfc3151.html
      */

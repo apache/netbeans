@@ -120,7 +120,7 @@ public final class ConfigManager {
     }
 
     public synchronized boolean exists(String name) {
-        return configs.keySet().contains(name) && configs.get(name) != null;
+        return configs.containsKey(name) && configs.get(name) != null;
     }
 
     public synchronized Configuration createNew(String name, String displayName) {
@@ -157,7 +157,7 @@ public final class ConfigManager {
 
     public void markAsCurrentConfiguration(String currentConfig) {
         synchronized (this) {
-            assert configs.keySet().contains(currentConfig);
+            assert configs.containsKey(currentConfig);
             this.currentConfig = currentConfig;
         }
         changeSupport.fireChange();
@@ -216,7 +216,7 @@ public final class ConfigManager {
             if (name != null && name.trim().length() == 0) {
                 name = null;
             }
-            assert configs.keySet().contains(name) : "Unknown configuration: " + name;
+            assert configs.containsKey(name) : "Unknown configuration: " + name;
             this.name = name;
         }
 

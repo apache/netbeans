@@ -60,6 +60,7 @@ public final class DDProvider {
     private static final String EJB_30_DOCTYPE = "http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"; //NOI18N
     private static final String EJB_31_DOCTYPE = "http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"; //NOI18N
     private static final String EJB_32_DOCTYPE = "http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd"; //NOI18N
+    private static final String EJB_40_DOCTYPE = "https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd"; //NOI18N
     private static final DDProvider ddProvider = new DDProvider();
     private final Map<Object, EjbJarProxy> ddMap;
 
@@ -196,7 +197,9 @@ public final class DDProvider {
     }
 
     private static EjbJar createEjbJar(String version, Document document) {
-        if (EjbJar.VERSION_3_2.equals(version)) {
+        if (EjbJar.VERSION_4_0.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.ejb.model_4_0.EjbJar(document, Common.USE_DEFAULT_VALUES);
+        } else if (EjbJar.VERSION_3_2.equals(version)) {
             return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_2.EjbJar(document, Common.USE_DEFAULT_VALUES);
         } else if (EjbJar.VERSION_3_1.equals(version)) {
             return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_1.EjbJar(document, Common.USE_DEFAULT_VALUES);
@@ -227,7 +230,9 @@ public final class DDProvider {
             }
         }
         if (id != null) {
-            if(EJB_32_DOCTYPE.equals(id)) {
+            if(EJB_40_DOCTYPE.equals(id)) {
+                return EjbJar.VERSION_4_0;
+            } else if(EJB_32_DOCTYPE.equals(id)) {
                 return EjbJar.VERSION_3_2;
             } else if (EJB_31_DOCTYPE.equals(id)) {
                 return EjbJar.VERSION_3_1;
@@ -272,7 +277,9 @@ public final class DDProvider {
         @Override
         public InputSource resolveEntity(String publicId, String systemId) {
             String resource;
-            if (EJB_32_DOCTYPE.equals(systemId)) {
+            if (EJB_40_DOCTYPE.equals(systemId)) {
+                resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_4_0.xsd"; //NOI18N
+            } else if (EJB_32_DOCTYPE.equals(systemId)) {
                 resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_2.xsd"; //NOI18N
             } else if (EJB_31_DOCTYPE.equals(systemId)) {
                 resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_1.xsd"; //NOI18N

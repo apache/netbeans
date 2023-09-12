@@ -36,11 +36,14 @@ import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
-import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
+import org.netbeans.modules.java.lsp.server.protocol.UIContext;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.RequestProcessor;
@@ -57,35 +60,40 @@ public class AbstractDialogDisplayerTest extends NbTestCase {
     
     private static class MockUIContext extends UIContext {
         @Override
-        protected boolean isValid() {
+        public boolean isValid() {
             return true;
         }
 
         @Override
-        protected void showMessage(MessageParams msg) {
+        public void showMessage(MessageParams msg) {
         }
 
         @Override
-        protected CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg) {
+        public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams msg) {
             return CompletableFuture.completedFuture(null);
         }
 
         @Override
-        protected CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+        public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
             return CompletableFuture.completedFuture(null);
         }
 
         @Override
-        protected CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
+        public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
 
         @Override
-        protected void logMessage(MessageParams msg) {
+        public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+            return CompletableFuture.completedFuture(Collections.emptyMap());
         }
 
         @Override
-        protected StatusDisplayer.Message showStatusMessage(ShowStatusMessageParams msg) {
+        public void logMessage(MessageParams msg) {
+        }
+
+        @Override
+        public StatusDisplayer.Message showStatusMessage(ShowStatusMessageParams msg) {
             return null;
         }
     }

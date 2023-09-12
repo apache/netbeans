@@ -29,10 +29,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.debug.Breakpoint;
-import org.eclipse.lsp4j.debug.BreakpointEventArguments;
 import org.eclipse.lsp4j.debug.SetBreakpointsArguments;
 import org.eclipse.lsp4j.debug.SetBreakpointsResponse;
 import org.eclipse.lsp4j.debug.SetExceptionBreakpointsArguments;
+import org.eclipse.lsp4j.debug.SetExceptionBreakpointsResponse;
 import org.eclipse.lsp4j.debug.Source;
 import org.eclipse.lsp4j.debug.SourceBreakpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
@@ -116,8 +116,8 @@ public final class NbBreakpointsRequestHandler {
         }
     }
 
-    public CompletableFuture<Void> setExceptionBreakpoints(SetExceptionBreakpointsArguments arguments, DebugAdapterContext context) {
-        CompletableFuture<Void> resultFuture = new CompletableFuture<>();
+    public CompletableFuture<SetExceptionBreakpointsResponse> setExceptionBreakpoints(SetExceptionBreakpointsArguments arguments, DebugAdapterContext context) {
+        CompletableFuture<SetExceptionBreakpointsResponse> resultFuture = new CompletableFuture<>();
         if (context.getDebugSession() == null) {
             ErrorUtilities.completeExceptionally(resultFuture, "Empty debug session.", ResponseErrorCode.InvalidParams);
             return resultFuture;
@@ -126,7 +126,9 @@ public final class NbBreakpointsRequestHandler {
         boolean notifyCaught = ArrayUtils.contains(filters, CAUGHT_EXCEPTION_FILTER_NAME);
         boolean notifyUncaught = ArrayUtils.contains(filters, UNCAUGHT_EXCEPTION_FILTER_NAME);
         context.getBreakpointManager().setExceptionBreakpoints(notifyCaught, notifyUncaught);
-        return CompletableFuture.completedFuture(null);
+        SetExceptionBreakpointsResponse response = new SetExceptionBreakpointsResponse();
+        // TODO: response.setBreakpoints(...);
+        return CompletableFuture.completedFuture(response);
     }
 
     private NbBreakpoint[] convertClientBreakpointsToDebugger(Source source, String sourceFile, SourceBreakpoint[] sourceBreakpoints, DebugAdapterContext context) {

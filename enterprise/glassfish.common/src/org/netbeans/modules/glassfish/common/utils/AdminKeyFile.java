@@ -322,7 +322,7 @@ public class AdminKeyFile {
          * Get value of user <code>String</code> read
          * from <code>admin-keyfile</code>.
          * <p/>
-         * @rerurn Value of user <code>String</code>.
+         * @return Value of user <code>String</code>.
          */
         private String getUser() {
             return user.toString();
@@ -332,7 +332,7 @@ public class AdminKeyFile {
          * Get value of password hash <code>String</code> read
          * from <code>admin-keyfile</code>.
          * <p/>
-         * @rerurn Value of password hash <code>String</code>.
+         * @return Value of password hash <code>String</code>.
          */
         private String getPasswordHash() {
             return hash.toString();
@@ -342,7 +342,7 @@ public class AdminKeyFile {
          * Get value of tool <code>String</code> read
          * from <code>admin-keyfile</code>.
          * <p/>
-         * @rerurn Value of tool <code>String</code>.
+         * @return Value of tool <code>String</code>.
          */
         private String getTool() {
             return tool.toString();

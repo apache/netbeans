@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.ByteArrayInputStream;
 import java.util.logging.Level;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Utilities;
 
 /**
  * Handles module events distributed by NetBeans module
@@ -93,7 +94,7 @@ public final class ModuleLifecycleManager extends ModuleInstall implements Error
                             }
                         }
                         if (!notified) {
-                            JOptionPane.showMessageDialog(null, 
+                            JOptionPane.showMessageDialog(Utilities.findDialogParent(), 
                                                           NbBundle.getBundle(ModuleLifecycleManager.class).getString("MSG_Install_Warning"),  // NOI18N
                                                           NbBundle.getBundle(ModuleLifecycleManager.class).getString("MSG_Install_Warning_Title"),  // NOI18N
                                                           JOptionPane.WARNING_MESSAGE);

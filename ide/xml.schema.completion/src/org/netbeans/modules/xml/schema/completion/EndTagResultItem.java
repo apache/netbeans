@@ -34,7 +34,7 @@ import org.openide.util.NbBundle;
 
 /**
  *
- * @Alex Petrov (Alexey.Petrov@Sun.com)
+ * @author Alex Petrov (Alexey.Petrov@Sun.com)
  */
 public class EndTagResultItem extends CompletionResultItem {
     private static final Logger _logger = Logger.getLogger(EndTagResultItem.class.getName());

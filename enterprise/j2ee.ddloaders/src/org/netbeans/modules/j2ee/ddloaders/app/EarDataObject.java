@@ -168,7 +168,7 @@ public class EarDataObject extends DD2beansDataObject
                 }
             }
         }
-        srcRoots = srcRootList.toArray(new FileObject[srcRootList.size ()]);
+        srcRoots = srcRootList.toArray(new FileObject[0]);
     }
     
     private String getPackageName (FileObject clazz) {
@@ -241,21 +241,18 @@ public class EarDataObject extends DD2beansDataObject
     /** Create document from the Node. This method is called after Node (Node properties)is changed.
      * The document is generated from data modul (isDocumentGenerable=true) 
     */
+    @Override
     protected String generateDocument() {
         //System.out.println("Generating document - generate....");
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
+        String document = null;
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             ejbJar.write(out);
-            out.close();
-            return out.toString("UTF8"); //NOI18N
+            document = out.toString("UTF8"); //NOI18N
         }
-        catch (IOException e) {
-            Logger.getLogger("global").log(Level.INFO, null, e);
+        catch (IOException | IllegalStateException e) {
+            Logger.getGlobal().log(Level.INFO, null, e);
         }
-        catch (IllegalStateException e){
-            Logger.getLogger("global").log(Level.INFO, null, e);
-	}
-	return out.toString ();
+        return document;
     }
         
     /** Update document in text editor. This method is called after Node (Node properties)is changed.
@@ -456,7 +453,7 @@ public class EarDataObject extends DD2beansDataObject
                     else if (options[1].equals (e.getSource ())) {
                         Enumeration<DDChangeEvent> en = connectionPanel.listModel.elements ();
                         while (en.hasMoreElements ()) {
-                            processDDChangeEvent ((DDChangeEvent)en.nextElement ());
+                            processDDChangeEvent(en.nextElement());
                         }
                         confirmChangesDialog[0].setVisible (false);
                         connectionPanel.setChanges (null);

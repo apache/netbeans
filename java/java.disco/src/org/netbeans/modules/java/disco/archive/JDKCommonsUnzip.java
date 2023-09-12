@@ -18,15 +18,12 @@
  */
 package org.netbeans.modules.java.disco.archive;
 
-import com.google.common.base.MoreObjects;
 import java.io.File;
 import java.io.IOException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.windows.InputOutput;
 
 public class JDKCommonsUnzip extends CommonsUnzip {
-
-    private static final File[] EMPTY_FILES = new File[0];
 
     @Override
     public void uncompress(File zip, File targetDir, InputOutput io) throws IOException {
@@ -37,7 +34,7 @@ public class JDKCommonsUnzip extends CommonsUnzip {
 
         if (bin != null) {
             io.getOut().println("Making sure java is executable.");
-            for (File exe : MoreObjects.firstNonNull(bin.listFiles(), EMPTY_FILES)) {
+            for (File exe : bin.listFiles()) {
                 if (exe.isFile())
                     exe.setExecutable(true);
             }
@@ -46,11 +43,11 @@ public class JDKCommonsUnzip extends CommonsUnzip {
     }
 
     public static @Nullable File findBin(File outputDir) {
-        for (File f : MoreObjects.firstNonNull(outputDir.listFiles(), EMPTY_FILES)) {
+        for (File f : outputDir.listFiles()) {
             if (f.isDirectory() && f.getName().equals("bin"))
                 return f;
         }
-        for (File f : MoreObjects.firstNonNull(outputDir.listFiles(), EMPTY_FILES)) {
+        for (File f : outputDir.listFiles()) {
             if (f.isDirectory()) {
                 File sub = findBin(f);
                 if (sub != null)

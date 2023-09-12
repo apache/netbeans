@@ -424,7 +424,7 @@ public class GraphLink {
             // Don't deal with namespaces
             int colonPos = step.indexOf(':');
             if (colonPos >= 0)
-                step = step.substring(colonPos+1, step.length());
+                step = step.substring(colonPos+1);
             //System.out.println("step="+step);
             // Now go look for step
             result = result.lookForChild(step);

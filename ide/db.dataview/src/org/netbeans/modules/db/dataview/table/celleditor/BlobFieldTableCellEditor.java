@@ -272,9 +272,9 @@ public class BlobFieldTableCellEditor extends AbstractCellEditor
         }
         is.close();
         os.close();
-        if (t != null && t instanceof RuntimeException) {
+        if (t instanceof RuntimeException) {
             throw (RuntimeException) t;
-        } else if (t != null && t instanceof IOException) {
+        } else if (t instanceof IOException) {
             throw (IOException) t;
         } else if (t != null) {
             throw new RuntimeException(t);

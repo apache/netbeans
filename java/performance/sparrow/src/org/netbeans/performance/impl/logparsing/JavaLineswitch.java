@@ -84,7 +84,7 @@ public class JavaLineswitch extends ValueLogElement implements Comparable, Value
         if (identifier.startsWith("+") || identifier.startsWith("-")) {
             Boolean val = Boolean.valueOf(identifier.startsWith("+"));
             value = val;
-            identifier = identifier.substring(1, identifier.length());
+            identifier = identifier.substring(1);
         } else {
             value = new Integer(intValue);
         }

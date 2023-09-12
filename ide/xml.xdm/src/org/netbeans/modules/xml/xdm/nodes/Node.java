@@ -45,7 +45,7 @@ public interface Node extends org.w3c.dom.Node {
 	
 	/**
 	 * @return tree if node has already been added to the tree. 
-	 * @see #addedToTree()
+	 * @see #addedToTree(XDMModel)
 	 */
 	boolean isInTree();
 

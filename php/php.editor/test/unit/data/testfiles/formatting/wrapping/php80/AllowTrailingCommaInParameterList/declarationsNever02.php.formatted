@@ -40,7 +40,6 @@ class Test {
     public function testWithReturnType(int $param1, ?string $param2,): void {
         echo "Trailing Comma in Parameter List" . PHP_EOL;
     }
-
 }
 
 $closure = function ($param1, $param2, $param3, $param4,) {

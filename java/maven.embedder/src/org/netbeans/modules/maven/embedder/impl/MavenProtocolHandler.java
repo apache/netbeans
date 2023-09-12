@@ -59,7 +59,7 @@ public class MavenProtocolHandler extends URLStreamHandler {
         MavenEmbedder online = EmbedderFactory.getOnlineEmbedder();
         Artifact a = resolveM2Url(u, online);
         try {
-            online.resolve(a, Collections.<ArtifactRepository>singletonList(online.createRemoteRepository(RepositorySystem.DEFAULT_REMOTE_REPO_URL, RepositorySystem.DEFAULT_REMOTE_REPO_ID)), online.getLocalRepository());
+            online.resolveArtifact(a, Collections.<ArtifactRepository>singletonList(online.createRemoteRepository(RepositorySystem.DEFAULT_REMOTE_REPO_URL, RepositorySystem.DEFAULT_REMOTE_REPO_ID)), online.getLocalRepository());
         } catch (ArtifactNotFoundException | ArtifactResolutionException | RuntimeException x) {
             throw new IOException(u + ": " + x, x);
         }

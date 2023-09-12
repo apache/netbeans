@@ -49,7 +49,7 @@ public class JanitorPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         cbEnabled = new javax.swing.JCheckBox();
 
-        jLabel1.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         org.openide.awt.Mnemonics.setLocalizedText(cbEnabled, org.openide.util.NbBundle.getMessage(JanitorPanel.class, "JanitorPanel.cbEnabled.text")); // NOI18N
 

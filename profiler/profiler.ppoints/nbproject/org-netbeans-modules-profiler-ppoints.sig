@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.39
+#Version 1.45
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2035,7 +2035,10 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
+innr public final static PasswordLine
+innr public final static QuickPick
 innr public static Confirmation
 innr public static InputLine
 innr public static Message

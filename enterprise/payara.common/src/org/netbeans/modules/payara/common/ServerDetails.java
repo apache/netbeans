@@ -432,6 +432,16 @@ public enum ServerDetails implements PayaraPlatformVersionAPI {
     }
 
     @Override
+    public boolean isEE9Supported() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isEE10Supported() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public boolean equalsMajorMinor(PayaraPlatformVersionAPI version) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

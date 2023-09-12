@@ -23,14 +23,14 @@ import java.util.Set;
 /**
  * Provides decorations based on file state. 
  * Allows a filesystem to annotate a group of files with additional markers.
- * <p/>
+ * <p>
  * This could be useful, for example, for a filesystem supporting version
  * control. It could annotate names and icons of data nodes according to whether
  * the files were current, locked, etc. 
- * <p/>
+ * <p>
  * Textual and HTML markup annotations are supported. The implementation must
  * support at least plain annotation.
- * <p/>
+ * <p>
  * This interface replaces and supersedes the former {@code FileSystem.Status}. 
  * Other markers are possible, e.g. icon, but they are not provided in this interface.
  * For icon or other GUI artifacts, please see {@code openide.filesystems.nb} module, 
@@ -61,7 +61,7 @@ public interface StatusDecorator {
      * filesystems that proxy other filesystems (and so must implement
      * this interface to supply HTML annotations) should return null if
      * the filesystem they proxy does not provide an implementation of
-     * {@link FileSystem.HtmlStatus}.
+     * {@code FileSystem.HtmlStatus}.
      * <p>Note that since the {@code name} argument must be free of HTML,
      * it is tricky to use this decorator on a {@code Node} arising from
      * foreign code, to chain decorators, or otherwise when you wish to add
@@ -82,8 +82,8 @@ public interface StatusDecorator {
      * HtmlStatus but plain Status.
      *
      * @since FileSystems API, 4.30
-     * @see <a href="@org-openide-loaders@/org/openide/loaders/DataNode.html#getHtmlDisplayName()"><code>DataNode.getHtmlDisplayName()</code></a>
-     * @see <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHtmlDisplayName"><code>Node.getHtmlDisplayName()</code></a>
+     * @see <a href="@org-openide-loaders@/org/openide/loaders/DataNode.html#getHtmlDisplayName--"><code>DataNode.getHtmlDisplayName()</code></a>
+     * @see <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHtmlDisplayName--"><code>Node.getHtmlDisplayName()</code></a>
      **/
     public String annotateNameHtml(String name, Set<? extends FileObject> files);
 }

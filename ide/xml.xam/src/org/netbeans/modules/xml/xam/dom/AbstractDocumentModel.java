@@ -58,7 +58,7 @@ public abstract class AbstractDocumentModel<T extends DocumentComponent<T>>
      * Do not assign to this field. And do not read from it either. Its initialization is not synchronized
      * by 'this' instance from 6.x, there's no guarantee that the field's value will be visible to the
      * reading thread.
-     * <p/>
+     * <p>
      * The field will be soon deprecated
      */
     protected DocumentModelAccess access;
@@ -234,6 +234,7 @@ public abstract class AbstractDocumentModel<T extends DocumentComponent<T>>
      * @deprecated Use {@link org.netbeans.modules.xml.xam.dom.AbstractDocumentModel#prepareChangeInfo(java.util.List, java.util.List)} instead. It is necessary for fixing bug #166177.
      *
      */
+    @Deprecated
     public ChangeInfo prepareChangeInfo(List<Node> pathToRoot) {
         return prepareChangeInfo(pathToRoot, pathToRoot);
     }
@@ -251,9 +252,9 @@ public abstract class AbstractDocumentModel<T extends DocumentComponent<T>>
      * declaration is present only in old model's tree.
      *
      * Be aware that the method is designed to be called only from XDM
-     * {@link org.netbeans.modules.xml.xdm.xam.XDMListener},
+     * <a href="@org-netbeans-modules-xml-xdm@/org/netbeans/modules/xml/xdm/xam/XDMListener.html">org.netbeans.modules.xml.xdm.xam.XDMListener</a>,
      * but it also can be redifined. An example can be found in
-     * {@link org.netbeans.modules.xml.wsdl.model.WSDLModel}.
+     * <a href="@org-netbeans-modules-xml-wsdl-model@/org/netbeans/modules/xml/wsdl/model/WSDLModel.html">org.netbeans.modules.xml.wsdl.model.WSDLModel</a>.
      *
      * @since 1.11
      *
@@ -365,7 +366,7 @@ public abstract class AbstractDocumentModel<T extends DocumentComponent<T>>
     }
     
     protected void firePropertyChangedEvents(SyncUnit unit, Element oldElement) {
-        Set<String> propertyNames = new HashSet(unit.getRemovedAttributes().keySet());
+        Set<String> propertyNames = new HashSet<>(unit.getRemovedAttributes().keySet());
         propertyNames.addAll(unit.getAddedAttributes().keySet());
         for (String name : propertyNames) {
             Attr oldAttr = unit.getRemovedAttributes().get(name);

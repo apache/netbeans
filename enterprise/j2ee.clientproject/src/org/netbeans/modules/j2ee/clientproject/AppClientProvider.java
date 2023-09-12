@@ -351,7 +351,13 @@ public final class AppClientProvider extends J2eeModuleProvider
         if (p == null) {
             return AppClient.VERSION_6_0;
         }
-        if (Profile.JAKARTA_EE_8_FULL.equals(p) || Profile.JAKARTA_EE_8_WEB.equals(p)) {
+        if (Profile.JAKARTA_EE_10_FULL.equals(p) || Profile.JAKARTA_EE_10_WEB.equals(p)) {
+            return AppClient.VERSION_10_0;
+        } else if (Profile.JAKARTA_EE_9_1_FULL.equals(p) || Profile.JAKARTA_EE_9_1_WEB.equals(p)) {
+            return AppClient.VERSION_9_0;
+        } else if (Profile.JAKARTA_EE_9_FULL.equals(p) || Profile.JAKARTA_EE_9_WEB.equals(p)) {
+            return AppClient.VERSION_9_0;
+        } else if (Profile.JAKARTA_EE_8_FULL.equals(p) || Profile.JAKARTA_EE_8_FULL.equals(p)) {
             return AppClient.VERSION_8_0;
         } else if (Profile.JAVA_EE_8_FULL.equals(p) || Profile.JAVA_EE_8_WEB.equals(p)) {
             return AppClient.VERSION_8_0;

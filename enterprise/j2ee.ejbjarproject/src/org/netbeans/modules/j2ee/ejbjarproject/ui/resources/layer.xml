@@ -54,6 +54,7 @@
         <file name="ejb-jar-3.0.xml" url="ejb-jar-3.0.xml"/>
         <file name="ejb-jar-3.1.xml" url="ejb-jar-3.1.xml"/>
         <file name="ejb-jar-3.2.xml" url="ejb-jar-3.2.xml"/>
+        <file name="ejb-jar-4.0.xml" url="ejb-jar-4.0.xml"/>
         <file name="MANIFEST.MF" url="MANIFEST.MF"/>
     </folder>
 

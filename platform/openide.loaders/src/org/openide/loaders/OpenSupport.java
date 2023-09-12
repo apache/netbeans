@@ -258,15 +258,15 @@ public abstract class OpenSupport extends CloneableOpenSupport {
         */
         public CloneableOpenSupport findCloneableOpenSupport() {
             OpenCookie oc = getDataObject().getCookie(OpenCookie.class);
-            if (oc != null && oc instanceof CloneableOpenSupport) {
+            if (oc instanceof CloneableOpenSupport) {
                 return (CloneableOpenSupport) oc;
             }
             EditCookie edc = getDataObject().getCookie(EditCookie.class);
-            if (edc != null && edc instanceof CloneableOpenSupport) {
+            if (edc instanceof CloneableOpenSupport) {
                 return (CloneableOpenSupport) edc;
             }
             EditorCookie ec = getDataObject().getCookie(EditorCookie.class);
-            if (ec != null && ec instanceof CloneableOpenSupport) {
+            if (ec instanceof CloneableOpenSupport) {
                 return (CloneableOpenSupport) ec;
             }
             return null;
@@ -404,15 +404,15 @@ public abstract class OpenSupport extends CloneableOpenSupport {
             DataObject obj = entry.getDataObject ();
             OpenSupport os = null;
             OpenCookie oc = obj.getCookie(OpenCookie.class);
-            if (oc != null && oc instanceof OpenSupport) {
+            if (oc instanceof OpenSupport) {
                 os = (OpenSupport) oc;
             } else {
                 EditCookie edc = obj.getCookie(EditCookie.class);
-                if (edc != null && edc instanceof OpenSupport) {
+                if (edc instanceof OpenSupport) {
                     os = (OpenSupport) edc;
                 } else {
                     EditorCookie ec = obj.getCookie(EditorCookie.class);
-                    if (ec != null && ec instanceof OpenSupport) {
+                    if (ec instanceof OpenSupport) {
                         os = (OpenSupport) ec;
                     }
                 }

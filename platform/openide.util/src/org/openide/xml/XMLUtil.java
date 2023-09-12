@@ -91,6 +91,7 @@ public final class XMLUtil extends Object {
     // ~~~~~~~~~~~~~~~~~~~~~ SAX related ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     /** Create a simple parser.
+      * @throws SAXException if a parser can not be created
       * @return <code>createXMLReader(false, false)</code>
       */
     public static XMLReader createXMLReader() throws SAXException {
@@ -99,7 +100,8 @@ public final class XMLUtil extends Object {
 
     /** Create a simple parser, possibly validating.
      * @param validate if true, a validating parser is returned
-     * @return <code>createXMLReader(validate, false)</code>
+     * @throws SAXException if a parser can not be created
+     * @return <code>createXMLReader(validate, false)</code> 
      */
     public static XMLReader createXMLReader(boolean validate)
     throws SAXException {
@@ -149,7 +151,7 @@ public final class XMLUtil extends Object {
 
     /**
      * Creates an empty DOM document. E.g.:
-     * <p><pre>
+     * <pre>
      * Document doc = createDocument("book", null, null, null);
      * </pre><p>
      * creates new DOM of a well-formed document with root element named book.
@@ -187,8 +189,8 @@ public final class XMLUtil extends Object {
      * Obtains DOMImpementaton interface providing a number of methods for performing
      * operations that are independent of any particular DOM instance.
      *
-     * @throw DOMException <code>NOT_SUPPORTED_ERR</code> if cannot get DOMImplementation
-     * @throw FactoryConfigurationError Application developers should never need to directly catch errors of this type.
+     * @throws DOMException <code>NOT_SUPPORTED_ERR</code> if cannot get DOMImplementation
+     * @throws FactoryConfigurationError Application developers should never need to directly catch errors of this type.
      *
      * @return DOMImplementation implementation
      */
@@ -372,7 +374,7 @@ public final class XMLUtil extends Object {
      * some CDATA sections my not be written as CDATA section or may be merged with
      * other CDATA section at the same level. Also if plain text nodes are mixed with
      * CDATA sections at the same level all text is likely to end up in one big CDATA section.
-     * <br/>
+     * <br>
      * For nodes that only have one CDATA section this method should work fine.
      * </p>
      * 
@@ -588,7 +590,7 @@ public final class XMLUtil extends Object {
 
     /**
      * Escape passed string as XML element content (<code>&lt;</code>,
-     * <code>&amp;</code> and <code>><code> in <code>]]></code> sequences).
+     * <code>&amp;</code> and <code>&gt;</code> in <code>]]&gt;</code> sequences).
      *
      * @param val a string to be escaped
      *
@@ -638,7 +640,7 @@ public final class XMLUtil extends Object {
      * @param val data to be converted
      * @param start offset
      * @param len count
-     *
+     * @return converted data
      * @since 1.29
      */
     public static String toHex(byte[] val, int start, int len) {
@@ -659,7 +661,7 @@ public final class XMLUtil extends Object {
      * @param hex data to be converted
      * @param start offset
      * @param len count
-     *
+     * @return converted data
      * @throws IOException if input does not represent hex encoded value
      *
      * @since 1.29
@@ -925,8 +927,9 @@ public final class XMLUtil extends Object {
      * This compares localName (nodeName if localName is null) to name,
      * and checks the tags namespace with the provided namespace.
      * A <code>null</code> namespace will match any namespace.
-     *
-     * <ul>This is differs from the DOM version by:
+     * <p>
+     * This is differs from the DOM version by:
+     * <ul>
      * <li>not searching recursively</li>
      * <li>returns a single result</li>
      * </ul>
@@ -986,7 +989,7 @@ public final class XMLUtil extends Object {
      * 
      * @param from element to translate
      * @param namespace namespace to be translated to
-     * @return
+     * @return translated element
      * 
      * @since 8.4
      */

@@ -93,6 +93,7 @@ public class NewClustersRebootTest extends NbTestCase {
         assertTrue("file found: " + testf, testf.exists());
 
         LinkedList<String> allArgs = new LinkedList<String>(Arrays.asList(args));
+        allArgs.addFirst("-J-Dbootstrap.disableJDKCheck=true");
         allArgs.addFirst("-J-Dnetbeans.mainclass=" + NewClustersRebootCallback.class.getName());
         allArgs.addFirst(System.getProperty("java.home"));
         allArgs.addFirst("--jdkhome");

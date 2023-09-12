@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
-import com.google.gson.InstanceCreator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,6 +45,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
+import java.util.prefs.Preferences;
+import java.util.LinkedHashSet;
+import java.util.WeakHashMap;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
@@ -65,6 +69,7 @@ import org.eclipse.lsp4j.RenameOptions;
 import org.eclipse.lsp4j.SemanticTokensCapabilities;
 import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
+import org.eclipse.lsp4j.SetTraceParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
@@ -72,14 +77,22 @@ import org.eclipse.lsp4j.TextDocumentSyncOptions;
 import org.eclipse.lsp4j.WorkDoneProgressCancelParams;
 import org.eclipse.lsp4j.WorkDoneProgressParams;
 import org.eclipse.lsp4j.WorkspaceFolder;
+import org.eclipse.lsp4j.WorkspaceFoldersOptions;
+import org.eclipse.lsp4j.WorkspaceServerCapabilities;
+import org.eclipse.lsp4j.WorkspaceSymbolOptions;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.JsonRpcException;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
+import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
+import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
 import org.eclipse.lsp4j.jsonrpc.messages.RequestMessage;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseError;
+import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.lsp4j.jsonrpc.services.JsonDelegate;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
@@ -88,9 +101,11 @@ import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.eclipse.lsp4j.services.WorkspaceService;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -98,6 +113,7 @@ import org.netbeans.api.project.ProjectUtils;
 import static org.netbeans.api.project.ProjectUtils.parentOf;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.lsp.server.LspGsonSetup;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.Utils;
@@ -105,7 +121,17 @@ import org.netbeans.modules.java.lsp.server.explorer.LspTreeViewServiceImpl;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import org.netbeans.modules.java.lsp.server.explorer.api.TreeViewService;
 import org.netbeans.modules.java.lsp.server.files.OpenedDocuments;
+import org.netbeans.modules.java.lsp.server.input.InputService;
+import org.netbeans.modules.java.lsp.server.input.LspInputServiceImpl;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
+import org.netbeans.modules.parsing.spi.indexing.Context;
+import org.netbeans.modules.parsing.spi.indexing.CustomIndexer;
+import org.netbeans.modules.parsing.spi.indexing.CustomIndexerFactory;
+import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.progress.spi.InternalHandle;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -113,6 +139,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.AbstractLookup;
@@ -141,16 +168,17 @@ public final class Server {
     }
 
     public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
-        LanguageServerImpl server = new LanguageServerImpl();
+        LanguageServerImpl server = new LanguageServerImpl(session);
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
         Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup);
         NbCodeLanguageClient remote = serverLauncher.getRemoteProxy();
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
         Future<Void> runningServer = serverLauncher.startListening();
+        LSPServerTelemetryFactory.getDefault().connect(server.client, runningServer);
         return new NbLspServer(server, runningServer);
     }
-
+    
     private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
             Function<MessageConsumer, MessageConsumer> processor) {
         return new LSPLauncher.Builder<NbCodeLanguageClient>()
@@ -160,6 +188,8 @@ public final class Server {
             .setOutput(io.second())
             .wrapMessages(processor)
             .configureGson(gb -> {
+                Lookup.getDefault().lookupAll(LspGsonSetup.class).forEach(s -> s.configureBuilder(gb));
+                
                 gb.registerTypeAdapter(SemanticTokensCapabilities.class, new InstanceCreator<SemanticTokensCapabilities>() {
                     @Override public SemanticTokensCapabilities createInstance(Type type) {
                         return new SemanticTokensCapabilities(null);
@@ -170,6 +200,22 @@ public final class Server {
                         return new SemanticTokensParams(new TextDocumentIdentifier(""));
                     }
                 });
+            })
+            .setExceptionHandler((t) -> {
+                LOG.log(Level.WARNING, "Error occurred during LSP message dispatch", t);
+                if (t instanceof CompletionException) {
+                    if (t.getCause() instanceof ResponseErrorException) {
+                        return ((ResponseErrorException)t).getResponseError();
+                    }
+                    Throwable cause = t.getCause();
+                    ResponseError error = new ResponseError();
+                    error.setMessage(cause.getMessage());
+                    error.setCode(ResponseErrorCode.InternalError);
+                    error.setData(cause);
+                    
+                    return error;
+                }
+                return RemoteEndpoint.DEFAULT_EXCEPTION_HANDLER.apply(t);
             })
             .create();
     }
@@ -246,6 +292,9 @@ public final class Server {
                         Lookups.executeWith(ll, () -> {
                             try {
                                 delegate.consume(msg);
+                            } catch (RuntimeException | Error e) {
+                                LOG.log(Level.WARNING, "Error occurred during message dispatch", e);
+                                throw e;
                             } finally {
                                 // cancel while the OperationContext is still active.
                                 if (ftoCancel != null) {
@@ -308,6 +357,7 @@ public final class Server {
 
     public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState, NbLanguageServer {
 
+        private static final String NETBEANS_FORMAT = "netbeans.format";
         private static final String NETBEANS_JAVA_IMPORTS = "netbeans.java.imports";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
@@ -318,12 +368,14 @@ public final class Server {
         private final TextDocumentServiceImpl textDocumentService = new TextDocumentServiceImpl(this);
         private final WorkspaceServiceImpl workspaceService = new WorkspaceServiceImpl(this);
         private final InstanceContent   sessionServices = new InstanceContent();
+        private final AbstractLookup sessionOnly = new AbstractLookup(sessionServices);
         private final Lookup sessionLookup = new ProxyLookup(
-                new AbstractLookup(sessionServices),
+                sessionOnly,
                 Lookup.getDefault()
         );
 
         private final LspTreeViewServiceImpl treeService = new LspTreeViewServiceImpl(sessionLookup);
+        private final LspInputServiceImpl inputService = new LspInputServiceImpl();
 
                 /**
          * Projects that are or were opened. After projects open, their CompletableFutures
@@ -361,9 +413,24 @@ public final class Server {
         private final List<FileObject> acceptedWorkspaceFolders = new ArrayList<>();
 
         private final OpenedDocuments openedDocuments = new OpenedDocuments();
+        
+        private final LspSession lspSession;
+        
+        LanguageServerImpl(LspSession session) {
+            this.lspSession = session;
+        }
 
-        Lookup getSessionLookup() {
-            return sessionLookup;
+        private Lookup getSessionLookup() {
+            return lspSession.getLookup();
+        }
+        
+        /**
+         * Returns a Lookup specific for this LSP server's session. Does not include the default Lookup contents,
+         * it is suitable for composing into a ProxyLookup with other parts + the default one.
+         * @return 
+         */
+        Lookup getSessionOnlyLookup() {
+            return sessionOnly;
         }
 
         /**
@@ -379,6 +446,8 @@ public final class Server {
                 return CompletableFuture.completedFuture(new Project[0]);
             }
             CompletableFuture<Project[]> f = new CompletableFuture<>();
+            LOG.log(Level.FINER, "Asked to open project(s): {0}", Arrays.asList(projectCandidates));
+            LOG.log(Level.FINER, "Caller:", new Throwable());
             SERVER_INIT_RP.post(() -> {
                 asyncOpenSelectedProjects0(f, projectCandidates, addWorkspace, false);
             });
@@ -554,7 +623,7 @@ public final class Server {
             List<Project> toOpen = new ArrayList<>();
             Map<Project, CompletableFuture<Void>> local = new HashMap<>();
             synchronized (this) {
-                LOG.log(Level.FINER, "{0}: Asked to open project(s): {1}", new Object[]{ id, Arrays.asList(projects) });
+                LOG.log(Level.FINER, "{0}: Opening project(s): {1}", new Object[]{ id, Arrays.asList(projects) });
                 for (Project p : projects) {
                     CompletableFuture<Void> pending = beingOpened.get(p);
                     if (pending != null) {
@@ -566,7 +635,7 @@ public final class Server {
                 }
                 beingOpened.putAll(local);
             }
-
+            long t = System.currentTimeMillis();
             LOG.log(Level.FINER, id + ": Opening projects: {0}", Arrays.asList(toOpen));
 
             // before the projects are officialy 'opened', try to prime the projects
@@ -603,6 +672,14 @@ public final class Server {
 
             // Wait for all priming builds, even those already pending, to finish:
             CompletableFuture.allOf(primingBuilds.toArray(new CompletableFuture[primingBuilds.size()])).thenRun(() -> {
+                Set<Project> additionalProjects = new LinkedHashSet<>();
+                for (Project prj : projects) {
+                    Set<Project> containedProjects = ProjectUtils.getContainedProjects(prj, true);
+                    if (containedProjects != null) {
+                        additionalProjects.addAll(containedProjects);
+                    }
+                }
+                projects.addAll(additionalProjects);
                 OpenProjects.getDefault().open(projects.toArray(new Project[0]), false);
                 try {
                     LOG.log(Level.FINER, "{0}: Calling openProjects() for : {1}", new Object[]{id, Arrays.asList(projects)});
@@ -622,6 +699,7 @@ public final class Server {
                 projectSet.retainAll(openedProjects);
                 projectSet.addAll(projects);
 
+                Project[] prjsRequested = projects.toArray(new Project[projects.size()]);
                 Project[] prjs = projects.toArray(new Project[projects.size()]);
                 LOG.log(Level.FINER, "{0}: Finished opening projects: {1}", new Object[]{id, Arrays.asList(projects)});
                 synchronized (this) {
@@ -641,7 +719,8 @@ public final class Server {
                         openingFileOwners.put(p, f.thenApply(unused -> p));
                     }
                 }
-                f.complete(prjs);
+                f.complete(prjsRequested);
+                LOG.log(Level.INFO, "{0} projects opened in {1}ms", new Object[] { prjsRequested.length, (System.currentTimeMillis() - t) });
             }).exceptionally(e -> {
                 f.completeExceptionally(e);
                 return null;
@@ -668,7 +747,7 @@ public final class Server {
         @Override
         public OpenedDocuments getOpenedDocuments() {
             return openedDocuments;
-        }
+        } 
 
         private JavaSource showIndexingCompleted(Project[] opened) {
             try {
@@ -713,14 +792,17 @@ public final class Server {
                 capabilities.setTypeDefinitionProvider(true);
                 capabilities.setImplementationProvider(true);
                 capabilities.setDocumentHighlightProvider(true);
+                capabilities.setDocumentFormattingProvider(true);
+                capabilities.setDocumentRangeFormattingProvider(true);
                 capabilities.setReferencesProvider(true);
-                
+
                 CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
                 chOpts.setWorkDoneProgress(true);
                 capabilities.setCallHierarchyProvider(chOpts);
-                List<String> commands = new ArrayList<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
-                        JAVA_BUILD_WORKSPACE,
-                        JAVA_CLEAN_WORKSPACE,
+                Set<String> commands = new LinkedHashSet<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
+                        NBLS_BUILD_WORKSPACE,
+                        NBLS_CLEAN_WORKSPACE,
+                        NBLS_GET_ARCHIVE_FILE_CONTENT,
                         JAVA_RUN_PROJECT_ACTION,
                         JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
                         JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
@@ -729,19 +811,25 @@ public final class Server {
                         JAVA_GET_PROJECT_PACKAGES,
                         JAVA_GET_PROJECT_SOURCE_ROOTS,
                         JAVA_LOAD_WORKSPACE_TESTS,
+                        JAVA_RESOLVE_STACKTRACE_LOCATION,
                         JAVA_NEW_FROM_TEMPLATE,
                         JAVA_NEW_PROJECT,
                         JAVA_PROJECT_CONFIGURATION_COMPLETION,
                         JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS,
                         JAVA_SUPER_IMPLEMENTATION,
-                        JAVA_SOURCE_FOR,
                         JAVA_CLEAR_PROJECT_CACHES,
-                        NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH));
+                        NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH,
+                        JAVA_PROJECT_INFO,
+                        JAVA_ENABLE_PREVIEW,
+                        NBLS_DOCUMENT_SYMBOLS
+                ));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
                 }
-                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(commands));
-                capabilities.setWorkspaceSymbolProvider(true);
+                capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(new ArrayList<>(commands)));
+                WorkspaceSymbolOptions wsOpts = new WorkspaceSymbolOptions();
+                wsOpts.setResolveProvider(true);
+                capabilities.setWorkspaceSymbolProvider(wsOpts);
                 capabilities.setCodeLensProvider(new CodeLensOptions(false));
                 RenameOptions renOpt = new RenameOptions();
                 renOpt.setPrepareProvider(true);
@@ -749,6 +837,14 @@ public final class Server {
                 FoldingRangeProviderOptions foldingOptions = new FoldingRangeProviderOptions();
                 capabilities.setFoldingRangeProvider(foldingOptions);
                 textDocumentService.init(init.getCapabilities(), capabilities);
+
+                // register for workspace changess
+                WorkspaceServerCapabilities wcaps = new WorkspaceServerCapabilities();
+                WorkspaceFoldersOptions wfopts = new WorkspaceFoldersOptions();
+                wfopts.setSupported(true);
+                wfopts.setChangeNotifications(true);
+                wcaps.setWorkspaceFolders(wfopts);
+                capabilities.setWorkspace(wcaps);
             }
             return new InitializeResult(capabilities);
         }
@@ -758,6 +854,7 @@ public final class Server {
             NbCodeClientCapabilities capa = NbCodeClientCapabilities.get(init);
             client.setClientCaps(capa);
             hackConfigureGroovySupport(capa);
+            hackNoReuseOfOutputsForAntProjects();
             List<FileObject> projectCandidates = new ArrayList<>();
             List<WorkspaceFolder> folders = init.getWorkspaceFolders();
             if (folders != null) {
@@ -770,7 +867,6 @@ public final class Server {
                 }
             } else {
                 String root = init.getRootUri();
-
                 if (root != null) {
                     try {
                         projectCandidates.add(Utils.fromUri(root));
@@ -782,11 +878,37 @@ public final class Server {
                 }
             }
             CompletableFuture<Project[]> prjs = workspaceProjects;
-            SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects0(prjs, projectCandidates, true, true));
+            SERVER_INIT_RP.post(() -> {
+                List<FileObject> additionalCandidates = new ArrayList<>();
+                AtomicBoolean cancel = new AtomicBoolean();
+                ProgressHandle h = ProgressHandle.createHandle("Collecting workspace projects...", () -> {
+                    cancel.set(true);
+                    return true;
+                });
+                h.start();
+                try {
+                    for (FileObject candidate : projectCandidates) {
+                        if (cancel.get()) {
+                            break;
+                        }
+                        Project prj = FileOwnerQuery.getOwner(candidate);
+                        if (prj == null) {
+                            collectProjectCandidates(candidate, additionalCandidates, cancel);
+                        }
+                    }
+                } catch (IOException ex) {
+                    LOG.log(Level.FINE, null, ex);
+                } finally {
+                    h.finish();
+                }
+                if (!cancel.get()) {
+                    projectCandidates.addAll(additionalCandidates);
+                }
+                asyncOpenSelectedProjects0(prjs, projectCandidates, true, true);
+            });
 
             // chain showIndexingComplete message after initial project open.
-            prjs.
-                    thenApply(this::showIndexingCompleted);
+            prjs.thenApply(this::showIndexingCompleted);
 
             initializeOptions();
 
@@ -798,12 +920,34 @@ public final class Server {
             );
         }
 
+        private void collectProjectCandidates(FileObject fo, List<FileObject> candidates, AtomicBoolean cancel) throws IOException {
+            for (FileObject chld : fo.getChildren()) {
+                if (cancel.get()) {
+                    return;
+                }
+                if (chld.isFolder() && !chld.isSymbolicLink()) {
+                    Project prj = FileOwnerQuery.getOwner(chld);
+                    if (prj != null) {
+                        candidates.add(chld);
+                    } else {
+                        collectProjectCandidates(chld, candidates, cancel);
+                    }
+                }
+            }
+        }
+
         private void initializeOptions() {
             getWorkspaceProjects().thenAccept(projects -> {
                 if (projects != null && projects.length > 0) {
                     ConfigurationItem item = new ConfigurationItem();
                     FileObject fo = projects[0].getProjectDirectory();
                     item.setScopeUri(Utils.toUri(fo));
+                    item.setSection(NETBEANS_FORMAT);
+                    client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                        if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
+                            workspaceService.updateJavaFormatPreferences(fo, (JsonObject) c.get(0));
+                        }
+                    });
                     item.setSection(NETBEANS_JAVA_IMPORTS);
                     client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
                         if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
@@ -840,6 +984,11 @@ public final class Server {
             return treeService;
         }
 
+        @JsonDelegate
+        public InputService getInputService() {
+            return inputService;
+        }
+
         @Override
         public TextDocumentService getTextDocumentService() {
             return textDocumentService;
@@ -868,24 +1017,32 @@ public final class Server {
             });
             sessionServices.add(new WorkspaceUIContext(client));
             sessionServices.add(treeService.getNodeRegistry());
+            sessionServices.add(inputService.getRegistry());
             ((LanguageClientAware) getTextDocumentService()).connect(client);
             ((LanguageClientAware) getWorkspaceService()).connect(client);
             ((LanguageClientAware) treeService).connect(client);
         }
+
+        @Override
+        public void setTrace(SetTraceParams params) {
+            // no op: there's already a lot of noise in the log, and the console log
+            // can be controlled by a commandline parameter to the NBLS.
+        }
     }
 
-    public static final String JAVA_BUILD_WORKSPACE =  "java.build.workspace";
-    public static final String JAVA_CLEAN_WORKSPACE =  "java.clean.workspace";
+    public static final String NBLS_BUILD_WORKSPACE =  "nbls.build.workspace";
+    public static final String NBLS_CLEAN_WORKSPACE =  "nbls.clean.workspace";
     public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
     public static final String JAVA_NEW_PROJECT =  "java.new.project";
     public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";
     public static final String JAVA_GET_PROJECT_CLASSPATH = "java.get.project.classpath";
     public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";
     public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
+    public static final String JAVA_RESOLVE_STACKTRACE_LOCATION =  "java.resolve.stacktrace.location";
     public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
-    public static final String JAVA_SOURCE_FOR =  "java.source.for";
     public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
     public static final String JAVA_RUN_PROJECT_ACTION = "java.project.run.action";
+    public static final String NBLS_GET_ARCHIVE_FILE_CONTENT = "nbls.get.archive.file.content";
 
     /**
      * Enumerates project configurations.
@@ -918,6 +1075,22 @@ public final class Server {
      * new project files were generated into workspace subtree.
      */
     public static final String JAVA_CLEAR_PROJECT_CACHES =  "java.clear.project.caches";
+    
+    /**
+     * For a project directory, returns basic project information and structure.
+     * Syntax: nbls.project.info(locations : String | String[], options? : { projectStructure? : boolean; actions? : boolean; recursive? : boolean }) : LspProjectInfo
+     */
+    public static final String JAVA_PROJECT_INFO = "nbls.project.info";
+
+    /**
+     * Provides enable preview for given project
+     */
+    public static final String JAVA_ENABLE_PREVIEW = "java.project.enable.preview";
+
+    /**
+     * Provides symbols for the given document
+     */
+    public static final String NBLS_DOCUMENT_SYMBOLS =  "nbls.document.symbols";
 
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";
@@ -945,6 +1118,12 @@ public final class Server {
         public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
             logWarning(params);
             return CompletableFuture.completedFuture(params.getValue());
+        }
+
+        @Override
+        public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
         }
 
         @Override
@@ -1016,6 +1195,12 @@ public final class Server {
         }
 
         @Override
+        public CompletableFuture<String> execInHtmlPage(HtmlPageParams params) {
+            logWarning(params);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
         public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
             logWarning(params);
             return CompletableFuture.completedFuture(null);
@@ -1033,15 +1218,123 @@ public final class Server {
     private static void hackConfigureGroovySupport(NbCodeClientCapabilities caps) {
         boolean b = caps != null && caps.wantsGroovySupport();
         try {
-            Class clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
+            Class<?> clazz = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.netbeans.modules.groovy.editor.api.GroovyIndexer");
             Method m = clazz.getDeclaredMethod("setIndexingEnabled", Boolean.TYPE);
             m.setAccessible(true);
             m.invoke(null, b);
+        } catch (ClassNotFoundException ex) {
+            // java.lang.ClassNotFoundException is expected when Groovy support is not activated / enabled. Do not log, if the
+            // client wants groovy disabled, which is obviuously true in this case :)
+            if (b && !groovyClassWarningLogged) {
+                groovyClassWarningLogged = true;
+                LOG.log(Level.WARNING, "Unable to configure Groovy indexing: Groovy support is not enabled");
+            }
         } catch (ReflectiveOperationException ex) {
             if (!groovyClassWarningLogged) {
                 groovyClassWarningLogged = true;
                 LOG.log(Level.WARNING, "Unable to configure Groovy support", ex);
             }
+        }
+    }
+
+    private static boolean antClassWarningLogged;
+    private static void hackNoReuseOfOutputsForAntProjects() {
+        final String PROP_AUTO_CLOSE_TABS = "autoCloseTabs"; // NOI18N
+        try {
+            Class antSettings = Lookup.getDefault().lookup(ClassLoader.class).loadClass("org.apache.tools.ant.module.AntSettings");
+            Preferences prefs = NbPreferences.forModule(antSettings);
+            prefs.putBoolean(PROP_AUTO_CLOSE_TABS, false);
+        } catch (ReflectiveOperationException ex) {
+            if (!antClassWarningLogged) {
+                antClassWarningLogged = true;
+                LOG.log(Level.WARNING, "Unable to configure Ant support", ex);
+            }
+        }
+    }
+
+    public static class LSPServerTelemetryFactory extends CustomIndexerFactory {
+
+        private static LSPServerTelemetryFactory INSTANCE;
+
+        private final WeakHashMap<LanguageClient, Future<Void>> clients = new WeakHashMap<>();
+        private final CustomIndexer noOp = new CustomIndexer() {
+            @Override
+            protected void index(Iterable<? extends Indexable> files, Context context) {
+            }
+        };
+
+        @MimeRegistration(mimeType="", service=CustomIndexerFactory.class)
+        public static LSPServerTelemetryFactory getDefault() {
+            if (INSTANCE == null) {
+                INSTANCE = new LSPServerTelemetryFactory();
+            }
+            return INSTANCE;
+        }
+
+        private LSPServerTelemetryFactory() {
+        }
+
+        public synchronized void connect(LanguageClient client, Future<Void> future) {
+            clients.put(client, future);
+        }
+
+        @Override
+        public synchronized boolean scanStarted(Context context) {
+            Set<LanguageClient> toRemove = new HashSet<>();
+            for (Map.Entry<LanguageClient, Future<Void>> entry : clients.entrySet()) {
+                if (entry.getValue().isDone()) {
+                    toRemove.add(entry.getKey());
+                } else {
+                    entry.getKey().telemetryEvent("nbls.scanStarted");
+                }
+            }
+            for (LanguageClient lc : toRemove) {
+                clients.remove(lc);
+            }
+            return true;
+        }
+
+        @Override
+        public synchronized void scanFinished(Context context) {
+            Set<LanguageClient> toRemove = new HashSet<>();
+            for (Map.Entry<LanguageClient, Future<Void>> entry : clients.entrySet()) {
+                if (entry.getValue().isDone()) {
+                    toRemove.add(entry.getKey());
+                } else {
+                    entry.getKey().telemetryEvent("nbls.scanFinished");
+                }
+            }
+            for (LanguageClient lc : toRemove) {
+                clients.remove(lc);
+            }
+        }
+
+        @Override
+        public void filesDeleted(Iterable<? extends Indexable> deleted, Context context) {
+        }
+
+        @Override
+        public void filesDirty(Iterable<? extends Indexable> dirty, Context context) {
+        }
+
+        @Override
+        public String getIndexerName() {
+            return "LSPServerTelemetry";
+        }
+
+        @Override
+        public int getIndexVersion() {
+            return 1;
+        }
+
+        @Override
+        public CustomIndexer createIndexer() {
+            return noOp;
+        }
+
+        @Override
+        public boolean supportsEmbeddedIndexers() {
+            return false;
         }
     }
 }

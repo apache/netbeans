@@ -1,6 +1,7 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/maven/indexer/Bundle.properties
 AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Specification-Version: 2.57
+OpenIDE-Module-Specification-Version: 2.62
 OpenIDE-Module: org.netbeans.modules.maven.indexer/2
+OpenIDE-Module-Java-Dependencies: Java > 11
 

@@ -53,6 +53,7 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author Martin Fousek <marfous@netbeans.org>
  */
+// @todo: Support JakartaEE
 @SuppressWarnings("serial") // not used to be serialized
 public class MdbPropertiesPanelVisual extends javax.swing.JPanel {
 

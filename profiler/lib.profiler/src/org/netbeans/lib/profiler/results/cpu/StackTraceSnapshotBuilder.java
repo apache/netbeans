@@ -77,8 +77,14 @@ public class StackTraceSnapshotBuilder {
         new MethodInfo("sun.nio.ch.KQueueArrayWrapper","kevent0[native](int, long, int, long) : int"), // NOI18N
         new MethodInfo("sun.nio.ch.WindowsSelectorImpl$SubSelector","poll0[native]"), // NOI18N
         new MethodInfo("sun.nio.ch.WindowsSelectorImpl$SubSelector","poll0[native](long, int, int[], int[], int[], long) : int"), // NOI18N
+        new MethodInfo("sun.nio.ch.EPoll","wait[native]"), // NOI18N
         new MethodInfo("java.net.PlainSocketImpl", "socketConnect[native]"), // NOI18N
         new MethodInfo("java.net.PlainSocketImpl", "socketConnect[native](java.net.InetAddress, int, int) : void"), // NOI18N
+        new MethodInfo("java.net.SocketInputStream", "socketRead0[native]"), // NOI18N
+        new MethodInfo("jdk.internal.misc.Unsafe", "park[native]"), // NOI18N
+        new MethodInfo("java.lang.ref.Reference", "waitForReferencePendingList[native]"), // NOI18N
+        new MethodInfo("java.io.FileInputStream", "readBytes[native]"), // NOI18N
+        new MethodInfo("sun.management.ThreadImpl", "dumpThreads0[native]"), // NOI18N
     });
 
     private InstrumentationFilter filter;
@@ -264,7 +270,7 @@ public class StackTraceSnapshotBuilder {
     int stackTraceCount = 0;
     //    int builderBatchSize;
     final Set<String> ignoredThreadNames = new HashSet<String>();
-    final Map<Long,Long> threadtimes = new HashMap();
+    final Map<Long,Long> threadtimes = new HashMap<>();
     
     {
         registerNewMethodInfo(new MethodInfo("Thread","")); // NOI18N
@@ -302,7 +308,7 @@ public class StackTraceSnapshotBuilder {
         
         if (timediff < 0) return;
         synchronized (lock) {
-            Map<Long,SampledThreadInfo> tinfoMap = new HashMap();
+            Map<Long,SampledThreadInfo> tinfoMap = new HashMap<>();
             
             for (SampledThreadInfo tinfo : threads) {
                 tinfoMap.put(tinfo.getThreadId(),tinfo);
@@ -319,7 +325,7 @@ public class StackTraceSnapshotBuilder {
         
         if (timediff < 0) return;
         synchronized (lock) {
-            Map<Long,SampledThreadInfo> tinfoMap = new HashMap();
+            Map<Long,SampledThreadInfo> tinfoMap = new HashMap<>();
             
             //            if (stackTraceCount%builderBatchSize == 0) {
             //                ccgb.doBatchStart();
@@ -350,7 +356,7 @@ public class StackTraceSnapshotBuilder {
             }
             Thread.State newState = tinfo.getThreadState();
             // ignore threads, which has not yet started.
-            if (Thread.State.NEW.equals(newState)) {
+            if (Thread.State.NEW == newState) {
                 tinfoIt.remove();
                 continue;
             }

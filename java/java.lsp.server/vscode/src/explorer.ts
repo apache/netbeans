@@ -20,9 +20,41 @@ import * as vscode from 'vscode';
 import { ThemeIcon } from 'vscode';
 import {  LanguageClient } from 'vscode-languageclient/node';
 import { NbLanguageClient } from './extension';
-import { NodeChangedParams, NodeInfoNotification, NodeInfoRequest, GetResourceParams } from './protocol';
+import { NodeChangedParams, NodeInfoNotification, NodeInfoRequest, GetResourceParams, NodeChangeType, NodeChangesParams } from './protocol';
 
 const doLog : boolean = false;
+const EmptyIcon = "EMPTY_ICON";
+
+/**
+ * Listener that can watch for node structure or property changes.
+ */
+export interface TreeNodeListener {
+  /**
+   * Node has been destroyed. No more events will be delivered.
+   * @param n the node
+   */
+  nodeDestroyed?(n : Visualizer) : void;
+
+  /**
+   * Node itself (description, icon, ...) has been changed.
+   * @param n the node
+   */
+  nodeChanged?(n : Visualizer) : void;
+
+  /**
+   * Node's children changed.
+   * @param n the node
+   */
+  nodeChildrenChanged?(n : Visualizer) : void;
+
+  /**
+   * Informs that some properties of the node changed. If list of properties is undefined, then
+   * not only an unspecified property could change, but also the set of properties could be changed as well.
+   * @param n the node
+   * @param properties list of changed properties or undefined.
+   */
+  nodePropertiesChanged?(n : Visualizer, properties?: String[]) : void;
+}
 
 /**
  * Cached image information.
@@ -126,10 +158,78 @@ export class TreeViewService extends vscode.Disposable {
     return view;
   }
 
+  private listeners: Map<string, {types : NodeChangeType[], listener : TreeNodeListener}[]> = new Map();
+
+  private removeListenerRegistration(key : string, data : {types : NodeChangeType[], listener : TreeNodeListener}) : void {
+    let a = this.listeners.get(key);
+    if (!a) {
+      return;
+    }
+    let index = a?.findIndex((x) => x === data);
+    if (index !== undefined) {
+      a?.splice(index, 1);
+      if (!a?.length) {
+        this.listeners.delete(key);
+      }
+    }
+}
+
+  public addNodeChangeListener(node : Visualizer, listener : TreeNodeListener, ...types : NodeChangeType[]) : vscode.Disposable {
+    const listenerKey = node.rootId  + ':' + (node.id || '');
+    let a = this.listeners.get(listenerKey);
+    if (a === undefined) {
+      a = [];
+      this.listeners.set(listenerKey, a);
+    }
+    const data = { types, listener };
+    a.push(data);
+    
+    let success = false;
+    const r = this.client.sendRequest(NodeInfoRequest.changes, { rootId : node.rootId, nodeId: Number(node.id), types });
+    r.catch(() => {
+      // remove the listener registration
+      this.removeListenerRegistration(listenerKey, data);
+    });
+
+    return new vscode.Disposable(() => {
+      this.removeListenerRegistration(listenerKey, data);
+    });
+  }
+
   private nodeChanged(params : NodeChangedParams) : void {
     let p : VisualizerProvider | undefined = this.providers.get(params.rootId);
-    if (p) {
-      p.refresh(params);
+    if (!p) {
+      return;
+    }
+    p.refresh(params);
+    const key = params.rootId + ':' + (params.nodeId || '');
+    const list = this.listeners.get(key);
+    if (!list || !params.nodeId) {
+      return;
+    }
+    const v = p.item(params.nodeId);
+    if (!v) {
+      return;
+    }
+    for (let { types, listener } of list) {
+      if (!params.types) {
+        // unspecified change
+        listener.nodeChanged?.(v);
+        continue;
+      }
+      const filtered = params.types.filter((t) => !types || types.indexOf(t) != -1);
+      if (filtered.includes(NodeChangeType.CHILDEN)) {
+        listener.nodeChildrenChanged?.(v);
+      }
+      if (filtered.includes(NodeChangeType.SELF)) {
+        listener.nodeChanged?.(v);
+      }
+      if (filtered.includes(NodeChangeType.DESTROY)) {
+        listener.nodeDestroyed?.(v);
+      }
+      if (filtered.includes(NodeChangeType.PROPERTY)) {
+        listener.nodePropertiesChanged?.(v, params.properties);
+      }
     }
   }
 
@@ -176,6 +276,9 @@ export class TreeViewService extends vscode.Disposable {
       const r = this.findProductIcon(nodeData.iconDescriptor.baseUri, nodeData.name, nodeData.contextValue);
       // override the icon with local.
       if (r) {
+        if (r === EmptyIcon) {
+          ci = new CachedImage(nodeData.iconDescriptor.baseUri, undefined, undefined, [ nodeData.name, nodeData.contextValue ]);
+        }
         ci = new CachedImage(nodeData.iconDescriptor.baseUri, undefined, r, [ nodeData.name, nodeData.contextValue ]);
         this.images.set(nodeData.iconIndex, ci);
       }
@@ -198,11 +301,11 @@ export class TreeViewService extends vscode.Disposable {
   public findProductIcon(res : vscode.Uri, ...values: string[]) : string | ThemeIcon | undefined {
     const s : string = res.toString();
     outer: for (let e of this.entries) {
-      if (e.uriRegexp.exec(s)) {
+      if (e.uriRegexp.test(s)) {
         if (e.valueRegexps) {
           let s : string = " " + values.join(" ") + " ";
           for (let vr of e.valueRegexps) {
-            if (!vr.exec(s)) {
+            if (!vr.test(s)) {
               continue outer;
             }
           }
@@ -211,10 +314,19 @@ export class TreeViewService extends vscode.Disposable {
           return ThemeIcon.File;
         } else if (e.codeicon == '*folder') {
           return ThemeIcon.Folder;
+        } else if (e.codeicon == '') {
+          return EmptyIcon;
         } else if (e.iconPath) {
           return e.iconPath;
         }
-        return new ThemeIcon(e.codeicon);
+        let resultIcon;
+        if (e.color) {
+          resultIcon = new ThemeIcon(e.codeicon, new vscode.ThemeColor(e.color));
+        } else {
+          resultIcon = new ThemeIcon(e.codeicon);
+        }
+        
+        return resultIcon;
       }
     }
     return undefined;
@@ -237,7 +349,7 @@ export class TreeViewService extends vscode.Disposable {
                   vals.push(re);
                 }
               }
-              newEntries.push(new ImageEntry(re, m?.codeicon, m?.iconPath, vals));
+              newEntries.push(new ImageEntry(re, m?.codeicon, m?.iconPath, vals, m?.color));
             } catch (e) {
               console.log("Invalid icon mapping in extension %s: %s -> %s", ext.id, reString, m?.codicon);
             }
@@ -266,11 +378,13 @@ export class TreeViewService extends vscode.Disposable {
 
 export interface TreeItemDecorator<T> extends vscode.Disposable {
   decorateTreeItem(element: T, item : vscode.TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem>;
+  decorateChildren(element: T, children: Visualizer[]): Visualizer[] | Thenable<Visualizer[]>;
 }
 
 export interface CustomizableTreeDataProvider<T> extends vscode.TreeDataProvider<T> {
   fireItemChange(item? : T) : void;
   addItemDecorator(deco : TreeItemDecorator<T>) : vscode.Disposable;
+  getRoot() : T;
 }
 
 class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDataProvider<Visualizer> {
@@ -287,7 +401,7 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     uri : vscode.Uri | string | ThemeIcon | undefined
   ) {
     super(() => this.disconnect());
-    this.root = new Visualizer(rootData.id, rootData, uri);
+    this.root = new Visualizer(rootData.id, rootData.id, rootData, uri);
     this.treeData.set(rootData.id, this.root);
   }
 
@@ -299,6 +413,10 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     for (let deco of this.decorators) {
       deco.dispose();
     }
+  }
+
+  item(id : number) : Visualizer | undefined {
+    return this.treeData.get(id);
   }
 
   fireItemChange(item : Visualizer | undefined) : void {
@@ -402,9 +520,10 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     return this.wrap(async (arr) => {
       const pn : number = Number(element.parent?.id) || -1;
       let fetched = await this.queryVisualizer(element, arr, () => this.fetchItem(pn, n));
+      let origin : vscode.TreeItem;
       if (fetched) {
         element.update(fetched);
-        return self.getTreeItem2(fetched);
+        origin = await self.getTreeItem2(fetched);
       } else {
         // fire a change, this was unexpected
         const pn : number = Number(element.parent?.id) || -1;
@@ -412,8 +531,27 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
         if (pv) {
           this.fireItemChange(pv);
         }
-        return element;
+        origin = element;
       }
+      let ti : vscode.TreeItem = new vscode.TreeItem(origin.label || "", origin.collapsibleState);
+
+      // See #4113 -- vscode broke icons display, if resourceUri is defined in TreeItem. We're OK with files,
+      // but folders can have a semantic icon, so let hide resourceUri from vscode for folders.
+      ti.command = origin.command;
+      ti.contextValue = origin.contextValue;
+      ti.description = origin.description;
+      ti.iconPath = origin.iconPath;
+      ti.id = origin.id;
+      ti.label = origin.label;
+      ti.tooltip = origin.tooltip;
+      ti.accessibilityInformation = origin.accessibilityInformation;
+
+      if (origin.resourceUri) {
+        if (!origin.resourceUri.toString().endsWith("/")) {
+          ti.resourceUri = origin.resourceUri;
+        }
+      }
+      return ti;
     });
   }
 
@@ -531,7 +669,7 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
       return undefined;
     }
     let iconUri = await this.ts.fetchImageUri(d);
-    let v = new Visualizer(n, d, iconUri);
+    let v = new Visualizer(this.root.data.id, n, d, iconUri);
     if (d.command) {
       // PENDING: provide an API to register command (+ parameters) -> command translators.
       if (d.command === 'vscode.open') {
@@ -550,6 +688,8 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
       this.log.appendLine(`Doing getChildren on ${e?.idstring()}`);
     }
 
+    let decos : TreeItemDecorator<Visualizer>[] = [...this.decorators];
+    const parent = e || this.root;
     async function collectResults(list : Visualizer[], arr: any, element: Visualizer): Promise<Visualizer[]> {
       let res : Visualizer[] = [];
       let now : Visualizer[] | undefined;
@@ -561,6 +701,25 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
           res.push(v);
         }
       }
+
+      if (decos.length > 0) {
+        async function f(orig: Visualizer[]) : Promise<Visualizer[]> {
+          const deco = decos.shift();
+          if (!deco) {
+            return orig;
+          }
+          // decorateChildren(element: T, item : Visualizer, children: Visualizer[]): Visualizer[] | Thenable<Visualizer[]>;
+          const decorated = deco.decorateChildren(parent, orig);
+          if (Array.isArray(decorated)) {
+              return f(decorated);
+          } else {
+              return (decorated as Thenable<Visualizer[]>).then(f);
+          }
+        }
+
+        res = await f(res);
+      }
+
       now = element.updateChildren(res, self);
       for (let i = 0; i < now.length; i++) {
         const v = now[i];
@@ -572,15 +731,9 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
     }
 
     return self.wrap((list) => self.queryVisualizer(e, list, () => {
-        if (e) {
-          return this.client.sendRequest(NodeInfoRequest.children, { nodeId : e.data.id}).then(async (arr) => {
-            return collectResults(list, arr, e);
-          });
-        } else {
-          return this.client.sendRequest(NodeInfoRequest.children, { nodeId: this.root.data.id}).then(async (arr) => {
-            return collectResults(list, arr, this.root);
-          });
-        }
+        return this.client.sendRequest(NodeInfoRequest.children, { nodeId : parent.data.id}).then(async (arr) => {
+          return collectResults(list, arr, parent);
+        });
       }
     ));
   }
@@ -604,12 +757,13 @@ class VisualizerProvider extends vscode.Disposable implements CustomizableTreeDa
 let visualizerSerial = 1;
 
 export class Visualizer extends vscode.TreeItem {
-
+  
   visId : number;
   pendingQueries : number = 0;
   pendingChange : boolean = false;
 
   constructor(
+    public rootId : number,
     explicitId : number,
     public data : NodeInfoRequest.Data,
     public image : vscode.Uri | string | ThemeIcon | undefined
@@ -629,7 +783,7 @@ export class Visualizer extends vscode.TreeItem {
   }
 
   copy() : Visualizer {
-    let v : Visualizer = new Visualizer(Number(this.id), this.data, this.image);
+    let v : Visualizer = new Visualizer(this.rootId, Number(this.id), this.data, this.image);
     v.id = this.id;
     v.label = this.label;
     v.description = this.description;
@@ -697,7 +851,8 @@ class ImageEntry {
     readonly uriRegexp : RegExp,
     readonly codeicon : string,
     readonly iconPath? : string,
-    readonly valueRegexps? : RegExp[]
+    readonly valueRegexps? : RegExp[],
+    readonly color?: string
     ) {}
 }
 class ImageTranslator {

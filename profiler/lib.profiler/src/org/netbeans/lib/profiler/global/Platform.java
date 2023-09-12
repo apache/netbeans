@@ -39,6 +39,16 @@ public class Platform implements CommonConstants {
     public static final int OS_WINNT = 1;
 
     /**
+     * Operating system is Windows 95.
+     */
+    public static final int OS_WIN95 = 2;
+
+    /**
+     * Operating system is Windows 98.
+     */
+    public static final int OS_WIN98 = 4;
+
+    /**
      * Operating system is Solaris.
      */
     public static final int OS_SOLARIS = 8;
@@ -106,7 +116,7 @@ public class Platform implements CommonConstants {
     /**
      * A mask for Windows platforms.
      */
-    public static final int OS_WINDOWS_MASK = OS_WINNT | OS_WIN2000 | OS_WIN_OTHER;
+    public static final int OS_WINDOWS_MASK = OS_WINNT | OS_WIN95 | OS_WIN98 | OS_WIN2000 | OS_WIN_OTHER;
 
     /**
      * A mask for Unix platforms.
@@ -391,6 +401,12 @@ public class Platform implements CommonConstants {
         if ("Windows NT".equals(osName)) { // NOI18N
 
             return OS_WINNT;
+        } else if ("Windows 95".equals(osName)) { // NOI18N
+
+            return OS_WIN95;
+        } else if ("Windows 98".equals(osName)) { // NOI18N
+
+            return OS_WIN98;
         } else if ("Windows 2000".equals(osName)) { // NOI18N
 
             return OS_WIN2000;

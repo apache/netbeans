@@ -922,17 +922,10 @@ public class WebAppProxy implements WebApp {
             if (dataObject instanceof DDProviderDataObject) {
                 ((DDProviderDataObject) dataObject).writeModel(webApp);
             } else {
-                FileLock lock = fo.lock();
-                try {
-                    OutputStream os = fo.getOutputStream(lock);
-                    try {
-                        writing = true;
-                        write(os);
-                    } finally {
-                        os.close();
-                    }
-                } finally {
-                    lock.releaseLock();
+                try (FileLock lock = fo.lock();
+                        OutputStream os = fo.getOutputStream(lock)) {
+                    writing = true;
+                    write(os);
                 }
             }
         }
@@ -961,6 +954,12 @@ public class WebAppProxy implements WebApp {
             } else if (WebApp.VERSION_4_0.equals(version)) {
                 ((org.netbeans.modules.j2ee.dd.impl.web.model_4_0.WebApp)clonedWebApp)._setSchemaLocation
                     ("http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd");
+            } else if (WebApp.VERSION_5_0.equals(version)) {
+                ((org.netbeans.modules.j2ee.dd.impl.web.model_5_0.WebApp)clonedWebApp)._setSchemaLocation
+                    ("https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd");
+            } else if (WebApp.VERSION_6_0.equals(version)) {
+                ((org.netbeans.modules.j2ee.dd.impl.web.model_6_0.WebApp)clonedWebApp)._setSchemaLocation
+                    ("https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd");
             }
         }
         proxy.setError(error);

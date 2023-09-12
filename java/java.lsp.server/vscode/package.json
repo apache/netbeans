@@ -1,11 +1,11 @@
 {
 	"name": "apache-netbeans-java",
-	"displayName": "Language Server",
+	"displayName": "Language Server for Java by Apache NetBeans",
 	"description": "Apache NetBeans Language Server Extension for Visual Studio Code",
 	"author": "Apache NetBeans",
 	"license": "Apache 2.0",
 	"version": "0.1.0",
-	"preview": true,
+	"preview": false,
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/apache/netbeans"
@@ -22,11 +22,10 @@
 		"multi-root ready"
 	],
 	"engines": {
-		"vscode": "^1.60.0"
+		"vscode": "^1.76.0"
 	},
 	"activationEvents": [
 		"onLanguage:java",
-		"onCommand:java.workspace.newproject",
 		"workspaceContains:**/*.java",
 		"workspaceContains:pom.xml",
 		"workspaceContains:build.gradle",
@@ -65,7 +64,7 @@
 				{
 					"id": "foundProjects",
 					"name": "Projects",
-					"when": "nbJavaLSReady"
+					"when": "nbJavaLSReady && config.netbeans.javaSupport.enabled"
 				},
 				{
 					"id": "database.connections",
@@ -75,7 +74,7 @@
 				{
 					"id": "cloud.resources",
 					"name": "Cloud",
-					"when": "nbJavaLSReady"
+					"when": "nbJavaLSReady && config.netbeans.javaSupport.enabled"
 				},
 				{
 					"id": "run-config",
@@ -85,6 +84,13 @@
 				}
 			]
 		},
+		"viewsWelcome": [
+			{
+				"view": "database.connections",
+				"contents": "No database connections found.\n[Add Database Connection](command:db.add.connection)\n[Add Oracle Autonomous DB](command:nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction)",
+				"when": "nb.database.view.active"
+			}
+		],
 		"configuration": {
 			"title": "Java",
 			"properties": {
@@ -94,7 +100,8 @@
 						"null"
 					],
 					"default": null,
-					"description": "Specifies JDK for the Apache NetBeans Language Server"
+					"description": "Specifies JDK for the Apache NetBeans Language Server",
+					"scope": "machine"
 				},
 				"netbeans.verbose": {
 					"type": "boolean",
@@ -112,7 +119,7 @@
 						"Share data between all workspaces (more effective)",
 						"Each workspace has its own data (more isolated)"
 					],
-					"default": "global"
+					"default": "local"
 				},
 				"netbeans.conflict.check": {
 					"type": "boolean",
@@ -121,13 +128,18 @@
 				},
 				"netbeans.revealActiveInProjects": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Reveals active text editor in Projects view"
 				},
 				"java.test.editor.enableShortcuts": {
 					"type": "boolean",
 					"default": false,
 					"description": "Enable Run/Debug test in editor"
+				},
+				"netbeans.javaSupport.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enables Java support in Language Server"
 				},
 				"netbeans.groovySupport.enabled": {
 					"type": "boolean",
@@ -138,6 +150,28 @@
 					"type": "integer",
 					"default": 100,
 					"description": "Timeout (in milliseconds) for loading Javadoc in code completion (-1 for unlimited)"
+				},
+				"netbeans.format.codeFormatter": {
+					"type": "string",
+					"enum": [
+						"NetBeans",
+						"Eclipse",
+						"Google",
+						"Spring"
+					],
+					"enumDescriptions": [
+						"Internal NetBeans Code Formatter",
+						"Eclipse Code Formatter",
+						"Goolge Code Formatter",
+						"Spring Code Formatter"
+					],
+					"description": "Code formatter to use",
+					"default": "NetBeans"
+				},
+				"netbeans.format.settingsPath": {
+					"type": "string",
+					"description": "Path to the file containing exported formatter settings",
+					"default": null
 				},
 				"netbeans.java.onSave.organizeImports": {
 					"type": "boolean",
@@ -167,22 +201,22 @@
 					"default": 999,
 					"minimum": 1
 				},
-				"java8+.runConfig.arguments": {
+				"java+.runConfig.arguments": {
 					"type": "string",
 					"default": "",
 					"description": "Arguments"
 				},
-				"java8+.runConfig.vmOptions": {
+				"java+.runConfig.vmOptions": {
 					"type": "string",
 					"default": "",
 					"description": "VM options"
 				},
-				"java8+.runConfig.env": {
+				"java+.runConfig.env": {
 					"type": "string",
 					"default": "",
 					"description": "Environment variables"
 				},
-				"java8+.runConfig.cwd": {
+				"java+.runConfig.cwd": {
 					"type": "string",
 					"default": "",
 					"description": "Working directory"
@@ -199,9 +233,10 @@
 		],
 		"debuggers": [
 			{
-				"type": "java8+",
-				"label": "Java 8+",
+				"type": "java+",
+				"label": "Java+",
 				"runtime": "node",
+				"when": "config.netbeans.javaSupport.enabled",
 				"languages": [
 					"java",
 					"groovy"
@@ -291,6 +326,11 @@
 								"default": "${command:java.attachDebugger.pickProcess}",
 								"description": "Process Id of the debuggee"
 							},
+							"listen": {
+								"type": "string",
+								"default": "false",
+								"description": "Listen for the debuggee to attach"
+							},
 							"timeout": {
 								"type": "string",
 								"default": "30000",
@@ -301,19 +341,19 @@
 				},
 				"initialConfigurations": [
 					{
-						"type": "java8+",
+						"type": "java+",
 						"request": "launch",
-						"name": "Launch Java 8+ App"
+						"name": "Launch Java App"
 					}
 				],
 				"configurationSnippets": [
 					{
-						"label": "Java 8+: Launch Java 8+ Application",
-						"description": "Launch a Java 8+ Application in debug mode",
+						"label": "Java+: Launch Java Application",
+						"description": "Launch a Java Application in debug mode",
 						"body": {
-							"type": "java8+",
+							"type": "java+",
 							"request": "launch",
-							"name": "Launch Java 8+ App"
+							"name": "Launch Java App"
 						}
 					}
 				]
@@ -406,12 +446,16 @@
 		],
 		"commands": [
 			{
-				"command": "java.workspace.compile",
+				"command": "nbls.node.properties.edit",
+				"title": "Properties"
+			},
+			{
+				"command": "nbls.workspace.compile",
 				"title": "Compile Workspace",
 				"category": "Java"
 			},
 			{
-				"command": "java.clean.workspace",
+				"command": "nbls.workspace.clean",
 				"title": "Clean Workspace",
 				"category": "Java"
 			},
@@ -433,6 +477,11 @@
 				"category": "Java"
 			},
 			{
+				"command": "java.open.type",
+				"title": "Open Type...",
+				"category": "Java"
+			},
+			{
 				"command": "graalvm.pause.script",
 				"title": "Pause in Script",
 				"category": "GraalVM"
@@ -442,9 +491,14 @@
 				"title": "Delete"
 			},
 			{
-				"command": "db.add.connection",
+				"command": "db.add.all.connection",
 				"title": "Add Database Connection",
-				"category": "Database"
+				"category": "Database",
+				"icon": "$(add)"
+			},
+			{
+				"command": "db.add.connection",
+				"title": "Add JDBC Database Connection"
 			},
 			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Connect",
@@ -452,11 +506,31 @@
 			},
 			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-				"title": "Disconnect"
+				"title": "Disconnect from Database"
 			},
 			{
 				"command": "nbls:Database:netbeans.db.explorer.action.Refresh",
 				"title": "Refresh"
+			},
+			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateBuildRun",
+				"title": "Run",
+				"icon": "$(run)"
+			},
+			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",
+				"title": "Add Repository",
+				"icon": "$(github-alt)"
+			},
+			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
+				"title": "Add To Project",
+				"icon": "$(star-empty)"
+			},
+			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CloudRefresh",
+				"title": "Refresh",
+				"icon": "$(refresh)"
 			},
 			{
 				"command": "nbls:Edit:org.openide.actions.DeleteAction",
@@ -502,7 +576,7 @@
 			},
 			{
 				"command": "java.local.db.set.preferred.connection",
-				"title": "Make Default Connection"
+				"title": "Set as Default Connection"
 			},
 			{
 				"command": "java.workspace.configureRunSettings",
@@ -515,8 +589,16 @@
 				"category": "Test"
 			},
 			{
+				"command": "nbls.addEventListener",
+				"title": "Add event listener"
+			},
+			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
 				"title": "Add DB Connection"
+			},
+			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction",
+				"title": "Add Oracle Autonomous Database"
 			},
 			{
 				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
@@ -527,11 +609,6 @@
 				"title": "Open Service Console"
 			},
 			{
-				"command": "java.db.set.env",
-				"title": "Set Database Environment Variables",
-				"category": "Database"
-			},
-			{
 				"command": "java.select.editor.projects",
 				"title": "Reveal active editor in Projects",
 				"category": "Project"
@@ -539,28 +616,28 @@
 		],
 		"keybindings": [
 			{
-				"command": "java.workspace.compile",
+				"command": "nbls.workspace.compile",
 				"key": "shift+alt+b",
-				"when": "nbJavaLSReady"
+				"when": "nbJavaLSReady && config.netbeans.javaSupport.enabled"
 			},
 			{
 				"command": "java.goto.super.implementation",
 				"key": "alt+U",
 				"mac": "alt+cmd+U",
-				"when": "editorHasCodeActionsProvider && editorTextFocus"
+				"when": "editorHasCodeActionsProvider && editorTextFocus && config.netbeans.javaSupport.enabled"
 			},
 			{
 				"command": "editor.action.sourceAction",
 				"key": "alt+insert",
 				"mac": "ctrl+alt+enter",
-				"when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
+				"when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly && config.netbeans.javaSupport.enabled"
 			}
 		],
 		"menus": {
 			"editor/context": [
 				{
 					"command": "java.goto.super.implementation",
-					"when": "nbJavaLSReady && editorLangId == java && editorTextFocus",
+					"when": "nbJavaLSReady && editorLangId == java && editorTextFocus && config.netbeans.javaSupport.enabled",
 					"group": "navigation@100"
 				}
 			],
@@ -577,15 +654,16 @@
 					"when": "nbJavaLSReady"
 				},
 				{
-					"command": "java.workspace.newproject"
+					"command": "java.workspace.newproject",
+					"when": "config.netbeans.javaSupport.enabled"
 				},
 				{
-					"command": "java.workspace.compile",
-					"when": "nbJavaLSReady"
+					"command": "nbls.workspace.compile",
+					"when": "nbJavaLSReady && config.netbeans.javaSupport.enabled"
 				},
 				{
 					"command": "java.goto.super.implementation",
-					"when": "nbJavaLSReady && editorLangId == java"
+					"when": "nbJavaLSReady && editorLangId == java && config.netbeans.javaSupport.enabled"
 				},
 				{
 					"command": "graalvm.pause.script",
@@ -593,6 +671,10 @@
 				},
 				{
 					"command": "foundProjects.deleteEntry",
+					"when": "false"
+				},
+				{
+					"command": "nbls.node.properties.edit",
 					"when": "false"
 				},
 				{
@@ -605,6 +687,22 @@
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Refresh",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateBuildRun",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CloudRefresh",
 					"when": "false"
 				},
 				{
@@ -630,55 +728,77 @@
 				{
 					"command": "java.workspace.configureRunSettings",
 					"when": "false"
+				},
+				{
+					"command": "db.add.all.connection",
+					"when": "false"
+				},
+				{
+					"command": "nbls.addEventListener",
+					"when": "false"
 				}
 			],
 			"view/title": [
 				{
 					"command": "java.workspace.newproject",
-					"when": "nbJavaLSReady && view == foundProjects",
+					"when": "nbJavaLSReady && view == foundProjects && config.netbeans.javaSupport.enabled",
 					"group": "navigation"
 				},
 				{
-					"command": "java.workspace.compile",
-					"when": "nbJavaLSReady && view == foundProjects"
+					"command": "nbls.workspace.compile",
+					"when": "nbJavaLSReady && view == foundProjects && config.netbeans.javaSupport.enabled"
 				},
 				{
-					"command": "java.clean.workspace",
-					"when": "nbJavaLSReady && view == foundProjects"
+					"command": "nbls.workspace.clean",
+					"when": "nbJavaLSReady && view == foundProjects && config.netbeans.javaSupport.enabled"
 				},
 				{
 					"command": "testing.runAll",
-					"when": "nbJavaLSReady && view == foundProjects"
+					"when": "nbJavaLSReady && view == foundProjects && config.netbeans.javaSupport.enabled"
 				},
 				{
 					"command": "workbench.action.debug.run",
-					"when": "nbJavaLSReady && view == foundProjects"
+					"when": "nbJavaLSReady && view == foundProjects && config.netbeans.javaSupport.enabled"
 				},
 				{
 					"command": "workbench.action.debug.start",
-					"when": "nbJavaLSReady && view == foundProjects"
+					"when": "nbJavaLSReady && view == foundProjects && config.netbeans.javaSupport.enabled"
+				},
+				{
+					"command": "db.add.all.connection",
+					"when": "view == database.connections",
+					"group": "navigation@3"
 				}
 			],
 			"view/item/context": [
 				{
 					"command": "foundProjects.deleteEntry",
-					"when": "view == foundProjects && viewItem == node"
+					"when": "view == foundProjects && viewItem == node && config.netbeans.javaSupport.enabled"
+				},
+				{
+					"command": "nbls.node.properties.edit",
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
+					"group": "db@9999"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/ && viewItem =~ /is:disconnected/",
+					"group": "db@10"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Disconnect",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/ && viewItem =~ /is:connected/",
+					"group": "db@20"
 				},
 				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Refresh",
-					"when": "viewItem =~ /class:ddl.DBConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
+					"group": "db@30"
 				},
 				{
 					"command": "nbls:Edit:org.openide.actions.DeleteAction",
-					"when": "viewItem =~ /cap:delete/"
+					"when": "viewItem =~ /cap:delete/",
+					"group": "db@50"
 				},
 				{
 					"command": "java.workspace.new",
@@ -687,41 +807,65 @@
 				},
 				{
 					"command": "java.project.run",
-					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/",
+					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/ && config.netbeans.javaSupport.enabled",
 					"group": "inline@10"
 				},
 				{
 					"command": "java.project.debug",
-					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/",
+					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/ && config.netbeans.javaSupport.enabled",
 					"group": "inline@11"
 				},
 				{
 					"command": "java.project.test",
-					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/"
+					"when": "view == foundProjects && viewItem =~ /is:project/ && viewItem =~ /^(?!.*is:projectRoot)/ && config.netbeans.javaSupport.enabled",
+					"group": "F@30"
 				},
 				{
 					"command": "java.project.compile",
-					"when": "view == foundProjects && viewItem =~ /is:project/"
+					"when": "view == foundProjects && viewItem =~ /is:project/ && config.netbeans.javaSupport.enabled",
+					"group": "F@10"
 				},
 				{
 					"command": "java.project.clean",
-					"when": "view == foundProjects && viewItem =~ /is:project/"
+					"when": "view == foundProjects && viewItem =~ /is:project/ && config.netbeans.javaSupport.enabled",
+					"group": "F@20"
 				},
 				{
 					"command": "java.local.db.set.preferred.connection",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
+					"group": "db@40"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
-					"when": "viewItem =~ /class:oracle.items.DatabaseItem/"
+					"when": "viewItem =~ /class:oracle.database.DatabaseItem/"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
-					"when": "viewItem =~ /class:oracle.items.DatabaseItem/"
+					"when": "viewItem =~ /class:oracle.database.DatabaseItem/"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
-					"when": "viewItem =~ /class:oracle.items.CompartmentItem/"
+					"when": "viewItem =~ /class:oracle.compartment.CompartmentItem/"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",
+					"when": "viewItem =~ /class:oracle.devops.DevopsProjectItem/",
+					"group": "inline@12"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateBuildRun",
+					"when": "viewItem =~ /class:oracle.devops.BuildPipelineItem/",
+					"group": "inline@12"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddToProject",
+					"when": "viewItem =~ /class:oracle/",
+					"group": "inline@14"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CloudRefresh",
+					"when": "viewItem =~ /class:oracle/",
+					"group": "inline@13"
 				},
 				{
 					"command": "java.workspace.configureRunSettings",
@@ -792,6 +936,113 @@
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/java/api/common/project/ui/resources/platform",
 				"codeicon": "vm"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/tenancy.svg",
+				"codeicon": "cloud"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/compartment.svg",
+				"codeicon": "archive"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/database.svg",
+				"codeicon": "database"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/devops_project.svg",
+				"codeicon": "project"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/knowledge_base.svg",
+				"codeicon": "book"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/build_pipeline.svg",
+				"codeicon": "list-tree"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/build_pipeline_folder.svg",
+				"codeicon": "list-tree"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/build_run.svg",
+				"codeicon": "primitive-dot"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/build_run_folder.svg",
+				"codeicon": "history"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/repository.svg",
+				"codeicon": "repo"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/repository_folder.svg",
+				"codeicon": "repo"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/deploy_artifact.svg",
+				"codeicon": "file-binary"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/common/explorer/resources/defaultFolder.svg",
+				"codeicon": "file-submodule"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/deploy_artifact_folder.svg",
+				"codeicon": "file-binary"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/deploy_artifact.svg",
+				"codeicon": "file-binary"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/green_dot.svg",
+				"codeicon": "pass",
+				"color": "charts.green"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/red_dot.svg",
+				"codeicon": "error",
+				"color": "charts.red"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/connection.gif",
+				"codeicon": "database"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/connectionDisconnected.gif",
+				"codeicon": "debug-disconnect"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/column.gif",
+				"codeicon": "layout-centered"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/table.gif",
+				"codeicon": "table"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/schema.png",
+				"codeicon": "layers-dot"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/folder.svg",
+				"codeicon": "folder"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/db/resources/view.gif",
+				"codeicon": "open-preview"
+			},
+			{
+				"uriExpression": "nbres:/org/openide/nodes/wait.gif",
+				"codeicon": "watch"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/yellow_dot.svg",
+				"codeicon": "circle-large-outline",
+				"color": "charts.yellow"
 			}
 		],
 		"jsonValidation": [
@@ -803,8 +1054,8 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
+		"compile": "tsc -p ./; node ./esbuild.js",
+		"watch": "tsc -watch -p ./ | node ./esbuild.js --watch",
 		"test": "node ./out/test/runTest.js",
 		"nbcode": "node ./out/nbcode.js",
 		"nbjavac": "node ./out/nbcode.js -J-Dnetbeans.close=true --modules --install .*nbjavac.*",
@@ -815,16 +1066,26 @@
 		"@types/mocha": "^9.0.0",
 		"@types/node": "^13.11.0",
 		"@types/ps-node": "^0.1.0",
-		"@types/vscode": "^1.60.0",
+		"@types/vscode": "^1.76.0",
+		"@types/vscode-webview": "^1.57.1",
+		"@vscode/codicons": "0.0.29",
+		"esbuild": "^0.16.17",
 		"glob": "^7.1.6",
 		"mocha": "^9.1.2",
 		"ps-node": "^0.1.6",
-		"typescript": "^3.8.3",
+		"typescript": "^4.6.4",
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
+		"@vscode/debugadapter": "1.55.1",
+		"@vscode/webview-ui-toolkit": "^1.2.2",
 		"jsonc-parser": "3.0.0",
-		"vscode-debugadapter": "1.42.1",
-		"vscode-languageclient": "7.0.0"
+		"vscode-languageclient": "8.0.1"
+	},
+	"__metadata": {
+		"id": "66c7d7dc-934c-499b-94af-5375e8234fdd",
+		"publisherDisplayName": "Apache Software Foundation",
+		"publisherId": "4dbc1d1a-d64b-46f8-8756-1c234855f645",
+		"isPreReleaseVersion": false
 	}
 }

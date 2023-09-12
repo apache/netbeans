@@ -90,7 +90,7 @@ public final class PlatformUiSupport {
      * The model listens on the {@link JavaPlatformManager} and update its
      * state according to the changes.
      * @param activePlatform the active project's platform, can be <code>null</code>.
-     * @param filter project specific filter to filter-out platforms that are not usable in given context
+     * @param filters project specific filter to filter-out platforms that are not usable in given context
      * @return {@link ComboBoxModel}.
      */
     public static ComboBoxModel createPlatformComboBoxModel(String activePlatform, Collection<? extends PlatformFilter> filters) {
@@ -129,7 +129,7 @@ public final class PlatformUiSupport {
     }
 
     /**
-     * Like {@link #storePlatform(EditableProperties, UpdateHelper, Object, Object)}, but platform name may be
+     * Like {@link #storePlatform(EditableProperties, UpdateHelper, String, Object, Object)}, but platform name may be
      * <code>null</code> (in such case the default platform is used).
      * @param props project's shared properties.
      * @param helper {@link UpdateHelper} that is capable to upgrade project metadata if needed.
@@ -163,8 +163,8 @@ public final class PlatformUiSupport {
      * @param props project's shared properties
      * @param helper {@link UpdateHelper} that is capable to upgrade project metadata if needed.
      * @param projectConfigurationNamespace project configuration namespace.
-     * @param platformKey the {@link PlatformKey} got from the platform model.
-     * @param sourceLevelKey {@link SourceLevelKey} representing source level; can be <code>null</code>.
+     * @param platformKey the {@code PlatformKey} got from the platform model.
+     * @param sourceLevelKey {@code SourceLevelKey} representing source level; can be <code>null</code>.
      */
     public static void storePlatform(
             @NonNull final EditableProperties props,
@@ -187,8 +187,8 @@ public final class PlatformUiSupport {
      * @param props project's shared properties
      * @param helper {@link UpdateHelper} that is capable to upgrade project metadata if needed.
      * @param projectConfigurationNamespace project configuration namespace.
-     * @param platformKey the {@link PlatformKey} got from the platform model.
-     * @param sourceLevelKey {@link SourceLevelKey} representing source level; can be <code>null</code>.
+     * @param platformKey the {@code PlatformKey} got from the platform model.
+     * @param sourceLevelKey {@code SourceLevelKey} representing source level; can be <code>null</code>.
      * @param updatePreferredPlatform if true the {@link PreferredProjectPlatform} will be updated
      * @since 1.37
      */
@@ -214,9 +214,9 @@ public final class PlatformUiSupport {
      * @param props project's shared properties
      * @param helper {@link UpdateHelper} that is capable to upgrade project metadata if needed.
      * @param projectConfigurationNamespace project configuration namespace.
-     * @param platformKey the {@link PlatformKey} got from the platform model.
-     * @param sourceLevelKey {@link SourceLevelKey} representing source level; can be <code>null</code>.
-     * @param profileKey {@link Profile} representing required profile; can be <code>null</code> for full JRE.
+     * @param platformKey the {@code PlatformKey} got from the platform model.
+     * @param sourceLevelKey {@code SourceLevelKey} representing source level; can be <code>null</code>.
+     * @param profileKey {@link org.netbeans.api.java.queries.SourceLevelQuery.Profile} representing required profile; can be <code>null</code> for full JRE.
      * @param updatePreferredPlatform if true the {@link PreferredProjectPlatform} will be updated
      * @since 1.45
      */
@@ -420,12 +420,12 @@ public final class PlatformUiSupport {
     }
 
     /**
-     * Return a {@link SourceLevelQuery.Profile} for an item obtained from the ComboBoxModel created by
+     * Return a {@link org.netbeans.api.java.queries.SourceLevelQuery.Profile} for an item obtained from the ComboBoxModel created by
      * the {@link PlatformUiSupport#createProfileComboBoxModel} method.
      * This method can return <code>null</code> if the profile is broken.
      * @param profileKey an item obtained from {@link ComboBoxModel} created by
      *                    {@link PlatformUiSupport#createProfileComboBoxModel}.
-     * @return {@link SourceLevelQuery.Profile} or <code>null</code> in case when profile is broken.
+     * @return {@link org.netbeans.api.java.queries.SourceLevelQuery.Profile} or <code>null</code> in case when profile is broken.
      * @throws IllegalArgumentException if the input parameter is not an object created by profile combobox model.
      * @since 1.57
      */
@@ -458,7 +458,7 @@ public final class PlatformUiSupport {
      * @param initialTargetLevel initial target level value, null if unknown.
      * @param minimalSpecificationVersion minimal JDK version to be displayed. It can be <code>null</code> if all the JDK versions
      *                          should be displayed (typically for Java SE project).
-     * @return {@link ComboBoxModel} of {@link SourceLevelKey}.
+     * @return {@link ComboBoxModel} of {@code SourceLevelKey}.
      * @see #createSourceLevelComboBoxModel(ComboBoxModel, String, String)
      */
     public static ComboBoxModel createSourceLevelComboBoxModel(ComboBoxModel platformComboBoxModel,
@@ -469,13 +469,13 @@ public final class PlatformUiSupport {
     }
 
     /**
-     * Exactly like {@link #createSourceLevelComboBoxModel(ComboBoxModel, String, String, JDK)}
+     * Exactly like {@link #createSourceLevelComboBoxModel(ComboBoxModel, String, String, SpecificationVersion)}
      * but without any minimal JDK version.
      * @param platformComboBoxModel the platform's model used for listenning.
      * @param initialSourceLevel initial source level value, null if unknown.
      * @param initialTargetLevel initial target level value, null if unknown.
-     * @return {@link ComboBoxModel} of {@link SourceLevelKey}.
-     * @see #createSourceLevelComboBoxModel(ComboBoxModel, String, String, JDK)
+     * @return {@link ComboBoxModel} of {@code SourceLevelKey}.
+     * @see #createSourceLevelComboBoxModel(ComboBoxModel, String, String, SpecificationVersion)
      */
     public static ComboBoxModel createSourceLevelComboBoxModel(ComboBoxModel platformComboBoxModel,
             String initialSourceLevel, String initialTargetLevel) {
@@ -769,7 +769,7 @@ public final class PlatformUiSupport {
                     final String active = eval.getProperty(ProjectProperties.PLATFORM_ACTIVE);
                     if (active != null) {
                         final String activeHomeKey = String.format("platforms.%s.home", active);    //NOI18N
-                        if (eval.getProperty(activeHomeKey) != null && !globalProps.keySet().contains(activeHomeKey)) {
+                        if (eval.getProperty(activeHomeKey) != null && !globalProps.containsKey(activeHomeKey)) {
                             projectPlatform = project != null ?
                                 ProjectPlatform.forProject(
                                     project,
@@ -1247,7 +1247,7 @@ public final class PlatformUiSupport {
     }
 
     /**
-     * Retturns a {@link JavaPlatform} for given {@link PlatformKey}
+     * Retturns a {@link JavaPlatform} for given {@code PlatformKey}
      * or null when the platformKey is either null or not bound to a platform.
      * @param platformKey
      * @return java platform

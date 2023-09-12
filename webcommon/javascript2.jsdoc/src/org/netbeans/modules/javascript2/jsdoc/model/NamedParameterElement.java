@@ -111,7 +111,7 @@ public class NamedParameterElement extends ParameterElement implements DocParame
         }
         boolean optional = name.matches("\\[.*\\]"); //NOI18N
         String defaultValue = null;
-        List<Type> correctedTypes = new ArrayList<Type>();
+        List<Type> correctedTypes = new ArrayList<>();
         if (optional) {
             nameStartOffset++;
             name = name.substring(1, name.length() - 1);
@@ -124,7 +124,7 @@ public class NamedParameterElement extends ParameterElement implements DocParame
         } else {
             for (Type paramType : paramTypes) {
                 boolean changed = false;
-                String paramTypeName = paramType.getType();    
+                String paramTypeName = paramType.getType();
                 if (paramTypeName.indexOf('~') > 0) {
                     paramTypeName = paramTypeName.replace('~', '.');
                     changed = true;
@@ -134,8 +134,8 @@ public class NamedParameterElement extends ParameterElement implements DocParame
                         optional = true;
                         changed = true;
                         paramTypeName = JsDocElementUtils.GoogleCompilerSytax.removeSyntax(paramTypeName);
-                    } 
-                } 
+                    }
+                }
                 if (changed) {
                     correctedTypes.add(JsDocElementUtils.createTypeUsage(paramTypeName, paramType.getOffset()));
                 } else {

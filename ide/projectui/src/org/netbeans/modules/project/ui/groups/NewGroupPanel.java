@@ -201,14 +201,14 @@ public class NewGroupPanel extends JPanel {
     
 
     public static Group create(Type type, String name, boolean autoSync, boolean useOpen, String masterProject, String directory) {
-        if (Type.ADHOC.equals(type)) {
+        if (Type.ADHOC == type) {
             AdHocGroup g = AdHocGroup.create(name, autoSync);
             if (useOpen) {
                 g.setProjects(new HashSet<Project>(Arrays.asList(OpenProjects.getDefault().getOpenProjects())));
                 g.setMainProject(OpenProjects.getDefault().getMainProject());
             }
             return g;
-        } else if (Type.SUB.equals(type)) {
+        } else if (Type.SUB == type) {
             FileObject fo = FileUtil.toFileObject(new File(masterProject));
             try {
                 return SubprojectsGroup.create(name, ProjectManager.getDefault().findProject(fo));
@@ -216,7 +216,7 @@ public class NewGroupPanel extends JPanel {
                 throw new AssertionError(x);
             }
         } else {
-            assert Type.DIR.equals(type);
+            assert Type.DIR == type;
             FileObject f = FileUtil.toFileObject(FileUtil.normalizeFile(new File(directory)));
             return DirectoryGroup.create(name, f);
         }

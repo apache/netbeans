@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Stack;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import static junit.framework.Assert.fail;
 import org.netbeans.jellytools.TopComponentOperator;
 import org.netbeans.jemmy.TimeoutExpiredException;
 import org.netbeans.jemmy.Waitable;
@@ -38,6 +37,7 @@ import org.netbeans.test.beans.BeansTestCase;
 import org.openide.explorer.view.Visualizer;
 import org.openide.nodes.Node;
 
+import static org.junit.Assert.fail;
 
 /**
  *

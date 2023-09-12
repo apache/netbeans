@@ -1,4 +1,0 @@
-        self::$staticField1;^
-        -------------------
-HINT:Introduce Hint
-FIX:Create Field "$staticField1" in Trait "TraitA" (testIntroduceSuggestionTrait.php)

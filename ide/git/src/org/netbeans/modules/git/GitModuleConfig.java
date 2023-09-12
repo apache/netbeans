@@ -48,6 +48,7 @@ public final class GitModuleConfig {
     
     private static GitModuleConfig instance;
     private static final String AUTO_OPEN_OUTPUT_WINDOW = "autoOpenOutput";     // NOI18N
+    private static final String AUTO_REPLACE_INVALID_BRANCH_NAME_CHARACTERS = "autoReplaceInvalidBranchNameCharacters";
     public static final String PROP_COMMIT_EXCLUSIONS          = "commitExclusions";   // NOI18N
     private static final String PROP_LAST_USED_MODE     = "lastUsedMode";       // NOI18N
     private static final String EXCLUDE_NEW_FILES       = "excludeNewFiles";    // NOI18N
@@ -202,6 +203,14 @@ public final class GitModuleConfig {
         getPreferences().putBoolean(AUTO_OPEN_OUTPUT_WINDOW, value);
     }
 
+    public boolean getAutoReplaceInvalidBranchNameCharacters() {
+        return getPreferences().getBoolean(AUTO_REPLACE_INVALID_BRANCH_NAME_CHARACTERS, false);
+    }
+
+    public void setAutoReplaceInvalidBranchNameCharacters(boolean value) {
+        getPreferences().putBoolean(AUTO_REPLACE_INVALID_BRANCH_NAME_CHARACTERS, value);
+    }    
+    
     public void putRecentCommitAuthors(String author) {
         if(author == null) return;
         author = author.trim();

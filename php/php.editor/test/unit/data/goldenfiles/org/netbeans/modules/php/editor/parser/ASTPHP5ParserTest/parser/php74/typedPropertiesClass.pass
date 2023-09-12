@@ -147,23 +147,8 @@
         <token id='T_PUBLIC' start='1154' end='1160'>
             <text>public</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='1161' end='1162'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1162' end='1165'>
-            <text>Foo</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1165' end='1166'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1166' end='1169'>
-            <text>Bar</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1169' end='1170'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1170' end='1177'>
-            <text>MyClass</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1161' end='1177'>
+            <text>\Foo\Bar\MyClass</text>
         </token>
         <token id='T_VARIABLE' start='1178' end='1187'>
             <text>$myClass2</text>
@@ -405,23 +390,8 @@
         <token id='T_STATIC' start='1705' end='1711'>
             <text>static</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='1712' end='1713'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1713' end='1716'>
-            <text>Foo</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1716' end='1717'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1717' end='1720'>
-            <text>Bar</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1720' end='1721'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1721' end='1728'>
-            <text>MyClass</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1712' end='1728'>
+            <text>\Foo\Bar\MyClass</text>
         </token>
         <token id='T_VARIABLE' start='1729' end='1744'>
             <text>$staticMyClass2</text>
@@ -565,7 +535,9 @@
                     </FieldsDeclaration>
                     <FieldsDeclaration start='980' end='1001' modifier='private'>
                         <FieldType>
-                            <Identifier start='988' end='993' name='array'/>
+                            <NamespaceName start='988' end='993' isCurrent='false' isGlobal='false'>
+                                <Identifier start='988' end='993' name='array'/>
+                            </NamespaceName>
                         </FieldType>
                         <VariableNames>
                             <Variable start='994' end='1000' isDollared='true'>
@@ -739,7 +711,9 @@
                     </FieldsDeclaration>
                     <FieldsDeclaration start='1426' end='1472' modifier='private static'>
                         <FieldType>
-                            <Identifier start='1441' end='1446' name='array'/>
+                            <NamespaceName start='1441' end='1446' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1441' end='1446' name='array'/>
+                            </NamespaceName>
                         </FieldType>
                         <VariableNames>
                             <Variable start='1447' end='1459' isDollared='true'>
@@ -786,9 +760,7 @@
                             </Variable>
                         </VariableNames>
                         <InitialValues>
-                            <NamespaceName start='1516' end='1520' isCurrent='false' isGlobal='false'>
-                                <Identifier start='1516' end='1520' name='null'/>
-                            </NamespaceName>
+                            <Scalar start='1516' end='1520' type='STRING' value='null'/>
                         </InitialValues>
                     </FieldsDeclaration>
                     <FieldsDeclaration start='1526' end='1566' modifier='private static'>

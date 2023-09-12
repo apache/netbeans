@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.StringTokenizer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -33,7 +34,6 @@ import org.netbeans.modules.web.jsf.editor.index.JsfIndex;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
 import org.netbeans.modules.web.jsfapi.api.LibraryType;
 import org.netbeans.modules.web.jsfapi.api.Tag;
-import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 
@@ -56,7 +56,7 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
     private Map<String, CompositeComponent> compositeComponentsMap;
 
     //for cc libraries with facelets library descriptor, the constructor is called by Mojarra
-    public CompositeComponentLibrary(FaceletsLibrarySupport support, String compositeLibraryName, String namespace, URL libraryDescriptorURL) {
+    public CompositeComponentLibrary(FaceletsLibrarySupport support, String compositeLibraryName, Set<String> namespace, URL libraryDescriptorURL) {
         super(support, namespace, libraryDescriptorURL);
 
         this.compositeLibraryResourceFolderName = compositeLibraryName;
@@ -89,7 +89,7 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
 
     @Override
     public String getDefaultNamespace() {
-        return LibraryUtils.getCompositeLibraryURL(getLibraryName(), support.getJsfSupport().isJsf22Plus());
+        return getNamespace();
     }
 
     @Override

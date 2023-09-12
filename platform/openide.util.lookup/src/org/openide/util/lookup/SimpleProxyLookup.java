@@ -278,7 +278,7 @@ final class SimpleProxyLookup extends org.openide.util.Lookup {
         }
 
         /** A change in lookup occured.
-         * @param ev event describing the change
+         * @param anEvent event describing the change
          *
          */
         public void resultChanged(LookupEvent anEvent) {

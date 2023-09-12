@@ -49,11 +49,11 @@ public class DefaultAnchorShapeResolver implements AnchorShapeLocationResolver
         this.attachedEnd = attachedTo;
         this.attachedWidget = attachedWidget;
     }
-    
+
     public int getEndLocation()
     {
-        int retVal = 0;
-        
+        int retVal;
+
         if(attachedWidget != null)
         {
             Rectangle bounds = attachedWidget.getBounds();
@@ -61,8 +61,7 @@ public class DefaultAnchorShapeResolver implements AnchorShapeLocationResolver
         }
         else
         {
-//            Rectangle bounds = attachedWidget.getBounds();
-            Rectangle bounds = new Rectangle();
+            Rectangle bounds;
             if(attachedEnd == ConnectionEnd.SOURCE)
             {
                 Widget sourceWidget = getConnection().getSourceAnchor().getRelatedWidget();
@@ -75,7 +74,7 @@ public class DefaultAnchorShapeResolver implements AnchorShapeLocationResolver
             }
             retVal = getLocation(bounds);
         }
-        
+
         return retVal;
     }
 

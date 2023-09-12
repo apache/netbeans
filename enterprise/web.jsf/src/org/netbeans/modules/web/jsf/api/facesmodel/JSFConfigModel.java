@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.web.jsf.api.facesmodel;
 
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.xml.xam.dom.DocumentModel;
 
 /**
@@ -32,6 +33,6 @@ public interface JSFConfigModel extends DocumentModel <JSFConfigComponent>{
     
     JSFConfigComponentFactory getFactory();
     
-    JSFVersion getVersion();
+    JsfVersion getVersion();
     
 }

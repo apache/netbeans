@@ -54,6 +54,7 @@ public @interface ServiceProvider {
      * <p>Requests to look up the specified interface should result in this implementation.
      * Requests for any other types may or may not result in this implementation even if the
      * implementation is assignable to those types.
+     * @return type to register this implementation
      */
     Class<?> service();
 
@@ -61,6 +62,7 @@ public @interface ServiceProvider {
      * An optional position in which to register this service relative to others.
      * Lower-numbered services are returned in the lookup result first.
      * Services with no specified position are returned last.
+     * @return position to register the service
      */
     int position() default Integer.MAX_VALUE;
 
@@ -71,6 +73,7 @@ public @interface ServiceProvider {
      *
      * <p><i>Note:</i> Dollar sign ($) is used in inner class names. For example
      * <code>org.netbeans.modules.openfile.FileChooser$JavaFilesFilter</code>.</p>
+     * @return set of implementations this implementation supersedes
      */
     String[] supersedes() default {};
 
@@ -86,6 +89,7 @@ public @interface ServiceProvider {
      * The {@link NamedServiceDefinition} offers various benefits over 
      * plain {@link #path()} usage including type checking and lower 
      * possibility of typos.
+     * @return path to register implementation
      */
     String path() default "";
 

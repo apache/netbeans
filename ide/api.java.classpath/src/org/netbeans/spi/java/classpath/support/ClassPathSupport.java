@@ -133,7 +133,6 @@ public class ClassPathSupport {
      * @throws IllegalArgumentException in case a path entry looks to be invalid
      * @since org.netbeans.api.java/1 1.15
      * @see FileUtil#urlForArchiveOrDir
-     * @see ClassPath#toJVMPath
      */
     public static ClassPath createClassPath(String jvmPath) throws IllegalArgumentException {
         List<PathResourceImplementation> l = new ArrayList<PathResourceImplementation>();

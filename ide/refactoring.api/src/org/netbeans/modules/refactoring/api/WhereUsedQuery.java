@@ -36,12 +36,12 @@ import org.openide.util.Parameters;
  */
 public final class WhereUsedQuery extends AbstractRefactoring {
     /**
-     * key for {@link #getBooleanValue()}
+     * key for {@link #getBooleanValue(Object)}
      * is search in comments requested?
      */
     public static final String SEARCH_IN_COMMENTS = "SEARCH_IN_COMMENTS"; // NOI18N
     /**
-     * key for {@link #getBooleanValue()}
+     * key for {@link #getBooleanValue(Object)}
      * is find references requested?
      */
     public static final String FIND_REFERENCES = "FIND_REFERENCES"; // NOI18N
@@ -49,11 +49,12 @@ public final class WhereUsedQuery extends AbstractRefactoring {
     /**
      * Creates a new instance of WhereUsedQuery.
      * WhereUsedQuery implementations currently understand following types:
-     * <table border="1">
+     * <table>
+     * <caption>WhereUsedQuery types supported</caption>
      *   <tr><th>Module</th><th>Types the Module Understands</th><th>Implementation</th></tr>
      *   <tr><td>Java Refactoring</td><td><ul>
      *                                    <li>{@link org.openide.filesystems.FileObject} with content type text/x-java (class references)
-     *                                    <li>{@link org.netbeans.api.java.source.TreePathHandle} (class, field, method references)
+     *                                    <li><a href="@org-netbeans-modules-java-source-base@/org/netbeans/api/java/source/TreePathHandle.html">org.netbeans.api.java.source.TreePathHandle</a> (class, field, method references)
      *                                    </ul>
      *                              <td>Finds references</td></tr>
      * </table>

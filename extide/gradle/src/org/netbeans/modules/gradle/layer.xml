@@ -158,13 +158,6 @@
                     </file>
                 </folder>
             </folder>
-            <folder name="x-gradle-cli">
-                <file name="EditorKit.instance">
-                    <attr name="instanceClass" stringvalue="org.netbeans.modules.gradle.execute.GradleCliEditorKit"/>
-                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit,org.netbeans.modules.gradle.execute.GradleCliEditorKit"/>
-                    <attr name="beaninfo" boolvalue="false"/>
-                </file>
-            </folder>
         </folder>
     </folder>
 </filesystem>

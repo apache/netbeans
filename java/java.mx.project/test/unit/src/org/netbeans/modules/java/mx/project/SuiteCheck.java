@@ -135,7 +135,7 @@ abstract class SuiteCheck extends NbTestCase {
         for (SourceGroup sourceGroup : src.getSourceGroups("java")) {
             if (sourceGroup instanceof Compliance.Provider) {
                 Compliance c = ((Compliance.Provider) sourceGroup).getCompliance();
-                if (!c.includes(8)) {
+                if (!c.includes(11)) {
                     log(Level.INFO, "Skipping check of %s with compliance %s", sourceGroup, c);
                     continue;
                 }

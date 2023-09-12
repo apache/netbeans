@@ -1,0 +1,2211 @@
+<testresult testFile='fetchPropertiesInConstExpressions_01.php'>
+    <scanner>
+        <token id='T_ENUM' start='814' end='818'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='819' end='820'>
+            <text>E</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='820' end='821'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='822' end='828'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='829' end='830'>
+            <text>{</text>
+        </token>
+        <token id='T_CASE' start='835' end='839'>
+            <text>case</text>
+        </token>
+        <token id='T_CASE' start='840' end='844'>
+            <text>Case</text>
+        </token>
+        <token id='T_EQUAL' start='845' end='846'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='847' end='856'>
+            <text>&apos;E::Case&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='856' end='857'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='862' end='867'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='868' end='870'>
+            <text>C1</text>
+        </token>
+        <token id='T_EQUAL' start='871' end='872'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='873' end='874'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='874' end='878'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='878' end='880'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='880' end='884'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='884' end='886'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='886' end='891'>
+            <text>value</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='892' end='894'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_STRING' start='895' end='899'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='899' end='901'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='901' end='905'>
+            <text>Case</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='905' end='906'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='906' end='907'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='912' end='917'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='918' end='920'>
+            <text>C2</text>
+        </token>
+        <token id='T_EQUAL' start='921' end='922'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='923' end='924'>
+            <text>[</text>
+        </token>
+        <token id='T_STRING' start='924' end='928'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='928' end='930'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='930' end='934'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='934' end='937'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='937' end='942'>
+            <text>value</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='943' end='945'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_STRING' start='946' end='950'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='950' end='952'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='952' end='956'>
+            <text>Case</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='956' end='957'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='957' end='958'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='959' end='960'>
+            <text>}</text>
+        </token>
+        <token id='T_CONST' start='978' end='983'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='984' end='988'>
+            <text>NAME</text>
+        </token>
+        <token id='T_EQUAL' start='989' end='990'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='991' end='992'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='992' end='994'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='994' end='998'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='998' end='1000'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1000' end='1004'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='1004' end='1005'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1006' end='1011'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1012' end='1017'>
+            <text>VALUE</text>
+        </token>
+        <token id='T_EQUAL' start='1018' end='1019'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1020' end='1021'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1021' end='1023'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1023' end='1027'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1027' end='1029'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1029' end='1034'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1034' end='1035'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1036' end='1041'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1042' end='1055'>
+            <text>NAME_NULLSAFE</text>
+        </token>
+        <token id='T_EQUAL' start='1056' end='1057'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1058' end='1059'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1059' end='1061'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1061' end='1065'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1065' end='1068'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1068' end='1072'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='1072' end='1073'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1074' end='1079'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1080' end='1094'>
+            <text>VALUE_NULLSAFE</text>
+        </token>
+        <token id='T_EQUAL' start='1095' end='1096'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1097' end='1098'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1098' end='1100'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1100' end='1104'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1104' end='1107'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1107' end='1112'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1112' end='1113'>
+            <text>;</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1124' end='1126'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1126' end='1130'>
+            <text>Attr</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1130' end='1131'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1131' end='1132'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1132' end='1134'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1134' end='1138'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1138' end='1140'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1140' end='1144'>
+            <text>name</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1144' end='1145'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1145' end='1146'>
+            <text>]</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1147' end='1149'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1149' end='1153'>
+            <text>Attr</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1153' end='1154'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1154' end='1155'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1155' end='1157'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1157' end='1161'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1161' end='1164'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1164' end='1168'>
+            <text>name</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1168' end='1169'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1169' end='1170'>
+            <text>]</text>
+        </token>
+        <token id='T_CLASS' start='1171' end='1176'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='1177' end='1189'>
+            <text>ExampleClass</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1190' end='1191'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='1196' end='1201'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1202' end='1206'>
+            <text>NAME</text>
+        </token>
+        <token id='T_EQUAL' start='1207' end='1208'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1209' end='1210'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1210' end='1212'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1212' end='1216'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1216' end='1218'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1218' end='1222'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='1222' end='1223'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1228' end='1233'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1234' end='1239'>
+            <text>VALUE</text>
+        </token>
+        <token id='T_EQUAL' start='1240' end='1241'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1242' end='1243'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1243' end='1245'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1245' end='1249'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1249' end='1251'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1251' end='1256'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1256' end='1257'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1262' end='1267'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1268' end='1281'>
+            <text>NAME_NULLSAFE</text>
+        </token>
+        <token id='T_EQUAL' start='1282' end='1283'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1284' end='1285'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1285' end='1287'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1287' end='1291'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1291' end='1294'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1294' end='1298'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='1298' end='1299'>
+            <text>;</text>
+        </token>
+        <token id='T_CONST' start='1304' end='1309'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1310' end='1324'>
+            <text>VALUE_NULLSAFE</text>
+        </token>
+        <token id='T_EQUAL' start='1325' end='1326'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1327' end='1328'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1328' end='1330'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1330' end='1334'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1334' end='1337'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1337' end='1342'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1342' end='1343'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1349' end='1355'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1356' end='1362'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1363' end='1368'>
+            <text>$name</text>
+        </token>
+        <token id='T_EQUAL' start='1369' end='1370'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1371' end='1372'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1372' end='1374'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1374' end='1378'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1378' end='1380'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1380' end='1384'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='1384' end='1385'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1390' end='1396'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1397' end='1403'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1404' end='1410'>
+            <text>$value</text>
+        </token>
+        <token id='T_EQUAL' start='1411' end='1412'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1413' end='1414'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1414' end='1416'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1416' end='1420'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1420' end='1422'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1422' end='1427'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1427' end='1428'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1433' end='1439'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1440' end='1446'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1447' end='1460'>
+            <text>$nameNullsafe</text>
+        </token>
+        <token id='T_EQUAL' start='1461' end='1462'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1463' end='1464'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1464' end='1466'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1466' end='1470'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1470' end='1473'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1473' end='1477'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='1477' end='1478'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1483' end='1489'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1490' end='1496'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1497' end='1511'>
+            <text>$valueNullsafe</text>
+        </token>
+        <token id='T_EQUAL' start='1512' end='1513'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1514' end='1515'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1515' end='1517'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1517' end='1521'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1521' end='1524'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1524' end='1529'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1529' end='1530'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1536' end='1542'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1543' end='1549'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='1550' end='1556'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1557' end='1568'>
+            <text>$staticName</text>
+        </token>
+        <token id='T_EQUAL' start='1569' end='1570'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1571' end='1572'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1572' end='1574'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1574' end='1578'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1578' end='1580'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1580' end='1584'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='1584' end='1585'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1590' end='1596'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1597' end='1603'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='1604' end='1610'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1611' end='1623'>
+            <text>$staticValue</text>
+        </token>
+        <token id='T_EQUAL' start='1624' end='1625'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1626' end='1627'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1627' end='1629'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1629' end='1633'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1633' end='1635'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1635' end='1640'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1640' end='1641'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1646' end='1652'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1653' end='1659'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='1660' end='1666'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1667' end='1686'>
+            <text>$staticNameNullsafe</text>
+        </token>
+        <token id='T_EQUAL' start='1687' end='1688'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1689' end='1690'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1690' end='1692'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1692' end='1696'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1696' end='1699'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1699' end='1703'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='1703' end='1704'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1709' end='1715'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='1716' end='1722'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='1723' end='1729'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1730' end='1750'>
+            <text>$staticValueNullsafe</text>
+        </token>
+        <token id='T_EQUAL' start='1751' end='1752'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1753' end='1754'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1754' end='1756'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1756' end='1760'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1760' end='1763'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1763' end='1768'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1768' end='1769'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1770' end='1771'>
+            <text>}</text>
+        </token>
+        <token id='T_FUNCTION' start='1773' end='1781'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1782' end='1786'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1786' end='1787'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1826' end='1831'>
+            <text>$name</text>
+        </token>
+        <token id='T_EQUAL' start='1832' end='1833'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1834' end='1835'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1835' end='1837'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1837' end='1841'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1841' end='1843'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1843' end='1847'>
+            <text>name</text>
+        </token>
+        <token id='T_COMMA' start='1847' end='1848'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1853' end='1859'>
+            <text>$value</text>
+        </token>
+        <token id='T_EQUAL' start='1860' end='1861'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1862' end='1863'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1863' end='1865'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1865' end='1869'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1869' end='1871'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1871' end='1876'>
+            <text>value</text>
+        </token>
+        <token id='T_COMMA' start='1876' end='1877'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1882' end='1895'>
+            <text>$nameNullsafe</text>
+        </token>
+        <token id='T_EQUAL' start='1896' end='1897'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1898' end='1899'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1899' end='1901'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1901' end='1905'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1905' end='1908'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1908' end='1912'>
+            <text>name</text>
+        </token>
+        <token id='T_COMMA' start='1912' end='1913'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1918' end='1932'>
+            <text>$valueNullsafe</text>
+        </token>
+        <token id='T_EQUAL' start='1933' end='1934'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1935' end='1936'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1936' end='1938'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='1938' end='1942'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1942' end='1945'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1945' end='1950'>
+            <text>value</text>
+        </token>
+        <token id='T_COMMA' start='1950' end='1951'>
+            <text>,</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1952' end='1953'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1954' end='1955'>
+            <text>{</text>
+        </token>
+        <token id='T_STATIC' start='1983' end='1989'>
+            <text>static</text>
+        </token>
+        <token id='T_VARIABLE' start='1990' end='2001'>
+            <text>$staticName</text>
+        </token>
+        <token id='T_EQUAL' start='2002' end='2003'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2004' end='2005'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2005' end='2007'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='2007' end='2011'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2011' end='2013'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2013' end='2017'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='2017' end='2018'>
+            <text>;</text>
+        </token>
+        <token id='T_STATIC' start='2023' end='2029'>
+            <text>static</text>
+        </token>
+        <token id='T_VARIABLE' start='2030' end='2042'>
+            <text>$staticValue</text>
+        </token>
+        <token id='T_EQUAL' start='2043' end='2044'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2045' end='2046'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2046' end='2048'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='2048' end='2052'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2052' end='2054'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2054' end='2059'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='2059' end='2060'>
+            <text>;</text>
+        </token>
+        <token id='T_STATIC' start='2065' end='2071'>
+            <text>static</text>
+        </token>
+        <token id='T_VARIABLE' start='2072' end='2091'>
+            <text>$staticNameNullsafe</text>
+        </token>
+        <token id='T_EQUAL' start='2092' end='2093'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2094' end='2095'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2095' end='2097'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='2097' end='2101'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2101' end='2104'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2104' end='2108'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='2108' end='2109'>
+            <text>;</text>
+        </token>
+        <token id='T_STATIC' start='2114' end='2120'>
+            <text>static</text>
+        </token>
+        <token id='T_VARIABLE' start='2121' end='2141'>
+            <text>$staticValueNullsafe</text>
+        </token>
+        <token id='T_EQUAL' start='2142' end='2143'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2144' end='2145'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2145' end='2147'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='2147' end='2151'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2151' end='2154'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2154' end='2159'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='2159' end='2160'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2161' end='2162'>
+            <text>}</text>
+        </token>
+        <token id='T_ENUM' start='2164' end='2168'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='2169' end='2180'>
+            <text>ExampleEnum</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='2180' end='2181'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='2182' end='2188'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2189' end='2190'>
+            <text>{</text>
+        </token>
+        <token id='T_CASE' start='2195' end='2199'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='2200' end='2204'>
+            <text>NAME</text>
+        </token>
+        <token id='T_EQUAL' start='2205' end='2206'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2207' end='2208'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2208' end='2210'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='2210' end='2214'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2214' end='2216'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2216' end='2220'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='2220' end='2221'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='2226' end='2230'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='2231' end='2236'>
+            <text>VALUE</text>
+        </token>
+        <token id='T_EQUAL' start='2237' end='2238'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2239' end='2240'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2240' end='2242'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='2242' end='2246'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2246' end='2248'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2248' end='2253'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='2253' end='2254'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='2259' end='2263'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='2264' end='2277'>
+            <text>NULLSAFE_NAME</text>
+        </token>
+        <token id='T_EQUAL' start='2278' end='2279'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2280' end='2281'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2281' end='2283'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='2283' end='2287'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2287' end='2290'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2290' end='2294'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='2294' end='2295'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='2300' end='2304'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='2305' end='2319'>
+            <text>NULLSAFE_VALUE</text>
+        </token>
+        <token id='T_EQUAL' start='2320' end='2321'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2322' end='2323'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2323' end='2325'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='2325' end='2329'>
+            <text>Case</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='2329' end='2332'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2332' end='2337'>
+            <text>value</text>
+        </token>
+        <token id='T_SEMICOLON' start='2337' end='2338'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='2343' end='2347'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='2348' end='2353'>
+            <text>TEST1</text>
+        </token>
+        <token id='T_EQUAL' start='2354' end='2355'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2356' end='2357'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2357' end='2359'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='2359' end='2363'>
+            <text>Case</text>
+        </token>
+        <token id='T_SEMICOLON' start='2363' end='2364'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='2369' end='2373'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='2374' end='2379'>
+            <text>TEST2</text>
+        </token>
+        <token id='T_EQUAL' start='2380' end='2381'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2382' end='2387'>
+            <text>TEST1</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2387' end='2389'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2389' end='2393'>
+            <text>name</text>
+        </token>
+        <token id='T_SEMICOLON' start='2393' end='2394'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2395' end='2396'>
+            <text>}</text>
+        </token>
+        <token id='T_CONST' start='2398' end='2403'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='2404' end='2409'>
+            <text>VALUE</text>
+        </token>
+        <token id='T_EQUAL' start='2410' end='2411'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2412' end='2419'>
+            <text>&apos;value&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='2419' end='2420'>
+            <text>;</text>
+        </token>
+        <token id='T_CLASS' start='2421' end='2426'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='2427' end='2449'>
+            <text>ReflectionVariableTest</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2450' end='2451'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='2457' end='2462'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='2463' end='2464'>
+            <text>C</text>
+        </token>
+        <token id='T_EQUAL' start='2465' end='2466'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2467' end='2468'>
+            <text>E</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2468' end='2470'>
+            <text>::</text>
+        </token>
+        <token id='T_CASE' start='2470' end='2474'>
+            <text>Case</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2474' end='2476'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2476' end='2477'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='2477' end='2482'>
+            <text>VALUE</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2482' end='2483'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='2483' end='2484'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2485' end='2486'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='2487' end='2487'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='2487'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='962' end='978' commentType='singleLine'/>
+            <Comment start='1115' end='1124' commentType='singleLine'/>
+            <Comment start='1792' end='1822' commentType='singleLine'/>
+            <Comment start='1960' end='1979' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='962' end='978' commentType='singleLine'/>
+            <Comment start='1115' end='1124' commentType='singleLine'/>
+            <Comment start='1792' end='1822' commentType='singleLine'/>
+            <Comment start='1960' end='1979' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <EnumDeclaration start='814' end='960'>
+                <EnumName>
+                    <Identifier start='819' end='820' name='E'/>
+                </EnumName>
+                <BackingType>
+                    <NamespaceName start='822' end='828' isCurrent='false' isGlobal='false'>
+                        <Identifier start='822' end='828' name='string'/>
+                    </NamespaceName>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='829' end='960' isCurly='true'>
+                    <CaseDeclaration start='835' end='857'>
+                        <CaseName>
+                            <Identifier start='840' end='844' name='Case'/>
+                        </CaseName>
+                        <Scalar start='847' end='856' type='STRING' value='&apos;E::Case&apos;'/>
+                    </CaseDeclaration>
+                    <ClassConstantDeclaration start='862' end='907' modifier='public'>
+                        <Names>
+                            <Identifier start='868' end='870' name='C1'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='873' end='906' type='NEW'>
+                                <ArrayElement start='874' end='905'>
+                                    <Key>
+                                        <FieldAccess start='874' end='891' isNullsafe='false'>
+                                            <StaticConstantAccess start='874' end='884'>
+                                                <NamespaceName start='874' end='878' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='874' end='878' name='self'/>
+                                                </NamespaceName>
+                                                <Constant>
+                                                    <Identifier start='880' end='884' name='Case'/>
+                                                </Constant>
+                                                <Member>
+                                                    <Identifier start='880' end='884' name='Case'/>
+                                                </Member>
+                                            </StaticConstantAccess>
+                                            <Field>
+                                                <Variable start='886' end='891' isDollared='false'>
+                                                    <Identifier start='886' end='891' name='value'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                    </Key>
+                                    <Value>
+                                        <StaticConstantAccess start='895' end='905'>
+                                            <NamespaceName start='895' end='899' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='895' end='899' name='self'/>
+                                            </NamespaceName>
+                                            <Constant>
+                                                <Identifier start='901' end='905' name='Case'/>
+                                            </Constant>
+                                            <Member>
+                                                <Identifier start='901' end='905' name='Case'/>
+                                            </Member>
+                                        </StaticConstantAccess>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='912' end='958' modifier='public'>
+                        <Names>
+                            <Identifier start='918' end='920' name='C2'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='923' end='957' type='NEW'>
+                                <ArrayElement start='924' end='956'>
+                                    <Key>
+                                        <FieldAccess start='924' end='942' isNullsafe='true'>
+                                            <StaticConstantAccess start='924' end='934'>
+                                                <NamespaceName start='924' end='928' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='924' end='928' name='self'/>
+                                                </NamespaceName>
+                                                <Constant>
+                                                    <Identifier start='930' end='934' name='Case'/>
+                                                </Constant>
+                                                <Member>
+                                                    <Identifier start='930' end='934' name='Case'/>
+                                                </Member>
+                                            </StaticConstantAccess>
+                                            <Field>
+                                                <Variable start='937' end='942' isDollared='false'>
+                                                    <Identifier start='937' end='942' name='value'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                    </Key>
+                                    <Value>
+                                        <StaticConstantAccess start='946' end='956'>
+                                            <NamespaceName start='946' end='950' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='946' end='950' name='self'/>
+                                            </NamespaceName>
+                                            <Constant>
+                                                <Identifier start='952' end='956' name='Case'/>
+                                            </Constant>
+                                            <Member>
+                                                <Identifier start='952' end='956' name='Case'/>
+                                            </Member>
+                                        </StaticConstantAccess>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </EnumDeclaration>
+            <GlobalConstantDeclaration start='978' end='1005'>
+                <Names>
+                    <Identifier start='984' end='988' name='NAME'/>
+                </Names>
+                <Initializers>
+                    <FieldAccess start='991' end='1004' isNullsafe='false'>
+                        <StaticConstantAccess start='991' end='998'>
+                            <NamespaceName start='991' end='992' isCurrent='false' isGlobal='false'>
+                                <Identifier start='991' end='992' name='E'/>
+                            </NamespaceName>
+                            <Constant>
+                                <Identifier start='994' end='998' name='Case'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='994' end='998' name='Case'/>
+                            </Member>
+                        </StaticConstantAccess>
+                        <Field>
+                            <Variable start='1000' end='1004' isDollared='false'>
+                                <Identifier start='1000' end='1004' name='name'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='1006' end='1035'>
+                <Names>
+                    <Identifier start='1012' end='1017' name='VALUE'/>
+                </Names>
+                <Initializers>
+                    <FieldAccess start='1020' end='1034' isNullsafe='false'>
+                        <StaticConstantAccess start='1020' end='1027'>
+                            <NamespaceName start='1020' end='1021' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1020' end='1021' name='E'/>
+                            </NamespaceName>
+                            <Constant>
+                                <Identifier start='1023' end='1027' name='Case'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='1023' end='1027' name='Case'/>
+                            </Member>
+                        </StaticConstantAccess>
+                        <Field>
+                            <Variable start='1029' end='1034' isDollared='false'>
+                                <Identifier start='1029' end='1034' name='value'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='1036' end='1073'>
+                <Names>
+                    <Identifier start='1042' end='1055' name='NAME_NULLSAFE'/>
+                </Names>
+                <Initializers>
+                    <FieldAccess start='1058' end='1072' isNullsafe='true'>
+                        <StaticConstantAccess start='1058' end='1065'>
+                            <NamespaceName start='1058' end='1059' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1058' end='1059' name='E'/>
+                            </NamespaceName>
+                            <Constant>
+                                <Identifier start='1061' end='1065' name='Case'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='1061' end='1065' name='Case'/>
+                            </Member>
+                        </StaticConstantAccess>
+                        <Field>
+                            <Variable start='1068' end='1072' isDollared='false'>
+                                <Identifier start='1068' end='1072' name='name'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <GlobalConstantDeclaration start='1074' end='1113'>
+                <Names>
+                    <Identifier start='1080' end='1094' name='VALUE_NULLSAFE'/>
+                </Names>
+                <Initializers>
+                    <FieldAccess start='1097' end='1112' isNullsafe='true'>
+                        <StaticConstantAccess start='1097' end='1104'>
+                            <NamespaceName start='1097' end='1098' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1097' end='1098' name='E'/>
+                            </NamespaceName>
+                            <Constant>
+                                <Identifier start='1100' end='1104' name='Case'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='1100' end='1104' name='Case'/>
+                            </Member>
+                        </StaticConstantAccess>
+                        <Field>
+                            <Variable start='1107' end='1112' isDollared='false'>
+                                <Identifier start='1107' end='1112' name='value'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <ClassDeclaration start='1124' end='1771' modifier='NONE'>
+                <Attributes>
+                    <Attribute start='1124' end='1146'>
+                        <AttributeDeclarations>
+                            <AttributeDeclaration start='1126' end='1145'>
+                                <AttributeName>
+                                    <NamespaceName start='1126' end='1130' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1126' end='1130' name='Attr'/>
+                                    </NamespaceName>
+                                </AttributeName>
+                                <AttributeParameters>
+                                    <FieldAccess start='1131' end='1144' isNullsafe='false'>
+                                        <StaticConstantAccess start='1131' end='1138'>
+                                            <NamespaceName start='1131' end='1132' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1131' end='1132' name='E'/>
+                                            </NamespaceName>
+                                            <Constant>
+                                                <Identifier start='1134' end='1138' name='Case'/>
+                                            </Constant>
+                                            <Member>
+                                                <Identifier start='1134' end='1138' name='Case'/>
+                                            </Member>
+                                        </StaticConstantAccess>
+                                        <Field>
+                                            <Variable start='1140' end='1144' isDollared='false'>
+                                                <Identifier start='1140' end='1144' name='name'/>
+                                            </Variable>
+                                        </Field>
+                                    </FieldAccess>
+                                </AttributeParameters>
+                            </AttributeDeclaration>
+                        </AttributeDeclarations>
+                    </Attribute>
+                    <Attribute start='1147' end='1170'>
+                        <AttributeDeclarations>
+                            <AttributeDeclaration start='1149' end='1169'>
+                                <AttributeName>
+                                    <NamespaceName start='1149' end='1153' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1149' end='1153' name='Attr'/>
+                                    </NamespaceName>
+                                </AttributeName>
+                                <AttributeParameters>
+                                    <FieldAccess start='1154' end='1168' isNullsafe='true'>
+                                        <StaticConstantAccess start='1154' end='1161'>
+                                            <NamespaceName start='1154' end='1155' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1154' end='1155' name='E'/>
+                                            </NamespaceName>
+                                            <Constant>
+                                                <Identifier start='1157' end='1161' name='Case'/>
+                                            </Constant>
+                                            <Member>
+                                                <Identifier start='1157' end='1161' name='Case'/>
+                                            </Member>
+                                        </StaticConstantAccess>
+                                        <Field>
+                                            <Variable start='1164' end='1168' isDollared='false'>
+                                                <Identifier start='1164' end='1168' name='name'/>
+                                            </Variable>
+                                        </Field>
+                                    </FieldAccess>
+                                </AttributeParameters>
+                            </AttributeDeclaration>
+                        </AttributeDeclarations>
+                    </Attribute>
+                </Attributes>
+                <ClassName>
+                    <Identifier start='1177' end='1189' name='ExampleClass'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='1190' end='1771' isCurly='true'>
+                    <ClassConstantDeclaration start='1196' end='1223' modifier='public'>
+                        <Names>
+                            <Identifier start='1202' end='1206' name='NAME'/>
+                        </Names>
+                        <Initializers>
+                            <FieldAccess start='1209' end='1222' isNullsafe='false'>
+                                <StaticConstantAccess start='1209' end='1216'>
+                                    <NamespaceName start='1209' end='1210' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1209' end='1210' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1212' end='1216' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1212' end='1216' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1218' end='1222' isDollared='false'>
+                                        <Identifier start='1218' end='1222' name='name'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1228' end='1257' modifier='public'>
+                        <Names>
+                            <Identifier start='1234' end='1239' name='VALUE'/>
+                        </Names>
+                        <Initializers>
+                            <FieldAccess start='1242' end='1256' isNullsafe='false'>
+                                <StaticConstantAccess start='1242' end='1249'>
+                                    <NamespaceName start='1242' end='1243' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1242' end='1243' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1245' end='1249' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1245' end='1249' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1251' end='1256' isDollared='false'>
+                                        <Identifier start='1251' end='1256' name='value'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1262' end='1299' modifier='public'>
+                        <Names>
+                            <Identifier start='1268' end='1281' name='NAME_NULLSAFE'/>
+                        </Names>
+                        <Initializers>
+                            <FieldAccess start='1284' end='1298' isNullsafe='true'>
+                                <StaticConstantAccess start='1284' end='1291'>
+                                    <NamespaceName start='1284' end='1285' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1284' end='1285' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1287' end='1291' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1287' end='1291' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1294' end='1298' isDollared='false'>
+                                        <Identifier start='1294' end='1298' name='name'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1304' end='1343' modifier='public'>
+                        <Names>
+                            <Identifier start='1310' end='1324' name='VALUE_NULLSAFE'/>
+                        </Names>
+                        <Initializers>
+                            <FieldAccess start='1327' end='1342' isNullsafe='true'>
+                                <StaticConstantAccess start='1327' end='1334'>
+                                    <NamespaceName start='1327' end='1328' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1327' end='1328' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1330' end='1334' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1330' end='1334' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1337' end='1342' isDollared='false'>
+                                        <Identifier start='1337' end='1342' name='value'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <FieldsDeclaration start='1349' end='1385' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1356' end='1362' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1356' end='1362' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1363' end='1368' isDollared='true'>
+                                <Identifier start='1364' end='1368' name='name'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <FieldAccess start='1371' end='1384' isNullsafe='false'>
+                                <StaticConstantAccess start='1371' end='1378'>
+                                    <NamespaceName start='1371' end='1372' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1371' end='1372' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1374' end='1378' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1374' end='1378' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1380' end='1384' isDollared='false'>
+                                        <Identifier start='1380' end='1384' name='name'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1390' end='1428' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1397' end='1403' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1397' end='1403' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1404' end='1410' isDollared='true'>
+                                <Identifier start='1405' end='1410' name='value'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <FieldAccess start='1413' end='1427' isNullsafe='false'>
+                                <StaticConstantAccess start='1413' end='1420'>
+                                    <NamespaceName start='1413' end='1414' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1413' end='1414' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1416' end='1420' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1416' end='1420' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1422' end='1427' isDollared='false'>
+                                        <Identifier start='1422' end='1427' name='value'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1433' end='1478' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1440' end='1446' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1440' end='1446' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1447' end='1460' isDollared='true'>
+                                <Identifier start='1448' end='1460' name='nameNullsafe'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <FieldAccess start='1463' end='1477' isNullsafe='true'>
+                                <StaticConstantAccess start='1463' end='1470'>
+                                    <NamespaceName start='1463' end='1464' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1463' end='1464' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1466' end='1470' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1466' end='1470' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1473' end='1477' isDollared='false'>
+                                        <Identifier start='1473' end='1477' name='name'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1483' end='1530' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1490' end='1496' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1490' end='1496' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1497' end='1511' isDollared='true'>
+                                <Identifier start='1498' end='1511' name='valueNullsafe'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <FieldAccess start='1514' end='1529' isNullsafe='true'>
+                                <StaticConstantAccess start='1514' end='1521'>
+                                    <NamespaceName start='1514' end='1515' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1514' end='1515' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1517' end='1521' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1517' end='1521' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1524' end='1529' isDollared='false'>
+                                        <Identifier start='1524' end='1529' name='value'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1536' end='1585' modifier='public static'>
+                        <FieldType>
+                            <NamespaceName start='1550' end='1556' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1550' end='1556' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1557' end='1568' isDollared='true'>
+                                <Identifier start='1558' end='1568' name='staticName'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <FieldAccess start='1571' end='1584' isNullsafe='false'>
+                                <StaticConstantAccess start='1571' end='1578'>
+                                    <NamespaceName start='1571' end='1572' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1571' end='1572' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1574' end='1578' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1574' end='1578' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1580' end='1584' isDollared='false'>
+                                        <Identifier start='1580' end='1584' name='name'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1590' end='1641' modifier='public static'>
+                        <FieldType>
+                            <NamespaceName start='1604' end='1610' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1604' end='1610' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1611' end='1623' isDollared='true'>
+                                <Identifier start='1612' end='1623' name='staticValue'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <FieldAccess start='1626' end='1640' isNullsafe='false'>
+                                <StaticConstantAccess start='1626' end='1633'>
+                                    <NamespaceName start='1626' end='1627' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1626' end='1627' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1629' end='1633' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1629' end='1633' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1635' end='1640' isDollared='false'>
+                                        <Identifier start='1635' end='1640' name='value'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1646' end='1704' modifier='public static'>
+                        <FieldType>
+                            <NamespaceName start='1660' end='1666' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1660' end='1666' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1667' end='1686' isDollared='true'>
+                                <Identifier start='1668' end='1686' name='staticNameNullsafe'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <FieldAccess start='1689' end='1703' isNullsafe='true'>
+                                <StaticConstantAccess start='1689' end='1696'>
+                                    <NamespaceName start='1689' end='1690' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1689' end='1690' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1692' end='1696' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1692' end='1696' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1699' end='1703' isDollared='false'>
+                                        <Identifier start='1699' end='1703' name='name'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1709' end='1769' modifier='public static'>
+                        <FieldType>
+                            <NamespaceName start='1723' end='1729' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1723' end='1729' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1730' end='1750' isDollared='true'>
+                                <Identifier start='1731' end='1750' name='staticValueNullsafe'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <FieldAccess start='1753' end='1768' isNullsafe='true'>
+                                <StaticConstantAccess start='1753' end='1760'>
+                                    <NamespaceName start='1753' end='1754' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1753' end='1754' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1756' end='1760' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1756' end='1760' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1763' end='1768' isDollared='false'>
+                                        <Identifier start='1763' end='1768' name='value'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <FunctionDeclaration start='1773' end='2162' isReference='false'>
+                <Identifier start='1782' end='1786' name='test'/>
+                <FormalParameters>
+                    <FormalParameter start='1826' end='1847' isMandatory='false' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1826' end='1831' isDollared='true'>
+                                <Identifier start='1827' end='1831' name='name'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                            <FieldAccess start='1834' end='1847' isNullsafe='false'>
+                                <StaticConstantAccess start='1834' end='1841'>
+                                    <NamespaceName start='1834' end='1835' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1834' end='1835' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1837' end='1841' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1837' end='1841' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1843' end='1847' isDollared='false'>
+                                        <Identifier start='1843' end='1847' name='name'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='1853' end='1876' isMandatory='false' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1853' end='1859' isDollared='true'>
+                                <Identifier start='1854' end='1859' name='value'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                            <FieldAccess start='1862' end='1876' isNullsafe='false'>
+                                <StaticConstantAccess start='1862' end='1869'>
+                                    <NamespaceName start='1862' end='1863' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1862' end='1863' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1865' end='1869' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1865' end='1869' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1871' end='1876' isDollared='false'>
+                                        <Identifier start='1871' end='1876' name='value'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='1882' end='1912' isMandatory='false' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1882' end='1895' isDollared='true'>
+                                <Identifier start='1883' end='1895' name='nameNullsafe'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                            <FieldAccess start='1898' end='1912' isNullsafe='true'>
+                                <StaticConstantAccess start='1898' end='1905'>
+                                    <NamespaceName start='1898' end='1899' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1898' end='1899' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1901' end='1905' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1901' end='1905' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1908' end='1912' isDollared='false'>
+                                        <Identifier start='1908' end='1912' name='name'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </DefaultValue>
+                    </FormalParameter>
+                    <FormalParameter start='1918' end='1950' isMandatory='false' isVariadic='false'>
+                        <ParametrType>
+                        </ParametrType>
+                        <ParametrName>
+                            <Variable start='1918' end='1932' isDollared='true'>
+                                <Identifier start='1919' end='1932' name='valueNullsafe'/>
+                            </Variable>
+                        </ParametrName>
+                        <DefaultValue>
+                            <FieldAccess start='1935' end='1950' isNullsafe='true'>
+                                <StaticConstantAccess start='1935' end='1942'>
+                                    <NamespaceName start='1935' end='1936' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1935' end='1936' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='1938' end='1942' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='1938' end='1942' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <Variable start='1945' end='1950' isDollared='false'>
+                                        <Identifier start='1945' end='1950' name='value'/>
+                                    </Variable>
+                                </Field>
+                            </FieldAccess>
+                        </DefaultValue>
+                    </FormalParameter>
+                </FormalParameters>
+                <Block start='1954' end='2162' isCurly='true'>
+                    <StaticStatement start='1983' end='2018'>
+                        <Variables>
+                            <Variable start='1990' end='2001' isDollared='true'>
+                                <Identifier start='1991' end='2001' name='staticName'/>
+                            </Variable>
+                        </Variables>
+                        <Expressions>
+                            <Assignment start='1990' end='2017' operator='EQUAL'>
+                                <Variable start='1990' end='2001' isDollared='true'>
+                                    <Identifier start='1991' end='2001' name='staticName'/>
+                                </Variable>
+                                <FieldAccess start='2004' end='2017' isNullsafe='false'>
+                                    <StaticConstantAccess start='2004' end='2011'>
+                                        <NamespaceName start='2004' end='2005' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2004' end='2005' name='E'/>
+                                        </NamespaceName>
+                                        <Constant>
+                                            <Identifier start='2007' end='2011' name='Case'/>
+                                        </Constant>
+                                        <Member>
+                                            <Identifier start='2007' end='2011' name='Case'/>
+                                        </Member>
+                                    </StaticConstantAccess>
+                                    <Field>
+                                        <Variable start='2013' end='2017' isDollared='false'>
+                                            <Identifier start='2013' end='2017' name='name'/>
+                                        </Variable>
+                                    </Field>
+                                </FieldAccess>
+                            </Assignment>
+                        </Expressions>
+                    </StaticStatement>
+                    <StaticStatement start='2023' end='2060'>
+                        <Variables>
+                            <Variable start='2030' end='2042' isDollared='true'>
+                                <Identifier start='2031' end='2042' name='staticValue'/>
+                            </Variable>
+                        </Variables>
+                        <Expressions>
+                            <Assignment start='2030' end='2059' operator='EQUAL'>
+                                <Variable start='2030' end='2042' isDollared='true'>
+                                    <Identifier start='2031' end='2042' name='staticValue'/>
+                                </Variable>
+                                <FieldAccess start='2045' end='2059' isNullsafe='false'>
+                                    <StaticConstantAccess start='2045' end='2052'>
+                                        <NamespaceName start='2045' end='2046' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2045' end='2046' name='E'/>
+                                        </NamespaceName>
+                                        <Constant>
+                                            <Identifier start='2048' end='2052' name='Case'/>
+                                        </Constant>
+                                        <Member>
+                                            <Identifier start='2048' end='2052' name='Case'/>
+                                        </Member>
+                                    </StaticConstantAccess>
+                                    <Field>
+                                        <Variable start='2054' end='2059' isDollared='false'>
+                                            <Identifier start='2054' end='2059' name='value'/>
+                                        </Variable>
+                                    </Field>
+                                </FieldAccess>
+                            </Assignment>
+                        </Expressions>
+                    </StaticStatement>
+                    <StaticStatement start='2065' end='2109'>
+                        <Variables>
+                            <Variable start='2072' end='2091' isDollared='true'>
+                                <Identifier start='2073' end='2091' name='staticNameNullsafe'/>
+                            </Variable>
+                        </Variables>
+                        <Expressions>
+                            <Assignment start='2072' end='2108' operator='EQUAL'>
+                                <Variable start='2072' end='2091' isDollared='true'>
+                                    <Identifier start='2073' end='2091' name='staticNameNullsafe'/>
+                                </Variable>
+                                <FieldAccess start='2094' end='2108' isNullsafe='true'>
+                                    <StaticConstantAccess start='2094' end='2101'>
+                                        <NamespaceName start='2094' end='2095' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2094' end='2095' name='E'/>
+                                        </NamespaceName>
+                                        <Constant>
+                                            <Identifier start='2097' end='2101' name='Case'/>
+                                        </Constant>
+                                        <Member>
+                                            <Identifier start='2097' end='2101' name='Case'/>
+                                        </Member>
+                                    </StaticConstantAccess>
+                                    <Field>
+                                        <Variable start='2104' end='2108' isDollared='false'>
+                                            <Identifier start='2104' end='2108' name='name'/>
+                                        </Variable>
+                                    </Field>
+                                </FieldAccess>
+                            </Assignment>
+                        </Expressions>
+                    </StaticStatement>
+                    <StaticStatement start='2114' end='2160'>
+                        <Variables>
+                            <Variable start='2121' end='2141' isDollared='true'>
+                                <Identifier start='2122' end='2141' name='staticValueNullsafe'/>
+                            </Variable>
+                        </Variables>
+                        <Expressions>
+                            <Assignment start='2121' end='2159' operator='EQUAL'>
+                                <Variable start='2121' end='2141' isDollared='true'>
+                                    <Identifier start='2122' end='2141' name='staticValueNullsafe'/>
+                                </Variable>
+                                <FieldAccess start='2144' end='2159' isNullsafe='true'>
+                                    <StaticConstantAccess start='2144' end='2151'>
+                                        <NamespaceName start='2144' end='2145' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2144' end='2145' name='E'/>
+                                        </NamespaceName>
+                                        <Constant>
+                                            <Identifier start='2147' end='2151' name='Case'/>
+                                        </Constant>
+                                        <Member>
+                                            <Identifier start='2147' end='2151' name='Case'/>
+                                        </Member>
+                                    </StaticConstantAccess>
+                                    <Field>
+                                        <Variable start='2154' end='2159' isDollared='false'>
+                                            <Identifier start='2154' end='2159' name='value'/>
+                                        </Variable>
+                                    </Field>
+                                </FieldAccess>
+                            </Assignment>
+                        </Expressions>
+                    </StaticStatement>
+                </Block>
+            </FunctionDeclaration>
+            <EnumDeclaration start='2164' end='2396'>
+                <EnumName>
+                    <Identifier start='2169' end='2180' name='ExampleEnum'/>
+                </EnumName>
+                <BackingType>
+                    <NamespaceName start='2182' end='2188' isCurrent='false' isGlobal='false'>
+                        <Identifier start='2182' end='2188' name='string'/>
+                    </NamespaceName>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='2189' end='2396' isCurly='true'>
+                    <CaseDeclaration start='2195' end='2221'>
+                        <CaseName>
+                            <Identifier start='2200' end='2204' name='NAME'/>
+                        </CaseName>
+                        <FieldAccess start='2207' end='2220' isNullsafe='false'>
+                            <StaticConstantAccess start='2207' end='2214'>
+                                <NamespaceName start='2207' end='2208' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2207' end='2208' name='E'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <Identifier start='2210' end='2214' name='Case'/>
+                                </Constant>
+                                <Member>
+                                    <Identifier start='2210' end='2214' name='Case'/>
+                                </Member>
+                            </StaticConstantAccess>
+                            <Field>
+                                <Variable start='2216' end='2220' isDollared='false'>
+                                    <Identifier start='2216' end='2220' name='name'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='2226' end='2254'>
+                        <CaseName>
+                            <Identifier start='2231' end='2236' name='VALUE'/>
+                        </CaseName>
+                        <FieldAccess start='2239' end='2253' isNullsafe='false'>
+                            <StaticConstantAccess start='2239' end='2246'>
+                                <NamespaceName start='2239' end='2240' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2239' end='2240' name='E'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <Identifier start='2242' end='2246' name='Case'/>
+                                </Constant>
+                                <Member>
+                                    <Identifier start='2242' end='2246' name='Case'/>
+                                </Member>
+                            </StaticConstantAccess>
+                            <Field>
+                                <Variable start='2248' end='2253' isDollared='false'>
+                                    <Identifier start='2248' end='2253' name='value'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='2259' end='2295'>
+                        <CaseName>
+                            <Identifier start='2264' end='2277' name='NULLSAFE_NAME'/>
+                        </CaseName>
+                        <FieldAccess start='2280' end='2294' isNullsafe='true'>
+                            <StaticConstantAccess start='2280' end='2287'>
+                                <NamespaceName start='2280' end='2281' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2280' end='2281' name='E'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <Identifier start='2283' end='2287' name='Case'/>
+                                </Constant>
+                                <Member>
+                                    <Identifier start='2283' end='2287' name='Case'/>
+                                </Member>
+                            </StaticConstantAccess>
+                            <Field>
+                                <Variable start='2290' end='2294' isDollared='false'>
+                                    <Identifier start='2290' end='2294' name='name'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='2300' end='2338'>
+                        <CaseName>
+                            <Identifier start='2305' end='2319' name='NULLSAFE_VALUE'/>
+                        </CaseName>
+                        <FieldAccess start='2322' end='2337' isNullsafe='true'>
+                            <StaticConstantAccess start='2322' end='2329'>
+                                <NamespaceName start='2322' end='2323' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2322' end='2323' name='E'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <Identifier start='2325' end='2329' name='Case'/>
+                                </Constant>
+                                <Member>
+                                    <Identifier start='2325' end='2329' name='Case'/>
+                                </Member>
+                            </StaticConstantAccess>
+                            <Field>
+                                <Variable start='2332' end='2337' isDollared='false'>
+                                    <Identifier start='2332' end='2337' name='value'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='2343' end='2364'>
+                        <CaseName>
+                            <Identifier start='2348' end='2353' name='TEST1'/>
+                        </CaseName>
+                        <StaticConstantAccess start='2356' end='2363'>
+                            <NamespaceName start='2356' end='2357' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2356' end='2357' name='E'/>
+                            </NamespaceName>
+                            <Constant>
+                                <Identifier start='2359' end='2363' name='Case'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='2359' end='2363' name='Case'/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='2369' end='2394'>
+                        <CaseName>
+                            <Identifier start='2374' end='2379' name='TEST2'/>
+                        </CaseName>
+                        <FieldAccess start='2382' end='2393' isNullsafe='false'>
+                            <ConstantVariable start='2382' end='2387'>
+                                <NamespaceName start='2382' end='2387' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2382' end='2387' name='TEST1'/>
+                                </NamespaceName>
+                            </ConstantVariable>
+                            <Field>
+                                <Variable start='2389' end='2393' isDollared='false'>
+                                    <Identifier start='2389' end='2393' name='name'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                    </CaseDeclaration>
+                </Block>
+            </EnumDeclaration>
+            <GlobalConstantDeclaration start='2398' end='2420'>
+                <Names>
+                    <Identifier start='2404' end='2409' name='VALUE'/>
+                </Names>
+                <Initializers>
+                    <Scalar start='2412' end='2419' type='STRING' value='&apos;value&apos;'/>
+                </Initializers>
+            </GlobalConstantDeclaration>
+            <ClassDeclaration start='2421' end='2486' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='2427' end='2449' name='ReflectionVariableTest'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='2450' end='2486' isCurly='true'>
+                    <ClassConstantDeclaration start='2457' end='2484' modifier='public'>
+                        <Names>
+                            <Identifier start='2463' end='2464' name='C'/>
+                        </Names>
+                        <Initializers>
+                            <FieldAccess start='2467' end='2483' isNullsafe='false'>
+                                <StaticConstantAccess start='2467' end='2474'>
+                                    <NamespaceName start='2467' end='2468' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2467' end='2468' name='E'/>
+                                    </NamespaceName>
+                                    <Constant>
+                                        <Identifier start='2470' end='2474' name='Case'/>
+                                    </Constant>
+                                    <Member>
+                                        <Identifier start='2470' end='2474' name='Case'/>
+                                    </Member>
+                                </StaticConstantAccess>
+                                <Field>
+                                    <ReflectionVariable start='2476' end='2483'>
+                                        <NamespaceName start='2477' end='2482' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='2477' end='2482' name='VALUE'/>
+                                        </NamespaceName>
+                                    </ReflectionVariable>
+                                </Field>
+                            </FieldAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+        </Statements>
+    </Program>
+</testresult>

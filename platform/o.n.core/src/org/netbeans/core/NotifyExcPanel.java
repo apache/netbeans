@@ -21,6 +21,7 @@ package org.netbeans.core;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -38,6 +39,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
@@ -54,10 +58,12 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.event.HyperlinkEvent;
 import org.netbeans.core.startup.CLIOptions;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -87,7 +93,7 @@ public final class NotifyExcPanel extends JPanel implements ActionListener {
     /** preferred width of this component */
     private static final int SIZE_PREFERRED_WIDTH=550;
     /** preferred height of this component */
-    private static final int SIZE_PREFERRED_HEIGHT=250;
+    private static final int SIZE_PREFERRED_HEIGHT=350;
     private static final int MAX_STORED_EXCEPTIONS = 500;
     private static final boolean AUTO_FOCUS = Boolean.getBoolean("netbeans.winsys.auto_focus"); // NOI18N
 
@@ -107,7 +113,7 @@ public final class NotifyExcPanel extends JPanel implements ActionListener {
     /** details button */
     private JButton details;
     /** details window */
-    private JTextPane output;
+    private JTextArea output;
 
     /** boolean to show/hide details */
     private static boolean showDetails;
@@ -131,12 +137,13 @@ public final class NotifyExcPanel extends JPanel implements ActionListener {
         details = new JButton ();
         details.setDefaultCapable (false);
 
-        output = new JTextPane() {
+        output = new JTextArea() {
             public @Override boolean getScrollableTracksViewportWidth() {
                 return false;
             }
         };
         output.setEditable(false);
+        output.setLineWrap(false);
         Font f = output.getFont();
         output.setFont(new Font("Monospaced", Font.PLAIN, null == f ? 12 : f.getSize() + 1)); // NOI18N
         output.setForeground(UIManager.getColor("Label.foreground")); // NOI18N
@@ -484,32 +491,41 @@ public final class NotifyExcPanel extends JPanel implements ActionListener {
                 }
             } else {
                 ResourceBundle curBundle = NbBundle.getBundle (NotifyExcPanel.class);
+                String message;
                 if (current.getSeverity() == Level.WARNING) {
                     // less scary message for warning level
-                    descriptor.setMessage (
-                        java.text.MessageFormat.format(
-                            curBundle.getString("NTF_ExceptionWarning"),
-                            new Object[] {
-                                current.getClassName ()
-                            }
-                        )
+                    message = MessageFormat.format(
+                        curBundle.getString("NTF_ExceptionWarning"),
+                        new Object[] { current.getClassName() }
                     );
                     title = curBundle.getString("NTF_ExceptionWarningTitle"); // NOI18N
                 } else {
-                    // emphasize user-non-friendly exceptions
-                    //      if (this.getMessage() == null || "".equals(this.getMessage())) { // NOI18N
-                    descriptor.setMessage (
-                        java.text.MessageFormat.format(
-                            curBundle.getString("NTF_ExceptionalException"),
-                            new Object[] {
-                                current.getClassName (),
-                                CLIOptions.getLogDir ()
-                            }
-                        )
+                    message = MessageFormat.format(
+                        curBundle.getString("NTF_ExceptionalException"),
+                        new Object[] { current.getClassName(), Paths.get(CLIOptions.getLogDir()).toUri() }
                     );
-
                     title = curBundle.getString("NTF_ExceptionalExceptionTitle"); // NOI18N
                 }
+                JTextPane pane = new JTextPane();
+                pane.setContentType("text/html"); // NOI18N
+                pane.setText(message);
+                pane.setBackground(UIManager.getColor("Label.background")); // NOI18N
+                pane.setBorder(BorderFactory.createEmptyBorder());
+                pane.setEditable(false);
+                pane.setFocusable(true);
+                pane.addHyperlinkListener((e) -> {
+                    if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                        try {
+                            Desktop.getDesktop().browse(e.getURL().toURI());
+                        } catch (IOException | URISyntaxException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                });
+                JScrollPane sp = new JScrollPane(pane);
+                sp.setBorder(BorderFactory.createEmptyBorder());
+                sp.setPreferredSize(new Dimension(300, 120));
+                descriptor.setMessage(sp);
             }
         }
 

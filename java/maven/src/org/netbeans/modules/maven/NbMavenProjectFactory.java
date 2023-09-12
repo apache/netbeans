@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectFactory2;
 import org.netbeans.spi.project.ProjectState;
@@ -77,7 +78,9 @@ public class NbMavenProjectFactory implements ProjectFactory2 {
 
     public @Override ProjectManager.Result isProject2(FileObject projectDirectory) {
         if (isProject(projectDirectory)) {
-            return new ProjectManager.Result(ImageUtilities.loadImageIcon("org/netbeans/modules/maven/resources/Maven2Icon.gif", true)); //NOI18N
+            return new ProjectManager.Result(
+                    null, NbMavenProject.TYPE, 
+                    ImageUtilities.loadImageIcon("org/netbeans/modules/maven/resources/Maven2Icon.gif", true)); //NOI18N
         }
         return null;
     }

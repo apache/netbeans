@@ -312,7 +312,7 @@ public final class ProjectWebModule extends J2eeModuleProvider
     }
 
     public ClassPathProvider getClassPathProvider () {
-        return (ClassPathProvider) project.getLookup ().lookup (ClassPathProvider.class);
+        return project.getLookup().lookup(ClassPathProvider.class);
     }
 
     public FileObject getArchive () {
@@ -558,11 +558,13 @@ public final class ProjectWebModule extends J2eeModuleProvider
     public String getModuleVersion () {
         // return a version based on the Java EE version
         Profile platformVersion = getJ2eeProfile();
-        if (Profile.JAKARTA_EE_9_FULL.equals(platformVersion) || Profile.JAKARTA_EE_9_WEB.equals(platformVersion)) {
-            return WebApp.VERSION_4_0;
-        } else if (Profile.JAKARTA_EE_8_FULL.equals(platformVersion) || Profile.JAKARTA_EE_8_WEB.equals(platformVersion)) {
-            return WebApp.VERSION_4_0;
-        } else if (Profile.JAVA_EE_8_FULL.equals(platformVersion) || Profile.JAVA_EE_8_WEB.equals(platformVersion)) {
+        if (Profile.JAKARTA_EE_10_FULL.equals(platformVersion) || Profile.JAKARTA_EE_10_WEB.equals(platformVersion)) {
+            return WebApp.VERSION_6_0;
+        } else if (Profile.JAKARTA_EE_9_1_FULL.equals(platformVersion) || Profile.JAKARTA_EE_9_1_WEB.equals(platformVersion)
+                || Profile.JAKARTA_EE_9_FULL.equals(platformVersion) || Profile.JAKARTA_EE_9_WEB.equals(platformVersion)) {
+            return WebApp.VERSION_5_0;
+        } else if (Profile.JAKARTA_EE_8_FULL.equals(platformVersion) || Profile.JAKARTA_EE_8_WEB.equals(platformVersion) 
+                || Profile.JAVA_EE_8_FULL.equals(platformVersion) || Profile.JAVA_EE_8_WEB.equals(platformVersion)) {
             return WebApp.VERSION_4_0;
         } else if (Profile.JAVA_EE_7_FULL.equals(platformVersion) || Profile.JAVA_EE_7_WEB.equals(platformVersion)) {
             return WebApp.VERSION_3_1;

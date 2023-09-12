@@ -152,7 +152,7 @@ public class XMLWizardIterator implements TemplateWizard.Iterator {
         }
         model = new DocumentModel(targetFolderURL);
         Object prop = templateWizard.getProperty (WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
     }

@@ -21,18 +21,57 @@ package org.netbeans.modules.java.disco;
 import eu.hansolo.jdktools.ArchiveType;
 import eu.hansolo.jdktools.PackageType;
 import eu.hansolo.jdktools.ReleaseStatus;
-import eu.hansolo.jdktools.versioning.VersionNumber;
+import eu.hansolo.jdktools.TermOfSupport;
+import eu.hansolo.jdktools.versioning.Semver;
 import io.foojay.api.discoclient.pkg.Distribution;
 import io.foojay.api.discoclient.pkg.Pkg;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
+import java.util.function.Function;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 
 public class BundleTableModel extends AbstractTableModel {
-    private String[]     columnNames = { "Version", "Distribution", "Architecture", "Bundle Type", "Release Status", "Extension" };
+
+    private enum Column {
+
+        VERSION("Version", Semver.class, bundle -> bundle.getJavaVersion()),
+        DISTRIBUTION("Distribution", Distribution.class, bundle -> bundle.getDistribution().getUiString()),
+        ARCHITECTURE("Architecture", String.class, bundle -> bundle.getArchitecture().getUiString()),
+        LIBC("LibC", String.class, bundle -> bundle.getLibCType().getUiString()),
+        BUNDLE("Bundle", PackageType.class, bundle -> bundle.getPackageType().getUiString()),
+        SUPPORT("Support", String.class, bundle -> toString(bundle.getTermOfSupport())),
+        STATUS("Release Status", ReleaseStatus.class, bundle -> bundle.getReleaseStatus().name()),
+        EXTENSION("Extension", ArchiveType.class, bundle -> bundle.getArchiveType().getUiString());
+
+        private static String toString(TermOfSupport tos) {
+            switch (tos) {
+                case LTS: return "LTS";
+                case MTS: return "MTS";
+                case STS: return "STS";
+                default:  return "";
+            }
+        }
+
+        private final String colname;
+        private final Class<?> type;
+        private final Function<Pkg, Object> valueMapping;
+
+        private Column(String name, Class<?> type, Function<Pkg, Object> valueMapping) {
+            this.colname = name;
+            this.type = type;
+            this.valueMapping = valueMapping;
+        }
+
+        private Object getValueFor(Pkg bundle) {
+            return valueMapping.apply(bundle);
+        }
+    }
+
+    private static final Column[] COLUMNS = Column.values();
+
     private List<Pkg> bundles;
 
 
@@ -41,57 +80,37 @@ public class BundleTableModel extends AbstractTableModel {
     }
 
 
-    public List<Pkg> getBundles() { return bundles; }
+    public List<Pkg> getBundles() {
+        return bundles;
+    }
+
     public void setBundles(final List<Pkg> bundles) {
         this.bundles = bundles;
         this.fireTableDataChanged();
     }
 
+    @Override
+    public int getRowCount() {
+        return bundles == null ? 0 : bundles.size();
+    }
+
+    @Override
+    public int getColumnCount() {
+        return COLUMNS.length;
+    }
+
+    @Override
     public @NonNull String getColumnName(final int col) {
-        switch(col) {
-            case 0 :
-            case 1 :
-            case 2 :
-            case 3 :
-            case 4 :
-            case 5 : return columnNames[col];
-            default: throw new IllegalArgumentException("Column not found " + col);
-        }
+        return COLUMNS[col].colname;
     }
 
-    public Class getColumnClass(final int col) {
-        switch(col) {
-            case 0 : return VersionNumber.class;
-            case 1 : return Distribution.class;
-            case 2 : return String.class;
-            case 3 : return PackageType.class;
-            case 4 : return ReleaseStatus.class;
-            case 5 : return ArchiveType.class;
-            default: return super.getColumnClass(col);
-        }
+    @Override
+    public @NonNull Class<?> getColumnClass(final int col) {
+        return COLUMNS[col].type;
     }
 
-    @Override public int getRowCount() {
-        if (null == bundles) { return 0; }
-        return bundles.size();
-    }
-
-    @Override public int getColumnCount() {
-        return columnNames.length;
-    }
-
-    @Override public @NonNull Object getValueAt(final @NonNegative int row, final @NonNegative int col) {
-        if (row < 0 || row >= getRowCount())
-            throw new IllegalArgumentException("Row not found " + row);
-        final Pkg bundle = bundles.get(row);
-        switch(col) {
-            case 0 : return bundle.getDistributionVersion();
-            case 1 : return bundle.getDistribution().getUiString();
-            case 2 : return bundle.getArchitecture().getUiString();
-            case 3 : return bundle.getPackageType().getUiString();
-            case 4 : return bundle.getReleaseStatus().name();
-            case 5 : return bundle.getArchiveType().getUiString();
-            default: throw new IllegalArgumentException("Column not found " + col);
-        }
+    @Override
+    public @NonNull Object getValueAt(final @NonNegative int row, final @NonNegative int col) {
+        return COLUMNS[col].getValueFor(bundles.get(row));
     }
 }

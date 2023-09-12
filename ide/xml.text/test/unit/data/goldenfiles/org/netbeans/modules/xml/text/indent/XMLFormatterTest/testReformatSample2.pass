@@ -748,7 +748,7 @@ Link to<A HREF="overview-summary.html">Non-frame version.</A>
         <!-- possibly after filtering for duplicates or something like this. -->
         <!-- Timeout is ten minutes; should be enough for valid start, while preventing -->
         <!-- a deadlock from hanging an automated build: -->
-        <exec os="Windows NT Windows 2000 Windows 2003 Windows XP" executable="${netbeans.dest.abs}/bin/nb.exe" failonerror="yes" timeout="600000">
+        <exec os="Windows NT Windows 95 Windows 98 Windows 2000 Windows 2003 Windows XP" executable="${netbeans.dest.abs}/bin/nb.exe" failonerror="yes" timeout="600000">
             <arg value="--jdkhome"/>
             <arg file="${nbjdk.home}"/>
             <arg value="--userdir"/>
@@ -828,7 +828,7 @@ Link to<A HREF="overview-summary.html">Non-frame version.</A>
     >
         <property name="tryme.debug.args" value="" />
         
-        <exec os="Windows NT Windows 2000 Windows 2003 Windows XP" executable="${netbeans.dest.abs}/bin/nb.exe" failonerror="yes">
+        <exec os="Windows NT Windows 95 Windows 98 Windows 2000 Windows 2003 Windows XP" executable="${netbeans.dest.abs}/bin/nb.exe" failonerror="yes">
             <arg value="--jdkhome"/>
             <arg file="${nbjdk.home}"/>
             <arg value="--userdir"/>

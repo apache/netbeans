@@ -57,7 +57,7 @@ import org.openide.util.NbBundle;
  * 
  * @author Max Sauer
  */
-class CreateEnumConstant extends CreateFixBase implements Fix {
+class CreateEnumConstant extends ModificationResultBasedFix implements Fix {
 
     private String name;
     private String inFQN;

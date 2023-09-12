@@ -195,6 +195,7 @@ final class JBossMsgDestRefModifier {
      *
      * @deprecated
      */
+    @Deprecated
     static void modifyMsgDrv(Jboss modifiedJboss, String msgDestRefName, Map beans, String destPrefix) {
 
         assert(beans.size() > 0);
@@ -215,6 +216,7 @@ final class JBossMsgDestRefModifier {
      *
      * @deprecated
      */
+    @Deprecated
     private static void addMsgDrvMsgDestReference(Jboss modifiedJboss, String msgDestRefName, Map beans, String destPrefix) {
 
         List/*<Entity>*/ msgdrvsWithoutReference = new LinkedList();

@@ -46,7 +46,6 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelException;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.PersistentObject;
 import org.netbeans.modules.j2ee.persistence.api.EntityClassScope;
@@ -71,13 +70,13 @@ public class EntityClosure {
     
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     
-    private Set<Entity> availableEntityInstances = new HashSet<Entity>();
-    private Set<String> availableEntities = new HashSet<String>();
-    private Set<String> wantedEntities = new HashSet<String>();
-    private Set<String> selectedEntities = new HashSet<String>();
-    private Set<String> referencedEntities = new HashSet<String>();
-    private HashMap<String,Entity> fqnEntityMap = new HashMap<String,Entity>();
-    private HashMap<String,Boolean> fqnIdExistMap = new HashMap<String,Boolean>();
+    private Set<Entity> availableEntityInstances = new HashSet<>();
+    private Set<String> availableEntities = new HashSet<>();
+    private Set<String> wantedEntities = new HashSet<>();
+    private Set<String> selectedEntities = new HashSet<>();
+    private Set<String> referencedEntities = new HashSet<>();
+    private HashMap<String,Entity> fqnEntityMap = new HashMap<>();
+    private HashMap<String,Boolean> fqnIdExistMap = new HashMap<>();
     private boolean modelReady;
     private boolean ejbModuleInvolved = false;
     private boolean closureEnabled = true;
@@ -100,32 +99,22 @@ public class EntityClosure {
     private EntityClosure(EntityClassScope entityClassScope, Project project) {
         this.model = entityClassScope.getEntityMappingsModel(true);
         this.project = project;
-        readHelper = MetadataModelReadHelper.create(model, new MetadataModelAction<EntityMappingsMetadata, List<Entity>>() {
-            @Override
-            public List<Entity> run(EntityMappingsMetadata metadata) {
-                return Arrays.<Entity>asList(metadata.getRoot().getEntity());
-            }
-        });
+        readHelper = MetadataModelReadHelper.create(model, (EntityMappingsMetadata metadata) -> 
+                Arrays.<Entity>asList(metadata.getRoot().getEntity()) );
     }
     
     private void initialize() {
-        readHelper.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (readHelper.getState() == State.FINISHED) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                addAvaliableEntities(new HashSet<Entity>(readHelper.getResult()));
-                                modelReady = true;
-                                changeSupport.fireChange();
-                            } catch (ExecutionException e) {
-                                Exceptions.printStackTrace(e);
-                            }
-                        }
-                    });
-                }
+        readHelper.addChangeListener( (ChangeEvent e) -> {
+            if (readHelper.getState() == State.FINISHED) {
+                SwingUtilities.invokeLater( () -> {
+                    try {
+                        addAvaliableEntities(new HashSet<Entity>(readHelper.getResult()));
+                        modelReady = true;
+                        changeSupport.fireChange();
+                    } catch (ExecutionException e1) {
+                        Exceptions.printStackTrace(e1);
+                    }
+                });
             }
         });
         readHelper.start();
@@ -136,13 +125,7 @@ public class EntityClosure {
         
         JavaSource source = null;
         try {
-            source = model.runReadAction(new MetadataModelAction<EntityMappingsMetadata, JavaSource>() {
-
-                @Override
-                public JavaSource run(EntityMappingsMetadata metadata) throws Exception {
-                    return metadata.createJavaSource();
-                }
-            });
+            source = model.runReadAction( (EntityMappingsMetadata metadata) -> metadata.createJavaSource() );
         } catch (MetadataModelException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
@@ -153,24 +136,20 @@ public class EntityClosure {
             try {
                 ClassPath classPath = source.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
                 final Set<Project> ejbProjects = getEjbModulesOfClasspath(classPath);
-                source.runUserActionTask(new Task<CompilationController>() {
-
-                    @Override
-                    public void run(CompilationController parameter) throws Exception {
-                        for (Entity en : entities) {
-                            availableEntities.add(en.getClass2());
-                            fqnEntityMap.put(en.getClass2(), en);
-                            PersistentObject po = (PersistentObject) en;
-                            ElementHandle<TypeElement> teh = po.getTypeElementHandle();
-                            TypeElement te = teh.resolve(parameter);
-                            fqnIdExistMap.put(en.getClass2(), JpaControllerUtil.haveId(te));
-
-                            // issue #219565 - troubles of EJB's enities CP visibility
-                            FileObject file = SourceUtils.getFile(teh, parameter.getClasspathInfo());
-                            if (isEjbProjectEntity(ejbProjects, file)) {
-                                ejbModuleInvolved = true;
-                                LOG.log(Level.INFO, "Entity came from EJB module and mustn''t be visible on CP, entity={0}", en.getClass2());
-                            }
+                source.runUserActionTask( (CompilationController parameter) -> {
+                    for (Entity en : entities) {
+                        availableEntities.add(en.getClass2());
+                        fqnEntityMap.put(en.getClass2(), en);
+                        PersistentObject po = (PersistentObject) en;
+                        ElementHandle<TypeElement> teh = po.getTypeElementHandle();
+                        TypeElement te = teh.resolve(parameter);
+                        fqnIdExistMap.put(en.getClass2(), JpaControllerUtil.haveId(te));
+                        
+                        // issue #219565 - troubles of EJB's enities CP visibility
+                        FileObject file = SourceUtils.getFile(teh, parameter.getClasspathInfo());
+                        if (isEjbProjectEntity(ejbProjects, file)) {
+                            ejbModuleInvolved = true;
+                            LOG.log(Level.INFO, "Entity came from EJB module and mustn''t be visible on CP, entity={0}", en.getClass2());
                         }
                     }
                 }, true);
@@ -220,7 +199,7 @@ public class EntityClosure {
             if (wantedEntities.addAll(entities)) {
                 try{
                     Set<String> refEntities = getReferencedEntitiesTransitively(entities);
-                    Set<String> addedEntities = new HashSet<String>(entities);
+                    Set<String> addedEntities = new HashSet<>(entities);
                     addedEntities.addAll(refEntities);
                     
                     selectedEntities.addAll(addedEntities);
@@ -289,8 +268,8 @@ public class EntityClosure {
      */
     private Set<String> getReferencedEntitiesTransitively(Set<String> entities) throws IOException {
         
-        Queue<String> entityQueue = new Queue<String>(entities);
-        Set<String> refEntities = new HashSet<String>();
+        Queue<String> entityQueue = new Queue<>(entities);
+        Set<String> refEntities = new HashSet<>();
         
         while (!entityQueue.isEmpty()) {
             String entity = entityQueue.poll();
@@ -314,27 +293,22 @@ public class EntityClosure {
             return Collections.emptySet();
         }
 
-        JavaSource source = model.runReadAction(new MetadataModelAction<EntityMappingsMetadata, JavaSource>() {
-            @Override
-            public JavaSource run(EntityMappingsMetadata metadata) throws Exception {
-                return metadata.createJavaSource();
-            }
-        });
+        JavaSource source = model.runReadAction( (EntityMappingsMetadata metadata) -> metadata.createJavaSource() );
                 
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
 
         source.runUserActionTask(new Task<CompilationController>() {
             @Override
             public void run(CompilationController parameter) throws Exception {
                 List<Entity> entities = readHelper.getResult();
-                Set<String> entitiesFqn = new HashSet<String>();
+                Set<String> entitiesFqn = new HashSet<>();
                 for( Entity entity : entities){
                     entitiesFqn.add( entity.getClass2());  
                 }
                 
                 TypeElement entity = parameter.getElements().getTypeElement(entityClass);
                 for (Element element : parameter.getElements().getAllMembers(entity)){
-                    if (ElementKind.METHOD.equals(element.getKind())){
+                    if (ElementKind.METHOD == element.getKind()) {
                         ExecutableType methodType = (ExecutableType)parameter.getTypes().
                                 asMemberOf((DeclaredType)entity.asType(), element);
                          TypeMirror returnType = methodType.getReturnType();
@@ -345,7 +319,7 @@ public class EntityClosure {
                              addTypeMirror(result, parameter, paramType, entitiesFqn);
                         }
                     }
-                    else if  (ElementKind.FIELD.equals(element.getKind())){
+                    else if  (ElementKind.FIELD == element.getKind()) {
                         TypeMirror typeMirror = parameter.getTypes().
                                 asMemberOf((DeclaredType)entity.asType(), element);
                         addTypeMirror(result, parameter, typeMirror, entitiesFqn );
@@ -372,7 +346,7 @@ public class EntityClosure {
     }
 
     private void redoClosure() {
-        Set<String> allEntities = new HashSet<String>(availableEntities);
+        Set<String> allEntities = new HashSet<>(availableEntities);
         allEntities.addAll(selectedEntities);
         
         referencedEntities.clear();
@@ -404,7 +378,7 @@ public class EntityClosure {
         if (closureEnabled) {
             redoClosure();
         } else {
-            Set<String> allEntities = new HashSet<String>(availableEntities);
+            Set<String> allEntities = new HashSet<>(availableEntities);
             allEntities.addAll(selectedEntities);
             
             referencedEntities.clear();
@@ -425,38 +399,22 @@ public class EntityClosure {
     
     void waitModelIsReady(){
         try {
-            Future result = model.runReadActionWhenReady(new MetadataModelAction<EntityMappingsMetadata, Boolean>() {
-
-                @Override
-                public Boolean run(EntityMappingsMetadata metadata) throws Exception {
-                    return true;
-                }
-            });
+            Future result = model.runReadActionWhenReady( (EntityMappingsMetadata metadata) -> true );
             result.get();
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (MetadataModelException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
+        } catch (InterruptedException | ExecutionException | IOException ex) {
             Exceptions.printStackTrace(ex);
         }
         
     }
     
     private boolean isFieldAccess(final String entity) throws MetadataModelException, IOException {
-        Boolean result = model.runReadAction(new MetadataModelAction<EntityMappingsMetadata, Boolean>() {
-            
-            @Override
-            public Boolean run(EntityMappingsMetadata metadata) throws Exception {
-                for (Entity e : metadata.getRoot().getEntity()){
-                    if (e.getClass2().equals(entity)){
-                        return e.getAccess().equals(Entity.FIELD_ACCESS);
-                    }
+        Boolean result = model.runReadAction( (EntityMappingsMetadata metadata) -> {
+            for (Entity e : metadata.getRoot().getEntity()){
+                if (e.getClass2().equals(entity)){
+                    return e.getAccess().equals(Entity.FIELD_ACCESS);
                 }
-                return false;
             }
+            return false;
         });
         
         return result;
@@ -471,7 +429,7 @@ public class EntityClosure {
     }
 
     private Set<Project> getEjbModulesOfClasspath(ClassPath classPath) {
-        Set<Project> ejbProjects = new HashSet<Project>();
+        Set<Project> ejbProjects = new HashSet<>();
         for (FileObject fileObject : classPath.getRoots()) {
             Project rootOwner = FileOwnerQuery.getOwner(fileObject);
             if (rootOwner != null) {
@@ -554,7 +512,7 @@ public class EntityClosure {
     private static class EntityClosureComboBoxModel extends DefaultComboBoxModel implements ChangeListener {
 
         private EntityClosure entityClosure;
-        private List<String> entities = new ArrayList<String>();
+        private List<String> entities = new ArrayList<>();
 
         EntityClosureComboBoxModel(EntityClosure entityClosure) {
             this.entityClosure = entityClosure;

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.39.0
+#Version 1.45.0
 
 CLSS public com.sun.faces.RIConstants
 fld public final static java.lang.Class[] EMPTY_CLASS_ARGS
@@ -3548,13 +3548,14 @@ cons public init()
 meth public boolean isReadOnly(javax.el.ELContext,java.lang.Object,java.lang.Object)
 meth public java.lang.Class<?> getCommonPropertyType(javax.el.ELContext,java.lang.Object)
 meth public java.lang.Class<?> getType(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.lang.Object convertToType(javax.el.ELContext,java.lang.Object,java.lang.Class<?>)
 meth public java.lang.Object getValue(javax.el.ELContext,java.lang.Object,java.lang.Object)
 meth public java.lang.Object invoke(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Class<?>[],java.lang.Object[])
 meth public java.util.Iterator<java.beans.FeatureDescriptor> getFeatureDescriptors(javax.el.ELContext,java.lang.Object)
 meth public void add(javax.el.ELResolver)
 meth public void setValue(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
 supr javax.el.ELResolver
-hfds elResolvers
+hfds elResolvers,size
 hcls CompositeIterator
 
 CLSS public abstract javax.el.ELContext
@@ -3562,14 +3563,26 @@ cons public init()
 meth public abstract javax.el.ELResolver getELResolver()
 meth public abstract javax.el.FunctionMapper getFunctionMapper()
 meth public abstract javax.el.VariableMapper getVariableMapper()
+meth public boolean isLambdaArgument(java.lang.String)
 meth public boolean isPropertyResolved()
+meth public java.lang.Object convertToType(java.lang.Object,java.lang.Class<?>)
 meth public java.lang.Object getContext(java.lang.Class)
+meth public java.lang.Object getLambdaArgument(java.lang.String)
+meth public java.util.List<javax.el.EvaluationListener> getEvaluationListeners()
 meth public java.util.Locale getLocale()
+meth public javax.el.ImportHandler getImportHandler()
+meth public void addEvaluationListener(javax.el.EvaluationListener)
+meth public void enterLambdaScope(java.util.Map<java.lang.String,java.lang.Object>)
+meth public void exitLambdaScope()
+meth public void notifyAfterEvaluation(java.lang.String)
+meth public void notifyBeforeEvaluation(java.lang.String)
+meth public void notifyPropertyResolved(java.lang.Object,java.lang.Object)
 meth public void putContext(java.lang.Class,java.lang.Object)
 meth public void setLocale(java.util.Locale)
 meth public void setPropertyResolved(boolean)
+meth public void setPropertyResolved(java.lang.Object,java.lang.Object)
 supr java.lang.Object
-hfds locale,map,resolved
+hfds importHandler,lambdaArgs,listeners,locale,map,resolved
 
 CLSS public abstract interface javax.el.ELContextListener
 intf java.util.EventListener
@@ -3585,6 +3598,7 @@ meth public abstract java.lang.Class<?> getType(javax.el.ELContext,java.lang.Obj
 meth public abstract java.lang.Object getValue(javax.el.ELContext,java.lang.Object,java.lang.Object)
 meth public abstract java.util.Iterator<java.beans.FeatureDescriptor> getFeatureDescriptors(javax.el.ELContext,java.lang.Object)
 meth public abstract void setValue(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
+meth public java.lang.Object convertToType(javax.el.ELContext,java.lang.Object,java.lang.Class<?>)
 meth public java.lang.Object invoke(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Class<?>[],java.lang.Object[])
 supr java.lang.Object
 
@@ -3596,13 +3610,17 @@ meth public abstract boolean isLiteralText()
 meth public abstract int hashCode()
 meth public abstract java.lang.String getExpressionString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public abstract javax.el.MethodExpression
 cons public init()
 meth public abstract java.lang.Object invoke(javax.el.ELContext,java.lang.Object[])
 meth public abstract javax.el.MethodInfo getMethodInfo(javax.el.ELContext)
+meth public boolean isParametersProvided()
 meth public boolean isParmetersProvided()
+ anno 0 java.lang.Deprecated()
 supr javax.el.Expression
+hfds serialVersionUID
 
 CLSS public abstract javax.el.ValueExpression
 cons public init()
@@ -3613,6 +3631,7 @@ meth public abstract java.lang.Object getValue(javax.el.ELContext)
 meth public abstract void setValue(javax.el.ELContext,java.lang.Object)
 meth public javax.el.ValueReference getValueReference(javax.el.ELContext)
 supr javax.el.Expression
+hfds serialVersionUID
 
 CLSS public javax.faces.FacesException
 cons public init()
@@ -4032,25 +4051,25 @@ supr javax.servlet.jsp.tagext.TagSupport
 
 CLSS public abstract interface javax.servlet.ServletContextAttributeListener
 intf java.util.EventListener
-meth public abstract void attributeAdded(javax.servlet.ServletContextAttributeEvent)
-meth public abstract void attributeRemoved(javax.servlet.ServletContextAttributeEvent)
-meth public abstract void attributeReplaced(javax.servlet.ServletContextAttributeEvent)
+meth public void attributeAdded(javax.servlet.ServletContextAttributeEvent)
+meth public void attributeRemoved(javax.servlet.ServletContextAttributeEvent)
+meth public void attributeReplaced(javax.servlet.ServletContextAttributeEvent)
 
 CLSS public abstract interface javax.servlet.ServletContextListener
 intf java.util.EventListener
-meth public abstract void contextDestroyed(javax.servlet.ServletContextEvent)
-meth public abstract void contextInitialized(javax.servlet.ServletContextEvent)
+meth public void contextDestroyed(javax.servlet.ServletContextEvent)
+meth public void contextInitialized(javax.servlet.ServletContextEvent)
 
 CLSS public abstract interface javax.servlet.ServletRequestAttributeListener
 intf java.util.EventListener
-meth public abstract void attributeAdded(javax.servlet.ServletRequestAttributeEvent)
-meth public abstract void attributeRemoved(javax.servlet.ServletRequestAttributeEvent)
-meth public abstract void attributeReplaced(javax.servlet.ServletRequestAttributeEvent)
+meth public void attributeAdded(javax.servlet.ServletRequestAttributeEvent)
+meth public void attributeRemoved(javax.servlet.ServletRequestAttributeEvent)
+meth public void attributeReplaced(javax.servlet.ServletRequestAttributeEvent)
 
 CLSS public abstract interface javax.servlet.ServletRequestListener
 intf java.util.EventListener
-meth public abstract void requestDestroyed(javax.servlet.ServletRequestEvent)
-meth public abstract void requestInitialized(javax.servlet.ServletRequestEvent)
+meth public void requestDestroyed(javax.servlet.ServletRequestEvent)
+meth public void requestInitialized(javax.servlet.ServletRequestEvent)
 
 CLSS public abstract interface javax.servlet.ServletResponse
 meth public abstract boolean isCommitted()
@@ -4143,8 +4162,10 @@ meth public abstract boolean containsHeader(java.lang.String)
 meth public abstract int getStatus()
 meth public abstract java.lang.String encodeRedirectURL(java.lang.String)
 meth public abstract java.lang.String encodeRedirectUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.String encodeURL(java.lang.String)
 meth public abstract java.lang.String encodeUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.String getHeader(java.lang.String)
 meth public abstract java.util.Collection<java.lang.String> getHeaderNames()
 meth public abstract java.util.Collection<java.lang.String> getHeaders(java.lang.String)
@@ -4160,6 +4181,9 @@ meth public abstract void setHeader(java.lang.String,java.lang.String)
 meth public abstract void setIntHeader(java.lang.String,int)
 meth public abstract void setStatus(int)
 meth public abstract void setStatus(int,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>> getTrailerFields()
+meth public void setTrailerFields(java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>>)
 
 CLSS public javax.servlet.http.HttpServletResponseWrapper
 cons public init(javax.servlet.http.HttpServletResponse)
@@ -4168,11 +4192,14 @@ meth public boolean containsHeader(java.lang.String)
 meth public int getStatus()
 meth public java.lang.String encodeRedirectURL(java.lang.String)
 meth public java.lang.String encodeRedirectUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String encodeURL(java.lang.String)
 meth public java.lang.String encodeUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getHeader(java.lang.String)
 meth public java.util.Collection<java.lang.String> getHeaderNames()
 meth public java.util.Collection<java.lang.String> getHeaders(java.lang.String)
+meth public java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>> getTrailerFields()
 meth public void addCookie(javax.servlet.http.Cookie)
 meth public void addDateHeader(java.lang.String,long)
 meth public void addHeader(java.lang.String,java.lang.String)
@@ -4185,18 +4212,20 @@ meth public void setHeader(java.lang.String,java.lang.String)
 meth public void setIntHeader(java.lang.String,int)
 meth public void setStatus(int)
 meth public void setStatus(int,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public void setTrailerFields(java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>>)
 supr javax.servlet.ServletResponseWrapper
 
 CLSS public abstract interface javax.servlet.http.HttpSessionAttributeListener
 intf java.util.EventListener
-meth public abstract void attributeAdded(javax.servlet.http.HttpSessionBindingEvent)
-meth public abstract void attributeRemoved(javax.servlet.http.HttpSessionBindingEvent)
-meth public abstract void attributeReplaced(javax.servlet.http.HttpSessionBindingEvent)
+meth public void attributeAdded(javax.servlet.http.HttpSessionBindingEvent)
+meth public void attributeRemoved(javax.servlet.http.HttpSessionBindingEvent)
+meth public void attributeReplaced(javax.servlet.http.HttpSessionBindingEvent)
 
 CLSS public abstract interface javax.servlet.http.HttpSessionListener
 intf java.util.EventListener
-meth public abstract void sessionCreated(javax.servlet.http.HttpSessionEvent)
-meth public abstract void sessionDestroyed(javax.servlet.http.HttpSessionEvent)
+meth public void sessionCreated(javax.servlet.http.HttpSessionEvent)
+meth public void sessionDestroyed(javax.servlet.http.HttpSessionEvent)
 
 CLSS public abstract interface javax.servlet.jsp.tagext.BodyTag
 fld public final static int EVAL_BODY_BUFFERED = 2
@@ -4258,5 +4287,5 @@ meth public void setPageContext(javax.servlet.jsp.PageContext)
 meth public void setParent(javax.servlet.jsp.tagext.Tag)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds parent,values
+hfds parent,serialVersionUID,values
 

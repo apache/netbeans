@@ -1,0 +1,7 @@
+Directory:CLASS:[PUBLIC]:ESCAPED{Directory}:
+  constructor:CONSTRUCTOR:[PUBLIC]:ESCAPED{constructor}ESCAPED{(}ESCAPED{displayName}ESCAPED{)}<font color="#999999">ESCAPED{ : }Directory</font>:
+  displayName:FIELD:[PUBLIC]:ESCAPED{displayName}:
+ImageFile:CLASS:[PUBLIC]:ESCAPED{ImageFile}:
+  constructor:CONSTRUCTOR:[PUBLIC]:ESCAPED{constructor}ESCAPED{(}ESCAPED{displayName}ESCAPED{)}<font color="#999999">ESCAPED{ : }ImageFile</font>:
+  displayName:FIELD:[PUBLIC]:ESCAPED{displayName}:
+getJsonData:METHOD:[PRIVATE]:ESCAPED{getJsonData}ESCAPED{(}ESCAPED{folderURL}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

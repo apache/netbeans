@@ -3,19 +3,24 @@ console.log(/a/.|test('xaxa'));
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
-METHOD     compile(regexp: RegExp, modifi  [PUBLIC]   JS Platform
-METHOD     exec(str: String): Array        [PUBLIC]   JS Platform
-METHOD     hasOwnProperty(prop: String):   [PUBLIC]   JS Platform
-METHOD     isPrototypeOf(obj): Boolean     [PUBLIC]   JS Platform
-METHOD     propertyIsEnumerable(prop: Str  [PUBLIC]   JS Platform
-METHOD     test(str: String): Boolean      [PUBLIC]   JS Platform
+METHOD     compile(pattern: String): RegE  [PUBLIC]   JS Platform
+METHOD     exec(string: String): null|Reg  [PUBLIC]   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
+METHOD     isPrototypeOf(v: Object): Bool  [PUBLIC]   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
+METHOD     test(string: String): Boolean   [PUBLIC]   JS Platform
 METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
 METHOD     toString(): String              [PUBLIC]   JS Platform
 METHOD     valueOf(): Object               [PUBLIC]   JS Platform
-FIELD      constructor: Function           [PUBLIC]   JS Platform
+FIELD      $&: String                      [PUBLIC]   JS Platform
+FIELD      $': String                      [PUBLIC]   JS Platform
+FIELD      $+: String                      [PUBLIC]   JS Platform
+FIELD      $`: String                      [PUBLIC]   JS Platform
+FIELD      dotAll: Boolean                 [PUBLIC]   JS Platform
 FIELD      flags: String                   [PUBLIC]   JS Platform
 FIELD      global: Boolean                 [PUBLIC]   JS Platform
 FIELD      ignoreCase: Boolean             [PUBLIC]   JS Platform
+FIELD      lastIndex: Number               [PUBLIC]   JS Platform
 FIELD      multiline: Boolean              [PUBLIC]   JS Platform
 FIELD      source: String                  [PUBLIC]   JS Platform
 FIELD      sticky: Boolean                 [PUBLIC]   JS Platform

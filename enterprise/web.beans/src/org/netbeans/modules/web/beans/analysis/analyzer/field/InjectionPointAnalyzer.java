@@ -182,7 +182,7 @@ public class InjectionPointAnalyzer extends AbstractDecoratorAnalyzer<Void> impl
         Map<String, ? extends AnnotationMirror> qualifiersFqns = helper.
             getAnnotationsByType(qualifiers);
         boolean hasDefault = model.hasImplicitDefaultQualifier( element );
-        if ( !hasDefault && qualifiersFqns.keySet().contains(AnnotationUtil.DEFAULT_FQN)){
+        if ( !hasDefault && qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN)){
             hasDefault = true;
         }
         if ( !hasDefault || cancel.get() ){

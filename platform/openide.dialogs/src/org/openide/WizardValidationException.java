@@ -61,6 +61,7 @@ public final class WizardValidationException extends Exception {
      *
      * @return description will notifies an user what value must be corrected
      */
+    @Override
     public String getLocalizedMessage() {
         return (localizedMessage != null) ? localizedMessage : this.getMessage();
     }

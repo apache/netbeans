@@ -356,14 +356,16 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
                 }
 
                 logFine("urlstr:", urlStr); // NOI18N
-                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage (NbDdeBrowserImpl.class, "MSG_activatingBrowser"));
-                try {
-                    task.browser.reqDdeMessage(task.browser.realDDEServer(),WWW_ACTIVATE,"-1,0x0",task.browser.getActivateTimeout());
-                } catch (NbBrowserException ex) {
-                    logFine("Exception, gonna start browser:", ex);
-                    triedStart = true;
-                    startBrowser(task.browser.extBrowserFactory.getBrowserExecutable(), urlStr);
-                }  
+                if (!win9xHack(task.browser.realDDEServer())) {
+                    StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage (NbDdeBrowserImpl.class, "MSG_activatingBrowser"));
+                    try {
+                        task.browser.reqDdeMessage(task.browser.realDDEServer(),WWW_ACTIVATE,"-1,0x0",task.browser.getActivateTimeout());
+                    } catch (NbBrowserException ex) {
+                        logFine("Exception, gonna start browser:", ex);
+                        triedStart = true;
+                        startBrowser(task.browser.extBrowserFactory.getBrowserExecutable(), urlStr);
+                    }  
+                }
                 logFine("firstpart"); // NOI18N
 
                 if (!triedStart) {
@@ -443,6 +445,15 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
             return url;
         }
         
+        /**
+         * Checks for IExplorer & Win9x combination.
+         */
+        private boolean win9xHack (String browser) {
+            return browser.equals(ExtWebBrowser.IEXPLORE)
+                   && (Utilities.getOperatingSystem() == Utilities.OS_WIN98 
+                      ||  Utilities.getOperatingSystem() == Utilities.OS_WIN95);
+        }
+
         /** 
          * Utility function that tries to start new browser process.
          *

@@ -85,8 +85,8 @@ final class XMLEntityResolverChain implements EntityResolver {
      *        or null if none was supplied.
      * @param systemID - The system identifier of the external entity being referenced.
      *
-     * @throw SAXException - Any SAX exception, possibly wrapping another exception. 
-     * @throw IOException - A Java-specific IO exception, possibly the result of creating 
+     * @throws SAXException - Any SAX exception, possibly wrapping another exception.
+     * @throws IOException - A Java-specific IO exception, possibly the result of creating
      *        a new InputStream or Reader for the InputSource.
      *
      * @return An InputSource object describing the new input source, 

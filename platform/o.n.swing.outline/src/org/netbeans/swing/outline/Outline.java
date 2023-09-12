@@ -99,8 +99,8 @@ import org.netbeans.swing.etable.ETableColumnModel;
  * a tooltip.  Assume the class this is implemented in is a 
  * JPanel subclass or other Swing container.
  * <br>
- * XXX todo: clean up formatting & edit for style
- * <pre>
+ * XXX todo: clean up formatting &amp; edit for style
+ * <pre>{@code
  * public void initComponents() {
  *   setLayout (new BorderLayout());
  *   TreeModel treeMdl = new FileTreeModel (someDirectory);
@@ -179,7 +179,7 @@ import org.netbeans.swing.etable.ETableColumnModel;
  *          return false;
  *      }
  *   }
- * </pre>
+ * }</pre>
  *
  *
  * @author  Tim Boudreau

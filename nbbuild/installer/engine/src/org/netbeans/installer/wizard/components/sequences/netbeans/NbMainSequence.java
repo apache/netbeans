@@ -184,7 +184,7 @@ public class NbMainSequence extends WizardSequence {
                                             progress.getDetail().substring(SIZE_MODULES_PATTERN.length()) :
                                             progress.getDetail().substring(SIZE_UPDATES_PATTERN.length());
                                     try {
-                                        sizeOfModules = Integer.valueOf(size);
+                                        sizeOfModules = Integer.parseInt(size);
                                         if (sizeOfModules > 0) {
                                             spendPercentage = spendPercentage + INSTALL_STEP;
                                         }
@@ -389,7 +389,7 @@ public class NbMainSequence extends WizardSequence {
         }        
 
         private ExecutionResults runIDE(List<String> commandsBase, File nbInstallLocation, boolean checkForUpdate, CompositeProgress compositeProgress) throws IOException {
-            List<String> commands = new ArrayList(commandsBase);
+            List<String> commands = new ArrayList<>(commandsBase);
 
             String title = null;
             if (checkForUpdate) {

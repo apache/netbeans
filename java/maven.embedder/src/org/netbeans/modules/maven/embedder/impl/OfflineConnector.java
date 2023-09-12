@@ -40,9 +40,9 @@ public final class OfflineConnector implements RepositoryConnectorFactory {
         // (No apparent way to suppress WRCF from the Plexus container; using "wagon" as the role hint does not work.)
         // Could also return a no-op RepositoryConnector which would perform no downloads.
         // But we anyway want to ensure that related code is consistently setting the offline flag on all Maven structures that require it.
-        throw new AssertionError();
+        throw new OfflineOperationError();
     }
-
+    
     @Override
     public float getPriority() {
         return Float.MAX_VALUE;

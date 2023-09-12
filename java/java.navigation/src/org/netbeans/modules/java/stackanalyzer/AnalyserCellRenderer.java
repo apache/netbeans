@@ -82,7 +82,7 @@ class AnalyserCellRenderer extends DefaultListCellRenderer {
         Link link = StackLineAnalyser.analyse (line);
 
         if (isSelected) {
-            setBackground (bg == null ? list.getSelectionBackground () : bg);
+            setBackground(bg == null ? list.getSelectionBackground() : bg);
             setForeground(fg == null ? list.getSelectionForeground() : fg);
         } else {
             setBackground (list.getBackground ());
@@ -95,17 +95,23 @@ class AnalyserCellRenderer extends DefaultListCellRenderer {
         if (link != null) {
             StringBuilder sb = new StringBuilder ();
             sb.append ("<html>");
-            if (isSelected)
-                sb.append("<style> a.val {text-decoration: underline; color: " + toRgbText(getForeground().getRGB()) + "} </style><body>");
-            sb.append (line.substring (0, link.getStartOffset ()));
+            if (isSelected) {
+                sb.append("<style> a.val {text-decoration: underline; color: "+toRgbText(getForeground())+"} </style><body>");
+            }
+            String prefix = line.substring (0, link.getStartOffset ());
+            if (prefix.startsWith("at ")) {
+                prefix = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + prefix;
+            }
+            sb.append (prefix);
             sb.append ("<a class=\"val\" href=\"\">");
             sb.append (line.substring (link.getStartOffset (), link.getEndOffset ()));
             sb.append ("</a>");
             sb.append (line.substring (link.getEndOffset ()));
             sb.append ("</body></html>");
             setText (sb.toString ());
-        } else
+        } else {
             setText (line.trim ());
+        }
 
         setEnabled (list.isEnabled ());
 
@@ -136,13 +142,8 @@ class AnalyserCellRenderer extends DefaultListCellRenderer {
 //        return cp.findResource (resource) != null;
 //    }
 
-    private static String toRgbText(int rgb) {
-        if (rgb > 0xFFFFFF)
-            rgb = 0xFFFFFF;
-        if (rgb < 0)
-            rgb = 0;
-        String str = "000000" + Integer.toHexString(rgb); //NOI18N
-        return "#" + str.substring(str.length() - 6); //NOI18N
+    private String toRgbText(Color c) {
+        return String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
     }
 }
 

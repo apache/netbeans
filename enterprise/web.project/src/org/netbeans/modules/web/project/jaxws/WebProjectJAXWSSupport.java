@@ -410,7 +410,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
      */
     @Override
     public void serviceFromJavaRemoved(String serviceName) {
-        JaxWsModel jaxWsModel = (JaxWsModel)project.getLookup().lookup(JaxWsModel.class);
+        JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         Boolean isJsr109 = jaxWsModel.getJsr109();
         if(isJsr109!=null && !isJsr109){
             try{
@@ -443,7 +443,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             if(sunjaxwsFile != null){
                 FileLock lock = null;
                 //if there are no more services, delete the file
-                JaxWsModel jaxWsModel = (JaxWsModel)project.getLookup().lookup(JaxWsModel.class);
+                JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
                 if(jaxWsModel.getServices().length == 0) {
                     synchronized(this) {
                         try{
@@ -495,7 +495,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
     public void removeJsr109Entries(String serviceName) throws IOException {
         WebApp webApp = getWebApp();
         if (webApp != null) {
-            JaxWsModel jaxWsModel = (JaxWsModel)project.getLookup().lookup(JaxWsModel.class);
+            JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
             if (jaxWsModel != null) {
                 Service service = jaxWsModel.findServiceByName(serviceName);
                 if (service != null) {
@@ -615,6 +615,14 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
                 return JAKARTA_EE_VERSION_9;
             } else if (Profile.JAKARTA_EE_9_FULL.equals(webModule.getJ2eeProfile())) {
                 return JAKARTA_EE_VERSION_9;
+            } else if (Profile.JAKARTA_EE_9_1_WEB.equals(webModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_91;
+            } else if (Profile.JAKARTA_EE_9_1_FULL.equals(webModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_91;
+            } else if (Profile.JAKARTA_EE_10_WEB.equals(webModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_10;
+            } else if (Profile.JAKARTA_EE_10_FULL.equals(webModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_10;
             } else if (Profile.JAVA_EE_5.equals(webModule.getJ2eeProfile())) {
               return JAVA_EE_VERSION_15;
             }

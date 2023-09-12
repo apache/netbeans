@@ -124,8 +124,12 @@ public class DDDataObject extends  DDMultiViewDataObject
 
     // FIXME this is bit strange as we reference other mime types here
     @MultiViewElement.Registration(
-        mimeType={DDDataLoader.REQUIRED_MIME_1, DDWeb25DataLoader.REQUIRED_MIME, DDWeb30DataLoader.REQUIRED_MIME,
-            DDWebFragment30DataLoader.REQUIRED_MIME, DDWeb30DataLoader.REQUIRED_MIME_31, DDWebFragment30DataLoader.REQUIRED_MIME_31},
+        mimeType={DDDataLoader.REQUIRED_MIME_1, DDWeb25DataLoader.REQUIRED_MIME, 
+                DDWeb30DataLoader.REQUIRED_MIME, DDWebFragment30DataLoader.REQUIRED_MIME, 
+                DDWeb30DataLoader.REQUIRED_MIME_31, DDWebFragment30DataLoader.REQUIRED_MIME_31, 
+                DDWeb40DataLoader.REQUIRED_MIME_40, DDWebFragment40DataLoader.REQUIRED_MIME_40, 
+                DDWeb50DataLoader.REQUIRED_MIME_50, DDWebFragment50DataLoader.REQUIRED_MIME_50, 
+                DDWeb60DataLoader.REQUIRED_MIME_60, DDWebFragment60DataLoader.REQUIRED_MIME_60},
         iconBase="org/netbeans/modules/j2ee/ddloaders/web/resources/DDDataIcon.gif",
         persistenceType=TopComponent.PERSISTENCE_ONLY_OPENED,
         preferredID="multiview_xml",
@@ -170,8 +174,7 @@ public class DDDataObject extends  DDMultiViewDataObject
                         operationListener);
             }
         }
-        srcRoots = (FileObject[]) srcRootList
-                .toArray(new FileObject[srcRootList.size()]);
+        srcRoots = (FileObject[]) srcRootList.toArray(new FileObject[0]);
     }
 
     private String getPackageName (FileObject clazz) {

@@ -24,7 +24,6 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.css.lib.Css3Lexer;
 import org.netbeans.modules.css.lib.TestUtil;
 import org.netbeans.modules.css.lib.TokenNode;
-import static org.junit.Assert.*;
 import org.netbeans.modules.parsing.spi.ParseException;
 
 /**
@@ -122,5 +121,20 @@ public class NodeUtilTest extends NbTestCase {
         assertEquals(NodeType.token, tokenNode.type());
         assertEquals("h1", tokenNode.image().toString());
     }
-        
+
+    public void testUnescape() throws Exception {
+        assertEquals(null, NodeUtil.unescape(null));
+        assertEquals("", NodeUtil.unescape(""));
+        assertEquals("div", NodeUtil.unescape("div"));
+        assertEquals("\\\\", NodeUtil.unescape("\\5c\\5c"));
+        assertEquals("\\\\", NodeUtil.unescape("\\\\\\\\"));
+        assertEquals("H\tallo", NodeUtil.unescape("H\\000009allo"));
+        assertEquals("H\tallo", NodeUtil.unescape("H\\000009 allo"));
+        assertEquals("demo:with:colon", NodeUtil.unescape("demo\\:with\\:colon"));
+        assertEquals("demo:with:colon", NodeUtil.unescape("demo\\3A with\\3A colon"));
+        assertEquals("demo:with: colon", NodeUtil.unescape("demo\\3Awith\\3A  colon"));
+        // Characters outside the BMP are representated as surrogate pairs
+        assertEquals("demo\uD801\uDC37with\uD801\uDC37highSurrogate", NodeUtil.unescape("demo\\10437with\\10437highSurrogate"));
+        assertEquals("demo\uD801\uDC37with\uD801\uDC37highSurrogate", NodeUtil.unescape("demo\\10437 with\\10437 highSurrogate"));
+    }
 }

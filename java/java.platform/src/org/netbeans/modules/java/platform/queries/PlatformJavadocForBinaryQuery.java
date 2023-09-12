@@ -80,6 +80,11 @@ public class PlatformJavadocForBinaryQuery implements JavadocForBinaryQueryImple
                     candidates.add(jp);
                 }
             }
+            for (ClassPath.Entry entry : jp.getSourceFolders().entries()) {
+                if (binaryRoot.equals(entry.getURL())) {
+                    candidates.add(jp);
+                }
+            }
         }
         return candidates.isEmpty() ? null : new R(candidates);
     }

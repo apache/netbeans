@@ -38,8 +38,6 @@ public class BasicAggregateProgressFactory {
      * @param allowToCancel either null, if the task cannot be cancelled or 
      *          an instance of {@link org.openide.util.Cancellable} that will be called when user 
      *          triggers cancel of the task.
-     * @param linkOutput an <code>Action</code> instance that links the running task in the progress bar
-     *                   to an output of the task. The action is assumed to open the apropriate component with the task's output.
      * @param displayName to be shown in the progress UI
      * @return an instance of <code>ProgressHandle</code>, initialized but not started.
      *

@@ -52,7 +52,7 @@ public class CodeAction {
     /**
      * Construct the {@code CodeAction}.
      *
-     * @param text the name of the action
+     * @param title the name of the action
      * @param command the command that should be invoked
      * @param edit the {@code WorkspaceEdit} that should be performed
      */

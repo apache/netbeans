@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.23
+#Version 9.29
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -497,6 +497,8 @@ fld public final static int OS_UNIX_MASK = 1709048
 fld public final static int OS_UNIX_OTHER = 524288
 fld public final static int OS_VMS = 16384
 fld public final static int OS_WIN2000 = 8192
+fld public final static int OS_WIN95 = 2
+fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 303111
  anno 0 java.lang.Deprecated()
 fld public final static int OS_WINNT = 1
@@ -667,7 +669,7 @@ intf java.util.EventListener
 meth public abstract void resultChanged(org.openide.util.LookupEvent)
 
 CLSS public org.openide.util.MapFormat
-cons public init(java.util.Map)
+cons public init(java.util.Map<java.lang.String,?>)
 meth protected java.lang.Object processKey(java.lang.String)
 meth public boolean isExactMatch()
 meth public boolean willThrowExceptionIfKeyWasNotFound()
@@ -681,7 +683,7 @@ meth public java.util.Map getMap()
 meth public static java.lang.String format(java.lang.String,java.util.Map)
 meth public void setExactMatch(boolean)
 meth public void setLeftBrace(java.lang.String)
-meth public void setMap(java.util.Map)
+meth public void setMap(java.util.Map<java.lang.String,?>)
 meth public void setRightBrace(java.lang.String)
 meth public void setThrowExceptionIfKeyWasNotFound(boolean)
 supr java.text.Format

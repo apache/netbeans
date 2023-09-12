@@ -30,5 +30,12 @@
             </xml-rule>
         </resolver>
     </file>
+    <file>
+        <ext name="xml"/>
+        <resolver mime="text/x-beans+xml">
+            <xml-rule>
+                <element name="beans" ns="https://jakarta.ee/xml/ns/jakartaee"/>
+            </xml-rule>
+        </resolver>
+    </file>
 </MIME-resolver>
-

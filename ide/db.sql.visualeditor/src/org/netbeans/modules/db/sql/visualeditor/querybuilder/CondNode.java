@@ -206,28 +206,29 @@ public class CondNode extends AbstractNode
     public class ColumnPropertyEditor1 extends PropertyEditorSupport {
 
         public String[] getTags() {
-            List columnNames ;
+            List<String> columnNames ;
             try {
                 columnNames = _queryBuilder.getColumnNames(_table1);
             } catch(SQLException sqle) {
                 return new String[0] ;
             }
-            return (String[])columnNames.toArray(new String[columnNames.size()]);
+            return columnNames.toArray(new String[0]);
             // return new String[] {"PERSONID", "NAME" };
         }
     }
 
     public class ColumnPropertyEditor2 extends PropertyEditorSupport {
 
+        @Override
         public String[] getTags() {
 
-           List columnNames ;
+           List<String> columnNames ;
             try {
                 columnNames = _queryBuilder.getColumnNames(_table2);
             } catch (SQLException sqle) {
                 return new String[0] ;
             }
-            return (String[])columnNames.toArray(new String[columnNames.size()]);
+            return columnNames.toArray(new String[0]);
         }
     }
 }

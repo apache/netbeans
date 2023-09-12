@@ -32,7 +32,7 @@ import org.openide.util.LookupListener;
  * Permits accelerators to be set on actions based on global registrations.
  * This class is only intended for use from NetBeans infrastructure code:
  * that which either reads shortcut definitions (i.e. the global {@link Keymap});
- * or which loads actions into presenters (e.g. {@link Toolbar}).
+ * or which loads actions into presenters (e.g. <a href="@org-openide-loaders@/org/openide/awt/Toolbar.html">Toolbar</a>).
  * @since org.openide.loaders 7.13 but moved down to org.openide.awt 7.42
  */
 public abstract class AcceleratorBinding {

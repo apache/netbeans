@@ -26,7 +26,7 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.util.NbBundle;
 
-// BEGIN: org.netbeans.api.htmlui.UICntrl
+// @start region="controller" 
 @Model(className = "UI", targetId = "", properties = {
     @Property(name = "text", type = String.class)
 })
@@ -56,4 +56,4 @@ public final class UICntrl {
         return new UI("Hello World!").applyBindings();
     }
 }
-// END: org.netbeans.api.htmlui.UICntrl
+// @end region="controller" 

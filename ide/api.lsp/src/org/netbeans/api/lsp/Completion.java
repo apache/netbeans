@@ -44,9 +44,9 @@ public final class Completion {
         CompletionAccessor.setDefault(new CompletionAccessor() {
             @Override
             public Completion createCompletion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
-                    boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat, TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits,
-                    List<Character> commitCharacters) {
-                return new Completion(label, kind, tags, detail, documentation, preselect, sortText, filterText, insertText, insertTextFormat, textEdit, additionalTextEdits, commitCharacters);
+                    boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat, TextEdit textEdit, Command command,
+                    CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters) {
+                return new Completion(label, kind, tags, detail, documentation, preselect, sortText, filterText, insertText, insertTextFormat, textEdit, command, additionalTextEdits, commitCharacters);
             }
         });
     }
@@ -62,12 +62,13 @@ public final class Completion {
     private final String insertText;
     private final TextFormat insertTextFormat;
     private final TextEdit textEdit;
+    private final Command command;
     private final CompletableFuture<List<TextEdit>> additionalTextEdits;
     private final List<Character> commitCharacters;
 
     private Completion(String label, Kind kind, List<Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
             boolean preselect, String sortText, String filterText, String insertText, TextFormat insertTextFormat,
-            TextEdit textEdit, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters) {
+            TextEdit textEdit, Command command, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters) {
         this.label = label;
         this.kind = kind;
         this.tags = tags;
@@ -79,6 +80,7 @@ public final class Completion {
         this.insertText = insertText;
         this.insertTextFormat = insertTextFormat;
         this.textEdit = textEdit;
+        this.command = command;
         this.additionalTextEdits = additionalTextEdits;
         this.commitCharacters = commitCharacters;
     }
@@ -204,6 +206,16 @@ public final class Completion {
     }
 
     /**
+     * An optional command that is executed after inserting this completion.
+     *
+     * @since 1.17
+     */
+    @CheckForNull
+    public Command getCommand() {
+        return command;
+    }
+
+    /**
      * A list of additional text edits that are applied when selecting this
      * completion. Edits must not overlap (including the same insert position)
      * with the main edit nor with themselves.
@@ -232,7 +244,7 @@ public final class Completion {
     /**
      * Computes and collects completions for a document at a given offset. Example
      * usage can be illustrated by:
-     * {@codesnippet CompletionTest#testCompletionCollect}
+     * {@snippet file="org/netbeans/api/lsp/CompletionTest.java" region="testCompletionCollect"}
      *
      * @param doc a text document
      * @param offset an offset inside the text document

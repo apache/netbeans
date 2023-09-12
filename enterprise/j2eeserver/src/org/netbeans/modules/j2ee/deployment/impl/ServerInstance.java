@@ -1674,7 +1674,7 @@ public class ServerInstance implements Node.Cookie, Comparable {
     }
     
     public boolean isManagerOf(Target target) {
-        return getTargetMap().keySet().contains(target.getName());
+        return getTargetMap().containsKey(target.getName());
     }
     
     public synchronized ServerTarget getCoTarget() {

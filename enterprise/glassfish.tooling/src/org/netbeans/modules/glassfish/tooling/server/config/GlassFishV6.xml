@@ -24,21 +24,9 @@
         <asadmin jar="client/appserver-cli.jar"/>
     </tools>
     <java version="1.8">
-        <platform version="1.7"/>
         <platform version="1.8"/>
     </java>
-    <javaee version="1.8">
-        <profile version="1.3" type="full"/>
-        <profile version="1.4" type="full"/>
-        <profile version="1.5" type="full"/>
-        <profile version="1.6" type="web"/>
-        <profile version="1.6" type="full" check="full"/>
-        <profile version="1.7" type="web"/>
-        <profile version="1.7" type="full" check="full"/>
-        <profile version="1.8" type="web"/>
-        <profile version="1.8" type="full" check="full"/>
-        <profile version="8.0.0" type="web"/>
-        <profile version="8.0.0" type="full" check="full"/>
+    <javaee version="9.0.0">
         <profile version="9.0.0" type="web"/>
         <profile version="9.0.0" type="full" check="full"/>
         <module type="war"/>
@@ -54,39 +42,32 @@
         <classpath>
             <fileset dir="modules">
                 <include name="jakarta\..+\.jar"/>
-                <include name="jakarta.validation-api-3.0.0.jar"/>
-                <include name="jakarta.enterprise.cdi-api-3.0.0.jar"/>
+                <include name="jakarta.enterprise.cdi-api.jar"/>
+                <include name="jakarta.validation-api.jar"/>
                 <include name="jaxb-osgi.jar"/>
-                <include name="jaxr-api-osgi.jar"/>
-                <include name="jaxrpc-api-osgi.jar"/>
                 <include name="webservices-osgi.jar"/>
                 <include name="weld-osgi-bundle.jar"/>
             </fileset>
             <fileset dir="modules/endorsed">
                 <include name=".+\.jar"/>
             </fileset>
-            <fileset dir="../mq/lib">
-                <include name="jaxm-api.jar"/>
-            </fileset>
         </classpath>
         <javadocs>
-            <lookup path="docs/javaee-doc-api.jar"/>
+            <lookup path="docs/jakartaee9-doc-api.jar"/>
         </javadocs>
         <sources>
         </sources>
     </library>
-    <library id="Jersey 2">
+    <library id="Jersey 3">
         <classpath>
             <fileset dir="modules">
-                <include name="guava.+\.jar"/>
                 <include name="jackson.+\.jar"/>
-                <!-- include name="javax.ws.+\.jar"/ -->
                 <include name="jersey.+\.jar"/>
                 <include name="jettison.*\.jar"/>
             </fileset>
         </classpath>
         <javadocs>
-            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.0-m05-2/jersey-documentation-2.0-m05-2-docbook.zip"/>
+            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/3.0.0-M1/jersey-documentation-3.0.0-M1-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>

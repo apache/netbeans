@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
+import javax.swing.UIManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -326,7 +327,7 @@ public class UnusedBindingsPanel extends javax.swing.JPanel implements ExplorerM
         refreshButton = new javax.swing.JButton();
         messageLabel = new javax.swing.JLabel();
 
-        findPanel.setBackground(treeView.getViewport().getView().getBackground());
+        findPanel.setBackground(UIManager.getColor("Tree.background"));
 
         org.openide.awt.Mnemonics.setLocalizedText(findButton, org.openide.util.NbBundle.getMessage(UnusedBindingsPanel.class, "UnusedBindingsPanel.findButton.text")); // NOI18N
         findButton.addActionListener(new java.awt.event.ActionListener() {
@@ -386,7 +387,7 @@ public class UnusedBindingsPanel extends javax.swing.JPanel implements ExplorerM
 
         dataPanel.add(refreshPanel, java.awt.BorderLayout.PAGE_END);
 
-        messageLabel.setBackground(treeView.getViewport().getView().getBackground());
+        messageLabel.setBackground(UIManager.getColor("Tree.background"));
         messageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         messageLabel.setEnabled(false);
         messageLabel.setOpaque(true);

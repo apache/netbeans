@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.85
+#Version 7.91
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -1795,7 +1795,10 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
+innr public final static PasswordLine
+innr public final static QuickPick
 innr public static Confirmation
 innr public static InputLine
 innr public static Message
@@ -2447,6 +2450,7 @@ innr public static ToolbarButton
 innr public static ToolbarToggleButton
 meth public static java.lang.String cutAmpersand(java.lang.String)
 meth public static java.lang.String findKey(org.openide.util.actions.SystemAction)
+meth public static java.lang.String keyStrokeToString(javax.swing.KeyStroke)
 meth public static javax.swing.Action alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)
 meth public static javax.swing.Action checkbox(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public static javax.swing.Action forID(java.lang.String,java.lang.String)
@@ -3278,6 +3282,7 @@ CLSS public abstract interface static org.openide.cookies.EditorCookie$Observabl
 fld public final static java.lang.String PROP_DOCUMENT = "document"
 fld public final static java.lang.String PROP_MODIFIED = "modified"
 fld public final static java.lang.String PROP_OPENED_PANES = "openedPanes"
+fld public final static java.lang.String PROP_RELOADING = "reloading"
 intf org.openide.cookies.EditorCookie
 meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
@@ -3330,6 +3335,7 @@ CLSS public abstract interface org.openide.loaders.CreateFromTemplateAttributesP
 meth public abstract java.util.Map<java.lang.String,?> attributesFor(org.openide.loaders.DataObject,org.openide.loaders.DataFolder,java.lang.String)
 
 CLSS public abstract org.openide.loaders.CreateFromTemplateHandler
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld public final static java.lang.String FREE_FILE_EXTENSION = "freeFileExtension"
 meth protected abstract boolean accept(org.openide.filesystems.FileObject)

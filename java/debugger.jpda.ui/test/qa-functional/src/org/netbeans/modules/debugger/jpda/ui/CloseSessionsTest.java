@@ -96,7 +96,7 @@ public class CloseSessionsTest extends DebuggerTestCase {
                 .getCurrentSession()
                 .lookup(null, JPDADebugger.class);
         JPDADebugger debugger = list.get(0);
-        WeakReference<? extends JPDADebugger> debuggerRef = new WeakReference(debugger);
+        WeakReference<? extends JPDADebugger> debuggerRef = new WeakReference<>(debugger);
 
         //finish debugging
         Utilities.endAllSessions();

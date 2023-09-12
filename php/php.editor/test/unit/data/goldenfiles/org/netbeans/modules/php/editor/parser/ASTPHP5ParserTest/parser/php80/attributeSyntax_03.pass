@@ -180,11 +180,8 @@
         <token id='T_NEW' start='1090' end='1093'>
             <text>new</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='1094' end='1095'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1095' end='1110'>
-            <text>ReflectionClass</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1094' end='1110'>
+            <text>\ReflectionClass</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='1110' end='1111'>
             <text>(</text>

@@ -256,7 +256,7 @@ public abstract class OptionImpl implements Cloneable {
     
     /** Consistency test, based on the list of leaf options present in the
      * command line.
-     * @param present set of leaf options present in the command line
+     * @param presentOptions set of leaf options present in the command line
      * @return Boolean - TRUE option is there, FALSE option is not there, null everything is broken
      */
     public abstract Appearance checkConsistent(Set<OptionImpl> presentOptions);
@@ -517,7 +517,8 @@ public abstract class OptionImpl implements Cloneable {
                 // not everything is ok, more options present
                 return Appearance.createError(new MF());
             }
-            
+
+            @Override
             public void markConsistent(Appearance a) {
                 super.markConsistent(a);
                 for (OptionImpl i : arr) {
@@ -525,6 +526,7 @@ public abstract class OptionImpl implements Cloneable {
                 }
             }
 
+            @Override
             public OptionImpl findNotUsedOption(Set<OptionImpl> used) {
                 OptionImpl me = super.findNotUsedOption(used);
                 if (me != null) {
@@ -559,7 +561,8 @@ public abstract class OptionImpl implements Cloneable {
                     i.process(additionalArgs, optionsAndTheirArgs);
                 }
             }
-            
+
+            @Override
             public String findName(boolean usedOrAny, String[] args) {
                 for (Iterator it = arr.iterator(); it.hasNext();) {
                     OptionImpl elem = (OptionImpl) it.next();

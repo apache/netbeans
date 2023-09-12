@@ -264,7 +264,7 @@ public class VariablesModel implements TreeModel, NodeModel, TableModel {
     // other mothods ...........................................................
 
     void fireChanges () {
-        Vector<ModelListener> v = (Vector<ModelListener>)listeners.clone();
+        Vector<ModelListener> v = new Vector<>(listeners);
         int i, k = v.size ();
         for (i = 0; i < k; i++)
             v.get(i).modelChanged(new ModelEvent.TreeChanged(this));

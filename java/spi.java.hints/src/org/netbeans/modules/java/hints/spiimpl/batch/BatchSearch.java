@@ -234,8 +234,9 @@ public class BatchSearch {
                         if (cancel.get())
                             return;
                         final AtomicBoolean stop = new AtomicBoolean();
+                        List<FileObject> currentInputList = toProcess.subList(currentPointer.get(), toProcess.size());
 //                        JavaSource js = JavaSource.create(e.getKey(), f);
-                        JavaSource js = JavaSource.create(e.getKey(), toProcess.subList(currentPointer.get(), toProcess.size()));
+                        JavaSource js = JavaSource.create(e.getKey(), currentInputList);
 
                         js.runUserActionTask(new Task<CompilationController>() {
                             @Override
@@ -246,8 +247,15 @@ public class BatchSearch {
                                 boolean cont = true;
 
                                 try {
-                                    if (parameter.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0)
+                                    if (parameter.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
+                                        if (currentInputList.size() == 1) {
+                                            //the javac crashed while processing the (single) file, we must ensure progress, otherwise infinite loop in processing would happen:
+                                            problems.add(new MessageImpl(MessageKind.WARNING, "An error occurred while processing file: " + FileUtil.getFileDisplayName(parameter.getFileObject()) + ", please see the IDE log for more information."));
+                                            currentPointer.incrementAndGet();
+                                        }
+
                                         return ;
+                                    }
 
                                     progress.setMessage("processing: " + FileUtil.getFileDisplayName(parameter.getFileObject()));
                                     Resource r = file2Resource.get(parameter.getFileObject());

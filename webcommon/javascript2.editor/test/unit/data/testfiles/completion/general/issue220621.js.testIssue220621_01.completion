@@ -2,4 +2,5 @@ Code completion result for source line:
 var allLinks = href.s|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     seal(obj: Object): Object       [PUBLIC,   JS Platform
+METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
+METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform

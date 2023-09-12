@@ -109,4 +109,11 @@ public class TreeItem {
             this.resourceUri = URLMapper.findURL(fo, URLMapper.EXTERNAL).toString();
         }
     }
+    
+    public String toString() {
+        return String.format(
+            "TreeItem[%s, id = %d, resource = %s, context = %s",
+            name, id, resourceUri, contextValue
+        );
+    }
 }

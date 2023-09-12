@@ -1,0 +1,520 @@
+<testresult testFile='treatNamespacedNamesAsSingleToken_01a.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='815' end='824'>
+            <text>namespace</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='825' end='837'>
+            <text>test\require</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='838' end='839'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='844' end='849'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='850' end='858'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_EQUAL' start='859' end='860'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='861' end='867'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='867' end='868'>
+            <text>;</text>
+        </token>
+        <token id='T_FUNCTION' start='873' end='881'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='882' end='886'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='886' end='887'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='887' end='888'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='889' end='890'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='890' end='891'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='892' end='893'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='895' end='904'>
+            <text>namespace</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='905' end='918'>
+            <text>test\function</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='919' end='920'>
+            <text>{</text>
+        </token>
+        <token id='T_FUNCTION' start='925' end='933'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='934' end='938'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='938' end='939'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='939' end='940'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='941' end='942'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='942' end='943'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='944' end='945'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='947' end='956'>
+            <text>namespace</text>
+        </token>
+        <token id='T_READONLY' start='957' end='965'>
+            <text>readOnly</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='966' end='967'>
+            <text>{</text>
+        </token>
+        <token id='T_FUNCTION' start='972' end='980'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='981' end='985'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='985' end='986'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='986' end='987'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='988' end='989'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='989' end='990'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='991' end='992'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='994' end='1003'>
+            <text>namespace</text>
+        </token>
+        <token id='T_MATCH' start='1004' end='1009'>
+            <text>match</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1010' end='1011'>
+            <text>{</text>
+        </token>
+        <token id='T_FUNCTION' start='1016' end='1024'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='1025' end='1029'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1029' end='1030'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1030' end='1031'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1032' end='1033'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1033' end='1034'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1035' end='1036'>
+            <text>}</text>
+        </token>
+        <token id='T_NAMESPACE' start='1038' end='1047'>
+            <text>namespace</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1048' end='1049'>
+            <text>{</text>
+        </token>
+        <token id='T_USE' start='1054' end='1057'>
+            <text>use</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='1058' end='1070'>
+            <text>test\require</text>
+        </token>
+        <token id='T_SEMICOLON' start='1070' end='1071'>
+            <text>;</text>
+        </token>
+        <token id='T_USE' start='1076' end='1079'>
+            <text>use</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1080' end='1094'>
+            <text>\test\function</text>
+        </token>
+        <token id='T_SEMICOLON' start='1094' end='1095'>
+            <text>;</text>
+        </token>
+        <token id='T_USE' start='1100' end='1103'>
+            <text>use</text>
+        </token>
+        <token id='T_FUNCTION' start='1104' end='1112'>
+            <text>function</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='1113' end='1126'>
+            <text>readOnly\test</text>
+        </token>
+        <token id='T_AS' start='1127' end='1129'>
+            <text>as</text>
+        </token>
+        <token id='T_STRING' start='1130' end='1140'>
+            <text>aliasTest1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1140' end='1141'>
+            <text>;</text>
+        </token>
+        <token id='T_USE' start='1146' end='1149'>
+            <text>use</text>
+        </token>
+        <token id='T_FUNCTION' start='1150' end='1158'>
+            <text>function</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1159' end='1178'>
+            <text>\test\function\test</text>
+        </token>
+        <token id='T_AS' start='1179' end='1181'>
+            <text>as</text>
+        </token>
+        <token id='T_STRING' start='1182' end='1192'>
+            <text>aliasTest2</text>
+        </token>
+        <token id='T_SEMICOLON' start='1192' end='1193'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='1198' end='1215'>
+            <text>test\require\test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1215' end='1216'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1216' end='1217'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1217' end='1218'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_RELATIVE' start='1223' end='1250'>
+            <text>namespace\test\require\test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1250' end='1251'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1251' end='1252'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1252' end='1253'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1258' end='1276'>
+            <text>\test\require\test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1276' end='1277'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1277' end='1278'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1278' end='1279'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='1284' end='1305'>
+            <text>test\require\CONSTANT</text>
+        </token>
+        <token id='T_SEMICOLON' start='1305' end='1306'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1311' end='1333'>
+            <text>\test\require\CONSTANT</text>
+        </token>
+        <token id='T_SEMICOLON' start='1333' end='1334'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_RELATIVE' start='1339' end='1370'>
+            <text>namespace\test\require\CONSTANT</text>
+        </token>
+        <token id='T_SEMICOLON' start='1370' end='1371'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_QUALIFIED' start='1376' end='1389'>
+            <text>readOnly\test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1389' end='1390'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1390' end='1391'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1391' end='1392'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1397' end='1411'>
+            <text>\readOnly\test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1411' end='1412'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1412' end='1413'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1413' end='1414'>
+            <text>;</text>
+        </token>
+        <token id='T_NAME_RELATIVE' start='1419' end='1442'>
+            <text>namespace\readOnly\test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1442' end='1443'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1443' end='1444'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1444' end='1445'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1446' end='1447'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1448' end='1448'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1448'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <NamespaceDeclaration start='815' end='893' isBracketed='true'>
+                <NamespaceName start='825' end='837' isCurrent='false' isGlobal='false'>
+                    <Identifier start='825' end='829' name='test'/>
+                    <Identifier start='830' end='837' name='require'/>
+                </NamespaceName>
+                <Block start='838' end='893' isCurly='true'>
+                    <GlobalConstantDeclaration start='844' end='868'>
+                        <Names>
+                            <Identifier start='850' end='858' name='CONSTANT'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='861' end='867' type='STRING' value='"test"'/>
+                        </Initializers>
+                    </GlobalConstantDeclaration>
+                    <FunctionDeclaration start='873' end='891' isReference='false'>
+                        <Identifier start='882' end='886' name='test'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='889' end='891' isCurly='true'>
+                        </Block>
+                    </FunctionDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='895' end='945' isBracketed='true'>
+                <NamespaceName start='905' end='918' isCurrent='false' isGlobal='false'>
+                    <Identifier start='905' end='909' name='test'/>
+                    <Identifier start='910' end='918' name='function'/>
+                </NamespaceName>
+                <Block start='919' end='945' isCurly='true'>
+                    <FunctionDeclaration start='925' end='943' isReference='false'>
+                        <Identifier start='934' end='938' name='test'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='941' end='943' isCurly='true'>
+                        </Block>
+                    </FunctionDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='947' end='992' isBracketed='true'>
+                <NamespaceName start='957' end='965' isCurrent='false' isGlobal='false'>
+                    <Identifier start='957' end='965' name='readOnly'/>
+                </NamespaceName>
+                <Block start='966' end='992' isCurly='true'>
+                    <FunctionDeclaration start='972' end='990' isReference='false'>
+                        <Identifier start='981' end='985' name='test'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='988' end='990' isCurly='true'>
+                        </Block>
+                    </FunctionDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='994' end='1036' isBracketed='true'>
+                <NamespaceName start='1004' end='1009' isCurrent='false' isGlobal='false'>
+                    <Identifier start='1004' end='1009' name='match'/>
+                </NamespaceName>
+                <Block start='1010' end='1036' isCurly='true'>
+                    <FunctionDeclaration start='1016' end='1034' isReference='false'>
+                        <Identifier start='1025' end='1029' name='test'/>
+                        <FormalParameters>
+                        </FormalParameters>
+                        <Block start='1032' end='1034' isCurly='true'>
+                        </Block>
+                    </FunctionDeclaration>
+                </Block>
+            </NamespaceDeclaration>
+            <NamespaceDeclaration start='1038' end='1447' isBracketed='true'>
+                <Block start='1048' end='1447' isCurly='true'>
+                    <UseStatement start='1054' end='1071' type='TYPE'>
+                        <SingleUseStatementPart start='1058' end='1070'>
+                            <Name>
+                                <NamespaceName start='1058' end='1070' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1058' end='1062' name='test'/>
+                                    <Identifier start='1063' end='1070' name='require'/>
+                                </NamespaceName>
+                            </Name>
+                            <Alias>
+                            </Alias>
+                        </SingleUseStatementPart>
+                    </UseStatement>
+                    <UseStatement start='1076' end='1095' type='TYPE'>
+                        <SingleUseStatementPart start='1080' end='1094'>
+                            <Name>
+                                <NamespaceName start='1080' end='1094' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='1081' end='1085' name='test'/>
+                                    <Identifier start='1086' end='1094' name='function'/>
+                                </NamespaceName>
+                            </Name>
+                            <Alias>
+                            </Alias>
+                        </SingleUseStatementPart>
+                    </UseStatement>
+                    <UseStatement start='1100' end='1141' type='FUNCTION'>
+                        <SingleUseStatementPart start='1113' end='1140'>
+                            <Name>
+                                <NamespaceName start='1113' end='1126' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1113' end='1121' name='readOnly'/>
+                                    <Identifier start='1122' end='1126' name='test'/>
+                                </NamespaceName>
+                            </Name>
+                            <Alias>
+                                <Identifier start='1130' end='1140' name='aliasTest1'/>
+                            </Alias>
+                        </SingleUseStatementPart>
+                    </UseStatement>
+                    <UseStatement start='1146' end='1193' type='FUNCTION'>
+                        <SingleUseStatementPart start='1159' end='1192'>
+                            <Name>
+                                <NamespaceName start='1159' end='1178' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='1160' end='1164' name='test'/>
+                                    <Identifier start='1165' end='1173' name='function'/>
+                                    <Identifier start='1174' end='1178' name='test'/>
+                                </NamespaceName>
+                            </Name>
+                            <Alias>
+                                <Identifier start='1182' end='1192' name='aliasTest2'/>
+                            </Alias>
+                        </SingleUseStatementPart>
+                    </UseStatement>
+                    <ExpressionStatement start='1198' end='1218'>
+                        <FunctionInvocation start='1198' end='1217'>
+                            <FucntionName start='1198' end='1215'>
+                                <NamespaceName start='1198' end='1215' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1198' end='1202' name='test'/>
+                                    <Identifier start='1203' end='1210' name='require'/>
+                                    <Identifier start='1211' end='1215' name='test'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1223' end='1253'>
+                        <FunctionInvocation start='1223' end='1252'>
+                            <FucntionName start='1223' end='1250'>
+                                <NamespaceName start='1223' end='1250' isCurrent='true' isGlobal='false'>
+                                    <Identifier start='1233' end='1237' name='test'/>
+                                    <Identifier start='1238' end='1245' name='require'/>
+                                    <Identifier start='1246' end='1250' name='test'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1258' end='1279'>
+                        <FunctionInvocation start='1258' end='1278'>
+                            <FucntionName start='1258' end='1276'>
+                                <NamespaceName start='1258' end='1276' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='1259' end='1263' name='test'/>
+                                    <Identifier start='1264' end='1271' name='require'/>
+                                    <Identifier start='1272' end='1276' name='test'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1284' end='1306'>
+                        <NamespaceName start='1284' end='1305' isCurrent='false' isGlobal='false'>
+                            <Identifier start='1284' end='1288' name='test'/>
+                            <Identifier start='1289' end='1296' name='require'/>
+                            <Identifier start='1297' end='1305' name='CONSTANT'/>
+                        </NamespaceName>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1311' end='1334'>
+                        <NamespaceName start='1311' end='1333' isCurrent='false' isGlobal='true'>
+                            <Identifier start='1312' end='1316' name='test'/>
+                            <Identifier start='1317' end='1324' name='require'/>
+                            <Identifier start='1325' end='1333' name='CONSTANT'/>
+                        </NamespaceName>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1339' end='1371'>
+                        <NamespaceName start='1339' end='1370' isCurrent='true' isGlobal='false'>
+                            <Identifier start='1349' end='1353' name='test'/>
+                            <Identifier start='1354' end='1361' name='require'/>
+                            <Identifier start='1362' end='1370' name='CONSTANT'/>
+                        </NamespaceName>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1376' end='1392'>
+                        <FunctionInvocation start='1376' end='1391'>
+                            <FucntionName start='1376' end='1389'>
+                                <NamespaceName start='1376' end='1389' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1376' end='1384' name='readOnly'/>
+                                    <Identifier start='1385' end='1389' name='test'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1397' end='1414'>
+                        <FunctionInvocation start='1397' end='1413'>
+                            <FucntionName start='1397' end='1411'>
+                                <NamespaceName start='1397' end='1411' isCurrent='false' isGlobal='true'>
+                                    <Identifier start='1398' end='1406' name='readOnly'/>
+                                    <Identifier start='1407' end='1411' name='test'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </ExpressionStatement>
+                    <ExpressionStatement start='1419' end='1445'>
+                        <FunctionInvocation start='1419' end='1444'>
+                            <FucntionName start='1419' end='1442'>
+                                <NamespaceName start='1419' end='1442' isCurrent='true' isGlobal='false'>
+                                    <Identifier start='1429' end='1437' name='readOnly'/>
+                                    <Identifier start='1438' end='1442' name='test'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </ExpressionStatement>
+                </Block>
+            </NamespaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

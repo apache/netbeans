@@ -26,7 +26,7 @@ import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.php.api.PhpVersion;

@@ -69,7 +69,7 @@ import org.openide.windows.TopComponent;
 /**
  * Basic UI class for view tabs - non scrollable tabbed displayer, which shows all
  * tabs equally sized, proportionally. This class is independent on specific
- * L&F, acts as base class for specific L&F descendants.
+ * L&amp;F, acts as base class for specific L&amp;F descendants.
  * <p>
  * XXX eventually this class should be deleted and a subclass of BasicTabDisplayer can be used;
  * currently this is simply a port of the original code to the new API. Do not introduce any new
@@ -225,7 +225,7 @@ public abstract class AbstractViewTabDisplayerUI extends TabDisplayerUI {
 
             if( null != btnClose ) {
                 Icon icon = btnClose.getIcon();
-                btnClose.setBounds( width, height/2-icon.getIconHeight()/2, icon.getIconWidth(), icon.getIconHeight() );
+                btnClose.setBounds( width, (height - icon.getIconHeight()) / 2, icon.getIconWidth(), icon.getIconHeight() );
                 width += icon.getIconWidth();
             }
 
@@ -233,7 +233,7 @@ public abstract class AbstractViewTabDisplayerUI extends TabDisplayerUI {
                 if( 0 != width )
                     width += ICON_X_PAD;
                 Icon icon = btnAutoHidePin.getIcon();
-                btnAutoHidePin.setBounds( width, height/2-icon.getIconHeight()/2, icon.getIconWidth(), icon.getIconHeight() );
+                btnAutoHidePin.setBounds( width, (height - icon.getIconHeight()) / 2, icon.getIconWidth(), icon.getIconHeight() );
                 width += icon.getIconWidth();
                 width += ICON_X_PAD;
             }
@@ -742,8 +742,8 @@ public abstract class AbstractViewTabDisplayerUI extends TabDisplayerUI {
                     getSelectionModel().setSelectedIndex(i);
                     tabState.setSelected(i);
                     Component tc = i >= 0 ? getDataModel().getTab(i).getComponent() : null;
-                    if( null != tc && tc instanceof TopComponent
-                        && !((TopComponent)tc).isAncestorOf( KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner() ) ) {
+                    if(tc instanceof TopComponent
+                       && !((TopComponent) tc).isAncestorOf(KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner())) {
                         ((TopComponent)tc).requestActive();
                     }
                 }

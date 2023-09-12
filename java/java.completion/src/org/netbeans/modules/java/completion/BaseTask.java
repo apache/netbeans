@@ -340,10 +340,32 @@ abstract class BaseTask extends UserTask {
                         }
                         if (lastCase != null) {
                             stmts = lastCase.getStatements();
+                            if (stmts == null || stmts.isEmpty()) {
+                                Tree body = lastCase.getBody();
+                                if (body != null) {
+                                    last = body;
+                                } else {
+                                    Tree guard = lastCase.getGuard();
+                                    if (guard != null) {
+                                        last = guard;
+                                    }
+                                }
+                            }
                         }
                         break;
                     case CASE:
                         stmts = ((CaseTree) path.getLeaf()).getStatements();
+                        if (stmts == null || stmts.isEmpty()) {
+                            Tree body = ((CaseTree) path.getLeaf()).getBody();
+                            if (body != null) {
+                                last = body;
+                            } else {
+                                Tree guard = ((CaseTree) path.getLeaf()).getGuard();
+                                if (guard != null) {
+                                    last = guard;
+                                }
+                            }
+                        }
                         break;
                     case CONDITIONAL_AND: case CONDITIONAL_OR:
                         BinaryTree bt = (BinaryTree) last;
@@ -482,10 +504,32 @@ abstract class BaseTask extends UserTask {
                         }
                         if (lastCase != null) {
                             stmts = lastCase.getStatements();
+                            if (stmts == null || stmts.isEmpty()) {
+                                Tree caseBody = lastCase.getBody();
+                                if (caseBody != null) {
+                                    last = caseBody;
+                                } else {
+                                    Tree guard = lastCase.getGuard();
+                                    if (guard != null) {
+                                        last = guard;
+                                    }
+                                }
+                            }
                         }
                         break;
                     case CASE:
                         stmts = ((CaseTree) path.getLeaf()).getStatements();
+                        if (stmts == null || stmts.isEmpty()) {
+                            Tree caseBody = ((CaseTree) path.getLeaf()).getBody();
+                            if (caseBody != null) {
+                                last = caseBody;
+                            } else {
+                                Tree guard = ((CaseTree) path.getLeaf()).getGuard();
+                                if (guard != null) {
+                                    last = guard;
+                                }
+                            }
+                        }
                         break;
                 }
                 if (stmts != null) {

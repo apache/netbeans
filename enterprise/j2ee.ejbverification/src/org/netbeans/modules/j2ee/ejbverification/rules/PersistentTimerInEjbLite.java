@@ -83,10 +83,11 @@ public final class PersistentTimerInEjbLite {
         final List<ErrorDescription> problems = new ArrayList<>();
         final EJBProblemContext ctx = HintsUtils.getOrCacheContext(hintContext);
         if (ctx != null && ctx.getEjb() instanceof Session) {
-            boolean ee7lite = (ctx.getEjbModule().getJ2eeProfile() == Profile.JAVA_EE_7_WEB) || (ctx.getEjbModule().getJ2eeProfile() == Profile.JAVA_EE_8_WEB) || (ctx.getEjbModule().getJ2eeProfile() == Profile.JAKARTA_EE_8_WEB) || (ctx.getEjbModule().getJ2eeProfile() == Profile.JAKARTA_EE_9_WEB);
+            boolean ee9lite = ctx.getEjbModule().getJ2eeProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB);
+            boolean ee7lite = ctx.getEjbModule().getJ2eeProfile().isAtLeast(Profile.JAVA_EE_7_WEB);
             boolean ee6lite = ctx.getEjbModule().getJ2eeProfile() == Profile.JAVA_EE_6_WEB;
             J2eePlatform platform = ProjectUtil.getPlatform(ctx.getProject());
-            if ((ee6lite || ee7lite) && nonEeFullServer(platform)) {
+            if ((ee6lite || ee7lite || ee9lite) && nonEeFullServer(platform)) {
                 for (Element element : ctx.getClazz().getEnclosedElements()) {
                     for (AnnotationMirror annm : element.getAnnotationMirrors()) {
                         if (EJBAPIAnnotations.SCHEDULE.equals(annm.getAnnotationType().toString())) {
@@ -112,8 +113,23 @@ public final class PersistentTimerInEjbLite {
         if (platform == null) {
             return true;
         }
-
-        return !platform.getSupportedProfiles().contains(Profile.JAVA_EE_6_FULL);
+        if(platform.getSupportedProfiles().contains(Profile.JAVA_EE_6_FULL)) {
+            return false;
+        } else if(platform.getSupportedProfiles().contains(Profile.JAVA_EE_7_FULL)) {
+            return false;
+        } else if(platform.getSupportedProfiles().contains(Profile.JAVA_EE_8_FULL)) {
+            return false;
+        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_8_FULL)) {
+            return false;
+        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_FULL)) {
+            return false;
+        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_1_FULL)) {
+            return false;
+        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_10_FULL)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private static boolean isTimerPersistent(Map<? extends ExecutableElement, ? extends AnnotationValue> values) {

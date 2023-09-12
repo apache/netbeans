@@ -46,6 +46,7 @@ import org.netbeans.modules.web.jsf.api.metamodel.SystemEventListener;
  * @author ads
  *
  */
+// @todo: Support JakartaEE
 class ObjectProviders {
     
     /**
@@ -339,9 +340,9 @@ class ObjectProviders {
             List<TypeElement> result = new ArrayList<TypeElement>(interfaces
                     .size());
             for (TypeMirror typeMirror : interfaces) {
-                if (TypeKind.DECLARED.equals(typeMirror.getKind())) {
+                if (TypeKind.DECLARED == typeMirror.getKind()) {
                     Element element = ((DeclaredType) typeMirror).asElement();
-                    if (ElementKind.INTERFACE.equals(element.getKind())) {
+                    if (ElementKind.INTERFACE == element.getKind()) {
                         result.add( (TypeElement) element );
                         List<TypeElement> superInterfaces = 
                             getImplementedInterfaces((TypeElement) element, helper);

@@ -171,7 +171,7 @@ public final class ProjectUtilities {
 
     public static Project[] getOpenedProjectsForAttach() {
         Project[] projects = getOpenedProjects();
-        ArrayList<Project> projectsArray = new ArrayList(projects.length);
+        ArrayList<Project> projectsArray = new ArrayList<>(projects.length);
 
         for (int i = 0; i < projects.length; i++) {
             if (ProjectUtilities.isProjectTypeSupportedForAttach(projects[i])) {

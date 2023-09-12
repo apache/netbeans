@@ -353,6 +353,8 @@ public final class JavaTargetChooserPanel implements WizardDescriptor.Panel<Wiza
             String token = tukac.nextToken();
             if ("".equals(token))
                 return false;
+            if("snippet-files".equals(token) && !tukac.hasMoreTokens())
+                return true;
             if (!Utilities.isJavaIdentifier(token))
                 return false;
         }

@@ -275,7 +275,7 @@ public final class JavaTooltipTask extends BaseTask {
                             ret.add(paramStrings);
                             break;
                         }
-                        if (argTypes[i] == null || argTypes[i].getKind() != TypeKind.ERROR && !types.isAssignable(argTypes[i], param)) {
+                        if (argTypes[i] == null || argTypes[i].getKind() != TypeKind.ERROR && !isAssignable(types, argTypes[i], param)) {
                             break;
                         }
                     }
@@ -283,5 +283,15 @@ public final class JavaTooltipTask extends BaseTask {
             }
         }
         return ret.isEmpty() ? null : ret;
+    }
+
+    private static boolean isAssignable(Types types, TypeMirror arg, TypeMirror parameter) {
+        if(types.isAssignable(arg, parameter)) {
+            return true;
+        } else if (parameter instanceof TypeVariable) {
+            TypeMirror requiredTypes = ((TypeVariable) parameter).getUpperBound();
+            return types.isAssignable(arg, requiredTypes);
+        }
+        return false;
     }
 }

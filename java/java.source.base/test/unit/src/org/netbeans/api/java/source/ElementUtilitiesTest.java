@@ -26,20 +26,25 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
-import static junit.framework.TestCase.assertNull;
+import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.JavaSourceTest.SourceLevelQueryImpl;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+
+import static junit.framework.TestCase.assertNull;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 
 /**
  *
@@ -51,6 +56,7 @@ public class ElementUtilitiesTest extends NbTestCase {
         super(name);
     }
 
+    @Override
     protected void setUp() throws Exception {
         clearWorkDir();
         SourceUtilsTestUtil.setLookup(new Object[0], ElementUtilities.class.getClassLoader());
@@ -530,4 +536,67 @@ public class ElementUtilitiesTest extends NbTestCase {
                 }.scan(controller.getCompilationUnit(), null);
             }}, true);
     }
+
+
+    public void testGetMembers() throws Exception {
+        prepareTest();
+        SourceUtilsTestUtil.setSourceLevel(testFO, "8");
+        TestUtilities.copyStringToFile(FileUtil.toFile(testFO),
+                "package test;" +
+                "public class A implements Runnable {" +
+                "    private final int FIELD1 = 0;" +
+                "    private final int FIELD2 = 1;" +
+                "    public void run() {}" +
+                "}");
+        SourceLevelQueryImpl.sourceLevel = "8";
+
+        JavaSource javaSource = JavaSource.forFileObject(testFO);
+        javaSource.runUserActionTask((CompilationController controller) -> {
+            controller.toPhase(JavaSource.Phase.RESOLVED);
+
+            ClassTree outerTree = (ClassTree)controller.getCompilationUnit().getTypeDecls().get(0);
+            TreePath outerPath = new TreePath(new TreePath(controller.getCompilationUnit()), outerTree);
+            TypeMirror mirror = controller.getTrees().getTypeMirror(outerPath);
+            assertNotNull(mirror);
+
+            ElementUtilities utils = controller.getElementUtilities();
+            Set<String> members = new HashSet<>();
+            utils.getMembers(mirror, null).forEach((e) -> members.add(e.toString()));
+
+            List<String> good = Arrays.asList("getClass()",
+                    "hashCode()", "equals(java.lang.Object)", "clone()", "toString()", "notify()",
+                    "notifyAll()", "wait(long)", "wait(long,int)", "wait()", "finalize()", "A()",
+                    "FIELD1", "FIELD2", "run()", "this", "super", "class");
+            assertEquals(good.size(), members.size());
+            assertTrue(members.containsAll(good));
+
+        }, true);
+    }
+
+    public void testGetGlobalTypes() throws Exception {
+        prepareTest();
+        SourceUtilsTestUtil.setSourceLevel(testFO, "8");
+        TestUtilities.copyStringToFile(FileUtil.toFile(testFO),
+                "package test;" +
+                "import java.util.List;" +
+                "public class A { public static class B {} }"
+        );
+        SourceLevelQueryImpl.sourceLevel = "8";
+
+        JavaSource javaSource = JavaSource.forFileObject(testFO);
+        javaSource.runUserActionTask((CompilationController controller) -> {
+            controller.toPhase(JavaSource.Phase.RESOLVED);
+
+            ElementUtilities utils = controller.getElementUtilities();
+            Set<String> globals = new HashSet<>();
+            utils.getGlobalTypes(null).forEach((e) -> globals.add(e.toString()));
+
+            assertFalse(globals.isEmpty());
+            assertTrue(globals.contains("test.A"));
+            assertFalse(globals.contains("test.A.B"));
+            assertTrue(globals.contains("java.util.List"));
+            assertTrue(globals.contains("java.lang.System"));
+        }, true);
+    }
+
 }

@@ -461,7 +461,7 @@ public class Utils {
     {
         Utils.waitSecond(data, 5);
 
-        TestCase.assertEquals("Installer Finshed", 0, ((Integer) System.getProperties().get("nbi.exit.code")).intValue());
+        TestCase.assertEquals("Installer Finshed", 0, (Integer) System.getProperties().get("nbi.exit.code"));
 
         TestCase.assertEquals("NetBeans dir created", OK, Utils.dirExist(NB_DIR_NAME));
 
@@ -475,7 +475,7 @@ public class Utils {
 
         Utils.waitSecond(data, 5);
 
-        TestCase.assertEquals("Uninstaller Finshed", 0, ((Integer) System.getProperties().get("nbi.exit.code")).intValue());
+        TestCase.assertEquals("Uninstaller Finshed", 0, (Integer) System.getProperties().get("nbi.exit.code"));
 
         TestCase.assertFalse("NetBeans dir deleted", Utils.dirExist(NB_DIR_NAME).equals(OK));
         TestCase.assertFalse("Tomcat dir deleted", Utils.dirExist(TOMCAT_DIR_NAME).equals(OK));
@@ -493,7 +493,7 @@ public class Utils {
 
         Utils.waitSecond(data, 5);
 
-        TestCase.assertEquals("Installer Finshed", 0, ((Integer) System.getProperties().get("nbi.exit.code")).intValue());
+        TestCase.assertEquals("Installer Finshed", 0, (Integer) System.getProperties().get("nbi.exit.code"));
 
         TestCase.assertEquals(
             "NetBeans dir created",
@@ -519,7 +519,7 @@ public class Utils {
 
       Utils.waitSecond(data, 5);
 
-      TestCase.assertEquals("Uninstaller Finshed", 0, ((Integer) System.getProperties().get("nbi.exit.code")).intValue());
+      TestCase.assertEquals("Uninstaller Finshed", 0, (Integer) System.getProperties().get("nbi.exit.code"));
 
       TestCase.assertFalse(
           "NetBeans dir deleted",

@@ -4,44 +4,28 @@ ba.r|esolve();
 (QueryType=COMPLETION, prefixSearch=false, caseSensitive=true)
 ------------------------------------
 METHOD     resolve(): String               [PUBLIC]   path.js
-</pre><h2>Documentation:</h2><p>Resolves <code>to</code> to an absolute path.
+</pre><h2>Documentation:</h2><p>The <code>path.resolve()</code> method resolves a sequence of paths or path segments into
+an absolute path.</p>
+<p>The given sequence of paths is processed from right to left, with each
+subsequent <code>path</code> prepended until an absolute path is constructed.
+For instance, given the sequence of path segments: <code>/foo</code>, <code>/bar</code>, <code>baz</code>,
+calling <code>path.resolve('/foo', '/bar', 'baz')</code> would return <code>/bar/baz</code>
+because <code>'baz'</code> is not an absolute path but <code>'/bar' + '/' + 'baz'</code> is.</p>
+<p>If, after processing all given <code>path</code> segments, an absolute path has not yet
+been generated, the current working directory is used.</p>
+<p>The resulting path is normalized and trailing slashes are removed unless the
+path is resolved to the root directory.</p>
+<p>Zero-length <code>path</code> segments are ignored.</p>
+<p>If no <code>path</code> segments are passed, <code>path.resolve()</code> will return the absolute path
+of the current working directory.</p>
+<pre><code class="language-js">path.resolve('/foo/bar', './baz');
+// Returns: '/foo/bar/baz'
 
-</p>
-<p>If <code>to</code> isn&#39;t already absolute <code>from</code> arguments are prepended in right to left
-order, until an absolute path is found. If after using all <code>from</code> paths still
-no absolute path is found, the current working directory is used as well. The
-resulting path is normalized, and trailing slashes are removed unless the path
-gets resolved to the root directory. Non-string <code>from</code> arguments are ignored.
+path.resolve('/foo/bar', '/tmp/file/');
+// Returns: '/tmp/file'
 
-</p>
-<p>Another way to think of it is as a sequence of <code>cd</code> commands in a shell.
-
-</p>
-<pre><code>path.resolve(&#39;foo/bar&#39;, &#39;/tmp/file/&#39;, &#39;..&#39;, &#39;a/../subfile&#39;)</code></pre>
-<p>Is similar to:
-
-</p>
-<pre><code>cd foo/bar
-cd /tmp/file/
-cd ..
-cd a/../subfile
-pwd</code></pre>
-<p>The difference is that the different paths don&#39;t need to exist and may also be
-files.
-
-</p>
-<p>Examples:
-
-</p>
-<pre><code>path.resolve(&#39;/foo/bar&#39;, &#39;./baz&#39;)
-// returns
-&#39;/foo/bar/baz&#39;
-
-path.resolve(&#39;/foo/bar&#39;, &#39;/tmp/file/&#39;)
-// returns
-&#39;/tmp/file&#39;
-
-path.resolve(&#39;wwwroot&#39;, &#39;static_files/png/&#39;, &#39;../gif/image.gif&#39;)
-// if currently in /home/myself/node, it returns
-&#39;/home/myself/node/wwwroot/static_files/gif/image.gif&#39;</code></pre>
-</body></html>
+path.resolve('wwwroot', 'static_files/png/', '../gif/image.gif');
+// If the current working directory is /home/myself/node,
+// this returns '/home/myself/node/wwwroot/static_files/gif/image.gif'
+</code></pre>
+<p>A <a href="errors.html#class-typeerror"><code>TypeError</code></a> is thrown if any of the arguments is not a string.</p></body></html>

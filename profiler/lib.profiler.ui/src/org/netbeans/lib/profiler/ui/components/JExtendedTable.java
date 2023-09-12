@@ -251,7 +251,7 @@ public class JExtendedTable extends JTable implements CellTipAware, MouseListene
     public void processMouseEvent(final MouseEvent e) {
         if (e instanceof MouseWheelEvent) {
             Component target = JExtendedTable.this.getParent();
-            if (target == null || !(target instanceof JViewport))
+            if (!(target instanceof JViewport))
                 target = JExtendedTable.this;
             MouseEvent mwe = SwingUtilities.convertMouseEvent(
                     JExtendedTable.this, (MouseWheelEvent)e, target);

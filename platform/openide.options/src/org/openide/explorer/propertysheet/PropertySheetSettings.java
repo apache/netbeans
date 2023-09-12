@@ -29,7 +29,7 @@ import javax.swing.UIManager;
 
 /**
 * Settings for the property sheet.
-* @see PropertySheet
+* @see <a href="@org-openide-explorer@/org/openide/explorer/propertysheet/PropertySheet.html">PropertySheet</a>
 *
 * @deprecated None of the settings in this class are supported in the new property sheet.  The entire implementation
 *            has been gutted to do nothing.

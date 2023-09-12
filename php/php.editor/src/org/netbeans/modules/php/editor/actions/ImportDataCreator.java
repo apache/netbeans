@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import org.netbeans.modules.php.api.PhpVersion;
+import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.actions.FixUsesAction.Options;
 import org.netbeans.modules.php.editor.actions.ImportData.DataItem;
 import org.netbeans.modules.php.editor.actions.ImportData.ItemVariant;
@@ -86,25 +88,31 @@ public class ImportDataCreator {
     }
 
     private void processFQElementName(final String fqElementName) {
-        Collection<FullyQualifiedElement> possibleFQElements = fetchPossibleFQElements(fqElementName);
+        // GH-6039: avoid getting all types
+        if (!StringUtils.hasText(fqElementName)) {
+            return;
+        }
+        // GH-6075
+        String fqeName = CodeUtils.removeNullableTypePrefix(fqElementName);
+        Collection<FullyQualifiedElement> possibleFQElements = fetchPossibleFQElements(fqeName);
         Collection<FullyQualifiedElement> filteredPlatformConstsAndFunctions = filterPlatformConstsAndFunctions(possibleFQElements);
         Collection<FullyQualifiedElement> filteredDuplicates = filterDuplicates(filteredPlatformConstsAndFunctions);
-        Collection<FullyQualifiedElement> filteredExactUnqualifiedNames = filterExactUnqualifiedName(filteredDuplicates, fqElementName);
+        Collection<FullyQualifiedElement> filteredExactUnqualifiedNames = filterExactUnqualifiedName(filteredDuplicates, fqeName);
         if (filteredExactUnqualifiedNames.isEmpty()) {
             if (options.getPhpVersion().compareTo(PhpVersion.PHP_56) >= 0) {
-                possibleItems.add(new EmptyItem(fqElementName));
+                possibleItems.add(new EmptyItem(fqeName));
             } else {
-                if (!isConstOrFunction(fqElementName)) {
-                    possibleItems.add(new EmptyItem(fqElementName));
+                if (!isConstOrFunction(fqeName)) {
+                    possibleItems.add(new EmptyItem(fqeName));
                 }
             }
         } else {
             Collection<FullyQualifiedElement> filteredFQElements = filterFQElementsFromCurrentNamespace(filteredExactUnqualifiedNames);
             if (filteredFQElements.isEmpty()) {
-                possibleItems.add(new ReplaceItem(fqElementName, filteredExactUnqualifiedNames));
+                possibleItems.add(new ReplaceItem(fqeName, filteredExactUnqualifiedNames));
             } else {
                 possibleItems.add(new ValidItem(
-                        fqElementName,
+                        fqeName,
                         filteredFQElements,
                         filteredFQElements.size() != filteredExactUnqualifiedNames.size()));
             }
@@ -241,6 +249,7 @@ public class ImportDataCreator {
                     ? fqElement.getFullyQualifiedName().toString()
                     : fqElement.getName();
             ItemVariant replaceItemVariant = new ItemVariant(itemVariantReplaceName, ItemVariant.UsagePolicy.CAN_BE_USED);
+            assert usedNames.get(fqName) != null : "fqName: " + fqName; // NOI18N
             data.addJustToReplace(new DataItem(fqName, Collections.singletonList(replaceItemVariant), replaceItemVariant, usedNames.get(fqName)));
         }
 
@@ -306,6 +315,7 @@ public class ImportDataCreator {
                 }
             }
             Collections.sort(variants);
+            assert usedNames.get(typeName) != null : "typeName: " + typeName; // NOI18N
             data.add(new DataItem(typeName, variants, defaultValue, usedNames.get(typeName)));
         }
 

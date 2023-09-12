@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.24
+#Version 3.31
 
 CLSS public abstract interface java.io.Serializable
 
@@ -682,6 +682,9 @@ hfds conditionException,conditionResult,debugger,event,referenceType,resume,thre
 CLSS public abstract interface org.netbeans.api.debugger.jpda.event.JPDABreakpointListener
 intf java.util.EventListener
 meth public abstract void breakpointReached(org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent)
+
+CLSS public abstract interface org.netbeans.spi.debugger.jpda.BreakpointStratifier
+meth public abstract void stratify(org.netbeans.api.debugger.jpda.JPDABreakpoint)
 
 CLSS public abstract org.netbeans.spi.debugger.jpda.BreakpointsClassFilter
 cons public init()

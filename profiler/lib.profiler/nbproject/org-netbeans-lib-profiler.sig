@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.124
+#Version 1.130
 
 CLSS public abstract interface java.io.Serializable
 
@@ -25,6 +25,8 @@ supr java.lang.RuntimeException
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
+meth public java.util.Spliterator<{java.lang.Iterable%0}> spliterator()
+meth public void forEach(java.util.function.Consumer<? super {java.lang.Iterable%0}>)
 
 CLSS public java.lang.Object
 cons public init()
@@ -1021,6 +1023,8 @@ fld public final static int OS_TRU64 = 512
 fld public final static int OS_UNIX_MASK = 3064
 fld public final static int OS_VMS = 8192
 fld public final static int OS_WIN2000 = 4096
+fld public final static int OS_WIN95 = 2
+fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 20487
 fld public final static int OS_WINNT = 1
 fld public final static int OS_WIN_OTHER = 16384

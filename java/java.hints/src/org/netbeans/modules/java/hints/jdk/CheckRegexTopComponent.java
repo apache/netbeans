@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.hints.jdk;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +38,7 @@ import org.openide.windows.Mode;
 import org.openide.windows.WindowManager;
 
 /**
- * Top component which displays something.
+ * Top component for inspecting regular expressions.
  */
 @ConvertAsProperties(
         dtd = "-//org.netbeans.modules.java.hints.jdk//CheckRegex//EN",
@@ -72,6 +71,7 @@ public final class CheckRegexTopComponent extends TopComponent {
     
     public CheckRegexTopComponent() {
         initComponents();
+        errorLabel.setVisible(false);
         setName(Bundle.CTL_CheckRegexTopComponent());
         setToolTipText(Bundle.HINT_CheckRegexTopComponent());
         isStrictMatch = false;
@@ -95,22 +95,21 @@ public final class CheckRegexTopComponent extends TopComponent {
         canonEqMenuItem = new javax.swing.JCheckBoxMenuItem();
         unicodeCaseMenuItem = new javax.swing.JCheckBoxMenuItem();
         unicodeCharacterClassMenuItem = new javax.swing.JCheckBoxMenuItem();
-        examplesFrame = new javax.swing.JFrame();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        regexLabel1 = new javax.swing.JLabel();
-        regexLabel = new javax.swing.JLabel();
+        flagsButton = new javax.swing.JButton();
+        javax.swing.JButton examplesButton = new javax.swing.JButton();
+        strictCheckBox = new javax.swing.JCheckBox();
+        verticalSplitPane = new javax.swing.JSplitPane();
+        regexPanel = new javax.swing.JPanel();
+        javax.swing.JLabel regexLabel = new javax.swing.JLabel();
         regexScrollPane = new javax.swing.JScrollPane();
         regexTextArea = new javax.swing.JTextArea();
-        exampleLabel = new javax.swing.JLabel();
+        errorLabel = new javax.swing.JLabel();
+        javax.swing.JPanel examplePanel = new javax.swing.JPanel();
+        javax.swing.JLabel exampleLabel = new javax.swing.JLabel();
         exampleLayeredPane = new javax.swing.JLayeredPane();
         iconLabel = new javax.swing.JLabel();
         exampleScrollPane = new javax.swing.JScrollPane();
         exampleTextArea = new javax.swing.JTextArea();
-        strictCheckBox = new javax.swing.JCheckBox();
-        errorLabel = new javax.swing.JLabel();
-        flagsButton = new javax.swing.JButton();
-        examplesButton = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(multilineMenuItem, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.multilineMenuItem.text")); // NOI18N
         multilineMenuItem.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.multilineMenuItem.toolTipText")); // NOI18N
@@ -193,105 +192,6 @@ public final class CheckRegexTopComponent extends TopComponent {
         });
         flagsPopupMenu.add(unicodeCharacterClassMenuItem);
 
-        examplesFrame.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        examplesFrame.setLocationByPlatform(true);
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        org.openide.awt.Mnemonics.setLocalizedText(regexLabel1, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.regexLabel1.text")); // NOI18N
-
-        javax.swing.GroupLayout examplesFrameLayout = new javax.swing.GroupLayout(examplesFrame.getContentPane());
-        examplesFrame.getContentPane().setLayout(examplesFrameLayout);
-        examplesFrameLayout.setHorizontalGroup(
-            examplesFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(examplesFrameLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(examplesFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(regexLabel1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        examplesFrameLayout.setVerticalGroup(
-            examplesFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, examplesFrameLayout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(regexLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        org.openide.awt.Mnemonics.setLocalizedText(regexLabel, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.regexLabel.text")); // NOI18N
-
-        regexScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        regexScrollPane.setPreferredSize(new java.awt.Dimension(164, 74));
-
-        regexTextArea.setColumns(20);
-        regexTextArea.setRows(5);
-        regexTextArea.setFocusAccelerator('g');
-        regexTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                regexTextAreaKeyReleased(evt);
-            }
-        });
-        regexScrollPane.setViewportView(regexTextArea);
-
-        org.openide.awt.Mnemonics.setLocalizedText(exampleLabel, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.exampleLabel.text")); // NOI18N
-
-        exampleScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        exampleScrollPane.setOpaque(false);
-
-        exampleTextArea.setColumns(20);
-        exampleTextArea.setRows(5);
-        exampleTextArea.setFocusAccelerator('x');
-        exampleTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                exampleTextAreaKeyReleased(evt);
-            }
-        });
-        exampleScrollPane.setViewportView(exampleTextArea);
-
-        org.openide.awt.Mnemonics.setLocalizedText(strictCheckBox, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.strictCheckBox.text")); // NOI18N
-        strictCheckBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                strictCheckBoxItemStateChanged(evt);
-            }
-        });
-
-        exampleLayeredPane.setLayer(iconLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        exampleLayeredPane.setLayer(exampleScrollPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        exampleLayeredPane.setLayer(strictCheckBox, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        javax.swing.GroupLayout exampleLayeredPaneLayout = new javax.swing.GroupLayout(exampleLayeredPane);
-        exampleLayeredPane.setLayout(exampleLayeredPaneLayout);
-        exampleLayeredPaneLayout.setHorizontalGroup(
-            exampleLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, exampleLayeredPaneLayout.createSequentialGroup()
-                .addContainerGap(297, Short.MAX_VALUE)
-                .addComponent(iconLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(strictCheckBox))
-            .addGroup(exampleLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(exampleLayeredPaneLayout.createSequentialGroup()
-                    .addComponent(exampleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 15, Short.MAX_VALUE)))
-        );
-        exampleLayeredPaneLayout.setVerticalGroup(
-            exampleLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(exampleLayeredPaneLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(exampleLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(strictCheckBox)
-                    .addComponent(iconLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(exampleLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(exampleLayeredPaneLayout.createSequentialGroup()
-                    .addComponent(exampleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 6, Short.MAX_VALUE)))
-        );
-
         org.openide.awt.Mnemonics.setLocalizedText(flagsButton, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.flagsButton.text")); // NOI18N
         flagsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -306,45 +206,159 @@ public final class CheckRegexTopComponent extends TopComponent {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(strictCheckBox, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.strictCheckBox.text")); // NOI18N
+        strictCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.strictCheckBox.toolTipText")); // NOI18N
+        strictCheckBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                strictCheckBoxItemStateChanged(evt);
+            }
+        });
+
+        verticalSplitPane.setDividerLocation(80);
+        verticalSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        regexPanel.setPreferredSize(new java.awt.Dimension(517, 80));
+
+        org.openide.awt.Mnemonics.setLocalizedText(regexLabel, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.regexLabel.text")); // NOI18N
+
+        regexScrollPane.setMinimumSize(new java.awt.Dimension(6, 30));
+        regexScrollPane.setPreferredSize(new java.awt.Dimension(164, 74));
+
+        regexTextArea.setColumns(20);
+        regexTextArea.setRows(5);
+        regexTextArea.setFocusAccelerator('g');
+        regexTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                regexTextAreaKeyReleased(evt);
+            }
+        });
+        regexScrollPane.setViewportView(regexTextArea);
+
+        errorLabel.setForeground(new java.awt.Color(255, 0, 0));
+        org.openide.awt.Mnemonics.setLocalizedText(errorLabel, "dummy error message"); // NOI18N
+
+        javax.swing.GroupLayout regexPanelLayout = new javax.swing.GroupLayout(regexPanel);
+        regexPanel.setLayout(regexPanelLayout);
+        regexPanelLayout.setHorizontalGroup(
+            regexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(regexPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(regexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(regexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
+                    .addGroup(regexPanelLayout.createSequentialGroup()
+                        .addComponent(regexLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(errorLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        regexPanelLayout.setVerticalGroup(
+            regexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(regexPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(regexLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(regexScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorLabel))
+        );
+
+        verticalSplitPane.setTopComponent(regexPanel);
+
+        org.openide.awt.Mnemonics.setLocalizedText(exampleLabel, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.exampleLabel.text")); // NOI18N
+
+        exampleLayeredPane.setMinimumSize(new java.awt.Dimension(0, 40));
+
+        exampleScrollPane.setOpaque(false);
+
+        exampleTextArea.setColumns(20);
+        exampleTextArea.setRows(5);
+        exampleTextArea.setFocusAccelerator('x');
+        exampleTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                exampleTextAreaKeyReleased(evt);
+            }
+        });
+        exampleScrollPane.setViewportView(exampleTextArea);
+
+        exampleLayeredPane.setLayer(iconLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        exampleLayeredPane.setLayer(exampleScrollPane, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout exampleLayeredPaneLayout = new javax.swing.GroupLayout(exampleLayeredPane);
+        exampleLayeredPane.setLayout(exampleLayeredPaneLayout);
+        exampleLayeredPaneLayout.setHorizontalGroup(
+            exampleLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, exampleLayeredPaneLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(iconLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(exampleLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(exampleScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE))
+        );
+        exampleLayeredPaneLayout.setVerticalGroup(
+            exampleLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(exampleLayeredPaneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(iconLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(42, Short.MAX_VALUE))
+            .addGroup(exampleLayeredPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(exampleLayeredPaneLayout.createSequentialGroup()
+                    .addComponent(exampleScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+
+        javax.swing.GroupLayout examplePanelLayout = new javax.swing.GroupLayout(examplePanel);
+        examplePanel.setLayout(examplePanelLayout);
+        examplePanelLayout.setHorizontalGroup(
+            examplePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(examplePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(examplePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(exampleLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(examplePanelLayout.createSequentialGroup()
+                        .addComponent(exampleLabel)
+                        .addGap(0, 386, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        examplePanelLayout.setVerticalGroup(
+            examplePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(examplePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(exampleLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(exampleLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        verticalSplitPane.setRightComponent(examplePanel);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addComponent(flagsButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(examplesButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(strictCheckBox)
+                .addGap(6, 6, 6))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(regexLabel)
-                    .addComponent(exampleLabel)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(regexScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(62, 62, 62)
-                        .addComponent(errorLabel))
-                    .addComponent(exampleLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(flagsButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(examplesButton)))
-                .addGap(266, 266, 266))
+                .addComponent(verticalSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(regexLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(regexScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(errorLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(exampleLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(exampleLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(verticalSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(flagsButton)
-                    .addComponent(examplesButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(examplesButton)
+                    .addComponent(strictCheckBox))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -463,9 +477,8 @@ public final class CheckRegexTopComponent extends TopComponent {
 
     private void examplesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_examplesButtonActionPerformed
         
-        Pattern p;
         try {
-            p = Pattern.compile(regexTextArea.getText());
+            Pattern.compile(regexTextArea.getText());
         } catch (PatternSyntaxException pse) {
             errorLabel.setText(Bundle.CheckRegexTopComponent_label_error(pse.getDescription()));
             return;
@@ -480,27 +493,22 @@ public final class CheckRegexTopComponent extends TopComponent {
     private javax.swing.JCheckBoxMenuItem commentsMenuItem;
     private javax.swing.JCheckBoxMenuItem dotAllMenuItem;
     private javax.swing.JLabel errorLabel;
-    private javax.swing.JLabel exampleLabel;
     private javax.swing.JLayeredPane exampleLayeredPane;
     private javax.swing.JScrollPane exampleScrollPane;
     private javax.swing.JTextArea exampleTextArea;
-    private javax.swing.JButton examplesButton;
-    private javax.swing.JFrame examplesFrame;
     private javax.swing.JButton flagsButton;
     private javax.swing.JPopupMenu flagsPopupMenu;
     private javax.swing.JLabel iconLabel;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JCheckBoxMenuItem literalMenuItem;
     private javax.swing.JCheckBoxMenuItem multilineMenuItem;
-    private javax.swing.JLabel regexLabel;
-    private javax.swing.JLabel regexLabel1;
+    private javax.swing.JPanel regexPanel;
     private javax.swing.JScrollPane regexScrollPane;
     private javax.swing.JTextArea regexTextArea;
     private javax.swing.JCheckBox strictCheckBox;
     private javax.swing.JCheckBoxMenuItem unicodeCaseMenuItem;
     private javax.swing.JCheckBoxMenuItem unicodeCharacterClassMenuItem;
     private javax.swing.JCheckBoxMenuItem unixLinesMenuItem;
+    private javax.swing.JSplitPane verticalSplitPane;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
@@ -570,17 +578,21 @@ public final class CheckRegexTopComponent extends TopComponent {
         Highlighter highlighter = exampleTextArea.getHighlighter();
         highlighter.removeAllHighlights();
 
-        errorLabel.setText("");
         iconLabel.setIcon(null);
 
-        if (regexTextArea.getText().length() == 0 || exampleTextArea.getText().length() == 0) {
+        if (regexTextArea.getText().isEmpty() || exampleTextArea.getText().isEmpty()) {
             return;
         }
         Pattern p;
         try {
             p = Pattern.compile(regexTextArea.getText(), Flags);
+            errorLabel.setVisible(false);
         } catch (PatternSyntaxException pse) {
             errorLabel.setText(Bundle.CheckRegexTopComponent_label_error(pse.getDescription()));
+            errorLabel.setVisible(true);
+            if (regexPanel.getHeight() < regexPanel.getPreferredSize().height) {
+                verticalSplitPane.resetToPreferredSizes();
+            }
             return;
         }
         Matcher m = p.matcher(exampleTextArea.getText());

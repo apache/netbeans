@@ -48,7 +48,7 @@ public class GoToTypeWorker implements Runnable {
     private volatile boolean isCanceled = false;
     private final String text;
     private final long createTime;
-    private List<? extends TypeDescriptor> types = Collections.<TypeDescriptor>emptyList();;
+    private List<? extends TypeDescriptor> types = Collections.<TypeDescriptor>emptyList();
 
     public GoToTypeWorker( String text ) {
         this.text = text;

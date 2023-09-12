@@ -159,14 +159,14 @@ public class JsFormatterEmbeddedTest extends JsFormatterTestBase {
     }
 
     public void testJsx7BinaryBeforeIfLong() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>();
+        HashMap<String, Object> options = new HashMap<>();
         options.put(FmtOptions.wrapBinaryOps, CodeStyle.WrapStyle.WRAP_IF_LONG);
         options.put(FmtOptions.wrapAfterBinaryOps, false);
         reformatFileContents("testfiles/formatter/jsx7.js", options, ".binaryBefore.IfLong.formatted");
     }
 
     public void testJsx7BinaryAfterIfLong() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>();
+        HashMap<String, Object> options = new HashMap<>();
         options.put(FmtOptions.wrapBinaryOps, CodeStyle.WrapStyle.WRAP_IF_LONG);
         options.put(FmtOptions.wrapAfterBinaryOps, true);
         reformatFileContents("testfiles/formatter/jsx7.js", options, ".binaryAfter.IfLong.formatted");
@@ -177,14 +177,14 @@ public class JsFormatterEmbeddedTest extends JsFormatterTestBase {
     }
     
     public void testJsx8BinaryBeforeIfLong() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>();
+        HashMap<String, Object> options = new HashMap<>();
         options.put(FmtOptions.wrapBinaryOps, CodeStyle.WrapStyle.WRAP_IF_LONG);
         options.put(FmtOptions.wrapAfterBinaryOps, false);
         reformatFileContents("testfiles/formatter/jsx8.js", options, ".binaryBefore.IfLong.formatted");
     }
 
     public void testJsx8BinaryAfterIfLong() throws Exception {
-        HashMap<String, Object> options = new HashMap<String, Object>();
+        HashMap<String, Object> options = new HashMap<>();
         options.put(FmtOptions.wrapBinaryOps, CodeStyle.WrapStyle.WRAP_IF_LONG);
         options.put(FmtOptions.wrapAfterBinaryOps, true);
         reformatFileContents("testfiles/formatter/jsx8.js", options, ".binaryAfter.IfLong.formatted");

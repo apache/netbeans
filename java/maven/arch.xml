@@ -118,7 +118,7 @@
     <api group="layer" name="MavenPackagingLookup" type="export" category="devel">
         <p>
             <code>Projects/org-netbeans-modules-maven/&lt;packaging-type>/Lookup</code> is added to the project's additional Lookup. The content is expected
-            to contain packaing-specific services and processors, for example, <a href="@TOP@/org/netbans/modules/maven/api/execute/PrerequisitesChecker.html">PrerequisitesCheckers</a>.
+            to contain packaing-specific services and processors, for example, <a href="@TOP@/org/netbeans/modules/maven/api/execute/PrerequisitesChecker.html">PrerequisitesCheckers</a>.
             In addition, <code>Projects/org-netbeans-modules-maven/_any/Lookup</code> defines services that act after the packaging-specific ones.
         </p>
         For the details and examples, see description in <a href="@TOP@/org/netbeans/modules/maven/api/execute/PrerequisitesChecker.html">PrerequisitesChecker javadoc</a>.
@@ -138,6 +138,14 @@
        "Projects/org-netbeans-modules-maven/DependencyActions" folders' content is used to
        add item's to node popup. To main project node, Dependencies node and node for single dependency.
        It's content is expected to be <code>Action</code> instances.
+     </p>
+    </api>
+    <api group="layer" name="LifecycleParticipants" type="export" category="official">
+     <p>
+         A module can disable warning for a custom lifecycle participant by creating a <b>folder</b> in 
+         <code>Projects/org-netbeans-modules-maven/LifecycleParticipant</code>. Currently single boolean attribute,
+         <code>ignoreOnModelLoad</code> is supported, which suppresses project problem and warning about
+         the custom participant. The participant's code does not run after project load.         
      </p>
     </api>
 
@@ -161,8 +169,8 @@
     <api group="lookup" name="ActionConfiguration" type="import" category="official">
         <p>
             Project API clients may place <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectConfiguration.html">ProjectConfiguration</a> 
-            instance in the <b>context Lookup</b> passed to <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html##isActionEnabled-java.lang.String-org.openide.util.Lookup-">ActionProvider.isActionEnabled()</a> or 
-            <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html##invokeAction-java.lang.String-org.openide.util.Lookup-">ActionProvider.invokeAction()</a>. If such instance is present, the action is configured according to settings in the selected configuration.
+            instance in the <b>context Lookup</b> passed to <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#isActionEnabled-java.lang.String-org.openide.util.Lookup-">ActionProvider.isActionEnabled()</a> or 
+            <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#invokeAction-java.lang.String-org.openide.util.Lookup-">ActionProvider.invokeAction()</a>. If such instance is present, the action is configured according to settings in the selected configuration.
             If not present, the active configuration is used. See example in <a href="@TOP@/org/netbeans/modules/maven/api/NbMavenProject.html">NbMavenProject</a> documentation.
         </p>
     </api>

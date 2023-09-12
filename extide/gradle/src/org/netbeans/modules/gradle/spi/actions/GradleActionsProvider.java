@@ -45,8 +45,8 @@ import org.openide.util.Lookup;
  * Overridance rules (priority, strength, ...) apply as usual.
  * <div class="nonnormative">
  * This is an example, how to disable e.g. {@code debug.single} action in a specific configuration the user may activate:
- * {@codesnippet disable-action-xml}
- * 
+ * {@snippet file="org/netbeans/modules/gradle/actions/declarative-actions2.xml" region="disable-action-xml"}
+ * </div>
  * @author Laszlo Kishalmi
  * @author Svata Dedic
  */
@@ -72,14 +72,14 @@ public interface GradleActionsProvider {
      * Provides a declarative action description. The returned {@link InputStream} must contain XML content conforming to
      * {@code action-mapping.dtd}.
      * <div class="nonnormative">
-     * An examplea action mapping:
-     * {@codesnippet action-declaration-xml}
+     * An example of an action mapping:
+     * {@snippet file="org/netbeans/modules/gradle/actions/action-mapping.xml" region="action-declaration-xml"}
      * </div>
      * <p>
      * Starting from <b>version 2.13</b> the InputStream can contain entries for {@link GradleExecConfiguration}s.
      * <div class="nonnormative">
      * Example of how configuration is declared in action mapping:
-     * {@codesnippet configuration-declaration-xml}
+     * {@snippet file="org/netbeans/modules/gradle/actions/declarative-actions.xml" region="configuration-declaration-xml"}
      * </div>
      * @return stream with action description.
      */

@@ -26,7 +26,7 @@ import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Enumeration;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.junit.Manager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;

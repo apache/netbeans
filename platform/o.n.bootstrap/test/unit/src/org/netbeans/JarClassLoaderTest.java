@@ -18,15 +18,23 @@
  */
 package org.netbeans;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -37,12 +45,18 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.security.Permission;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.tools.SimpleJavaFileObject;
+import javax.tools.ToolProvider;
 import junit.framework.AssertionFailedError;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.test.TestFileUtils;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /** Tests that cover some basic aspects of a Proxy/JarClassLoader.
  *
@@ -349,6 +363,7 @@ public class JarClassLoaderTest extends NbTestCase {
                 controlSemaphore.acquire();
             }
 
+            @Override
             public void run() {
                 controlSemaphore.release(); // we're about to start blocking
                 try {
@@ -413,5 +428,87 @@ public class JarClassLoaderTest extends NbTestCase {
         public @Override void checkPermission(Permission perm) {}
 
         public @Override void checkPermission(Permission perm, Object ctx) {}
+    }
+
+    public void testMultiReleaseJar() throws Exception {
+        clearWorkDir();
+
+        // Prepare multi-release jar file
+        File classes = new File(getWorkDir(), "classes");
+        classes.mkdirs();
+        ToolProvider.getSystemJavaCompiler()
+                    .getTask(null, null, d -> { throw new IllegalStateException(d.toString()); }, Arrays.asList("-d", classes.getAbsolutePath()), null,
+                             Arrays.asList(new SourceFileObject("test/Impl.java", "package test; public class Impl { public static String get() { return \"base\"; } }"),
+                                           new SourceFileObject("api/API.java", "package api; public class API { public static String run() { return test.Impl.get(); } }")))
+                    .call();
+        File classes9 = new File(new File(new File(classes, "META-INF"), "versions"), "9");
+        classes9.mkdirs();
+        ToolProvider.getSystemJavaCompiler()
+                    .getTask(null, null, d -> { throw new IllegalStateException(d.toString()); }, Arrays.asList("-d", classes9.getAbsolutePath(), "-classpath", classes.getAbsolutePath()), null,
+                             Arrays.asList(new SourceFileObject("test/Impl.java", "package test; public class Impl { public static String get() { return \"9\"; } }")))
+                    .call();
+        Map<String, byte[]> jarContent = new LinkedHashMap<>();
+        jarContent.put("META-INF/MANIFEST.MF", "Manifest-Version: 1.0\nMulti-Release: true\n\n".getBytes());
+        Path classesPath = classes.toPath();
+        Files.walk(classesPath)
+             .filter(p -> Files.isRegularFile(p))
+             .forEach(p -> {
+                  try {
+                      jarContent.put(classesPath.relativize(p).toString(), TestFileUtils.readFileBin(p.toFile()));
+                  } catch (IOException ex) {
+                      throw new IllegalStateException(ex);
+                  }
+             });
+        jarContent.put("test/dummy.txt", "base".getBytes(UTF_8));
+        jarContent.put("META-INF/versions/9/test/dummy.txt", "9".getBytes(UTF_8));
+        File jar = new File(getWorkDir(), "multi-release.jar");
+        try (OutputStream out = new FileOutputStream(jar)) {
+            TestFileUtils.writeZipFile(out, jarContent);
+        }
+
+        // Check multi release class loading
+        JarClassLoader jcl = new JarClassLoader(Arrays.asList(jar), new ProxyClassLoader[0]);
+        Class<?> api = jcl.loadClass("api.API");
+        Method run = api.getDeclaredMethod("run");
+        String output = (String) run.invoke(null);
+        String expected;
+        try {
+            Class.forName("java.lang.Runtime$Version");
+            expected = "9";
+        } catch (ClassNotFoundException ex) {
+            expected = "base";
+        }
+        assertEquals(expected, output);
+
+        // Check multi release resource loading
+        try(InputStream is = jcl.getResourceAsStream("test/dummy.txt")) {
+            assertEquals(expected, loadUTF8(is));
+        }
+    }
+
+    private static String loadUTF8(InputStream is) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[2048];
+        int read;
+        while ((read = is.read(buffer)) > 0) {
+            baos.write(buffer, 0, read);
+        }
+        return baos.toString("UTF-8");
+    }
+
+    private static final class SourceFileObject extends SimpleJavaFileObject {
+
+        private final String content;
+
+        public SourceFileObject(String path, String content) throws URISyntaxException {
+            super(new URI("mem://" + path), Kind.SOURCE);
+            this.content = content;
+        }
+
+        @Override
+        public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+            return content;
+        }
+
     }
 }

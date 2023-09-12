@@ -63,7 +63,7 @@ public class AdvancedOptionImpl extends AdvancedOption {
 
     /**
      * Provides list of options for this category
-     * @return list of keywords for each optioncategory sub-panel
+     * @return set of keywords for each optioncategory sub-panel
      */
     public Set<String> getKeywordsByCategory() {
 	if (keywords != null) {

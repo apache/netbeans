@@ -26,13 +26,17 @@ import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /** Support class for <code>Node.Property</code>.
-*
-* @author Jan Jancura, Jaroslav Tulach, Ian Formanek
-*/
+ *
+ * @param <T> the type of the represented property.
+ *
+ * @author Jan Jancura, Jaroslav Tulach, Ian Formanek
+ */
 public abstract class PropertySupport<T> extends Node.Property<T> {
     /** flag whether the property is readable */
     private boolean canR;
@@ -62,6 +66,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
     * Returns the value passed into constructor.
     * @return <CODE>true</CODE> if the read of the value is supported
     */
+    @Override
     public boolean canRead() {
         return canR;
     }
@@ -70,6 +75,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
     * Returns the value passed into constructor.
     * @return <CODE>true</CODE> if the read of the value is supported
     */
+    @Override
     public boolean canWrite() {
         return canW;
     }
@@ -78,6 +84,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
      * Like {@link Class#cast} but handles primitive types.
      * See JDK #6456930.
      */
+    @SuppressWarnings("unchecked")
     static <T> T cast(Class<T> c, Object o) {
         if (c.isPrimitive()) {
             // Could try to actually type-check it, but never mind.
@@ -85,6 +92,79 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
         } else {
             return c.cast(o);
         }
+    }
+
+    /**
+     * Fluent wrapper method for {@link #setDisplayName(java.lang.String)}.
+     *
+     * @param displayName the display name to set.
+     * @since 7.62
+     *
+     * @return this instance
+     */
+    public final PropertySupport<T> withDisplayName(String displayName) {
+        setDisplayName(displayName);
+        return this;
+    }
+
+    /**
+     * Fluent wrapper method for {@link #setShortDescription(java.lang.String)}.
+     *
+     * @param shortDescription short description
+     * @since 7.62
+     * @return this instance
+     */
+    public final PropertySupport<T> withShortDescription(String shortDescription) {
+        setShortDescription(shortDescription);
+        return this;
+    }
+
+    /**
+     * Creates a "virtual" property where getter and setter are backed by the
+     * provided {@link Supplier} and {@link Consumer} functional interfaces.
+     * @param <T> the type of the property
+     * @param name the name of the property
+     * @param valueType the type of the property
+     * @param supplier the getter functional interface, can be {@code null} for write-only properties.
+     * @param consumer the setter functional interface, can be {@code null} for read-only properties.
+     *
+     * @since 7.62
+     * @return a {@link PropertySupport} instance where getter and setter are
+     *         backed by the provided functional interfaces.
+     */
+    public static <T> PropertySupport<T> readWrite(String name, Class<T> valueType, Supplier<T> supplier, Consumer<T> consumer) {
+        return new FunctionalProperty<>(name, valueType, supplier, consumer);
+    }
+
+    /**
+     * Creates a read-only "virtual" property where getter is backed by the
+     * provided {@link Supplier} functional interface.
+     * @param <T> the type of the property
+     * @param name the name of the property
+     * @param valueType the type of the property
+     * @param supplier the getter functional interface.
+     *
+     * @since 7.62
+     * @return a read-only {@link PropertySupport} instance where getter is
+     *         backed by the provided functional interface.
+     */
+    public static <T> PropertySupport<T> readOnly(String name, Class<T> valueType, Supplier<T> supplier) {
+        return new FunctionalProperty<>(name, valueType, supplier, null);
+    }
+    /**
+     * Creates a write-only "virtual" property where setter is backed by the
+     * provided {@link Consumer} functional interface.
+     * @param <T> the type of the property
+     * @param name the name of the property
+     * @param valueType the type of the property
+     * @param consumer the setter functional interface.
+     *
+     * @since 7.62
+     * @return a write-only {@link PropertySupport} instance where setter is
+     *         backed by the provided functional interface.
+     */
+    public static <T> PropertySupport<T> writeOnly(String name, Class<T> valueType, Consumer<T> consumer) {
+        return new FunctionalProperty<>(name, valueType, null, consumer);
     }
 
     /**
@@ -213,7 +293,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
         }
 
         // Finds the proper getter
-        private static Method findGetter(Object instance, Class valueType, String property)
+        private static Method findGetter(Object instance, Class<?> valueType, String property)
         throws NoSuchMethodException {
             NoSuchMethodException nsme;
 
@@ -273,7 +353,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
                 }
             } catch (IllegalArgumentException iae) {
                 //Provide a better message for debugging
-                StringBuffer sb = new StringBuffer("Attempted to invoke method ");
+                StringBuilder sb = new StringBuilder("Attempted to invoke method ");
                 sb.append(getter.getName());
                 sb.append(" from class ");
                 sb.append(getter.getDeclaringClass().getName());
@@ -288,6 +368,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
         /* Can write the value of the property.
         * @return <CODE>true</CODE> if the read of the value is supported
         */
+        @Override
         public boolean canWrite() {
             return setter != null;
         }
@@ -298,6 +379,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
         * @exception IllegalArgumentException wrong argument
         * @exception InvocationTargetException an exception during invocation
         */
+        @Override
         public void setValue(T val)
         throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
             if (setter == null) {
@@ -322,14 +404,13 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
         * @return the property editor or <CODE>null</CODE> if there should not be
         *    any editor.
         */
+        @Override
         public PropertyEditor getPropertyEditor() {
             if (propertyEditorClass != null) {
                 try {
-                    return propertyEditorClass.newInstance();
-                } catch (InstantiationException ex) {
+                    return propertyEditorClass.getDeclaredConstructor().newInstance();
+                } catch (ReflectiveOperationException | SecurityException | IllegalArgumentException ex) {
                     Exceptions.printStackTrace(ex);
-                } catch (IllegalAccessException iex) {
-                    Exceptions.printStackTrace(iex);
                 }
             }
 
@@ -357,6 +438,35 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
         */
         public ReadWrite(String name, Class<T> type, String displayName, String shortDescription) {
             super(name, type, displayName, shortDescription, true, true);
+        }
+    }
+
+    private static final class FunctionalProperty<T> extends PropertySupport<T> {
+        private final Supplier<T> supplier;
+        private final Consumer<T> consumer;
+
+        public FunctionalProperty(String name, Class<T> type, Supplier<T> supplier, Consumer<T> consumer) {
+            super(name, type, null, null, supplier != null, consumer != null);
+            this.supplier = supplier;
+            this.consumer = consumer;
+        }
+
+        @Override
+        public T getValue() throws IllegalAccessException {
+            if (supplier != null) {
+                return supplier.get();
+            } else {
+                throw new IllegalAccessException("Cannod read from WriteOnly property"); // NOI18N
+            }
+        }
+
+        @Override
+        public void setValue(T val) throws IllegalAccessException {
+            if (consumer != null) {
+                consumer.accept(val);
+            } else {
+                throw new IllegalAccessException("Cannot write to ReadOnly property"); // NOI18N
+            }
         }
     }
 
@@ -424,9 +534,8 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
         * @param node the node
         */
         public Name(final Node node) {
-            this(
-                node, NbBundle.getBundle(PropertySupport.class).getString("CTL_StandardName"),
-                NbBundle.getBundle(PropertySupport.class).getString("CTL_StandardHint")
+            this(node, NbBundle.getMessage(PropertySupport.class, "CTL_StandardName"),
+                NbBundle.getMessage(PropertySupport.class, "CTL_StandardHint")
             );
         }
 
@@ -443,6 +552,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
         /* Getter for the value. Delegates to Node.getName().
         * @return the name
         */
+        @Override
         public String getValue() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
             return node.getName();
         }
@@ -450,6 +560,7 @@ public abstract class PropertySupport<T> extends Node.Property<T> {
         /* Setter for the value. Delegates to Node.setName().
         * @param val new name
         */
+        @Override
         public void setValue(String val)
         throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
             Object oldName = node.getName();

@@ -19,6 +19,8 @@
 package org.netbeans.lib.nbjavac.services;
 
 import com.sun.tools.javac.comp.AttrContext;
+import com.sun.tools.javac.comp.CompileStates;
+import com.sun.tools.javac.comp.CompileStates.CompileState;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree;
@@ -81,14 +83,20 @@ public class NBJavaCompiler extends JavaCompiler {
         boolean prevDesugaring = desugaring;
         try {
             desugaring = true;
-        super.desugar(env, results);
+            if (desugarCallback != null) {
+                desugarCallback.accept(env);
+            }
+            super.desugar(env, results);
         } finally {
             desugaring = prevDesugaring;
         }
     }
 
     void maybeInvokeDesugarCallback(Env<AttrContext> env) {
-        if (desugaring && desugarCallback != null) {
+        //TODO: no test for compileStates.isDone:
+        //during desugaring, it may happen that a source is parsed&entered lazily,
+        //but not attributed (yet). Avoid attempts to clean errors in it:
+        if (desugaring && desugarCallback != null && compileStates.isDone(env, CompileState.FLOW)) {
             desugarCallback.accept(env);
         }
     }

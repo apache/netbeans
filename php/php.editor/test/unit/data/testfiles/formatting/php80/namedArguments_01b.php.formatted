@@ -36,7 +36,6 @@ class ParentClass {
     ) {
         
     }
-
 }
 
 class ExampleClass extends ParentClass {
@@ -55,7 +54,6 @@ class ExampleClass extends ParentClass {
     public static function staticTest(ExampleClass $exampleClass, int $test) {
         
     }
-
 }
 
 $instance = new ExampleClass($test1, test2: $test2);

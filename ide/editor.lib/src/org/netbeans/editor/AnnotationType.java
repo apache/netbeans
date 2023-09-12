@@ -325,7 +325,7 @@ public class AnnotationType {
     }
 
     /** Setter for Actions property
-     * @return array of actions */    
+     */
     public void setActions(javax.swing.Action[] actions) {
         putProp(PROP_ACTIONS, actions);
     }
@@ -403,7 +403,7 @@ public class AnnotationType {
     }
 
     /** Setter for the TooltipText property
-     * @param name localized TooltipText of the annotation type */    
+     * @param text localized TooltipText of the annotation type */    
     public void setTooltipText(String text) {
         putProp(PROP_TOOLTIP_TEXT, text);
     }
@@ -759,7 +759,7 @@ public class AnnotationType {
             "none", "ok", "warning", "error" // NOI18N
         };
         
-        /**Returns a {@link String} representation of the {@link Status}.
+        /**Returns a {@link String} representation of the {@link Severity}.
          * The format of the {@link String} is not specified.
          * This method should only be used for debugging purposes.
          *
@@ -791,10 +791,10 @@ public class AnnotationType {
             return VALUES[Math.max(first.getStatus(), second.getStatus())];
         }
         
-        /**Returns default {@link Color} for a given {@link Status}.
+        /**Returns default {@link Color} for a given {@link Severity}.
          *
-         * @param s {@link Status} for which default color should be found
-         * @return default {@link Color} for a given {@link Status}
+         * @param s {@link Severity} for which default color should be found
+         * @return default {@link Color} for a given {@link Severity}
          */
         public static Color getDefaultColor(Severity s) {
             return DEFAULT_STATUS_COLORS[s.getStatus()];

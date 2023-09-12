@@ -3,7 +3,7 @@
 <#assign licenseLast = " */">
 <#include "${project.licensePath}">
 
-<#if package?? && package != "">
+<#if package?? && package != "" && !package?ends_with("snippet-files")>
 package ${package};
 
 </#if>

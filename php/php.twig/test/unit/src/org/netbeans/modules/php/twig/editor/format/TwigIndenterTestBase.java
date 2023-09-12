@@ -19,8 +19,6 @@
 package org.netbeans.modules.php.twig.editor.format;
 
 import javax.swing.text.Document;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.fail;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.html.lexer.HTMLTokenId;

@@ -265,10 +265,7 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                 if (scope != null) {
                     ASTNode variable = ASTUtils.getVariable(scope, variableExpression.getName(), path, doc, lexOffset);
                     if (variable != null) {
-                        // I am using getRange and not getOffset, because getRange is adding 'def_' to offset of field
-                        int offset = ASTUtils.getRange(variable, doc).getStart();
-                        // FIXME parsing API
-                        return new DeclarationLocation(info.getSnapshot().getSource().getFileObject(), offset);
+                        return getVariableLocation(variable, doc, info);
                     }
                 }
             // find a field ?
@@ -289,9 +286,7 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
                         }
                         ASTNode variable = ASTUtils.getVariable(scope, ((ConstantExpression) property).getText(), path, doc, lexOffset);
                         if (variable != null) {
-                            int offset = ASTUtils.getOffset(doc, variable.getLineNumber(), variable.getColumnNumber());
-                            // FIXME parsing API
-                            return new DeclarationLocation(info.getSnapshot().getSource().getFileObject(), offset);
+                            return getVariableLocation(variable, doc, info);
                         }
                     } else {
                         // find variable type
@@ -382,6 +377,13 @@ public class GroovyDeclarationFinder implements DeclarationFinder {
             Exceptions.printStackTrace(ble);
         }
         return DeclarationLocation.NONE;
+    }
+
+    private DeclarationLocation getVariableLocation(ASTNode variable, BaseDocument doc, ParserResult info) {
+        // I am using getRange and not getOffset, because getRange is adding 'def_' to offset of field
+        int offset = ASTUtils.getRange(variable, doc).getStart();
+        // FIXME parsing API
+        return new DeclarationLocation(info.getSnapshot().getSource().getFileObject(), offset);
     }
 
     private DeclarationLocation findType(String fqName, OffsetRange range,

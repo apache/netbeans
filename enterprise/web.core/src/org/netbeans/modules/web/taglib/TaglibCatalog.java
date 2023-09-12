@@ -19,12 +19,14 @@
 
 package org.netbeans.modules.web.taglib;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.netbeans.modules.xml.catalog.spi.CatalogDescriptor;
 import org.netbeans.modules.xml.catalog.spi.CatalogListener;
 import org.netbeans.modules.xml.catalog.spi.CatalogReader;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 
 /** Catalog for taglib DTDs and schemas that enables code completion and XML validation in editor.
  *
@@ -62,7 +64,7 @@ public class TaglibCatalog implements CatalogReader, CatalogDescriptor, org.xml.
      * @return null if cannot proceed, try later.
      */
     public java.util.Iterator getPublicIDs() {
-        java.util.List list = new java.util.ArrayList();
+        List<String> list = new ArrayList<>();
         list.add(TAGLIB_1_1);
         list.add(TAGLIB_1_2);
         list.add(TAGLIB_2_0_ID);

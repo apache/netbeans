@@ -60,7 +60,7 @@ public class LocalNBMsProvider implements UpdateProvider {
     public Map<String, UpdateItem> getUpdateItems() {
         Map<String, UpdateItem> res = new HashMap<String, UpdateItem> ();
         for (int i = 0; i < nbms.length; i++) {
-            Map<String, UpdateItem> items = null;
+            Map<String, UpdateItem> items;
             try {
                 items = AutoupdateInfoParser.getUpdateItems (nbms [i]);
             } catch (IOException ex) {
@@ -72,9 +72,7 @@ public class LocalNBMsProvider implements UpdateProvider {
             if(items.size()!=1) {
                 err.log(Level.INFO, "File " + nbms [i] + " contains not single items: " + items);
             }
-            for (String id : items.keySet ()) {
-                res.put (id, items.get (id));
-            }
+            res.putAll(items);
         }
         return res;
     }

@@ -1,0 +1,2 @@
+        $fn = $this->|>MARK_OCCURRENCES:test<|(...);
+    private function |>MARK_OCCURRENCES:tes^t<|(): void {

@@ -118,7 +118,7 @@ public final class SearchPattern {
      * @param searchExpression a searched text
      * @param wholeWords if true, only whole words were searched
      * @param matchCase if true, case sensitive search was preformed
-     * @param regExp if true, regular expression search was performed
+     * @param matchType the pattern is matched to the searched text
      */
     private SearchPattern(String searchExpression, boolean wholeWords,
             boolean matchCase, MatchType matchType) {

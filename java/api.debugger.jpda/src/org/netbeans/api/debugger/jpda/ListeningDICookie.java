@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * <br><br>
  * <b>How to use it:</b>
- * {@codesnippet org.netbeans.api.debugger.jpda.StartListeningTest}
+ * {@snippet file="org/netbeans/api/debugger/jpda/StartListeningTest.java" region="listening"}
  * 
  * @author Jan Jancura
  */
@@ -80,7 +80,7 @@ public final class ListeningDICookie extends AbstractDICookie {
      * Creates a new instance of ListeningDICookie for given parameters. Example
      * showing how to tell the IDE to start listening on a random port:
      * 
-     * {@codesnippet org.netbeans.api.debugger.jpda.StartListeningTest}
+     * {@snippet file="org/netbeans/api/debugger/jpda/StartListeningTest.java" region="listening"}
      *
      * @param portNumber a number of port to listen on, use {@code -1} to
      *    let the system select a random port since 3.12

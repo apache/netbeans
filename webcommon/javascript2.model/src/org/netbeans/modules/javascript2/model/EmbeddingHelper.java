@@ -26,9 +26,9 @@ package org.netbeans.modules.javascript2.model;
 public class EmbeddingHelper {
 
     private static final String GENERATED_IDENTIFIER = "__UNKNOWN__"; // NOI18N
-    
+
     private static final String NETBEANS_IMPORT_FILE = "__netbeans_import__"; // NOI18N
-    
+
     public static boolean isGeneratedIdentifier(String ident) {
         return GENERATED_IDENTIFIER.equals(ident) || ident.contains(NETBEANS_IMPORT_FILE);
     }
@@ -36,5 +36,5 @@ public class EmbeddingHelper {
     public static boolean containsGeneratedIdentifier(String ident) {
         return ident.contains(GENERATED_IDENTIFIER) || ident.contains(NETBEANS_IMPORT_FILE);
     }
-    
+
 }

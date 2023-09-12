@@ -42,41 +42,41 @@ public class YamlLexerTest extends YamlTestBase {
 
     public void testInput() throws Exception {
         LexerTestUtilities.checkTokenDump(this, "testfiles/input.yaml.txt",
-                YamlTokenId.language());
+                YamlLanguage.language());
     }
 
     public void testInput2() throws Exception {
         LexerTestUtilities.checkTokenDump(this, "testfiles/input2.yaml.txt",
-                YamlTokenId.language());
+                YamlLanguage.language());
     }
 
     public void testInput3() throws Exception {
         LexerTestUtilities.checkTokenDump(this, "testfiles/input3.yaml.txt",
-                YamlTokenId.language());
+                YamlLanguage.language());
     }
     
     public void testInput4() throws Exception {
         LexerTestUtilities.checkTokenDump(this, "testfiles/input4.yaml.txt",
-                YamlTokenId.language());
+                YamlLanguage.language());
     }
 
     public void testNETBEANS_4167() throws Exception {
         LexerTestUtilities.checkTokenDump(this, "testfiles/issue_NETBEANS-4167.yaml.txt",
-                YamlTokenId.language());
+                YamlLanguage.language());
     }
 
     public void testNETBEANS_4370_1() throws Exception {
         LexerTestUtilities.checkTokenDump(this, "testfiles/issue_NETBEANS-4370_1.yaml.txt",
-                YamlTokenId.language());
+                YamlLanguage.language());
     }
 
     public void testNETBEANS_4370_2() throws Exception {
         LexerTestUtilities.checkTokenDump(this, "testfiles/issue_NETBEANS-4370_2.yaml.txt",
-                YamlTokenId.language());
+                YamlLanguage.language());
     }
 
     public void testIssue246124() throws Exception {
         LexerTestUtilities.checkTokenDump(this, "testfiles/issue246124.yaml",
-                YamlTokenId.language());
+                YamlLanguage.language());
     }
 }

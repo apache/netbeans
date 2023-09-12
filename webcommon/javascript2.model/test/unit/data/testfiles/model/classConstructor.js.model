@@ -1,0 +1,51 @@
+FUNCTION classConstructor [ANONYMOUS: false, DECLARED: true - classConstructor, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+ClassInProgrammScope  : OBJECT ClassInProgrammScope [ANONYMOUS: false, DECLARED: true - ClassInProgrammScope, MODIFIERS: PUBLIC, CLASS]
+                      # PROPERTIES
+                      constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, CONSTRUCTOR]
+                                  # RETURN TYPES
+                                  ClassInProgrammScope, RESOLVED: true
+                                  # PARAMETERS
+                                  OBJECT x [ANONYMOUS: false, DECLARED: true - x, MODIFIERS: PUBLIC, PARAMETER]
+                                  OBJECT y [ANONYMOUS: false, DECLARED: true - y, MODIFIERS: PUBLIC, PARAMETER]
+                                  # PROPERTIES
+                                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+ClassInProgrammScope2 : OBJECT ClassInProgrammScope2 [ANONYMOUS: false, DECLARED: true - ClassInProgrammScope2, MODIFIERS: PUBLIC, CLASS]
+                      # PROPERTIES
+                      constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, CONSTRUCTOR]
+                                  # RETURN TYPES
+                                  ClassInProgrammScope2, RESOLVED: true
+                                  # PARAMETERS
+                                  OBJECT x [ANONYMOUS: false, DECLARED: true - x, MODIFIERS: PUBLIC, PARAMETER]
+                                  # PROPERTIES
+                                  arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                      prototype   : OBJECT prototype [ANONYMOUS: false, DECLARED: true, MODIFIERS: PUBLIC, OBJECT]
+WithoutConstructor    : OBJECT WithoutConstructor [ANONYMOUS: false, DECLARED: true - WithoutConstructor, MODIFIERS: PUBLIC, CLASS]
+classConstructorL#20  : FUNCTION classConstructorL#20 [ANONYMOUS: true, DECLARED: true - classConstructorL#20, MODIFIERS: PUBLIC, FUNCTION]
+                      # RETURN TYPES
+                      undefined, RESOLVED: true
+                      # PROPERTIES
+                      ClassInAnonymousFunction : OBJECT ClassInAnonymousFunction [ANONYMOUS: false, DECLARED: true - ClassInAnonymousFunction, MODIFIERS: PUBLIC, CLASS]
+                                               # PROPERTIES
+                                               constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, CONSTRUCTOR]
+                                                           # RETURN TYPES
+                                                           classConstructorL#20.ClassInAnonymousFunction, RESOLVED: true
+                                                           # PARAMETERS
+                                                           OBJECT x [ANONYMOUS: false, DECLARED: true - x, MODIFIERS: PUBLIC, PARAMETER]
+                                                           OBJECT y [ANONYMOUS: false, DECLARED: true - y, MODIFIERS: PUBLIC, PARAMETER]
+                                                           # PROPERTIES
+                                                           arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                      arguments                : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+console               : OBJECT console [ANONYMOUS: false, DECLARED: false - console, MODIFIERS: PUBLIC, OBJECT]
+                      # PROPERTIES
+                      log : FUNCTION log [ANONYMOUS: false, DECLARED: false - log, MODIFIERS: PUBLIC, METHOD]
+                          # PARAMETERS
+                          OBJECT param1 [ANONYMOUS: false, DECLARED: true - param1, MODIFIERS: PUBLIC, PARAMETER]
+                          OBJECT param2 [ANONYMOUS: false, DECLARED: true - param2, MODIFIERS: PUBLIC, PARAMETER]
+                          # PROPERTIES
+                          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+super                 : FUNCTION super [ANONYMOUS: false, DECLARED: false - super, MODIFIERS: PUBLIC, FUNCTION]
+                      # PROPERTIES
+                      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

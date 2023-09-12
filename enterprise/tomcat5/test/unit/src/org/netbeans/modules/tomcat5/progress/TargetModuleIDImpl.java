@@ -45,31 +45,38 @@ public class TargetModuleIDImpl implements TargetModuleID {
         this.url = url;
     }
 
+    @Override
     public TargetModuleID[] getChildTargetModuleID() {
         return new TargetModuleID[0];
     }
 
+    @Override
     public String getModuleID() {
         return moduleID;
     }
 
+    @Override
     public TargetModuleID getParentTargetModuleID() {
         return null;
     }
 
+    @Override
     public Target getTarget() {
         return new Target() {
 
+            @Override
             public String getDescription() {
                 return targetDescription;
             }
 
+            @Override
             public String getName() {
                 return targetName;
             }
         };
     }
 
+    @Override
     public String getWebURL() {
         return url;
     }

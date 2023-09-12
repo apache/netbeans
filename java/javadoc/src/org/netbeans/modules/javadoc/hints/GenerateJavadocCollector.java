@@ -21,6 +21,7 @@ package org.netbeans.modules.javadoc.hints;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
@@ -53,7 +54,11 @@ public class GenerateJavadocCollector implements CompletionCollector {
     @Override
     public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
         if (context != null && context.getTriggerKind() == Completion.TriggerKind.TriggerCharacter && context.getTriggerCharacter() == '*') {
-            TokenSequence<JavaTokenId> ts = SourceUtils.getJavaTokenSequence(TokenHierarchy.get(doc), offset);
+            AtomicReference<TokenSequence<JavaTokenId>> ref = new AtomicReference<>();
+            doc.render(() -> {
+                ref.set(SourceUtils.getJavaTokenSequence(TokenHierarchy.get(doc), offset));
+            });
+            TokenSequence<JavaTokenId> ts = ref.get();
             if (ts != null) {
                 ts.move(offset);
                 if (ts.moveNext() && ts.token().id() == JavaTokenId.JAVADOC_COMMENT) {

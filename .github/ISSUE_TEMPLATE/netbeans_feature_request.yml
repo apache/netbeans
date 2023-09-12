@@ -34,24 +34,38 @@ body:
     attributes:
       label: Related issues
       description: Is there currently another issue associated with this?
-  - type: checkboxes
+  - type: dropdown
     attributes:
-      label: Are you willing to submit a PR?
+      label: Are you willing to submit a pull request?
       description: >
         This is absolutely not required, but we are happy to guide you in the contribution process,
-        especially if you already have a good understanding of how to implement the fix.
+        especially if you already have a good understanding of how to implement the fix. <br>
         Apache NetBeans is a community-managed project and we love to bring new contributors in.
       options:
-        - label: Yes I am willing to submit a PR!
-  - type: checkboxes
-    attributes:
-      label: Code of Conduct
-      description: The Code of Conduct helps create a safe space for everyone.
-      options:
-        - label: >
-            I agree to follow the Apache Software Foundation's
-            [Code of Conduct](https://www.apache.org/foundation/policies/conduct.html)
-          required: true
+        - "No"
+        - "Yes"
+    validations:
+        required: true
+#  - type: dropdown
+#    attributes:
+#      label: Code of Conduct
+#      description: > 
+#         The Code of Conduct helps create a safe space for everyone.
+#         I agree to follow the Apache Software Foundation's
+#         [Code of Conduct](https://www.apache.org/foundation/policies/conduct.html)
+#      options:
+#        - "Yes"
+#    validations:
+#        required: true
+#  - type: markdown
+#    attributes:
+#      value: "Thank you for completing our form!"
   - type: markdown
     attributes:
-      value: "Thanks for completing our form!"
+      value: "**By submitting this form you agree to follow the Apache Software Foundation's
+        [Code of Conduct](https://www.apache.org/foundation/policies/conduct.html)**.
+         
+        The Code of Conduct helps create a safe space for everyone.
+        
+        
+        Thank you for completing our form!"

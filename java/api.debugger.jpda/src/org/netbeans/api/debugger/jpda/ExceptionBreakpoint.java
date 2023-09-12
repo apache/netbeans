@@ -24,6 +24,8 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -102,7 +104,7 @@ public class ExceptionBreakpoint extends JPDABreakpoint {
      *
      * @param exceptionClassName class name filter
      * @param catchType one of constants: {@link #TYPE_EXCEPTION_CAUGHT},
-     *   {@link #TYPE_EXCEPTION_UNCAUGHT, {@link #TYPE_EXCEPTION_CAUGHT_UNCAUGHT}.
+     *   {@link #TYPE_EXCEPTION_UNCAUGHT}, {@link #TYPE_EXCEPTION_CAUGHT_UNCAUGHT}.
      * @return a new breakpoint for given parameters
      */
     public static ExceptionBreakpoint create (
@@ -133,9 +135,7 @@ public class ExceptionBreakpoint extends JPDABreakpoint {
         if (cn != null) {
             cn = cn.trim();
         }
-        if ( (cn == exceptionClassName) ||
-             ((cn != null) && (exceptionClassName != null) && exceptionClassName.equals (cn))
-        ) return;
+        if (Objects.equals(cn, exceptionClassName)) return;
         Object old = exceptionClassName;
         exceptionClassName = cn;
         firePropertyChange (PROP_EXCEPTION_CLASS_NAME, old, exceptionClassName);

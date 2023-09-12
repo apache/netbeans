@@ -370,8 +370,7 @@ public final class UiUtils {
                             } else if (e instanceof ExceptionInInitializerError) {
                                 final Throwable cause = e.getCause();
                                 
-                                if ((cause != null) &&
-                                        (cause instanceof HeadlessException)) {
+                                if (cause instanceof HeadlessException) {
                                     System.err.println(cause.getMessage());
                                 }
                             }                            

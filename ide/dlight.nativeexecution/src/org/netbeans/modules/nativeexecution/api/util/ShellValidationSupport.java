@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.modules.nativeexecution.api.util.Shell.ShellType;
-import org.netbeans.modules.nativeexecution.spi.support.NativeExecutionUserNotification;;
+import org.netbeans.modules.nativeexecution.spi.support.NativeExecutionUserNotification;
 //import org.netbeans.modules.dlight.nativeexecution.ui.ShellValidationStatusPanel;
 //import org.openide.DialogDescriptor;
 //import org.openide.DialogDisplayer;

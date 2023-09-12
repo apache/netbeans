@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.spi.sendopts.OptionGroups;
 import org.netbeans.spi.sendopts.Env;
 import org.netbeans.spi.sendopts.Option;

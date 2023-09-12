@@ -124,7 +124,7 @@ public class EmptyStatements {
     public static ErrorDescription forDO_WHILE_LOOP(HintContext ctx) {
     
         Tree parent = ctx.getPath().getParentPath().getLeaf();
-        if (!Kind.DO_WHILE_LOOP.equals(parent.getKind())) {
+        if (Kind.DO_WHILE_LOOP != parent.getKind()) {
             return null;
         }
 

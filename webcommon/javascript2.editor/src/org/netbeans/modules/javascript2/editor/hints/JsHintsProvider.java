@@ -133,7 +133,7 @@ public class JsHintsProvider implements HintsProvider {
         // if in embedded
         if (parserResult.isEmbedded()) {
             String mimeType = ErrorCheckingSupport.getMimeType(parserResult);
-            List<HintFix> defaultFixes = new ArrayList<HintFix>(2);
+            List<HintFix> defaultFixes = new ArrayList<>(2);
             if (!ErrorCheckingSupport.isErrorCheckingEnabledForFile(parserResult)) {
                 defaultFixes.add(ErrorCheckingSupport.createErrorFixForFile(parserResult.getSnapshot(), true));
             }
@@ -144,7 +144,7 @@ public class JsHintsProvider implements HintsProvider {
 
             if (!errors.isEmpty()) {
                 if (ErrorCheckingSupport.isErrorCheckingEnabled(parserResult, mimeType)) {
-                    List<HintFix> errorFixes = new ArrayList<HintFix>(2);
+                    List<HintFix> errorFixes = new ArrayList<>(2);
                     if (ErrorCheckingSupport.isErrorCheckingEnabledForFile(parserResult)) {
                         errorFixes.add(ErrorCheckingSupport.createErrorFixForFile(parserResult.getSnapshot(), false));
                     }
@@ -155,7 +155,7 @@ public class JsHintsProvider implements HintsProvider {
 
                     Snapshot snapshot = parserResult.getSnapshot();
                     Lines lines = new Lines(snapshot.getText());
-                    Set<Integer> linesWithHints = new HashSet<Integer>();
+                    Set<Integer> linesWithHints = new HashSet<>();
 
                     for (Error error : errors) {
                         FileObject fo = error.getFile();
@@ -172,7 +172,7 @@ public class JsHintsProvider implements HintsProvider {
 
                         int start = snapshot.getOriginalOffset(error.getStartPosition());
                         int end = snapshot.getOriginalOffset(error.getEndPosition());
-                        
+
                         if (start > -1 && end > -1 && start <= end) {
                             Hint h = new Hint(new JsErrorRule(),
                                     error.getDisplayName(),
@@ -198,7 +198,7 @@ public class JsHintsProvider implements HintsProvider {
             }
         } else {
             //unhandled.addAll(errors);
-            Collection<String> disableFixActionNames = new HashSet<String>();
+            Collection<String> disableFixActionNames = new HashSet<>();
             for (FilterableError e : parserResult.getErrors(true)) {
                 if (e.isFiltered()) {
                     FilterableError.SetFilterAction disableFilterAction = e.getDisableFilterAction();
@@ -215,7 +215,7 @@ public class JsHintsProvider implements HintsProvider {
                     }
                 } else {
                     Collection<FilterableError.SetFilterAction> enableFilterActions = e.getEnableFilterActions();
-                    List<HintFix> fixes = new ArrayList<HintFix>();
+                    List<HintFix> fixes = new ArrayList<>();
                     for (FilterableError.SetFilterAction action : enableFilterActions) {
                         fixes.add(new ErrorCheckFix(action));
                     }
@@ -352,7 +352,7 @@ public class JsHintsProvider implements HintsProvider {
             return HintSeverity.ERROR;
         }
     }
-    
+
     private static final class ErrorCheckFix implements HintFix {
 
         private final FilterableError.SetFilterAction action;

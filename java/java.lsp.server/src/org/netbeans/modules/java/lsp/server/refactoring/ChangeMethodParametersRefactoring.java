@@ -25,9 +25,9 @@ import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
@@ -57,9 +57,9 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.refactoring.java.api.ChangeParametersRefactoring;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
@@ -79,7 +79,6 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
     private static final String CHANGE_METHOD_PARAMS_REFACTORING_KIND = "refactor.change.method.params";
     private static final String CHANGE_METHOD_PARAMS_REFACTORING_COMMAND =  "java.refactor.change.method.params";
 
-    private final Set<String> commands = Collections.singleton(CHANGE_METHOD_PARAMS_REFACTORING_COMMAND);
     private final Gson gson = new Gson();
 
     @Override
@@ -131,7 +130,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
 
     @Override
     public Set<String> getCommands() {
-        return commands;
+        return Collections.singleton(CHANGE_METHOD_PARAMS_REFACTORING_COMMAND);
     }
 
     @Override
@@ -187,7 +186,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         return "null";
     }
 
-    @HTMLDialog(url = "ui/ChangeMethodParameters.html")
+    @HTMLDialog(url = "ui/ChangeMethodParameters.html", resources = {"refactoring.css"})
     static HTMLDialog.OnSubmit showChangeMethodParametersUI(
         CompilationController ci,
         NbCodeLanguageClient client,
@@ -255,7 +254,7 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
                 ChangeParametersRefactoring refactoring = new ChangeParametersRefactoring(handle);
                 Modifier selectedModifier = ui.getSelectedModifier();
                 if (selectedModifier != null) {
-                    Set<javax.lang.model.element.Modifier> modifiers = new HashSet<>(1);
+                    Set<javax.lang.model.element.Modifier> modifiers = EnumSet.noneOf(javax.lang.model.element.Modifier.class);
                     switch (selectedModifier) {
                         case PRIVATE: modifiers.add(javax.lang.model.element.Modifier.PRIVATE);break;
                         case PACKAGE_PRIVATE: break; /* no modifier */

@@ -676,7 +676,7 @@ public abstract class SharedClassObject extends Object implements Externalizable
         private transient SharedClassObject object;
 
         /** Constructor.
-        * @param the instance
+        * @param object instance
         */
         public WriteReplace(SharedClassObject object) {
             this.object = object;

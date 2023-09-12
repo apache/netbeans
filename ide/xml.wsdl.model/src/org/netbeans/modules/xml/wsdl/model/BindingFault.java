@@ -33,5 +33,6 @@ public interface BindingFault extends Nameable<WSDLComponent>, WSDLComponent {
     /**
      * @deprecated use setName() instead.
      */
+    @Deprecated
     void setFault(Reference<Fault> fault);
 }

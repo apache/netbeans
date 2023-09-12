@@ -110,6 +110,7 @@ public final class GsfUtilities {
      * @return indentation level, in characters.
      * @deprecated Use {@link #getLineIndent(javax.swing.text.Document, int) } instead.
      */
+    @Deprecated
     public static int getLineIndent(BaseDocument doc, int offset) {
         return getLineIndent((Document)doc, offset);
     }
@@ -121,6 +122,7 @@ public final class GsfUtilities {
      * Copied from Indent module's "modifyIndent"
      * @deprecated Use {@link #setLineIndentation(javax.swing.text.Document, int, int).
      */
+    @Deprecated
     public static int setLineIndentation(BaseDocument doc, int lineOffset, int newIndent) throws BadLocationException {
         return setLineIndentation((Document)doc, lineOffset, newIndent);
     }
@@ -234,6 +236,7 @@ public final class GsfUtilities {
      * @return document instance or {@code null} if not opened and {@code openIfNecessary} was false.
      * @deprecated Use {@link #getADocument(org.openide.filesystems.FileObject, boolean)}.
      */
+    @Deprecated
     public static BaseDocument getDocument(FileObject fileObject, boolean openIfNecessary) {
         return getDocument(fileObject, openIfNecessary, false);
     }
@@ -252,6 +255,11 @@ public final class GsfUtilities {
     }
 
     /**
+     * see org.openide.text.DataEditorSupport#BIG_FILE_THRESHOLD_MB
+     */
+    private static final long BIG_FILE_THRESHOLD_MB = Integer.getInteger("org.openide.text.big.file.size", 5) * 1024 * 1024;
+
+    /**
      * Load the document for the given fileObject.
      * @param fileObject the file whose document we want to obtain
      * @param openIfNecessary If true, block if necessary to open the document. If false, will only return the
@@ -261,6 +269,7 @@ public final class GsfUtilities {
      * @return
      * @deprecated Use {@link #getADocument(org.openide.filesystems.FileObject, boolean, boolean)}.
      */
+    @Deprecated
     public static BaseDocument getDocument(FileObject fileObject, boolean openIfNecessary, boolean skipLarge) {
         if (skipLarge) {
             // Make sure we're not dealing with a huge file!
@@ -275,7 +284,7 @@ public final class GsfUtilities {
             // (see issue http://www.netbeans.org/issues/show_bug.cgi?id=148702 )
             // but for many cases, the user probably doesn't want really large files as indicated
             // by the skipLarge parameter).
-            if (fileObject.getSize () > 1024 * 1024) {
+            if (fileObject.getSize () > BIG_FILE_THRESHOLD_MB) {
                 return null;
             }
         }

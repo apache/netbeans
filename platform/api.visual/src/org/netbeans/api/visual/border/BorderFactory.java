@@ -476,15 +476,15 @@ public final class BorderFactory {
      * @return the resize border
      */
     public static Border createResizeBorder (int thickness, String property,  
-                                              Widget assocaited) {
-        return createResizeBorder (thickness, property, assocaited, false);
+                                              Widget associated) {
+        return createResizeBorder (thickness, property, associated, false);
     }
     
     /**
      * Creates a resize border. Usually used as resizing handles for ResizeAction. It renders a bounding rectangle with 8-direction squares.
      * The instance can be shared by multiple widgets.
      * @param thickness the thickness of the border
-     * @param drawProperty the property name for the border color
+     * @param property the property name for the border color
      * @param table the resource table.
      * @return the resize border
      */
@@ -591,7 +591,8 @@ public final class BorderFactory {
 /**
      * Creates a resize border rendered with dashed stroke.
      * The instance can be shared by multiple widgets.
-     * @param color  the border color
+     * @param property the property name
+     * @param associated the widget used
      * @param width  the inset width
      * @param height the inset height
      * @param squares the
@@ -608,7 +609,8 @@ public final class BorderFactory {
     /**
      * Creates a resize border rendered with dashed stroke.
      * The instance can be shared by multiple widgets.
-     * @param color  the border color
+     * @param property the property name
+     * @param table the resource table
      * @param width  the inset width
      * @param height the inset height
      * @param squares the

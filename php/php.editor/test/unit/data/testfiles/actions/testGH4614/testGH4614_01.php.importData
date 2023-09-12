@@ -1,0 +1,12 @@
+Caret position: 980
+Should show uses panel: true
+Defaults:
+ \Test1\Foo
+
+Names:
+ Foo
+
+Variants:
+ \Test1\Foo
+ Don't import.
+

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.15
+#Version 1.22
 
 CLSS public java.lang.Object
 cons public init()
@@ -312,6 +312,7 @@ meth public java.lang.String getName()
 meth public java.lang.String getTooltipText()
 meth public java.util.Set<{org.netbeans.modules.java.graph.GraphNode%0}> getDuplicatesOrConflicts()
 meth public void addDuplicateOrConflict({org.netbeans.modules.java.graph.GraphNode%0})
+meth public void removeDuplicateOrConflict({org.netbeans.modules.java.graph.GraphNode%0})
 meth public void setImpl({org.netbeans.modules.java.graph.GraphNode%0})
 meth public void setManagedState(int)
 meth public void setParent({org.netbeans.modules.java.graph.GraphNode%0})

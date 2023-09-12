@@ -40,6 +40,7 @@ public final class WildflyPluginProperties {
     public static final String PROPERTY_ROOT_DIR = "root-dir";//NOI18N
     public static final String PROPERTY_HOST = "host";//NOI18N
     public static final String PROPERTY_PORT = "port";//NOI18N
+    public static final String PROPERTY_PORT_OFFSET = "port-offset";//NOI18N
     public static final String PROPERTY_ADMIN_PORT = "admin-port";//NOI18N
     public static final String PROPERTY_JAVA_OPTS = "java_opts"; // NOI18N
     public static final String PROPERTY_CONFIG_FILE = "config_file"; // NOI18N

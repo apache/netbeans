@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.project.dependency
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/project/dependency/Bundle.properties
+OpenIDE-Module-Implementation-Version: 1

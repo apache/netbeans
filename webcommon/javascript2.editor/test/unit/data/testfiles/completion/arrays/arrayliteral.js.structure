@@ -1,5 +1,5 @@
 ar:VARIABLE:[PUBLIC]:ESCAPED{ar}<font color="#999999">ESCAPED{ : }Array</font>:
 prom1:VARIABLE:[PUBLIC]:ESCAPED{prom1}<font color="#999999">ESCAPED{ : }String</font>:
 prom2:VARIABLE:[PUBLIC]:ESCAPED{prom2}<font color="#999999">ESCAPED{ : }Number</font>:
-prom3:VARIABLE:[PUBLIC]:ESCAPED{prom3}<font color="#999999">ESCAPED{ : }Number</font>:
+prom3:VARIABLE:[PUBLIC]:ESCAPED{prom3}<font color="#999999">ESCAPED{ : }String</font>:
 getdate:METHOD:[PUBLIC]:ESCAPED{getdate}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }Date</font>:

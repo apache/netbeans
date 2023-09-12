@@ -35,7 +35,7 @@ public final class HTMLDialogBase {
         this.view = view;
     }
 
-    public static HTMLDialogBase create(String url, Runnable onPageLoad, HTMLDialog.OnSubmit onSubmit, String[] techIds, Class<?> component) {
+    public static HTMLDialogBase create(String url, String[] resources, Runnable onPageLoad, HTMLDialog.OnSubmit onSubmit, String[] techIds, Class<?> component) {
         ClassLoader loader = onPageLoad.getClass().getClassLoader();
         final URL u;
         try {
@@ -88,7 +88,7 @@ public final class HTMLDialogBase {
         }
         AcceptAndInit init = new AcceptAndInit();
         HTMLViewerSpi.Context c = ContextAccessor.getDefault().newContext(
-            loader, u, techIds, onSubmit, init, init, component
+            loader, u, resources, techIds, onSubmit, init, init, component
         );
         HtmlPair<?, ?> view = HtmlPair.newView(c);
         final Buttons<?, ?> buttons = component == null ? new Buttons<>(view, onSubmit) : null;

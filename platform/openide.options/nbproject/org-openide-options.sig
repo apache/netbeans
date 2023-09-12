@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.52
+#Version 6.58
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1324,6 +1324,7 @@ meth public abstract void addAnnotation(javax.swing.text.Position,int,org.openid
 meth public abstract void removeAnnotation(org.openide.text.Annotation)
 
 CLSS public final org.openide.text.NbDocument$Colors
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld public final static java.lang.String PROP_BREAKPOINT = "NbBreakpointStyle"
 fld public final static java.lang.String PROP_CURRENT = "NbCurrentStyle"

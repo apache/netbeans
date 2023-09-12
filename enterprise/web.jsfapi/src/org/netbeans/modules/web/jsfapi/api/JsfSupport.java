@@ -38,13 +38,13 @@ public interface JsfSupport {
     public WebModule getWebModule();
 
     public Library getLibrary(String namespace);
-    
+
     /**
      * @return Library namespace to Library instance map
      */
     public Map<String, ? extends Library> getLibraries();
-    
+
     public Lookup getLookup();
 
-    public boolean isJsf22Plus();
+    public JsfVersion getJsfVersion();
 }

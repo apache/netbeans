@@ -80,6 +80,8 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
     protected static final String JAVA_EE_VERSION_18="java-ee-version-18"; //NOI18N
     protected static final String JAKARTA_EE_VERSION_8="jakarta-ee-version-8"; //NOI18N
     protected static final String JAKARTA_EE_VERSION_9="jakarta-ee-version-9"; //NOI18N
+    protected static final String JAKARTA_EE_VERSION_91="jakarta-ee-version-91"; //NOI18N
+    protected static final String JAKARTA_EE_VERSION_10="jakarta-ee-version-10"; //NOI18N
 
     private Project project;
     private AntProjectHelper antProjectHelper;

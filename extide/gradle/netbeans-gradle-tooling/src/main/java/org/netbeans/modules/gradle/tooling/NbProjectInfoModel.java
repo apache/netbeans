@@ -20,7 +20,7 @@
 package org.netbeans.modules.gradle.tooling;
 
 import java.io.Serializable;
-import org.netbeans.modules.gradle.api.NbProjectInfo;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

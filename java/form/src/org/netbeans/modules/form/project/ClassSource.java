@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 
 /**
@@ -50,6 +49,9 @@ public final class ClassSource {
         this(className, entries, null);
     }
     public ClassSource(String className, Collection<? extends Entry> entries, String typeParameters) {
+        if (entries.contains(null)) {
+            throw new IllegalArgumentException("entries contains null entry: "+entries);
+        }
         this.className = className;
         this.entries = entries;
         this.typeParameters = typeParameters;
@@ -73,7 +75,7 @@ public final class ClassSource {
 
     /** Union of {@link ClassSource.Entry#getClasspath}. */
     public List<URL> getClasspath() {
-        List<URL> cp = new ArrayList<URL>();
+        List<URL> cp = new ArrayList<>();
         for (Entry entry : entries) {
             cp.addAll(entry.getClasspath());
         }

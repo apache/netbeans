@@ -65,7 +65,7 @@ public class LiveEngine implements ObjectMap, Visitor {
     }
     
     public String getID(Object o) {
-        objects.put(o, null);; // mark as known
+        objects.put(o, null); // mark as known
         return null; // null - if somebody really uses it, fails quickly
     }
 

@@ -40,7 +40,7 @@ public class AppClientProjectWebServicesSupportProvider implements WebServicesCl
 
     public WebServicesClientSupport findWebServicesClientSupport (FileObject file) {
         Project project = FileOwnerQuery.getOwner (file);
-        if (project != null && project instanceof AppClientProject) {
+        if (project instanceof AppClientProject) {
             return ((AppClientProject) project).getAPIWebServicesClientSupport();
         }
         return null;
@@ -48,7 +48,7 @@ public class AppClientProjectWebServicesSupportProvider implements WebServicesCl
         
     public JAXWSClientSupport findJAXWSClientSupport(FileObject file) {
         Project project = FileOwnerQuery.getOwner(file);
-        if (project != null && project instanceof AppClientProject) {
+        if (project instanceof AppClientProject) {
             return ((AppClientProject) project).getAPIJAXWSClientSupport();
         }
         return null;

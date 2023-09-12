@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.67.0
+#Version 1.73.0
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -52,7 +52,9 @@ cons public init()
 fld public final static java.lang.String PROP_CURRENT_FONT_COLOR_PROFILE = "currentFontColorProfile"
 fld public final static java.lang.String PROP_CURRENT_KEY_MAP_PROFILE = "currentKeyMapProfile"
 fld public final static java.lang.String PROP_DEFAULT_FONT_COLORS = "defaultFontColors"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_EDITOR_FONT_COLORS
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_MIME_TYPES = "mime-types"
 meth public abstract boolean isCustomFontColorProfile(java.lang.String)
 meth public abstract boolean isCustomKeymapProfile(java.lang.String)
@@ -60,7 +62,9 @@ meth public abstract java.lang.String getCurrentFontColorProfile()
 meth public abstract java.lang.String getCurrentKeyMapProfile()
 meth public abstract java.lang.String getLanguageName(java.lang.String)
 meth public abstract java.util.Collection<javax.swing.text.AttributeSet> getDefaultFontColorDefaults(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Collection<javax.swing.text.AttributeSet> getDefaultFontColors(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Map<java.lang.String,javax.swing.text.AttributeSet> getAnnotationDefaults(java.lang.String)
 meth public abstract java.util.Map<java.lang.String,javax.swing.text.AttributeSet> getAnnotations(java.lang.String)
 meth public abstract java.util.Map<java.lang.String,javax.swing.text.AttributeSet> getHighlightingDefaults(java.lang.String)
@@ -79,6 +83,7 @@ meth public abstract void setAnnotations(java.lang.String,java.util.Map<java.lan
 meth public abstract void setCurrentFontColorProfile(java.lang.String)
 meth public abstract void setCurrentKeyMapProfile(java.lang.String)
 meth public abstract void setDefaultFontColors(java.lang.String,java.util.Collection<javax.swing.text.AttributeSet>)
+ anno 0 java.lang.Deprecated()
 meth public abstract void setHighlightings(java.lang.String,java.util.Map<java.lang.String,javax.swing.text.AttributeSet>)
 meth public static org.netbeans.modules.editor.settings.storage.api.EditorSettings getDefault()
 supr java.lang.Object

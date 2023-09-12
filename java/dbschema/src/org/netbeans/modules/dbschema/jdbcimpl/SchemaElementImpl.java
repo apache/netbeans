@@ -328,7 +328,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
         return result;
     }
     
-    private List checkReferences(List tables, DDLBridge bridge, String schema) throws SQLException {
+    private List checkReferences(List<String> tables, DDLBridge bridge, String schema) throws SQLException {
         ResultSet rs;
         String pkSchema;
         String fkSchema;
@@ -362,7 +362,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         
                         pkSchema = rset.get(new Integer(2));
                         fkSchema = rset.get(new Integer(6));
-                        if ((pkSchema == fkSchema) || (pkSchema.equals(fkSchema))) {
+                        if (Objects.equals(pkSchema, fkSchema)) {
                             refTable = rset.get(new Integer(3));
                             if (! tables.contains(refTable))
                                 tables.add(refTable);
@@ -389,7 +389,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         if (fkSchema != null) {
                             fkSchema = fkSchema.trim();
                         }
-                        if ((pkSchema == fkSchema) || (pkSchema.equals(fkSchema))) {
+                        if (Objects.equals(pkSchema, fkSchema)) {
                             refTable = rs.getString("PKTABLE_NAME").trim(); //NOI18N
                             if (! tables.contains(refTable))
                                 tables.add(refTable);
@@ -481,7 +481,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                     boolean all = false;
                     for (int k = 0; k < columns.size(); k++)
                         //test if the view is created over all columns and try to eliminate agregation functions
-                        if (((String) columns.get(k)).trim().endsWith("*")) {
+                        if (columns.get(k).trim().endsWith("*")) {
                             all = true;
                             break;
                         }
@@ -541,7 +541,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
 
                             keys = new UniqueKeyElement[tempList.size()];
                             for (int k = 0; k < tempList.size(); k++)
-                                keys[k] = (UniqueKeyElement) tempList.get(k);
+                                keys[k] = tempList.get(k);
                             te.setKeys(keys);
 
                             IndexElement[] indexes = new IndexElement[keys.length];
@@ -698,7 +698,7 @@ public class SchemaElementImpl extends DBElementImpl implements SchemaElement.Im
                         ke[j] = uke[j];
                     int idx = uke.length;
                     for (int j = 0; j < tempList.size(); j++)
-                        ke[j + idx] = (ForeignKeyElement) tempList.get(j);
+                        ke[j + idx] = tempList.get(j);
                     
                     te.setKeys(ke);
 

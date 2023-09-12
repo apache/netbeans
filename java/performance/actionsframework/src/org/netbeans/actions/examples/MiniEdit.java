@@ -639,7 +639,7 @@ public class MiniEdit extends javax.swing.JFrame implements ContextProvider, Foc
                     File f = (File) en.nextElement();
                     fileSelected |= !f.isDirectory();
                     dirSelected |= f.isDirectory();
-                    allFilesOpen &= openDocs.keySet().contains(f);
+                    allFilesOpen &= openDocs.containsKey(f);
                 }
                 if (fileSelected) {
                     result.put("fileSelected", Boolean.TRUE);

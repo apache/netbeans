@@ -24,8 +24,6 @@ import org.netbeans.modules.css.prep.editor.model.CPElement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.*;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.css.lib.CssTestBase;
 import org.netbeans.modules.css.lib.TestUtil;

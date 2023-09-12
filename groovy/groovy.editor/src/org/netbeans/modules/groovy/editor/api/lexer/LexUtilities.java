@@ -26,6 +26,7 @@ import java.util.Set;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
@@ -163,12 +164,16 @@ public final class LexUtilities {
     /** Find the Groovy token sequence (in case it's embedded in something else at the top level. */
     @SuppressWarnings("unchecked")
     public static TokenSequence<GroovyTokenId> getGroovyTokenSequence(Document doc, int offset) {
-        final BaseDocument baseDocument = (BaseDocument) doc;
+        final BaseDocument baseDocument = doc instanceof BaseDocument ? (BaseDocument) doc : null;
         try {
-            baseDocument.readLock();
+            if (baseDocument != null) {
+                baseDocument.readLock();
+            }
             return getGroovyTokenSequence(TokenHierarchy.get(doc), offset);
         } finally {
-            baseDocument.readUnlock();
+            if (baseDocument != null) {
+                baseDocument.readUnlock();
+            }
         }
     }
 
@@ -236,6 +241,10 @@ public final class LexUtilities {
         return getPositionedSequence(doc, offset, true);
     }
 
+    public static TokenSequence<GroovyTokenId> getPositionedSequence(LineDocument doc, int offset) {
+        return getPositionedSequence(doc, offset, true);
+    }
+
     public static TokenSequence<GroovyTokenId> getPositionedSequence(BaseDocument doc, int offset, boolean lookBack) {
         TokenSequence<GroovyTokenId> ts = getGroovyTokenSequence(doc, offset);
 
@@ -264,7 +273,63 @@ public final class LexUtilities {
         return null;
     }
 
+    public static TokenSequence<GroovyTokenId> getPositionedSequence(LineDocument doc, int offset, boolean lookBack) {
+        TokenSequence<GroovyTokenId> ts = getGroovyTokenSequence(doc, offset);
+
+        if (ts != null) {
+            try {
+                ts.move(offset);
+            } catch (AssertionError e) {
+                DataObject dobj = (DataObject) doc.getProperty(Document.StreamDescriptionProperty);
+
+                if (dobj != null) {
+                    Exceptions.attachMessage(e, FileUtil.getFileDisplayName(dobj.getPrimaryFile()));
+                }
+
+                throw e;
+            }
+
+            if (!lookBack && !ts.moveNext()) {
+                return null;
+            } else if (lookBack && !ts.moveNext() && !ts.movePrevious()) {
+                return null;
+            }
+
+            return ts;
+        }
+
+        return null;
+    }
+
     public static Token<GroovyTokenId> getToken(BaseDocument doc, int offset) {
+        TokenSequence<GroovyTokenId> ts = getGroovyTokenSequence(doc, offset);
+
+        if (ts != null) {
+            try {
+                ts.move(offset);
+            } catch (AssertionError e) {
+                DataObject dobj = (DataObject) doc.getProperty(Document.StreamDescriptionProperty);
+
+                if (dobj != null) {
+                    Exceptions.attachMessage(e, FileUtil.getFileDisplayName(dobj.getPrimaryFile()));
+                }
+
+                throw e;
+            }
+
+            if (!ts.moveNext() && !ts.movePrevious()) {
+                return null;
+            }
+
+            Token<GroovyTokenId> token = ts.token();
+
+            return token;
+        }
+
+        return null;
+    }
+
+    public static Token<GroovyTokenId> getToken(LineDocument doc, int offset) {
         TokenSequence<GroovyTokenId> ts = getGroovyTokenSequence(doc, offset);
 
         if (ts != null) {
@@ -451,7 +516,25 @@ public final class LexUtilities {
      * with a corresponding "end" token, such as "begin", "def", "module",
      * etc.
      */
+    public static boolean isBeginToken(TokenId id, LineDocument doc, int offset) {
+        return END_PAIRS.contains(id);
+    }
+
+    /**
+     * Return true iff the given token is a token that should be matched
+     * with a corresponding "end" token, such as "begin", "def", "module",
+     * etc.
+     */
     public static boolean isBeginToken(TokenId id, BaseDocument doc, TokenSequence<GroovyTokenId> ts) {
+        return END_PAIRS.contains(id);
+    }
+
+    /**
+     * Return true iff the given token is a token that should be matched
+     * with a corresponding "end" token, such as "begin", "def", "module",
+     * etc.
+     */
+    public static boolean isBeginToken(TokenId id, LineDocument doc, TokenSequence<GroovyTokenId> ts) {
         return END_PAIRS.contains(id);
     }
 

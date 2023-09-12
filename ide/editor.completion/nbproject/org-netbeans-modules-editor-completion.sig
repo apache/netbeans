@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.60.0
+#Version 1.66.0
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -80,6 +80,7 @@ meth public abstract org.netbeans.spi.editor.completion.CompletionTask createToo
 meth public abstract void defaultAction(javax.swing.text.JTextComponent)
 meth public abstract void processKeyEvent(java.awt.event.KeyEvent)
 meth public abstract void render(java.awt.Graphics,java.awt.Font,java.awt.Color,java.awt.Color,int,int,boolean)
+meth public boolean shouldSingleClickInvokeDefaultAction()
 
 CLSS public abstract interface org.netbeans.spi.editor.completion.CompletionProvider
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CompletionProviders")

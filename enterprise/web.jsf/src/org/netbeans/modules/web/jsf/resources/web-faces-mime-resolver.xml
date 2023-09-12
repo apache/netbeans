@@ -92,5 +92,24 @@
             </xml-rule>
         </resolver>
     </file>
-
+    <file>
+        <ext name="xml"/>
+            <resolver mime="text/x-jsf+xml">
+            <xml-rule>
+            	<element name="faces-config" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="3.0"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
+    <file>
+        <ext name="xml"/>
+            <resolver mime="text/x-jsf+xml">
+            <xml-rule>
+            	<element name="faces-config" ns="https://jakarta.ee/xml/ns/jakartaee">
+                    <attr name="version" text="4.0"/>
+                </element>
+            </xml-rule>
+        </resolver>
+    </file>
 </MIME-resolver>

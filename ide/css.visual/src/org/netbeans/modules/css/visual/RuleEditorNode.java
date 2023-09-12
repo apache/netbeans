@@ -32,10 +32,12 @@ import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JLabel;
@@ -595,15 +597,29 @@ public class RuleEditorNode extends AbstractNode {
             GroupGrammarElement rootElement = pmodel.getGrammarElement(context);
 
             rootElement.accept(new GrammarElementVisitor() {
+                private Set<GroupGrammarElement> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+
                 @Override
-                public void visit(UnitGrammarElement element) {
+                public boolean visit(UnitGrammarElement element) {
                     unitElements.add(element);
+                    return true;
                 }
 
                 @Override
-                public void visit(FixedTextGrammarElement element) {
+                public boolean visit(FixedTextGrammarElement element) {
                     fixedElements.add(element);
+                    return true;
                 }
+
+                @Override
+                public boolean visit(GroupGrammarElement element) {
+                    if (seen.contains(element)) {
+                        return false;
+                    }
+                    seen.add(element);
+                    return true;
+                }
+
             });
         }
 

@@ -19,18 +19,13 @@
 package org.netbeans.modules.netbinox;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.MockEvents;
 import org.netbeans.MockModuleInstaller;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
-import org.netbeans.SetupHid;
-import static org.netbeans.SetupHid.createTestJAR;
 
 /**
  *

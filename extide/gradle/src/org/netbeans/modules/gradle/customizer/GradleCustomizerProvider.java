@@ -25,8 +25,6 @@ import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.netbeans.spi.project.ui.CustomizerProvider;
 import org.netbeans.spi.project.ui.CustomizerProvider2;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle;
 
 import static org.netbeans.modules.gradle.customizer.Bundle.*;
@@ -63,19 +61,15 @@ public class GradleCustomizerProvider implements CustomizerProvider2 {
     @NbBundle.Messages({
         "# {0} - project display name",
         "TIT_Project_Properties=Project Properties - {0}",
-        "TXT_Unloadable=Project is unloadable, the project information is unreliable. Show Project Properties dialog?",
-        "TIT_Unloadable=Project Unloadable"
+        "# {0} - project display name",
+        "TIT_Unloadable_Project_Properties=Project Properties - {0} (Unloadable)",
     })
     @Override
     public void showCustomizer(final String preselectedCategory, final String preselectedSubCategory) {
-        if (NbGradleProject.get(project).isUnloadable()) {
-            NotifyDescriptor.Confirmation nd = new NotifyDescriptor.Confirmation(TXT_Unloadable(), TIT_Unloadable());
-            nd.setOptionType(NotifyDescriptor.YES_NO_OPTION);
-            if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.NO_OPTION) {
-                return;
-            }
-        }
-//        try {
+        String displayName = ProjectUtils.getInformation(project).getDisplayName();
+        String title = NbGradleProject.get(project).isUnloadable()
+                ? TIT_Unloadable_Project_Properties(displayName)
+                : TIT_Project_Properties(displayName);
         Mutex.EVENT.readAccess(() -> {
             assert EventQueue.isDispatchThread();
             Lookup context = Lookups.singleton(project);
@@ -85,13 +79,10 @@ public class GradleCustomizerProvider implements CustomizerProvider2 {
                     (ActionEvent ae) -> {/*noop*/},
                     null,
                     HELP_CTX);
-            dialog.setTitle(TIT_Project_Properties(ProjectUtils.getInformation(project).getDisplayName()));
+            dialog.setTitle(title);
             dialog.setModal(true);
             dialog.setVisible(true);
         });
-//        } catch (Exception ex) {
-//            Logger.getLogger(GradleCustomizerProvider.class.getName()).log(Level.SEVERE, "Cannot show project customizer", ex);
-//        }
     }
 
     @Override

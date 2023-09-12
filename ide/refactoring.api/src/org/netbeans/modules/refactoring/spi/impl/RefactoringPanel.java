@@ -955,7 +955,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
     }
      
      private Set<FileObject> getModifiedFileObjects() {
-         Set<FileObject> result = new HashSet();
+         Set<FileObject> result = new HashSet<>();
          for (DataObject dob: DataObject.getRegistry().getModified()) {
              result.add(dob.getPrimaryFile());
          }

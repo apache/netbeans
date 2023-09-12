@@ -79,6 +79,7 @@
                           <Component id="autoCompletionSmartQuotesLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="autoCompletionSmartQuotesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="autoStringConcatenationCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="codeCompletionFirstClassCallableCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -142,6 +143,8 @@
               <Component id="codeCompletionNonStaticMethodsCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="codeCompletionSmartParametersPreFillingCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="codeCompletionFirstClassCallableCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="codeCompletionVariablesScopeLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -509,6 +512,13 @@
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.codeCompletionSmartParametersPreFillingCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="codeCompletionFirstClassCallableCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/php/editor/options/Bundle.properties" key="CodeCompletionPanel.codeCompletionFirstClassCallableCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

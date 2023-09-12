@@ -19,60 +19,117 @@
 
 package org.netbeans.modules.gradle.tooling;
 
+import groovy.lang.GroovySystem;
+import groovy.lang.MetaBeanProperty;
+import groovy.lang.MetaClass;
+import groovy.lang.MetaProperty;
 import groovy.lang.MissingPropertyException;
 import java.io.File;
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import static java.util.Arrays.asList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.codehaus.groovy.runtime.InvokerHelper;
+import org.codehaus.groovy.runtime.metaclass.MultipleSetterProperty;
+import org.gradle.api.NamedDomainObjectContainer;
+import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.UnknownDomainObjectException;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.FileCollectionDependency;
 import org.gradle.api.artifacts.ModuleDependency;
 import org.gradle.api.artifacts.ProjectDependency;
+import org.gradle.api.artifacts.PublishArtifact;
+import org.gradle.api.artifacts.PublishArtifactSet;
 import org.gradle.api.artifacts.ResolveException;
 import org.gradle.api.artifacts.ResolvedArtifact;
 import org.gradle.api.artifacts.ResolvedDependency;
 import org.gradle.api.artifacts.component.ComponentIdentifier;
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier;
 import org.gradle.api.artifacts.component.ModuleComponentSelector;
 import org.gradle.api.artifacts.component.ProjectComponentIdentifier;
 import org.gradle.api.artifacts.result.ArtifactResolutionResult;
 import org.gradle.api.artifacts.result.ArtifactResult;
 import org.gradle.api.artifacts.result.ComponentArtifactsResult;
+import org.gradle.api.artifacts.result.DependencyResult;
 import org.gradle.api.artifacts.result.ResolvedArtifactResult;
+import org.gradle.api.artifacts.result.ResolvedComponentResult;
 import org.gradle.api.artifacts.result.ResolvedDependencyResult;
 import org.gradle.api.artifacts.result.UnresolvedDependencyResult;
+import org.gradle.api.attributes.Attribute;
+import org.gradle.api.attributes.AttributeContainer;
+import org.gradle.api.attributes.Category;
 import org.gradle.api.distribution.DistributionContainer;
 import org.gradle.api.file.ConfigurableFileCollection;
+import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.initialization.IncludedBuild;
-import org.gradle.api.plugins.JavaPlatformPlugin;
+import org.gradle.api.internal.provider.ProviderInternal;
+import org.gradle.api.logging.Logger;
+import org.gradle.api.logging.Logging;
+import org.gradle.api.plugins.ExtensionAware;
+import org.gradle.api.plugins.ExtensionContainer;
+import org.gradle.api.plugins.ExtensionsSchema.ExtensionSchema;
+import org.gradle.api.plugins.ExtraPropertiesExtension;
+import org.gradle.api.provider.Provider;
+import org.gradle.api.reflect.HasPublicType;
+import org.gradle.api.reflect.TypeOf;
 import org.gradle.api.specs.Specs;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
+import org.gradle.api.tasks.TaskDependency;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.api.tasks.testing.Test;
+import org.gradle.internal.extensibility.DefaultExtraPropertiesExtension;
 import org.gradle.jvm.JvmLibrary;
 import org.gradle.language.base.artifact.SourcesArtifact;
 import org.gradle.language.java.artifact.JavadocArtifact;
-import org.gradle.util.VersionNumber;
-import org.netbeans.modules.gradle.api.NbProjectInfo;
+import org.gradle.plugin.use.PluginId;
+import org.gradle.util.GradleVersion;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
 class NbProjectInfoBuilder {
+    
+    /**
+     * The logger. Use Gradle logging - use {@code lifecycle} level for messages that should
+     * be printed regularly, and {@code info} for verbose debug messages. This is because if
+     * debug loglevel is enabled, gradle will spit out enormous number of diagnostics. This
+     * Plugin is not for 'end-user' use anyway, so INFO level is enabled when the logging level gradle
+     * project loader is enabled to FINER level.
+     */
+    private static final Logger LOG =  Logging.getLogger(NbProjectInfoBuilder.class);
+
+    /**
+     * Name of the default extensibility point for various domain objects defined by Gradle.
+     */
+    private static final String DEFAULT_EXTENSION_NAME = "ext"; // NOI18N
+    
     private static final String NB_PREFIX = "netbeans.";
     private static final Set<String> CONFIG_EXCLUDES = new HashSet<>(asList( new String[]{
         "archives",
@@ -126,28 +183,62 @@ class NbProjectInfoBuilder {
         "war"
     }));
 
+    private static final GradleVersion GRADLE_VERSION = GradleVersion.current().getBaseVersion();
+
     final Project project;
-    final VersionNumber gradleVersion;
+    final GradleInternalAdapter adapter;
+
+    public static final class ValueAndType {
+        final Class type;
+        final Optional<Object> value;
+
+        public ValueAndType(Class type, Object value) {
+            this.type = type;
+            this.value = Optional.ofNullable(value);
+        }
+
+        public ValueAndType(Class type) {
+            this.type = type;
+            this.value = Optional.empty();
+        }
+    }
 
     NbProjectInfoBuilder(Project project) {
         this.project = project;
-        this.gradleVersion = VersionNumber.parse(project.getGradle().getGradleVersion());
+        this.adapter = sinceGradleOrDefault("7.6", () -> new GradleInternalAdapter.Gradle76(project), () -> new GradleInternalAdapter(project));
     }
+    
+    private NbProjectInfoModel model = new NbProjectInfoModel();
 
     public NbProjectInfo buildAll() {
-        NbProjectInfoModel model = new NbProjectInfoModel();
-        detectProjectMetadata(model);
+        adapter.setModel(model);
+        runAndRegisterPerf(model, "meta", this::detectProjectMetadata);
         detectProps(model);
         detectLicense(model);
-        detectPlugins(model);
-        detectSources(model);
+        runAndRegisterPerf(model, "plugins", this::detectPlugins);
+        runAndRegisterPerf(model, "sources", this::detectSources);
         detectTests(model);
-        detectDependencies(model);
-        detectArtifacts(model);
+        runAndRegisterPerf(model, "dependencies", this::detectDependencies);
+        runAndRegisterPerf(model, "artifacts", this::detectArtifacts);
         detectDistributions(model);
+        
+        // introspection is only allowed for gradle 7.4 and above.
+        // TODO: investigate if some of the instrospection could be done for earlier Gradles.
+        sinceGradle("7.0", () -> {
+            runAndRegisterPerf(model, "detectExtensions", this::detectExtensions);
+        });
+        sinceGradle("7.0", () -> {
+            runAndRegisterPerf(model, "detectPlugins2", this::detectAdditionalPlugins);
+        });
+        sinceGradle("7.0", () -> {
+            runAndRegisterPerf(model, "taskDependencies", this::detectTaskDependencies);
+        });
+        runAndRegisterPerf(model, "taskProperties", this::detectTaskProperties);
+        runAndRegisterPerf(model, "artifacts", this::detectConfigurationArtifacts);
+        storeGlobalTypes(model);
         return model;
     }
-
+    
     @SuppressWarnings("null")
     private void detectDistributions(NbProjectInfoModel model) {
         if (project.getPlugins().hasPlugin("distribution")) {
@@ -164,10 +255,679 @@ class NbProjectInfoBuilder {
         }
         model.getInfo().put("license", license);
     }
+    
+    private void addTypes(Class c, Set<Class> types) {
+        if (c == null || !types.add(c)) {
+            return;
+        }
+        if (c.getSuperclass() != Object.class) {
+            addTypes(c.getSuperclass(), types);
+        }
+        for (Class i : c.getInterfaces()) {
+            addTypes(i, types);
+        }
+    }
+    
+    private String getTaskInheritance(Task t) {
+        Class nonDecorated = findNonDecoratedClass(t.getClass());
+        Set<Class> classes = new HashSet<>();
+        addTypes(nonDecorated, classes);
+        return classes.stream().map(Class::getName).sorted().collect(Collectors.joining(","));
+    }
+    
+    private static final Set<String> EXCLUDE_TASK_PROPERTIES = new HashSet<>(Arrays.asList(
+        "dependsOn",
+        "project",
+        "actions",
+        "taskDependencies",
+        "dependsOn",
+        "ant",
+        "logger",
+        "logging",
+        "outputs",
+        "destroyables",
+        "mustRunAfter",
+        "finalizedBy",
+        "shouldRunAfter",
+        "enabled",
+        "description",
+        "group"
+    ));
+    
+    private void detectTaskProperties(NbProjectInfoModel model) {
+        Map<String, Object> taskProperties = new HashMap<>();
+        Map<String, String> taskPropertyTypes = new HashMap<>();
+        
+        // make a copy of the task map; may mutate.
+        for (Task task : new ArrayList<>(project.getTasks().getAsMap().values())) {
+            Class taskClass = task.getClass();
+            Class nonDecorated = findNonDecoratedClass(taskClass);
+            
+            taskPropertyTypes.put(task.getName(), nonDecorated.getName());
+            inspectObjectAndValues(taskClass, task, task.getName() + ".", globalTypes, taskPropertyTypes, taskProperties, EXCLUDE_TASK_PROPERTIES, true); // NOI18N
+        }
+        
+        model.getInfo().put("tasks.propertyValues", taskProperties); // NOI18N
+        model.getInfo().put("tasks.propertyTypes", taskPropertyTypes); // NOI18N
+    }
+    
+    private void detectTaskDependencies(NbProjectInfoModel model) {
+        Map<String, Object> tasks = new HashMap<>();
+        
+        // make a copy of the task map; may mutate.
+        for (Task task : new ArrayList<>(project.getTasks().getAsMap().values())) {
+            Map<String, String> taskInfo = new HashMap<>();
+            taskInfo.put("name", task.getPath()); // NOI18N
+            taskInfo.put("enabled", Boolean.toString(task.getEnabled())); // NOI18N
+            taskInfo.put("mustRunAfter", dependenciesAsString(task, task.getMustRunAfter())); // NOI18N
+            taskInfo.put("shouldRunAfter", dependenciesAsString(task, task.getShouldRunAfter())); // NOI18N
+            taskInfo.put("taskDependencies", dependenciesAsString(task, task.getTaskDependencies())); // NOI18N
+            
+            Class taskClass = task.getClass();
+            Class nonDecorated = findNonDecoratedClass(taskClass);
+            
+            taskInfo.put("type", nonDecorated.getName()); // NOI18N
+            taskInfo.put("inherits", getTaskInheritance(task)); // NOI18N
+
+            tasks.put(task.getName(), taskInfo);
+        }
+        
+        model.getInfo().put("taskDetails", tasks); // NOI18N
+    }
+    
+    private String dependenciesAsString(Task t, TaskDependency td) {
+        try {
+            Set<? extends Task> deps = td.getDependencies(t);
+            if (deps.isEmpty()) {
+                return "";
+            }
+            return deps.stream().map(Task::getPath).collect(Collectors.joining(","));
+        } catch (LinkageError | RuntimeException ex) {
+            LOG.warn("Error getting dependencies for task {}: {}", t.getName(), ex.getLocalizedMessage(), ex);
+            return "";
+        }
+    }
+    
+    private void detectConfigurationArtifacts(NbProjectInfoModel model) {
+        List<Configuration> configs = project.getConfigurations()
+            .stream()
+            .filter(Configuration::isCanBeConsumed)
+            .filter(c -> !c.isCanBeResolved())
+            .sorted(Comparator.comparing(Configuration::getName))
+            .collect(Collectors.toList());
+        Map<String, Object> data = new HashMap<>();
+        for (Configuration c : configs) {
+            PublishArtifactSet publishSet = c.getAllArtifacts();
+            if (publishSet.isEmpty()) {
+                continue;
+            }
+            Map<String, Object> confData = new HashMap<>();
+            LOG.lifecycle("Configuration {} artifacts:", c.getName());
+            for (PublishArtifact a : publishSet) {
+                Map<String, String> artData = new HashMap<>();
+                artData.put("name", a.getName()); // NOI18N
+                artData.put("classifier", a.getClassifier()); // NOI18N
+                artData.put("extension", a.getExtension()); // NOI18N
+                artData.put("type", a.getType()); // NOI18N
+                
+                File f = a.getFile();
+                LOG.info("\t{}: name: {}, type: {}, classifier: {}, extension: {}", 
+                        f.getPath(), a.getName(), a.getType(), a.getClassifier(), a.getExtension());
+                Set<? extends Task> tasks = a.getBuildDependencies().getDependencies(null);
+                String taskList = tasks.stream().map(t -> t.getName()).collect(Collectors.joining(","));
+                artData.put("buildDeps", taskList); // NOI18N
+                LOG.info("\tbuilt by: {}", taskList); // NOI18N
+                confData.put(f.getPath(), artData);
+            }
+            data.put(c.getName(), confData);
+        }
+        model.getInfo().put("configurationArtifacts", data); // NOI18N
+    }
+    
+    /**
+     * Relies on PluginManagerInternal.findPluginIdForClass (gradle 7.1) and PluginRegistry.findPluginForClass (gradle 7.0)
+     * @param model 
+     */
+    private void detectAdditionalPlugins(NbProjectInfoModel model) {
+        if (!adapter.hasPluginManager()) {
+            return;
+        }
+        LOG.lifecycle("Detecting additional plugins");
+        final Set<String> plugins = new LinkedHashSet<>();
+        
+        project.getPlugins().matching((Plugin p) -> {
+            for (Class c = p.getClass(); c != null && c != Object.class; c = c.getSuperclass()) {
+                Optional<PluginId> id = adapter.findPluginId(c);
+                if (id.isPresent()) {
+                    LOG.info("Plugin: {} -> {}", id.get(), p);
+                    plugins.add(id.get().getId());
+                    break;
+                }
+            }
+            return false;
+        }).toArray(); // force iteration, gradle is lazier than I :)
+        // rely on Set to avoid duplicities.
+        ((Set)model.getInfo().get("plugins")).addAll(plugins); // NOI18N
+    }
+    
+    private void runAndRegisterPerf(NbProjectInfoModel model, String s, Consumer<NbProjectInfoModel> r) {
+        runAndRegisterPerf(model, s, () -> r.accept(model));
+    }
+    
+    private void runAndRegisterPerf(NbProjectInfoModel model, String s, Runnable r) {
+        long time = System.currentTimeMillis();
+        try {
+            r.run();
+        } finally {
+            long span = System.currentTimeMillis() - time;
+            model.registerPerf(s, span);
+        }
+    }
+    
+    private void storeGlobalTypes(NbProjectInfoModel model) {
+        model.getInfo().put("extensions.globalTypes", globalTypes); // NOI18N
+    }
+    
+    private void detectExtensions(NbProjectInfoModel model) {
+        StringBuilder sb = new StringBuilder();
+        for (String s : IGNORED_SYSTEM_CLASSES_REGEXP) {
+            if (sb.length() > 0) {
+                sb.append("|"); // NOI18N
+            }
+            sb.append(s);
+        }
+        ignoreClassesPattern = Pattern.compile(sb.toString());
+
+        inspectExtensions("", project.getExtensions());
+        model.getInfo().put("extensions.propertyTypes", propertyTypes); // NOI18N
+        model.getInfo().put("extensions.propertyValues", values); // NOI18N
+    }
+
+    /**
+     * Ignored properties, which are exposed by Groovy's Metaobject protocol, but should have
+     * been hidden.
+     */
+    private static final Set<String> IGNORED_SYSTEM_PROPERTIES = new HashSet<>(Arrays.asList(
+            "asDynamicObject", 
+            "convention", 
+            "class", 
+            "conventionMapping", 
+            "extensions", 
+            "modelIdentityDisplayName",
+            "project", 
+            "taskThatOwnsThisObject",
+            "additionalMethods",
+            "elementsAsDynamicObject",
+            "collectionSchema",
+            "didWork",
+            "onlyIf"
+    ));
+    
+    /**
+     * Classes that are ignored during value/type introspection. 
+     */
+    private static final String[] IGNORED_SYSTEM_CLASSES_REGEXP = {
+            "java\\..*",
+            "org\\.gradle\\.api\\.file\\..*",
+            "org\\.gradle\\.api\\.tasks\\..*",
+            "org\\.gradle\\.api\\.reflect\\..*",
+            "org\\.gradle\\.api\\.NamedDomainObject.*",
+            "org\\.gradle\\.api\\.internal\\..*",
+            "org.gradle.api.internal.tasks.DefaultTaskDependency",
+            "org\\.gradle\\.api\\.specs\\..*"
+    };
+
+    private Class findIterableItemClass(Class clazz) {
+        if (clazz == null) {
+            return null;
+        }
+        Map<TypeVariable<?>, Type> parameters = TypeUtils.getTypeArguments(clazz, Iterable.class);
+        if (parameters == null || parameters.isEmpty()) {
+            return null;
+        }
+        for (Map.Entry<TypeVariable<?>, Type> e : parameters.entrySet()) {
+            TypeVariable<?> tv = e.getKey();
+            if (tv.getGenericDeclaration() == Iterable.class) {
+                Type t = e.getValue();
+                if (!(t instanceof Class) || t == Object.class) {
+                    return null;
+                } else {
+                    return (Class)t;
+                }
+            }
+        }
+        return null;
+    }        
+    
+    public static final String COLLECTION_TYPE_MARKER = "#col"; // NOI18N
+    public static final String COLLECTION_TYPE_NAMED = "named"; // NOI18N
+    public static final String COLLECTION_TYPE_MAP = "map"; // NOI18N
+    public static final String COLLECTION_TYPE_LIST = "list"; // NOI18N
+    public static final String COLLECTION_ITEM_MARKER = "#itemType"; // NOI18N
+    public static final String COLLECTION_ITEM_PREFIX = COLLECTION_ITEM_MARKER + "."; // NOI18N
+    public static final String COLLECTION_CONTENT_PREFIX = "#content"; // NOI18N
+    public static final String COLLECTION_KEYS_MARKER = "#keys"; // NOI18N
+    
+    
+    private static boolean isPrimitiveOrString(Class c) {
+        if (c == Object.class) {
+            return false;
+        }
+        String n = c.getName();
+        return c.isPrimitive() || n.startsWith("java.lang.");
+    }
+    
+    /**
+     * Inspects extension or plugin objects for properties and their types. Object values are inspected recursively.
+     * Property values are read; values that are {@link ProviderInternal}s are computed
+     * 
+     * @param clazz class to inspect
+     * @param object the value to inspect and dump property values, possibly {@code null}
+     * @param prefix prefix for type and value maps
+     * @param globalTypes map to store information for individual types
+     * @param propertyTypes
+     * @param defaultValues 
+     */
+    private void inspectObjectAndValues(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues) {
+        inspectObjectAndValues(clazz, object, prefix, globalTypes, propertyTypes, defaultValues, null, true);
+    }
+    
+    private void inspectObjectAndValues(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues, Set<String> excludes, boolean type) {
+        try {
+            inspectObjectAndValues0(clazz, object, prefix, globalTypes, propertyTypes, defaultValues, excludes, type);
+        } catch (RuntimeException ex) {
+            LOG.warn("Error during inspection of {}, value {}, prefix {}", clazz, object, prefix);
+        }
+    }
+    
+    private boolean isMutableType(Object potentialValue) {
+        return adapter.isMutableType(potentialValue);
+    }
+    
+    private void addNestedKeys(String prefix, Map<String, String> propertyTypes, Collection<String> keys) {
+            propertyTypes.merge(prefix + COLLECTION_KEYS_MARKER, String.join(";;", keys), (old, add) -> {
+                List<String> oldList = new ArrayList<>(Arrays.asList(old.split(";;")));
+                List<String> newList = Arrays.asList(add.split(";;"));
+                oldList.addAll(newList);
+                return String.join(";;", oldList);
+            });
+    }
+    
+    private void inspectObjectAndValues0(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues, Set<String> excludes, boolean type) {
+        Class nonDecorated = findNonDecoratedClass(clazz);
+        
+        // record object's type first, even though the value may be excluded (i.e. ignored class). Do not add types for collection or map items -- to much clutter.
+        String typeKey = prefix;
+        if (prefix.endsWith(".")) {
+            typeKey = prefix.substring(0, prefix.length() - 1);
+        } else {
+            typeKey = prefix;
+        }
+        if (type) {
+            if (propertyTypes.putIfAbsent(typeKey, nonDecorated.getName()) != null && object == null) {
+                // type already introspected, no value to fetch properties from.
+                return;
+            }
+        }
+        
+        if (clazz == null || clazz.isEnum()) {
+            return;
+        }
+        if (clazz.isArray() || (excludes == null && ignoreClassesPattern.matcher(clazz.getName()).matches())) {
+            // try to dump as a list/map
+            dumpValue(object, typeKey, propertyTypes, defaultValues, clazz, null);
+            return;
+        }
+
+        MetaClass mclazz = GroovySystem.getMetaClassRegistry().getMetaClass(clazz);
+        Map<String, String> globTypes = globalTypes.computeIfAbsent(nonDecorated.getName(), cn -> new HashMap<>());
+        List<MetaProperty> props = mclazz.getProperties();
+        List<String> addedKeys = new ArrayList<>();
+        for (MetaProperty mp : props) {
+            Class propertyDeclaringClass = null;
+            String getterName = null;
+            String propName = mp.getName();
+            // some properties are added by DSL wrappers, we should better ignore them.
+            if ((excludes != null && excludes.contains(propName)) || IGNORED_SYSTEM_PROPERTIES.contains(propName)) {
+                continue;
+            }
+            LOG.info("Inspecting {}.{}", clazz.getName(), propName);
+            Class t = mp.getType();
+            if (t == Object.class) {
+                // MultipleSetter is probably for an overloaded setter
+                if (mp instanceof MultipleSetterProperty) {
+                    MultipleSetterProperty msp = (MultipleSetterProperty)mp;
+                    t = msp.getGetter().getReturnType();
+                }
+            }
+
+            if (mp instanceof MetaBeanProperty) {
+                MetaBeanProperty mbp = (MetaBeanProperty)mp;
+
+                if (mbp.getGetter() == null) {
+                    continue;
+                }
+                
+                // PENDING: not all settable stuff has a setter. Some are containers or objects which are always present,
+                // and have to be configured using their properties, i.e. java.modularity. But there are TOOOO MANY things
+                // that have a getter and are DEFINITELY not meant for a DSL. 
+                // Giving up this time, they should be added if a decent way to filter out implementation garbage is found.
+                if (mbp.getSetter() == null) {
+                    if (object == null) {
+                        continue;
+                    }
+                    Object potentialValue;
+                    try {
+                        potentialValue = mclazz.getProperty(object, propName);
+                    } catch (RuntimeException ex) {
+                        // just ignore - the value cannot be obtained
+                        continue;
+                    }
+                    if (!isMutableType(potentialValue)) {
+                        continue;
+                    }
+                }
+
+                getterName = mbp.getGetter().getName();
+                propertyDeclaringClass = mbp.getGetter().getDeclaringClass().getTheClass();
+            }
+            List<Type> typeParameters = null;
+            if (propertyDeclaringClass != null && t.getTypeParameters().length > 0) {
+                try {
+                    Method m = propertyDeclaringClass.getDeclaredMethod(getterName);
+                    Type rt = m.getGenericReturnType();
+                    if (rt instanceof ParameterizedType) {
+                        typeParameters = new ArrayList<>(Arrays.asList(((ParameterizedType)rt).getActualTypeArguments()));
+                    }
+                } catch (ReflectiveOperationException ex) {
+                }
+            }
+            Object value = null;
+            if ((mp.getModifiers() & Modifier.PUBLIC) == 0) {
+                continue;
+            }
+            if (object != null) {
+                // Provider must NOT be asked for a value, otherwise it might run a Task in order to compute
+                // the value.
+                try {
+                    value = mclazz.getProperty(object, propName);
+                    if (Provider.class.isAssignableFrom(t)) {
+                        ValueAndType vt = adapter.findPropertyValueInternal(propName, value);
+                        if (vt != null) {
+                            t = vt.type;
+                            if (vt.value.isPresent()) {
+                                value = vt.value.get();
+                            }
+                        }
+                    }
+                } catch (RuntimeException ex) {
+                    // just ignore - the property value cannot be obtained
+                }
+            }
+            if (value != null && !(value instanceof Provider)) {
+                if (isPrimitiveOrString(value.getClass())) {
+                    defaultValues.put(prefix + propName, value);
+                } else {
+                    try {
+                        defaultValues.put(prefix + propName, value.toString());
+                    } catch (RuntimeException ex) {
+                        // just ignore... some properties cannot be computed at this time, and their toString() attempts to do that.
+                        LOG.info("Could not get value of {}", propName, ex);
+                    }
+                }
+            }
+            
+            addedKeys.add(propName);
+            
+            String cn = findNonDecoratedClass(t).getName();
+            globTypes.put(propName, cn);
+            propertyTypes.put(prefix + propName, cn);
+
+            boolean dumped = false;
+            
+            if (value != null) {
+                // attemtp to enumerate membrs of a Container or an Iterable.
+                Class itemClass = null;
+                if ((value instanceof NamedDomainObjectContainer) && (value instanceof HasPublicType)) {
+                    String newPrefix;
+                    
+                    TypeOf pubType = ((HasPublicType)value).getPublicType();
+                    if (pubType != null && pubType.getComponentType() != null) {
+                        itemClass = pubType.getComponentType().getConcreteClass();
+                    } else {
+                        itemClass = findIterableItemClass(pubType.getConcreteClass());
+                    }
+                    propertyTypes.put(prefix + propName + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_NAMED);
+                    propertyTypes.put(prefix + propName, findNonDecoratedClass(t).getName());
+                    if (itemClass != null) {
+                        propertyTypes.put(prefix + propName + COLLECTION_ITEM_MARKER, itemClass.getName());
+                        newPrefix = prefix + propName + COLLECTION_ITEM_PREFIX; // NOI18N
+                        inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
+                    }
+
+                    NamedDomainObjectContainer nc = (NamedDomainObjectContainer)value;
+                    Map<String, ?> m = new HashMap<>(nc.getAsMap());
+                    dumpContainerProperties(m, prefix + propName, defaultValues);
+                    dumped = true;
+                } else {
+                    dumped = dumpValue(value, prefix + propName, propertyTypes, defaultValues, t, typeParameters);
+                }
+                
+                if (!dumped) {
+                    if (!isPrimitiveOrString(t) && !Provider.class.isAssignableFrom(t)) {
+                        String newPrefix = prefix + propName + "."; // NOI18N
+
+                        // recursively inspect a structured value.
+                        inspectObjectAndValues(t, value, newPrefix, globalTypes, propertyTypes, defaultValues);
+                    }
+                }
+            }
+        }
+        addNestedKeys(typeKey, propertyTypes, addedKeys);
+    }
+    
+    private void dumpContainerProperties(Map<String, ?> m, String prefix, Map<String, Object> defaultValues) {
+        // merge with other properties
+        addNestedKeys(prefix, propertyTypes, m.keySet());
+
+        for (Map.Entry<String, ?> it : m.entrySet()) {
+            String k = it.getKey();
+            String newPrefix = prefix + "." + k + "."; // NOI18N
+            Object v = it.getValue();
+            if (v == null) {
+                defaultValues.put(prefix + "." + k, null); // NOI18N
+            } else {
+                defaultValues.put(prefix + "." + k, Objects.toString(v)); // NOI18N
+                inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+            }
+        }
+    }
+    
+    private boolean dumpValue(Object value, String prefix, Map<String, String> propertyTypes, Map<String, Object> defaultValues, Class t, List<Type> typeParameters) {
+        // attemtp to enumerate membrs of a Container or an Iterable.
+        Class itemClass = null;
+        String cn = null;
+        boolean dumped = false;
+        if ((value instanceof NamedDomainObjectContainer) && (value instanceof HasPublicType)) {
+            String newPrefix;
+
+            TypeOf pubType = ((HasPublicType)value).getPublicType();
+            if (pubType != null && pubType.getComponentType() != null) {
+                itemClass = pubType.getComponentType().getConcreteClass();
+            } else {
+                itemClass = findIterableItemClass(pubType.getConcreteClass());
+            }
+            propertyTypes.put(prefix + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_NAMED);
+            if (itemClass != null) {
+                propertyTypes.put(prefix + COLLECTION_ITEM_MARKER, itemClass.getName());
+                newPrefix = prefix + COLLECTION_ITEM_PREFIX; // NOI18N
+                inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
+            }
+
+            NamedDomainObjectContainer nc = (NamedDomainObjectContainer)value;
+            Map<String, ?> m = new HashMap<>(nc.getAsMap());
+            List<String> ss = new ArrayList<>(m.keySet());
+            propertyTypes.put(prefix + COLLECTION_KEYS_MARKER, String.join(";;", ss));
+            for (String k : m.keySet()) {
+                newPrefix = prefix + "." + k + "."; // NOI18N
+                Object v = m.get(k);
+                if (v == null) {
+                    defaultValues.put(prefix + "." + k, null); // NOI18N
+                } else {
+                    defaultValues.put(prefix + "." + k, Objects.toString(v)); // NOI18N
+                    inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+                }
+            }
+            dumped = true;
+        } else if (Iterable.class.isAssignableFrom(t)) {
+            itemClass = findIterableItemClass(t);
+            if (itemClass == null && typeParameters != null && !typeParameters.isEmpty()) {
+                if (typeParameters.get(0) instanceof Class) {
+                    itemClass = (Class)typeParameters.get(0);
+                }
+            }
+
+            propertyTypes.put(prefix + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_LIST);
+            
+            if (itemClass != null) {
+                cn = findNonDecoratedClass(itemClass).getName();
+                propertyTypes.put(prefix + COLLECTION_ITEM_MARKER, cn);
+                String newPrefix = prefix + COLLECTION_ITEM_PREFIX; // NOI18N
+                if (!cn.startsWith("java.lang.") && !Provider.class.isAssignableFrom(t)) { //NOI18N
+                    inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
+                }
+            }
+
+            if (value instanceof Iterable) {
+                int index = 0;
+                try {
+                    for (Object o : (Iterable)value) {
+                        String newPrefix = prefix + "[" + index + "]."; // NOI18N
+                        if (o == null) {
+                            defaultValues.put(prefix + "[" + index + "]", null); //NOI18N
+                        } else {
+                            defaultValues.put(prefix + "[" + index + "]", Objects.toString(o)); //NOI18N
+                            inspectObjectAndValues(o.getClass(), o, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
+                        }
+                        index++;
+                    }
+                } catch (RuntimeException ex) {
+                    // values cannot be obtained
+                }
+                dumped = true;
+            }
+        } else if (value instanceof Map) {
+            Map mvalue = (Map)value;
+            Set<Object> ks = mvalue.keySet();
+            Class keyClass = findIterableItemClass(ks.getClass());
+            if (keyClass == null || keyClass == java.lang.Object.class) {
+                boolean ok = true;
+                for (Object k : ks) {
+                    if (!(k instanceof String)) {
+                        ok = false;
+                    }
+                }
+                if (ok) {
+                    keyClass = String.class;
+                }
+            }
+            if (keyClass == String.class) {
+                itemClass = findIterableItemClass(mvalue.values().getClass());
+
+                String keys = ks.stream().map(k -> k.toString()).map((String k) -> k.replace(";", "\\;")).collect(Collectors.joining(";;"));
+                propertyTypes.put(prefix + COLLECTION_KEYS_MARKER, keys);
+
+                propertyTypes.put(prefix + COLLECTION_TYPE_MARKER, COLLECTION_TYPE_MAP);
+                if (itemClass != null) {
+                    cn = findNonDecoratedClass(itemClass).getName();
+                    propertyTypes.put(prefix + COLLECTION_ITEM_MARKER, cn);
+                    String newPrefix = prefix + COLLECTION_ITEM_PREFIX; // NOI18N
+                    if (!cn.startsWith("java.lang.") && !Provider.class.isAssignableFrom(t)) { //NOI18N
+                        inspectObjectAndValues(itemClass, null, newPrefix, globalTypes, propertyTypes, defaultValues);
+                    }
+                }
+
+                for (Object o : ks) {
+                    String k = o.toString();
+                    String newPrefix = prefix + "[" + k + "]"; // NOI18N
+                    Object v = mvalue.get(o);
+                    if (v == null) {
+                        defaultValues.put(newPrefix, null); // NOI18N
+                    } else {
+                        defaultValues.put(newPrefix, Objects.toString(v)); // NOI18N
+                        inspectObjectAndValues(v.getClass(), v, newPrefix + ".", globalTypes, propertyTypes, defaultValues, null, itemClass == null);
+                    }
+                }
+                dumped = true;
+            }
+        }
+        return dumped;
+    }
+    
+    private static Class findNonDecoratedClass(Class clazz) {
+        while (clazz != Object.class && (clazz.getModifiers() & 0x1000 /* Modifiers.SYNTHETIC */) > 0) {
+            clazz = clazz.getSuperclass();
+        }
+        return clazz;
+    }
+
+    /**
+     * Regexp that combines names in {@link #IGNORED_SYSTEM_CLASSES_REGEXP}. Computed at the start of {@link #inspectExtensions}
+     */
+    private Pattern ignoreClassesPattern;
+    
+    Map<String, Map<String, String>> globalTypes = new HashMap<>();
+    Map<String, String> propertyTypes = new HashMap<>();
+    Map<String, Object> values = new HashMap<>();
+
+    /**
+     * Inspects extension container on an object. The prefix should be name of the object, including "." delimiter, will be used
+     * to prefix all properties found.
+     * 
+     * @param prefix prefix for the extension, including "." tail delimiter
+     * @param container extension container to enumerate.
+     */
+    private void inspectExtensions(String prefix, ExtensionContainer container) {
+        for (ExtensionSchema es : container.getExtensionsSchema().getElements()) {
+            String extName = es.getName();
+            
+            LOG.info("Extension: {}{}", prefix, extName);
+            
+            Object ext;
+            try {
+                ext = container.getByName(extName);
+                if (ext == null) {
+                    continue;
+                }
+            } catch (UnknownDomainObjectException ex) {
+                // ignore, the extension could not be obtained, ignore.
+                continue;
+            }
+            
+            // special case for 'ext' DefaultProperiesExtension whose properties are 'merged' with the base object
+            // can be read in the buildscript as if the object itself defined them
+            if (DEFAULT_EXTENSION_NAME.equals(extName) && (ext instanceof ExtraPropertiesExtension)) {
+                String p = prefix.endsWith(".") ? prefix.substring(0, prefix.length() - 1) : prefix;
+                dumpContainerProperties(((ExtraPropertiesExtension)ext).getProperties(), p, values);
+                continue;
+            }
+            
+            Class c = findNonDecoratedClass(ext.getClass());
+            propertyTypes.put(prefix + extName, c.getName());
+            inspectObjectAndValues(ext.getClass(), ext, prefix + extName + ".", globalTypes, propertyTypes, values);
+            if (ext instanceof ExtensionAware) {
+                inspectExtensions(prefix + extName + ".", ((ExtensionAware)ext).getExtensions());  // NOI18N
+            }
+        }
+        List<String> propNames = new ArrayList<>(propertyTypes.keySet());
+        Collections.sort(propNames);
+        for (String p : propNames) {
+            LOG.info("Extension property: {}: {} = {}", p, propertyTypes.get(p), values.get(p));  // NOI18N
+        }
+    }
 
     @SuppressWarnings("null")
     private void detectProjectMetadata(NbProjectInfoModel model) {
-        long time = System.currentTimeMillis();
         model.getInfo().put("project_name", project.getName());
         model.getInfo().put("project_path", project.getPath());
         model.getInfo().put("project_status", project.getStatus());
@@ -182,6 +942,7 @@ class NbProjectInfoBuilder {
         model.getInfo().put("project_rootDir", project.getRootDir());
         model.getInfo().put("gradle_user_home", project.getGradle().getGradleUserHomeDir());
         model.getInfo().put("gradle_home", project.getGradle().getGradleHomeDir());
+        model.getInfo().put("gradle_version", project.getGradle().getGradleVersion());
 
         Set<Configuration> visibleConfigurations = configurationsToSave();
         model.getInfo().put("configurations", visibleConfigurations.stream().map(conf->conf.getName()).collect(Collectors.toCollection(HashSet::new )));
@@ -191,12 +952,12 @@ class NbProjectInfoBuilder {
             sp.put(p.getPath(), p.getProjectDir());
         }
         model.getInfo().put("project_subProjects", sp);
-
+        
         Map<String, File> ib = new HashMap<>();
-        System.out.printf("Gradle Version: %s%n", gradleVersion);
+        LOG.lifecycle("Gradle Version: {}", GradleVersion.current());
         sinceGradle("3.1", () -> {
             for(IncludedBuild p: project.getGradle().getIncludedBuilds()) {
-                System.out.printf("Include Build: %s%n", p.getName());
+                LOG.lifecycle("Include Build: {}", p.getName());
                 ib.put(p.getName(), p.getProjectDir());
             }
         });
@@ -217,11 +978,9 @@ class NbProjectInfoBuilder {
             tasks.add(arr);
         }
         model.getInfo().put("tasks", tasks);
-        model.registerPerf("meta", System.currentTimeMillis() - time);
     }
 
     private void detectPlugins(NbProjectInfoModel model) {
-        long time = System.currentTimeMillis();
         Set<String> plugins = new HashSet<>();
         for (String plugin : RECOGNISED_PLUGINS) {
             if (project.getPlugins().hasPlugin(plugin)) {
@@ -229,7 +988,6 @@ class NbProjectInfoBuilder {
             }
         }
         model.getInfo().put("plugins", plugins);
-        model.registerPerf("plugins", System.currentTimeMillis() - time);
     }
 
     private void detectTests(NbProjectInfoModel model) {
@@ -264,45 +1022,149 @@ class NbProjectInfoBuilder {
                 .forEach(e -> nbprops.put(e.getKey().substring(NB_PREFIX.length()), String.valueOf(e.getValue())));
         model.getInfo().put("nbprops", nbprops);
     }
+    
+    private Path longestPrefixPath(List<Path> files) {
+        if (files.size() < 2) {
+            return null;
+        }
+        Path first = files.get(0);
+        Path result = null;
+        Path root = first.getRoot();
+        int count = first.getNameCount();
+        for (int i = 1; i <= count; i++) {
+            Path match = root != null ? root.resolve(first.subpath(0, i)) : first.subpath(0, i);
+            
+            for (int pi = 1; pi < files.size(); pi++) {
+                Path p = files.get(pi);
+                if (!p.startsWith(match)) {
+                    return result;
+                }
+            }
+            result = match;
+        }
+        // if all paths (more than one) are the same, something is strange.
+        return null;
+    }
 
     private void detectSources(NbProjectInfoModel model) {
-        long time = System.currentTimeMillis();
-
         boolean hasJava = project.getPlugins().hasPlugin("java-base");
         boolean hasGroovy = project.getPlugins().hasPlugin("groovy-base");
         boolean hasScala = project.getPlugins().hasPlugin("scala-base");
         boolean hasKotlin = project.getPlugins().hasPlugin("org.jetbrains.kotlin.android") ||
                             project.getPlugins().hasPlugin("org.jetbrains.kotlin.js") ||
                             project.getPlugins().hasPlugin("org.jetbrains.kotlin.jvm");
-
+        Map<String, Boolean> available = new HashMap<>();
+        available.put("java", hasJava);
+        available.put("groovy", hasGroovy);
+        available.put("kotlin", hasKotlin);
+        
         if (hasJava) {
             SourceSetContainer sourceSets = (SourceSetContainer) getProperty(project, "sourceSets");
             if (sourceSets != null) {
                 model.getInfo().put("sourcesets", storeSet(sourceSets.getNames()));
                 for(SourceSet sourceSet: sourceSets) {
                     String propBase = "sourceset_" + sourceSet.getName() + "_";
+                    
+                    Set<File> outDirs = new LinkedHashSet<>();
+                    sinceGradle("4.0", () -> {
+                        // classesDirs is just an iterable
+                        for (File dir: (ConfigurableFileCollection) getProperty(sourceSet, "output", "classesDirs")) {
+                            outDirs.add(dir);
+                        }
+                    });
+                    beforeGradle("4.0", () -> {
+                        outDirs.add((File)getProperty(sourceSet, "output", "classesDir"));
+                    });
+                    
+                    List<Path> outPaths = outDirs.stream().map(File::toPath).collect(Collectors.toList());
+                    // find the longest common prefix:
+                    Path base = longestPrefixPath(outPaths);
+                    
                     for(String lang: new String[] {"JAVA", "GROOVY", "SCALA", "KOTLIN"}) {
-                        Task compileTask = project.getTasks().findByName(sourceSet.getCompileTaskName(lang.toLowerCase()));
+                        String langId = lang.toLowerCase();
+                        Task compileTask = project.getTasks().findByName(sourceSet.getCompileTaskName(langId));
                         if (compileTask != null) {
-                            model.getInfo().put(
-                                    propBase + lang + "_source_compatibility",
-                                    compileTask.property("sourceCompatibility"));
-                            model.getInfo().put(
-                                    propBase + lang + "_target_compatibility",
-                                    compileTask.property("targetCompatibility"));
+                            Object o = null;
 
+                            // try to get from Kotlin options; breaking change in kotlinCompile 1.7+ does not derive from
+                            // SourceTask and does not have source/targetCompatibility. It reportedly ignores those options
+                            // even before 1.7
+                            if ("KOTLIN".equals(lang)) {
+                                o = getProperty(compileTask, "kotlinOptions", "languageVersion");
+                            } 
+                            if (o == null && compileTask.hasProperty("sourceCompatibility")) {
+                                o = getProperty(compileTask, "sourceCompatibility");
+                            }
+                            if (o != null) {
+                                model.getInfo().put(
+                                    propBase + lang + "_source_compatibility",
+                                    o.toString()
+                                );
+                            }
+                            o = null;
+                            if ("KOTLIN".equals(lang)) {
+                                o = getProperty(compileTask, "kotlinOptions", "jvmTarget");
+                            } 
+                            if (o == null && compileTask.hasProperty("targetCompatibility")) {
+                                o = getProperty(compileTask, "targetCompatibility");
+                            }
+                            if (o != null) {
+                                model.getInfo().put(
+                                        propBase + lang + "_target_compatibility",
+                                        o.toString()
+                                );
+                            }
                             List<String> compilerArgs;
 
-                            try {
-                                compilerArgs = (List<String>) getProperty(compileTask, "options", "allCompilerArgs");
-                            } catch (Throwable ex) {
-                                try {
-                                    compilerArgs = (List<String>) getProperty(compileTask, "options", "compilerArgs");
-                                } catch (Throwable ex2) {
-                                    compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "freeCompilerArgs");
-                                }
+                            compilerArgs = (List<String>) getProperty(compileTask, "options", "allCompilerArgs");
+                            if (compilerArgs == null) {
+                                compilerArgs = (List<String>) getProperty(compileTask, "options", "compilerArgs");
+                            }
+                            if (compilerArgs == null) {
+                                compilerArgs = (List<String>) getProperty(compileTask, "kotlinOptions", "freeCompilerArgs");
                             }
                             model.getInfo().put(propBase + lang + "_compiler_args", new ArrayList<>(compilerArgs));
+                        }
+                        if (Boolean.TRUE.equals(available.get(langId))) {
+                            model.getInfo().put(propBase + lang, storeSet(getProperty(sourceSet, langId, "srcDirs")));
+                            asGradle("4.0", "6.1", () -> {
+                                File outDir = (File) getProperty(sourceSet, langId, "outputDir");
+                                model.getInfo().put(propBase + lang + "_output_classes", outDir);
+                            });
+                            sinceGradle("6.1", () -> {
+                                DirectoryProperty dirProp = (DirectoryProperty)getProperty(sourceSet, langId, "classesDirectory");
+                                if (dirProp != null) {
+                                    File outDir;
+
+                                    if (dirProp.isPresent()) {
+                                        outDir = dirProp.get().getAsFile();
+                                    } else {
+                                        // kotlin plugin uses some weird late binding, so it has the output item, but it cannot be resolved to a
+                                        // concrete file path at this time. Let's make an approximation from
+                                        Path candidate = null;
+                                        if (base != null) {
+                                            Path prefix = base.resolve(langId);
+                                            // assume the language has just one output dir in the source set:
+                                            for (int i = 0; i < outPaths.size(); i++) {
+                                                Path p = outPaths.get(i);
+                                                if (p.startsWith(prefix)) {
+                                                    if (candidate != null) {
+                                                        candidate = null;
+                                                        break;
+                                                    } else {
+                                                        candidate = p;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        outDir = candidate != null ? candidate.toFile() : new File("");
+                                    }
+
+                                    model.getInfo().put(propBase + lang + "_output_classes", outDir);
+                                }
+                            });
+
+
                         }
                     }
    
@@ -317,17 +1179,7 @@ class NbProjectInfoBuilder {
                     if (hasKotlin) {
                         model.getInfo().put(propBase + "KOTLIN", storeSet(getProperty(getProperty(sourceSet, "kotlin"), "srcDirs")));
                     }
-                    sinceGradle("4.0", () -> {
-                        Set<File> dirs = new LinkedHashSet<>();
-                        // classesDirs is just an iterable
-                        for (File dir: (ConfigurableFileCollection) getProperty(sourceSet, "output", "classesDirs")) {
-                            dirs.add(dir);
-                        }
-                        model.getInfo().put(propBase + "output_classes", dirs);
-                    });
-                    beforeGradle("4.0", () -> {
-                        model.getInfo().put(propBase + "output_classes", Collections.singleton(getProperty(sourceSet, "output", "classesDir")));
-                    });
+                    model.getInfo().put(propBase + "output_classes", outDirs);
                     model.getInfo().put(propBase + "output_resources", sourceSet.getOutput().getResourcesDir());
                     sinceGradle("5.2", () -> {
                         model.getInfo().put(propBase + "GENERATED", storeSet(getProperty(sourceSet, "output", "generatedSourcesDirs", "files")));
@@ -361,11 +1213,9 @@ class NbProjectInfoBuilder {
                 model.noteProblem("No sourceSets found on this project. This project mightbe a Model/Rule based one which is not supported at the moment.");
             }
         }
-        model.registerPerf("plugins", System.currentTimeMillis() - time);
     }
 
     private void detectArtifacts(NbProjectInfoModel model) {
-        long time = System.currentTimeMillis();
         if (project.getPlugins().hasPlugin("java")) {
             model.getInfo().put("main_jar", getProperty(project, "jar", "archivePath"));
         }
@@ -385,11 +1235,19 @@ class NbProjectInfoBuilder {
             }
         }
         Map<String, Object> archives = new HashMap<>();
-        project.getTasks().withType(Jar.class).forEach(jar -> {
-            archives.put(jar.getClassifier(), jar.getArchivePath());
+        beforeGradle("5.2", () -> {
+            // The jar.getCassifier() and jar.getArchievePath() are deprecated since 5.2
+            // These methods got removed in 8.0
+            project.getTasks().withType(Jar.class).forEach(jar -> {
+                archives.put(jar.getClassifier(), jar.getArchivePath());
+            });
+        });
+        sinceGradle("5.2", () -> {
+            project.getTasks().withType(Jar.class).forEach(jar -> {
+                archives.put(jar.getArchiveClassifier().get(), jar.getDestinationDirectory().file(jar.getArchiveFileName().get()).get().getAsFile());
+            });
         });
         model.getInfo().put("archives", archives);
-        model.registerPerf("artifacts", System.currentTimeMillis() - time);
     }
 
     private static boolean resolvable(Configuration conf) {
@@ -399,32 +1257,204 @@ class NbProjectInfoBuilder {
             return true;
         }
     }
+    
+    private static String nonNullString(Object s) {
+        return s == null ? "" : s.toString();
+    }
+    
+    /**
+     * Walker that collect resolved dependencies. The walker does not work with FLAT list of
+     * dependencies from getAllDependencies, but rather with the dependency tree so it can
+     * discover the dependency structures. 
+     */
+    class DependencyWalker {
+        final Configuration configuration;
+        final boolean ignoreUnresolvable;
+        final Map<String, String> unresolvedProblems;
+        final Set<String> componentIds;
+        final String configName;
+        final Set<ComponentIdentifier> ids;
+        final Set<String> unresolvedIds;
+        final Map<String, Set<String>> directDependencies;
+        final Map<String, String> projectIds;
+        final Map<String, String> resolvedVersions;
+        
+        int depth;
 
+        public DependencyWalker(Configuration configuration, 
+                boolean ignoreUnresolvable, 
+                Map<String, String> unresolvedProblems, 
+                Set<String> componentIds, 
+                Set<ComponentIdentifier> ids, 
+                Set<String> unresolvedIds, 
+                Map<String, Set<String>> directDependencies,
+                Map<String, String> projectIds, Map<String, String> resolvedVersions) {
+            this.configuration = configuration;
+            this.ignoreUnresolvable = ignoreUnresolvable;
+            this.unresolvedProblems = unresolvedProblems;
+            this.componentIds = componentIds;
+            this.ids = ids;
+            this.unresolvedIds = unresolvedIds;
+            this.directDependencies = directDependencies;
+            this.projectIds = projectIds;
+            this.resolvedVersions = resolvedVersions;
+            
+            this.configName = configuration.getName();
+        }
+        
+        public void walkResolutionResult(ResolvedComponentResult node) {
+            walkChildren(true, "", node.getDependencies(), new HashSet<>());
+        }
+        
+        String findNodeIdentifier(ComponentIdentifier cid) {
+            String nodeIdString;
+            if (cid instanceof ModuleComponentIdentifier) {
+                ModuleComponentIdentifier mid = (ModuleComponentIdentifier)cid;
+
+                nodeIdString = String.format("%s:%s:%s", nonNullString(mid.getGroup()), mid.getModule(), nonNullString(mid.getVersion()));
+
+            } else if (cid instanceof ProjectComponentIdentifier) {
+                ProjectComponentIdentifier pid = (ProjectComponentIdentifier)cid;
+                String absPath = project.getRootProject().absoluteProjectPath(pid.getProjectPath());
+                String rootName = project.getRootProject().getName();
+                
+                String aid;
+                Object g = project.getGroup();
+                Object v = project.getVersion();
+                String gid = g == null ? "" : g.toString();
+                if (project != project.getRootProject()) {
+                    aid = rootName + "-" + project.getName();
+                } else {
+                    aid = project.getName();
+                }
+                String ver = v == null ? "" : v.toString();
+                projectIds.put(absPath, String.format("%s:%s:%s", gid, nonNullString(aid), nonNullString(v)));
+                return "*project:" + absPath;
+            } else {
+                return null;
+            }
+            
+            return nodeIdString;
+        }
+        
+        public void walkResolutionResult(ResolvedDependencyResult node, Set<String> stack) {
+            String c = node.getResolvedVariant().getAttributes().getAttribute(Attribute.of("org.gradle.category", String.class)); 
+            if (c != null && (Category.REGULAR_PLATFORM.equals(c) || Category.ENFORCED_PLATFORM.equals(c))) {
+                // TEMPORARY FIX: do not walk children of BOMs, as they are not real dependencies, just version constraints.
+                // better project dependency API needed to handle this.
+                return;
+            }
+            depth++;
+            ResolvedComponentResult rcr = node.getSelected();
+            String id = findNodeIdentifier(rcr.getId());
+            if (!stack.add(id)) {
+                return;
+            }
+            walkChildren(false, id, rcr.getDependencies(), stack);
+            stack.remove(id);
+            depth--;
+        }
+        
+        public void walkChildren(boolean root, String parentId, Collection<? extends DependencyResult> deps, Set<String> stack) {
+            for (DependencyResult it2 : deps) {
+
+                if (it2 instanceof ResolvedDependencyResult) {
+                    ResolvedDependencyResult rdr = (ResolvedDependencyResult) it2;
+                    ComponentIdentifier id = null;
+                    if (rdr.getRequested() instanceof ModuleComponentSelector) {
+                        ids.add(rdr.getSelected().getId());
+                        // do not bother with components that only select a variant, which is itself a component
+                        // TODO: represent as a special component type so the IDE shows it, but the IDE knows it is an abstract
+                        // intermediate with no artifact(s).
+                        if (rdr.getResolvedVariant() == null) {
+                            id = rdr.getSelected().getId();
+                        } else {
+                            id = sinceGradle("6.8", () -> {
+                                if (!rdr.getResolvedVariant().getExternalVariant().isPresent()) {
+                                    return rdr.getSelected().getId();
+                                } else {
+                                    return null;
+                                }
+                            });
+                        }
+                    }
+                    if (id != null) {
+                        componentIds.add(id.toString());
+                        if (id instanceof ModuleComponentIdentifier) {
+                            ModuleComponentIdentifier mci = (ModuleComponentIdentifier)id;
+                            resolvedVersions.putIfAbsent(
+                                    String.format("%s:%s", mci.getGroup(), nonNullString(mci.getModuleIdentifier().getName())),
+                                    String.format("%s:%s:%s", mci.getGroup(), nonNullString(mci.getModuleIdentifier().getName()), nonNullString(mci.getVersion()))
+                            );
+                        }
+                    }
+                    if (directDependencies.computeIfAbsent(parentId, f -> new HashSet<>()).
+                        add(findNodeIdentifier(rdr.getSelected().getId()))) {
+                        walkResolutionResult(rdr, stack);
+                    }
+                }
+                if (it2 instanceof UnresolvedDependencyResult) {
+                    UnresolvedDependencyResult udr = (UnresolvedDependencyResult) it2;
+                    String id = udr.getRequested().getDisplayName();
+                    if(componentIds.contains(id)) {
+                        unresolvedIds.add(id);
+                    }
+                    if(!ignoreUnresolvable && (configuration.isVisible() || configuration.isCanBeConsumed())) {
+                        // hidden configurations like 'testCodeCoverageReportExecutionData' might contain unresolvable artifacts.
+                        // do not report problems here
+                        Throwable failure = ((UnresolvedDependencyResult) it2).getFailure();
+                        if (project.getGradle().getStartParameter().isOffline()) {
+                            // if the unresolvable is bcs. offline mode, throw an exception to get retry in online mode.
+                            Throwable prev = null;
+                            for (Throwable t = failure; t != prev && t != null; prev = t, t = t.getCause()) {
+                                if (t.getMessage().contains("available for offline")) {
+                                    throw new NeedOnlineModeException("Need online mode", failure);
+                                }
+                            }
+                        }
+                        unresolvedProblems.putIfAbsent(id, ((UnresolvedDependencyResult) it2).getFailure().getMessage());
+                    }
+                }
+            }
+        }
+    }
+    
     private void detectDependencies(NbProjectInfoModel model) {
-        long time = System.currentTimeMillis();
-        Set<ComponentIdentifier> ids = new HashSet();
-        Map<String, File> projects = new HashMap();
-        Map<String, String> unresolvedProblems = new HashMap();
-        Map<String, Set<File>> resolvedJvmArtifacts = new HashMap();
+        Set<ComponentIdentifier> ids = new HashSet<>();
+        Map<String, File> projects = new HashMap<>();
+        Map<String, String> unresolvedProblems = new HashMap<>();
+        Map<String, Set<File>> resolvedJvmArtifacts = new HashMap<>();
         Set<Configuration> visibleConfigurations = configurationsToSave();
+        Map<String, String> projectIds = new HashMap<>();
 
         // NETBEANS-5846: if this project uses javaPlatform plugin with dependencies enabled, 
         // do not report unresolved problems
-        boolean ignoreUnresolvable = (project.getPlugins().hasPlugin(JavaPlatformPlugin.class) && 
+        boolean ignoreUnresolvable = (project.getPlugins().hasPlugin("java-platform") &&
             Boolean.TRUE.equals(getProperty(project, "javaPlatform", "allowDependencies")));
 
         visibleConfigurations.forEach(it -> {
             String propBase = "configuration_" + it.getName() + "_";
             model.getInfo().put(propBase + "non_resolving", !resolvable(it));
             model.getInfo().put(propBase + "transitive",  it.isTransitive());
+            model.getInfo().put(propBase + "canBeConsumed", it.isCanBeConsumed());
             model.getInfo().put(propBase + "extendsFrom",  it.getExtendsFrom().stream().map(c -> c.getName()).collect(Collectors.toCollection(HashSet::new)));
             model.getInfo().put(propBase + "description",  it.getDescription());
+
+            Map<String, String> attributes = new LinkedHashMap<>();
+            AttributeContainer attrs = it.getAttributes();
+            for (Attribute<?> attr : attrs.keySet()) {
+                attributes.put(attr.getName(), String.valueOf(attrs.getAttribute(attr)));
+            }
+            model.getInfo().put(propBase + "attributes", attributes);
         });
         //visibleConfigurations = visibleConfigurations.findAll() { resolvable(it) }
         visibleConfigurations.forEach(it -> {
+            
+            Map<String, Set<String>> directDependencies = new HashMap<>();
             Set<String> componentIds = new HashSet<>();
             Set<String> unresolvedIds = new HashSet<>();
             Set<String> projectNames = new HashSet<>();
+            Map<String, String> resolvedVersions = new HashMap<>();
             long time_inspect_conf = System.currentTimeMillis();
 
             it.getDependencies().withType(ModuleDependency.class).forEach(it2 -> {
@@ -434,9 +1464,14 @@ class NbProjectInfoBuilder {
                 String id = group + ":" + name + ":" + version;
                 componentIds.add(id);
             });
+            // TODO: what to do with PROJECT dependencies ?
 
+            String configPrefix = "configuration_" + it.getName() + "_";
             if (resolvable(it)) {
                 try {
+                    // PENDING: this following code is duplicated in DependencyWalker. Currently IDE uses the old
+                    // information, the DependencyWalker collects just dependency tree(s), which is used marginally (new feature).
+                    // remove the code block in favour to DependencyWalker after stabilization.
                     it.getIncoming().getResolutionResult().getAllDependencies().forEach( it2 -> {
                         if (it2 instanceof ResolvedDependencyResult) {
                             ResolvedDependencyResult rdr = (ResolvedDependencyResult) it2;
@@ -453,7 +1488,7 @@ class NbProjectInfoBuilder {
                                             componentIds.add(rdr.getSelected().getId().toString());
                                         }
                                     });
-                                }
+                                } 
                             }
                         }
                         if (it2 instanceof UnresolvedDependencyResult) {
@@ -479,6 +1514,15 @@ class NbProjectInfoBuilder {
                             }
                         }
                     });
+                    
+                    // PENDING: collect components separately from the depth search, so existing
+                    // functions are not broken. REMOVE this duplicity after Dependency walker is tested
+                    // to work the same as the original code.
+                    Set<String> componentIds2 = new HashSet<>();
+                    DependencyWalker walker = new DependencyWalker(
+                            it, ignoreUnresolvable, unresolvedProblems, componentIds2, ids, unresolvedIds, directDependencies, projectIds, resolvedVersions);
+
+                    walker.walkResolutionResult(it.getIncoming().getResolutionResult().getRoot());
                 } catch (ResolveException ex) {
                     model.noteProblem(ex);
                 }
@@ -486,9 +1530,30 @@ class NbProjectInfoBuilder {
                 unresolvedIds.addAll(componentIds);
                 componentIds.clear();
             }
+
+            Set<String> directChildSpecs = new HashSet<>();
+            it.getDependencies().forEach(d -> {
+                StringBuilder sb = new StringBuilder();
+                String g;
+                String a;
+                if (d instanceof ProjectDependency) {
+                    sb.append("*project:"); // NOI18N
+                    Project other = ((ProjectDependency)d).getDependencyProject();
+                    g = other.getGroup().toString();
+                    a = other.getName();
+                } else {
+                    g = d.getGroup();
+                    a = d.getName();
+                }
+                sb.append(g).append(':').append(a).append(":").append(nonNullString(d.getVersion()));
+                String id = sb.toString();
+                String resolved = resolvedVersions.get(id);
+                directChildSpecs.add(resolved != null ? resolved : id);
+            });
+            model.getInfo().put(configPrefix + "directChildren", directChildSpecs);
+
             String depBase = "dependency_inspect_" + it.getName();
             String depPrefix = depBase + "_";
-            String configPrefix = "configuration_" + it.getName() + "_";
             long time_project_deps = System.currentTimeMillis();
             model.registerPerf(depPrefix + "module", time_project_deps - time_inspect_conf);
             it.getDependencies().withType(ProjectDependency.class).forEach(it2 -> {
@@ -526,11 +1591,12 @@ class NbProjectInfoBuilder {
             }
             long time_report = System.currentTimeMillis();
             model.registerPerf(depPrefix + "collect", time_report - time_collect);
-
+            
             model.getInfo().put(configPrefix + "components", componentIds);
             model.getInfo().put(configPrefix + "projects", projectNames);
             model.getInfo().put(configPrefix + "files", fileDeps);
             model.getInfo().put(configPrefix + "unresolved", unresolvedIds);
+            model.getInfo().put(configPrefix + "dependencies", directDependencies);
             model.registerPerf(depPrefix + "file", System.currentTimeMillis() - time_report);
             model.registerPerf(depBase, System.currentTimeMillis() - time_inspect_conf);
         });
@@ -596,13 +1662,15 @@ class NbProjectInfoBuilder {
 
             model.registerPerf("dependencies_collect", System.currentTimeMillis() - collect_time);
         }
+        
+        // project abs path -> project's GAV
+        model.getInfo().put("project_ids", projectIds);
 
         model.getExt().put("resolved_jvm_artifacts", resolvedJvmArtifacts);
         model.getExt().put("resolved_sources_artifacts", resolvedSourcesArtifacts);
         model.getExt().put("resolved_javadoc_artifacts", resolvedJavadocArtifacts);
         model.getInfo().put("project_dependencies", projects);
         model.getInfo().put("unresolved_problems", unresolvedProblems);
-        model.registerPerf("dependencies", System.currentTimeMillis() - time);
     }
 
     private static Set<File> collectResolvedArtifacts(Set<ArtifactResult> res) {
@@ -661,25 +1729,66 @@ class NbProjectInfoBuilder {
                 .flatMap(c -> c.getHierarchy().stream())
                 .collect(Collectors.toSet());
     }
+    
+    interface ExceptionCallable<T, E extends Throwable> {
+        public T call() throws E;
+    }
 
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void sneakyThrow(Throwable exception) throws T {
+            throw (T) exception;
+    }        
+    
+    private <T, E extends Throwable> T sinceGradleOrDefault(String version, ExceptionCallable<T, E> c, Supplier<T> def) {
+        if (GRADLE_VERSION.compareTo(GradleVersion.version(version)) >= 0) {
+            try {
+                return c.call();
+            } catch (RuntimeException | Error e) {
+                throw e;
+            } catch (Throwable t) {
+                sneakyThrow(t);
+                return null;
+            }
+        } else if (def != null) {
+            return def.get();
+        } else {
+            return null;
+        }
+    }
+    
+    private <T, E extends Throwable> T sinceGradle(String version, ExceptionCallable<T, E> c) {
+        return sinceGradleOrDefault(version, c, null);
+    }
+    
     private void sinceGradle(String version, Runnable r) {
-        if (gradleVersion.compareTo(VersionNumber.parse(version)) >= 0) {
+        if (GRADLE_VERSION.compareTo(GradleVersion.version(version)) >= 0) {
             r.run();
         }
     }
 
     private void beforeGradle(String version, Runnable r) {
-        if (gradleVersion.compareTo(VersionNumber.parse(version)) < 0) {
+        if (GRADLE_VERSION.compareTo(GradleVersion.version(version)) < 0) {
+            r.run();
+        }
+    }
+
+    private void asGradle(String fromVersion, String toVersion, Runnable r) {
+        if ((GRADLE_VERSION.compareTo(GradleVersion.version(fromVersion)) >= 0)
+                && (GRADLE_VERSION.compareTo(GradleVersion.version(toVersion)) < 0)) {
             r.run();
         }
     }
 
     private static Object getProperty(Object obj, String... propPath) {
         Object currentObject = obj;
-        for(String prop: propPath) {
-            currentObject = InvokerHelper.getPropertySafe(currentObject, prop);
+        try {
+            for(String prop: propPath) {
+                currentObject = InvokerHelper.getPropertySafe(currentObject, prop);
+            }
+            return currentObject;
+        } catch (MissingPropertyException ex) {
+            return null;
         }
-        return currentObject;
     }
 }
 

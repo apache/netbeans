@@ -26,6 +26,7 @@ import com.sun.source.tree.LambdaExpressionTree.BodyKind;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModuleTree;
+import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import static com.sun.source.tree.Tree.*;
@@ -1341,8 +1342,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 printNoParenExpr(lab);
                 sep = ", "; //TODO: space or not should be a configuration setting
             }
+            if (tree.getGuard() != null) {
+                needSpace();
+                print("when ");
+                print(tree.getGuard());
+            }
         }
-        Object caseKind = CasualDiff.getCaseKind(tree);
+        Object caseKind = tree.getCaseKind();
         if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
             print(':');
             newline();
@@ -2061,8 +2067,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
-    public void visitDefaultCaseLabel(JCDefaultCaseLabel that) {
+    public void visitDefaultCaseLabel(JCDefaultCaseLabel tree) {
         print("default");
+    }
+
+    @Override
+    public void visitConstantCaseLabel(JCConstantCaseLabel tree) {
+        printExpr(tree.expr);
     }
 
     @Override
@@ -2077,8 +2088,28 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     @Override
     public void visitTree(JCTree tree) {
-	print("(UNKNOWN: " + tree + ")");
-	newline();
+        print("(UNKNOWN: " + tree + ")");
+        newline();
+    }
+
+    @Override
+    public void visitPatternCaseLabel(JCPatternCaseLabel tree) {
+        print(tree.pat);
+    }
+
+    @Override
+    public void visitRecordPattern(JCRecordPattern tree) {
+        print(tree.deconstructor);
+        print("(");
+        Iterator<JCPattern> it = tree.nested.iterator();
+        while (it.hasNext()) {
+            JCPattern pattern = it.next();
+            doAccept(pattern, true);
+            if (it.hasNext()) {
+                print(", ");
+            }
+        }
+        print(")");
     }
 
     /**************************************************************************

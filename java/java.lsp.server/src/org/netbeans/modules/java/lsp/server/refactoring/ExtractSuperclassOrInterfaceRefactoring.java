@@ -56,11 +56,11 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
-import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.java.api.ExtractInterfaceRefactoring;
@@ -125,8 +125,8 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
             return Collections.emptyList();
         }
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        List<QuickPickItem> members = new ArrayList();
-        List<QuickPickItem> allMembers = new ArrayList();
+        List<QuickPickItem> members = new ArrayList<>();
+        List<QuickPickItem> allMembers = new ArrayList<>();
         ClassTree sourceTree = (ClassTree) path.getLeaf();
         for (Tree member : sourceTree.getMembers()) {
             TreePath memberTreePath = new TreePath(path, member);
@@ -183,7 +183,7 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
             String uri = gson.fromJson(gson.toJson(arguments.get(0)), String.class);
             QuickPickItem type = gson.fromJson(gson.toJson(arguments.get(1)), QuickPickItem.class);
             List<QuickPickItem> members = Arrays.asList(gson.fromJson(gson.toJson(arguments.get(2)), QuickPickItem[].class));
-            client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectMembersToExtract(), true, members)).thenAccept(selected -> {
+            client.showQuickPick(new ShowQuickPickParams(null, Bundle.DN_SelectMembersToExtract(), true, members)).thenAccept(selected -> {
                 if (selected != null && !selected.isEmpty()) {
                     String label = EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? Bundle.DN_SelectClassName() : Bundle.DN_SelectInterfaceName();
                     String value = EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "NewClass" : "NewInterface";

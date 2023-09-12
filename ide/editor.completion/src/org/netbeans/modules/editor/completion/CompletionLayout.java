@@ -367,48 +367,82 @@ public final class CompletionLayout {
                 completionScrollPane = new CompletionScrollPane(
                     editorComponent, listSelectionListener,
                     new MouseAdapter() {
+                        CompletionItem selectedItemOnPress;
+
+                        @Override
+                        public void mousePressed(MouseEvent evt) {
+                            if (!SwingUtilities.isLeftMouseButton(evt)) {
+                                return;
+                            }
+                            selectedItemOnPress = completionScrollPane.getSelectedCompletionItem();
+                        }
+
+                        @Override
+                        public void mouseReleased(MouseEvent evt) {
+                            /* Handle single-click via mouseReleased, rather than in mouseClick with
+                            getClickCount() == 1, since the latter kind of event will not be fired if
+                            the mouse pointer ends up being dragged a tiny bit while the button is
+                            clicked (common on touchpads). */
+                            if (!SwingUtilities.isLeftMouseButton(evt)) {
+                                return;
+                            }
+                            CompletionItem selectedItem = completionScrollPane.getSelectedCompletionItem();
+                            boolean shouldInvokeDefaultAction =
+                                    selectedItem != null && selectedItem == selectedItemOnPress &&
+                                    selectedItem.shouldSingleClickInvokeDefaultAction();
+                            selectedItemOnPress = null;
+                            if (shouldInvokeDefaultAction) {
+                                invokeDefaultAction(selectedItem);
+                            }
+                        }
+
                         @Override
                         public void mouseClicked(MouseEvent evt) {
-			    JTextComponent c = getEditorComponent();
-                            if (SwingUtilities.isLeftMouseButton(evt)) {
-                                if (completionScrollPane.getView().getSize().width - CompletionJList.arrowSpan() <= evt.getPoint().x) {
-                                    CompletionItem selectedItem = completionScrollPane.getSelectedCompletionItem();
-                                    if (selectedItem instanceof CompositeCompletionItem && !((CompositeCompletionItem)selectedItem).getSubItems().isEmpty()) {
-                                        CompletionImpl.get().showCompletionSubItems();
-                                        evt.consume();
-                                        return;
+                            if (!SwingUtilities.isLeftMouseButton(evt)) {
+                                return;
+                            }
+                            if (completionScrollPane.getView().getSize().width - CompletionJList.arrowSpan() <= evt.getPoint().x) {
+                                CompletionItem selectedItem = completionScrollPane.getSelectedCompletionItem();
+                                if (selectedItem instanceof CompositeCompletionItem && !((CompositeCompletionItem)selectedItem).getSubItems().isEmpty()) {
+                                    CompletionImpl.get().showCompletionSubItems();
+                                    evt.consume();
+                                    return;
+                                }
+                            }
+                            for (CompletionLayoutPopup popup : getLayout().visiblePopups) {
+                                if (popup instanceof CompletionPopup) {
+                                    if (popup == CompletionPopup.this) {
+                                        break;
+                                    } else {
+                                        popup.hide();
                                     }
                                 }
-                                for (CompletionLayoutPopup popup : getLayout().visiblePopups) {
-                                    if (popup instanceof CompletionPopup) {
-                                        if (popup == CompletionPopup.this) {
-                                            break;
-                                        } else {
-                                            popup.hide();
-                                        }
-                                    }
-                                }
-                                if (c != null && evt.getClickCount() == 2 ) {
-                                    CompletionItem selectedItem
-                                            = completionScrollPane.getSelectedCompletionItem();
-                                    if (selectedItem != null) {
-                                        Document doc = c.getDocument();
-                                        if (doc instanceof GuardedDocument && ((GuardedDocument)doc).isPosGuarded(c.getSelectionEnd())) {
-                                            Toolkit.getDefaultToolkit().beep();
-                                        } else {
-                                            LogRecord r = new LogRecord(Level.FINE, "COMPL_MOUSE_SELECT"); // NOI18N
-                                            r.setParameters(new Object[] { null, completionScrollPane.getSelectedIndex(), selectedItem.getClass().getSimpleName()});
-                                            CompletionImpl.uilog(r);
-                                            CompletionImpl.sendUndoableEdit(doc, CloneableEditorSupport.BEGIN_COMMIT_GROUP);
-                                            MulticaretHandler mch = MulticaretHandler.create(c);
-                                            try {
-                                                selectedItem.defaultAction(c);
-                                            } finally {
-                                                mch.release();
-                                                CompletionImpl.sendUndoableEdit(doc, CloneableEditorSupport.END_COMMIT_GROUP);
-                                            }
-                                        }
-                                    }
+                            }
+                            CompletionItem selectedItem = completionScrollPane.getSelectedCompletionItem();
+                            if (selectedItem != null && !selectedItem.shouldSingleClickInvokeDefaultAction() && evt.getClickCount() == 2) {
+                                invokeDefaultAction(selectedItem);
+                            }
+                        }
+
+                        private void invokeDefaultAction(CompletionItem selectedItem) {
+                            JTextComponent c = getEditorComponent();
+                            if (c == null ) {
+                                return;
+                            }
+                            Document doc = c.getDocument();
+                            if (doc instanceof GuardedDocument && ((GuardedDocument)doc).isPosGuarded(c.getSelectionEnd())) {
+                                Toolkit.getDefaultToolkit().beep();
+                            } else {
+                                LogRecord r = new LogRecord(Level.FINE, "COMPL_MOUSE_SELECT"); // NOI18N
+                                r.setParameters(new Object[] { null, completionScrollPane.getSelectedIndex(), selectedItem.getClass().getSimpleName()});
+                                CompletionImpl.uilog(r);
+                                CompletionImpl.sendUndoableEdit(doc, CloneableEditorSupport.BEGIN_COMMIT_GROUP);
+                                MulticaretHandler mch = MulticaretHandler.create(c);
+                                try {
+                                    selectedItem.defaultAction(c);
+                                } finally {
+                                    mch.release();
+                                    CompletionImpl.sendUndoableEdit(doc, CloneableEditorSupport.END_COMMIT_GROUP);
                                 }
                             }
                         }

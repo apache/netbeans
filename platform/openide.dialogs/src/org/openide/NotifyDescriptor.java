@@ -28,6 +28,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,6 +43,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
@@ -182,10 +184,10 @@ public class NotifyDescriptor extends Object {
     private static final int MAXIMUM_TEXT_WIDTH = 100;
 
     /** preferred width of text area */
-    private static final int SIZE_PREFERRED_WIDTH = 300;
+    private static final int SIZE_PREFERRED_WIDTH = 350;
 
     /** preferred height of text area */
-    private static final int SIZE_PREFERRED_HEIGHT = 100;
+    private static final int SIZE_PREFERRED_HEIGHT = 150;
     private Object message;
 
     /** The message type. */
@@ -341,7 +343,6 @@ public class NotifyDescriptor extends Object {
         if (newMessage instanceof String) {
             // bugfix #25457, use JTextArea for word-wrapping
             JTextArea area = new JTextArea((String) newMessage);
-            area.setPreferredSize(new Dimension(SIZE_PREFERRED_WIDTH, SIZE_PREFERRED_HEIGHT));
             area.setBackground(UIManager.getColor("Label.background")); // NOI18N
             area.setBorder(BorderFactory.createEmptyBorder());
             area.setLineWrap(true);
@@ -350,7 +351,10 @@ public class NotifyDescriptor extends Object {
             area.setFocusable(true);
             area.getAccessibleContext().setAccessibleName(NbBundle.getMessage(NotifyDescriptor.class, "ACN_NotifyDescriptor_MessageJTextArea")); // NOI18N
             area.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(NotifyDescriptor.class, "ACD_NotifyDescriptor_MessageJTextArea")); // NOI18N
-            newMessage = area;
+            JScrollPane sp = new JScrollPane(area);
+            sp.setBorder(BorderFactory.createEmptyBorder());
+            sp.setPreferredSize(new Dimension(SIZE_PREFERRED_WIDTH, SIZE_PREFERRED_HEIGHT));
+            newMessage = sp;
         }
 
         message = newMessage;
@@ -1016,7 +1020,8 @@ public class NotifyDescriptor extends Object {
         public PasswordLine(String text, String title) {
             super(text, title);
         }
-        
+
+        @Override
         JTextField createTextField() {
             return new JPasswordField(25);
         }
@@ -1255,6 +1260,15 @@ public class NotifyDescriptor extends Object {
         }
 
         /**
+         * Get label text.
+         * @return label text
+         * @since 7.63
+         */
+        public String getLabel() {
+            return text;
+        }
+
+        /**
          * Get the list of selection items.
          * @return unmodifiable list of items
          * @since 7.60
@@ -1324,6 +1338,127 @@ public class NotifyDescriptor extends Object {
             public void setSelected(boolean selected) {
                 this.selected = selected;
             }
+        }
+    }
+
+    /** Notification providing a composed input of multiple chained selection lists and/or input lines.
+    * @since 7.63
+    */
+    public static final class ComposedInput extends NotifyDescriptor {
+
+        /** Name of property for the estimated number of chained inputs. */
+        public static final String PROP_ESTIMATED_NUMBER_OF_INPUTS = "estimatedNumberOfInputs"; // NOI18N
+
+        private final List<NotifyDescriptor> inputs = new ArrayList<>();
+        private final Callback callback;
+        private int estimatedNumberOfInputs;
+
+        /** Construct dialog with the specified title and chained inputs.
+        * @param title title of the dialog
+        * @param estimatedNumberOfInputs estimated number of chained inputs
+        * @param callback callback used to create chained inputs
+        * @since 7.63
+        */
+        public ComposedInput(final String title, final int estimatedNumberOfInputs, final Callback callback) {
+            super(null, title, OK_CANCEL_OPTION, PLAIN_MESSAGE, null, null);
+            this.callback = callback;
+            this.estimatedNumberOfInputs = estimatedNumberOfInputs;
+        }
+
+        /**
+         * Estimated number of chained inputs.
+         * @since 7.63
+         */
+        public int getEstimatedNumberOfInputs() {
+            return estimatedNumberOfInputs;
+        }
+
+        /**
+         * Set estimated number of chained inputs.
+         * @param estimatedNumberOfInputs estimated number of chained inputs
+         * @since 7.63
+         */
+        public void setEstimatedNumberOfInputs(int estimatedNumberOfInputs) {
+            int oldNumber = this.estimatedNumberOfInputs;
+            this.estimatedNumberOfInputs = estimatedNumberOfInputs;
+            firePropertyChange(PROP_ESTIMATED_NUMBER_OF_INPUTS, oldNumber, estimatedNumberOfInputs);
+        }
+
+        /**
+         * Lazy creates chained input of the given ordinal.
+         * @param number input number from interval &lt;1, totalInputs+1&gt;
+         * @return nested selection list, input line, or null
+         * @since 7.63
+         */
+        public NotifyDescriptor createInput(int number) {
+            NotifyDescriptor step = callback.createInput(this, number);
+            if (step != null) {
+                if (number - 1 < inputs.size()) {
+                    inputs.set(number - 1, step);
+                } else if (number - 1 == inputs.size()) {
+                    inputs.add(step);
+                } else {
+                    return null;
+                }
+                if (number >= estimatedNumberOfInputs) {
+                    estimatedNumberOfInputs = number;
+                }
+            }
+            return step;
+        }
+
+        /**
+         * Returns all created chained inputs.
+         * @since 7.63
+         */
+        public NotifyDescriptor[] getInputs() {
+            return inputs.toArray(new NotifyDescriptor[0]);
+        }
+
+        @Override
+        public Object getMessage() {
+            Object msg = super.getMessage();
+            if (msg != null) {
+                return msg;
+            }
+            JPanel panel = new JPanel();
+            panel.setOpaque (false);
+            panel.setLayout(new java.awt.GridBagLayout());
+
+            NotifyDescriptor input;
+            int i = 0;
+            java.awt.GridBagConstraints gridBagConstraints = null;
+            while ((input = createInput(++i)) != null) {
+                gridBagConstraints = new java.awt.GridBagConstraints();
+                gridBagConstraints.gridx = 0;
+                gridBagConstraints.gridy = i - 1;
+                gridBagConstraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
+                gridBagConstraints.gridheight = java.awt.GridBagConstraints.RELATIVE;
+                gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
+                panel.add((JPanel)input.getMessage(), gridBagConstraints);
+            }
+            if (gridBagConstraints != null) {
+                gridBagConstraints.weighty = 1.0;
+            }
+
+            this.setMessage(panel);
+            return panel;
+        }
+
+        /**
+         * Callback used to lazy create chained inputs.
+         * @since 7.63
+         */
+        public static interface Callback {
+
+            /**
+             * Lazy creates chained input of the given ordinal.
+             * @param input {@link ComposedInput} instance
+             * @param number input ordinal from interval &lt;1, totalInputs+1&gt;
+             * @return selection list, input line, or null
+             * @since 7.63
+             */
+            public NotifyDescriptor createInput(ComposedInput input, int number);
         }
     }
 }

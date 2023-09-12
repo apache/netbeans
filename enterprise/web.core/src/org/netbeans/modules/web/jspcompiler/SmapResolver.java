@@ -21,9 +21,11 @@ package org.netbeans.modules.web.jspcompiler;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
@@ -82,15 +84,15 @@ public class SmapResolver {
     
     /** contains hashmap of fileid's & filenames in the jsp
      */
-    private Hashtable fsection = new Hashtable(3);
+    private Map<String, String> fsection = new Hashtable<>(3);
     
     /** contains jsp -> servlet line mappings
      */
-    private Map jsp2java = new TreeMap();
+    private Map<String, String> jsp2java = new TreeMap<>();
     
     /** contains servlet -> jsp line mappings
      */
-    private Map java2jsp = new TreeMap();
+    private Map<String, String> java2jsp = new TreeMap<>();
 
     /** Creates a new instance of SmapResolver
      * @param reader reader provides readSmap() method which returns SMAP iformation as a String
@@ -288,7 +290,7 @@ public class SmapResolver {
      * @return filename
      */
     private String getFileNameByIndex(String index) {
-        return (String)fsection.get(index);
+        return fsection.get(index);
     }
     
     /** access index by the filename
@@ -296,11 +298,11 @@ public class SmapResolver {
      * @return index of the file in SMAP
      */
     private String getIndexByFileName(String fname) {
-        Set s = fsection.entrySet();
-        Iterator i = s.iterator();
+        Set<Entry<String, String>> s = fsection.entrySet();
+        Iterator<Entry<String, String>> i = s.iterator();
         while (i.hasNext()) {
-            Map.Entry mentry = (Map.Entry)i.next();
-            String value = (String)mentry.getValue();
+            Map.Entry<String, String> mentry = i.next();
+            String value = mentry.getValue();
             if (value.equalsIgnoreCase(fname)) {
                 return mentry.getKey().toString();
             }
@@ -318,10 +320,10 @@ public class SmapResolver {
     /** 
      * get all the filenames in the SMAP
      */
-    public Map getFileNames() {
-        Hashtable h = new Hashtable(fsection.size());
-        Collection c = fsection.values();
-        Iterator i = c.iterator();
+    public Map<Integer, String> getFileNames() {
+        Map<Integer, String> h = new Hashtable<>(fsection.size());
+        Collection<String> c = fsection.values();
+        Iterator<String> i = c.iterator();
         int counter = 0;
         while (i.hasNext()) {
             h.put(counter++, i.next());
@@ -333,10 +335,9 @@ public class SmapResolver {
      * get primary jsp filename
      */
     public String getPrimaryJspFileName() {
-        TreeMap tm = new TreeMap(fsection);
-        Object o = tm.firstKey();
-        String s = (String)fsection.get(o);
-        return s;
+        TreeMap<String, String> tm = new TreeMap<>(fsection);
+        String firstKey = tm.firstKey();
+        return fsection.get(firstKey);
     }
 
     /** if there are included files in the jsp or not 
@@ -360,7 +361,7 @@ public class SmapResolver {
      */
     public String getJspFileName(int line, int col) throws IOException {
         String key = Integer.toString(line);
-        String value = (String)java2jsp.get(key);
+        String value = java2jsp.get(key);
         if (value == null) return null;
         String index = value.substring(value.indexOf(FID_DELIM)+1);
         return getFileNameByIndex(index);
@@ -370,14 +371,14 @@ public class SmapResolver {
         String fileIndex = getIndexByFileName(jspFileName);
         if (fileIndex == null) return -1;
         String key = "".concat(Integer.toString(line)).concat("#").concat(fileIndex);
-        String value = (String)jsp2java.get(key);
+        String value = jsp2java.get(key);
         if (value == null) return -1;
         return Integer.parseInt(value);
     }
 
     public int unmangle(int line, int col) {
         String key = Integer.toString(line);
-        String value = (String)java2jsp.get(key);
+        String value = java2jsp.get(key);
         if (value == null) return -1;
         int jspline = Integer.parseInt(value.substring(0, value.indexOf("#")));
         return jspline;

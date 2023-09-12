@@ -326,7 +326,7 @@ public class YamlCompletion implements CodeCompletionHandler {
 
         @Override
         public String getMimeType() {
-            return YamlTokenId.YAML_MIME_TYPE;
+            return YamlLanguage.MIME_TYPE;
         }
 
         @Override

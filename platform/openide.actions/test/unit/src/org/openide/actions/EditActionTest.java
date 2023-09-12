@@ -100,7 +100,7 @@ public class EditActionTest extends NbTestCase {
      * Test getHelpCtx method. 
      */ 
     public void testGetHelpCtx() { 
-        HelpCtx expected = new HelpCtx(EditAction.class);; 
+        HelpCtx expected = new HelpCtx(EditAction.class);
         HelpCtx result   = instance.getHelpCtx(); 
          
         assertEquals(expected, result); 

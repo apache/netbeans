@@ -157,6 +157,7 @@ public class BaseDocumentEvent extends AbstractDocument.DefaultDocumentEvent {
     * modification event itself.
      * @deprecated
     */
+    @Deprecated
     public char[] getChars() {
         String text = getText();
         return (text != null) ? text.toCharArray() : null;
@@ -173,6 +174,7 @@ public class BaseDocumentEvent extends AbstractDocument.DefaultDocumentEvent {
      * Get the line at which the insert/remove occured.
      * @deprecated
      */
+    @Deprecated
     public int getLine() {
         Element lineRoot = ((BaseDocument)getDocument()).getParagraphElement(0).getParentElement();
         int lineIndex = lineRoot.getElementIndex(getOffset());

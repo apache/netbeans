@@ -151,11 +151,11 @@ public class JPAClassPathHelper {
             return null;
         }
         List<URL> urls = library.getContent("classpath"); // NOI18N
-        return ClassPathSupport.createClassPath(urls.toArray(new URL[urls.size()]));
+        return ClassPathSupport.createClassPath(urls.toArray(new URL[0]));
     }
     
     
     private ClassPath createProxyClassPath(Set<ClassPath> classPaths) {
-        return classPaths.isEmpty() ? ClassPath.EMPTY : ClassPathSupport.createProxyClassPath(classPaths.toArray(new ClassPath[classPaths.size()]));
+        return classPaths.isEmpty() ? ClassPath.EMPTY : ClassPathSupport.createProxyClassPath(classPaths.toArray(new ClassPath[0]));
     }
 }

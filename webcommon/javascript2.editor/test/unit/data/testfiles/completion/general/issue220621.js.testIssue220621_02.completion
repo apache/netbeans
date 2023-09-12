@@ -1,17 +1,3 @@
 Code completion result for source line:
 script.m|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-METHOD     mozMatchesSelector(): undefine  [PUBLIC,   JS Platform
-METHOD     mozRequestFullScreen(): undefi  [PUBLIC,   JS Platform
-ATTRIBUTE  manifest                                   <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  max                                        <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  maxlength                                  <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  media                                      <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  mediagroup                                 <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  menu                                       <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  method                                     <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  min                                        <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  minlength                                  <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  multiple                                   <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  muted                                      <font color=#999999>HTML Attribute</font>

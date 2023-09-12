@@ -36,8 +36,6 @@ import org.netbeans.modules.gradle.actions.ActionToTaskUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.GradleBaseProjectTrampoline;
 import org.netbeans.modules.gradle.api.execute.ActionMapping;
-import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
-import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
@@ -219,7 +217,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
      */
     public void xtestExamplePassJVmAndArguments() throws Exception {
         Project project = createSimpleJavaProject();
-        // BEGIN: JavaExecTokenProviderTest#testExamplePassJvmAndArguments
+        // @start region="testExamplePassJvmAndArguments"
         ExplicitProcessParameters params = ExplicitProcessParameters.builder().
                 args("Frodo").
                 launcherArg("-verbose").
@@ -235,7 +233,7 @@ public class JavaExecTokenProviderTest extends NbTestCase {
         actions.invokeAction(ActionProvider.COMMAND_RUN, Lookups.fixed(
                 params, params2
         ));
-        // END: JavaExecTokenProviderTest#testExamplePassJvmAndArguments
+        // @end region="testExamplePassJvmAndArguments"
     }
     
     public void testExamplePassJVmAndArguments() throws Exception {

@@ -26,16 +26,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.Action;
 
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.java.openjdk.common.BuildUtils;
+import org.netbeans.modules.java.openjdk.common.BuildUtils.ExtraMakeTargets;
 import org.netbeans.modules.java.openjdk.common.ShortcutUtils;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.SingleMethod;
 import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
@@ -149,6 +152,8 @@ public class ActionProviderImpl implements ActionProvider {
                     filteredActions.retainAll(Arrays.asList(actions));
                     filteredActions.add(COMMAND_BUILD_GENERIC_FAST);
                     filteredActions.add(COMMAND_PROFILE_TEST_SINGLE);
+                    filteredActions.add(SingleMethod.COMMAND_RUN_SINGLE_METHOD);
+                    filteredActions.add(SingleMethod.COMMAND_DEBUG_SINGLE_METHOD);
                     supported = filteredActions.toArray(new String[0]);
                     break;
                 }
@@ -176,6 +181,15 @@ public class ActionProviderImpl implements ActionProvider {
                 }
             }
         }
+        if (SingleMethod.COMMAND_RUN_SINGLE_METHOD.equals(command) ||
+            SingleMethod.COMMAND_DEBUG_SINGLE_METHOD.equals(command)) {
+            for (ActionProvider ap : Lookup.getDefault().lookupAll(ActionProvider.class)) {
+                if (new HashSet<>(Arrays.asList(ap.getSupportedActions())).contains(command) && ap.isActionEnabled(command, context)) {
+                    ap.invokeAction(command, context);
+                    return ;
+                }
+            }
+        }
         FileObject scriptFO = script;
         Settings settings = project.getLookup().lookup(Settings.class);
         Properties props = new Properties();
@@ -199,12 +213,17 @@ public class ActionProviderImpl implements ActionProvider {
             scriptFO = genericScript;
             command = COMMAND_BUILD_FAST; //XXX: should only do this if genericScript supports it
         }
+        String extraTargets = context.lookupAll(ExtraMakeTargets.class)
+                                     .stream()
+                                     .flatMap(emt -> Arrays.stream(emt.getExtraMakeTargets()))
+                                     .collect(Collectors.joining(" "));
         FileObject basedirFO = project.currentModule != null ? scriptFO == genericScript ? project.moduleRepository.getJDKRoot()
                                                                                          : repository
                                                              : repository.getParent();
         props.put("basedir", FileUtil.toFile(basedirFO).getAbsolutePath());
         props.put("CONF", project.configurations.getActiveConfiguration().getLocation().getName());
         props.put("nb.jdk.project.target.java.home", BuildUtils.findTargetJavaHome(project.getProjectDirectory()).getAbsolutePath());
+        props.put("nb.extra.make.targets", extraTargets);
         RootKind kind = getKind(context);
         RunSingleConfig singleFileProperty = command2Properties.get(Pair.of(command, kind));
         if (singleFileProperty != null) {

@@ -377,13 +377,10 @@ public class PropertyValueTest extends CssTestBase {
         PropertyDefinition p = Properties.getPropertyDefinition( "font-family");
         ResolvedProperty pv = new ResolvedProperty(p, "fantasy, monospace");
         
-//        System.out.println(p.getGrammarElement(null).toString2(0));
-        
         Node root = pv.getParseTree();
         dumpTree(root);
         
         assertNotNull(root);
-//        assertNull(root.parent()); //root node has no parent
         assertEquals("font-family", root.name());
         
         Collection<Node> ch = root.children();
@@ -394,7 +391,6 @@ public class PropertyValueTest extends CssTestBase {
         assertNotNull(ch1);
         assertTrue(ch1 instanceof Node.GroupNodeImpl);
         assertEquals("@generic-family", ch1.name());
-//        assertEquals(root, ch1.parent());
         
         ch = ch1.children();
         assertEquals(1, ch.size());
@@ -404,7 +400,6 @@ public class PropertyValueTest extends CssTestBase {
         assertNotNull(ch2);
         assertTrue(ch2 instanceof Node.ResolvedTokenNode);
         assertEquals("fantasy(IDENT;0-7)", ch2.toString());
-//        assertEquals(ch1, ch2.parent());
         
     }
 

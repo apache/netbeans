@@ -35,7 +35,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 
 /**
  *
@@ -227,7 +226,7 @@ public class CCPaintComponent extends JPanel {
     protected int getWidth(String s) {
         Integer i = widths.get(s);
         if (i != null) {
-            return i.intValue();
+            return i;
         } else {
             if (s == null) {
                 s = "";

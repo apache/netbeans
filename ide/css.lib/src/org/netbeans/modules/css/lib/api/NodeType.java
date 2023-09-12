@@ -482,5 +482,13 @@ public enum NodeType {
     , sass_forward_with_declaration
     , sass_forward_hide
     , sass_forward_show
+    // definitions to handle variable syntax
+    , preservedToken
+    , preservedTokenTopLevel
+    , braceBlock
+    , bracketBlock
+    , parenBlock
+    , componentValue
+    , componentValueOuter
     ;
 }

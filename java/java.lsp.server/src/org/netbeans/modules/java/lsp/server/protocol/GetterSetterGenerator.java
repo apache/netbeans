@@ -54,6 +54,8 @@ import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -140,14 +142,15 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
             int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
             boolean all = ((JsonObject) data).getAsJsonPrimitive(ALL).getAsBoolean();
             List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject) data).get(FIELDS), QuickPickItem[].class));
+            String title;
             String text;
             switch (kind) {
-                case GeneratorUtils.GETTERS_ONLY: text = Bundle.DN_SelectGetters(); break;
-                case GeneratorUtils.SETTERS_ONLY: text = Bundle.DN_SelectSetters(); break;
-                default: text = Bundle.DN_SelectGettersSetters(); break;
+                case GeneratorUtils.GETTERS_ONLY: title = Bundle.DN_GenerateGetters(); text = Bundle.DN_SelectGetters(); break;
+                case GeneratorUtils.SETTERS_ONLY: title = Bundle.DN_GenerateSetters(); text = Bundle.DN_SelectSetters(); break;
+                default: title = Bundle.DN_GenerateGettersSetters(); text = Bundle.DN_SelectGettersSetters(); break;
             }
             if (all && fields.size() > 1) {
-                client.showQuickPick(new ShowQuickPickParams(text, true, fields)).thenAccept(selected -> {
+                client.showQuickPick(new ShowQuickPickParams(title, text, true, fields)).thenAccept(selected -> {
                     try {
                         if (selected != null && !selected.isEmpty()) {
                             WorkspaceEdit edit = generate(kind, uri, offset, selected);

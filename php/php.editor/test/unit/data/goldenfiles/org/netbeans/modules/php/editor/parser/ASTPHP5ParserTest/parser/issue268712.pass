@@ -93,11 +93,8 @@
         <token id='T_EQUAL' start='124' end='125'>
             <text>=</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='126' end='127'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='127' end='132'>
-            <text>TEST1</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='126' end='132'>
+            <text>\TEST1</text>
         </token>
         <token id='T_OPEN_RECT' start='132' end='133'>
             <text>[</text>
@@ -117,14 +114,8 @@
         <token id='T_NAMESPACE' start='141' end='150'>
             <text>namespace</text>
         </token>
-        <token id='T_STRING' start='151' end='164'>
-            <text>Issue268712_B</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='164' end='165'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='165' end='168'>
-            <text>Sub</text>
+        <token id='T_NAME_QUALIFIED' start='151' end='168'>
+            <text>Issue268712_B\Sub</text>
         </token>
         <token id='T_CURLY_OPEN' start='169' end='170'>
             <text>{</text>
@@ -201,17 +192,8 @@
         <token id='T_EQUAL' start='270' end='271'>
             <text>=</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='272' end='273'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='273' end='286'>
-            <text>Issue268712_A</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='286' end='287'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='287' end='292'>
-            <text>TEST3</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='272' end='292'>
+            <text>\Issue268712_A\TEST3</text>
         </token>
         <token id='T_SEMICOLON' start='292' end='293'>
             <text>;</text>
@@ -225,17 +207,8 @@
         <token id='T_EQUAL' start='310' end='311'>
             <text>=</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='312' end='313'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='313' end='326'>
-            <text>Issue268712_A</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='326' end='327'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='327' end='332'>
-            <text>TEST2</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='312' end='332'>
+            <text>\Issue268712_A\TEST2</text>
         </token>
         <token id='T_OPEN_RECT' start='332' end='333'>
             <text>[</text>
@@ -327,11 +300,8 @@
         <token id='T_EQUAL' start='425' end='426'>
             <text>=</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='427' end='428'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='428' end='433'>
-            <text>TEST1</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='427' end='433'>
+            <text>\TEST1</text>
         </token>
         <token id='T_OPEN_RECT' start='433' end='434'>
             <text>[</text>
@@ -351,17 +321,8 @@
         <token id='T_EQUAL' start='454' end='455'>
             <text>=</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='456' end='457'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='457' end='470'>
-            <text>Issue268712_A</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='470' end='471'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='471' end='476'>
-            <text>TEST2</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='456' end='476'>
+            <text>\Issue268712_A\TEST2</text>
         </token>
         <token id='T_OPEN_RECT' start='476' end='477'>
             <text>[</text>
@@ -438,17 +399,8 @@
         <token id='T_ECHO' start='595' end='599'>
             <text>echo</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='600' end='601'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='601' end='614'>
-            <text>Issue268712_B</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='614' end='615'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='615' end='620'>
-            <text>TEST6</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='600' end='620'>
+            <text>\Issue268712_B\TEST6</text>
         </token>
         <token id='T_OPEN_RECT' start='620' end='621'>
             <text>[</text>
@@ -471,17 +423,8 @@
         <token id='T_ECHO' start='644' end='648'>
             <text>echo</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='649' end='650'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='650' end='663'>
-            <text>Issue268712_B</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='663' end='664'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='664' end='669'>
-            <text>TEST6</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='649' end='669'>
+            <text>\Issue268712_B\TEST6</text>
         </token>
         <token id='T_OPEN_RECT' start='669' end='670'>
             <text>[</text>
@@ -513,14 +456,8 @@
         <token id='T_ECHO' start='697' end='701'>
             <text>echo</text>
         </token>
-        <token id='T_STRING' start='702' end='705'>
-            <text>Sub</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='705' end='706'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='706' end='709'>
-            <text>SUB</text>
+        <token id='T_NAME_QUALIFIED' start='702' end='709'>
+            <text>Sub\SUB</text>
         </token>
         <token id='T_OPEN_RECT' start='709' end='710'>
             <text>[</text>
@@ -543,14 +480,8 @@
         <token id='T_ECHO' start='732' end='736'>
             <text>echo</text>
         </token>
-        <token id='T_STRING' start='737' end='740'>
-            <text>Sub</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='740' end='741'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='741' end='744'>
-            <text>SUB</text>
+        <token id='T_NAME_QUALIFIED' start='737' end='744'>
+            <text>Sub\SUB</text>
         </token>
         <token id='T_OPEN_RECT' start='744' end='745'>
             <text>[</text>
@@ -582,14 +513,8 @@
         <token id='T_ECHO' start='772' end='776'>
             <text>echo</text>
         </token>
-        <token id='T_NAMESPACE' start='777' end='786'>
-            <text>namespace</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='786' end='787'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='787' end='792'>
-            <text>TEST6</text>
+        <token id='T_NAME_RELATIVE' start='777' end='792'>
+            <text>namespace\TEST6</text>
         </token>
         <token id='T_OPEN_RECT' start='792' end='793'>
             <text>[</text>
@@ -612,14 +537,8 @@
         <token id='T_ECHO' start='816' end='820'>
             <text>echo</text>
         </token>
-        <token id='T_NAMESPACE' start='821' end='830'>
-            <text>namespace</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='830' end='831'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='831' end='836'>
-            <text>TEST6</text>
+        <token id='T_NAME_RELATIVE' start='821' end='836'>
+            <text>namespace\TEST6</text>
         </token>
         <token id='T_OPEN_RECT' start='836' end='837'>
             <text>[</text>

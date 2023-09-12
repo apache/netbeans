@@ -635,7 +635,7 @@ public abstract class PageInfo {
     
     // added in NetBeans
     
-    public Map getTagLibraries() {
+    public Map<String, TagLibraryInfo> getTagLibraries() {
         return taglibsMap;
     }
     
@@ -716,7 +716,7 @@ public abstract class PageInfo {
         sb.append(indent).append("doctypeSystem       : ").append(doctypeSystem).append('\n');  // NOI18N
         sb.append(indent).append("doctypePublic       : ").append(doctypePublic).append('\n');  // NOI18N
         sb.append(indent).append("hasJspRoot          : ").append(hasJspRoot).append('\n');  // NOI18N
-        sb.append(indent).append("prefixes:\n").append(collectionToString(new TreeSet(prefixes), indent + "  "));  // NOI18N
+        sb.append(indent).append("prefixes:\n").append(collectionToString(new TreeSet<>(prefixes), indent + "  "));  // NOI18N
         sb.append(indent).append("includePrelude:\n").append(collectionToString(includePrelude, indent + "  "));  // NOI18N
         sb.append(indent).append("includeCoda:\n").append(collectionToString(includeCoda, indent + "  "));  // NOI18N
         sb.append(indent).append("pluginDcls:\n").append(collectionToString(pluginDcls, indent + "  "));  // NOI18N
@@ -736,11 +736,11 @@ public abstract class PageInfo {
         return sb.toString();
     }
     
-    private String taglibsMapToString(Map m, String indent) {
+    private String taglibsMapToString(Map<String, TagLibraryInfo> m, String indent) {
         StringBuilder sb = new StringBuilder();
-        Iterator it = new TreeSet(m.keySet()).iterator();
+        Iterator<String> it = new TreeSet<>(m.keySet()).iterator();
         while (it.hasNext()) {
-            Object key = it.next();
+            String key = it.next();
             sb.append(indent).append("tag library: ").append(key).append('\n');  // NOI18N
             sb.append(tagLibraryInfoToString((TagLibraryInfo)m.get(key), indent + "    "));  // NOI18N
         }
@@ -866,11 +866,11 @@ public abstract class PageInfo {
     } // interface BeanData
 
     // helper methods for help implement toString() 
-    private static String mapToString(Map m, String indent) {
+    private static String mapToString(Map<String, String> m, String indent) {
         StringBuilder sb = new StringBuilder();
-        Iterator it = new TreeSet(m.keySet()).iterator();
+        Iterator<String> it = new TreeSet<>(m.keySet()).iterator();
         while (it.hasNext()) {
-            Object key = it.next();
+            String key = it.next();
             sb.append(indent).append(key).append(" -> ").append(m.get(key)).append('\n');
         }
         return sb.toString();

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE codetemplates PUBLIC "-//NetBeans//DTD Editor Code Templates settings 1.0//EN" "https://netbeans.apache.org/dtds/EditorCodeTemplates-1_0.dtd">
+<codetemplates>
+    <codetemplate abbreviation="ch" xml:space="preserve">
+        <code>-> channel (${cursor})</code>
+    </codetemplate>
+    <codetemplate abbreviation="fr" xml:space="preserve">
+        <code>fragment </code>
+    </codetemplate>
+    <codetemplate abbreviation="gr" xml:space="preserve">
+        <code>grammar </code>
+    </codetemplate>
+    <codetemplate abbreviation="lx" xml:space="preserve">
+        <code>lexer </code>
+    </codetemplate>
+    <codetemplate abbreviation="md" xml:space="preserve">
+        <code>mode </code>
+    </codetemplate>
+    <codetemplate abbreviation="pa" xml:space="preserve">
+        <code>parser </code>
+    </codetemplate>
+    <codetemplate abbreviation="pom" xml:space="preserve">
+        <code>-> popMode</code>
+    </codetemplate>
+    <codetemplate abbreviation="pum" xml:space="preserve">
+        <code>-> pushMode (${cursor})</code>
+    </codetemplate>
+    <codetemplate abbreviation="sk" xml:space="preserve">
+        <code>-> skip</code>
+    </codetemplate>
+    <codetemplate abbreviation="tp" xml:space="preserve">
+        <code>-> type (${cursor})</code>
+    </codetemplate>
+</codetemplates>
+

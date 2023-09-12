@@ -45,12 +45,9 @@ public class JsCamelCaseInterceptor implements CamelCaseInterceptor {
         final Document doc = context.getDocument();
         final int offset = context.getOffset();
         final boolean reverse = context.isBackward();
-        doc.render(new Runnable() {
-            @Override
-            public void run() {
-                int nextOffset = getWordOffset(doc, offset, reverse);
-                context.setNextWordOffset(nextOffset);
-            }
+        doc.render(() -> {
+            int nextOffset = getWordOffset(doc, offset, reverse);
+            context.setNextWordOffset(nextOffset);
         });
     }
 

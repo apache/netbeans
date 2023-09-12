@@ -52,7 +52,11 @@ class OutWriter extends PrintWriter {
 
     private boolean disposeOnClose = false;
 
-    private static final boolean USE_HEAP_STORAGE = Boolean.getBoolean("nb.output.heap");
+    //IZ 44375 - Memory mapping fails with bad file handle on win 98
+    private static final boolean USE_HEAP_STORAGE =
+        Boolean.getBoolean("nb.output.heap") || Utilities.getOperatingSystem() == //NOI18N
+        Utilities.OS_WIN98 || 
+        Utilities.getOperatingSystem() == Utilities.OS_WIN95;
 
     /**
      * Byte array used to write the line separator after line writes.
@@ -454,7 +458,7 @@ class OutWriter extends PrintWriter {
                 } else if (c == '\b') {
                     int skip = handleBackspace(charBuff);
                     if (skip == -2) {
-                        lineCLVT -= lines.removeLastTab();;
+                        lineCLVT -= lines.removeLastTab();
                     } else if (skip == 2) {
                         lineCLVT--;
                     } else if (skip == 1) {

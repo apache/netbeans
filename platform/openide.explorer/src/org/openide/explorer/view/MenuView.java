@@ -48,7 +48,7 @@ import javax.swing.event.*;
 * explored context.
  *
  * <p>
- * This class is a <q>view</q>
+ * This class is a <em>view</em>
  * to use it properly you need to add it into a component which implements
  * {@link Provider}. Good examples of that can be found 
  * in {@link ExplorerUtils}. Then just use 
@@ -56,7 +56,7 @@ import javax.swing.event.*;
  * and control its state.
  * </p>
  * <p>
- * There can be multiple <q>views</q> under one container implementing {@link Provider}. Select from
+ * There can be multiple <em>views</em> under one container implementing {@link Provider}. Select from
  * range of predefined ones or write your own:
  * </p>
  * <ul>
@@ -150,6 +150,7 @@ public class MenuView extends JPanel {
 
     /* Initializes view.
     */
+    @Override
     public void addNotify() {
         super.addNotify();
         explorerManager = ExplorerManager.find(this);
@@ -159,6 +160,7 @@ public class MenuView extends JPanel {
 
     /* Deinitializes view.
     */
+    @Override
     public void removeNotify() {
         super.removeNotify();
         explorerManager.removePropertyChangeListener(listener);
@@ -196,6 +198,7 @@ public class MenuView extends JPanel {
             this.root = root;
         }
 
+        @Override
         public void mousePressed(MouseEvent e) {
             if (e.getComponent().isEnabled()) {
                 // open the popup menu
@@ -303,13 +306,13 @@ public class MenuView extends JPanel {
             this(node, action, true);
         }
 
-        /** @deprecated use {@link MenuView.Menu#MenuView.Menu(Node, NodeAcceptor)}
+        /** @deprecated use {@link #Menu(Node, NodeAcceptor)}
          */
         public @Deprecated Menu(Node node, Acceptor action) {
             this(node, new AcceptorProxy(action), true);
         }
 
-        /** @deprecated use {@link MenuView.Menu#MenuView.Menu(Node, NodeAcceptor, boolean)}
+        /** @deprecated use {@link #Menu(Node, NodeAcceptor, boolean)}
          */
         public @Deprecated Menu(Node node, Acceptor action, boolean setName) {
             this(node, new AcceptorProxy(action), setName);
@@ -512,6 +515,7 @@ public class MenuView extends JPanel {
         /** Inform the acceptor.
          * @param time see superclass
          */
+        @Override
         public void doClick(int time) {
             action.acceptNodes(new Node[] { node });
         }

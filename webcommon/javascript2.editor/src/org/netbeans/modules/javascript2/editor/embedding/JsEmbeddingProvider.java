@@ -69,7 +69,9 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
                 return Collections.singletonList(Embedding.create(embeddings));
             }
         } else {
-            LOG.warning("Unexpected snapshot type: '" + snapshot.getMimeType() + "'; expecting '" + sourceMimeType + "'"); //NOI18N
+            LOG.log(Level.WARNING,
+                    "Unexpected snapshot type: ''{0}''; expecting ''{1}''",  //NOI18N
+                    new Object[]{snapshot.getMimeType(), sourceMimeType});
             return Collections.<Embedding>emptyList();
         }
     }
@@ -137,7 +139,7 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
     private static final String LATTE_MIME_TYPE = "text/x-latte"; // NOI18N
     private static final String JSX_MIME_TYPE = "text/x-jsx"; //NOI18N
     //private static final String GSP_TAG_MIME_TYPE = "application/x-gsp"; // NOI18N
-    private static final Map<String, Translator> translators = new HashMap<String, Translator>();
+    private static final Map<String, Translator> translators = new HashMap<>();
 
     static {
 //        translators.put(JSP_MIME_TYPE, new JspTranslator());
@@ -167,9 +169,8 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
     }
 
     protected interface Translator {
-
         public List<Embedding> translate(Snapshot snapshot);
-    } // End of Translator interface
+    }
 
     private static final class JspTranslator implements Translator {
 
@@ -179,6 +180,7 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
          * @param tokenHierarchy The token hierarchy for the RHTML code
          * @param tokenSequence  The token sequence for the RHTML code
          */
+        @Override
         public List<Embedding> translate(Snapshot snapshot) {
             TokenHierarchy<?> th = snapshot.getTokenHierarchy();
             if (th == null) {
@@ -188,7 +190,7 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
             }
 
             TokenSequence<? extends TokenId> tokenSequence = th.tokenSequence();
-            List<Embedding> embeddings = new ArrayList<Embedding>();
+            List<Embedding> embeddings = new ArrayList<>();
 
             //TODO - implement the "classpath" import for other projects
             //how is the javascript classpath done????????/
@@ -244,7 +246,7 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
             }
 
             TokenSequence<? extends TokenId> tokenSequence = th.tokenSequence();
-            List<Embedding> embeddings = new ArrayList<Embedding>();
+            List<Embedding> embeddings = new ArrayList<>();
 
             JsAnalyzerState state = new JsAnalyzerState();
 
@@ -271,16 +273,19 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
 
     private static final class PhpTranslator implements Translator {
 
+        @Override
         public List<Embedding> translate(Snapshot snapshot) {
             TokenHierarchy<?> th = snapshot.getTokenHierarchy();
             if (th == null) {
                 //likely the php language couldn't be found
-                LOG.info("Cannot get TokenHierarchy from snapshot " + snapshot); //NOI18N
+                LOG.log(Level.INFO,
+                        "Cannot get TokenHierarchy from snapshot {0}",  //NOI18N
+                        snapshot);
                 return Collections.emptyList();
             }
 
             TokenSequence<? extends TokenId> tokenSequence = th.tokenSequence();
-            List<Embedding> embeddings = new ArrayList<Embedding>();
+            List<Embedding> embeddings = new ArrayList<>();
 
             //TODO - implement the "classpath" import for other projects
             //how is the javascript classpath done????????/
@@ -330,12 +335,14 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
             TokenHierarchy<?> th = snapshot.getTokenHierarchy();
             if (th == null) {
                 //likely the tpl language couldn't be found
-                LOG.info("Cannot get TokenHierarchy from snapshot " + snapshot); //NOI18N
+                LOG.log(Level.INFO,
+                        "Cannot get TokenHierarchy from snapshot {0}", //NOI18N
+                        snapshot);
                 return Collections.emptyList();
             }
 
             TokenSequence<? extends TokenId> tokenSequence = th.tokenSequence();
-            List<Embedding> embeddings = new ArrayList<Embedding>();
+            List<Embedding> embeddings = new ArrayList<>();
 
             //TODO - implement the "classpath" import for other projects
             //how is the javascript classpath done????????/
@@ -402,12 +409,14 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
             TokenHierarchy<?> th = snapshot.getTokenHierarchy();
             if (th == null) {
                 //likely the twig language couldn't be found
-                LOG.info("Cannot get TokenHierarchy from snapshot " + snapshot); //NOI18N
+                LOG.log(Level.INFO,
+                        "Cannot get TokenHierarchy from snapshot {0}", //NOI18N
+                        snapshot);
                 return Collections.emptyList();
             }
 
             TokenSequence<? extends TokenId> tokenSequence = th.tokenSequence();
-            List<Embedding> embeddings = new ArrayList<Embedding>();
+            List<Embedding> embeddings = new ArrayList<>();
 
             JsAnalyzerState state = new JsAnalyzerState();
             while (tokenSequence.moveNext()) {
@@ -449,12 +458,14 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
             TokenHierarchy<?> th = snapshot.getTokenHierarchy();
             if (th == null) {
                 //likely the latte language couldn't be found
-                LOG.info("Cannot get TokenHierarchy from snapshot " + snapshot); //NOI18N
+                LOG.log(Level.INFO,
+                        "Cannot get TokenHierarchy from snapshot {0}", //NOI18N
+                        snapshot);
                 return Collections.emptyList();
             }
 
             TokenSequence<? extends TokenId> tokenSequence = th.tokenSequence();
-            List<Embedding> embeddings = new ArrayList<Embedding>();
+            List<Embedding> embeddings = new ArrayList<>();
 
             JsAnalyzerState state = new JsAnalyzerState();
             while (tokenSequence.moveNext()) {
@@ -491,12 +502,15 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
 
     private static final class RhtmlTranslator implements Translator {
 
+        @Override
         public List<Embedding> translate(Snapshot snapshot) {
-            List<Embedding> embeddings = new ArrayList<Embedding>();
+            List<Embedding> embeddings = new ArrayList<>();
             TokenHierarchy<?> th = snapshot.getTokenHierarchy();
             if (th == null) {
                 //likely a rhtml language couldn't be found
-                LOG.info("Cannot get TokenHierarchy from snapshot " + snapshot); //NOI18N
+                LOG.log(Level.INFO,
+                        "Cannot get TokenHierarchy from snapshot {0}", //NOI18N
+                        snapshot);
                 return embeddings;
             }
             TokenSequence<? extends TokenId> tokenSequence = th.tokenSequence();
@@ -674,12 +688,13 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
 
         }
     }
-    
+
     private static final class HtmlTranslator implements Translator {
 
+        @Override
         public List<Embedding> translate(Snapshot snapshot) {
             TokenSequence<? extends TokenId> tokenSequence = snapshot.getTokenHierarchy().tokenSequence();
-            List<Embedding> embeddings = new ArrayList<Embedding>();
+            List<Embedding> embeddings = new ArrayList<>();
             JsAnalyzerState state = new JsAnalyzerState();
             @SuppressWarnings("unchecked")
             TokenSequence<? extends HTMLTokenId> htmlTokenSequence = (TokenSequence<? extends HTMLTokenId>) tokenSequence;
@@ -770,7 +785,7 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
                         }
                     }
                     if (src != null) {
-                        if (type == null || type.toLowerCase().indexOf("javascript") != -1) {
+                        if (type == null || type.toLowerCase().contains("javascript")) {
                             if (src.length() > 2 && src.startsWith("\"") && src.endsWith("\"")) {
                                 src = src.substring(1, src.length() - 1);
                             }
@@ -901,7 +916,7 @@ public final class JsEmbeddingProvider extends EmbeddingProvider {
     }
 
     protected static List<EmbeddingPosition> extractJsEmbeddings(String text, int sourceStart) {
-        List<EmbeddingPosition> embeddings = new LinkedList<EmbeddingPosition>();
+        List<EmbeddingPosition> embeddings = new LinkedList<>();
         // beggining comment around the script
         int start = 0;
         for (; start < text.length(); start++) {

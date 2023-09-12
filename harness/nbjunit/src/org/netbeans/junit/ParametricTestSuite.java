@@ -36,6 +36,7 @@ public abstract class ParametricTestSuite extends MultiTestSuite{
     
     /**
      * Constructs a ParametricTestSuite with the given name.
+     * @param name name of the suite
      */
     public ParametricTestSuite(String name){
         super(name);
@@ -43,16 +44,20 @@ public abstract class ParametricTestSuite extends MultiTestSuite{
     
     /**
      * Returns an array of testcases for the given parameter.
+     * @param parameter parametre to retrieve the test case frome
+     * @return array of testcases
      */
     protected abstract ParametricTestCase[] cases(Object parameter);
     /**
      * Returns an array of parameters for this suite.
+     * @return array of parameters
      */
     protected abstract Object[] getParameters();
     
     /**
      * Factory method returns a new instance of a testcases.
      * Overrides the basic method so that it's needless any more.
+     * @return test case
      */
     protected final MultiTestCase nextTestCase(){
         return null;

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.26
+#Version 1.32
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -379,6 +379,12 @@ CLSS public abstract interface java.io.Serializable
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
 
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
+
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
 intf java.io.Serializable
@@ -408,6 +414,32 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract interface javax.accessibility.Accessible
 meth public abstract javax.accessibility.AccessibleContext getAccessibleContext()
@@ -721,6 +753,7 @@ supr java.lang.Object
 hfds desc,icon,name,type
 
 CLSS public abstract interface org.netbeans.modules.j2ee.deployment.plugins.spi.RegistryNodeFactory
+ anno 0 java.lang.Deprecated()
 meth public abstract org.openide.nodes.Node getManagerNode(org.openide.util.Lookup)
 meth public abstract org.openide.nodes.Node getTargetNode(org.openide.util.Lookup)
 
@@ -799,7 +832,10 @@ fld public final static java.lang.String PROP_TITLE = "title"
 fld public final static java.lang.String PROP_VALID = "valid"
 fld public final static java.lang.String PROP_VALUE = "value"
 fld public final static java.lang.String PROP_WARNING_NOTIFICATION = "warningNotification"
+innr public final static ComposedInput
 innr public final static Exception
+innr public final static PasswordLine
+innr public final static QuickPick
 innr public static Confirmation
 innr public static InputLine
 innr public static Message

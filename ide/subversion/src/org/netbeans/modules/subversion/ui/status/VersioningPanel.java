@@ -281,7 +281,7 @@ class VersioningPanel extends JPanel implements ExplorerManager.Provider, Prefer
                                 return;
                             }
                             String sticky = nodes[i].getCopy(); // copy must be initialized on all nodes
-                            if (stickyCommon && sticky != currentSticky && (sticky == null || currentSticky == null || !sticky.equals(currentSticky))) {
+                            if (stickyCommon && !Objects.equals(sticky, currentSticky)) {
                                 stickyCommon = false;
                             }
                         }

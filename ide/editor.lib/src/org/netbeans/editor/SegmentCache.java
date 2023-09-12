@@ -28,6 +28,7 @@ import javax.swing.text.Segment;
  * @deprecated The caching is no longer performed as the object creation
  * in the present JVMs is fast. Simply use <code>new Segment()</code>.
  */
+@Deprecated
 public class SegmentCache {
     
     private static final SegmentCache SHARED = new SegmentCache();
@@ -48,7 +49,7 @@ public class SegmentCache {
     
     /**
      * @return A free {@link javax.swing.text.Segment}. When done, the segment
-     * should be recycled by invoking {@link #releaseSegment()}.
+     * should be recycled by invoking {@link #releaseSegment(Segment)}.
      * 
      * @deprecated Simply returns <code>new Segment()</code>.
      */

@@ -23,13 +23,19 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import javax.lang.model.element.TypeElement;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.lsp4j.debug.OutputEventArguments;
@@ -37,12 +43,25 @@ import org.eclipse.lsp4j.debug.Source;
 import org.eclipse.lsp4j.debug.TerminatedEventArguments;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.NotifyDescriptor.QuickPick.Item;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -71,10 +90,89 @@ public final class NbLaunchRequestHandler {
 
         if (!isNative && (StringUtils.isBlank(mainFilePath) && StringUtils.isBlank(filePath) && StringUtils.isBlank(projectFilePath)
                           || modulePaths.isEmpty() && classPaths.isEmpty())) {
-            ErrorUtilities.completeExceptionally(resultFuture,
-                "Failed to launch debuggee VM. Missing mainClass or modulePaths/classPaths options in launch configuration.",
-                ResponseErrorCode.serverErrorStart);
-            return resultFuture;
+            if (modulePaths.isEmpty() && classPaths.isEmpty()) {
+                ErrorUtilities.completeExceptionally(resultFuture,
+                    "Failed to launch debuggee VM. Missing modulePaths/classPaths options in launch configuration.",
+                    ResponseErrorCode.ServerNotInitialized);
+                return resultFuture;
+            }
+            if (StringUtils.isBlank(mainFilePath) && StringUtils.isBlank(filePath) && StringUtils.isBlank(projectFilePath)) {
+                LspServerState state = Lookup.getDefault().lookup(LspServerState.class);
+                if (state == null) {
+                    ErrorUtilities.completeExceptionally(resultFuture,
+                        "Failed to launch debuggee VM. Missing mainClass or modulePaths/classPaths options in launch configuration.",
+                        ResponseErrorCode.ServerNotInitialized);
+                    return resultFuture;
+                }
+                return state.openedProjects().thenCompose(prjs -> {
+                    FileObject[] sourceRoots =
+                        Arrays.stream(prjs)
+                              .flatMap(p -> Arrays.stream(ProjectUtils.getSources(p).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)))
+                              .map(sg -> sg.getRootFolder())
+                              .toArray(s -> new FileObject[s]);
+
+                    List<ElementHandle<TypeElement>> mainClasses =
+                            new ArrayList<>(SourceUtils.getMainClasses(sourceRoots));
+                    CompletableFuture<Void> currentResult = new CompletableFuture<>();
+                    Consumer<ElementHandle<TypeElement>> handleSelectedMainClass = mainClass -> {
+                        Map<String, Object> newLaunchArguments = new HashMap<>(launchArguments);
+                        ClasspathInfo cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(sourceRoots));
+                        FileObject mainClassFile = SourceUtils.getFile(mainClass, cpInfo);
+                        if (mainClassFile == null) {
+                            ErrorUtilities.completeExceptionally(currentResult,
+                                "Cannot find source file for the selected main class.",
+                                ResponseErrorCode.ServerNotInitialized);
+                        } else {
+                            newLaunchArguments.put("mainClass", mainClassFile.toURI().toString());
+                            launch(newLaunchArguments, context).thenAccept(res -> currentResult.complete(res))
+                                                               .exceptionally(t -> {
+                                                                   currentResult.completeExceptionally(t);
+                                                                   return null;
+                                                               });
+                        }
+                    };
+
+                    switch (mainClasses.size()) {
+                        case 0:
+                            String message = "Failed to launch debuggee VM. No mainClass provided.";
+                            if (SourceUtils.isScanInProgress()) {
+                                message += " Indexing is in progress, please try again when the indexing is completed.";
+                            }
+                            ErrorUtilities.completeExceptionally(currentResult,
+                                message,
+                                ResponseErrorCode.ServerNotInitialized);
+                            break;
+                        case 1:
+                            handleSelectedMainClass.accept(mainClasses.get(0));
+                            break;
+                        case 2:
+                            List<NotifyDescriptor.QuickPick.Item> mainClassItems =
+                                    mainClasses.stream()
+                                               .map(eh -> new Item(eh.getQualifiedName(), eh.getQualifiedName()))
+                                               .collect(Collectors.toList());
+
+                            NotifyDescriptor.QuickPick pick = new DialogDescriptor.QuickPick("Please choose main class",
+                                                                                             "Choose main class", mainClassItems, false);
+                            DialogDisplayer.getDefault().notifyFuture(pick).thenAccept(acceptedPick -> {
+                                for (int i = 0; i < acceptedPick.getItems().size(); i++) {
+                                    NotifyDescriptor.QuickPick.Item item = acceptedPick.getItems().get(i);
+                                    if (item.isSelected()) {
+                                        ElementHandle<TypeElement> mainClass = mainClasses.get(i);
+                                        handleSelectedMainClass.accept(mainClass);
+                                        break;
+                                    }
+                                }
+                            }).exceptionally(t -> {
+                                ErrorUtilities.completeExceptionally(currentResult,
+                                    "Failed to launch debuggee VM. No mainClass provided.",
+                                    ResponseErrorCode.ServerNotInitialized);
+                                return null;
+                            });
+                            break;
+                    }
+                    return currentResult;
+                });
+            }
         }
         if (StringUtils.isBlank((String)launchArguments.get("encoding"))) {
             context.setDebuggeeEncoding(StandardCharsets.UTF_8);
@@ -82,7 +180,7 @@ public final class NbLaunchRequestHandler {
             if (!Charset.isSupported((String)launchArguments.get("encoding"))) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     "Failed to launch debuggee VM. 'encoding' options in the launch configuration is not recognized.",
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
                 return resultFuture;
             }
             context.setDebuggeeEncoding(Charset.forName((String)launchArguments.get("encoding")));
@@ -116,7 +214,7 @@ public final class NbLaunchRequestHandler {
             if (file == null) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                         "Missing file: " + filePath,
-                        ResponseErrorCode.serverErrorStart);
+                        ResponseErrorCode.ServerNotInitialized);
                 return resultFuture;
             }
         } else {
@@ -124,7 +222,7 @@ public final class NbLaunchRequestHandler {
             if (nativeImage == null) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     "Failed to launch debuggee native image. No native image is specified.",
-                    ResponseErrorCode.serverErrorStart);
+                    ResponseErrorCode.ServerNotInitialized);
                 return resultFuture;
             }
             nativeImageFile = new File(nativeImage);

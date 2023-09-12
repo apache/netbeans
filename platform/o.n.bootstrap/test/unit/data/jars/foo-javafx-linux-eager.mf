@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.foo.javafx.linux.eager
+OpenIDE-Module-Name: Simulated Linux Javafx package
+OpenIDE-Module-Public-Packages: org.foo.javafx.*
+OpenIDE-Module-Module-Dependencies: org.foo.javafx, org.foo.javafx.linux
+OpenIDE-Module-Fragment-Host: org.foo.javafx

@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.editor.java;
 
+import com.sun.source.tree.CaseLabelTree;
 import com.sun.source.tree.Tree;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -112,12 +113,23 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
                                     }
                                     treeKindCtx = tree.getKind();
                                     switch (treeKindCtx) {
-                                        case CASE:
-                                            if (so < controller.getTrees().getSourcePositions().getEndPosition(controller.getCompilationUnit(), ((CaseTree)tree).getExpression())) {
+                                        case CASE: {
+                                            if (((CaseTree)tree).getCaseKind() == CaseTree.CaseKind.RULE) {
                                                 treeKindCtx = null;
+                                            } else {
+                                                SourcePositions sp = controller.getTrees().getSourcePositions();
+                                                List<? extends CaseLabelTree> labels = ((CaseTree)tree).getLabels();
+                                                int startPos = labels.isEmpty() ? (int) sp.getEndPosition(controller.getCompilationUnit(), labels.get(labels.size() - 1))
+                                                        : (int)sp.getStartPosition(controller.getCompilationUnit(), tree);
+                                                String headerText = controller.getText().substring(startPos, so);
+                                                int idx = headerText.indexOf(':');
+                                                if (idx < 0) {
+                                                    treeKindCtx = null;
+                                                }
                                             }
                                             break;
-                                        case CLASS:
+                                        }
+                                        case CLASS: {
                                             SourcePositions sp = controller.getTrees().getSourcePositions();
                                             int startPos = (int)sp.getEndPosition(controller.getCompilationUnit(), ((ClassTree)tree).getModifiers());
                                             if (startPos <= 0) {
@@ -130,6 +142,7 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
                                                 stringCtx = CLASS_HEADER;
                                             }
                                             break;
+                                        }
                                         case FOR_LOOP:
                                         case ENHANCED_FOR_LOOP:
                                             if (!isRightParenthesisOfLoopPresent(controller, so)) {

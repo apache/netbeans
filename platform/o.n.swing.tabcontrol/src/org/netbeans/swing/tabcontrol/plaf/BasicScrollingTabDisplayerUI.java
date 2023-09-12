@@ -383,7 +383,7 @@ public abstract class BasicScrollingTabDisplayerUI extends BasicTabDisplayerUI {
 
     /**
      * Provides an offscreen graphics context so that widths based on character
-     * size can be calculated correctly before the component is shown.
+     * size can be calculated correctly before the component is shown. Never returns null.
      *
      * <p>For more accurate text measurements, clients should prefer calling
      * {@link #getOffscreenGraphics(JComponent)}.
@@ -399,7 +399,7 @@ public abstract class BasicScrollingTabDisplayerUI extends BasicTabDisplayerUI {
 
     /**
      * Provides an offscreen graphics context so that widths based on character
-     * size can be calculated correctly before the component is shown
+     * size can be calculated correctly before the component is shown. Never returns null.
      *
      * @param component may be null without causing fatal errors, but should be set for accurate
      *        text measurement (especially on displays with HiDPI scaling enabled)

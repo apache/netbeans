@@ -304,7 +304,7 @@ committed to the repository for legal reasons. You need to download it:
             <br/><strong>Compatibility: </strong> <xsl:apply-templates select="compatibility/node()"/>
         </xsl:if>
         <xsl:if test="compatibility/@source = 'incompatible' and compatibility/@binary = 'compatible'">
-            <br/><em><a href="http://wiki.netbeans.org/VersioningPolicy#Compatible_change_on_the_trunk">Binary-compatible</a></em>
+            <br/><em><a href="https://netbeans.apache.org/wiki/VersioningPolicy#Compatible_change_on_the_trunk">Binary-compatible</a></em>
         </xsl:if>
     </xsl:template>
 

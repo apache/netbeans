@@ -25,7 +25,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 
 /**
  * Context information to provide code completion proposals.
- * 
+ *
  * @author sdedic
  * @since 0.84
  */
@@ -34,7 +34,7 @@ public final class ProposalRequest {
     private final CompletionContext type;
     private final Collection<String> selectors;
     private final int offset;
-    
+
     public ProposalRequest(CodeCompletionContext context, CompletionContext type, Collection<String> selectors, int anchor) {
         this.context = context;
         this.type = type;
@@ -51,7 +51,7 @@ public final class ProposalRequest {
 
     /**
      * Provides code completion context from the parser.
-     * @return 
+     * @return
      */
     public CodeCompletionContext getContext() {
         return context;
@@ -59,7 +59,7 @@ public final class ProposalRequest {
 
     /**
      * Determines the requested completion type.
-     * @return 
+     * @return
      */
     public CompletionContext getType() {
         return type;
@@ -67,7 +67,7 @@ public final class ProposalRequest {
 
     /**
      * Convenience method to get the parser result.
-     * @return 
+     * @return
      */
     public ParserResult getInfo() {
         return context.getParserResult();

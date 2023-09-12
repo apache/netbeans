@@ -19,11 +19,6 @@
 package org.netbeans.modules.maven.output;
 
 import junit.framework.*;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.modules.maven.api.output.OutputVisitor;
 
 /**

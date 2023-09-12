@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.55
+#Version 1.61
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -49,9 +49,13 @@ meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public final org.netbeans.api.editor.mimelookup.MimeLookup
 meth public <%0 extends java.lang.Object> org.openide.util.Lookup$Result<{%%0}> lookup(org.openide.util.Lookup$Template<{%%0}>)
+ anno 0 java.lang.Deprecated()
 meth public <%0 extends java.lang.Object> {%%0} lookup(java.lang.Class<{%%0}>)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.api.editor.mimelookup.MimeLookup childLookup(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.api.editor.mimelookup.MimeLookup getMimeLookup(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.util.Lookup getLookup(java.lang.String)
 meth public static org.openide.util.Lookup getLookup(org.netbeans.api.editor.mimelookup.MimePath)
 supr org.openide.util.Lookup

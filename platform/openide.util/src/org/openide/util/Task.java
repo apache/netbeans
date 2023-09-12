@@ -20,6 +20,7 @@ package org.openide.util;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
 * to finish.
 * <P>
 * For example:
-* <p><code><PRE>
+* <PRE><code>
 * Runnable r = new Runnable () {
 *   public void run () {
 *     // do something
@@ -37,7 +38,7 @@ import java.util.logging.Logger;
 * };
 * Task task = new Task (r);
 * RequestProcessor.postRequest (task);
-* </PRE></code>
+* </code></PRE>
 * <p>In a different thread one can then test <CODE>task.isFinished ()</CODE>
 * or wait for it with <CODE>task.waitFinished ()</CODE>.
 *
@@ -68,7 +69,7 @@ public class Task extends Object implements Runnable {
     private boolean finished;
 
     /** listeners for the finish of task (TaskListener) */
-    private HashSet<TaskListener> list;
+    private Set<TaskListener> list;
 
     /** Create a new task.
     * The runnable should provide its own error-handling, as
@@ -192,7 +193,7 @@ public class Task extends Object implements Runnable {
     }
 
     /** Notify all waiters that this task has finished.
-    * @see #run
+    * @see #run()
     */
     protected final void notifyFinished() {
         Iterator<TaskListener> it;
@@ -207,7 +208,7 @@ public class Task extends Object implements Runnable {
                 return;
             }
 
-            it = ((HashSet<TaskListener>) list.clone()).iterator();
+            it = (new HashSet<>(list)).iterator();
         }
 
         while (it.hasNext()) {
@@ -246,7 +247,7 @@ public class Task extends Object implements Runnable {
         boolean callNow;
         synchronized (this) {
             if (list == null) {
-                list = new HashSet<TaskListener>();
+                list = new HashSet<>();
             }
             list.add(l);
             

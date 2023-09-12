@@ -18,8 +18,14 @@
  */
 package org.netbeans.api.lsp;
 
+import java.util.Collection;
+import java.net.URL;
 import java.util.List;
 import java.util.function.Consumer;
+import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.modules.lsp.DiagnosticUtils;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 
 /**
  * A diagnostic for LSP. Use a {@link Diagnostic.Builder} to create an instance.
@@ -34,14 +40,16 @@ public class Diagnostic {
     private final Severity severity;
     private final String code;
     private final LazyCodeActions actions;
+    private final URL codeDescription;
 
     private Diagnostic(Position startPosition, Position endPosition, String description,
-                       Severity severity, String code, LazyCodeActions actions) {
+                       Severity severity, String code, URL codeDescription, LazyCodeActions actions) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.description = description;
         this.severity = severity;
         this.code = code;
+        this.codeDescription = codeDescription;
         this.actions = actions;
     }
 
@@ -85,6 +93,14 @@ public class Diagnostic {
     public String getCode() {
         return code;
     }
+    
+    /**
+     * The URL where the problem is described.
+     * @return  URL with problem description
+     */
+    public URL getCodeDescription() {
+        return this.codeDescription;
+    }
 
     /**
      * The actions associated with the diagnostic.
@@ -110,6 +126,7 @@ public class Diagnostic {
         private final String description;
         private Severity severity;
         private String code;
+        private URL codeDescription;
         private LazyCodeActions actions;
 
         private Builder(Position startPosition, Position endPosition, String description) {
@@ -121,8 +138,8 @@ public class Diagnostic {
         /**
          * Create a new {@code Builder}
          *
-         * @param startOffset the start offset of the diagnostic
-         * @param endOffset the end offset of the diagnostic
+         * @param startPosition the start offset of the diagnostic
+         * @param endPosition the end offset of the diagnostic
          * @param description the description of the diagnostic
          * @return a new builder
          */
@@ -151,6 +168,16 @@ public class Diagnostic {
             this.code = code;
             return this;
         }
+        
+        /**
+         * Set the URL, where the problem is described
+         * @param codeDescription URL with problem description
+         * @return this builder
+         */
+        public Builder setCodeDescription(URL codeDescription) {
+            this.codeDescription = codeDescription;
+            return this;
+        }
 
         /**
          * Set the actions associated with the diagnostic.
@@ -169,7 +196,7 @@ public class Diagnostic {
          * @return the new Diagnostic
          */
         public Diagnostic build() {
-            return new Diagnostic(startPosition, endPosition, description, severity, code, actions);
+            return new Diagnostic(startPosition, endPosition, description, severity, code, codeDescription, actions);
         }
     }
 
@@ -186,4 +213,36 @@ public class Diagnostic {
          */
         public List<CodeAction> computeCodeActions(Consumer<Exception> errorReporter);
     }
+    
+   /**
+    * Allows to trigger diagnostics collection. The implementation will
+    * coordinate potential push of the diagnostic information to the LSP client.
+    */
+   public interface ReporterControl {
+       /**
+        * Notifies that the diagnostics for {@code file} may have changed. The 
+        * implementation should coordinate collection of {@link Diagnostic} information
+        * for the affected files.
+        * @param files files whose diagnostics may have changed.
+        * @param mimeType optional; mimetype selector for changed files.
+        */
+       public void diagnosticChanged(Collection<FileObject> files, String mimeType);
+   }  
+   
+    /**
+     * Returns a Control object appropriate for the context and the file. The returned 
+     * object can be used to fire changes to LSP client(s). It is important to call
+     * the method while the context is in effect, i.e. during the client's request. May
+     * return {@code null} if no suitable LSP can be found.
+     * 
+     * @param context the Optional. Context used to identify the LSP client. If {@code null},
+     * the default Lookup will be used.
+     * @param file Optional. The file or folder whose diagnostic will be reported.
+     * @return the control object.
+     * @since 1.11
+     */
+   public static ReporterControl findReporterControl(@NullAllowed Lookup context, @NullAllowed FileObject file) {
+       return DiagnosticUtils.findReporterControl(context, file);
+   }
+
 }

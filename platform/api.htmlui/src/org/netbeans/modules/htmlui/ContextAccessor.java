@@ -50,7 +50,7 @@ public abstract class ContextAccessor {
     }
 
     public abstract HTMLViewerSpi.Context newContext(
-        ClassLoader loader, URL url, String[] techIds,
+        ClassLoader loader, URL url, String[] resources, String[] techIds,
         OnSubmit onSubmit, Consumer<String> lifeCycleCallback, Callable<Lookup> onPageLoad,
         Class<?> component
     );

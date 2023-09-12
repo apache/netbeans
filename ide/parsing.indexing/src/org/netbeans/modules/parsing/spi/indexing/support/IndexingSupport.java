@@ -101,7 +101,7 @@ public final class IndexingSupport {
 
     /**
      * Creates a new {@link IndexDocument}. This method does exactly the same as
-     * {@link #createDocument(org.netbeans.modules.parsing.spi.indexing.Indexable), but you can
+     * {@link #createDocument(org.netbeans.modules.parsing.spi.indexing.Indexable)}, but you can
      * use <code>FileObject</code>s directly. The <code>FileObject</code> passed in
      * as a parameter has to be in the folders hierarchy under the root, which
      * this <code>IndexingSupport</code> instance was created for.

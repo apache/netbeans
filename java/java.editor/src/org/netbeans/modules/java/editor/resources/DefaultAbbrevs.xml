@@ -334,7 +334,7 @@ ${selection}${cursor}
     <!-- Arrays and List conversion and sorting -->
     <codetemplate abbreviation="2ar">
          <code>
- <![CDATA[${clazz}[] ${var newVarName default="arr"} = ${typeCast cast default="" editable=false} ${coll instanceof="java.util.Collection"}.toArray(new ${clazz}[${coll}.size()]);
+ <![CDATA[${clazz}[] ${var newVarName default="arr"} = ${typeCast cast default="" editable=false} ${coll instanceof="java.util.Collection"}.toArray(new ${clazz}[0]);
  ]]>
          </code>
      </codetemplate>
@@ -380,6 +380,8 @@ ${cursor}]]></code></codetemplate>
 
      <!-- Miscellaneous common code patterns -->
      <codetemplate abbreviation="rn"><code><![CDATA[${no-indent}return null;]]></code></codetemplate>
+     <codetemplate abbreviation="rt"><code><![CDATA[${no-indent}return true;]]></code></codetemplate>
+     <codetemplate abbreviation="rf"><code><![CDATA[${no-indent}return false;]]></code></codetemplate>
      <codetemplate abbreviation="f"><code><![CDATA[${no-indent}final ]]></code></codetemplate>
      <codetemplate abbreviation="ps"><code><![CDATA[${no-format}private static ]]></code></codetemplate>
      <codetemplate abbreviation="Ps"><code><![CDATA[${no-format}public static ]]></code></codetemplate>

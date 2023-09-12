@@ -943,4 +943,12 @@ public class Css3ParserLessTest extends CssTestBase {
                 + "  #gradient > .vertical(rgba(40,50,60,0), rgba(40,50,60,0.075), 0, 100%);\n"
                 + "}");
     }
+
+    public void testScssUseForward() {
+        assertParses("@use: blue;\n");
+        assertParses("@forward: darken(@demo, 10%);");
+        assertParses("a { color: @use }");
+        assertParses("a { color: @forward }");
+        assertParses(".@{my-selector} { font-weight: bold }", true);
+    }
 }

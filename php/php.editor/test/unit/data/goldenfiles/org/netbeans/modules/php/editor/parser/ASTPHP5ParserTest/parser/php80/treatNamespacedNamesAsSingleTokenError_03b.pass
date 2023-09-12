@@ -1,0 +1,29 @@
+<testresult testFile='treatNamespacedNamesAsSingleTokenError_03b.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='815' end='824'>
+            <text>namespace</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='825' end='846'>
+            <text>\Fully\Qualified\Name</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='847' end='848'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='848' end='849'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='851' end='851'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='851'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='824'/>
+            <ASTError start='825' end='849'/>
+        </Statements>
+    </Program>
+</testresult>

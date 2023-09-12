@@ -42,6 +42,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import org.netbeans.insane.live.CancelException;
 import org.netbeans.insane.live.LiveReferences;
+import org.netbeans.insane.live.Path;
 import org.openide.DialogDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
@@ -439,18 +440,18 @@ public class TimeComponentPanel extends javax.swing.JPanel implements PropertyCh
                 inner.paintImmediately(inner.getBounds());
             }
         });
-        Map/*<Object,Path>*/ traces = LiveReferences.fromRoots(objects, null, bar.getModel());
+        Map<Object, Path> traces = LiveReferences.fromRoots(objects, null, bar.getModel());
         if (traces == null) {
             return "";
         }
         StringBuffer sb = new StringBuffer();
-        
-        for (Object inst : traces.keySet()) {
+
+        traces.forEach((inst, path) -> {
             sb.append(inst);
             sb.append(":\n"); // NOI18N
-            sb.append(traces.get(inst));
+            sb.append(path);
             sb.append("\n\n"); // NOI18N
-        }
+        });
   
         return sb.toString();
     }

@@ -95,7 +95,9 @@ public class QtUiDataLoader extends UniFileLoader {
         @Override
         protected java.text.Format createFormat(FileObject target, String name, String ext) {
 
-            Map<Object, Object> map = (CppSettings.findObject(CppSettings.class, true)).getReplaceableStringsProps();
+            Map<Object, Object> properties = (CppSettings.findObject(CppSettings.class, true)).getReplaceableStringsProps();
+            final Map<String, Object> map = new java.util.HashMap<>();
+            properties.forEach((key, value) -> map.put(key.toString(), value));
 
             String packageName = target.getPath().replace('/', '_');
             // add an underscore to the package name if it is not an empty string

@@ -506,10 +506,9 @@ public abstract class BrandingSupport {
     
     private void loadLocalizedBundlesFromPlatform(final BrandableModule moduleEntry, final Set<String> keys, final Set<BundleKey> bundleKeys) {
         Map<String,String> p = localizingBundle(moduleEntry);
-        for (String key : p.keySet()) {
-            if (keys.contains(key)) {
-                String value = p.get(key);
-                bundleKeys.add(new BundleKey(moduleEntry, key, value));
+        for (Map.Entry<String,String> entry : p.entrySet()) {
+            if (keys.contains(entry.getKey())) {
+                bundleKeys.add(new BundleKey(moduleEntry, entry.getKey(), entry.getValue()));
             }
         }
     }

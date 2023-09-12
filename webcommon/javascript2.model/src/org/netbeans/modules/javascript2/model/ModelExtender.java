@@ -41,11 +41,11 @@ public final class ModelExtender {
     public static final String MODEL_INTERCEPTORS_PATH = "JavaScript/Model/ModelInterceptors";                      //NOI18N
 
     public static final String FUNCTION_INTERCEPTORS_PATH = "JavaScript/Model/FunctionInterceptors";                //NOI18N
-    
+
     public static final String OBJECT_INTERCEPTORS_PATH = "JavaScript/Model/ObjectInterceptors";                    //NOI18N
 
     public static final String TYPE_NAME_CONVERTORS_PATH = "JavaScript/Model/TypeNameConvertors";    //NOI18N
-    
+
     private static final Lookup.Result<ModelInterceptor> MODEL_INTERCEPTORS =
             Lookups.forPath(MODEL_INTERCEPTORS_PATH).lookupResult(ModelInterceptor.class);
 
@@ -54,10 +54,10 @@ public final class ModelExtender {
 
     private static final Lookup.Result<ObjectInterceptor> OBJECT_INTERCEPTORS =
             Lookups.forPath(OBJECT_INTERCEPTORS_PATH).lookupResult(ObjectInterceptor.class);
-    
+
     private static final Lookup.Result<TypeNameConvertor> TYPE_DISPLAY_NAME_CONVERTORS =
             Lookups.forPath(TYPE_NAME_CONVERTORS_PATH).lookupResult(TypeNameConvertor.class);
-    
+
     private static ModelExtender instance;
 
     private List<JsObject> extendingObjects;
@@ -69,13 +69,9 @@ public final class ModelExtender {
     public static synchronized ModelExtender getDefault() {
         if (instance == null) {
             instance = new ModelExtender();
-            MODEL_INTERCEPTORS.addLookupListener(new LookupListener() {
-
-                @Override
-                public void resultChanged(LookupEvent ev) {
-                    synchronized (instance) {
-                        instance.extendingObjects = null;
-                    }
+            MODEL_INTERCEPTORS.addLookupListener((LookupEvent ev) -> {
+                synchronized (instance) {
+                    instance.extendingObjects = null;
                 }
             });
         }
@@ -89,9 +85,9 @@ public final class ModelExtender {
      * null.
      */
     public List<FunctionInterceptor> getFunctionInterceptors() {
-        return new ArrayList<FunctionInterceptor>(FUNCTION_INTERCEPTORS.allInstances());
+        return new ArrayList<>(FUNCTION_INTERCEPTORS.allInstances());
     }
-    
+
     /**
      * Get all registered {@link ObjectCallProcessor}s.
      *
@@ -99,17 +95,17 @@ public final class ModelExtender {
      * null.
      */
     public List<ObjectInterceptor> getObjectInterceptors() {
-        return new ArrayList<ObjectInterceptor>(OBJECT_INTERCEPTORS.allInstances());
+        return new ArrayList<>(OBJECT_INTERCEPTORS.allInstances());
     }
 
     public List<TypeNameConvertor> getTypeNameConvertors() {
-        return new ArrayList<TypeNameConvertor>(TYPE_DISPLAY_NAME_CONVERTORS.allInstances());
+        return new ArrayList<>(TYPE_DISPLAY_NAME_CONVERTORS.allInstances());
     }
-    
+
     public synchronized List<? extends JsObject> getExtendingGlobalObjects(FileObject fo) {
         if (extendingObjects == null) {
             Collection<? extends ModelInterceptor> interceptors = MODEL_INTERCEPTORS.allInstances();
-            extendingObjects = new ArrayList<JsObject>(interceptors.size());
+            extendingObjects = new ArrayList<>(interceptors.size());
             for (ModelInterceptor interceptor : interceptors) {
                 extendingObjects.addAll(interceptor.interceptGlobal(
                         ModelElementFactoryAccessor.getDefault().createModelElementFactory(), fo));

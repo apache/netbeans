@@ -29,6 +29,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.execute.GradleExecAccessor;
 import org.netbeans.modules.gradle.spi.actions.BeforeBuildActionHook;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.spi.actions.AfterBuildActionHook;
 import org.netbeans.modules.gradle.spi.actions.DefaultGradleActionsProvider;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
@@ -43,16 +44,16 @@ import org.openide.util.Lookup;
  * The configuration can be defined by the user using the UI. There are no API calls (yet) to 
  * create or manage Configurations.
  * <p>
- * <a name="request-for-invocation">One can <b>request action invocation</b> in a specific {@link GradleExecConfiguration}. In that
+ * <a name="request-for-invocation"></a>One can <b>request action invocation</b> in a specific {@link GradleExecConfiguration}. In that
  * case, {@link ActionMapping} for the action specific for the selected configuration (if defined) will be used. Also, if the {@link #getCommandLineArgs()}
  * or {@link #getProjectProperties()} are not empty, their values will be combined with the {@link ActionMapping} settings.
  * To invoke a Project Action with a specific Configuration, place the Configuration instance in the Action's context Lookup:
  * <div class="nonnormative">
- * {@codesnippet invokeActionWithConfiguraiton}
+ * {@snippet file="org/netbeans/modules/gradle/actions/ConfigurableActionsProviderImplTest.java" region="invokeActionWithConfiguration"}
  * </div>
  * <p>
  * GradleExecConfigurations can be also declared by a Plugin that implements a
- * <a href="@TOP@/org/netbeans/spi/GradleActionsProvider.html#define-configuration">GradleActionsProvider</a>,
+ * {@link org.netbeans.modules.gradle.spi.actions.GradleActionsProvider },
  * or which uses {@link DefaultGradleActionsProvider#forProjectLayer(org.openide.filesystems.FileObject)}.
  * 
  * @since 2.13
@@ -195,7 +196,7 @@ public final class GradleExecConfiguration implements ProjectConfiguration {
     /**
      * Attempts to find an effective configuration for the project. The effective configuration is the 
      * {@link ProjectConfigurationProvider#getActiveConfiguration()}, unless it has been overriden by contents of 
-     * the `context` {@link Lookup}, or by some caller. Can be used from implementations of {@link AfterBuildActionHoo},
+     * the `context` {@link Lookup}, or by some caller. Can be used from implementations of {@link AfterBuildActionHook},
      * {@link BeforeBuildActionHook} etc.
      * 
      * @param prj project

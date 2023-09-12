@@ -80,10 +80,10 @@ public abstract class DefaultGradleActionsProvider implements GradleActionsProvi
      * <div class="nonnormative">
      * An example of how an action or configuration contribution can be declared in the
      * action definition stream:
-     * {@codesnippet configuration-declaration-xml}
+     * {@snippet file="org/netbeans/modules/gradle/actions/declarative-actions.xml" region="configuration-declaration-xml"}
      * It can be then included in either Gradle Project's generic Lookup (folder
      * {@code Projects/org-netbeans-modules-gradle/Lookup} or in a plugin-specific folder:
-     * {@codesnippet configprovider-declaration-xml}
+     * {@snippet file="META-INF/generated-layer.xml" region="configprovider-declaration-xml"}
      * </div>
      * 
      * @param fo the layer file

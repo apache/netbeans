@@ -26,19 +26,6 @@
             <folder name="x-yaml">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.languages.yaml.Bundle"/>
 
-                <file name="language.instance">
-                    <attr name="instanceCreate" methodvalue="org.netbeans.modules.languages.yaml.YamlTokenId.language"/>
-                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
-                </file>
-
-                <file name="org-netbeans-modules-languages-yaml-ruby-RubyEmbeddingProvider$Factory.instance">
-                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.TaskFactory"/>
-                </file>
-
-                <file name="org-netbeans-modules-languages-yaml-EmbeddedSectionsHighlighting$Factory.instance">
-                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
-                </file>
-
                 <folder name="FontsColors">
                     <folder name="NetBeans">
                         <folder name="Defaults">
@@ -75,7 +62,7 @@
                         <file name="TabsAndIndents.instance">
                             <attr name="instanceOf" stringvalue="org.netbeans.modules.options.editor.spi.PreferencesCustomizer$Factory"/>
                             <attr name="instanceCreate" methodvalue="org.netbeans.modules.options.editor.spi.CustomizerFactories.createDefaultTabsAndIndentsCustomizerFactory"/>
-                            <attr name="previewTextFile" stringvalue="org/netbeans/modules/languages/yaml/YamlExample.html"/>
+                            <attr name="previewTextFile" stringvalue="org/netbeans/modules/languages/yaml/YamlExample.yaml"/>
                             <attr name="position" intvalue="100"/>
                         </file>
                     </folder>
@@ -100,83 +87,6 @@
             <folder name="x-yaml">
                 <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/languages/yaml/yaml_files_16.png"/>
                 <attr name="iconBase" stringvalue="org/netbeans/modules/languages/yaml/yaml_files_16.png"/>
-                <folder name="Actions">
-                    <file name="CopyAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
-                        <attr name="position" intvalue="400"/>
-                    </file>
-                    <file name="CutAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
-                        <attr name="position" intvalue="300"/>
-                    </file>
-                    <file name="DeleteAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
-                        <attr name="position" intvalue="800"/>
-                    </file>
-                    <file name="FileSystemAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
-                        <attr name="position" intvalue="1300"/>
-                    </file>
-                    <file name="NewAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-NewAction.instance"/>
-                        <attr name="position" intvalue="700"/>
-                    </file>
-                    <file name="OpenAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
-                        <attr name="position" intvalue="100"/>
-                    </file>
-                    <file name="PasteAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
-                        <attr name="position" intvalue="500"/>
-                    </file>
-                    <file name="PropertiesAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
-                        <attr name="position" intvalue="1600"/>
-                    </file>
-                    <file name="RenameAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
-                        <attr name="position" intvalue="900"/>
-                    </file>
-                    <file name="SaveAsTemplateAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
-                        <attr name="position" intvalue="1100"/>
-                    </file>
-                    <file name="Separator1.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="200"/>
-                    </file>
-                    <file name="Separator2.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="600"/>
-                    </file>
-                    <file name="Separator3.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="1000"/>
-                    </file>
-                    <file name="Separator4.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="1200"/>
-                    </file>
-                    <file name="Separator5.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="1400"/>
-                    </file>
-
-
-                    <file name="ToolsAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
-                        <attr name="position" intvalue="1500"/>
-                    </file>
-                </folder>
-                <folder name="Factories">
-                    <file name="YamlDataLoader.instance">
-                        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/languages/yaml/yaml_files_16.png"/>
-                        <attr name="dataObjectClass" stringvalue="org.netbeans.modules.languages.yaml.YamlDataObject"/>
-                        <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
-                        <attr name="mimeType" stringvalue="text/x-yaml"/>
-                        <attr name="position" intvalue="1083"/>
-                    </file>
-                </folder>
             </folder>
         </folder>
     </folder>

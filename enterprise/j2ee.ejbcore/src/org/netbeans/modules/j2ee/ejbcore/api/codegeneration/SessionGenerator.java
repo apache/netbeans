@@ -22,12 +22,10 @@ package org.netbeans.modules.j2ee.ejbcore.api.codegeneration;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
 import org.netbeans.modules.j2ee.ejbcore.EjbGenerationUtil;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.lang.model.element.Modifier;
+import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.project.JavaProjectConstants;
@@ -42,18 +40,12 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.libraries.Library;
 import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.modules.j2ee.common.J2eeProjectCapabilities;
-import org.netbeans.modules.j2ee.core.api.support.java.method.MethodModel;
 import org.netbeans.modules.j2ee.dd.api.ejb.AssemblyDescriptor;
 import org.netbeans.modules.j2ee.dd.api.ejb.ContainerTransaction;
-import org.netbeans.modules.j2ee.ejbcore.action.BusinessMethodGenerator;
 import org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.TimerOptions;
 import org.netbeans.modules.j2ee.ejbcore.naming.EJBNameOptions;
-import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
-import org.openide.util.RequestProcessor;
 
 /**
  * Generator of Session EJBs for EJB 2.1 and 3.0
@@ -73,6 +65,12 @@ public final class SessionGenerator {
     public static final String EJB30_LOCAL = "Templates/J2EE/EJB30/SessionLocal.java"; // NOI18N
     public static final String EJB30_REMOTE = "Templates/J2EE/EJB30/SessionRemote.java"; // NOI18N
 
+    public static final String EJB40_STATELESS_EJBCLASS = "Templates/J2EE/EJB40/StatelessEjbClass.java"; // NOI18N
+    public static final String EJB40_STATEFUL_EJBCLASS = "Templates/J2EE/EJB40/StatefulEjbClass.java"; // NOI18N
+    public static final String EJB40_LOCAL = "Templates/J2EE/EJB40/SessionLocal.java"; // NOI18N
+    public static final String EJB40_REMOTE = "Templates/J2EE/EJB40/SessionRemote.java"; // NOI18N
+    public static final String EJB40_SINGLETON_EJBCLASS = "Templates/J2EE/EJB40/SingletonEjbClass.java"; // NOI18N
+
     public static final String EJB31_SINGLETON_EJBCLASS = "Templates/J2EE/EJB31/SingletonEjbClass.java"; // NOI18N
 
     public static final String ANNOTATION_LOCAL_BEAN = "javax.ejb.LocalBean";
@@ -86,7 +84,7 @@ public final class SessionGenerator {
     private final boolean hasRemote;
     private final boolean hasLocal;
     private final String sessionType;
-    private final boolean isSimplified;
+    private final Profile enterpriseProfile;
 //    private final boolean hasBusinessInterface;
     private final boolean isXmlBased;
 
@@ -106,21 +104,21 @@ public final class SessionGenerator {
     private final Map<String, Object> templateParameters;
 
     public static SessionGenerator create(String wizardTargetName, FileObject pkg, boolean hasRemote, boolean hasLocal,
-            String sessionType, boolean isSimplified, boolean hasBusinessInterface, boolean isXmlBased,
+            String sessionType, Profile enterpriseProfile, boolean hasBusinessInterface, boolean isXmlBased,
             TimerOptions timerOptions, boolean exposeTimer, boolean nonPersistentTimer) {
-        return new SessionGenerator(wizardTargetName, pkg, hasRemote, hasLocal, sessionType, isSimplified,
+        return new SessionGenerator(wizardTargetName, pkg, hasRemote, hasLocal, sessionType, enterpriseProfile,
                 hasBusinessInterface, isXmlBased, timerOptions, exposeTimer, nonPersistentTimer, false);
     }
 
     protected SessionGenerator(String wizardTargetName, FileObject pkg, boolean hasRemote, boolean hasLocal,
-            String sessionType, boolean isSimplified, boolean hasBusinessInterface, boolean isXmlBased,
+            String sessionType, Profile enterpriseProfile, boolean hasBusinessInterface, boolean isXmlBased,
             TimerOptions timerOptions, boolean exposeTimer, boolean nonPersistentTimer, boolean isTest) {
         this.pkg = pkg;
         this.remotePkg = pkg;
         this.hasRemote = hasRemote;
         this.hasLocal = hasLocal;
         this.sessionType = sessionType;
-        this.isSimplified = isSimplified;
+        this.enterpriseProfile = enterpriseProfile;
 //        this.hasBusinessInterface = hasBusinessInterface;
         this.isXmlBased = isXmlBased;
         this.ejbNameOptions = new EJBNameOptions();
@@ -187,7 +185,17 @@ public final class SessionGenerator {
 
     public FileObject generate() throws IOException {
         FileObject resultFileObject = null;
-        if (isSimplified) {
+        if (enterpriseProfile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+            resultFileObject = generateEJB40Classes();
+
+            //put these lines in a common function at the appropriate place after EA1
+            //something like public EjbJar getEjbJar()
+            //This method will be used whereever we construct/get DD object graph to ensure
+            //corresponding config listners attached to it.
+            Project project = FileOwnerQuery.getOwner(pkg);
+            J2eeModuleProvider j2eeModuleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
+            j2eeModuleProvider.getConfigSupport().ensureConfigurationReady();
+        } else if (enterpriseProfile.isAtLeast(Profile.JAVA_EE_5)) {
             resultFileObject = generateEJB30Classes();
 
             //put these lines in a common function at the appropriate place after EA1
@@ -264,6 +272,39 @@ public final class SessionGenerator {
         }
         if (hasLocal) {
             GenerationUtils.createClass(EJB30_LOCAL, pkg, localName, null, templateParameters);
+        }
+
+        return ejbClassFO;
+    }
+
+    private FileObject generateEJB40Classes() throws IOException {
+        String ejbClassTemplateName = "";
+        if (sessionType.equals(Session.SESSION_TYPE_STATELESS)){
+            ejbClassTemplateName = EJB40_STATELESS_EJBCLASS;
+        } else if (sessionType.equals(Session.SESSION_TYPE_STATEFUL)){
+            ejbClassTemplateName = EJB40_STATEFUL_EJBCLASS;
+        } else if (sessionType.equals(Session.SESSION_TYPE_SINGLETON)){
+            ejbClassTemplateName = EJB40_SINGLETON_EJBCLASS;
+        } else{
+            assert false;
+        }
+
+        if (hasLocal && hasRemote){
+            this.templateParameters.put(TEMPLATE_PROPERTY_INTERFACES, remoteName + ", " + localName); //NOI18N
+        } else if (hasLocal){
+            this.templateParameters.put(TEMPLATE_PROPERTY_INTERFACES, localName);
+        } else if (hasRemote){
+            this.templateParameters.put(TEMPLATE_PROPERTY_INTERFACES, remoteName);
+        } else {
+            this.templateParameters.put(TEMPLATE_PROPERTY_LOCAL_BEAN, Boolean.TRUE.toString());
+        }
+
+        final FileObject ejbClassFO = GenerationUtils.createClass(ejbClassTemplateName,  pkg, ejbClassName, null, templateParameters);
+        if (hasRemote) {
+            GenerationUtils.createClass(EJB40_REMOTE, remotePkg, remoteName, null, templateParameters);
+        }
+        if (hasLocal) {
+            GenerationUtils.createClass(EJB40_LOCAL, pkg, localName, null, templateParameters);
         }
 
         return ejbClassFO;

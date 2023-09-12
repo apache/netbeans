@@ -148,7 +148,7 @@ class ItemNode extends FilterNode {
         PaletteActions customActions = getCustomActions();
         
         if( null == customActions )
-            return null;;
+            return null;
         
         return customActions.getPreferredAction( getLookup() );
     }

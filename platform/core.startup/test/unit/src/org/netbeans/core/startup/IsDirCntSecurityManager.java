@@ -19,7 +19,7 @@
 package org.netbeans.core.startup;
 
 import java.security.Permission;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * Counts the number of File.isDirectory() calls.

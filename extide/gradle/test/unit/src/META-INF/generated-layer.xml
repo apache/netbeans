@@ -20,7 +20,7 @@
 
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
-<!-- BEGIN:configprovider-declaration-xml -->
+<!-- @start region="configprovider-declaration-xml" -->
 <filesystem>
     <folder name="Projects">
         <folder name="org-netbeans-modules-gradle">
@@ -38,7 +38,7 @@
             </folder>
         </folder>
     </folder>
-<!-- END:configprovider-declaration-xml -->
+<!-- @end region="configprovider-declaration-xml" -->
     <folder name="Projects">
         <folder name="org-netbeans-modules-gradle">
             <folder name="Plugins">

@@ -54,6 +54,7 @@ public abstract class ColumnModel implements Model {
      * @since 1.11
      * @deprecated Use ampersand in {@link #getDisplayName()}.
      */
+    @Deprecated
     public Character getDisplayedMnemonic() {
         return null;
     }
@@ -76,6 +77,7 @@ public abstract class ColumnModel implements Model {
      * <code>null</code>
      * @deprecated Not used. See {@link #getCurrentOrderNumber}.
      */
+    @Deprecated
     public String getPreviuosColumnID () {
         return null;
     }
@@ -90,6 +92,7 @@ public abstract class ColumnModel implements Model {
      * @return ID of column next to this one or <code>null</code>
      * @deprecated Not used. See {@link #getCurrentOrderNumber}.
      */
+    @Deprecated
     public String getNextColumnID () {
         return null;
     }

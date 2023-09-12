@@ -166,7 +166,7 @@ public final class Source {
         if (fieldContent == null && fieldURL == null) {
             // There is a Data inner class instead:
             Field fieldData = sourceVar.getField(SOURCE_VAR_DATA);
-            if (fieldData != null && fieldData instanceof ObjectVariable) {
+            if (fieldData instanceof ObjectVariable) {
                 fieldURL = ((ObjectVariable) fieldData).getField(SOURCE_VAR_URL);
                 fieldContent = ((ObjectVariable) fieldData).getField(SOURCE_VAR_DATA_ARRAY);
             }
@@ -199,7 +199,7 @@ public final class Source {
             name = name.substring(1, name.length() - 1);
         }
         int nl = name.length();
-        if (nl < 4 || !name.substring(nl - 3, nl).toLowerCase().equals(".js")) {
+        if (nl < 4 || !name.substring(nl - 3, nl).equalsIgnoreCase(".js")) {
             name = name + ".js";
         }
         // Check whether the file happens to exist

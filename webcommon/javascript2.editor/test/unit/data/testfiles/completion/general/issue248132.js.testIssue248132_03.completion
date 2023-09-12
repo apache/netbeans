@@ -2,4 +2,4 @@ Code completion result for source line:
 var w1 = new window.Wo|rker();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     Worker(uri: String): Worker     [PUBLIC,   JS Platform
+METHOD     Worker()                        [PUBLIC]   issue248132.js

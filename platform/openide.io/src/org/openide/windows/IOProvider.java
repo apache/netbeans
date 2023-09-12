@@ -192,6 +192,7 @@ public abstract class IOProvider {
     private static final class Trivial extends IOProvider {
         
         private static final Reader in = new BufferedReader(new InputStreamReader(System.in)) {
+            @Override
             public void close() {
                 // do nothing, prevent blocking between System.in.read() and System.in.close();
             }

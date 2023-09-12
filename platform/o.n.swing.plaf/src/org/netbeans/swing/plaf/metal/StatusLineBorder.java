@@ -44,6 +44,7 @@ class StatusLineBorder extends AbstractBorder {
         this.type = type;
     }
 
+    @Override
     public void paintBorder(Component c, Graphics g, int x, int y,
     int w, int h) {
         g.translate(x, y);
@@ -80,6 +81,7 @@ class StatusLineBorder extends AbstractBorder {
         g.translate(-x, -y);
     }
 
+    @Override
     public Insets getBorderInsets(Component c) {
         if (insets == null) {
             insets = getBorderInsets(c, new Insets(0, 0, 0, 0));
@@ -87,6 +89,7 @@ class StatusLineBorder extends AbstractBorder {
         return insets;
     }
 
+    @Override
     public Insets getBorderInsets(Component c, Insets insets) {
         insets.left = (type & LEFT) != 0 ? 2 : 0;
         insets.top = (type & TOP) != 0 ? 4 : 0;

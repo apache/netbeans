@@ -271,7 +271,7 @@ public abstract class OpenFileDialogFilter extends FileFilter {
 
         @Override
         public String[] getSuffixes() {
-            ArrayList<String> suffixList = new ArrayList();
+            ArrayList<String> suffixList = new ArrayList<>();
             for(String extension : getFilter().getExtensions()) {
                 suffixList.add(EXTENSION_SEPARATOR + extension);
             }

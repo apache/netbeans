@@ -176,6 +176,10 @@ public final class CodeStyle {
         return preferences.getInt(BLANK_LINES_AFTER_USE, getDefaultAsInt(BLANK_LINES_AFTER_USE));
     }
 
+    public int getBlankLinesBetweenUseTypes() {
+        return preferences.getInt(BLANK_LINES_BETWEEN_USE_TYPES, getDefaultAsInt(BLANK_LINES_BETWEEN_USE_TYPES));
+    }
+
     public int getBlankLinesBeforeClass() {
         return preferences.getInt(BLANK_LINES_BEFORE_CLASS, getDefaultAsInt(BLANK_LINES_BEFORE_CLASS));
     }
@@ -202,6 +206,10 @@ public final class CodeStyle {
 
     public int getBlankLinesAfterFields() {
         return preferences.getInt(BLANK_LINES_AFTER_FIELDS, getDefaultAsInt(BLANK_LINES_AFTER_FIELDS));
+    }
+
+    public boolean getBlankLinesEOF() {
+        return preferences.getBoolean(BLANK_LINES_EOF, getDefaultAsBoolean(BLANK_LINES_EOF));
     }
 
     /**
@@ -320,6 +328,10 @@ public final class CodeStyle {
 
     public boolean spaceAroundTernaryOps() {
         return preferences.getBoolean(SPACE_AROUND_TERNARY_OPS, getDefaultAsBoolean(SPACE_AROUND_TERNARY_OPS));
+    }
+
+    public boolean spaceAroundCoalescingOps() {
+        return preferences.getBoolean(SPACE_AROUND_COALESCING_OPS, getDefaultAsBoolean(SPACE_AROUND_COALESCING_OPS));
     }
 
     public boolean spaceAroundKeyValueOps() {
@@ -685,6 +697,11 @@ public final class CodeStyle {
         return WrapStyle.valueOf(wrap);
     }
 
+    public WrapStyle wrapCoalescingOps() {
+        String wrap = preferences.get(WRAP_COALESCING_OPS, getDefaultAsString(WRAP_COALESCING_OPS));
+        return WrapStyle.valueOf(wrap);
+    }
+
     public WrapStyle wrapAssignOps() {
         String wrap = preferences.get(WRAP_ASSIGN_OPS, getDefaultAsString(WRAP_ASSIGN_OPS));
         return WrapStyle.valueOf(wrap);
@@ -730,6 +747,14 @@ public final class CodeStyle {
 
     public boolean aliasesFromCapitalsOfNamespaces() {
         return preferences.getBoolean(ALIASES_CAPITALS_OF_NAMESPACES, getDefaultAsBoolean(ALIASES_CAPITALS_OF_NAMESPACES));
+    }
+
+    public boolean putInPSR12Order() {
+        return preferences.getBoolean(PUT_IN_PSR12_ORDER, getDefaultAsBoolean(PUT_IN_PSR12_ORDER));
+    }
+
+    public boolean usesKeepExistingTypeOrder() {
+        return preferences.getBoolean(USES_KEEP_EXISTING_TYPE_ORDER, getDefaultAsBoolean(USES_KEEP_EXISTING_TYPE_ORDER));
     }
 
     private static class Producer implements FmtOptions.CodeStyleProducer {

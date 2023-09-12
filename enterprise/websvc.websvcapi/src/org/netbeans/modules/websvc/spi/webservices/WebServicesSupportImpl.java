@@ -26,6 +26,7 @@ import org.openide.filesystems.FileObject;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.dd.api.webservices.ServiceImplBean;
+import org.netbeans.modules.websvc.api.webservices.WsCompileEditorSupport;
 import org.netbeans.spi.project.support.ant.ReferenceHelper;
 
 /**
@@ -106,7 +107,7 @@ public interface WebServicesSupportImpl {
     /**
      * Get the list of services and their wscompile settings.
      */
-    public List/*WsCompileEditorSupport.ServiceSettings*/ getServices();
+    public List<WsCompileEditorSupport.ServiceSettings> getServices();
     
     /**
      * Add infrastructure methods and fields (if any) that should be present

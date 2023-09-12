@@ -44,7 +44,7 @@ import org.openide.windows.*;
  * @author  Stepan Herold
  */
 public class LogSupport {
-    private Map/*<Link, Link>*/ links = Collections.synchronizedMap(new HashMap());
+    private Map<Link, Link> links = Collections.synchronizedMap(new HashMap());
     private Annotation errAnnot;
     
     /**
@@ -121,6 +121,7 @@ public class LogSupport {
             return accessible;
         }
         
+        @Override
         public String toString() {
             return "path=" + path + " line=" + line + " message=" + message 
                     + " isError=" + error + " isAccessible=" + accessible;
@@ -137,10 +138,12 @@ public class LogSupport {
             shortDesc = desc;
         }
         
+        @Override
         public String getAnnotationType() {
             return "org-netbeans-modules-tomcat5-error"; // NOI18N
         }
         
+        @Override
         public String getShortDescription() {
             return shortDesc;
         }
@@ -166,6 +169,7 @@ public class LogSupport {
             this.line = line;
         }
         
+        @Override
         public int hashCode() {
             if (hashCode == 0) {
                 int result = 17;
@@ -177,6 +181,7 @@ public class LogSupport {
             return hashCode;
         } 
         
+        @Override
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
@@ -196,6 +201,7 @@ public class LogSupport {
          * If the link is clicked, required file is opened in the editor and an 
          * <code>ErrorAnnotation</code> is attached.
          */
+        @Override
         public void outputLineAction(OutputEvent ev) {
             FileObject sourceFile = GlobalPathRegistry.getDefault().findResource(path);
             if (sourceFile == null) {
@@ -239,6 +245,7 @@ public class LogSupport {
          * If a link is cleared, error annotation is detached and link cache is 
          * clared.
          */
+        @Override
         public void outputLineCleared(OutputEvent ev) {
             if (errAnnot != null) {
                 errAnnot.detach();
@@ -248,6 +255,7 @@ public class LogSupport {
             }
         }
         
+        @Override
         public void outputLineSelected(OutputEvent ev) {           
         }
     }    

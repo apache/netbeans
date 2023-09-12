@@ -112,7 +112,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         LifecycleManager.getDefault().saveAll();
     }
 
-    private static class CIFactory implements JavaCompletionTask.ModuleItemFactory<CI> {
+    private static class CIFactory implements JavaCompletionTask.ModuleItemFactory<CI>, JavaCompletionTask.RecordPatternItemFactory<CI> {
 
         private static final int SMART_TYPE = 1000;
         @Override
@@ -437,6 +437,34 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         public CI createDefaultConstructorItem(TypeElement elem, int substitutionOffset, boolean smartType) {
             String simpleName = elem.getSimpleName().toString();
             return new CI(simpleName + "()", smartType ? 650 - SMART_TYPE : 650, simpleName + "#0#");
+        }
+        
+        @Override
+        public CI createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars) {
+            String simpleName = elem.getSimpleName().toString();
+            StringBuilder sb = new StringBuilder();
+            StringBuilder sortParams = new StringBuilder();
+            sb.append(simpleName);
+            sb.append('(');
+            sortParams.append('(');
+            Iterator<? extends RecordComponentElement> it = elem.getRecordComponents().iterator();
+            RecordComponentElement recordComponent;
+            String name;
+            int cnt = 0;
+            while (it.hasNext()) {
+                recordComponent = it.next();
+                name = recordComponent.getAccessor().getReturnType().toString();
+                sortParams.append(name);
+                sb.append(name.substring(name.lastIndexOf(".") + 1));
+                sb.append(" ");
+                sb.append(recordComponent.getSimpleName().toString());
+                if (it.hasNext()) {
+                    sb.append(", "); //NOI18N
+                }
+                cnt++;
+            }
+            sb.append(")");
+            return new CI(sb.toString(), 650, "#" + ((cnt < 10 ? "0" : "") + cnt) + "#" + sortParams.toString());
         }
 
         @Override

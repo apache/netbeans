@@ -58,137 +58,141 @@ public class ClassPathProviderImpl implements ClassPathProvider {
 
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
-        FileObject search = file.getParent();
-        FileObject testProperties = null;
+        TestRootDescription rootDesc = TestRootDescription.findRootDescriptionFor(file);
 
-        while (search != null) {
-            if (testProperties == null) {
-                testProperties =  BuildUtils.getFileObject(search, "TEST.properties");
+        if (rootDesc == null) {
+            return null;
+        }
+
+        FileObject testProperties = rootDesc.testProperties;
+        FileObject testRoot = rootDesc.testRoot;
+        FileObject testRootFile = rootDesc.testRootFile;
+
+        boolean javac = (Utilities.isLangtoolsRepository(testRoot.getParent()) || testRoot.getNameExt().equals("langtools")) &&
+                        ShortcutUtils.getDefault().shouldUseCustomTest("langtools", FileUtil.getRelativePath(testRoot.getParent(), file));
+        FileObject keyRoot = javac ? testRoot.getNameExt().equals("langtools") ? Utilities.getLangtoolsKeyRoot(testRoot.getParent().getParent()) : Utilities.getLangtoolsKeyRoot(testRoot.getParent()) : null;
+        //XXX: hack to make things work for langtools:
+        switch (type) {
+            case ClassPath.COMPILE:
+                if (javac) {
+                    ClassPath langtoolsCP = ClassPath.getClassPath(keyRoot, ClassPath.COMPILE);
+                    Library testngLib = LibraryManager.getDefault().getLibrary("testng");
+                    Library junit5Lib = LibraryManager.getDefault().getLibrary("junit_5");
+
+                    if (testngLib != null || junit5Lib != null) {
+                        List<ClassPath> parts = new ArrayList<>();
+
+                        if (testngLib != null) {
+                            parts.add(ClassPathSupport.createClassPath(testngLib.getContent("classpath").toArray(new URL[0])));
+                        }
+                        if (junit5Lib != null) {
+                            parts.add(ClassPathSupport.createClassPath(junit5Lib.getContent("classpath").toArray(new URL[0])));
+                        }
+
+                        parts.add(langtoolsCP);
+
+                        return ClassPathSupport.createProxyClassPath(parts.toArray(new ClassPath[0]));
+                    }
+
+                    if (langtoolsCP == null)
+                        return ClassPath.EMPTY;
+                    else
+                        return langtoolsCP;
+                }
+                else return null;
+            case ClassPath.BOOT:
+                if (javac) {
+                    try {
+                        ClassPath langtoolsBCP = ClassPath.getClassPath(keyRoot, ClassPath.BOOT);
+                        List<URL> roots = new ArrayList<>();
+                        for (String rootPaths : new String[] {"build/classes/",
+                                                              "build/java.compiler/classes/",
+                                                              "build/jdk.compiler/classes/",
+                                                              "build/jdk.javadoc/classes/",
+                                                              "build/jdk.dev/classes/"}) {
+                            roots.add(testRoot.getParent().toURI().resolve(rootPaths).toURL());
+                        }
+                        return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()])), langtoolsBCP);
+                    } catch (MalformedURLException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                return null;
+            case ClassPath.SOURCE:
+                break;
+            default:
+                return null;
+        }
+
+        Set<FileObject> roots = new LinkedHashSet<>();
+
+        if (testProperties != null) {
+            roots.add(testProperties.getParent());
+
+            try (InputStream in = testProperties.getInputStream()) {
+                Properties p = new Properties();
+                p.load(in);
+                String libDirsText = p.getProperty("lib.dirs");
+                FileObject libDirsRoot = libDirsText != null ? resolve(testProperties, testRoot, libDirsText) : null;
+
+                if (libDirsRoot != null) roots.add(libDirsRoot);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
+        } else {
+            if (file.isFolder()) return null;
 
-            FileObject testRoot = BuildUtils.getFileObject(search, "TEST.ROOT");
+            roots.add(file.getParent());
+            try (Reader r = new InputStreamReader(file.getInputStream(), FileEncodingQuery.getEncoding(file))) {
+                StringBuilder content = new StringBuilder();
+                int read;
 
-            if (testRoot != null) {
-                boolean javac = (Utilities.isLangtoolsRepository(search.getParent()) || search.getNameExt().equals("langtools")) &&
-                                ShortcutUtils.getDefault().shouldUseCustomTest("langtools", FileUtil.getRelativePath(search.getParent(), file));
-                FileObject keyRoot = javac ? search.getNameExt().equals("langtools") ? Utilities.getLangtoolsKeyRoot(search.getParent().getParent()) : Utilities.getLangtoolsKeyRoot(search.getParent()) : null;
-                //XXX: hack to make things work for langtools:
-                switch (type) {
-                    case ClassPath.COMPILE:
-                        if (javac) {
-                            ClassPath langtoolsCP = ClassPath.getClassPath(keyRoot, ClassPath.COMPILE);
-                            Library testngLib = LibraryManager.getDefault().getLibrary("testng");
-
-                            if (testngLib != null) {
-                                return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(testngLib.getContent("classpath").toArray(new URL[0])),
-                                                                             langtoolsCP);
-                            }
-
-                            if (langtoolsCP == null)
-                                return ClassPath.EMPTY;
-                            else
-                                return langtoolsCP;
-                        }
-                        else return null;
-                    case ClassPath.BOOT:
-                        if (javac) {
-                            try {
-                                ClassPath langtoolsBCP = ClassPath.getClassPath(keyRoot, ClassPath.BOOT);
-                                List<URL> roots = new ArrayList<>();
-                                for (String rootPaths : new String[] {"build/classes/",
-                                                                      "build/java.compiler/classes/",
-                                                                      "build/jdk.compiler/classes/",
-                                                                      "build/jdk.javadoc/classes/",
-                                                                      "build/jdk.dev/classes/"}) {
-                                    roots.add(search.getParent().toURI().resolve(rootPaths).toURL());
-                                }
-                                return ClassPathSupport.createProxyClassPath(ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()])), langtoolsBCP);
-                            } catch (MalformedURLException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
-                        }
-                        return null;
-                    case ClassPath.SOURCE:
-                        break;
-                    default:
-                        return null;
+                while ((read = r.read()) != (-1)) {
+                    content.append((char) read);
                 }
 
-                Set<FileObject> roots = new LinkedHashSet<>();
+                Pattern library = Pattern.compile("@library (.*)\n");
+                Matcher m = library.matcher(content.toString());
 
-                if (testProperties != null) {
-                    roots.add(testProperties.getParent());
-
-                    try (InputStream in = testProperties.getInputStream()) {
+                if (m.find()) {
+                    List<FileObject> libDirs = new ArrayList<>();
+                    try (InputStream in = testRootFile.getInputStream()) {
                         Properties p = new Properties();
                         p.load(in);
-                        String libDirsText = p.getProperty("lib.dirs");
-                        FileObject libDirsRoot = libDirsText != null ? resolve(testProperties, search, libDirsText) : null;
+                        String externalLibRoots = p.getProperty("external.lib.roots");
+                        if (externalLibRoots != null) {
+                            for (String extLib : externalLibRoots.split("\\s+")) {
+                                FileObject libDir = BuildUtils.getFileObject(testRoot, extLib);
 
-                        if (libDirsRoot != null) roots.add(libDirsRoot);
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                } else {
-                    if (file.isFolder()) return null;
-                    
-                    roots.add(file.getParent());
-                    try (Reader r = new InputStreamReader(file.getInputStream(), FileEncodingQuery.getEncoding(file))) {
-                        StringBuilder content = new StringBuilder();
-                        int read;
-                        
-                        while ((read = r.read()) != (-1)) {
-                            content.append((char) read);
-                        }
-                        
-                        Pattern library = Pattern.compile("@library (.*)\n");
-                        Matcher m = library.matcher(content.toString());
-
-                        if (m.find()) {
-                            List<FileObject> libDirs = new ArrayList<>();
-                            try (InputStream in = testRoot.getInputStream()) {
-                                Properties p = new Properties();
-                                p.load(in);
-                                String externalLibRoots = p.getProperty("external.lib.roots");
-                                if (externalLibRoots != null) {
-                                    for (String extLib : externalLibRoots.split("\\s+")) {
-                                        FileObject libDir = BuildUtils.getFileObject(search, extLib);
-
-                                        if (libDir != null) {
-                                            libDirs.add(libDir);
-                                        }
-                                    }
-                                }
-                            }
-                            libDirs.add(search);
-                            String libraryPaths = m.group(1).trim();
-                            for (String libraryPath : libraryPaths.split(" ")) {
-                                for (FileObject libDir : libDirs) {
-                                    FileObject libFO = resolve(file, libDir, libraryPath);
-
-                                    if (libFO != null) {
-                                        roots.add(libFO);
-                                    }
+                                if (libDir != null) {
+                                    libDirs.add(libDir);
                                 }
                             }
                         }
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
+                    }
+                    libDirs.add(testRoot);
+                    String libraryPaths = m.group(1).trim();
+                    for (String libraryPath : libraryPaths.split(" ")) {
+                        for (FileObject libDir : libDirs) {
+                            FileObject libFO = resolve(file, libDir, libraryPath);
+
+                            if (libFO != null) {
+                                roots.add(libFO);
+                            }
+                        }
                     }
                 }
-
-                //XXX:
-                for (FileObject root : roots) {
-                    initializeUsagesQuery(root);
-                }
-
-                return ClassPathSupport.createClassPath(roots.toArray(new FileObject[0]));
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
-
-            search = search.getParent();
         }
-        
-        return null;
+
+        //XXX:
+        for (FileObject root : roots) {
+            initializeUsagesQuery(root);
+        }
+
+        return ClassPathSupport.createClassPath(roots.toArray(new FileObject[0]));
     }
 
     private FileObject resolve(FileObject file, FileObject root, String spec) {

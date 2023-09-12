@@ -31,11 +31,6 @@ import java.util.logging.Level;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
-import static javax.lang.model.element.ElementKind.*;
-import static javax.lang.model.element.Modifier.*;
-import static javax.lang.model.SourceVersion.RELEASE_10;
-import static javax.lang.model.SourceVersion.RELEASE_11;
-import static javax.lang.model.SourceVersion.RELEASE_13;
 import javax.lang.model.type.*;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.ElementFilter;
@@ -55,6 +50,15 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.parsing.api.Source;
 import org.openide.util.Pair;
+
+import static javax.lang.model.element.ElementKind.*;
+import static javax.lang.model.element.Modifier.*;
+import static javax.lang.model.SourceVersion.RELEASE_10;
+import static javax.lang.model.SourceVersion.RELEASE_11;
+import static javax.lang.model.SourceVersion.RELEASE_16;
+import static javax.lang.model.SourceVersion.RELEASE_19;
+import static javax.lang.model.SourceVersion.RELEASE_21;
+import static javax.lang.model.type.TypeKind.VOID;
 
 /**
  *
@@ -119,11 +123,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
     
     public static interface LambdaItemFactory<T> extends ItemFactory<T> {
-        T createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean addSemicolon);
+        T createLambdaItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, boolean expression, boolean addSemicolon);
     }
     
     public static interface ModuleItemFactory<T> extends ItemFactory<T> {
         T createModuleItem(String moduleName, int substitutionOffset);
+    }
+
+    public static interface RecordPatternItemFactory<T> extends ItemFactory<T> {
+        T createRecordPatternItem(CompilationInfo info, TypeElement elem, DeclaredType type, int substitutionOffset, ReferencesCount referencesCount, boolean isDeprecated, boolean insideNew, boolean addTypeVars);
     }
 
     public static enum Options {
@@ -203,6 +211,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private static final String VAR_KEYWORD = "var"; //NOI18N
     private static final String VOID_KEYWORD = "void"; //NOI18N
     private static final String VOLATILE_KEYWORD = "volatile"; //NOI18N
+    private static final String WHEN_KEYWORD = "when"; //NOI18N
     private static final String WHILE_KEYWORD = "while"; //NOI18N
     private static final String WITH_KEYWORD = "with"; //NOI18N
     private static final String YIELD_KEYWORD = "yield"; //NOI18N
@@ -487,6 +496,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
             case DEFAULT_CASE_LABEL:
                 localResult(env);
                 addKeywordsForBlock(env);
+                break;
+            case DECONSTRUCTION_PATTERN:
+                insideDeconstructionRecordPattern(env);
                 break;
         }
     }
@@ -1543,14 +1555,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         localResult(env);
         addKeywordsForBlock(env);
-        
-        String prefix = env.getPrefix();
-        if (env.getController().getSourceVersion().compareTo(RELEASE_13) >= 0 && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
-            TreePath parentPath = env.getPath().getParentPath();
-            if (parentPath.getLeaf().getKind() == Tree.Kind.CASE && parentPath.getParentPath().getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
-                addKeyword(env, YIELD_KEYWORD, null, false);
-            }
-        }
     }
 
     @SuppressWarnings("fallthrough")
@@ -1661,10 +1665,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     kinds = EnumSet.of(INTERFACE);
                 } else if (parent.getKind() == Tree.Kind.IMPORT) {
                     inImport = true;
-                    kinds = ((ImportTree) parent).isStatic() ? EnumSet.of(CLASS, ENUM, INTERFACE, ANNOTATION_TYPE, FIELD, METHOD, ENUM_CONSTANT) : EnumSet.of(CLASS, ANNOTATION_TYPE, ENUM, INTERFACE);
+                    kinds = ((ImportTree) parent).isStatic() ? EnumSet.of(CLASS, ENUM, INTERFACE, ANNOTATION_TYPE, RECORD, FIELD, METHOD, ENUM_CONSTANT, RECORD_COMPONENT) : EnumSet.of(CLASS, ANNOTATION_TYPE, ENUM, INTERFACE, RECORD);
                 } else if (parent.getKind() == Tree.Kind.NEW_CLASS && ((NewClassTree) parent).getIdentifier() == fa) {
                     insideNew = true;
-                    kinds = EnumSet.of(CLASS, INTERFACE, ANNOTATION_TYPE);
+                    kinds = EnumSet.of(CLASS, INTERFACE, ANNOTATION_TYPE, RECORD);
                     if (grandParent.getKind() == Tree.Kind.THROW) {
                         TypeElement te = controller.getElements().getTypeElement("java.lang.Throwable"); //NOI18N
                         if (te != null) {
@@ -1692,14 +1696,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
                                 return;
                             }
                         }
-                        kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, FIELD, METHOD, ENUM_CONSTANT);
+                        kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, RECORD, FIELD, METHOD, ENUM_CONSTANT, RECORD_COMPONENT);
                     }
                 } else if (parent.getKind() == Tree.Kind.ASSIGNMENT && ((AssignmentTree) parent).getExpression() == fa && grandParent != null && grandParent.getKind() == Tree.Kind.ANNOTATION) {
                     if (type.getKind() == TypeKind.ERROR && el.getKind().isClass()) {
                         el = controller.getElements().getPackageElement(((TypeElement) el).getQualifiedName());
                     }
                     if (el instanceof PackageElement) {
-                        addPackageContent(env, (PackageElement) el, EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE), null, false, false);
+                        addPackageContent(env, (PackageElement) el, EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, RECORD), null, false, false);
                     } else if (type.getKind() == TypeKind.DECLARED) {
                         addMemberConstantsAndTypes(env, (DeclaredType) type, el);
                     }
@@ -1715,7 +1719,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             baseType = controller.getTypes().getDeclaredType(te);
                         }
                     } else {
-                        kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE);
+                        kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, RECORD);
                     }
                 } else if (parent.getKind() == Tree.Kind.METHOD && ((MethodTree) parent).getThrows().contains(fa)) {
                     Types types = controller.getTypes();
@@ -1745,7 +1749,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         el = controller.getElements().getPackageElement(((TypeElement) el).getQualifiedName());
                     }
                     if (el instanceof PackageElement) {
-                        addPackageContent(env, (PackageElement) el, EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE), null, false, false);
+                        addPackageContent(env, (PackageElement) el, EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, RECORD), null, false, false);
                     } else if (type.getKind() == TypeKind.DECLARED) {
                         addMemberConstantsAndTypes(env, (DeclaredType) type, el);
                     }
@@ -1776,13 +1780,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         }
                         kinds = EnumSet.of(INTERFACE, ANNOTATION_TYPE);
                     } else {
-                        kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, FIELD, METHOD, ENUM_CONSTANT);
+                        kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, RECORD, FIELD, METHOD, ENUM_CONSTANT, RECORD_COMPONENT);
                     }
                 } else if (afterLt) {
                     kinds = EnumSet.of(METHOD);
                 } else if (parent.getKind() == Tree.Kind.ENHANCED_FOR_LOOP && ((EnhancedForLoopTree) parent).getExpression() == fa) {
                     env.insideForEachExpression();
-                    kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, FIELD, METHOD, ENUM_CONSTANT);
+                    kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, RECORD, FIELD, METHOD, ENUM_CONSTANT, RECORD_COMPONENT);
                 } else if (tu.getPathElementOfKind(Tree.Kind.EXPORTS, path) != null) {
                     kinds = EnumSet.noneOf(ElementKind.class);
                     srcOnly = true;
@@ -1791,7 +1795,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 } else if (tu.getPathElementOfKind(Tree.Kind.USES, path) != null) {
                     kinds = EnumSet.of(ANNOTATION_TYPE, CLASS, INTERFACE);
                 } else {
-                    kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, FIELD, METHOD, ENUM_CONSTANT);
+                    kinds = EnumSet.of(CLASS, ENUM, ANNOTATION_TYPE, INTERFACE, RECORD, FIELD, METHOD, ENUM_CONSTANT, RECORD_COMPONENT);
                 }
                 switch (type.getKind()) {
                     case TYPEVAR:
@@ -1993,8 +1997,56 @@ public final class JavaCompletionTask<T> extends BaseTask {
     private void insideMethodInvocation(Env env) throws IOException {
         TreePath path = env.getPath();
         MethodInvocationTree mi = (MethodInvocationTree) path.getLeaf();
+        String prefix = env.getPrefix();
         int offset = env.getOffset();
         TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, mi, offset);
+        if (path.getParentPath().getLeaf().getKind() == Kind.CONSTANT_CASE_LABEL) {
+            CompilationController controller = env.getController();
+            controller.toPhase(Phase.RESOLVED);
+            TypeMirror tm = controller.getTreeUtilities().parseType(fullName(mi.getMethodSelect()), env.getScope().getEnclosingClass());
+            if (tm != null && tm.getKind() == TypeKind.DECLARED) {
+                TypeElement te = (TypeElement) ((DeclaredType) tm).asElement();
+                if (te.getKind() == RECORD) {
+                    List<? extends RecordComponentElement> recordComponents = te.getRecordComponents();
+                    int size = mi.getArguments().size();
+                    if (size <= recordComponents.size()) {
+                        TypeMirror componentType = recordComponents.get(size - 1).getAccessor().getReturnType();
+                        if (ts != null && (ts.token().id() == JavaTokenId.LPAREN || ts.token().id() == JavaTokenId.COMMA)) {
+                            if (componentType.getKind() == TypeKind.DECLARED) {
+                                if (prefix != null) {
+                                    TypeMirror ptm = controller.getTreeUtilities().parseType(prefix, env.getScope().getEnclosingClass());
+                                    if (ptm != null && ptm.getKind() == TypeKind.DECLARED) {
+                                        TypeElement pte = (TypeElement) ((DeclaredType) ptm).asElement();
+                                        if (pte != null && pte.getKind() == RECORD) {
+                                            results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(controller, pte, (DeclaredType) ptm, anchorOffset, null, controller.getElements().isDeprecated(pte), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
+                                            env.addToExcludes(pte);
+                                        }
+                                    }
+                                }
+                                addClassTypes(env, (DeclaredType) componentType);
+                            }
+                            addKeyword(env, VAR_KEYWORD, SPACE, false);
+                        } else {
+                            final Map<Name, ? extends Element> illegalForwardRefs = env.getForwardReferences();
+                            Scope scope = env.getScope();
+                            final ExecutableElement method = scope.getEnclosingMethod();
+                            ElementUtilities.ElementAcceptor acceptor = new ElementUtilities.ElementAcceptor() {
+                                @Override
+                                public boolean accept(Element e, TypeMirror t) {
+                                    return (method == null || method == e.getEnclosingElement() || e.getModifiers().contains(FINAL)
+                                            || EnumSet.of(LOCAL_VARIABLE, PARAMETER, EXCEPTION_PARAMETER, RESOURCE_VARIABLE).contains(simplifyElementKind(e.getKind())) && controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && controller.getElementUtilities().isEffectivelyFinal((VariableElement)e))
+                                            && !illegalForwardRefs.containsKey(e.getSimpleName());
+                                }
+                            };
+                            for (String name : Utilities.varNamesSuggestions(componentType, LOCAL_VARIABLE, EnumSet.noneOf(Modifier.class), null, prefix, controller.getTypes(), controller.getElements(), controller.getElementUtilities().getLocalMembersAndVars(scope, acceptor), CodeStyle.getDefault(controller.getDocument()))) {
+                                results.add(itemFactory.createVariableItem(env.getController(), name, anchorOffset, true, false));
+                            }
+                        }
+                    }
+                    return;
+                }
+            }
+        }
         if (ts == null || (ts.token().id() != JavaTokenId.LPAREN && ts.token().id() != JavaTokenId.COMMA)) {
             SourcePositions sp = env.getSourcePositions();
             CompilationUnitTree root = env.getRoot();
@@ -2011,7 +2063,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
             return;
         }
-        String prefix = env.getPrefix();
         if (prefix == null || prefix.length() == 0) {
             addMethodArguments(env, mi);
         }
@@ -2360,44 +2411,40 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 lastCase = t;
             }
             if (lastCase != null) {
-                StatementTree last = null;
                 List<? extends StatementTree> statements = lastCase.getStatements();
                 if (statements == null) {
-                    Tree caseBody = lastCase.getBody();
-                    if (caseBody instanceof StatementTree) {
-                        statements = Collections.singletonList((StatementTree) caseBody);
+                    int pos = (int) sourcePositions.getStartPosition(root, lastCase.getBody());
+                    if (pos != Diagnostic.NOPOS && pos < offset) {
+                        addKeyword(env, CASE_KEYWORD, SPACE, false);
+                        addKeyword(env, DEFAULT_KEYWORD, COLON, false);
                     }
-                }
-                for (StatementTree stat : statements) {
-                    int pos = (int) sourcePositions.getStartPosition(root, stat);
-                    if (pos == Diagnostic.NOPOS || offset <= pos) {
-                        break;
+                } else {
+                    Tree last = null;
+                    for (StatementTree stat : statements) {
+                        int pos = (int) sourcePositions.getStartPosition(root, stat);
+                        if (pos == Diagnostic.NOPOS || offset <= pos) {
+                            break;
+                        }
+                        last = stat;
                     }
-                    last = stat;
-                }
-                if (last != null) {
-                    if (last.getKind() == Tree.Kind.TRY) {
-                        if (((TryTree) last).getFinallyBlock() == null) {
-                            addKeyword(env, CATCH_KEYWORD, null, false);
-                            addKeyword(env, FINALLY_KEYWORD, null, false);
-                            if (((TryTree) last).getCatches().isEmpty()) {
-                                return;
+                    if (last != null) {
+                        if (last.getKind() == Tree.Kind.TRY) {
+                            if (((TryTree) last).getFinallyBlock() == null) {
+                                addKeyword(env, CATCH_KEYWORD, null, false);
+                                addKeyword(env, FINALLY_KEYWORD, null, false);
+                                if (((TryTree) last).getCatches().isEmpty()) {
+                                    return;
+                                }
+                            }
+                        } else if (last.getKind() == Tree.Kind.IF) {
+                            if (((IfTree) last).getElseStatement() == null) {
+                                addKeyword(env, ELSE_KEYWORD, null, false);
                             }
                         }
-                    } else if (last.getKind() == Tree.Kind.IF) {
-                        if (((IfTree) last).getElseStatement() == null) {
-                            addKeyword(env, ELSE_KEYWORD, null, false);
-                        }
                     }
+                    localResult(env);
+                    addKeywordsForBlock(env);
                 }
-                localResult(env);
-                addKeywordsForBlock(env);
-                String prefix = env.getPrefix();
-                if (env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_13) >= 0
-                    && path.getLeaf().getKind() == Kind.SWITCH_EXPRESSION && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
-                    addKeyword(env, YIELD_KEYWORD, null, false);
-                }
-
             } else {
                 TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, path.getLeaf(), offset);
                 if (ts != null && ts.token().id() == JavaTokenId.LBRACE) {
@@ -2412,54 +2459,85 @@ public final class JavaCompletionTask<T> extends BaseTask {
         int offset = env.getOffset();
         TreePath path = env.getPath();
         CaseTree cst = (CaseTree) path.getLeaf();
+        String prefix = env.getPrefix();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
         CompilationController controller = env.getController();
         TreePath parentPath = path.getParentPath();
-        ExpressionTree caseExpressionTree = null;
+        CaseLabelTree firstCaseLabelTree = null;
+        CaseLabelTree lastCaseLabelTree = null;
         ExpressionTree caseErroneousTree = null;
-        List<? extends ExpressionTree> caseTreeList = cst.getExpressions();
-        if (!caseTreeList.isEmpty() && caseTreeList.size() == 1) {
-            caseExpressionTree = caseTreeList.get(0);
-            caseErroneousTree = caseTreeList.get(0);
-        } else if (caseTreeList.size() > 1) {
-            caseExpressionTree = caseTreeList.get(0);
-            for (ExpressionTree et : caseTreeList) {
+        List<? extends CaseLabelTree> caseTreeList = cst.getLabels();
+        if (!caseTreeList.isEmpty()) {
+            firstCaseLabelTree = caseTreeList.get(0);
+            lastCaseLabelTree = caseTreeList.get(caseTreeList.size() - 1);
+            if (lastCaseLabelTree != null && lastCaseLabelTree.getKind() == Tree.Kind.CONSTANT_CASE_LABEL) {
+                ExpressionTree et = ((ConstantCaseLabelTree) lastCaseLabelTree).getConstantExpression();
                 if (et != null && et.getKind() == Tree.Kind.ERRONEOUS) {
                     caseErroneousTree = et;
-                    break;
                 }
             }
         }
 
-        if (caseExpressionTree != null && ((sourcePositions.getStartPosition(root, caseExpressionTree) >= offset)
+        if (firstCaseLabelTree != null && ((sourcePositions.getStartPosition(root, firstCaseLabelTree) >= offset)
                 || (caseErroneousTree != null && caseErroneousTree.getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) caseErroneousTree).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, caseErroneousTree) >= offset))) {
-
-            if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH || parentPath.getLeaf().getKind() == Kind.SWITCH_EXPRESSION) {
-                ExpressionTree exprTree = null;
+            if (firstCaseLabelTree.getKind() == Kind.CONSTANT_CASE_LABEL && ((ConstantCaseLabelTree) firstCaseLabelTree).getConstantExpression().getKind() == Kind.NULL_LITERAL) {
+                addKeyword(env, DEFAULT_KEYWORD, null, false);
+            } else if (firstCaseLabelTree.getKind() != Kind.DEFAULT_CASE_LABEL && (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH || parentPath.getLeaf().getKind() == Kind.SWITCH_EXPRESSION)) {
+                ExpressionTree exprTree;
                 if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH) {
                     exprTree = ((SwitchTree) parentPath.getLeaf()).getExpression();
                 } else {
                     exprTree = ((SwitchExpressionTree) parentPath.getLeaf()).getExpression();
                 }
                 TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(parentPath, exprTree));
-                if (tm.getKind() == TypeKind.DECLARED && ((DeclaredType) tm).asElement().getKind() == ENUM) {
-                    addEnumConstants(env, (TypeElement) ((DeclaredType) tm).asElement());
+                if (tm.getKind() == TypeKind.DECLARED) {
+                    if (((DeclaredType) tm).asElement().getKind() == ENUM) {
+                        addEnumConstants(env, (TypeElement) ((DeclaredType) tm).asElement());
+                    } else {
+                        if (env.getController().getSourceVersion().compareTo(RELEASE_21) >= 0) {
+                            if (prefix != null) {
+                                TypeMirror ptm = controller.getTreeUtilities().parseType(prefix, env.getScope().getEnclosingClass());
+                                if (ptm != null && ptm.getKind() == TypeKind.DECLARED) {
+                                    TypeElement pte = (TypeElement) ((DeclaredType) ptm).asElement();
+                                    if (pte != null && pte.getKind() == RECORD) {
+                                        results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(controller, pte, (DeclaredType) ptm, anchorOffset, null, controller.getElements().isDeprecated(pte), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
+                                        env.addToExcludes(pte);
+                                    }
+                                }
+                            }
+                            addCaseLabels(env, cst);
+                        }
+                        addLocalConstantsAndTypes(env);
+                    }
                 } else {
                     addLocalConstantsAndTypes(env);
+                }
+            }
+        } else if (lastCaseLabelTree != null && lastCaseLabelTree.getKind() == Tree.Kind.PATTERN_CASE_LABEL
+                && env.getController().getSourceVersion().compareTo(RELEASE_21) >= 0 && cst.getBody() == null) {
+            if (cst.getGuard() == null) {
+                addKeyword(env, WHEN_KEYWORD, SPACE, false);
+            } else {
+                TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, cst, offset);
+                if (ts != null && ts.token().id() == JavaTokenId.IDENTIFIER && WHEN_KEYWORD.contentEquals(ts.token().text())) {
+                    localResult(env);
                 }
             }
         } else {
             TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, cst, offset);
             if (ts != null && ts.token().id() == JavaTokenId.IDENTIFIER) {
-                for (ExpressionTree caseExpression : caseTreeList) {
-                    if (caseExpression != null && caseExpression.getKind() == Tree.Kind.IDENTIFIER) {
-                        TreePath tPath = new TreePath(path, caseExpression);
-                        insideExpression(env, tPath);
-                        return;
+                for (CaseLabelTree clt : caseTreeList) {
+                    if (clt != null && clt.getKind() == Tree.Kind.CONSTANT_CASE_LABEL) {
+                        ExpressionTree caseExpression = ((ConstantCaseLabelTree) clt).getConstantExpression();
+                        if (caseExpression != null && caseExpression.getKind() == Tree.Kind.IDENTIFIER) {
+                            TreePath tPath = new TreePath(path, caseExpression);
+                            insideExpression(env, tPath);
+                            return;
+                        }
                     }
                 }
-            } else if (ts != null && ts.token().id() != JavaTokenId.DEFAULT) {
+            } else if (ts != null && ts.token().id() != JavaTokenId.NULL && ts.token().id() != JavaTokenId.DEFAULT) {
                 localResult(env);
                 addKeywordsForBlock(env);
             }
@@ -2521,9 +2599,21 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
 
     private void insideTypeCheck(Env env) throws IOException {
+        CompilationController controller = env.getController();
+        String prefix = env.getPrefix();
         InstanceOfTree iot = (InstanceOfTree) env.getPath().getLeaf();
         TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, iot, env.getOffset());
         if (ts != null && ts.token().id() == JavaTokenId.INSTANCEOF) {
+            if (prefix != null && controller.getSourceVersion().compareTo(RELEASE_21) >= 0) {
+                TypeMirror tm = controller.getTreeUtilities().parseType(prefix, env.getScope().getEnclosingClass());
+                if (tm != null && tm.getKind() == TypeKind.DECLARED) {
+                    TypeElement te = (TypeElement) ((DeclaredType) tm).asElement();
+                    if (te != null && te.getKind() == RECORD) {
+                        results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(controller, te, (DeclaredType) tm, anchorOffset, null, controller.getElements().isDeprecated(te), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
+                        env.addToExcludes(te);
+                    }
+                }
+            }
             addClassTypes(env, null);
         }
     }
@@ -2764,6 +2854,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreePath tPath = new TreePath(path, t);
         if (t.getKind() == Tree.Kind.MODIFIERS) {
             insideModifiers(env, tPath);
+        } else if (t.getKind() == Tree.Kind.IDENTIFIER && YIELD_KEYWORD.contentEquals(((IdentifierTree) t).getName())) {
+            TreePath sPath = controller.getTreeUtilities().getPathElementOfKind(Tree.Kind.SWITCH_EXPRESSION, path);
+            if (sPath != null) {
+                localResult(env);
+                addValueKeywords(env);
+            }
         } else if (t.getKind() == Tree.Kind.MEMBER_SELECT && ERROR.contentEquals(((MemberSelectTree) t).getIdentifier())) {
             controller.toPhase(Phase.ELEMENTS_RESOLVED);
             TreePath expPath = new TreePath(tPath, ((MemberSelectTree) t).getExpression());
@@ -2826,6 +2922,26 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (et.getKind() == Tree.Kind.ANNOTATED_TYPE) {
             et = ((AnnotatedTypeTree) et).getUnderlyingType();
             exPath = new TreePath(exPath, et);
+        }
+        if (et.getKind() == Tree.Kind.INSTANCE_OF && endPos < offset && controller.getSourceVersion().compareTo(RELEASE_16) >= 0) {
+            if (((InstanceOfTree) et).getPattern() == null) {
+                TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(exPath, ((InstanceOfTree) et).getType()));
+                final Map<Name, ? extends Element> illegalForwardRefs = env.getForwardReferences();
+                Scope scope = env.getScope();
+                final ExecutableElement method = scope.getEnclosingMethod();
+                ElementUtilities.ElementAcceptor acceptor = new ElementUtilities.ElementAcceptor() {
+                    @Override
+                    public boolean accept(Element e, TypeMirror t) {
+                        return (method == null || method == e.getEnclosingElement() || e.getModifiers().contains(FINAL)
+                                || EnumSet.of(LOCAL_VARIABLE, PARAMETER, EXCEPTION_PARAMETER, RESOURCE_VARIABLE).contains(simplifyElementKind(e.getKind())) && controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0 && controller.getElementUtilities().isEffectivelyFinal((VariableElement)e))
+                                && !illegalForwardRefs.containsKey(e.getSimpleName());
+                    }
+                };
+                for (String name : Utilities.varNamesSuggestions(tm, varKind, varMods, null, prefix, controller.getTypes(), controller.getElements(), controller.getElementUtilities().getLocalMembersAndVars(scope, acceptor), CodeStyle.getDefault(controller.getDocument()))) {
+                    results.add(itemFactory.createVariableItem(env.getController(), name, anchorOffset, true, false));
+                }
+            }
+            return;
         }
         if (parent.getKind() != Tree.Kind.PARENTHESIZED
                 && (et.getKind() == Tree.Kind.PRIMITIVE_TYPE || et.getKind() == Tree.Kind.ARRAY_TYPE || et.getKind() == Tree.Kind.PARAMETERIZED_TYPE)) {
@@ -3050,21 +3166,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
     
-    private void addClassTypes(final Env env, DeclaredType baseType) throws IOException{
-        EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE, TYPE_PARAMETER);
-        if (isRecordSupported(env)) {
-            classKinds.add(RECORD);
-        }
-        addTypes(env, classKinds, baseType);
-    }
-
-    private boolean isRecordSupported(final Env env) {
-        return env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_14) >= 0;
-    }
-    private boolean isSealedSupported(final Env env) {
-        return env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_15) >= 0;
-    }
-
     private void insideRecord(Env env) throws IOException {
         int offset = env.getOffset();
         env.insideClass();
@@ -3236,6 +3337,58 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
     }
 
+    private void insideDeconstructionRecordPattern(final Env env) throws IOException {
+        DeconstructionPatternTree dpt = (DeconstructionPatternTree) env.getPath().getLeaf();
+        int offset = env.getOffset();
+        String prefix = env.getPrefix();
+        TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, dpt, offset);
+        if (ts == null || (ts.token().id() != JavaTokenId.LPAREN && ts.token().id() != JavaTokenId.COMMA)) {
+            return;
+        }
+        CompilationController controller = env.getController();
+        controller.toPhase(Phase.RESOLVED);
+        TypeMirror tm = controller.getTrees().getTypeMirror(env.getPath());
+        if (tm != null && tm.getKind() == TypeKind.DECLARED) {
+            TypeElement te = (TypeElement) ((DeclaredType) tm).asElement();
+            if (te != null && te.getKind() == RECORD) {
+                List<? extends RecordComponentElement> recordComponents = te.getRecordComponents();
+                int size = dpt.getNestedPatterns().size();
+                if (size <= recordComponents.size()) {
+                    TypeMirror componentType = recordComponents.get(size - 1).getAccessor().getReturnType();
+                    if (componentType.getKind() == TypeKind.DECLARED) {
+                        if (prefix != null) {
+                            TypeMirror ptm = controller.getTreeUtilities().parseType(prefix, env.getScope().getEnclosingClass());
+                            if (ptm != null && ptm.getKind() == TypeKind.DECLARED) {
+                                TypeElement pte = (TypeElement) ((DeclaredType) ptm).asElement();
+                                if (pte != null && pte.getKind() == RECORD) {
+                                    results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(controller, pte, (DeclaredType) ptm, anchorOffset, null, controller.getElements().isDeprecated(pte), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
+                                    env.addToExcludes(pte);
+                                }
+                            }
+                        }
+                        addClassTypes(env, (DeclaredType) componentType);
+                    }
+                    addKeyword(env, VAR_KEYWORD, SPACE, false);
+                }
+            }
+        }
+    }
+
+    private void addClassTypes(final Env env, DeclaredType baseType) throws IOException{
+        EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE, TYPE_PARAMETER);
+        if (isRecordSupported(env)) {
+            classKinds.add(RECORD);
+        }
+        addTypes(env, classKinds, baseType);
+    }
+
+    private boolean isRecordSupported(final Env env) {
+        return env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_14) >= 0;
+    }
+    private boolean isSealedSupported(final Env env) {
+        return env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_15) >= 0;
+    }
+
     private void localResult(Env env) throws IOException {
         addLocalMembersAndVars(env);
         addClassTypes(env, null);
@@ -3344,7 +3497,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             addTypeDotClassMembers(env, type);
                         } else if (controller.getSourceVersion().compareTo(SourceVersion.RELEASE_8) >= 0
                                 && elements.isFunctionalInterface(element) && itemFactory instanceof LambdaItemFactory) {
-                            results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, env.addSemicolon()));
+                            results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, true, env.addSemicolon()));
+                            if (controller.getElementUtilities().getDescriptorElement(element).getReturnType().getKind() != VOID) {
+                                results.add(((LambdaItemFactory<T>)itemFactory).createLambdaItem(env.getController(), element, type, anchorOffset, false, env.addSemicolon()));
+                            }
                         }
                         final boolean startsWith = startsWith(env, element.getSimpleName().toString());
                         final boolean withinScope = withinScope(env, element);
@@ -3375,6 +3531,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
             addAllStaticMemberNames(env);
         }
         final TypeElement enclClass = scope.getEnclosingClass();
+        List<ExecutableElement> methodsIn = null;
+
         for (Element e : locals) {
             switch (simplifyElementKind(e.getKind())) {
                 case ENUM_CONSTANT:
@@ -3394,8 +3552,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     }
                     break;
                 case METHOD:
+                    if (methodsIn == null) {
+                        methodsIn = ElementFilter.methodsIn(locals);
+                    }
                     ExecutableType et = (ExecutableType) asMemberOf(e, enclClass != null ? enclClass.asType() : null, types);
-                    if (e.getEnclosingElement() != enclClass && conflictsWithLocal(e.getSimpleName(), enclClass, locals)) {
+                    if (e.getEnclosingElement() != enclClass && conflictsWithLocalMethods(e.getSimpleName(), enclClass, methodsIn)) {
                         results.add(itemFactory.createStaticMemberItem(env.getController(), (DeclaredType)e.getEnclosingElement().asType(), e, et, false, anchorOffset, elements.isDeprecated(e), env.addSemicolon()));
                     } else {
                         results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, env.getScope().getEnclosingClass() != e.getEnclosingElement(), elements.isDeprecated(e), false, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, enclClass != null ? enclClass.asType() : null), smartTypes), env.assignToVarPos(), false));
@@ -4019,6 +4180,46 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
     }
 
+    private void addCaseLabels(Env env, CaseTree cst) {
+        TreePath path = env.getPath().getParentPath();
+        boolean nullUsed = false;
+        boolean defaultUsed = false;
+        boolean patternUsedInCase = false;
+        List<? extends CaseTree> caseTrees = null;
+        if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH) {
+            caseTrees = ((SwitchTree) path.getLeaf()).getCases();
+        } else if (path != null && path.getLeaf().getKind() == Tree.Kind.SWITCH_EXPRESSION) {
+            caseTrees = ((SwitchExpressionTree) path.getLeaf()).getCases();
+        }
+        if (caseTrees != null) {
+            for (CaseTree ct : caseTrees) {
+                for (CaseLabelTree clt : ct.getLabels()) {
+                    switch (clt.getKind()) {
+                        case DEFAULT_CASE_LABEL:
+                            defaultUsed = true;
+                            break;
+                        case CONSTANT_CASE_LABEL:
+                            if ((((ConstantCaseLabelTree) clt).getConstantExpression()).getKind() == Tree.Kind.NULL_LITERAL) {
+                                nullUsed = true;
+                            }
+                            break;
+                        case PATTERN_CASE_LABEL:
+                            if (ct == cst) {
+                                patternUsedInCase = true;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        if (!nullUsed) {
+            addKeyword(env, NULL_KEYWORD, null, false);
+        }
+        if (nullUsed && !defaultUsed && !patternUsedInCase) {
+            addKeyword(env, DEFAULT_KEYWORD, null, false);
+        }
+    }
+
     private void addPackageContent(final Env env, PackageElement pe, EnumSet<ElementKind> kinds, DeclaredType baseType, boolean insideNew, boolean srcOnly) throws IOException {
         if (isRecordSupported(env)) {
             kinds.add(RECORD);
@@ -4139,6 +4340,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case ENUM:
                 case INTERFACE:
                 case ANNOTATION_TYPE:
+                case RECORD:
                     results.add(itemFactory.createTypeItem(env.getController(), (TypeElement) e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false));
                     env.addToExcludes(e);
                     break;
@@ -4160,7 +4362,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         };
         for (TypeElement e : controller.getElementUtilities().getGlobalTypes(acceptor)) {
-            results.add(itemFactory.createTypeItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false));
+            Tree iot = env.getPath().getLeaf();
+            TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, iot, env.getOffset());
+            if (env.getPrefix() != null && e.getSimpleName().toString().contentEquals(env.getPrefix()) && (e.getKind() == ElementKind.RECORD)
+                    && ts != null && ts.token().id() == JavaTokenId.INSTANCEOF) {
+                results.add(((RecordPatternItemFactory<T>) itemFactory).createRecordPatternItem(controller, e, (DeclaredType) e.asType(), anchorOffset, null, controller.getElements().isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass()));
+            } else {
+                results.add(itemFactory.createTypeItem(env.getController(), e, (DeclaredType) e.asType(), anchorOffset, null, elements.isDeprecated(e), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), false, false, false));
+            }
         }
     }
 
@@ -4184,7 +4393,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     continue;
                 }
                 if (!kinds.contains(name.getKind()) && !doNotRemove.contains(name.getQualifiedName())) {
-                    removed.put(name.getQualifiedName(), name);
+                    int idx = name.getQualifiedName().lastIndexOf('.');
+                    String sName = idx < 0 ? name.getQualifiedName() : name.getQualifiedName().substring(idx + 1);
+                    if (startsWith(env, sName, prefix)) {
+                        removed.put(name.getQualifiedName(), name);
+                    }
                     continue;
                 }
                 String qName = name.getQualifiedName();
@@ -4193,10 +4406,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 while ((idx = qName.lastIndexOf('.')) > 0) {
                     if (sName == null) {
                         sName = qName.substring(idx + 1);
-                        if (sName.length() <= 0 || !startsWith(env, sName, prefix)) {
-                            break;
+                        if (sName.length() > 0 && startsWith(env, sName, prefix)) {
+                            results.add(itemFactory.createTypeItem(name, kinds, anchorOffset, env.getReferencesCount(), controller.getSnapshot().getSource(), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), env.isAfterExtends()));
                         }
-                        results.add(itemFactory.createTypeItem(name, kinds, anchorOffset, env.getReferencesCount(), controller.getSnapshot().getSource(), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), env.isAfterExtends()));
                     }
                     qName = qName.substring(0, idx);
                     doNotRemove.add(qName);
@@ -4218,7 +4430,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             Set<ElementHandle<TypeElement>> declaredTypes = controller.getClasspathInfo().getClassIndex().getDeclaredTypes(subwordsPattern != null ? subwordsPattern : prefix != null ? prefix : EMPTY, kind, EnumSet.allOf(ClassIndex.SearchScope.class));
             results.ensureCapacity(results.size() + declaredTypes.size());
             for (ElementHandle<TypeElement> name : declaredTypes) {
-                if (excludeHandles != null && excludeHandles.contains(name) || isAnnonInner(name)) {
+                if (!kinds.contains(name.getKind()) || excludeHandles != null && excludeHandles.contains(name) || isAnnonInner(name)) {
                     continue;
                 }
                 results.add(itemFactory.createTypeItem(name, kinds, anchorOffset, env.getReferencesCount(), controller.getSnapshot().getSource(), env.isInsideNew(), env.isInsideNew() || env.isInsideClass(), env.isAfterExtends()));
@@ -4664,6 +4876,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         boolean caseAdded = false;
         boolean breakAdded = false;
         boolean continueAdded = false;
+        boolean yieldAdded = false;
         TreePath tp = env.getPath();
         while (tp != null) {
             switch (tp.getLeaf().getKind()) {
@@ -4689,6 +4902,30 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     if (!breakAdded && Utilities.startsWith(BREAK_KEYWORD, prefix)) {
                         breakAdded = true;
                         results.add(itemFactory.createKeywordItem(BREAK_KEYWORD, withinLabeledStatement(env) ? null : SEMI, anchorOffset, false));
+                    }
+                    break;
+                case SWITCH_EXPRESSION:
+                    lastCase = null;
+                    root = env.getRoot();
+                    sourcePositions = env.getSourcePositions();
+                    for (CaseTree t : ((SwitchExpressionTree) tp.getLeaf()).getCases()) {
+                        if (sourcePositions.getStartPosition(root, t) >= env.getOffset()) {
+                            break;
+                        }
+                        lastCase = t;
+                    }
+                    if (!caseAdded && (lastCase == null || lastCase.getExpression() != null)) {
+                        caseAdded = true;
+                        if (Utilities.startsWith(CASE_KEYWORD, prefix)) {
+                            results.add(itemFactory.createKeywordItem(CASE_KEYWORD, SPACE, anchorOffset, false));
+                        }
+                        if (Utilities.startsWith(DEFAULT_KEYWORD, prefix)) {
+                            results.add(itemFactory.createKeywordItem(DEFAULT_KEYWORD, COLON, anchorOffset, false));
+                        }
+                    }
+                    if (!yieldAdded && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
+                        yieldAdded = true;
+                        results.add(itemFactory.createKeywordItem(YIELD_KEYWORD, SPACE, anchorOffset, false));
                     }
                     break;
                 case DO_WHILE_LOOP:
@@ -4749,6 +4986,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreePath tp = env.getPath();
         boolean cAdded = false;
         boolean bAdded = false;
+        boolean yAdded = false;
         while (tp != null && !(cAdded && bAdded)) {
             switch (tp.getLeaf().getKind()) {
                 case DO_WHILE_LOOP:
@@ -4763,6 +5001,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     if (!bAdded && Utilities.startsWith(BREAK_KEYWORD, prefix)) {
                         results.add(itemFactory.createKeywordItem(BREAK_KEYWORD, SEMI, anchorOffset, false));
                         bAdded = true;
+                    }
+                    break;
+                case SWITCH_EXPRESSION:
+                    if (!yAdded && Utilities.startsWith(YIELD_KEYWORD, prefix)) {
+                        results.add(itemFactory.createKeywordItem(YIELD_KEYWORD, SPACE, anchorOffset, false));
+                        yAdded = true;
                     }
                     break;
             }
@@ -5509,6 +5753,25 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         }
                     }
                     return ret;
+                case SWITCH_EXPRESSION:
+                    SwitchExpressionTree sew = (SwitchExpressionTree) tree;
+                    if (sew.getExpression() != lastTree && sew.getExpression().getKind() != Tree.Kind.ERRONEOUS) {
+                        return null;
+                    }
+                    ret = new HashSet<>();
+                    types = controller.getTypes();
+                    ret.add(controller.getTypes().getPrimitiveType(TypeKind.INT));
+                    te = controller.getElements().getTypeElement("java.lang.Enum"); //NOI18N
+                    if (te != null) {
+                        ret.add(types.getDeclaredType(te));
+                    }
+                    if (controller.getSourceVersion().compareTo(SourceVersion.RELEASE_7) >= 0) {
+                        te = controller.getElements().getTypeElement("java.lang.String"); //NOI18N
+                        if (te != null) {
+                            ret.add(types.getDeclaredType(te));
+                        }
+                    }
+                    return ret;
                 case METHOD_INVOCATION:
                     MethodInvocationTree mi = (MethodInvocationTree) tree;
                     sourcePositions = env.getSourcePositions();
@@ -5886,6 +6149,23 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         {
                             return null;
                         }
+                    } else if (exp.getKind() == Tree.Kind.ERRONEOUS) {
+                        Iterator<? extends Tree> it = ((ErroneousTree) exp).getErrorTrees().iterator();
+                        if (it.hasNext()) {
+                            Tree t = it.next();
+                            if (t.getKind() == Tree.Kind.IDENTIFIER && YIELD_KEYWORD.contentEquals(((IdentifierTree) t).getName())) {
+                                TreePath sPath = tu.getPathElementOfKind(Tree.Kind.SWITCH_EXPRESSION, path);
+                                if (sPath != null) {
+                                    path = sPath;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case YIELD:
+                    TreePath sPath = tu.getPathElementOfKind(Tree.Kind.SWITCH_EXPRESSION, path);
+                    if (sPath != null) {
+                        path = sPath;
                     }
                     break;
                 case BLOCK:
@@ -6208,9 +6488,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         return false;
     }
-    
-    private boolean conflictsWithLocal(Name name, TypeElement enclClass, Iterable<? extends Element> locals) {
-        for (ExecutableElement local : ElementFilter.methodsIn(locals)) {
+
+    private static boolean conflictsWithLocalMethods(Name name, TypeElement enclClass, List<ExecutableElement> methodsIn) {
+        for (ExecutableElement local : methodsIn) {
             if (local.getEnclosingElement() == enclClass && name.contentEquals(local.getSimpleName())) {
                 return true;
             }

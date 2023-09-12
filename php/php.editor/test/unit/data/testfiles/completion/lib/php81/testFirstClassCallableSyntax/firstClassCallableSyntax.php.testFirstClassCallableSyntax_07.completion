@@ -1,0 +1,5 @@
+Code completion result for source line:
+$test?->meth|od($test->method(...));
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     method($param1, $param2)        [PUBLIC]   Test
+METHOD     method(...)                     [PUBLIC]   Test

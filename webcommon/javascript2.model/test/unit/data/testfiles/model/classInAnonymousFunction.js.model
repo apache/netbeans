@@ -1,0 +1,29 @@
+FUNCTION classInAnonymousFunction [ANONYMOUS: false, DECLARED: true - classInAnonymousFunction, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+classInAnonymousFunctionL#20 : FUNCTION classInAnonymousFunctionL#20 [ANONYMOUS: true, DECLARED: true - classInAnonymousFunctionL#20, MODIFIERS: PUBLIC, FUNCTION]
+                             # RETURN TYPES
+                             undefined, RESOLVED: true
+                             # PROPERTIES
+                             Directory : OBJECT Directory [ANONYMOUS: false, DECLARED: true - Directory, MODIFIERS: PUBLIC, CLASS]
+                                       # PROPERTIES
+                                       constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, CONSTRUCTOR]
+                                                   # RETURN TYPES
+                                                   classInAnonymousFunctionL#20.Directory, RESOLVED: true
+                                                   # PARAMETERS
+                                                   OBJECT displayName [ANONYMOUS: false, DECLARED: true - displayName, MODIFIERS: PUBLIC, PARAMETER]
+                                                   # PROPERTIES
+                                                   arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                       displayName : OBJECT displayName [ANONYMOUS: false, DECLARED: true - displayName, MODIFIERS: PUBLIC, PROPERTY]
+                             ImageFile : OBJECT ImageFile [ANONYMOUS: false, DECLARED: true - ImageFile, MODIFIERS: PUBLIC, CLASS]
+                                       # PROPERTIES
+                                       constructor : FUNCTION constructor [ANONYMOUS: false, DECLARED: true - constructor, MODIFIERS: PUBLIC, CONSTRUCTOR]
+                                                   # RETURN TYPES
+                                                   classInAnonymousFunctionL#20.ImageFile, RESOLVED: true
+                                                   # PARAMETERS
+                                                   OBJECT displayName [ANONYMOUS: false, DECLARED: true - displayName, MODIFIERS: PUBLIC, PARAMETER]
+                                                   # PROPERTIES
+                                                   arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                       displayName : OBJECT displayName [ANONYMOUS: false, DECLARED: true - displayName, MODIFIERS: PUBLIC, PROPERTY]
+                             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

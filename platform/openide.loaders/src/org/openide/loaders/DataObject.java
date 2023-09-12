@@ -115,12 +115,12 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
     private static final Set<DataObject> syncModified = Collections.synchronizedSet(modified);
 
     /** Modified flag 
-     * @GuardedBy(LOCK)
+     * &#64;GuardedBy(LOCK)
      */
     private boolean modif = false;
 
     /** the node delegate for this data object 
-     * @GuardedBy(LOCK)
+     * &#64;GuardedBy(LOCK)
        */
     private transient Node nodeDelegate;
     private static final Node BEING_CREATED = Node.EMPTY.cloneNode();
@@ -134,12 +134,12 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
     private final DataLoader loader;
 
     /** property change listener support.
-     * Threading: lock free, changes HAS to go through {@link DataObject#changeSupportUpdater}.
+     * Threading: lock free, changes HAS to go through {@code DataObject#changeSupportUpdater}.
      */
     private volatile PropertyChangeSupport changeSupport;
 
     /** vetoable property change listener support 
-        *  @GuardedBy(LOCK)
+        *  &#64;GuardedBy(LOCK)
         */
     private VetoableChangeSupport vetoableChangeSupport;
 
@@ -394,12 +394,11 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
     * <P>
     * This method is called only once per data object.
     * <p>It is strongly recommended that the resulting node will, when asked for
-    * the cookie <samp>DataObject.class</samp>, return this same data object.
+    * the cookie <code>DataObject.class</code>, return this same data object.
     * <p>It is also recommended that the node:
     * <ol>
     * <li>Base its name on {@link #getName}.
     * <li>Base its display name additionally on {@link DataNode#getShowFileExtensions}.
-    * <li>Tune its display name and icon according to {@link org.openide.filesystems.FileSystem.Status}.
     * </ol>
     * @return the node delegate (without parent) for this data object
     * @see <a href="doc-files/api.html#create-delegate">Datasystems API - Creating a node delegate</a>
@@ -1255,7 +1254,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
     
     /** Factory interface for converting file object to data objects. Read
      * more about the layer based registrations in 
-     * <a href="@TOP@/org/openide/loaders/doc-files/api.html#register"/>separate document</a>.
+     * <a href="@TOP@/org/openide/loaders/doc-files/api.html#register">separate document</a>.
      * @since 7.0
      */
     public static interface Factory {
@@ -1269,7 +1268,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
         *    primary file already exists
         * @exception IOException if the object is recognized but cannot be created
         * @exception InvalidClassException if the class is not instance of
-        *    {@link #getRepresentationClass}
+        *    {@link DataLoader#getRepresentationClass}
         *
         * @return suitable data object or <CODE>null</CODE> if the handler cannot
         *   recognize this object (or its group)
@@ -1316,7 +1315,7 @@ implements Node.Cookie, Serializable, HelpCtx.Provider, Lookup.Provider {
     public static @interface Registration {
         /**
          * Mime type to recognize. Use
-         * {@link MIMEResolver.ExtensionRegistration} and co. to assign
+         * {@link org.openide.filesystems.MIMEResolver.ExtensionRegistration} and co. to assign
          * a mime types to {@link FileObject files} in the system.
          */
         String mimeType();

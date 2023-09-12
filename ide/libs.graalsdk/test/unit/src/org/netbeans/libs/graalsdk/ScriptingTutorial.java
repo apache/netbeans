@@ -30,6 +30,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import org.junit.Assume;
+import static org.junit.Assume.assumeNotNull;
+import static org.junit.Assume.assumeTrue;
 import org.netbeans.api.scripting.Scripting;
 
 
@@ -51,7 +54,7 @@ public class ScriptingTutorial extends NbTestCase {
     }
 
     public ScriptEngine listAll() {
-        // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#listAll
+        // @start region="listAll"
         ScriptEngine found = null;
         final ScriptEngineManager manager = Scripting.createManager();
         for (ScriptEngineFactory factory : manager.getEngineFactories()) {
@@ -63,12 +66,14 @@ public class ScriptingTutorial extends NbTestCase {
                 }
             }
         }
-        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#listAll
+        // @end region="listAll"
+        Assume.assumeTrue("Need Javascript", found != null);
+        Assume.assumeTrue("Need Python", manager.getEngineByMimeType("text/x-python") != null);
         return found;
     }
 
     public void testHelloWorld() throws Exception {
-        // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#testHelloWorld
+        // @start region="testHelloWorld"
         ScriptEngine python = Scripting.createManager().getEngineByMimeType("text/x-python");
         assert python != null : "Install Graal Python via `gu install python`";
 
@@ -79,11 +84,11 @@ public class ScriptingTutorial extends NbTestCase {
         );
 
         assert x.equals("Hello World!") : x;
-        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#testHelloWorld
+        // @end region="testHelloWorld"
     }
 
     public void testCastPythonObj() throws Exception {
-        // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#testCastPythonObj
+        // @start region="testCastPythonObj"
         ScriptEngine python = Scripting.createManager().getEngineByName("GraalVM:python");
         assert python != null : "Install Graal Python via `gu install python`";
 
@@ -97,11 +102,11 @@ public class ScriptingTutorial extends NbTestCase {
         Map<?,?> point = ((Invocable)python).getInterface(raw, Map.class);
         assert ((Number)point.get("x")).intValue() == 1;
         assert ((Number)point.get("y")).intValue() == 2;
-        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#testCastPythonObj
+        // @end region="testCastPythonObj"
     }
 
     public void testCastJsArray() throws Exception {
-        // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#testCastJsArray
+        // @start region="testCastJsArray"
         ScriptEngine js = Scripting.createManager().getEngineByName("GraalVM:js");
         assert js != null : "Run on GraalVM!";
 
@@ -113,11 +118,14 @@ public class ScriptingTutorial extends NbTestCase {
         assert list.size() == 2;
         assert list.get(0).equals("Hello");
         assert list.get(1).equals("World");
-        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#testCastJsArray
+        // @end region="testCastJsArray"
     }
 
     public void testHelloWorldInPythonAndJavaScript() throws Exception {
-        // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#testHelloWorldInPythonAndJavaScript
+        // only execute this test, if JS comes from GraalVM JDK, not from bundled impl:
+        assumeTrue("Need GraalVM-provided JS to be interoperable with Python", 
+                Scripting.createManager().getEngineByMimeType("text/javascript").getClass().getName().contains("graalsdk.system"));
+        // @start region="testHelloWorldInPythonAndJavaScript"
         // creates a single shared manager for two languages
         final ScriptEngineManager manager = Scripting.createManager();
 
@@ -147,14 +155,14 @@ public class ScriptingTutorial extends NbTestCase {
         String helloWorld = (String) sayHelloFn.apply(worldFn);
 
         assert "Hello World!".equals(helloWorld) : helloWorld;
-        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#testHelloWorldInPythonAndJavaScript
+        // @end region="testHelloWorldInPythonAndJavaScript"
     }
 
     public void testCallJavaScriptFunctionFromJava() throws Exception {
         callJavaScriptFunctionFromJava();
     }
 
-    // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#callJavaScriptFunctionFromJava
+    // @start region="callJavaScriptFunctionFromJava"
     @FunctionalInterface
     interface Multiplier {
         int multiply(int a, int b);
@@ -178,12 +186,12 @@ public class ScriptingTutorial extends NbTestCase {
         assertEquals(144, mul.multiply(12, 12));
         assertEquals(256, mul.multiply(32, 8));
     }
-    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#callJavaScriptFunctionFromJava
+    // @end region="callJavaScriptFunctionFromJava"
 
     public void testPythonFunctionFromJava() throws Exception {
         ScriptEngineManager manager = Scripting.createManager();
 
-        // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#testPythonFunctionFromJava
+        // @start region="testPythonFunctionFromJava"
         ScriptEngine python = manager.getEngineByName("GraalVM:python");
         Invocable invocable = (Invocable) python;
         String src = "" +
@@ -201,7 +209,7 @@ public class ScriptingTutorial extends NbTestCase {
         assertEquals(42, mul.multiply(6, 7));
         assertEquals(144, mul.multiply(12, 12));
         assertEquals(256, mul.multiply(32, 8));
-        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#testPythonFunctionFromJava
+        // @end region="testPythonFunctionFromJava"
     }
 
     public void testCallRFunctionFromJava() throws Exception {
@@ -211,27 +219,29 @@ public class ScriptingTutorial extends NbTestCase {
         }
     }
 
-    // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#callRFunctionFromJava
+    // @start region="callRFunctionFromJava"
     @FunctionalInterface
     interface BinomQuantile {
         int qbinom(double q, int count, double prob);
     }
 
     public void callRFunctionFromJava() throws Exception {
-        // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#allowAllAccess
+        // @start region="allowAllAccess
         // FastR currently needs access to native libraries:
         final ScriptEngineManager manager = Scripting.newBuilder().allowAllAccess(true).build();
         ScriptEngine rEngine = manager.getEngineByMimeType("application/x-r");
-        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#allowAllAccess
+        // @end region="allowAllAccess"
 
+        assumeNotNull(rEngine);
         final Object funcRaw = rEngine.eval("qbinom");
         BinomQuantile func = ((Invocable) rEngine).getInterface(funcRaw, BinomQuantile.class);
         assertEquals(4, func.qbinom(0.37, 10, 0.5));
     }
-    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#callRFunctionFromJava
+    // @end region="callRFunctionFromJava"
 
     public void testCallRFunctionFromJavaTheOldWay() throws Exception {
         ScriptEngine rEngine = Scripting.createManager().getEngineByMimeType("application/x-r");
+        assumeNotNull(rEngine);
         // FastR currently needs access to native libraries:
         rEngine.getContext().setAttribute("allowAllAccess", true, ScriptContext.GLOBAL_SCOPE);
 
@@ -244,7 +254,7 @@ public class ScriptingTutorial extends NbTestCase {
         callJavaScriptFunctionsWithSharedStateFromJava();
     }
 
-    // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#callJavaScriptFunctionsWithSharedStateFromJava
+    // @start region="callJavaScriptFunctionsWithSharedStateFromJava"
     interface Counter {
         void addTime(int hours, int minutes, int seconds);
         int timeInSeconds();
@@ -283,7 +293,7 @@ public class ScriptingTutorial extends NbTestCase {
 
         assertEquals(99330, counter.timeInSeconds());
     }
-    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#callJavaScriptFunctionsWithSharedStateFromJava
+    // @end region="callJavaScriptFunctionsWithSharedStateFromJava"
 
     public void testAccessFieldsOfJavaObject() throws Exception {
         accessFieldsOfJavaObject();
@@ -293,7 +303,7 @@ public class ScriptingTutorial extends NbTestCase {
         accessFieldsOfJavaObjectWithConverter();
     }
 
-    // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#accessFieldsOfJavaObject
+    // @start region="accessFieldsOfJavaObject"
 
     public static final class Moment {
         public final int hours;
@@ -328,9 +338,9 @@ public class ScriptingTutorial extends NbTestCase {
 
         assertEquals(3600 * 6 + 30 * 60 + 10, seconds);
     }
-    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#accessFieldsOfJavaObject
+    // @end region="accessFieldsOfJavaObject"
 
-    // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#accessFieldsOfJavaObjectWithConverter
+    // @start region="accessFieldsOfJavaObjectWithConverter"
 
     @FunctionalInterface
     interface MomentConverter {
@@ -358,13 +368,13 @@ public class ScriptingTutorial extends NbTestCase {
 
         assertEquals(3600 * 6 + 30 * 60 + 10, seconds);
     }
-    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#accessFieldsOfJavaObjectWithConverter
+    // @end region="accessFieldsOfJavaObjectWithConverter"
 
     public void testCreateJavaScriptFactoryForJavaClass() throws Exception {
         createJavaScriptFactoryForJavaClass();
     }
 
-    // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#createJavaScriptFactoryForJavaClass
+    // @start region="createJavaScriptFactoryForJavaClass"
 
     interface MomentFactory {
         Moment create(int h, int m, int s);
@@ -392,13 +402,13 @@ public class ScriptingTutorial extends NbTestCase {
         assertEquals("Minutes", 30, javaMoment.minutes);
         assertEquals("Seconds", 10, javaMoment.seconds);
     }
-    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#createJavaScriptFactoryForJavaClass
+    // @end region="createJavaScriptFactoryForJavaClass"
 
     public void testCallJavaScriptClassFactoryFromJava() throws Exception {
         callJavaScriptClassFactoryFromJava();
     }
 
-    // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#callJavaScriptClassFactoryFromJava
+    // @start region="callJavaScriptClassFactoryFromJava"
 
     interface Incrementor {
         int inc();
@@ -452,14 +462,14 @@ public class ScriptingTutorial extends NbTestCase {
 
         assertEquals("Values are the same", initFive.value(), initTen.value());
     }
-    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#callJavaScriptClassFactoryFromJava
+    // @end region="callJavaScriptClassFactoryFromJava"
 
 
     public void testAccessJavaScriptArrayWithTypedElementsFromJava() throws Exception {
         accessJavaScriptArrayWithTypedElementsFromJava();
     }
 
-    // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#accessJavaScriptArrayWithTypedElementsFromJava
+    // @start region="accessJavaScriptArrayWithTypedElementsFromJava"
 
     interface Point {
         int x();
@@ -502,7 +512,7 @@ public class ScriptingTutorial extends NbTestCase {
         assertEquals(5, second.x());
         assertEquals(7, second.y());
     }
-    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#accessJavaScriptArrayWithTypedElementsFromJava
+    // @end region="accessJavaScriptArrayWithTypedElementsFromJava"
 
     public void tetsAccessJSONObjectProperties() throws Exception {
         accessJavaScriptJSONObjectFromJava();
@@ -510,7 +520,7 @@ public class ScriptingTutorial extends NbTestCase {
 
 
     // Checkstyle: stop
-    // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#accessJavaScriptJSONObjectFromJava
+    // @start region="accessJavaScriptJSONObjectFromJava"
 
     interface Repository {
         int id();
@@ -579,8 +589,7 @@ public class ScriptingTutorial extends NbTestCase {
         assertEquals("id", 399710, owner.id());
         assertFalse(owner.site_admin());
     }
-
-    // END: org.netbeans.libs.graalsdk.ScriptingTutorial#accessJavaScriptJSONObjectFromJava
+    // @end region="accessJavaScriptJSONObjectFromJava"
 
     public void testHandleScriptException() throws Exception {
         handleScriptExceptions();
@@ -598,7 +607,7 @@ public class ScriptingTutorial extends NbTestCase {
     
     // Checkstyle: stop
     public void handleScriptExceptions() throws Exception {
-        // BEGIN: org.netbeans.libs.graalsdk.ScriptingTutorial#handleScriptExceptions
+        // @start region="handleScriptExceptions"
         // this is error in Javascript (null dereference), so ScriptException will be thrown,
         // with scripting engine's implementation exception inside.
         try {
@@ -644,6 +653,6 @@ public class ScriptingTutorial extends NbTestCase {
         } catch (Exception ex) {
             fail("NoSuchElement expected");
         }
-        // END: org.netbeans.libs.graalsdk.ScriptingTutorial#handleScriptExceptions
+        // @end region="handleScriptExceptions"
     }
 }

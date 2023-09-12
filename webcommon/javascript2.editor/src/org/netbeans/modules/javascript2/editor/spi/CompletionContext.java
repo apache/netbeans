@@ -29,15 +29,15 @@ public enum CompletionContext {
     OBJECT_MEMBERS, // usually after this.
     /**
      * This context is before ':' in an object literal definition, when a property
-     * is defined. Typically 
+     * is defined. Typically
      * var object_listeral = {
      *  property_name : value
      * }
-     * 
+     *
      * This context can be used by frameworks to suggest the names of properties
      * to define for example various configuration objects.
      */
-    OBJECT_PROPERTY_NAME, 
+    OBJECT_PROPERTY_NAME,
     DOCUMENTATION, // inside documentation blocks
     GLOBAL,
     IN_STRING,      // inside a string
@@ -48,5 +48,5 @@ public enum CompletionContext {
     STRING, // cc should offer methods of String objects
     REGEXP,  // cc should offer methods of RegEx objects
     IMPORT_EXPORT_MODULE, // the position where js modules names should be offered
-    IMPORT_EXPORT_SPECIAL_TOKENS //the position where as,from keywords should be displayed in CC list 
+    IMPORT_EXPORT_SPECIAL_TOKENS //the position where as,from keywords should be displayed in CC list
 }

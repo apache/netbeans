@@ -39,7 +39,7 @@ public class LibraryFactory {
     /**
      * Creates Library for LibraryImplementation
      * @param libraryImplementation the library SPI object
-     * @return Library API instance, for which the {@link Library#getManager} will be {@link LibraryManager#getDefault}
+     * @return Library API instance, for which the {@link Library#getManager()} will be {@link org.netbeans.api.project.libraries.LibraryManager#getDefault()}
      */
     public static Library createLibrary (LibraryImplementation libraryImplementation) {
         assert libraryImplementation != null;

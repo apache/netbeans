@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.httpserver/2
-OpenIDE-Module-Implementation-Version: 42
+OpenIDE-Module-Implementation-Version: 43
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/httpserver/Bundle.properties
 OpenIDE-Module-Install: org/netbeans/modules/httpserver/HttpServerModule.class
 OpenIDE-Module-Layer: org/netbeans/modules/httpserver/layer.xml

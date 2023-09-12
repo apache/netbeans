@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.editor.parser.api;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
@@ -27,8 +28,10 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
+import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionName;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
@@ -38,6 +41,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
+import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultTreePathVisitor;
@@ -71,7 +75,7 @@ public final class Utils {
                 }
             }
             if (possible != null && (possible.getEndOffset() + 1 < node.getStartOffset())) {
-                List<ASTNode> nodes = (new NodeRangeLocator()).locate(root, new OffsetRange(possible.getEndOffset() + 1, node.getStartOffset() - 1));
+                List<ASTNode> nodes = (new NodeRangeLocator()).locate(root, new OffsetRange(possible.getEndOffset() + 1, getNodeRangeLocatorEndOffset(node)));
                 if (!nodes.isEmpty()) {
                     if (!isConstantDeclaration(nodes, node)
                             && !isFieldDeclaration(nodes, node)) {
@@ -82,6 +86,21 @@ public final class Utils {
         }
 
         return possible;
+    }
+
+    private static int getNodeRangeLocatorEndOffset(ASTNode node) {
+        int endOffset = node.getStartOffset() - 1;
+        if (node instanceof SingleFieldDeclaration) {
+            // GH-6310 start offset of SingleFieldDeclaration is start offset of a variable name
+            // because we can declare multiple fields as one statement e.g. public int $field1, $field2;
+            // so, check a field type
+            SingleFieldDeclaration field = (SingleFieldDeclaration) node;
+            Expression fieldType = field.getFieldType();
+            if (fieldType != null) {
+                endOffset = fieldType.getStartOffset() - 1;
+            }
+        }
+        return endOffset;
     }
 
     private static boolean isConstantDeclaration(List<ASTNode> nodes, ASTNode node) {
@@ -101,15 +120,29 @@ public final class Utils {
 
     private static boolean isFieldDeclaration(List<ASTNode> nodes, ASTNode node) {
         boolean isFieldDeclaration = false;
-        if (nodes.size() == 1 && (node instanceof Identifier)) {
-            ASTNode next = nodes.iterator().next();
-            if (next instanceof NamespaceName
-                    || next instanceof NullableType
-                    || next instanceof UnionType) {
+        if (!nodes.isEmpty() && (node instanceof Identifier)) {
+            Iterator<ASTNode> iterator = nodes.iterator();
+            ASTNode next = iterator.next();
+            if (isTypeNode(next)) {
                 isFieldDeclaration = true;
+                while (iterator.hasNext()) {
+                    // e.g. public int $f1, $f2, $f3 = 0;
+                    next = iterator.next();
+                    if (!(next instanceof SingleFieldDeclaration)) {
+                        isFieldDeclaration = false;
+                        break;
+                    }
+                }
             }
         }
         return isFieldDeclaration;
+    }
+
+    private static boolean isTypeNode(ASTNode node) {
+        return node instanceof NamespaceName
+                || node instanceof NullableType
+                || node instanceof UnionType
+                || node instanceof IntersectionType;
     }
 
     public static Program getRoot(ParserResult result) {
@@ -337,7 +370,7 @@ public final class Utils {
     public static List<PHPDocVarTypeTag> getPropertyTags(Program root, ClassDeclaration node) {
         List<PHPDocVarTypeTag> tags = new ArrayList<>();
         Comment comment = Utils.getCommentForNode(root, node);
-        if (comment != null && (comment instanceof PHPDocBlock)) {
+        if (comment instanceof PHPDocBlock) {
             PHPDocBlock phpDoc = (PHPDocBlock) comment;
             for (PHPDocTag tag : phpDoc.getTags()) {
                 if (tag.getKind().equals(PHPDocTag.Type.PROPERTY)

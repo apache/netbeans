@@ -40,7 +40,7 @@ public class YamlTestBase extends CslTestBase {
 
     @Override
     protected String getPreferredMimeType() {
-        return YamlTokenId.YAML_MIME_TYPE;
+        return YamlLanguage.MIME_TYPE;
     }
 
     @Override

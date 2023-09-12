@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.4
+#Version 0.10
 
 CLSS public abstract interface java.lang.Cloneable
 

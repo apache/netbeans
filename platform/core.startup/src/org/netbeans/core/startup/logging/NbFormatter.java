@@ -20,6 +20,7 @@ package org.netbeans.core.startup.logging;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -38,6 +39,12 @@ import org.xml.sax.SAXParseException;
  */
 public final class NbFormatter extends java.util.logging.Formatter {
     private static String lineSeparator = System.getProperty("line.separator"); // NOI18N
+    private static final ThreadLocal<SimpleDateFormat> DATEFORMATTER = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        }
+    };
     public static final java.util.logging.Formatter FORMATTER = new NbFormatter();
 
     @Override
@@ -56,7 +63,7 @@ public final class NbFormatter extends java.util.logging.Formatter {
 
     private void print(StringBuilder sb, LogRecord record, Set<Throwable> beenThere) {
         sb.append("[");
-        sb.append(new Date(record.getMillis()).toString());
+        sb.append(DATEFORMATTER.get().format(new Date(record.getMillis())));
         sb.append("] [");
         sb.append(record.getThreadID());
         sb.append("] ");

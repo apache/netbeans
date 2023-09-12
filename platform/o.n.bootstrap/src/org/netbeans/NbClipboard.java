@@ -143,12 +143,12 @@ implements LookupListener, FlavorListener, AWTEventListener
             // transferable. Can be fixed as Jesse describes in #32485
 //            if (log.isLoggable (Level.FINER)) {
                 log.log (Level.INFO, "========= setContents ========= called with, slowSystemClipboard: {0}, firering: {1}: ", new Object[]{slowSystemClipboard, FIRING.get()}); // NOI18N
-                logFlavors (contents, Level.INFO, false);
+//                logFlavors (contents, Level.INFO, false);
 //            }
             contents = convert(contents);
 //            if (log.isLoggable (Level.FINER)) {
-                log.log (Level.INFO, "After conversion:"); // NOI18N
-                logFlavors (contents, Level.INFO, false);
+//                log.log (Level.INFO, "After conversion:"); // NOI18N
+                logFlavors (contents, Level.INFO, true);
 //            }
 
             if (slowSystemClipboard) {
@@ -215,8 +215,8 @@ implements LookupListener, FlavorListener, AWTEventListener
 
             synchronized (this) {
 //                if (log.isLoggable (Level.FINE)) {
-                    log.log (Level.INFO, "getContents by {0}", requestor); // NOI18N
-                    logFlavors (prev, Level.INFO, false);
+//                    log.log (Level.INFO, "getContents by {0}", requestor); // NOI18N
+//                    logFlavors (prev, Level.INFO, false);
 //                }
                 if (prev == null) {
                     // if system clipboard has no contents
@@ -226,7 +226,7 @@ implements LookupListener, FlavorListener, AWTEventListener
                 Transferable res = convert (prev);
 //                if (log.isLoggable (Level.FINE)) {
                     log.log (Level.INFO, "getContents by {0}", requestor); // NOI18N
-                    logFlavors (res, Level.INFO, false);
+                    logFlavors (res, Level.INFO, true);
 
                     res = new LoggableTransferable (res);
 //                }
@@ -295,26 +295,34 @@ implements LookupListener, FlavorListener, AWTEventListener
     
     private void logFlavors (Transferable trans, Level level, boolean content) {
         if (trans == null) {
-            log.log (level, "  no clipboard contents");
+            log.log (level, "DATA:  no clipboard contents");
         }
         else {
             if (content) {
-                java.awt.datatransfer.DataFlavor[] arr = trans.getTransferDataFlavors();
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < arr.length; i++) {
-                    sb.append("  ").append(i).append(" = ").append(arr[i]);
-                    try {
-                        sb.append(" contains: ").append(trans.getTransferData(arr[i]));
-                    } catch (UnsupportedFlavorException ex) {
-                        log.log(level, "Can't convert to " + arr[i], ex);
-                    } catch (IOException ex) {
-                        log.log(level, "Can't convert to " + arr[i], ex);
-                    }
-                    sb.append("\n");
+                try {
+                    String data = (String) trans.getTransferData(DataFlavor.stringFlavor);
+                    log.log(level, "DATA: {0}", data);
+//                java.awt.datatransfer.DataFlavor[] arr = trans.getTransferDataFlavors();
+//                StringBuilder sb = new StringBuilder();
+//                for (int i = 0; i < arr.length; i++) {
+//                    sb.append("  ").append(i).append(" = ").append(arr[i]);
+//                    try {
+//                        sb.append(" contains: ").append(trans.getTransferData(arr[i]));
+//                    } catch (UnsupportedFlavorException ex) {
+//                        log.log(level, "Can't convert to " + arr[i], ex);
+//                    } catch (IOException ex) {
+//                        log.log(level, "Can't convert to " + arr[i], ex);
+//                    }
+//                    sb.append("\n");
+//                }
+//                log.log (level, sb.toString());
+                } catch (UnsupportedFlavorException ex) {
+                        log.log(level, "DATA: <NON-STRING>");
+                } catch (IOException ex) {
+                        log.log(level, "DATA: <IOEXCEPTION>", ex);
                 }
-                log.log (level, sb.toString());
             } else {
-                log.log (level, " clipboard contains data");
+                log.log (level, "DATA: clipboard contains data");
             }
         }
     }
@@ -460,7 +468,7 @@ implements LookupListener, FlavorListener, AWTEventListener
                 superSetContents(transferable, null);
 //                if (log.isLoggable (Level.FINE)) {
                     log.log (Level.INFO, "internal clipboard updated:"); // NOI18N
-                    logFlavors (transferable, Level.INFO, false);
+                    logFlavors (transferable, Level.INFO, true);
 //                }
                 if (notify) {
                     fireChange();
@@ -491,6 +499,7 @@ implements LookupListener, FlavorListener, AWTEventListener
             log.log(Level.INFO, "BEGIN SetContents#run ({0})", ownr);
             try {
                 log.log(Level.INFO, "END SetContents#run ({0}) / before systemClipboard#setContents", ownr);
+                logFlavors(cnts, Level.INFO, true);
                 systemClipboard.setContents(cnts, ownr);
                 log.log(Level.INFO, "END SetContents#run ({0}) / after systemClipboard#setContents", ownr);
             } catch (IllegalStateException e) {

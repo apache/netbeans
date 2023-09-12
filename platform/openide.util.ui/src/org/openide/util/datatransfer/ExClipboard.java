@@ -202,7 +202,6 @@ public abstract class ExClipboard extends Clipboard {
     * @param t transferable to notify its listeners
     */
     public static void transferableOwnershipLost(Transferable t) {
-        LOG.info("BEGIN ExClipboard#transferableOwnershipLost");
         if (t instanceof ExTransferable) {
             ((ExTransferable) t).fireOwnershipLost();
         } else if (t.isDataFlavorSupported(ExTransferable.multiFlavor)) {
@@ -211,16 +210,13 @@ public abstract class ExClipboard extends Clipboard {
                 int cnt = mto.getCount();
 
                 for (int i = 0; i < cnt; i++) {
-                    LOG.info("BEGIN ExClipboard#transferableOwnershipLost (MultiTransferObject)");
                     transferableOwnershipLost(mto.getTransferableAt(i));
-                    LOG.info("END ExClipboard#transferableOwnershipLost (MultiTransferObject)");
                 }
             } catch (Exception e) {
                 LOG.log(Level.INFO, "Exception, that should not occur, did occur", e);
                 // shouldn't occure
             }
         }
-        LOG.info("END ExClipboard#transferableOwnershipLost");
     }
 
     /** Convertor that can convert the {@link Transferable contents} of a clipboard to

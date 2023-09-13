@@ -1025,7 +1025,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                         if (client.getNbCodeCapabilities().wantsJavaSupport()) {
                             //introduce hints:
-                            CompilationController cc = CompilationController.get(resultIterator.getParserResult());
+                            CompilationController cc = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
                             if (cc != null) {
                                 cc.toPhase(JavaSource.Phase.RESOLVED);
                                 if (!range.getStart().equals(range.getEnd())) {

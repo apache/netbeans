@@ -85,7 +85,7 @@ public final class PushDownRefactoring extends CodeRefactoring {
         if (only == null || !only.contains(CodeActionKind.Refactor)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null || !JavaRefactoringUtils.isRefactorable(info.getFileObject())) {
             return Collections.emptyList();
         }

@@ -497,5 +497,27 @@ public enum NodeType {
     , layerBody
     , layerStatement
     , layerBlock
+    // @container
+    , containerAtRule
+    , containerCondition
+    , containerQueryWithOperator
+    , containerQueryConjunction
+    , containerQueryDisjunction
+    , containerQueryInParens
+    , containerName
+    , styleQuery
+    , styleCondition
+    , styleConditionWithOperator
+    , styleQueryConjunction
+    , styleQueryDisjunction
+    , styleInParens
+    , sizeFeature
+    , sizeFeatureName
+    , sizeFeatureValue
+    , styleFeature
+    , sizeFeatureFixedValue
+    , sizeFeatureRangeSingle
+    , sizeFeatureRangeBetweenLt
+    , sizeFeatureRangeBetweenGt
     ;
 }

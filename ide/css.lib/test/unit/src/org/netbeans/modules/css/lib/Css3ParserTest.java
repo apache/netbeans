@@ -27,7 +27,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.BadLocationException;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.TokenStream;
 import org.netbeans.modules.css.lib.api.*;
+import org.netbeans.modules.css.lib.nbparser.ProgressingTokenStream;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.openide.filesystems.FileObject;
 
@@ -1658,5 +1661,19 @@ public class Css3ParserTest extends CssTestBase {
                 + "@import url(theme.css) layer(theme);\n"
                 + "@layer components;\n"
                 + "@layer default {}");
+    }
+
+    public void testParseContainer() throws Exception {
+        assertParses("@container test style(--responsive: true) {}");
+        assertParses("@container style(--responsive: true) {}");
+        assertParses("@container my-layout (inline-size > 45em) {}");
+        assertParses("@container my-layout (45em < inline-size) {}");
+        assertParses("@container (--cards: small) {}");
+        assertParses("@container (--cards: small) { h1 {background: green; border: 1px solid green; } }");
+        assertParses("@container my-component-library (inline-size > 30em) {}");
+        assertParses("@container card (inline-size > 30em) { @container style(--responsive: true) { } }");
+        assertParses("@container (width < 30em) { }");
+        assertParses("@container (20em < width < 30em) { }");
+        assertParses("@container name (max-height: 780px) {}");
     }
 }

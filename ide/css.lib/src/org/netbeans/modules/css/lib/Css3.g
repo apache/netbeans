@@ -529,9 +529,13 @@ supportsDisjunction
         : (key_or ws supportsInParens)
         ;
 
-supportsInParens
+supportsInParens options {backtrack=true;}
 	:
-	LPAREN ws? (supportsCondition | supportsFeature) ws? RPAREN
+	LPAREN ws? supportsCondition ws? RPAREN
+	| supportsFeature
+        | function
+        // this is still lacking ( <any-value>?) - lets see whether this becomes
+        // a problem or not
 	;
 	
 supportsFeature
@@ -541,7 +545,7 @@ supportsFeature
 	
 supportsDecl
 	:
-	declaration
+	LPAREN ws? declaration ws? RPAREN
 	;
 
 layerAtRule

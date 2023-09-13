@@ -882,7 +882,7 @@ public class Css3ParserTest extends CssTestBase {
         CssParserResult result = TestUtil.parse(invalidCss);
         assertTrue(result.getParserDiagnostics().size() > 0);
         
-        assertParses(validCss1);
+        assertParses(validCss1, true);
         assertParses(validCss2);
         
     }
@@ -907,7 +907,15 @@ public class Css3ParserTest extends CssTestBase {
         assertTrue(result5.getParserDiagnostics().size() > 0);
         
     }
-    
+
+    public void testSupportsFunctions() throws Exception {
+        assertParses("@supports selector(h2 > p) {}");
+        assertParses("@supports font-tech(color-COLRv1) {}");
+        assertParses("@supports font-format(opentype) {}");
+        assertParses("@supports font-format(opentype) and selector(h2 > p) {}");
+        assertParses("@supports font-format(opentype) and (color: hotpink) {}");
+    }
+
     public void testCounterStyle() throws ParseException, BadLocationException {
         String content = "@counter-style cool { glyph: '|'; }";
 

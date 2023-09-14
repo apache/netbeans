@@ -85,7 +85,7 @@ public class DefaultCssEditorModule extends CssEditorModule {
         module("ruby", "http://www.w3.org/TR/css3-ruby"), //NOI18N
         module("multi-column_layout", "http://www.w3.org/TR/css3-multicol"), //NOI18N
         module("values_and_units", "http://www.w3.org/TR/css3-values"), //NOI18N
-        module("text", "http://www.w3.org/TR/css3-text"), //NOI18N
+        module("text", "http://www.w3.org/TR/css-text-4"), //NOI18N
         module("writing_modes", "http://www.w3.org/TR/css3-writing-modes"), //NOI18N
         module("generated_content_for_paged_media", "http://www.w3.org/TR/css3-gcpm"), //NOI18N
         module("fonts", "http://www.w3.org/TR/css3-fonts"), //NOI18N

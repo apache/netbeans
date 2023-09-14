@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 /home/matthias/src/netbeans/ide/css.lib/src/org/netbeans/modules/css/lib/Css3.g 2023-09-14 18:13:31
+// $ANTLR 3.5.2 /home/matthias/src/netbeans/ide/css.lib/src/org/netbeans/modules/css/lib/Css3.g 2023-09-14 19:44:33
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -37192,10 +37192,10 @@ public class Css3Parser extends DebugParser {
 			// /home/matthias/src/netbeans/ide/css.lib/src/org/netbeans/modules/css/lib/Css3.g:1585:5: {...}? IDENT
 			{
 			dbg.location(1585,5);
-			if ( !(evalPredicate(tokenNameIs(new String[]{"LESS", "CSS", "REFERENCE", "INLINE", "ONCE", "MULTIPLE"}),"tokenNameIs(new String[]{\"LESS\", \"CSS\", \"REFERENCE\", \"INLINE\", \"ONCE\", \"MULTIPLE\"})")) ) {
+			if ( !(evalPredicate(tokenNameIs(new String[]{"LESS", "CSS", "REFERENCE", "INLINE", "ONCE", "MULTIPLE", "OPTIONAL"}),"tokenNameIs(new String[]{\"LESS\", \"CSS\", \"REFERENCE\", \"INLINE\", \"ONCE\", \"MULTIPLE\", \"OPTIONAL\"})")) ) {
 				if (state.backtracking>0) {state.failed=true; return;}
-				throw new FailedPredicateException(input, "less_import_types", "tokenNameIs(new String[]{\"LESS\", \"CSS\", \"REFERENCE\", \"INLINE\", \"ONCE\", \"MULTIPLE\"})");
-			}dbg.location(1585,92);
+				throw new FailedPredicateException(input, "less_import_types", "tokenNameIs(new String[]{\"LESS\", \"CSS\", \"REFERENCE\", \"INLINE\", \"ONCE\", \"MULTIPLE\", \"OPTIONAL\"})");
+			}dbg.location(1585,104);
 			match(input,IDENT,FOLLOW_IDENT_in_less_import_types11529); if (state.failed) return;
 			}
 

@@ -1582,7 +1582,7 @@ sass_content
     ;
 
 less_import_types: 
-    {tokenNameIs(new String[]{"LESS", "CSS", "REFERENCE", "INLINE", "ONCE", "MULTIPLE"})}? IDENT
+    {tokenNameIs(new String[]{"LESS", "CSS", "REFERENCE", "INLINE", "ONCE", "MULTIPLE", "OPTIONAL"})}? IDENT
     ; catch[ RecognitionException rce] {
         reportError(rce);
         input.consume();

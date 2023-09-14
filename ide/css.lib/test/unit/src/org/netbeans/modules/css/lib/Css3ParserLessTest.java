@@ -974,4 +974,8 @@ public class Css3ParserLessTest extends CssTestBase {
                 + "@layer components;\n"
                 + "@layer default {}");
     }
+
+    public void testIssueGH6447() {
+        assertParses("@import (optional) \"user.less\";");
+    }
 }

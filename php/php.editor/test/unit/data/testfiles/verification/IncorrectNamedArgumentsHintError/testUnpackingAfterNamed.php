@@ -22,14 +22,14 @@
 function test($a, $b, $c, $name) {
 }
 
-test(1, ...[1, 2, 3],);
-test(1, 2, 3, 4, ...[],);
-test(1, ...[2, 3, 4], ...[]);
-test(...[],);
-test(name: 'arg');
-test($test, name: 'arg');
+test(1, ...[1, 2, 3],); // OK
+test(1, 2, 3, 4, ...[],); // OK
+test(1, ...[2, 3, 4], ...[]); // OK
+test(...[],); // OK
+test(name: 'arg'); // OK
+test($test, name: 'arg'); // OK
 test(
-    ...[],
+    ...[], // OK
     name: 'arg'
 );
 test(
@@ -37,51 +37,66 @@ test(
     2,
     3,
     name: 'arg',
-    ...[],
+    ...[], // NG
+);
+$uppacking = [1, 2, 3];
+test(...$unpacking, name: "arg"); // OK
+test(name: "arg", ...$unpacking); // NG
+test(
+        1,
+        b:2,
+        ...[2], // NG
+        ...[1] // NG
+);
+test(
+        a:1,
+        b:2,
+        ...[2], // NG
+        ...[1] // NG
 );
 
 class TestExample {
     public function test($a, $b, $c, $name): void {}
     public static function staticTest($a, $b, $c, $name): void {}
 
-    public function testNamedAndUnpack(): void {
+    public function testUnpackingAfterNamed(): void {
         $this->test(
-            ...[1, 2, 3],
+            ...[1, 2, 3], // OK
             name: 'arg'
         );
         $this->test(
             name: 'arg',
-            ...[1, 2, 3],
+            ...[1, 2, 3], // NG
         );
         self::staticTest(
-            ...[1, 2, 3],
+            ...[1, 2, 3], // OK
             name: 'arg'
         );
         self::staticTest(
             name: 'arg',
-            ...[1, 2, 3],
+            ...[1, 2, 3], // NG
         );
     }
 }
 
 $test = new Test(
     name: "test",
-    ...['a', 'b']
+    ...['a', 'b'] // NG
 );
 $test = new Test(
-    ...['a', 'b'],
+    ...['a', 'b'], // OK
     name: "test",
 );
 
 $anon = new class(
     name: "test",
-    ...['a', 'b'],
+    ...['a', 'b'], // NG
 ) {
     public function __construct($name, $a, $b) {}
 };
 
 $anon = new class(
-    ...['a', 'b'],
+    ...['a', 'b'], // OK
     name: "test",
 ) {
     public function __construct($name, $a, $b) {}

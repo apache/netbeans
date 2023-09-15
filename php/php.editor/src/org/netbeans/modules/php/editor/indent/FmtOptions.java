@@ -94,6 +94,7 @@ public final class FmtOptions {
     public static final String BLANK_LINES_AFTER_NAMESPACE = "blankLinesAfterNamespace"; //NOI18N
     public static final String BLANK_LINES_BEFORE_USE = "blankLinesBeforeUse"; //NOI18N
     public static final String BLANK_LINES_BEFORE_USE_TRAIT = "blankLinesBeforeUseTrait"; //NOI18N
+    public static final String BLANK_LINES_AFTER_USE_TRAIT = "blankLinesAfterUseTrait"; //NOI18N
     public static final String BLANK_LINES_AFTER_USE = "blankLinesAfterUse"; //NOI18N
     public static final String BLANK_LINES_BETWEEN_USE_TYPES = "blankLinesBetweenUseType"; //NOI18N
     public static final String BLANK_LINES_BEFORE_CLASS = "blankLinesBeforeClass"; //NOI18N
@@ -289,6 +290,7 @@ public final class FmtOptions {
             {BLANK_LINES_AFTER_NAMESPACE, "1"}, //NOI18N
             {BLANK_LINES_BEFORE_USE, "1"}, //NOI18N
             {BLANK_LINES_BEFORE_USE_TRAIT, "1"}, //NOI18N
+            {BLANK_LINES_AFTER_USE_TRAIT, "1"}, //NOI18N
             {BLANK_LINES_AFTER_USE, "1"}, //NOI18N
             {BLANK_LINES_BETWEEN_USE_TYPES, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_CLASS, "1"}, //NOI18N

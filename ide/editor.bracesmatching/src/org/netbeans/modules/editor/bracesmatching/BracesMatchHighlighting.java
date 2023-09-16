@@ -60,6 +60,9 @@ public class BracesMatchHighlighting extends AbstractHighlightsContainer
     private static final String BRACES_MATCH_MULTICHAR_COLORING = "nbeditor-bracesMatching-match-multichar"; //NOI18N
     private static final String BRACES_MISMATCH_MULTICHAR_COLORING = "nbeditor-bracesMatching-mismatch-multichar"; //NOI18N
 
+    private static final String ANGLE_BRACKETS_MATCH_COLORING = "nbeditor-bracesMatching-match"; //NOI18N
+    private static final String ANGLE_BRACKETS_MISMATCH_COLORING = "nbeditor-bracesMatching-mismatch"; //NOI18N
+
     private final JTextComponent component;
     private final Document document;
     
@@ -71,7 +74,9 @@ public class BracesMatchHighlighting extends AbstractHighlightsContainer
     private final AttributeSet bracesMismatchColoring;
     private final AttributeSet bracesMatchMulticharColoring;
     private final AttributeSet bracesMismatchMulticharColoring;
-    
+    private final AttributeSet angleBracketsMatchColoring;
+    private final AttributeSet angleBracketsMismatchColoring;
+
     private boolean released;
 
     public BracesMatchHighlighting(JTextComponent component, Document document) {
@@ -86,11 +91,16 @@ public class BracesMatchHighlighting extends AbstractHighlightsContainer
         AttributeSet mismatch = fcs.getFontColors(BRACES_MISMATCH_COLORING);
         AttributeSet matchMultichar = fcs.getFontColors(BRACES_MATCH_MULTICHAR_COLORING);
         AttributeSet mismatchMultichar = fcs.getFontColors(BRACES_MISMATCH_MULTICHAR_COLORING);
+        AttributeSet angleBracketsMatch = fcs.getFontColors(ANGLE_BRACKETS_MATCH_COLORING);
+        AttributeSet angleBracketsMismatch = fcs.getFontColors(ANGLE_BRACKETS_MISMATCH_COLORING);
         this.bracesMatchColoring = match != null ? match : SimpleAttributeSet.EMPTY;
         this.bracesMismatchColoring = mismatch != null ? mismatch : SimpleAttributeSet.EMPTY;
         this.bracesMatchMulticharColoring = matchMultichar != null ? matchMultichar : SimpleAttributeSet.EMPTY;
         this.bracesMismatchMulticharColoring = mismatchMultichar != null ? mismatchMultichar : SimpleAttributeSet.EMPTY;
-        
+        this.angleBracketsMatchColoring = angleBracketsMatch != null ? angleBracketsMatch : SimpleAttributeSet.EMPTY;
+        this.angleBracketsMismatchColoring = angleBracketsMismatch != null ? angleBracketsMismatch : SimpleAttributeSet.EMPTY;
+
+
         // Create and hook up the highlights bag
         this.bag = new OffsetsBag(document, true);
         this.bag.addHighlightsChangeListener(this);
@@ -213,7 +223,9 @@ public class BracesMatchHighlighting extends AbstractHighlightsContainer
                 bracesMatchColoring, 
                 bracesMismatchColoring,
                 bracesMatchMulticharColoring,
-                bracesMismatchMulticharColoring
+                bracesMismatchMulticharColoring,
+                    angleBracketsMatch, // Add these lines
+                    angleBracketsMismatch // Add these lines
             );
         }
     }

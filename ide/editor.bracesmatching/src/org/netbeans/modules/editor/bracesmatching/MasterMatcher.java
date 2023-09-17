@@ -120,7 +120,7 @@ public final class MasterMatcher {
         AttributeSet matchedColoring, 
         AttributeSet mismatchedColoring,
         AttributeSet matchedMulticharColoring,
-        AttributeSet mismatchedMulticharColoring
+        AttributeSet mismatchedMulticharColoring,
         AttributeSet angleBraceMatchColoring,
         AttributeSet angleBraceMismatchColoring
     ) {

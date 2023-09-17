@@ -62,11 +62,16 @@ public class CommonAnnotationHelper {
     // see JSR250
     private static final Set<String> RESOURCE_REF_TYPES = new HashSet<String>(Arrays.<String>asList(
             "javax.sql.DataSource",
+            "jakarta.jms.ConnectionFactory",
             "javax.jms.ConnectionFactory",
+            "jakarta.jms.QueueConnectionFactory",
             "javax.jms.QueueConnectionFactory",
+            "jakarta.jms.TopicConnectionFactory",
             "javax.jms.TopicConnectionFactory",
+            "jakarta.mail.Session",
             "javax.mail.Session",
             "java.net.URL",
+            "jakarta.resource.cci.ConnectionFactory",
             "javax.resource.cci.ConnectionFactory",
             "org.omg.CORBA_2_3.ORB"
             // any other connection factory defined by a resource adapter
@@ -82,12 +87,19 @@ public class CommonAnnotationHelper {
             "java.lang.Long",
             "java.lang.Float"));
     private static final Set<String> SERVICE_REF_TYPES = new HashSet<String>(Arrays.<String>asList(
+            "jakarta.xml.rpc.Service",
+            "jakarta.xml.ws.Service",
+            "jakarta.jws.WebService",
             "javax.xml.rpc.Service",
             "javax.xml.ws.Service",
-            "javax.jws.WebService"));
+            "javax.jws.WebService"
+    ));
     private static final Set<String> MESSAGE_DESTINATION_TYPES = new HashSet<String>(Arrays.<String>asList(
+            "jakarta.jms.Queue",
+            "jakarta.jms.Topic",
             "javax.jms.Queue",
-            "javax.jms.Topic"));
+            "javax.jms.Topic"
+    ));
 
     private CommonAnnotationHelper() {
     }
@@ -105,6 +117,11 @@ public class CommonAnnotationHelper {
             }
         }, null);
         try {
+            helper.getAnnotationScanner().findAnnotations("jakarta.annotation.security.DeclareRoles", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
+                public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
+                    parser.parse(annotation);
+                }
+            });
             helper.getAnnotationScanner().findAnnotations("javax.annotation.security.DeclareRoles", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
                 public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
                     parser.parse(annotation);
@@ -280,7 +297,10 @@ public class CommonAnnotationHelper {
         }
 
         Map<String, ? extends AnnotationMirror> ans = helper.getAnnotationsByType(typeElement.getAnnotationMirrors());
-        AnnotationMirror wsMirror = ans.get("javax.jws.WebService"); //NOI18N
+        AnnotationMirror wsMirror = ans.get("jakarta.jws.WebService"); //NOI18N
+        if (wsMirror == null) {
+            wsMirror = ans.get("javax.jws.WebService"); //NOI18N
+        }
         if (wsMirror != null) {
             for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : wsMirror.getElementValues().entrySet()) {
                 ExecutableElement key = entry.getKey();
@@ -302,14 +322,18 @@ public class CommonAnnotationHelper {
         
         // fields
         for (VariableElement field : ElementFilter.fieldsIn(typeElement.getEnclosedElements())) {
-            if (helper.hasAnnotation(field.getAnnotationMirrors(), "javax.annotation.Resource")) { //NOI18N
+            if (helper.hasAnnotation(field.getAnnotationMirrors(), "jakarta.annotation.Resource") //NOI18N
+                    || helper.hasAnnotation(field.getAnnotationMirrors(), "javax.annotation.Resource") //NOI18N
+            ) {
                 ResourceImpl resource = new ResourceImpl(field, typeElement, helper);
                 result.add(resource);
             }
         }
         // methods
         for (ExecutableElement method : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
-            if (helper.hasAnnotation(method.getAnnotationMirrors(), "javax.annotation.Resource")) { //NOI18N
+            if (helper.hasAnnotation(method.getAnnotationMirrors(), "jakarta.annotation.Resource") //NOI18N
+                    || helper.hasAnnotation(method.getAnnotationMirrors(), "javax.annotation.Resource") //NOI18N
+            ) {
                 ResourceImpl resource = new ResourceImpl(method, typeElement, helper);
                 result.add(resource);
             }
@@ -321,6 +345,14 @@ public class CommonAnnotationHelper {
         
         final List<ResourceImpl> result = new ArrayList<ResourceImpl>();
         try {
+            helper.getAnnotationScanner().findAnnotations(
+                    "jakarta.annotation.Resource", // NOI18N
+                    EnumSet.of(ElementKind.CLASS, ElementKind.METHOD, ElementKind.FIELD),new AnnotationHandler() {
+                        public void handleAnnotation(TypeElement typeElement, Element element, AnnotationMirror annotation) {
+                            ResourceImpl resource = new ResourceImpl(element, typeElement, helper);
+                            result.add(resource);
+                        }
+                    });
             helper.getAnnotationScanner().findAnnotations(
                     "javax.annotation.Resource", // NOI18N
                     EnumSet.of(ElementKind.CLASS, ElementKind.METHOD, ElementKind.FIELD),new AnnotationHandler() {
@@ -341,7 +373,9 @@ public class CommonAnnotationHelper {
         
         // fields
         for (VariableElement field : ElementFilter.fieldsIn(typeElement.getEnclosedElements())) {
-            if (helper.hasAnnotation(field.getAnnotationMirrors(), "javax.xml.ws.WebServiceRef")) { //NOI18N
+            if (helper.hasAnnotation(field.getAnnotationMirrors(), "jakarta.xml.ws.WebServiceRef") //NOI18N
+                    || helper.hasAnnotation(field.getAnnotationMirrors(), "javax.xml.ws.WebServiceRef") //NOI18N
+            ) { //NOI18N
                 addServiceReference(result, field, typeElement, helper);
             }
         }
@@ -352,6 +386,13 @@ public class CommonAnnotationHelper {
         
         final List<ServiceRef> result = new ArrayList<ServiceRef>();
         try {
+            helper.getAnnotationScanner().findAnnotations(
+                    "jakarta.xml.ws.WebServiceRef", // NOI18N
+                    EnumSet.of(ElementKind.FIELD),new AnnotationHandler() {
+                        public void handleAnnotation(TypeElement typeElement, Element element, AnnotationMirror annotation) {
+                            addServiceReference(result, element, typeElement, helper);
+                        }
+                    });
             helper.getAnnotationScanner().findAnnotations(
                     "javax.xml.ws.WebServiceRef", // NOI18N
                     EnumSet.of(ElementKind.FIELD),new AnnotationHandler() {

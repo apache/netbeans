@@ -120,9 +120,7 @@ public final class MasterMatcher {
         AttributeSet matchedColoring, 
         AttributeSet mismatchedColoring,
         AttributeSet matchedMulticharColoring,
-        AttributeSet mismatchedMulticharColoring,
-        AttributeSet angleBraceMatchColoring,
-        AttributeSet angleBraceMismatchColoring
+        AttributeSet mismatchedMulticharColoring
     ) {
         assert document != null : "The document parameter must not be null"; //NOI18N
         assert highlights != null : "The highlights parameter must not be null"; //NOI18N
@@ -130,8 +128,6 @@ public final class MasterMatcher {
         assert mismatchedColoring != null : "The mismatchedColoring parameter must not be null"; //NOI18N
         assert matchedMulticharColoring != null : "The matchedMulticharColoring parameter must not be null"; //NOI18N
         assert mismatchedMulticharColoring != null : "The mismatchedMulticharColoring parameter must not be null"; //NOI18N
-        assert angleBraceMatchColoring != null : "The angleBraceMatchColoring parameter must not be null"; //NOI18N
-        assert angleBraceMismatchColoring != null : "The angleBraceMismatchColoring parameter must not be null"; //NOI18N
         assert caretOffset >= 0 : "The caretOffset parameter must be >= 0"; //NOI18N
         
         fireMatchCleared();
@@ -152,8 +148,7 @@ public final class MasterMatcher {
                     lastResult.addHighlightingJob(
                             highlights,
                             matchedColoring, mismatchedColoring,
-                            matchedMulticharColoring, mismatchedMulticharColoring,
-                            angleBraceMatchColoring, angleBraceMismatchColoring
+                            matchedMulticharColoring, mismatchedMulticharColoring
                     );
                 } else {
                     // Different request, cancel the current task

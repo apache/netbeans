@@ -163,8 +163,7 @@ public final class MasterMatcher {
                 lastResult.addHighlightingJob(
                         highlights,
                         matchedColoring, mismatchedColoring,
-                        matchedMulticharColoring, mismatchedMulticharColoring,
-                        angleBraceMatchColoring, angleBraceMismatchColoring
+                        matchedMulticharColoring, mismatchedMulticharColoring
                 );
 
                 // Fire up a new task

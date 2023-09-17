@@ -59,7 +59,8 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
     private static final JavaTokenId [] PAIR_TOKEN_IDS = new JavaTokenId [] { 
         JavaTokenId.LPAREN, JavaTokenId.RPAREN, 
         JavaTokenId.LBRACKET, JavaTokenId.RBRACKET, 
-        JavaTokenId.LBRACE, JavaTokenId.RBRACE
+        JavaTokenId.LBRACE, JavaTokenId.RBRACE.
+            JavaTokenId.LANGLE, JavaTokenId.RANGLE
     };
     
     private final MatcherContext context;

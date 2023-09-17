@@ -599,18 +599,14 @@ public final class MasterMatcher {
             AttributeSet matchedColoring,
             AttributeSet mismatchedColoring,
             AttributeSet matchedMulticharColoring,
-            AttributeSet mismatchedMulticharColoring,
-            AttributeSet angleBraceMatchColoring,
-            AttributeSet angleBraceMismatchColoring
+            AttributeSet mismatchedMulticharColoring
         ) {
             highlightingJobs.add(new Object[] {
                 highlights,
                 matchedColoring,
                 mismatchedColoring,
                 matchedMulticharColoring,
-                mismatchedMulticharColoring,
-                    angleBraceMatchColoring,
-                    angleBraceMismatchColoring
+                mismatchedMulticharColoring
             });
         }
 

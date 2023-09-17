@@ -55,7 +55,7 @@ import org.openide.util.Exceptions;
  */
 public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFactory, BracesMatcher.ContextLocator {
 
-    private static final char [] PAIRS = new char [] { '(', ')', '[', ']', '{', '}' }; //NOI18N
+    private static final char [] PAIRS = new char [] { '(', ')', '[', ']', '{', '}', '<', '>' }; //NOI18N
     private static final JavaTokenId [] PAIR_TOKEN_IDS = new JavaTokenId [] { 
         JavaTokenId.LPAREN, JavaTokenId.RPAREN, 
         JavaTokenId.LBRACKET, JavaTokenId.RBRACKET, 

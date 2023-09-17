@@ -224,8 +224,8 @@ public class BracesMatchHighlighting extends AbstractHighlightsContainer
                 bracesMismatchColoring,
                 bracesMatchMulticharColoring,
                 bracesMismatchMulticharColoring,
-                    angleBracketsMatch, // Add these lines
-                    angleBracketsMismatch // Add these lines
+                    angleBracketsMatchColoring, // Add these lines
+                    angleBracketsMismatchColoring // Add these lines
             );
         }
     }

@@ -49,7 +49,11 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         if (ClassPath.COMPILE.equals(type)){
             try {
                 URL eclipselinkJarUrl = Class.forName("javax.persistence.EntityManager").getProtectionDomain().getCodeSource().getLocation();
-                return ClassPathSupport.createClassPath(new URL[]{FileUtil.getArchiveRoot(eclipselinkJarUrl)});
+                URL javaEE8ApiJarUrl = Class.forName("javax.annotation.Resource").getProtectionDomain().getCodeSource().getLocation();
+                return ClassPathSupport.createClassPath(new URL[]{
+                    FileUtil.getArchiveRoot(eclipselinkJarUrl),
+                    FileUtil.getArchiveRoot(javaEE8ApiJarUrl)
+                });
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

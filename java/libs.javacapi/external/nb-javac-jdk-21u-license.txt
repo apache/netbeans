@@ -1,7 +1,7 @@
 Name: Javac Compiler Implementation
 Description: Javac Compiler Implementation
-Version: jdk-21+26
-Files: nb-javac-jdk-21+26-api.jar nb-javac-jdk-21+26.jar
+Version: jdk-21u
+Files: nb-javac-jdk-21u-api.jar nb-javac-jdk-21u.jar
 License: GPL-2-CP
 Origin: OpenJDK (https://github.com/openjdk/jdk21)
 Source: https://github.com/openjdk/jdk21

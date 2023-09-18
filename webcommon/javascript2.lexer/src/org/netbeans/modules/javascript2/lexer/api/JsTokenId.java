@@ -89,6 +89,8 @@ public enum JsTokenId implements TokenId {
     BRACKET_RIGHT_CURLY("}", "separator"), // NOI18N
     BRACKET_LEFT_BRACKET("[", "separator"), // NOI18N
     BRACKET_RIGHT_BRACKET("]", "separator"), // NOI18N
+    BRACKET_LEFT_ANGLE("<", "separator"), // NOI18N
+    BRACKET_RIGHT_ANGLE(">", "separator"), // NOI18N
 
     OPERATOR_SEMICOLON(";", "separator"), // NOI18N
     OPERATOR_COMMA(",", "separator"), // NOI18N

@@ -40,12 +40,13 @@ import org.netbeans.spi.editor.bracesmatching.support.BracesMatcherSupport;
 // major portion copied from java
 public class JsBracesMatcher implements BracesMatcher {
 
-    private static final char [] PAIRS = new char [] { '(', ')', '[', ']', '{', '}' }; //NOI18N
+    private static final char [] PAIRS = new char [] { '(', ')', '[', ']', '{', '}', '<', '>' }; //NOI18N
 
     private static final JsTokenId [] PAIR_TOKEN_IDS = new JsTokenId [] {
         JsTokenId.BRACKET_LEFT_PAREN, JsTokenId.BRACKET_RIGHT_PAREN,
         JsTokenId.BRACKET_LEFT_BRACKET, JsTokenId.BRACKET_RIGHT_BRACKET,
-        JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.BRACKET_RIGHT_CURLY
+        JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.BRACKET_RIGHT_CURLY,
+            JsTokenId.BRACKET_LEFT_ANGLE, JsTokenId.BRACKET_RIGHT_ANGLE
     };
 
     private final MatcherContext context;

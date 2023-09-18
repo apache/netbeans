@@ -38,7 +38,7 @@ public final class BracesMatcherSupport {
      * Creates the default <code>BracesMatcher</code> implementation. The default
      * matcher is used when no other matcher is available. The default matcher
      * is basically a character matcher, which looks for the following character
-     * pairs: <code>'(', ')', '[', ']', '{', '}', '&lt;', '&gt;'</code>.
+     * pairs: <code>'(', ')', '[', ']', '{', '}', '<', '>', '&lt;', '&gt;'</code>.
      * 
      * @param context The context for the matcher.
      * @param lowerBound The start offset of the area where the created matcher
@@ -72,7 +72,7 @@ public final class BracesMatcherSupport {
      * backward direction towards the beginning of a document.
      * 
      * <p>In other words each pair should contain the 'opening' character first
-     * and the 'closing' character second. For example, when searching for curely
+     * and the 'closing' character second. For example, when searching for curly
      * braces they should be listed in the following order
      * <code>char [] braces = new char [] { '{', '}' }</code>.
      * 

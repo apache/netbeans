@@ -116,41 +116,38 @@
                                   <Component id="bNamespaceLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="bUseTraitLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="maxPreservedBlankLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="afterUseTraitLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                              <Component id="aMethodsField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="bMethodsField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="aFieldsField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="bFunctionEndField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="betweenFields" linkSize="1" alignment="0" max="32767" attributes="1"/>
-                                              <Component id="bFieldsField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="aClassField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="bClassEndField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="aClassHeaderField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="bClassField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="aUseField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="bUseField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="aNamespaceField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="bNamespaceField" linkSize="1" alignment="0" max="32767" attributes="3"/>
-                                              <Component id="betweenUseTypesField" alignment="0" max="32767" attributes="0"/>
-                                          </Group>
-                                          <Component id="aOpenPHPTagField" linkSize="1" min="-2" max="-2" attributes="3"/>
-                                          <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="bClosePHPTagField" linkSize="1" alignment="0" min="-2" max="-2" attributes="3"/>
-                                              <Component id="aOpenPHPTagHTMLField" linkSize="1" alignment="0" min="-2" max="-2" attributes="3"/>
-                                          </Group>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="aMethodsField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="bMethodsField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="aFieldsField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="bFunctionEndField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="betweenFields" linkSize="1" alignment="0" max="32767" attributes="1"/>
+                                          <Component id="bFieldsField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="aClassField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="bClassEndField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="aClassHeaderField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="bClassField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="aUseField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="bUseField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="aNamespaceField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="bNamespaceField" linkSize="1" alignment="0" max="32767" attributes="3"/>
+                                          <Component id="betweenUseTypesField" alignment="0" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Component id="aOpenPHPTagField" linkSize="1" min="-2" max="-2" attributes="3"/>
+                                      <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="bClosePHPTagField" linkSize="1" alignment="0" min="-2" max="-2" attributes="3"/>
+                                          <Component id="aOpenPHPTagHTMLField" linkSize="1" alignment="0" min="-2" max="-2" attributes="3"/>
                                       </Group>
                                   </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="maxPreservedBlankField" max="32767" attributes="0"/>
-                                          <Component id="bUseTraitField" linkSize="1" max="32767" attributes="0"/>
-                                      </Group>
+                                  <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="maxPreservedBlankField" max="32767" attributes="0"/>
+                                      <Component id="bUseTraitField" linkSize="1" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="afterUseTraitTextField" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -259,6 +256,11 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="bUseTraitField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="bUseTraitLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="afterUseTraitLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="afterUseTraitTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -813,6 +815,20 @@
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="org/netbeans/modules/php/editor/indent/ui/Bundle.properties" key="FmtBlankLines.endOfFileCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="afterUseTraitLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/php/editor/indent/ui/Bundle.properties" key="FmtBlankLines.afterUseTraitLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="afterUseTraitTextField">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/php/editor/indent/ui/Bundle.properties" key="FmtBlankLines.afterUseTraitTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>

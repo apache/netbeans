@@ -25,9 +25,9 @@ import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -45,7 +45,7 @@ import org.openide.util.Pair;
     "MSG_PortParseError=Cannot parse '{1}' as port in '{0}'"
 })
 final class ConnectionSpec implements Closeable {
-    private static final int HASH_LEN = 16;
+    private static final int HASH_LEN = 64;
     private final Boolean listen;
     private final boolean hash;
     private final int port;
@@ -121,7 +121,7 @@ final class ConnectionSpec implements Closeable {
             char[] hashContent;
             if (hash) {
                 byte[] hashBytes = new byte[HASH_LEN];
-                new Random().nextBytes(hashBytes);
+                new SecureRandom().nextBytes(hashBytes);
                 hashContent = new char[hashBytes.length * 2];
                 int idx = 0;
                 for (byte b : hashBytes) {

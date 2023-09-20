@@ -35,6 +35,7 @@ import org.netbeans.modules.web.beans.analysis.analyzer.annotation.TargetVerifie
  * @author ads
  *
  */
+// @todo: Support JakartaEE
 public class StereotypeChecker extends RuntimeAnnotationChecker {
     
     static final String STEREOTYPE = "javax.enterprise.inject.Stereotype";  //NOI18N

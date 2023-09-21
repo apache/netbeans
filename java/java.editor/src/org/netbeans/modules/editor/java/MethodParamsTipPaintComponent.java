@@ -24,6 +24,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import org.openide.awt.GraphicsUtils;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -91,8 +92,14 @@ public class MethodParamsTipPaintComponent extends JToolTip {
         if (params != null) {
             for (List<String> p : params) {
                 int i = 0;
+                if (p.isEmpty()) {
+                    p.add(NbBundle.getMessage(MethodParamsTipPaintComponent.class, "JCP-no-parameters"));
+                }
                 int plen = p.size() - 1;
                 for (String s : p) {
+                    if (i < plen) {
+                        s += ", "; //NOI18N
+                    }
                     if (getWidth(s, i == idx || i == plen && idx > plen ? getDrawFont().deriveFont(Font.BOLD) : getDrawFont()) + drawX > screenWidth) {
                         drawY += fontHeight;
                         drawX = startX + getWidth("        ", drawFont); //NOI18N

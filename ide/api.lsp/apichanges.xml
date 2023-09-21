@@ -51,6 +51,21 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="SignatureInformation">
+        <api name="LSP_API"/>
+        <summary>Added SignatureInformation and SignatureInformationCollector</summary>
+        <version major="1" minor="20"/>
+        <date day="21" month="9" year="2023"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            A <a href="@TOP@/org/netbeans/api/lsp/SignatureInformation.html">SignatureInformation</a> class
+            and <a href="@TOP@/org/netbeans/api/lsp/SignatureInformationCollecto.html">SignatureInformationCollector</a> interface
+            introduced that allows to compute and collect signature information.
+        </description>
+        <class package="org.netbeans.api.lsp" name="SignatureInformation"/>
+        <class package="org.netbeans.spi.lsp" name="SignatureInformationCollector"/>
+    </change>
     <change id="LazyCodeAction">
         <api name="LSP_API"/>
         <summary>Added CodeAction with lazy edit computation</summary>

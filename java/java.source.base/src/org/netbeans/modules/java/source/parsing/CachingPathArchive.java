@@ -41,6 +41,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
+import static org.netbeans.modules.java.source.parsing.FileObjects.convertPackage2Folder;
 
 /**
  *
@@ -119,6 +120,21 @@ public class CachingPathArchive extends AbstractPathArchive {
     }
 
     @Override
+    @CheckForNull
+    public synchronized URI getDirectory(String dirName) throws IOException {
+        init();
+
+        if (!data.containsKey(dirName)) {
+            return null;
+        }
+
+        final char sep = root.getFileSystem().getSeparator().charAt(0);
+        Path resolved = root.resolve(convertPackage2Folder(dirName, sep));
+
+        return resolved.toUri();
+    }
+
+    @Override
     public synchronized void clear() {
         super.clear();
         data = null;
@@ -186,11 +202,11 @@ public class CachingPathArchive extends AbstractPathArchive {
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                     final State state = states.removeLast();
-                    if (state.currentFolder != EMPTY_FOLDER) {
-                        data.put(
-                            getResourceName(dir),
-                            Arrays.copyOfRange(state.currentFolder, 0, state.currentOffset));
-                    }
+
+                    data.put(
+                        getResourceName(dir),
+                        Arrays.copyOfRange(state.currentFolder, 0, state.currentOffset));
+
                     return FileVisitResult.CONTINUE;
                 }
             });

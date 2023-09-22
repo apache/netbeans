@@ -20,10 +20,12 @@ package org.netbeans.modules.java.openjdk.project;
 
 import java.net.URL;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
-import org.netbeans.modules.java.openjdk.project.JDKProject;
 import org.netbeans.spi.java.queries.MultipleRootsUnitTestForSourceQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -42,23 +44,45 @@ public class UnitTestForSourceQueryImpl implements MultipleRootsUnitTestForSourc
 
     @Override
     public URL[] findUnitTests(FileObject source) {
-        SourceGroup[] groups = ProjectUtils.getSources(prj)
-                                           .getSourceGroups(SourcesImpl.SOURCES_TYPE_JDK_PROJECT_TESTS);
-        return notInReturn(source, groups);
+        Set<FileObject> roots = getRoots(SourcesImpl.SOURCES_TYPE_JDK_PROJECT_TESTS);
+
+        if (!insideAnyRoot(roots, source)) {
+            return toURLs(roots);
+        }
+
+        return null;
     }
 
     @Override
     public URL[] findSources(FileObject unitTest) {
-        SourceGroup[] groups = ProjectUtils.getSources(prj)
-                                           .getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        return notInReturn(unitTest, groups);
+        Set<FileObject> roots = getRoots(JavaProjectConstants.SOURCES_TYPE_JAVA);
+
+        roots.removeAll(getRoots(SourcesImpl.SOURCES_TYPE_JDK_PROJECT_TESTS));
+
+        if (!insideAnyRoot(roots, unitTest)) {
+            return toURLs(roots);
+        }
+
+        return null;
     }
 
-    private URL[] notInReturn(FileObject file, SourceGroup[] groups) {
+    private Set<FileObject> getRoots(String type) {
+        SourceGroup[] groups = ProjectUtils.getSources(prj)
+                                           .getSourceGroups(type);
+
         return Arrays.stream(groups)
                      .map(sg -> sg.getRootFolder())
-                     .filter(root -> FileUtil.isParentOf(root, file) || root == file)
-                     .map(f -> f.toURL())
-                     .toArray(s -> new URL[s]);
+                     .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private boolean insideAnyRoot(Set<FileObject> roots, FileObject toTest) {
+        return roots.stream()
+                    .anyMatch(root -> FileUtil.isParentOf(root, toTest) || root == toTest);
+    }
+
+    private URL[] toURLs(Set<FileObject> roots) {
+        return roots.stream()
+                    .map(f -> f.toURL())
+                    .toArray(s -> new URL[s]);
     }
 }

@@ -46,12 +46,15 @@ import org.openide.util.Task;
 import org.openide.util.Utilities;
 import org.openide.util.datatransfer.ExClipboard;
 
-@org.openide.util.lookup.ServiceProviders({@org.openide.util.lookup.ServiceProvider(service=java.awt.datatransfer.Clipboard.class), @org.openide.util.lookup.ServiceProvider(service=org.openide.util.datatransfer.ExClipboard.class)})
+@org.openide.util.lookup.ServiceProviders({
+    @org.openide.util.lookup.ServiceProvider(service=java.awt.datatransfer.Clipboard.class),
+    @org.openide.util.lookup.ServiceProvider(service=org.openide.util.datatransfer.ExClipboard.class)
+})
 public final class NbClipboard extends ExClipboard
 implements LookupListener, FlavorListener, AWTEventListener
 {
     private static final Logger log = Logger.getLogger(NbClipboard.class.getName());
-    private ThreadLocal<Boolean> FIRING = new ThreadLocal<Boolean>();
+    private final ThreadLocal<Boolean> FIRING = new ThreadLocal<>();
     private Clipboard systemClipboard;
     private ExClipboard.Convertor[] convertors;
     private Lookup.Result<ExClipboard.Convertor> result;
@@ -59,7 +62,7 @@ implements LookupListener, FlavorListener, AWTEventListener
     private Transferable last;
     private long lastWindowActivated;
     private long lastWindowDeactivated;
-    private Reference<Object> lastWindowDeactivatedSource = new WeakReference<Object>(null);
+    private Reference<Object> lastWindowDeactivatedSource = new WeakReference<>(null);
     private volatile Task setContentsTask = Task.EMPTY;
     private volatile Task getContentsTask = Task.EMPTY;
     private boolean anyWindowIsActivated = true;
@@ -68,7 +71,8 @@ implements LookupListener, FlavorListener, AWTEventListener
         //for unit testing
         this( Toolkit.getDefaultToolkit().getSystemClipboard() );
     }
-    
+
+    @SuppressWarnings("LeakingThisInConstructor")
     NbClipboard( Clipboard systemClipboard ) {
         super("NBClipboard");   // NOI18N
         this.systemClipboard = systemClipboard;
@@ -80,7 +84,7 @@ implements LookupListener, FlavorListener, AWTEventListener
 
         resultChanged(null);
 
-        if (System.getProperty("netbeans.slow.system.clipboard.hack") != null) {
+        if (System.getProperty("netbeans.slow.system.clipboard.hack") != null) { // NOI18N
             slowSystemClipboard = Boolean.getBoolean("netbeans.slow.system.clipboard.hack"); // NOI18N
         } else if (Utilities.isMac()) {
             slowSystemClipboard = false;
@@ -100,11 +104,14 @@ implements LookupListener, FlavorListener, AWTEventListener
                 this, AWTEvent.WINDOW_EVENT_MASK);
         }
     }
-    
+
+    @Override
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     protected synchronized ExClipboard.Convertor[] getConvertors () {
         return convertors;
     }
 
+    @Override
     public synchronized void resultChanged(LookupEvent ev) {
         Collection<? extends ExClipboard.Convertor> c = result.allInstances();
         ExClipboard.Convertor[] temp = new ExClipboard.Convertor[c.size()];
@@ -124,7 +131,7 @@ implements LookupListener, FlavorListener, AWTEventListener
     // accesses the system clipboard directly then we don't see these changes.
     //
     // The other problem is an AWT bug
-    // 
+    //
     // http://developer.java.sun.com/developer/bugParade/bugs/4818143.html
     //
     // sun.awt.datatransfer.ClipboardTransferable.getClipboardData() can hang
@@ -136,6 +143,7 @@ implements LookupListener, FlavorListener, AWTEventListener
     private static final RequestProcessor RP = new RequestProcessor("System clipboard synchronizer"); // NOI18N
 
     @Override
+    @SuppressWarnings("AssignmentToMethodParameter")
     public void setContents(Transferable contents, ClipboardOwner owner) {
         synchronized (this) {
             // XXX(-dstrupl) the following line might lead to a double converted
@@ -162,12 +170,8 @@ implements LookupListener, FlavorListener, AWTEventListener
                 this.contents = contents;
 
                     if (oldOwner != null && oldOwner != owner) {
-                    EventQueue.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            oldOwner.lostOwnership(NbClipboard.this, oldContents);
-                        }
+                    EventQueue.invokeLater(() -> {
+                        oldOwner.lostOwnership(NbClipboard.this, oldContents);
                     });
                 }
             } else {
@@ -189,12 +193,11 @@ implements LookupListener, FlavorListener, AWTEventListener
                 // The purpose of lastWindowActivated+100 is to ignore calls
                 // which immediatelly follow WINDOW_ACTIVATED event.
                 // This is workaround of JDK bug described in issue 41098.
-                long curr = System.currentTimeMillis();
                 int waitTime = Integer.getInteger("sun.awt.datatransfer.timeout", 1000); // NOI18N
                 if (waitTime > 0 && !Boolean.TRUE.equals(FIRING.get())) {
                     boolean ok = scheduleGetFromSystemClipboard(false).waitFinished (waitTime);
                     if (!ok) {
-                        log.log(Level.FINE, "Time out waiting for sync with system clipboard for {0} ms", waitTime);
+                        log.log(Level.FINE, "Time out waiting for sync with system clipboard for {0} ms", waitTime); // NOI18N
                     }
                 }
                 prev = super.getContents (requestor);
@@ -252,18 +255,19 @@ implements LookupListener, FlavorListener, AWTEventListener
         Boolean prev = FIRING.get();
         try {
             FIRING.set(true);
-            super.addFlavorListener(listener); 
+            super.addFlavorListener(listener);
         } finally {
             FIRING.set(prev);
         }
     }
-    
-    
+
+
 
     private void scheduleSetContents(final Transferable cnts, final ClipboardOwner ownr, int delay) {
         setContentsTask = RP.post(new SetContents(cnts, ownr), delay);
     }
-     
+
+    @SuppressWarnings("NestedAssignment")
     private Task scheduleGetFromSystemClipboard(boolean notify) {
         return getContentsTask = RP.post(new GetContents(notify));
     }
@@ -274,39 +278,37 @@ implements LookupListener, FlavorListener, AWTEventListener
         setContentsTask.waitFinished ();
         getContentsTask.waitFinished ();
     }
-    
+
     final void activateWindowHack (boolean reschedule) {
         // if WINDOW_DEACTIVATED is followed immediatelly with
-        // WINDOW_ACTIVATED then it is JDK bug described in 
+        // WINDOW_ACTIVATED then it is JDK bug described in
         // issue 41098.
         lastWindowActivated = System.currentTimeMillis();
         if (reschedule) {
             scheduleGetFromSystemClipboard(true);
         }
     }
-    
+
     private void logFlavors (Transferable trans, Level level, boolean content) {
         if (trans == null) {
-            log.log (level, "  no clipboard contents");
+            log.log (level, "  no clipboard contents"); // NOI18N
         }
         else {
             if (content) {
                 java.awt.datatransfer.DataFlavor[] arr = trans.getTransferDataFlavors();
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < arr.length; i++) {
-                    sb.append("  ").append(i).append(" = ").append(arr[i]);
+                    sb.append("  ").append(i).append(" = ").append(arr[i]); // NOI18N
                     try {
-                        sb.append(" contains: ").append(trans.getTransferData(arr[i]));
-                    } catch (UnsupportedFlavorException ex) {
-                        log.log(level, "Can't convert to " + arr[i], ex);
-                    } catch (IOException ex) {
-                        log.log(level, "Can't convert to " + arr[i], ex);
+                        sb.append(" contains: ").append(trans.getTransferData(arr[i])); // NOI18N
+                    } catch (UnsupportedFlavorException | IOException ex) {
+                        log.log(level, "Can't convert to " + arr[i], ex); // NOI18N
                     }
                     sb.append("\n");
                 }
                 log.log (level, sb.toString());
             } else {
-                log.log (level, " clipboard contains data");
+                log.log (level, " clipboard contains data"); // NOI18N
             }
         }
     }
@@ -339,10 +341,10 @@ implements LookupListener, FlavorListener, AWTEventListener
 
         if (ev.getID() == WindowEvent.WINDOW_DEACTIVATED) {
             lastWindowDeactivated = System.currentTimeMillis();
-            lastWindowDeactivatedSource = new WeakReference<Object>(ev.getSource());
+            lastWindowDeactivatedSource = new WeakReference<>(ev.getSource());
             anyWindowIsActivated = false;
             if( Utilities.isWindows() ) {
-                //#247585 - even listening to clipboard changes when the window isn't active 
+                //#247585 - even listening to clipboard changes when the window isn't active
                 //may throw a MS Windows error as the 'clipboard copy' action doesn't have enough time to finish
                 systemClipboard.removeFlavorListener(this);
             }
@@ -377,40 +379,41 @@ implements LookupListener, FlavorListener, AWTEventListener
         this.contents = t;
 
         if (oldOwner != null && oldOwner != owner) {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    oldOwner.lostOwnership(NbClipboard.this, oldContents);
-                }
+            EventQueue.invokeLater(() -> {
+                oldOwner.lostOwnership(NbClipboard.this, oldContents);
             });
         }
     }
-    
+
     /** Transferable that logs operations on itself.
      */
     private final class LoggableTransferable implements Transferable {
-        private Transferable delegate;
-        
+        private final Transferable delegate;
+
         public LoggableTransferable (Transferable delegate) {
             this.delegate = delegate;
         }
+
+        @Override
         public Object getTransferData (DataFlavor flavor) throws UnsupportedFlavorException, java.io.IOException {
-            log.log (Level.FINE, "Request for flavor: " + flavor); // NOI18N
+            log.log (Level.FINE, "Request for flavor: {0}", flavor); // NOI18N
             Object res = delegate.getTransferData (flavor);
-            log.log (Level.FINE, "Returning value: " + res); // NOI18N
+            log.log (Level.FINE, "Returning value: {0}", res); // NOI18N
             return res;
         }
-        
+
+        @Override
         public DataFlavor[] getTransferDataFlavors () {
             return delegate.getTransferDataFlavors ();
         }
-        
+
+        @Override
         public boolean isDataFlavorSupported (DataFlavor flavor) {
             boolean res = delegate.isDataFlavorSupported (flavor);
-            log.log (Level.FINE, "isDataFlavorSupported: " + flavor + " result: " + res); // NOI18N
+            log.log (Level.FINE, "isDataFlavorSupported: {0} result: {1}", new Object[]{flavor, res}); // NOI18N
             return res;
         }
-        
+
     }
 
     private final class GetContents implements Runnable {
@@ -419,12 +422,35 @@ implements LookupListener, FlavorListener, AWTEventListener
         public GetContents(boolean notify) {
             this.notify = notify;
         }
-        
+
         @Override
+        @SuppressWarnings("SleepWhileInLoop")
         public void run() {
-            log.fine("Running update");
+            log.fine("Running update"); // NOI18N
             try {
-                Transferable transferable = systemClipboard.getContents(this);
+                Transferable transferable = null;
+                // There can be a race between multiple applications accessing
+                // the clipboard. If access can't be optained directly, retry
+                // for a maximum of 1s. This is called from the requestprocessor
+                // that is used because accessing the clipboard can block
+                // indefinitely. Running the access loop here is deemed similar
+                // in nature.
+                final int MAX_TRIES = 50;
+                final long start = System.currentTimeMillis();
+                for (int i = 0; i < MAX_TRIES; i++) {
+                    try {
+                        transferable = systemClipboard.getContents(this);
+                        break;
+                    } catch (IllegalStateException ex) {
+                        // Throw exception if retries failed
+                        if (i == (MAX_TRIES - 1) || (System.currentTimeMillis() - start) > 980L) {
+                            throw ex;
+                        } else {
+                            log.log(Level.INFO, "systemClipboard#getContents threw IllegalStateException (try: {0})", i + 1); // NOI18N
+                        }
+                        Thread.sleep(20); // Give system time to settle
+                    }
+                }
                 superSetContents(transferable, null);
                 if (log.isLoggable (Level.FINE)) {
                     log.log (Level.FINE, "internal clipboard updated:"); // NOI18N
@@ -437,7 +463,8 @@ implements LookupListener, FlavorListener, AWTEventListener
             catch (ThreadDeath ex) {
                 throw ex;
             }
-            catch (Throwable ignore) {
+            catch (InterruptedException | RuntimeException ex) {
+                log.log(Level.INFO, "systemClipboard not available", ex); // NOI18N
             }
         }
     }
@@ -457,7 +484,11 @@ implements LookupListener, FlavorListener, AWTEventListener
                 systemClipboard.setContents(cnts, ownr);
             } catch (IllegalStateException e) {
                 //#139616
-                log.log(Level.FINE, "systemClipboard not available", e); // NOI18N
+                if(log.isLoggable(Level.FINE)) {
+                    log.log(Level.FINE, "systemClipboard not available", e); // NOI18N
+                } else {
+                    log.log(Level.INFO, "systemClipboard#setContents threw IllegalStateException"); // NOI18N
+                }
                 scheduleSetContents(cnts, ownr, 100);
                 return;
             }

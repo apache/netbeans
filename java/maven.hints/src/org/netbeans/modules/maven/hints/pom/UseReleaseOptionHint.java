@@ -19,7 +19,6 @@
 package org.netbeans.modules.maven.hints.pom;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.prefs.Preferences;
@@ -78,7 +77,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
     public List<ErrorDescription> getErrorsForDocument(POMModel model, Project prj) {
 
         if (prj == null) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         // no hints if plugin was downgraded
@@ -87,7 +86,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
             // note: this is the embedded plugin version, only useful for downgrade checks
             String pluginVersion = PluginPropertyUtils.getPluginVersion(nbproject.getMavenProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
             if (pluginVersion != null && new ComparableVersion(pluginVersion).compareTo(COMPILER_PLUGIN_VERSION) <= 0) {
-                return Collections.emptyList();
+                return List.of();
             }
         }
 
@@ -99,7 +98,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
 
         if (build != null && build.getPlugins() != null) {
             Optional<Plugin> compilerPlugin = build.getPlugins().stream()
-                    .filter((p) -> "maven-compiler-plugin".equals(p.getArtifactId()))
+                    .filter((p) -> Constants.PLUGIN_COMPILER.equals(p.getArtifactId()))
                     .filter(this::isPluginCompatible)
                     .findFirst();
 
@@ -118,7 +117,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
         if (!releaseSupportedByDeclaredPlugin) {
             ComparableVersion mavenVersion = PomModelUtils.getActiveMavenVersion();
             if (mavenVersion == null || mavenVersion.compareTo(MAVEN_VERSION) <= 0) {
-                return Collections.emptyList();
+                return List.of();
             }
         }
 
@@ -133,7 +132,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
     private List<ErrorDescription> createHintsForParent(String prefix, POMComponent parent) {
 
         if (parent == null) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         int source;
@@ -162,7 +161,7 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
             }
         } catch (NumberFormatException ignored) {
             // if source or target is invalid or missing
-            return Collections.emptyList();
+            return List.of();
         }
 
         if (source == target && source >= 9) {
@@ -175,12 +174,12 @@ public class UseReleaseOptionHint implements POMErrorFixProvider {
             }
             return hints;
         }
-        return Collections.emptyList();
+        return List.of();
     }
 
     private ErrorDescription createHintForComponent(String prefix, POMComponent component, POMModel model, String release) {
         Line line = NbEditorUtilities.getLine(model.getBaseDocument(), component.findPosition(), false);
-        List<Fix> fix = Collections.singletonList(new ConvertToReleaseOptionFix(prefix, release, component));
+        List<Fix> fix = List.of(new ConvertToReleaseOptionFix(prefix, release, component));
         return ErrorDescriptionFactory.createErrorDescription(Severity.HINT, FIX_UseReleaseVersionHint(), fix, model.getBaseDocument(), line.getLineNumber()+1);
     }
 

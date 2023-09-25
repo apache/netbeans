@@ -138,7 +138,7 @@ public abstract class MainMenuAction implements Presenter.Menu, ChangeListener, 
             if (keys != null && keys.length > 0) {
                 for (KeyStroke key : keys) {
                     // filter out synthetic mouse keycodes
-                    if (key.getKeyCode() >= 0x290 && key.getKeyCode() <= 0x29F) {
+                    if (org.openide.util.Utilities.isMouseKeyCode(key.getKeyCode())) {
                         continue;
                     }
                     if (itemAccelerator==null || !itemAccelerator.equals(key)){

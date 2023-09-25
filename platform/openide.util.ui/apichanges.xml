@@ -27,6 +27,21 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="mouseKeyCodes">
+      <api name="util"/>
+      <summary>Added methods to query mouse event pseudo-keycodes</summary>
+      <version major="9" minor="31"/>
+      <date day="25" month="9" year="2023"/>
+      <author login="neilcsmith"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="yes"/>
+      <description>
+            <p>
+               Added methods to query the existing pseudo-keycodes assigned to mouse wheel events, and new pseudo-keycodes added
+               for extended mouse buttons.
+            </p>
+       </description>
+       <class package="org.openide.util" name="Utilities"/>
+    </change>
     <change id="findDialogParent2">
          <api name="util"/>
          <summary>static method Utilities.findDialogParent overloaded and isModalDialogOpen added</summary>

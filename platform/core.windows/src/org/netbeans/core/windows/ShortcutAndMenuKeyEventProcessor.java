@@ -314,7 +314,6 @@ final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyE
     private void processMouseEvent(MouseEvent mev) {
         if (mev.getID() != MouseEvent.MOUSE_PRESSED
                 || mev.getButton() <= MouseEvent.BUTTON3
-                || mev.getButton() > 10
                 || mev.isPopupTrigger()
                 || mev.isConsumed()) {
             return;
@@ -323,7 +322,10 @@ final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyE
         if (NbLifecycleManager.isExiting()) {
             return;
         }
-        int keycode = 0x292 + (mev.getButton() - 1);
+        int keycode = Utilities.mouseButtonKeyCode(mev.getButton());
+        if (keycode == KeyEvent.VK_UNDEFINED) {
+            return;
+        }
         int modifiers = 0;
         if (mev.isControlDown()) {
             modifiers |= InputEvent.CTRL_DOWN_MASK;

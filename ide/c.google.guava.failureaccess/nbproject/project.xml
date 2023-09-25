@@ -23,12 +23,12 @@
    <type>org.netbeans.modules.apisupport.project</type>
    <configuration>
        <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-           <code-name-base>com.google.guava</code-name-base>
+           <code-name-base>com.google.guava.failureaccess</code-name-base>
            <module-dependencies/>
            <public-packages/>
            <class-path-extension>
-               <runtime-relative-path>com-google-guava.jar</runtime-relative-path>
-               <binary-origin>external/guava-32.1.2-jre.jar</binary-origin>
+               <runtime-relative-path>com-google-guava-failureaccess.jar</runtime-relative-path>
+               <binary-origin>external/failureaccess-1.0.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

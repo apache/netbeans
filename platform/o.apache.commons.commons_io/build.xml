@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="platform/o.apache.commons.io" default="build" basedir=".">
+<project basedir="." default="netbeans" name="platform/o.apache.commons.commons_io">
+    <description>Builds, tests, and runs the project org.apache.commons.commons_io</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <target name="jar"/>
 </project>

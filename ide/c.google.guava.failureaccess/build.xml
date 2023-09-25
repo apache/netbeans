@@ -19,17 +19,7 @@
     under the License.
 
 -->
-<project xmlns="http://www.netbeans.org/ns/project/1">
-   <type>org.netbeans.modules.apisupport.project</type>
-   <configuration>
-       <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-           <code-name-base>com.google.guava</code-name-base>
-           <module-dependencies/>
-           <public-packages/>
-           <class-path-extension>
-               <runtime-relative-path>com-google-guava.jar</runtime-relative-path>
-               <binary-origin>external/guava-32.1.2-jre.jar</binary-origin>
-            </class-path-extension>
-        </data>
-    </configuration>
+<project name="ide/c.google.guava.failureaccess" default="build" basedir=".">
+    <import file="../../nbbuild/templates/projectized.xml"/>
+    <target name="jar"/>
 </project>

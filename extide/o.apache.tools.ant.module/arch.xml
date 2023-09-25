@@ -314,7 +314,7 @@
             <li>
                 <api group="java" name="Ant" type="import" category="third" url="https://ant.apache.org">
                     Ant itself, of course.
-                    1.8.0+ is required, 1.10.8 recommended (and currently bundled); some features may be limited to newer versions.
+                    1.8.0+ is required, 1.10.14 recommended (and currently bundled); some features may be limited to newer versions.
                 </api>
             </li>
         </ol>

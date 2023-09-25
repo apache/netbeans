@@ -24,31 +24,31 @@
         <mkdir dir="lib"/>
         <copy todir="lib">
             <fileset dir=".">
-                <include name="ant-antlr-1.10.8.jar" />
-                <include name="ant-apache-bcel-1.10.8.jar" />
-                <include name="ant-apache-bsf-1.10.8.jar" />
-                <include name="ant-apache-log4j-1.10.8.jar" />
-                <include name="ant-apache-oro-1.10.8.jar" />
-                <include name="ant-apache-regexp-1.10.8.jar" />
-                <include name="ant-apache-resolver-1.10.8.jar" />
-                <include name="ant-apache-xalan2-1.10.8.jar" />
-                <include name="ant-commons-logging-1.10.8.jar" />
-                <include name="ant-commons-net-1.10.8.jar" />
-                <include name="ant-jai-1.10.8.jar" />
-                <include name="ant-javamail-1.10.8.jar" />
-                <include name="ant-jdepend-1.10.8.jar" />
-                <include name="ant-jmf-1.10.8.jar" />
-                <include name="ant-jsch-1.10.8.jar" />
-                <include name="ant-junit-1.10.8.jar" />
-                <include name="ant-junit4-1.10.8.jar" />
-                <include name="ant-launcher-1.10.8.jar" />
-                <include name="ant-netrexx-1.10.8.jar" />
-                <include name="ant-swing-1.10.8.jar" />
-                <include name="ant-testutil-1.10.8.jar" />
-                <include name="ant-xz-1.10.8.jar" />
-                <include name="ant-1.10.8.jar" />
+                <include name="ant-antlr-1.10.14.jar" />
+                <include name="ant-apache-bcel-1.10.14.jar" />
+                <include name="ant-apache-bsf-1.10.14.jar" />
+                <include name="ant-apache-log4j-1.10.14.jar" />
+                <include name="ant-apache-oro-1.10.14.jar" />
+                <include name="ant-apache-regexp-1.10.14.jar" />
+                <include name="ant-apache-resolver-1.10.14.jar" />
+                <include name="ant-apache-xalan2-1.10.14.jar" />
+                <include name="ant-commons-logging-1.10.14.jar" />
+                <include name="ant-commons-net-1.10.14.jar" />
+                <include name="ant-jai-1.10.14.jar" />
+                <include name="ant-javamail-1.10.14.jar" />
+                <include name="ant-jdepend-1.10.14.jar" />
+                <include name="ant-jmf-1.10.14.jar" />
+                <include name="ant-jsch-1.10.14.jar" />
+                <include name="ant-junit-1.10.14.jar" />
+                <include name="ant-junit4-1.10.14.jar" />
+                <include name="ant-launcher-1.10.14.jar" />
+                <include name="ant-netrexx-1.10.14.jar" />
+                <include name="ant-swing-1.10.14.jar" />
+                <include name="ant-testutil-1.10.14.jar" />
+                <include name="ant-xz-1.10.14.jar" />
+                <include name="ant-1.10.14.jar" />
             </fileset>
-            <globmapper from="*-1.10.8.jar" to="*.jar"/>
+            <globmapper from="*-1.10.14.jar" to="*.jar"/>
         </copy>
     </target>
     <target name="clean">

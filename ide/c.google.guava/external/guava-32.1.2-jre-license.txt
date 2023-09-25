@@ -1,9 +1,9 @@
-Name: Commons Compress
-Version: 1.23.0
-OSR: 19203
-Description: The Apache Commons Compress library defines an API for working with ar, cpio, Unix dump, tar, zip, gzip, XZ, Pack200, bzip2, 7z, arj, lzma, snappy, DEFLATE, lz4, Brotli, Zstandard, DEFLATE64 and Z files.
-Origin: https://commons.apache.org/proper/commons-compress/index.html
+Name: Guava
+Version: 32.1.2
 License: Apache-2.0
+Origin: https://github.com/google/guava
+Description: Guava is a set of core libraries that includes new collection types (such as multimap and multiset), immutable collections, a graph library, and utilities for concurrency, I/O, hashing, primitives, strings, and more.
+
 
                                  Apache License
                            Version 2.0, January 2004

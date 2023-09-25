@@ -1,8 +1,10 @@
-Name: Guava
-Version: 27.0
+Name: Apache Commons IO
+Description: Assist with developing IO functionality
+Origin: Apache Software Foundation
+Version: 2.13.0
 License: Apache-2.0
-Origin: https://github.com/google/guava
-Description: Guava is a set of core libraries that includes new collection types (such as multimap and multiset), immutable collections, a graph library, and utilities for concurrency, I/O, hashing, primitives, strings, and more.
+URL: https://commons.apache.org/proper/commons-io/
+
 
 
                                  Apache License
@@ -206,3 +208,4 @@ Description: Guava is a set of core libraries that includes new collection types
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+

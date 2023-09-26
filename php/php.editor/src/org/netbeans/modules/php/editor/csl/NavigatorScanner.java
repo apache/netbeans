@@ -72,6 +72,7 @@ public final class NavigatorScanner {
 
     private static final Logger LOGGER = Logger.getLogger(NavigatorScanner.class.getName());
     private static final String FONT_GRAY_COLOR = "<font color=\"#999999\">"; //NOI18N
+    private static final String FONT_INHERITED_COLOR = "<font color=\"#7D694A\">"; //NOI18N
     private static final String CLOSE_FONT = "</font>"; //NOI18N
     private static ImageIcon interfaceIcon = null;
     private static ImageIcon traitIcon = null;
@@ -362,10 +363,44 @@ public final class NavigatorScanner {
             }
         }
 
+        protected void appendConstantDescription(ConstantElement constant, HtmlFormatter formatter) {
+            appendConstantDescription(constant, formatter, false);
+        }
+
+        protected void appendConstantDescription(ConstantElement constant, HtmlFormatter formatter, boolean isInherited) {
+            if (constant.isDeprecated()) {
+                formatter.deprecated(true);
+            }
+            if (isInherited) {
+                formatter.appendHtml(FONT_INHERITED_COLOR);
+            }
+            formatter.appendText(getName());
+            if (isInherited) {
+                formatter.appendHtml(CLOSE_FONT);
+            }
+            if (constant.isDeprecated()) {
+                formatter.deprecated(false);
+            }
+            String value = constant.getValue();
+            if (value != null) {
+                formatter.appendText(" "); //NOI18N
+                formatter.appendHtml(FONT_GRAY_COLOR);
+                formatter.appendText(value);
+                formatter.appendHtml(CLOSE_FONT);
+            }
+        }
+
         protected void appendFunctionDescription(FunctionScope function, HtmlFormatter formatter) {
+            appendFunctionDescription(function, formatter, false);
+        }
+
+        protected void appendFunctionDescription(FunctionScope function, HtmlFormatter formatter, boolean isInherited) {
             formatter.reset();
             if (function == null) {
                 return;
+            }
+            if (isInherited) {
+                formatter.appendHtml(FONT_INHERITED_COLOR);
             }
             if (function.isDeprecated()) {
                 formatter.deprecated(true);
@@ -380,6 +415,9 @@ public final class NavigatorScanner {
                 processParameters(function, formatter, parameters);
             }
             formatter.appendText(")");   //NOI18N
+            if (isInherited) {
+                formatter.appendHtml(CLOSE_FONT);
+            }
             Collection<? extends String> returnTypes = function.getReturnTypeNames();
             if (!returnTypes.isEmpty()) {
                 processReturnTypes(function, formatter, returnTypes);
@@ -518,7 +556,13 @@ public final class NavigatorScanner {
             if (field.isDeprecated()) {
                 formatter.deprecated(true);
             }
+            if (isInherited()) {
+                formatter.appendHtml(FONT_INHERITED_COLOR);
+            }
             formatter.appendText(field.getName());
+            if (isInherited()) {
+                formatter.appendHtml(CLOSE_FONT);
+            }
             if (field.isDeprecated()) {
                 formatter.deprecated(false);
             }
@@ -682,21 +726,7 @@ public final class NavigatorScanner {
         @Override
         public String getHtml(HtmlFormatter formatter) {
             formatter.reset();
-            if (getConstant().isDeprecated()) {
-                formatter.deprecated(true);
-            }
-            formatter.appendText(getName());
-            if (getConstant().isDeprecated()) {
-                formatter.deprecated(false);
-            }
-            final ConstantElement constant = getConstant();
-            String value = constant.getValue();
-            if (value != null) {
-                formatter.appendText(" "); //NOI18N
-                formatter.appendHtml(FONT_GRAY_COLOR); //NOI18N
-                formatter.appendText(value);
-                formatter.appendHtml(CLOSE_FONT);
-            }
+            appendConstantDescription(getConstant(), formatter);
             return formatter.getText();
         }
 
@@ -723,6 +753,13 @@ public final class NavigatorScanner {
         @Override
         public ElementHandle getDeclaringElement() {
             return getConstant().getInScope();
+        }
+
+        @Override
+        public String getHtml(HtmlFormatter formatter) {
+            formatter.reset();
+            appendConstantDescription(getConstant(), formatter, isInherited());
+            return formatter.getText();
         }
 
     }
@@ -763,7 +800,7 @@ public final class NavigatorScanner {
         @Override
         public String getHtml(HtmlFormatter formatter) {
             formatter.reset();
-            appendFunctionDescription(getMethodScope(), formatter);
+            appendFunctionDescription(getMethodScope(), formatter, isInherited());
             return formatter.getText();
         }
 
@@ -947,7 +984,7 @@ public final class NavigatorScanner {
         @Override
         public String getHtml(HtmlFormatter formatter) {
             formatter.reset();
-            appendFunctionDescription(getMethodScope(), formatter);
+            appendFunctionDescription(getMethodScope(), formatter, isInherited());
             return formatter.getText();
         }
 

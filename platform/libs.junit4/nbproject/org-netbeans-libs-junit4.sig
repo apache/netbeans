@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.33
+#Version 1.39
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1369,6 +1369,15 @@ supr org.junit.experimental.theories.ParameterSupplier
 CLSS public abstract interface org.junit.function.ThrowingRunnable
 meth public abstract void run() throws java.lang.Throwable
 
+CLSS public org.junit.internal.ArrayComparisonFailure
+cons public init(java.lang.String,java.lang.AssertionError,int)
+meth public java.lang.String getMessage()
+meth public java.lang.String toString()
+meth public java.lang.Throwable getCause()
+meth public void addDimension(int)
+supr java.lang.AssertionError
+hfds fCause,fIndices,fMessage,serialVersionUID
+
 CLSS public org.junit.internal.AssumptionViolatedException
 cons public init(java.lang.Object,org.hamcrest.Matcher<?>)
  anno 0 java.lang.Deprecated()
@@ -1385,6 +1394,79 @@ meth public java.lang.String getMessage()
 meth public void describeTo(org.hamcrest.Description)
 supr java.lang.RuntimeException
 hfds fAssumption,fMatcher,fValue,fValueMatcher,serialVersionUID
+
+CLSS public final org.junit.internal.Checks
+meth public static <%0 extends java.lang.Object> {%%0} notNull({%%0})
+meth public static <%0 extends java.lang.Object> {%%0} notNull({%%0},java.lang.String)
+supr java.lang.Object
+
+CLSS public org.junit.internal.Classes
+cons public init()
+ anno 0 java.lang.Deprecated()
+meth public static java.lang.Class<?> getClass(java.lang.String) throws java.lang.ClassNotFoundException
+meth public static java.lang.Class<?> getClass(java.lang.String,java.lang.Class<?>) throws java.lang.ClassNotFoundException
+supr java.lang.Object
+
+CLSS public abstract org.junit.internal.ComparisonCriteria
+cons public init()
+meth protected abstract void assertElementsEqual(java.lang.Object,java.lang.Object)
+meth public void arrayEquals(java.lang.String,java.lang.Object,java.lang.Object)
+supr java.lang.Object
+hfds END_OF_ARRAY_SENTINEL
+
+CLSS public org.junit.internal.ExactComparisonCriteria
+cons public init()
+meth protected void assertElementsEqual(java.lang.Object,java.lang.Object)
+supr org.junit.internal.ComparisonCriteria
+
+CLSS public org.junit.internal.InexactComparisonCriteria
+cons public init(double)
+cons public init(float)
+fld public java.lang.Object fDelta
+meth protected void assertElementsEqual(java.lang.Object,java.lang.Object)
+supr org.junit.internal.ComparisonCriteria
+
+CLSS public abstract interface org.junit.internal.JUnitSystem
+meth public abstract java.io.PrintStream out()
+meth public abstract void exit(int)
+ anno 0 java.lang.Deprecated()
+
+CLSS public org.junit.internal.MethodSorter
+fld public final static java.util.Comparator<java.lang.reflect.Method> DEFAULT
+fld public final static java.util.Comparator<java.lang.reflect.Method> NAME_ASCENDING
+meth public static java.lang.reflect.Method[] getDeclaredMethods(java.lang.Class<?>)
+supr java.lang.Object
+
+CLSS public org.junit.internal.RealSystem
+cons public init()
+intf org.junit.internal.JUnitSystem
+meth public java.io.PrintStream out()
+meth public void exit(int)
+ anno 0 java.lang.Deprecated()
+supr java.lang.Object
+
+CLSS public org.junit.internal.TextListener
+cons public init(java.io.PrintStream)
+cons public init(org.junit.internal.JUnitSystem)
+meth protected java.lang.String elapsedTimeAsString(long)
+meth protected void printFailure(org.junit.runner.notification.Failure,java.lang.String)
+meth protected void printFailures(org.junit.runner.Result)
+meth protected void printFooter(org.junit.runner.Result)
+meth protected void printHeader(long)
+meth public void testFailure(org.junit.runner.notification.Failure)
+meth public void testIgnored(org.junit.runner.Description)
+meth public void testRunFinished(org.junit.runner.Result)
+meth public void testStarted(org.junit.runner.Description)
+supr org.junit.runner.notification.RunListener
+hfds writer
+
+CLSS public final org.junit.internal.Throwables
+meth public static java.lang.Exception rethrowAsException(java.lang.Throwable) throws java.lang.Exception
+meth public static java.lang.String getStacktrace(java.lang.Throwable)
+meth public static java.lang.String getTrimmedStackTrace(java.lang.Throwable)
+supr java.lang.Object
+hfds REFLECTION_METHOD_NAME_PREFIXES,TEST_FRAMEWORK_METHOD_NAME_PREFIXES,TEST_FRAMEWORK_TEST_METHOD_NAME_PREFIXES,getSuppressed
+hcls State
 
 CLSS public org.junit.internal.runners.JUnit38ClassRunner
 cons public init(java.lang.Class<?>)

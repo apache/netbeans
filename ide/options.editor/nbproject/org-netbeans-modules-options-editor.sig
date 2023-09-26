@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.75
+#Version 1.81
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -390,6 +390,12 @@ CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -952,7 +958,6 @@ meth public void propertyChange(java.beans.PropertyChangeEvent)
 meth public void setSelector(org.netbeans.modules.options.indentation.CustomizerSelector)
 supr javax.swing.JPanel
 hfds categoryCombo,categoryLabel,categoryPanel,jSplitPane1,languageCombo,languageLabel,optionsPanel,previewLabel,previewPanel,previewScrollPane,selector,storedCategory,storedMimeType,weakListener
-hcls LanguagesComparator
 
 CLSS public final org.netbeans.modules.options.indentation.FormattingPanelController
 cons public init()
@@ -1029,6 +1034,7 @@ supr java.lang.Object
 hfds LOG,allLanguagesPreferences,delegate,indentationPanel,mimePath,preferences,prefsFactory
 
 CLSS public final org.netbeans.modules.options.indentation.ProxyPreferences
+ anno 0 java.lang.Deprecated()
 intf java.util.prefs.NodeChangeListener
 intf java.util.prefs.PreferenceChangeListener
 meth public boolean getBoolean(java.lang.String,boolean)

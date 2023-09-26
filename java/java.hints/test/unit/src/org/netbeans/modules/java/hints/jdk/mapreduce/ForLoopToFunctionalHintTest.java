@@ -1406,7 +1406,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:hint:" + Bundle.ERR_ForLoopToFunctionalHint());
+                .assertNotContainsWarnings(Bundle.ERR_ForLoopToFunctionalHint());
     }
 
     public void testNoHintDueToNEF() throws Exception {
@@ -1789,7 +1789,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:hint:Can use functional operation");
+                .assertNotContainsWarnings("Can use functional operation");
 
     }
 
@@ -1832,7 +1832,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:hint:Can use functional operation");
+                .assertNotContainsWarnings("Can use functional operation");
 
     }
 
@@ -1873,7 +1873,7 @@ public class ForLoopToFunctionalHintTest extends NbTestCase {
                 + "}")
                 .sourceLevel("1.8")
                 .run(ForLoopToFunctionalHint.class)
-                .assertNotContainsWarnings("23:8-23:11:hint:Can use functional operation");
+                .assertNotContainsWarnings("Can use functional operation");
 
     }
     

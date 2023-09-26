@@ -24,6 +24,7 @@ import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
@@ -53,6 +54,7 @@ import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Scope;
@@ -71,7 +73,6 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.api.JavacScope;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
@@ -1518,6 +1519,13 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
         if (!scan(node.getExpression(), t.getExpression(), p))
             return false;
 
+        Tree nodePattern = node.getPattern();
+        Tree pPattern = t.getPattern();
+
+        if (nodePattern != null || pPattern != null) {
+            return scan(nodePattern, pPattern, p);
+        }
+
         return scan(node.getType(), t.getType(), p);
     }
 
@@ -1622,7 +1630,7 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
 
         MemberReferenceTree t = (MemberReferenceTree) p.getLeaf();
         
-        if (!node.getMode().equals(t.getMode()))
+        if (node.getMode() != t.getMode())
             return false;
 
         if (!scan(node.getQualifierExpression(), t.getQualifierExpression(), p))
@@ -1640,6 +1648,16 @@ public class CopyFinder extends ErrorAwareTreeScanner<Boolean, TreePath> {
         }
 
         return node.getName().contentEquals(t.getName());
+    }
+
+    public Boolean visitBindingPattern(BindingPatternTree node, TreePath p) {
+        if (p == null) {
+            return super.visitBindingPattern(node, p);
+        }
+
+        BindingPatternTree t = (BindingPatternTree) p.getLeaf();
+
+        return scan(node.getVariable(), t.getVariable(), p);
     }
 
 //

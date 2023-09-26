@@ -50,6 +50,7 @@ import org.netbeans.modules.csl.core.LanguageRegistry;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.micronaut.MicronautConfigProperties;
+import org.netbeans.modules.micronaut.MicronautConfigUtilities;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -78,7 +79,7 @@ public class MicronautConfigCompletionTask {
             try {
                 String text = lineDocument.getText(lineStart, caretOffset - lineStart);
                 String mimeType = DocumentUtilities.getMimeType(doc);
-                if ("text/x-yaml".equals(mimeType)) {
+                if (MicronautConfigUtilities.YAML_MIME.equals(mimeType)) {
                     if (!text.startsWith("#")) {
                         int idx = text.indexOf(':');
                         if (idx < 0) {

@@ -81,7 +81,7 @@ public class JsStructureScanner implements StructureScanner {
 
     @Override
     public List<? extends StructureItem> scan(org.netbeans.modules.csl.spi.ParserResult info) {
-        final List<StructureItem> items = new ArrayList<StructureItem>();
+        final List<StructureItem> items = new ArrayList<>();
         long start = System.currentTimeMillis();
         LOGGER.log(Level.FINE, "Structure scanner started at {0} ms", start);
         ParserResult result = (ParserResult) info;
@@ -89,7 +89,7 @@ public class JsStructureScanner implements StructureScanner {
         model.resolve();
         JsObject globalObject = model.getGlobalObject();
         final CancelSupport cancel = CancelSupport.getDefault();
-        getEmbededItems(result, globalObject, items, new HashSet<String>(), cancel);
+        getEmbededItems(result, globalObject, items, new HashSet<>(), cancel);
         long end = System.currentTimeMillis();
         LOGGER.log(Level.FINE, "Creating structure took {0} ms", new Object[]{(end - start)});
         return items;
@@ -105,12 +105,12 @@ public class JsStructureScanner implements StructureScanner {
         if (cancel.isCancelled()) {
             return collectedItems;
         }
-        Collection<? extends JsObject> properties = new ArrayList(jsObject.getProperties().values());
+        Collection<? extends JsObject> properties = new ArrayList<>(jsObject.getProperties().values());
         boolean countFunctionChild = (jsObject.getJSKind().isFunction() && !jsObject.isAnonymous() && jsObject.getJSKind() != JsElement.Kind.CONSTRUCTOR
-                && !containsFunction(jsObject)) 
+                && !containsFunction(jsObject))
                 || (ModelUtils.PROTOTYPE.equals(jsObject.getName()) && properties.isEmpty());
-        
-        
+
+
         for (JsObject child : properties) {
             if (cancel.isCancelled()) {
                 return collectedItems;
@@ -127,7 +127,7 @@ public class JsStructureScanner implements StructureScanner {
                 // don't display prototype, if thre are no properties
                 continue;
             }
-            List<StructureItem> children = new ArrayList<StructureItem>();
+            List<StructureItem> children = new ArrayList<>();
             if ((((countFunctionChild && !child.getModifiers().contains(Modifier.STATIC)
                     && !child.getName().equals(ModelUtils.PROTOTYPE)) || child.getJSKind() == JsElement.Kind.ANONYMOUS_OBJECT) &&  child.getJSKind() != JsElement.Kind.OBJECT_LITERAL)
                     || (child.getJSKind().isFunction() && child.isAnonymous() && child.getParent().getJSKind().isFunction() && child.getParent().getJSKind() != JsElement.Kind.FILE)) {
@@ -143,20 +143,20 @@ public class JsStructureScanner implements StructureScanner {
                     collectedItems.addAll(children);
                 } else {
                     if (function.isDeclared() /*&& (!jsObject.isAnonymous() || (jsObject.isAnonymous() && jsObject.getFullyQualifiedName().indexOf('.') == -1))*/) {
-                        collectedItems.add(new JsFunctionStructureItem(function, children, result));                          
+                        collectedItems.add(new JsFunctionStructureItem(function, children, result));
                     }
                 }
-            } else if (((child.getJSKind() == JsElement.Kind.OBJECT && (children.size() > 0 || child.isDeclared())) || child.getJSKind() == JsElement.Kind.OBJECT_LITERAL || child.getJSKind() == JsElement.Kind.ANONYMOUS_OBJECT) 
+            } else if (((child.getJSKind() == JsElement.Kind.OBJECT && (children.size() > 0 || child.isDeclared())) || child.getJSKind() == JsElement.Kind.OBJECT_LITERAL || child.getJSKind() == JsElement.Kind.ANONYMOUS_OBJECT)
                     && (children.size() > 0 || child.isDeclared())) {
                 if(!(jsObject.getJSKind() == JsElement.Kind.FILE && JsTokenId.JSON_MIME_TYPE.equals(jsObject.getMimeType()))) {
                     collectedItems.add(new JsObjectStructureItem(child, children, result));
                 } else {
-                    // don't include the first anonymous object. 
+                    // don't include the first anonymous object.
                     collectedItems.addAll(children);
                 }
             } else if (child.getJSKind() == JsElement.Kind.PROPERTY) {
                 if(child.isDeclared() && (child.getModifiers().contains(Modifier.PUBLIC)
-                        || !(jsObject.getParent() instanceof JsFunction)))
+                        || !(jsObject.getParent() instanceof JsFunction) || jsObject.getJSKind() == JsElement.Kind.CLASS))
                     collectedItems.add(new JsSimpleStructureItem(child, children.isEmpty() ? null : children, "prop-", result)); //NOI18N
             } else if ((child.getJSKind() == JsElement.Kind.VARIABLE || child.getJSKind() == JsElement.Kind.CONSTANT)&& child.isDeclared()
                 && (!jsObject.isAnonymous() || (jsObject.isAnonymous() && jsObject.getFullyQualifiedName().indexOf('.') == -1))) {
@@ -171,12 +171,12 @@ public class JsStructureScanner implements StructureScanner {
                 collectedItems.addAll(children);
             }
          }
-        
+
         if (jsObject instanceof JsFunction) {
             JsFunction jsFunction = (JsFunction)jsObject;
             for (JsObject param: jsFunction.getParameters()) {
-                if (hasDeclaredProperty(param) && !(jsObject instanceof JsReference && !((JsReference)jsObject).getOriginal().isAnonymous())) { 
-                    final List<StructureItem> items = new ArrayList<StructureItem>();
+                if (hasDeclaredProperty(param) && !(jsObject instanceof JsReference && !((JsReference)jsObject).getOriginal().isAnonymous())) {
+                    final List<StructureItem> items = new ArrayList<>();
                     getEmbededItems(result, param, items, processedObjects, cancel);
                     collectedItems.add(new JsObjectStructureItem(param, items, result));
                 }
@@ -186,15 +186,15 @@ public class JsStructureScanner implements StructureScanner {
                 JsObject returnObject = ModelUtils.findJsObjectByName(Model.getModel(result, false).getGlobalObject(), returnType.getType());
                 if(returnObject != null && returnObject.getJSKind() == JsElement.Kind.ANONYMOUS_OBJECT) {
                      for (JsObject property: returnObject.getProperties().values()) {
-                        final List<StructureItem> items = new ArrayList<StructureItem>();
+                        final List<StructureItem> items = new ArrayList<>();
                         getEmbededItems(result, property, items, processedObjects, cancel);
                         collectedItems.add(new JsObjectStructureItem(property, items, result));
                     }
-                } 
+                }
             }
         }
         if (jsObject.getJSKind() == JsElement.Kind.BLOCK) {
-            
+
         } else if (jsObject.getDeclarationName() != null) {
             Collection<? extends TypeUsage> assignmentForOffset = jsObject.getAssignmentForOffset(jsObject.getDeclarationName().getOffsetRange().getEnd());
             if (assignmentForOffset.size() == 1) {
@@ -202,7 +202,7 @@ public class JsStructureScanner implements StructureScanner {
                 if (assignedObject != null && assignedObject.getJSKind() == JsElement.Kind.ANONYMOUS_OBJECT
                         && processedObjects.contains(assignedObject.getParent().getFullyQualifiedName())) {
                     for (JsObject property : assignedObject.getProperties().values()) {
-                        final List<StructureItem> items = new ArrayList<StructureItem>();
+                        final List<StructureItem> items = new ArrayList<>();
                         getEmbededItems(result, property, items, processedObjects, cancel);
                         collectedItems.add(new JsObjectStructureItem(property, items, result));
                     }
@@ -262,22 +262,22 @@ public class JsStructureScanner implements StructureScanner {
             this.kind = kind;
             this.start = start;
         }
-        
+
     }
-    
+
     @Override
     public Map<String, List<OffsetRange>> folds(org.netbeans.modules.csl.spi.ParserResult info) {
-        long start = System.currentTimeMillis(); 
+        long start = System.currentTimeMillis();
         Map<String, List<OffsetRange>> folds;
         String mimeType = info.getSnapshot().getMimeType();
         if (JsTokenId.isJSONBasedMimeType(mimeType)) {
             folds = foldsJson((ParserResult)info);
         } else {
-            folds = new HashMap<String, List<OffsetRange>>();
+            folds = new HashMap<>();
             TokenHierarchy th = info.getSnapshot().getTokenHierarchy();
             TokenSequence ts = th.tokenSequence(language);
             List<TokenSequence<?>> list = th.tokenSequenceList(ts.languagePath(), 0, info.getSnapshot().getText().length());
-            List<FoldingItem> stack = new ArrayList<FoldingItem>();
+            List<FoldingItem> stack = new ArrayList<>();
             for (TokenSequenceIterator tsi = new TokenSequenceIterator(list, false); tsi.hasMore();) {
                 ts = tsi.getSequence();
                 TokenId tokenId;
@@ -318,7 +318,7 @@ public class JsStructureScanner implements StructureScanner {
                             previousTokenId = ts.token().id();
                             ts.moveNext();
                         }
-                        
+
                         if (previousTokenId != null && previousTokenId != JsTokenId.BRACKET_LEFT_CURLY) {
                             appendFold(folds, fromStack.kind, info.getSnapshot().getOriginalOffset(fromStack.start),
                                     info.getSnapshot().getOriginalOffset(ts.offset() + 1));
@@ -331,13 +331,13 @@ public class JsStructureScanner implements StructureScanner {
         LOGGER.log(Level.FINE, "Folding took %s ms", (end - start));
         return folds;
     }
-    
+
     private Map<String, List<OffsetRange>> foldsJson(ParserResult info) {
-        final Map<String, List<OffsetRange>> folds = new HashMap<String, List<OffsetRange>>();
+        final Map<String, List<OffsetRange>> folds = new HashMap<>();
         TokenHierarchy th = info.getSnapshot().getTokenHierarchy();
         TokenSequence ts = th.tokenSequence(language);
         List<TokenSequence<?>> list = th.tokenSequenceList(ts.languagePath(), 0, info.getSnapshot().getText().length());
-        List<FoldingItem> stack = new ArrayList<FoldingItem>();
+        List<FoldingItem> stack = new ArrayList<>();
         for (TokenSequenceIterator tsi = new TokenSequenceIterator(list, false); tsi.hasMore();) {
             ts = tsi.getSequence();
             TokenId tokenId;
@@ -372,7 +372,7 @@ public class JsStructureScanner implements StructureScanner {
     private List<OffsetRange> getRanges(Map<String, List<OffsetRange>> folds, String kind) {
         List<OffsetRange> ranges = folds.get(kind);
         if (ranges == null) {
-            ranges = new ArrayList<OffsetRange>();
+            ranges = new ArrayList<>();
             folds.put(kind, ranges);
         }
         return ranges;
@@ -385,29 +385,29 @@ public class JsStructureScanner implements StructureScanner {
 
     private boolean hasDeclaredProperty(JsObject jsObject) {
         boolean result =  false;
-        
+
         Iterator<? extends JsObject> it = jsObject.getProperties().values().iterator();
         while (!result && it.hasNext()) {
             JsObject property = it.next();
             result = property.isDeclared();
             if (!result) {
                 result = hasDeclaredProperty(property);
-            } 
+            }
         }
 
         return result;
     }
-    
-    
+
+
     private abstract class JsStructureItem implements StructureItem {
 
         private JsObject modelElement;
-        
+
         private final List<? extends StructureItem> children;
         private final String sortPrefix;
         protected final ParserResult parserResult;
         private final String fqn;
-        
+
         public JsStructureItem(JsObject elementHandle, List<? extends StructureItem> children, String sortPrefix, ParserResult parserResult) {
             this.modelElement = elementHandle;
             this.sortPrefix = sortPrefix;
@@ -419,7 +419,7 @@ public class JsStructureScanner implements StructureScanner {
                 this.children = Collections.emptyList();
             }
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             if (obj == null) {
@@ -476,7 +476,15 @@ public class JsStructureScanner implements StructureScanner {
 
         @Override
         public Set<Modifier> getModifiers() {
-            Set<Modifier> modifiers = modelElement.getModifiers().isEmpty() ? Collections.EMPTY_SET : EnumSet.copyOf(modelElement.getModifiers());
+            Set<Modifier> modifiers;
+
+            if (modelElement.getModifiers().isEmpty()) {
+                modifiers = Collections.EMPTY_SET;
+            } else {
+                modifiers = EnumSet.noneOf(Modifier.class);
+                modifiers.addAll(modelElement.getModifiers());
+            }
+
             if (modifiers.contains(Modifier.PRIVATE) && (modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED))) {
                 modifiers.remove(Modifier.PUBLIC);
                 modifiers.remove(Modifier.PROTECTED);
@@ -508,11 +516,11 @@ public class JsStructureScanner implements StructureScanner {
         public ImageIcon getCustomIcon() {
             return null;
         }
-     
+
         public JsObject getModelElement() {
             return modelElement;
         }
-        
+
         protected void appendTypeInfo(HtmlFormatter formatter, Collection<? extends Type> types) {
             Collection<String> displayNames = Utils.getDisplayNames(types);
             if (!displayNames.isEmpty()) {
@@ -530,15 +538,15 @@ public class JsStructureScanner implements StructureScanner {
                 formatter.appendHtml(CLOSE_FONT);
             }
         }
-        
+
     }
-    
+
     private class JsClassStructureItem extends JsStructureItem {
-        
+
         public JsClassStructureItem(JsObject elementHandle, List<? extends StructureItem> children, ParserResult parserResult) {
             super(elementHandle, children, "cl", parserResult); //NOI18N
         }
-        
+
         @Override
         public String getHtml(HtmlFormatter formatter) {
             formatter.reset();
@@ -553,9 +561,9 @@ public class JsStructureScanner implements StructureScanner {
             }
             JsObject prototype = clObject.getProperty(ModelUtils.PROTOTYPE);
             if (prototype != null) {
-                Collection<? extends TypeUsage> assignments = prototype.getAssignments(); 
+                Collection<? extends TypeUsage> assignments = prototype.getAssignments();
                 if (assignments != null && !assignments.isEmpty()) {
-                    // the class extends 
+                    // the class extends
                     formatter.appendHtml(FONT_GRAY_COLOR);
                     formatter.appendText(" :: ");   // NOI18N
                     boolean addComma = false;
@@ -572,15 +580,15 @@ public class JsStructureScanner implements StructureScanner {
             }
             return formatter.getText();
         }
-        
+
     }
-    
+
     private static ImageIcon priviligedIcon = null;
     private static ImageIcon callbackIcon = null;
     private static ImageIcon publicGenerator = null;
     private static ImageIcon privateGenerator = null;
     private static ImageIcon priviligedGenerator = null;
-    
+
     private class JsFunctionStructureItem extends JsStructureItem {
 
         private final List<TypeUsage> resolvedTypes;
@@ -591,7 +599,7 @@ public class JsStructureScanner implements StructureScanner {
                 ParserResult parserResult) {
             super(elementHandle, children, "fn", parserResult); //NOI18N
             Collection<? extends TypeUsage> returnTypes = getFunctionScope().getReturnTypes();
-            resolvedTypes = new ArrayList<TypeUsage>(ModelUtils.resolveTypes(returnTypes,
+            resolvedTypes = new ArrayList<>(ModelUtils.resolveTypes(returnTypes,
                     Model.getModel(parserResult, false), Index.get(parserResult.getSnapshot().getSource().getFileObject()), false));
         }
 
@@ -605,7 +613,7 @@ public class JsStructureScanner implements StructureScanner {
             appendFunctionDescription(getFunctionScope(), formatter);
             return formatter.getText();
         }
-        
+
         protected void appendFunctionDescription(JsFunction function, HtmlFormatter formatter) {
             formatter.reset();
             if (function == null) {
@@ -688,8 +696,8 @@ public class JsStructureScanner implements StructureScanner {
             }
             return super.getCustomIcon();
         }
-        
-        
+
+
     }
 
     private class JsObjectStructureItem extends JsStructureItem {
@@ -704,7 +712,7 @@ public class JsStructureScanner implements StructureScanner {
                 appendObjectDescription(getModelElement(), formatter);
                 return formatter.getText();
         }
-        
+
         protected void appendObjectDescription(JsObject object, HtmlFormatter formatter) {
             formatter.reset();
             if (object == null) {
@@ -721,13 +729,13 @@ public class JsStructureScanner implements StructureScanner {
         }
 
     }
-    
+
     private class JsSimpleStructureItem extends JsStructureItem {
 
         private final JsObject object;
 
         private final List<TypeUsage> resolvedTypes;
-        
+
         public JsSimpleStructureItem(JsObject elementHandle, String sortPrefix, ParserResult parserResult) {
             this(elementHandle, null, sortPrefix, parserResult);
         }
@@ -737,11 +745,11 @@ public class JsStructureScanner implements StructureScanner {
             this.object = elementHandle;
 
             Collection<? extends TypeUsage> assignmentForOffset = object.getAssignments();//tForOffset(object.getDeclarationName().getOffsetRange().getEnd());
-            resolvedTypes = new ArrayList<TypeUsage>(ModelUtils.resolveTypes(assignmentForOffset,
+            resolvedTypes = new ArrayList<>(ModelUtils.resolveTypes(assignmentForOffset,
                     Model.getModel(parserResult, false), Index.get(parserResult.getSnapshot().getSource().getFileObject()), false));
         }
 
-        
+
         @Override
         public String getHtml(HtmlFormatter formatter) {
             formatter.reset();
@@ -756,9 +764,9 @@ public class JsStructureScanner implements StructureScanner {
             appendTypeInfo(formatter, resolvedTypes);
             return formatter.getText();
         }
-        
+
     }
-    
+
     private static final class TokenSequenceIterator {
 
         private final List<TokenSequence<?>> list;

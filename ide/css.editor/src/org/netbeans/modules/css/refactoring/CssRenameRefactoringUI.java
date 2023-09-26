@@ -18,8 +18,10 @@
  */
 package org.netbeans.modules.css.refactoring;
 
+import org.netbeans.modules.css.refactoring.api.CssRefactoringExtraInfo;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
@@ -39,22 +41,19 @@ import org.openide.util.lookup.Lookups;
 public class CssRenameRefactoringUI implements RefactoringUI, RefactoringUIBypass {
 
     private final AbstractRefactoring refactoring;
-    private CssElementContext context;
+    private final CssRefactoringExtraInfo extraInfo;
+    private final String elementName;
     private RenamePanel panel;
-    private CssRefactoringExtraInfo extraInfo;
 
-    public CssRenameRefactoringUI(CssElementContext context) {
-	this.context = context;
+    public CssRenameRefactoringUI(String elementName, Object... lookupContent) {
+        this.elementName = elementName;
         this.extraInfo = new CssRefactoringExtraInfo();
-        Collection<Object> lookupContent = new ArrayList<>();
-        lookupContent.add(context);
-        lookupContent.add(extraInfo);
-        if(context instanceof CssElementContext.File ||
-                context instanceof CssElementContext.Folder) {
-            //put the fileobject to the lookup only if we are renaming a file or folder
-            lookupContent.add(context.getFileObject());
+        Collection<Object> finalLookupContent = new ArrayList<>();
+        if (lookupContent != null) {
+            finalLookupContent.addAll(Arrays.asList(lookupContent));
         }
-	this.refactoring = new RenameRefactoring(Lookups.fixed(lookupContent.toArray()));
+        finalLookupContent.add(extraInfo);
+	this.refactoring = new RenameRefactoring(Lookups.fixed(finalLookupContent.toArray()));
     }
 
     @Override
@@ -75,7 +74,7 @@ public class CssRenameRefactoringUI implements RefactoringUI, RefactoringUIBypas
     @Override
     public CustomRefactoringPanel getPanel(ChangeListener parent) {
 	if (panel == null) {
-	    panel = new RenamePanel(context.getElementName(), parent, NbBundle.getMessage(RenamePanel.class, "LBL_Rename"), true, true); //NOI18N
+	    panel = new RenamePanel(elementName, parent, NbBundle.getMessage(RenamePanel.class, "LBL_Rename"), true, true); //NOI18N
 	}
 
 	return panel;

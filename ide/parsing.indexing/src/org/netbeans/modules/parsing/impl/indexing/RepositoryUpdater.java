@@ -1924,7 +1924,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                             else {
                                 //What does it mean?
                                 if (ctx.useInitialState) {
-                                    if (!ctx.initialBinaries2InvDeps.keySet().contains(binaryRoot)) {
+                                    if (!ctx.initialBinaries2InvDeps.containsKey(binaryRoot)) {
                                         ctx.newBinariesToScan.add (binaryRoot);
                                         List<URL> binDeps = ctx.newBinaries2InvDeps.get(binaryRoot);
                                         if (binDeps == null) {
@@ -3250,7 +3250,23 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                             }
                         }
                     }
-                    ParserManager.parse(sources.keySet(), new T());
+
+                    // Performance of ParserManager#parse suffers if the sources
+                    // are of mixed mimetype. ParserManager will then generate
+                    // snapshots with mixed mimetypes, which violates the
+                    // ParserFactory contract and leads to slower code paths.
+                    //
+                    // To work around this the sources are passed to the
+                    // ParserManager grouped by their mimetype
+
+                    Map<String,List<Source>> sourcesByMimeType = sources
+                            .keySet()
+                            .stream()
+                            .collect(Collectors.groupingBy(s->s.getMimeType()));
+
+                    for(List<Source> l: sourcesByMimeType.values()) {
+                        ParserManager.parse(l, new T());
+                    }
                 } catch (final ParseException e) {
                     LOGGER.log(Level.WARNING, null, e);
                 } finally {
@@ -3810,7 +3826,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
         }
 
         protected @Override boolean getDone() {
-            if (scannedRoots2Depencencies.keySet().contains(root) ||
+            if (scannedRoots2Depencencies.containsKey(root) ||
                 !PathRegistry.getDefault().isIncompleteRoot(root)) {
                 updateProgress(root, false);
                 if (scanFiles(root, files, forceRefresh, sourceForBinaryRoot)) {

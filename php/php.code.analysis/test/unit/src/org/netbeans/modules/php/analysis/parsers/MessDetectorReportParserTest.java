@@ -20,7 +20,6 @@ package org.netbeans.modules.php.analysis.parsers;
 
 import java.io.File;
 import java.util.List;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.php.analysis.results.Result;
 

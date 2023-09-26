@@ -138,18 +138,21 @@ public final class StartTomcat extends StartServer implements ProgressObject {
         currentServerPort = tm.getServerPort();
     }
     
+    @Override
     public boolean supportsStartDeploymentManager () {
         return true;
     }
     
+    @Override
     public boolean supportsStartProfiling(Target target) {
         return true;
     }
     
     /** Start Tomcat server if the TomcatManager is not connected.
      */
+    @Override
     public ProgressObject startDeploymentManager () {
-        LOGGER.log(Level.FINE, "StartTomcat.startDeploymentManager called on " + tm);    // NOI18N
+        LOGGER.log(Level.FINE, "StartTomcat.startDeploymentManager called on {0}", tm);    // NOI18N
         pes.fireHandleProgressEvent (null, new Status (ActionType.EXECUTE, CommandType.START, "", StateType.RUNNING));
         SERVER_CONTROL_RP.post(new StartRunnable(MODE_RUN, CommandType.START),
                 0, Thread.NORM_PRIORITY);
@@ -162,24 +165,29 @@ public final class StartTomcat extends StartServer implements ProgressObject {
      * Start/stopping/debug apply to both servers.
      * @return true when admin is also target server
      */
+    @Override
     public boolean isAlsoTargetServer(Target target) { return true; }
 
     /**
      * Returns true if the admin server should be started before configure.
      */
+    @Override
     public boolean needsStartForConfigure() { return false; }
 
     /**
      * Returns true if the admin server should be started before asking for
      * target list.
      */
+    @Override
     public boolean needsStartForTargetList() { return false; }
 
     /**
      * Returns true if the admin server should be started before admininistrative configuration.
      */
+    @Override
     public boolean needsStartForAdminConfig() { return false; }
     
+    @Override
     public boolean needsRestart(Target target) {
          return tm.getNeedsRestart();
     }
@@ -187,6 +195,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
     /**
      * Returns true if this admin server is running.
      */
+    @Override
     public boolean isRunning() {
         return tm.isRunning (true);
     }
@@ -194,6 +203,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
     /**
      * Returns true if this target is in debug mode.
      */
+    @Override
     public boolean isDebuggable(Target target) {
         if (!isDebugModeUri.containsKey(tm.getUri())) {
             return false;
@@ -211,8 +221,9 @@ public final class StartTomcat extends StartServer implements ProgressObject {
      * exceptions thrown.
      * @return ServerProgress object used to monitor start server progress
      */
+    @Override
     public ProgressObject stopDeploymentManager() { 
-        LOGGER.log(Level.FINE, "StartTomcat.stopDeploymentManager called on " + tm);    // NOI18N
+        LOGGER.log(Level.FINE, "StartTomcat.stopDeploymentManager called on {0}", tm);    // NOI18N
         pes.fireHandleProgressEvent (null, new Status (ActionType.EXECUTE, CommandType.STOP, "", StateType.RUNNING));
         SERVER_CONTROL_RP.post(new StartRunnable(MODE_RUN, CommandType.STOP),
                 0, Thread.NORM_PRIORITY);
@@ -227,16 +238,18 @@ public final class StartTomcat extends StartServer implements ProgressObject {
      * @param target the target server
      * @return ServerProgress object to monitor progress on start operation
      */
+    @Override
     public ProgressObject startDebugging(Target target) {
-        LOGGER.log(Level.FINE, "StartTomcat.startDebugging called on " + tm);    // NOI18N
+        LOGGER.log(Level.FINE, "StartTomcat.startDebugging called on {0}", tm);    // NOI18N
         pes.fireHandleProgressEvent (null, new Status (ActionType.EXECUTE, CommandType.START, "", StateType.RUNNING));
         SERVER_CONTROL_RP.post(new StartRunnable(MODE_DEBUG, CommandType.START),
                 0, Thread.NORM_PRIORITY);
         return this;
     }
     
+    @Override
     public ProgressObject startProfiling(Target target) {
-        LOGGER.log(Level.FINE, "StartTomcat.startProfiling called on " + tm); // NOI18N
+        LOGGER.log(Level.FINE, "StartTomcat.startProfiling called on {0}", tm); // NOI18N
         pes.fireHandleProgressEvent(null, new Status(
                                                 ActionType.EXECUTE, 
                                                 CommandType.START, 
@@ -247,6 +260,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
         return this;
     }
 
+    @Override
     public ServerDebugInfo getDebugInfo(Target target) { 
         ServerDebugInfo sdi;
         TomcatProperties tp = tm.getTomcatProperties();
@@ -268,6 +282,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
             this.command = command;
         }
         
+        @Override
         public synchronized void run () {
             // PENDING check whether is runs or not
             TomcatProperties tp = tm.getTomcatProperties();
@@ -330,12 +345,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
                 }
                 try {
                     DebugSupport.allowDebugging(tm);
-                }
-                catch (IOException e) {
-                    // fault, but not a critical one
-                    LOGGER.log(Level.INFO, null, e);
-                }
-                catch (SAXException e) {
+                } catch (IOException | SAXException e) {
                     // fault, but not a critical one
                     LOGGER.log(Level.INFO, null, e);
                 }
@@ -432,8 +442,8 @@ public final class StartTomcat extends StartServer implements ProgressObject {
                         transport = "dt_shmem"; // NOI18N
                         address = tp.getSharedMem();
                     }
-                    LOGGER.log(Level.FINE, "transport: " + transport);    // NOI18N
-                    LOGGER.log(Level.FINE, "address: " + address);    // NOI18N
+                    LOGGER.log(Level.FINE, "transport: {0}", transport);    // NOI18N
+                    LOGGER.log(Level.FINE, "address: {0}", address);    // NOI18N
                     p = pd.exec (
                         new TomcatFormat(startupScript, homeDir),
                         new String[] {
@@ -665,49 +675,60 @@ public final class StartTomcat extends StartServer implements ProgressObject {
         return null;
     }
     
+    @Override
     public boolean supportsStartDebugging(Target target) {
         return true;
     }
 
+    @Override
     public ClientConfiguration getClientConfiguration (TargetModuleID targetModuleID) {
         return null;
     }
     
+    @Override
     public DeploymentStatus getDeploymentStatus () {
         return pes.getDeploymentStatus ();
     }
     
+    @Override
     public TargetModuleID[] getResultTargetModuleIDs () {
         return new TargetModuleID [] {};
     }
     
+    @Override
     public boolean isCancelSupported () {
         return false;
     }
     
+    @Override
     public void cancel () 
     throws OperationUnsupportedException {
         throw new OperationUnsupportedException ("");
     }
     
+    @Override
     public boolean isStopSupported () {
         return false;
     }
     
+    @Override
     public void stop () 
     throws OperationUnsupportedException {
         throw new OperationUnsupportedException ("");
     }
     
+    @Override
     public void addProgressListener (ProgressListener pl) {
         pes.addProgressListener (pl);
     }
     
+    @Override
     public void removeProgressListener (ProgressListener pl) {
         pes.removeProgressListener (pl);
     }
     
     
+    @Override
     public String toString () {
         return "StartTomcat [" + tm + "]"; // NOI18N
     }
@@ -814,63 +835,55 @@ public final class StartTomcat extends StartServer implements ProgressObject {
             return; // catalina.properties does not exist, can't do anything
         }
         EditableProperties props = new EditableProperties(false);
-        try {
-            InputStream is = new BufferedInputStream(new FileInputStream(catalinaProp));
-            try {
-                props.load(is);
-                String COMMON_LOADER = "common.loader"; // NOI18N
-                String commonLoader = props.getProperty(COMMON_LOADER);
-                if (commonLoader != null) {
-                    String COMMON_ENDORSED = "${catalina.home}/common/endorsed/*.jar"; // NOI18N 
-                    int idx = commonLoader.indexOf(COMMON_ENDORSED);
-                    if (endorsedEnabled) {
-                        if (idx == -1) { // common/endorsed/*.jar is not present, add it
-                            String COMMON_LIB = "${catalina.home}/" + tm.libFolder() + "/*.jar"; // NOI18N
-                            int commonLibIdx = commonLoader.indexOf(COMMON_LIB);
-                            StringBuffer sb = new StringBuffer(commonLibIdx == -1 
-                                    ? commonLoader 
-                                    : commonLoader.substring(0, commonLibIdx));
-                            if (commonLibIdx != -1) {
-                                sb.append(COMMON_ENDORSED).append(',').append(commonLoader.substring(commonLibIdx));
-                            } else {
-                                if (commonLoader.trim().length() != 0) {
-                                    sb.append(',');
-                                }
-                                sb.append(COMMON_ENDORSED);
-                            }
-                            props.setProperty(COMMON_LOADER, sb.toString());
+        try (InputStream is = new BufferedInputStream(new FileInputStream(catalinaProp))) {
+            props.load(is);
+            String COMMON_LOADER = "common.loader"; // NOI18N
+            String commonLoader = props.getProperty(COMMON_LOADER);
+            if (commonLoader != null) {
+                String COMMON_ENDORSED = "${catalina.home}/common/endorsed/*.jar"; // NOI18N 
+                int idx = commonLoader.indexOf(COMMON_ENDORSED);
+                if (endorsedEnabled) {
+                    if (idx == -1) { // common/endorsed/*.jar is not present, add it
+                        String COMMON_LIB = "${catalina.home}/" + tm.libFolder() + "/*.jar"; // NOI18N
+                        int commonLibIdx = commonLoader.indexOf(COMMON_LIB);
+                        StringBuilder sb = new StringBuilder(commonLibIdx == -1 
+                                ? commonLoader 
+                                : commonLoader.substring(0, commonLibIdx));
+                        if (commonLibIdx != -1) {
+                            sb.append(COMMON_ENDORSED).append(',').append(commonLoader.substring(commonLibIdx));
                         } else {
-                            return;
+                            if (commonLoader.trim().length() != 0) {
+                                sb.append(',');
+                            }
+                            sb.append(COMMON_ENDORSED);
                         }
+                        props.setProperty(COMMON_LOADER, sb.toString());
                     } else {
-                        if (idx != -1) { // common/endorsed/*.jar is present, remove it
-                            String strBefore = commonLoader.substring(0, idx);
-                            int commaIdx = strBefore.lastIndexOf(',');
-                            StringBuffer sb = new StringBuffer(commonLoader.substring(0, commaIdx == -1 ? idx : commaIdx));
-                            String strAfter = commonLoader.substring(idx + COMMON_ENDORSED.length());
-                            if (commaIdx == -1) {
-                                // we have to cut off the trailing comman after the endorsed lib
-                                int trailingCommaIdx = strAfter.indexOf(',');
-                                if (trailingCommaIdx != -1) {
-                                    strAfter = strAfter.substring(trailingCommaIdx + 1);
-                                }
+                        return;
+                    }
+                } else {
+                    if (idx != -1) { // common/endorsed/*.jar is present, remove it
+                        String strBefore = commonLoader.substring(0, idx);
+                        int commaIdx = strBefore.lastIndexOf(",");
+                        StringBuilder sb = new StringBuilder(commonLoader.substring(0, commaIdx == -1 ? idx : commaIdx));
+                        String strAfter = commonLoader.substring(idx + COMMON_ENDORSED.length());
+                        if (commaIdx == -1) {
+                            // we have to cut off the trailing comman after the endorsed lib
+                            int trailingCommaIdx = strAfter.indexOf(",");
+                            if (trailingCommaIdx != -1) {
+                                strAfter = strAfter.substring(trailingCommaIdx + 1);
                             }
-                            sb.append(strAfter);
-                            props.setProperty(COMMON_LOADER, sb.toString());
-                        } else {
-                            return;
                         }
+                        sb.append(strAfter);
+                        props.setProperty(COMMON_LOADER, sb.toString());
+                    } else {
+                        return;
                     }
                 }
-            } finally {
-                is.close();
             }
             // store changes
-            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(catalinaProp));
-            try {
+            try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(catalinaProp))) {
                 props.store(out);
-            } finally {
-                out.close();
             }
         } catch (FileNotFoundException fnfe) {
             LOGGER.log(Level.INFO, null, fnfe);
@@ -889,6 +902,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
             in = new BufferedInputStream(is);
         }
 
+        @Override
         public void run() {
             try {
                 byte buffer[] = new byte[1024];
@@ -915,8 +929,8 @@ public final class StartTomcat extends StartServer implements ProgressObject {
         private static final long serialVersionUID = 992972967554321415L;
         
         public TomcatFormat(File startupScript, File homeDir) {
-            super(new java.util.HashMap ());
-            java.util.Map map = getMap ();
+            super(new HashMap());
+            Map<String, String> map = getMap();
             String scriptPath = startupScript.getAbsolutePath();
             map.put(TAG_EXEC_CMD,       scriptPath);
             map.put(TAG_EXEC_STARTUP,   "run");         // NOI18N

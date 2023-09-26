@@ -69,18 +69,18 @@ public final class VirtualSourceProviderQuery {
     public static boolean hasVirtualSource (final File file) {
         Parameters.notNull("file", file);
         final String ext = FileObjects.getExtension(file.getName());
-        return getExt2ProvMap().keySet().contains(ext);
+        return getExt2ProvMap().containsKey(ext);
     }
     
     public static boolean hasVirtualSource (final FileObject file) {
         Parameters.notNull("file", file);
         final String ext = file.getExt();
-        return getExt2ProvMap().keySet().contains(ext);
+        return getExt2ProvMap().containsKey(ext);
     }
     
     public static boolean hasVirtualSource (final String extension) {
         Parameters.notNull("extension", extension);
-        return getExt2ProvMap().keySet().contains(extension);
+        return getExt2ProvMap().containsKey(extension);
     }
     
     public static boolean hasVirtualSource (final Indexable indexable) {

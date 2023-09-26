@@ -328,21 +328,21 @@ final class Utils {
         public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
             // Scroll almost one screen
             Container parent = getParent();
-            if ((parent == null) || !(parent instanceof JViewport)) return 50;
+            if (!(parent instanceof JViewport)) return 50;
             return (int)(((JViewport)parent).getHeight() * 0.95f);
         }
 
         public boolean getScrollableTracksViewportHeight() {
             // Allow dynamic vertical enlarging of the panel but request the vertical scrollbar when needed
             Container parent = getParent();
-            if ((parent == null) || !(parent instanceof JViewport)) return false;
+            if (!(parent instanceof JViewport)) return false;
             return getPreferredSize().height < ((JViewport)parent).getHeight();
         }
 
         public boolean getScrollableTracksViewportWidth() {
             // Allow dynamic horizontal enlarging of the panel but request the vertical scrollbar when needed
             Container parent = getParent();
-            if ((parent == null) || !(parent instanceof JViewport)) return false;
+            if (!(parent instanceof JViewport)) return false;
             return getPreferredSize().width < ((JViewport)parent).getWidth();
         }
 

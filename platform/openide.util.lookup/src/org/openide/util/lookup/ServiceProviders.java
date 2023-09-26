@@ -34,6 +34,7 @@ public @interface ServiceProviders {
 
     /**
      * List of service provider registrations.
+     * @return list of service provider
      */
     ServiceProvider[] value();
 

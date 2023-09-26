@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.el.ELException;
@@ -90,7 +91,7 @@ public final class ELTypeUtilities {
     }
 
     private static void put(Class<? extends Node> node, TypeKind... kinds) {
-        Set<TypeKind> kindSet = new HashSet<>();
+        Set<TypeKind> kindSet = EnumSet.noneOf(TypeKind.class);
         kindSet.addAll(Arrays.asList(kinds));
         TYPES.put(node, kindSet);
     }

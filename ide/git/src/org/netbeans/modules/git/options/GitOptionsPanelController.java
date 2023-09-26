@@ -143,6 +143,7 @@ final class GitOptionsPanelController extends OptionsPanelController implements 
             panel.cbOpenOutputWindow.addActionListener(this);
             panel.excludeNewFiles.addActionListener(this);
             panel.signOffCheckBox.addActionListener(this);
+            panel.cbReplaceInvalidBranchNameCharacters.addActionListener(this);
             panel.txtProjectAnnotation.setText(GitModuleConfig.getDefault().getProjectAnnotationFormat());
             panel.txtProjectAnnotation.getDocument().addDocumentListener(this);
         }
@@ -160,6 +161,7 @@ final class GitOptionsPanelController extends OptionsPanelController implements 
     private void load () {
         getPanel();
         panel.cbOpenOutputWindow.setSelected(GitModuleConfig.getDefault().getAutoOpenOutput());
+        panel.cbReplaceInvalidBranchNameCharacters.setSelected(GitModuleConfig.getDefault().getAutoReplaceInvalidBranchNameCharacters());
         panel.excludeNewFiles.setSelected(GitModuleConfig.getDefault().getExludeNewFiles());
         panel.signOffCheckBox.setSelected(GitModuleConfig.getDefault().getSignOff());
         panel.cbIgnoreNotSharableFiles.setSelected(GitModuleConfig.getDefault().getAutoIgnoreFiles());
@@ -169,6 +171,7 @@ final class GitOptionsPanelController extends OptionsPanelController implements 
     private void store () {
         getPanel();
         GitModuleConfig.getDefault().setAutoOpenOutput(panel.cbOpenOutputWindow.isSelected());
+        GitModuleConfig.getDefault().setAutoReplaceInvalidBranchNameCharacters(panel.cbReplaceInvalidBranchNameCharacters.isSelected());
         GitModuleConfig.getDefault().setExcludeNewFiles(panel.excludeNewFiles.isSelected());
         GitModuleConfig.getDefault().setSignOff(panel.signOffCheckBox.isSelected());
         GitModuleConfig.getDefault().setAutoIgnoreFiles(panel.cbIgnoreNotSharableFiles.isSelected());
@@ -178,6 +181,7 @@ final class GitOptionsPanelController extends OptionsPanelController implements 
     
     private void fireChanged() {
         changed = GitModuleConfig.getDefault().getAutoOpenOutput() != panel.cbOpenOutputWindow.isSelected()
+                || GitModuleConfig.getDefault().getAutoReplaceInvalidBranchNameCharacters() != panel.cbReplaceInvalidBranchNameCharacters.isSelected()
                 || GitModuleConfig.getDefault().getExludeNewFiles() != panel.excludeNewFiles.isSelected()
                 || GitModuleConfig.getDefault().getSignOff() != panel.signOffCheckBox.isSelected()
                 || GitModuleConfig.getDefault().getAutoIgnoreFiles() != panel.cbIgnoreNotSharableFiles.isSelected()
@@ -234,7 +238,7 @@ final class GitOptionsPanelController extends OptionsPanelController implements 
             sb.append(annotation.substring(0, pos));
             sb.append(variable);
             if (pos < annotation.length()) {
-                sb.append(annotation.substring(pos, annotation.length()));
+                sb.append(annotation.substring(pos));
             }
             panel.txtProjectAnnotation.setText(sb.toString());
             panel.txtProjectAnnotation.requestFocus();

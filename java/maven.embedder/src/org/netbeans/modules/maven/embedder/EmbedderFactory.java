@@ -44,6 +44,7 @@ import org.netbeans.api.project.ui.ProjectGroup;
 import org.netbeans.api.project.ui.ProjectGroupChangeEvent;
 import org.netbeans.api.project.ui.ProjectGroupChangeListener;
 import org.netbeans.modules.maven.embedder.impl.ExtensionModule;
+import org.netbeans.modules.maven.embedder.impl.OfflineOperationError;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.NbPreferences;
@@ -513,5 +514,18 @@ public final class EmbedderFactory {
             properties.setProperty("env." + key, entry.getValue());
         }
         return properties;
+    }
+
+    /**
+     * Checks if the throwable is actually a report that operation failed because of
+     * offline mode. The errors are thrown if an operation attempts to go online despite
+     * that the maven session was configured for offline mode.
+     * 
+     * @param t throwable to check
+     * @return true, if the throwable 
+     * @since 2.71
+     */
+    public static boolean isOfflineException(Throwable t) {
+        return t instanceof OfflineOperationError;
     }
 }

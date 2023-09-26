@@ -123,7 +123,7 @@ public class ResultsOutlineCellRenderer extends DefaultOutlineCellRenderer {
         }
 
         for (int i = 1; i <= text.length() - 1; i++) {
-            String part = text.substring(text.length() - i, text.length());
+            String part = text.substring(text.length() - i);
             int swidth = fm.stringWidth(part);
             if (swidth >= desired) {
                 return part.length() > 0 ? prefix + part + " " : text;  //NOI18N

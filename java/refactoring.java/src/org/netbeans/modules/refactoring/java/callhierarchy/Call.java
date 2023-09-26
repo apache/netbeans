@@ -216,10 +216,7 @@ final class Call implements CallDescriptor {
         }
 
         if(selectionElm.getKind() != ElementKind.INSTANCE_INIT && selectionElm.getKind() != ElementKind.STATIC_INIT) {
-            TreePath declarationPath = javac.getTrees().getPath(selectionElm);
-            if (declarationPath != null) {
-                c.declaration = TreePathHandle.create(declarationPath, javac);
-            }
+            c.declaration = TreePathHandle.create(selectionElm, javac);
         }
 
         if (c.identity != null) {

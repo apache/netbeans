@@ -32,6 +32,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -53,12 +54,48 @@ import org.openide.util.WeakListeners;
  * @author Laszlo Kishalmi
  */
 public class GradleSourceForBinary implements SourceForBinaryQueryImplementation2 {
+    
+    private static Map<SourceType, String> sourceMimeTypes = new EnumMap<>(SourceType.class);
+    
+    static {
+        sourceMimeTypes.put(JAVA, "text/x-java");
+        sourceMimeTypes.put(GROOVY, "text/x-groovy");
+        sourceMimeTypes.put(SCALA, "text/x-scala");
+        sourceMimeTypes.put(KOTLIN, "text/x-kotlin");
+    }
 
     private final Project project;
     private final Map<URL, Res> cache = new HashMap<>();
-
+    
     public GradleSourceForBinary(Project project) {
         this.project = project;
+    }
+    
+    private static final EnumSet<SourceType> ALL_LANGUAGES;
+    
+    static {
+        EnumSet<SourceType> s = EnumSet.allOf(SourceType.class);
+        s.remove(SourceType.RESOURCES);
+        s.remove(SourceType.GENERATED);
+        
+        ALL_LANGUAGES = s;
+    }
+    
+    private Result languageSourceForOutput(GradleJavaSourceSet ss, File outputDir) {
+        
+        for (SourceType st : ALL_LANGUAGES) {
+            File f = ss.getOutputClassDir(st);
+            if (outputDir.equals(f)) {
+                // special case for java here; Java replaces its classpath entries by corresponding cache entries with
+                // indexed sources (.sig files) so that it tracks not compiled source changes. Other languages do not generate
+                // the expected files.
+                // The proper solution will be to change java implementation to use output folder as a fallback if nothing
+                // is found in the cache; then this special case may be removed.
+                boolean canPreferSource = st == SourceType.JAVA;
+                return new Res(project, ss.getName(), EnumSet.of(st), canPreferSource);
+            }
+        }
+        return new Res(project, ss.getName(), ALL_LANGUAGES, false);
     }
 
     @Override
@@ -76,8 +113,7 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
                                 File outputDir = ss.getCompilerArgs(JAVA).contains("--module-source-path") ? //NOI18N
                                         root.getParentFile() : root;
                                 if (ss.getOutputClassDirs().contains(outputDir)) {
-                                    ret = new Res(project, ss.getName(), EnumSet.of(JAVA, GROOVY, SCALA, KOTLIN, GENERATED));
-                                    break;
+                                    return languageSourceForOutput(ss, outputDir);
                                 }
                                 if ((ret == null) && root.equals(ss.getOutputResources())) {
                                     ret = new Res(project, ss.getName(), EnumSet.of(RESOURCES));
@@ -122,11 +158,17 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
         private final Set<SourceType> sourceTypes;
         private final PropertyChangeListener listener;
         private final ChangeSupport support = new ChangeSupport(this);
-
+        private final boolean preferSources;
+        
         public Res(Project project, String sourceSet, Set<SourceType> sourceTypes) {
+            this(project, sourceSet, sourceTypes, true);
+        }
+
+        public Res(Project project, String sourceSet, Set<SourceType> sourceTypes, boolean preferSources) {
             this.project = project;
             this.sourceSet = sourceSet;
             this.sourceTypes = sourceTypes;
+            this.preferSources = preferSources;
             listener = (PropertyChangeEvent evt) -> {
                 if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
                     support.fireChange();
@@ -137,7 +179,7 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
 
         @Override
         public boolean preferSources() {
-            return true;
+            return preferSources;
         }
 
         @Override

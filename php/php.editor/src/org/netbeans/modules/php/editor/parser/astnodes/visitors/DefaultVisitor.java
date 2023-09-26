@@ -43,6 +43,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.CloneExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ContinueStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.DereferencableVariable;
@@ -56,6 +57,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ExpressionStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FinallyClause;
+import org.netbeans.modules.php.editor.parser.astnodes.FirstClassCallableArg;
 import org.netbeans.modules.php.editor.parser.astnodes.ForEachStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.ForStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
@@ -275,6 +277,11 @@ public class DefaultVisitor implements Visitor {
     }
 
     @Override
+    public void visit(ConstantVariable constantVariable) {
+        scan(constantVariable.getName());
+    }
+
+    @Override
     public void visit(ConditionalExpression node) {
         scan(node.getCondition());
         scan(node.getIfTrue());
@@ -349,6 +356,11 @@ public class DefaultVisitor implements Visitor {
     @Override
     public void visit(FinallyClause node) {
         scan(node.getBody());
+    }
+
+    @Override
+    public void visit(FirstClassCallableArg firstClassCallableArg) {
+        // noop
     }
 
     @Override

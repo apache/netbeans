@@ -378,7 +378,7 @@ public final class StopwatchProfilingPoint extends CodeProfilingPoint.Paired imp
 
     private Annotation endAnnotation;
     private Annotation startAnnotation;
-    private List<Result> results = new ArrayList();
+    private List<Result> results = new ArrayList<>();
     private final Object resultsSync = new Object();
     private WeakReference<Report> reportReference;
 

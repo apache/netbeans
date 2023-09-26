@@ -20,10 +20,6 @@
 package org.netbeans.modules.glassfish.common;
 
 import java.io.File;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -36,28 +32,11 @@ public class ServerDetailsTest {
     public ServerDetailsTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of valueOf method, of class ServerDetails.
      */
     @Test
     public void testValueOf() {
-        System.out.println("valueOf");
         String name = "GLASSFISH_SERVER_3_1";
         ServerDetails expResult = ServerDetails.GLASSFISH_SERVER_3_1;
         ServerDetails result = ServerDetails.valueOf(name);
@@ -69,7 +48,6 @@ public class ServerDetailsTest {
      */
     @Test
     public void testGetVersionFromInstallDirectory() {
-        System.out.println("getVersionFromInstallDirectory");
         File glassfishDir = null;
         int expResult = -1;
         int result = ServerDetails.getVersionFromInstallDirectory(glassfishDir);
@@ -81,7 +59,6 @@ public class ServerDetailsTest {
      */
     @Test
     public void testGetVersionFromDomainXml() {
-        System.out.println("getVersionFromDomainXml");
         File domainXml = null;
         int expResult = -1;
         int result = ServerDetails.getVersionFromDomainXml(domainXml);
@@ -93,7 +70,6 @@ public class ServerDetailsTest {
      */
     @Test
     public void testIsInstalledInDirectory() {
-        System.out.println("isInstalledInDirectory");
         File glassfishDir = null;
         ServerDetails instance = ServerDetails.GLASSFISH_SERVER_3;
         boolean expResult = false;

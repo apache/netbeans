@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
@@ -34,8 +32,6 @@ import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.javascript2.editor.classpath.ClassPathProviderImpl;
-import org.netbeans.modules.javascript2.editor.classpath.ClasspathProviderImplAccessor;
 import org.netbeans.modules.javascript2.editor.options.OptionsUtils;
 import org.netbeans.modules.javascript2.editor.parser.JsParserResult;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -45,7 +41,6 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.impl.indexing.RepositoryUpdater;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
-import org.openide.util.test.MockLookup;
 
 /**
  *
@@ -96,7 +91,7 @@ public class JsCodeCompletionBase extends JsTestBase {
 
         final BaseDocument doc = getDocument(content.toString());
         Source source = Source.create(doc);
-        final AtomicReference<CompletionProposal> found = new AtomicReference<CompletionProposal>();
+        final AtomicReference<CompletionProposal> found = new AtomicReference<>();
         ParserManager.parse(Collections.singleton(source), new UserTask() {
             @Override
             public void run(ResultIterator resultIterator) throws Exception {
@@ -176,11 +171,11 @@ public class JsCodeCompletionBase extends JsTestBase {
     }
 
     protected void assertCompletionItemNames(String[] expected, CodeCompletionResult ccresult, Match type) {
-        Collection<String> real = new ArrayList<String>();
+        Collection<String> real = new ArrayList<>();
         for (CompletionProposal ccp : ccresult.getItems()) {
             real.add(ccp.getName());
         }
-        Collection<String> exp = new ArrayList<String>(Arrays.asList(expected));
+        Collection<String> exp = new ArrayList<>(Arrays.asList(expected));
 
         if (type == Match.EXACT) {
             assertEquals(exp, real);
@@ -216,11 +211,11 @@ public class JsCodeCompletionBase extends JsTestBase {
 
     private static class TestCodeCompletionContext extends CodeCompletionContext {
 
-        private int caretOffset;
-        private ParserResult result;
-        private String prefix;
-        private CodeCompletionHandler.QueryType type;
-        private boolean isCaseSensitive;
+        private final int caretOffset;
+        private final ParserResult result;
+        private final String prefix;
+        private final CodeCompletionHandler.QueryType type;
+        private final boolean isCaseSensitive;
 
         public TestCodeCompletionContext(int caretOffset, ParserResult result, String prefix, CodeCompletionHandler.QueryType type, boolean isCaseSensitive) {
             this.caretOffset = caretOffset;

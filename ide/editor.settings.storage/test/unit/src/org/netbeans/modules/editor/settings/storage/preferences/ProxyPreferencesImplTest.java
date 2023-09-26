@@ -32,7 +32,6 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.editor.settings.storage.api.OverridePreferences;
 import org.netbeans.modules.editor.settings.storage.api.MemoryPreferences;

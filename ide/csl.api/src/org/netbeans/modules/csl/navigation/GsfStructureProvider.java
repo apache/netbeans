@@ -72,7 +72,7 @@ public class GsfStructureProvider implements StructureProvider {
             case KEYWORD: return StructureElement.Kind.Key;
             case OTHER: return StructureElement.Kind.Object;
             case PACKAGE: return StructureElement.Kind.Package;
-            case PARAMETER: return StructureElement.Kind.TypeParameter;
+            case PARAMETER: return StructureElement.Kind.Variable;
             case PROPERTY: return StructureElement.Kind.Property;
             case RULE: return StructureElement.Kind.Event;
             case TAG: return StructureElement.Kind.Operator;

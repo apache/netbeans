@@ -22,7 +22,6 @@ package org.netbeans.modules.apisupport.project;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
-import junit.framework.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.openide.ErrorManager;
 

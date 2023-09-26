@@ -1136,6 +1136,7 @@ final class BinaryFS extends FileSystem implements DataInput {
                     return new FOEntry(fo, s);
                 }
 
+                @Override
                 public void remove() {
                     throw new UnsupportedOperationException();
                 }

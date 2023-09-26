@@ -156,7 +156,7 @@ public class UseDatabaseCodeGenerator implements CodeGenerator {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals(SelectDatabasePanel.IS_VALID)) {
                     Object newvalue = evt.getNewValue();
-                    if ((newvalue != null) && (newvalue instanceof Boolean)) {
+                    if (newvalue instanceof Boolean) {
                         Boolean booleanValue = (Boolean) newvalue;
                         if (booleanValue) {
                             dialogDescriptor.setValid(true);

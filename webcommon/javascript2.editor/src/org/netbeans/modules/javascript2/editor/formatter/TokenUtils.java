@@ -26,11 +26,11 @@ import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 
 /**
  * Utility methods extracted from {@link FormatVisitor}.
- * 
+ *
  * @author Dusan Balek, Petr Hejl
  */
 final class TokenUtils {
-    
+
     private final TokenSequence<? extends JsTokenId> ts;
     private final FormatTokenStream tokenStream;
     private final int formatFinish;
@@ -176,9 +176,8 @@ final class TokenUtils {
     public static FormatToken findVirtualToken(FormatToken token, FormatToken.Kind kind,
             boolean backwards) {
         FormatToken result = backwards ? token.previous() : token.next();
-        while (result != null && result.isVirtual()
-                && result.getKind() != kind) {
-            result = backwards ? result.previous() : result.next();;
+        while (result != null && result.isVirtual() && result.getKind() != kind) {
+            result = backwards ? result.previous() : result.next();
         }
         if (result != null && result.getKind() != kind) {
             return null;
@@ -218,5 +217,5 @@ final class TokenUtils {
         if (original != null) {
             original.setPrevious(token);
         }
-    }    
+    }
 }

@@ -3,8 +3,9 @@ a|;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      ale                             [PRIVATE]  issue249500.js
+METHOD     atob()                          [PUBLIC]   <font color=#999999>NodeJS</font>
 VARIABLE   aaa: Module newjavascript       [PUBLIC]   test_01.js
 VARIABLE   arguments: Arguments            [PRIVATE]  issue249500.js
 VARIABLE   as: Module address              [PUBLIC]   testAddress.js
-KEYWORD    async                                      ECMAScript 7 (Experimental)
-KEYWORD    await                                      ECMAScript 7 (Experimental)
+KEYWORD    async                                      ECMAScript 7 - 2016 (Experimental)
+KEYWORD    await                                      ECMAScript 7 - 2016 (Experimental)

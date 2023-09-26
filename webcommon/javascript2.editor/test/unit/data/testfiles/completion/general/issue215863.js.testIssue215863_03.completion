@@ -2,6 +2,7 @@ Code completion result for source line:
 h|istory;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     hasOwnProperty(prop: String):   [PUBLIC]   JS Platform
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform
 METHOD     helpId(): Number                [PUBLIC]   issue226521.js
-FIELD      history: History                [PUBLIC]   JS Platform
+VARIABLE   history                         [PUBLIC]   issue215863.js

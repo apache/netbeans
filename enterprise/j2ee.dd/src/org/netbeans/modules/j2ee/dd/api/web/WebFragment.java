@@ -22,7 +22,7 @@ package org.netbeans.modules.j2ee.dd.api.web;
  * Interface for WebFragment element.<br>
  * The WebFragment object is the root of bean graph generated<br>
  * for deployment descriptor(web-fragment.xml) file.<br>
- * For getting the root (WebFragment object) use the {@link WebFragmentProvider#getDDRoot} method.
+ * For getting the root (WebFragment object) use the {@link WebFragmentProvider#getWebFragmentRoot(org.openide.filesystems.FileObject) } method.
  *
  *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
  *</p>
@@ -36,8 +36,8 @@ public interface WebFragment extends org.netbeans.modules.j2ee.dd.api.common.Roo
 
     // Methods specific for WebFragment
 
-	RelativeOrdering newRelativeOrdering();
-	RelativeOrdering[] getOrdering();
-	void setOrdering(RelativeOrdering[] value);
+    RelativeOrdering newRelativeOrdering();
+    RelativeOrdering[] getOrdering();
+    void setOrdering(RelativeOrdering[] value);
 
 }

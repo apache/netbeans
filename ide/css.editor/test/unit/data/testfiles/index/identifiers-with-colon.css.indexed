@@ -1,0 +1,10 @@
+
+
+Document 0
+Searchable Keys:
+  classes : class:with:colon:name
+  cssContent : true
+  htmlElements : custom-element:with:colon
+  ids : id:with:colon
+
+Not Searchable Keys:

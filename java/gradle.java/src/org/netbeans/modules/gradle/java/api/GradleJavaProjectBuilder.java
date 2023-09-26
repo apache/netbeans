@@ -99,6 +99,11 @@ final class GradleJavaProjectBuilder implements ProjectInfoExtractor.Result {
                     if (compArgs != null) {
                         compilerArgs.put(lang, Collections.unmodifiableList(compArgs));
                     }
+                    // if detected, note the output dirs for individual language(s).
+                    File f = (File)info.get("sourceset_" + name + "_" + lang.name() + "_output_classes");
+                    if (f != null) {
+                        sourceSet.outputs.put(lang, f);
+                    }
                 }
                 sourceSet.sourcesCompatibility = Collections.unmodifiableMap(sourceComp);
                 sourceSet.targetCompatibility = Collections.unmodifiableMap(targetComp);

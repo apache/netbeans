@@ -821,7 +821,7 @@ public final class JavadocImports {
                 jdctx.doc = javac.getDocument();
                 jdctx.javac = javac;
                 long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), dcComment, node);
-                int errorBodyLength = body.trim().substring(0, body.length()).trim().length();
+                int errorBodyLength = body.trim().length();
                 int caretOffset = (int) startPosition + errorBodyLength;
                 TreePath javadocFor = result[0].getTreePath();
                 if (javadocFor == null) {

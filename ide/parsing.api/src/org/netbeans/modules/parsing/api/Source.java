@@ -124,7 +124,7 @@ public final class Source implements Lookup.Provider {
      * Gets a <code>Source</code> instance for a file. The <code>FileObject</code>
      * passed to this method has to be a valid data file. There is no <code>Source</code>
      * representation for a folder.
-     * <p/>
+     * <p>
      * This form allows to specify Lookup that provides access to context-dependent
      * services for the parsing system and the user tasks called from parsing API.
      * 
@@ -183,7 +183,7 @@ public final class Source implements Lookup.Provider {
     }
     
     /**
-     * Gets a <code>Source</cide> instance for a <code>Document</code>. For details, please 
+     * Gets a <code>Source</code> instance for a <code>Document</code>. For details, please 
      * see {@link #create(javax.swing.text.Document)}; this form allows to specify
      * a Lookup that provides access to user or context-dependent services.
      * 
@@ -972,7 +972,7 @@ public final class Source implements Lookup.Provider {
      * Returns a Lookup providing a context for the source.
      * In the presence of multiple scopes or users in the system, this Lookup may
      * provide access to necessary context-dependent services or scope-dependent data.
-     * <p/>
+     * <p>
      * A Source may be created with a Lookup, or it will use the default Lookup as a context
      * @return Lookup.
      * @since 9.2

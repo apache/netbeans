@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.php.editor.verification;
 
+import org.netbeans.modules.php.api.PhpVersion;
+import org.openide.filesystems.FileObject;
+
 public class UnusableTypesHintErrorTest extends PHPHintsTestBase {
 
     public UnusableTypesHintErrorTest(String testName) {
@@ -36,6 +39,10 @@ public class UnusableTypesHintErrorTest extends PHPHintsTestBase {
         checkHints(new UnusableTypesHintError(), "testUnionTypes_01.php");
     }
 
+    public void testUnionTypes_01_PHP81() throws Exception {
+        checkHints(new UnusableTypesHintErrorStub(PhpVersion.PHP_81), "testUnionTypes_01.php");
+    }
+
     public void testStaticReturnTypes_01() throws Exception {
         checkHints(new UnusableTypesHintError(), "testStaticReturnTypes_01.php");
     }
@@ -52,9 +59,38 @@ public class UnusableTypesHintErrorTest extends PHPHintsTestBase {
         checkHints(new UnusableTypesHintError(), "testIntersectionTypes_01.php");
     }
 
+    public void testNullableTypes_01() throws Exception {
+        checkHints(new UnusableTypesHintError(), "testNullableTypes_01.php");
+    }
+
+    public void testNullableTypes_01_PHP81() throws Exception {
+        checkHints(new UnusableTypesHintErrorStub(PhpVersion.PHP_81), "testNullableTypes_01.php");
+    }
+
+    public void testDnfTypes_01() throws Exception {
+        checkHints(new UnusableTypesHintError(), "testDnfTypes_01.php");
+    }
+
+    public void testDuplicateTypes_01() throws Exception {
+        checkHints(new UnusableTypesHintError(), "testDuplicateTypes_01.php");
+    }
+
     @Override
     protected String getTestDirectory() {
         return TEST_DIRECTORY + "UnusableTypesHintError/";
     }
 
+    private static final class UnusableTypesHintErrorStub extends UnusableTypesHintError {
+
+        private PhpVersion phpVersion;
+
+        public UnusableTypesHintErrorStub(PhpVersion phpVersion) {
+            this.phpVersion = phpVersion;
+        }
+
+        @Override
+        protected PhpVersion getPhpVersion(FileObject fileObject) {
+            return phpVersion;
+        }
+    }
 }

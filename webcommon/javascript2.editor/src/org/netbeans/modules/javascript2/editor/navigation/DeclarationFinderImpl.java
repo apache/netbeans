@@ -21,7 +21,6 @@ package org.netbeans.modules.javascript2.editor.navigation;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -64,7 +63,7 @@ import org.openide.util.Exceptions;
  * @author Petr Pisl
  */
 public class DeclarationFinderImpl implements DeclarationFinder {
-    
+
     private final Language<JsTokenId> language;
 
     public DeclarationFinderImpl(Language<JsTokenId> language) {
@@ -80,7 +79,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
         Snapshot snapshot = jsResult.getSnapshot();
         TokenSequence ts = LexUtilities.getTokenSequence(snapshot, caretOffset, language);
         int offset = info.getSnapshot().getEmbeddedOffset(caretOffset);
-        
+
         ts.move(offset);
         if (ts.moveNext()) {
             if (ts.token().id() == JsTokenId.STRING) {
@@ -100,7 +99,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
         }
         Model model = Model.getModel(jsResult, false);
         model.resolve();
-        
+
         OccurrencesSupport os = new OccurrencesSupport(model);
         Occurrence occurrence = os.getOccurrence(offset);
         if (occurrence != null) {
@@ -111,11 +110,11 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                 assignments = parent.getAssignments();
             }
             Index jsIndex = Index.get(snapshot.getSource().getFileObject());
-            List<IndexResult> indexResults = new ArrayList<IndexResult>();
+            List<IndexResult> indexResults = new ArrayList<>();
             if (assignments == null || assignments.isEmpty()) {
                 FileObject fo = object.getFileObject();
                 if (object.isDeclared()) {
-                    
+
                     if (fo != null) {
                         if (fo.equals(snapshot.getSource().getFileObject()) && object.getDeclarationName() != null) {
                             int docOffset = LexUtilities.getLexerOffset(jsResult, getDeclarationOffset(object));
@@ -135,7 +134,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                             // TODO we need to solve to translating model offsets to the doc offset for other files?
                             return new DeclarationLocation(fo, getDeclarationOffset(object), object);
                         }
-                        
+
                     }
                 } else {
                     Collection<? extends IndexResult> items = Index.get(fo).findByFqn(
@@ -158,7 +157,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                         return DeclarationLocation.NONE;
                     }
                     int partIndex = 1;
-                    // find the last object that is defined in the file / model. The rest will be done through the index. 
+                    // find the last object that is defined in the file / model. The rest will be done through the index.
                     while (partIndex < fqnParts.length) {
                         JsObject property = parent.getProperty(fqnParts[partIndex]);
                         if (property != null && property.isDeclared()) {
@@ -170,14 +169,14 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                     }
                     // build the FQN of the last defined property in the file / model
                     String lastDefinedFQN = parent.getFullyQualifiedName();
-                    List<IndexResult> rItems = new ArrayList();
+                    List<IndexResult> rItems = new ArrayList<>();
                     if (partIndex < fqnParts.length) {
                         // find the next property from FQN in the index for the defined property in the file / model
                         rItems.addAll(findPropertyOfType(jsIndex, lastDefinedFQN.toString(), fqnParts[partIndex]));
                         parent = findPropertyOrParameterInModel(parent, fqnParts[partIndex]);
                         partIndex++;
                         for (int i = partIndex; (!rItems.isEmpty()) && i < fqnParts.length; i++ ) {
-                            List<IndexResult> copy = new ArrayList(rItems);
+                            List<IndexResult> copy = new ArrayList<>(rItems);
                             rItems.clear();
                             // and for the found property find next property from the FQN
                             for (IndexResult indexResult : copy) {
@@ -202,7 +201,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                     if (location != null) {
                         return location;
                     }
-                } 
+                }
             } else {
                 FileObject fo = object.getFileObject();
                 if (object.isDeclared()) {
@@ -216,7 +215,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                             // TODO we need to solve to translating model offsets to the doc offset for other files?
                             return new DeclarationLocation(fo, getDeclarationOffset(object), object);
                         }
-                        
+
                     }
                 }
                 if (ts != null) {
@@ -253,13 +252,13 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                 return loc;
             }
         }
-        // try to find the symbol in index and offer the declarations. 
+        // try to find the symbol in index and offer the declarations.
         if (occurrence != null) {
             JsObject object = occurrence.getDeclarations().iterator().next();
             FileObject fo = object.getFileObject();
             if (fo != null && object.getName() != null) {
                 Collection<? extends IndexResult> items = Index.get(fo).query(Index.FIELD_BASE_NAME, object.getName(), QuerySupport.Kind.EXACT, Index.TERMS_BASIC_INFO);
-                List<IndexResult> indexResults = new ArrayList<IndexResult>();
+                List<IndexResult> indexResults = new ArrayList<>();
                 for (IndexResult item : items) {
                     IndexedElement element = IndexedElement.create(item);
                     if (!element.getModifiers().contains(Modifier.PRIVATE) && element.getJSKind() != JsElement.Kind.PARAMETER) {
@@ -272,30 +271,30 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                 }
             }
         }
-        
+
         return DeclarationLocation.NONE;
     }
 
     private int getDeclarationOffset(JsObject object) {
-        return object.getDeclarationName() != null 
+        return object.getDeclarationName() != null
                 ? object.getDeclarationName().getOffsetRange().getStart()
                 : object.getOffset();
     }
-    
+
     private JsObject findPropertyOrParameterInModel(JsObject parent, String name) {
         JsObject object = parent.getProperty(name);
         if (object == null && parent instanceof JsFunction) {
             object = ((JsFunction)parent).getParameter(name);
-        } 
+        }
         return object;
     }
-    
+
     private Collection<? extends IndexResult> findPropertyOfType(Index jsIndex, String fqn, String propertyName) {
         return findPropertyOfType(jsIndex, fqn, propertyName, 0);
     }
-    
+
     private Collection<? extends IndexResult> findPropertyOfType(Index jsIndex, String fqn, String propertyName, int count) {
-        List<IndexResult> items = new ArrayList();
+        List<IndexResult> items = new ArrayList<>();
         if (count > 5) {
             return items;
         }
@@ -315,7 +314,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
         }
         return items;
     }
-    
+
     private DeclarationLocation processIndexResult(List<IndexResult> indexResults) {
         if (!indexResults.isEmpty()) {
             IndexResult iResult = indexResults.get(0);
@@ -324,7 +323,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
             }
             String value = iResult.getValue(Index.FIELD_OFFSET);
             int offset = Integer.parseInt(value);
-            HashSet<String> alreadyThere = new HashSet<String>();
+            HashSet<String> alreadyThere = new HashSet<>();
             DeclarationLocation location = new DeclarationLocation(iResult.getFile(), offset, IndexedElement.create(iResult));
             alreadyThere.add(iResult.getFile().getPath() + offset);
             if (indexResults.size() > 1) {
@@ -340,42 +339,38 @@ public class DeclarationFinderImpl implements DeclarationFinder {
         }
         return null;
     }
-    
+
     @Override
     public OffsetRange getReferenceSpan(final Document doc, final int caretOffset) {
         if (doc == null) {
             return OffsetRange.NONE;
         }
         final OffsetRange[] value = new OffsetRange[1];
-        
-        doc.render(new Runnable() {
 
-            @Override
-            public void run() {
-                TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(doc, caretOffset, language);
-                if (ts != null) {
-                    ts.move(caretOffset);
-                    if (ts.moveNext() && (ts.token().id() == JsTokenId.IDENTIFIER || ts.token().id() == JsTokenId.PRIVATE_IDENTIFIER)) {
-                        value[0] = new OffsetRange(ts.offset(), ts.offset() + ts.token().length());
-                    } else if (ts.token() != null && ts.token().id() == JsTokenId.DOC_COMMENT) {
-                        TokenSequence<? extends JsDocumentationTokenId> tsDoc = LexerUtils.getTokenSequence(doc, caretOffset, JsDocumentationTokenId.language(), true);
-                        if (tsDoc != null) {
-                            if (tsDoc.token() != null && tsDoc.token().id() == JsDocumentationTokenId.OTHER) {
-                                if (tsDoc.moveNext() && tsDoc.token().id() == JsDocumentationTokenId.BRACKET_RIGHT_CURLY
-                                        && tsDoc.movePrevious() && tsDoc.movePrevious() && tsDoc.token().id() == JsDocumentationTokenId.BRACKET_LEFT_CURLY) {
-                                    tsDoc.moveNext();
-                                    value[0] = new OffsetRange(tsDoc.offset(), tsDoc.offset() + tsDoc.token().length());
-                                }
+        doc.render(() -> {
+            TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(doc, caretOffset, language);
+            if (ts != null) {
+                ts.move(caretOffset);
+                if (ts.moveNext() && (ts.token().id() == JsTokenId.IDENTIFIER || ts.token().id() == JsTokenId.PRIVATE_IDENTIFIER)) {
+                    value[0] = new OffsetRange(ts.offset(), ts.offset() + ts.token().length());
+                } else if (ts.token() != null && ts.token().id() == JsTokenId.DOC_COMMENT) {
+                    TokenSequence<? extends JsDocumentationTokenId> tsDoc = LexerUtils.getTokenSequence(doc, caretOffset, JsDocumentationTokenId.language(), true);
+                    if (tsDoc != null) {
+                        if (tsDoc.token() != null && tsDoc.token().id() == JsDocumentationTokenId.OTHER) {
+                            if (tsDoc.moveNext() && tsDoc.token().id() == JsDocumentationTokenId.BRACKET_RIGHT_CURLY
+                                    && tsDoc.movePrevious() && tsDoc.movePrevious() && tsDoc.token().id() == JsDocumentationTokenId.BRACKET_LEFT_CURLY) {
+                                tsDoc.moveNext();
+                                value[0] = new OffsetRange(tsDoc.offset(), tsDoc.offset() + tsDoc.token().length());
                             }
-                        } 
-                    } else if (ts.token() != null && ts.token().id() == JsTokenId.STRING) {
-                        // we need to check, where we are in the import expression (ES6)
-                        int start = ts.offset();
-                        int end = ts.offset() + ts.token().length();
-                        Token<? extends JsTokenId> token = LexUtilities.findPreviousToken(ts, Utils.LOOK_FOR_IMPORT_EXPORT_TOKENS);
-                        if (token.id() == JsTokenId.KEYWORD_IMPORT || token.id() == JsTokenId.KEYWORD_EXPORT) {
-                            value[0] = new OffsetRange (start, end);
                         }
+                    }
+                } else if (ts.token() != null && ts.token().id() == JsTokenId.STRING) {
+                    // we need to check, where we are in the import expression (ES6)
+                    int start = ts.offset();
+                    int end = ts.offset() + ts.token().length();
+                    Token<? extends JsTokenId> token = LexUtilities.findPreviousToken(ts, Utils.LOOK_FOR_IMPORT_EXPORT_TOKENS);
+                    if (token.id() == JsTokenId.KEYWORD_IMPORT || token.id() == JsTokenId.KEYWORD_EXPORT) {
+                        value[0] = new OffsetRange (start, end);
                     }
                 }
             }
@@ -403,7 +398,8 @@ public class DeclarationFinderImpl implements DeclarationFinder {
         private final int offset;
         private final DeclarationLocation location;
         private final IndexedElement element;
-        
+        private String stringLocation;
+
         public AlternativeLocationImpl(IndexResult iResult) {
             this.iResult = iResult;
             String value = iResult.getValue(Index.FIELD_OFFSET);
@@ -411,13 +407,16 @@ public class DeclarationFinderImpl implements DeclarationFinder {
             this.location = new DeclarationLocation(iResult.getFile(), offset);
             this.element = IndexedElement.create(iResult);
         }
-        
+
         @Override
         public ElementHandle getElement() {
             return element;
         }
 
-        private  String getStringLocation() {
+        private String getStringLocation() {
+            if(stringLocation != null) {
+                return stringLocation;
+            }
             int lineNumber = 0;
             int count = 0;
             List<String> asLines;
@@ -430,7 +429,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
             if (asLines != null) {
                 for (String line : asLines) {
                     lineNumber++;
-                    count = count + line.length();
+                    count += line.length();
                     if (count >= offset) {
                         break;
                     }
@@ -440,9 +439,10 @@ public class DeclarationFinderImpl implements DeclarationFinder {
             if (lineNumber > 0) {
                 result = result + " : " + lineNumber; //NOI18N
             }
+            stringLocation = result;
             return result;
         }
-        
+
         @Override
         public String getDisplayHtml(HtmlFormatter formatter) {
             formatter.appendText(getStringLocation());
@@ -457,9 +457,15 @@ public class DeclarationFinderImpl implements DeclarationFinder {
         @Override
         public int compareTo(AlternativeLocation o) {
             AlternativeLocationImpl ali = (AlternativeLocationImpl)o;
-            return getStringLocation().compareTo(ali.getStringLocation());
+            String relPath1 = iResult.getRelativePath();
+            String relPath2 = ali.iResult.getRelativePath();
+            int comparison = relPath1.compareTo(relPath2);
+            if(comparison != 0) {
+                return comparison;
+            }
+            return offset - ali.offset;
         }
-        
+
     }
-    
+
 }

@@ -39,6 +39,7 @@ public final class TreeItemData {
     private String[] contextValues;
     private String command;
     private URI resourceURI;
+    private boolean leaf;
     
     static {
         try {
@@ -50,6 +51,16 @@ public final class TreeItemData {
 
     public TreeItemData() {
     }
+
+    public boolean isLeaf() {
+        return leaf;
+    }
+
+    public TreeItemData makeLeaf() {
+        this.leaf = true;
+        return this;
+    }
+    
 
     public URI getResourceURI() {
         return resourceURI;
@@ -122,6 +133,7 @@ public final class TreeItemData {
         if (data.getIconImage() != null) {
             setIconImage(data.getIconImage());
         }
+        leaf |= data.isLeaf();
         return this;
     }
 }

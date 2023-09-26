@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
@@ -48,6 +49,7 @@ import org.openide.modules.InstalledFileLocator;
 public class DefaultFaceletLibraries {
 
     private static DefaultFaceletLibraries INSTANCE;
+    private File jsfImplJar;
     private Collection<FileObject> libraryDescriptorsFiles;
     private Map<String, FaceletsLibraryDescriptor> librariesDescriptors;
     private static Map<String, Library> jsf22FaceletPseudoLibraries;
@@ -59,19 +61,29 @@ public class DefaultFaceletLibraries {
         return INSTANCE;
     }
 
-    public DefaultFaceletLibraries() {
-        init();
+    public DefaultFaceletLibraries(File jsfImplJar) {
+        this.jsfImplJar = jsfImplJar;
+
+        init(jsfImplJar);
     }
 
-    private void init() {
-        File jsfImplJar = InstalledFileLocator.getDefault().locate(
+    public DefaultFaceletLibraries() {
+        this(InstalledFileLocator.getDefault().locate(
                 "modules/ext/jsf-2_2/javax.faces.jar", //NOI18N
-                "org.netbeans.modules.web.jsf20", false); //NOI18N
+                "org.netbeans.modules.web.jsf20", false) //NOI18N
+        );
+    }
+
+    private void init(File jsfImplJar) {
         assert jsfImplJar != null;
 
         FileObject jsfImplJarFo = FileUtil.getArchiveRoot(FileUtil.toFileObject(jsfImplJar));
         libraryDescriptorsFiles = findLibraryDescriptors(jsfImplJarFo, ".taglib.xml"); //NOI18N
 
+    }
+
+    public File getJsfImplJar() {
+        return jsfImplJar;
     }
 
     public Collection<FileObject> getLibrariesDescriptorsFiles() {
@@ -128,21 +140,27 @@ public class DefaultFaceletLibraries {
 
     protected static synchronized Map<String, Library> getJsf22FaceletPseudoLibraries(FaceletsLibrarySupport support) {
         if (jsf22FaceletPseudoLibraries == null) {
-            jsf22FaceletPseudoLibraries = new HashMap<>(2);
-            jsf22FaceletPseudoLibraries.put(DefaultLibraryInfo.JSF.getLegacyNamespace(), new JsfFaceletPseudoLibrary(support, DefaultLibraryInfo.JSF));
-            jsf22FaceletPseudoLibraries.put(DefaultLibraryInfo.PASSTHROUGH.getLegacyNamespace(), new JsfFaceletPseudoLibrary(support, DefaultLibraryInfo.PASSTHROUGH));
+            Map<String, Library> map = new HashMap<>(2);
+            DefaultLibraryInfo.JSF.getValidNamespaces().stream()
+                    .filter(namespace -> namespace.startsWith(NamespaceUtils.JCP_ORG_LOCATION))
+                    .forEach(namespace -> map.put(namespace, new JsfFaceletPseudoLibrary(support, DefaultLibraryInfo.JSF)));
+            DefaultLibraryInfo.PASSTHROUGH.getValidNamespaces().stream()
+                    .filter(namespace -> namespace.startsWith(NamespaceUtils.JCP_ORG_LOCATION))
+                    .forEach(namespace -> map.put(namespace, new JsfFaceletPseudoLibrary(support, DefaultLibraryInfo.PASSTHROUGH)));
+
+            jsf22FaceletPseudoLibraries = Collections.unmodifiableMap(map);
         }
         return jsf22FaceletPseudoLibraries;
     }
 
     private static class JsfFaceletPseudoLibrary implements Library {
 
-        private final String namespace;
+        private final Set<String> validNamespaces;
         private final String prefix;
         private final String displayName;
 
         public JsfFaceletPseudoLibrary(FaceletsLibrarySupport support, DefaultLibraryInfo defaultLibraryInfo) {
-            this.namespace = defaultLibraryInfo.getNamespace();
+            this.validNamespaces = defaultLibraryInfo.getValidNamespaces();
             this.prefix = defaultLibraryInfo.getDefaultPrefix();
             this.displayName = defaultLibraryInfo.getDisplayName();
         }
@@ -164,7 +182,7 @@ public class DefaultFaceletLibraries {
 
         @Override
         public String getNamespace() {
-            return namespace;
+            return validNamespaces.iterator().next();
         }
 
         @Override
@@ -183,9 +201,8 @@ public class DefaultFaceletLibraries {
         }
 
         @Override
-        public String getLegacyNamespace() {
-            return NamespaceUtils.NS_MAPPING.get(namespace);
+        public Set<String> getValidNamespaces() {
+            return validNamespaces;
         }
-
     }
 }

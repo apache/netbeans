@@ -36,6 +36,11 @@ void getOSVersion(DWORD *id, DWORD *major, DWORD *minor, DWORD *productType) {
     return;
 }
 
+DWORD is9x() {
+    DWORD id, major, minor, type;
+    getOSVersion(& id, & major, & minor, & type);
+    return (id == VER_PLATFORM_WIN32_WINDOWS) ? 1 : 0;
+}
 DWORD isNT() {    
     DWORD id, major, minor, type;
     getOSVersion(& id, & major, & minor, & type);

@@ -36,6 +36,7 @@ public class TomcatPlatformFactory extends J2eePlatformFactory {
     public TomcatPlatformFactory() {
     }
     
+    @Override
     public J2eePlatformImpl getJ2eePlatformImpl(DeploymentManager dm) {
         assert TomcatManager.class.isAssignableFrom(dm.getClass()) : this + " cannot create platform for unknown deployment manager:" + dm;
         return ((TomcatManager)dm).getTomcatPlatform();

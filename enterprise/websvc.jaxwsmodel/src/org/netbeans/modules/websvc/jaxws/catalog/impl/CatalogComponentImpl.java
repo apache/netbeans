@@ -53,7 +53,7 @@ public abstract class CatalogComponentImpl extends AbstractDocumentComponent<Cat
                 org.w3c.dom.Node n = nl.item(i);
                 if (n instanceof Element) {
                     CatalogModel model = getModel();
-                    CatalogComponent comp = (CatalogComponent) model.getFactory().create((Element)n, this);
+                    CatalogComponent comp = model.getFactory().create((Element)n, this);
                     if (comp != null) {
                         children.add(comp);
                     }

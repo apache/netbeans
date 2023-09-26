@@ -106,6 +106,7 @@ import org.netbeans.lib.nbjavac.services.NBParserFactory;
 import org.netbeans.lib.nbjavac.services.NBClassWriter;
 import org.netbeans.lib.nbjavac.services.NBJavacTrees;
 import org.netbeans.lib.nbjavac.services.NBLog;
+import org.netbeans.lib.nbjavac.services.NBNames;
 import org.netbeans.lib.nbjavac.services.NBResolve;
 import org.netbeans.lib.nbjavac.services.NBTreeMaker;
 import org.netbeans.modules.java.source.base.SourceLevelUtils;
@@ -620,7 +621,7 @@ public class JavacParser extends Parser {
      * Moves the Javac into the required {@link JavaSource#Phase}
      * Not synchronized, has to be called under Parsing API lock.
      * @param the required {@link JavaSource#Phase}
-     * @parma currentInfo - the javac
+     * @param currentInfo - the javac
      * @param cancellable when true the method checks cancels
      * @return the reached phase
      * @throws IOException when the javac throws an exception
@@ -1051,6 +1052,7 @@ public class JavacParser extends Parser {
         Context context = new Context();
         //need to preregister the Messages here, because the getTask below requires Log instance:
         NBLog.preRegister(context, DEV_NULL);
+        NBNames.preRegister(context);
         JavacTaskImpl task = (JavacTaskImpl)JavacTool.create().getTask(null,
                 ClasspathInfoAccessor.getINSTANCE().createFileManager(cpInfo, validatedSourceLevel.name),
                 diagnosticListener, options, files.iterator().hasNext() ? null : Arrays.asList("java.lang.Object"), files,
@@ -1190,6 +1192,13 @@ public class JavacParser extends Parser {
                                new Object[]{srcClassPath, sourceLevel, moduleBoot}); //NOI18N
                     return SourceLevelUtils.JDK1_8;
                 }
+                if (source.compareTo(SourceLevelUtils.JDK15) >= 0 &&
+                    !hasResource("java/lang/Record", new ClassPath[] {moduleBoot}, new ClassPath[] {moduleCompile, moduleAllUnnamed}, new ClassPath[] {srcClassPath})) { //NOI18N
+                    LOGGER.log(warnLevel,
+                               "Even though the source level of {0} is set to: {1}, java.lang.Record cannot be found on the system module path: {2}\n", //NOI18N
+                               new Object[]{srcClassPath, sourceLevel, moduleBoot}); //NOI18N
+                    return SourceLevelUtils.JDK14;
+                }
                 return source;
             }
         }
@@ -1229,6 +1238,8 @@ public class JavacParser extends Parser {
             } else if (option.equals("-parameters") || option.startsWith("-Xlint")) {     //NOI18N
                 res.add(option);
             } else if (option.equals("--enable-preview")) {     //NOI18N
+                res.add(option);
+            } else if (option.equals("-XDrawDiagnostics")) {     //NOI18N
                 res.add(option);
             } else if ((
                     option.startsWith("--add-modules") ||   //NOI18N

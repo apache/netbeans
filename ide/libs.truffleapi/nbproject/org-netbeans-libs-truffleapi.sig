@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.15
+#Version 1.21
 
 CLSS public final com.oracle.truffle.api.ArrayUtils
 meth public !varargs static int indexOf(byte[],int,int,byte[])
@@ -1241,6 +1241,41 @@ meth public java.lang.Object[] getSuppliedValues()
 meth public java.lang.String getMessage()
 supr java.lang.RuntimeException
 hfds node,serialVersionUID,suppliedNodes,suppliedValues
+
+CLSS public abstract com.oracle.truffle.api.exception.AbstractTruffleException
+cons protected init()
+cons protected init(com.oracle.truffle.api.exception.AbstractTruffleException)
+cons protected init(com.oracle.truffle.api.nodes.Node)
+cons protected init(java.lang.String)
+cons protected init(java.lang.String,com.oracle.truffle.api.nodes.Node)
+cons protected init(java.lang.String,java.lang.Throwable,int,com.oracle.truffle.api.nodes.Node)
+fld public final static int UNLIMITED_STACK_TRACE = -1
+intf com.oracle.truffle.api.TruffleException
+intf com.oracle.truffle.api.interop.TruffleObject
+meth public final boolean isCancelled()
+ anno 0 java.lang.Deprecated()
+meth public final boolean isExit()
+ anno 0 java.lang.Deprecated()
+meth public final boolean isIncompleteSource()
+ anno 0 java.lang.Deprecated()
+meth public final boolean isInternalError()
+ anno 0 java.lang.Deprecated()
+meth public final boolean isSyntaxError()
+ anno 0 java.lang.Deprecated()
+meth public final com.oracle.truffle.api.nodes.Node getLocation()
+meth public final com.oracle.truffle.api.source.SourceSection getSourceLocation()
+ anno 0 java.lang.Deprecated()
+meth public final int getExitStatus()
+ anno 0 java.lang.Deprecated()
+meth public final int getStackTraceElementLimit()
+meth public final java.lang.Object getExceptionObject()
+ anno 0 java.lang.Deprecated()
+meth public final java.lang.Throwable fillInStackTrace()
+meth public final java.lang.Throwable getCause()
+meth public final java.lang.Throwable initCause(java.lang.Throwable)
+ anno 0 java.lang.Deprecated()
+supr java.lang.RuntimeException
+hfds cause,lazyStackTrace,location,stackTraceElementLimit
 
 CLSS public abstract interface com.oracle.truffle.api.frame.Frame
 meth public abstract boolean getBoolean(com.oracle.truffle.api.frame.FrameSlot) throws com.oracle.truffle.api.frame.FrameSlotTypeException

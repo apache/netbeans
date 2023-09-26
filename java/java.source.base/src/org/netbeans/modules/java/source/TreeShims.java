@@ -60,6 +60,8 @@ public class TreeShims {
 //    public static final String NULL_LITERAL = "NULL_LITERAL"; //NOI18N
 //    public static final String PARENTHESIZED_PATTERN = "PARENTHESIZED_PATTERN"; //NOI18N
 //    public static final String GUARDED_PATTERN = "GUARDED_PATTERN"; //NOI18N
+//    public static final String DECONSTRUCTION_PATTERN = "DECONSTRUCTION_PATTERN";
+//    public static final String RECORDPATTERN = "RECORDPATTERN";
 //
 //    public static List<? extends ExpressionTree> getExpressions(CaseTree node) {
 //        try {
@@ -366,31 +368,83 @@ public class TreeShims {
 //        }
 //        return null;
 //    }
-    public static List<DocTree> getSnippetDocTreeAttributes(DocTree node) {
-        try {
-            Class gpt = Class.forName("com.sun.source.doctree.SnippetTree"); //NOI18N
-            return isJDKVersionRelease18_Or_Above()
-                    ? (List<DocTree>) gpt.getDeclaredMethod("getAttributes").invoke(node) //NOI18N
-                    : null;
-        } catch (NoSuchMethodException | ClassNotFoundException ex) {
-            return null;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw TreeShims.<RuntimeException>throwAny(ex);
-        }
-    }
+//    public static List<DocTree> getSnippetDocTreeAttributes(DocTree node) {
+//        try {
+//            Class gpt = Class.forName("com.sun.source.doctree.SnippetTree"); //NOI18N
+//            return isJDKVersionRelease18_Or_Above()
+//                    ? (List<DocTree>) gpt.getDeclaredMethod("getAttributes").invoke(node) //NOI18N
+//                    : null;
+//        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+//            return null;
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            throw TreeShims.<RuntimeException>throwAny(ex);
+//        }
+//    }
+//
+//    public static TextTree getSnippetDocTreeText(DocTree node) {
+//        try {
+//            Class gpt = Class.forName("com.sun.source.doctree.SnippetTree"); //NOI18N
+//            return isJDKVersionRelease18_Or_Above()
+//                    ? (TextTree) gpt.getDeclaredMethod("getBody").invoke(node) //NOI18N
+//                    : null;
+//        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+//            return null;
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            throw TreeShims.<RuntimeException>throwAny(ex);
+//        }
+//    }
 
-    public static TextTree getSnippetDocTreeText(DocTree node) {
-        try {
-            Class gpt = Class.forName("com.sun.source.doctree.SnippetTree"); //NOI18N
-            return isJDKVersionRelease18_Or_Above()
-                    ? (TextTree) gpt.getDeclaredMethod("getBody").invoke(node) //NOI18N
-                    : null;
-        } catch (NoSuchMethodException | ClassNotFoundException ex) {
-            return null;
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw TreeShims.<RuntimeException>throwAny(ex);
-        }
-    }
+//  public static ExpressionTree getDeconstructor(Tree node) {
+//        try {
+//            Class gpt = Class.forName("com.sun.source.tree.DeconstructionPatternTree"); //NOI18N
+//            return isJDKVersionRelease19_Or_Above()
+//                    ? (ExpressionTree) gpt.getDeclaredMethod("getDeconstructor").invoke(node) //NOI18N
+//                    : null;
+//        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+//            return null;
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            throw TreeShims.<RuntimeException>throwAny(ex);
+//        }
+//    }
+
+//    public static List<? extends PatternTree> getNestedPatterns(Tree node) {
+//        try {
+//            Class gpt = Class.forName("com.sun.source.tree.DeconstructionPatternTree"); //NOI18N
+//            return isJDKVersionRelease19_Or_Above()
+//                    ? (List<? extends PatternTree>) gpt.getDeclaredMethod("getNestedPatterns").invoke(node) //NOI18N
+//                    : null;
+//        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+//            return null;
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            throw TreeShims.<RuntimeException>throwAny(ex);
+//        }
+//    }
+
+//    public static VariableTree getVariable(Tree node) {
+//        try {
+//            Class gpt = Class.forName("com.sun.source.tree.DeconstructionPatternTree"); //NOI18N
+//            return isJDKVersionRelease19_Or_Above()
+//                    ? (VariableTree) gpt.getDeclaredMethod("getVariable").invoke(node) //NOI18N
+//                    : null;
+//        } catch (NoSuchMethodException | ClassNotFoundException ex) {
+//            return null;
+//        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            throw TreeShims.<RuntimeException>throwAny(ex);
+//        }
+//    }
+
+//    public static Tree RecordPattern(TreeMaker make, ExpressionTree deconstructor, List<PatternTree> nested, VariableTree var) {
+//        ListBuffer<JCTree.JCPattern> nestedVar = new ListBuffer<>();
+//        for (PatternTree t : nested) {
+//            nestedVar.append((JCTree.JCPattern) t);
+//        }
+//        try {
+//            Method getMethod = TreeMaker.class.getDeclaredMethod("RecordPattern", JCTree.JCExpression.class, com.sun.tools.javac.util.List.class, JCTree.JCVariableDecl.class);
+//            return (Tree) getMethod.invoke(make, (JCTree.JCExpression) deconstructor, nestedVar.toList(), (JCTree.JCVariableDecl) var);
+//        } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+//            throw TreeShims.<RuntimeException>throwAny(ex);
+//        }
+//    }
 
     public static Element toRecordComponent(Element el) {
         if (el == null ||el.getKind() != ElementKind.FIELD) {
@@ -412,7 +466,9 @@ public class TreeShims {
         if (isJDKVersionRelease17_Or_Above()) {
             try {
                 return node.getClass().getField("patternSwitch").getBoolean(node);
-            } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex) {
+            } catch(NoSuchFieldException e){
+                return false;
+            }catch (IllegalArgumentException | IllegalAccessException | SecurityException ex) {
                 throw TreeShims.<RuntimeException>throwAny(ex);
             }
         }
@@ -423,9 +479,13 @@ public class TreeShims {
         return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(17) >= 0;
     }
 
-    public static boolean isJDKVersionRelease18_Or_Above() {
-        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(18) >= 0;
-    }
+//    public static boolean isJDKVersionRelease19_Or_Above(){
+//        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(19) >= 0;
+//    }
+
+//    public static boolean isJDKVersionRelease18_Or_Above() {
+//        return Integer.valueOf(SourceVersion.latest().name().split("_")[1]).compareTo(18) >= 0;
+//    }
 
     @SuppressWarnings("unchecked")
     public static <T extends Throwable> RuntimeException throwAny(Throwable t) throws T {

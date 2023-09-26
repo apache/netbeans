@@ -27,6 +27,7 @@ import org.netbeans.modules.tomcat5.deploy.TomcatModule;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.deploy.spi.exceptions.TargetException;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.TargetModuleIDResolver;
 
 /*
@@ -43,10 +44,12 @@ public class TMIDResolver extends TargetModuleIDResolver {
         this.tm = (TomcatManager) dm;
     }
     
+    @Override
     public TargetModuleID[] lookupTargetModuleID(java.util.Map queryInfo, Target[] targetList) {
         String contextRoot = (String) queryInfo.get(KEY_CONTEXT_ROOT);
-        if (contextRoot == null)
+        if (contextRoot == null) {
             return EMPTY_TMID_ARRAY;
+        }
         // Tomcat ROOT context path bug hack
         if ("".equals(contextRoot)) { // NOI18N
             contextRoot = "/"; // NOI18N
@@ -56,13 +59,14 @@ public class TMIDResolver extends TargetModuleIDResolver {
             TargetModuleID[] tmidList = tm.getAvailableModules(ModuleType.WAR, targetList);
             for (int i=0; i<tmidList.length; i++) {
                 TomcatModule tm = (TomcatModule) tmidList[i];
-                if (contextRoot.equals(tm.getPath()))
+                if (contextRoot.equals(tm.getPath())) {
                     result.add(tm);
+                }
             }
-        } catch(Exception ex) {
+        } catch(IllegalStateException | TargetException ex) {
             Logger.getLogger(TMIDResolver.class.getName()).log(Level.INFO, null, ex);
         }
         
-        return (TargetModuleID[]) result.toArray(new TargetModuleID[result.size()]);
+        return (TargetModuleID[]) result.toArray(new TargetModuleID[0]);
     }
 }

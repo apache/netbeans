@@ -121,7 +121,7 @@ public final class CPPVariable implements NIVariable {
     public String getExpressionPath() {
         MIRecord pathRecord;
         try {
-            pathRecord = frame.getThread().getDebugger().sendAndGet("-var-info-path-expression " + uniqueName);
+            pathRecord = frame.getThread().getDebugger().sendAndGet("-var-info-path-expression \"" + uniqueName + "\"");
         } catch (InterruptedException ex) {
             return null;
         }

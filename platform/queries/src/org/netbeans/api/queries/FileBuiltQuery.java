@@ -47,8 +47,8 @@ public final class FileBuiltQuery {
      * This would typically mean that at least its syntax has been
      * validated by a build system, some conventional output file exists
      * and is at least as new as the source file, etc.
-     * For example, for a <samp>Foo.java</samp> source file, this could
-     * check whether <samp>Foo.class</samp> exists (in the appropriate
+     * For example, for a <code>Foo.java</code> source file, this could
+     * check whether <code>Foo.class</code> exists (in the appropriate
      * build directory) with at least as new a timestamp.
      * </p>
      * <p>

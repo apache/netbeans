@@ -48,6 +48,7 @@ public class FlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
     private final Color background = UIManager.getColor("EditorTab.background"); // NOI18N
     private final Color activeBackground = Utils.getUIColor("EditorTab.activeBackground", background); // NOI18N
     private final Color contentBorderColor = UIManager.getColor("TabbedContainer.editor.contentBorderColor"); // NOI18N
+    private final boolean unscaledBorders = Utils.getUIBoolean("EditorTab.unscaledBorders", false); // NOI18N
     private final Insets tabInsets = UIScale.scale(UIManager.getInsets("EditorTab.tabInsets")); // NOI18N
 
     public FlatEditorTabDisplayerUI(TabDisplayer displayer) {
@@ -65,23 +66,24 @@ public class FlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
 
     @Override
     public Dimension getPreferredSize(JComponent c) {
-        int prefHeight;
-        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics();
-        if (g != null) {
-            FontMetrics fm = g.getFontMetrics(displayer.getFont());
-            Insets ins = getTabAreaInsets();
-            prefHeight = fm.getHeight() + ins.top + ins.bottom
-                    + tabInsets.top + tabInsets.bottom;
-        } else
-            prefHeight = UIScale.scale(28);
+        Graphics g = BasicScrollingTabDisplayerUI.getOffscreenGraphics(c);
+        FontMetrics fm = g.getFontMetrics(displayer.getFont());
+        Insets ins = getTabAreaInsets();
+        // Standard icons are 16 pixels tall, so always allocate space for them.
+        int prefHeight = Math.max(fm.getHeight(), 16) + ins.top + ins.bottom
+                + tabInsets.top + tabInsets.bottom;
         return new Dimension(displayer.getWidth(), prefHeight);
     }
 
     @Override
     public TabCellRenderer getTabCellRenderer(int tab) {
         TabCellRenderer ren = super.getTabCellRenderer(tab);
-        if (ren instanceof FlatEditorTabCellRenderer && tab + 1 < displayer.getModel().size()) {
-            ((FlatEditorTabCellRenderer)ren).nextTabSelected = (tabState.getState(tab + 1) & TabState.SELECTED) != 0;
+        if (ren instanceof FlatEditorTabCellRenderer) {
+            FlatEditorTabCellRenderer fren = (FlatEditorTabCellRenderer) ren;
+            int N = displayer.getModel().size();
+            fren.firstTab = (tab == 0);
+            fren.lastTab = (tab == N - 1);
+            fren.nextTabSelected = tab + 1 < N && (tabState.getState(tab + 1) & TabState.SELECTED) != 0;
         }
         return ren;
     }
@@ -114,7 +116,7 @@ public class FlatEditorTabDisplayerUI extends BasicScrollingTabDisplayerUI {
         g.fillRect (0, 0, width, height);
 
         // paint bottom border
-        int contentBorderWidth = HiDPIUtils.deviceBorderWidth(scale, 1);
+        int contentBorderWidth = unscaledBorders ? 1 : HiDPIUtils.deviceBorderWidth(scale, 1);
         g.setColor(contentBorderColor);
         g.fillRect(0, height - contentBorderWidth, width, contentBorderWidth);
     }

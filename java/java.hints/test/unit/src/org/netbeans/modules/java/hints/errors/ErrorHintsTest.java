@@ -99,7 +99,7 @@ public class ErrorHintsTest extends HintsTestBase {
     }
     
     private List<ElementHandle<? extends Element>> findElementHandles(CompilationInfo info, String... specs) {
-        List<ElementHandle<? extends Element>> result = new ArrayList(specs.length);
+        List<ElementHandle<? extends Element>> result = new ArrayList<>(specs.length);
         for (String spec : specs) {
             Element el = info.getElementUtilities().findElement(spec);
             if (el != null) {

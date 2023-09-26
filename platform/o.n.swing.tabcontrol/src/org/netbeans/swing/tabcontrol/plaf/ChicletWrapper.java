@@ -38,6 +38,7 @@ import java.util.Date;
  * @deprecated The new brushed metal look and feel doesn't need this class anymore.
  * @author Tim Boudreau
  */
+@Deprecated
 public class ChicletWrapper implements Runnable {
     private boolean allowVertical = true;
     private boolean leftNotch = false;

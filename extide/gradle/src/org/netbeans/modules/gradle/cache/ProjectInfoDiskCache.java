@@ -34,8 +34,8 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache.QualifiedProjectInfo;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
-import org.netbeans.modules.gradle.api.NbProjectInfo;
-import org.netbeans.modules.gradle.api.NbProjectInfo.Report;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo.Report;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 
 /**
@@ -45,7 +45,7 @@ import org.netbeans.modules.gradle.spi.GradleFiles;
 public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, QualifiedProjectInfo> {
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 21;
+    private static final int COMPATIBLE_CACHE_VERSION = 23;
     private static final String INFO_CACHE_FILE_NAME = "project-info.ser"; //NOI18N
     private static final Map<GradleFiles, ProjectInfoDiskCache> DISK_CACHES = Collections.synchronizedMap(new WeakHashMap<>());
 

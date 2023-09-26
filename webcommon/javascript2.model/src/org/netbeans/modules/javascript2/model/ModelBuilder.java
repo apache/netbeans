@@ -30,46 +30,46 @@ import org.openide.filesystems.FileObject;
  * @author Petr Pisl
  */
 public final class ModelBuilder {
-    
+
     private final JsFunctionImpl globalObject;
-    private Stack<JsObjectImpl> stack;
-    private Stack<DeclarationScopeImpl> functionStack;
+    private final Stack<JsObjectImpl> stack;
+    private final Stack<DeclarationScopeImpl> functionStack;
     private int anonymObjectCount;
     private int withObjectCount;
     private JsWith currentWith;
-    
+
     public static final String WITH_OBJECT_NAME_START = "With$"; //NOI18N
     public static final String ANONYMOUS_OBJECT_NAME_START = "Anonym$"; //NOI18N
-    
+
     ModelBuilder(JsFunctionImpl globalObject) {
         this.globalObject = globalObject;
-        this.stack = new Stack<JsObjectImpl>();
-        this.functionStack = new Stack<DeclarationScopeImpl>();
+        this.stack = new Stack<>();
+        this.functionStack = new Stack<>();
         anonymObjectCount = 0;
         withObjectCount = 0;
         setCurrentObject(globalObject);
         currentWith = null;
     }
-    
-    
+
+
     /**
      * @return the fileScope
      */
     public JsObjectImpl getGlobal() {
         return globalObject;
     }
-    
+
     /**
      * @return the currentScope or null
      */
     public JsObjectImpl getCurrentObject() {
         return stack.isEmpty() ? globalObject : stack.peek();
     }
-    
+
     public DeclarationScopeImpl getCurrentDeclarationScope() {
         return functionStack.isEmpty() ? globalObject : functionStack.peek();
     }
-    
+
     public JsFunctionImpl getCurrentDeclarationFunction() {
         JsObject declarationScope = getCurrentDeclarationScope();
         while(declarationScope != null && declarationScope.getParent() != null && !(declarationScope instanceof JsFunctionImpl)) {
@@ -80,7 +80,7 @@ public final class ModelBuilder {
         }
         return (JsFunctionImpl)declarationScope;
     }
-    
+
     /**
      * @param currentScope the currentScope to set
      */
@@ -93,7 +93,7 @@ public final class ModelBuilder {
             this.currentWith = (JsWith)object;
         }
     }
-    
+
     void reset() {
         if (!stack.empty()) {
             JsObject object = stack.pop();
@@ -105,28 +105,23 @@ public final class ModelBuilder {
             }
         }
     }
-    
+
     String getUnigueNameForAnonymObject(ParserResult parserResult) {
         FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
         if (fo != null) {
             return fo.getName() + ANONYMOUS_OBJECT_NAME_START + anonymObjectCount++;
         }
-        return  ANONYMOUS_OBJECT_NAME_START + anonymObjectCount++;  
+        return  ANONYMOUS_OBJECT_NAME_START + anonymObjectCount++;
     }
-    
+
     String getUnigueNameForWithObject() {
-        return WITH_OBJECT_NAME_START + withObjectCount++;  
+        return WITH_OBJECT_NAME_START + withObjectCount++;
     }
-    
-//    FunctionScope build(FunctionNode function) {
-//        FunctionScopeImpl functionScope = ModelElementFactory.create(function, this);
-//        return functionScope;
-//    }
-    
+
     public JsWith getCurrentWith() {
         return currentWith;
     }
-    
+
     public String getFunctionName(FunctionNode node) {
         if (node.isAnonymous() ) {
             return globalObject.getName() + node.getName().replace(':', '#');

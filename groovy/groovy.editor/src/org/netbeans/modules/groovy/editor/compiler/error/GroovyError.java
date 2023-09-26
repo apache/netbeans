@@ -117,4 +117,71 @@ public class GroovyError implements Badging {
     public boolean showExplorerBadge() {
         return false;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj.getClass() != GroovyError.class) {
+            return false;
+        }
+
+        final GroovyError test = (GroovyError)obj;
+
+        if (this.start != test.start) {
+            return false;
+        }
+
+        if (this.end != test.end) {
+            return false;
+        }
+        
+        if ((this.description == null && test.description != null) || 
+                (this.description != null && test.description == null)
+                || !this.description.equals(test.description)) {
+            return false;
+        }
+        
+        if (!this.displayName.equals(test.displayName)) {
+            return false;
+        }
+        
+        if ((this.file == null && test.file != null) || 
+                (this.file != null && test.file == null)
+                || !this.file.equals(test.file)) {
+            return false;
+        }
+        
+        if (this.id != test.id) {
+            return false;
+        }
+        
+        if (!this.key.equals(test.key)) {
+            return false;
+        }
+        
+        if (this.severity != test.severity) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+
+        hash = (11 * hash) + this.start;
+        hash = (11 * hash) + this.end;
+        hash = (11 * hash) + (this.description != null ? this.description.hashCode() : 0);
+        hash = (11 * hash) + this.displayName.hashCode();
+        hash = (11 * hash) + (this.file != null ? this.file.hashCode() : 0);
+        hash = (11 * hash) + this.id.hashCode();
+        hash = (11 * hash) + this.key.hashCode();
+        hash = (11 * hash) + this.severity.hashCode();
+
+        return hash;
+    }
+    
 }

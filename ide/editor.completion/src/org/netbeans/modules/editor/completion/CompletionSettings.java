@@ -66,7 +66,11 @@ public final class CompletionSettings {
     boolean documentationPopupNextToCC() {
         return preferences.getBoolean(SimpleValueNames.JAVADOC_POPUP_NEXT_TO_CC, false);
     }
-    
+
+    public boolean completionDisplayTooltip() {
+        return preferences.getBoolean(SimpleValueNames.COMPLETION_PARAMETER_TOOLTIP, true);
+    }
+
     public int documentationAutoPopupDelay() {
         return preferences.getInt(SimpleValueNames.JAVADOC_AUTO_POPUP_DELAY, 200);
     }

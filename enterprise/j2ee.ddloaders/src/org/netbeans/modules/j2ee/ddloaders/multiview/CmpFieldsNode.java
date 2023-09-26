@@ -88,11 +88,11 @@ public class CmpFieldsNode extends EjbSectionNode {
                 return this;
             }
         } else if (element instanceof CmpField[]) {
-            final List list1 = Arrays.asList(cmpFields.getCmpFields());
-            final List list2 = new LinkedList<>(Arrays.asList((CmpField[]) element));
+            final List<CmpField> list1 = Arrays.asList(cmpFields.getCmpFields());
+            final List<CmpField> list2 = new LinkedList<>(Arrays.asList((CmpField[]) element));
             if (list1.size() == list2.size()) {
                 list2.removeAll(list1);
-                if (list2.size() == 0) {
+                if (list2.isEmpty()) {
                     return this;
                 }
             }

@@ -34,7 +34,7 @@ import org.netbeans.modules.parsing.impl.indexing.IndexabilityQueryContextAccess
  * {@link org.openide.filesystems} with respect to threading semantics.
  * </p>
  *
- * @see org.netbeans.api.queries.IndexabilityQuery
+ * @see org.netbeans.modules.parsing.impl.indexing.IndexabilityQuery
  * @since org.netbeans.modules.parsing.indexing 9.24.0
  */
 public interface IndexabilityQueryImplementation {

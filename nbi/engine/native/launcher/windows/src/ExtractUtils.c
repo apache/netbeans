@@ -60,6 +60,7 @@ void skipStub(LauncherProperties * props) {
         WCHAR * os;
         props->status = EXIT_CODE_STUB;        
         os = appendStringW(NULL, L"It`s only the launcher stub.\nOS: ");
+        if(is9x()) os = appendStringW(os, L"Windows 9x");
         if(isNT()) os = appendStringW(os, L"Windows NT");
         if(is2k()) os = appendStringW(os, L"Windows 2000");
         if(isXP()) os = appendStringW(os, L"Windows XP");

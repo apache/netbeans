@@ -1,5 +1,3 @@
 Code completion result for source line:
 window.history.b|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-METHOD     back(): undefined               [PUBLIC]   JS Platform

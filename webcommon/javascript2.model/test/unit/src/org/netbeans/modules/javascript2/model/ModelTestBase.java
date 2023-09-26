@@ -39,13 +39,13 @@ import org.openide.filesystems.FileObject;
  * @author Petr Pisl
  */
 public class ModelTestBase extends CslTestBase {
-    
+
     public ModelTestBase(String testName) {
         super(testName);
     }
 
     @Override
-    protected void setUp() throws Exception {        
+    protected void setUp() throws Exception {
         TestLanguageProvider.register(getPreferredLanguage().getLexerLanguage());
         super.setUp();
     }
@@ -59,12 +59,8 @@ public class ModelTestBase extends CslTestBase {
         Model model = getModel(file);
 
         final StringWriter sw = new StringWriter();
-        Model.Printer p = new Model.Printer() {
-
-            @Override
-            public void println(String str) {
-                sw.append(str).append("\n");
-            }
+        Model.Printer p = (String str) -> {
+            sw.append(str).append("\n");
         };
         model.writeModel(p, resolve);
         assertDescriptionMatches(fo, sw.toString(), false, ".model", true);
@@ -73,23 +69,23 @@ public class ModelTestBase extends CslTestBase {
     public Model getModel(String file) throws Exception {
         final Model[] globals = new Model[1];
         Source source = getTestSource(getTestFile(file));
-        
+
         ParserManager.parse(Collections.singleton(source), new UserTask() {
             public @Override void run(ResultIterator resultIterator) throws Exception {
                 ParserResult parameter = (ParserResult) resultIterator.getParserResult();
                 Model model = Model.getModel(parameter, false);
                 globals[0] = model;
             }
-        });        
+        });
         return globals[0];
     }
-    
+
     @Override
     protected boolean runInEQ() {
         // Must run in AWT thread (BaseKit.install() checks for that)
         return true;
     }
-    
+
     @Override
     protected String getPreferredMimeType() {
         return JsTokenId.JAVASCRIPT_MIME_TYPE;
@@ -111,7 +107,7 @@ public class ModelTestBase extends CslTestBase {
             @Override
             public Set<String> getSourcePathIds() {
                 return Collections.emptySet();
-            }       
+            }
         };
     }
 }

@@ -18,13 +18,12 @@
  */
 package org.netbeans.modules.javascript2.jsdoc.model;
 
+import java.util.List;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.netbeans.modules.javascript2.types.api.Type;
 
-/**
- *
- * @author matthias
- */
+import static org.junit.Assert.assertEquals;
+
 public class JsDocElementUtilsTest {
 
     public JsDocElementUtilsTest() {
@@ -35,4 +34,32 @@ public class JsDocElementUtilsTest {
         JsDocElementUtils.createElementForType(JsDocElementType.PARAM, "Demo with {", 0);
     }
 
+    @Test
+    public void testParseTypes() {
+        List<Type> results;
+
+        results = JsDocElementUtils.parseTypes("SimpleType", 20);
+        assertEquals(1, results.size());
+        assertEquals("SimpleType", results.get(0).getType());
+        assertEquals(20, results.get(0).getOffset());
+
+        results = JsDocElementUtils.parseTypes("  SimpleType", 20);
+        assertEquals(1, results.size());
+        assertEquals("SimpleType", results.get(0).getType());
+        assertEquals(22, results.get(0).getOffset());
+
+        results = JsDocElementUtils.parseTypes("(test|null)", 20);
+        assertEquals(2, results.size());
+        assertEquals("test", results.get(0).getType());
+        assertEquals(21, results.get(0).getOffset());
+        assertEquals("null", results.get(1).getType());
+        assertEquals(26, results.get(1).getOffset());
+
+        results = JsDocElementUtils.parseTypes("  (  test | null ) ", 20);
+        assertEquals(2, results.size());
+        assertEquals("test", results.get(0).getType());
+        assertEquals(25, results.get(0).getOffset());
+        assertEquals("null", results.get(1).getType());
+        assertEquals(32, results.get(1).getOffset());
+    }
 }

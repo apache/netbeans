@@ -98,5 +98,4 @@ class ArrowFunctions {
     public static function new() {
         return new ArrowFunctions();
     }
-
 }

@@ -467,7 +467,7 @@ public class CssRuleCreateActionDialog extends javax.swing.JPanel {
                 }   break;
             case ELEMENT_ID_TYPE:
                 if(!selectElementIdTextField.getText().trim().equals("")){
-                    rule = "#" + selectElementIdTextField.getText().trim();;
+                    rule = "#" + selectElementIdTextField.getText().trim();
                 }   break;
         }
         if((rule != null) && (!selectedRules.contains(rule))){
@@ -495,7 +495,7 @@ public class CssRuleCreateActionDialog extends javax.swing.JPanel {
                 }   break;
             case ELEMENT_ID_TYPE:
                 if(!selectElementIdTextField.getText().trim().equals("")){
-                    rule = "#" + selectElementIdTextField.getText().trim();;
+                    rule = "#" + selectElementIdTextField.getText().trim();
                 }   break;
         }
         return rule;

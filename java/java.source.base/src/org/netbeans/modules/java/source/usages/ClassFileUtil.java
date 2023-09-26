@@ -21,6 +21,8 @@ package org.netbeans.modules.java.source.usages;
 
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.util.Convert;
+import com.sun.tools.javac.util.Convert.Validation;
+import com.sun.tools.javac.util.InvalidUtfException;
 import com.sun.tools.javac.util.Name;
 
 import java.util.*;
@@ -303,15 +305,19 @@ public class ClassFileUtil {
         assert name != null;
         final int nameLength = name.getByteLength();
         final char[] nameChars = new char[nameLength];
-        int charLength = Convert.utf2chars(name.getByteArray(), name.getByteOffset(), nameChars, 0, nameLength);
-        if (separator != '.') {         //NOI18N
-            for (int i=0; i<charLength; i++) {
-                if (nameChars[i] == '.') {  //NOI18N
-                    nameChars[i] = separator; 
+        try {
+            int charLength = Convert.utf2chars(name.getByteArray(), name.getByteOffset(), nameChars, 0, nameLength, Validation.NONE);
+            if (separator != '.') {         //NOI18N
+                for (int i=0; i<charLength; i++) {
+                    if (nameChars[i] == '.') {  //NOI18N
+                        nameChars[i] = separator;
+                    }
                 }
             }
+            sb.append(nameChars,0,charLength);
+        } catch (InvalidUtfException ex) {
+            throw new IllegalStateException(ex);
         }
-        sb.append(nameChars,0,charLength);
     }
     
     /**

@@ -90,17 +90,8 @@
         <token id='T_QUESTION_MARK' start='122' end='123'>
             <text>?</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='123' end='124'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='124' end='127'>
-            <text>Foo</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='127' end='128'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='128' end='131'>
-            <text>Bar</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='123' end='131'>
+            <text>\Foo\Bar</text>
         </token>
         <token id='T_CURLY_OPEN' start='132' end='133'>
             <text>{</text>
@@ -111,17 +102,8 @@
         <token id='T_NEW' start='145' end='148'>
             <text>new</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='149' end='150'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='150' end='153'>
-            <text>Foo</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='153' end='154'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='154' end='157'>
-            <text>Bar</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='149' end='157'>
+            <text>\Foo\Bar</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='157' end='158'>
             <text>(</text>
@@ -154,9 +136,7 @@
                 </NullableType>
                 <Block start='31' end='51' isCurly='true'>
                     <ReturnStatement start='37' end='49'>
-                        <NamespaceName start='44' end='48' isCurrent='false' isGlobal='false'>
-                            <Identifier start='44' end='48' name='null'/>
-                        </NamespaceName>
+                        <Scalar start='44' end='48' type='STRING' value='null'/>
                     </ReturnStatement>
                 </Block>
             </FunctionDeclaration>

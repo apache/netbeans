@@ -141,6 +141,7 @@ public class ComplexListDataEvent extends ListDataEvent {
         return componentChanged;
     }
 
+    @Override
     public String toString() {
         String[] types = new String[]{
             "CONTENTS_CHANGED", "INTERVAL_ADDED", //NOI18N

@@ -112,7 +112,7 @@
     depends="create-userdir,add-userdir">
     <echo>Warmup 1 - running IDE once to prime disk and memory caches and create userdir</echo>
 
-    <exec os="Windows NT Windows 2000 Windows XP" 
+    <exec os="Windows NT Windows 95 Windows 98 Windows 2000 Windows XP" 
     executable="${netbeans.home}/bin/runide.exe" failonerror="yes" timeout="600000">
         <arg value="-J-Dnetbeans.close=true"/>
     </exec>
@@ -123,7 +123,7 @@
     </exec>
 
     <echo>Warmup 2 - running IDE a second time prime disk and memory caches and create userdir</echo>
-    <exec os="Windows NT Windows 2000 Windows XP" 
+    <exec os="Windows NT Windows 95 Windows 98 Windows 2000 Windows XP" 
     executable="${netbeans.home}/bin/runide.exe" failonerror="yes" timeout="600000">
         <arg value="-J-Dnetbeans.close=true"/>
     </exec>
@@ -305,7 +305,7 @@ Copying ide.log</echo>
 <target name="runide-freshuserdir" depends="delete-userdir,create-userdir,runide" />
   
 <target name="runide" description="Start the IDE with the userdir specified in the userdir property">
-<exec os="Windows NT Windows 2000 Windows XP" 
+<exec os="Windows NT Windows 95 Windows 98 Windows 2000 Windows XP" 
 executable="${netbeans.home}/bin/runide.exe" failonerror="yes" timeout="600000" 
 output="${gclog}_${index}">
 </exec>

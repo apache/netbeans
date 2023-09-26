@@ -44,7 +44,7 @@ import java.util.Collection;
  * </p>
  * 
  * <p>
- * <b>Incoming changes:</b><br/>
+ * <b>Incoming changes:</b><br>
  * Represented by the status values INCOMING_NEW or INCOMING_MODIFIED. In case 
  * the implementation keeps track of changes the user haven't seen yet 
  * (e.g. by opening the Issue UI) then it is also expected to provide the 
@@ -52,7 +52,7 @@ import java.util.Collection;
  * </p>
  * 
  * <p>
- * <b>Outgoing changes:</b><br/>
+ * <b>Outgoing changes:</b><br>
  * Represented by the status values OUTGOING_NEW or OUTGOING_MODIFIED. Typically each
  * particular issue editor UI is expected to provide a way to change an issue 
  * and to submit those changes. In case the implementation keeps track of changes 
@@ -64,10 +64,11 @@ import java.util.Collection;
  * <p>
  * Even though the status value is entirely given by the particular implementation, 
  * the precedence of Status values is expected to be the following:
- * <table border="1" cellpadding="3" cellspacing="0">
- * <tr bgcolor="#ccccff">
- * <td><b>Issue state</b></font></td>
- * <td><b>Expected Status</b></font></td>
+ * <table>
+ * <caption>precedence of Status</caption>
+ * <tr>
+ * <th style="background-color:#ccccff"><b>Issue state</b></th>
+ * <th style="background-color:#ccccff"><b>Expected Status</b></th>
  * </tr>
  *  <tr>
  *      <td>no changes</td>
@@ -153,18 +154,17 @@ public interface IssueStatusProvider<R, I> {
 
     /**
      * Sets the information if the user has seen the incoming changes or 
-     * wishes to mark them as seen (so that they aren't annotated anymore).<br/>
+     * wishes to mark them as seen (so that they aren't annotated anymore).<br>
      * Called e.g. by the 'Mark as Seen/Unseen' action in the Tasks Dashboard or when an Issue was opened 
      * by the user.
      * 
      * <p>
      * The expected result of setting seen to <b><code>true</code></b>:
-     * </p>
-     * <p>
-     * <table border="1" cellpadding="3" cellspacing="0">
-     * <tr bgcolor="#ccccff">
-     * <td><b>Status before</b></font></td>
-     * <td><b>Status after </b></font></td>
+     * <table>
+     * <caption>expected result</caption>
+     * <tr>
+     * <th style="background-color:#ccccff"><b>Status before</b></th>
+     * <th style="background-color:#ccccff"><b>Status after </b></th>
      * </tr>
      *  <tr>
      *      <td>SEEN</td>
@@ -184,7 +184,6 @@ public interface IssueStatusProvider<R, I> {
      *  </tr>
      * 
      * </table>
-     * </p>
      * 
      * <p>
      * It is up the particular implementation if and for how long the information 

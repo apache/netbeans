@@ -188,16 +188,19 @@ public class WinFlatViewTabDisplayerUI extends AbstractViewTabDisplayerUI {
 
         // paint text
         int txtX = x + txtLeftPad;
-        int txtY = y + tabInsets.top + fm.getAscent();
         int availH = height - tabInsets.top - tabInsets.bottom;
-        if (availH > fm.getHeight()) {
-            txtY += (availH - fm.getHeight()) / 2;
-        }
         int style = HtmlRenderer.STYLE_TRUNCATE;
         if (!isSelected(index)) {
             // center text of unselected tabs
             txtX = Math.max(x + 1, x + ((width - realTxtWidth) / 2));
         }
+
+        /* Keep the txtY calculation the same as for WinFlatEditorTabCellRenderer, with an offset that
+        makes the text in view tabs and editor tabs always line up. */
+        double txtVisualAscent = getTxtFont().createGlyphVector(fm.getFontRenderContext(), "H")
+            .getVisualBounds().getHeight();
+        int txtY = tabInsets.top + (int) Math.round((availH + txtVisualAscent) / 2) + 1;
+
         HtmlRenderer.renderString(text, g, txtX, txtY, availTxtWidth, height,
                 getTxtFont(), c, style, true);
     }

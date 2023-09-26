@@ -19,10 +19,12 @@
 
 package org.netbeans.modules.java.hints.infrastructure;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,12 +34,14 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.swing.text.BadLocationException;
@@ -51,6 +55,8 @@ import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaParserResultTask;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -169,7 +175,9 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             ERR.log(ErrorManager.INFORMATIONAL, "ehm=" + ehm);
         }
 
-        final Position[] range = getLine(info, d, doc, (int) getPrefferedPosition(info, d), (int) d.getEndPosition());
+        int endPos = (int) d.getEndPosition();
+
+        final Position[] range = getLine(info, d, doc, pos, endPos < 0 ? pos : endPos);
 
         if (isCanceled()) {
             return null;
@@ -195,7 +203,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
     }
     
     /**
-     * @param forPosition position for ehich errors would be computed
+     * @param forPosition position for which errors would be computed
      * @return errors for line specified by forPosition
      * @throws IOException
      */
@@ -205,14 +213,14 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         }
 
         List<Diagnostic> errors = info.getDiagnostics();
-        List<ErrorDescription> descs = new ArrayList<ErrorDescription>();
+        Set<ErrorDescription> descs = new LinkedHashSet<>();
         
         if (ERR.isLoggable(ErrorManager.INFORMATIONAL))
             ERR.log(ErrorManager.INFORMATIONAL, "errors = " + errors );
 
         boolean isJava = org.netbeans.modules.java.hints.errors.Utilities.JAVA_MIME_TYPE.equals(mimeType);
 
-        Map<Class, Data> data = new HashMap<Class, Data>();
+        Map<Class, Data> data = new HashMap<>();
 
         OUTER: for (Diagnostic _d : errors) {
             if (ConvertToDiamondBulkHint.CODES.contains(_d.getCode())) {
@@ -401,7 +409,8 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             "compiler.warn.missing.SVUID",
             "compiler.warn.has.been.deprecated",
             "compiler.warn.raw.class.use",
-            "compiler.err.class.public.should.be.in.file"
+            "compiler.err.class.public.should.be.in.file",
+            "compiler.err.cant.ref.non.effectively.final.var"
     ));
     
     private static final Set<String> USE_PROVIDED_SPAN = new HashSet<String>(Arrays.asList(
@@ -598,41 +607,11 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         }
         
         if (UNDERLINE_IDENTIFIER.contains(d.getCode())) {
-            int offset = (int) getPrefferedPosition(info, d);
-            TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
-            
-            int diff = ts.move(offset);
-            
-            if (ts.moveNext() && diff >= 0 && diff < ts.token().length()) {
-                Token<JavaTokenId> t = ts.token();
-                
-                if (t.id() == JavaTokenId.DOT) {
-                    while (ts.moveNext() && WHITESPACE.contains(ts.token().id()))
-                        ;
-                    t = ts.token();
-                }
-                
-                if (t.id() == JavaTokenId.NEW) {
-                    while (ts.moveNext() && WHITESPACE.contains(ts.token().id()))
-                        ;
-                    t = ts.token();
-                }
-                
-                if (t.id() == JavaTokenId.CLASS) {
-                    while (ts.moveNext() && WHITESPACE.contains(ts.token().id()))
-                        ;
-                    t = ts.token();
-                }
-
-                if (t.id() == JavaTokenId.IDENTIFIER) {
-                    int[] span = translatePositions(info, new int[] {ts.offset(), ts.offset() + t.length()});
-                    
-                    if (span != null) {
-                        soff = span[0];
-                        endOffset   = span[1];
-                        rangePrepared = true;
-                    }
-                }
+            int[] span = findIdentifierSpan(info, soff);
+            if (span != null) {
+                soff = span[0];
+                endOffset   = span[1];
+                rangePrepared = true;
             }
         }
         
@@ -653,6 +632,23 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             return null;
         }
         
+        if ("compiler.err.preview.feature.disabled.plural".equals(d.getCode())) {
+            //workaround for: JDK-8310314
+            Diagnostic[] nested = Hacks.getNestedDiagnostics(d);
+            if ("compiler.misc.feature.unnamed.classes".equals(nested[0].getCode())) {
+                if (endOffset == info.getText().length()) {
+                    ClassTree topLevelClass = (ClassTree) info.getCompilationUnit().getTypeDecls().get(0);
+                    TreePath topLevelClassTP = new TreePath(new TreePath(info.getCompilationUnit()), topLevelClass);
+                    Tree firstNonClass = topLevelClass.getMembers().stream().filter(t -> !TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind())).filter(t -> !info.getTreeUtilities().isSynthetic(new TreePath(topLevelClassTP, t))).findFirst().orElse(null);
+
+                    if (firstNonClass != null) {
+                        soff = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), firstNonClass);
+                        endOffset = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), firstNonClass);
+                    }
+                }
+            }
+        }
+
         PosExtractor ex = new PosExtractor(info, sdoc, soff, endOffset, dObj, rangePrepared);
         // getText also fetches lineOffset
         final String text = ex.getText();
@@ -775,7 +771,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         return Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER;
     }
 
-    private int[] translatePositions(CompilationInfo info, int[] span) {
+    private static int[] translatePositions(CompilationInfo info, int[] span) {
         if (span == null || span[0] == (-1) || span[1] == (-1))
             return null;
         
@@ -822,9 +818,56 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             
             return d.getStartPosition();
         }
+        if ("compiler.err.var.might.not.have.been.initialized".equals(d.getCode())) {
+            int[] span = findIdentifierSpan(info, (int) d.getPosition());
+            if (span == null) {
+                Object param = SourceUtils.getDiagnosticParam(d, 0);
+                if (param instanceof VariableElement) {
+                    TreePath path = info.getTrees().getPath((VariableElement) param);
+                    if (path != null && path.getLeaf().getKind() == Kind.VARIABLE) {
+                        span = info.getTreeUtilities().findNameSpan((VariableTree) path.getLeaf());
+                        if (span != null) {
+                            return span[0];
+                        }
+                    }
+                }
+            }
+        }
         
         return d.getPosition();
     }
 
+    private static int[] findIdentifierSpan(CompilationInfo info, int offset) {
+        TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
+
+        int diff = ts.move(offset);
+
+        if (ts.moveNext() && diff >= 0 && diff < ts.token().length()) {
+            Token<JavaTokenId> t = ts.token();
+
+            if (t.id() == JavaTokenId.DOT) {
+                while (ts.moveNext() && WHITESPACE.contains(ts.token().id()))
+                    ;
+                t = ts.token();
+            }
+
+            if (t.id() == JavaTokenId.NEW) {
+                while (ts.moveNext() && WHITESPACE.contains(ts.token().id()))
+                    ;
+                t = ts.token();
+            }
+
+            if (t.id() == JavaTokenId.CLASS) {
+                while (ts.moveNext() && WHITESPACE.contains(ts.token().id()))
+                    ;
+                t = ts.token();
+            }
+
+            if (t.id() == JavaTokenId.IDENTIFIER) {
+                return translatePositions(info, new int[] {ts.offset(), ts.offset() + t.length()});
+            }
+        }
+        return null;
+    }
 }
 

@@ -53,10 +53,10 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.refactoring.java.api.JavaRefactoringUtils;
 import org.netbeans.modules.refactoring.java.api.MemberInfo;
@@ -74,7 +74,6 @@ public final class PushDownRefactoring extends CodeRefactoring {
     private static final String PUSH_DOWN_REFACTORING_KIND = "refactor.push.down";
     private static final String PUSH_DOWN_REFACTORING_COMMAND =  "java.refactor.push.down";
 
-    private final Set<String> commands = Collections.singleton(PUSH_DOWN_REFACTORING_COMMAND);
     private final Gson gson = new Gson();
 
     @Override
@@ -142,7 +141,7 @@ public final class PushDownRefactoring extends CodeRefactoring {
 
     @Override
     public Set<String> getCommands() {
-        return commands;
+        return Collections.singleton(PUSH_DOWN_REFACTORING_COMMAND);
     }
 
     @Override
@@ -155,7 +154,7 @@ public final class PushDownRefactoring extends CodeRefactoring {
                 String uri = gson.fromJson(gson.toJson(arguments.get(0)), String.class);
                 QuickPickItem sourceItem = gson.fromJson(gson.toJson(arguments.get(1)), QuickPickItem.class);
                 List<QuickPickItem> members = Arrays.asList(gson.fromJson(gson.toJson(arguments.get(2)), QuickPickItem[].class));
-                client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectMembersToPushDown(), true, members)).thenAccept(selected -> {
+                client.showQuickPick(new ShowQuickPickParams(null, Bundle.DN_SelectMembersToPushDown(), true, members)).thenAccept(selected -> {
                     if (selected != null && !selected.isEmpty()) {
                         pushDown(client, uri, sourceItem, selected);
                     }

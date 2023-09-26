@@ -27,12 +27,12 @@ import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.netbeans.modules.groovy.editor.api.parser.ApplyGroovyTransformation;
 
-// BEGIN:GroovyTestTransformer
+// @start region="transformer"
 @GroovyASTTransformation(phase = CompilePhase.PARSING)
 @ApplyGroovyTransformation()
 public class GroovyTestTransformer implements ASTTransformation, CompilationUnitAware {
     // ...
-// END:GroovyTestTransformer
+// @end region="transformer"
     public static CompilationUnit parserCompUnit;
     
     @Override

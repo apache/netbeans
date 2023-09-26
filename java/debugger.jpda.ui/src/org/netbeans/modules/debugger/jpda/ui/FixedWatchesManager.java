@@ -265,8 +265,9 @@ NodeActionsProviderFilter, ExtendedNodeModelFilter, TableModelFilter {
     @Override
     public Action[] getActions (NodeActionsProvider original, Object node) 
     throws UnknownTypeException {
-        Action [] actions = original.getActions (node);
-        List myActions = new ArrayList();
+        Action[] actions = original.getActions (node);
+        List<Action> myActions = new ArrayList<>();
+
         if (fixedWatches.containsKey (new KeyWrapper(node))) {
             KeyStroke deleteKey = KeyStroke.getKeyStroke ("DELETE");
             int deleteIndex = -1;

@@ -309,7 +309,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
                     }
                 }
             }
-            if (a != null && a instanceof DebuggerAction) {
+            if (a instanceof DebuggerAction) {
                 return (DebuggerAction) a;
             }
         }
@@ -457,7 +457,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
                         }
                     }
                 }
-                final List<ComponentInfo> windowsToClose = new ArrayList<ComponentInfo>(openedWindows);
+                final List<ComponentInfo> windowsToClose = new ArrayList<>(openedWindows);
                 //windowsToClose.removeAll(retainOpened);
                 try {
                     SwingUtilities.invokeLater(new Runnable() {
@@ -482,7 +482,7 @@ public class DebuggerManagerListener extends DebuggerManagerAdapter {
                                     }
                                 }
                             }
-                            List<ComponentInfo> windowsToCloseCopy = (ArrayList<ComponentInfo>) ((ArrayList) windowsToClose).clone();
+                            List<ComponentInfo> windowsToCloseCopy = new ArrayList<>(windowsToClose);
                             for (ComponentInfo ci : windowsToCloseCopy) {
                                 Component c = ci.getComponent();
                                 if (retainOpenedComponents.contains(c)) {

@@ -2,4 +2,4 @@ Code completion result for source line:
 $c = nul|l;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-CONSTANT   NULL ?                          [PUBLIC]   constants.php
+CONSTANT   NULL null                       [PUBLIC]   constants.php

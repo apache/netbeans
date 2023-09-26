@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.54.0
+#Version 1.60.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -25,6 +25,12 @@ CLSS public abstract interface java.lang.Cloneable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -176,6 +182,7 @@ cons public init(java.lang.Object)
 supr java.util.EventObject
 
 CLSS public abstract interface org.netbeans.api.extexecution.input.LineProcessor
+ anno 0 java.lang.Deprecated()
 intf java.io.Closeable
 meth public abstract void close()
 meth public abstract void processLine(java.lang.String)
@@ -247,6 +254,7 @@ supr java.lang.Enum<org.netbeans.modules.nativeexecution.api.HostInfo$Bitness>
 
 CLSS public final static !enum org.netbeans.modules.nativeexecution.api.HostInfo$CpuFamily
  outer org.netbeans.modules.nativeexecution.api.HostInfo
+fld public final static org.netbeans.modules.nativeexecution.api.HostInfo$CpuFamily AARCH64
 fld public final static org.netbeans.modules.nativeexecution.api.HostInfo$CpuFamily ARM
 fld public final static org.netbeans.modules.nativeexecution.api.HostInfo$CpuFamily SPARC
 fld public final static org.netbeans.modules.nativeexecution.api.HostInfo$CpuFamily UNKNOWN

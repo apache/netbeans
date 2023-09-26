@@ -173,7 +173,7 @@ public class RepositoryPreferencesTest extends NbTestCase {
         try {
             Locale.setDefault(new Locale("te", "ST"));
             int def = RepositoryPreferences.getDefaultIndexUpdateFrequency();
-            assertEquals("Branded to never", RepositoryPreferences.FREQ_NEVER, def);
+            assertEquals("Branded to startup", RepositoryPreferences.FREQ_STARTUP, def);
         } finally {
             Locale.setDefault(orig);
         }

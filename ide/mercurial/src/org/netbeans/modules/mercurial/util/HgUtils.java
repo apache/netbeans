@@ -259,7 +259,7 @@ public class HgUtils {
      * @return boolean true - answered Yes, false - answered No
      */
     public static boolean confirmDialog(Class bundleLocation, String title, String query) {
-        int response = JOptionPane.showOptionDialog(null, NbBundle.getMessage(bundleLocation, query), NbBundle.getMessage(bundleLocation, title), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+        int response = JOptionPane.showOptionDialog(Utilities.findDialogParent(), NbBundle.getMessage(bundleLocation, query), NbBundle.getMessage(bundleLocation, title), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
         if (response == JOptionPane.YES_OPTION) {
             return true;
@@ -276,7 +276,7 @@ public class HgUtils {
      * @param warning to display to the user
      */
      public static void warningDialog(Class bundleLocation, String title, String warning) {
-        JOptionPane.showMessageDialog(null,
+        JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                 NbBundle.getMessage(bundleLocation,warning),
                 NbBundle.getMessage(bundleLocation,title),
                 JOptionPane.WARNING_MESSAGE);

@@ -93,8 +93,6 @@ public class DefaultTabDataModel implements TabDataModel {
             return;
         }
 
-        List newContents = Arrays.asList(data);
-
         list.clear();
         list.addAll(Arrays.asList(data));
 
@@ -365,7 +363,7 @@ public class DefaultTabDataModel implements TabDataModel {
      */
     @Override
     public void removeTabs(int start, int end) {
-        java.util.List affected = new ArrayList(list.subList(start, end));
+        List<TabData> affected = new ArrayList<>(list.subList(start, end));
         if (start == end) {
             list.remove(start);
         } else {
@@ -374,13 +372,13 @@ public class DefaultTabDataModel implements TabDataModel {
         ComplexListDataEvent lde = new ComplexListDataEvent(this,
                                                             ListDataEvent.INTERVAL_REMOVED,
                                                             start, end);
-        lde.setAffectedItems((TabData[]) affected.toArray(new TabData[0]));
+        lde.setAffectedItems(affected.toArray(new TabData[0]));
         fireIntervalRemoved(lde);
     }
 
     @Override
     public void addTabs(int[] indices, TabData[] data) {
-        Map<Integer,TabData> m = new HashMap<Integer,TabData>(data.length);
+        Map<Integer,TabData> m = new HashMap<>(data.length);
         for (int i = 0; i < data.length; i++) {
             m.put(new Integer(indices[i]), data[i]);
         }

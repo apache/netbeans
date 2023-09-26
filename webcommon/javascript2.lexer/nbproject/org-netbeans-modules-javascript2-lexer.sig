@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.21
+#Version 1.27
 
 CLSS public abstract interface java.io.Serializable
 
@@ -137,6 +137,9 @@ fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId NUM
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_AND
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_ARROW
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_ASSIGNMENT
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_ASSIGN_LOG_AND
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_ASSIGN_LOG_OR
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_ASSIGN_NULLISH
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_AT
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_BITWISE_AND
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_BITWISE_AND_ASSIGNMENT
@@ -171,6 +174,8 @@ fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPE
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_NOT
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_NOT_EQUALS
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_NOT_EQUALS_EXACTLY
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_NULLISH
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_OPTIONAL_ACCESS
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_OR
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_PLUS
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_PLUS_ASSIGNMENT
@@ -181,6 +186,7 @@ fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPE
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_RIGHT_SHIFT_ASSIGNMENT
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_SEMICOLON
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId OPERATOR_TERNARY
+fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId PRIVATE_IDENTIFIER
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId REGEXP
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId REGEXP_BEGIN
 fld public final static org.netbeans.modules.javascript2.lexer.api.JsTokenId REGEXP_END

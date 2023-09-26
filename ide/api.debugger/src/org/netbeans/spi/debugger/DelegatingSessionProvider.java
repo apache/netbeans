@@ -34,6 +34,7 @@ import org.netbeans.api.debugger.Session;
 // XXX: What this is for??
 // XXX: Not usable anyway, Session is final with private constructor
 // XXX: Should be deprecated? Or removed - can not be meaningfully implemented anyway...
+@Deprecated
 public abstract class DelegatingSessionProvider {
 
     /**

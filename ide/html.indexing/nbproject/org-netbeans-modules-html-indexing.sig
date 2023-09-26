@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.5
+#Version 1.13
 
 CLSS public java.lang.Object
 cons public init()
@@ -16,7 +16,7 @@ meth public int hashCode()
 meth public java.lang.String toString()
 
 CLSS public org.netbeans.modules.html.editor.api.index.HtmlIndex
-fld public final static int VERSION = 2
+fld public final static int VERSION = 3
 fld public final static java.lang.String NAME = "html"
 fld public final static java.lang.String REFERS_KEY = "imports"
 innr public static AllDependenciesMaps

@@ -638,6 +638,7 @@ public class DirectedGraph<N, E> {
             return type;
         }
 
+        @Override
         public String toString() {
             return "dummy vertex " + index;
         }

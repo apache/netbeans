@@ -250,7 +250,7 @@ public final class TreeGraphLayout<N,E> extends GraphLayout<N,E> {
 
             /**
              * Setter of the most right coordinate of this {@link LeftRight}.
-             * @param left the most right coordinate to set.
+             * @param right the most right coordinate to set.
              * @since 2.25
              */
             public void setRight(int right) {

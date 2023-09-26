@@ -1,0 +1,6 @@
+[type="checkbox"]:nth-child(2n),
+[type="checkbox"]:not([hidden]),
+[type="checkbox"]:not(.active),
+[type="checkbox"]:not(:checked),
+[type="checkbox"]:checked {
+}

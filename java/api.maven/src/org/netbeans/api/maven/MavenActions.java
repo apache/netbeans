@@ -42,9 +42,9 @@ import org.netbeans.modules.maven.spi.actions.AbstractMavenActionsProvider;
  * <div class="nonnormative">
  * This example shows how to declare actions in a modules' layer, and register actions when <code>org.netbeans.modules.maven:test.plugin</code>
  * plugin is used by the maven project:
- * {@codesnippet LayerActionsRegistration}
+ * {@snippet file="META-INF/generated-layer.xml" region="LayerActionsRegistration"}
  * The referenced resource may declare both default configuration actions, and actions overrides in a specific configuration:
- * {@codesnippet ActionsExample}
+ * {@snippet file="org/netbeans/api/maven/test-maven-actions.xml" region="ActionsExample"}
  * </div>
  * 
  * @author sdedic

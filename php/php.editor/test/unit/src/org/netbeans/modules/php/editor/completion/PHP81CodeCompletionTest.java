@@ -61,6 +61,15 @@ public class PHP81CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath(fileName), caretPosition, false);
     }
 
+    private void checkCompletionForFirstClassCallable(String fileName, String caretPosition) throws Exception {
+        try {
+            PHPCompletionItem.setAddFirstClassCallable(true);
+            checkCompletion(getTestPath(fileName), caretPosition, false);
+        } finally {
+            PHPCompletionItem.setAddFirstClassCallable(null);
+        }
+    }
+
     public void testNeverReturnType_Function01() throws Exception {
         checkCompletion("neverReturnType", "function returnType(): ^never { // func");
     }
@@ -1086,6 +1095,81 @@ public class PHP81CodeCompletionTest extends PHPCodeCompletionTestBase {
 
     public void testEnumsFieldTypeTyping04() throws Exception {
         checkCompletion("enumsFieldTypeTyping04", "    private static Enum^");
+    }
+
+    public void testEnumsUnionAndBackedMembers_01() throws Exception {
+        checkCompletion("enumsUnionAndBackedMembers", "        self::^from(\"apple\");");
+    }
+
+    public void testEnumsUnionAndBackedMembers_02() throws Exception {
+        checkCompletion("enumsUnionAndBackedMembers", "            self::APPLE => \"apple\" === self::APPLE->^value,");
+    }
+
+    public void testEnumsUnionAndBackedMembers_03() throws Exception {
+        checkCompletion("enumsUnionAndBackedMembers", "            self::BANANA => \"banana\" === self::BANANA?->^value,");
+    }
+
+    public void testEnumsUnionAndBackedMembers_04() throws Exception {
+        checkCompletion("enumsUnionAndBackedMembers", "        self::TEST1->^value;");
+    }
+
+    public void testEnumsUnionAndBackedMembers_05() throws Exception {
+        checkCompletion("enumsUnionAndBackedMembers", "Union::^cases();");
+    }
+
+    // GH-5100
+    public void testEnumsSpecialVariablesWithinInstanceContextGH5100_01() throws Exception {
+        checkCompletion("enumsSpecialVariablesWithinInstanceContextGH5100", "        $this->^publicEnumMethod();");
+    }
+
+    public void testEnumsSpecialVariablesWithinInstanceContextGH5100_02() throws Exception {
+        checkCompletion("enumsSpecialVariablesWithinInstanceContextGH5100", "        $^ // test keywords");
+    }
+
+    public void testEnumsSpecialVariablesWithinInstanceContextGH5100_03() throws Exception {
+        checkCompletion("enumsSpecialVariablesWithinInstanceContextGH5100", "        sel^f::class;");
+    }
+
+    public void testEnumsSpecialVariablesWithinInstanceContextGH5100_04() throws Exception {
+        checkCompletion("enumsSpecialVariablesWithinInstanceContextGH5100", "        stat^ic::class;");
+    }
+
+    public void testFirstClassCallableSyntax_01() throws Exception {
+        checkCompletionForFirstClassCallable("firstClassCallableSyntax", "tes^t(...);");
+    }
+
+    public void testFirstClassCallableSyntax_02() throws Exception {
+        // can't use it with new expression
+        checkCompletionForFirstClassCallable("firstClassCallableSyntax", "$test = new Te^st();");
+    }
+
+    public void testFirstClassCallableSyntax_03() throws Exception {
+        checkCompletionForFirstClassCallable("firstClassCallableSyntax", "$fn = $test->met^hod(...);");
+    }
+
+    public void testFirstClassCallableSyntax_04() throws Exception {
+        checkCompletionForFirstClassCallable("firstClassCallableSyntax", "$fn = Test::staticM^ethod(...);");
+    }
+
+    public void testFirstClassCallableSyntax_05() throws Exception {
+        checkCompletionForFirstClassCallable("firstClassCallableSyntax", "$fn = $test::staticMeth^od(...);");
+    }
+
+    public void testFirstClassCallableSyntax_06() throws Exception {
+        checkCompletionForFirstClassCallable("firstClassCallableSyntax", "$fn = $test->staticMet^hod(...);");
+    }
+
+    public void testFirstClassCallableSyntax_07() throws Exception {
+        // can't use it with null safe operator(?->), but show it atm...
+        checkCompletionForFirstClassCallable("firstClassCallableSyntax", "$test?->meth^od($test->method(...));");
+    }
+
+    public void testFirstClassCallableSyntax_08() throws Exception {
+        checkCompletionForFirstClassCallable("firstClassCallableSyntax", "$test?->method($test->met^hod(...));");
+    }
+
+    public void testFirstClassCallableSyntax_09() throws Exception {
+        checkCompletionForFirstClassCallable("firstClassCallableSyntax", "$fn = (new Test)->meth^od(...);");
     }
 
 }

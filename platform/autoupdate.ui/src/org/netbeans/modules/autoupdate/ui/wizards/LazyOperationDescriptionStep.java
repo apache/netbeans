@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -34,6 +35,8 @@ import org.netbeans.api.autoupdate.OperationContainer;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.autoupdate.UpdateManager;
 import org.netbeans.api.autoupdate.UpdateUnit;
+import org.netbeans.api.autoupdate.UpdateUnitProvider;
+import org.netbeans.api.autoupdate.UpdateUnitProviderFactory;
 import org.netbeans.modules.autoupdate.ui.Utilities;
 import org.netbeans.modules.autoupdate.ui.actions.AutoupdateCheckScheduler;
 import org.netbeans.modules.autoupdate.ui.actions.Installer;
@@ -119,7 +122,8 @@ public class LazyOperationDescriptionStep implements WizardDescriptor.Panel<Wiza
     
     @SuppressWarnings("unchecked")
     private void checkRealUpdates () {
-        final Collection<String> problems=new ArrayList<String>();
+        final Collection<String> problems = new ArrayList<>();
+        final List<String> notifications = new ArrayList<>();
         checkRealUpdatesTask = Installer.RP.post (new Runnable () {
             @Override
             public void run () {
@@ -167,6 +171,14 @@ public class LazyOperationDescriptionStep implements WizardDescriptor.Panel<Wiza
                             }
                         });
                     }
+                } else {
+                    for (UpdateUnitProvider p :
+                            UpdateUnitProviderFactory.getDefault().getUpdateUnitProviders(true)) {
+                        String desc = p.getDescription();
+                        if (desc != null && desc.contains("<a name=\"autoupdate_catalog_parser\"")) {
+                            notifications.add(desc);
+                        }
+                    }
                 }
             }
         });
@@ -186,25 +198,31 @@ public class LazyOperationDescriptionStep implements WizardDescriptor.Panel<Wiza
             @Override
             public void run() {
                 JPanel body;
-                if(problems==null || problems.isEmpty())
-                {
-                    body = new OperationDescriptionPanel (
-                        getBundle ("LazyOperationDescriptionStep_NoUpdates_Title"), // NOI18N
-                        getBundle ("LazyOperationDescriptionStep_NoUpdates"), // NOI18N
-                        "", "",
-                        false);
+                if (problems.isEmpty()) {
+                    if (notifications.isEmpty()) {
+                        body = new OperationDescriptionPanel(
+                                getBundle("LazyOperationDescriptionStep_NoUpdates_Title"), // NOI18N
+                                getBundle("LazyOperationDescriptionStep_NoUpdates"), // NOI18N
+                                "", "",
+                                false);
+                    } else {
+                        String content = notifications.stream().collect(Collectors.joining("<br><br>"));
+                        body = new OperationDescriptionPanel(
+                                getBundle("LazyOperationDescriptionStep_Notifications_Title"), // NOI18N
+                                content, // NOI18N
+                                "", "",
+                                false);
+                    }
+                } else {
+                    body = new OperationDescriptionPanel(
+                            getBundle("LazyOperationDescriptionStep_NoUpdatesWithProblems_Title"), // NOI18N
+                            getBundle("LazyOperationDescriptionStep_NoUpdatesWithProblems"), // NOI18N
+                            "", "",
+                            false);
                 }
-                else
-                {
-                    body = new OperationDescriptionPanel (
-                        getBundle ("LazyOperationDescriptionStep_NoUpdatesWithProblems_Title"), // NOI18N
-                        getBundle ("LazyOperationDescriptionStep_NoUpdatesWithProblems"), // NOI18N
-                        "", "",
-                        false);
-                }
-                component.setBody (body);
-                component.setWaitingState (false);
-                fireChange ();
+                component.setBody(body);
+                component.setWaitingState(false);
+                fireChange();
             }
         }
         checkRealUpdatesTask.addTaskListener (new TLAndR());

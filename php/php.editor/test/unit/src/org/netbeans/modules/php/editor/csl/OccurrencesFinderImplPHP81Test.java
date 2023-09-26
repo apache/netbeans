@@ -493,6 +493,34 @@ public class OccurrencesFinderImplPHP81Test extends OccurrencesFinderImplTestBas
         checkOccurrences(getTestPath(), "        static::CONST^ANT2;", true);
     }
 
+    public void testEnumerationsWithInterface_01a() throws Exception {
+        checkOccurrences(getTestPath(), "interface ExampleInter^face1 {}", true);
+    }
+
+    public void testEnumerationsWithInterface_01b() throws Exception {
+        checkOccurrences(getTestPath(), "use Enum1\\ExampleInterf^ace1;", true);
+    }
+
+    public void testEnumerationsWithInterface_01c() throws Exception {
+        checkOccurrences(getTestPath(), "enum EnumImpl1 implements ExampleInterf^ace1 {", true);
+    }
+
+    public void testEnumerationsWithInterface_01d() throws Exception {
+        checkOccurrences(getTestPath(), "enum EnumImpl2 implements ExampleInterfa^ce1, ExampleInterface2 {", true);
+    }
+
+    public void testEnumerationsWithInterface_02a() throws Exception {
+        checkOccurrences(getTestPath(), "interface ExampleInterf^ace2 {}", true);
+    }
+
+    public void testEnumerationsWithInterface_02b() throws Exception {
+        checkOccurrences(getTestPath(), "use Enum1\\ExampleInterfa^ce2;", true);
+    }
+
+    public void testEnumerationsWithInterface_02c() throws Exception {
+        checkOccurrences(getTestPath(), "enum EnumImpl2 implements ExampleInterface1, Exam^pleInterface2 {", true);
+    }
+
     public void testEnumerationsWithBackingType_a01() throws Exception {
         checkOccurrences(getTestPath(), "    case C^ASE1 = 1;", true);
     }
@@ -519,6 +547,62 @@ public class OccurrencesFinderImplPHP81Test extends OccurrencesFinderImplTestBas
 
     public void testEnumerationsWithBackingType_c02() throws Exception {
         checkOccurrences(getTestPath(), "            static::CAS^E3 => 'Case3',", true);
+    }
+
+    public void testFirstClassCallableSyntax_01a() throws Exception {
+        checkOccurrences(getTestPath(), "function te^st($param1, $param2, $param3) {", true);
+    }
+
+    public void testFirstClassCallableSyntax_01b() throws Exception {
+        checkOccurrences(getTestPath(), "tes^t(...); // test", true);
+    }
+
+    public void testFirstClassCallableSyntax_01c() throws Exception {
+        checkOccurrences(getTestPath(), "$fn = t^est(...);", true);
+    }
+
+    public void testFirstClassCallableSyntax_02a() throws Exception {
+        checkOccurrences(getTestPath(), "    public function public^Method(int $param): int {", true);
+    }
+
+    public void testFirstClassCallableSyntax_02b() throws Exception {
+        checkOccurrences(getTestPath(), "$fn = $test->publicMetho^d(...);", true);
+    }
+
+    public void testFirstClassCallableSyntax_02c() throws Exception {
+        checkOccurrences(getTestPath(), "$fn = (new Test)->publicM^ethod(...);", true);
+    }
+
+    public void testFirstClassCallableSyntax_03a() throws Exception {
+        checkOccurrences(getTestPath(), "    public static function publicSta^ticMethod(): void {", true);
+    }
+
+    public void testFirstClassCallableSyntax_03b() throws Exception {
+        checkOccurrences(getTestPath(), "$fn = $test->publicStat^icMethod(...);", true);
+    }
+
+    public void testFirstClassCallableSyntax_03c() throws Exception {
+        checkOccurrences(getTestPath(), "$fn = $test::publicStatic^Method(...);", true);
+    }
+
+    public void testFirstClassCallableSyntax_03d() throws Exception {
+        checkOccurrences(getTestPath(), "$fn = Test::publicS^taticMethod(...);", true);
+    }
+
+    public void testFirstClassCallableSyntax_04a() throws Exception {
+        checkOccurrences(getTestPath(), "        $fn = $this->tes^t(...);", true);
+    }
+
+    public void testFirstClassCallableSyntax_04b() throws Exception {
+        checkOccurrences(getTestPath(), "    private function tes^t(): void {", true);
+    }
+
+    public void testFirstClassCallableSyntax_05a() throws Exception {
+        checkOccurrences(getTestPath(), "        $fn = self::testSta^tic(...);", true);
+    }
+
+    public void testFirstClassCallableSyntax_05b() throws Exception {
+        checkOccurrences(getTestPath(), "    private static function testSt^atic(): void {", true);
     }
 
 }

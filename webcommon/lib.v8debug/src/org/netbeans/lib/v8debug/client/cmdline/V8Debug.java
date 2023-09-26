@@ -1020,17 +1020,17 @@ public class V8Debug {
                 if (o.getProperties() != null) {
                     Map<String, V8Object.Property> properties = o.getProperties();
                     String newLine = System.getProperty("line.separator");
-                    for (String propName : properties.keySet()) {
+
+                    properties.forEach((propName, v8Prop) -> {
                         sb.append(newLine);
                         sb.append("  ");
                         sb.append(propName);
                         sb.append(" = ");
-                        V8Object.Property property = properties.get(propName);
                         sb.append('(');
-                        sb.append(property.getType());
+                        sb.append(v8Prop.getType());
                         sb.append(") ref: ");
-                        sb.append(property.getReference());
-                    }
+                        sb.append(v8Prop.getReference());
+                    });
                 }
                 return sb.toString();
             case String:
@@ -1046,8 +1046,8 @@ public class V8Debug {
     }
 
     private void printValues(Map<String, ReferencedValue> argumentRefs) {
-        for (String name : argumentRefs.keySet()) {
-            System.out.println(name + " = " + printStr(argumentRefs.get(name)));
+        for (Map.Entry<String, ReferencedValue> entry : argumentRefs.entrySet()) {
+            System.out.println(entry.getKey() + " = " + printStr(entry.getValue()));
         }
     }
     

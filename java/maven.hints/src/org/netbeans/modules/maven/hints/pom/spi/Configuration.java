@@ -38,7 +38,7 @@ public final class Configuration {
     static final String IN_TASK_LIST_KEY = "inTaskList"; // NOI18N
     private final HintSeverity defaultSeverity;
     private final String displayName;
-    private final Map<String, Object> id2Saved = new HashMap<String, Object>();
+    private final Map<String, Object> id2Saved = new HashMap<>();
 
     public Configuration(String id, String displayName, String description, boolean defaultEnabled, HintSeverity defaultSeverity) {
         this.id = id;
@@ -95,7 +95,7 @@ public final class Configuration {
     }
 
 
-    /** Gets current severiry of the hint.
+    /** Gets current severity of the hint.
      * @return Hints severity in current profile.
      */
     public final HintSeverity getSeverity(Preferences p) {
@@ -116,10 +116,17 @@ public final class Configuration {
         return id2Saved.get(key);
     }
 
+    /**
+     * Resets the saved preference values of this configuration.
+     * This should be called once saved or if canceled to be ready for the next round of changes.
+     */
+    public void resetSavedValues() {
+        id2Saved.clear();
+    }
 
     /** Severity of hint
      *  <li><code>ERROR</code>  - will show up as error
-     *  <li><code>WARNING</code>  - will show up as warrnig
+     *  <li><code>WARNING</code>  - will show up as warning
      */
     public static enum HintSeverity {
         ERROR,

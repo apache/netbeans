@@ -337,7 +337,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
                 while (it.hasNext()) {
                     AnnotateLine line = it.next();
                     String author = line.getAuthor();
-                    if(author != null && !author.equals("") && !kenaiUsersMap.keySet().contains(author)) {
+                    if(author != null && !author.equals("") && !kenaiUsersMap.containsKey(author)) {
                         KenaiUser ku = SvnKenaiAccessor.getInstance().forName(author, url.toString());
                         if(ku != null) {
                             kenaiUsersMap.put(author, ku);

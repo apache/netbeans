@@ -30,6 +30,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import org.netbeans.modules.web.core.palette.JspPaletteUtilities;
+import org.netbeans.modules.web.core.palette.items.GetProperty.BeanDescr;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.NbBundle;
@@ -52,7 +53,7 @@ public class SetPropertyCustomizer extends javax.swing.JPanel {
 
         initComponents();
 
-        beanNameCb.setModel(new DefaultComboBoxModel(setProperty.getAllBeans().toArray()));
+        beanNameCb.setModel(new DefaultComboBoxModel<>(setProperty.getAllBeans().toArray(new BeanDescr[]{})));
         beanNameCb.setSelectedIndex(setProperty.getBeanIndex());
         addDocumentListener(beanNameCb);
     }
@@ -115,10 +116,10 @@ public class SetPropertyCustomizer extends javax.swing.JPanel {
         }
 
         if (currentBean == null) {
-            propertyNameCb.setModel(new DefaultComboBoxModel());
+            propertyNameCb.setModel(new DefaultComboBoxModel<>());
         } else {
             String[] pref = {"set"};  // NOI18N
-            propertyNameCb.setModel(new DefaultComboBoxModel(JspPaletteUtilities.getTypeProperties(target, currentBean.getFqcn(), pref).toArray()));
+            propertyNameCb.setModel(new DefaultComboBoxModel<>(JspPaletteUtilities.getTypeProperties(target, currentBean.getFqcn(), pref).toArray(new String[]{})));
         }
     }
     
@@ -148,11 +149,11 @@ public class SetPropertyCustomizer extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel1 = new javax.swing.JLabel();
-        beanNameCb = new javax.swing.JComboBox();
+        beanNameCb = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         propertyValueTf = new javax.swing.JTextField();
-        propertyNameCb = new javax.swing.JComboBox();
+        propertyNameCb = new javax.swing.JComboBox<>();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -231,11 +232,11 @@ public class SetPropertyCustomizer extends javax.swing.JPanel {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox beanNameCb;
+    private javax.swing.JComboBox<BeanDescr> beanNameCb;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JComboBox propertyNameCb;
+    private javax.swing.JComboBox<String> propertyNameCb;
     private javax.swing.JTextField propertyValueTf;
     // End of variables declaration//GEN-END:variables
     

@@ -206,17 +206,15 @@ public class TomcatProperties {
 //                org.openide.ErrorManager.getDefault ().log (nef.getLocalizedMessage ());
 //            }
 //        }
-        ip.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                String name = evt.getPropertyName();
-                if (PROP_SERVER_PORT.equals(name) || PROP_USERNAME.equals(name) 
+        ip.addPropertyChangeListener( (PropertyChangeEvent evt) -> {
+            String name = evt.getPropertyName();
+            if (PROP_SERVER_PORT.equals(name) || PROP_USERNAME.equals(name) 
                     || PROP_PASSWORD.equals(name)) {
-                    // update Ant deployment properties file if it exists
-                    try {
-                        storeAntDeploymentProperties(getAntDeploymentPropertiesFile(), false);
-                    } catch(IOException ioe) {
-                        Logger.getLogger(TomcatProperties.class.getName()).log(Level.INFO, null, ioe);
-                    }
+                // update Ant deployment properties file if it exists
+                try {
+                    storeAntDeploymentProperties(getAntDeploymentPropertiesFile(), false);
+                } catch(IOException ioe) {
+                    Logger.getLogger(TomcatProperties.class.getName()).log(Level.INFO, null, ioe);
                 }
             }
         });
@@ -238,16 +236,9 @@ public class TomcatProperties {
         antProps.setProperty("tomcat.username", getUsername());         // NOI18N
         file.createNewFile();
         FileObject fo = FileUtil.toFileObject(file);
-        FileLock lock = fo.lock();
-        try {
-            OutputStream os = fo.getOutputStream(lock);
-            try {
-                antProps.store(os);
-            } finally {
-                os.close();
-            }
-        } finally {
-            lock.releaseLock();
+        try (FileLock lock = fo.lock();
+                OutputStream os = fo.getOutputStream(lock)) {
+            antProps.store(os);
         }
     }
     
@@ -270,6 +261,18 @@ public class TomcatProperties {
         String prefix;
         String serverID;
         switch (tm.getTomcatVersion()) {
+            case TOMCAT_110:
+                prefix = "tomcat110"; // NIO18N
+                serverID = TomcatFactory.SERVER_ID_110;
+                break;
+            case TOMCAT_101:
+                prefix = "tomcat101"; // NIO18N
+                serverID = TomcatFactory.SERVER_ID_101;
+                break;
+            case TOMCAT_100:
+                prefix = "tomcat100"; // NIO18N
+                serverID = TomcatFactory.SERVER_ID_100;
+                break;
             case TOMCAT_90:
                 prefix = "tomcat90"; // NIO18N
                 serverID = TomcatFactory.SERVER_ID_90;
@@ -391,7 +394,7 @@ public class TomcatProperties {
         JavaPlatformManager jpm = JavaPlatformManager.getDefault();
         JavaPlatform[] installedPlatforms = jpm.getPlatforms(null, new Specification("J2SE", null)); // NOI18N
         for (int i = 0; i < installedPlatforms.length; i++) {
-            String platformName = (String)installedPlatforms[i].getProperties().get(PLAT_PROP_ANT_NAME);
+            String platformName = installedPlatforms[i].getProperties().get(PLAT_PROP_ANT_NAME);
             if (platformName != null && platformName.equals(currentJvm)) {
                 return installedPlatforms[i];
             }
@@ -401,7 +404,7 @@ public class TomcatProperties {
     }
     
     public void setJavaPlatform(JavaPlatform javaPlatform) {
-        ip.setProperty(PROP_JAVA_PLATFORM, (String)javaPlatform.getProperties().get(PLAT_PROP_ANT_NAME));
+        ip.setProperty(PROP_JAVA_PLATFORM, javaPlatform.getProperties().get(PLAT_PROP_ANT_NAME));
     }
     
     public String getJavaOpts() {
@@ -661,7 +664,7 @@ public class TomcatProperties {
         };
         
         // tomcat libs
-        List<URL> retValue = new ArrayList<URL>();
+        List<URL> retValue = new ArrayList<>();
         retValue.addAll(listUrls(new File(homeDir, tm.libFolder()), nbFilter));
 
         // TOMEE as webapp
@@ -672,7 +675,7 @@ public class TomcatProperties {
             }
         }
 
-        if (tm.isTomcat60()) {
+        if (tm.getTomcatVersion().isAtLeast(TomcatVersion.TOMCAT_60)) {
             try {
                 retValue.add(new File(homeDir, "bin/tomcat-juli.jar").toURI().toURL()); // NOI18N
             } catch (MalformedURLException e) {
@@ -731,7 +734,22 @@ public class TomcatProperties {
                     addFileToList(list, jspApiDoc);
                     addFileToList(list, servletApiDoc);
                 } else {
-                    File j2eeDoc = InstalledFileLocator.getDefault().locate("docs/javaee-doc-api.jar", null, false); // NOI18N
+                    String eeDocs;
+                    switch (tm.getTomcatVersion()) {
+                        case TOMCAT_110:
+                        case TOMCAT_101:
+                           eeDocs = "docs/jakartaee10-doc-api.jar";
+                           break;
+                        case TOMCAT_100:
+                            eeDocs = "docs/jakartaee9-doc-api.jar";
+                            break;
+                        case TOMCAT_90:
+                            eeDocs = "docs/jakartaee8-doc-api.jar";
+                            break;
+                        default:
+                            eeDocs = "docs/javaee-doc-api.jar";
+                    }
+                    File j2eeDoc = InstalledFileLocator.getDefault().locate(eeDocs, null, false); // NOI18N
                     if (j2eeDoc != null) {
                         addFileToList(list, j2eeDoc);
                     }
@@ -752,7 +770,7 @@ public class TomcatProperties {
     }
     
     public void setOpenContextLogOnRun(boolean val) {
-        ip.setProperty(PROP_OPEN_LOG, Boolean.valueOf(val).toString());
+        ip.setProperty(PROP_OPEN_LOG, Boolean.toString(val));
     }
     
     public boolean getOpenContextLogOnRun() {
@@ -859,18 +877,16 @@ public class TomcatProperties {
     // private helper methods -------------------------------------------------
     
     private static List<URL> listUrls(final File folder, final String[] filter) {
-        File[] jars = folder.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                if (!name.endsWith(".jar") || !dir.equals(folder)) {
+        File[] jars = folder.listFiles( (File dir, String name) -> {
+            if (!name.endsWith(".jar") || !dir.equals(folder)) {
+                return false;
+            }
+            for (int i = 0; i < filter.length; i++) {
+                if (name.indexOf(filter[i]) != -1) {
                     return false;
                 }
-                for (int i = 0; i < filter.length; i++) {
-                    if (name.indexOf(filter[i]) != -1) {
-                        return false;
-                    }
-                }
-                return true;
             }
+            return true;
         });
         if (jars == null) {
             return Collections.emptyList();

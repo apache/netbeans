@@ -404,7 +404,7 @@ public class OptionsPanel extends JPanel {
 
         pOptions.setBorder(new CompoundBorder(
                 new VariableBorder(null, null, borderMac, null),
-                BorderFactory.createEmptyBorder(0, 5, 5, 5)
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
                 ));
         add(pCategories, BorderLayout.NORTH);
         add(pOptions, BorderLayout.CENTER);
@@ -673,9 +673,11 @@ public class OptionsPanel extends JPanel {
                         if (categoryid2tabs.get(id) != null) {
                             HashMap<Integer, TabInfo> tabsInfo = categoryid2tabs.get(id);
                             boolean foundInNoTab = true;
-                            for (Integer tabIndex : tabsInfo.keySet()) {
+                            for (Map.Entry<Integer, TabInfo> it : tabsInfo.entrySet()) {
+                                Integer tabIndex = it.getKey();
+
                                 if (tabIndex != -1) {
-                                    ArrayList<String> tabWords = tabsInfo.get(tabIndex).getWords();
+                                    ArrayList<String> tabWords = it.getValue().getWords();
                                     boolean foundInTab = false;
                                     if (containsAllSearchWords(tabWords, stWords)) {
                                         foundInTab = true;
@@ -1006,6 +1008,22 @@ public class OptionsPanel extends JPanel {
         return new Color (193, 210, 238);
     }
 
+    private Color getSelectionForeground() {
+        Color uiColor = UIManager.getColor("nb.options.categories.selectionForeground"); //NOI18N
+        if (uiColor != null) {
+            return uiColor;
+        }
+
+        if ( useUIDefaultsColors() ) {
+            Color res = UIManager.getColor("Tree.selectionForeground"); //NOI18N
+            if (null == res) {
+                return new Color(res.getRGB());
+            }
+        }
+
+        return getTabPanelForeground();
+    }
+
     private Color getHighlightBackground() {
         Color uiColor = UIManager.getColor("nb.options.categories.highlightBackground"); //NOI18N
         if (uiColor != null) {
@@ -1021,6 +1039,24 @@ public class OptionsPanel extends JPanel {
             }
         }
         return new Color (224, 232, 246);
+    }
+
+    private Color getHighlightForeground() {
+        Color uiColor = UIManager.getColor("nb.options.categories.highlightForeground"); //NOI18N
+        if (uiColor != null) {
+            return uiColor;
+        }
+
+        if( useUIDefaultsColors() ) {
+            if( !Color.white.equals( getTabPanelBackground() ) ) {
+                Color res = UIManager.getColor( "Tree.selectionForeground" ); //NOI18N
+                if( null == res )
+                    res = Color.blue;
+                return new Color( res.getRGB() );
+            }
+        }
+
+        return getTabPanelForeground();
     }
 
     /**
@@ -1153,7 +1189,6 @@ public class OptionsPanel extends JPanel {
             addMouseListener (this);
             setFocusable (false);
             setFocusTraversalKeysEnabled (false);
-            setForeground (getTabPanelForeground());
             
             if (isMac) {
                 setFont(labelFontMac);
@@ -1169,7 +1204,8 @@ public class OptionsPanel extends JPanel {
             } else {
                 setBorder (new EmptyBorder (2, 4, 2, 4));
             }
-            setBackground (getTabPanelBackground());
+            setBackground(getTabPanelBackground());
+            setForeground(getTabPanelForeground());
         }
         
         void setSelected () {
@@ -1187,7 +1223,8 @@ public class OptionsPanel extends JPanel {
                     new EmptyBorder (0, 2, 0, 2)
                 ));
             }
-            setBackground (selected);            
+            setBackground(selected);            
+            setForeground(getSelectionForeground());
         }
         
         void setHighlighted() {
@@ -1200,6 +1237,7 @@ public class OptionsPanel extends JPanel {
                         new EmptyBorder(0, 2, 0, 2)
                         ));
                 setBackground(highlighted);
+                setForeground(getHighlightForeground());
             }
             if (!category.isHighlited()) {
                 if (categoryModel.getHighlitedCategoryID() != null) {
@@ -1319,6 +1357,7 @@ public class OptionsPanel extends JPanel {
 
         @Override
         void setNormal() {
+            super.setNormal();
             setBorder(normalBorder);
             status = STATUS_NORMAL;
             repaint();

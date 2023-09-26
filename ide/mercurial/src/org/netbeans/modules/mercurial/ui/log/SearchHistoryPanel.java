@@ -910,7 +910,7 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
                         if (username == null || username.isEmpty()) {
                             username = author;
                         }
-                        if(!kenaiUsersMap.keySet().contains(author)) {
+                        if(!kenaiUsersMap.containsKey(author)) {
                             VCSKenaiAccessor.KenaiUser kenaiUser = HgKenaiAccessor.getInstance().forName(username, url);
                             if(kenaiUser != null) {
                                 kenaiUsersMap.put(author, kenaiUser);

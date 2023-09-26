@@ -138,7 +138,7 @@ public final class WebServicesSupport {
         return impl.getReferenceHelper();
     }
     
-    public List/*WsCompileEditorSupport.ServiceSettings*/ getServices() {
+    public List<WsCompileEditorSupport.ServiceSettings> getServices() {
         return impl.getServices();
     }
     

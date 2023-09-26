@@ -870,7 +870,7 @@ public abstract class Children extends Object {
     * association of a key with any node and to remove nodes by key.
     * Subclasses should reasonably
     * implement {@link #add} and {@link #remove}.
-     * @param T the key type
+     * @param <T> the key type
     */
     public static class Map<T> extends Children {
         /** A map to use to store children in.
@@ -1131,7 +1131,7 @@ public abstract class Children extends Object {
         /** Create an empty list with a specified storage method.
         *
         * @param c collection to store data in
-        * @see Children.Array#Children.Array(Collection)
+        * @see Children.Array#Array(Collection)
         */
         protected SortedArray(Collection<Node> c) {
             super(c);
@@ -1204,7 +1204,7 @@ public abstract class Children extends Object {
         /** Create an empty list with a specific storage method.
         *
         * @param map the map to use with this object
-        * @see Children.Map#Children.Map(java.util.Map)
+        * @see Children.Map#Map(java.util.Map)
         */
         protected SortedMap(java.util.Map<T,Node> map) {
             super(map);
@@ -1300,17 +1300,16 @@ public abstract class Children extends Object {
     * call {@link #refreshKey}. Usually this is not necessary.
     * </ol>
     * Note that for simple cases, it may be preferable to subclass
-    * <a href="ChildFactory.html">ChildFactory</a> and pass the result to
-    * <a href="Children.html#create(org.openide.nodes.ChildFactory, boolean)">
-    * create()</a>; doing so makes it easy to switch to using child
+    * {@link ChildFactory} and pass the result to
+    * {@link Children#create(org.openide.nodes.ChildFactory, boolean) }; doing so makes it easy to switch to using child
     * nodes computed on a background thread if necessary for performance
     * reasons.
     * <p><b>Related documentation</b></p>
     * <ul>
-    *   <li><a href="http://platform.netbeans.org/tutorials/nbm-nodesapi.html">NetBeans System Properties Module Tutorial</a></li>
+    *   <li><a href="https://netbeans.apache.org/tutorials/nbm-nodesapi.html">NetBeans System Properties Module Tutorial</a></li>
     * </ul>
     *
-    * @param T the type of the key
+    * @param <T> the type of the key
     */
     public abstract static class Keys<T> extends Children.Array {
         /** the last runnable (created in method setKeys) for each children object.
@@ -1679,7 +1678,8 @@ public abstract class Children extends Object {
     * added to the collection and if the same object is added
     * more than once it is indexed by a number.
     */
-    private abstract static class Dupl<T> implements Cloneable, Entry {
+    // package-private for tests only!
+    abstract static class Dupl<T> implements Cloneable, Entry {
         /** the key either real value or Dupl (Dupl (Dupl (... value ...)))*/
         protected Object key;
 

@@ -1514,7 +1514,7 @@ final class PropUtils {
      * Just a helper method which delegates to shallBeRDVEnabled(Node.Property).
      */
     static boolean shallBeRDVEnabled(FeatureDescriptor fd) {
-        if ((fd != null) && fd instanceof Node.Property) {
+        if (fd instanceof Property) {
             return shallBeRDVEnabled((Node.Property) fd);
         }
 
@@ -1532,7 +1532,7 @@ final class PropUtils {
      * return true and don't override Node.Property.isDefaultValue(). The
      * isDefaultValue() return false by default.<br>
      * For more information and detailed reason why we do so see
-     * <a href="http://www.netbeans.org/issues/show_bug.cgi?id=51907">
+     * <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=51907">
      * Issue 51907</a>.
      */
     static boolean shallBeRDVEnabled(Node.Property property) {

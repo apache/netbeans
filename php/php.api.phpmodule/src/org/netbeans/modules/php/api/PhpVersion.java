@@ -38,6 +38,7 @@ import org.openide.util.NbBundle;
     "PhpVersion.PHP_74=PHP 7.4",
     "PhpVersion.PHP_80=PHP 8.0",
     "PhpVersion.PHP_81=PHP 8.1",
+    "PhpVersion.PHP_82=PHP 8.2",
 })
 public enum PhpVersion {
 
@@ -96,7 +97,13 @@ public enum PhpVersion {
      * PHP 8.1.
      * @since 2.80
      */
-    PHP_81(Bundle.PhpVersion_PHP_81());
+    PHP_81(Bundle.PhpVersion_PHP_81()),
+    /**
+     * PHP 8.2.
+     * @since 2.87
+     */
+    PHP_82(Bundle.PhpVersion_PHP_82()),
+    ;
 
     private final String displayName;
     private final boolean namespaces;
@@ -221,6 +228,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports the null, false, and true types.
+     *
+     * @return {@code true} if this version supports null, false, and true
+     * types, {@code false} otherwise
+     * @since 2.87
+     */
+    public boolean hasNullAndFalseAndTrueTypes() {
+        return this.compareTo(PhpVersion.PHP_82) >= 0;
+    }
+
+    /**
      * Check whether this is supported version yet by PHP official.
      *
      * @return {@code true} if this is supported version, {@code false}
@@ -254,6 +272,7 @@ public enum PhpVersion {
         PHP_74(LocalDate.of(2019, 11, 28), LocalDate.of(2021, 11, 28), LocalDate.of(2022, 11, 28)),
         PHP_80(LocalDate.of(2020, 11, 26), LocalDate.of(2022, 11, 26), LocalDate.of(2023, 11, 26)),
         PHP_81(LocalDate.of(2021, 11, 25), LocalDate.of(2023, 11, 25), LocalDate.of(2024, 11, 25)),
+        PHP_82(LocalDate.of(2022, 12, 8), LocalDate.of(2024, 12, 8), LocalDate.of(2025, 12, 8)),
         ;
 
         private final LocalDate initialRelease;

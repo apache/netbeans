@@ -54,7 +54,7 @@ public final class CodeStyle {
     public static CodeStyle get(Document doc, Defaults.Provider provider) {
         return new CodeStyle(provider, CodeStylePreferences.get(doc).getPreferences());
     }
-    
+
     public static CodeStyle get(FormatContext context) {
         return get(context.getDefaultsProvider(), context.getDocument(), context.isEmbedded());
     }
@@ -261,7 +261,7 @@ public final class CodeStyle {
     public boolean spaceBeforeMethodDeclParen() {
         return preferences.getBoolean(spaceBeforeMethodDeclParen, provider.getDefaultAsBoolean(spaceBeforeMethodDeclParen));
     }
-    
+
     public boolean spaceBeforeAnonMethodDeclParen() {
         return preferences.getBoolean(spaceBeforeAnonMethodDeclParen, provider.getDefaultAsBoolean(spaceBeforeAnonMethodDeclParen));
     }
@@ -317,7 +317,7 @@ public final class CodeStyle {
     public boolean spaceAroundAssignOps() {
         return preferences.getBoolean(spaceAroundAssignOps, provider.getDefaultAsBoolean(spaceAroundAssignOps));
     }
-    
+
     public boolean spaceAroundArrowOps() {
         return preferences.getBoolean(spaceAroundArrowOps, provider.getDefaultAsBoolean(spaceAroundArrowOps));
     }
@@ -590,7 +590,7 @@ public final class CodeStyle {
     public boolean wrapAfterBinaryOps() {
         return preferences.getBoolean(wrapAfterBinaryOps, provider.getDefaultAsBoolean(wrapAfterBinaryOps));
     }
-    
+
     public WrapStyle wrapTernaryOps() {
         String wrap = preferences.get(wrapTernaryOps, provider.getDefaultAsString(wrapTernaryOps));
         return WrapStyle.valueOf(wrap);
@@ -600,7 +600,7 @@ public final class CodeStyle {
         String wrap = preferences.get(wrapAssignOps, provider.getDefaultAsString(wrapAssignOps));
         return WrapStyle.valueOf(wrap);
     }
-    
+
     public WrapStyle wrapArrowOps() {
         String wrap = preferences.get(wrapArrowOps, provider.getDefaultAsString(wrapArrowOps));
         return WrapStyle.valueOf(wrap);
@@ -622,7 +622,7 @@ public final class CodeStyle {
         String wrap = preferences.get(wrapObjects, provider.getDefaultAsString(wrapObjects));
         return WrapStyle.valueOf(wrap);
     }
-    
+
     public WrapStyle wrapProperties() {
         String wrap = preferences.get(wrapProperties, provider.getDefaultAsString(wrapProperties));
         return WrapStyle.valueOf(wrap);
@@ -642,7 +642,7 @@ public final class CodeStyle {
         String wrap = preferences.get(wrapElements, provider.getDefaultAsString(wrapElements));
         return WrapStyle.valueOf(wrap);
     }
-    
+
     public WrapStyle wrapClassExtends() {
         String wrap = preferences.get(wrapClassExtends, provider.getDefaultAsString(wrapClassExtends));
         return WrapStyle.valueOf(wrap);
@@ -655,15 +655,15 @@ public final class CodeStyle {
     public int maxPreservedObjectLines() {
         return preferences.getInt(maxPreservedObjectLines, provider.getDefaultAsInt(maxPreservedObjectLines));
     }
-    
+
     public int maxPreservedArrayLines() {
         return preferences.getInt(maxPreservedArrayLines, provider.getDefaultAsInt(maxPreservedArrayLines));
     }
-    
+
     public int maxPreservedCodeLines() {
         return preferences.getInt(maxPreservedCodeLines, provider.getDefaultAsInt(maxPreservedCodeLines));
     }
-    
+
     // Uses
 
 //    public boolean preferFullyQualifiedNames() {
@@ -738,7 +738,7 @@ public final class CodeStyle {
         final boolean spaceBeforeFinally;
 
         final boolean spaceBeforeAnonMethodDeclParen;
-        
+
         final boolean spaceBeforeMethodDeclParen;
 
         final boolean spaceBeforeMethodCallParen;
@@ -766,7 +766,7 @@ public final class CodeStyle {
         final boolean spaceAroundKeyValueOps;
 
         final boolean spaceAroundAssignOps;
-        
+
         final boolean spaceAroundArrowOps;
 
         final boolean spaceAroundObjectOps;
@@ -868,7 +868,7 @@ public final class CodeStyle {
         final CodeStyle.WrapStyle wrapTernaryOps;
 
         final CodeStyle.WrapStyle wrapAssignOps;
-        
+
         final CodeStyle.WrapStyle wrapArrowOps;
 
         final boolean wrapAfterTernaryOps;
@@ -886,14 +886,14 @@ public final class CodeStyle {
         final CodeStyle.WrapStyle wrapDecorators;
 
         final CodeStyle.WrapStyle wrapElements;
-        
+
         final CodeStyle.WrapStyle wrapClassExtends;
 
         final int maxPreservedClassLines;
         final int maxPreservedObjectLines;
         final int maxPreservedArrayLines;
         final int maxPreservedCodeLines;
-        
+
         final boolean placeElseOnNewLine;
         final boolean placeWhileOnNewLine;
         final boolean placeCatchOnNewLine;

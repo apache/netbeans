@@ -66,7 +66,12 @@ public class BreakpointRuntimeSetter extends DebuggerManagerAdapter {
             return;
         }
         Object source = event.getSource();
-        performCommand((Breakpoint) source, Lazy.UPDATE_COMMAND);
+
+        if (((Breakpoint) source).isEnabled()) {
+            performCommand((Breakpoint) source, Lazy.SET_COMMAND);
+        } else {
+            performCommand((Breakpoint) source, Lazy.REMOVE_COMMAND);
+        }
     }
 
     private void performCommand(Breakpoint breakpoint, Command command) {

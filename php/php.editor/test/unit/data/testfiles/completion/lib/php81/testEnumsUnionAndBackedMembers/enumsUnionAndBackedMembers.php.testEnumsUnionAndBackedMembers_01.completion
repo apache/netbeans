@@ -1,0 +1,12 @@
+Code completion result for source line:
+self::|from("apple");
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   APPLE "apple"                   [PUBLIC]   Fruit
+CONSTANT   BANANA "banana"                 [PUBLIC]   Fruit
+CONSTANT   ORANGE "orange"                 [PUBLIC]   Fruit
+CONSTANT   class \Fruit                    [PUBLIC]   Magic Constant
+------------------------------------
+METHOD     cases()                         [STATIC,   BackedEnum
+METHOD     cases()                         [STATIC,   UnitEnum
+METHOD     from(int|string $value)         [STATIC,   BackedEnum
+METHOD     tryFrom(int|string $value)      [STATIC,   BackedEnum

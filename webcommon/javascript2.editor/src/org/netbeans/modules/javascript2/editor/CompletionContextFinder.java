@@ -244,7 +244,6 @@ public class CompletionContextFinder {
     protected static boolean isPropertyNameContext(TokenSequence<JsTokenId> ts) {
 
         //find the begining of the object literal
-        Token<? extends JsTokenId> token = null;
         JsTokenId tokenId = ts.token().id();
 
         if (tokenId == JsTokenId.OPERATOR_COMMA) {
@@ -252,11 +251,11 @@ public class CompletionContextFinder {
         }
         List<JsTokenId> listIds = Arrays.asList(JsTokenId.OPERATOR_COMMA, JsTokenId.OPERATOR_COLON, JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.OPERATOR_SEMICOLON);
         // find previous , or : or { or ;
-        token = LexUtilities.findPreviousToken(ts, listIds);
+        Token<? extends JsTokenId> token = LexUtilities.findPreviousToken(ts, listIds);
         tokenId = token.id();
         boolean commaFirst = false;
         if (tokenId == JsTokenId.OPERATOR_COMMA && ts.movePrevious()) {
-            List<JsTokenId> checkParentList = new ArrayList(listIds);
+            List<JsTokenId> checkParentList = new ArrayList<>(listIds);
             List<JsTokenId> parentList = Arrays.asList(JsTokenId.BRACKET_LEFT_PAREN, JsTokenId.BRACKET_RIGHT_PAREN, JsTokenId.BRACKET_RIGHT_CURLY);
             checkParentList.addAll(parentList);
             token = LexUtilities.findPreviousToken(ts, checkParentList);
@@ -347,7 +346,6 @@ public class CompletionContextFinder {
     }
 
     private static void balanceBracketBack(TokenSequence<JsTokenId> ts) {
-        Token<? extends JsTokenId> token = ts.token();
         JsTokenId tokenId = ts.token().id();
         JsTokenId tokenIdOriginal = ts.token().id();
         List<JsTokenId> lookingFor;
@@ -360,7 +358,7 @@ public class CompletionContextFinder {
         }
         int balance = -1;
         while (balance != 0 && ts.movePrevious()) {
-            token = LexUtilities.findPreviousToken(ts, lookingFor);
+            Token<? extends JsTokenId> token = LexUtilities.findPreviousToken(ts, lookingFor);
             tokenId = token.id();
             if (lookingFor.contains(tokenIdOriginal)) {
                 balance --;

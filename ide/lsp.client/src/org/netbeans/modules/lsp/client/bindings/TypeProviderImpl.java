@@ -23,6 +23,8 @@ import java.util.Set;
 import javax.swing.Icon;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.SymbolKind;
+import org.eclipse.lsp4j.WorkspaceSymbol;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.spi.jumpto.type.TypeDescriptor;
 import org.netbeans.spi.jumpto.type.TypeProvider;
 import org.openide.filesystems.FileObject;
@@ -52,24 +54,25 @@ public class TypeProviderImpl extends BaseSymbolProvider implements TypeProvider
         computeSymbolNames(context.getSearchType(),
                            context.getText(),
                            (info, simpleName) -> {
-                               if (TYPE_KINDS.contains(info.getKind())) {
-                                   result.addResult(new TypeDescriptorImpl(info, simpleName));
-                               }
+                                SymbolKind kind = info.isLeft() ? info.getLeft().getKind() : info.getRight().getKind();
+                                if (TYPE_KINDS.contains(kind)) {
+                                    result.addResult(new TypeDescriptorImpl(info, simpleName));
+                                }
                            });
     }
 
     public static class TypeDescriptorImpl extends TypeDescriptor implements BaseSymbolDescriptor {
 
-        private final SymbolInformation info;
+        private final Either<SymbolInformation, WorkspaceSymbol> info;
         private final String simpleName;
 
-        public TypeDescriptorImpl(SymbolInformation info, String simpleName) {
+        public TypeDescriptorImpl(Either<SymbolInformation, WorkspaceSymbol> info, String simpleName) {
             this.info = info;
             this.simpleName = simpleName;
         }
 
         @Override
-        public SymbolInformation getInfo() {
+        public Either<SymbolInformation, WorkspaceSymbol> getInfo() {
             return info;
         }
 

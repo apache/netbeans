@@ -307,6 +307,11 @@ public class HistoryRootNode extends AbstractNode {
             return getDisplayName();
         }
         
+        @Override
+        public Action[] getActions(boolean context) {
+            return NO_ACTION;
+        }        
+        
     }    
     
     private class BaseProperty extends PropertySupport.ReadOnly<TableEntry> {

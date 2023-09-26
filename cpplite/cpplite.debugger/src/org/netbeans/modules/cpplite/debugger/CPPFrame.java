@@ -158,7 +158,7 @@ public final class CPPFrame implements DVFrame {
                 record = frame.thread.getDebugger().sendAndGet("-stack-list-variables --thread " + frame.thread.getId() + " --frame " + frame.level + " --no-frame-filters 2");
             } else {
                 // from to
-                record = frame.thread.getDebugger().sendAndGet("-var-list-children --thread " + frame.thread.getId() + " --frame " + frame.level + " --all-values " + parentVar.getUniqueName());
+                record = frame.thread.getDebugger().sendAndGet("-var-list-children --thread " + frame.thread.getId() + " --frame " + frame.level + " --all-values " + "\"" + parentVar.getUniqueName() + "\"");
             }
         } catch (InterruptedException ex) {
             return Collections.emptyMap();
@@ -257,7 +257,7 @@ public final class CPPFrame implements DVFrame {
             result.complete(value);
             return result;
         }
-        thread.getDebugger().send(new Command("-var-create --thread " + thread.getId() + " --frame " + level + " - * " + expression) {
+        thread.getDebugger().send(new Command("-var-create --thread " + thread.getId() + " --frame " + level + " - * \"" + expression + "\"") {
             @Override
             protected void onDone(MIRecord record) {
                 MITList results = record.results();

@@ -62,6 +62,6 @@ public abstract class FunctionArgumentAccessor {
     public abstract FunctionArgument createForReference(int order, int offset, List<String> value);
 
     public abstract FunctionArgument createForArray(int order, int offset, JsObject value);
-    
+
     public abstract FunctionArgument createForUnknown(int order);
 }

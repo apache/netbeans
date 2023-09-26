@@ -44,10 +44,10 @@ public final class JspColoringData extends PropertyChangeSupport {
     public static final String PROP_PARSING_IN_PROGRESS = "parsingInProgress"; //NOI18N
     
     /** Taglib id -> TagLibraryInfo */
-    private Map taglibs;
+    private Map<String, TagLibraryInfo> taglibs;
     
     /** Prefix -> Taglib id */
-    private Map prefixMapper;
+    private Map<String, String> prefixMapper;
     
     private boolean elIgnored = false;
     
@@ -118,9 +118,9 @@ public final class JspColoringData extends PropertyChangeSupport {
     /** Incorporates new parse data from the parser, possibly firing a change about coloring.
      * @param newTaglibs the new map of (uri -> TagLibraryInfo)
      * @param newPrefixMapper the new map of (prefix, uri)
-     * @param parseSuccessful wherher parsing was successful. If false, then the new information is partial only
+     * @param parseSuccessful whether parsing was successful. If false, then the new information is partial only
      */
-    public void applyParsedData(Map newTaglibs, Map newPrefixMapper, boolean newELIgnored, boolean newXMLSyntax, boolean parseSuccessful) {
+    public void applyParsedData(Map<String, TagLibraryInfo> newTaglibs, Map<String, String> newPrefixMapper, boolean newELIgnored, boolean newXMLSyntax, boolean parseSuccessful) {
 
         initialized = true;
 
@@ -159,13 +159,13 @@ public final class JspColoringData extends PropertyChangeSupport {
         }
         else {
             // merge
-            Iterator it = newPrefixMapper.keySet().iterator();
+            Iterator<String> it = newPrefixMapper.keySet().iterator();
             while (it.hasNext()) {
-                Object prefix = it.next();
-                Object uri = newPrefixMapper.get(prefix);
-                Object uriOld = prefixMapper.get(prefix);
+                String prefix = it.next();
+                String uri = newPrefixMapper.get(prefix);
+                String uriOld = prefixMapper.get(prefix);
                 if ((uriOld == null) || !uri.equals(uriOld)) {
-                    Object newTaglib = newTaglibs.get(uri);
+                    TagLibraryInfo newTaglib = newTaglibs.get(uri);
                     if (newTaglib != null) {
                         // change - merge it
                         prefixMapper.put(prefix, uri);
@@ -180,7 +180,9 @@ public final class JspColoringData extends PropertyChangeSupport {
         }
     }
 
-    private static boolean equalsColoringInformation(Map taglibs1, Map prefixMapper1, Map taglibs2, Map prefixMapper2) {
+    private static boolean equalsColoringInformation(Map<String, TagLibraryInfo> taglibs1, Map<String, String> prefixMapper1,
+            Map<String, TagLibraryInfo> taglibs2, Map<String, String> prefixMapper2) {
+
         if ((taglibs1 == null) != (taglibs2 == null)) {
             return false;
         }
@@ -191,16 +193,18 @@ public final class JspColoringData extends PropertyChangeSupport {
             return false;
         }
         else {
-            Iterator it = prefixMapper1.keySet().iterator();
+            Iterator<String> it = prefixMapper1.keySet().iterator();
             while (it.hasNext()) {
-                Object prefix = it.next();
-                Object key1 = prefixMapper1.get(prefix);
-                Object key2 = prefixMapper2.get(prefix);
+                String prefix = it.next();
+                String key1 = prefixMapper1.get(prefix);
+                String key2 = prefixMapper2.get(prefix);
+
                 if ((key1 == null) || (key2 == null)) {
                     return false;
                 }
-                TagLibraryInfo tli1 = (TagLibraryInfo)taglibs1.get(key1);
-                TagLibraryInfo tli2 = (TagLibraryInfo)taglibs2.get(key2);
+
+                TagLibraryInfo tli1 = taglibs1.get(key1);
+                TagLibraryInfo tli2 = taglibs2.get(key2);
                 if ((tli1 == null) || (tli2 == null)) {
                     return false;
                 }

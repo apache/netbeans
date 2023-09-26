@@ -51,7 +51,7 @@ public class JoinRandomTest extends NbTestCase {
     @Override
     protected Level logLevel() {
         return Level.INFO;
-//        return super.logLevel();;
+//        return super.logLevel();
     }
 
     public void testRandom() throws Exception {

@@ -3,20 +3,8 @@
         <token id='T_USE' start='6' end='9'>
             <text>use</text>
         </token>
-        <token id='T_STRING' start='10' end='11'>
-            <text>A</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='11' end='12'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='12' end='13'>
-            <text>B</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='13' end='14'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='14' end='15'>
-            <text>C</text>
+        <token id='T_NAME_QUALIFIED' start='10' end='15'>
+            <text>A\B\C</text>
         </token>
         <token id='T_AS' start='16' end='18'>
             <text>as</text>

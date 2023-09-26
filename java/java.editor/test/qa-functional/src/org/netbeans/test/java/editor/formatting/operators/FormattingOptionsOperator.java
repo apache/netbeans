@@ -158,7 +158,7 @@ public class FormattingOptionsOperator extends NbDialogOperator {
         public boolean checkComponent(Component comp) {
             if (comp instanceof JComponent) {
                 Object labeledBy = ((JComponent) comp).getClientProperty("labeledBy");
-                if (labeledBy != null && (labeledBy instanceof JLabel)) {
+                if (labeledBy instanceof JLabel) {
                     String labelText = ((JLabel) labeledBy).getText();
                     if (getDefaultStringComparator().equals(labelText, this.label)) {
                         if (type == null) {

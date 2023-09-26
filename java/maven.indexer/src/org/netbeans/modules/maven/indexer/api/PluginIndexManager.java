@@ -319,7 +319,7 @@ public class PluginIndexManager {
             String[] gav = extensionPlugin.split(":", 3);
             MavenEmbedder online = EmbedderFactory.getOnlineEmbedder();
             Artifact art = online.createArtifact(gav[0], gav[1], gav[2], "maven-plugin");
-            online.resolve(art, Collections.<ArtifactRepository>emptyList(), online.getLocalRepository());
+            online.resolveArtifact(art, Collections.<ArtifactRepository>emptyList(), online.getLocalRepository());
             File jar = art.getFile();
             if (jar.isFile()) {
                 Map<String, List<String>> phases = parsePhases("jar:" + BaseUtilities.toURI(jar) + "!/META-INF/plexus/components.xml", packaging);

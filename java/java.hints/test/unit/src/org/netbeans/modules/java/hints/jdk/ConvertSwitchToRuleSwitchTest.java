@@ -940,6 +940,111 @@ public class ConvertSwitchToRuleSwitchTest extends NbTestCase {
                         "     }\n" +
                         "}\n");
     }
+    
+        public void testSwitchToRuleSwitchBindingPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
+            return;
+        }
+        HintTest.create()
+                .input("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(Object p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case Integer i : result = \"a\"; break;\n" +
+                        "            default : System.err.println(\"No.\"); break;\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n")
+                .sourceLevel("21")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(Object p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case Integer i -> result = \"a\";\n" +
+                        "            default -> System.err.println(\"No.\");\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n");
+    }
+    
+    public void testSwitchToRuleSwitchGuardedPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
+            return;
+        }
+        HintTest.create()
+                .input("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(Object p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case Integer i when (i > 10): result = \"a\"; break;\n" +
+                        "            default: System.err.println(\"No.\"); break;\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n")
+                .sourceLevel("21")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("3:9-3:15:verifier:" + Bundle.ERR_ConvertSwitchToRuleSwitch())
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;" +
+                        "public class Test {\n" +
+                        "     private void test(Object p) {\n" +
+                        "         String result;\n" +
+                        "         switch (p) {\n" +
+                        "            case Integer i when (i > 10) -> result = \"a\";\n" +
+                        "            default -> System.err.println(\"No.\");\n" +
+                        "         }\n" +
+                        "     }\n" +
+                        "}\n");
+    }
+    
+    public void testSwitchExpressionGuardedPattern() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip tests
+            return;
+        }
+        HintTest.create()
+                .input("package test;"
+                        + "class Test {\n"
+                        + "    public String test(Object p, Object o1, Object o2) {\n"
+                        + "        switch (p) {\n"
+                        + "            case Integer i  when (i > 10):\n"
+                        + "               return (String) o1;\n"
+                        + "            default :\n"
+                        + "                return (String) o2;\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}")
+                .sourceLevel("21")
+                .run(ConvertSwitchToRuleSwitch.class)
+                .findWarning("2:8-2:14:verifier:" + Bundle.ERR_ConvertSwitchToSwitchExpression())
+                .applyFix()
+                .assertCompilable()
+                .assertVerbatimOutput("package test;"
+                            + "class Test {\n"
+                            + "    public String test(Object p, Object o1, Object o2) {\n"
+                            + "        return (String) (switch (p) {\n"
+                            + "            case Integer i when (i > 10) -> o1;\n"
+                            + "            default -> o2;\n"
+                            + "        });\n"
+                            + "    }\n"
+                            + "}");
+    }
 
     public static Test suite() {
         TestSuite suite = new TestSuite();

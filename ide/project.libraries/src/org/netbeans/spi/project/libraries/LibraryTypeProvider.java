@@ -53,8 +53,8 @@ public interface LibraryTypeProvider extends Lookup.Provider {
 
     /**
      * Creates a new empty library implementation.
-     * Generally will use {@link LibrariesSupport#createLibraryImplementation}.
-     * This method is <strong>not</strong> used by {@link LibraryManager#createLibrary} except in the case of {@link LibraryManager#getDefault}.
+     * Generally will use {@link org.netbeans.spi.project.libraries.support.LibrariesSupport#createLibraryImplementation}.
+     * This method is <strong>not</strong> used by {@link org.netbeans.api.project.libraries.LibraryManager#createLibrary} except in the case of {@link org.netbeans.api.project.libraries.LibraryManager#getDefault}.
      * @return the created library model, never null
      */
     public LibraryImplementation createLibrary ();
@@ -65,7 +65,7 @@ public interface LibraryTypeProvider extends Lookup.Provider {
      * If the LibraryTypeProvider implementation requires clean of
      * additional settings (e.g. remove properties in the build.properties)
      * it should be done in this method.
-     * This method is <strong>not</strong> used by {@link LibraryManager#createLibrary} except in the case of {@link LibraryManager#getDefault}.
+     * This method is <strong>not</strong> used by {@link org.netbeans.api.project.libraries.LibraryManager#createLibrary} except in the case of {@link org.netbeans.api.project.libraries.LibraryManager#getDefault}.
      * @param libraryImpl
      */
     public void libraryDeleted (LibraryImplementation libraryImpl);
@@ -77,7 +77,7 @@ public interface LibraryTypeProvider extends Lookup.Provider {
      * If the LibraryTypeProvider implementation requires initialization of
      * additional settings (e.g. adding properties into the build.properties)
      * it should be done in this method.
-     * This method is <strong>not</strong> used by {@link LibraryManager#createLibrary} except in the case of {@link LibraryManager#getDefault}.
+     * This method is <strong>not</strong> used by {@link org.netbeans.api.project.libraries.LibraryManager#createLibrary} except in the case of {@link org.netbeans.api.project.libraries.LibraryManager#getDefault}.
      */
     public void libraryCreated (LibraryImplementation libraryImpl);
 

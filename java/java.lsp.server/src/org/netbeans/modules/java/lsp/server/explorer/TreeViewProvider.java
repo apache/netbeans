@@ -34,19 +34,19 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.modules.java.lsp.server.explorer.TreeItem.CollapsibleState;
 import org.netbeans.modules.java.lsp.server.explorer.TreeItem.IconDescriptor;
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangeType;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -137,46 +137,50 @@ public abstract class TreeViewProvider {
     private SortedMap<Integer, NodeHolder> holdChildren = new TreeMap<>();
     
     /**
-     * Node > identity map.
+     * Node > identity map. Note that FilterNodes equals compare the original node, so
+     * IdentityHashMap-style map must be used.
      */
     // @GuardedBy(this)
-    private Map<Node, Integer> idMap = new WeakHashMap<>();
+    private WeakIdentityMap<Node, Integer> idMap = WeakIdentityMap.newHashMap();
     
     protected TreeViewProvider(String treeId, ExplorerManager manager, TreeNodeRegistry registry, Lookup context) {
         this.treeId = treeId;
         this.context = context;
         this.manager = manager;
+        
+        Node n;
         this.nodeRegistry = registry;
         
         this.nodeListener = new NodeListener() {
             @Override
             public void childrenAdded(NodeMemberEvent ev) {
-                notifyChange(ev.getNode());
+                LOG.log(Level.FINER, "tree {0} children of node {2} added: {1}", new Object[] { treeId, ev, ev.getNode() });
+                onDidChangeTreeData(ev.getNode(), NodeChangeType.CHILDREN, null);
             }
 
             @Override
             public void childrenRemoved(NodeMemberEvent ev) {
-                notifyChange(ev.getNode());
+                LOG.log(Level.FINER, "tree {0} children of node {2} removed: {1}", new Object[] { treeId, ev, ev.getNode() });
+                onDidChangeTreeData(ev.getNode(), NodeChangeType.CHILDREN, null);
             }
 
             @Override
             public void childrenReordered(NodeReorderEvent ev) {
-                notifyChange(ev.getNode());
+                LOG.log(Level.FINER, "tree {0} children of node {2} reordered: {1}", new Object[] { treeId, ev, ev.getNode() });
+                onDidChangeTreeData(ev.getNode(), NodeChangeType.CHILDREN, null);
             }
 
             @Override
             public void nodeDestroyed(NodeEvent ev) {
+                LOG.log(Level.FINER, "tree {0} children of node {2} destroyed: {1}", new Object[] { treeId, ev, ev.getNode() });
                 removeNode(ev.getNode());
-                notifyChange(ev.getNode());
+                onDidChangeTreeData(ev.getNode(), NodeChangeType.DESTROY, null);
             }
 
             @Override
             public void propertyChange(PropertyChangeEvent ev) {
-                notifyChange((Node) ev.getSource());
-            }
-
-            private void notifyChange(Node src) {
-                onDidChangeTreeData(src, findId(src));
+                LOG.log(Level.FINER, "tree {0} property of node {2} changed: {1}", new Object[] { treeId, ev, ev.getSource()});
+                onDidChangeTreeData((Node)ev.getSource(), NodeChangeType.SELF, null);
             }
         };
         factories = context.lookupResult(TreeDataProvider.Factory.class);
@@ -186,7 +190,7 @@ public abstract class TreeViewProvider {
         refreshProviders();
     }
     
-    protected abstract void onDidChangeTreeData(Node n, int id);
+    protected abstract void onDidChangeTreeData(Node n, NodeChangeType type, String property);
 
     public Lookup getLookup() {
         return context;
@@ -255,7 +259,7 @@ public abstract class TreeViewProvider {
             }
         }
         // PENDING: perhaps too many changes if many sibling nodes are being removed ?
-        onDidChangeTreeData(parent, parentLspId);
+        onDidChangeTreeData(parent, NodeChangeType.CHILDREN, null);
     }
     
     /**
@@ -272,7 +276,7 @@ public abstract class TreeViewProvider {
                 return;
             }
         }
-        onDidChangeTreeData(parent, id);
+        onDidChangeTreeData(parent, NodeChangeType.CHILDREN, null);
     }
     
     /**
@@ -368,6 +372,7 @@ public abstract class TreeViewProvider {
      * @return a TreeItem suitable for LSP transmit
      */
     public TreeItem findTreeItem(Node n) {
+        LOG.log(Level.FINER, "Finding tree item for node {0}", n);
         TreeDataProvider[] pa = this.providers;
         String v;
         boolean expanded;
@@ -390,6 +395,9 @@ public abstract class TreeViewProvider {
         v = data.getContextValues() == null ? "" : String.join(" ", data.getContextValues()); // NOI18N
 
         TreeItem ti = new TreeItem(id, n, expanded, v);
+        if (data.isLeaf()) {
+            ti.collapsibleState = CollapsibleState.None;
+        }
         
         if (data.getIconImage() != null && data.getIconImage() != DUMMY_NODE.getIcon(BeanInfo.ICON_COLOR_16x16)) {
             TreeNodeRegistry.ImageDataOrIndex idoi = nodeRegistry.imageOrIndex(data.getIconImage());
@@ -411,7 +419,7 @@ public abstract class TreeViewProvider {
         if (data.getResourceURI() != null) {
             ti.resourceUri = data.getResourceURI().toString();
         }
-        
+        LOG.log(Level.FINER, "Finding tree item for node {0} => {1} ", new Object[] { n, ti });
         return ti;
     }
     
@@ -444,7 +452,7 @@ public abstract class TreeViewProvider {
             nh.id2Child = newId2Node;
         }
         if (LOG.isLoggable(Level.FINER)) {
-            LOG.log(Level.FINER, "Children of id {0}: {1}", new Object[] { parentId, Arrays.asList(ids) });
+            LOG.log(Level.FINER, "Children of id {0}: {1}", new Object[] { parentId, Arrays.toString(ids) });
         }
         if (obsolete != null) {
             synchronized (this) {
@@ -463,9 +471,7 @@ public abstract class TreeViewProvider {
 
     public final CompletionStage<Node[]> getChildren(Node nodeOrNull) {
         Node node = getNodeOrRoot(nodeOrNull);
-        return CompletableFuture.supplyAsync(() -> {
-            return node.getChildren().getNodes(true);
-        }, INITIALIZE);
+        return CompletableFuture.completedFuture(node.getChildren().getNodes());
     }
 
     public final CompletionStage<Node> getParent(Node node) {
@@ -590,7 +596,7 @@ public abstract class TreeViewProvider {
             this.providers = n;
         }
         // fire complete tree change
-        onDidChangeTreeData(null, -1);
+        onDidChangeTreeData(null, null, null);
     }
     
     class Firer implements Runnable {
@@ -606,7 +612,7 @@ public abstract class TreeViewProvider {
             for (Node n : toFire) {
                 int id = findId(n);
                 if (id != -1) {
-                    onDidChangeTreeData(n, id);
+                    onDidChangeTreeData(n, null, null);
                 }
             }
         }
@@ -641,9 +647,9 @@ public abstract class TreeViewProvider {
             // there are no nodes at all
             return -1; 
         }
-        
+
         @Override
-        protected void onDidChangeTreeData(Node n, int id) {
+        protected void onDidChangeTreeData(Node n, NodeChangeType type, String property) {
         }
     };
     

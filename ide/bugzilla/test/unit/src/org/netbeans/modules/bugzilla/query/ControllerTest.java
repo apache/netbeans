@@ -91,7 +91,7 @@ public class ControllerTest extends NbTestCase implements TestConstants {
         String[] parametersGiven = parametersUrl.split("&");
         String params = c.getUrlParameters(true);
         assertTrue(params.startsWith("&"));
-        params = params.substring(1, params.length());
+        params = params.substring(1);
         String[] parametersReturned = params.split("&");
 //        assertEquals(parametersGiven.length, parametersReturned.length);
 

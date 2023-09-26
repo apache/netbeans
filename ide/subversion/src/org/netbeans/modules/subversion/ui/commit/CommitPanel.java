@@ -302,7 +302,7 @@ public class CommitPanel extends AutoResizingPanel implements PreferenceChangeLi
             JTabbedPane hooksTabbedPane = new JTabbedPane();
             for (SvnHook hook : hooks) {
                 hooksTabbedPane.add(hook.createComponent(hookContext),
-                                    hook.getDisplayName().replaceAll("\\&", ""));
+                                    hook.getDisplayName().replace("&", ""));
             }
             hooksSectionPanel.add(hooksTabbedPane);
         }

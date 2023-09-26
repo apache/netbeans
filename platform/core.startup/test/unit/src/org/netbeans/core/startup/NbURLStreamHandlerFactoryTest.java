@@ -208,7 +208,8 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
             first = null;
             return f;
         }
-        
+
+        @Override
         protected URL findResource(String name) {
             if (first == null) {
                 first = name;
@@ -229,6 +230,7 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
             }
         }
 
+        @Override
         protected Enumeration<URL> findResources(String name) throws IOException {
             URL u = findResource(name);
             if (u != null) {
@@ -276,11 +278,13 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
         }
 
         public void connect() throws IOException {}
-        
+
+        @Override
         public int getContentLength() {
             return path.length();
         }
 
+        @Override
         public String getContentType() {
             if (path.endsWith(".html")) {
                 return "text/html";
@@ -289,6 +293,7 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
             }
         }
 
+        @Override
         public InputStream getInputStream() throws IOException {
             return new ByteArrayInputStream(path.getBytes(StandardCharsets.UTF_8));
         }

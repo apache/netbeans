@@ -44,7 +44,7 @@ public class PatchUtils {
      * 
      * @param patch the patch file
      * @param context the file or folder to be updated with the patch
-     * @throws PatchException
+     * @throws org.netbeans.modules.diff.builtin.PatchException
      * @throws IOException - the patch is invalid or cannot be applied
      * @since 1.19
      */
@@ -60,7 +60,7 @@ public class PatchUtils {
      *  <li>normal</li>
      *  <li>unified</li>
      * </ul>
-     * @param file patch file
+     * @param patch patch file
      * @return true if the given input stream is a patch otherwise false
      * @throws IOException
      * @since 1.19

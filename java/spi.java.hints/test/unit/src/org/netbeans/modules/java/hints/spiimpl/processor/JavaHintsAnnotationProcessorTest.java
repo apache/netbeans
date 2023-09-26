@@ -20,6 +20,7 @@ package org.netbeans.modules.java.hints.spiimpl.processor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Locale;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.test.AnnotationProcessorTestUtils;
 import org.openide.util.test.TestFileUtils;
@@ -32,6 +33,21 @@ public class JavaHintsAnnotationProcessorTest extends NbTestCase {
 
     public JavaHintsAnnotationProcessorTest(String name) {
         super(name);
+    }
+
+    private Locale originalLocale;
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        Locale.setDefault(originalLocale);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        originalLocale = Locale.getDefault();
+        Locale.setDefault(Locale.US);
     }
 
     public void testErrors1() throws Exception {

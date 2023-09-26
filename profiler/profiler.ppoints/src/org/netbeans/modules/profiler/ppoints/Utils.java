@@ -197,7 +197,7 @@ public class Utils {
             renderer.setEnabled(rendererOrig.isEnabled());
             renderer.setBorder(rendererOrig.getBorder());
 
-            if ((value != null) && value instanceof Lookup.Provider) {
+            if (value instanceof Lookup.Provider) {
                 renderer.setText(ProjectUtilities.getDisplayName((Lookup.Provider)value));
                 renderer.setIcon(ProjectUtilities.getIcon((Lookup.Provider)value));
 
@@ -654,7 +654,7 @@ public class Utils {
         File file = new File(location.getFile());
         int lineNumber = location.getLine();
 
-        List<CodeProfilingPoint> lineProfilingPoints = new ArrayList();
+        List<CodeProfilingPoint> lineProfilingPoints = new ArrayList<>();
         List<CodeProfilingPoint> profilingPoints = ProfilingPointsManager.getDefault()
                                                                          .getProfilingPoints(CodeProfilingPoint.class, null, false);
 
@@ -725,7 +725,7 @@ public class Utils {
 
     public static String getUniqueName(String name, String nameSuffix, Lookup.Provider project) {
         List<ProfilingPoint> projectProfilingPoints = ProfilingPointsManager.getDefault().getProfilingPoints(project, false, true);
-        Set<String> projectProfilingPointsNames = new HashSet();
+        Set<String> projectProfilingPointsNames = new HashSet<>();
 
         for (ProfilingPoint projectProfilingPoint : projectProfilingPoints) {
             projectProfilingPointsNames.add(projectProfilingPoint.getName());

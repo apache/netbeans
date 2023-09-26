@@ -119,15 +119,16 @@ extends GlassfishConfiguration implements DeploymentConfiguration {
         super(module, J2eeModuleHelper.getWsModuleHelper(webServerDDName), version);
     }
 
-   /**
-     * Create an instance of SunONEDeploymentConfiguration for GF V2
-     * and earlier servers.
-     *
-     * @param module  J2eeModule instance for the project represented by this config.
-     * @param mySdmi  Sun deployment manager.
-     * @deprecated Use constructor with {@link GlassFishVersion}.
-     * @throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
-     */
+    /**
+      * Create an instance of SunONEDeploymentConfiguration for GF V2
+      * and earlier servers.
+      *
+      * @param module  J2eeModule instance for the project represented by this config.
+      * @param mySdmi  Sun deployment manager.
+      * @deprecated Use constructor with {@link GlassFishVersion}.
+      * @throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+      */
+    @Deprecated
     public SunONEDeploymentConfiguration(
             final J2eeModule module, final SunDeploymentManagerInterface mySdmi
     ) throws ConfigurationException {
@@ -143,6 +144,7 @@ extends GlassfishConfiguration implements DeploymentConfiguration {
      * @deprecated Use constructor with {@link GlassFishVersion}.
      * @throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
      */
+    @Deprecated
     public SunONEDeploymentConfiguration(
             final J2eeModule module, final String webServerDDName
     ) throws ConfigurationException {

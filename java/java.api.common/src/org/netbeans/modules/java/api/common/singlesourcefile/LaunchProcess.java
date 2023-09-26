@@ -25,21 +25,22 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 
 final class LaunchProcess implements Callable<Process> {
-    private static final Pattern JVM_ARGS_PATTERN = Pattern.compile("(.*) (--source[ ]* [0-9]*)(.*)");  //NOI18N
 
     private final FileObject fileObject;
     private final JPDAStart start;
+    private final ExplicitProcessParameters params;
 
-    LaunchProcess(FileObject fileObject, JPDAStart start) {
+    LaunchProcess(FileObject fileObject, JPDAStart start, ExplicitProcessParameters params) {
         this.fileObject = fileObject;
         this.start = start;
+        this.params = params;
     }
 
     @Override
@@ -68,26 +69,28 @@ final class LaunchProcess implements Callable<Process> {
             File javaFile = FileUtil.toFile(java);
             String javaPath = javaFile.getAbsolutePath();
 
-            Object argumentsObject = fileObject.getAttribute(SingleSourceFileUtil.FILE_ARGUMENTS);
-            String arguments = argumentsObject != null ? ((String) argumentsObject).trim() : ""; // NOI18N
+            ExplicitProcessParameters paramsFromAttributes =
+                    ExplicitProcessParameters.builder()
+                                             .args(readArgumentsFromAttribute(fileObject, SingleSourceFileUtil.FILE_ARGUMENTS))
+                                             .launcherArgs(readArgumentsFromAttribute(fileObject, SingleSourceFileUtil.FILE_VM_OPTIONS))
+                                             .workingDirectory(FileUtil.toFile(fileObject.getParent()))
+                                             .build();
 
-            Object vmOptionsObj = fileObject.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS);
-            String vmOptions = vmOptionsObj != null ? ((String) vmOptionsObj) : ""; // NOI18N
-
+            ExplicitProcessParameters realParameters =
+                    ExplicitProcessParameters.builder()
+                                             .combine(params)
+                                             .combine(paramsFromAttributes)
+                                             .build();
             commandsList.add(javaPath);
-            if (!vmOptions.isEmpty()) {
-                //filtering out --source param from VM option
-                Matcher m1 = JVM_ARGS_PATTERN.matcher(vmOptions);
-                while (m1.find()) {
-                    String group1 = m1.group(1);
-                    String group3 = m1.group(3);
-                    vmOptions = group1 + group3;
-                }
-                commandsList.addAll(Arrays.asList(vmOptions.split(" ")));  //NOI18N
+
+            if (realParameters.getLauncherArguments()!= null) {
+                commandsList.addAll(realParameters.getLauncherArguments());
             }
+
             if (port != null) {
                 commandsList.add("-agentlib:jdwp=transport=dt_socket,address=" + port + ",server=n"); //NOI18N
             }
+
             if (compile) {
                 commandsList.add("-cp");
                 commandsList.add(FileUtil.toFile(fileObject.getParent()).toString());
@@ -96,12 +99,13 @@ final class LaunchProcess implements Callable<Process> {
                 commandsList.add(fileObject.getNameExt());
             }
 
-            if (!arguments.isEmpty()) {
-                commandsList.addAll(Arrays.asList(arguments.split(" ")));  //NOI18N
+            if (realParameters.getArguments() != null) {
+                commandsList.addAll(realParameters.getArguments());
             }
 
             ProcessBuilder runFileProcessBuilder = new ProcessBuilder(commandsList);
-            runFileProcessBuilder.directory(FileUtil.toFile(fileObject.getParent())); //NOI18N
+            runFileProcessBuilder.environment().putAll(realParameters.getEnvironmentVariables());
+            runFileProcessBuilder.directory(realParameters.getWorkingDirectory());
             runFileProcessBuilder.redirectErrorStream(true);
             runFileProcessBuilder.redirectOutput();
 
@@ -112,5 +116,13 @@ final class LaunchProcess implements Callable<Process> {
                     "Could not get InputStream of Run Process"); //NOI18N
         }
         return null;
+    }
+
+    private static List<String> readArgumentsFromAttribute(FileObject fileObject, String attributeName) {
+        Object argumentsObject = fileObject.getAttribute(attributeName);
+        if (!(argumentsObject instanceof String)) {
+            return null;
+        }
+        return Arrays.asList(BaseUtilities.parseParameters(((String) argumentsObject).trim()));
     }
 }

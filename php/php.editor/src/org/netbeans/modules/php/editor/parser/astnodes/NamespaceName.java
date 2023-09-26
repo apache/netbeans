@@ -20,14 +20,20 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import org.netbeans.api.annotations.common.NonNull;
 
 /**
  * Represents namespace name:
- * <pre>e.g.<pre>MyNamespace;
- *MyProject\Sub\Level;
- *namespace\MyProject\Sub\Level;
+ *
+ * <pre>
+ * e.g.
+ * MyNamespace;
+ * MyProject\Sub\Level;
+ * namespace\MyProject\Sub\Level;
+ * </pre>
  */
 public class NamespaceName extends Expression {
 
@@ -64,6 +70,24 @@ public class NamespaceName extends Expression {
         this.current = current;
     }
 
+    @NonNull
+    public static NamespaceName create(int start, int end, @NonNull String namespaceName) {
+        boolean isGlobal = namespaceName.startsWith("\\"); // NOI18N
+        boolean isCurrent = namespaceName.startsWith("namespace\\"); // NOI18N
+        String[] names = namespaceName.split("\\\\"); // NOI18N
+        int startSegment = start;
+        List<Identifier> list = new ArrayList<>(names.length);
+        for (String n : names) {
+            if (n.equals("namespace") || n.isEmpty()) { // NOI18N
+                startSegment += n.length() + 1; // length + \
+                continue;
+            }
+            list.add(new Identifier(startSegment, startSegment + n.length(), n));
+            startSegment += n.length() + 1; // length + \
+        }
+        return new NamespaceName(start, end, list, isGlobal, isCurrent);
+    }
+
     /**
      * Returns whether this namespace name has global context (starts with '\')
      * @return
@@ -85,7 +109,7 @@ public class NamespaceName extends Expression {
      * @return segments. If names list is empty, that means that this namespace is global.
      */
     public List<Identifier> getSegments() {
-        return this.segments;
+        return Collections.unmodifiableList(this.segments);
     }
 
     @Override

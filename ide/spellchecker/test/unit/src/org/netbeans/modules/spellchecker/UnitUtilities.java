@@ -22,7 +22,7 @@ package org.netbeans.modules.spellchecker;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

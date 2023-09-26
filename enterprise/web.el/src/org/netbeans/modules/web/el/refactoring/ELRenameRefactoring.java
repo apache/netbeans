@@ -61,14 +61,23 @@ public class ELRenameRefactoring extends ELWhereUsedQuery {
     @Override
     protected Problem handleClass(CompilationContext info, RefactoringElementsBag refactoringElementsBag, TreePathHandle handle, Element targetType) {
         TypeElement type = (TypeElement) targetType;
-        // handles only cases where the managed bean name matches the class name and is not 
+        // handles only cases where the managed bean name matches the class name and is not
         // explicitly specified in the annotation
         String beanName = ELVariableResolvers.findBeanName(info, type.getQualifiedName().toString(), getFileObject());
         if (beanName != null && beanName.equalsIgnoreCase(type.getSimpleName().toString())) {
             for (AnnotationMirror ann : info.info().getElements().getAllAnnotationMirrors(type)) {
                 CharSequence annFqn = info.info().getTypeUtilities().getTypeName(ann.getAnnotationType(), TypeNameOptions.PRINT_FQN);
                 if ("javax.faces.bean.ManagedBean".contentEquals(annFqn)) { //NOI18N
-                    for (ExecutableElement annElem : ann.getElementValues().keySet()) { 
+                    for (ExecutableElement annElem : ann.getElementValues().keySet()) {
+                        if ("name".contentEquals(annElem.getSimpleName())) { //NOI18N
+                            // name explicitly specified, so don't refactor
+                            return null;
+                        }
+                    }
+                    // uses default name, can be refactored
+                    return super.handleClass(info, refactoringElementsBag, handle, targetType);
+                } else if ("jakarta.faces.bean.ManagedBean".contentEquals(annFqn)) { //NOI18N
+                    for (ExecutableElement annElem : ann.getElementValues().keySet()) {
                         if ("name".contentEquals(annElem.getSimpleName())) { //NOI18N
                             // name explicitly specified, so don't refactor
                             return null;
@@ -78,7 +87,16 @@ public class ELRenameRefactoring extends ELWhereUsedQuery {
                     return super.handleClass(info, refactoringElementsBag, handle, targetType);
                 }
                 if ("javax.inject.Named".contentEquals(annFqn)) { //NOI18N
-                    for (ExecutableElement annElem : ann.getElementValues().keySet()) { 
+                    for (ExecutableElement annElem : ann.getElementValues().keySet()) {
+                        if ("value".contentEquals(annElem.getSimpleName())) { //NOI18N
+                            // name explicitly specified, so don't refactor
+                            return null;
+                        }
+                    }
+                    // uses default name, can be refactored
+                    return super.handleClass(info, refactoringElementsBag, handle, targetType);
+                } else if ("jakarta.inject.Named".contentEquals(annFqn)) { //NOI18N
+                    for (ExecutableElement annElem : ann.getElementValues().keySet()) {
                         if ("value".contentEquals(annElem.getSimpleName())) { //NOI18N
                             // name explicitly specified, so don't refactor
                             return null;

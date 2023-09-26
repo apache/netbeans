@@ -26,14 +26,14 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
  * @author Petr Pisl
  */
 public interface JsWith extends JsObject {
-    
+
     /**
-     * 
+     *
      * @return collection types that corresponds to the expression in the with ()
      */
     public Collection<TypeUsage> getTypes();
-    
+
     public Collection<? extends JsWith> getInnerWiths();
-            
+
     public JsWith getOuterWith();
 }

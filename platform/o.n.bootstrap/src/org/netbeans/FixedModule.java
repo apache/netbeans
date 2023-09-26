@@ -222,6 +222,11 @@ final class FixedModule extends Module {
     protected void classLoaderUp(Set<Module> parents) throws IOException {
         return; // no need
     }
+
+    @Override
+    void releaseClassLoader() {
+        return; // don't touch it
+    }
     
     /** Turn off the classloader and release all resources. */
     protected void classLoaderDown() {

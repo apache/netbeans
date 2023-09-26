@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.9
+#Version 1.15
 
 CLSS public abstract interface com.formdev.flatlaf.FlatClientProperties
 fld public final static java.lang.String BUTTON_TYPE = "JButton.buttonType"
@@ -11,6 +11,8 @@ fld public final static java.lang.String BUTTON_TYPE_TAB = "tab"
 fld public final static java.lang.String BUTTON_TYPE_TOOLBAR_BUTTON = "toolBarButton"
 fld public final static java.lang.String COMPONENT_FOCUS_OWNER = "JComponent.focusOwner"
 fld public final static java.lang.String COMPONENT_ROUND_RECT = "JComponent.roundRect"
+fld public final static java.lang.String COMPONENT_TITLE_BAR_CAPTION = "JComponent.titleBarCaption"
+fld public final static java.lang.String GLASS_PANE_FULL_HEIGHT = "JRootPane.glassPaneFullHeight"
 fld public final static java.lang.String MENU_BAR_EMBEDDED = "JRootPane.menuBarEmbedded"
 fld public final static java.lang.String MINIMUM_HEIGHT = "JComponent.minimumHeight"
 fld public final static java.lang.String MINIMUM_WIDTH = "JComponent.minimumWidth"
@@ -18,6 +20,7 @@ fld public final static java.lang.String OUTLINE = "JComponent.outline"
 fld public final static java.lang.String OUTLINE_ERROR = "error"
 fld public final static java.lang.String OUTLINE_WARNING = "warning"
 fld public final static java.lang.String PLACEHOLDER_TEXT = "JTextField.placeholderText"
+fld public final static java.lang.String POPUP_BORDER_CORNER_RADIUS = "Popup.borderCornerRadius"
 fld public final static java.lang.String POPUP_DROP_SHADOW_PAINTED = "Popup.dropShadowPainted"
 fld public final static java.lang.String POPUP_FORCE_HEAVY_WEIGHT = "Popup.forceHeavyWeight"
 fld public final static java.lang.String PROGRESS_BAR_LARGE_HEIGHT = "JProgressBar.largeHeight"
@@ -30,6 +33,9 @@ fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY = "JTextFiel
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_ALWAYS = "always"
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_NEVER = "never"
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_ONCE = "once"
+fld public final static java.lang.String SPLIT_PANE_EXPANDABLE_SIDE = "JSplitPane.expandableSide"
+fld public final static java.lang.String SPLIT_PANE_EXPANDABLE_SIDE_LEFT = "left"
+fld public final static java.lang.String SPLIT_PANE_EXPANDABLE_SIDE_RIGHT = "right"
 fld public final static java.lang.String SQUARE_SIZE = "JButton.squareSize"
 fld public final static java.lang.String STYLE = "FlatLaf.style"
 fld public final static java.lang.String STYLE_CLASS = "FlatLaf.styleClass"
@@ -72,6 +78,7 @@ fld public final static java.lang.String TABBED_PANE_TRAILING_COMPONENT = "JTabb
 fld public final static java.lang.String TAB_BUTTON_SELECTED_BACKGROUND = "JToggleButton.tab.selectedBackground"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_COLOR = "JToggleButton.tab.underlineColor"
 fld public final static java.lang.String TAB_BUTTON_UNDERLINE_HEIGHT = "JToggleButton.tab.underlineHeight"
+fld public final static java.lang.String TAB_BUTTON_UNDERLINE_PLACEMENT = "JToggleButton.tab.underlinePlacement"
 fld public final static java.lang.String TEXT_FIELD_CLEAR_CALLBACK = "JTextField.clearCallback"
 fld public final static java.lang.String TEXT_FIELD_LEADING_COMPONENT = "JTextField.leadingComponent"
 fld public final static java.lang.String TEXT_FIELD_LEADING_ICON = "JTextField.leadingIcon"
@@ -81,7 +88,11 @@ fld public final static java.lang.String TEXT_FIELD_TRAILING_COMPONENT = "JTextF
 fld public final static java.lang.String TEXT_FIELD_TRAILING_ICON = "JTextField.trailingIcon"
 fld public final static java.lang.String TITLE_BAR_BACKGROUND = "JRootPane.titleBarBackground"
 fld public final static java.lang.String TITLE_BAR_FOREGROUND = "JRootPane.titleBarForeground"
+fld public final static java.lang.String TITLE_BAR_SHOW_CLOSE = "JRootPane.titleBarShowClose"
 fld public final static java.lang.String TITLE_BAR_SHOW_ICON = "JRootPane.titleBarShowIcon"
+fld public final static java.lang.String TITLE_BAR_SHOW_ICONIFFY = "JRootPane.titleBarShowIconify"
+fld public final static java.lang.String TITLE_BAR_SHOW_MAXIMIZE = "JRootPane.titleBarShowMaximize"
+fld public final static java.lang.String TITLE_BAR_SHOW_TITLE = "JRootPane.titleBarShowTitle"
 fld public final static java.lang.String TREE_PAINT_SELECTION = "JTree.paintSelection"
 fld public final static java.lang.String TREE_WIDE_SELECTION = "JTree.wideSelection"
 fld public final static java.lang.String USE_WINDOW_DECORATIONS = "JRootPane.useWindowDecorations"
@@ -181,6 +192,7 @@ meth public java.lang.String getID()
 meth public java.util.Map<java.lang.String,java.lang.String> getExtraDefaults()
 meth public javax.swing.Icon getDisabledIcon(javax.swing.JComponent,javax.swing.Icon)
 meth public javax.swing.UIDefaults getDefaults()
+meth public static <%0 extends java.lang.Object> {%%0} getStyleableValue(javax.swing.JComponent,java.lang.String)
 meth public static boolean install(javax.swing.LookAndFeel)
  anno 0 java.lang.Deprecated()
 meth public static boolean isLafDark()
@@ -189,7 +201,13 @@ meth public static boolean isUseNativeWindowDecorations()
 meth public static boolean setup(javax.swing.LookAndFeel)
 meth public static boolean supportsNativeWindowDecorations()
 meth public static java.lang.Object parseDefaultsValue(java.lang.String,java.lang.String,java.lang.Class<?>)
+meth public static java.lang.String getPreferredFontFamily()
+meth public static java.lang.String getPreferredLightFontFamily()
+meth public static java.lang.String getPreferredMonospacedFontFamily()
+meth public static java.lang.String getPreferredSemiboldFontFamily()
+meth public static java.util.Map<java.lang.String,java.lang.Class<?>> getStyleableInfos(javax.swing.JComponent)
 meth public static java.util.Map<java.lang.String,java.lang.String> getGlobalExtraDefaults()
+meth public static java.util.function.Function<java.lang.String,java.awt.Color> getSystemColorGetter()
 meth public static javax.swing.UIDefaults$ActiveValue createActiveFontValue(float)
 meth public static void hideMnemonics()
 meth public static void initIconColors(javax.swing.UIDefaults,boolean)
@@ -202,6 +220,11 @@ meth public static void repaintAllFramesAndDialogs()
 meth public static void revalidateAndRepaintAllFramesAndDialogs()
 meth public static void runWithUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>,java.lang.Runnable)
 meth public static void setGlobalExtraDefaults(java.util.Map<java.lang.String,java.lang.String>)
+meth public static void setPreferredFontFamily(java.lang.String)
+meth public static void setPreferredLightFontFamily(java.lang.String)
+meth public static void setPreferredMonospacedFontFamily(java.lang.String)
+meth public static void setPreferredSemiboldFontFamily(java.lang.String)
+meth public static void setSystemColorGetter(java.util.function.Function<java.lang.String,java.awt.Color>)
 meth public static void setUseNativeWindowDecorations(boolean)
 meth public static void showMnemonics(java.awt.Component)
 meth public static void unregisterCustomDefaultsSource(java.io.File)
@@ -216,7 +239,7 @@ meth public void setExtraDefaults(java.util.Map<java.lang.String,java.lang.Strin
 meth public void uninitialize()
 meth public void unregisterUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>)
 supr javax.swing.plaf.basic.BasicLookAndFeel
-hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,extraDefaults,globalExtraDefaults,mnemonicHandler,oldPopupFactory,postInitialization,uiDefaultsGetters,updateUIPending
+hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,extraDefaults,getUIMethod,getUIMethodInitialized,globalExtraDefaults,mnemonicHandler,oldPopupFactory,postInitialization,preferredFontFamily,preferredLightFontFamily,preferredMonospacedFontFamily,preferredSemiboldFontFamily,subMenuUsabilityHelperInstalled,systemColorGetter,uiDefaultsGetters,updateUIPending
 hcls ActiveFont,FlatUIDefaults,ImageIconUIResource
 
 CLSS public abstract interface static com.formdev.flatlaf.FlatLaf$DisabledIconProvider
@@ -255,6 +278,7 @@ fld public final static java.lang.String NATIVE_LIBRARY_PATH = "flatlaf.nativeLi
 fld public final static java.lang.String UI_SCALE = "flatlaf.uiScale"
 fld public final static java.lang.String UI_SCALE_ALLOW_SCALE_DOWN = "flatlaf.uiScale.allowScaleDown"
 fld public final static java.lang.String UI_SCALE_ENABLED = "flatlaf.uiScale.enabled"
+fld public final static java.lang.String UPDATE_UI_ON_SYSTEM_FONT_CHANGE = "flatlaf.updateUIOnSystemFontChange"
 fld public final static java.lang.String USE_JETBRAINS_CUSTOM_DECORATIONS = "flatlaf.useJetBrainsCustomDecorations"
 fld public final static java.lang.String USE_TEXT_Y_CORRECTION = "flatlaf.useTextYCorrection"
 fld public final static java.lang.String USE_UBUNTU_FONT = "flatlaf.useUbuntuFont"
@@ -286,6 +310,26 @@ meth public java.lang.String getDescription()
 meth public java.lang.String getName()
 supr com.formdev.flatlaf.FlatLaf
 hfds theme
+
+CLSS public com.formdev.flatlaf.themes.FlatMacDarkLaf
+cons public init()
+fld public final static java.lang.String NAME = "FlatLaf macOS Dark"
+meth public boolean isDark()
+meth public java.lang.String getDescription()
+meth public java.lang.String getName()
+meth public static boolean setup()
+meth public static void installLafInfo()
+supr com.formdev.flatlaf.FlatDarkLaf
+
+CLSS public com.formdev.flatlaf.themes.FlatMacLightLaf
+cons public init()
+fld public final static java.lang.String NAME = "FlatLaf macOS Light"
+meth public boolean isDark()
+meth public java.lang.String getDescription()
+meth public java.lang.String getName()
+meth public static boolean setup()
+meth public static void installLafInfo()
+supr com.formdev.flatlaf.FlatLightLaf
 
 CLSS public abstract interface com.formdev.flatlaf.util.AnimatedIcon
 innr public static AnimationSupport
@@ -354,6 +398,7 @@ meth public static float clamp(float)
 meth public static float luma(java.awt.Color)
 meth public static java.awt.Color darken(java.awt.Color,float)
 meth public static java.awt.Color desaturate(java.awt.Color,float)
+meth public static java.awt.Color fade(java.awt.Color,float)
 meth public static java.awt.Color lighten(java.awt.Color,float)
 meth public static java.awt.Color mix(java.awt.Color,java.awt.Color,float)
 meth public static java.awt.Color saturate(java.awt.Color,float)
@@ -428,6 +473,17 @@ meth public java.awt.Color derive(java.awt.Color)
 meth public java.lang.String toString()
 supr javax.swing.plaf.ColorUIResource
 hfds baseOfDefaultColorRGB,functions,hasBaseOfDefaultColor
+
+CLSS public com.formdev.flatlaf.util.FontUtils
+cons public init()
+meth public static boolean installFont(java.net.URL)
+meth public static java.awt.Font getCompositeFont(java.lang.String,int,int)
+meth public static java.awt.Font[] getAllFonts()
+meth public static java.lang.String[] getAvailableFontFamilyNames()
+meth public static void loadFontFamily(java.lang.String)
+meth public static void registerFontFamilyLoader(java.lang.String,java.lang.Runnable)
+supr java.lang.Object
+hfds loadersMap
 
 CLSS public com.formdev.flatlaf.util.Graphics2DProxy
 cons public init(java.awt.Graphics2D)
@@ -565,7 +621,7 @@ meth public static void drawStringWithYCorrection(javax.swing.JComponent,java.aw
 meth public static void paintAtScale1x(java.awt.Graphics2D,int,int,int,int,com.formdev.flatlaf.util.HiDPIUtils$Painter)
 meth public static void paintAtScale1x(java.awt.Graphics2D,javax.swing.JComponent,com.formdev.flatlaf.util.HiDPIUtils$Painter)
 supr java.lang.Object
-hfds useTextYCorrection
+hfds CORRECTION_INTER,CORRECTION_OPEN_SANS,CORRECTION_SEGOE_UI,CORRECTION_TAHOMA,SCALE_FACTORS,useDebugScaleFactor,useTextYCorrection
 
 CLSS public abstract interface static com.formdev.flatlaf.util.HiDPIUtils$Painter
  outer com.formdev.flatlaf.util.HiDPIUtils
@@ -596,6 +652,7 @@ supr java.lang.Object
 
 CLSS public com.formdev.flatlaf.util.NativeLibrary
 cons public init(java.io.File,boolean)
+cons public init(java.lang.String,boolean)
 cons public init(java.lang.String,java.lang.ClassLoader,boolean)
 meth public boolean isLoaded()
 supr java.lang.Object
@@ -662,6 +719,7 @@ CLSS public com.formdev.flatlaf.util.SystemInfo
 cons public init()
 fld public final static boolean isAARCH64
 fld public final static boolean isJava_11_orLater
+fld public final static boolean isJava_12_orLater
 fld public final static boolean isJava_15_orLater
 fld public final static boolean isJava_17_orLater
 fld public final static boolean isJava_18_orLater
@@ -670,6 +728,7 @@ fld public final static boolean isJetBrainsJVM
 fld public final static boolean isJetBrainsJVM_11_orLater
 fld public final static boolean isKDE
 fld public final static boolean isLinux
+fld public final static boolean isMacFullWindowContentSupported
 fld public final static boolean isMacOS
 fld public final static boolean isMacOS_10_11_ElCapitan_orLater
 fld public final static boolean isMacOS_10_14_Mojave_orLater

@@ -29,6 +29,8 @@ public interface MxProject {
 
     List<String> dependencies();
 
+    List<String> generatedDependencies();
+
     List<String> annotationProcessors();
 
     String javaCompliance();

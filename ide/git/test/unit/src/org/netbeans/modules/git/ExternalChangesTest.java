@@ -29,7 +29,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.libs.git.GitBranch;

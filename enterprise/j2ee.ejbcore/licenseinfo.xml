@@ -46,6 +46,12 @@
         <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB30StatefulEjbClass.template</file>
         <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB30StatelessEjbClass.template</file>
         <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB31SingletonEjbClass.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB40StatelessEjbClass.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB40StatefulEjbClass.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB40SessionLocal.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB40SessionRemote.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB40MessageDrivenBean.template</file>
+        <file>src/org/netbeans/modules/j2ee/ejbcore/resources/templates/EJB40SingletonEjbClass.template</file>
         <file>src/org/netbeans/modules/j2ee/ejbcore/resources/CachingServiceLocator.template</file>
         <file>src/org/netbeans/modules/j2ee/ejbcore/resources/ServiceLocator.template</file>
         <license ref="Apache-2.0-ASF" />

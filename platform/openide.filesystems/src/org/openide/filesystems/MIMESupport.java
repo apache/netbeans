@@ -287,7 +287,7 @@ final class MIMESupport extends Object {
                 resolvedMimeType = resolveMIME(withinMIMETypes);
                 if (resolvedMimeType == null) {
                     // fallback for xml files to be recognized e.g. in platform without any MIME resolver registered
-                    if (getExt().toLowerCase().equals("xml")) {  //NOI18N
+                    if (getExt().equalsIgnoreCase("xml")) {  //NOI18N
                         resolvedMimeType = "text/xml"; // NOI18N
                     } else {
                         // general fallback

@@ -18,7 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle.actions;
 
-import org.netbeans.modules.cloud.oracle.items.DatabaseItem;
+import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
@@ -33,7 +33,7 @@ import org.openide.util.NbBundle.Messages;
 
 @ActionID(
         category = "Tools",
-        id = "org.netbeans.modules.cloud.oracle.OpenServiceConsoleAction"
+        id = "org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction"
 )
 @ActionRegistration(
         displayName = "#CTL_OpenServiceConsoleAction"

@@ -53,3 +53,5 @@ enterprise/modules/ext/aws-sdk/commons-codec-1.3.jar javacard/JCDK3.0.2_Connecte
 
 # maven needs commons-lang internally
 ide/modules/org-apache-commons-lang.jar java/maven/lib/commons-lang-2.6.jar
+
+

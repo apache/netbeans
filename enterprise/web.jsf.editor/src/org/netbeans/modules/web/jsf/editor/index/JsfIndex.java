@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -117,7 +118,7 @@ public class JsfIndex {
 
     // --------------- BOTH EMBEDDING && BINARY INDEXES ------------------
     public Collection<String> getAllCompositeLibraryNames() {
-        Collection<String> col = new ArrayList<>();
+        Collection<String> col = new LinkedHashSet<>();
         try {
             //aggregate data from both indexes
             col.addAll(getAllCompositeLibraryNames(createBinaryIndex()));

@@ -51,8 +51,6 @@
                 <include name="bean-validator.jar"/>
                 <include name="cdi-api.jar"/>
                 <include name="jaxb-osgi.jar"/>
-                <include name="jaxr-api-osgi.jar"/>
-                <include name="jaxrpc-api-osgi.jar"/>
                 <include name="webservices-osgi.jar"/>
                 <include name="weld-osgi-bundle.jar"/>
             </fileset>            
@@ -74,13 +72,12 @@
             <fileset dir="modules">
                 <include name="guava.+\.jar"/>
                 <include name="jackson.+\.jar"/>
-                <!-- include name="javax.ws.+\.jar"/ -->
                 <include name="jersey.+\.jar"/>
                 <include name="jettison.*\.jar"/>
             </fileset>
         </classpath>
         <javadocs> 
-            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.0-m05-2/jersey-documentation-2.0-m05-2-docbook.zip"/>
+            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.21/jersey-documentation-2.21-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>

@@ -89,6 +89,11 @@ public final class JavaDocumentationTask<T> extends BaseTask {
                 case ENUM_CONSTANT:
                 case FIELD:
                 case METHOD:
+                case LOCAL_VARIABLE:
+                case PARAMETER:
+                case EXCEPTION_PARAMETER:
+                case RESOURCE_VARIABLE:
+                case BINDING_VARIABLE:
                     documentation = (T)factory.create(controller, el, cancel);
             }
         }

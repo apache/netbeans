@@ -503,4 +503,215 @@ public class TinyTest extends NbTestCase {
                 .findWarning("4:22-4:29:verifier:ERR_Tiny_collectionsToArray")
                 .assertFixes();
     }
+
+    public void testValueOfToParse1() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         float prim = Float.parseFloat(\"5\");\n" +
+                       "         prim = Float.valueOf(\"6\");\n" +
+                       "     }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .findWarning("4:16-4:34:verifier:Unnecessary temporary when converting from String")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput(
+                       "package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         float prim = Float.parseFloat(\"5\");\n" +
+                       "         prim = Float.parseFloat(\"6\");\n" +
+                       "     }\n" +
+                       "}\n");
+    }
+
+    public void testValueOfToParse2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "import java.util.ArrayList;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         ArrayList arrayList = new ArrayList(Integer.valueOf(\"6\"));\n" +
+                       "         arrayList.get(Integer.parseInt(\"1\"));\n" +
+                       "     }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .findWarning("4:45-4:65:verifier:Unnecessary temporary when converting from String")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput(
+                       "package test;\n" +
+                       "import java.util.ArrayList;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         ArrayList arrayList = new ArrayList(Integer.parseInt(\"6\"));\n" +
+                       "         arrayList.get(Integer.parseInt(\"1\"));\n" +
+                       "     }\n" +
+                       "}\n")
+                ;
+    }
+
+    public void testValueOfToParse3() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "import java.util.ArrayList;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         ArrayList arrayList = new ArrayList(Integer.parseInt(\"6\"));\n" +
+                       "         arrayList.get(Integer.valueOf(\"1\"));\n" +
+                       "     }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .findWarning("5:23-5:43:verifier:Unnecessary temporary when converting from String")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput(
+                       "package test;\n" +
+                       "import java.util.ArrayList;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         ArrayList arrayList = new ArrayList(Integer.parseInt(\"6\"));\n" +
+                       "         arrayList.get(Integer.parseInt(\"1\"));\n" +
+                       "     }\n" +
+                       "}\n");
+    }
+
+    public void testValueOfToParseInMethodReturn() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "     private int test() {\n" +
+                       "         return Integer.valueOf(\"1\");\n" +
+                       "     }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .findWarning("3:16-3:36:verifier:Unnecessary temporary when converting from String")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput(
+                       "package test;\n" +
+                       "public class Test {\n" +
+                       "     private int test() {\n" +
+                       "         return Integer.parseInt(\"1\");\n" +
+                       "     }\n" +
+                       "}\n");
+    }
+
+    public void testParseToValueOfInLambdaReturn() throws Exception {
+        HintTest.create()
+                .sourceLevel("8")
+                .input("package test;\n" +
+                       "import java.util.concurrent.Callable;\n" +
+                       "import java.util.concurrent.Executors;\n"  +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         Executors.newFixedThreadPool(1).submit(() -> {\n" +
+                       "             return Integer.parseInt(\"1\");\n" +
+                       "         });" +
+                       "     }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .findWarning("6:20-6:41:verifier:Unnecessary temporary when converting from String")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput(
+                       "package test;\n" +
+                       "import java.util.concurrent.Callable;\n" +
+                       "import java.util.concurrent.Executors;\n"  +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         Executors.newFixedThreadPool(1).submit(() -> {\n" +
+                       "             return Integer.valueOf(\"1\");\n" +
+                       "         });" +
+                       "     }\n" +
+                       "}\n");
+    }
+
+    public void testParseToValueOf() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "import java.util.HashSet;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         new HashSet().add(Float.parseFloat(\"6\"));\n" +
+                       "     }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .findWarning("4:27-4:48:verifier:Unnecessary temporary when converting from String")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput(
+                       "package test;\n" +
+                       "import java.util.HashSet;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         new HashSet().add(Float.valueOf(\"6\"));\n" +
+                       "     }\n" +
+                       "}\n");
+    }
+
+    public void testNewObjectToValueOf_step1() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         byte b = new Byte(\"5\");\n" +
+                       "     }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .findWarning("3:18-3:31:verifier:Replace usage of deprecated boxed primitive constructors with factory methods.")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput(
+                       "package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         byte b = Byte.valueOf(\"5\");\n" +
+                       "     }\n" +
+                       "}\n");
+    }
+
+    public void testValueOfToParse_step2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         byte b = Byte.valueOf(\"5\");\n" +
+                       "     }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .findWarning("3:18-3:35:verifier:Unnecessary temporary when converting from String")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput(
+                       "package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         byte b = Byte.parseByte(\"5\");\n" +
+                       "     }\n" +
+                       "}\n");
+    }
+
+    public void testValueOfToParseInBinaryOp() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         if (0 < Byte.valueOf(\"5\")) {}\n" +
+                       "     }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .findWarning("3:17-3:34:verifier:Unnecessary temporary when converting from String")
+                .applyFix()
+                .assertCompilable()
+                .assertOutput(
+                       "package test;\n" +
+                       "public class Test {\n" +
+                       "     private void test() {\n" +
+                       "         if (0 < Byte.parseByte(\"5\")) {}\n" +
+                       "     }\n" +
+                       "}\n");
+    }
 }

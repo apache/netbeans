@@ -33,13 +33,13 @@ public final class Occurrence {
     private final OffsetRange offsetRange;
 
     private final List<JsObject> declarations;
-    
+
     public Occurrence(OffsetRange offsetRange, JsObject... declarations) {
         this.offsetRange = offsetRange;
         this.declarations = new ArrayList<>(declarations.length);
         Collections.addAll(this.declarations, declarations);
     }
-    
+
     public OffsetRange getOffsetRange() {
         return offsetRange;
     }
@@ -47,7 +47,7 @@ public final class Occurrence {
     public Collection<? extends JsObject> getDeclarations() {
         return Collections.unmodifiableCollection(declarations);
     }
-    
+
     @Override
     public int hashCode() {
         return offsetRange.hashCode();
@@ -62,11 +62,11 @@ public final class Occurrence {
             return false;
         }
         final Occurrence other = (Occurrence) obj;
-        if (this.offsetRange != other.offsetRange 
+        if (this.offsetRange != other.offsetRange
                 && (this.offsetRange == null || !this.offsetRange.equals(other.offsetRange))) {
             return false;
         }
         return true;
     }
-    
+
 }

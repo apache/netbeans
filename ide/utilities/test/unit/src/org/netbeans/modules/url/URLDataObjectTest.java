@@ -20,8 +20,9 @@ package org.netbeans.modules.url;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
-import static junit.framework.Assert.*;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *

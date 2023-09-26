@@ -137,7 +137,7 @@ public class PresoObjAllocCCTNode extends CCTNode {
             nCalls += _node.nCalls;
             totalObjSize += _node.totalObjSize;
 
-            List<CCTNode> ch = new ArrayList();
+            List<CCTNode> ch = new ArrayList<>();
             
             // Include current children
             if (children != null) ch.addAll(Arrays.asList(children));

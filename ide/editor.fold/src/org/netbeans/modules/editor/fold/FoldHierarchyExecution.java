@@ -1338,11 +1338,11 @@ public final class FoldHierarchyExecution implements DocumentListener, Runnable 
      * If the saved operations do not match the document event, empty collection is returned - this is for cleanup
      * after failed operations. Each call will clear out the thread-local where the post-process is collected,
      * so call only ONCE !
-     * <p/>
+     * <p>
      * The returned collection contains pairs of Objects: Integer, which is a bitfield composed from two pieces of
      * information: The OPERATION_ code and the {@link FoldUtilitiesImpl} FLAG_ constants that specify the damage
      * done to the fold by the remove operation.
-     * <p/>
+     * <p>
      * 
      * @param evt the event that provoked the mutation. Used as an identity key of post process operations.
      * @return Collection of post-process operations.

@@ -57,7 +57,14 @@ final class DPISafeBorder implements Border {
 
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        HiDPIUtils.paintAtScale1x(g, x, y, width, height, this::paintBorderAtScale1x);
+        /* Detect borders which may need to visually connect with a prior adjacent component. This
+        applies in particular to view/editor tabs connecting to their tab containers underneath.
+        Round the starting position down towards the previous component to try to avoid a gap on
+        fractional HiDPI scalings (e.g. 150%). */
+        boolean roundXdown = insets.left == 0;
+        boolean roundYdown = insets.top == 0;
+        HiDPIUtils.paintAtScale1x(
+            g, x, y, width, height, roundXdown, roundYdown, this::paintBorderAtScale1x);
     }
 
     private void paintBorderAtScale1x(Graphics2D g, int deviceWidth, int deviceHeight, double scale) {

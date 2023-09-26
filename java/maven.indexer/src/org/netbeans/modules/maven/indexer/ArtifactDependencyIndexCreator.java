@@ -114,7 +114,7 @@ class ArtifactDependencyIndexCreator extends AbstractIndexCreator {
     }
 
     @Override public Collection<IndexerField> getIndexerFields() {
-        return Arrays.asList(FLD_NB_DEPENDENCY_GROUP, FLD_NB_DEPENDENCY_ARTIFACT, FLD_NB_DEPENDENCY_VERSION);
+        return List.of(FLD_NB_DEPENDENCY_GROUP, FLD_NB_DEPENDENCY_ARTIFACT, FLD_NB_DEPENDENCY_VERSION);
     }
 
     private MavenProject load(ArtifactInfo ai) {

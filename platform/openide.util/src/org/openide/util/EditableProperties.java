@@ -47,7 +47,7 @@ import java.util.Set;
 /**
  * Similar to {@link java.util.Properties} but designed to retain additional
  * information needed for safe hand-editing.
- * Useful for various <samp>*.properties</samp> in a project:
+ * Useful for various <code>*.properties</code> in a project:
  * <ol>
  * <li>Can associate comments with particular entries.
  * <li>Order of entries preserved during modifications whenever possible.
@@ -260,7 +260,7 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
      * Same behavior as {@link #setProperty(String,String)} with the difference that each item
      * will be stored on its own line of text. {@link #getProperty} will simply concatenate
      * all the items into one string, so generally separators
-     * (such as <samp>:</samp> for path-like properties) must be included in
+     * (such as <code>:</code> for path-like properties) must be included in
      * the items (for example, at the end of all but the last item).
      * @param key a property name; cannot be null nor empty
      * @param value the desired value; cannot be null; can be empty array
@@ -859,7 +859,8 @@ public final class EditableProperties extends AbstractMap<String,String> impleme
             delegate.next();
             return new MapEntryImpl(item);
         }
-        
+
+        @Override
         public void remove() {
             delegate.previous();
             Item item = findNext();

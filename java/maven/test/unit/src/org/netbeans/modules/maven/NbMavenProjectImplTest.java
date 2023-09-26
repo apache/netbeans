@@ -238,7 +238,7 @@ public class NbMavenProjectImplTest extends NbTestCase {
         public String m();
     }
 
-    // BEGIN:ProjectServiceProvider.pluginSpecific
+    // @start region="ProjectServiceProvider.pluginSpecific"
     @ProjectServiceProvider(service=PS.class, 
             projectType=NbMavenProject.TYPE + "/org.netbeans.modules.maven:test.plugin")
     public static class PluginService implements PS {
@@ -246,7 +246,7 @@ public class NbMavenProjectImplTest extends NbTestCase {
             return "special";
         }
     }
-    // END:ProjectServiceProvider.pluginSpecific
+    // @end region="ProjectServiceProvider.pluginSpecific"
     
     /**
      * Checks that a service registered against a maven plugin is not present by default.

@@ -74,7 +74,8 @@ public class AngularWhenInterceptor implements FunctionInterceptor {
                         String controllerName = getStringValueAt(content, controller.getOffsetRange().getStart());
                         if (controllerName.isEmpty()
                                 && (controller.getJSKind() == JsElement.Kind.METHOD
-                                || controller.getJSKind() == JsElement.Kind.FUNCTION)) {
+                                || controller.getJSKind() == JsElement.Kind.FUNCTION
+                                || controller.getJSKind() == JsElement.Kind.ARROW_FUNCTION)) {
                             // probably anonymous function as a controller
                             controllerName = controller.getFullyQualifiedName();
                             if (controllerName != null && !controllerName.isEmpty()) {

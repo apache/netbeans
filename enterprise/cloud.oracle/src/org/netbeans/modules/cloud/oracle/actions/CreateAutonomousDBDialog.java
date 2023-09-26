@@ -22,7 +22,7 @@ import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.util.Optional;
 import javax.swing.event.DocumentListener;
-import org.netbeans.modules.cloud.oracle.items.CompartmentItem;
+import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;

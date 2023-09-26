@@ -30,7 +30,8 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -63,15 +64,17 @@ public final class CompositeComponentWizardIterator implements TemplateWizard.It
 
         FileObject template = Templates.getTemplate( wizard );
         DataObject dTemplate = DataObject.find(template);
-        HashMap<String, Object> templateProperties = new HashMap<String, Object>();
+        HashMap<String, Object> templateProperties = new HashMap<>();
         if (selectedText != null) {
             templateProperties.put("implementation", selectedText);   //NOI18N
         }
         Project project = Templates.getProject(wizard);
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
-            JSFVersion version = JSFVersion.forWebModule(webModule);
-            if (version != null && version.isAtLeast(JSFVersion.JSF_2_2)) {
+            JsfVersion version = JsfVersionUtils.forWebModule(webModule);
+            if (version != null && version.isAtLeast(JsfVersion.JSF_3_0)) {
+                templateProperties.put("isJSF30", Boolean.TRUE); //NOI18N
+            } else if (version != null && version.isAtLeast(JsfVersion.JSF_2_2)) {
                 templateProperties.put("isJSF22", Boolean.TRUE); //NOI18N
             }
         }
@@ -117,7 +120,7 @@ public final class CompositeComponentWizardIterator implements TemplateWizard.It
 
         Object prop = wizard.getProperty (WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
         String[] steps = Utilities.createSteps(beforeSteps, panels);

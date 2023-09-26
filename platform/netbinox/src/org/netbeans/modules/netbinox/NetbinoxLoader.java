@@ -20,8 +20,6 @@ package org.netbeans.modules.netbinox;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.ProtectionDomain;
@@ -34,7 +32,6 @@ import org.eclipse.osgi.baseadaptor.loader.ClasspathEntry;
 import org.eclipse.osgi.baseadaptor.loader.ClasspathManager;
 import org.eclipse.osgi.framework.adaptor.ClassLoaderDelegate;
 import org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader;
-import org.openide.util.Exceptions;
 import org.osgi.framework.FrameworkEvent;
 
 /** Classloader that eliminates some unnecessary disk touches.

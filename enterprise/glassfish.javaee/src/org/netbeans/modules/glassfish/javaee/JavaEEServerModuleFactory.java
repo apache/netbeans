@@ -39,6 +39,7 @@ import org.netbeans.modules.glassfish.spi.GlassfishModule;
 import org.netbeans.modules.glassfish.spi.GlassfishModuleFactory;
 import org.netbeans.modules.glassfish.spi.RegisteredDerbyServer;
 import org.netbeans.modules.glassfish.spi.ServerUtilities;
+import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
 import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceCreationException;
 import org.netbeans.spi.project.libraries.LibraryTypeProvider;
 import org.netbeans.spi.project.libraries.support.LibrariesSupport;
@@ -56,6 +57,7 @@ import org.openide.util.Utilities;
 public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
 
     private static final JavaEEServerModuleFactory singleton = new JavaEEServerModuleFactory();
+    private static final Logger LOG = Logger.getLogger(JavaEEServerModuleFactory.class.getName());
     
     private JavaEEServerModuleFactory() {
     }
@@ -106,12 +108,12 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
                         // exception
                         ip = InstanceProperties.getInstanceProperties(url);
                         if (null == ip) {
-                            Logger.getLogger("glassfish-javaee").log(Level.WARNING, null, ex); // NOI18N
+                            LOG.log(Level.WARNING, null, ex); // NOI18N
                         }
                     }
 
                 if(ip == null) {
-                    Logger.getLogger("glassfish-javaee").log(Level.INFO, "Unable to create/locate J2EE InstanceProperties for {0}", url);
+                    LOG.log(Level.INFO, "Unable to create/locate J2EE InstanceProperties for {0}", url);
                 }
             }
 
@@ -137,7 +139,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
                 }
             });
         } else {
-            Logger.getLogger("glassfish-javaee").log(Level.WARNING, "commonModule is NULL");
+            LOG.log(Level.WARNING, "commonModule is NULL");
         }
 
         return (ip != null) ? new JavaEEServerModule(instanceLookup, ip) : null;
@@ -188,10 +190,10 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
             if (j2eeDoc != null) {
                 docList.add(ServerUtilities.fileToUrl(j2eeDoc));
             } else {
-                Logger.getLogger("glassfish-javaee").log(Level.WARNING, "Warning: Java EE documentation not found when registering EclipseLink library.");
+                LOG.log(Level.WARNING, "Warning: Java EE documentation not found when registering EclipseLink library.");
             }
         } catch (MalformedURLException ex) {
-            Logger.getLogger("glassfish-javaee").log(Level.WARNING, ex.getLocalizedMessage(), ex);
+            LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
             return false;
         }
         String name = ECLIPSE_LINK_LIB;
@@ -224,7 +226,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
             try {
                 libraryList.add(ServerUtilities.fileToUrl(f));
             } catch (MalformedURLException ex) {
-                Logger.getLogger("glassfish-javaee").log(Level.WARNING, ex.getLocalizedMessage(), ex);
+                LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
                 return false;
             }
         }
@@ -245,6 +247,9 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
     private static final String JAVA_EE_5_LIB = "Java-EE-GlassFish-v3-Prelude"; // NOI18N
 
     private static final String JAVA_EE_JAVADOC = "javaee-doc-api.jar"; // NOI18N
+    private static final String JAKARTA_EE_8_JAVADOC = "jakartaee8-doc-api.jar"; // NOI18N
+    private static final String JAKARTA_EE_9_JAVADOC = "jakartaee9-doc-api.jar"; // NOI18N
+    private static final String JAKARTA_EE_10_JAVADOC = "jakartaee10-doc-api.jar"; // NOI18N
 
     private static boolean ensureGlassFishApiSupport(GlassFishServer server) {
         String installRoot = server.getServerRoot();
@@ -256,18 +261,34 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
         if (f != null && f.exists()) {
             name = JAVA_EE_6_LIB;
         }
-
-        File j2eeDoc = InstalledFileLocator.getDefault().locate(
+        
+        File j2eeDoc;
+        if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_7_0_0)) {
+            j2eeDoc = InstalledFileLocator.getDefault().locate(
+                "docs/" + JAKARTA_EE_10_JAVADOC,
+                Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+        } else if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_6)) {
+            j2eeDoc = InstalledFileLocator.getDefault().locate(
+                "docs/" + JAKARTA_EE_9_JAVADOC,
+                Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+        } else if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_5_1_0)) {
+            j2eeDoc = InstalledFileLocator.getDefault().locate(
+                "docs/" + JAKARTA_EE_8_JAVADOC,
+                Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+        } else {
+            j2eeDoc = InstalledFileLocator.getDefault().locate(
                 "docs/" + JAVA_EE_JAVADOC,
                 Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+        }
+
         if (j2eeDoc != null) {
             try {
                 docList.add(ServerUtilities.fileToUrl(j2eeDoc));
             } catch (MalformedURLException ex) {
-                Logger.getLogger("glassfish-javaee").log(Level.INFO, "Problem while registering Java EE API library JavaDoc."); // NOI18N
+                LOG.log(Level.INFO, "Problem while registering Java EE API library JavaDoc."); // NOI18N
             }
         } else {
-            Logger.getLogger("glassfish-javaee").log(Level.INFO, "Java EE documentation not found when registering Java EE API library."); // NOI18N
+            LOG.log(Level.INFO, "Java EE documentation not found when registering Java EE API library."); // NOI18N
         }
 
         // additional jar for glassfish-samples support
@@ -276,7 +297,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
             try {
                 libraryList.add(ServerUtilities.fileToUrl(f));
             } catch (MalformedURLException ex) {
-                Logger.getLogger("glassfish-javaee").log(Level.INFO, "Problem while registering web-core into GlassFish API library."); // NOI18N
+                LOG.log(Level.INFO, "Problem while registering web-core into GlassFish API library."); // NOI18N
             }
         }
 
@@ -322,11 +343,11 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
                     libPath = libPath.substring(5);
                 }
                 if (!new File(libPath.replace("!/", "")).exists()) {
-                    Logger.getLogger("glassfish-javaee").log(Level.FINE, "libPath does not exist.  Updating {0}", name);
+                    LOG.log(Level.FINE, "libPath does not exist.  Updating {0}", name);
                     try {
                         lmgr.removeLibrary(lib);
                     } catch (IOException ex) {
-                        Logger.getLogger("glassfish-javaee").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                        LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
                     } catch (IllegalArgumentException ex) {
                         // Already removed somehow, ignore.
                         }
@@ -343,7 +364,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
             try {
                 lmgr.removeLibrary(lib);
             } catch (IOException ex) {
-                Logger.getLogger("glassfish-javaee").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
             } catch (IllegalArgumentException ex) {
                 // Already removed somehow, ignore.
             }
@@ -360,11 +381,11 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
                     libPath = libPath.substring(5);
                 }
                 if (!new File(libPath.replace("!/", "")).exists()) {
-                    Logger.getLogger("glassfish-javaee").log(Level.FINE, "libPath does not exist.  Updating {0}", name);
+                    LOG.log(Level.FINE, "libPath does not exist.  Updating {0}", name);
                     try {
                         lmgr.removeLibrary(lib);
                     } catch (IOException ex) {
-                        Logger.getLogger("glassfish-javaee").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                        LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
                     } catch (IllegalArgumentException ex) {
                         // Already removed somehow, ignore.
                         }
@@ -381,7 +402,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
             try {
                 lmgr.removeLibrary(lib);
             } catch (IOException ex) {
-                Logger.getLogger("glassfish-javaee").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
             } catch (IllegalArgumentException ex) {
                 // Already removed somehow, ignore.
             }
@@ -402,22 +423,22 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
                 LibraryTypeProvider ltp = LibrariesSupport.getLibraryTypeProvider(libType);
                 if (null != ltp) {
                     lib = lmgr.createLibrary(libType, name, displayName, description, contents);
-                    Logger.getLogger("glassfish-javaee").log(Level.FINE, "Created library {0}", name);
+                    LOG.log(Level.FINE, "Created library {0}", name);
                 } else {
                     lmgr.addPropertyChangeListener(new InitializeLibrary(lmgr, libType, name, contents, displayName, description));
-                    Logger.getLogger("glassfish-javaee").log(Level.FINE, "schedule to create library {0}", name);
+                    LOG.log(Level.FINE, "schedule to create library {0}", name);
                 }
             } catch (IOException ex) {
                 // Someone must have created the library in a parallel thread, try again otherwise fail.
                 lib = lmgr.getLibrary(name);
                 if (lib == null) {
-                    Logger.getLogger("glassfish-javaee").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                    LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
                 }
             } catch (IllegalArgumentException ex) {
                 // Someone must have created the library in a parallel thread, try again otherwise fail.
                 lib = lmgr.getLibrary(name);
                 if (lib == null) {
-                    Logger.getLogger("glassfish-javaee").log(Level.INFO, ex.getLocalizedMessage(), ex);
+                    LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
                 }
             }
         }
@@ -454,14 +475,14 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
                             LibraryTypeProvider ltp = LibrariesSupport.getLibraryTypeProvider(libType);
                             if (null != ltp) {
                                 lmgr.createLibrary(libType, name, displayName, description, content);
-                                Logger.getLogger("glassfish-javaee").log(Level.FINE, "Created library {0}", name);
+                                LOG.log(Level.FINE, "Created library {0}", name);
                                 removeFromListenerList(pcl);
                             }
                         } catch (IOException ex) {
-                            Logger.getLogger("glassfish-javaee").log(Level.INFO,
+                            LOG.log(Level.INFO,
                                     ex.getLocalizedMessage(), ex);
                         } catch (IllegalArgumentException iae) {
-                            Logger.getLogger("glassfish-javaee").log(Level.INFO,
+                            LOG.log(Level.INFO,
                                     iae.getLocalizedMessage(), iae);
                         }
                     } else {

@@ -24,67 +24,82 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.openide.util.NbBundle;
+import org.openide.util.NbBundle.Messages;
 
 /**
  * Represents the defined Java EE profiles.
  *
  * @author Petr Hejl
  */
-public final class Profile {
+public enum Profile {
 
-    public static final Comparator<Profile> UI_COMPARATOR = new Comparator<Profile>() {
-
-        @Override
-        public int compare(Profile o1, Profile o2) {
-            return -(o1.order - o2.order);
-        }
-    };
+    // !!! ATTENTION: BE AWARE OF THE ENUM ORDER! It controls compatibility and UI position.
+    // Do not ever change name of this constant - it is copied from j2eeserver
+    @Messages("J2EE_13.displayName=J2EE 1.3")
+    J2EE_13("1.3"),
 
     // Do not ever change name of this constant - it is copied from j2eeserver
-    public static final Profile J2EE_13  = new Profile(1, "1.3", null, "J2EE13.displayName");
+    @Messages("J2EE_14.displayName=J2EE 1.4")
+    J2EE_14("1.4"),
 
     // Do not ever change name of this constant - it is copied from j2eeserver
-    public static final Profile J2EE_14  = new Profile(2, "1.4", null, "J2EE14.displayName");
+    @Messages("JAVA_EE_5.displayName=Java EE 5")
+    JAVA_EE_5("1.5"),
 
-    // Do not ever change name of this constant - it is copied from j2eeserver
-    public static final Profile JAVA_EE_5  = new Profile(3, "1.5", null, "JavaEE5.displayName");
+    @Messages("JAVA_EE_6_WEB.displayName=Java EE 6 Web")
+    JAVA_EE_6_WEB("1.6", "web"),
 
-    public static final Profile JAVA_EE_6_FULL  = new Profile(4, "1.6", null, "JavaEE6Full.displayName");
+    @Messages("JAVA_EE_6_FULL.displayName=Java EE 6")
+    JAVA_EE_6_FULL("1.6"),
 
-    public static final Profile JAVA_EE_6_WEB  = new Profile(5, "1.6", "web", "JavaEE6Web.displayName");
+    @Messages("JAVA_EE_7_WEB.displayName=Java EE 7 Web")
+    JAVA_EE_7_WEB("1.7", "web"),
 
-    public static final Profile JAVA_EE_7_FULL  = new Profile(6, "1.7", null, "JavaEE7Full.displayName");
+    @Messages("JAVA_EE_7_FULL.displayName=Java EE 7")
+    JAVA_EE_7_FULL("1.7"),
 
-    public static final Profile JAVA_EE_7_WEB  = new Profile(7, "1.7", "web", "JavaEE7Web.displayName");
+    @Messages("JAVA_EE_8_WEB.displayName=Java EE 8 Web")
+    JAVA_EE_8_WEB("1.8", "web"),
 
-    public static final Profile JAVA_EE_8_FULL  = new Profile(8, "1.8", null, "JavaEE8Full.displayName");
+    @Messages("JAVA_EE_8_FULL.displayName=Java EE 8")
+    JAVA_EE_8_FULL("1.8"),
 
-    public static final Profile JAVA_EE_8_WEB  = new Profile(9, "1.8", "web", "JavaEE8Web.displayName");
+    @Messages("JAKARTA_EE_8_WEB.displayName=Jakarta EE 8 Web")
+    JAKARTA_EE_8_WEB("8.0", "web"),
 
-    public static final Profile JAKARTA_EE_8_FULL  = new Profile(10, "8.0", null, "JakartaEE8Full.displayName");
+    @Messages("JAKARTA_EE_8_FULL.displayName=Jakarta EE 8")
+    JAKARTA_EE_8_FULL("8.0"),
 
-    public static final Profile JAKARTA_EE_8_WEB  = new Profile(11, "8.0", "web", "JakartaEE8Web.displayName");
+    @Messages("JAKARTA_EE_9_WEB.displayName=Jakarta EE 9 Web")
+    JAKARTA_EE_9_WEB("9.0", "web"),
 
-    public static final Profile JAKARTA_EE_9_WEB  = new Profile(12, "9.0", "web", "JakartaEE9Web.displayName");
+    @Messages("JAKARTA_EE_9_FULL.displayName=Jakarta EE 9")
+    JAKARTA_EE_9_FULL("9.0"),
 
-    public static final Profile JAKARTA_EE_9_FULL  = new Profile(13, "9.0", null, "JakartaEE9Full.displayName");
+    @Messages("JAKARTA_EE_9_1_WEB.displayName=Jakarta EE 9.1 Web")
+    JAKARTA_EE_9_1_WEB("9.1", "web"),
 
-    private final int order;
+    @Messages("JAKARTA_EE_9_1_FULL.displayName=Jakarta EE 9.1")
+    JAKARTA_EE_9_1_FULL("9.1"),
+
+    @Messages("JAKARTA_EE_10_WEB.displayName=Jakarta EE 10 Web")
+    JAKARTA_EE_10_WEB("10", "web"),
+
+    @Messages("JAKARTA_EE_10_FULL.displayName=Jakarta EE 10")
+    JAKARTA_EE_10_FULL("10");
+    // !!! ATTENTION: BE AWARE OF THE ENUM ORDER! It controls compatibility and UI position.
+
+    public static final Comparator<Profile> UI_COMPARATOR = (Profile o1, Profile o2) -> -(o1.ordinal() - o2.ordinal());
 
     // cache
     private final String propertiesString;
 
-    private final String bundleKey;
+    private Profile(String canonicalName) {
+        this.propertiesString = canonicalName;
+    }
 
-    private Profile(int order, String canonicalName, String profile, String bundleKey) {
-        this.order = order;
-        this.bundleKey = bundleKey;
-
-        StringBuilder builder = new StringBuilder(canonicalName);
-        if (profile != null) {
-            builder.append("-").append(profile); // NOI18N
-        }
-        this.propertiesString = builder.toString();
+    private Profile(String canonicalName, String profile) {
+        this.propertiesString = canonicalName + "-" + profile;
     }
 
     /**
@@ -94,7 +109,7 @@ public final class Profile {
      */
     @NonNull
     public String getDisplayName() {
-        return NbBundle.getMessage(Profile.class, bundleKey);
+        return NbBundle.getMessage(Profile.class, this.name() + ".displayName");
     }
 
     @NonNull
@@ -122,7 +137,7 @@ public final class Profile {
      * @since 1.19
      */
     public boolean isAtLeast(@NonNull Profile profile) {
-        return isVersionEqualOrHigher(this, profile);
+        return this.ordinal() >= profile.ordinal();
     }
 
     @Override
@@ -132,122 +147,20 @@ public final class Profile {
 
     @CheckForNull
     public static Profile fromPropertiesString(@NullAllowed String value) {
-        String valueMinusQuotes = value;
-        if(value != null && value.contains("\"")){
-            valueMinusQuotes = value.replace("\"","");
+        if (value == null) {
+            return null;
         }
-        if (J2EE_13.toPropertiesString().equals(valueMinusQuotes)) {
-            return J2EE_13;
-        } else if (J2EE_14.toPropertiesString().equals(valueMinusQuotes)) {
-            return J2EE_14;
-        } else if (JAVA_EE_5.toPropertiesString().equals(valueMinusQuotes)) {
-            return JAVA_EE_5;
-        } else if (JAVA_EE_6_FULL.toPropertiesString().equals(valueMinusQuotes)
-                || "EE_6_FULL".equals(value)){ // NOI18N
-            return JAVA_EE_6_FULL;
-        } else if (JAVA_EE_6_WEB.toPropertiesString().equals(valueMinusQuotes)
-                || "EE_6_WEB".equals(value)) {
-            return JAVA_EE_6_WEB;
-        } else if (JAVA_EE_7_FULL.toPropertiesString().equals(valueMinusQuotes)
-                || "EE_7_FULL".equals(value)) { // NOI18N
-            return JAVA_EE_7_FULL;
-        } else if (JAVA_EE_7_WEB.toPropertiesString().equals(valueMinusQuotes)
-                || "EE_7_WEB".equals(value)) {
-            return JAVA_EE_7_WEB;
-        } else if (JAVA_EE_8_FULL.toPropertiesString().equals(valueMinusQuotes)
-                || "EE_8_FULL".equals(value)) { // NOI18N
-            return JAVA_EE_8_FULL;
-        } else if (JAVA_EE_8_WEB.toPropertiesString().equals(valueMinusQuotes)
-                || "EE_8_WEB".equals(value)) {
-            return JAVA_EE_8_WEB;
-        } else if (JAKARTA_EE_8_FULL.toPropertiesString().equals(valueMinusQuotes)
-                || "JAKARTA_EE_8_FULL".equals(value)) {
-            return JAKARTA_EE_8_FULL;
-        } else if (JAKARTA_EE_8_WEB.toPropertiesString().equals(valueMinusQuotes)
-                || "JAKARTA_EE_8_WEB".equals(value)) {
-            return JAKARTA_EE_8_WEB;
-        } else if (JAKARTA_EE_9_FULL.toPropertiesString().equals(valueMinusQuotes)
-                || "JAKARTA_EE_9_FULL".equals(value)) {
-            return JAKARTA_EE_9_FULL;
-        } else if (JAKARTA_EE_9_WEB.toPropertiesString().equals(valueMinusQuotes)
-                || "JAKARTA_EE_9_WEB".equals(value)) {
-            return JAKARTA_EE_9_WEB;
-        } else {
-          return null;
-        }
-    }
 
-    private static String getProfileVersion(@NonNull Profile profile) {
-        String profileDetails = profile.toPropertiesString();
-        int indexOfDash = profileDetails.indexOf("-");
-        if (indexOfDash != -1) {
-            return profileDetails.substring(0, indexOfDash);
-        }
-        return profileDetails;
-    }
+        String valueMinusQuotes = value.replace("\"","");
 
-    private static boolean compareWebAndFull(@NonNull Profile profileToCompare, @NonNull Profile comparingVersion) {
-        boolean isThisFullProfile = isFullProfile(profileToCompare);
-        boolean isParamFullProfile = isFullProfile(comparingVersion);
-        if (isThisFullProfile && isParamFullProfile) {
-            // Both profiles are Java EE Full
-            return true;
-        }
-        if (!isThisFullProfile && !isParamFullProfile) {
-            // Both profiles are Java EE Web
-            return true;
-        }
-        if (isThisFullProfile && !isParamFullProfile) {
-            // profileToCompare is Java EE Full profile and comparingVersion is only Java EEWeb profile
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean isFullProfile(@NonNull Profile profile) {
-        final String profileDetails = profile.toPropertiesString();
-        if (profileDetails.indexOf("-") == -1) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Compares if the first given profile has equal or higher Java EE version
-     * in comparison to the second profile.
-     *
-     * Please be aware of the following rules:
-     * <br/><br/>
-     *
-     * 1) Each Java EE X version is considered as lower than Java EE X+1 version
-     * (this applies regardless on Web/Full specification and in reality it means
-     * that even Java EE 6 Full version is considered as lower than Java EE 7 Web)
-     * <br/><br/>
-     *
-     * 2) Each Java EE X Web version is considered as lower than Java EE X Full
-     * <br/>
-     *
-     * @param profileToCompare profile that we want to compare
-     * @param comparingVersion version which we are comparing with
-     * @return <code>true</code> if the profile version is equal or higher in
-     *         comparison with the second one, <code>false</code> otherwise
-     * @since 1.19
-     */
-    private static boolean isVersionEqualOrHigher(@NonNull Profile profileToCompare, @NonNull Profile comparingVersion) {
-        int comparisonResult = Profile.UI_COMPARATOR.compare(profileToCompare, comparingVersion);
-        if (comparisonResult == 0) {
-            // The same version for both
-            return true;
-        } else {
-            String profileToCompareVersion = getProfileVersion(profileToCompare);
-            String comparingProfileVersion = getProfileVersion(comparingVersion);
-            if (profileToCompareVersion.equals(comparingProfileVersion)) {
-                return compareWebAndFull(profileToCompare, comparingVersion);
-            } else {
-                // profileToCompare has lower version than comparingVersion
-                return comparisonResult <= 0;
+        for (Profile profile : Profile.values()) {
+            if (profile.toPropertiesString().equals(valueMinusQuotes)
+                    || profile.name().equals(valueMinusQuotes)
+                    || (valueMinusQuotes.startsWith("EE_") && profile.name().endsWith(valueMinusQuotes))) {
+                return profile;
             }
         }
-    }
 
+        return null;
+    }
 }

@@ -470,7 +470,9 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
 					return usingSurefire28(config.getMavenProject());
 				    } else if (usingJUnit4(config.getMavenProject())) { //#214334
 					return usingSurefire2121(config.getMavenProject());
-				    }
+				    } else if (getJUnitVersion(config.getMavenProject()).equals("JUNIT5")){
+                                        return usingSurefire2220(config.getMavenProject());
+                                    }
 				}
 			    }
 			    return false;
@@ -505,7 +507,12 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     private boolean usingSurefire28(MavenProject prj) {
         String v = PluginPropertyUtils.getPluginVersion(prj, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE);
         return v != null && new ComparableVersion(v).compareTo(new ComparableVersion("2.8")) >= 0;
-    } 
+    }
+
+    private boolean usingSurefire2220(MavenProject prj) {
+        String v = PluginPropertyUtils.getPluginVersion(prj, Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE);
+        return v != null && new ComparableVersion(v).compareTo(new ComparableVersion("2.22.0")) >= 0;
+    }
     
      private boolean usingTestNG(MavenProject prj) {
         for (Artifact a : prj.getArtifacts()) {
@@ -526,6 +533,12 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 }
                 if (version != null && new ComparableVersion(version).compareTo(new ComparableVersion("3.8")) >= 0) {
                     return "JUNIT3"; //NOI18N
+                }
+            }
+            if ("org.junit.jupiter".equals(a.getGroupId()) && "junit-jupiter-api".equals(a.getArtifactId())) {
+                String version = a.getVersion();
+                if (version != null && new ComparableVersion(version).compareTo(new ComparableVersion("5.0")) >= 0) {
+                    return "JUNIT5"; //NOI18N
                 }
             }
         }

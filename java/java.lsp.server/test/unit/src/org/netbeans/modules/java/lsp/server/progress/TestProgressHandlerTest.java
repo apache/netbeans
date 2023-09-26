@@ -42,10 +42,10 @@ import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestSuiteInfo;
@@ -145,11 +145,6 @@ public class TestProgressHandlerTest extends NbTestCase {
 
         MockLanguageClient(List<TestProgressParams> messages) {
             this.messages = messages;
-        }
-
-        @Override
-        public void telemetryEvent(Object object) {
-            fail();
         }
 
         @Override

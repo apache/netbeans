@@ -46,6 +46,8 @@ import org.eclipse.lsp4j.WorkspaceEdit;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -131,15 +133,16 @@ public final class EqualsHashCodeGenerator extends CodeActionsProvider {
             String uri = ((JsonObject) data).getAsJsonPrimitive(URI).getAsString();
             int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
             List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject) data).get(FIELDS), QuickPickItem[].class));
+            String title;
             String text;
             boolean generateEquals = HASH_CODE_ONLY != kind;
             boolean generateHashCode = EQUALS_ONLY != kind;
             switch (kind) {
-                case EQUALS_ONLY: text = Bundle.DN_SelectEquals(); break;
-                case HASH_CODE_ONLY: text = Bundle.DN_SelectHashCode(); break;
-                default: text = Bundle.DN_SelectEqualsHashCode(); break;
+                case EQUALS_ONLY: title = Bundle.DN_GenerateEquals(); text = Bundle.DN_SelectEquals(); break;
+                case HASH_CODE_ONLY: title = Bundle.DN_GenerateHashCode(); text = Bundle.DN_SelectHashCode(); break;
+                default: title = Bundle.DN_GenerateEqualsHashCode(); text = Bundle.DN_SelectEqualsHashCode(); break;
             }
-            client.showQuickPick(new ShowQuickPickParams(text, true, fields)).thenAccept(selected -> {
+            client.showQuickPick(new ShowQuickPickParams(title, text, true, fields)).thenAccept(selected -> {
                 try {
                     if (selected != null) {
                         FileObject file = Utils.fromUri(uri);

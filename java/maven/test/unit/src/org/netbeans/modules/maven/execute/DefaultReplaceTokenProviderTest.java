@@ -16,9 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.maven.execute;
 
+import java.io.IOException;
+import java.util.Map;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
@@ -27,6 +28,7 @@ import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
+import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
@@ -38,7 +40,8 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
 
     private FileObject d;
 
-    @Override protected void setUp() throws Exception {
+    @Override
+    protected void setUp() throws Exception {
         clearWorkDir();
         d = FileUtil.toFileObject(getWorkDir());
     }
@@ -64,23 +67,121 @@ public class DefaultReplaceTokenProviderTest extends NbTestCase {
         // XXX test src/main/java selections
         // XXX test selections across groups, or outside groups
         // XXX test single methods
-        
+
         //#213671
         assertEquals(null, ActionProviderImpl.replacements(p, ActionProvider.COMMAND_RUN, Lookup.EMPTY).get(DefaultReplaceTokenProvider.PACK_CLASSNAME));
         assertEquals(null, ActionProviderImpl.replacements(p, ActionProvider.COMMAND_RUN, Lookup.EMPTY).get(DefaultReplaceTokenProvider.CLASSNAME));
         assertEquals(null, ActionProviderImpl.replacements(p, ActionProvider.COMMAND_RUN, Lookup.EMPTY).get(DefaultReplaceTokenProvider.CLASSNAME_EXT));
-        
+
     }
     
+    public void testTestNotIT_GH4587() throws Exception {
+        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
+                + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
+        TestFileUtils.writeFile(d, "src/test/java/p1/FirstTest.java", "package p1; class FirstTest {}");
+        TestFileUtils.writeFile(d, "src/test/java/p1/FirstIT.java", "package p1; class FirstIT {}");
+        Project p = ProjectManager.getDefault().findProject(d);
+        DefaultReplaceTokenProvider instance = new DefaultReplaceTokenProvider(p);
+        FileObject file = d.getFileObject("src/test/java/p1/FirstTest.java");
+        String converted = instance.convert(ActionProvider.COMMAND_TEST_SINGLE, Lookups.singleton(file));
+        assertNull(converted);
+        converted = instance.convert(ActionProvider.COMMAND_DEBUG_TEST_SINGLE, Lookups.singleton(file));
+        assertNull(converted);
+        DataObject dob = DataObject.find(file);
+        converted = instance.convert(ActionProvider.COMMAND_TEST_SINGLE, Lookups.singleton(dob));
+        assertNull(converted);
+        converted = instance.convert(ActionProvider.COMMAND_DEBUG_TEST_SINGLE, Lookups.singleton(dob));
+        assertNull(converted);
+        file = d.getFileObject("src/test/java/p1/FirstIT.java");
+        converted = instance.convert(ActionProvider.COMMAND_TEST_SINGLE, Lookups.singleton(file));
+        assertEquals(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE, converted);
+        dob = DataObject.find(file);
+        converted = instance.convert(ActionProvider.COMMAND_TEST_SINGLE, Lookups.singleton(dob));
+        assertEquals(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE, converted);
+    }
+
     public void testNgSingle() throws Exception {
         TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
                 + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
         TestFileUtils.writeFile(d, "src/test/java/p1/FirstNGTest.java", "package p1; class FirstNGTest {}");
         TestFileUtils.writeFile(d, "src/main/java/p1/First.java", "package p1; class First {}");
-        
+
         Project p = ProjectManager.getDefault().findProject(d);
         assertEquals("p1.FirstNGTest", ActionProviderImpl.replacements(p, ActionProvider.COMMAND_TEST_SINGLE, Lookups.singleton(d.getFileObject("src/main/java/p1/First.java"))).get(DefaultReplaceTokenProvider.PACK_CLASSNAME));
 
     }
 
+    public void testIntegration2Files() throws Exception {
+        pomWithHelperPluginAndExtraTestFolder();
+        TestFileUtils.writeFile(d, "src/extra-test/java/p1/ItTest.java",
+                "//license\n"
+                + "package p1;\n"
+                + "class ItTest {}");
+        TestFileUtils.writeFile(d, "src/extra-test/java/p1/a/b/c/ItTestInlined.java",
+                "/*a comment*/ package p1.a. b.c ; class ItTestInlined {}"); //spabe between a and b is allowed
+
+        Project p = ProjectManager.getDefault().findProject(d);
+        DefaultReplaceTokenProvider instance = new DefaultReplaceTokenProvider(p);
+        Map<String, String> replacements = instance.createReplacements(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE,
+                Lookups.fixed(
+                        d.getFileObject("src/extra-test/java/p1/ItTest.java"),
+                        d.getFileObject("src/extra-test/java/p1/a/b/c/ItTestInlined.java"))
+        );
+
+        final String packageClassName = replacements.get("packageClassName");
+        assertTrue(packageClassName.contains("p1.ItTest"));
+        assertTrue(packageClassName.contains("p1.a.b.c.ItTestInlined"));
+    }
+
+    private void pomWithHelperPluginAndExtraTestFolder() throws IOException {
+        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
+                + "<groupId>g</groupId><artifactId>a</artifactId><version>0</version><build>"
+                + "<plugins><plugin><groupId>org.codehaus.mojo</groupId><artifactId>build-helper-maven-plugin</artifactId>"
+                + "<executions><execution><id>add-test-source</id><phase>generate-test-sources</phase><goals>"
+                + "<goal>add-test-source</goal></goals><configuration><sources><source>src/extra-test/java</source></sources>"
+                + "</configuration></execution></executions></plugin></plugins></build></project>");
+    }
+
+    public void testIntegrationPackage() throws Exception {
+        pomWithHelperPluginAndExtraTestFolder();
+        TestFileUtils.writeFile(d, "src/extra-test/java/p1/a/b/c/ItTestInlined.java",
+                "/*a comment*/ package p1.a. b.c ; class ItTestInlined {}"); //space between a and b is allowed
+
+        Project p = ProjectManager.getDefault().findProject(d);
+
+        DefaultReplaceTokenProvider instance = new DefaultReplaceTokenProvider(p);
+        Map<String, String> replacements = instance.createReplacements(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE,
+                Lookups.fixed(
+                        d.getFileObject("src/extra-test/java/p1/a/b/c/"))
+        );
+
+        final String packageClassName = replacements.get("packageClassName");
+        assertTrue(packageClassName.contains("p1.a.b.c.**"));
+    }
+
+    public void testIntegration2FilesAndPacakge() throws Exception {
+        pomWithHelperPluginAndExtraTestFolder();
+        TestFileUtils.writeFile(d, "src/extra-test/java/p1/ItTest.java",
+                "//license\n"
+                + "package p1;\n"
+                + "class ItTest {}");
+        TestFileUtils.writeFile(d, "src/extra-test/java/p1/a/b/c/ItTestInlined.java",
+                "/*a comment*/ package p1.a. b.c ; class ItTestInlined {}"); //space between a and b is allowed
+        TestFileUtils.writeFile(d, "src/extra-test/java/p1/d/ItTest3.java",
+                "package p1.d;\nclass ItTest3 {}");
+
+        Project p = ProjectManager.getDefault().findProject(d);
+        DefaultReplaceTokenProvider instance = new DefaultReplaceTokenProvider(p);
+        Map<String, String> replacements = instance.createReplacements(ActionProviderImpl.COMMAND_INTEGRATION_TEST_SINGLE,
+                Lookups.fixed(
+                        d.getFileObject("src/extra-test/java/p1/ItTest.java"),
+                        d.getFileObject("src/extra-test/java/p1/a/b/c/ItTestInlined.java"),
+                        d.getFileObject("src/extra-test/java/p1/d/"))
+        );
+
+        final String packageClassName = replacements.get("packageClassName");
+        assertTrue(packageClassName.contains("p1.ItTest"));
+        assertTrue(packageClassName.contains("p1.a.b.c.ItTestInlined"));
+        assertTrue(packageClassName.contains("p1.d.**"));
+    }
 }

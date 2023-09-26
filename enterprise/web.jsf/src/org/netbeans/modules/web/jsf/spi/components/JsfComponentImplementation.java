@@ -23,7 +23,8 @@ import java.util.Set;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -89,12 +90,12 @@ public interface JsfComponentImplementation {
      * Returns for which versions is the JSF component library designed.
      * <p>
      * By creating new project and choosing JSF framework are JSF suites filtered
-     * out according to their {@link JSFVersion}s.
+     * out according to their {@link JsfVersionUtils}s.
      *
-     * @return set of {@link JSFVersion} suitable for this JSF component library
+     * @return set of {@link JsfVersionUtils} suitable for this JSF component library
      */
     @NonNull
-    Set<JSFVersion> getJsfVersion();
+    Set<JsfVersion> getJsfVersion();
 
     /**
      * Finds out if a given web module has already been extended with this JSF component library.

@@ -104,7 +104,8 @@ final class QuietEditorPane extends JEditorPane {
     public QuietEditorPane() {
         setFontHeightWidth(getFont());
     }
-    
+
+    @Override
     public AccessibleContext getAccessibleContext() {
         AccessibleContext ctx = super.getAccessibleContext();
         if (ctx != null) {

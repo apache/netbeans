@@ -133,11 +133,11 @@ public abstract class SmartSteppingCallback {
         /**
          * Express the necessity to perform a step at the given location.
          * @param stepSize the step size,
-         *  one of {@link #JPDAStep.STEP_LINE} or {@link #JPDAStep.STEP_MIN},
+         *  one of {@link JPDAStep#STEP_LINE} or {@link JPDAStep#STEP_MIN},
          *  or <code>0</code> for the default size.
          * @param stepDepth the step depth,
-         *  one of {@link #JPDAStep.STEP_INTO}, {@link #JPDAStep.STEP_OVER},
-         *  {@link #JPDAStep.STEP_OUT}, or <code>0</code> for the default depth.
+         *  one of {@link JPDAStep#STEP_INTO}, {@link JPDAStep#STEP_OVER},
+         *  {@link JPDAStep#STEP_OUT}, or <code>0</code> for the default depth.
          * @return the step information instance.
          * throws {@link IllegalArgumentException} when the size or depth is wrong.
          */
@@ -181,7 +181,7 @@ public abstract class SmartSteppingCallback {
         
         /**
          * Get the step size.
-         * @return One of {@link #JPDAStep.STEP_LINE} or {@link #JPDAStep.STEP_MIN},
+         * @return One of {@link JPDAStep#STEP_LINE} or {@link JPDAStep#STEP_MIN},
          *  or <code>0</code> for the default size.
          */
         public int getStepSize() {
@@ -190,8 +190,8 @@ public abstract class SmartSteppingCallback {
         
         /**
          * Get the step depth.
-         * @return One of {@link #JPDAStep.STEP_INTO}, {@link #JPDAStep.STEP_OVER},
-         *  {@link #JPDAStep.STEP_OUT}, or <code>0</code> for the default depth.
+         * @return One of {@link JPDAStep#STEP_INTO}, {@link JPDAStep#STEP_OVER},
+         *  {@link JPDAStep#STEP_OUT}, or <code>0</code> for the default depth.
          */
         public int getStepDepth() {
             return stepDepth;

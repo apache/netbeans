@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.81
+#Version 2.89
 
 CLSS public abstract interface java.io.Serializable
 
@@ -115,9 +115,11 @@ fld public final static org.netbeans.modules.php.api.PhpVersion PHP_73
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_74
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_80
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_81
+fld public final static org.netbeans.modules.php.api.PhpVersion PHP_82
 meth public boolean hasMixedType()
 meth public boolean hasNamespaces()
 meth public boolean hasNeverType()
+meth public boolean hasNullAndFalseAndTrueTypes()
 meth public boolean hasNullableTypes()
 meth public boolean hasPropertyTypes()
 meth public boolean hasScalarAndReturnTypes()
@@ -305,6 +307,9 @@ meth public static boolean isEmpty(java.lang.String)
 meth public static java.lang.String capitalize(java.lang.String)
 meth public static java.lang.String decapitalize(java.lang.String)
 meth public static java.lang.String implode(java.util.Collection<java.lang.String>,java.lang.String)
+meth public static java.lang.String truncate(java.lang.String,int,int,java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 4 org.netbeans.api.annotations.common.NullAllowed()
 meth public static java.lang.String webalize(java.lang.String)
 meth public static java.util.List<java.lang.String> explode(java.lang.String,java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NullAllowed()

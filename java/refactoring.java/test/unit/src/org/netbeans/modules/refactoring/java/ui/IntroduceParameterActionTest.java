@@ -20,8 +20,6 @@ package org.netbeans.modules.refactoring.java.ui;
 
 import com.sun.source.tree.Tree;
 import java.util.concurrent.atomic.AtomicInteger;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.modules.refactoring.java.test.RefactoringTestBase;
 import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;

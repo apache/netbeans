@@ -35,6 +35,7 @@ public class TomcatManagerTest extends TestBase {
         super(testName);
     }
     
+    @Override
     protected void setUp () throws Exception {
         super.setUp ();
     }
@@ -72,6 +73,33 @@ public class TomcatManagerTest extends TestBase {
     
     public static void main(java.lang.String[] args) {
         TestRunner.run(suite());
+    }
+    
+    public void testIsHigherThanTomcat70() {
+        TomcatManager.TomcatVersion tomcatVersion = TomcatManager.TomcatVersion.TOMCAT_70;
+        
+        assertFalse(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_110));
+        assertFalse(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_101));
+        assertFalse(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_100));
+        assertFalse(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_90));
+        assertFalse(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_80));
+        assertTrue(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_60));
+        assertTrue(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_55));
+        assertTrue(tomcatVersion.isAtLeast(TomcatManager.TomcatVersion.TOMCAT_50));
+        
+    }
+    
+    public void testIsHigherThanTomee70() {
+        TomcatManager.TomEEVersion tomEEVersion = TomcatManager.TomEEVersion.TOMEE_70;
+        
+        assertFalse(tomEEVersion.isAtLeast(TomcatManager.TomEEVersion.TOMEE_90));
+        assertFalse(tomEEVersion.isAtLeast(TomcatManager.TomEEVersion.TOMEE_80));
+        assertFalse(tomEEVersion.isAtLeast(TomcatManager.TomEEVersion.TOMEE_71));
+        assertTrue(tomEEVersion.isAtLeast(TomcatManager.TomEEVersion.TOMEE_70));
+        assertTrue(tomEEVersion.isAtLeast(TomcatManager.TomEEVersion.TOMEE_17));
+        assertTrue(tomEEVersion.isAtLeast(TomcatManager.TomEEVersion.TOMEE_16));
+        assertTrue(tomEEVersion.isAtLeast(TomcatManager.TomEEVersion.TOMEE_15));
+        
     }
     
 }

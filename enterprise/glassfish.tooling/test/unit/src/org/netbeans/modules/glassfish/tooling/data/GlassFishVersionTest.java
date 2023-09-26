@@ -39,7 +39,7 @@ public class GlassFishVersionTest {
      * Test that <code>toValue</code> handles addition values for given version
      * and additional values array.
      */
-    public static void verifyToValueFromAdditionalArray(
+    private static void verifyToValueFromAdditionalArray(
             GlassFishVersion version, String[] values) {
         for (String value : values) {
             GlassFishVersion gfVersion = GlassFishVersion.toValue(value);
@@ -85,6 +85,32 @@ public class GlassFishVersionTest {
                 GlassFishVersion.GF_3_1_STR_NEXT);
         verifyToValueFromAdditionalArray(GlassFishVersion.GF_4,
                 GlassFishVersion.GF_4_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_4_1_2,
+                GlassFishVersion.GF_4_1_2_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_5,
+                GlassFishVersion.GF_5_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_5_1_0,
+                GlassFishVersion.GF_5_1_0_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_6,
+                GlassFishVersion.GF_6_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_6_1_0,
+                GlassFishVersion.GF_6_1_0_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_6_2_5,
+                GlassFishVersion.GF_6_2_5_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_0,
+                GlassFishVersion.GF_7_0_0_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_1,
+                GlassFishVersion.GF_7_0_1_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_2,
+                GlassFishVersion.GF_7_0_2_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_3,
+                GlassFishVersion.GF_7_0_3_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_4,
+                GlassFishVersion.GF_7_0_4_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_5,
+                GlassFishVersion.GF_7_0_5_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_7_0_6,
+                GlassFishVersion.GF_7_0_6_STR_NEXT);
     }
 
     /**
@@ -93,26 +119,34 @@ public class GlassFishVersionTest {
     @Test
     public void testToValueIncomplete() {
         GlassFishVersion versions[] = {
-            GlassFishVersion.GF_1,
-            GlassFishVersion.GF_2,
-            GlassFishVersion.GF_2_1,
-            GlassFishVersion.GF_2_1_1,
-            GlassFishVersion.GF_3,
-            GlassFishVersion.GF_3_1_2,
-            GlassFishVersion.GF_3_1_2_2,
-            GlassFishVersion.GF_3_1_2_3,
-            GlassFishVersion.GF_3_1_2_4
+            GlassFishVersion.GF_1, GlassFishVersion.GF_2,
+            GlassFishVersion.GF_2_1, GlassFishVersion.GF_2_1_1,
+            GlassFishVersion.GF_3, GlassFishVersion.GF_3_1_2,
+            GlassFishVersion.GF_3_1_2_2, GlassFishVersion.GF_3_1_2_3,
+            GlassFishVersion.GF_3_1_2_4, GlassFishVersion.GF_3_1_2_5,
+            GlassFishVersion.GF_4, GlassFishVersion.GF_4_0_1,
+            GlassFishVersion.GF_4_1, GlassFishVersion.GF_4_1_1,
+            GlassFishVersion.GF_4_1_2, GlassFishVersion.GF_5,
+            GlassFishVersion.GF_5_0_1, GlassFishVersion.GF_5_1_0,
+            GlassFishVersion.GF_6, GlassFishVersion.GF_6_1_0,
+            GlassFishVersion.GF_6_2_0, GlassFishVersion.GF_6_2_1,
+            GlassFishVersion.GF_6_2_2, GlassFishVersion.GF_6_2_3,
+            GlassFishVersion.GF_6_2_4, GlassFishVersion.GF_6_2_5,
+            GlassFishVersion.GF_7_0_0, GlassFishVersion.GF_7_0_1,
+            GlassFishVersion.GF_7_0_2, GlassFishVersion.GF_7_0_3,
+            GlassFishVersion.GF_7_0_4, GlassFishVersion.GF_7_0_5,
+            GlassFishVersion.GF_7_0_6
         };
         String strings[] = {
-            "1.0.1.4",
-            "2.0.1.5",
-            "2.1.0.3",
-            "2.1.1.7",
-            "3.0.0.1",
-            "3.1.2.1",
-            "3.1.2.2",
-            "3.1.2.3",
-            "3.1.2.4"
+            "1.0.1.4", "2.0.1.5", "2.1.0.3", "2.1.1.7",
+            "3.0.0.1", "3.1.2.1", "3.1.2.2", "3.1.2.3",
+            "3.1.2.4", "3.1.2.5", "4.0.0.0", "4.0.1.0",
+            "4.1.0.0", "4.1.1.0", "4.1.2.0", "5.0.0.0",
+            "5.0.1.0", "5.1.0.0", "6.0.0.0", "6.1.0.0",
+            "6.2.0.0", "6.2.1.0", "6.2.2.0", "6.2.3.0",
+            "6.2.4.0", "6.2.5.0", "7.0.0.0", "7.0.1.0",
+            "7.0.2.0", "7.0.3.0", "7.0.4.0", "7.0.5.0",
+            "7.0.6.0"
         };
         for (int i = 0; i < versions.length; i++) {
             GlassFishVersion version = GlassFishVersion.toValue(strings[i]);

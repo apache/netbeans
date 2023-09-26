@@ -170,7 +170,7 @@ public final class SourceCache {
                 return parser;
             }
         }
-        Parser _parser = null;
+        Parser _parser;
         Lookup lookup = MimeLookup.getLookup (mimeType);
         ParserFactory parserFactory = lookup.lookup (ParserFactory.class);
         if (parserFactory != null) {
@@ -186,6 +186,8 @@ public final class SourceCache {
                         _snapshot
                     });
             }
+        } else {
+            return null;
         }
 
         synchronized (TaskProcessor.INTERNAL_LOCK) {

@@ -492,7 +492,7 @@ public class NBSLanguageReader {
         String              nt, 
         int                 id, 
         GRNode              grNode, 
-        List                right, 
+        List<String>        right, 
         List<Rule>          rules,
         Language            language
     ) throws ParseException {

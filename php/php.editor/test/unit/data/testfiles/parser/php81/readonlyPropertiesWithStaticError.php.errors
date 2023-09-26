@@ -1,10 +1,13 @@
 [[861,869]-Syntax error
  unexpected:	readonly
  after:	static
- expected:	identifier, variable, function, array, callable, namespace, \, define, ?, abstract, final, private, protected, public] 861-869:Syntax error
+ expected:	identifier, variable, function, array, callable, define, ?, abstract, final, private, protected, public, (] 861-869:Syntax error
  unexpected:	readonly
  after:	static
- expected:	identifier, variable, function, array, callable, namespace, \, define, ?, abstract, final, private, protected, public
+ expected:	identifier, variable, function, array, callable, define, ?, abstract, final, private, protected, public, (
+[[870,873]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'int'] 870-873:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	identifier 'int'
 [[874,885]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	variable '$withStatic'] 874-885:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	variable '$withStatic'

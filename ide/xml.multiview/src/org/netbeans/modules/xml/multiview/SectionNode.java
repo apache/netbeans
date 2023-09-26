@@ -55,6 +55,7 @@ public class SectionNode extends AbstractNode {
     /**
      * Create a new section node with a given child set.
      *
+     * @param sectionNodeView
      * @param children the children for this node.
      * @param key the key by which this node is identified
      * @param title the title for the node
@@ -115,7 +116,7 @@ public class SectionNode extends AbstractNode {
      * @param boxPanel the panel to be populated
      */
     public void populateBoxPanel(BoxPanel boxPanel) {
-        List nodeList = new LinkedList<>();
+        List<Component> nodeList = new LinkedList<>();
         SectionInnerPanel nodeInnerPanel = createNodeInnerPanel();
         if (nodeInnerPanel != null) {
             nodeList.add(nodeInnerPanel);
@@ -124,7 +125,7 @@ public class SectionNode extends AbstractNode {
         for (int i = 0; i < nodes.length; i++) {
             nodeList.add(((SectionNode) nodes[i]).getSectionNodePanel());
         }
-        boxPanel.setComponents((Component[]) nodeList.toArray(new Component[0]));
+        boxPanel.setComponents(nodeList.toArray(new Component[0]));
     }
 
 

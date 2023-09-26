@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.49
+#Version 2.0.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -109,25 +109,43 @@ fld public final static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo P
 intf org.netbeans.modules.web.jsfapi.api.LibraryInfo
 meth public java.lang.String getDefaultPrefix()
 meth public java.lang.String getDisplayName()
-meth public java.lang.String getLegacyNamespace()
 meth public java.lang.String getNamespace()
+meth public java.util.Set<java.lang.String> getValidNamespaces()
 meth public static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo valueOf(java.lang.String)
 meth public static org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo[] values()
 meth public static org.netbeans.modules.web.jsfapi.api.LibraryInfo forNamespace(java.lang.String)
 supr java.lang.Enum<org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo>
-hfds ALL_INFOS,defaultPrefix,displayName,namespace
+hfds allValidNamespaces,defaultPrefix,displayName
 
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.Function
 meth public abstract java.lang.String getDescription()
 meth public abstract java.lang.String getName()
 meth public abstract java.lang.String getSignature()
 
+CLSS public final !enum org.netbeans.modules.web.jsfapi.api.JsfNamespaces
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfNamespaces JAKARTA_EE_NS
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfNamespaces JAVA_SUN_COM_NS
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfNamespaces XMLNS_JCP_ORG_NS
+innr public final static !enum Type
+meth public java.lang.String getNamespace(org.netbeans.modules.web.jsfapi.api.JsfNamespaces$Type)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfNamespaces valueOf(java.lang.String)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfNamespaces[] values()
+supr java.lang.Enum<org.netbeans.modules.web.jsfapi.api.JsfNamespaces>
+hfds namespaces
+
+CLSS public final static !enum org.netbeans.modules.web.jsfapi.api.JsfNamespaces$Type
+ outer org.netbeans.modules.web.jsfapi.api.JsfNamespaces
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfNamespaces$Type TAGLIB
+meth public static org.netbeans.modules.web.jsfapi.api.JsfNamespaces$Type valueOf(java.lang.String)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfNamespaces$Type[] values()
+supr java.lang.Enum<org.netbeans.modules.web.jsfapi.api.JsfNamespaces$Type>
+
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.JsfSupport
-meth public abstract boolean isJsf22Plus()
 meth public abstract java.util.Map<java.lang.String,? extends org.netbeans.modules.web.jsfapi.api.Library> getLibraries()
 meth public abstract org.netbeans.api.java.classpath.ClassPath getClassPath()
 meth public abstract org.netbeans.api.project.Project getProject()
 meth public abstract org.netbeans.modules.web.api.webmodule.WebModule getWebModule()
+meth public abstract org.netbeans.modules.web.jsfapi.api.JsfVersion getJsfVersion()
 meth public abstract org.netbeans.modules.web.jsfapi.api.Library getLibrary(java.lang.String)
 meth public abstract org.openide.util.Lookup getLookup()
 
@@ -136,6 +154,25 @@ cons public init()
 fld public final static java.lang.String JSF_XHTML_FILE_MIMETYPE = "text/facelets"
 meth public static boolean isFaceletsFile(org.openide.filesystems.FileObject)
 supr java.lang.Object
+
+CLSS public final !enum org.netbeans.modules.web.jsfapi.api.JsfVersion
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_1_0
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_1_1
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_1_2
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_0
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_1
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_2
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_2_3
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_3_0
+fld public final static org.netbeans.modules.web.jsfapi.api.JsfVersion JSF_4_0
+meth public boolean isAtLeast(org.netbeans.modules.web.jsfapi.api.JsfVersion)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public java.lang.String getShortName()
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion latest()
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion valueOf(java.lang.String)
+meth public static org.netbeans.modules.web.jsfapi.api.JsfVersion[] values()
+supr java.lang.Enum<org.netbeans.modules.web.jsfapi.api.JsfVersion>
+hfds version
 
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.Library
 intf org.netbeans.modules.web.jsfapi.api.LibraryInfo
@@ -162,9 +199,8 @@ meth public abstract org.netbeans.modules.web.jsfapi.api.Tag getTag()
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.LibraryInfo
 meth public abstract java.lang.String getDefaultPrefix()
 meth public abstract java.lang.String getDisplayName()
-meth public abstract java.lang.String getLegacyNamespace()
- anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public abstract java.lang.String getNamespace()
+meth public abstract java.util.Set<java.lang.String> getValidNamespaces()
 
 CLSS public final !enum org.netbeans.modules.web.jsfapi.api.LibraryType
  anno 0 java.lang.Deprecated()
@@ -183,7 +219,6 @@ fld public final static java.util.Map<java.lang.String,java.lang.String> NS_MAPP
 meth public static <%0 extends java.lang.Object> {%%0} getForNs(java.util.Map<java.lang.String,{%%0}>,java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public static boolean containsNsOf(java.util.Collection<java.lang.String>,org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo)
-meth public static java.util.Set<java.lang.String> getAvailableNss(java.util.Map<java.lang.String,? extends org.netbeans.modules.web.jsfapi.api.Library>,boolean)
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.Tag
@@ -212,6 +247,9 @@ cons public init()
 meth public static java.util.Map<java.lang.String,java.lang.String> getInputTextValuesMap(org.openide.filesystems.FileObject)
 supr java.lang.Object
 
+CLSS public abstract interface org.netbeans.modules.web.jsfapi.spi.JsfReferenceImplementationProvider
+meth public abstract java.nio.file.Path artifactPathFor(org.netbeans.modules.web.jsfapi.api.JsfVersion)
+
 CLSS public org.netbeans.modules.web.jsfapi.spi.JsfSupportHandle
  anno 0 java.lang.Deprecated()
 cons public init()
@@ -230,18 +268,18 @@ hfds CACHE,LOGGER
 
 CLSS public org.netbeans.modules.web.jsfapi.spi.LibraryUtils
 cons public init()
-fld public final static java.lang.String COMPOSITE_LIBRARY_LEGACY_NS = "http://java.sun.com/jsf/composite"
-fld public final static java.lang.String COMPOSITE_LIBRARY_NS = "http://xmlns.jcp.org/jsf/composite"
+fld public final static java.lang.String COMPOSITE_LIBRARY_JAKARTA_NS = "jakarta.faces.composite"
+fld public final static java.lang.String COMPOSITE_LIBRARY_JCP_NS = "http://xmlns.jcp.org/jsf/composite"
+fld public final static java.lang.String COMPOSITE_LIBRARY_SUN_NS = "http://java.sun.com/jsf/composite"
 fld public final static java.lang.String XHTML_NS = "http://www.w3.org/1999/xhtml"
-meth public static boolean importLibrary(javax.swing.text.Document,org.netbeans.modules.web.jsfapi.api.Library,java.lang.String,boolean)
-meth public static boolean isCompositeComponentLibrary(org.netbeans.modules.web.jsfapi.api.Library)
- anno 0 java.lang.Deprecated()
+meth public static boolean importLibrary(javax.swing.text.Document,org.netbeans.modules.web.jsfapi.api.Library,java.lang.String)
 meth public static java.lang.String generateDefaultPrefix(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-meth public static java.lang.String getCompositeLibraryURL(java.lang.String,boolean)
+meth public static java.lang.String getCompositeLibraryURL(java.lang.String,org.netbeans.modules.web.jsfapi.api.JsfVersion)
 meth public static java.util.Map<java.lang.String,org.netbeans.modules.web.jsfapi.api.Library> getDeclaredLibraries(org.netbeans.modules.html.editor.lib.api.HtmlParsingResult)
-meth public static java.util.Map<org.netbeans.modules.web.jsfapi.api.Library,java.lang.String> importLibrary(javax.swing.text.Document,java.util.Map<org.netbeans.modules.web.jsfapi.api.Library,java.lang.String>,boolean)
+meth public static java.util.Map<org.netbeans.modules.web.jsfapi.api.Library,java.lang.String> importLibrary(javax.swing.text.Document,java.util.Map<org.netbeans.modules.web.jsfapi.api.Library,java.lang.String>)
+meth public static java.util.Set<java.lang.String> getAllCompositeLibraryNamespaces(java.lang.String,org.netbeans.modules.web.jsfapi.api.JsfVersion)
 meth public static org.netbeans.api.project.Project[] getOpenedJSFProjects()
 supr java.lang.Object
 

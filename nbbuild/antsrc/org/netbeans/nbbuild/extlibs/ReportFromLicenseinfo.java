@@ -38,6 +38,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.netbeans.nbbuild.extlibs.licenseinfo.CommentType;
@@ -78,10 +80,15 @@ public class ReportFromLicenseinfo extends Task {
             }
             
             Path nballPath = nball.toPath();
-            List<File> licenseinfofiles = Files.walk(nballPath)
-                    .filter(p -> p.endsWith("licenseinfo.xml"))
-                    .map(p -> p.toFile())
-                    .collect(Collectors.toList());
+
+            List<File> licenseinfofiles;
+
+            try (Stream<Path> walk = Files.walk(nballPath)) {
+                licenseinfofiles = walk
+                        .filter(p -> p.endsWith("licenseinfo.xml"))
+                        .map(p -> p.toFile())
+                        .collect(Collectors.toList());
+            }
             
             TreeMap<LicenseGroup,List<File>> licenseInfo = new TreeMap<>();
             

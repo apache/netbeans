@@ -55,12 +55,12 @@ public class MicronautConfigCompletionProvider implements CompletionProvider {
 
     public static final String PROPERTY_NAME_COLOR = getHTMLColor(64, 64, 217);
 
-    @MimeRegistration(mimeType = "text/x-yaml", service = CompletionProvider.class)
+    @MimeRegistration(mimeType = MicronautConfigUtilities.YAML_MIME, service = CompletionProvider.class)
     public static MicronautConfigCompletionProvider createYamlProvider() {
         return new MicronautConfigCompletionProvider();
     }
 
-    @MimeRegistration(mimeType = "text/x-properties", service = CompletionProvider.class)
+    @MimeRegistration(mimeType = MicronautConfigUtilities.PROPERTIES_MIME, service = CompletionProvider.class)
     public static MicronautConfigCompletionProvider createPropertiesProvider() {
         return new MicronautConfigCompletionProvider();
     }

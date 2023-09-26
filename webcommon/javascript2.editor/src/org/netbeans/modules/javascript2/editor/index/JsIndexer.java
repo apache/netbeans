@@ -66,7 +66,7 @@ public class JsIndexer extends EmbeddingIndexer {
 
     private static final Logger LOG = Logger.getLogger(JsIndexer.class.getName());
 
-    private static ChangeSupport changeSupport = new ChangeSupport(JsIndexer.class);
+    private static final ChangeSupport changeSupport = new ChangeSupport(JsIndexer.class);
 
     @Override
     protected void index(Indexable indexable, Result result, Context context) {
@@ -101,7 +101,7 @@ public class JsIndexer extends EmbeddingIndexer {
                 storeObject(object, object.getName(), support, indexable, visited);
             }
         }
-        
+
         IndexDocument document = support.createDocument(indexable);
         for (JsObject object : globalObject.getProperties().values()) {
             if (object.getParent() != null) {
@@ -116,11 +116,11 @@ public class JsIndexer extends EmbeddingIndexer {
         IndexDocument elementDocument = support.createDocument(indexable);
         elementDocument.addPair(Index.FIELD_BASE_NAME, object.getName(), true, true);
         elementDocument.addPair(Index.FIELD_BASE_NAME_INSENSITIVE, object.getName().toLowerCase(), true, false);
-        elementDocument.addPair(Index.FIELD_FQ_NAME,  fqn + (object.isAnonymous() ? ANONYMOUS_POSFIX 
+        elementDocument.addPair(Index.FIELD_FQ_NAME,  fqn + (object.isAnonymous() ? ANONYMOUS_POSFIX
                 : object.getJSKind() == JsElement.Kind.PARAMETER ? PARAMETER_POSTFIX : OBJECT_POSFIX), true, true);
 //        boolean isGlobal = object.getParent() != null ? ModelUtils.isGlobal(object.getParent()) : ModelUtils.isGlobal(object);
 //        elementDocument.addPair(JsIndex.FIELD_IS_GLOBAL, (isGlobal ? "1" : "0"), true, true);
-        elementDocument.addPair(Index.FIELD_OFFSET, Integer.toString(object.getOffset()), true, true);            
+        elementDocument.addPair(Index.FIELD_OFFSET, Integer.toString(object.getOffset()), true, true);
         elementDocument.addPair(Index.FIELD_FLAG, Integer.toString(IndexedElement.Flag.getFlag(object)), false, true);
 //        StringBuilder sb = new StringBuilder();
 //        for (JsObject property : object.getProperties().values()) {
@@ -139,7 +139,7 @@ public class JsIndexer extends EmbeddingIndexer {
             sb.append("|");
         }
         elementDocument.addPair(Index.FIELD_ASSIGNMENTS, sb.toString(), false, true);
-        
+
         if (object.getJSKind().isFunction()) {
             sb = new StringBuilder();
             for(TypeUsage type : ((JsFunction)object).getReturnTypes()) {
@@ -153,7 +153,7 @@ public class JsIndexer extends EmbeddingIndexer {
             elementDocument.addPair(Index.FIELD_RETURN_TYPES, sb.toString(), false, true);
             elementDocument.addPair(Index.FIELD_PARAMETERS, codeParameters(((JsFunction)object).getParameters()), false, true);
         }
-        
+
         if (object instanceof JsArray) {
             sb = new StringBuilder();
             for(TypeUsage type : ((JsArray)object).getTypesInArray()) {
@@ -167,17 +167,17 @@ public class JsIndexer extends EmbeddingIndexer {
             elementDocument.addPair(Index.FIELD_ARRAY_TYPES, sb.toString(), false, true);
         }
 
-        
+
         return elementDocument;
     }
-    
+
     protected static IndexDocument createDocumentForReference(JsReference object, String fqn, IndexingSupport support, Indexable indexable) {
         IndexDocument elementDocument = support.createDocument(indexable);
         elementDocument.addPair(Index.FIELD_BASE_NAME, object.getName(), true, true);
         elementDocument.addPair(Index.FIELD_BASE_NAME_INSENSITIVE, object.getName(), true, false);
-        elementDocument.addPair(Index.FIELD_FQ_NAME,  fqn + (object.isAnonymous() ? ANONYMOUS_POSFIX 
+        elementDocument.addPair(Index.FIELD_FQ_NAME,  fqn + (object.isAnonymous() ? ANONYMOUS_POSFIX
                 : object.getJSKind() == JsElement.Kind.PARAMETER ? PARAMETER_POSTFIX : OBJECT_POSFIX), true, true);
-        elementDocument.addPair(Index.FIELD_OFFSET, Integer.toString(object.getOffset()), true, true);            
+        elementDocument.addPair(Index.FIELD_OFFSET, Integer.toString(object.getOffset()), true, true);
         elementDocument.addPair(Index.FIELD_FLAG, Integer.toString(IndexedElement.Flag.getFlag(object)), false, true);
 
         StringBuilder sb = new StringBuilder();
@@ -187,7 +187,7 @@ public class JsIndexer extends EmbeddingIndexer {
         sb.append(":"); //NOI18N
         sb.append("1");  //NOI18N
         elementDocument.addPair(Index.FIELD_ASSIGNMENTS, sb.toString(), false, true);
-        
+
         if (object.getJSKind().isFunction()) {
             sb = new StringBuilder();
             for(TypeUsage type : ((JsFunction)object).getReturnTypes()) {
@@ -201,7 +201,7 @@ public class JsIndexer extends EmbeddingIndexer {
             elementDocument.addPair(Index.FIELD_RETURN_TYPES, sb.toString(), false, true);
             elementDocument.addPair(Index.FIELD_PARAMETERS, codeParameters(((JsFunction)object).getParameters()), false, true);
         }
-        
+
         if (object instanceof JsArray) {
             sb = new StringBuilder();
             for(TypeUsage type : ((JsArray)object).getTypesInArray()) {
@@ -253,14 +253,14 @@ public class JsIndexer extends EmbeddingIndexer {
             }
         }
     }
-    
+
     private boolean isInvisibleFunction(JsObject object) {
         if (object.getJSKind().isFunction() && (object.isAnonymous() || object.getModifiers().contains(Modifier.PRIVATE))) {
             JsObject parent = object.getParent();
             if (parent != null && parent.getJSKind() == JsElement.Kind.FILE) {
                 return false;
             }
-            if (parent != null && parent instanceof JsFunction) {
+            if (parent instanceof JsFunction) {
                 Collection<? extends TypeUsage> returnTypes = ((JsFunction) parent).getReturnTypes();
                 String fqn = object.getFullyQualifiedName();
                 for (TypeUsage returnType : returnTypes) {
@@ -332,7 +332,7 @@ public class JsIndexer extends EmbeddingIndexer {
             }
         }
     }
-    
+
     private boolean storeUsage(JsObject object) {
         boolean result = true;
         if ("arguments".equals(object.getName()) || object.getJSKind() == JsElement.Kind.ANONYMOUS_OBJECT
@@ -341,14 +341,14 @@ public class JsIndexer extends EmbeddingIndexer {
         }
         return result;
     }
-    
+
     public static final class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "js"; // NOI18N
-        public static final int VERSION = 16;
+        public static final int VERSION = 17;
         private static final int PRIORITY = 100;
-        
-        private static final ThreadLocal<Collection<Runnable>> postScanTasks = new ThreadLocal<Collection<Runnable>>();
+
+        private static final ThreadLocal<Collection<Runnable>> postScanTasks = new ThreadLocal<>();
 
         @Override
         public EmbeddingIndexer createIndexer(final Indexable indexable, final Snapshot snapshot) {
@@ -406,7 +406,7 @@ public class JsIndexer extends EmbeddingIndexer {
 
         @Override
         public boolean scanStarted(Context context) {
-            postScanTasks.set(new LinkedList<Runnable>());
+            postScanTasks.set(new LinkedList<>());
             return super.scanStarted(context);
         }
 
@@ -438,7 +438,7 @@ public class JsIndexer extends EmbeddingIndexer {
             final Collection<Runnable> tasks = postScanTasks.get();
             if (tasks == null) {
                 throw new IllegalStateException("JsIndexer.postScanTask can be called only from scanner thread.");  //NOI18N
-            }                        
+            }
             tasks.add(task);
         }
 
@@ -446,9 +446,9 @@ public class JsIndexer extends EmbeddingIndexer {
         public int getPriority() {
             return PRIORITY;
         }
-        
+
     } // End of Factory class
-    
+
     @ServiceProvider(service = org.netbeans.modules.javascript2.model.spi.IndexChangeSupport.class)
     public static final class IndexChangeSupport implements org.netbeans.modules.javascript2.model.spi.IndexChangeSupport {
 
@@ -466,7 +466,7 @@ public class JsIndexer extends EmbeddingIndexer {
             changeSupport.fireChange();
         }
     }
-    
+
     @ServiceProvider(service = org.netbeans.modules.javascript2.editor.spi.PostScanProvider.class)
     public static final class PostScanProvider implements org.netbeans.modules.javascript2.editor.spi.PostScanProvider {
 

@@ -1,0 +1,9 @@
+Display text: $this-><b>publicMethod</b>();
+File name: index.php
+Name: publicMethod
+Position: BEGIN: 960 END: 972
+
+Display text: public function <b>publicMethod</b>(): void { // EnumA
+File name: index.php
+Name: publicMethod
+Position: BEGIN: 1077 END: 1089

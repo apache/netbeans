@@ -109,11 +109,19 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.autoupdate.ui</code-name-base>
+                    <code-name-base>org.netbeans.modules.autoupdate.services</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.35</specification-version>
+                        <specification-version>1.76</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.editor.document</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.26</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -211,7 +219,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.54</specification-version>
+                        <specification-version>2.77</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -308,7 +316,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.80</specification-version>
+                        <specification-version>1.89</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -509,6 +517,14 @@
                         <specification-version>6.64</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <implementation-version/>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -576,6 +592,19 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.libs.freemarker</code-name-base>
                     </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.xml.text</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.editor.mimelookup.impl</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.modules</code-name-base>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <friend-packages>
@@ -619,11 +648,14 @@
                 <!-- danis@netbeans.org -->
                 <friend>org.vaadin.netbeans.maven</friend>
                 <friend>org.netbeans.modules.payara.micro</friend>
+                <friend>org.netbeans.modules.jakarta.transformer</friend>
                 <!-- NetBeans support for Google App Engine -->
                 <friend>org.netbeans.modules.j2ee.appengine</friend>
                 <friend>org.netbeans.modules.maven.util</friend>
                 <!-- JShel support -->
                 <friend>org.netbeans.modules.jshell.support</friend>
+                <!-- sdedic@apache.org -->
+                <friend>org.netbeans.modules.micronaut</friend>
                 <package>org.netbeans.modules.maven.api</package>
                 <package>org.netbeans.modules.maven.api.archetype</package>
                 <package>org.netbeans.modules.maven.api.classpath</package>
@@ -633,6 +665,7 @@
                 <package>org.netbeans.modules.maven.api.output</package>
                 <package>org.netbeans.modules.maven.api.problem</package>
                 <package>org.netbeans.modules.maven.execute</package>
+                <package>org.netbeans.modules.maven.options</package>
                 <package>org.netbeans.modules.maven.execute.model</package>
                 <package>org.netbeans.modules.maven.execute.model.io.jdom</package>
                 <package>org.netbeans.modules.maven.execute.model.io.xpp3</package>

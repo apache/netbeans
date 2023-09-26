@@ -54,13 +54,14 @@ import org.netbeans.modules.javascript2.editor.formatter.Defaults;
  */
 public class FmtSpaces extends JPanel implements TreeCellRenderer, MouseListener, KeyListener {
 
-    private SpacesCategorySupport scs;
-    private DefaultTreeModel model;
+    private final DefaultTreeModel model;
+    private final DefaultTreeCellRenderer dr = new DefaultTreeCellRenderer();
+    private final JCheckBox renderer = new JCheckBox();
 
-    private DefaultTreeCellRenderer dr = new DefaultTreeCellRenderer();
-    private JCheckBox renderer = new JCheckBox();
+    private SpacesCategorySupport scs;
 
     /** Creates new form FmtSpaces */
+    @SuppressWarnings("LeakingThisInConstructor")
     private FmtSpaces() {
         initComponents();
         model = createModel();
@@ -86,18 +87,18 @@ public class FmtSpaces extends JPanel implements TreeCellRenderer, MouseListener
     }
 
     public static PreferencesCustomizer.Factory getController() {
-        return new PreferencesCustomizer.Factory() {
-            @Override
-            public PreferencesCustomizer create(Preferences preferences) {
-                String preview = "";
-                try {
-                    preview = Utils.loadPreviewText(FmtTabsIndents.class.getClassLoader().getResourceAsStream("org/netbeans/modules/javascript2/editor/formatter/ui/Spaces.js"));
-                } catch (IOException ex) {
-                    // TODO log it
-                }
-                return new SpacesCategorySupport(Defaults.getInstance(JsTokenId.JAVASCRIPT_MIME_TYPE),
-                        preferences, new FmtSpaces(), preview);
+        return (Preferences preferences) -> {
+            String preview = "";
+            try {
+                preview = Utils.loadPreviewText(FmtTabsIndents.class.getClassLoader().getResourceAsStream("org/netbeans/modules/javascript2/editor/formatter/ui/Spaces.js"));
+            } catch (IOException ex) {
+                // TODO log it
             }
+            return new SpacesCategorySupport(
+                    Defaults.getInstance(JsTokenId.JAVASCRIPT_MIME_TYPE),
+                    preferences,
+                    new FmtSpaces(),
+                    preview);
         };
     }
 
@@ -404,7 +405,7 @@ public class FmtSpaces extends JPanel implements TreeCellRenderer, MouseListener
         }
 
         private List<Item> getAllItems() {
-            List<Item> result = new LinkedList<FmtSpaces.Item>();
+            List<Item> result = new LinkedList<>();
             DefaultMutableTreeNode root = (DefaultMutableTreeNode) ((FmtSpaces) panel).model.getRoot();
             Enumeration children = root.depthFirstEnumeration();
             while( children.hasMoreElements() ) {

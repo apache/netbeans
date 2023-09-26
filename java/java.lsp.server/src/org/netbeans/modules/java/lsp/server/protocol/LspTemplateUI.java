@@ -50,6 +50,10 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.SourceGroupModifier;
 import org.netbeans.api.templates.CreateDescriptor;
 import org.netbeans.api.templates.FileBuilder;
+import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -243,7 +247,7 @@ final class LspTemplateUI {
 
     private static CompletionStage<DataObject> findTemplate(DataFolder templates, NbCodeLanguageClient client) {
         final List<QuickPickItem> categories = quickPickTemplates(templates);
-        final CompletionStage<List<QuickPickItem>> pickGroup = client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectGroup(), false, categories));
+        final CompletionStage<List<QuickPickItem>> pickGroup = client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectGroup(), categories));
         final CompletionStage<DataFolder> group = pickGroup.thenApply((selectedGroups) -> {
             final String chosen = singleSelection(selectedGroups);
             FileObject chosenFo = templates.getPrimaryFile().getFileObject(chosen);
@@ -251,7 +255,7 @@ final class LspTemplateUI {
         });
         final CompletionStage<List<QuickPickItem>> pickProject = group.thenCompose(chosenGroup -> {
             List<QuickPickItem> projectTypes = quickPickTemplates(chosenGroup);
-            return client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectTemplate(), false, projectTypes));
+            return client.showQuickPick(new ShowQuickPickParams(Bundle.CTL_TemplateUI_SelectTemplate(), projectTypes));
         });
         final CompletionStage<DataObject> findTemplate = pickProject.thenCombine(group, (selectedTemplates, chosenGroup) -> {
             try {
@@ -456,23 +460,7 @@ final class LspTemplateUI {
     }
 
     static String stripHtml(String s) {
-        boolean inTag = false;
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
-            if (inTag) {
-                if (ch == '>') {
-                    inTag = false;
-                }
-            } else {
-                if (ch == '<') {
-                    inTag = true;
-                    continue;
-                }
-                sb.append(ch);
-            }
-        }
-        return sb.toString();
+        return Utils.html2plain(s, true);
     }
 
     private static <T extends Exception> T raise(Class<T> clazz, Exception ex) throws T {

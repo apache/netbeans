@@ -21,10 +21,6 @@ package org.netbeans.modules.bugtracking.api;
 
 import java.util.Set;
 import java.util.logging.Level;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.fail;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.bugtracking.APIAccessor;
 import org.netbeans.modules.bugtracking.IssueImpl;

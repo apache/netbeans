@@ -178,7 +178,7 @@ public class CommentHandlerService implements CommentHandler {
     private static class CopyEntry {
         private Tree target;
         private RelativePosition pos;
-        private Collection<Comment> comments = new ArrayList();
+        private Collection<Comment> comments = new ArrayList<>();
     }
     
     /**

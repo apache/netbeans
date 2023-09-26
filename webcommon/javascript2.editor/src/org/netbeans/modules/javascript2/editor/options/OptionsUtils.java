@@ -37,7 +37,7 @@ import org.openide.util.WeakListeners;
  */
 public final class OptionsUtils {
 
-    private static final Map<Language<JsTokenId>, OptionsUtils> INSTANCES = new WeakHashMap<Language<JsTokenId>, OptionsUtils>();
+    private static final Map<Language<JsTokenId>, OptionsUtils> INSTANCES = new WeakHashMap<>();
 
     public static final String AUTO_COMPLETION_TYPE_RESOLUTION = "codeCompletionTypeResolution"; //NOI18N
     public static final String AUTO_COMPLETION_SMART_QUOTES = "codeCompletionSmartQuotes"; //NOI18N
@@ -45,7 +45,7 @@ public final class OptionsUtils {
     public static final String AUTO_COMPLETION_FULL = "autoCompletionFull"; // NOI18N
     public static final String AUTO_COMPLETION_AFTER_DOT = "autoCompletionAfterDot"; // NOI18N
     public static final String COMPETION_ITEM_SIGNATURE_WIDTH = "codeComletionItemDescriptionWith"; //NOI18N
-    
+
     // default values
     public static final boolean AUTO_COMPLETION_TYPE_RESOLUTION_DEFAULT = false;
     public static final boolean AUTO_COMPLETION_SMART_QUOTES_DEFAULT = true;
@@ -78,7 +78,7 @@ public final class OptionsUtils {
                         AUTO_STRING_CONCATINATION,
                         AUTO_STRING_CONCATINATION_DEFAULT);
             }
-            
+
             if (settingName == null || AUTO_COMPLETION_FULL.equals(settingName)) {
                 autoCompletionFull = preferences.getBoolean(
                         AUTO_COMPLETION_FULL,
@@ -107,7 +107,7 @@ public final class OptionsUtils {
     private Boolean autoCompletionFull = null;
     private Boolean autoCompletionAfterDot = null;
     private Integer codeCompletionItemSignatureWidth = null;
-    
+
     private OptionsUtils(Language<JsTokenId> language) {
         this.mimeType = language.mimeType();
     }
@@ -141,7 +141,7 @@ public final class OptionsUtils {
         assert autoStringConcatination != null;
         return autoStringConcatination;
     }
-    
+
     /**
      * Code Completion after typing.
      */
@@ -153,14 +153,14 @@ public final class OptionsUtils {
 
     /**
      * Code Completion items signature width.
-     * @return number of chars 
+     * @return number of chars
      */
     public int getCodeCompletionItemSignatureWidth() {
         lazyInit();
         assert codeCompletionItemSignatureWidth != null;
         return codeCompletionItemSignatureWidth;
     }
-    
+
     /**
      * Variables after "$".
      */
@@ -181,13 +181,13 @@ public final class OptionsUtils {
             preferencesTracker.preferenceChange(null);
         }
     }
-    
+
     public void setTestTypeResolution(boolean value) {
         autoCompletionTypeResolution = value;
     }
-    
+
     /**
-     * 
+     *
      * @param width number of chars of max width of signature
      */
     public void setCodeCompletionItemSignatureWidth(int width) {

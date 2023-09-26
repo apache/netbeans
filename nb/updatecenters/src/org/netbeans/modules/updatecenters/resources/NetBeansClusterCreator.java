@@ -91,7 +91,7 @@ public final class NetBeansClusterCreator extends AutoupdateClusterCreator {
         } finally {
             is.close();
         }
-        if (!p.keySet().contains(clusterName)) {         
+        if (!p.containsKey(clusterName)) {
             OutputStream os = new FileOutputStream(conf, true);
             try {
                 os.write('\n');

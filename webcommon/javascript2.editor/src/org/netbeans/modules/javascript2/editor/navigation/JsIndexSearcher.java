@@ -50,7 +50,7 @@ public class JsIndexSearcher implements IndexSearcher{
 
     @Override
     public Set<? extends Descriptor> getTypes(Project project, String textForQuery, Kind searchType, Helper helper) {
-        Set<JsDescriptor> result = new HashSet<JsDescriptor>();
+        Set<JsDescriptor> result = new HashSet<>();
         final Index index = getIndex(project);
 
         if (index != null) {
@@ -70,7 +70,7 @@ public class JsIndexSearcher implements IndexSearcher{
 
     @Override
     public Set<? extends Descriptor> getSymbols(Project project, String textForQuery, Kind searchType, Helper helper) {
-        Set<JsDescriptor> result = new HashSet<JsDescriptor>();
+        Set<JsDescriptor> result = new HashSet<>();
         final Index index = getIndex(project);
 
         if (index != null) {
@@ -85,8 +85,8 @@ public class JsIndexSearcher implements IndexSearcher{
     }
 
     private Index getIndex(Project project) {
-        Set<String> sourceIds = new HashSet<String>();
-        Set<String> libraryIds = new HashSet<String>();
+        Set<String> sourceIds = new HashSet<>();
+        Set<String> libraryIds = new HashSet<>();
         Collection<? extends PathRecognizer> lookupAll = Lookup.getDefault().lookupAll(PathRecognizer.class);
         for (PathRecognizer pathRecognizer : lookupAll) {
             Set<String> source = pathRecognizer.getSourcePathIds();
@@ -189,7 +189,7 @@ public class JsIndexSearcher implements IndexSearcher{
             FileObject fileObject = element.getFileObject();
             if (fileObject != null) {
                 GsfUtilities.open(fileObject, element.getOffset(), element.getName());
-            } 
+            }
         }
 
         private void initProjectInfo() {

@@ -205,9 +205,7 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
             }
         });
 
-        cbOsgiDeps.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(cbOsgiDeps, org.openide.util.NbBundle.getMessage(NbmWizardPanelVisual.class, "NbmWizardPanelVisual.cbOsgiDeps.text")); // NOI18N
-        cbOsgiDeps.setEnabled(false);
 
         cbAddModule.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(cbAddModule, org.openide.util.NbBundle.getMessage(NbmWizardPanelVisual.class, "NbmWizardPanelVisual.cbAddModule.text")); // NOI18N
@@ -272,14 +270,6 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
 }//GEN-LAST:event_cbAddModuleActionPerformed
 
     private void versionComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_versionComboActionPerformed
-        cbOsgiDeps.setVisible(false); // none of the apache releases support osgi
-//        String version = (String) versionCombo.getSelectedItem();
-//        if (RELEASE90_VERSION.equals(version)) {
-//            cbOsgiDeps.setEnabled(true);
-//        } else {
-//            cbOsgiDeps.setEnabled(false);
-//            cbOsgiDeps.setSelected(false);
-//        }
         vgEnabled.performValidation();
     }//GEN-LAST:event_versionComboActionPerformed
 
@@ -299,8 +289,7 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
                 handle.finish();
                 handle = null;
             }
-        }        
-         
+        }
         d.putProperty(NbmWizardIterator.OSGIDEPENDENCIES, cbOsgiDeps.isSelected());
          if (isApp) {
              if (cbAddModule.isSelected()) {

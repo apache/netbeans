@@ -34,15 +34,12 @@ public class Utils {
     public static final int POSSIBLE_SCROLL_BAR_WIDTH = 30;
 
     public static String loadPreviewText(InputStream is) throws IOException {
-            BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-            try {
-                StringBuilder sb = new StringBuilder();
-                for (String line = r.readLine(); line != null; line = r.readLine()) {
-                    sb.append(line).append('\n'); //NOI18N
-                }
-                return sb.toString();
-            } finally {
-                r.close();
+        try ( BufferedReader r = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+            StringBuilder sb = new StringBuilder();
+            for (String line = r.readLine(); line != null; line = r.readLine()) {
+                sb.append(line).append('\n'); //NOI18N
             }
+            return sb.toString();
         }
+    }
 }

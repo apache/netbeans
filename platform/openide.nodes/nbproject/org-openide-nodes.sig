@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.60
+#Version 7.66
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1590,8 +1590,14 @@ innr public final static Name
 innr public static Reflection
 meth public boolean canRead()
 meth public boolean canWrite()
+meth public final org.openide.nodes.PropertySupport<{org.openide.nodes.PropertySupport%0}> withDisplayName(java.lang.String)
+meth public final org.openide.nodes.PropertySupport<{org.openide.nodes.PropertySupport%0}> withShortDescription(java.lang.String)
+meth public static <%0 extends java.lang.Object> org.openide.nodes.PropertySupport<{%%0}> readOnly(java.lang.String,java.lang.Class<{%%0}>,java.util.function.Supplier<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.openide.nodes.PropertySupport<{%%0}> readWrite(java.lang.String,java.lang.Class<{%%0}>,java.util.function.Supplier<{%%0}>,java.util.function.Consumer<{%%0}>)
+meth public static <%0 extends java.lang.Object> org.openide.nodes.PropertySupport<{%%0}> writeOnly(java.lang.String,java.lang.Class<{%%0}>,java.util.function.Consumer<{%%0}>)
 supr org.openide.nodes.Node$Property<{org.openide.nodes.PropertySupport%0}>
 hfds canR,canW
+hcls FunctionalProperty
 
 CLSS public final static org.openide.nodes.PropertySupport$Name
  outer org.openide.nodes.PropertySupport

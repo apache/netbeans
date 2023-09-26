@@ -93,6 +93,10 @@ public abstract class IDENativeMavenWizardIterator implements WizardDescriptor.I
 
         return new FileBuilder(w.getTemplate().getPrimaryFile(), w.getTargetFolder().getPrimaryFile().getParent()).
             param(TemplateUtils.PARAM_PACKAGE, (String) wiz.getProperty("package")).
+            param(TemplateUtils.PARAM_PACKAGING, (String) this.packaging).
+            param(TemplateUtils.PARAM_GROUP_ID, (String) wiz.getProperty("groupId")).
+            param(TemplateUtils.PARAM_ARTIFACT_ID, (String) wiz.getProperty("artifactId")).
+            param(TemplateUtils.PARAM_VERSION, (String) wiz.getProperty("version")).
             defaultMode(FileBuilder.Mode.COPY).
             name(w.getTargetName()).
             useLookup(Lookups.fixed(h));
@@ -101,6 +105,7 @@ public abstract class IDENativeMavenWizardIterator implements WizardDescriptor.I
     /**
      * @deprecated Hook into {@link IDENativeTemplateHandler} instead.
      */
+    @Deprecated
     protected CreateProjectBuilder createBuilder(File projFile, ProjectInfo vi, ProgressHandle handle) {
             CreateProjectBuilder builder = new CreateProjectBuilder(projFile, vi.groupId, vi.artifactId, vi.version)
                     .setProgressHandle(handle)

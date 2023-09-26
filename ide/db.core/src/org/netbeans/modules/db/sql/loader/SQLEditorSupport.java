@@ -144,6 +144,8 @@ public class SQLEditorSupport extends DataEditorSupport
 
     @Override
     protected void initializeCloneableEditor(CloneableEditor editor) {
+        // Invoked when SQLCloneableEditor is deserialized and from the 
+        // SQLCloneableEditor(Lookup) constructor.
         super.initializeCloneableEditor(editor);
         ((SQLCloneableEditor) editor).initialize();
     }

@@ -564,7 +564,7 @@ public class CategoryList extends JList implements Autoscroll {
                 policy = kfm.getDefaultFocusTraversalPolicy();
             Component next = focusNext ? policy.getComponentAfter( container, CategoryList.this )
                                       : policy.getComponentBefore( container, CategoryList.this );
-            if( null != next && next instanceof CategoryButton ) {
+            if(next instanceof CategoryButton) {
                 clearSelection();
                 next.requestFocus();
             }

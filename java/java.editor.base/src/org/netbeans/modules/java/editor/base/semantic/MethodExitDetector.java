@@ -260,9 +260,7 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
                     }
                 }
                 
-                for (TypeMirror type : toRemove) {
-                    exceptions2Highlights.remove(type);
-                }
+                exceptions2Highlights.keySet().removeAll(toRemove);
             }
             
         }

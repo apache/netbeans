@@ -1,0 +1,7 @@
+micronaut:
+  application:
+    name: microdemo
+netty:
+  default:
+    allocator:
+      max-order: 3

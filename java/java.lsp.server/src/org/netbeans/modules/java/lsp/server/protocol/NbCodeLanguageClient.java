@@ -18,14 +18,20 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
-import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.services.JsonNotification;
 import org.eclipse.lsp4j.jsonrpc.services.JsonRequest;
 import org.eclipse.lsp4j.jsonrpc.validation.NonNull;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 
 /**
  * An extension to the standard LanguageClient that adds several messages missing
@@ -46,10 +52,17 @@ public interface NbCodeLanguageClient extends LanguageClient {
     public void showStatusBarMessage(@NonNull ShowStatusMessageParams params);
     /**
      * Shows an HTML based UI.
-     * @param params the URI of the page to show
+     * @param params the page to show
      */
     @JsonRequest("window/showHtmlPage")
     public CompletableFuture<String> showHtmlPage(@NonNull HtmlPageParams params);
+
+    /**
+     * Execute script in an HTML based UI.
+     * @param params the script to execute
+     */
+    @JsonRequest("window/execInHtmlPage")
+    public CompletableFuture<String> execInHtmlPage(@NonNull HtmlPageParams params);
 
     /**
      * Shows a selection list allowing multiple selections.
@@ -68,6 +81,15 @@ public interface NbCodeLanguageClient extends LanguageClient {
      */
     @JsonRequest("window/showInputBox")
     public CompletableFuture<String> showInputBox(@NonNull ShowInputBoxParams params);
+
+    /**
+     * Shows a mutli-step input using QuickPicks and InputBoxes.
+     *
+     * @param params input parameters
+     * @return collected input values and selected items
+     */
+    @JsonRequest("window/showMultiStepInput")
+    public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(@NonNull ShowMutliStepInputParams params);
 
     /**
      * Notifies client of running tests progress. Provides information about a test suite being loaded,

@@ -258,7 +258,7 @@ public class MicronautRefactoringFactory implements RefactoringPluginFactory {
                 DataObject dobj = DataObject.find(getParentFile());
                 if (dobj != null) {
                     EditorCookie.Observable obs = dobj.getCookie(EditorCookie.Observable.class);
-                    if (obs != null && obs instanceof CloneableEditorSupport) {
+                    if (obs instanceof CloneableEditorSupport) {
                         CloneableEditorSupport supp = (CloneableEditorSupport)obs;
                         return new PositionBounds(supp.createPositionRef(startOffset, Position.Bias.Forward), supp.createPositionRef(Math.max(startOffset, endOffset), Position.Bias.Forward));
                     }

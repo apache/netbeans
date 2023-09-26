@@ -19,16 +19,21 @@
 
 package org.netbeans.modules.java.source.indexing;
 
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -40,9 +45,12 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Kinds.Kind;
+import com.sun.tools.javac.code.Source;
+import com.sun.tools.javac.code.Source.Feature;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.RecordComponent;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.SymbolMetadata;
 import com.sun.tools.javac.code.Symtab;
@@ -59,17 +67,21 @@ import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCPackageDecl;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
+import com.sun.tools.javac.tree.JCTree.JCSwitch;
+import com.sun.tools.javac.tree.JCTree.JCSwitchExpression;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -103,6 +115,7 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
@@ -338,6 +351,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     return;
                 }
                 dropMethodsAndErrors(jtFin.getContext(), env.toplevel, dc);
+                log.nerrors = 0;
             });
             final Future<Void> done = FileManagerTransaction.runConcurrent(new FileSystem.AtomicAction() {
                 @Override
@@ -531,6 +545,9 @@ final class VanillaCompileWorker extends CompileWorker {
         Trees trees = Trees.instance(BasicJavacTask.instance(ctx));
         Types types = Types.instance(ctx);
         TreeMaker make = TreeMaker.instance(ctx);
+        Elements el = JavacElements.instance(ctx);
+        Source source = Source.instance(ctx);
+        boolean hasMatchException = el.getTypeElement("java.lang.MatchException") != null;
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
             private Set<JCNewClass> anonymousClasses = Collections.newSetFromMap(new LinkedHashMap<>());
@@ -582,7 +599,8 @@ final class VanillaCompileWorker extends CompileWorker {
                 } else {
                     scan(node.getInitializer(), null);
                 }
-                decl.sym.type = decl.type = error2Object(decl.type);
+                decl.type = error2Object(decl.type);
+                decl.sym.type = error2Object(decl.sym.type);
                 clearAnnotations(decl.sym.getMetadata());
                 return null;
             }
@@ -711,6 +729,10 @@ final class VanillaCompileWorker extends CompileWorker {
                     ct.supertype_field = error2Object(ct.supertype_field);
                 }
                 clearAnnotations(clazz.sym.getMetadata());
+                for (RecordComponent rc : clazz.sym.getRecordComponents()) {
+                    rc.type = error2Object(rc.type);
+                    scan(rc.accessorMeth, p);
+                }
                 for (JCTree def : clazz.defs) {
                     boolean errorClass = isErroneousClass(def);
                     if (errorClass) {
@@ -884,6 +906,44 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             @Override
+            public Void visitMemberReference(MemberReferenceTree node, Void p) {
+                JCMemberReference ref = (JCMemberReference) node;
+                ref.target = error2Object(ref.target);
+                return super.visitMemberReference(node, p);
+            }
+
+            @Override
+            public Void visitBindingPattern(BindingPatternTree node, Void p) {
+                return super.visitBindingPattern(node, p);
+            }
+
+            @Override
+            public Void visitDeconstructionPattern(DeconstructionPatternTree node, Void p) {
+                errorFound |= !hasMatchException;
+                return super.visitDeconstructionPattern(node, p);
+            }
+
+            @Override
+            public Void visitSwitch(SwitchTree node, Void p) {
+                JCSwitch swt = (JCSwitch) node;
+                handleSwitch(swt.patternSwitch);
+                return super.visitSwitch(node, p);
+            }
+
+            @Override
+            public Void visitSwitchExpression(SwitchExpressionTree node, Void p) {
+                JCSwitchExpression swt = (JCSwitchExpression) node;
+                handleSwitch(swt.patternSwitch);
+                return super.visitSwitchExpression(node, p);
+            }
+
+            private void handleSwitch(boolean patternSwitch) {
+                if (patternSwitch && !Feature.PATTERN_SWITCH.allowedInSource(source)) {
+                    errorFound = true;
+                }
+            }
+
+            @Override
             public Void scan(Tree tree, Void p) {
                 if (tree != null && ExpressionTree.class.isAssignableFrom(tree.getClass())) {
                     errorFound |= isErroneous(trees.getTypeMirror(new TreePath(getCurrentPath(), tree))); //isErroneous - enough?
@@ -959,6 +1019,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     return null;
 
                 if (isErroneous(t)) {
+                    errorFound = true;
                     return syms.objectType;
                 }
 

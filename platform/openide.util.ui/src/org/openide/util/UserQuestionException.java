@@ -55,7 +55,7 @@ public abstract class UserQuestionException extends java.io.IOException {
     }
 
     /** Invoke the action if the user confirms the action.
-     * @exception IOException if another I/O problem exists
+     * @exception java.io.IOException if another I/O problem exists
      */
     public abstract void confirmed() throws java.io.IOException;
 }

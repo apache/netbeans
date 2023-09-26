@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.5
+#Version 0.11
 
 CLSS public java.lang.Object
 cons public init()
@@ -17,6 +17,7 @@ meth public java.lang.String toString()
 
 CLSS public final org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner
 meth public static org.netbeans.modules.nativeimage.api.debug.NIDebugger attach(java.io.File,long,java.lang.String,org.netbeans.api.project.Project,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.nativeimage.api.debug.NIDebugger start(java.io.File,java.util.List<java.lang.String>,java.lang.String,org.netbeans.api.project.Project,java.lang.String,org.netbeans.api.extexecution.ExecutionDescriptor,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
  anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.nativeimage.api.debug.NIDebugger start(java.io.File,org.netbeans.modules.nativeimage.api.debug.StartDebugParameters,org.netbeans.api.project.Project,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)

@@ -35,7 +35,7 @@ public final class FunctionArgument {
             public FunctionArgument createForAnonymousObject(int order, int offset, JsObject value) {
                 return new FunctionArgument(Kind.ANONYMOUS_OBJECT, order, offset, value);
             }
-            
+
             @Override
             public FunctionArgument createForArray(int order, int offset, JsObject value) {
                 return new FunctionArgument(Kind.ARRAY, order, offset, value);
@@ -62,7 +62,7 @@ public final class FunctionArgument {
     private final int order;
 
     private final int offset;
-    
+
     private final Object value;
 
     private FunctionArgument(Kind kind, int order, int offset, Object value) {

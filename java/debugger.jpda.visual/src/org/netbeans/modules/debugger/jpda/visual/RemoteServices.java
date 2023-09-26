@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.EnumMap;
 import java.util.WeakHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
@@ -283,7 +284,7 @@ public class RemoteServices {
                 synchronized (remoteServiceClasses) {
                     Map<ServiceType, ClassObjectReference> basicClassesByType = remoteServiceClasses.get(t.getDebugger());
                     if (basicClassesByType == null) {
-                        basicClassesByType = new HashMap<>();
+                        basicClassesByType = new EnumMap<>(ServiceType.class);
                         remoteServiceClasses.put(t.getDebugger(), basicClassesByType);
                     }
                     basicClassesByType.put(sType, basicClass);

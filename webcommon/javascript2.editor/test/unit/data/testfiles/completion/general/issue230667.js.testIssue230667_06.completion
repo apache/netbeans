@@ -2,5 +2,6 @@ Code completion result for source line:
 var myObject1 = new myObject().method1().toPrecision(5).toLocaleString().b|ig();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     big(): String                   [PUBLIC,   JS Platform
-METHOD     bold(): String                  [PUBLIC,   JS Platform
+METHOD     big(): String                   [PUBLIC]   JS Platform
+METHOD     blink(): String                 [PUBLIC]   JS Platform
+METHOD     bold(): String                  [PUBLIC]   JS Platform

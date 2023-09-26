@@ -22,6 +22,7 @@ package org.netbeans.modules.gradle.java;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.java.api.GradleJavaProject;
 import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
+import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType.*;
 import org.netbeans.modules.gradle.spi.actions.ReplaceTokenProvider;
 import java.io.File;
 import java.util.Arrays;
@@ -42,11 +43,13 @@ import org.openide.util.Lookup;
  */
 public class GradleJavaTokenProvider implements ReplaceTokenProvider {
 
-    private static final String SELECTED_CLASS      = "selectedClass";     //NOI18N
-    private static final String SELECTED_CLASS_NAME = "selectedClassName"; //NOI18N
-    private static final String SELECTED_PACKAGE    = "selectedPackage";   //NOI18N
-    private static final String SELECTED_METHOD     = "selectedMethod";    //NOI18N
-    private static final String AFFECTED_BUILD_TASK = "affectedBuildTasks";//NOI18N
+    private static final String SELECTED_CLASS       = "selectedClass";     //NOI18N
+    private static final String SELECTED_CLASS_NAME  = "selectedClassName"; //NOI18N
+    private static final String SELECTED_PACKAGE     = "selectedPackage";   //NOI18N
+    private static final String SELECTED_METHOD      = "selectedMethod";    //NOI18N
+    private static final String AFFECTED_BUILD_TASK  = "affectedBuildTasks";//NOI18N
+    private static final String TEST_TASK_NAME       = "testTaskName";      //NOI18N
+    private static final String CLEAN_TEST_TASK_NAME = "cleanTestTaskName"; //NOI18N
 
     private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
             SELECTED_CLASS,
@@ -73,6 +76,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
         processSelectedPackageAndClass(ret, context);
         processSelectedMethod(ret, context);
         processSourceSets(ret, context);
+        processTestSourceSet(ret, context);
         return ret;
     }
 
@@ -147,4 +151,16 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
         return ret;
     }
 
+    private void processTestSourceSet(final Map<String, String> map, Lookup context) {
+        FileObject fo = RunUtils.extractFileObjectfromLookup(context);
+        GradleJavaProject gjp = GradleJavaProject.get(project);
+        if ((gjp != null) && (fo != null)) {
+            File f = FileUtil.toFile(fo);
+            GradleJavaSourceSet sourceSet = gjp.containingSourceSet(f);
+            if (sourceSet != null && sourceSet.isTestSourceSet() && sourceSet.getSourceType(f) != RESOURCES) {
+                map.put(TEST_TASK_NAME, sourceSet.getName());
+                map.put(CLEAN_TEST_TASK_NAME, sourceSet.getTaskName("clean", null));
+            }
+        }
+    }
 }

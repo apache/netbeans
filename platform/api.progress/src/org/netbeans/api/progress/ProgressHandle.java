@@ -35,7 +35,7 @@ import org.openide.util.Cancellable;
  * Instances provided by the ProgressHandleFactory allow the users of the API to
  * notify the progress bar UI about changes in the state of the running task.
  * Progress component will be visualized only after one of the start() methods.
- * <p/>
+ * <p>
  * This class was adapted to contain only non-Swing part of the Progress API. If you need
  * to use progress UI components, please work with {@code org.netbeans.api.progres.ProgressUIHandle} 
  * class from {@code org.netbeans.api.progress.nb} module.
@@ -89,7 +89,7 @@ public final class ProgressHandle implements AutoCloseable {
     
     /**
      * Creates a potentially cancellable handle, which can deliver an event if the user 'triggers' the handle. 
-     * How the handle will be presented, and what the "trigger" gesture is depends on the {@link Controller} 
+     * How the handle will be presented, and what the "trigger" gesture is depends on the {@link org.netbeans.modules.progress.spi.Controller} 
      * implementation. The user may make an action on the handle (other than cancel), which will
      * be reflected back. Typically used to focus or display some part of the UI. 
      * If {@code triggerCallback} is provided, it should handle at least {@link #ACTION_VIEW} action command

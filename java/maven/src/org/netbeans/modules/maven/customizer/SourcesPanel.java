@@ -76,8 +76,10 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
         @Override
         public void performOperation(POMModel model) {
             String s = PluginPropertyUtils.getPluginProperty(handle.getProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "source", null, null);
-            String t = PluginPropertyUtils.getPluginProperty(handle.getProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "source", null, null);
-            if (s == null && t == null) {
+            String t = PluginPropertyUtils.getPluginProperty(handle.getProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "target", null, null);
+            String r = PluginPropertyUtils.getPluginProperty(handle.getProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "release", null, null);
+            if (s == null && t == null && r == null) {
+                // set in project properties
                 Project p = model.getProject();
                 if (p != null) {
                     Properties prop = p.getProperties();
@@ -85,11 +87,25 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
                         prop = model.getFactory().createProperties();
                         p.setProperties(prop);
                     }
-                    prop.setProperty("maven.compiler.source", sourceLevel);
-                    prop.setProperty("maven.compiler.target", sourceLevel);
+                    if (prop.getProperty("maven.compiler.release") != null) {
+                        prop.setProperty("maven.compiler.release", sourceLevel);
+                        prop.setProperty("maven.compiler.source", null);
+                        prop.setProperty("maven.compiler.target", null);
+                    } else {
+                        prop.setProperty("maven.compiler.source", sourceLevel);
+                        prop.setProperty("maven.compiler.target", sourceLevel);
+                    }
                 }
             } else {
+                // set in plugin config
                 ModelUtils.setSourceLevel(model, sourceLevel);
+                // clear props, just in case
+                if (model.getProject() != null && model.getProject().getProperties() != null) {
+                    Properties prop = model.getProject().getProperties();
+                    prop.setProperty("maven.compiler.source", null);
+                    prop.setProperty("maven.compiler.target", null);
+                    prop.setProperty("maven.compiler.release", null);
+                }
             }
         }
     };

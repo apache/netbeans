@@ -68,7 +68,7 @@ import org.openide.util.NbBundle;
  *
  * @author Jan lahoda
  */
-public abstract class CreateClassFix extends CreateFixBase implements EnhancedFix {
+public abstract class CreateClassFix extends ModificationResultBasedFix implements EnhancedFix {
     
     protected ClasspathInfo cpInfo;
     protected Set<Modifier> modifiers;

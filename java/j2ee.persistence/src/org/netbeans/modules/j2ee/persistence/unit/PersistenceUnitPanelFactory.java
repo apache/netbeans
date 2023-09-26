@@ -24,7 +24,6 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
-import org.netbeans.modules.j2ee.persistence.provider.Provider;
 import org.netbeans.modules.xml.multiview.XmlMultiViewDataObject;
 import org.netbeans.modules.xml.multiview.ui.InnerPanelFactory;
 import org.netbeans.modules.xml.multiview.ui.SectionView;
@@ -45,7 +44,7 @@ public class PersistenceUnitPanelFactory implements InnerPanelFactory, PropertyC
      * A naive cache for preventing reinitialization of persistence unit panels
      * if nothing has changed.
      */
-    private Map<PersistenceUnit, PersistenceUnitPanel> cache = new HashMap<PersistenceUnit, PersistenceUnitPanel>(10);
+    private Map<PersistenceUnit, PersistenceUnitPanel> cache = new HashMap<>(10);
     
     /** Creates a new instance of PersistenceUnitPanelFactory */
     PersistenceUnitPanelFactory(ToolBarDesignEditor editor, PUDataObject dObj) {
@@ -59,6 +58,7 @@ public class PersistenceUnitPanelFactory implements InnerPanelFactory, PropertyC
      * panel if the key had no associated panel yet.
      * @param key the persistence unit whose associated panel should be retrieved.
      */ 
+    @Override
     public SectionInnerPanel createInnerPanel(Object key) {
         SectionInnerPanel panel = null;
         if (key instanceof PersistenceUnit){
@@ -76,6 +76,7 @@ public class PersistenceUnitPanelFactory implements InnerPanelFactory, PropertyC
         return panel;
     }
     
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (!XmlMultiViewDataObject.PROPERTY_DATA_MODIFIED.equals(evt.getPropertyName())){
             cache.clear();

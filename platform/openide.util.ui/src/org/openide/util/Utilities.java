@@ -66,10 +66,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.WeakHashMap;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -94,6 +96,12 @@ public final class Utilities {
 
     /** Operating system is Windows NT. */
     public static final int OS_WINNT = BaseUtilities.OS_WINNT;
+
+    /** Operating system is Windows 95. */
+    public static final int OS_WIN95 = BaseUtilities.OS_WIN95;
+
+    /** Operating system is Windows 98. */
+    public static final int OS_WIN98 = BaseUtilities.OS_WIN98;
 
     /** Operating system is Solaris. */
     public static final int OS_SOLARIS = BaseUtilities.OS_SOLARIS;
@@ -220,9 +228,9 @@ public final class Utilities {
      * In order to provide useful support for this problem, this queue has been
      * provided.
      * <P>
-     * If you have a reference that needs cleanup, make it implement <link>Runnable</link>
+     * If you have a reference that needs cleanup, make it implement {@link Runnable}
      * and register it with the queue:
-     * <PRE>
+     * <PRE>{@code
      * class MyReference extends WeakReference<Thing> implements Runnable {
      *     private final OtherInfo dataToCleanUp;
      *     public MyReference(Thing ref, OtherInfo data) {
@@ -233,7 +241,7 @@ public final class Utilities {
      *         dataToCleanUp.releaseOrWhateverYouNeed();
      *     }
      * }
-     * </PRE>
+     * }</PRE>
      * When the <code>ref</code> object is garbage collected, your run method
      * will be invoked by calling
      * <code>((Runnable) reference).run()</code>
@@ -285,8 +293,8 @@ public final class Utilities {
     /** Test whether a given string is a valid Java identifier.
     * @param id string which should be checked
     * @return <code>true</code> if a valid identifier
-    * @see SourceVersion#isIdentifier
-    * @see SourceVersion#isKeyword
+    * @see javax.lang.model.SourceVersion#isIdentifier
+    * @see javax.lang.model.SourceVersion#isKeyword
     */
     public static boolean isJavaIdentifier(String id) {
         return BaseUtilities.isJavaIdentifier(id);
@@ -693,9 +701,9 @@ public final class Utilities {
     * <li>Include command names with embedded spaces, such as <code>c:\Program Files\jdk\bin\javac</code>.
     * <li>Include extra command arguments, such as <code>-Dname=value</code>.
     * <li>Do anything else which might require unusual characters or processing. For example:
-    * <p><code><pre>
+    * <pre>{@code
     * "c:\program files\jdk\bin\java" -Dmessage="Hello /\\/\\ there!" -Xmx128m
-    * </pre></code>
+    * }</pre>
     * <p>This example would create the following executable name and arguments:
     * <ol>
     * <li> <code>c:\program files\jdk\bin\java</code>
@@ -1151,11 +1159,9 @@ public final class Utilities {
                 return w.getGraphicsConfiguration();
             } else {
                 //#217737 - try to find the main window which could be placed in secondary screen
-                for( Frame f : Frame.getFrames() ) {
-                    if( "NbMainWindow".equals(f.getName())) { //NOI18N
-                        return f.getGraphicsConfiguration();
-                    }
-                }
+                Frame f = findMainWindow();
+                if(f != null)
+                    return f.getGraphicsConfiguration();
             }
         }
 
@@ -1183,7 +1189,7 @@ public final class Utilities {
      * system menus and the like.
      * On certain platforms this methods uses a cache to avoid performance degradation due to repeated calls.
      * This can be disabled by setting the property "-Dnetbeans.screen.insetsCache=false"
-     * See issue http://netbeans.org/bugzilla/show_bug.cgi?id=219507
+     * See issue https://bz.apache.org/netbeans/show_bug.cgi?id=219507
      *
      * @param gconf the GraphicsConfiguration of the monitor
      * @return the rectangle of the screen where one can place windows
@@ -1319,6 +1325,88 @@ public final class Utilities {
         );
     }
 
+    /**
+     * Find the main NetBeans window; must have width or height.
+     * This is used locally to avoid dependency issues. 
+     * @return NetBeans' main window
+     */
+    private static Frame findMainWindow()
+    {
+        Frame f = null;
+        for( Frame f01 : Frame.getFrames() ) {
+            if( "NbMainWindow".equals(f01.getName())) { //NOI18N
+                if(f01.getWidth() != 0 || f01.getHeight() != 0) {
+                    f = f01;
+                }
+                break;
+            }
+        }
+        return f;
+    }
+
+    /**
+     * Finds an appropriate component to use for a dialog's parent. This is for
+     * use in situations where a standard swing API, such as
+     * {@linkplain javax.swing.JOptionPane}.show* or
+     * {@linkplain javax.swing.JFileChooser}.show*, is used to display a dialog.
+     * {@code null} should never be used as a dialog's parent because it
+     * frequently does the wrong thing in a multi-screen setup.
+     * <p>
+     * The use of the NetBeans API
+     * <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault--">DialogDisplayer.getDefault*</a>
+     * is encouraged to display a dialog.
+     *
+     * @return A suitable parent component for swing dialogs
+     * @since 9.26
+     */
+    // PR4739
+    public static Component findDialogParent() {
+        return findDialogParent(null);
+    }
+
+    /**
+     * Finds an appropriate component to use for a dialog's parent. Similar to
+     * {@link #findDialogParent()} with the ability to specify a suggested
+     * parent component. The suggested parent will be returned if it is
+     * non-null, and either there is no active modal dialog or it is contained
+     * within that dialog.
+     *
+     * @param suggestedParent the component to return if non-null and valid
+     * @return the suggested parent if suitable, otherwise another suitable
+     * parent component for swing dialogs
+     * @since 9.30
+     */
+    public static Component findDialogParent(Component suggestedParent) {
+        Component parent = suggestedParent;
+        if (parent == null) {
+            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        }
+        Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        if (parent == null) {
+            parent = active;
+        } else if (active instanceof Dialog && ((Dialog) active).isModal()) {
+            Window suggested = parent instanceof Window ? (Window) parent : SwingUtilities.windowForComponent(parent);
+            if (suggested != active) {
+                return active;
+            }
+        }
+        if (parent == null) {
+            parent = findMainWindow();
+        }
+        return parent;
+    }
+
+    /**
+     * Check whether a modal dialog is open.
+     *
+     * @return true if a modal dialog is open, false otherwise
+     * @since 9.30
+     */
+    public static boolean isModalDialogOpen() {
+        Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        return active instanceof Dialog && ((Dialog) active).isModal();
+    }
+
     /** @return size of the screen. The size is modified for Windows OS
      * - some points are subtracted to reflect a presence of the taskbar
      *
@@ -1344,7 +1432,7 @@ public final class Utilities {
      * @param parent
      * @param approveButtonText
      * @deprecated Not needed in JDK 1.4.
-     * @see <a href="@org-openide-filesystems@/org/openide/filesystems/FileChooserBuilder.html"><code>FileChooserBuilder</code></a>
+     * @see <a href="@org-openide-filesystems-nb@/org/openide/filesystems/FileChooserBuilder.html"><code>FileChooserBuilder</code></a>
      */
     @Deprecated
     public static int showJFileChooser(
@@ -1546,7 +1634,7 @@ public final class Utilities {
      * @exception TopologicalSortException if the sort cannot succeed due to cycles in the graph, the
      *   exception contains additional information to describe and possibly recover from the error
      * @since 3.30
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=27286">Issue #27286</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=27286">Issue #27286</a>
      */
     public static <T> List<T> topologicalSort(Collection<? extends T> c, Map<? super T, ? extends Collection<? extends T>> edges)
     throws TopologicalSortException {
@@ -1590,24 +1678,24 @@ public final class Utilities {
      * Btw. one can use spaces instead of <code>=</code> sign.
      * For a real world example
      * check the
-     * <a href="http://www.netbeans.org/source/browse/xml/text-edit/compat/src/META-INF/netbeans/">
+     * <a href="https://github.com/apache/netbeans/tree/master/ide/xml">
      * xml module</a>.
      *
      * <P>
-     * For purposes of <link>org.openide.util.io.NbObjectInputStream</link> there is
+     * For purposes of {@link org.openide.util.io.NbObjectInputStream} there is
      * a following special convention:
      * If the
      * className is not listed as one that is to be renamed, the returned
      * string == className, if the className is registered to be renamed
      * than the className != returned value, even in a case when className.equals (retValue)
-     * <p/>
+     * <p>
      * Similar behaviour applies to <b>filenames</b> provided by layers (system filesystem). Filenames
      * can be also translated to adapt to location changes e.g. in action registrations. Note that 
      * <b>no spaces or special characters</b> are allowed in both translated filenames or translation 
      * results. Filenames must conform to regexp {@code ^[/a-zA-Z0-9$_.+-]+$}. Keys and values are treated
      * as paths from fs root.
      * 
-     * <p/>
+     * <p>
      * Example of file path translation (action registration file has moved):
      * <pre>
      * # registration ID has changed
@@ -1811,13 +1899,49 @@ public final class Utilities {
     }
 
     /**
+     * Loads a menu sequence from a path, given a specific context as Lookup. This variant will allow to use action's contextual presence, enablement or selection,
+     * based on Lookup contents. If the registered action implements a {@link ContextAwareAction}, an instance bound to the passed `context' will be created - if
+     * the context factory returns {@code null}, indicating the action is not appropriate for the context, the registration will be skipped.
+     * Use {@link #actionsGlobalContext()} to supply global context.
+     * 
+     * Any {@link Action} instances are returned as is;
+     * any {@link JSeparator} instances are translated to nulls.
+     * Warnings are logged for any other instances.
+     * @param path a path as given to {@link Lookups#forPath}, generally a layer folder name
+     * @param context the context passed to the action(s)
+     * @return a list of actions interspersed with null separators
+     * @since 7.14
+     */
+    public static List<? extends Action> actionsForPath(String path, Lookup context) {
+        List<Action> actions = new ArrayList<Action>();
+        for (Lookup.Item<Object> item : Lookups.forPath(path).lookupResult(Object.class).allItems()) {
+            if (Action.class.isAssignableFrom(item.getType())) {
+                Object instance = item.getInstance();
+                if (instance instanceof ContextAwareAction) {
+                    Object contextAwareInstance = ((ContextAwareAction)instance).createContextAwareInstance(context);
+                    if (contextAwareInstance == null) {
+                        Logger.getLogger(Utilities.class.getName()).log(Level.WARNING,"ContextAwareAction.createContextAwareInstance(context) returns null. That is illegal!" + " action={0}, context={1}", new Object[] {instance, context});
+                    } else {
+                        instance = contextAwareInstance;
+                    }
+                }
+                actions.add((Action) instance);
+            } else if (JSeparator.class.isAssignableFrom(item.getType())) {
+                actions.add(null);
+            } else {
+                Logger.getLogger(Utilities.class.getName()).log(Level.WARNING, "Unrecognized object of {0} found in actions path {1}", new Object[] {item.getType(), path});
+            }
+        }
+        return actions;
+    }
+    /**
      * Global context for actions. Toolbar, menu or any other "global"
      * action presenters shall operate in this context.
      * Presenters for context menu items should <em>not</em> use
      * this method; instead see {@link ContextAwareAction}.
      * @see ContextGlobalProvider
      * @see ContextAwareAction
-     * @see <a href="http://wiki.netbeans.org/DevFaqActionContextSensitive">NetBeans FAQ</a>
+     * @see <a href="https://netbeans.apache.org/wiki/DevFaqActionContextSensitive">NetBeans FAQ</a>
      * @return the context for actions
      * @since 4.10
      */
@@ -1847,9 +1971,9 @@ public final class Utilities {
     /**
      * Loads an image based on resource path.
      * Exactly like {@link #loadImage(String)} but may do a localized search.
-     * For example, requesting <samp>org/netbeans/modules/foo/resources/foo.gif</samp>
-     * might actually find <samp>org/netbeans/modules/foo/resources/foo_ja.gif</samp>
-     * or <samp>org/netbeans/modules/foo/resources/foo_mybranding.gif</samp>.
+     * For example, requesting <code>org/netbeans/modules/foo/resources/foo.gif</code>
+     * might actually find <code>org/netbeans/modules/foo/resources/foo_ja.gif</code>
+     * or <code>org/netbeans/modules/foo/resources/foo_mybranding.gif</code>.
      * 
      * <p>Caching of loaded images can be used internally to improve performance.
      * 
@@ -1963,7 +2087,7 @@ public final class Utilities {
      * and {@link URI#resolve(URI)}.
      * @param f a file
      * @return a {@code file}-protocol URI which may use the host field
-     * @see java.nio.file.Path.toUri
+     * @see java.nio.file.Path#toUri()
      * @since 8.25
      */
     public static URI toURI(File f) {
@@ -1976,7 +2100,7 @@ public final class Utilities {
      * which accepts UNC URIs with a host field.
      * @param u a {@code file}-protocol URI which may use the host field
      * @return a file
-     * @see java.nio.file.Paths.get(java.net.URI)
+     * @see java.nio.file.Paths#get(java.net.URI)
      * @since 8.25
      */
     public static File toFile(URI u) throws IllegalArgumentException {
@@ -1989,7 +2113,7 @@ public final class Utilities {
      * @return a URL using the <code>file</code> protocol
      * @throws MalformedURLException for no good reason
      * @see #toFile
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=29711">Issue #29711</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=29711">Issue #29711</a>
      * @since 3.26
      * @deprecated Use {@link #toURI} and {@link URI#toURL} instead under JDK 1.4.
      *             ({@link File#toURL} is buggy in JDK 1.3 and the bugs are not fixed in JDK 1.4.)
@@ -2018,7 +2142,7 @@ public final class Utilities {
      * @return an absolute file it points to, or <code>null</code> if the URL
      *         does not seem to point to a file at all
      * @see #toURL
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=29711">Issue #29711</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=29711">Issue #29711</a>
      * @since 3.26
      * @deprecated Use {@link URL#toURI} and {@link #toFile(URI)} instead under JDK 1.4.
      *             (There was no proper equivalent under JDK 1.3.)
@@ -2095,7 +2219,7 @@ public final class Utilities {
 
         /** Get the unorderable elements.
         * @return the elements
-        * @see Utilities.UnorderableException#Utilities.UnorderableException(Collection,Map)
+        * @see UnorderableException#UnorderableException(Collection,Map)
         */
         public Collection getUnorderable() {
             return unorderable;
@@ -2103,7 +2227,7 @@ public final class Utilities {
 
         /** Get the dependencies.
         * @return the dependencies
-        * @see Utilities.UnorderableException#Utilities.UnorderableException(Collection,Map)
+        * @see UnorderableException#UnorderableException(Collection,Map)
         */
         public Map getDeps() {
             return deps;

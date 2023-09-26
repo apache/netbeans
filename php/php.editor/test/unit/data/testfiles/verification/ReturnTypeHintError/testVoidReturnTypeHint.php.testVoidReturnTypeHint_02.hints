@@ -4,6 +4,9 @@ HINT:"void" cannot be used with "?"
 function invalidVoidReturnType2(): ?void { // invalidVoidReturnType2 func
                                     ----
 HINT:"void" cannot be used with "?"
+    return;
+    -------
+HINT:Return statement must be filled with the value
     return true; // voidReturnType3 func
     ------------
 HINT:"void" cannot return anything
@@ -43,6 +46,9 @@ HINT:"void" cannot be used with "?"
         $anon = function(): ?void { // anon2 trait
                              ----
 HINT:"void" cannot be used with "?"
+            return;
+            -------
+HINT:Return statement must be filled with the value
     public function voidReturnType2(): ?void; // voidReturnType2 interface
                                         ----
 HINT:"void" cannot be used with "?"

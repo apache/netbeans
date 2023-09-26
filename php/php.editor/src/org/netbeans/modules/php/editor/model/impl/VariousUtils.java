@@ -89,6 +89,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag;
+import org.netbeans.modules.php.editor.parser.astnodes.PHPVarComment;
 import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.Reference;
@@ -266,10 +267,17 @@ public final class VariousUtils {
     public static String getUnionType(UnionType unionType) {
         StringBuilder sb = new StringBuilder();
         for (Expression type : unionType.getTypes()) {
-            QualifiedName name = QualifiedName.create(type);
             if (sb.length() > 0) {
                 sb.append(Type.SEPARATOR);
             }
+            // GH-4725: PHP 8.2 Disjunctive Normal Form Types
+            // e.g. (X&Y)|(A&B)
+            if (type instanceof IntersectionType) {
+                IntersectionType intersectionType = (IntersectionType) type;
+                sb.append("(").append(getIntersectionType(intersectionType)).append(")"); // NOI18N
+                continue;
+            }
+            QualifiedName name = QualifiedName.create(type);
             assert name != null : type;
             sb.append(name.toString());
         }
@@ -377,7 +385,18 @@ public final class VariousUtils {
                     break;
                 }
             }
+        } else if ((comment instanceof PHPVarComment) && PHPDocTag.Type.VAR == tagType) {
+            // GH-6359
+            // /** @var Type $field */
+            // private $field;
+            PHPVarComment varComment = (PHPVarComment) comment;
+            PHPDocVarTypeTag tag = varComment.getVariable();
+            String[] parts = WS_PATTERN.split(tag.getValue().trim(), 3); // 3: @var Type $field
+            if (parts.length > 1) {
+                return parts[1];
+            }
         }
+
         return null;
     }
 
@@ -428,7 +447,7 @@ public final class VariousUtils {
             if (scalarType.equals(Scalar.Type.STRING)) {
                 String stringValue = scalar.getStringValue().toLowerCase();
                 if (stringValue.equals("false") || stringValue.equals("true")) { //NOI18N
-                    return Type.BOOLEAN;
+                    return Type.BOOL;
                 }
                 if (stringValue.equals(Type.NULL)) {
                     return Type.NULL;
@@ -739,6 +758,9 @@ public final class VariousUtils {
                                     if (inScope instanceof ClassScope) {
                                         String clsName = ((ClassScope) inScope).getName();
                                         newRecentTypes.addAll(IndexScopeImpl.getClasses(QualifiedName.create(clsName), varScope));
+                                    } else if (inScope instanceof EnumScope) {
+                                        String enumName = ((EnumScope) inScope).getName();
+                                        newRecentTypes.addAll(IndexScopeImpl.getEnums(QualifiedName.create(enumName), varScope));
                                     } else if (inScope instanceof TraitScope) {
                                         String traitName = ((TraitScope) inScope).getName();
                                         newRecentTypes.addAll(IndexScopeImpl.getTraits(QualifiedName.create(traitName), varScope));
@@ -1401,6 +1423,11 @@ public final class VariousUtils {
                                 }
                                 metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.TYPE_TYPE_PREFIX);
                             }
+                        } else if (isReference(token)) {
+                            // ->fieldName
+                            metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.FIELD_TYPE_PREFIX);
+                            state = State.REFERENCE;
+                            break;
                         } else {
                             metaAll = transformToFullyQualifiedType(metaAll, tokenSequence, varScope);
                             metaAll.insert(0, PRE_OPERATION_TYPE_DELIMITER + VariousUtils.TYPE_TYPE_PREFIX);
@@ -1656,9 +1683,9 @@ public final class VariousUtils {
             csi = (TypeScope) inScope;
         }
         if (csi != null) {
-            if ("self".equals(staticTypeName)) { //NOI18N
+            if (Type.SELF.equalsIgnoreCase(staticTypeName) || Type.STATIC.equalsIgnoreCase(staticTypeName)) {
                 return Collections.singletonList(csi);
-            } else if ("parent".equals(staticTypeName) && (csi instanceof ClassScope)) { //NOI18N
+            } else if (Type.PARENT.equalsIgnoreCase(staticTypeName) && (csi instanceof ClassScope)) {
                 return ((ClassScope) csi).getSuperClasses();
             }
         }
@@ -1918,6 +1945,32 @@ public final class VariousUtils {
      * string|\Foo\ClassName|null
      */
     public static String qualifyTypeNames(String typeNames, int offset, Scope inScope) {
+        // GH-4725: PHP 8.2 Disjunctive Normal Form Types
+        // e.g. (X&Y)|(A&B)|Countable
+        StringBuilder sb = new StringBuilder();
+        if (typeNames != null) {
+            if (typeNames.contains("(")) { // NOI18N
+                String[] split = TYPE_SEPARATOR_PATTERN.split(typeNames);
+                for (String type : split) {
+                    if (sb.length() > 0) {
+                        sb.append(Type.SEPARATOR);
+                    }
+                    String typeName = type.replace("(", "").replace(")", ""); // NOI18N
+                    boolean isIntersectionType = typeName.contains(Type.SEPARATOR_INTERSECTION);
+                    if (isIntersectionType) {
+                        sb.append("(").append(qualifyUnionOrIntersectionTypeNames(typeName, offset, inScope)).append(")"); // NOI18N
+                    } else {
+                        sb.append(qualifyUnionOrIntersectionTypeNames(typeName, offset, inScope));
+                    }
+                }
+            } else {
+                sb.append(qualifyUnionOrIntersectionTypeNames(typeNames, offset, inScope));
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String qualifyUnionOrIntersectionTypeNames(String typeNames, int offset, Scope inScope) {
         StringBuilder retval = new StringBuilder();
         if (typeNames != null) {
             if (!typeNames.matches(SPACES_AND_TYPE_DELIMITERS)) {
@@ -1935,7 +1988,7 @@ public final class VariousUtils {
                     int indexOfArrayDelim = typeName.indexOf('[');
                     if (indexOfArrayDelim != -1) {
                         typeRawPart = typeName.substring(0, indexOfArrayDelim);
-                        typeArrayPart = typeName.substring(indexOfArrayDelim, typeName.length());
+                        typeArrayPart = typeName.substring(indexOfArrayDelim);
                     }
                     if ("$this".equals(typeName)) { //NOI18N
                         // #239987

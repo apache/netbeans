@@ -86,7 +86,7 @@ public class ConfigurationPanelTest extends NbTestCase {
         assertNotNull(texts);
         assertFalse(texts.isEmpty());
         
-        List<String> expected = new ArrayList();
+        List<String> expected = new ArrayList<>();
         expected.add("Required");
         assertEquals(expected, texts);
         
@@ -94,7 +94,7 @@ public class ConfigurationPanelTest extends NbTestCase {
         assertNotNull(texts);
         assertFalse(texts.isEmpty());
         
-        expected = new ArrayList();
+        expected = new ArrayList<>();
         expected.add("Recommended");
         assertEquals(expected, texts);
         

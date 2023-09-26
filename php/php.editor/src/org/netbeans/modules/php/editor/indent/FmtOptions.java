@@ -44,6 +44,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -94,6 +95,7 @@ public final class FmtOptions {
     public static final String BLANK_LINES_BEFORE_USE = "blankLinesBeforeUse"; //NOI18N
     public static final String BLANK_LINES_BEFORE_USE_TRAIT = "blankLinesBeforeUseTrait"; //NOI18N
     public static final String BLANK_LINES_AFTER_USE = "blankLinesAfterUse"; //NOI18N
+    public static final String BLANK_LINES_BETWEEN_USE_TYPES = "blankLinesBetweenUseType"; //NOI18N
     public static final String BLANK_LINES_BEFORE_CLASS = "blankLinesBeforeClass"; //NOI18N
     public static final String BLANK_LINES_BEFORE_CLASS_END = "blankLinesBeforeClassEnd"; //NOI18N
     public static final String BLANK_LINES_AFTER_CLASS = "blankLinesAfterClass"; //NOI18N
@@ -101,6 +103,7 @@ public final class FmtOptions {
     public static final String BLANK_LINES_BEFORE_FIELDS = "blankLinesBeforeField"; //NOI18N
     public static final String BLANK_LINES_BETWEEN_FIELDS = "blankLinesBetweenField"; //NOI18N
     public static final String BLANK_LINES_AFTER_FIELDS = "blankLinesAfterField"; //NOI18N
+    public static final String BLANK_LINES_EOF = "blankLinesEndOfFile"; //NOI18N
     public static final String BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES = "blankLinesGroupFieldsWithoutDocAndAttributes"; //NOI18N
     public static final String BLANK_LINES_BEFORE_FUNCTION = "blankLinesBeforeFunction"; //NOI18N
     public static final String BLANK_LINES_AFTER_FUNCTION = "blankLinesAfterFunction"; //NOI18N
@@ -128,6 +131,7 @@ public final class FmtOptions {
     public static final String SPACE_AROUND_UNARY_OPS = "spaceAroundUnaryOps"; //NOI18N
     public static final String SPACE_AROUND_BINARY_OPS = "spaceAroundBinaryOps"; //NOI18N
     public static final String SPACE_AROUND_TERNARY_OPS = "spaceAroundTernaryOps"; //NOI18N
+    public static final String SPACE_AROUND_COALESCING_OPS = "spaceAroundCoalescingOps"; //NOI18N
     public static final String SPACE_AROUND_STRING_CONCAT_OPS = "spaceAroundStringConcatOps"; //NOI18N
     public static final String SPACE_AROUND_ASSIGN_OPS = "spaceAroundAssignOps"; //NOI18N
     public static final String SPACE_AROUND_KEY_VALUE_OPS = "spaceAroundKeyValueOps"; //NOI18N
@@ -210,6 +214,7 @@ public final class FmtOptions {
     public static final String WRAP_DO_WHILE_STATEMENT = "wrapDoWhileStatement"; //NOI18N
     public static final String WRAP_BINARY_OPS = "wrapBinaryOps"; //NOI18N
     public static final String WRAP_TERNARY_OPS = "wrapTernaryOps"; //NOI18N
+    public static final String WRAP_COALESCING_OPS = "wrapCoalescingOps"; //NOI18N
     public static final String WRAP_ASSIGN_OPS = "wrapAssignOps"; //NOI18N
     public static final String WRAP_BLOCK_BRACES = "wrapBlockBraces";  //NOI18N
     public static final String WRAP_GROUP_USE_BRACES = "wrapGroupUseBraces"; // NOI18N
@@ -221,6 +226,8 @@ public final class FmtOptions {
     public static final String PREFER_GROUP_USES = "preferGroupUses"; // NOI18N
     public static final String START_USE_WITH_NAMESPACE_SEPARATOR = "startUseWithNamespaceSeparator"; //NOI18N
     public static final String ALIASES_CAPITALS_OF_NAMESPACES = "aliasesCapitalsOfNamespacesNames"; //NOI18N
+    public static final String PUT_IN_PSR12_ORDER = "putInPSR12Order"; //NOI18N
+    public static final String USES_KEEP_EXISTING_TYPE_ORDER = "usesKeepExistingTypeOrder"; //NOI18N
     public static CodeStyleProducer codeStyleProducer;
 
     private FmtOptions() {
@@ -283,12 +290,14 @@ public final class FmtOptions {
             {BLANK_LINES_BEFORE_USE, "1"}, //NOI18N
             {BLANK_LINES_BEFORE_USE_TRAIT, "1"}, //NOI18N
             {BLANK_LINES_AFTER_USE, "1"}, //NOI18N
+            {BLANK_LINES_BETWEEN_USE_TYPES, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_CLASS, "1"}, //NOI18N
             {BLANK_LINES_AFTER_CLASS, "1"}, //NOI18N
             {BLANK_LINES_AFTER_CLASS_HEADER, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_CLASS_END, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_FIELDS, "1"}, //NOI18N
-            {BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, TRUE}, //NOI18N
+            {BLANK_LINES_EOF, FALSE},
+            {BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, TRUE},
             {BLANK_LINES_BETWEEN_FIELDS, "1"}, //NOI18N
             {BLANK_LINES_AFTER_FIELDS, "1"}, //NOI18N
             {BLANK_LINES_BEFORE_FUNCTION, "1"}, //NOI18N
@@ -318,6 +327,7 @@ public final class FmtOptions {
             {SPACE_AROUND_UNARY_OPS, FALSE},
             {SPACE_AROUND_BINARY_OPS, TRUE},
             {SPACE_AROUND_TERNARY_OPS, TRUE},
+            {SPACE_AROUND_COALESCING_OPS, TRUE},
             {SPACE_AROUND_STRING_CONCAT_OPS, TRUE},
             {SPACE_AROUND_KEY_VALUE_OPS, TRUE},
             {SPACE_AROUND_ASSIGN_OPS, TRUE},
@@ -400,6 +410,7 @@ public final class FmtOptions {
             {WRAP_DO_WHILE_STATEMENT, WRAP_ALWAYS}, //NOI18N
             {WRAP_BINARY_OPS, WRAP_NEVER}, //NOI18N
             {WRAP_TERNARY_OPS, WRAP_NEVER},
+            {WRAP_COALESCING_OPS, WRAP_NEVER},
             {WRAP_ASSIGN_OPS, WRAP_NEVER},
             {WRAP_BLOCK_BRACES, TRUE},
             {WRAP_GROUP_USE_BRACES, TRUE},
@@ -410,7 +421,9 @@ public final class FmtOptions {
             {PREFER_MULTIPLE_USE_STATEMENTS_COMBINED, FALSE},
             {PREFER_GROUP_USES, FALSE},
             {START_USE_WITH_NAMESPACE_SEPARATOR, FALSE},
-            {ALIASES_CAPITALS_OF_NAMESPACES, FALSE}
+            {ALIASES_CAPITALS_OF_NAMESPACES, FALSE},
+            {PUT_IN_PSR12_ORDER, FALSE},
+            {USES_KEEP_EXISTING_TYPE_ORDER, TRUE},
         };
 
         defaults = new HashMap<>();
@@ -537,6 +550,10 @@ public final class FmtOptions {
                 // Ignore it
             }
 
+            // keep the caret position
+            // to avoid being scrolled to the end of the editor
+            int caretPosition = pane.getCaretPosition();
+
             Rectangle visibleRectangle = pane.getVisibleRect();
             pane.setText(previewText);
             pane.setIgnoreRepaint(true);
@@ -560,11 +577,15 @@ public final class FmtOptions {
                 } finally {
                     reformat.unlock();
                 }
+                // avoid being set to an invalid position
+                caretPosition = Integer.min(caretPosition, doc.getLength());
             } else {
                 LOGGER.warning(String.format("Can't format %s; it's not BaseDocument.", doc)); //NOI18N
             }
+            pane.setCaretPosition(caretPosition);
             pane.setIgnoreRepaint(false);
-            pane.scrollRectToVisible(visibleRectangle);
+            // invoke later because the preview pane is scrolled to the caret position when we change options after we scroll it anywhere
+            SwingUtilities.invokeLater(() -> pane.scrollRectToVisible(visibleRectangle));
             pane.repaint(100);
 
         }

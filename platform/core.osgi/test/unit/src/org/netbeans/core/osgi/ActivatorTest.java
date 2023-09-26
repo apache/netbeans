@@ -168,11 +168,13 @@ public class ActivatorTest extends NbTestCase {
         headers.clear();
         String os = System.getProperty("os.name");
         System.setProperty("os.name", "Windows 2000");
+        System.setProperty("os.arch", "amd64");
         try {
             headers.put("Bundle-SymbolicName", "org.openide.modules");
             final TreeSet<String> export = new TreeSet<String>(Arrays.asList(
                 "cnb.org.openide.modules",
-                "org.openide.modules.os.Windows"
+                "org.openide.modules.os.Windows",
+                "org.openide.modules.arch.amd64"
             ));
             if (isJavaFX()) {
                 export.add("org.openide.modules.jre.JavaFX");

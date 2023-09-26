@@ -69,21 +69,19 @@ export function launch(
     if (info.verbose) {
         ideArgs.push('-J-Dnetbeans.logger.console=true');
     }
+    ideArgs.push(`-J-Dnetbeans.extra.dirs="${clusterPath}"`)
     if (env['netbeans.extra.options']) {
         ideArgs.push(env['netbeans.extra.options']);
     }
     ideArgs.push(...extraArgs);
     
-    if (env['netbeans.debug'] && extraArgs && extraArgs.find(s => s.includes("--list"))) {
+    if (env['netbeans_debug'] && extraArgs && extraArgs.find(s => s.includes("--list"))) {
         ideArgs.push(...['-J-Xdebug', '-J-Dnetbeans.logger.console=true', '-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000']);
     }
 
     let process: ChildProcessByStdio<any, Readable, Readable> = spawn(nbcodePath, ideArgs, {
         cwd : userDir,
         stdio : ["ignore", "pipe", "pipe"],
-        env : Object.assign({
-            'extra_clusters' : clusterPath
-        }, global.process.env)
     });
     return process;
 }
@@ -97,13 +95,21 @@ if (typeof process === 'object' && process.argv0 === 'node') {
     let clusters = fs.readdirSync(nbcode).filter(c => c !== 'bin' && c !== 'etc').map(c => path.join(nbcode, c));
     let args = process.argv.slice(2);
     let json = JSON.parse("" + fs.readFileSync(path.join(extension, 'package.json')));
-    let globalStorage = os.platform() === 'darwin' ? 
-        path.join(os.homedir(), 'Library', 'Application Support', 'Code', 'User', 'globalStorage', json.publisher + '.' + json.name) :
-        path.join(os.homedir(), '.config', 'Code', 'User', 'globalStorage', json.publisher + '.' + json.name);
+    let storage;
+    
+    if (!env.nbcode_userdir || env.nbcode_userdir == 'global') {
+        storage = path.join(os.platform() === 'darwin' ? 
+                path.join(os.homedir(), 'Library', 'Application Support') :
+                path.join(os.homedir(), '.config'),
+                'Code', 'User', 'globalStorage', json.publisher + '.' + json.name);
+    } else {
+        storage = env.nbcode_userdir;
+    }
+    console.log('Launching NBLS with user directory: ' + storage)
     let info = {
         clusters : clusters,
         extensionPath: extension,
-        storagePath : globalStorage,
+        storagePath : storage,
         jdkHome : null
     };
     let p = launch(info, ...args);

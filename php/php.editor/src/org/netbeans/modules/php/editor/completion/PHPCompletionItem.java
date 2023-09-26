@@ -134,10 +134,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
     private QualifiedNameKind generateAs;
     private static ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
     private static final Cache<FileObject, PhpLanguageProperties> PROPERTIES_CACHE
-            = new Cache<>(new WeakHashMap<FileObject, PhpLanguageProperties>());
+            = new Cache<>(new WeakHashMap<>());
     private final boolean isPlatform;
     private final boolean isDeprecated;
     private PhpVersion phpVersion;
+    private static volatile Boolean ADD_FIRST_CLASS_CALLABLE = null; // for unit tests
 
     PHPCompletionItem(ElementHandle element, CompletionRequest request, QualifiedNameKind generateAs) {
         this.request = request;
@@ -155,6 +156,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
     PHPCompletionItem(ElementHandle element, CompletionRequest request) {
         this(element, request, null);
+    }
+
+    // for unit tests
+    static void setAddFirstClassCallable(Boolean add) {
+        ADD_FIRST_CLASS_CALLABLE = add;
     }
 
     @Override
@@ -266,7 +272,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         ElementHandle elem = getElement();
         if (elem instanceof MethodElement) {
             final MethodElement method = (MethodElement) elem;
-            if (method.isConstructor() && request.context.equals(CompletionContext.NEW_CLASS)) {
+            if (method.isConstructor() && isNewClassContext(request.context)) {
                 elem = method.getType();
             }
         }
@@ -441,6 +447,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         return result;
     }
 
+    private boolean isNewClassContext(CompletionContext context) {
+        return context.equals(CompletionContext.NEW_CLASS)
+                || context.equals(CompletionContext.THROW_NEW);
+    }
+
     static class NewClassItem extends MethodElementItem {
 
         /**
@@ -518,7 +529,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         }
 
         MethodElementItem(FunctionElementItem function, boolean completeAccessPrefix) {
-            super(function.getBaseFunctionElement(), function.request, function.parameters);
+            super(function.getBaseFunctionElement(), function.request, function.parameters, null, function.isFirstClassCallable);
             this.completeAccessPrefix = completeAccessPrefix;
         }
 
@@ -642,6 +653,10 @@ public abstract class PHPCompletionItem implements CompletionProposal {
     static class FunctionElementItem extends PHPCompletionItem {
 
         private List<ParameterElement> parameters;
+        // NETBEANS-5599 PHP 8.1
+        // https://wiki.php.net/rfc/first_class_callable_syntax
+        // https://www.php.net/manual/en/functions.first_class_callable_syntax.php
+        private final boolean isFirstClassCallable;
 
         /**
          * @return more than one instance in case if optional parameters exists
@@ -668,17 +683,42 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             if (retval.isEmpty()) {
                 retval.add(new FunctionElementItem(function, request, parameters, generateAs));
             }
+            if (addFirstClassCallableItem(function)) {
+                retval.add(createFirstClassCallableItem(function, request));
+            }
 
             return retval;
         }
 
+        static FunctionElementItem createFirstClassCallableItem(BaseFunctionElement function, CompletionRequest request) {
+            return new FunctionElementItem(function, request, Collections.emptyList(), null, true);
+        }
+
+        private static boolean addFirstClassCallableItem(BaseFunctionElement function) {
+            return !isConstructor(function)
+                    && (OptionsUtils.codeCompletionFirstClassCallable()
+                    || (ADD_FIRST_CLASS_CALLABLE != null && ADD_FIRST_CLASS_CALLABLE)); // for unit tests
+        }
+
+        private static boolean isConstructor(BaseFunctionElement function) {
+            if (function instanceof MethodElement) {
+                return ((MethodElement) function).isConstructor();
+            }
+            return false;
+        }
+
         FunctionElementItem(BaseFunctionElement function, CompletionRequest request, List<ParameterElement> parameters) {
-            this(function, request, parameters, null);
+            this(function, request, parameters, null, false);
         }
 
         FunctionElementItem(BaseFunctionElement function, CompletionRequest request, List<ParameterElement> parameters, QualifiedNameKind generateAs) {
+            this(function, request, parameters, generateAs, false);
+        }
+
+        FunctionElementItem(BaseFunctionElement function, CompletionRequest request, List<ParameterElement> parameters, QualifiedNameKind generateAs, boolean isFirstClassCallable) {
             super(function, request, generateAs);
             this.parameters = new ArrayList<>(parameters);
+            this.isFirstClassCallable = isFirstClassCallable;
         }
 
         public BaseFunctionElement getBaseFunctionElement() {
@@ -702,13 +742,16 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             template.append(super.getInsertPrefix());
             if (!insertOnlyMethodsName(request)) {
                 template.append("("); //NOI18N
+                if (isFirstClassCallable) {
+                    template.append(CodeUtils.ELLIPSIS); // ...
+                }
                 List<String> params = getInsertParams();
                 for (int i = 0; i < params.size(); i++) {
                     String param = params.get(i);
                     if (param.startsWith("&")) { //NOI18N
                         param = param.substring(1);
                     }
-                    template.append(String.format("${php-cc-%d  default=\"%s\"}", i, param));
+                    template.append(String.format("${php-cc-%d  default=\"%s\"}", i, param)); // NOI18N
 
                     if (i < params.size() - 1) {
                         template.append(", "); //NOI18N
@@ -770,6 +813,13 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         @Override
         public String getSortText() {
+            if (isFirstClassCallable) {
+                // put first-class callable syntax on the last position
+                // e.g.
+                // strlen($length)
+                // strlen(...)
+                return getName() + "99"; // NOI18N
+            }
             return getName() + parameters.size();
         }
 
@@ -789,6 +839,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                     formatter.appendText(paramTpl);
                     formatter.emphasis(false);
                 }
+            }
+            if (isFirstClassCallable) {
+                formatter.appendText(CodeUtils.ELLIPSIS); // ...
             }
         }
     }
@@ -850,6 +903,45 @@ public abstract class PHPCompletionItem implements CompletionProposal {
          */
         protected String getTypeName() {
             return typeName;
+        }
+    }
+
+    // Backed cases have an additional read-only property (value)
+    // e.g. EnumName::CASE_NAME->value;
+    // see https://www.php.net/manual/en/language.enumerations.backed.php
+    static class AdditionalFieldItem extends BasicFieldItem {
+
+        private final String fieldName;
+        private final String fieldTypeName;
+        private final String typeName;
+
+        public static AdditionalFieldItem getItem(String fieldName, String fieldTypeName, String typeName, CompletionRequest request) {
+            return new AdditionalFieldItem(fieldName, fieldTypeName, typeName, request);
+        }
+
+        private AdditionalFieldItem(String fieldName, String filedTypeName, String typeName, CompletionRequest request) {
+            super(null, fieldName, request);
+            this.fieldName = fieldName;
+            this.fieldTypeName = filedTypeName;
+            this.typeName = typeName;
+        }
+
+        @Override
+        public String getRhsHtml(HtmlFormatter formatter) {
+            if (typeName != null) {
+                formatter.appendText(typeName);
+            }
+            return formatter.getText();
+        }
+
+        @Override
+        public String getName() {
+            return fieldName;
+        }
+
+        @Override
+        protected String getTypeName() {
+            return fieldTypeName;
         }
     }
 
@@ -916,7 +1008,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                     typeName = StringUtils.implode(typeNames, Type.SEPARATOR);
                 }
             }
-            return StringUtils.truncate(typeName, 0, TYPE_NAME_MAX_LENGTH, "..."); // NOI18N
+            return StringUtils.truncate(typeName, 0, TYPE_NAME_MAX_LENGTH, CodeUtils.ELLIPSIS); // ...
         }
 
         @Override

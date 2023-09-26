@@ -63,25 +63,25 @@ For now, web-fragment is defined exactly the same way as web-app.
                     }
                     // due to compatibility with servlet2.3
                     public void setTaglib(int index, org.netbeans.modules.j2ee.dd.api.web.Taglib valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_1);
                     }
                     public org.netbeans.modules.j2ee.dd.api.web.Taglib getTaglib(int index) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_1);
                     }
                     public void setTaglib(org.netbeans.modules.j2ee.dd.api.web.Taglib[] value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_1);
                     }
                     public org.netbeans.modules.j2ee.dd.api.web.Taglib[] getTaglib() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_1);
                     }
                     public int sizeTaglib() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_1);
                     }
                     public int addTaglib(org.netbeans.modules.j2ee.dd.api.web.Taglib valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_1);
                     }
                     public int removeTaglib(org.netbeans.modules.j2ee.dd.api.web.Taglib valueInterface) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(VERSION_3_1);
                     }
                     public void setJspConfig(org.netbeans.modules.j2ee.dd.api.web.JspConfig value) {
                         if (value==null) setJspConfig(new org.netbeans.modules.j2ee.dd.api.web.JspConfig[]{});
@@ -138,13 +138,13 @@ For now, web-fragment is defined exactly the same way as web-app.
                         else return values[0];
                     }
                     public org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering newAbsoluteOrdering() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException("web-fragment "+VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException("web-fragment "+VERSION_3_1);
                     }
                     public void setAbsoluteOrdering(org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering[] value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException("web-fragment "+VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException("web-fragment "+VERSION_3_1);
                     }
                     public org.netbeans.modules.j2ee.dd.api.web.AbsoluteOrdering[] getAbsoluteOrdering() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
-                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException("web-fragment "+VERSION_3_0);
+                        throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException("web-fragment "+VERSION_3_1);
                     }
             </user-code>
         </meta-element>

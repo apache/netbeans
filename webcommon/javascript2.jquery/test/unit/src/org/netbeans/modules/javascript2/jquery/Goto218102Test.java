@@ -19,7 +19,6 @@
 package org.netbeans.modules.javascript2.jquery;
 
 import java.util.Collections;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.OffsetRange;
 import static org.netbeans.modules.csl.api.test.CslTestBase.getCaretOffset;

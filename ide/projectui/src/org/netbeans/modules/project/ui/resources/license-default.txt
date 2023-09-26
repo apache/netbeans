@@ -1,4 +1,6 @@
 ${licenseFirst!""}
 ${licensePrefix}Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+<#if !.data_model["org.openide.filesystems.FileObject"].getPath()?contains("{") >
 ${licensePrefix}Click nbfs://nbhost/SystemFileSystem/${.data_model["org.openide.filesystems.FileObject"].getPath()} to edit this template
+</#if>
 ${licenseLast!""}

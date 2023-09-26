@@ -27,6 +27,19 @@
       <folder name="Code">
         <attr name="displayName" bundlevalue="org.netbeans.modules.java.source.Bundle#Templates/Classes/Code"/>
         <attr name="position" intvalue="10000"/>
+        <!-- internal templates -->
+        <file name="LambdaExpression" url="LambdaExpression.template">
+            <attr name="position" intvalue="300"/>
+            <attr name="templateCategory" stringvalue="java-code-snippet"/>
+            <attr name="simple" boolvalue="false"/> <!--hide in Template Manager-->
+            <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+        </file>
+        <file name="LambdaBody" url="LambdaBody.template">
+            <attr name="position" intvalue="400"/>
+            <attr name="templateCategory" stringvalue="java-code-snippet"/>
+            <attr name="simple" boolvalue="false"/> <!--hide in Template Manager-->
+            <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+        </file>
       </folder>
     </folder>
   </folder>

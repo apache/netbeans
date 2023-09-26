@@ -331,7 +331,7 @@ final class JUnitOutputReader {
                     }
                 }
 
-                if (state.equals(State.TESTCASE_ISSUE) && !msg.equals("")){
+                if (state == State.TESTCASE_ISSUE && !msg.equals("")){
                     addStackTraceLine(testcase, msg, true);
                 }
                 break;

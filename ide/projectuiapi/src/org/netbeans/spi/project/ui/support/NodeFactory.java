@@ -66,6 +66,8 @@ public interface NodeFactory {
          * {@link NodeFactorySupport#createCompositeChildren} may be passed a path of {@code Projects/TYPE/Nodes}.
          */
         String[] projectType();
+        
+        String parentPath() default "";
 
         int position() default Integer.MAX_VALUE;
 ;

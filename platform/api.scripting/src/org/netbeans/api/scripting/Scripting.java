@@ -41,7 +41,7 @@ import org.openide.util.Lookup;
  * implementations of {@link ScriptEngineFactory}. To execute a JavaScript
  * code use:
  * <p>
- * {@codesnippet org.netbeans.api.scripting.ScriptingTutorialTest#testFourtyTwo}
+ * {@snippet file="org/netbeans/api/scripting/ScriptingTutorialTest.java" region="testFourtyTwo"}
  * <p>
  * Consult <a href="@org-netbeans-libs-graalsdk@/org/netbeans/libs/graalsdk/package-summary.html">scripting tutorial</a>
  * to learn more about advanced polyglot scripting topics.
@@ -83,14 +83,14 @@ public final class Scripting {
      * classes and features in the JVM. For example it is common in Nashorn scripts
      * to use:
      * 
-     * {@codesnippet org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS}
+     * {@snippet file="org/netbeans/api/scripting/JavaScriptEnginesTest.java" region="allowLoadAClassInJS"}
      * 
      * Such classloading is prevented by default. To allow it, specify {@code true}
      * in here.
      * <p>
      * {@link ScriptEngineManager} created with all access on, has a boolean property
      * in its {@link ScriptEngineManager#getBindings()}:
-     * {@codesnippet org.netbeans.api.scripting.ScriptingTest#testBuilderAllowAccess}
+     * {@snippet file="org/netbeans/api/scripting/ScriptingTest.java" region="testBuilderAllowAccess"}
      *
      * @param allAccess allow access to JVM internals from the script
      * @return instance of {@code this} builder
@@ -162,6 +162,9 @@ public final class Scripting {
                     it.set(new GraalJSWrapperFactory(f));
                 }
             }
+            // reverse the list: as later engines override the earlier ones in MIME mappings, so
+            // they should be enumerated first, to give them higher precedence
+            Collections.reverse(all);
             return all;
         }
 

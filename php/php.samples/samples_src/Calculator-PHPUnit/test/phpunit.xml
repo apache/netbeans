@@ -20,9 +20,9 @@
 
 -->
 <phpunit bootstrap="../vendor/autoload.php">
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+    <coverage>
+        <include>
             <directory suffix=".php">../src</directory>
-        </whitelist>
-    </filter>
+        </include>
+    </coverage>
 </phpunit>

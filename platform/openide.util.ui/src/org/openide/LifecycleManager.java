@@ -93,6 +93,7 @@ public abstract class LifecycleManager {
             System.exit(0);
         }
 
+        @Override
         public void exit(int status) {
             System.exit(status);
         }

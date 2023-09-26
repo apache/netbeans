@@ -27,8 +27,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.BadLocationException;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.modules.css.lib.api.*;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.openide.filesystems.FileObject;
@@ -1480,10 +1478,25 @@ public class Css3ParserTest extends CssTestBase {
         assertParses(".less {}");
     }
 
+    public void testParseVariable() {
+        assertParses("h1 {--demoVar: 1em; margin: var(--demoVar);}");
+        assertParses("h1 {--demoVar: 1em; margin: var(--demoVar, 3ex 2em);}");
+        assertParses(":root {--primary-font: 'Arial', 'Helvetica', sans-serif;}");
+        assertParses("h1 {--grid-gutter: ( var(--margins) * var(--spacing-unit));}");
+        assertParses("h1 {--grid-gutter:;}");
+    }
+
     public void testMathExpressionInFunction() {
         assertParses("div {\n"
                 + "    padding: calc(1 * 1);\n"
                 + "}");
+    }
+
+    public void testCalcVarCombination() {
+        assertParses("div {width: calc(var(--widthC) + 2px);}");
+        assertParses("div {width: calc(var(--grid-margin) - var(--cell-margin));}");
+        assertParses("div {width: var(--demoVal, calc(var(--grid-margin) - var(--cell-margin)));}");
+        assertParses(read(getTestFile("testfiles/google-chrome-css-custom-properties.css")));
     }
     
     public void testLessScssKeywordInCss() {
@@ -1587,13 +1600,6 @@ public class Css3ParserTest extends CssTestBase {
                 + "}");
     }
 
-    public void testParseVariable() {
-        assertParses("h1 {"
-            + "--demoVar: 1em;"
-            + "margin: var(--demoVar, 3ex 2em);"
-            + "}");
-    }
-
     public void testParseSelectorListCSS4() {
         assertParses("h1:not(.dummy) {}");
         assertParses("h1:not( .h2:visible ) {}");
@@ -1606,6 +1612,9 @@ public class Css3ParserTest extends CssTestBase {
         assertParses("*|*:is(*:hover, *:focus) {}");
         assertParses("a:where(:valid, :unsupported) {}");
         assertParses("a:where(:not(:hover)) {text-decoration: none;}");
+        assertParses("body:has(#aCheck:checked) {}");
+        assertParses(":is(h1, h2, h3):has(+ :is(h2, h3, h4)) {}");
+        assertParses(":is(h1, h2, h3):has(+ h2, + h3, + h4) {}");
     }
 
     public void testParsePage() {

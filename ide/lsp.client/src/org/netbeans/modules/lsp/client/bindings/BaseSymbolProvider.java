@@ -33,8 +33,14 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.Icon;
+import org.eclipse.lsp4j.Location;
+import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.SymbolInformation;
+import org.eclipse.lsp4j.WorkspaceSymbol;
+import org.eclipse.lsp4j.WorkspaceSymbolLocation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -56,16 +62,16 @@ public class BaseSymbolProvider {
 
     private static final Pattern WORD_START = Pattern.compile("(^|[^\\p{L}])(\\p{L})");
     private final AtomicBoolean cancel = new AtomicBoolean();
-    private CompletableFuture<List<? extends SymbolInformation>> currentQuery;
+    private CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>> currentQuery;
 
     public String name() {
         return "lsp-client";
     }
 
-    public void computeSymbolNames(SearchType searchType, String searchText, BiConsumer<SymbolInformation, String> found) {
+    public void computeSymbolNames(SearchType searchType, String searchText, BiConsumer<Either<SymbolInformation, WorkspaceSymbol>, String> found) {
         cancel.set(false);
 
-        List<CompletableFuture<List<? extends SymbolInformation>>> queries = new ArrayList<>();
+        List<CompletableFuture<Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>>>> queries = new ArrayList<>();
 
         try {
             for (LSPBindings b : LSPBindings.getAllBindings()) {
@@ -86,21 +92,34 @@ public class BaseSymbolProvider {
                 try {
                     currentQuery = queries.remove(queries.size() - 1);
 
-                    List<? extends SymbolInformation> infos = currentQuery.get();
+                    Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> infos = currentQuery.get();
 
                     currentQuery = null;
 
                     if (infos != null) {
-                        for (SymbolInformation info : infos) {
-                            if (cancel.get()) {
-                                return ;
+                        if (infos.isLeft()) {
+                            for (SymbolInformation info : infos.getLeft()) {
+                                if (cancel.get()) {
+                                    return ;
+                                }
+                                Matcher wordStartMatcher = WORD_START.matcher(info.getName());
+                                while (wordStartMatcher.find()) {
+                                    int nameStart = wordStartMatcher.start(2);
+                                    String namePart = info.getName().substring(nameStart);
+                                    if (matcher.accept(namePart)) {
+                                        found.accept(Either.forLeft(info), namePart);
+                                    }
+                                }
                             }
-                            Matcher wordStartMatcher = WORD_START.matcher(info.getName());
-                            while (wordStartMatcher.find()) {
-                                int nameStart = wordStartMatcher.start(2);
-                                String namePart = info.getName().substring(nameStart);
-                                if (matcher.accept(namePart)) {
-                                    found.accept(info, namePart);
+                        } else if (infos.isRight()) {
+                            for (WorkspaceSymbol sym : infos.getRight()) {
+                                Matcher wordStartMatcher = WORD_START.matcher(sym.getName());
+                                while (wordStartMatcher.find()) {
+                                    int nameStart = wordStartMatcher.start(2);
+                                    String namePart = sym.getName().substring(nameStart);
+                                    if (matcher.accept(namePart)) {
+                                        found.accept(Either.forRight(sym), namePart);
+                                    }
                                 }
                             }
                         }
@@ -138,22 +157,21 @@ public class BaseSymbolProvider {
 
     public static interface BaseSymbolDescriptor {
 
-        public SymbolInformation getInfo();
+        public Either<SymbolInformation, WorkspaceSymbol> getInfo();
 
         public default Icon getIcon() {
-            return Icons.getSymbolIcon(getInfo().getKind());
+            return Icons.getSymbolIcon(getInfo().isLeft() ? getInfo().getLeft().getKind() : getInfo().getRight().getKind());
         }
 
         public default String getSymbolName() {
-            return getInfo().getName();
+            return getInfo().isLeft() ? getInfo().getLeft().getName() : getInfo().getRight().getName();
         }
 
         public default String getOwnerName() {
-            String container = getInfo().getContainerName();
+            String container = getInfo().isLeft() ? getInfo().getLeft().getContainerName() : getInfo().getRight().getContainerName();
 
             if (container == null || "".equals(container)) {
-                String uri = getInfo().getLocation().getUri();
-
+                String uri = getUri();
                 container = uri.substring(uri.lastIndexOf('/') + 1);
             }
 
@@ -185,7 +203,7 @@ public class BaseSymbolProvider {
 
         public default FileObject getFileObject() {
             try {
-                URI target = URI.create(getInfo().getLocation().getUri());
+                URI target = URI.create(getUri());
 
                 return URLMapper.findFileObject(target.toURL());
             } catch (MalformedURLException ex) {
@@ -199,8 +217,29 @@ public class BaseSymbolProvider {
         }
 
         public default void open() {
-            Utils.open(getInfo().getLocation().getUri(), getInfo().getLocation().getRange());
+            Utils.open(getUri(), getRange());
         }
 
+        public default String getUri() {
+            if (getInfo().isLeft()) {
+                return getInfo().getLeft().getLocation().getUri();
+            }
+            Either<Location, WorkspaceSymbolLocation> location = getInfo().getRight().getLocation();
+            if (location.isLeft()) {
+                return location.getLeft().getUri();
+            }
+            return location.getRight().getUri();
+        }
+
+        public default Range getRange() {
+            if (getInfo().isLeft()) {
+                return getInfo().getLeft().getLocation().getRange();
+            }
+            Either<Location, WorkspaceSymbolLocation> location = getInfo().getRight().getLocation();
+            if (location.isLeft()) {
+                return location.getLeft().getRange();
+            }
+            return new Range(new Position(0, 0), new Position(0, 0));
+        }
     }
 }

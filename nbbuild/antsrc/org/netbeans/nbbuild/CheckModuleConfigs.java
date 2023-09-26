@@ -57,10 +57,7 @@ public final class CheckModuleConfigs extends Task {
         File clusterPropertiesFile = new File(nbroot, "nbbuild" + File.separatorChar + "cluster.properties");
         Map<String,Object> properties = getProject().getProperties();
         Map<String,Set<String>> clusters = loadModuleClusters(properties, clusterPropertiesFile);
-        Set<String> allClusterModules = new TreeSet<>();
-        for (Set<String> s : clusters.values()) {
-            allClusterModules.addAll(s);
-        }
+
         // Check that javadoc <= full cluster config:
         Set<String> javadoc = splitToSet(getProject().getProperty("config.javadoc.all"), "config.javadoc.all");
         for (Set<String> modules : clusters.values()) {
@@ -80,8 +77,7 @@ public final class CheckModuleConfigs extends Task {
             }
             allClusters.put(m.group(1), splitToList((String) clusterDef.getValue(), clusterDef.getKey()));
         }
-        allClusters.get("experimental").removeAll(allClusters.get("betauc")); // intentionally a superset
-        allClusters.get("betauc").removeAll(allClusters.get("stableuc")); // ditto
+
         for (Map.Entry<String,List<String>> entry : allClusters.entrySet()) {
             String name = entry.getKey();
             List<String> modules = entry.getValue();

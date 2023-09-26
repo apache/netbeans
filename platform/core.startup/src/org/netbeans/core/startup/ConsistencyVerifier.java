@@ -58,18 +58,26 @@ public class ConsistencyVerifier {
     public static SortedMap<String,SortedSet<String>> findInconsistencies(Set<Manifest> modules) throws IllegalArgumentException {
         return findInconsistencies(modules, null);
     }
+
     /**
      * Find all expected installation problems for a set of modules.
-     * Standard OS and module format tokens are provided, but all other dependencies
-     * must be accessible from the set of modules supplied.
-     * <p>The manifests may contain the pseudoattributes <code>autoload</code> and <code>eager</code>
-     * which if set to <code>true</code> will mark the corresponding modules autoload or eager (resp.).
-     * It is considered an error if some nondeprecated autoload modules would not be enabled unless explicitly whitelisted.
+     * Standard OS, architecture and module format tokens are provided, but all
+     * other dependencies must be accessible from the set of modules supplied.
+     * <p>
+     * The manifests may contain the pseudoattributes <code>autoload</code> and
+     * <code>eager</code> which if set to <code>true</code> will mark the
+     * corresponding modules autoload or eager (resp.). It is considered an
+     * error if some nondeprecated autoload modules would not be enabled unless
+     * explicitly whitelisted.
+     *
      * @param modules a set of module manifests to test together
-     * @param permittedDisabledAutoloads if null, do not check autoload enablement;
-     *                                   otherwise (not null but possibly empty) permit the listed modules (as CNBs) to be disabled
-     * @return a map from module code name bases, to sets of problems, expressed in an unspecified but readable format
-     * @throws IllegalArgumentException if the set of modules is illegal (e.g. contains duplicates)
+     * @param permittedDisabledAutoloads if null, do not check autoload
+     * enablement; otherwise (not null but possibly empty) permit the listed
+     * modules (as CNBs) to be disabled
+     * @return a map from module code name bases, to sets of problems, expressed
+     * in an unspecified but readable format
+     * @throws IllegalArgumentException if the set of modules is illegal (e.g.
+     * contains duplicates)
      */
     public static SortedMap<String,SortedSet<String>> findInconsistencies(
             Set<Manifest> modules, Set<String> permittedDisabledAutoloads) throws IllegalArgumentException {
@@ -91,7 +99,22 @@ public class ConsistencyVerifier {
                 "org.openide.modules.os.MacOSX, " + // NOI18N
                 "org.openide.modules.os.Linux, " + // NOI18N
                 "org.openide.modules.os.Solaris, " + // NOI18N
-                "org.openide.modules.os.OS2"); // NOI18N
+                "org.openide.modules.os.OS2, " + // NOI18N
+                "org.openide.modules.arch.x86_64, " + // NOI18N
+                "org.openide.modules.arch.amd64, " + // NOI18N
+                "org.openide.modules.arch.x86," + // NOI18N
+                "org.openide.modules.arch.aarch64," + // NOI18N
+                "org.openide.modules.arch.arm," + // NOI18N
+                "org.openide.modules.arch.ppc," + // NOI18N
+                "org.openide.modules.arch.ppc64," + // NOI18N
+                "org.openide.modules.arch.ppc64le," + // NOI18N
+                "org.openide.modules.arch.s390x," + // NOI18N
+                "org.openide.modules.arch.zarch_64," + // NOI18N
+                "org.openide.modules.arch.sparc," + // NOI18N
+                "org.openide.modules.arch.sparcv9," + // NOI18N
+                "org.openide.modules.arch.riscv64," + // NOI18N
+                "org.openide.modules.arch.loongarch64" + // NOI18N
+                "");
         dummy.getMainAttributes().putValue("OpenIDE-Module-Public-Packages", "-"); // NOI18N
         try {
             mgr.createFixed(dummy, null, ClassLoader.getSystemClassLoader());
@@ -126,6 +149,8 @@ public class ConsistencyVerifier {
                 if (autoload) {
                     // discard dependency on JDK: will allow other modules, dependent on these autoloads, to enable
                     man.remove(new Attributes.Name("OpenIDE-Module-Java-Dependencies"));
+                    // ignore package dependencies
+                    man.remove(new Attributes.Name("OpenIDE-Module-Package-Dependencies"));
                 }
                 Module mod = mgr.createFixed(m, null, ClassLoader.getSystemClassLoader(), autoload, eager);
                 mods.add(mod);

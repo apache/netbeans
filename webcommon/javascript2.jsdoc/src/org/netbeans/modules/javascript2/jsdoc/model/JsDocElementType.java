@@ -101,7 +101,7 @@ public enum JsDocElementType {
      */
     public static synchronized JsDocElementType fromString(String value) {
         if (types == null) {
-           types = new HashMap<String, JsDocElementType>();
+           types = new HashMap<>();
            for (JsDocElementType type : JsDocElementType.values()) {
                types.put(type.toString().toLowerCase(Locale.ENGLISH), type);
            }

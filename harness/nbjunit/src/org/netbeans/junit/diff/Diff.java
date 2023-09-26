@@ -36,7 +36,7 @@ package org.netbeans.junit.diff;
  *
  * @author Jan Becicka
  * @version 0.1
- * @see junit.framework.Assert Assert class
+ * @see org.junit.Assert Assert class
  */
 public interface Diff {
     
@@ -45,6 +45,7 @@ public interface Diff {
     * @param second second file to compare
     * @param diff difference file, caller can pass null value, when results are not needed.
     * @return true iff files differ
+    * @throws java.io.IOException if an I/O exception occurs
     */
     public boolean diff(final java.io.File first, final java.io.File second, java.io.File diff) throws java.io.IOException;
     
@@ -53,6 +54,7 @@ public interface Diff {
     * @param second second file to compare
     * @param diff difference file, caller can pass null value, when results are not needed.
     * @return true iff files differ
+    * @throws java.io.IOException if an I/O exception occurs
     */
     public boolean diff(final String first, final String second, String diff) throws java.io.IOException;
     

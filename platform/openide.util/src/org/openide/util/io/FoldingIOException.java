@@ -49,16 +49,19 @@ public class FoldingIOException extends IOException {
     }
 
     /** Prints stack trace of the foreign exception */
+    @Override
     public void printStackTrace() {
         t.printStackTrace();
     }
 
     /** Prints stack trace of the foreign exception */
+    @Override
     public void printStackTrace(java.io.PrintStream s) {
         t.printStackTrace(s);
     }
 
     /** Prints stack trace of the foreign exception */
+    @Override
     public void printStackTrace(java.io.PrintWriter s) {
         t.printStackTrace(s);
     }
@@ -66,6 +69,7 @@ public class FoldingIOException extends IOException {
     /**
     * @return toString of the foreign exception
     */
+    @Override
     public String toString() {
         return t.toString();
     }
@@ -73,6 +77,7 @@ public class FoldingIOException extends IOException {
     /**
     * @return getLocalizedMessage of the foreign exception
     */
+    @Override
     public String getLocalizedMessage() {
         return t.getLocalizedMessage();
     }

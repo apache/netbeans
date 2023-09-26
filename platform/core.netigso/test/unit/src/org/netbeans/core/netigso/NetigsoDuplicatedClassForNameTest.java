@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.MockEvents;
 import org.netbeans.MockModuleInstaller;
 import org.netbeans.Module;

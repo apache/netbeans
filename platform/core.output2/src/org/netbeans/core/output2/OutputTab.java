@@ -164,7 +164,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
         Document old = getDocument();
         hasOutputListeners = false;
         super.setDocument(doc);
-        if (old != null && old instanceof OutputDocument) {
+        if (old instanceof OutputDocument) {
             ((OutputDocument) old).dispose();
         }
         applyOptions();
@@ -872,7 +872,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
             EXPAND_TREE
     };
 
-    private final Map<ACTION, TabAction> actions = new EnumMap<ACTION, TabAction>(ACTION.class);;
+    private final Map<ACTION, TabAction> actions = new EnumMap<ACTION, TabAction>(ACTION.class);
 
     private void createActions() {
         KeyStrokeUtils.refreshActionCache();

@@ -29,7 +29,7 @@ import java.util.*;
 *
 * @author Jaroslav Tulach
 * @since 3.30
-* @see BaseMutexUtilities#topologicalSort
+* @see BaseUtilities#topologicalSort
 */
 public final class TopologicalSortException extends Exception {
     /** all vertexes */
@@ -60,7 +60,7 @@ public final class TopologicalSortException extends Exception {
     public final List partialSort() {
         Set[] all = topologicalSets();
 
-        ArrayList<Object> res = new ArrayList<Object>(vertexes.size());
+        List<Object> res = new ArrayList<Object>(vertexes.size());
 
         for (int i = 0; i < all.length; i++) {
             for (Object e : all[i]) {
@@ -141,6 +141,7 @@ public final class TopologicalSortException extends Exception {
     /** Adds description why the graph cannot be sorted.
      * @param w writer to write to
      */
+    @Override
     public final void printStackTrace(java.io.PrintWriter w) {
         printDebug(w);
         super.printStackTrace(w);
@@ -149,6 +150,7 @@ public final class TopologicalSortException extends Exception {
     /** Adds description why the graph cannot be sorted.
      * @param s stream to write to
      */
+    @Override
     public final void printStackTrace(java.io.PrintStream s) {
         java.io.PrintWriter w = new java.io.PrintWriter(s);
         this.printStackTrace(w);

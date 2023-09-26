@@ -2,12 +2,8 @@ Code completion result for source line:
 a|lert("Text");
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-CONSTRUCTO arguments                       [PUBLIC]   JS Platform
-METHOD     addEventListener(type: String,  [PUBLIC,   JS Platform
-METHOD     alert(): undefined              [PUBLIC,   JS Platform
-METHOD     assign(target: Object): Object  [PUBLIC,   JS Platform
-METHOD     atob(encodedData: String): Str  [PUBLIC,   JS Platform
-FIELD      applicationCache: Object        [PUBLIC]   JS Platform
+METHOD     alert()                         [PUBLIC]   issue215863.js
+METHOD     assign(target: Object, sources  [PUBLIC,   JS Platform
 VARIABLE   a1: MyLib.ObjA                  [PUBLIC]   issue251821.js
 VARIABLE   a232376: Turtle                 [PUBLIC]   issue232376.js
 KEYWORD    async                                      ECMAScript 7 - 2016 (Experimental)

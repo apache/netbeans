@@ -126,7 +126,7 @@ public final class HtmlPaletteUtilities {
     public static void insert(final String s, final JTextComponent target, final boolean reformat)
             throws BadLocationException {
         final Document _doc = target.getDocument();
-        if (_doc == null || !(_doc instanceof BaseDocument)) {
+        if (!(_doc instanceof BaseDocument)) {
             return;
         }
 

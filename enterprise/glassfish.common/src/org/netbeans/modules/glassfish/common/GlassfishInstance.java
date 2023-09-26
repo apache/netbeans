@@ -721,7 +721,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
     private transient Lookup full;
     private final transient Lookup.Result<GlassfishModuleFactory>
             lookupResult = Lookups.forPath(Util.GF_LOOKUP_PATH).lookupResult(
-            GlassfishModuleFactory.class);;
+            GlassfishModuleFactory.class);
     private transient Collection<? extends GlassfishModuleFactory>
             currentFactories = Collections.emptyList();
     

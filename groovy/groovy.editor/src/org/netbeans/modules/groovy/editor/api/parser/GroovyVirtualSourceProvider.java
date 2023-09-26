@@ -699,7 +699,12 @@ public class GroovyVirtualSourceProvider implements VirtualSourceProvider {
             if (genericsType.isPlaceholder()) {
                 out.print(genericsType.getName());
             } else {
-                printTypeName(genericsType.getType(), out);
+                // Note: Groovy's GenericsType.toString() uses Set<String> to avoid
+                // recursion through placeholders; but the algorithm here differs, bcs
+                // placeholders bypass this recursive invocation at all. 
+                // If this simplified printing produces some errors, the algo should be
+                // tuned to be like the GenericsType.toString one.
+                printType(genericsType.getType(), out);
                 ClassNode[] upperBounds = genericsType.getUpperBounds();
                 ClassNode lowerBound = genericsType.getLowerBound();
                 if (upperBounds != null) {

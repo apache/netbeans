@@ -464,8 +464,14 @@ public class DeclarativeHintsParser {
                 }
             }
             if (result == null) {
-                result = ClasspathInfo.create(ClassPathSupport.createProxyClassPath(
-                        javacPath, cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT)), ClassPath.EMPTY, ClassPath.EMPTY);
+                ClassPath bootCP =
+                        ClassPathSupport.createProxyClassPath(javacPath,
+                                                              cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT)
+                                                             );
+                ClassPath systemCP = cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_BOOT);
+                result = new ClasspathInfo.Builder(bootCP)
+                                          .setModuleBootPath(systemCP)
+                                          .build();
                 cache = new WeakReference<>(new Holder(result, cpInfo));
             }
             cpInfo = result;

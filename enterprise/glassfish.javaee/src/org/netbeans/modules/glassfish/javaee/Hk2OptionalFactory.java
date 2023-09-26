@@ -68,6 +68,12 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
                 t, true);
     }
 
+    public static Hk2OptionalFactory createEe7() {
+        ServerUtilities t = ServerUtilities.getEe7Utilities();
+        return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createEe7(),
+                t, true);
+    }
+    
     public static Hk2OptionalFactory createEe8() {
         ServerUtilities t = ServerUtilities.getEe8Utilities();
         return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createEe8(),
@@ -89,6 +95,12 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
     public static Hk2OptionalFactory createJakartaEe91() {
         ServerUtilities t = ServerUtilities.getJakartaEe91Utilities();
         return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createJakartaEe91(),
+                t, true);
+    }
+
+    public static Hk2OptionalFactory createJakartaEe10() {
+        ServerUtilities t = ServerUtilities.getJakartaEe10Utilities();
+        return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createJakartaEe10(),
                 t, true);
     }
 

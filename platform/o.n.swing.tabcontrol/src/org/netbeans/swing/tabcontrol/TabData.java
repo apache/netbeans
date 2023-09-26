@@ -31,7 +31,7 @@ import java.awt.*;
  * immutable to client code, changes to the data model may change the values
  * returned by the methods of this class.  TabData objects are the data
  * component of TabDataModel.
- * <p/>
+ * <p>
  * TabData objects implement their <code>equals()</code> and
  * <code>hashCode</code> contract based on the equality of the user object and
  * the text.  The icon and the tooltip text are not considered when testing

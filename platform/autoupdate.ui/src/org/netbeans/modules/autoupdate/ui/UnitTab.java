@@ -1299,7 +1299,7 @@ public final class UnitTab extends javax.swing.JPanel {
         @Override
         protected boolean isEnabled(Unit u) {
             boolean retval = false;
-            if ((u != null) && (u instanceof Unit.Update)) {
+            if (u instanceof Unit.Update) {
                 retval = u.canBeMarked();
             }
             return retval;
@@ -1386,7 +1386,7 @@ public final class UnitTab extends javax.swing.JPanel {
         @Override
         protected boolean isEnabled(Unit u) {
             boolean retval = false;
-            if ((u != null) && (u instanceof Unit.Available)) {
+            if (u instanceof Unit.Available) {
                 retval = u.canBeMarked();
             }
             return retval;
@@ -1675,7 +1675,7 @@ public final class UnitTab extends javax.swing.JPanel {
 
         protected boolean isEnabled (Unit u) {
             boolean retval = false;
-            if ((u != null) && (u instanceof Unit.Installed)) {
+            if (u instanceof Unit.Installed) {
                 Unit.Installed i = (Unit.Installed)u;
                 if (!i.getRelevantElement ().isEnabled ()) {
                      retval = Unit.Installed.isOperationAllowed (u.updateUnit, u.getRelevantElement (), Containers.forEnable ());
@@ -1700,7 +1700,7 @@ public final class UnitTab extends javax.swing.JPanel {
             String category = uu.getCategoryName();
             List<Unit> units = model.getUnits();
             for (Unit u : units) {
-                if ((u != null) && (u instanceof Unit.Installed) && category.equals(u.getCategoryName())) {
+                if ((u instanceof Unit.Installed) && category.equals(u.getCategoryName())) {
                     Unit.Installed installed = (Unit.Installed) u;
                     if (!installed.getRelevantElement().isEnabled()) {
                         retval = Unit.Installed.isOperationAllowed(installed.updateUnit, installed.getRelevantElement(), Containers.forEnable());
@@ -1712,7 +1712,7 @@ public final class UnitTab extends javax.swing.JPanel {
         }
         @Override
         protected String getContextName (Unit u) {
-            if ((u != null) && (u instanceof Unit.Installed)) {
+            if (u instanceof Unit.Installed) {
                 return getActionName ()+ " \"" + u.getCategoryName () + "\"";
             }
             return getActionName ();
@@ -1726,7 +1726,7 @@ public final class UnitTab extends javax.swing.JPanel {
             int count = model.getRowCount ();
             for (int i = 0; i < count; i++) {
                 Unit u = model.getUnitAtRow (i);
-                if ((u != null) && (u instanceof Unit.Installed) && category.equals (u.getCategoryName ())) {
+                if ((u instanceof Unit.Installed) && category.equals(u.getCategoryName())) {
                     Unit.Installed installed = (Unit.Installed)u;
                     if (!installed.getRelevantElement().isEnabled() && !installed.updateUnit.isPending()) {
                         OperationInfo info = Containers.forEnable ().add (installed.updateUnit, installed.getRelevantElement ());
@@ -1807,7 +1807,7 @@ public final class UnitTab extends javax.swing.JPanel {
 
         protected boolean isEnabled (Unit u) {
             boolean retval = false;
-            if ((u != null) && (u instanceof Unit.Installed)) {
+            if (u instanceof Unit.Installed) {
                 Unit.Installed i = (Unit.Installed)u;
                 if (i.getRelevantElement ().isEnabled ()) {
                     retval = Unit.Installed.isOperationAllowed (u.updateUnit, u.getRelevantElement (), Containers.forDisable ());
@@ -1828,7 +1828,7 @@ public final class UnitTab extends javax.swing.JPanel {
         @Override
         protected boolean isEnabled(Unit u) {
             boolean retval = false;
-            if ((u != null) && (u instanceof Unit.Installed)) {
+            if (u instanceof Unit.Installed) {
                 Unit.Installed i = (Unit.Installed) u;
                 if (! i.getRelevantElement().isEnabled()) {
                     retval = Unit.Installed.isOperationAllowed(u.updateUnit, u.getRelevantElement(), Containers.forEnable());
@@ -1865,7 +1865,7 @@ public final class UnitTab extends javax.swing.JPanel {
 
         @Override
         protected String getContextName(Unit u) {
-            if ((u != null) && (u instanceof Unit.Installed)) {
+            if (u instanceof Unit.Installed) {
                 return getActionName() + " \"" + u.getDisplayName() + "\""; //NOI18N
             }
             return getActionName();
@@ -1881,7 +1881,7 @@ public final class UnitTab extends javax.swing.JPanel {
         @Override
         protected boolean isEnabled(Unit u) {
             boolean retval = false;
-            if ((u != null) && (u instanceof Unit.Installed)) {
+            if (u instanceof Unit.Installed) {
                 Unit.Installed i = (Unit.Installed) u;
                 if (i.getRelevantElement().isEnabled()) {
                     retval = Unit.Installed.isOperationAllowed(u.updateUnit, u.getRelevantElement(), Containers.forDisable());
@@ -1918,7 +1918,7 @@ public final class UnitTab extends javax.swing.JPanel {
 
         @Override
         protected String getContextName(Unit u) {
-            if ((u != null) && (u instanceof Unit.Installed)) {
+            if (u instanceof Unit.Installed) {
                 return getActionName() + " \"" + u.getDisplayName() + "\""; //NOI18N
             }
             return getActionName();
@@ -1934,7 +1934,7 @@ public final class UnitTab extends javax.swing.JPanel {
         @Override
         protected boolean isEnabled(Unit u) {
             boolean retval = false;
-            if ((u != null) && (u instanceof Unit.Installed)) {
+            if (u instanceof Unit.Installed) {
                 retval = ((Unit.Installed)u).isUninstallAllowed();
             }
             return retval;
@@ -1968,7 +1968,7 @@ public final class UnitTab extends javax.swing.JPanel {
 
         @Override
         protected String getContextName(Unit u) {
-            if ((u != null) && (u instanceof Unit.Installed)) {
+            if (u instanceof Unit.Installed) {
                 return getActionName() + " \"" + u.getDisplayName() + "\""; //NOI18N
             }
             return getActionName();
@@ -1988,7 +1988,7 @@ public final class UnitTab extends javax.swing.JPanel {
             String category = uu.getCategoryName();
             List<Unit> units = model.getUnits();
             for (Unit u : units) {
-                if ((u != null) && (u instanceof Unit.Installed) && category.equals(u.getCategoryName())) {
+                if ((u instanceof Unit.Installed) && category.equals(u.getCategoryName())) {
                     Unit.Installed installed = (Unit.Installed) u;
                     if (installed.getRelevantElement().isEnabled()) {
                         retval = Unit.Installed.isOperationAllowed(installed.updateUnit, installed.getRelevantElement(), Containers.forDisable());
@@ -2000,7 +2000,7 @@ public final class UnitTab extends javax.swing.JPanel {
         
         @Override
         protected String getContextName (Unit u) {
-            if ((u != null) && (u instanceof Unit.Installed)) {
+            if (u instanceof Unit.Installed) {
                 return getActionName ()+ " \"" + u.getCategoryName () + "\"";//NOI18N
             }
             return getActionName ();
@@ -2014,7 +2014,7 @@ public final class UnitTab extends javax.swing.JPanel {
             int count = model.getRowCount ();
             for (int i = 0; i < count; i++) {
                 Unit u = model.getUnitAtRow (i);
-                if ((u != null) && (u instanceof Unit.Installed) && category.equals (u.getCategoryName ())) {
+                if ((u instanceof Unit.Installed) && category.equals(u.getCategoryName())) {
                     Unit.Installed installed = (Unit.Installed)u;
                     if (installed.getRelevantElement().isEnabled() && !installed.updateUnit.isPending()) {
                         OperationInfo info = Containers.forDisable ().add (installed.updateUnit, installed.getRelevantElement ());

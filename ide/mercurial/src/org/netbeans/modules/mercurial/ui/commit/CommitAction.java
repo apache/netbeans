@@ -83,6 +83,7 @@ import org.openide.cookies.EditorCookie;
 import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
+import org.openide.util.Utilities;
 
 /**
  * Commit action for mercurial:
@@ -148,7 +149,7 @@ public class CommitAction extends ContextAction {
                     NbBundle.getMessage(CommitAction.class, "MSG_COMMIT_NOT_SUPPORTED_INVIEW_INFO")); // NOI18N
             logger.output(""); // NOI18N
             logger.closeLog();
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                     NbBundle.getMessage(CommitAction.class, "MSG_COMMIT_NOT_SUPPORTED_INVIEW"),// NOI18N
                     NbBundle.getMessage(CommitAction.class, "MSG_COMMIT_NOT_SUPPORTED_INVIEW_TITLE"),// NOI18N
                     JOptionPane.INFORMATION_MESSAGE);

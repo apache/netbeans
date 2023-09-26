@@ -125,6 +125,7 @@ final class TemplateWizard1 extends javax.swing.JPanel implements DataFilter,
         Utilities.attachInitJob(this, this);
     }
 
+    @Override
     public void addNotify() {
         // overriden to set the labels later than in constructor
         // in order to fix #19667
@@ -156,11 +157,13 @@ final class TemplateWizard1 extends javax.swing.JPanel implements DataFilter,
 
     /** Forward focus to tree view. */
     @SuppressWarnings("deprecation")
+    @Override
     public boolean requestDefaultFocus() {
         return treeView.requestDefaultFocus();
     }
 
     /** Preffered size */
+    @Override
     public java.awt.Dimension getPreferredSize() {
         return TemplateWizard.PREF_DIM;
     }

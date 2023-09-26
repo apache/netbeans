@@ -42,6 +42,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
@@ -90,6 +92,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
     static final String NBJDK_HOME = "nbjdk.home"; // NOI18N
     public static final String RUN_CP = "run.cp";
     private static final SpecificationVersion JDK9 = new SpecificationVersion("9"); //NOI18N
+    private static final String JAVACAPI_CNB = "org.netbeans.libs.javacapi";
     
     private final NbModuleProject project;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
@@ -423,9 +426,22 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             buildDefaults.put(CP, "${module.classpath}:${cp.extra}"); // NOI18N
             buildDefaults.put(RUN_CP, "${module.run.classpath}:${cp.extra}:${build.classes.dir}"); // NOI18N
             if (type == NbModuleType.NETBEANS_ORG && "true".equals(projectProperties.getProperties().get("requires.nb.javac"))) {
-                ModuleEntry javacapi = ml.getEntry("org.netbeans.libs.javacapi");
-                if (javacapi != null) {
-                    buildDefaults.put(ClassPathProviderImpl.BOOTCLASSPATH_PREPEND, javacapi.getClassPathExtensions());
+                ModuleEntry javacLibrary = ml.getEntry(JAVACAPI_CNB);
+                if (javacLibrary != null) {
+                    boolean implDependencyOnJavac =
+                        projectDependencies().filter(dep -> JAVACAPI_CNB.equals(dependencyCNB(dep)))
+                                             .map(dep -> XMLUtil.findElement(dep, "run-dependency", NbModuleProject.NAMESPACE_SHARED)) // NOI18N
+                                             .filter(runDep -> runDep != null)
+                                             .anyMatch(runDep -> XMLUtil.findElement(runDep, "implementation-version", NbModuleProject.NAMESPACE_SHARED) != null); // NOI18N
+                    String bootcpPrepend;
+                    if (implDependencyOnJavac) {
+                        bootcpPrepend = javacLibrary.getClassPathExtensions();
+                    } else {
+                        bootcpPrepend = Stream.of(javacLibrary.getClassPathExtensions().split(Pattern.quote(File.pathSeparator)))
+                                              .filter(ext -> ext.endsWith("-api.jar"))
+                                              .collect(Collectors.joining(File.pathSeparator));
+                    }
+                    buildDefaults.put(ClassPathProviderImpl.BOOTCLASSPATH_PREPEND, bootcpPrepend);
                 }
             }
             
@@ -604,27 +620,16 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         
     }
     
-    /**
-     * Should be similar to impl in ParseProjectXml.
-     */
     private String computeModuleClasspath(ModuleList ml) {
-        Element data = project.getPrimaryConfigurationData();
-        Element moduleDependencies = XMLUtil.findElement(data,
-            "module-dependencies", NbModuleProject.NAMESPACE_SHARED); // NOI18N
-        assert moduleDependencies != null : "Malformed metadata in " + project;
         StringBuilder cp = new StringBuilder();
-        for (Element dep : XMLUtil.findSubElements(moduleDependencies)) {
-            if (XMLUtil.findElement(dep, "compile-dependency", // NOI18N
-                    NbModuleProject.NAMESPACE_SHARED) == null) {
-                continue;
-            }
-            Element cnbEl = XMLUtil.findElement(dep, "code-name-base", // NOI18N
-                NbModuleProject.NAMESPACE_SHARED);
-            String cnb = XMLUtil.findText(cnbEl);
+        projectDependencies()
+                .filter(dep -> XMLUtil.findElement(dep, "compile-dependency", NbModuleProject.NAMESPACE_SHARED) != null) // NOI18N
+                .map(this::dependencyCNB)
+                .forEach(cnb -> {
             ModuleEntry module = ml.getEntry(cnb);
             if (module == null) {
                 Util.err.log(ErrorManager.WARNING, "Warning - could not find dependent module " + cnb + " for " + FileUtil.getFileDisplayName(project.getProjectDirectory()));
-                continue;
+                return ;
             }
             File moduleJar = module.getJarLocation();
             if (cp.length() > 0) {
@@ -632,11 +637,25 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             }
             cp.append(moduleJar.getAbsolutePath());
             cp.append(module.getClassPathExtensions());
-        }
+        });
         appendMyOwnClassPathExtensions(cp);
         return cp.toString();
     }
-    
+
+    private Stream<Element> projectDependencies() {
+        Element data = project.getPrimaryConfigurationData();
+        Element moduleDependencies = XMLUtil.findElement(data,
+            "module-dependencies", NbModuleProject.NAMESPACE_SHARED); // NOI18N
+        assert moduleDependencies != null : "Malformed metadata in " + project;
+        return XMLUtil.findSubElements(moduleDependencies).stream();
+    }
+
+    private String dependencyCNB(Element dependency) {
+        Element cnbEl = XMLUtil.findElement(dependency, "code-name-base", // NOI18N
+            NbModuleProject.NAMESPACE_SHARED);
+        return XMLUtil.findText(cnbEl);
+    }
+
     /**
      * Follows transitive runtime dependencies.
      * @see "issue #70206"

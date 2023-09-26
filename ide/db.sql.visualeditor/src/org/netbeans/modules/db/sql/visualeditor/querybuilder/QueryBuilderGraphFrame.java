@@ -848,7 +848,7 @@ public class QueryBuilderGraphFrame extends JPanel
                 SQLQueryFactory.createTable(tableName, corrName, schemaName);
             JoinTable joinTable=SQLQueryFactory.createJoinTable(tbl);
             
-            List columnNames = new ArrayList();
+            List<String> columnNames = new ArrayList<>();
             columnNames.add("*"); // NOI18N
             
             // Insert the table into the model first, so that column insertions can refer to it
@@ -2039,7 +2039,7 @@ public class QueryBuilderGraphFrame extends JPanel
         public void select(Widget widget, Point localLocation, boolean invertSelection) {
 
             Object object = _scene.findObject(widget);
-            if ((object != null) && (object instanceof AbstractNode)) {
+            if (object instanceof AbstractNode) {
 		AbstractNode an = (AbstractNode)object;
 		_queryBuilder.setActivatedNodes(new Node[] { an });
                 _scene.userSelectionSuggested(Collections.singleton(object), invertSelection);

@@ -68,7 +68,7 @@ import org.openide.util.actions.SystemAction;
 * </p>
 *
 * @author Jan Jancura, Ian Formanek, Jaroslav Tulach
-* @param T the type of bean to be represented
+* @param <T> the type of bean to be represented
 */
 public class BeanNode<T> extends AbstractNode {
     // static ..................................................................................................................
@@ -512,7 +512,7 @@ public class BeanNode<T> extends AbstractNode {
             // Propagate helpID's.
             Object help = propertyDescriptor[i].getValue("helpID"); // NOI18N
 
-            if ((help != null) && (help instanceof String)) {
+            if (help instanceof String) {
                 prop.setValue("helpID", help); // NOI18N
             }
 

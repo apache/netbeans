@@ -516,7 +516,7 @@ abstract class OperationValidator {
             boolean res = false;
             UpdateElementImpl impl = Trampoline.API.impl (uElement);
             assert impl != null;
-            if (impl != null && impl instanceof NativeComponentUpdateElementImpl) {
+            if (impl instanceof NativeComponentUpdateElementImpl) {
                 NativeComponentUpdateElementImpl ni = (NativeComponentUpdateElementImpl) impl;
                 if (ni.getInstallInfo ().getCustomInstaller () != null) {
                     res = containsElement (uElement, unit);
@@ -538,7 +538,7 @@ abstract class OperationValidator {
             boolean res = false;
             UpdateElementImpl impl = Trampoline.API.impl (uElement);
             assert impl != null;
-            if (impl != null && impl instanceof NativeComponentUpdateElementImpl) {
+            if (impl instanceof NativeComponentUpdateElementImpl) {
                 NativeComponentUpdateElementImpl ni = (NativeComponentUpdateElementImpl) impl;
                 res = ni.getNativeItem ().getUpdateItemDeploymentImpl ().getCustomUninstaller () != null;
             }

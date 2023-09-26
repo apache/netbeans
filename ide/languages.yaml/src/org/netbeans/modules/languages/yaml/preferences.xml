@@ -23,4 +23,6 @@
 
 <editor-preferences>
     <entry category="private" name="custom-action-list" value="org.netbeans.modules.languages.yaml.InsertTabAction.createCustomActions" />
+    <entry javaType="java.lang.Boolean" name="enable-indent" xml:space="preserve"><value>true</value></entry>
+    <entry javaType="java.lang.Integer" name="indent-shift-width" xml:space="preserve"><value>2</value></entry>
 </editor-preferences>

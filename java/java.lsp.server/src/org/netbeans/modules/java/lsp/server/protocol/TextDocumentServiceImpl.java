@@ -622,7 +622,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             signatureInformation.setParameters(parameters);
             if (activeSignature.get() < 0 && signature.isActive()) {
                 activeSignature.set(signatures.size());
-                activeParameter.set(signatureInformation.getActiveParameter());
+                if (signatureInformation.getActiveParameter() != null) {
+                    activeParameter.set(signatureInformation.getActiveParameter());
+                }
             }
             signatures.add(signatureInformation);
         });

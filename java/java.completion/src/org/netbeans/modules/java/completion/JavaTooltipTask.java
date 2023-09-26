@@ -38,6 +38,8 @@ import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
+import java.util.Collections;
+import javax.lang.model.element.AnnotationValue;
 
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.source.*;
@@ -219,6 +221,48 @@ public final class JavaTooltipTask extends BaseTask {
                         path = path.getParentPath();
                         pos = (int) sourcePositions.getStartPosition(root, path.getLeaf());
                     }
+                    String text = controller.getText().substring(pos, offset);
+                    int idx = text.indexOf('('); //NOI18N
+                    anchorOffset = idx < 0 ? pos : pos + controller.getSnapshot().getOriginalOffset(idx);
+                    idx = text.lastIndexOf(','); //NOI18N
+                    toolTipOffset = idx < 0 ? pos : pos + controller.getSnapshot().getOriginalOffset(idx);
+                    if (toolTipOffset < anchorOffset) {
+                        toolTipOffset = anchorOffset;
+                    }
+                    return;
+                }
+            } else if (tree.getKind() == Tree.Kind.ANNOTATION) {
+                AnnotationTree at = (AnnotationTree) tree;
+                controller.toPhase(JavaSource.Phase.RESOLVED);
+                final Trees trees = controller.getTrees();
+                final Element element = trees.getElement(path);
+                if (element != null && element.getKind() == ANNOTATION_TYPE) {
+                    final Element activeElement = lastTree != null && lastTree.getKind() == Tree.Kind.ASSIGNMENT ? trees.getElement(new TreePath(path, ((AssignmentTree) lastTree).getVariable())) : null;
+                    TypeUtilities tu = controller.getTypeUtilities();
+                    List<List<String>> data = new ArrayList<>();
+                    List<String> signatures = new ArrayList<>();
+                    for (Element e : element.getEnclosedElements()) {
+                        if (e.getKind() == METHOD && e.asType().getKind() == TypeKind.EXECUTABLE) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(tu.getTypeName(((ExecutableType) e.asType()).getReturnType())).append(' '); //NOI18N
+                            sb.append(e.getSimpleName()).append("()"); //NOI18N
+                            AnnotationValue defaultValue = ((ExecutableElement) e).getDefaultValue();
+                            if (defaultValue != null) {
+                                sb.append(" default ").append(defaultValue.toString());
+                            }
+                            if (e == activeElement) {
+                                activeSignatureIndex = signatures.size();
+                            }
+                            data.add(Collections.singletonList(sb.toString()));
+                            signatures.add(sb.toString());
+                        }
+                    }
+                    toolTipData = data.isEmpty() ? null : data;
+                    toolTipSignatures = signatures.isEmpty() ? null : signatures;
+                    toolTipIndex = -1;
+                    CompilationUnitTree root = env.getRoot();
+                    SourcePositions sourcePositions = env.getSourcePositions();
+                    int pos = (int) sourcePositions.getEndPosition(root, at.getAnnotationType());
                     String text = controller.getText().substring(pos, offset);
                     int idx = text.indexOf('('); //NOI18N
                     anchorOffset = idx < 0 ? pos : pos + controller.getSnapshot().getOriginalOffset(idx);

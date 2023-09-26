@@ -790,9 +790,70 @@ public final class Utilities {
         values.put(0x290,"MOUSE_WHEEL_UP");
         values.put(0x291,"MOUSE_WHEEL_DOWN");
 
+        for (int button = 4; button < 10; button++) {
+            String name = "MOUSE_BUTTON" + button; // NOI18N
+            int code = 0x292 + (button - 1);
+            names.put(name, code);
+            values.put(code, name);
+        }
+
         NamesAndValues nav = new NamesAndValues(values, names);
         namesAndValues = new SoftReference<NamesAndValues>(nav);
         return nav;
+    }
+
+    /**
+     * Check whether the provided keycode is within the range reserved for mouse
+     * event pseudo-keycodes. Note that not all keycodes in the range may be
+     * mapped.
+     *
+     * @param keycode keycode to check
+     * @return true if in mouse range
+     * @since 9.31
+     */
+    public static boolean isMouseKeyCode(int keycode) {
+        return keycode >= 0x290 && keycode <= 0x29F;
+    }
+
+    /**
+     * Get the pseudo-keycode used for mouse wheel up events. May return
+     * {@link KeyEvent#VK_UNDEFINED} if not available.
+     *
+     * @return mouse wheel up keycode if defined
+     * @since 9.31
+     */
+    public static int mouseWheelUpKeyCode() {
+        return 0x290;
+    }
+
+    /**
+     * Get the pseudo-keycode used for mouse wheel up events. May return
+     * {@link KeyEvent#VK_UNDEFINED} if not available.
+     *
+     * @return mouse wheel down keycode if defined
+     * @since 9.31
+     */
+    public static int mouseWheelDownKeyCode() {
+        return 0x291;
+    }
+
+    /**
+     * Get the pseudo-keycode used for the provided mouse button. Returns
+     * {@link KeyEvent#VK_UNDEFINED} if not available.
+     * <p>
+     * Implementation note : only extended mouse buttons in the range BUTTON4 to
+     * BUTTON9 are currently mapped to keycodes.
+     *
+     * @param button mouse button
+     * @return keycode if defined
+     * @since 9.31
+     */
+    public static int mouseButtonKeyCode(int button) {
+        if (button >= 4 && button < 10) {
+            return 0x292 + (button - 1);
+        } else {
+            return KeyEvent.VK_UNDEFINED;
+        }
     }
 
     /** Converts a Swing key stroke descriptor to a familiar Emacs-like name.

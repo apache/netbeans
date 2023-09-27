@@ -45,12 +45,6 @@ DEST="../../release/lib/deployed/jdk16/mac"
 
 UNILIB="$DEST/libprofilerinterface.jnilib"
 
-if [ ! -f "$UNILIB" ]; then
-  echo "Error: This script expects Universal Library $UNILIB to exist."
-  exit 1
-fi
-
-
 cc $CPPFLAGS ../src-jdk15/config.c -o ../build/config && ../build/config > ../build/config.h
 
 echo "Content of config.h :"

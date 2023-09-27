@@ -20,7 +20,6 @@ package org.netbeans.modules.java.hints.jdk;
 
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
-import javax.lang.model.SourceVersion;
 import org.testng.annotations.Test;
 
 /**

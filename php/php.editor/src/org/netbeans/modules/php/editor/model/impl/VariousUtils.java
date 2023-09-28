@@ -132,7 +132,6 @@ public final class VariousUtils {
     private static final String VAR_TYPE_COMMENT_PREFIX = "@var"; //NOI18N
     private static final String SPACES_AND_TYPE_DELIMITERS = "[| ]*"; //NOI18N
     private static final Pattern SEMI_TYPE_NAME_PATTERN = Pattern.compile("[" + PRE_OPERATION_TYPE_DELIMITER + POST_OPERATION_TYPE_DELIMITER + "]"); // NOI18N
-    private static final Pattern WS_PATTERN = Pattern.compile("\\s+"); // NOI18N
     private static final Pattern SEMICOLON_PATTERN = Pattern.compile("\\;"); // NOI18N
     private static final Pattern DOT_PATTERN = Pattern.compile("\\."); // NOI18N
     private static final Pattern TYPE_SEPARATOR_PATTERN = Pattern.compile("\\|"); // NOI18N
@@ -341,8 +340,8 @@ public final class VariousUtils {
         return getDeprecatedDescriptionFromPHPDoc(root, node) != null;
     }
 
-    public static Map<String, List<Pair<QualifiedName, Boolean>>> getParamTypesFromPHPDoc(Program root, ASTNode node) {
-        Map<String, List<Pair<QualifiedName, Boolean>>> retval = new HashMap<>();
+    public static Map<String, Pair<String, List<Pair<QualifiedName, Boolean>>>> getParamTypesFromPHPDoc(Program root, ASTNode node) {
+        Map<String, Pair<String, List<Pair<QualifiedName, Boolean>>>> retval = new HashMap<>();
         Comment comment = Utils.getCommentForNode(root, node);
 
         if (comment instanceof PHPDocBlock) {
@@ -350,7 +349,7 @@ public final class VariousUtils {
 
             for (PHPDocTag tag : phpDoc.getTags()) {
                 if (tag.getKind().equals(PHPDocTag.Type.PARAM)) {
-                    List<Pair<QualifiedName, Boolean>> types = new ArrayList<>();
+                    List<Pair<QualifiedName, Boolean>> allTypes = new ArrayList<>();
                     PHPDocVarTypeTag paramTag = (PHPDocVarTypeTag) tag;
                     for (PHPDocTypeNode type : paramTag.getTypes()) {
                         String typeName = type.getValue();
@@ -358,8 +357,15 @@ public final class VariousUtils {
                         if (isNullableType) {
                             typeName = typeName.substring(1);
                         }
-                        types.add(Pair.of(QualifiedName.create(typeName), isNullableType));
+                        allTypes.add(Pair.of(QualifiedName.create(typeName), isNullableType));
                     }
+                    String value = paramTag.getValue().trim(); // e.g. (X&Y)|Z $variable
+                    String[] split = CodeUtils.WHITE_SPACES_PATTERN.split(value);
+                    String rawType = ""; // NOI18N
+                    if (split.length > 0) {
+                        rawType = split[0];
+                    }
+                    Pair<String, List<Pair<QualifiedName, Boolean>>> types = Pair.of(rawType, allTypes);
                     retval.put(paramTag.getVariable().getValue(), types);
                 }
             }
@@ -375,7 +381,7 @@ public final class VariousUtils {
 
             for (PHPDocTag tag : phpDoc.getTags()) {
                 if (tag.getKind().equals(tagType)) {
-                    String[] parts = WS_PATTERN.split(tag.getValue().trim(), 2);
+                    String[] parts = CodeUtils.WHITE_SPACES_PATTERN.split(tag.getValue().trim(), 2);
 
                     if (parts.length > 0) {
                         String type = SEMICOLON_PATTERN.split(parts[0], 2)[0];
@@ -391,7 +397,7 @@ public final class VariousUtils {
             // private $field;
             PHPVarComment varComment = (PHPVarComment) comment;
             PHPDocVarTypeTag tag = varComment.getVariable();
-            String[] parts = WS_PATTERN.split(tag.getValue().trim(), 3); // 3: @var Type $field
+            String[] parts = CodeUtils.WHITE_SPACES_PATTERN.split(tag.getValue().trim(), 3); // 3: @var Type $field
             if (parts.length > 1) {
                 return parts[1];
             }

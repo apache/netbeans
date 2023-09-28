@@ -66,6 +66,10 @@ public class NavigatorDeprecatedTest extends PhpNavigatorTestBase {
         performTest("structure/php82/deprecatedDnfReturnTypes_01");
     }
 
+    public void testDeprecatedTypesForDNFParameterTypes_01() throws Exception {
+        performTest("structure/php82/deprecatedDnfParameterTypes_01");
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

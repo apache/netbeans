@@ -37,6 +37,10 @@ public interface ParameterElement {
     int getModifier();
     Set<TypeResolver> getTypes();
     @CheckForNull
+    String getDeclaredType();
+    @CheckForNull
+    String getPhpdocType();
+    @CheckForNull
     String getDefaultValue();
     /**
      * @return false if the type information is taken from PHPDoc

@@ -605,6 +605,8 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             variableToUseName.getName(),
                             param.getDefaultValue(),
                             param.getOffset(),
+                            param.getDeclaredType(),
+                            param.getPhpdocType(),
                             param.getTypes(),
                             param.isMandatory(),
                             param.hasDeclaredType(),

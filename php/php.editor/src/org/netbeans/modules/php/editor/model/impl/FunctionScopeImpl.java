@@ -491,7 +491,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
     @NonNull
     @Override
     public List<? extends ParameterElement> getParameters() {
-        return paremeters;
+        return Collections.unmodifiableList(paremeters);
     }
 
     @Override

@@ -120,7 +120,7 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
     private static List<ParameterElement> fromParameterNames(String... names) {
         List<ParameterElement> retval = new ArrayList<>();
         for (String parameterName : names) {
-            retval.add(new ParameterElementImpl(parameterName, null, 0, Collections.<TypeResolver>emptySet(), true, true, false, false, false, 0, false));
+            retval.add(new ParameterElementImpl(parameterName, null, 0, null, null, Collections.<TypeResolver>emptySet(), true, true, false, false, false, 0, false));
         }
         return retval;
     }

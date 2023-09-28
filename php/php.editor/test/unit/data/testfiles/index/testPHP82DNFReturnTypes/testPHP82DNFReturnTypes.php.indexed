@@ -3,7 +3,7 @@
 Document 0
 Searchable Keys:
   base : arrowfunctiondeclaration:1308;ArrowFunctionDeclaration:1308;1308;;(X&Y)|(Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y)|(Y&Z)|(X&Z);
-  base : lambdafunctiondeclaration:1259;LambdaFunctionDeclaration:1259;1259;$test:int:1::1:0:0:0:0:0;(X&Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y&Z)|(X&Z);
+  base : lambdafunctiondeclaration:1259;LambdaFunctionDeclaration:1259;1259;$test:int:1::1:0:0:0:0:0:int:;(X&Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y&Z)|(X&Z);
   base : returntype;returnType;857;;(\X&\Y)|(\X&\Z);;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y)|(X&Z);
   top : $arrow
   top : $closure

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
@@ -412,7 +413,7 @@ public final class NavigatorScanner {
             }
             formatter.appendText("(");   //NOI18N
             List<? extends ParameterElement> parameters = function.getParameters();
-            if (parameters != null && parameters.size() > 0) {
+            if (parameters != null && !parameters.isEmpty()) {
                 processParameters(function, formatter, parameters);
             }
             formatter.appendText(")");   //NOI18N
@@ -437,26 +438,12 @@ public final class NavigatorScanner {
                     if (!first) {
                         formatter.appendText(", "); //NOI18N
                     }
-                    if (!types.isEmpty()) {
-                        formatter.appendHtml(FONT_GRAY_COLOR);
-                        int i = 0;
-                        for (TypeResolver typeResolver : types) {
-                            i++;
-                            if (typeResolver.isResolved()) {
-                                QualifiedName typeName = typeResolver.getTypeName(false);
-                                if (typeName != null) {
-                                    if (i > 1) {
-                                        formatter.appendText(Type.getTypeSeparator(formalParameter.isIntersectionType()));
-                                    }
-                                    if (typeResolver.isNullableType()) {
-                                        formatter.appendText(CodeUtils.NULLABLE_TYPE_PREFIX);
-                                    }
-                                    processTypeName(typeName.toString(), function, formatter);
-                                }
-                            }
-                        }
-                        formatter.appendText(" ");   //NOI18N
-                        formatter.appendHtml(CLOSE_FONT);
+                    if (formalParameter.hasDeclaredType()) {
+                        processDeclaredType(function, formatter, formalParameter.getDeclaredType(), false);
+                    } else if (formalParameter.getPhpdocType() != null) {
+                        processDeclaredType(function, formatter, formalParameter.getPhpdocType(), false);
+                    } else {
+                        assert types.isEmpty() : function.getName() + " has " + types.size() + " parameter(s)"; // NOI18N
                     }
                     formatter.appendText(name);
                     first = false;
@@ -486,11 +473,22 @@ public final class NavigatorScanner {
             formatter.appendHtml(CLOSE_FONT);
         }
 
-        private void processReturnTypes(FunctionScope function, HtmlFormatter formatter, String declaredReturnType) {
-            formatter.appendHtml(FONT_GRAY_COLOR + ":"); //NOI18N
-            StringBuilder sb = new StringBuilder(declaredReturnType.length());
-            for (int i = 0; i < declaredReturnType.length(); i++) {
-                char c = declaredReturnType.charAt(i);
+        private void processReturnTypes(FunctionScope function, HtmlFormatter formatter, @NullAllowed String declaredReturnType) {
+            processDeclaredType(function, formatter, declaredReturnType, true);
+        }
+
+        protected void processDeclaredType(ModelElement modelElement, HtmlFormatter formatter, @NullAllowed String declaredType, boolean isReturn) {
+            if (declaredType == null) {
+                return;
+            }
+            if (isReturn) {
+                formatter.appendHtml(FONT_GRAY_COLOR + ":"); // NOI18N
+            } else {
+                formatter.appendHtml(FONT_GRAY_COLOR);
+            }
+            StringBuilder sb = new StringBuilder(declaredType.length());
+            for (int i = 0; i < declaredType.length(); i++) {
+                char c = declaredType.charAt(i);
                 switch (c) {
                     case '(': // no break
                     case '?':
@@ -499,7 +497,7 @@ public final class NavigatorScanner {
                     case ')': // no break
                     case '|': // no break
                     case '&':
-                        processTypeName(sb, function, formatter);
+                        processTypeName(sb, modelElement, formatter);
                         formatter.appendText(String.valueOf(c));
                         break;
                     default:
@@ -508,17 +506,20 @@ public final class NavigatorScanner {
                 }
             }
             if (sb.length() > 0) {
-                processTypeName(sb, function, formatter);
+                processTypeName(sb, modelElement, formatter);
+            }
+            if (!isReturn) {
+                formatter.appendText(" "); // NOI18N
             }
             formatter.appendHtml(CLOSE_FONT);
         }
     }
 
-    private void processTypeName(StringBuilder sb, FunctionScope function, HtmlFormatter formatter) {
+    private void processTypeName(StringBuilder sb, ModelElement modelElement, HtmlFormatter formatter) {
         String type = sb.toString();
         if (sb.length() > 0) {
             sb.delete(0, sb.length());
-            processTypeName(type, function, formatter);
+            processTypeName(type, modelElement, formatter);
         }
     }
 

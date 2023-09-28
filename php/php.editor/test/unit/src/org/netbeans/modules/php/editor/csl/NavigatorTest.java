@@ -136,4 +136,8 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/php82/dnfReturnTypes");
     }
 
+    public void testDNFParameterTypes() throws Exception {
+        performTest("structure/php82/dnfParameterTypes");
+    }
+
 }

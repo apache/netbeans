@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
@@ -87,6 +88,9 @@ public final class CodeUtils {
     public static final String STATIC_METHOD_TYPE_PREFIX = "@static.mtd:"; // NOI18N
     public static final String NULLABLE_TYPE_PREFIX = "?"; // NOI18N
     public static final String ELLIPSIS = "..."; // NOI18N
+
+    public static final Pattern WHITE_SPACES_PATTERN = Pattern.compile("\\s+"); // NOI18N
+
     private static final Logger LOGGER = Logger.getLogger(CodeUtils.class.getName());
 
     private CodeUtils() {

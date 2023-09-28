@@ -251,12 +251,15 @@ jobs:
         run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: |
+          annotate_only: true
+          detailed_summary: true
+          report_paths: |
             ./*/*/build/test/*/results/TEST-*.xml
             ./nbbuild/build/test/commit-validation/results/TEST-*.xml
+
 
   # commit related checks - some steps run even when the build is dissabled
   paperwork:
@@ -743,10 +746,12 @@ jobs:
         run: ant $OPTS -f ide/xsl test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   build-tools:
@@ -849,10 +854,12 @@ jobs:
         run: ant $OPTS -f extide/o.apache.tools.ant.module test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   platform-modules-test1:
@@ -1049,10 +1056,12 @@ jobs:
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/netbinox test -Dtest.config=stableBTD
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   platform-modules-test2:
@@ -1199,12 +1208,14 @@ jobs:
         
       - name: platform/o.n.bootstrap on 11
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.bootstrap test
- 
+
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   harness-modules-test:
@@ -1269,10 +1280,12 @@ jobs:
         run: ant $OPTS -f nb/welcome test
         
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   java-modules-test:
@@ -1457,10 +1470,12 @@ jobs:
         run: ant $OPTS -f java/javadoc test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   apisupport-modules-test:
@@ -1508,10 +1523,12 @@ jobs:
         run: ant $OPTS -f apisupport/timers test -Dtest.config=stable
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   java-hints-test:
@@ -1559,10 +1576,12 @@ jobs:
         run: ant $OPTS -f java/spi.java.hints test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   java-debugger-test:
@@ -1619,10 +1638,12 @@ jobs:
 #        run: ant $OPTS -f java/debugger.jpda.ui test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   profiler-test:
@@ -1661,10 +1682,12 @@ jobs:
         run: ant $OPTS -f profiler/profiler.oql test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   webcommon-test:
@@ -1797,10 +1820,12 @@ jobs:
         run: ant $OPTS -f webcommon/web.inspect test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   javafx-test:
@@ -1839,10 +1864,12 @@ jobs:
 #        run: ant $OPTS -f javafx/javafx2.project test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   groovy-test:
@@ -1895,10 +1922,12 @@ jobs:
 #        run: ant $OPTS -f groovy/groovy.kit test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   rust-test:
@@ -1942,10 +1971,12 @@ jobs:
         run: ant $OPTS -f rust/rust.options test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   enterprise-test:
@@ -2197,10 +2228,12 @@ jobs:
         run: .github/retry.sh ant $OPTS -f enterprise/micronaut test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   versioning-test:
@@ -2262,10 +2295,12 @@ jobs:
           ant $OPTS -f ide/versioning test-qa-functional
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   mysql-db-test:
@@ -2319,10 +2354,12 @@ jobs:
         run: .github/retry.sh ant $OPTS $OPTS_TEST -f ide/db.mysql test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   php:
@@ -2461,10 +2498,12 @@ jobs:
         run: ant $OPTS -f php/spellchecker.bindings.php test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   lsp-test:
@@ -2502,10 +2541,12 @@ jobs:
         run: .github/retry.sh ant $OPTS -f java/java.lsp.server test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   graalvm-test:
@@ -2566,10 +2607,12 @@ jobs:
         run: .github/retry.sh ant $OPTS -f java/debugger.jpda.truffle test
 
       - name: Create Test Summary
-        uses: test-summary/action@v2
+        uses: mikepenz/action-junit-report@v4
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
+          annotate_only: true
+          detailed_summary: true
+          report_paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
   vscode-extension-test:

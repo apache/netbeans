@@ -481,7 +481,7 @@ public final class NavigatorScanner {
             if (declaredType == null) {
                 return;
             }
-            if (isReturn) {
+            if (isReturn || modelElement instanceof FieldElement) {
                 formatter.appendHtml(FONT_GRAY_COLOR + ":"); // NOI18N
             } else {
                 formatter.appendHtml(FONT_GRAY_COLOR);
@@ -508,7 +508,7 @@ public final class NavigatorScanner {
             if (sb.length() > 0) {
                 processTypeName(sb, modelElement, formatter);
             }
-            if (!isReturn) {
+            if (!isReturn && modelElement instanceof FunctionScope) { // parameter
                 formatter.appendText(" "); // NOI18N
             }
             formatter.appendHtml(CLOSE_FONT);
@@ -606,19 +606,8 @@ public final class NavigatorScanner {
             if (field.isDeprecated()) {
                 formatter.deprecated(false);
             }
-            Collection<? extends String> types = field.getDefaultTypeNames();
-            boolean isIntersectionType = field.getDefaultType() != null && field.getDefaultType().contains(Type.SEPARATOR_INTERSECTION);
-            if (!types.isEmpty()) {
-                formatter.appendHtml(FONT_GRAY_COLOR + ":"); //NOI18N
-                int i = 0;
-                for (String type : types) {
-                    i++;
-                    if (i > 1) {
-                        formatter.appendText(Type.getTypeSeparator(isIntersectionType));
-                    }
-                    processTypeName(type, field, formatter);
-                }
-                formatter.appendHtml(CLOSE_FONT);
+            if (StringUtils.hasText(field.getDefaultType())) {
+                processDeclaredType(field, formatter, field.getDefaultType(), false);
             }
             return formatter.getText();
         }

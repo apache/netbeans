@@ -21,6 +21,7 @@ package org.netbeans.modules.php.editor.model.impl;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.php.api.util.StringUtils;
 

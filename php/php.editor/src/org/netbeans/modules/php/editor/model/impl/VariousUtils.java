@@ -2040,6 +2040,20 @@ public final class VariousUtils {
         return typeName != null && typeName.contains(PRE_OPERATION_TYPE_DELIMITER);
     }
 
+    public static List<String> getAllTypeNames(String declaredTypes) {
+        if (!StringUtils.hasText(declaredTypes)) {
+            return Collections.emptyList();
+        }
+        List<String> typeNames = new ArrayList<>();
+        // e.g. (X&Y)|Z
+        for (String typeName : CodeUtils.SPLIT_TYPES_PATTERN.split(declaredTypes.trim())) {
+            if (!typeName.isEmpty() && !VariousUtils.isSemiType(typeName)) {
+                typeNames.add(typeName);
+            }
+        }
+        return typeNames;
+    }
+
     //~ inner class
     private static class CloneExpressionInfo {
 

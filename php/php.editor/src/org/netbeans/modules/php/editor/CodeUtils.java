@@ -90,6 +90,7 @@ public final class CodeUtils {
     public static final String ELLIPSIS = "..."; // NOI18N
 
     public static final Pattern WHITE_SPACES_PATTERN = Pattern.compile("\\s+"); // NOI18N
+    public static final Pattern SPLIT_TYPES_PATTERN = Pattern.compile("[()|&]"); // NOI18N
 
     private static final Logger LOGGER = Logger.getLogger(CodeUtils.class.getName());
 

@@ -252,16 +252,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
 
     @Override
     public Collection<? extends String> getDefaultTypeNames() {
-        Collection<String> retval = Collections.<String>emptyList();
-        if (defaultType != null && defaultType.length() > 0) {
-            retval = new ArrayList<>();
-            for (String typeName : defaultType.split("\\&|\\|")) { //NOI18N
-                if (!VariousUtils.isSemiType(typeName)) {
-                    retval.add(typeName);
-                }
-            }
-        }
-        return retval;
+        return VariousUtils.getAllTypeNames(defaultType);
     }
 
     @CheckForNull

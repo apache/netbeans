@@ -36,9 +36,8 @@
 #  ..meaning we build 32-bit binaries on 64-bit hosts.
 #
 #  The result of the build is file 'profiler-external-binaries-ASF.zip'
-#  which can be downloaded from the GitHub Actions UI and then uploaded
-#  to https://netbeans.osuosl.org/binaries/ so as to be used up by the
-#  Ant build scripts for the NetBeans distribution.
+#  which can be downloaded from the GitHub Actions UI and prepared for release
+#  to be used by the Ant build scripts for the NetBeans distribution.
 #
 #  Historically there has been native builds made of this code for other
 #  platforms, e.g Solaris SPARC, HP-UX and so on. We no longer care about
@@ -73,75 +72,112 @@ on:
 
 
 jobs:
-  build-linux:
+  
+  source:
+
+    name: Build source zip
 
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1
-    #   Checkout source code from repository
-    #
-    - name: Checkout source code
-      uses: actions/checkout@v2
-      with:
-        persist-credentials: false
-    #
-    # Step 2
-    #   Ant build NetBeans lib.profiler module. The sole reason for doing this - in the
-    #   context of the native binaries for the Profiler - is to have JNI header files
-    #   generated which are needed in step 3.
-    #
-    - name: Generate JNI header files
-      run: |
-         export JDK_HOME=${JAVA_HOME_8_X64}
-         echo "Building NbBuild bootstrap (needed for next step)"
-         ant bootstrap
-         echo "Building lib.profiler module"
-         cd profiler/lib.profiler && ant compile
-    #
-    # Step 3
-    #   Build the native binary from C source code
-    #
-    - name: Build native lib
-      run: |
-         export JDK_HOME=${JAVA_HOME_8_X64}
-         #
-         #
-         echo "Building 64-bit binary"
-         rm -f ../../release/lib/deployed/jdk16/linux-amd64/*.*
-         bash -e -x ./buildnative-linux64.sh
-         ls -l -R ../../release/lib/deployed/jdk16/linux-amd64
-         #
-         #
-         echo "Building 32-bit binary"
-         # Since we are on 64-bit system it means we do not by default have support
-         # for creating 32-bit binaries, however this support comes if we install
-         # the 'gcc-multilib' package for GNU C/C++.
-         sudo apt-get update
-         sudo apt-get install gcc-multilib
-         rm -f ../../release/lib/deployed/jdk16/linux/*.*
-         bash -e -x ./buildnative-linux.sh
-         ls -l -R ../../release/lib/deployed/jdk16/linux
-         #
-         #
-         echo "done"
-      working-directory: profiler/lib.profiler/native/scripts
-    #
-    # Step 4
-    #   Upload interim build artifacts to GitHub
-    #
-    - name: Upload artifact Linux 64 bit
-      uses: actions/upload-artifact@v2
-      with:
-        name: linux-amd64
-        path: profiler/lib.profiler/release/lib/deployed/jdk16/linux-amd64/
-        if-no-files-found: error
-    - name: Upload artifact Linux 32 bit
-      uses: actions/upload-artifact@v2
-      with:
-        name: linux
-        path: profiler/lib.profiler/release/lib/deployed/jdk16/linux/
-        if-no-files-found: error
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          submodules: false
+
+      - name: Caching dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.hgexternalcache
+          key: profiler-${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
+          restore-keys: profiler-${{ runner.os }}-
+
+      #   Ant build NetBeans lib.profiler module. The sole reason for doing this - in the
+      #   context of the native binaries for the Profiler - is to have JNI header files
+      - name: Generate JNI header files
+        run: |
+          export JDK_HOME=${JAVA_HOME_8_X64} 
+          echo "Building NbBuild bootstrap (needed for next step)"
+          ant bootstrap
+          echo "Building lib.profiler module"
+          cd profiler/lib.profiler && ant compile
+
+      - name: Generate source bundle
+        run: |
+          SOURCES="profiler/lib.profiler/build/sources"
+          mkdir -p ${SOURCES}/profiler/lib.profiler
+          cp -r profiler/lib.profiler/native/ ${SOURCES}/profiler/lib.profiler/
+          find profiler/lib.profiler/release/lib/deployed -type d -exec mkdir -p "${SOURCES}/{}" \; -exec touch "${SOURCES}/{}/PLACEHOLDER" \;
+          cp LICENSE ${SOURCES}/LICENSE
+          cp NOTICE ${SOURCES}/NOTICE
+          ls -l -R ${SOURCES}
+      - name: Upload native sources 
+        uses: actions/upload-artifact@v3
+        with:
+          name: profiler-external-sources-ASF
+          path: profiler/lib.profiler/build/sources/
+          if-no-files-found: error
+
+
+  build-linux:
+
+    runs-on: ubuntu-latest
+    
+    needs: source
+    
+    steps:
+
+      - name: Download sources
+        uses: actions/download-artifact@v3
+        with:
+          name: profiler-external-sources-ASF
+        
+      #
+      # Step 3
+      #   Build the native binary from C source code
+      #
+      - name: Build native lib
+        run: |
+           export JDK_HOME=${JAVA_HOME_8_X64}
+           #
+           #
+           echo "Building 64-bit binary"
+           rm -f ../../release/lib/deployed/jdk16/linux-amd64/*
+           bash -e -x ./buildnative-linux64.sh
+           ls -l -R ../../release/lib/deployed/jdk16/linux-amd64
+           #
+           #
+           echo "Building 32-bit binary"
+           # Since we are on 64-bit system it means we do not by default have support
+           # for creating 32-bit binaries, however this support comes if we install
+           # the 'gcc-multilib' package for GNU C/C++.
+           sudo apt-get update
+           sudo apt-get install gcc-multilib
+           rm -f ../../release/lib/deployed/jdk16/linux/*
+           bash -e -x ./buildnative-linux.sh
+           ls -l -R ../../release/lib/deployed/jdk16/linux
+           #
+           #
+           echo "done"
+        working-directory: profiler/lib.profiler/native/scripts
+      #
+      # Step 4
+      #   Upload interim build artifacts to GitHub
+      #
+      - name: Upload artifact Linux 64 bit
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-amd64
+          path: profiler/lib.profiler/release/lib/deployed/jdk16/linux-amd64/
+          if-no-files-found: error
+      - name: Upload artifact Linux 32 bit
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux
+          path: profiler/lib.profiler/release/lib/deployed/jdk16/linux/
+          if-no-files-found: error
 
 
 
@@ -150,141 +186,113 @@ jobs:
 
     runs-on: windows-latest
 
+    needs: source
+    
     steps:
-    # Step 1
-    #   Checkout source code from repository
-    #
-    - name: Checkout source code
-      uses: actions/checkout@v2
-      with:
-        persist-credentials: false
-    #
-    # Step 2
-    #   Ant build NetBeans lib.profiler module. The sole reason for doing this - in the
-    #   context of the native binaries for the Profiler - is to have JNI header files
-    #   generated which are needed in step 3.
-    #
-    - name: Generate JNI header files
-      run: |
-         set JDK_HOME=%JAVA_HOME_8_X64%
-         echo "Building NbBuild bootstrap (needed for next step)"
-         ant bootstrap
-         echo "Building lib.profiler module"
-         cd profiler/lib.profiler && ant compile
-      shell: cmd
-    #
-    # Step 3
-    #   Build the native binary from C source code
-    #
-    #   Use Windows 10 SDK 10.0.20348.0 since build fails with Windows 11 SDK 10.0.22000.0
-    #   https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-170#vcvarsall-syntax
-    #   https://bugs.python.org/issue45220
-    #
-    - name: Build native lib (64-bit)
-      run: |
-         echo on
-         set JDK_HOME=%JAVA_HOME_8_X64%
-         echo "Building 64-bit binary"
-         set OUTPUTDIR=../../release/lib/deployed/jdk16/windows-amd64
-         del /q /s "%OUTPUTDIR%"
-         rem  set up a Visual Studio command prompt for 64-bit development
-         call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" 10.0.20348.0
-         rem
-         rem
-         call buildnative-windows64-16.bat
-         if exist "%OUTPUTDIR%\profilerinterface.lib" del "%OUTPUTDIR%\profilerinterface.lib"
-         if exist "%OUTPUTDIR%\profilerinterface.exp" del "%OUTPUTDIR%\profilerinterface.exp"
-         ls -l -R "%OUTPUTDIR%"
-         echo "done"
-      shell: cmd
-      working-directory: profiler/lib.profiler/native/scripts
-    - name: Build native lib (32-bit)
-      run: |
-         echo on
-         set JDK_HOME=%JAVA_HOME_8_X64%
-         echo "Building 32-bit binary"
-         set OUTPUTDIR=../../release/lib/deployed/jdk16/windows
-         del /q /s "%OUTPUTDIR%"
-         rem   set up a Visual Studio command prompt for 32-bit development
-         call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat" 10.0.20348.0
-         rem
-         rem
-         call buildnative-windows-16.bat
-         if exist "%OUTPUTDIR%\profilerinterface.lib" del "%OUTPUTDIR%\profilerinterface.lib"
-         if exist "%OUTPUTDIR%\profilerinterface.exp" del "%OUTPUTDIR%\profilerinterface.exp"
-         ls -l -R "%OUTPUTDIR%"
-         echo "done"
-      shell: cmd
-      working-directory: profiler/lib.profiler/native/scripts
-    #
-    # Step 4
-    #   Upload interim build artifacts to GitHub
-    #
-    - name: Upload artifact Windows 64 bit
-      uses: actions/upload-artifact@v2
-      with:
-        name: windows-amd64
-        path: profiler/lib.profiler/release/lib/deployed/jdk16/windows-amd64/
-        if-no-files-found: error
-    - name: Upload artifact Windows 32 bit
-      uses: actions/upload-artifact@v2
-      with:
-        name: windows
-        path: profiler/lib.profiler/release/lib/deployed/jdk16/windows/
-        if-no-files-found: error
+
+      - name: Download sources
+        uses: actions/download-artifact@v3
+        with:
+          name: profiler-external-sources-ASF
+
+      #   Build the native binary from C source code
+      #
+      #   Use Windows 10 SDK 10.0.20348.0 since build fails with Windows 11 SDK 10.0.22000.0
+      #   https://docs.microsoft.com/en-us/cpp/build/building-on-the-command-line?view=msvc-170#vcvarsall-syntax
+      #   https://bugs.python.org/issue45220
+      #
+      - name: Build native lib (64-bit)
+        run: |
+           echo on
+           set JDK_HOME=%JAVA_HOME_8_X64%
+           echo "Building 64-bit binary"
+           set OUTPUTDIR=../../release/lib/deployed/jdk16/windows-amd64
+           del /q /s "%OUTPUTDIR%"
+           rem  set up a Visual Studio command prompt for 64-bit development
+           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" 10.0.20348.0
+           rem
+           rem
+           call buildnative-windows64-16.bat
+           if exist "%OUTPUTDIR%\profilerinterface.lib" del "%OUTPUTDIR%\profilerinterface.lib"
+           if exist "%OUTPUTDIR%\profilerinterface.exp" del "%OUTPUTDIR%\profilerinterface.exp"
+           ls -l -R "%OUTPUTDIR%"
+           echo "done"
+        shell: cmd
+        working-directory: profiler/lib.profiler/native/scripts
+      - name: Build native lib (32-bit)
+        run: |
+           echo on
+           set JDK_HOME=%JAVA_HOME_8_X64%
+           echo "Building 32-bit binary"
+           set OUTPUTDIR=../../release/lib/deployed/jdk16/windows
+           del /q /s "%OUTPUTDIR%"
+           rem   set up a Visual Studio command prompt for 32-bit development
+           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars32.bat" 10.0.20348.0
+           rem
+           rem
+           call buildnative-windows-16.bat
+           if exist "%OUTPUTDIR%\profilerinterface.lib" del "%OUTPUTDIR%\profilerinterface.lib"
+           if exist "%OUTPUTDIR%\profilerinterface.exp" del "%OUTPUTDIR%\profilerinterface.exp"
+           ls -l -R "%OUTPUTDIR%"
+           echo "done"
+        shell: cmd
+        working-directory: profiler/lib.profiler/native/scripts
+      #
+      # Step 4
+      #   Upload interim build artifacts to GitHub
+      #
+      - name: Upload artifact Windows 64 bit
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-amd64
+          path: profiler/lib.profiler/release/lib/deployed/jdk16/windows-amd64/
+          if-no-files-found: error
+      - name: Upload artifact Windows 32 bit
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows
+          path: profiler/lib.profiler/release/lib/deployed/jdk16/windows/
+          if-no-files-found: error
 
 
   build-macos:
 
     runs-on: macos-latest
+    
+    needs: source
 
     steps:
-    # Step 1
-    #   Checkout source code from repository
-    #
-    - name: Checkout source code
-      uses: actions/checkout@v2
-      with:
-        persist-credentials: false
-    #
-    # Step 2
-    #   Ant build NetBeans lib.profiler module. The sole reason for doing this - in the
-    #   context of the native binaries for the Profiler - is to have JNI header files
-    #   generated which are needed in step 3.
-    #
-    - name: Generate JNI header files
-      run: |
-         export JDK_HOME=${JAVA_HOME_8_X64}
-         echo "Building NbBuild bootstrap (needed for next step)"
-         ant bootstrap
-         echo "Building lib.profiler module"
-         cd profiler/lib.profiler && ant compile
-    #
-    # Step 3
-    #   Build the native binary from C source code
-    #
-    - name: Build native lib
-      run: |
-         export JDK_HOME=${JAVA_HOME_8_X64}
-         #
-         #
-         echo "Building 64-bit binary"
-         bash -e -x ./buildnative-mac.sh
-         ls -l -R ../../release/lib/deployed/jdk16/mac
-         #
-         #
-         echo "done"
-      working-directory: profiler/lib.profiler/native/scripts
-    #
-    # Step 4
-    #   Upload interim build artifacts to GitHub
-    #
-    - name: Upload artifact MacOS 64 bit
-      uses: actions/upload-artifact@v2
-      with:
-        name: mac
-        path: profiler/lib.profiler/release/lib/deployed/jdk16/mac/
-        if-no-files-found: error
+
+      - name: Download sources
+        uses: actions/download-artifact@v3
+        with:
+          name: profiler-external-sources-ASF
+
+      #   Build the native binary from C source code
+      #
+      - name: Build native lib
+        run: |
+           export JDK_HOME=${JAVA_HOME_8_X64}
+           #
+           #
+           echo "Building macOS binary"
+           rm -f ../../release/lib/deployed/jdk16/mac/*
+           bash -e -x ./buildnative-mac.sh
+           ls -l -R ../../release/lib/deployed/jdk16/mac
+           #
+           #
+           echo "done"
+        working-directory: profiler/lib.profiler/native/scripts
+      #
+      # Step 4
+      #   Upload interim build artifacts to GitHub
+      #
+      - name: Upload artifact MacOS 64 bit
+        uses: actions/upload-artifact@v3
+        with:
+          name: mac
+          path: profiler/lib.profiler/release/lib/deployed/jdk16/mac/
+          if-no-files-found: error
 
 
   build-zip-with-build-artifacts:
@@ -292,7 +300,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # Only run when the platform specific builds are finished
-    needs: [build-linux,build-windows,build-macos]
+    needs: [build-linux, build-windows, build-macos]
 
     steps:
 
@@ -300,12 +308,14 @@ jobs:
       run: mkdir -p myfiles/lib/deployed/jdk16
 
     - name: Download artifacts from predecessor jobs
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         path: myfiles/lib/deployed/jdk16
-
-    - name: Display structure of downloaded files
-      run: ls -l -R
+        
+    - name: Tidy up and display artifacts
+      run: |
+        rm -rf myfiles/lib/deployed/jdk16/*sources*
+        ls -l -R
 
     - name: Create BUILDINFO
       run: |
@@ -326,7 +336,7 @@ jobs:
 
 
     - name: Upload bundle
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: profiler-external-binaries-ASF
         path: myfiles/

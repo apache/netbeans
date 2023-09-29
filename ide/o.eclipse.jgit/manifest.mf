@@ -1,1 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
 OpenIDE-Module: org.eclipse.jgit
+OpenIDE-Module-Localizing-Bundle: org/eclipse/jgit/Bundle.properties
+OpenIDE-Module-Specification-Version: 6.7
+OpenIDE-Module-Java-Dependencies: Java > 11

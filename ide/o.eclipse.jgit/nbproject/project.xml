@@ -46,6 +46,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>com.google.gson</code-name-base>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.apache.commons.codec</code-name-base>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
                     <code-name-base>slf4j.jdk14</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -70,10 +78,87 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>org.eclipse.jgit.annotations</package>
+                <package>org.eclipse.jgit.api</package>
+                <package>org.eclipse.jgit.api.errors</package>
+                <package>org.eclipse.jgit.attributes</package>
+                <package>org.eclipse.jgit.blame</package>
+                <package>org.eclipse.jgit.diff</package>
+                <package>org.eclipse.jgit.dircache</package>
+                <package>org.eclipse.jgit.errors</package>
+                <package>org.eclipse.jgit.events</package>
+                <package>org.eclipse.jgit.fnmatch</package>
+                <package>org.eclipse.jgit.gitrepo</package>
+                <package>org.eclipse.jgit.gitrepo.internal</package>
+                <package>org.eclipse.jgit.gpg.bc</package>
+                <package>org.eclipse.jgit.gpg.bc.internal</package>
+                <package>org.eclipse.jgit.gpg.bc.internal.keys</package>
+                <package>org.eclipse.jgit.hooks</package>
+                <package>org.eclipse.jgit.ignore</package>
+                <package>org.eclipse.jgit.ignore.internal</package>
+                <package>org.eclipse.jgit.internal</package>
+                <package>org.eclipse.jgit.internal.diff</package>
+                <package>org.eclipse.jgit.internal.diffmergetool</package>
+                <package>org.eclipse.jgit.internal.fsck</package>
+                <package>org.eclipse.jgit.internal.revwalk</package>
+                <package>org.eclipse.jgit.internal.storage.commitgraph</package>
+                <package>org.eclipse.jgit.internal.storage.dfs</package>
+                <package>org.eclipse.jgit.internal.storage.file</package>
+                <package>org.eclipse.jgit.internal.storage.io</package>
+                <package>org.eclipse.jgit.internal.storage.memory</package>
+                <package>org.eclipse.jgit.internal.storage.pack</package>
+                <package>org.eclipse.jgit.internal.storage.reftable</package>
+                <package>org.eclipse.jgit.internal.submodule</package>
+                <package>org.eclipse.jgit.internal.transport.connectivity</package>
+                <package>org.eclipse.jgit.internal.transport.http</package>
+                <package>org.eclipse.jgit.internal.transport.parser</package>
+                <package>org.eclipse.jgit.internal.transport.ssh</package>
+                <package>org.eclipse.jgit.internal.transport.ssh.jsch</package>
+                <package>org.eclipse.jgit.internal.util</package>
+                <package>org.eclipse.jgit.lfs</package>
+                <package>org.eclipse.jgit.lfs.errors</package>
+                <package>org.eclipse.jgit.lfs.internal</package>
+                <package>org.eclipse.jgit.lfs.lib</package>
+                <package>org.eclipse.jgit.lib</package>
+                <package>org.eclipse.jgit.lib.internal</package>
+                <package>org.eclipse.jgit.logging</package>
+                <package>org.eclipse.jgit.merge</package>
+                <package>org.eclipse.jgit.nls</package>
+                <package>org.eclipse.jgit.notes</package>
+                <package>org.eclipse.jgit.patch</package>
+                <package>org.eclipse.jgit.revplot</package>
+                <package>org.eclipse.jgit.revwalk</package>
+                <package>org.eclipse.jgit.revwalk.filter</package>
+                <package>org.eclipse.jgit.storage.file</package>
+                <package>org.eclipse.jgit.storage.pack</package>
+                <package>org.eclipse.jgit.submodule</package>
+                <package>org.eclipse.jgit.transport</package>
+                <package>org.eclipse.jgit.transport.http</package>
+                <package>org.eclipse.jgit.transport.resolver</package>
+                <package>org.eclipse.jgit.transport.ssh.jsch</package>
+                <package>org.eclipse.jgit.treewalk</package>
+                <package>org.eclipse.jgit.treewalk.filter</package>
+                <package>org.eclipse.jgit.util</package>
+                <package>org.eclipse.jgit.util.io</package>
+                <package>org.eclipse.jgit.util.sha1</package>
+                <package>org.eclipse.jgit.util.time</package>
+            </public-packages>
             <class-path-extension>
-                <runtime-relative-path>org-eclipse-jgit.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit-5.7.0.202003110725-r.jar</binary-origin>
+                <runtime-relative-path>ext/org.eclipse.jgit-6.7.0.202309050840-r.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.jgit-6.7.0.202309050840-r.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/org.eclipse.jgit.gpg.bc-6.7.0.202309050840-r.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.jgit.gpg.bc-6.7.0.202309050840-r.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/org.eclipse.jgit.ssh.jsch-6.7.0.202309050840-r.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.jgit.ssh.jsch-6.7.0.202309050840-r.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/org.eclipse.jgit.lfs-6.7.0.202309050840-r.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.jgit.lfs-6.7.0.202309050840-r.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

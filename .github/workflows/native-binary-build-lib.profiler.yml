@@ -47,10 +47,7 @@
 # ----------------------
 
 
-
-
-name: Profiler native binary build
-
+name: NetBeans Profiler Libraries
 
 
 on:
@@ -69,23 +66,27 @@ on:
   # Allows you to run this workflow manually from the Actions tab in GitHub UI
   workflow_dispatch:
 
-
+# cancel other PR workflow run in the same head-base group if it exists (e.g. during PR syncs)
+# if this is not a PR run (no github.head_ref and github.base_ref defined), use an UID as group
+concurrency: 
+  group: profiler-${{ github.head_ref || github.run_id }}-${{ github.base_ref }}
+  cancel-in-progress: true
 
 jobs:
   
   source:
 
     name: Build source zip
-
     runs-on: ubuntu-latest
 
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
           submodules: false
+          show-progress: false
 
       - name: Caching dependencies
         uses: actions/cache@v3
@@ -123,8 +124,8 @@ jobs:
 
   build-linux:
 
+    name: Build on Linux
     runs-on: ubuntu-latest
-    
     needs: source
     
     steps:
@@ -184,8 +185,8 @@ jobs:
 
   build-windows:
 
+    name: Build on Windows
     runs-on: windows-latest
-
     needs: source
     
     steps:
@@ -257,8 +258,8 @@ jobs:
 
   build-macos:
 
+    name: Build on MacOS
     runs-on: macos-latest
-    
     needs: source
 
     steps:
@@ -297,6 +298,7 @@ jobs:
 
   build-zip-with-build-artifacts:
 
+    name: Package Profiler Libraries
     runs-on: ubuntu-latest
 
     # Only run when the platform specific builds are finished

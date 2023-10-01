@@ -285,6 +285,7 @@ styleSheet
     :
     	ws?
     	( charSet ws? )?
+        ( layerStatement ws? )?
         imports?
         namespaces?
         body?
@@ -329,12 +330,17 @@ imports
 
 importItem
     :
-        IMPORT_SYM ws? resourceIdentifier ((ws? mediaQueryList)=>ws? mediaQueryList)?
+        IMPORT_SYM ws? resourceIdentifier ws? importLayer? ((ws? mediaQueryList)=>ws? mediaQueryList)?
         |
         //multiple imports in one directive
-        {isScssSource()}? IMPORT_SYM ws? resourceIdentifier (ws? COMMA ws? resourceIdentifier)* ((ws? mediaQueryList)=>ws? mediaQueryList)?
+        {isScssSource()}? IMPORT_SYM ws? resourceIdentifier (ws? COMMA ws? resourceIdentifier)* ws? importLayer? ((ws? mediaQueryList)=>ws? mediaQueryList)?
         |
-        {isLessSource()}? IMPORT_SYM ws? (LPAREN less_import_types RPAREN ws?)? resourceIdentifier ((ws? mediaQueryList)=>ws? mediaQueryList)?
+        {isLessSource()}? IMPORT_SYM ws? (LPAREN less_import_types RPAREN ws?)? resourceIdentifier ws? importLayer? ((ws? mediaQueryList)=>ws? mediaQueryList)?
+    ;
+
+importLayer
+    :
+    {tokenNameEquals("layer")}? IDENT (LPAREN ws? layerName ws? RPAREN)?
     ;
 
 sass_use
@@ -523,20 +529,168 @@ supportsDisjunction
         : (key_or ws supportsInParens)
         ;
 
-supportsInParens
+supportsInParens options {backtrack=true;}
 	:
-	LPAREN ws? (supportsCondition | supportsFeature) ws? RPAREN
+	LPAREN ws? supportsCondition ws? RPAREN
+	| supportsFeature
+        | function
+        // this is still lacking ( <any-value>?) - lets see whether this becomes
+        // a problem or not
 	;
-	
+
 supportsFeature
 	:
 	supportsDecl
 	;
-	
+
 supportsDecl
 	:
-	declaration
+	LPAREN ws? declaration ws? RPAREN
 	;
+
+containerAtRule options {backtrack=true;}
+	:
+	(CONTAINER_SYM ws containerCondition ws? LBRACE) => CONTAINER_SYM ws containerCondition ws? LBRACE ws? syncToFollow body? RBRACE
+	| CONTAINER_SYM ws containerName ws containerCondition ws? LBRACE ws? syncToFollow body? RBRACE
+	;
+
+containerCondition
+        :
+        NOT ws containerQueryInParens
+        | containerQueryInParens (ws containerQueryWithOperator)?
+        ;
+
+containerQueryWithOperator
+        :
+        containerQueryConjunction (ws containerQueryConjunction)*
+        | containerQueryDisjunction (ws containerQueryDisjunction)*
+        ;
+
+containerQueryConjunction
+        : (key_and ws containerQueryInParens)
+        ;
+
+containerQueryDisjunction
+        : (key_or ws containerQueryInParens)
+        ;
+
+containerQueryInParens options {backtrack=true;}
+	:
+	LPAREN ws? containerCondition ws? RPAREN
+	| sizeFeature
+	| {tokenNameEquals("style")}? IDENT ws? LPAREN ws? styleQuery ws? RPAREN
+        | function
+        // this is still lacking ( <any-value>?) - lets see whether this becomes
+        // a problem or not
+	;
+
+containerName
+        : IDENT
+        ;
+
+styleQuery:
+        styleCondition
+        | styleFeature
+        ;
+
+styleCondition:
+        NOT ws styleInParens
+        | styleInParens (ws styleConditionWithOperator)
+        ;
+
+styleConditionWithOperator
+        :
+        styleQueryConjunction (ws styleQueryConjunction)*
+        | styleQueryDisjunction (ws styleQueryDisjunction)*
+        ;
+
+styleQueryConjunction
+        : (key_and ws styleInParens)
+        ;
+
+styleQueryDisjunction
+        : (key_or ws styleInParens)
+        ;
+
+styleInParens options {backtrack=true;}
+        :
+        LPAREN ws? styleCondition ws? RPAREN
+        | LPAREN ws? styleFeature ws? RPAREN
+        | function
+        // this is still lacking ( <any-value>?) - lets see whether this becomes
+        // a problem or not
+        ;
+
+sizeFeature options {backtrack=true;}
+        :
+        LPAREN ws? sizeFeatureFixedValue ws? RPAREN
+        | LPAREN ws? sizeFeatureRangeSingle ws? RPAREN
+        | LPAREN ws? sizeFeatureRangeBetweenLt ws? RPAREN
+        | LPAREN ws? sizeFeatureRangeBetweenGt ws? RPAREN
+        ;
+
+sizeFeatureFixedValue
+        :
+        sizeFeatureName ( ws? COLON ws? sizeFeatureValue)?
+        ;
+
+sizeFeatureRangeSingle
+        :
+        (sizeFeatureName | sizeFeatureValue) ws? (OPEQ | LESS | LESS_OR_EQ | GREATER | GREATER_OR_EQ) ws? (sizeFeatureName | sizeFeatureValue)
+        ;
+
+sizeFeatureRangeBetweenLt
+        :
+        sizeFeatureValue ws? (LESS | LESS_OR_EQ) ws? sizeFeatureName ws? (LESS | LESS_OR_EQ) ws? sizeFeatureValue
+        ;
+
+sizeFeatureRangeBetweenGt
+        :
+        sizeFeatureValue ws? (GREATER | GREATER_OR_EQ) ws? sizeFeatureName ws? (GREATER | GREATER_OR_EQ) ws? sizeFeatureValue
+        ;
+
+sizeFeatureName
+        :
+        IDENT
+        | VARIABLE
+        ;
+
+sizeFeatureValue
+        :
+        term
+        ;
+
+styleFeature
+        :
+        declaration
+        ;
+
+layerAtRule
+        :
+        layerBlock
+        |
+        layerStatement
+        ;
+
+layerBlock
+        :
+        (LAYER_SYM ws layerName? ws? layerBody)
+        ;
+
+layerStatement
+        :
+        (LAYER_SYM ws layerName ( ws? COMMA ws? layerName)* SEMI)
+        ;
+
+layerName
+        :
+        IDENT (DOT IDENT)*
+        ;
+
+layerBody
+        :
+        LBRACE ws? body? ws? RBRACE
+        ;
 
 at_rule
     :
@@ -546,6 +700,8 @@ at_rule
     | fontFace
     | supportsAtRule
     | vendorAtRule
+    | layerAtRule
+    | containerAtRule
     ;
 
 vendorAtRule
@@ -1033,7 +1189,7 @@ cp_term_symbol
     ;
 
 function
-	: 	functionName ws?
+	: 	functionName
 		LPAREN ws?
 		(
                     fnAttributes
@@ -1426,7 +1582,7 @@ sass_content
     ;
 
 less_import_types: 
-    {tokenNameIs(new String[]{"LESS", "CSS", "REFERENCE", "INLINE", "ONCE", "MULTIPLE"})}? IDENT
+    {tokenNameIs(new String[]{"LESS", "CSS", "REFERENCE", "INLINE", "ONCE", "MULTIPLE", "OPTIONAL"})}? IDENT
     ; catch[ RecognitionException rce] {
         reportError(rce);
         input.consume();
@@ -1840,6 +1996,8 @@ CHARSET_SYM         : '@CHARSET';
 COUNTER_STYLE_SYM   : '@COUNTER-STYLE';
 FONT_FACE_SYM       : '@FONT-FACE';
 SUPPORTS_SYM        : '@SUPPORTS';
+LAYER_SYM           : '@LAYER';
+CONTAINER_SYM       : '@CONTAINER';
 
 TOPLEFTCORNER_SYM     :'@TOP-LEFT-CORNER';
 TOPLEFT_SYM           :'@TOP-LEFT';

@@ -172,8 +172,34 @@ public class DefaultCssModuleTest extends CssModuleTestBase {
         }
     }
     
-    public void testCalc() {
+    public void testMathFunctions() {
         assertPropertyValues("width", "calc(100%/3 - 2*1em - 2*1px)");
+        assertPropertyValues("width", "calc(var(--width) * 2)");
+        assertPropertyValues("width", "clamp(1.8rem, 2.5vw, 2.8rem)");
+        assertPropertyValues("width", "max(4vw, 2em, 2rem)");
+        assertPropertyValues("width", "min(40%, 400px)");
+        assertPropertyValues("width", "abs(20% - 100px)");
+        assertPropertyValues("margin", "calc(sign(20% - 100px) * (20% - 100px))");
+        assertPropertyValues("transform", "rotate(acos(0.5))");
+        assertPropertyValues("transform", "rotate(asin(pi / 5))");
+        assertPropertyValues("transform", "rotate(atan(pi / 2))");
+        assertPropertyValues("transform", "rotate(atan2(20%, -30%))");
+        assertPropertyValues("width", "calc(100px * cos(2 * 0.125))");
+        assertPropertyValues("width", "calc(100px * sin(2 * 0.125))");
+        assertPropertyValues("width", "calc(100px * tan(1.732 - 1))");
+        assertPropertyValues("width", "calc(100px * sqrt(9))");
+        assertPropertyValues("width", "round(-105px, 10px)");
+        assertPropertyValues("width", "round(to-zero, -105px, 10px)");
+        assertPropertyValues("width", "round(up, 101px, var(--interval))");
+        assertPropertyValues("width", "round(var(--width), 50px)");
+        assertPropertyValues("font-size", "calc(1rem * pow(1.5, 4))");
+        assertPropertyValues("line-height", "mod(3.5, 2)");
+        assertPropertyValues("width", "calc(var(--size-0) * log(7.389))");
+        assertPropertyValues("width", "calc(var(--size-0) * log(8, 2))");
+        assertPropertyValues("width", "hypot(var(--size-0))");
+        assertPropertyValues("width", "hypot(var(--size-0), var(--size-0))");
+        assertPropertyValues("font-size", "calc(1rem * exp(1.25))");
+        assertPropertyValues("margin", "rem(10rem, 6rem)");
     }
     
     public void testGetDeclarationForURIQuoted() {

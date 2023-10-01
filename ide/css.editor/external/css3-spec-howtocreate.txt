@@ -45,7 +45,6 @@ http://www.w3.org/TR/css3-preslev/ \
 http://www.w3.org/TR/css3-regions/ \
 http://www.w3.org/TR/css3-ruby/ \
 http://www.w3.org/TR/css3-speech/ \
-http://www.w3.org/TR/css3-text/ \
 http://www.w3.org/TR/css3-transitions/ \
 http://www.w3.org/TR/css3-ui/ \
 http://www.w3.org/TR/css3-values/ \
@@ -53,7 +52,9 @@ http://www.w3.org/TR/css3-writing-modes/ \
 http://www.w3.org/TR/css-align-3/ \
 http://www.w3.org/TR/css-break-3/ \
 http://www.w3.org/TR/css-position-3/ \
-http://www.w3.org/TR/css-sizing-3/
+http://www.w3.org/TR/css-sizing-3/ \
+http://www.w3.org/TR/css-contain-3/ \
+http://www.w3.org/TR/css-text-4/
 
 3. Check that the contents still looks sane and mirroring worked
 

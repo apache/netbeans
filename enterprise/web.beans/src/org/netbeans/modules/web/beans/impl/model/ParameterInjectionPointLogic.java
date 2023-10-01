@@ -49,6 +49,7 @@ import org.openide.util.NbBundle;
  * @author ads
  *
  */
+// @todo: Support JakartaEE
 abstract class ParameterInjectionPointLogic extends FieldInjectionPointLogic 
     implements WebBeansModelProvider 
 {

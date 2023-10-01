@@ -115,7 +115,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
         });
         this.project = project;
         JsfVersion projectJsfVersion = JsfVersionUtils.forProject(project);
-        if(projectJsfVersion != null && projectJsfVersion.isAtLeast(JsfVersion.JSF_4_0)){
+        if(projectJsfVersion != null && projectJsfVersion.isAtLeast(JsfVersion.JSF_3_0)){
             this.jakartaMetaModelSupport = new org.netbeans.modules.jakarta.web.beans.MetaModelSupport(project);
         } else {
             this.metaModelSupport = new org.netbeans.modules.web.beans.MetaModelSupport(project);
@@ -374,7 +374,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
         }
         try {
             //check web beans
-            if(JsfVersionUtils.forProject(project) == JsfVersion.JSF_4_0){
+            if(JsfVersionUtils.forProject(project).isAtLeast(JsfVersion.JSF_3_0)) {
                jakartaMetaModelSupport.getMetaModel().runReadAction(new MetadataModelAction<org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel, Void>() {
                 @Override
                 public Void run(org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel metadata) throws Exception {

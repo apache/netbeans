@@ -35,6 +35,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
@@ -75,7 +76,7 @@ public class JpaControllerGenerator {
      * @param embeddedPkSupport
      * @throws IOException
      */
-        public static void generateJpaController(Project project, final String entityClass, final String controllerClass, String exceptionPackage, FileObject pkg, FileObject controllerFileObject, final EmbeddedPkSupport embeddedPkSupport) throws IOException {
+    public static void generateJpaController(Project project, final String entityClass, final String controllerClass, String exceptionPackage, FileObject pkg, FileObject controllerFileObject, final EmbeddedPkSupport embeddedPkSupport) throws IOException {
         final boolean isInjection = Util.isContainerManaged(project);
         final String simpleEntityName = JpaControllerUtil.simpleClassName(entityClass);
         String persistenceUnit = Util.getPersistenceUnitAsString(project, entityClass);
@@ -86,6 +87,7 @@ public class JpaControllerGenerator {
         final List<ElementHandle<ExecutableElement>> toOneRelMethods = new ArrayList<>();
         final List<ElementHandle<ExecutableElement>> toManyRelMethods = new ArrayList<>();
         final boolean[] fieldAccess = new boolean[] { false };
+        final boolean jakartaPersistencePackages = isJakartaPersistenceNs(pkg);
 
         //detect access type
         final ClasspathInfo classpathInfo = ClasspathInfo.create(pkg);
@@ -101,14 +103,23 @@ public class JpaControllerGenerator {
                 if (methodName.startsWith("get")) {
                     Element f = fieldAccess[0] ? JpaControllerUtil.guessField(method) : method;
                     if (f != null) {
-                        if (JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.Id") ||
-                                JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.EmbeddedId")) {
+                        if (JpaControllerUtil.isAnnotatedWith(f, "jakarta.persistence.Id")
+                                || JpaControllerUtil.isAnnotatedWith(f, "jakarta.persistence.EmbeddedId")
+                                || JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.Id")
+                                || JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.EmbeddedId")
+                        ) {
                             idGetter.add(ElementHandle.create(method));
-                        } else if (JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.OneToOne") ||
-                                JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.ManyToOne")) {
+                        } else if (JpaControllerUtil.isAnnotatedWith(f, "jakarta.persistence.OneToOne")
+                                || JpaControllerUtil.isAnnotatedWith(f, "jakarta.persistence.ManyToOne")
+                                || JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.OneToOne")
+                                || JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.ManyToOne")
+                        ) {
                             toOneRelMethods.add(ElementHandle.create(method));
-                        } else if (JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.OneToMany") ||
-                                JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.ManyToMany")) {
+                        } else if (JpaControllerUtil.isAnnotatedWith(f, "jakarta.persistence.OneToMany")
+                                || JpaControllerUtil.isAnnotatedWith(f, "jakarta.persistence.ManyToMany")
+                                || JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.OneToMany")
+                                || JpaControllerUtil.isAnnotatedWith(f, "javax.persistence.ManyToMany")
+                        ) {
                             toManyRelMethods.add(ElementHandle.create(method));
                         }
                     }
@@ -130,9 +141,21 @@ public class JpaControllerGenerator {
 
         controllerFileObject = addImplementsClause(controllerFileObject, controllerClass, "java.io.Serializable"); //NOI18N
         generateJpaController(fieldName, pkg, idGetter.get(0), persistenceUnit, controllerClass, exceptionPackage,
-                entityClass, simpleEntityName, toOneRelMethods, toManyRelMethods, isInjection, fieldAccess[0], controllerFileObject, embeddedPkSupport, getPersistenceVersion(project, controllerFileObject));
+                entityClass, simpleEntityName, toOneRelMethods, toManyRelMethods, isInjection, fieldAccess[0],
+                controllerFileObject, embeddedPkSupport, getPersistenceVersion(project, controllerFileObject),
+                jakartaPersistencePackages
+        );
     }
-    
+
+    private static boolean isJakartaPersistenceNs(final FileObject javaPackageRoot) {
+        for (ClassPath.Entry entry : ClassPath.getClassPath(javaPackageRoot, ClassPath.COMPILE).entries()) {
+            if(entry.includes("jakarta/persistence/Entity.class")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static String getPersistenceVersion(Project project, FileObject fo) throws IOException {
         String version = Persistence.VERSION_1_0;
         PersistenceScope persistenceScopes[] = PersistenceUtils.getPersistenceScopes(project, fo);
@@ -194,7 +217,9 @@ public class JpaControllerGenerator {
             final boolean isFieldAccess,
             FileObject controllerFileObject, 
             final EmbeddedPkSupport embeddedPkSupport,
-            final String version) throws IOException {
+            final String version,
+            final boolean jakartaPersistencePackages
+    ) throws IOException {
         
             final String[] idPropertyType = new String[1];
             final String[] derivedIdPropertyType = new String[1];
@@ -296,23 +321,40 @@ public class JpaControllerGenerator {
                 List<String> parameterTypes = new ArrayList<>();
                 List<String> parameterNames = new ArrayList<>();
                 String body = "";   //NOI18N
-                boolean isUserTransaction = workingCopy.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE).findResource("javax/transaction/UserTransaction.class")!=null;  //NOI18N
+                boolean isUserTransaction =
+                        workingCopy.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE).findResource("jakarta/transaction/UserTransaction.class") != null //NOI18N
+                        || workingCopy.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE).findResource("javax/transaction/UserTransaction.class") != null;  //NOI18N
                 if (isUserTransaction && isInjection) {
-                    modifiedClassTree = JpaControllerUtil.TreeMakerUtils.addVariable(modifiedClassTree, workingCopy, "utx", "javax.transaction.UserTransaction", privateModifier, null, null);   //NOI18N
-                    parameterTypes.add("javax.transaction.UserTransaction");   //NOI18N
+                    if (jakartaPersistencePackages) {
+                        modifiedClassTree = JpaControllerUtil.TreeMakerUtils.addVariable(modifiedClassTree, workingCopy, "utx", "jakarta.transaction.UserTransaction", privateModifier, null, null);   //NOI18N
+                        parameterTypes.add("jakarta.transaction.UserTransaction");   //NOI18N
+                    } else {
+                        modifiedClassTree = JpaControllerUtil.TreeMakerUtils.addVariable(modifiedClassTree, workingCopy, "utx", "javax.transaction.UserTransaction", privateModifier, null, null);   //NOI18N
+                        parameterTypes.add("javax.transaction.UserTransaction");   //NOI18N
+                    }
                     parameterNames.add("utx");   //NOI18N
                     body = "this.utx = utx;\n";   //NOI18N
                     
                 }
-                modifiedClassTree = JpaControllerUtil.TreeMakerUtils.addVariable(modifiedClassTree, workingCopy, "emf", "javax.persistence.EntityManagerFactory", privateModifier, null, null);   //NOI18N
-                parameterTypes.add("javax.persistence.EntityManagerFactory");   //NOI18N
+                if (jakartaPersistencePackages) {
+                    modifiedClassTree = JpaControllerUtil.TreeMakerUtils.addVariable(modifiedClassTree, workingCopy, "emf", "jakarta.persistence.EntityManagerFactory", privateModifier, null, null);   //NOI18N
+                    parameterTypes.add("jakarta.persistence.EntityManagerFactory");   //NOI18N
+                } else {
+                    modifiedClassTree = JpaControllerUtil.TreeMakerUtils.addVariable(modifiedClassTree, workingCopy, "emf", "javax.persistence.EntityManagerFactory", privateModifier, null, null);   //NOI18N
+                    parameterTypes.add("javax.persistence.EntityManagerFactory");   //NOI18N
+                }
                 parameterNames.add("emf");   //NOI18N
                 body += "this.emf = emf;";   //NOI18N
                 MethodInfo mi = new MethodInfo("<init>", publicModifier, "void", null, parameterTypes.toArray(new String[0]),   //NOI18N
                 parameterNames.toArray(new String[0]), body, null, null);
                 modifiedClassTree = JpaControllerUtil.TreeMakerUtils.modifyDefaultConstructor(classTree, modifiedClassTree, workingCopy, mi);
                 
-                MethodInfo methodInfo = new MethodInfo("getEntityManager", publicModifier, "javax.persistence.EntityManager", null, null, null, "return emf.createEntityManager();", null, null);
+                MethodInfo methodInfo;
+                if (jakartaPersistencePackages) {
+                    methodInfo = new MethodInfo("getEntityManager", publicModifier, "jakarta.persistence.EntityManager", null, null, null, "return emf.createEntityManager();", null, null);
+                } else {
+                    methodInfo = new MethodInfo("getEntityManager", publicModifier, "javax.persistence.EntityManager", null, null, null, "return emf.createEntityManager();", null, null);
+                }
                 modifiedClassTree = JpaControllerUtil.TreeMakerUtils.addMethod(modifiedClassTree, workingCopy, methodInfo);
                 
                 String bodyText;
@@ -330,18 +372,26 @@ public class JpaControllerGenerator {
                 List<ElementHandle<ExecutableElement>> allRelMethods = new ArrayList<>(toOneRelMethods);
                 allRelMethods.addAll(toManyRelMethods);
                 
-                String[] importFqs = {"javax.persistence.Query",
-                    "javax.persistence.EntityNotFoundException"
-                };
-                
+                List<String> importFqs = new ArrayList<>();
+
+                if(jakartaPersistencePackages) {
+                    importFqs.add("jakarta.persistence.Query");
+                    importFqs.add("jakarta.persistence.EntityNotFoundException");
+                    importFqs.add("jakarta.persistence.criteria.CriteriaQuery");
+                    importFqs.add("jakarta.persistence.criteria.Root");
+                } else {
+                    importFqs.add("javax.persistence.Query");
+                    importFqs.add("javax.persistence.EntityNotFoundException");
+                    if(version!=null && !Persistence.VERSION_1_0.equals(version)){//add criteria classes if appropriate
+                        modifiedImportCut = JpaControllerUtil.TreeMakerUtils.createImport(workingCopy, modifiedImportCut, "javax.persistence.criteria.CriteriaQuery");
+                        modifiedImportCut = JpaControllerUtil.TreeMakerUtils.createImport(workingCopy, modifiedImportCut, "javax.persistence.criteria.Root");
+                    }
+                }
+
                 for (String importFq : importFqs) {
                     modifiedImportCut = JpaControllerUtil.TreeMakerUtils.createImport(workingCopy, modifiedImportCut, importFq);
                 }
-                if(version!=null && !Persistence.VERSION_1_0.equals(version)){//add criteria classes if appropriate
-                    modifiedImportCut = JpaControllerUtil.TreeMakerUtils.createImport(workingCopy, modifiedImportCut, "javax.persistence.criteria.CriteriaQuery");
-                    modifiedImportCut = JpaControllerUtil.TreeMakerUtils.createImport(workingCopy, modifiedImportCut, "javax.persistence.criteria.Root");
-                }
-                
+
                 String oldMe = null;
                 
                 // <editor-fold desc=" all relations ">
@@ -618,12 +668,7 @@ public class JpaControllerGenerator {
                         }
                         
                         if (collectionTypeClass != null) { //(multiplicity == JpaControllerUtil.REL_TO_MANY) {
-                            importFqs = new String[]{
-                                collectionTypeClass //"java.util.Collection"
-                            };
-                            for (String importFq : importFqs) {
-                                modifiedImportCut = JpaControllerUtil.TreeMakerUtils.createImport(workingCopy, modifiedImportCut, importFq);
-                            }
+                            modifiedImportCut = JpaControllerUtil.TreeMakerUtils.createImport(workingCopy, modifiedImportCut, collectionTypeClass);
                         }
 
                     } else {
@@ -875,7 +920,11 @@ public class JpaControllerGenerator {
     static boolean isId(ExecutableElement method, boolean isFieldAccess) {
         Element element = isFieldAccess ? JpaControllerUtil.guessField(method) : method;
         if (element != null) {
-            if (JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.Id") || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.EmbeddedId")) { // NOI18N
+            if (JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.Id") // NOI18N
+                    || JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.EmbeddedId")  // NOI18N
+                    || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.Id")  // NOI18N
+                    || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.EmbeddedId")  // NOI18N
+            ) {
                 return true;
             }
         }

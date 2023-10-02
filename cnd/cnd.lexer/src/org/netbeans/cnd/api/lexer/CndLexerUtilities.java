@@ -410,15 +410,22 @@ public final class CndLexerUtilities {
         return CppTokenId.OPERATOR_CATEGORY.equals(category) || CppTokenId.SEPARATOR_CATEGORY.equals(category);
     }
     // filters
-    private static Filter<CppTokenId> FILTER_STD_C;
-    private static Filter<CppTokenId> FILTER_GCC_C;
-    private static Filter<CppTokenId> FILTER_STD_CPP;
-    private static Filter<CppTokenId> FILTER_STD_CPP11;
-    private static Filter<CppTokenId> FILTER_GCC_CPP;
-    private static Filter<CppTokenId> FILTER_GCC_CPP11;
-    private static Filter<CppTokenId> FILTER_HEADER_C;
-    private static Filter<CppTokenId> FILTER_HEADER_CPP;
+    private static Filter<CppTokenId> FILTER_C99;
+    private static Filter<CppTokenId> FILTER_C11;
+    private static Filter<CppTokenId> FILTER_C23;
+    private static Filter<CppTokenId> FILTER_CPP98;
+    private static Filter<CppTokenId> FILTER_CPP11;
+    private static Filter<CppTokenId> FILTER_CPP17;
+    private static Filter<CppTokenId> FILTER_CPP20;
+    private static Filter<CppTokenId> FILTER_CPP23;
+    private static Filter<CppTokenId> FILTER_HEADER_C99;
+    private static Filter<CppTokenId> FILTER_HEADER_C11;
+    private static Filter<CppTokenId> FILTER_HEADER_C23;
+    private static Filter<CppTokenId> FILTER_HEADER_CPP98;
     private static Filter<CppTokenId> FILTER_HEADER_CPP11;
+    private static Filter<CppTokenId> FILTER_HEADER_CPP17;
+    private static Filter<CppTokenId> FILTER_HEADER_CPP20;
+    private static Filter<CppTokenId> FILTER_HEADER_CPP23;
     private static Filter<CppTokenId> FILTER_PREPRPOCESSOR;
     private static Filter<CppTokenId> FILTER_OMP;
     private static Filter<FortranTokenId> FILTER_FORTRAN;    
@@ -447,18 +454,23 @@ public final class CndLexerUtilities {
                 switch (preferred) {
                     case C89:
                     case C99:
+                        return CndLexerUtilities.getHeaderC99Filter();
                     case C11:
-                    case C17:
-                    case C23:
+                    case C17: // C17 did not add any keywords
                         return CndLexerUtilities.getHeaderC11Filter();
+                    case C23:
+                        return CndLexerUtilities.getHeaderC23Filter();
                     case CPP98:
-                        return CndLexerUtilities.getHeaderCppFilter();
+                        return CndLexerUtilities.getHeaderCpp98Filter();
                     case CPP11:
-                    case CPP14:
-                    case CPP17:
-                    case CPP20:
-                    case CPP23:
+                    case CPP14: // C++14 did not add any keywords
                         return CndLexerUtilities.getHeaderCpp11Filter();
+                    case CPP17:
+                        return CndLexerUtilities.getHeaderCpp17Filter();
+                    case CPP20:
+                        return CndLexerUtilities.getHeaderCpp20Filter();
+                    case CPP23:
+                        return CndLexerUtilities.getHeaderCpp23Filter();
                     default:
                         throw new AssertionError(preferred.name());
                 }
@@ -475,27 +487,32 @@ public final class CndLexerUtilities {
                         CndUtils.assertTrue(false, "Unexpected flavor " + preferred + " for C++ Language"); // NOI18N
                         break;
                     case CPP98:
-                        return CndLexerUtilities.getGccCppFilter();
+                        return CndLexerUtilities.getCpp98Filter();
                     case CPP11:
-                    case CPP14:
+                    case CPP14: // C++14 did not add any keywords
+                        return CndLexerUtilities.getCpp11Filter();
                     case CPP17:
+                        return CndLexerUtilities.getCpp17Filter();
                     case CPP20:
+                        return CndLexerUtilities.getCpp20Filter();
                     case CPP23:
-                        return CndLexerUtilities.getGccCpp11Filter();
+                        return CndLexerUtilities.getCpp23Filter();
                     default:
                         throw new AssertionError(preferred.name());
                 }
             }
-            return CndLexerUtilities.getGccCpp11Filter();
+            return CndLexerUtilities.getCpp17Filter();
         } else if (language == CppTokenId.languageC()) {
             if (preferred != null && preferred != CndLanguageStandard.UNKNOWN) {
                 switch (preferred) {
                     case C89:
                     case C99:
+                        return CndLexerUtilities.getC99Filter();
                     case C11:
-                    case C17:
+                        return CndLexerUtilities.getC11Filter();
+                    case C17: // C17 did not add any keywords
                     case C23:
-                        return CndLexerUtilities.getGccC11Filter();
+                        return CndLexerUtilities.getC23Filter();
                     case CPP98:
                     case CPP11:
                     case CPP14:
@@ -508,7 +525,7 @@ public final class CndLexerUtilities {
                         throw new AssertionError(preferred.name());
                 }
             }
-            return CndLexerUtilities.getGccC11Filter();            
+            return CndLexerUtilities.getC11Filter();
         } else if (language == CppTokenId.languagePreproc()) {
             return CndLexerUtilities.getPreprocFilter();
         } else if (language == FortranTokenId.languageFortran()) {
@@ -545,94 +562,146 @@ public final class CndLexerUtilities {
         return FILTER_OMP;
     }
 
-    /*package*/ synchronized static Filter<CppTokenId> getStdCFilter() {
-        if (FILTER_STD_C == null) {
-            FILTER_STD_C = new Filter<CppTokenId>("StdCFilter"); // NOI18N
-            addCommonCCKeywords(FILTER_STD_C);
-            addCOnlyKeywords(FILTER_STD_C);
-//            addC11OnlyKeywords(FILTER_STD_C);
+    /*package*/ synchronized static Filter<CppTokenId> getC99Filter() {
+        if (FILTER_C99 == null) {
+            FILTER_C99 = new Filter<CppTokenId>("CFilter"); // NOI18N
+            addCommonCCKeywords(FILTER_C99);
+            addGccOnlyCommonCCKeywords(FILTER_C99);
+            addCOnlyKeywords(FILTER_C99);
         }
-        return FILTER_STD_C;
+        return FILTER_C99;
     }
 
-    /*package*/ synchronized static Filter<CppTokenId> getGccC11Filter() {
-        if (FILTER_GCC_C == null) {
-            FILTER_GCC_C = new Filter<CppTokenId>("GccCFilter"); // NOI18N
-            addCommonCCKeywords(FILTER_GCC_C);
-            addCOnlyKeywords(FILTER_GCC_C);
-            addC11OnlyKeywords(FILTER_GCC_C);
-            addGccOnlyCommonCCKeywords(FILTER_GCC_C);
-            //addGccOnlyCOnlyKeywords(FILTER_GCC_C);
+    /*package*/ synchronized static Filter<CppTokenId> getC11Filter() {
+        if (FILTER_C11 == null) {
+            FILTER_C11 = new Filter<CppTokenId>("C11Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_C11);
+            addCOnlyKeywords(FILTER_C11);
+            addC11OnlyKeywords(FILTER_C11);
+            addGccOnlyCommonCCKeywords(FILTER_C11);
         }
-        return FILTER_GCC_C;
+        return FILTER_C11;
     }
 
-    /*package*/ synchronized static Filter<CppTokenId> getStdCppFilter() {
-        if (FILTER_STD_CPP == null) {
-            FILTER_STD_CPP = new Filter<CppTokenId>("StdCppFilter"); // NOI18N
-            addCommonCCKeywords(FILTER_STD_CPP);
-            addCppOnlyKeywords(FILTER_STD_CPP);
+    /*package*/ synchronized static Filter<CppTokenId> getC23Filter() {
+        if (FILTER_C23 == null) {
+            FILTER_C23 = new Filter<CppTokenId>("C23Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_C23);
+            addCOnlyKeywords(FILTER_C23);
+            addC11OnlyKeywords(FILTER_C23);
+            addC23OnlyKeywords(FILTER_C23);
+            addGccOnlyCommonCCKeywords(FILTER_C23);
         }
-        return FILTER_STD_CPP;
+        return FILTER_C23;
     }
 
-    /*package*/ synchronized static Filter<CppTokenId> getGccCppFilter() {
-        if (FILTER_GCC_CPP == null) {
-            FILTER_GCC_CPP = new Filter<CppTokenId>("GccCppFilter"); // NOI18N
-            addCommonCCKeywords(FILTER_GCC_CPP);
-            addCppOnlyKeywords(FILTER_GCC_CPP);
-            addGccOnlyCommonCCKeywords(FILTER_GCC_CPP);
-            addGccOnlyCppOnlyKeywords(FILTER_GCC_CPP);
+    /*package*/ synchronized static Filter<CppTokenId> getCpp98Filter() {
+        if (FILTER_CPP98 == null) {
+            FILTER_CPP98 = new Filter<CppTokenId>("Cpp98Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_CPP98);
+            addCppOnlyKeywords(FILTER_CPP98);
         }
-        return FILTER_GCC_CPP;
+        return FILTER_CPP98;
     }
 
-    /*package*/ synchronized static Filter<CppTokenId> getStdCpp11Filter() {
-        if (FILTER_STD_CPP11 == null) {
-            FILTER_STD_CPP11 = new Filter<CppTokenId>("StdCpp11Filter"); // NOI18N
-            addCommonCCKeywords(FILTER_STD_CPP11);
-            addCppOnlyKeywords(FILTER_STD_CPP11);
-            addCpp11OnlyKeywords(FILTER_STD_CPP11);
+    /*package*/ synchronized static Filter<CppTokenId> getCpp11Filter() {
+        if (FILTER_CPP11 == null) {
+            FILTER_CPP11 = new Filter<CppTokenId>("Cpp11Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_CPP11);
+            addCppOnlyKeywords(FILTER_CPP11);
+            addGccOnlyCommonCCKeywords(FILTER_CPP11);
+            addGccOnlyCppOnlyKeywords(FILTER_CPP11);
+            addCpp11OnlyKeywords(FILTER_CPP11);
         }
-        return FILTER_STD_CPP11;
+        return FILTER_CPP11;
     }
 
-    /*package*/ synchronized static Filter<CppTokenId> getGccCpp11Filter() {
-        if (FILTER_GCC_CPP11 == null) {
-            FILTER_GCC_CPP11 = new Filter<CppTokenId>("GccCpp11Filter"); // NOI18N
-            addCommonCCKeywords(FILTER_GCC_CPP11);
-            addCppOnlyKeywords(FILTER_GCC_CPP11);
-            addCpp11OnlyKeywords(FILTER_GCC_CPP11);
-            addGccOnlyCommonCCKeywords(FILTER_GCC_CPP11);
-            addGccOnlyCppOnlyKeywords(FILTER_GCC_CPP11);
+    /*package*/ synchronized static Filter<CppTokenId> getCpp17Filter() {
+        if (FILTER_CPP17 == null) {
+            FILTER_CPP17 = new Filter<CppTokenId>("Cpp17Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_CPP17);
+            addCppOnlyKeywords(FILTER_CPP17);
+            addGccOnlyCommonCCKeywords(FILTER_CPP17);
+            addGccOnlyCppOnlyKeywords(FILTER_CPP17);
+            addCpp11OnlyKeywords(FILTER_CPP17);
+            addCpp17OnlyKeywords(FILTER_CPP17);
         }
-        return FILTER_GCC_CPP11;
+        return FILTER_CPP17;
     }
-    
+
+    /*package*/ synchronized static Filter<CppTokenId> getCpp20Filter() {
+        if (FILTER_CPP20 == null) {
+            FILTER_CPP20 = new Filter<CppTokenId>("Cpp20Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_CPP20);
+            addCppOnlyKeywords(FILTER_CPP20);
+            addGccOnlyCommonCCKeywords(FILTER_CPP20);
+            addGccOnlyCppOnlyKeywords(FILTER_CPP20);
+            addCpp11OnlyKeywords(FILTER_CPP20);
+            addCpp17OnlyKeywords(FILTER_CPP20);
+            addCpp20OnlyKeywords(FILTER_CPP20);
+        }
+        return FILTER_CPP20;
+    }
+
+    /*package*/ synchronized static Filter<CppTokenId> getCpp23Filter() {
+        if (FILTER_CPP23 == null) {
+            FILTER_CPP23 = new Filter<CppTokenId>("Cpp23Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_CPP23);
+            addCppOnlyKeywords(FILTER_CPP23);
+            addGccOnlyCommonCCKeywords(FILTER_CPP23);
+            addGccOnlyCppOnlyKeywords(FILTER_CPP23);
+            addCpp11OnlyKeywords(FILTER_CPP23);
+            addCpp17OnlyKeywords(FILTER_CPP23);
+            addCpp20OnlyKeywords(FILTER_CPP23);
+            addCpp23OnlyKeywords(FILTER_CPP23);
+        }
+        return FILTER_CPP23;
+    }
+
+    /*package*/ synchronized static Filter<CppTokenId> getHeaderC99Filter() {
+        if (FILTER_HEADER_C99 == null) {
+            FILTER_HEADER_C99 = new Filter<CppTokenId>("HeaderC99Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_HEADER_C99);
+            addGccOnlyCommonCCKeywords(FILTER_HEADER_C99);
+            addCOnlyKeywords(FILTER_HEADER_C99);
+        }
+        return FILTER_HEADER_C99;
+    }
+
     /*package*/ synchronized static Filter<CppTokenId> getHeaderC11Filter() {
-        if (FILTER_HEADER_C == null) {
-            FILTER_HEADER_C = new Filter<CppTokenId>("HeaderCFilter"); // NOI18N
-            addCommonCCKeywords(FILTER_HEADER_C);
-            addGccOnlyCommonCCKeywords(FILTER_HEADER_C);
-            // for header add all C keywords as well
-            addCOnlyKeywords(FILTER_HEADER_C);
-            addC11OnlyKeywords(FILTER_HEADER_C);
+        if (FILTER_HEADER_C11 == null) {
+            FILTER_HEADER_C11 = new Filter<CppTokenId>("HeaderC11Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_HEADER_C11);
+            addGccOnlyCommonCCKeywords(FILTER_HEADER_C11);
+            addCOnlyKeywords(FILTER_HEADER_C11);
+            addC11OnlyKeywords(FILTER_HEADER_C11);
         }
-        return FILTER_HEADER_C;
+        return FILTER_HEADER_C11;
+    }
+
+    /*package*/ synchronized static Filter<CppTokenId> getHeaderC23Filter() {
+        if (FILTER_HEADER_C23 == null) {
+            FILTER_HEADER_C23 = new Filter<CppTokenId>("HeaderC23Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_HEADER_C23);
+            addGccOnlyCommonCCKeywords(FILTER_HEADER_C23);
+            addCOnlyKeywords(FILTER_HEADER_C23);
+            addC11OnlyKeywords(FILTER_HEADER_C23);
+            addC23OnlyKeywords(FILTER_HEADER_C23);
+        }
+        return FILTER_HEADER_C23;
     }    
     
-    /*package*/ synchronized static Filter<CppTokenId> getHeaderCppFilter() {
-        if (FILTER_HEADER_CPP == null) {
-            FILTER_HEADER_CPP = new Filter<CppTokenId>("HeaderCppFilter"); // NOI18N
-            addCommonCCKeywords(FILTER_HEADER_CPP);
-            addCppOnlyKeywords(FILTER_HEADER_CPP);
-            addGccOnlyCommonCCKeywords(FILTER_HEADER_CPP);
-            addGccOnlyCppOnlyKeywords(FILTER_HEADER_CPP);
+    /*package*/ synchronized static Filter<CppTokenId> getHeaderCpp98Filter() {
+        if (FILTER_HEADER_CPP98 == null) {
+            FILTER_HEADER_CPP98 = new Filter<CppTokenId>("HeaderCpp98Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_HEADER_CPP98);
+            addCppOnlyKeywords(FILTER_HEADER_CPP98);
+            addGccOnlyCommonCCKeywords(FILTER_HEADER_CPP98);
+            addGccOnlyCppOnlyKeywords(FILTER_HEADER_CPP98);
             // for header add all C keywords as well
-            addCOnlyKeywords(FILTER_HEADER_CPP);
-            addC11OnlyKeywords(FILTER_HEADER_CPP);
+            addCOnlyKeywords(FILTER_HEADER_CPP98);
         }
-        return FILTER_HEADER_CPP;
+        return FILTER_HEADER_CPP98;
     }
 
     /*package*/ synchronized static Filter<CppTokenId> getHeaderCpp11Filter() {
@@ -642,13 +711,64 @@ public final class CndLexerUtilities {
             addCppOnlyKeywords(FILTER_HEADER_CPP11);
             addGccOnlyCommonCCKeywords(FILTER_HEADER_CPP11);
             addGccOnlyCppOnlyKeywords(FILTER_HEADER_CPP11);
-            // C++11 specific
             addCpp11OnlyKeywords(FILTER_HEADER_CPP11);
             // for header add all C keywords as well
             addCOnlyKeywords(FILTER_HEADER_CPP11);
             addC11OnlyKeywords(FILTER_HEADER_CPP11);            
         }
         return FILTER_HEADER_CPP11;
+    }
+
+    /*package*/ synchronized static Filter<CppTokenId> getHeaderCpp17Filter() {
+        if (FILTER_HEADER_CPP17 == null) {
+            FILTER_HEADER_CPP17 = new Filter<CppTokenId>("HeaderCpp17Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_HEADER_CPP17);
+            addCppOnlyKeywords(FILTER_HEADER_CPP17);
+            addGccOnlyCommonCCKeywords(FILTER_HEADER_CPP17);
+            addGccOnlyCppOnlyKeywords(FILTER_HEADER_CPP17);
+            addCpp11OnlyKeywords(FILTER_HEADER_CPP17);
+            addCpp17OnlyKeywords(FILTER_HEADER_CPP17);
+            // for header add all C keywords as well
+            addCOnlyKeywords(FILTER_HEADER_CPP17);
+            addC11OnlyKeywords(FILTER_HEADER_CPP17);
+        }
+        return FILTER_HEADER_CPP17;
+    }
+
+    /*package*/ synchronized static Filter<CppTokenId> getHeaderCpp20Filter() {
+        if (FILTER_HEADER_CPP20 == null) {
+            FILTER_HEADER_CPP20 = new Filter<CppTokenId>("HeaderCpp20Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_HEADER_CPP20);
+            addCppOnlyKeywords(FILTER_HEADER_CPP20);
+            addGccOnlyCommonCCKeywords(FILTER_HEADER_CPP20);
+            addGccOnlyCppOnlyKeywords(FILTER_HEADER_CPP20);
+            addCpp11OnlyKeywords(FILTER_HEADER_CPP20);
+            addCpp17OnlyKeywords(FILTER_HEADER_CPP20);
+            addCpp20OnlyKeywords(FILTER_HEADER_CPP20);
+            // for header add all C keywords as well
+            addCOnlyKeywords(FILTER_HEADER_CPP20);
+            addC11OnlyKeywords(FILTER_HEADER_CPP20);
+        }
+        return FILTER_HEADER_CPP20;
+    }
+
+    /*package*/ synchronized static Filter<CppTokenId> getHeaderCpp23Filter() {
+        if (FILTER_HEADER_CPP23 == null) {
+            FILTER_HEADER_CPP23 = new Filter<CppTokenId>("HeaderCpp23Filter"); // NOI18N
+            addCommonCCKeywords(FILTER_HEADER_CPP23);
+            addCppOnlyKeywords(FILTER_HEADER_CPP23);
+            addGccOnlyCommonCCKeywords(FILTER_HEADER_CPP23);
+            addGccOnlyCppOnlyKeywords(FILTER_HEADER_CPP23);
+            addCpp11OnlyKeywords(FILTER_HEADER_CPP23);
+            addCpp17OnlyKeywords(FILTER_HEADER_CPP23);
+            addCpp20OnlyKeywords(FILTER_HEADER_CPP23);
+            addCpp23OnlyKeywords(FILTER_HEADER_CPP23);
+            // for header add all C keywords as well
+            addCOnlyKeywords(FILTER_HEADER_CPP23);
+            addC11OnlyKeywords(FILTER_HEADER_CPP23);
+            addC23OnlyKeywords(FILTER_HEADER_CPP23);
+        }
+        return FILTER_HEADER_CPP23;
     }
     
     /*package*/ synchronized static Filter<FortranTokenId> getFortranFilter() {
@@ -890,13 +1010,51 @@ public final class CndLexerUtilities {
             CppTokenId.THREAD_LOCAL, // c++11
             CppTokenId.STATIC_ASSERT, // c++11
             CppTokenId.ALIGNAS, // c++11
+            CppTokenId.ALIGNOF, // c++11
             CppTokenId.CHAR16_T, // c++11
             CppTokenId.CHAR32_T, // c++11
             CppTokenId.NOEXCEPT, // c++11
+            CppTokenId._PRAGMA, // c++11
         };
         addToFilter(ids, filterToModify);
-    }    
+    }
+
+    private static void addCpp17OnlyKeywords(Filter<CppTokenId> filterToModify) {
+        CppTokenId[] ids = new CppTokenId[]{
+            CppTokenId.PREPROCESSOR___HAS_INCLUDE, // c++17
+        };
+        addToFilter(ids, filterToModify);
+    }
     
+    private static void addCpp20OnlyKeywords(Filter<CppTokenId> filterToModify) {
+        CppTokenId[] ids = new CppTokenId[]{
+            CppTokenId.CHAR8_T, // c++20
+            CppTokenId.CONCEPT, // c++20
+            CppTokenId.CONSTEVAL, // c++20
+            CppTokenId.CONSTINIT, // c++20
+            CppTokenId.CO_AWAIT, // c++20
+            CppTokenId.CO_RETURN, // c++20
+            CppTokenId.CO_YIELD, // c++20
+            CppTokenId.IMPORT, // c++20
+            CppTokenId.MODULE, // c++20
+            CppTokenId.REQUIRES, // c++20
+            CppTokenId.PREPROCESSOR___HAS_CPP_ATTRIBUTE, // c++20
+            CppTokenId.PREPROCESSOR_EXPORT, // c++20
+            CppTokenId.PREPROCESSOR_IMPORT, // c++20
+            CppTokenId.PREPROCESSOR_MODULE, // c++20
+        };
+        addToFilter(ids, filterToModify);
+    }
+
+    private static void addCpp23OnlyKeywords(Filter<CppTokenId> filterToModify) {
+        CppTokenId[] ids = new CppTokenId[]{
+            CppTokenId.PREPROCESSOR_ELIFDEF, // c++23
+            CppTokenId.PREPROCESSOR_ELIFNDEF, // c++23
+            CppTokenId.PREPROCESSOR_WARNING, // c++23
+        };
+        addToFilter(ids, filterToModify);
+    }
+
     private static void addCOnlyKeywords(Filter<CppTokenId> filterToModify) {
         CppTokenId[] ids = new CppTokenId[]{
             CppTokenId.INLINE, // gcc, C++, now in C also
@@ -913,15 +1071,45 @@ public final class CndLexerUtilities {
     
     private static void addC11OnlyKeywords(Filter<CppTokenId> filterToModify) {
         CppTokenId[] ids = new CppTokenId[]{
-            CppTokenId._NORETURN, // C11
-            CppTokenId._ATOMIC, // C11
-            CppTokenId._STATIC_ASSERT, // C11
-            CppTokenId._THREAD_LOCAL, // C11
             CppTokenId._ALIGNAS, // C11
             CppTokenId._ALIGNOF, // C11
+            CppTokenId._ATOMIC, // C11
+            CppTokenId._GENERIC, // C11
+            CppTokenId._NORETURN, // C11
+            CppTokenId._STATIC_ASSERT, // C11
+            CppTokenId._THREAD_LOCAL, // C11
         };
         addToFilter(ids, filterToModify);
     }
+
+    private static void addC23OnlyKeywords(Filter<CppTokenId> filterToModify) {
+        CppTokenId[] ids = new CppTokenId[]{
+            CppTokenId.ALIGNAS, // C23
+            CppTokenId.ALIGNOF, // C23
+            CppTokenId.BOOL, // C23
+            CppTokenId.CONSTEXPR, // C23
+            CppTokenId.FALSE, // C23
+            CppTokenId.NULLPTR, // C23
+            CppTokenId.STATIC_ASSERT, // C23
+            CppTokenId.THREAD_LOCAL, // C23
+            CppTokenId.TRUE, // C23
+            CppTokenId.TYPEOF, // C23
+            CppTokenId.TYPEOF_UNQUAL, // C23
+            CppTokenId._BITINT, // C23
+            CppTokenId._DECIMAL32, // C23
+            CppTokenId._DECIMAL64, // C23
+            CppTokenId._DECIMAL128, // C23
+            CppTokenId.PREPROCESSOR_ELIFDEF, // C23
+            CppTokenId.PREPROCESSOR_ELIFNDEF, // C23
+            CppTokenId.PREPROCESSOR_EMBED, // C23
+            CppTokenId.PREPROCESSOR_WARNING, // C23
+            CppTokenId.PREPROCESSOR___HAS_C_ATTRIBUTE, // C23
+            CppTokenId.PREPROCESSOR___HAS_EMBED, // C23
+            CppTokenId.PREPROCESSOR___HAS_INCLUDE, // C23
+        };
+        addToFilter(ids, filterToModify);
+    }
+
 
     private static void addGccOnlyCommonCCKeywords(Filter<CppTokenId> filterToModify) {
         CppTokenId[] ids = new CppTokenId[]{
@@ -966,7 +1154,6 @@ public final class CndLexerUtilities {
      */
     private static void addGccOnlyCppOnlyKeywords(Filter<CppTokenId> filterToModify) {
         CppTokenId[] ids = new CppTokenId[]{
-            CppTokenId.ALIGNOF,
             CppTokenId._ASM,
             CppTokenId._INLINE,
             CppTokenId.PASCAL,

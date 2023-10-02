@@ -818,7 +818,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '21' ]
+        java: [ '11', '17', '21' ]
       fail-fast: false
     steps:
 

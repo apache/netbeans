@@ -173,9 +173,14 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
      * Hooks for tests to mock the Maven execution.
      */
     public static class ExecuteMaven {
+        // tests only
+        MavenExecutor createCommandLineExecutor(RunConfig config, InputOutput io, TabContext tc) {
+            return new MavenCommandLineExecutor(config, io, tc);
+        }
+        
         public ExecutorTask execute(RunConfig config, InputOutput io, TabContext tc) {
             LifecycleManager.getDefault().saveAll();
-            MavenExecutor exec = new MavenCommandLineExecutor(config, io, tc);
+            MavenExecutor exec = createCommandLineExecutor(config, io, tc);
             ExecutorTask task = ExecutionEngine.getDefault().execute(config.getTaskDisplayName(), exec, new ProxyNonSelectableInputOutput(exec.getInputOutput()));
             exec.setTask(task);
             task.addTaskListener(new TaskListener() {
@@ -390,6 +395,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 if (prj != null) {
                     NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
                     if (impl != null) {
+                        // this reload must not wait for blockers.
                         RequestProcessor.Task reloadTask = impl.fireProjectReload();
                         reloadTask.waitFinished();
                     }
@@ -516,8 +522,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
         if (config.getReactorStyle() != RunConfig.ReactorStyle.NONE) {
             File basedir = config.getExecutionDirectory();
-            MavenProject mp = config.getMavenProject();
-            File projdir = NbMavenProject.isErrorPlaceholder(mp) ? basedir : mp.getBasedir();
+            MavenProject mp = NbMavenProject.getPartialProject(config.getMavenProject());
+            File projdir = mp == null || NbMavenProject.isErrorPlaceholder(mp) ? basedir : mp.getBasedir();
             String rel = basedir != null && projdir != null ? FileUtilities.relativizeFile(basedir, projdir) : null;
             if (!".".equals(rel)) {
                 toRet.add(config.getReactorStyle() == RunConfig.ReactorStyle.ALSO_MAKE ? "--also-make" : "--also-make-dependents");
@@ -627,7 +633,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         return sb.toString();
     }
 
-    private ProcessBuilder constructBuilder(final RunConfig clonedConfig, InputOutput ioput) {
+    // tests only
+    ProcessBuilder constructBuilder(final RunConfig clonedConfig, InputOutput ioput) {
         File javaHome = null;
         Map<String, String> envMap = new LinkedHashMap<String, String>();
         for (Map.Entry<? extends String,? extends String> entry : clonedConfig.getProperties().entrySet()) {
@@ -1100,7 +1107,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     
     private File searchMavenWrapper(RunConfig config) {
         String fileName = Utilities.isWindows() ? "mvnw.cmd" : "mvnw"; //NOI18N
-        MavenProject project = config.getMavenProject();
+        MavenProject project = NbMavenProject.getPartialProject(config.getMavenProject());
         while (project != null) {
             File baseDir = project.getBasedir();
             if (baseDir != null) {

@@ -21,7 +21,6 @@ package org.netbeans.modules.cnd.lexer;
 
 import java.util.Collections;
 import junit.framework.TestCase;
-import org.junit.Ignore;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.PartType;
@@ -33,7 +32,6 @@ import org.netbeans.cnd.api.lexer.CppTokenId;
 import org.netbeans.cnd.api.lexer.DoxygenTokenId;
 import org.netbeans.lib.lexer.test.LexerTestUtilities;
 import org.netbeans.cnd.api.lexer.CndLexerUtilities;
-import org.netbeans.cnd.api.lexer.CndTokenUtilities;
 import org.netbeans.cnd.api.lexer.Filter;
 import org.netbeans.modules.cnd.utils.CndLanguageStandards.CndLanguageStandard;
 
@@ -742,8 +740,13 @@ public class CppLexerBatchTestCase extends TestCase {
 
     private enum L {
         C,
+        C11,
+        C23,
         CPP,
         CPP11,
+        CPP17,
+        CPP20,
+        CPP23,
         BOTH
     }
 
@@ -785,10 +788,10 @@ public class CppLexerBatchTestCase extends TestCase {
     private T[] getAllKW() {
         return new T[] {
             T.T(CppTokenId.ALIGNAS, "alignas", L.CPP11),
-            T.T(CppTokenId.ALIGNOF, "alignof", L.CPP),
+            T.T(CppTokenId.ALIGNOF, "alignof", L.CPP11),
             T.T(CppTokenId.ALTERNATE_AND, "and", L.CPP),
             T.T(CppTokenId.ALTERNATE_AND_EQ, "and_eq", L.CPP),
-            //T.T(CppTokenId.ASM, "asm", L.BOTH), // failed for C
+            T.T(CppTokenId.ASM, "asm", L.BOTH), // not standard in C, but accepted by GCC
             T.T(CppTokenId.AUTO, "auto", L.BOTH),
             T.T(CppTokenId.ALTERNATE_BITAND, "bitand", L.CPP),
             T.T(CppTokenId.BOOL, "bool", L.CPP),
@@ -796,15 +799,21 @@ public class CppLexerBatchTestCase extends TestCase {
             T.T(CppTokenId.CASE, "case", L.BOTH),
             T.T(CppTokenId.CATCH, "catch", L.CPP),
             T.T(CppTokenId.CHAR, "char", L.BOTH),
+            T.T(CppTokenId.CHAR8_T, "char8_t", L.CPP20),
             T.T(CppTokenId.CHAR16_T, "char16_t", L.CPP11),
             T.T(CppTokenId.CHAR32_T, "char32_t", L.CPP11),
             T.T(CppTokenId.CLASS, "class", L.CPP),
             T.T(CppTokenId.ALTERNATE_COMPL, "compl", L.CPP),
-            //T.T(CppTokenId.CONCEPT, "concept", L.CPP), // unsupported keyword
+            T.T(CppTokenId.CONCEPT, "concept", L.CPP20),
             T.T(CppTokenId.CONST, "const", L.BOTH),
+            T.T(CppTokenId.CONSTEVAL, "consteval", L.CPP20),
             T.T(CppTokenId.CONSTEXPR, "constexpr", L.CPP11),
+            T.T(CppTokenId.CONSTINIT, "constinit", L.CPP20),
             T.T(CppTokenId.CONST_CAST, "const_cast", L.CPP),
             T.T(CppTokenId.CONTINUE, "continue", L.BOTH),
+            T.T(CppTokenId.CO_AWAIT, "co_await", L.CPP20),
+            T.T(CppTokenId.CO_RETURN, "co_return", L.CPP20),
+            T.T(CppTokenId.CO_YIELD, "co_yield", L.CPP20),
             T.T(CppTokenId.DECLTYPE, "decltype", L.CPP11),
             T.T(CppTokenId.DEFAULT, "default", L.BOTH),
             T.T(CppTokenId.DELETE, "delete", L.CPP),
@@ -824,9 +833,11 @@ public class CppLexerBatchTestCase extends TestCase {
             T.T(CppTokenId.FRIEND, "friend", L.CPP),
             T.T(CppTokenId.GOTO, "goto", L.BOTH),
             T.T(CppTokenId.IF, "if", L.BOTH),
+            T.T(CppTokenId.IMPORT, "import", L.CPP20),
             T.T(CppTokenId.INLINE, "inline", L.BOTH),
             T.T(CppTokenId.INT, "int", L.BOTH),
             T.T(CppTokenId.LONG, "long", L.BOTH),
+            T.T(CppTokenId.MODULE, "module", L.CPP20),
             T.T(CppTokenId.MUTABLE, "mutable", L.CPP),
             T.T(CppTokenId.NAMESPACE, "namespace", L.CPP),
             T.T(CppTokenId.NEW, "new", L.CPP),
@@ -843,7 +854,7 @@ public class CppLexerBatchTestCase extends TestCase {
             T.T(CppTokenId.PUBLIC, "public", L.CPP),
             T.T(CppTokenId.REGISTER, "register", L.BOTH),
             T.T(CppTokenId.REINTERPRET_CAST, "reinterpret_cast", L.CPP),
-            //T.T(CppTokenId.REQUIRES, "requires", L.CPP), // unsupported keyword
+            T.T(CppTokenId.REQUIRES, "requires", L.CPP20),
             T.T(CppTokenId.RESTRICT, "restrict", L.C),
             T.T(CppTokenId.RETURN, "return", L.BOTH),
             T.T(CppTokenId.SHORT, "short", L.BOTH),
@@ -864,6 +875,7 @@ public class CppLexerBatchTestCase extends TestCase {
             T.T(CppTokenId.TYPEID, "typeid", L.CPP),
             T.T(CppTokenId.TYPENAME, "typename", L.CPP),
             T.T(CppTokenId.TYPEOF, "typeof", L.BOTH),
+            T.T(CppTokenId.TYPEOF_UNQUAL, "typeof_unqual", L.C23),
             T.T(CppTokenId.UNION, "union", L.BOTH),
             T.T(CppTokenId.UNSIGNED, "unsigned", L.BOTH),
             T.T(CppTokenId.USING, "using", L.CPP),
@@ -874,17 +886,21 @@ public class CppLexerBatchTestCase extends TestCase {
             T.T(CppTokenId.WHILE, "while", L.BOTH),
             T.T(CppTokenId.ALTERNATE_XOR, "xor", L.CPP),
             T.T(CppTokenId.ALTERNATE_XOR_EQ, "xor_eq", L.CPP),
-            T.T(CppTokenId._ALIGNAS, "_Alignas", L.C), // unsupported keyword
-            T.T(CppTokenId._ALIGNOF, "_Alignof", L.C), // unsupported keyword
-            T.T(CppTokenId._ATOMIC, "_Atomic", L.C), // unsupported keyword
+            T.T(CppTokenId._ALIGNAS, "_Alignas", L.C11),
+            T.T(CppTokenId._ALIGNOF, "_Alignof", L.C11),
+            T.T(CppTokenId._ATOMIC, "_Atomic", L.C11),
+            T.T(CppTokenId._BITINT, "_BitInt", L.C23),
             T.T(CppTokenId._BOOL, "_Bool", L.C),
             T.T(CppTokenId._COMPLEX, "_Complex", L.C),
-            //T.T(CppTokenId._GENERIC, "_Generic", L.C), // unsupported keyword
+            T.T(CppTokenId._DECIMAL32, "_Decimal32", L.C23),
+            T.T(CppTokenId._DECIMAL64, "_Decimal64", L.C23),
+            T.T(CppTokenId._DECIMAL128, "_Decimal128", L.C23),
+            T.T(CppTokenId._GENERIC, "_Generic", L.C11),
             T.T(CppTokenId._IMAGINARY, "_Imaginary", L.C),
-            //T.T(CppTokenId._PRAGMA, "_Pragma", L.BOTH), // unsupported keyword
-            T.T(CppTokenId._NORETURN, "_Noreturn", L.C),
-            T.T(CppTokenId._STATIC_ASSERT, "_Static_assert", L.C), // unsupported keyword
-            T.T(CppTokenId._THREAD_LOCAL, "_Thread_local", L.C), // unsupported keyword
+            T.T(CppTokenId._NORETURN, "_Noreturn", L.C11),
+            //T.T(CppTokenId._PRAGMA, "_Pragma", L.C), C98 and C++11 --- can't test for that?
+            T.T(CppTokenId._STATIC_ASSERT, "_Static_assert", L.C11),
+            T.T(CppTokenId._THREAD_LOCAL, "_Thread_local", L.C11),
             T.T(CppTokenId.IDENTIFIER, "null", L.BOTH),
             T.T(CppTokenId.TRUE, "true", L.CPP),
             T.T(CppTokenId.FALSE, "false", L.CPP),

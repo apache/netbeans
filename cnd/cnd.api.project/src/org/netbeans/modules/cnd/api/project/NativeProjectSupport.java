@@ -113,6 +113,12 @@ public final class NativeProjectSupport {
             case C11:
                 flavor =NativeFileItem.LanguageFlavor.C11;
                 break;
+            case C17:
+                flavor =NativeFileItem.LanguageFlavor.C17;
+                break;
+            case C23:
+                flavor =NativeFileItem.LanguageFlavor.C23;
+                break;
             case CPP98:
                 flavor =NativeFileItem.LanguageFlavor.CPP98;
                 break;
@@ -124,6 +130,12 @@ public final class NativeProjectSupport {
                 break;
             case CPP17:
                 flavor =NativeFileItem.LanguageFlavor.CPP17;
+                break;
+            case CPP20:
+                flavor =NativeFileItem.LanguageFlavor.CPP20;
+                break;
+            case CPP23:
+                flavor =NativeFileItem.LanguageFlavor.CPP23;
                 break;
         }
         return flavor;
@@ -144,6 +156,10 @@ public final class NativeProjectSupport {
                 return CndLanguageStandard.C99;
             case C11:
                 return CndLanguageStandard.C11;
+            case C17:
+                return CndLanguageStandard.C17;
+            case C23:
+                return CndLanguageStandard.C23;
             case CPP98:
                 return CndLanguageStandard.CPP98;
             case CPP11:
@@ -152,6 +168,10 @@ public final class NativeProjectSupport {
                 return CndLanguageStandard.CPP14;
             case CPP17:
                 return CndLanguageStandard.CPP17;
+            case CPP20:
+                return CndLanguageStandard.CPP20;
+            case CPP23:
+                return CndLanguageStandard.CPP23;
             case F77:
             case F90:
             case F95:
@@ -195,14 +215,12 @@ public final class NativeProjectSupport {
         CndLanguageStandards.CndLanguageStandard defaultStandard = me.getDefaultStandard();
         if (defaultStandard != null) {
             switch(defaultStandard) {
-                case CPP11:
-                    return NativeFileItem.LanguageFlavor.CPP11;
-                case CPP14:
-                    return NativeFileItem.LanguageFlavor.CPP14;
-                case CPP17:
-                    return NativeFileItem.LanguageFlavor.CPP17;
-                case CPP98:
-                    return NativeFileItem.LanguageFlavor.CPP98;
+                case CPP98: return NativeFileItem.LanguageFlavor.CPP98;
+                case CPP11: return NativeFileItem.LanguageFlavor.CPP11;
+                case CPP14: return NativeFileItem.LanguageFlavor.CPP14;
+                case CPP17: return NativeFileItem.LanguageFlavor.CPP17;
+                case CPP20: return NativeFileItem.LanguageFlavor.CPP20;
+                case CPP23: return NativeFileItem.LanguageFlavor.CPP23;
             }
         }
         return NativeFileItem.LanguageFlavor.UNKNOWN;
@@ -219,14 +237,12 @@ public final class NativeProjectSupport {
         CndLanguageStandards.CndLanguageStandard defaultStandard = me.getDefaultStandard();
         if (defaultStandard != null) {
             switch(defaultStandard) {
-                case CPP11:
-                    return NativeFileItem.LanguageFlavor.CPP11;
-                case CPP14:
-                    return NativeFileItem.LanguageFlavor.CPP14;
-                case CPP17:
-                    return NativeFileItem.LanguageFlavor.CPP17;
-                case CPP98:
-                    return NativeFileItem.LanguageFlavor.CPP98;
+                case CPP98: return NativeFileItem.LanguageFlavor.CPP98;
+                case CPP11: return NativeFileItem.LanguageFlavor.CPP11;
+                case CPP14: return NativeFileItem.LanguageFlavor.CPP14;
+                case CPP17: return NativeFileItem.LanguageFlavor.CPP17;
+                case CPP20: return NativeFileItem.LanguageFlavor.CPP20;
+                case CPP23: return NativeFileItem.LanguageFlavor.CPP23;
             }
         }
         return NativeFileItem.LanguageFlavor.UNKNOWN;
@@ -243,12 +259,11 @@ public final class NativeProjectSupport {
         CndLanguageStandards.CndLanguageStandard defaultStandard = me.getDefaultStandard();
         if (defaultStandard != null) {
             switch(defaultStandard) {
-                case C89:
-                    return NativeFileItem.LanguageFlavor.C89;
-                case C99:
-                    return NativeFileItem.LanguageFlavor.C99;
-                case C11:
-                    return NativeFileItem.LanguageFlavor.C11;
+                case C89: return NativeFileItem.LanguageFlavor.C89;
+                case C99: return NativeFileItem.LanguageFlavor.C99;
+                case C11: return NativeFileItem.LanguageFlavor.C11;
+                case C17: return NativeFileItem.LanguageFlavor.C17;
+                case C23: return NativeFileItem.LanguageFlavor.C23;
             }
         }
         return NativeFileItem.LanguageFlavor.UNKNOWN;

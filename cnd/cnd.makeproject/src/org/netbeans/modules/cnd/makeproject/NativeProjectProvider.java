@@ -1053,6 +1053,10 @@ public final class NativeProjectProvider implements NativeProject, PropertyChang
                                 return NativeFileItem.LanguageFlavor.C99;
                             case CCompilerConfiguration.STANDARD_C11:
                                 return NativeFileItem.LanguageFlavor.C11;
+                            case CCompilerConfiguration.STANDARD_C17:
+                                return NativeFileItem.LanguageFlavor.C17;
+                            case CCompilerConfiguration.STANDARD_C23:
+                                return NativeFileItem.LanguageFlavor.C23;
                             default:
                                 return NativeFileItem.LanguageFlavor.DEFAULT;
                         }
@@ -1069,6 +1073,10 @@ public final class NativeProjectProvider implements NativeProject, PropertyChang
                                 return NativeFileItem.LanguageFlavor.CPP14;
                             case CCCompilerConfiguration.STANDARD_CPP17:
                                 return NativeFileItem.LanguageFlavor.CPP17;
+                            case CCCompilerConfiguration.STANDARD_CPP20:
+                                return NativeFileItem.LanguageFlavor.CPP20;
+                            case CCCompilerConfiguration.STANDARD_CPP23:
+                                return NativeFileItem.LanguageFlavor.CPP23;
                             default:
                                 return NativeFileItem.LanguageFlavor.DEFAULT;
                         }

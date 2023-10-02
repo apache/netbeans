@@ -138,6 +138,8 @@ public final class DocumentLanguageFlavorProvider implements CndSourceProperties
                 case C89:
                 case C99:
                 case C11:
+                case C17:
+                case C23:
                     if (MIMENames.isHeader(mime)) {
                         lang = NativeFileItem.Language.C_HEADER;
                     } else {
@@ -147,6 +149,8 @@ public final class DocumentLanguageFlavorProvider implements CndSourceProperties
                 case CPP11:
                 case CPP14:
                 case CPP17:
+                case CPP20:
+                case CPP23:
                     if (MIMENames.isHeader(mime)) {
                         lang = NativeFileItem.Language.C_HEADER;
                     } else {

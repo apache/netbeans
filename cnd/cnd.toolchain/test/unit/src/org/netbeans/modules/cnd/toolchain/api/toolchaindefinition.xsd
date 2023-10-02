@@ -253,6 +253,8 @@
                 <xs:element ref="tns:c89" minOccurs="0" maxOccurs="1"/>
                 <xs:element ref="tns:c99" minOccurs="0" maxOccurs="1"/>
                 <xs:element ref="tns:c11" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="tns:c17" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="tns:c23" minOccurs="0" maxOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -265,6 +267,8 @@
                 <xs:element ref="tns:cpp11" minOccurs="0" maxOccurs="1"/>
                 <xs:element ref="tns:cpp14" minOccurs="0" maxOccurs="1"/>
                 <xs:element ref="tns:cpp17" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="tns:cpp20" minOccurs="0" maxOccurs="1"/>
+                <xs:element ref="tns:cpp23" minOccurs="0" maxOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -284,6 +288,27 @@
     </xs:element>
 
     <xs:element name="c11">
+        <xs:complexType>
+            <xs:attribute name="flags" type="xs:string" use="required" />
+            <xs:attribute name="default" type="xs:string" use="optional" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="c17">
+        <xs:complexType>
+            <xs:attribute name="flags" type="xs:string" use="required" />
+            <xs:attribute name="default" type="xs:string" use="optional" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="c23">
+        <xs:complexType>
+            <xs:attribute name="flags" type="xs:string" use="required" />
+            <xs:attribute name="default" type="xs:string" use="optional" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cpp98">
         <xs:complexType>
             <xs:attribute name="flags" type="xs:string" use="required" />
             <xs:attribute name="default" type="xs:string" use="optional" />
@@ -311,7 +336,14 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="cpp98">
+    <xs:element name="cpp20">
+        <xs:complexType>
+            <xs:attribute name="flags" type="xs:string" use="required" />
+            <xs:attribute name="default" type="xs:string" use="optional" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="cpp23">
         <xs:complexType>
             <xs:attribute name="flags" type="xs:string" use="required" />
             <xs:attribute name="default" type="xs:string" use="optional" />

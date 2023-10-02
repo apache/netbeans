@@ -199,28 +199,62 @@ public enum CppTokenId implements TokenId {
     __UNUSED__("__unused__", "keyword"), // gcc // NOI18N
     __W64("__w64", "keyword"), // g++ // NOI18N
 
-    
     // C++11    
-    FINAL("final", "keyword"), // c++11 // NOI18N
-    OVERRIDE("override", "keyword"), // c++11 // NOI18N
-    CONSTEXPR("constexpr", "keyword"), // c++11 // NOI18N
-    DECLTYPE("decltype", "keyword"), // c++11 // NOI18N
-    __DECLTYPE("__decltype", "keyword"), // g++ // NOI18N
-    NULLPTR("nullptr", "keyword"), // c++11 // NOI18N
-    THREAD_LOCAL("thread_local", "keyword"), // c++11 // NOI18N
-    STATIC_ASSERT("static_assert", "keyword"), // c++11 // NOI18N
     ALIGNAS("alignas", "keyword"), // c++11 // NOI18N
     CHAR16_T("char16_t", "keyword"), // c++11 // NOI18N
     CHAR32_T("char32_t", "keyword"), // c++11 // NOI18N
+    CONSTEXPR("constexpr", "keyword"), // c++11 // NOI18N
+    DECLTYPE("decltype", "keyword"), // c++11 // NOI18N
+    FINAL("final", "keyword"), // c++11 // NOI18N
     NOEXCEPT("noexcept", "keyword"), // c++11 // NOI18N
+    NULLPTR("nullptr", "keyword"), // c++11 // NOI18N
+    OVERRIDE("override", "keyword"), // c++11 // NOI18N
+    STATIC_ASSERT("static_assert", "keyword"), // c++11 // NOI18N
+    THREAD_LOCAL("thread_local", "keyword"), // c++11 // NOI18N
+    _PRAGMA("_Pragma", "keyword"), // c++11 // NOI18N
+    __DECLTYPE("__decltype", "keyword"), // g++ // NOI18N
+
+    // C++17
+    PREPROCESSOR___HAS_INCLUDE("__has_include", "preprocessor-keyword-directive"), // c++17 // NOI18N
+
+    // C++20
+    CHAR8_T("char8_t", "keyword"), // c++20 // NOI18N
+    CONCEPT("concept", "keyword"), // c++20 // NOI18N
+    CONSTEVAL("consteval", "keyword"), // c++20 // NOI18N
+    CONSTINIT("constinit", "keyword"), // c++20 // NOI18N
+    CO_AWAIT("co_await", "keyword"), // c++20 // NOI18N
+    CO_RETURN("co_return", "keyword"), // c++20 // NOI18N
+    CO_YIELD("co_yeild", "keyword"), // c++20 // NOI18N
+    IMPORT("import", "keyword"), // c++20 // NOI18N
+    MODULE("module", "keyword"), // c++20 // NOI18N
+    REQUIRES("requires", "keyword"), // c++20 // NOI18N
+    PREPROCESSOR___HAS_CPP_ATTRIBUTE("__has_cpp_attribute", "preprocessor-keyword-directive"), // c++20 // NOI18N
+    PREPROCESSOR_EXPORT("export", "preprocessor-keyword-directive"), // c++20 // NOI18N
+    PREPROCESSOR_IMPORT("import", "preprocessor-keyword-directive"), // c++20 // NOI18N
+    PREPROCESSOR_MODULE("module", "preprocessor-keyword-directive"), // c++20 // NOI18N
+
+    // C++23
+    PREPROCESSOR_ELIFDEF("elifdef", "preprocessor-keyword-directive"), // c++23 // NOI18N
+    PREPROCESSOR_ELIFNDEF("elifndef", "preprocessor-keyword-directive"), // c++23 // NOI18N
 
     // C11
-    _NORETURN("_Noreturn", "keyword"), // c11 // NOI18N
-    _ATOMIC("_Atomic", "keyword"), // c11 // NOI18N
     _ALIGNAS("_Alignas", "keyword"), // c11 // NOI18N
     _ALIGNOF("_Alignof", "keyword"), // c11 // NOI18N
-    _THREAD_LOCAL("_Thread_local", "keyword"), // c11 // NOI18N
+    _ATOMIC("_Atomic", "keyword"), // c11 // NOI18N
+    _GENERIC("_Generic", "keyword"), // c11 // NOI18N
+    _NORETURN("_Noreturn", "keyword"), // c11 // NOI18N
     _STATIC_ASSERT("_Static_assert", "keyword"), // c11 // NOI18N
+    _THREAD_LOCAL("_Thread_local", "keyword"), // c11 // NOI18N
+
+    // C23
+    TYPEOF_UNQUAL("typeof_unqual", "keyword"), // c23 // NOI18N
+    _BITINT("_BitInt", "keyword"), // c23 // NOI18N
+    _DECIMAL32("_Decimal32", "keyword"), // c23 // NOI18N
+    _DECIMAL64("_Decimal64", "keyword"), // c23 // NOI18N
+    _DECIMAL128("_Decimal128", "keyword"), // c23 // NOI18N
+    PREPROCESSOR_EMBED("embed", "preprocessor-keyword-directive"), // c23 // NOI18N
+    PREPROCESSOR___HAS_C_ATTRIBUTE("__has_c_attribute", "preprocessor-keyword-directive"), // c23 // NOI18N
+    PREPROCESSOR___HAS_EMBED("__has_embed", "preprocessor-keyword-directive"), // c23 // NOI18N
 
     // extension points
     BUILT_IN_TYPE(null, "keyword"), // NOI18N

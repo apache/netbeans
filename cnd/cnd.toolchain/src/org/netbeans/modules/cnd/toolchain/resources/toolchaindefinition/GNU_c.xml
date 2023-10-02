@@ -58,6 +58,8 @@
             <c89 flags="-std=c89"/>
             <c99 flags="-std=c99"/>
             <c11 flags="-std=c11"/>
+            <c17 flags="-std=c17"/>
+            <c23 flags="-std=c2x"/>
         </c_standard>
         <output_object_file flags="-o " />
         <dependency_generation flags="-MMD -MP -MF &quot;$@.d&quot;" />

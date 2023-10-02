@@ -35,18 +35,24 @@ public class CCompilerConfiguration extends CCCCompilerConfiguration implements 
     public static final int STANDARD_C89 = 1;
     public static final int STANDARD_C99 = 2;
     public static final int STANDARD_C11 = 3;
-    public static final int STANDARD_INHERITED = 4;
+    public static final int STANDARD_C17 = 4;
+    public static final int STANDARD_C23 = 5;
+    public static final int STANDARD_INHERITED = 6;
     private static final String[] STANDARD_NAMES = {
         getString("STANDARD_DEFAULT"),
         getString("STANDARD_C89"),
         getString("STANDARD_C99"),
         getString("STANDARD_C11"),
+        getString("STANDARD_C17"),
+        getString("STANDARD_C23"),
         getString("STANDARD_INHERITED"),};
     private static final String[] STANDARD_NAMES_ROOT = {
         getString("STANDARD_DEFAULT"),
         getString("STANDARD_C89"),
         getString("STANDARD_C99"),
-        getString("STANDARD_C11"),};    
+        getString("STANDARD_C11"),
+        getString("STANDARD_C17"),
+        getString("STANDARD_C23"),};
     private IntConfiguration cStandard;        
     
     // Constructors
@@ -74,7 +80,9 @@ public class CCompilerConfiguration extends CCCCompilerConfiguration implements 
             case STANDARD_C89: return LanguageFlavor.C89.toExternal();
             case STANDARD_C99: return LanguageFlavor.C99.toExternal();
             case STANDARD_C11: return LanguageFlavor.C11.toExternal();
-            case STANDARD_INHERITED:  return LanguageFlavor.UNKNOWN.toExternal();
+            case STANDARD_C17: return LanguageFlavor.C17.toExternal();
+            case STANDARD_C23: return LanguageFlavor.C23.toExternal();
+            case STANDARD_INHERITED: return LanguageFlavor.UNKNOWN.toExternal();
             default: return LanguageFlavor.UNKNOWN.toExternal();
         }
     }    
@@ -92,6 +100,10 @@ public class CCompilerConfiguration extends CCCCompilerConfiguration implements 
             this.cStandard.setValue(STANDARD_C99);
         } else if (cStandard == LanguageFlavor.C11.toExternal()) {
             this.cStandard.setValue(STANDARD_C11);
+        } else if (cStandard == LanguageFlavor.C17.toExternal()) {
+            this.cStandard.setValue(STANDARD_C17);
+        } else if (cStandard == LanguageFlavor.C23.toExternal()) {
+            this.cStandard.setValue(STANDARD_C23);
         } else if (cStandard == LanguageFlavor.UNKNOWN.toExternal()) {
             this.cStandard.setValue(STANDARD_INHERITED);
         }

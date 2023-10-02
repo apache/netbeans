@@ -789,10 +789,10 @@ public class ConfigurationMakefileWriter {
         }
         if (conf.hasCPPFiles(projectDescriptor)) {
             if (compilerSet != null && compilerSet.getCompilerFlavor().isSunStudioCompiler()) {
-                int hasCpp11 = hasCpp11(projectDescriptor, conf);
-                if (hasCpp11 > 0) {
+                int cppStd = getCppStd(projectDescriptor, conf);
+                if (cppStd > 0) {
                     AbstractCompiler cpp = (AbstractCompiler)compilerSet.findTool(PredefinedToolKind.CCCompiler);
-                    return  "${LINK.cc}" + " "+cpp.getCppStandardOptions(hasCpp11) +" "; // NOI18N
+                    return  "${LINK.cc}" + " "+cpp.getCppStandardOptions(cppStd) +" "; // NOI18N
                 }
             }
             return  "${LINK.cc}" + " "; // NOI18N
@@ -802,7 +802,7 @@ public class ConfigurationMakefileWriter {
         return "${LINK.c}" + " "; // NOI18N
     }
 
-    private static int hasCpp11(MakeConfigurationDescriptor configurationDescriptor, MakeConfiguration conf) {
+    private static int getCppStd(MakeConfigurationDescriptor configurationDescriptor, MakeConfiguration conf) {
         Item[] items = configurationDescriptor.getProjectItems();
         // Base it on actual files added to project
         for (int x = 0; x < items.length; x++) {
@@ -817,10 +817,9 @@ public class ConfigurationMakefileWriter {
                 BasicCompilerConfiguration compilerConfiguration = itemConfiguration.getCompilerConfiguration();
                 if (compilerConfiguration instanceof CCCompilerConfiguration) {
                     CCCompilerConfiguration cppConf = (CCCompilerConfiguration) compilerConfiguration;
-                    if (cppConf.getInheritedCppStandard() == CCCompilerConfiguration.STANDARD_CPP11) {
-                        return CCCompilerConfiguration.STANDARD_CPP11;
-                    } else if (cppConf.getInheritedCppStandard() == CCCompilerConfiguration.STANDARD_CPP14) {
-                        return CCCompilerConfiguration.STANDARD_CPP14;
+                    final int cppStd = cppConf.getInheritedCppStandard();
+                    if (cppStd != CCCompilerConfiguration.STANDARD_DEFAULT) {
+                        return cppStd;
                     }
                 }
             }

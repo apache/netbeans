@@ -69,6 +69,9 @@ public class ConstructorPanel extends JPanel {
             name = properties.get(0).getName();
         }
         ComboBoxModel model = genType.getModel(name);
+        if (genType.equals(CGSGenerator.GenType.CONSTRUCTOR)) {
+            customizeMethodGeneration = false;
+        }
         if (genType.equals(CGSGenerator.GenType.METHODS)) {
             customizeMethodGeneration = false;
             Dimension preferredSize = getPreferredSize();

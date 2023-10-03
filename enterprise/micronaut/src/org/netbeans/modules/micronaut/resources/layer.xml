@@ -159,4 +159,11 @@
             </file>
         </folder>
     </folder>
+    <folder name="org-netbeans-modules-java-hints">
+        <folder name="rules">
+            <folder name="errors">
+                <file name="org-netbeans-modules-micronaut-hints-AddArgForRouteVar.instance"/>
+            </folder>
+        </folder>
+    </folder>
 </filesystem>

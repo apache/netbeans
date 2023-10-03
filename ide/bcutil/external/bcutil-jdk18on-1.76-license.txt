@@ -1,5 +1,5 @@
-Name: Bouncy Castle Java Provider
-Version: 1.70
+Name: Bouncy Castle ASN.1 Extension and Utility APIs
+Version: 1.76
 License: MIT-bouncycastle
 Origin: https://www.bouncycastle.org/latest_releases.html
 Description: Legion of the Bouncy Castle Java cryptography APIs

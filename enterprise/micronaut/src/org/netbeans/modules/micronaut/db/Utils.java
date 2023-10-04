@@ -28,6 +28,14 @@ import org.netbeans.api.project.SourceGroup;
 public class Utils {
 
     public static boolean isJPASupported(SourceGroup sg) {
+        return resolveClassName(sg, "io.micronaut.data.jpa.repository.JpaRepository"); //NOI18N
+    }
+
+    public static boolean isDBSupported(SourceGroup sg) {
+        return resolveClassName(sg, "io.micronaut.data.annotation.Id"); //NOI18N
+    }
+
+    private static boolean resolveClassName(SourceGroup sg, String fqn) {
         if (sg == null) {
             return false;
         }
@@ -35,7 +43,6 @@ public class Utils {
         if (compile == null) {
             return false;
         }
-        final String notNullAnnotation = "io.micronaut.data.jpa.repository.JpaRepository"; //NOI18N
-        return compile.findResource(notNullAnnotation.replace('.', '/') + ".class") != null; //NOI18N
+        return compile.findResource(fqn.replace('.', '/') + ".class") != null; //NOI18N
     }
 }

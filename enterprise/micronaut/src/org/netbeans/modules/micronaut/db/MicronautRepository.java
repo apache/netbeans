@@ -113,6 +113,10 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
                         return Collections.emptyList();
                     }
+                    if (!Utils.isDBSupported(sourceGroup) && !Utils.isJPASupported(sourceGroup)) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDdSupport(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
                     final boolean jpaSupported = Utils.isJPASupported(sourceGroup);
                     final Map<String, String> entity2idTypes = getEntityClasses(sourceGroup, jpaSupported);
                     final List<NotifyDescriptor.QuickPick.Item> entities = new ArrayList<>();

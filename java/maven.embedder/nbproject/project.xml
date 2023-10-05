@@ -256,10 +256,12 @@
                 <package>org.codehaus.plexus.util.introspection</package>
                 <package>org.codehaus.plexus.util.xml</package>
                 <package>org.codehaus.plexus.util.xml.pull</package>
-                <package>org.jdom</package>
-                <package>org.jdom.filter</package>
-                <package>org.jdom.input</package>
-                <package>org.jdom.output</package>
+                <package>org.jdom2</package>
+                <package>org.jdom2.filter</package>
+                <package>org.jdom2.input</package>
+                <package>org.jdom2.input.sax</package>
+                <package>org.jdom2.output</package>
+                <package>org.jdom2.util</package>
                 <package>org.netbeans.modules.maven.embedder</package>
                 <package>org.netbeans.modules.maven.embedder.exec</package>
                 <package>org.eclipse.aether</package>
@@ -283,8 +285,8 @@
                 <binary-origin>external/maven-dependency-tree-2.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/jdom-1.0.jar</runtime-relative-path>
-                <binary-origin>external/jdom-1.0.jar</binary-origin>
+                <runtime-relative-path>ext/maven/jdom2-2.0.6.1.jar</runtime-relative-path>
+                <binary-origin>external/jdom2-2.0.6.1.jar</binary-origin>
             </class-path-extension>
             <!-- zipinfo -1 .../apache-maven-*-bin.zip | sort | perl -n -e 'if (m!^apache-maven-.+/((lib|boot)/.+.jar)$!) {print "            <class-path-extension>\n                <runtime-relative-path>../maven/$1</runtime-relative-path>\n            </class-path-extension>\n"}' -->
             <class-path-extension>

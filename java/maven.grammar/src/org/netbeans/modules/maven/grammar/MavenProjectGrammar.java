@@ -51,11 +51,13 @@ import org.apache.maven.model.PluginManagement;
 import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.filter.Filter;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Content;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.filter.AbstractFilter;
+import org.jdom2.filter.Filter;
+import org.jdom2.input.SAXBuilder;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.maven.api.Constants;
@@ -120,7 +122,7 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
     }
     
     @Override
-    protected List<GrammarResult> getDynamicCompletion(String path, HintContext hintCtx, org.jdom.Element parent) {
+    protected List<GrammarResult> getDynamicCompletion(String path, HintContext hintCtx, org.jdom2.Element parent) {
         List<GrammarResult> result = new ArrayList<GrammarResult>();
         if (path.endsWith("plugins/plugin/configuration") || //NOI18N
             path.endsWith("plugins/plugin/executions/execution/configuration")) { //NOI18N
@@ -293,26 +295,21 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
     }
     
     private List<GrammarResult> collectPluginParams(Document pluginDoc, HintContext hintCtx) {
-        Iterator<Element> it = pluginDoc.getRootElement().getDescendants(new Filter() {
-            @Override
-            public boolean matches(Object object) {
-                if (object instanceof Element) {
-                    Element el = (Element)object;
-                    if ("parameter".equals(el.getName()) && //NOI18N
-                            el.getParentElement() != null && "parameters".equals(el.getParentElement().getName()) && //NOI18N
-                            el.getParentElement().getParentElement() != null && "mojo".equals(el.getParentElement().getParentElement().getName())) { //NOI18N
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
-
+        Iterator<Content> it = pluginDoc.getRootElement().getDescendants();
         List<GrammarResult> toReturn = new ArrayList<GrammarResult>();
         Collection<String> params = new HashSet<String>();
 
         while (it.hasNext()) {
-            Element el = it.next();
+            Content c = it.next();
+            if (!(c instanceof Element)) {
+                continue;
+            }
+            Element el = (Element) c;
+            if (!("parameter".equals(el.getName()) && //NOI18N
+                  el.getParentElement() != null && "parameters".equals(el.getParentElement().getName()) && //NOI18N
+                  el.getParentElement().getParentElement() != null && "mojo".equals(el.getParentElement().getParentElement().getName()))) { //NOI18N
+                continue;
+            }
             String editable = el.getChildText("editable"); //NOI18N
             if ("true".equalsIgnoreCase(editable)) { //NOI18N
                 String name = el.getChildText("name"); //NOI18N
@@ -793,23 +790,18 @@ public class MavenProjectGrammar extends AbstractSchemaBasedGrammar {
     }
 
     private Enumeration<GrammarResult> collectGoals(Document pluginDoc, HintContext virtualTextCtx) {
-        @SuppressWarnings("unchecked")
-        Iterator<Element> it = pluginDoc.getRootElement().getDescendants(new Filter() {
-            @Override
-            public boolean matches(Object object) {
-                if (object instanceof Element) {
-                    Element el = (Element)object;
-                    if ("goal".equals(el.getName()) && //NOI18N
-                            el.getParentElement() != null && "mojo".equals(el.getParentElement().getName())) { //NOI18N
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        Iterator<Content> it = pluginDoc.getRootElement().getDescendants();
         Collection<GrammarResult> toReturn = new ArrayList<GrammarResult>();
         while (it.hasNext()) {
-            Element el = it.next();
+            Content c = it.next();
+            if (!(c instanceof Element)) {
+                continue;
+            }
+            Element el = (Element) c;
+            if (!("goal".equals(el.getName()) && //NOI18N
+                  el.getParentElement() != null && "mojo".equals(el.getParentElement().getName()))) { //NOI18N
+                continue;
+            }
             String name = el.getText();
             if (name.startsWith(virtualTextCtx.getCurrentPrefix())) {
                toReturn.add(new MyTextElement(name, virtualTextCtx.getCurrentPrefix()));

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.68.0
+#Version 1.69.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -27,13 +27,13 @@ intf org.netbeans.modules.xml.api.model.GrammarQuery
 meth protected abstract java.io.InputStream getSchemaStream()
 meth protected final java.util.Enumeration<org.netbeans.modules.xml.api.model.GrammarResult> createTextValueList(java.lang.String[],org.netbeans.modules.xml.api.model.HintContext)
 meth protected final org.apache.maven.project.MavenProject getMavenProject()
-meth protected final org.jdom.Element findElement(org.jdom.Element,java.lang.String)
-meth protected final org.jdom.Element findNonTypedContent(org.jdom.Element)
-meth protected final org.jdom.Element findTypeContent(java.lang.String,org.jdom.Element)
+meth protected final org.jdom2.Element findElement(org.jdom2.Element,java.lang.String)
+meth protected final org.jdom2.Element findNonTypedContent(org.jdom2.Element)
+meth protected final org.jdom2.Element findTypeContent(java.lang.String,org.jdom2.Element)
 meth protected final org.netbeans.modules.xml.api.model.GrammarEnvironment getEnvironment()
-meth protected final void processSequence(java.lang.String,org.jdom.Element,java.util.Vector<org.netbeans.modules.xml.api.model.GrammarResult>)
-meth protected java.util.Enumeration<org.netbeans.modules.xml.api.model.GrammarResult> getDynamicValueCompletion(java.lang.String,org.netbeans.modules.xml.api.model.HintContext,org.jdom.Element)
-meth protected java.util.List<org.netbeans.modules.xml.api.model.GrammarResult> getDynamicCompletion(java.lang.String,org.netbeans.modules.xml.api.model.HintContext,org.jdom.Element)
+meth protected final void processSequence(java.lang.String,org.jdom2.Element,java.util.Vector<org.netbeans.modules.xml.api.model.GrammarResult>)
+meth protected java.util.Enumeration<org.netbeans.modules.xml.api.model.GrammarResult> getDynamicValueCompletion(java.lang.String,org.netbeans.modules.xml.api.model.HintContext,org.jdom2.Element)
+meth protected java.util.List<org.netbeans.modules.xml.api.model.GrammarResult> getDynamicCompletion(java.lang.String,org.netbeans.modules.xml.api.model.HintContext,org.jdom2.Element)
 meth public boolean hasCustomizer(org.netbeans.modules.xml.api.model.HintContext)
 meth public boolean isAllowed(java.util.Enumeration)
 meth public java.awt.Component getCustomizer(org.netbeans.modules.xml.api.model.HintContext)
@@ -46,7 +46,6 @@ meth public org.netbeans.modules.xml.api.model.GrammarResult queryDefault(org.ne
 meth public org.openide.nodes.Node$Property[] getProperties(org.netbeans.modules.xml.api.model.HintContext)
 supr java.lang.Object
 hfds environment,schemaDoc
-hcls DefinitionContentElementFilter
 
 CLSS protected abstract static org.netbeans.modules.maven.grammar.spi.AbstractSchemaBasedGrammar$AbstractResultNode
  outer org.netbeans.modules.maven.grammar.spi.AbstractSchemaBasedGrammar
@@ -119,8 +118,8 @@ meth public short getNodeType()
 supr org.netbeans.modules.maven.grammar.spi.AbstractSchemaBasedGrammar$AbstractResultNode
 
 CLSS public abstract interface org.netbeans.modules.maven.grammar.spi.GrammarExtensionProvider
-meth public abstract java.util.Enumeration<org.netbeans.modules.xml.api.model.GrammarResult> getDynamicValueCompletion(java.lang.String,org.netbeans.modules.xml.api.model.HintContext,org.jdom.Element)
-meth public abstract java.util.List<org.netbeans.modules.xml.api.model.GrammarResult> getDynamicCompletion(java.lang.String,org.netbeans.modules.xml.api.model.HintContext,org.jdom.Element)
+meth public abstract java.util.Enumeration<org.netbeans.modules.xml.api.model.GrammarResult> getDynamicValueCompletion(java.lang.String,org.netbeans.modules.xml.api.model.HintContext,org.jdom2.Element)
+meth public abstract java.util.List<org.netbeans.modules.xml.api.model.GrammarResult> getDynamicCompletion(java.lang.String,org.netbeans.modules.xml.api.model.HintContext,org.jdom2.Element)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.modules.xml.api.model.GrammarQuery

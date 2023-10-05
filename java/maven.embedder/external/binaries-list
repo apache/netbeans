@@ -16,4 +16,4 @@
 # under the License.
 A2AC1CD690AB4C80DEFE7F9BCE14D35934C35CEC jdom:jdom:1.0
 5D9CE6ADD7B714B8095F0E3E396C5E9F8C5DCFEF org.apache.maven.shared:maven-dependency-tree:2.2
-5501C83302757A1407C0546E68EEDBE78EF4C802 org.apache.maven:apache-maven:3.9.4:bin@zip
+448660E65018FF4354574800D0EFA831C7F5F469 org.apache.maven:apache-maven:3.9.5:bin@zip

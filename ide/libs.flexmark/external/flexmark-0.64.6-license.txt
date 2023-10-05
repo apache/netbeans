@@ -1,9 +1,9 @@
 Name: FlexMark-java
-Version: 0.62.2
+Version: 0.64.6
 License: BSD-flexmark
 Description: FlexMark library
 Origin: https://github.com/vsch/flexmark-java
-Files: flexmark-0.62.2.jar flexmark-ext-anchorlink-0.62.2.jar flexmark-ext-emoji-0.62.2.jar flexmark-ext-tables-0.62.2.jar flexmark-html2md-converter-0.62.2.jar flexmark-util-ast-0.62.2.jar flexmark-util-builder-0.62.2.jar flexmark-util-collection-0.62.2.jar flexmark-util-data-0.62.2.jar flexmark-util-dependency-0.62.2.jar flexmark-util-format-0.62.2.jar flexmark-util-html-0.62.2.jar flexmark-util-misc-0.62.2.jar flexmark-util-sequence-0.62.2.jar flexmark-util-visitor-0.62.2.jar flexmark-ext-gfm-tasklist-0.62.2.jar
+Files: flexmark-0.64.6.jar flexmark-ext-anchorlink-0.64.6.jar flexmark-ext-emoji-0.64.6.jar flexmark-ext-tables-0.64.6.jar flexmark-html2md-converter-0.64.6.jar flexmark-util-ast-0.64.6.jar flexmark-util-builder-0.64.6.jar flexmark-util-collection-0.64.6.jar flexmark-util-data-0.64.6.jar flexmark-util-dependency-0.64.6.jar flexmark-util-format-0.64.6.jar flexmark-util-html-0.64.6.jar flexmark-util-misc-0.64.6.jar flexmark-util-sequence-0.64.6.jar flexmark-util-visitor-0.64.6.jar flexmark-ext-gfm-tasklist-0.64.6.jar
 
 Copyright (c) 2015-2016, Atlassian Pty Ltd
 All rights reserved.

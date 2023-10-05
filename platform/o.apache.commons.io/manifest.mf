@@ -1,2 +1,0 @@
-OpenIDE-Module: org.apache.commons.io
-OpenIDE-Module-Specification-Version: 2.21

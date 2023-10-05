@@ -1,10 +1,10 @@
 Name: Apache Ant
 Origin: Apache Software Foundation
-Version: 1.10.8
-Files: ant-misc-1.10.8.zip ant-1.10.8.jar ant-antlr-1.10.8.jar ant-apache-bcel-1.10.8.jar ant-apache-bsf-1.10.8.jar ant-apache-log4j-1.10.8.jar ant-apache-oro-1.10.8.jar ant-apache-regexp-1.10.8.jar ant-apache-resolver-1.10.8.jar ant-apache-xalan2-1.10.8.jar ant-commons-logging-1.10.8.jar ant-commons-net-1.10.8.jar ant-jai-1.10.8.jar ant-javamail-1.10.8.jar ant-jdepend-1.10.8.jar ant-jmf-1.10.8.jar ant-jsch-1.10.8.jar ant-junit-1.10.8.jar ant-junit4-1.10.8.jar ant-launcher-1.10.8.jar ant-netrexx-1.10.8.jar ant-swing-1.10.8.jar ant-testutil-1.10.8.jar ant-xz-1.10.8.jar
+Version: 1.10.14
+Files: apache-ant-1.10.14-bin.zip
 Description: Ant build tool.
 License: Apache-2.0-ant
-URL: https://builds.apache.org/view/All/job/Ant_Nightly/lastBuild/
+URL: https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.14-bin.zip
 
 /*
  *                                 Apache License
@@ -201,7 +201,7 @@ URL: https://builds.apache.org/view/All/job/Ant_Nightly/lastBuild/
  *   you may not use this file except in compliance with the License.
  *   You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *       https://www.apache.org/licenses/LICENSE-2.0
  *
  *   Unless required by applicable law or agreed to in writing, software
  *   distributed under the License is distributed on an "AS IS" BASIS,
@@ -211,7 +211,7 @@ URL: https://builds.apache.org/view/All/job/Ant_Nightly/lastBuild/
  */
 
 W3C� SOFTWARE NOTICE AND LICENSE
-http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
+https://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
 
 This work (and included software, documentation such as READMEs, or other
 related items) is being provided by the copyright holders under the following

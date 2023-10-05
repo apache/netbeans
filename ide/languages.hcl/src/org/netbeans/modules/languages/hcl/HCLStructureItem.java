@@ -30,11 +30,10 @@ import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.languages.hcl.ast.HCLAddressableElement;
 import org.netbeans.modules.languages.hcl.ast.HCLAttribute;
 import org.netbeans.modules.languages.hcl.ast.HCLBlock;
 import org.netbeans.modules.languages.hcl.ast.HCLContainer;
-import org.netbeans.modules.languages.hcl.ast.HCLElement;
-import org.netbeans.modules.languages.hcl.ast.SourceRef;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -43,11 +42,11 @@ import org.openide.filesystems.FileObject;
  */
 public class HCLStructureItem implements ElementHandle, StructureItem {
 
-    final HCLElement element;
+    final HCLAddressableElement element;
     final SourceRef references;
     private List<? extends StructureItem> nestedCache;
 
-    public HCLStructureItem(HCLElement element, SourceRef references) {
+    public HCLStructureItem(HCLAddressableElement element, SourceRef references) {
         this.element = element;
         this.references = references;
     }

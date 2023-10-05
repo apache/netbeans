@@ -53,7 +53,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -109,6 +108,7 @@ import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.ParameterInformation;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
@@ -126,6 +126,9 @@ import org.eclipse.lsp4j.ResourceOperationKind;
 import org.eclipse.lsp4j.ShowDocumentParams;
 import org.eclipse.lsp4j.ShowDocumentResult;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.SignatureHelp;
+import org.eclipse.lsp4j.SignatureHelpParams;
+import org.eclipse.lsp4j.SignatureInformation;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
@@ -1389,6 +1392,65 @@ public class ServerTest extends NbTestCase {
                 "\n" +
                 "This is a test class with Javadoc.\n" +
                 "\n");
+    }
+
+    public void testSignatureHelp() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "/**\n" +
+                      " * This is a test class with Javadoc.\n" +
+                      " */\n" +
+                      "public class Test {\n" +
+                      "    public static void main(String[] args) {\n" +
+                      "        System.out.println(\"len: \" + args.length);\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        FileUtil.refreshFor(getWorkDir());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        assertNotNull(result.getCapabilities().getSignatureHelpProvider());
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        SignatureHelp help = server.getTextDocumentService().signatureHelp(new SignatureHelpParams(new TextDocumentIdentifier(toURI(src)), new Position(5, 30))).get();
+        assertNotNull(help);
+        List<SignatureInformation> signatures = help.getSignatures();
+        assertNotNull(signatures);
+        SignatureInformation sInfo = signatures.stream().filter(si -> "println(String x) : void".equals(si.getLabel())).findFirst().get();
+        assertNotNull(sInfo);
+        assertEquals(signatures.indexOf(sInfo), help.getActiveSignature().intValue());
+        assertEquals(0, help.getActiveParameter().intValue());
+        List<ParameterInformation> params = sInfo.getParameters();
+        assertNotNull(params);
+        assertEquals(1, params.size());
+        assertTrue(params.get(0).getLabel().isLeft());
+        assertEquals("String x", params.get(0).getLabel().getLeft());
+        assertEquals(0, sInfo.getActiveParameter().intValue());
     }
 
     public void testAdvancedCompletion1() throws Exception {

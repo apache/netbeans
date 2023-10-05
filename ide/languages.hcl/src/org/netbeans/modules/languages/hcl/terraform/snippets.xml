@@ -43,6 +43,12 @@
     <codetemplate abbreviation="fore" xml:space="preserve">
         <code>for_each = </code>
     </codetemplate>
+    <codetemplate abbreviation="fori" xml:space="preserve">
+        <code>[ for ${NAME newVarName default="i" ordering=2} in ${COLL newVarName default="local." ordering=1} : ${cursor} ]</code>
+    </codetemplate>
+    <codetemplate abbreviation="form" xml:space="preserve">
+        <code>{ for ${KEY newVarName default="k" ordering=2}, ${VALUE newVarName default="v" ordering=3} in ${COLL newVarName default="local." ordering=1} : ${KEY} => ${cursor} }</code>
+    </codetemplate>
     <codetemplate abbreviation="e" xml:space="preserve">
         <code>each.</code>
     </codetemplate>

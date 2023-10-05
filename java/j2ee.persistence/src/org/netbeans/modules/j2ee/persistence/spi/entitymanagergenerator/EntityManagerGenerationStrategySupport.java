@@ -261,14 +261,16 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
     }
     
     protected VariableTree createUserTransaction(){
-        return getTreeMaker().Variable(
+        VariableTree result = getTreeMaker().Variable(
                 getTreeMaker().Modifiers(
-                Collections.<Modifier>singleton(Modifier.PRIVATE),
-                Collections.<AnnotationTree>singletonList(getGenUtils().createAnnotation(RESOURCE_FQN))
+                        Collections.<Modifier>singleton(Modifier.PRIVATE),
+                        Collections.<AnnotationTree>singletonList(getGenUtils().createAnnotation(RESOURCE_FQN))
                 ),
                 "utx", //NOI18N
                 getTreeMaker().Identifier(USER_TX_FQN),
                 null);
+        result = (VariableTree) importFQNs(result);
+        return result;
     }
     
     protected VariableTree createEntityManagerFactory(String name){

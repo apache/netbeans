@@ -45,12 +45,12 @@
             </test-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/nb-javac-jdk-21-26-api.jar</runtime-relative-path>
-                <binary-origin>external/nb-javac-jdk-21+26-api.jar</binary-origin>
+                <runtime-relative-path>ext/nb-javac-jdk-21u-api.jar</runtime-relative-path>
+                <binary-origin>external/nb-javac-jdk-21u-api.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/nb-javac-jdk-21-26.jar</runtime-relative-path>
-                <binary-origin>external/nb-javac-jdk-21+26.jar</binary-origin>
+                <runtime-relative-path>ext/nb-javac-jdk-21u.jar</runtime-relative-path>
+                <binary-origin>external/nb-javac-jdk-21u.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

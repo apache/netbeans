@@ -37,6 +37,7 @@ import org.openide.util.NbBundle;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import org.openide.util.Exceptions;
 
@@ -413,7 +414,7 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
             while ((f == null) && (retries > 0)) {
                 retries--;
                 try {
-                    f = File.createTempFile("extbrowser", ".html");             // NOI18N
+                    f = Files.createTempFile("extbrowser", ".html").toFile();             // NOI18N
                     logFine("file:", f); // NOI18N
                     if (f != null) { 
                         fw = new FileWriter(f);

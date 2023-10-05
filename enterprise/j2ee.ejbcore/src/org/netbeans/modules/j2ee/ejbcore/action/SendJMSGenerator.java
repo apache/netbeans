@@ -79,7 +79,6 @@ import org.openide.util.Exceptions;
  *
  * @author Martin Adamek
  */
-// @todo: Support JakartaEE
 public final class SendJMSGenerator {
 
     private static final Logger LOG = Logger.getLogger(SendJMSGenerator.class.getName());
@@ -121,6 +120,7 @@ public final class SendJMSGenerator {
             }
         }, true);
         InjectionStrategy injectionStrategy = getInjectionStrategy(project, isInjectionTarget[0]);
+        boolean jakartaPackageNamespace = isJakartaPackageNamespace(project);
         String destinationFieldName = null;
         String connectionFactoryFieldName = null;
         String factoryName = connectionFactoryName;
@@ -137,32 +137,49 @@ public final class SendJMSGenerator {
         }
         switch (injectionStrategy) {
             case NO_INJECT:
-                factoryName = generateConnectionFactoryReference(container, factoryName, fileObject, className);
-                destinationName = generateDestinationReference(container, fileObject, className);
+                factoryName = generateConnectionFactoryReference(container, factoryName, fileObject, className, jakartaPackageNamespace);
+                destinationName = generateDestinationReference(container, fileObject, className, jakartaPackageNamespace);
                 break;
 
             case INJ_EE7_SOURCES:
             case INJ_COMMON:
                 destinationName = messageDestination.getName();
-                connectionFactoryFieldName = createInjectedResource(fileObject, className, factoryName, "javax.jms.ConnectionFactory"); // NO18N
-                destinationFieldName = createInjectedResource(fileObject, className, destinationName,
-                        messageDestination.getType() == Type.QUEUE ? "javax.jms.Queue" : "javax.jms.Topic"); //NOI18N
+                if (jakartaPackageNamespace) {
+                    connectionFactoryFieldName = createInjectedResource(fileObject, className, factoryName, "jakarta.jms.ConnectionFactory", jakartaPackageNamespace); // NO18N
+                    destinationFieldName = createInjectedResource(fileObject, className, destinationName,
+                            messageDestination.getType() == Type.QUEUE ? "jakarta.jms.Queue" : "jakarta.jms.Topic",
+                            jakartaPackageNamespace); //NOI18N
+                } else {
+                    connectionFactoryFieldName = createInjectedResource(fileObject, className, factoryName, "javax.jms.ConnectionFactory", jakartaPackageNamespace); // NO18N
+                    destinationFieldName = createInjectedResource(fileObject, className, destinationName,
+                            messageDestination.getType() == Type.QUEUE ? "javax.jms.Queue" : "javax.jms.Topic",  //NOI18N
+                            jakartaPackageNamespace);
+                }
                 break;
 
             case INJ_EE7_CDI:
-                destinationName = messageDestination.getName();
-                connectionFactoryFieldName = createInjectedFactory(fileObject, className, factoryName, "javax.jms.JMSContext"); // NO18N
-                destinationFieldName = createInjectedResource(fileObject, className, destinationName,
-                        messageDestination.getType() == Type.QUEUE ? "javax.jms.Queue" : "javax.jms.Topic"); //NOI18N
+                if (jakartaPackageNamespace) {
+                    destinationName = messageDestination.getName();
+                    connectionFactoryFieldName = createInjectedFactory(fileObject, className, factoryName, "jakarta.jms.JMSContext", jakartaPackageNamespace); // NO18N
+                    destinationFieldName = createInjectedResource(fileObject, className, destinationName,
+                            messageDestination.getType() == Type.QUEUE ? "jakarta.jms.Queue" : "jakarta.jms.Topic", //NOI18N
+                            jakartaPackageNamespace);
+                } else {
+                    destinationName = messageDestination.getName();
+                    connectionFactoryFieldName = createInjectedFactory(fileObject, className, factoryName, "javax.jms.JMSContext", jakartaPackageNamespace); // NO18N
+                    destinationFieldName = createInjectedResource(fileObject, className, destinationName,
+                            messageDestination.getType() == Type.QUEUE ? "javax.jms.Queue" : "javax.jms.Topic", //NOI18N
+                            jakartaPackageNamespace);
+                }
                 break;
         }
         
         String sendMethodName = ""; //NOI18N
         if (injectionStrategy != InjectionStrategy.INJ_EE7_CDI && injectionStrategy != InjectionStrategy.INJ_EE7_SOURCES) {
-            sendMethodName = createSendMethod(fileObject, className, messageDestination.getName());
+            sendMethodName = createSendMethod(fileObject, className, messageDestination.getName(), jakartaPackageNamespace);
         }
         createJMSProducer(fileObject, className, factoryName, connectionFactoryFieldName, destinationName,
-                destinationFieldName, sendMethodName, slStrategy, injectionStrategy);
+                destinationFieldName, sendMethodName, slStrategy, injectionStrategy, jakartaPackageNamespace);
 
         if (messageDestination != null
                 && injectionStrategy != InjectionStrategy.INJ_EE7_CDI && injectionStrategy != InjectionStrategy.INJ_EE7_SOURCES ) {
@@ -217,10 +234,10 @@ public final class SendJMSGenerator {
         }
     }        
 
-    private String generateConnectionFactoryReference(EnterpriseReferenceContainer container, String referenceName, FileObject referencingFile, String referencingClass) throws IOException {
+    private String generateConnectionFactoryReference(EnterpriseReferenceContainer container, String referenceName, FileObject referencingFile, String referencingClass, boolean jakartaPackageNamespace) throws IOException {
         ResourceReference ref = ResourceReference.create(
                 referenceName,
-                "javax.jms.ConnectionFactory",
+                jakartaPackageNamespace ? "jakarta.jms.ConnectionFactory": "javax.jms.ConnectionFactory",
                 ResourceRef.RES_AUTH_CONTAINER,
                 ResourceRef.RES_SHARING_SCOPE_SHAREABLE,
                 null
@@ -228,7 +245,7 @@ public final class SendJMSGenerator {
         return container.addResourceRef(ref, referencingFile, referencingClass);
     }
     
-    private String generateDestinationReference(EnterpriseReferenceContainer container, FileObject referencingFile, String referencingClass) throws IOException {
+    private String generateDestinationReference(EnterpriseReferenceContainer container, FileObject referencingFile, String referencingClass, boolean jakartaPackageNamespace) throws IOException {
         // this may need to generalized later if jms producers are expected
         // in web modules
         ProjectInformation projectInformation = ProjectUtils.getInformation(mdbHolderProject);
@@ -237,9 +254,15 @@ public final class SendJMSGenerator {
         if (mdbHolderProject.equals(referenceingProject)) {
             link = link.substring(link.indexOf('#') + 1);
         }
+        String queueClass = "jakarta.jms.Queue";
+        String topicClass = "jakarta.jms.Topic";
+        if (!jakartaPackageNamespace) {
+            queueClass = "javax.jms.Queue";
+            topicClass = "javax.jms.Topic";
+        }
         MessageDestinationReference ref = MessageDestinationReference.create(
                 messageDestination.getName(),
-                messageDestination.getType() == MessageDestination.Type.QUEUE ? "javax.jms.Queue" : "javax.jms.Topic",
+                messageDestination.getType() == MessageDestination.Type.QUEUE ? queueClass : topicClass,
                 PRODUCES,
                 link
                 );
@@ -254,12 +277,12 @@ public final class SendJMSGenerator {
      * @param fieldType the class of the field.
      * @return name of the created field.
      */
-    private String createInjectedResource(FileObject fileObject, String className, String destinationName, String fieldType) throws IOException {
+    private String createInjectedResource(FileObject fileObject, String className, String destinationName, String fieldType, boolean jakartaPackageNamespace) throws IOException {
         String fieldName = Utils.makeJavaIdentifierPart(Utils.jndiNameToCamelCase(destinationName, true, "jms")); //NOI18N
         _RetoucheUtil.generateAnnotatedField(
                 fileObject,
                 className,
-                "javax.annotation.Resource", //NOI18N
+                jakartaPackageNamespace ? "jakarta.annotation.Resource" : "javax.annotation.Resource", //NOI18N
                 fieldName,
                 fieldType,
                 Collections.singletonMap("mappedName", destinationName),  //NOI18N
@@ -276,12 +299,12 @@ public final class SendJMSGenerator {
      * @param fieldType the class of the field.
      * @return name of the created field.
      */
-    private String createInjectedFactory(FileObject fileObject, String className, String destinationName, String fieldType) throws IOException {
+    private String createInjectedFactory(FileObject fileObject, String className, String destinationName, String fieldType, boolean jakartaPackageNamespace) throws IOException {
         String fieldName = "context"; //NOI18N
         final ElementHandle<VariableElement> field = _RetoucheUtil.generateAnnotatedField(
                 fileObject,
                 className,
-                "javax.jms.JMSConnectionFactory", //NOI18N
+                jakartaPackageNamespace ? "jakarta.jms.JMSConnectionFactory" : "javax.jms.JMSConnectionFactory", //NOI18N
                 fieldName,
                 fieldType,
                 Collections.singletonMap("", destinationName),  //NOI18N
@@ -291,13 +314,15 @@ public final class SendJMSGenerator {
         javaSource.runModificationTask(new Task<WorkingCopy>() {
             @Override
             public void run(WorkingCopy parameter) throws Exception {
-                parameter.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                parameter.toPhase(JavaSource.Phase.RESOLVED);
                 GenerationUtils genUtils = GenerationUtils.newInstance(parameter);
                 TreePath fieldTree = parameter.getTrees().getPath(field.resolve(parameter));
                 VariableTree originalTree = (VariableTree) fieldTree.getLeaf();
                 ModifiersTree modifiers = originalTree.getModifiers();
                 List<AnnotationTree> annotations = new ArrayList<AnnotationTree>(modifiers.getAnnotations());
-                annotations.add(0, genUtils.createAnnotation("javax.inject.Inject")); //NOI18N
+                annotations.add(0, genUtils.createAnnotation(
+                        jakartaPackageNamespace ? "jakarta.inject.Inject" : "javax.inject.Inject" //NOI18N
+                ));
                 ModifiersTree nueMods = parameter.getTreeMaker().Modifiers(modifiers, annotations);
                 parameter.rewrite(modifiers, nueMods);
             }
@@ -305,21 +330,22 @@ public final class SendJMSGenerator {
         return fieldName;
     }
     
-    private String createSendMethod(FileObject fileObject, final String className, String destination) throws IOException {
+    private String createSendMethod(FileObject fileObject, final String className, String destination, boolean jakartaPackageNamespace) throws IOException {
         final MethodModel.Variable[] parameters = new MethodModel.Variable[] {
-            MethodModel.Variable.create("javax.jms.Session", "session"),
+            MethodModel.Variable.create(jakartaPackageNamespace ? "jakarta.jms.Session" : "javax.jms.Session", "session"),
             MethodModel.Variable.create(Object.class.getName(), "messageData")
         };
         String methodName = "createJMSMessageFor" + Utils.makeJavaIdentifierPart(Utils.jndiNameToCamelCase(destination, true, null));
         final MethodModel methodModel = MethodModel.create(
                 methodName,
-                "javax.jms.Message",
+                jakartaPackageNamespace ? "jakarta.jms.Message" : "javax.jms.Message",
                 "// TODO create and populate message to send\n" +
-                "javax.jms.TextMessage tm = session.createTextMessage();\n" +
+                (jakartaPackageNamespace ? "jakarta" : "javax") +
+                ".jms.TextMessage tm = session.createTextMessage();\n" +
                 "tm.setText(messageData.toString());\n"+
                 "return tm;\n",
                 Arrays.asList(parameters),
-                Collections.singletonList("javax.jms.JMSException"),
+                Collections.singletonList(jakartaPackageNamespace ? "jakarta.jms.JMSException" : "javax.jms.JMSException"),
                 Collections.singleton(Modifier.PRIVATE)
                 );
         JavaSource javaSource = JavaSource.forFileObject(fileObject);
@@ -346,7 +372,8 @@ public final class SendJMSGenerator {
             String destinationFieldName,
             String sendMethodName,
             ServiceLocatorStrategy slStrategy,
-            InjectionStrategy injectionStrategy) throws IOException {
+            InjectionStrategy injectionStrategy,
+            boolean jakartaPackageNamespace) throws IOException {
         String destName = Utils.makeJavaIdentifierPart(destinationName.substring(destinationName.lastIndexOf('/') + 1));
         StringBuffer destBuff = new StringBuffer(destName);
         destBuff.setCharAt(0, Character.toUpperCase(destBuff.charAt(0)));
@@ -361,23 +388,23 @@ public final class SendJMSGenerator {
                 break;
 
             case INJ_EE7_SOURCES:
-                body = getSendJMSCodeForCreatedJMSContext(connectionFactoryFieldName, destinationFieldName);
+                body = getSendJMSCodeForCreatedJMSContext(connectionFactoryFieldName, destinationFieldName, jakartaPackageNamespace);
                 parameterType = String.class.getName();
                 break;
 
             case INJ_COMMON:
-                throwsClause.add("javax.jms.JMSException");
-                body = getSendJMSCodeWithInjectedFields(connectionFactoryFieldName, destinationFieldName, sendMethodName);
+                throwsClause.add(jakartaPackageNamespace ? "jakarta.jms.JMSException" : "javax.jms.JMSException");
+                body = getSendJMSCodeWithInjectedFields(connectionFactoryFieldName, destinationFieldName, sendMethodName, jakartaPackageNamespace);
                 break;
 
             case NO_INJECT:
             default:
-                throwsClause.add("javax.jms.JMSException");
+                throwsClause.add(jakartaPackageNamespace ? "jakarta.jms.JMSException" : "javax.jms.JMSException");
                 if (slStrategy == null) {
-                    body = getSendJMSCode(connectionFactoryName, destinationName, sendMethodName);
+                    body = getSendJMSCode(connectionFactoryName, destinationName, sendMethodName, jakartaPackageNamespace);
                     throwsClause.add("javax.naming.NamingException");
                 } else {
-                    body = getSendJMSCode(connectionFactoryName, destinationName, sendMethodName, slStrategy, fileObject, className);
+                    body = getSendJMSCode(connectionFactoryName, destinationName, sendMethodName, slStrategy, fileObject, className, jakartaPackageNamespace);
                 }
                 break;
         }
@@ -409,15 +436,16 @@ public final class SendJMSGenerator {
      */
     private String getSendJMSCodeWithInjectedFields(String connectionFactoryFieldName,
             String destinationFieldName,
-            String messageMethodName){
+            String messageMethodName,
+            boolean jakartaPackageNamespace){
         
         return MessageFormat.format(
-                "javax.jms.Connection connection = null;\n" +
-                "javax.jms.Session session = null;\n" +
+                "{3}.jms.Connection connection = null;\n" +
+                "{3}.jms.Session session = null;\n" +
                 "try '{' \n" +
                 "connection = {0}.createConnection();\n" +
-                "session = connection.createSession(false,javax.jms.Session.AUTO_ACKNOWLEDGE);\n" +
-                "javax.jms.MessageProducer messageProducer = session.createProducer({1});\n" +
+                "session = connection.createSession(false,{3}.jms.Session.AUTO_ACKNOWLEDGE);\n" +
+                "{3}.jms.MessageProducer messageProducer = session.createProducer({1});\n" +
                 "messageProducer.send({2}(session, messageData));\n" +
                 " '}' finally '{'\n" +
                 "if (session != null) '{'\n" +
@@ -431,7 +459,7 @@ public final class SendJMSGenerator {
                 "connection.close();\n" +
                 "'}'\n" +
                 "'}'\n",
-                connectionFactoryFieldName, destinationFieldName, messageMethodName);
+                connectionFactoryFieldName, destinationFieldName, messageMethodName, jakartaPackageNamespace ? "jakarta" : "javax");
     }
 
     /**
@@ -449,28 +477,29 @@ public final class SendJMSGenerator {
      * creates AutoCloseable JMSContext.
      */
     private String getSendJMSCodeForCreatedJMSContext(String connectionFactoryFieldName,
-            String destinationFieldName){
+            String destinationFieldName,
+            boolean jakartaPackageNamespace){
         return MessageFormat.format(
-                "try (javax.jms.JMSContext context = {0}.createContext()) '{'\n" +                //NOI18N
+                "try ({2}.jms.JMSContext context = {0}.createContext()) '{'\n" +                //NOI18N
                 "context.createProducer().send({1}, messageData);\n" +    //NOI18N
                 "'}'\n",                                                                 //NOI18N
-                connectionFactoryFieldName, destinationFieldName);
+                connectionFactoryFieldName, destinationFieldName, jakartaPackageNamespace ? "jakarta" : "javax");
     }
     
     private String getSendJMSCode(String connectionName, String destinationName,
             String messageMethodName, ServiceLocatorStrategy sls,
-            FileObject fileObject, String className) {
+            FileObject fileObject, String className, boolean jakartaPackageNamespace) {
         String connectionFactory = sls.genJMSFactory(connectionName, fileObject, className);
         String destination = sls.genDestinationLookup(destinationName, fileObject, className);
         return MessageFormat.format(
-                "javax.jms.ConnectionFactory cf = (javax.jms.ConnectionFactory) " + connectionFactory + ";\n" +
-                "javax.jms.Connection conn = null;\n" +
-                "javax.jms.Session s = null;\n" +
+                "{3}.jms.ConnectionFactory cf = ({3}.jms.ConnectionFactory) " + connectionFactory + ";\n" +
+                "{3}.jms.Connection conn = null;\n" +
+                "{3}.jms.Session s = null;\n" +
                 "try '{' \n" +
                 "conn = cf.createConnection();\n" +
                 "s = conn.createSession(false,s.AUTO_ACKNOWLEDGE);\n" +
-                "javax.jms.Destination destination = (javax.jms.Destination) " + destination + ";\n" +
-                "javax.jms.MessageProducer mp = s.createProducer(destination);\n" +
+                "{3}.jms.Destination destination = ({3}.jms.Destination) " + destination + ";\n" +
+                "{3}.jms.MessageProducer mp = s.createProducer(destination);\n" +
                 "mp.send({2}(s,messageData));\n" +
                 " '}' finally '{'\n" +
                 "if (s != null) '{'\n"+
@@ -484,21 +513,21 @@ public final class SendJMSGenerator {
                 "conn.close();\n" +
                 "'}'\n" +
                 "'}'\n",
-                new Object[] {connectionName, destinationName, messageMethodName});
+                new Object[] {connectionName, destinationName, messageMethodName, jakartaPackageNamespace ? "jakarta" : "javax"});
     }
     
     private String getSendJMSCode(String connectionName, String destinationName,
-            String messageMethodName) {
+            String messageMethodName, boolean jakartaPackageNamespace) {
         return MessageFormat.format(
                 "javax.naming.Context c = new javax.naming.InitialContext();\n" +
-                "javax.jms.ConnectionFactory cf = (javax.jms.ConnectionFactory) c.lookup(\"java:comp/env/{0}\");\n" +
-                "javax.jms.Connection conn = null;\n" +
-                "javax.jms.Session s = null;\n" +
+                "{3}.jms.ConnectionFactory cf = ({3}.jms.ConnectionFactory) c.lookup(\"java:comp/env/{0}\");\n" +
+                "{3}.jms.Connection conn = null;\n" +
+                "{3}.jms.Session s = null;\n" +
                 "try '{' \n" +
                 "conn = cf.createConnection();\n" +
                 "s = conn.createSession(false,s.AUTO_ACKNOWLEDGE);\n" +
-                "javax.jms.Destination destination = (javax.jms.Destination) c.lookup(\"java:comp/env/{1}\");\n" +
-                "javax.jms.MessageProducer mp = s.createProducer(destination);\n" +
+                "{3}.jms.Destination destination = ({3}.jms.Destination) c.lookup(\"java:comp/env/{1}\");\n" +
+                "{3}.jms.MessageProducer mp = s.createProducer(destination);\n" +
                 "mp.send({2}(s,messageData));\n" +
                 " '}' finally '{'\n" +
                 "if (s != null) '{'\n"+
@@ -512,7 +541,7 @@ public final class SendJMSGenerator {
                 "conn.close();\n" +
                 "'}'\n" +
                 "'}'\n",
-                new Object[] {connectionName, destinationName, messageMethodName});
+                new Object[] {connectionName, destinationName, messageMethodName, jakartaPackageNamespace ? "jakarta" : "javax"});
     }
 
     public static InjectionStrategy getInjectionStrategy(Project project, boolean injectable) {
@@ -521,7 +550,7 @@ public final class SendJMSGenerator {
         }
 
         J2eeProjectCapabilities capabilities = J2eeProjectCapabilities.forProject(project);
-        if (!capabilities.isEjb32LiteSupported()) {
+        if (! (capabilities.isEjb32LiteSupported() || capabilities.isEjb40LiteSupported())) {
             return InjectionStrategy.INJ_COMMON;
         } else {
             CdiUtil cdiUtil = project.getLookup().lookup(CdiUtil.class);
@@ -531,6 +560,11 @@ public final class SendJMSGenerator {
                 return InjectionStrategy.INJ_EE7_SOURCES;
             }
         }
+    }
+
+    public static boolean isJakartaPackageNamespace(Project project) {
+        J2eeProjectCapabilities capabilities = J2eeProjectCapabilities.forProject(project);
+        return capabilities.isEjb40LiteSupported();
     }
 
     public static enum InjectionStrategy {

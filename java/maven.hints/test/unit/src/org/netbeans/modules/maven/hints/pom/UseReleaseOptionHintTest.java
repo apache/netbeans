@@ -141,6 +141,16 @@ public class UseReleaseOptionHintTest extends NbTestCase {
         assertEquals(6, hints.size());
     }
 
+    public void testCompilerPluginWithNoGroupID() throws Exception {
+        FileObject pom = TestFileUtils.writeFile(work, "pom.xml", COMPILER_POM.replaceFirst("<groupId>org.apache.maven.plugins</groupId>", ""));
+
+        POMModel model = POMModelFactory.getDefault().getModel(Utilities.createModelSource(pom));
+        Project project = ProjectManager.getDefault().findProject(pom.getParent());
+
+        List<ErrorDescription> hints = new UseReleaseOptionHint().getErrorsForDocument(model, project);
+        assertEquals(6, hints.size());
+    }
+
     public void testOldCompilerPlugin() throws Exception {
         FileObject pom = TestFileUtils.writeFile(work, "pom.xml", COMPILER_POM.replaceFirst("3.10.1", "3.5"));
 

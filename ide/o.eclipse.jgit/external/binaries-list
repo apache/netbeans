@@ -15,6 +15,3 @@
 # specific language governing permissions and limitations
 # under the License.
 30599F446ABE09AB51CFE24D3433170F2599F9CC org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r
-598B2D4E3677D82FB281BEA8AD8DC636D3624BAE org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.7.0.202309050840-r
-59B2627DE4CCDB433582EB28FA6C4B842948074A org.eclipse.jgit:org.eclipse.jgit.lfs:6.7.0.202309050840-r
-F437425BEAAB4073554ADE72A7F0C633312D249A org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:6.7.0.202309050840-r

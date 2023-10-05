@@ -14,5 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-OpenIDE-Module-Name=JGit Libraries
+598B2D4E3677D82FB281BEA8AD8DC636D3624BAE org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.7.0.202309050840-r

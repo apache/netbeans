@@ -22,62 +22,40 @@
 <project xmlns="http://www.netbeans.org/ns/project/1">
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
-        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
-            <code-name-base>org.netbeans.libs.git</code-name-base>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
+            <code-name-base>org.eclipse.jgit.ssh.jsch</code-name-base>
             <module-dependencies>
                 <dependency>
                     <code-name-base>com.jcraft.jsch</code-name-base>
-                    <build-prerequisite/>
                     <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>0.1.55</specification-version>
-                    </run-dependency>
+                    <run-dependency/>
                 </dependency>
                 <dependency>
                     <code-name-base>org.eclipse.jgit</code-name-base>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
+                    <code-name-base>slf4j.api</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>6.7</specification-version>
+                        <specification-version>1.6.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.eclipse.jgit.ssh.jsch</code-name-base>
+                    <code-name-base>slf4j.jdk14</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>6.7</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.libs.jsch.agentproxy</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>1.6.0</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <test-dependencies>
-                <test-type>
-                    <name>unit</name>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.libs.junit4</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                </test-type>
-            </test-dependencies>
-            <public-packages>
-                <package>org.netbeans.libs.git</package>
-                <package>org.netbeans.libs.git.progress</package>
-            </public-packages>
+            <public-packages/>
+            <class-path-extension>
+                <runtime-relative-path>org-eclipse-jgit-ssh-jsch.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.jgit.ssh.jsch-6.7.0.202309050840-r.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

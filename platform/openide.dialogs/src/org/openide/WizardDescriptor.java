@@ -3180,6 +3180,7 @@ public class WizardDescriptor extends DialogDescriptor {
         public FixedHeightPane () {
             super ();
             setEditable(false);
+            setFocusable(false);
             putClientProperty( JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
             HTMLEditorKit htmlkit = new HTMLEditorKit();
             // override the Swing default CSS to make the HTMLEditorKit use the

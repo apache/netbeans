@@ -125,7 +125,6 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
 
     @Override
     public void telemetryEvent(Object params) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

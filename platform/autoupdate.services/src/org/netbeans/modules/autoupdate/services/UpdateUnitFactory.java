@@ -217,13 +217,14 @@ public class UpdateUnitFactory {
         
         // XXX: it's should be moved in UI what should filter all elements w/ broken dependencies
         // #101515: Plugin Manager must filter updates by platform dependency
-        boolean passed = false;
         UpdateElementImpl elImpl = Trampoline.API.impl (element);
         if (elImpl instanceof ModuleUpdateElementImpl && elImpl.getModuleInfos () != null && elImpl.getModuleInfos ().size() == 1) {
             for (Dependency d : elImpl.getModuleInfos ().get (0).getDependencies ()) {
                 if (Dependency.TYPE_REQUIRES == d.getType ()) {
                     //log.log (Level.FINEST, "Dependency: NAME: " + d.getName () + ", TYPE: " + d.getType () + ": " + d.toString ());
                     if (d.getName ().startsWith ("org.openide.modules.os")) { // NOI18N
+                        // Filter OS specific dependencies
+                        boolean passed = false;
                         for (ModuleInfo info : InstalledModuleProvider.getInstalledModules ().values ()) {
                             if (Arrays.asList (info.getProvides ()).contains (d.getName ())) {
                                 log.log (Level.FINEST, element + " which requires OS " + d + " succeed.");
@@ -233,6 +234,20 @@ public class UpdateUnitFactory {
                         }
                         if (! passed) {
                             log.log (Level.FINE, element + " which requires OS " + d + " fails.");
+                            return ;
+                        }
+                    } else if (d.getName ().startsWith ("org.openide.modules.arch")) { // NOI18N
+                        // Filter architecture specific dependencies
+                        boolean passed = false;
+                        for (ModuleInfo info : InstalledModuleProvider.getInstalledModules ().values ()) {
+                            if (Arrays.asList (info.getProvides ()).contains (d.getName ())) {
+                                log.log (Level.FINEST, element + " which requires architecture " + d + " succeed.");
+                                passed = true;
+                                break;
+                            }
+                        }
+                        if (! passed) {
+                            log.log (Level.FINE, element + " which requires architecture " + d + " fails.");
                             return ;
                         }
                     }

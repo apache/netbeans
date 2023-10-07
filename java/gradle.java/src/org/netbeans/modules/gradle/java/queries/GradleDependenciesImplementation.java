@@ -25,12 +25,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import org.netbeans.api.annotations.common.NonNull;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
@@ -57,6 +59,9 @@ import org.openide.util.NbBundle;
  */
 @ProjectServiceProvider(service = ProjectDependenciesImplementation.class, projectType=NbGradleProject.GRADLE_PROJECT_TYPE)
 public class GradleDependenciesImplementation implements ProjectDependenciesImplementation {
+    private static final int DEPENDENCIES_MAX_COUNT = 100000;
+    private static final Logger LOG = Logger.getLogger(GradleDependenciesImplementation.class.getName());
+    
     private final Project project;
     private final NbGradleProject nbgp;
     
@@ -126,6 +131,7 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
         GradleConfiguration cfg;
         Scope scope;
         List<Dependency> problems = new ArrayList<>();
+        int counter = 0;
         
         /**
          * Marks files in file2FileObject without a FileObject.
@@ -182,13 +188,17 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
                 
                 this.scope = s;
                 
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "Dependencies for configuration {0}: {1}", new Object[] { cfg, cfg.getDependencies() });
+                }
+                
                 for (GradleDependency dep : cfg.getDependencies()) {
                     this.cfg = cfg.getDependencyOrigin(dep);
                     if (this.cfg == null) {
                         // safeguard: we cannot determine the origin, so let's assume this configuration defines the dependency
                         this.cfg = cfg;
                     }
-                    List<Dependency> ch = processLevel(cfg, dep, new HashSet<>());
+                    List<Dependency> ch = processLevel(cfg, dep, new LinkedHashSet<>());
                     Dependency n = createDependency(dep, ch);
                     rootDeps.add(n);
                 }
@@ -289,6 +299,11 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
         }
         
         List<Dependency> processLevel(GradleConfiguration c, GradleDependency d, Set<GradleDependency> allParents) {
+            if (counter > DEPENDENCIES_MAX_COUNT) {
+                LOG.log(Level.WARNING, "Potential dependency cycle for {0} (parents: {1}), abort!", new Object[] { d, allParents });
+                return Collections.emptyList();
+            }
+            counter++;
             Collection<GradleDependency> deps = c.getDependenciesOf(d);
             if (deps == null) {
                 return Collections.emptyList();

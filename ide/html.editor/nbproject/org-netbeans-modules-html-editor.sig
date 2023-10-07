@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.76
+#Version 2.77
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -571,6 +571,7 @@ meth public static java.lang.String hexColorCode(java.awt.Color)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAttribute(org.netbeans.modules.html.editor.lib.api.model.HtmlTagAttribute,java.lang.String,int,boolean,java.lang.String)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAttributeValue(java.lang.String,int)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAttributeValue(java.lang.String,int,boolean)
+meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAttributeValue(java.lang.String,int,boolean,int)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createAutocompleteEndTag(java.lang.String,int)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createBooleanAttribute(java.lang.String,int,boolean,java.lang.String)
 meth public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem createCharacterReference(java.lang.String,char,int,java.lang.String)
@@ -606,9 +607,11 @@ hfds attr,autocompleteQuotes,required
 CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$AttributeValue
  outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
 cons public init(java.lang.String,int,boolean)
+cons public init(java.lang.String,int,boolean,int)
 meth protected java.lang.String getSubstituteText()
+meth public int getSortPriority()
 supr org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem
-hfds addQuotation
+hfds addQuotation,sortPriority
 
 CLSS public static org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem$AutocompleteEndTag
  outer org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem

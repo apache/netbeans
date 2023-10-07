@@ -343,7 +343,8 @@ public class EnablePreviewMavenProj implements PreviewEnabler {
         @Override
         public void performOperation(final POMModel model) {
             Build build = model.getProject().getBuild();
-            Plugin plugin = build != null ? searchMavenCompilerPlugin(build).second() : null;
+            Pair<PluginContainer, Plugin> containerAndPlugin = build != null ? searchMavenCompilerPlugin(build) : null;
+            Plugin plugin = containerAndPlugin != null ? containerAndPlugin.second() : null;
             Configuration configuration = plugin != null ? plugin.getConfiguration() : null;
 
             if (configuration != null) {

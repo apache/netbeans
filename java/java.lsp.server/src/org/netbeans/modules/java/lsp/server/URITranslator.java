@@ -21,12 +21,10 @@ package org.netbeans.modules.java.lsp.server;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,7 +45,6 @@ public final class URITranslator {
     private static final URITranslator INSTANCE = new URITranslator();
 
     private final Map<String, String> uriFromCacheMap = new LRUCacheMap();
-    private final Map<String, String> uriToCacheMap = new LRUCacheMap();
 
     public static URITranslator getDefault() {
         return INSTANCE;
@@ -96,13 +93,32 @@ public final class URITranslator {
         });
     }
 
-    public synchronized String uriFromLSP(String nbUri) {
-        return uriToCacheMap.computeIfAbsent(nbUri, uri -> {
-            try {
-                return URLDecoder.decode(nbUri, StandardCharsets.UTF_8.name());
-            } catch (UnsupportedEncodingException ex) {}
-            return uri;
-        });
+    public String uriFromLSP(String nbUri) {
+        // handle special cases. We use file:jar:.....!/ and nbjrt:file:..../!/ but vscode url-encodes that, but wrongly, as it leaves other URI-encoded
+        // special characters as they are. However doing a full decode using Decoder will damage other URL-encoded special characters that would be
+        // parsed by URI.create() later.
+        // So handle the special cases manually and only remove the vscode-added scheme/delimiter encoded chars
+        int slash = nbUri.indexOf('/'); // NOI18N
+        if (slash != -1) {
+            int indexOfInnerScheme = nbUri.substring(0, slash).indexOf("%3A"); // NOI18N
+            if (indexOfInnerScheme > 0 && indexOfInnerScheme < slash) {
+                int n = indexOfInnerScheme + 3;
+                StringBuilder sb = new StringBuilder();
+                sb.append(nbUri, 0, indexOfInnerScheme);
+                sb.append(':'); // NOI18N
+                
+                // now search for the mangled !
+                int mangledExclamation = nbUri.indexOf("%21/"); // NOI18N
+                if (mangledExclamation > 0) {
+                    sb.append(nbUri, n, mangledExclamation);
+                    sb.append('!'); // NOI18N
+                    n = mangledExclamation + 3;
+                }
+                sb.append(nbUri, n, nbUri.length());
+                return sb.toString();
+            }
+        }
+        return nbUri;
     }
 
     /**

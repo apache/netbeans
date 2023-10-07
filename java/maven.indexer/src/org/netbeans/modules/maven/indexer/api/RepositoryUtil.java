@@ -95,7 +95,7 @@ public final class RepositoryUtil {
         } else {
             remotes = List.of(online.createRemoteRepository(RepositorySystem.DEFAULT_REMOTE_REPO_URL, RepositorySystem.DEFAULT_REMOTE_REPO_ID));
         }
-        online.resolve(a, remotes, online.getLocalRepository());
+        online.resolveArtifact(a, remotes, online.getLocalRepository());
         return a.getFile();
     }
     

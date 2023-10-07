@@ -343,3 +343,5 @@ public class NbGradleProjectImplTest extends AbstractGradleProjectTestCase {
         assertTrue(prjImpl.getAimedQuality().notBetterThan(aimed));
     }
 }
+
+

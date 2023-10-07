@@ -58,7 +58,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.17</specification-version>
+                        <specification-version>1.20</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -207,7 +207,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.8</specification-version>
+                        <specification-version>2.8</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -497,6 +497,11 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.editor</code-name-base>
                         <recursive/>
+                        <compile-dependency/>
+                        <test/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.editor.bracesmatching</code-name-base>
                         <compile-dependency/>
                         <test/>
                     </test-dependency>

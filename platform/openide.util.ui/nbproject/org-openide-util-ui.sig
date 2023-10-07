@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.29
+#Version 9.30
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -1279,6 +1279,7 @@ meth public static boolean isJavaIdentifier(java.lang.String)
 meth public static boolean isLargeFrameIcons()
  anno 0 java.lang.Deprecated()
 meth public static boolean isMac()
+meth public static boolean isModalDialogOpen()
 meth public static boolean isUnix()
 meth public static boolean isWindows()
 meth public static int arrayHashCode(java.lang.Object[])
@@ -1287,6 +1288,7 @@ meth public static int getOperatingSystem()
 meth public static int showJFileChooser(javax.swing.JFileChooser,java.awt.Component,java.lang.String)
  anno 0 java.lang.Deprecated()
 meth public static java.awt.Component findDialogParent()
+meth public static java.awt.Component findDialogParent(java.awt.Component)
 meth public static java.awt.Component getFocusTraversableComponent(java.awt.Component)
 meth public static java.awt.Cursor createCustomCursor(java.awt.Component,java.awt.Image,java.lang.String)
 meth public static java.awt.Cursor createProgressCursor(java.awt.Component)

@@ -21,7 +21,9 @@ package org.netbeans.modules.j2ee.dd.impl.ejb.annotation;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.netbeans.modules.j2ee.dd.api.common.PortComponentRef;
 import org.netbeans.modules.j2ee.dd.api.common.ServiceRef;
 import org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException;
@@ -180,8 +182,9 @@ public class SessionImplTest extends CommonTestCase {
                 Session session = (Session) getEjbByEjbName(metadata.getRoot().getEnterpriseBeans().getSession(), "Customer");
                 assertEquals(Session.SESSION_TYPE_STATELESS, session.getSessionType());
                 assertEquals(2, session.getBusinessLocal().length);
-                assertEquals("foo.CustomerLocalA", session.getBusinessLocal()[0]);
-                assertEquals("foo.CustomerLocalB", session.getBusinessLocal()[1]);
+                Set<String> ref = new HashSet<>(Arrays.asList("foo.CustomerLocalA", "foo.CustomerLocalB"));
+                Set<String> toCheck = new HashSet<>(Arrays.asList(session.getBusinessLocal()));
+                assertEquals(ref, toCheck);
                 // test Employee
                 session = (Session) getEjbByEjbName(metadata.getRoot().getEnterpriseBeans().getSession(), "SatisfiedEmployee");
                 assertEquals(Session.SESSION_TYPE_STATEFUL, session.getSessionType());

@@ -94,6 +94,7 @@ public final class FmtOptions {
     public static final String BLANK_LINES_AFTER_NAMESPACE = "blankLinesAfterNamespace"; //NOI18N
     public static final String BLANK_LINES_BEFORE_USE = "blankLinesBeforeUse"; //NOI18N
     public static final String BLANK_LINES_BEFORE_USE_TRAIT = "blankLinesBeforeUseTrait"; //NOI18N
+    public static final String BLANK_LINES_AFTER_USE_TRAIT = "blankLinesAfterUseTrait"; //NOI18N
     public static final String BLANK_LINES_AFTER_USE = "blankLinesAfterUse"; //NOI18N
     public static final String BLANK_LINES_BETWEEN_USE_TYPES = "blankLinesBetweenUseType"; //NOI18N
     public static final String BLANK_LINES_BEFORE_CLASS = "blankLinesBeforeClass"; //NOI18N
@@ -227,6 +228,7 @@ public final class FmtOptions {
     public static final String START_USE_WITH_NAMESPACE_SEPARATOR = "startUseWithNamespaceSeparator"; //NOI18N
     public static final String ALIASES_CAPITALS_OF_NAMESPACES = "aliasesCapitalsOfNamespacesNames"; //NOI18N
     public static final String PUT_IN_PSR12_ORDER = "putInPSR12Order"; //NOI18N
+    public static final String USES_KEEP_EXISTING_TYPE_ORDER = "usesKeepExistingTypeOrder"; //NOI18N
     public static CodeStyleProducer codeStyleProducer;
 
     private FmtOptions() {
@@ -288,6 +290,7 @@ public final class FmtOptions {
             {BLANK_LINES_AFTER_NAMESPACE, "1"}, //NOI18N
             {BLANK_LINES_BEFORE_USE, "1"}, //NOI18N
             {BLANK_LINES_BEFORE_USE_TRAIT, "1"}, //NOI18N
+            {BLANK_LINES_AFTER_USE_TRAIT, "1"}, //NOI18N
             {BLANK_LINES_AFTER_USE, "1"}, //NOI18N
             {BLANK_LINES_BETWEEN_USE_TYPES, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_CLASS, "1"}, //NOI18N
@@ -421,7 +424,8 @@ public final class FmtOptions {
             {PREFER_GROUP_USES, FALSE},
             {START_USE_WITH_NAMESPACE_SEPARATOR, FALSE},
             {ALIASES_CAPITALS_OF_NAMESPACES, FALSE},
-            {PUT_IN_PSR12_ORDER, FALSE}
+            {PUT_IN_PSR12_ORDER, FALSE},
+            {USES_KEEP_EXISTING_TYPE_ORDER, TRUE},
         };
 
         defaults = new HashMap<>();

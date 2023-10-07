@@ -28,12 +28,11 @@ fragment Hws
     ;
 
 fragment Vws
-    : [\r\n]
-    | [\n]
+    : '\r'? '\n'
     ;
 
 fragment NonVws
-    : ~[\r\n\f]
+    : ~[\r\n]
     ;
 
 fragment BlockComment

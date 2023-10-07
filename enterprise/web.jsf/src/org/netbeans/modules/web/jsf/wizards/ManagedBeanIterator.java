@@ -165,21 +165,26 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
             Map<String, Object> templateProperties = new HashMap<String, Object>();
             String targetName = Templates.getTargetName(wizard);
             boolean isCdiEnabled = false;
+            boolean jakartaJsfPackages;
             if(JSFUtils.isJakartaEE9Plus(wizard)) {
                 org.netbeans.modules.jakarta.web.beans.CdiUtil cdiUtil = project.getLookup().lookup(org.netbeans.modules.jakarta.web.beans.CdiUtil.class);
                 if(cdiUtil != null && cdiUtil.isCdiEnabled()){
                     isCdiEnabled = true;
                 }
+                templateProperties.put("jakartaJsfPackages", true);
+                jakartaJsfPackages = true;
             } else {
                 org.netbeans.modules.web.beans.CdiUtil cdiUtil = project.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
                 if(cdiUtil != null && cdiUtil.isCdiEnabled()){
                     isCdiEnabled = true;
                 }
+                templateProperties.put("jakartaJsfPackages", false);
+                jakartaJsfPackages = false;
             }
             if (isCdiEnabled) {
                 templateProperties.put("cdiEnabled", true);
                 templateProperties.put("classAnnotation", "@Named(value=\"" + beanName + "\")");   //NOI18N
-                templateProperties.put("scope", ScopeEntry.getFor(scope));    //NOI18N
+                templateProperties.put("scope", ScopeEntry.getFor(scope, jakartaJsfPackages));    //NOI18N
                 NamedScope namedScope = (NamedScope) scope;
                 switch (namedScope) {
                     case SESSION:
@@ -196,7 +201,7 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
                 } else {
                     templateProperties.put("classAnnotation", "@ManagedBean(name=\"" + beanName + "\")");   //NOI18N
                 }
-                templateProperties.put("scope", ScopeEntry.getFor(scope));    //NOI18N
+                templateProperties.put("scope", ScopeEntry.getFor(scope, jakartaJsfPackages));    //NOI18N
             }
             dobj = dTemplate.createFromTemplate(df, targetName, templateProperties);
         } else {
@@ -374,13 +379,13 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
             return parameters;
         }
 
-        private static ScopeEntry getFor(Object scope) {
+        private static ScopeEntry getFor(Object scope, boolean jakartaJsfPackages) {
             if (scope instanceof Scope) {
                 Scope typedScope = (Scope) scope;
-                return new ScopeEntry(FACES_SCOPE.get(typedScope), getScopeImport(typedScope));
+                return new ScopeEntry(FACES_SCOPE.get(typedScope), getScopeImport(typedScope, jakartaJsfPackages));
             } else {
                 NamedScope typedScope = (NamedScope) scope;
-                ScopeEntry se = new ScopeEntry(NAMED_SCOPE.get(typedScope), getScopeImport(typedScope));
+                ScopeEntry se = new ScopeEntry(NAMED_SCOPE.get(typedScope), getScopeImport(typedScope, jakartaJsfPackages));
                 if (typedScope == NamedScope.FLOW) {
                     se.parameters = "\"\""; //NOI18N
                 }
@@ -388,18 +393,32 @@ public class ManagedBeanIterator implements TemplateWizard.Iterator {
             }
         }
 
-        private static String getScopeImport(Scope scope) {
-            return "javax.faces.bean." + FACES_SCOPE.get(scope); //NOI18N
+        private static String getScopeImport(Scope scope, boolean jakartaJsfPackages) {
+            if(jakartaJsfPackages) {
+                return "jakarta.faces.bean." + FACES_SCOPE.get(scope); //NOI18N
+            } else {
+                return "javax.faces.bean." + FACES_SCOPE.get(scope); //NOI18N
+            }
         }
 
-        private static String getScopeImport(NamedScope scope) {
+        private static String getScopeImport(NamedScope scope, boolean jakartaJsfPackages) {
             String scopeSimpleName = NAMED_SCOPE.get(scope);
-            if (scope == NamedScope.FLOW) {
-                return "javax.faces.flow." + scopeSimpleName; //NOI18N
-            } else if (scope == NamedScope.VIEW) {
-                return "javax.faces.view." + scopeSimpleName; //NOI18N
+            if (jakartaJsfPackages) {
+                if (scope == NamedScope.FLOW) {
+                    return "jakarta.faces.flow." + scopeSimpleName; //NOI18N
+                } else if (scope == NamedScope.VIEW) {
+                    return "jakarta.faces.view." + scopeSimpleName; //NOI18N
+                } else {
+                    return "jakarta.enterprise.context." + scopeSimpleName; //NOI18N
+                }
             } else {
-                return "javax.enterprise.context." + scopeSimpleName; //NOI18N
+                if (scope == NamedScope.FLOW) {
+                    return "javax.faces.flow." + scopeSimpleName; //NOI18N
+                } else if (scope == NamedScope.VIEW) {
+                    return "javax.faces.view." + scopeSimpleName; //NOI18N
+                } else {
+                    return "javax.enterprise.context." + scopeSimpleName; //NOI18N
+                }
             }
         }
     }

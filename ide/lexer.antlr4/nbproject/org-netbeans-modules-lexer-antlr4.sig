@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.1.0
+#Version 1.3.0
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -68,6 +68,7 @@ intf org.netbeans.spi.lexer.Lexer<{org.netbeans.spi.lexer.antlr4.AbstractAntlrLe
 meth protected abstract org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge%1}> mapToken(org.antlr.v4.runtime.Token)
 meth protected final org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge%1}> groupToken({org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge%1},int)
 meth protected final org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge%1}> token({org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge%1})
+meth protected java.lang.String flyweightText({org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge%1})
 meth public final org.netbeans.api.lexer.Token<{org.netbeans.spi.lexer.antlr4.AbstractAntlrLexerBridge%1}> nextToken()
 meth public java.lang.Object state()
 meth public void release()
@@ -108,4 +109,6 @@ intf java.util.function.Predicate<org.antlr.v4.runtime.Token>
 meth public boolean test(org.antlr.v4.runtime.Token)
 supr java.lang.Object
 hfds channel
+
+CLSS abstract interface org.netbeans.spi.lexer.antlr4.package-info
 

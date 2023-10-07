@@ -18,6 +18,7 @@
  */
 package org.netbeans.swing.laf.flatlaf;
 
+import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.Color;
 import java.util.prefs.Preferences;
 import org.openide.util.NbPreferences;
@@ -36,6 +37,8 @@ class FlatLafPrefs {
     private static final String ALWAYS_SHOW_MNEMONICS = "alwaysShowMnemonics";
 
     private static final Preferences prefs = NbPreferences.forModule(FlatLafPrefs.class);
+
+    private static final boolean DEF_USE_WINDOW_DECORATIONS = SystemInfo.isWindows_10_orLater;
 
     static Color getAccentColor() {
         return parseColor(prefs.get(ACCENT_COLOR, null));
@@ -60,11 +63,11 @@ class FlatLafPrefs {
     }
 
     static boolean isUseWindowDecorations() {
-        return prefs.getBoolean(USE_WINDOW_DECORATIONS, true);
+        return prefs.getBoolean(USE_WINDOW_DECORATIONS, DEF_USE_WINDOW_DECORATIONS);
     }
 
     static void setUseWindowDecorations(boolean value) {
-        putBoolean(USE_WINDOW_DECORATIONS, value, true);
+        putBoolean(USE_WINDOW_DECORATIONS, value, DEF_USE_WINDOW_DECORATIONS);
     }
 
     static boolean isUnifiedTitleBar() {

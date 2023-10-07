@@ -1995,4 +1995,44 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/blankLines/issueGH4609BetweenUseTypes_03.php", options, false, true);
     }
 
+    public void testAfterUseTraitHasBlankLine_01a() throws Exception {
+        // GH-4685
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_USE_TRAIT, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_USE_TRAIT, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        reformatFileContents("testfiles/formatting/blankLines/AfterUseTrait_01.php", options, false, true);
+    }
+
+    public void testAfterUseTraitHasBlankLine_01b() throws Exception {
+        // GH-4685
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_USE_TRAIT, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_USE_TRAIT,1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        reformatFileContents("testfiles/formatting/blankLines/AfterUseTrait_01.php", options, false, true);
+    }
+
+    public void testAfterUseTraitNoBlankLine_01a() throws Exception {
+        // GH-4685
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_USE_TRAIT, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_USE_TRAIT, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 0);
+        reformatFileContents("testfiles/formatting/blankLines/AfterUseTrait_01.php", options, false, true);
+    }
+
+    public void testAfterUseTraitNoBlankLine_01b() throws Exception {
+        // GH-4685
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_USE_TRAIT, 0);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_USE_TRAIT, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FIELDS, 1);
+        options.put(FmtOptions.BLANK_LINES_BEFORE_FUNCTION, 1);
+        reformatFileContents("testfiles/formatting/blankLines/AfterUseTrait_01.php", options, false, true);
+    }
+
 }

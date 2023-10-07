@@ -49,6 +49,7 @@ import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
@@ -70,6 +71,7 @@ import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SetTraceParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.SignatureHelpOptions;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextDocumentSyncOptions;
@@ -104,6 +106,7 @@ import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -670,6 +673,14 @@ public final class Server {
 
             // Wait for all priming builds, even those already pending, to finish:
             CompletableFuture.allOf(primingBuilds.toArray(new CompletableFuture[primingBuilds.size()])).thenRun(() -> {
+                Set<Project> additionalProjects = new LinkedHashSet<>();
+                for (Project prj : projects) {
+                    Set<Project> containedProjects = ProjectUtils.getContainedProjects(prj, true);
+                    if (containedProjects != null) {
+                        additionalProjects.addAll(containedProjects);
+                    }
+                }
+                projects.addAll(additionalProjects);
                 OpenProjects.getDefault().open(projects.toArray(new Project[0]), false);
                 try {
                     LOG.log(Level.FINER, "{0}: Calling openProjects() for : {1}", new Object[]{id, Arrays.asList(projects)});
@@ -773,6 +784,10 @@ public final class Server {
                 completionOptions.setResolveProvider(true);
                 completionOptions.setTriggerCharacters(Arrays.asList(".", "#", "@", "*"));
                 capabilities.setCompletionProvider(completionOptions);
+                SignatureHelpOptions signatureHelpOptions = new SignatureHelpOptions();
+                signatureHelpOptions.setTriggerCharacters(Arrays.asList("("));
+                signatureHelpOptions.setRetriggerCharacters(Arrays.asList(","));
+                capabilities.setSignatureHelpProvider(signatureHelpOptions);
                 capabilities.setHoverProvider(true);
                 CodeActionOptions codeActionOptions = new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source, CodeActionKind.SourceOrganizeImports, CodeActionKind.Refactor));
                 codeActionOptions.setResolveProvider(true);
@@ -857,7 +872,6 @@ public final class Server {
                 }
             } else {
                 String root = init.getRootUri();
-
                 if (root != null) {
                     try {
                         projectCandidates.add(Utils.fromUri(root));
@@ -869,11 +883,37 @@ public final class Server {
                 }
             }
             CompletableFuture<Project[]> prjs = workspaceProjects;
-            SERVER_INIT_RP.post(() -> asyncOpenSelectedProjects0(prjs, projectCandidates, true, true));
+            SERVER_INIT_RP.post(() -> {
+                List<FileObject> additionalCandidates = new ArrayList<>();
+                AtomicBoolean cancel = new AtomicBoolean();
+                ProgressHandle h = ProgressHandle.createHandle("Collecting workspace projects...", () -> {
+                    cancel.set(true);
+                    return true;
+                });
+                h.start();
+                try {
+                    for (FileObject candidate : projectCandidates) {
+                        if (cancel.get()) {
+                            break;
+                        }
+                        Project prj = FileOwnerQuery.getOwner(candidate);
+                        if (prj == null) {
+                            collectProjectCandidates(candidate, additionalCandidates, cancel);
+                        }
+                    }
+                } catch (IOException ex) {
+                    LOG.log(Level.FINE, null, ex);
+                } finally {
+                    h.finish();
+                }
+                if (!cancel.get()) {
+                    projectCandidates.addAll(additionalCandidates);
+                }
+                asyncOpenSelectedProjects0(prjs, projectCandidates, true, true);
+            });
 
             // chain showIndexingComplete message after initial project open.
-            prjs.
-                    thenApply(this::showIndexingCompleted);
+            prjs.thenApply(this::showIndexingCompleted);
 
             initializeOptions();
 
@@ -883,6 +923,22 @@ public final class Server {
                         constructInitResponse(init, checkJavaSupport())
                     )
             );
+        }
+
+        private void collectProjectCandidates(FileObject fo, List<FileObject> candidates, AtomicBoolean cancel) throws IOException {
+            for (FileObject chld : fo.getChildren()) {
+                if (cancel.get()) {
+                    return;
+                }
+                if (chld.isFolder() && !chld.isSymbolicLink()) {
+                    Project prj = FileOwnerQuery.getOwner(chld);
+                    if (prj != null) {
+                        candidates.add(chld);
+                    } else {
+                        collectProjectCandidates(chld, candidates, cancel);
+                    }
+                }
+            }
         }
 
         private void initializeOptions() {

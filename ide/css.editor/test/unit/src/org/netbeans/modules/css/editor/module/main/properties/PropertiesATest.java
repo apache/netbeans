@@ -2776,4 +2776,14 @@ public class PropertiesATest extends CssModuleTestBase {
         assertCssCode("h1 { BORDER-STYLE: dashed }");
         assertCssCode("h1 { bOrDeR-sTyLe: dashed }");
     }
+
+    public void testContainProperties() throws Exception {
+        assertCssCode("main {container-type: normal}");
+        assertCssCode("main {container-type: size}");
+        assertCssCode("main {container-type: inline-size}");
+        assertCssCode("main {container-name: demo}");
+        assertCssCode("main {container: demo}");
+        assertCssCode("main {container: demo / size}");
+        assertCssCode("main {container: demo / inline-size}");
+    }
 }

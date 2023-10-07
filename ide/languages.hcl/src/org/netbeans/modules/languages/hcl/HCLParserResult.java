@@ -38,9 +38,9 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.csl.spi.ParserResult;
-import org.netbeans.modules.languages.hcl.ast.ASTBuilderListener;
+import org.netbeans.modules.languages.hcl.ast.HCLBlockFactory;
 import org.netbeans.modules.languages.hcl.ast.HCLDocument;
-import org.netbeans.modules.languages.hcl.ast.SourceRef;
+import org.netbeans.modules.languages.hcl.ast.HCLElement;
 import org.netbeans.modules.languages.hcl.grammar.HCLLexer;
 import org.netbeans.modules.languages.hcl.grammar.HCLParser;
 import org.netbeans.modules.languages.hcl.grammar.HCLParserBaseListener;
@@ -60,10 +60,11 @@ public class HCLParserResult  extends ParserResult {
     public final Map<String,List<OffsetRange>> folds = new HashMap<>();
 
     private HCLDocument document;
-    private SourceRef references;
+    private final SourceRef references;
 
     public HCLParserResult(Snapshot snapshot) {
         super(snapshot);
+        references = new SourceRef(snapshot);
     }
 
     protected final FileObject getFileObject() {
@@ -82,7 +83,8 @@ public class HCLParserResult  extends ParserResult {
             configureParser(parser);
 
 
-            parser.configFile();
+            HCLBlockFactory bf = new HCLBlockFactory(references::elementCreated);
+            document = bf.process(parser.configFile());
             lexer.reset();
             
         }
@@ -135,15 +137,18 @@ public class HCLParserResult  extends ParserResult {
         parser.addErrorListener(createErrorListener());
 
         parser.addParseListener(createFoldListener());
-
-        ASTBuilderListener astListener = new ASTBuilderListener(getSnapshot());
-        parser.addParseListener(astListener);
-
-        document = astListener.getDocument();
-        references = astListener.getReferences();
     }
 
     protected void processDocument(HCLDocument doc, SourceRef references) {
+    }
+
+    protected void addError(HCLElement e, String message) {
+        references.getOffsetRange(e).ifPresent((range) -> addError(message, range));
+    }
+    
+    private void addError(String message, OffsetRange range) {
+        DefaultError error = new DefaultError(null, message, null, getFileObject(), range.getStart() , range.getEnd(), false, Severity.ERROR);
+        errors.add(error);
     }
 
     private void addFold(FoldType ft, Token token) {
@@ -175,12 +180,14 @@ public class HCLParserResult  extends ParserResult {
         return new BaseErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-                int errorPosition = 0;
+                int errorStart = 0;
+                int errorEnd = 0;
                 if (offendingSymbol instanceof Token) {
                     Token offendingToken = (Token) offendingSymbol;
-                    errorPosition = offendingToken.getStartIndex();
+                    errorStart = offendingToken.getStartIndex();
+                    errorEnd = offendingToken.getStopIndex() + 1;
                 }
-                errors.add(new DefaultError(null, msg, null, getFileObject(), errorPosition, errorPosition, Severity.ERROR));
+                errors.add(new DefaultError(null, msg, null, getFileObject(), errorStart, errorEnd, errorStart == errorEnd, Severity.ERROR));
             }
 
         };
@@ -190,7 +197,7 @@ public class HCLParserResult  extends ParserResult {
         return new HCLParserBaseListener() {
 
             @Override
-            public void exitHeredocTemplate(HCLParser.HeredocTemplateContext ctx) {
+            public void exitHeredoc(HCLParser.HeredocContext ctx) {
                 addFold(HCLLanguage.HCLFold.HEREDOC, ctx.HEREDOC_START(), ctx.HEREDOC_END());
             }
 

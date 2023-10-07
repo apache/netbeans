@@ -49,7 +49,10 @@ public class EmbeddableImpl extends PersistentObject implements Embeddable, Java
         class2 = typeElement.getQualifiedName().toString();
         AnnotationModelHelper helper = getHelper();
         Map<String, ? extends AnnotationMirror> annByType = helper.getAnnotationsByType(typeElement.getAnnotationMirrors());
-        AnnotationMirror embeddableAnn = annByType.get("javax.persistence.Embeddable"); // NOI18N
+        AnnotationMirror embeddableAnn = annByType.get("jakarta.persistence.Embeddable"); // NOI18N
+        if (embeddableAnn == null) {
+            embeddableAnn = annByType.get("javax.persistence.Embeddable"); // NOI18N
+        }
         return embeddableAnn != null;
     }
 

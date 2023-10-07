@@ -90,7 +90,7 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
         if (only == null || !only.contains(CodeActionKind.Source)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null) {
             return Collections.emptyList();
         }

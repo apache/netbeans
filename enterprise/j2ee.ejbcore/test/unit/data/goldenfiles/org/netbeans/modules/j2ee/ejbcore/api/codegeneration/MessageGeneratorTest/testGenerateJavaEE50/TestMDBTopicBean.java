@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/J2EE/EJB30/MessageDrivenBean.java to edit this template
  */
 
 package testGenerateJavaEE50;
@@ -15,17 +14,18 @@ import javax.jms.MessageListener;
  *
  * @author {user}
  */
-@MessageDriven(mappedName = "TestMessageDestination", activationConfig =  {
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
-        @ActivationConfigProperty(propertyName = "subscriptionDurability", propertyValue = "Durable"),
+@MessageDriven(mappedName = "TestMDBTopicBean", activationConfig =  {
         @ActivationConfigProperty(propertyName = "clientId", propertyValue = "TestMDBTopicBean"),
-        @ActivationConfigProperty(propertyName = "subscriptionName", propertyValue = "TestMDBTopicBean")
+        @ActivationConfigProperty(propertyName = "subscriptionDurability", propertyValue = "Durable"),
+        @ActivationConfigProperty(propertyName = "subscriptionName", propertyValue = "TestMDBTopicBean"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic")
     })
 public class TestMDBTopicBean implements MessageListener {
     
     public TestMDBTopicBean() {
     }
 
+    @Override
     public void onMessage(Message message) {
     }
     

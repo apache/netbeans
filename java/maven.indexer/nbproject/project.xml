@@ -58,7 +58,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.54</specification-version>
+                        <specification-version>2.77</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -176,36 +176,36 @@
                 <package>org.netbeans.modules.maven.indexer.spi.impl</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/indexer-core-7.0.3.jar</runtime-relative-path>
-                <binary-origin>external/indexer-core-7.0.3.jar</binary-origin>
+                <runtime-relative-path>ext/maven/indexer-core-7.0.4.jar</runtime-relative-path>
+                <binary-origin>external/indexer-core-7.0.4.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/search-api-7.0.3.jar</runtime-relative-path>
-                <binary-origin>external/search-api-7.0.3.jar</binary-origin>
+                <runtime-relative-path>ext/maven/search-api-7.0.4.jar</runtime-relative-path>
+                <binary-origin>external/search-api-7.0.4.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/search-backend-smo-7.0.3.jar</runtime-relative-path>
-                <binary-origin>external/search-backend-smo-7.0.3.jar</binary-origin>
+                <runtime-relative-path>ext/maven/search-backend-smo-7.0.4.jar</runtime-relative-path>
+                <binary-origin>external/search-backend-smo-7.0.4.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-core-9.6.0.jar</runtime-relative-path>
-                <binary-origin>external/lucene-core-9.6.0.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-core-9.8.0.jar</runtime-relative-path>
+                <binary-origin>external/lucene-core-9.8.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-backward-codecs-9.6.0.jar</runtime-relative-path>
-                <binary-origin>external/lucene-backward-codecs-9.6.0.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-backward-codecs-9.8.0.jar</runtime-relative-path>
+                <binary-origin>external/lucene-backward-codecs-9.8.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-highlighter-9.6.0.jar</runtime-relative-path>
-                <binary-origin>external/lucene-highlighter-9.6.0.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-highlighter-9.8.0.jar</runtime-relative-path>
+                <binary-origin>external/lucene-highlighter-9.8.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-queryparser-9.6.0.jar</runtime-relative-path>
-                <binary-origin>external/lucene-queryparser-9.6.0.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-queryparser-9.8.0.jar</runtime-relative-path>
+                <binary-origin>external/lucene-queryparser-9.8.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-analysis-common-9.6.0.jar</runtime-relative-path>
-                <binary-origin>external/lucene-analysis-common-9.6.0.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-analysis-common-9.8.0.jar</runtime-relative-path>
+                <binary-origin>external/lucene-analysis-common-9.8.0.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/maven/javax.annotation-api-1.2.jar</runtime-relative-path>

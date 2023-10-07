@@ -5,26 +5,26 @@
 |--PRIVATE [982, 989] : ESCAPED{PRIVATE}ESCAPED{ }<font color="#999999">ESCAPED{'private'}</font>
 |--method [1024, 1235] : ESCAPED{method}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
 |-ExampleTrait2 [1245, 1608] : ESCAPED{ExampleTrait2}<font color="#999999">#ESCAPED{ExampleTrait}</font>
-|--(Inherited) IMPLICIT_PUBLIC [846, 861] : ESCAPED{IMPLICIT_PUBLIC}ESCAPED{ }<font color="#999999">ESCAPED{'implicit public'}</font>
-|--(Inherited) PUBLIC [900, 906] : ESCAPED{PUBLIC}ESCAPED{ }<font color="#999999">ESCAPED{'public'}</font>
-|--(Inherited) PROTECTED [939, 948] : ESCAPED{PROTECTED}ESCAPED{ }<font color="#999999">ESCAPED{'protected'}</font>
-|--(Inherited) PRIVATE [982, 989] : ESCAPED{PRIVATE}ESCAPED{ }<font color="#999999">ESCAPED{'private'}</font>
-|--(Inherited) method [1024, 1030] : ESCAPED{method}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--(Inherited) IMPLICIT_PUBLIC [846, 861] : <font color="#7D694A">ESCAPED{IMPLICIT_PUBLIC}</font>ESCAPED{ }<font color="#999999">ESCAPED{'implicit public'}</font>
+|--(Inherited) PUBLIC [900, 906] : <font color="#7D694A">ESCAPED{PUBLIC}</font>ESCAPED{ }<font color="#999999">ESCAPED{'public'}</font>
+|--(Inherited) PROTECTED [939, 948] : <font color="#7D694A">ESCAPED{PROTECTED}</font>ESCAPED{ }<font color="#999999">ESCAPED{'protected'}</font>
+|--(Inherited) PRIVATE [982, 989] : <font color="#7D694A">ESCAPED{PRIVATE}</font>ESCAPED{ }<font color="#999999">ESCAPED{'private'}</font>
+|--(Inherited) method [1024, 1030] : <font color="#7D694A">ESCAPED{method}ESCAPED{(}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
 |--IMPLICIT_PUBLIC2 [1330, 1346] : ESCAPED{IMPLICIT_PUBLIC2}ESCAPED{ }<font color="#999999">ESCAPED{'implicit public'}</font>
 |--PUBLIC2 [1385, 1392] : ESCAPED{PUBLIC2}ESCAPED{ }<font color="#999999">ESCAPED{'public'}</font>
 |--PROTECTED2 [1425, 1435] : ESCAPED{PROTECTED2}ESCAPED{ }<font color="#999999">ESCAPED{'protected'}</font>
 |--PRIVATE2 [1498, 1506] : ESCAPED{PRIVATE2}ESCAPED{ }<font color="#999999">ESCAPED{'private'}</font>
 |--test [1540, 1606] : ESCAPED{test}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
 |-ExampleClass [1616, 1812] : ESCAPED{ExampleClass}<font color="#999999">#ESCAPED{ExampleTrait}</font>
-|--(Inherited) IMPLICIT_PUBLIC [846, 861] : ESCAPED{IMPLICIT_PUBLIC}ESCAPED{ }<font color="#999999">ESCAPED{'implicit public'}</font>
-|--(Inherited) PUBLIC [900, 906] : ESCAPED{PUBLIC}ESCAPED{ }<font color="#999999">ESCAPED{'public'}</font>
-|--(Inherited) PROTECTED [939, 948] : ESCAPED{PROTECTED}ESCAPED{ }<font color="#999999">ESCAPED{'protected'}</font>
-|--(Inherited) PRIVATE [982, 989] : ESCAPED{PRIVATE}ESCAPED{ }<font color="#999999">ESCAPED{'private'}</font>
-|--(Inherited) method [1024, 1030] : ESCAPED{method}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--(Inherited) IMPLICIT_PUBLIC [846, 861] : <font color="#7D694A">ESCAPED{IMPLICIT_PUBLIC}</font>ESCAPED{ }<font color="#999999">ESCAPED{'implicit public'}</font>
+|--(Inherited) PUBLIC [900, 906] : <font color="#7D694A">ESCAPED{PUBLIC}</font>ESCAPED{ }<font color="#999999">ESCAPED{'public'}</font>
+|--(Inherited) PROTECTED [939, 948] : <font color="#7D694A">ESCAPED{PROTECTED}</font>ESCAPED{ }<font color="#999999">ESCAPED{'protected'}</font>
+|--(Inherited) PRIVATE [982, 989] : <font color="#7D694A">ESCAPED{PRIVATE}</font>ESCAPED{ }<font color="#999999">ESCAPED{'private'}</font>
+|--(Inherited) method [1024, 1030] : <font color="#7D694A">ESCAPED{method}ESCAPED{(}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
 |--test [1675, 1810] : ESCAPED{test}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
 |-Child [1820, 2030] : ESCAPED{Child}<font color="#999999">::ESCAPED{ExampleClass}</font>
-|--(Inherited) IMPLICIT_PUBLIC [846, 861] : ESCAPED{IMPLICIT_PUBLIC}ESCAPED{ }<font color="#999999">ESCAPED{'implicit public'}</font>
-|--(Inherited) PUBLIC [900, 906] : ESCAPED{PUBLIC}ESCAPED{ }<font color="#999999">ESCAPED{'public'}</font>
-|--(Inherited) PROTECTED [939, 948] : ESCAPED{PROTECTED}ESCAPED{ }<font color="#999999">ESCAPED{'protected'}</font>
-|--(Inherited) method [1024, 1030] : ESCAPED{method}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|--(Inherited) IMPLICIT_PUBLIC [846, 861] : <font color="#7D694A">ESCAPED{IMPLICIT_PUBLIC}</font>ESCAPED{ }<font color="#999999">ESCAPED{'implicit public'}</font>
+|--(Inherited) PUBLIC [900, 906] : <font color="#7D694A">ESCAPED{PUBLIC}</font>ESCAPED{ }<font color="#999999">ESCAPED{'public'}</font>
+|--(Inherited) PROTECTED [939, 948] : <font color="#7D694A">ESCAPED{PROTECTED}</font>ESCAPED{ }<font color="#999999">ESCAPED{'protected'}</font>
+|--(Inherited) method [1024, 1030] : <font color="#7D694A">ESCAPED{method}ESCAPED{(}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
 |--test [1870, 2028] : ESCAPED{test}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>

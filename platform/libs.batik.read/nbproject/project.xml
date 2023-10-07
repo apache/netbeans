@@ -34,7 +34,7 @@
                 are only depending on org.apache.commons.logging. So the problem
                 is unrelated to Batik. -->
                 <dependency>
-                    <code-name-base>org.apache.commons.io</code-name-base>
+                    <code-name-base>org.apache.commons.commons_io</code-name-base>
                     <compile-dependency/>
                 </dependency>
                 <dependency>

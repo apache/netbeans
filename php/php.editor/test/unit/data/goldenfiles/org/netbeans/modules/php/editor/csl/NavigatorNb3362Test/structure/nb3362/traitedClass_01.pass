@@ -1,28 +1,28 @@
 |-Test [17, 1116] : ESCAPED{Test}
 |--ChildClass [30, 1116] : ESCAPED{ChildClass}<font color="#999999">::ESCAPED{ParentClass}</font><font color="#999999">#ESCAPED{FooTrait}</font>
-|---(Inherited) $publicFooTraitField [58, 78] : ESCAPED{$publicFooTraitField}<font color="#999999">:ESCAPED{int}</font>
-|---(Inherited) $privateFooTraitField [96, 117] : ESCAPED{$privateFooTraitField}<font color="#999999">:ESCAPED{int}</font>
-|---(Inherited) $protectedFooTraitField [137, 160] : ESCAPED{$protectedFooTraitField}<font color="#999999">:ESCAPED{int}</font>
-|---(Inherited) $publicStaticFooTraitField [185, 211] : ESCAPED{$publicStaticFooTraitField}<font color="#999999">:ESCAPED{int}</font>
-|---(Inherited) $privateStaticFooTraitField [236, 263] : ESCAPED{$privateStaticFooTraitField}<font color="#999999">:ESCAPED{int}</font>
-|---(Inherited) $protectedStaticFooTraitField [290, 319] : ESCAPED{$protectedStaticFooTraitField}<font color="#999999">:ESCAPED{int}</font>
-|---(Inherited) publicFooTraitMethod [341, 361] : ESCAPED{publicFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|---(Inherited) privateFooTraitMethod [410, 431] : ESCAPED{privateFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|---(Inherited) protectedFooTraitMethod [499, 522] : ESCAPED{protectedFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|---(Inherited) publicStaticFooTraitMethod [594, 620] : ESCAPED{publicStaticFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|---(Inherited) privateStaticFooTraitMethod [676, 703] : ESCAPED{privateStaticFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|---(Inherited) protectedStaticFooTraitMethod [778, 807] : ESCAPED{protectedStaticFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|---(Inherited) IMPLICIT_PUBLIC_PARENT_CONST [55, 83] : ESCAPED{IMPLICIT_PUBLIC_PARENT_CONST}ESCAPED{ }<font color="#999999">ESCAPED{"parent"}</font>
-|---(Inherited) PUBLIC_PARENT_CONST [113, 132] : ESCAPED{PUBLIC_PARENT_CONST}ESCAPED{ }<font color="#999999">ESCAPED{"parent"}</font>
-|---(Inherited) PROTECTED_PARENT_CONST [216, 238] : ESCAPED{PROTECTED_PARENT_CONST}ESCAPED{ }<font color="#999999">ESCAPED{"parent"}</font>
-|---(Inherited) $publicParentClassField [268, 291] : ESCAPED{$publicParentClassField}<font color="#999999">:ESCAPED{int}</font>
-|---(Inherited) $protectedParentClassField [353, 379] : ESCAPED{$protectedParentClassField}<font color="#999999">:ESCAPED{int}</font>
-|---(Inherited) $publicStaticParentClassField [404, 433] : ESCAPED{$publicStaticParentClassField}<font color="#999999">:ESCAPED{int}</font>
-|---(Inherited) $protectedStaticParentClassField [515, 547] : ESCAPED{$protectedStaticParentClassField}<font color="#999999">:ESCAPED{int}</font>
-|---(Inherited) publicParentClassMethod [569, 592] : ESCAPED{publicParentClassMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|---(Inherited) protectedParentClassMethod [733, 759] : ESCAPED{protectedParentClassMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|---(Inherited) publicStaticParentClassMethod [831, 860] : ESCAPED{publicStaticParentClassMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|---(Inherited) protectedStaticParentClassMethod [1021, 1053] : ESCAPED{protectedStaticParentClassMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|---(Inherited) $publicFooTraitField [58, 78] : <font color="#7D694A">ESCAPED{$publicFooTraitField}</font><font color="#999999">:ESCAPED{int}</font>
+|---(Inherited) $privateFooTraitField [96, 117] : <font color="#7D694A">ESCAPED{$privateFooTraitField}</font><font color="#999999">:ESCAPED{int}</font>
+|---(Inherited) $protectedFooTraitField [137, 160] : <font color="#7D694A">ESCAPED{$protectedFooTraitField}</font><font color="#999999">:ESCAPED{int}</font>
+|---(Inherited) $publicStaticFooTraitField [185, 211] : <font color="#7D694A">ESCAPED{$publicStaticFooTraitField}</font><font color="#999999">:ESCAPED{int}</font>
+|---(Inherited) $privateStaticFooTraitField [236, 263] : <font color="#7D694A">ESCAPED{$privateStaticFooTraitField}</font><font color="#999999">:ESCAPED{int}</font>
+|---(Inherited) $protectedStaticFooTraitField [290, 319] : <font color="#7D694A">ESCAPED{$protectedStaticFooTraitField}</font><font color="#999999">:ESCAPED{int}</font>
+|---(Inherited) publicFooTraitMethod [341, 361] : <font color="#7D694A">ESCAPED{publicFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
+|---(Inherited) privateFooTraitMethod [410, 431] : <font color="#7D694A">ESCAPED{privateFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
+|---(Inherited) protectedFooTraitMethod [499, 522] : <font color="#7D694A">ESCAPED{protectedFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
+|---(Inherited) publicStaticFooTraitMethod [594, 620] : <font color="#7D694A">ESCAPED{publicStaticFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
+|---(Inherited) privateStaticFooTraitMethod [676, 703] : <font color="#7D694A">ESCAPED{privateStaticFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
+|---(Inherited) protectedStaticFooTraitMethod [778, 807] : <font color="#7D694A">ESCAPED{protectedStaticFooTraitMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
+|---(Inherited) IMPLICIT_PUBLIC_PARENT_CONST [55, 83] : <font color="#7D694A">ESCAPED{IMPLICIT_PUBLIC_PARENT_CONST}</font>ESCAPED{ }<font color="#999999">ESCAPED{"parent"}</font>
+|---(Inherited) PUBLIC_PARENT_CONST [113, 132] : <font color="#7D694A">ESCAPED{PUBLIC_PARENT_CONST}</font>ESCAPED{ }<font color="#999999">ESCAPED{"parent"}</font>
+|---(Inherited) PROTECTED_PARENT_CONST [216, 238] : <font color="#7D694A">ESCAPED{PROTECTED_PARENT_CONST}</font>ESCAPED{ }<font color="#999999">ESCAPED{"parent"}</font>
+|---(Inherited) $publicParentClassField [268, 291] : <font color="#7D694A">ESCAPED{$publicParentClassField}</font><font color="#999999">:ESCAPED{int}</font>
+|---(Inherited) $protectedParentClassField [353, 379] : <font color="#7D694A">ESCAPED{$protectedParentClassField}</font><font color="#999999">:ESCAPED{int}</font>
+|---(Inherited) $publicStaticParentClassField [404, 433] : <font color="#7D694A">ESCAPED{$publicStaticParentClassField}</font><font color="#999999">:ESCAPED{int}</font>
+|---(Inherited) $protectedStaticParentClassField [515, 547] : <font color="#7D694A">ESCAPED{$protectedStaticParentClassField}</font><font color="#999999">:ESCAPED{int}</font>
+|---(Inherited) publicParentClassMethod [569, 592] : <font color="#7D694A">ESCAPED{publicParentClassMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
+|---(Inherited) protectedParentClassMethod [733, 759] : <font color="#7D694A">ESCAPED{protectedParentClassMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
+|---(Inherited) publicStaticParentClassMethod [831, 860] : <font color="#7D694A">ESCAPED{publicStaticParentClassMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
+|---(Inherited) protectedStaticParentClassMethod [1021, 1053] : <font color="#7D694A">ESCAPED{protectedStaticParentClassMethod}ESCAPED{(}<font color="#999999">ESCAPED{int}ESCAPED{ }</font>ESCAPED{$param1}ESCAPED{, }<font color="#999999">ESCAPED{string}ESCAPED{ }</font>ESCAPED{$param2}ESCAPED{)}</font><font color="#999999">:ESCAPED{void}</font>
 |---IMPLICIT_PUBLIC_CHILD_CONST [93, 120] : ESCAPED{IMPLICIT_PUBLIC_CHILD_CONST}ESCAPED{ }<font color="#999999">ESCAPED{"child"}</font>
 |---PUBLIC_CHILD_CONST [149, 167] : ESCAPED{PUBLIC_CHILD_CONST}ESCAPED{ }<font color="#999999">ESCAPED{"child"}</font>
 |---PRIVATE_CHILD_CONST [197, 216] : ESCAPED{PRIVATE_CHILD_CONST}ESCAPED{ }<font color="#999999">ESCAPED{"child"}</font>

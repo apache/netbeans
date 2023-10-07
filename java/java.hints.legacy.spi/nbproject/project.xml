@@ -127,13 +127,14 @@
             <friend-packages>
                 <friend>org.netbeans.modules.ant.hints</friend>
                 <friend>org.netbeans.modules.apisupport.ant</friend>
-                <friend>org.netbeans.modules.java.lsp.server</friend>
                 <friend>org.netbeans.modules.jakarta.web.beans</friend>
+                <friend>org.netbeans.modules.java.lsp.server</friend>
                 <friend>org.netbeans.modules.javadoc</friend>
                 <friend>org.netbeans.modules.javahints</friend>
                 <friend>org.netbeans.modules.jshell.support</friend>
                 <friend>org.netbeans.modules.maven.hints</friend>
                 <friend>org.netbeans.modules.maven.j2ee</friend>
+                <friend>org.netbeans.modules.micronaut</friend>
                 <friend>org.netbeans.modules.web.beans</friend>
                 <package>org.netbeans.modules.java.hints.spi</package>
                 <package>org.netbeans.modules.java.hints.spi.preview</package>

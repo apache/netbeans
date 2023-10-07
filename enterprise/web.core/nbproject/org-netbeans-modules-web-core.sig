@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.52.0
+#Version 2.53.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -687,7 +687,7 @@ meth public boolean isTagLibRegistered(java.lang.String)
 meth public boolean isXMLSyntax()
 meth public java.lang.String toString()
 meth public java.util.Map getPrefixMapper()
-meth public void applyParsedData(java.util.Map,java.util.Map<java.lang.String,java.lang.String>,boolean,boolean,boolean)
+meth public void applyParsedData(java.util.Map<java.lang.String,javax.servlet.jsp.tagext.TagLibraryInfo>,java.util.Map<java.lang.String,java.lang.String>,boolean,boolean,boolean)
 meth public void parsingStarted()
 supr java.beans.PropertyChangeSupport
 hfds elIgnored,initialized,prefixMapper,taglibs,xmlSyntax
@@ -983,7 +983,7 @@ hfds attributes,clazz,evaluateBody,isBodyTag
 CLSS public org.netbeans.modules.web.wizards.TagHandlerIterator
 cons public init()
 intf org.openide.WizardDescriptor$AsynchronousInstantiatingIterator
-meth protected org.openide.WizardDescriptor$Panel[] createPanels(org.netbeans.api.project.Project,org.openide.loaders.TemplateWizard)
+meth protected org.openide.WizardDescriptor$Panel<org.openide.WizardDescriptor>[] createPanels(org.netbeans.api.project.Project,org.openide.loaders.TemplateWizard)
 meth public boolean hasNext()
 meth public boolean hasPrevious()
 meth public final void addChangeListener(javax.swing.event.ChangeListener)

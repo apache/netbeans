@@ -19,6 +19,7 @@
 
 package org.netbeans.swing.laf.flatlaf;
 
+import com.formdev.flatlaf.util.SystemInfo;
 import com.formdev.flatlaf.util.UIScale;
 import java.awt.Color;
 import java.awt.Font;
@@ -26,8 +27,10 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
 import javax.swing.BorderFactory;
 import javax.swing.InputMap;
+import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import javax.swing.UIDefaults;
 import javax.swing.UIDefaults.LazyValue;
@@ -150,6 +153,10 @@ public class FlatLFCustoms extends LFCustoms {
                     result.add(new InsetsUIResource(bm.top, bm.left, bm.bottom + 1, bm.right));
                 }
             }
+        }
+        if (SystemInfo.isLinux) {
+            result.add("windowDefaultLookAndFeelDecorated");
+            result.add(FlatLafPrefs.isUseWindowDecorations());
         }
         return result.toArray();
     }

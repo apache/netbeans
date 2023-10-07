@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.source.parsing;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileVisitResult;
@@ -39,6 +41,8 @@ import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
 
 /**
@@ -73,6 +77,19 @@ public final class CachingPathArchiveTest extends NbTestCase {
         } else {
             System.out.println("No JDK 9, nothing to test");
         }
+    }
+
+    public void testGetDirectory() throws IOException {
+        clearWorkDir();
+        File wd = getWorkDir();
+        File dir1 = new File(new File(wd, "dir1"), "a");
+        assertTrue(dir1.mkdirs());
+        File dir2 = new File(new File(wd, "dir2"), "a");
+        assertTrue(dir2.mkdirs());
+        new FileOutputStream(new File(dir2, "test.txt")).close();
+        Archive a = new CachingPathArchive(wd.toPath(), wd.toURI());
+        assertEquals(dir1.toURI(), a.getDirectory("dir1/a"));
+        assertEquals(dir2.toURI(), a.getDirectory("dir2/a"));
     }
 
     private static void verifyURIs(Path module) throws IOException {

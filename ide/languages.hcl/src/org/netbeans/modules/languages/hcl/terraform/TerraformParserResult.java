@@ -23,16 +23,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.netbeans.modules.csl.api.OffsetRange;
-import org.netbeans.modules.csl.api.Severity;
-import org.netbeans.modules.csl.spi.DefaultError;
 import org.netbeans.modules.languages.hcl.HCLParserResult;
 import org.netbeans.modules.languages.hcl.ast.HCLAttribute;
 import org.netbeans.modules.languages.hcl.ast.HCLBlock;
 import org.netbeans.modules.languages.hcl.ast.HCLContainer;
 import org.netbeans.modules.languages.hcl.ast.HCLDocument;
 import org.netbeans.modules.languages.hcl.ast.HCLIdentifier;
-import org.netbeans.modules.languages.hcl.ast.SourceRef;
+import org.netbeans.modules.languages.hcl.SourceRef;
+import org.netbeans.modules.languages.hcl.ast.HCLElement;
+import org.netbeans.modules.languages.hcl.ast.HCLElement.Visitor;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.openide.util.NbBundle.Messages;
 
@@ -42,7 +41,8 @@ import org.openide.util.NbBundle.Messages;
  */
 public class TerraformParserResult extends HCLParserResult {
 
-
+    private Map<String, HCLBlock> definedBlocks = new HashMap<>();
+    
     public enum BlockType {
 
         CHECK("check", 2),
@@ -97,55 +97,66 @@ public class TerraformParserResult extends HCLParserResult {
 
     })
     protected void processDocument(HCLDocument doc, SourceRef references) {
-        Set<String> defined = new HashSet<>();
-        for (HCLBlock block : doc.getBlocks()) {
-            List<HCLIdentifier> decl = block.getDeclaration();
-            HCLIdentifier type = decl.get(0);
+        doc.accept(this::duplicateAttributeVisitor);
+        doc.accept(this::checkBlockDeclarationVisitor);
+    }
 
-            BlockType bt = BlockType.get(type.id());
-            if (bt != null) {
-                if (decl.size() != bt.definitionLength) {
-                    references.getOffsetRange(type).ifPresent((range) -> addError(Bundle.INVALID_BLOCK_DECLARATION(bt.type, bt.definitionLength - 1), range));
-                } else {
-                    if (!defined.add(block.id())) {
-                        switch (bt) {
-                            case CHECK:
-                            case DATA:
-                            case MODULE:
-                            case OUTPUT:
-                            case RESOURCE:
-                            case VARIABLE:
-                                references.getOffsetRange(type).ifPresent((range) -> addError(Bundle.DUPLICATE_BLOCK(block.id()), range));
+
+    private boolean checkBlockDeclarationVisitor(HCLElement e) {
+        if (e instanceof HCLBlock) {
+            HCLBlock block = (HCLBlock) e;
+            if (block.getParent() instanceof HCLDocument) {
+                List<HCLIdentifier> decl = block.getDeclaration();
+                HCLIdentifier type = decl.get(0);
+
+                BlockType bt = BlockType.get(type.id());
+                if (bt != null) {
+                    if (decl.size() != bt.definitionLength) {
+                        addError(type, Bundle.INVALID_BLOCK_DECLARATION(bt.type, bt.definitionLength - 1));
+                    } else {
+                        if (definedBlocks.put(block.id(), block) != null) {
+                            switch (bt) {
+                                case CHECK:
+                                case DATA:
+                                case MODULE:
+                                case OUTPUT:
+                                case RESOURCE:
+                                case VARIABLE:
+                                    addError(decl.get(bt.definitionLength - 1), Bundle.DUPLICATE_BLOCK(block.id()));
+                            }
                         }
                     }
-                }
-            } else {
-                references.getOffsetRange(type).ifPresent((range) -> addError(Bundle.UNKNOWN_BLOCK(type.id()), range));
-            }
-            checkDuplicateAttribute(block, references);
-        }
-        for (HCLAttribute attribute : doc.getAttributes()) {
-            references.getOffsetRange(attribute.getName()).ifPresent((range) -> addError(Bundle.UNEXPECTED_DOCUMENT_ATTRIBUTE(attribute.id()), range));
-        }
-    }
-
-    private void checkDuplicateAttribute(HCLContainer c, SourceRef references) {
-        for (HCLBlock block : c.getBlocks()) {
-            checkDuplicateAttribute(block, references);
-        }
-        if (c.hasAttributes()) {
-            Set<String> defined = new HashSet<>();
-            for (HCLAttribute attr : c.getAttributes()) {
-                if (!defined.add(attr.id())) {
-                    references.getOffsetRange(attr.getName()).ifPresent((range) -> addError(Bundle.DUPLICATE_ATTRIBUTE(attr.id()), range));
+                } else {
+                    addError(type, Bundle.UNKNOWN_BLOCK(type.id()));
                 }
             }
+            return true;
         }
+        return !(e instanceof HCLDocument);
     }
-
-    private void addError(String message, OffsetRange range) {
-        DefaultError error = new DefaultError(null, message, null, getFileObject(), range.getStart() , range.getEnd(), Severity.ERROR);
-        errors.add(error);
+    
+    private boolean duplicateAttributeVisitor(HCLElement e) {
+        if (e instanceof HCLDocument) {
+            HCLDocument doc = (HCLDocument) e;
+            for (HCLAttribute attr : doc.getAttributes()) {
+                addError(attr, Bundle.UNEXPECTED_DOCUMENT_ATTRIBUTE(attr.id()));
+            }
+            return false;
+        }
+        if (e instanceof HCLContainer) {
+            HCLContainer c = (HCLContainer) e;
+            if (c.hasAttributes()) {
+                Set<String> defined = new HashSet<>();
+                for (HCLAttribute attr : c.getAttributes()) {
+                    if (!defined.add(attr.id())) {
+                        addError(attr.getName(), Bundle.DUPLICATE_ATTRIBUTE(attr.id()));
+                    }                        
+                }
+            }
+            return false;
+        }
+        return true;            
     }
+    
 
 }

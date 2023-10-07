@@ -30,6 +30,7 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.font.FontRenderContext;
@@ -72,6 +73,7 @@ import org.netbeans.modules.editor.lib2.EditorPreferencesDefaults;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
+import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 
 /**
@@ -1512,17 +1514,21 @@ public final class DocumentViewOp
         Keymap keymap = textComponent.getKeymap();
         double wheelRotation = evt.getPreciseWheelRotation();
         if (wheelRotation < 0) {
-            Action action = keymap.getAction(KeyStroke.getKeyStroke(0x290, modifiers)); //WHEEL_UP constant
+            int mouseUpKeyCode = Utilities.mouseWheelUpKeyCode();
+            Action action = mouseUpKeyCode == KeyEvent.VK_UNDEFINED ? null
+                    : keymap.getAction(KeyStroke.getKeyStroke(mouseUpKeyCode, modifiers));
             if (action != null) {
-                action.actionPerformed(new ActionEvent(docView.getTextComponent(),0,""));
+                action.actionPerformed(new ActionEvent(docView.getTextComponent(), 0, ""));
                 textComponent.repaint(); // Consider repaint triggering elsewhere
             } else {
                 delegator.delegateToOriginalListener(evt, activeScrollPane);
             }
         } else if (wheelRotation > 0) {
-            Action action = keymap.getAction(KeyStroke.getKeyStroke(0x291, modifiers)); //WHEEL_DOWN constant
+            int mouseDownKeyCode = Utilities.mouseWheelDownKeyCode();
+            Action action = mouseDownKeyCode == KeyEvent.VK_UNDEFINED ? null
+                    : keymap.getAction(KeyStroke.getKeyStroke(mouseDownKeyCode, modifiers));
             if (action != null) {
-                action.actionPerformed(new ActionEvent(docView.getTextComponent(),0,""));
+                action.actionPerformed(new ActionEvent(docView.getTextComponent(), 0, ""));
                 textComponent.repaint(); // Consider repaint triggering elsewhere
             } else {
                 delegator.delegateToOriginalListener(evt, activeScrollPane);

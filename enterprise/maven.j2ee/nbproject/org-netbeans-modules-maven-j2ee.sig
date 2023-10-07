@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.81
+#Version 1.82
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1001,6 +1001,13 @@ fld public final static java.lang.String HINT_J2EE_VERSION = "netbeans.hint.j2ee
 fld public final static java.lang.String SELECTED_BROWSER = "netbeans.selected.browser"
 supr java.lang.Object
 
+CLSS public org.netbeans.modules.maven.j2ee.MavenJsfReferenceImplementationProvider
+cons public init()
+intf org.netbeans.modules.web.jsfapi.spi.JsfReferenceImplementationProvider
+meth public java.nio.file.Path artifactPathFor(org.netbeans.modules.web.jsfapi.api.JsfVersion)
+supr java.lang.Object
+hfds JSF_VERSION_MAVEN_COORDINATES_MAPPING
+
 CLSS public org.netbeans.modules.maven.j2ee.MissingJavaEEForUnitTestExecutionHint
 cons public init()
 meth public java.lang.String getDescription()
@@ -1255,6 +1262,9 @@ meth public abstract java.util.Set<java.nio.file.Path> excludedFolders()
 CLSS public abstract interface org.netbeans.modules.maven.spi.nodes.SpecialIcon
 meth public abstract javax.swing.Icon getIcon()
  anno 0 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface org.netbeans.modules.web.jsfapi.spi.JsfReferenceImplementationProvider
+meth public abstract java.nio.file.Path artifactPathFor(org.netbeans.modules.web.jsfapi.api.JsfVersion)
 
 CLSS public org.netbeans.modules.web.jsfapi.spi.JsfSupportHandle
  anno 0 java.lang.Deprecated()

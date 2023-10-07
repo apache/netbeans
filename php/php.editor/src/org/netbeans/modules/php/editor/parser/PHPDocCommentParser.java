@@ -202,8 +202,7 @@ public class PHPDocCommentParser {
     private PHPDocTag createTag(int start, int end, AnnotationParsedLine type, String description, String originalComment, int originalCommentStart) {
         final Map<OffsetRange, String> types = type.getTypes();
         if (types.isEmpty()) {
-            boolean isReturnTag = type.equals(PHPDocTag.Type.RETURN);
-            List<PHPDocTypeNode> docTypes = findTypes(description, start, originalComment, originalCommentStart, isReturnTag);
+            List<PHPDocTypeNode> docTypes = findTypes(description, start, originalComment, originalCommentStart, type);
             if (PHP_DOC_VAR_TYPE_TAGS.contains(type)) {
                 String variable = getVaribleName(description);
                 PHPDocNode varibaleNode = null;
@@ -252,16 +251,16 @@ public class PHPDocCommentParser {
     }
 
     private List<PHPDocTypeNode> findTypes(String description, int startDescription, String originalComment, int originalCommentStart) {
-        return findTypes(description, startDescription, originalComment, originalCommentStart, false);
+        return findTypes(description, startDescription, originalComment, originalCommentStart, PHPDocTypeTag.Type.PARAM);
     }
 
-    private List<PHPDocTypeNode> findTypes(String description, int startDescription, String originalComment, int originalCommentStart, boolean isReturnTag) {
+    private List<PHPDocTypeNode> findTypes(String description, int startDescription, String originalComment, int originalCommentStart, AnnotationParsedLine tagType) {
         if (StringUtils.isEmpty(description)) {
             return Collections.emptyList();
         }
 
         List<PHPDocTypeNode> result = new ArrayList<>();
-        for (String stype : getTypes(description, isReturnTag)) {
+        for (String stype : getTypes(description, tagType)) {
             stype = removeHTMLTags(stype);
             stype = sanitizeShapes(stype);
             int startDocNode = findStartOfDocNode(originalComment, originalCommentStart, stype, startDescription);
@@ -288,13 +287,13 @@ public class PHPDocCommentParser {
         return result;
     }
 
-    private List<String> getTypes(String description, boolean isReturnTag) {
+    private List<String> getTypes(String description, AnnotationParsedLine tagType) {
         String[] tokens = description.trim().split("[ ]+"); //NOI18N
-        if (tokens.length > 0 && tokens[0].equals("static")) { // NOI18N
+        if (isMethodTag(tagType) && tokens.length > 0 && tokens[0].equals(Type.STATIC)) {
             tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
         }
         ArrayList<String> types = new ArrayList<>();
-        if (tokens.length > 0 && (isReturnTag || !tokens[0].startsWith("$"))) { //NOI18N
+        if (tokens.length > 0 && (isReturnTag(tagType) || !tokens[0].startsWith("$"))) { //NOI18N
             if (tokens[0].indexOf('|') > -1 || tokens[0].indexOf('&') > -1) {
                 String[] ttokens = tokens[0].split("[|&]"); //NOI18N
                 for (String ttoken : ttokens) {
@@ -471,6 +470,14 @@ public class PHPDocCommentParser {
             }
         }
         return result;
+    }
+
+    private static boolean isReturnTag(AnnotationParsedLine type) {
+        return PHPDocTypeTag.Type.RETURN == type;
+    }
+
+    private static boolean isMethodTag(AnnotationParsedLine type) {
+        return PHPDocTypeTag.Type.METHOD == type;
     }
 
     private static final class ParametersExtractorImpl implements ParametersExtractor {

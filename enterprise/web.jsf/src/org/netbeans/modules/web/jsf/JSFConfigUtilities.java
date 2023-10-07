@@ -96,7 +96,15 @@ public class JSFConfigUtilities {
             "javax.faces.validator.FacesValidator", //NOI18N
             "javax.faces.render.FacesBehaviorRenderer", //NOI18N
             "javax.faces.render.FacesRenderer", //NOI18N
-            "javax.faces.event.ListenerFor" //NOI18N
+            "javax.faces.event.ListenerFor", //NOI18N
+            "jakarta.faces.bean.ManagedBean", //NOI18N
+            "jakarta.faces.component.behavior.FacesBehavior", //NOI18N
+            "jakarta.faces.convert.FacesConverter", //NOI18N
+            "jakarta.faces.component.FacesComponent", //NOI18N
+            "jakarta.faces.validator.FacesValidator", //NOI18N
+            "jakarta.faces.render.FacesBehaviorRenderer", //NOI18N
+            "jakarta.faces.render.FacesRenderer", //NOI18N
+            "jakarta.faces.event.ListenerFor" //NOI18N
         ));
     private static List<ElementHandle> jsfResourcesElementHandles;
 

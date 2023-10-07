@@ -87,7 +87,7 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
         "DN_GenerateGetterSetterFor=Generate Getter and Setter for \"{0}\"",
     })
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null) {
             return Collections.emptyList();
         }

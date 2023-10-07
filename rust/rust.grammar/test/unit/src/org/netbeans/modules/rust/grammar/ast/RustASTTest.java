@@ -19,8 +19,6 @@
 package org.netbeans.modules.rust.grammar.ast;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.function.Consumer;

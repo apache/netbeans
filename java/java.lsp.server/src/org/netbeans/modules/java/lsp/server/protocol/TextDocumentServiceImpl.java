@@ -126,6 +126,7 @@ import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
+import org.eclipse.lsp4j.ParameterInformation;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PrepareRenameParams;
 import org.eclipse.lsp4j.PrepareRenameResult;
@@ -144,6 +145,7 @@ import org.eclipse.lsp4j.SemanticTokensWithRegistrationOptions;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SignatureHelpParams;
+import org.eclipse.lsp4j.SignatureInformation;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
@@ -580,7 +582,53 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<SignatureHelp> signatureHelp(SignatureHelpParams params) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        String uri = params.getTextDocument().getUri();
+        FileObject file = fromURI(uri);
+        Document rawDoc = server.getOpenedDocuments().getDocument(uri);
+        if (file == null || !(rawDoc instanceof StyledDocument)) {
+            return CompletableFuture.completedFuture(null);
+        }
+        StyledDocument doc = (StyledDocument) rawDoc;
+        List<SignatureInformation> signatures = new ArrayList<>();
+        AtomicInteger activeSignature = new AtomicInteger(-1);
+        AtomicInteger activeParameter = new AtomicInteger(-1);
+        org.netbeans.api.lsp.SignatureInformation.collect(doc, Utils.getOffset(doc, params.getPosition()), null, signature -> {
+            SignatureInformation signatureInformation = new SignatureInformation(signature.getLabel());
+            List<ParameterInformation> parameters = new ArrayList<>(signature.getParameters().size());
+            for (int i = 0; i < signature.getParameters().size(); i++) {
+                org.netbeans.api.lsp.SignatureInformation.ParameterInformation parameter = signature.getParameters().get(i);
+                ParameterInformation parameterInformation = new ParameterInformation(parameter.getLabel());
+                if (parameter.getDocumentation() != null) {
+                    MarkupContent markup = new MarkupContent();
+                    markup.setKind("markdown");
+                    markup.setValue(html2MD(parameter.getDocumentation()));
+                    parameterInformation.setDocumentation(markup);
+                }
+                parameters.add(parameterInformation);
+                if (signatureInformation.getActiveParameter() == null && parameter.isActive()) {
+                    signatureInformation.setActiveParameter(i);
+                }
+            }
+            if (signature.getDocumentation() != null) {
+                MarkupContent markup = new MarkupContent();
+                markup.setKind("markdown");
+                markup.setValue(html2MD(signature.getDocumentation()));
+                signatureInformation.setDocumentation(markup);
+            }
+            signatureInformation.setParameters(parameters);
+            if (activeSignature.get() < 0 && signature.isActive()) {
+                activeSignature.set(signatures.size());
+                if (signatureInformation.getActiveParameter() != null) {
+                    activeParameter.set(signatureInformation.getActiveParameter());
+                }
+            }
+            signatures.add(signatureInformation);
+        });
+        return CompletableFuture.completedFuture(signatures.isEmpty() ? null : new SignatureHelp(signatures, activeSignature.get(), activeParameter.get()));
     }
 
     @Override
@@ -910,7 +958,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         Range range = params.getRange();
         int startOffset = Utils.getOffset(doc, range.getStart());
         int endOffset = Utils.getOffset(doc, range.getEnd());
-        if (startOffset == endOffset) {
+        if (startOffset == endOffset || !params.getContext().getDiagnostics().isEmpty()) {
             final javax.swing.text.Element elem = NbDocument.findLineRootElement(doc);
             int lineStartOffset = elem.getStartOffset();
             int lineEndOffset = elem.getEndOffset();
@@ -1025,7 +1073,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                         if (client.getNbCodeCapabilities().wantsJavaSupport()) {
                             //introduce hints:
-                            CompilationController cc = CompilationController.get(resultIterator.getParserResult());
+                            CompilationController cc = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
                             if (cc != null) {
                                 cc.toPhase(JavaSource.Phase.RESOLVED);
                                 if (!range.getStart().equals(range.getEnd())) {
@@ -1987,7 +2035,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 return file;
             }
             missingFileDiscovered(uri);
-        } catch (MalformedURLException ex) {
+        } catch (MalformedURLException | IllegalArgumentException ex) {
             if (!uri.startsWith("untitled:") && !uri.startsWith("jdt:")) {
                 LOG.log(Level.WARNING, "Invalid file URL: " + uri, ex);
             }

@@ -89,6 +89,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag;
+import org.netbeans.modules.php.editor.parser.astnodes.PHPVarComment;
 import org.netbeans.modules.php.editor.parser.astnodes.ParenthesisExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
 import org.netbeans.modules.php.editor.parser.astnodes.Reference;
@@ -384,7 +385,18 @@ public final class VariousUtils {
                     break;
                 }
             }
+        } else if ((comment instanceof PHPVarComment) && PHPDocTag.Type.VAR == tagType) {
+            // GH-6359
+            // /** @var Type $field */
+            // private $field;
+            PHPVarComment varComment = (PHPVarComment) comment;
+            PHPDocVarTypeTag tag = varComment.getVariable();
+            String[] parts = WS_PATTERN.split(tag.getValue().trim(), 3); // 3: @var Type $field
+            if (parts.length > 1) {
+                return parts[1];
+            }
         }
+
         return null;
     }
 

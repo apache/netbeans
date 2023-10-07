@@ -46,7 +46,6 @@ import org.netbeans.modules.web.jsf.api.metamodel.SystemEventListener;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 class ObjectProviders {
     
     /**
@@ -82,6 +81,30 @@ class ObjectProviders {
                                             "javax.faces.event.ListenerFor"),// NOI18N
                                     new ListenerForHandler( helper , typeElement, 
                                             result ), 
+                                    null);
+                            parser.parse( annotation );
+                        }
+                    });
+            helper.getAnnotationScanner().findAnnotations(
+                    "jakarta.faces.event.ListenersFor",               // NOI18N
+                    EnumSet.of(ElementKind.CLASS),
+                    new AnnotationHandler() {
+                        public void handleAnnotation(TypeElement typeElement,
+                                Element element, AnnotationMirror annotation)
+                        {
+                            if ( !SystemEventListenerProvider.
+                                    isApplicationSystemEventListener(typeElement,
+                                            helper))
+                            {
+                                return;
+                            }
+                            AnnotationParser parser = AnnotationParser.create(
+                                    helper );
+                            parser.expectAnnotationArray("value" ,  // NOI18N
+                                    helper.resolveType(
+                                            "jakarta.faces.event.ListenerFor"),// NOI18N
+                                    new ListenerForHandler( helper , typeElement,
+                                            result ),
                                     null);
                             parser.parse( annotation );
                         }
@@ -141,7 +164,7 @@ class ObjectProviders {
 
         ComponentProvider( AnnotationModelHelper helper )
         {
-            super(helper, "javax.faces.component.FacesComponent");
+            super(helper, "javax.faces.component.FacesComponent", "jakarta.faces.component.FacesComponent");
         }
 
         /* (non-Javadoc)
@@ -159,7 +182,7 @@ class ObjectProviders {
     static final class BehaviorProvider extends AbstractProvider<BehaviorImpl> {
 
         BehaviorProvider( AnnotationModelHelper helper ) {
-            super( helper , "javax.faces.component.behavior.FacesBehavior");
+            super( helper, "javax.faces.component.behavior.FacesBehavior", "jakarta.faces.component.behavior.FacesBehavior");
         }
 
         /* (non-Javadoc)
@@ -180,7 +203,7 @@ class ObjectProviders {
 
         ConverterProvider( AnnotationModelHelper helper )
         {
-            super(helper, "javax.faces.convert.FacesConverter");
+            super(helper, "javax.faces.convert.FacesConverter", "jakarta.faces.convert.FacesConverter");
         }
 
         /* (non-Javadoc)
@@ -202,7 +225,7 @@ class ObjectProviders {
 
         ManagedBeanProvider( AnnotationModelHelper helper)
         {
-            super(helper, "javax.faces.bean.ManagedBean");
+            super(helper, "javax.faces.bean.ManagedBean", "jakarta.faces.bean.ManagedBean");
         }
 
         /* (non-Javadoc)
@@ -223,7 +246,7 @@ class ObjectProviders {
 
         ValidatorProvider( AnnotationModelHelper helper )
         {
-            super(helper, "javax.faces.validator.FacesValidator");
+            super(helper, "javax.faces.validator.FacesValidator", "jakarta.faces.validator.FacesValidator");
         }
 
         /* (non-Javadoc)
@@ -243,7 +266,7 @@ class ObjectProviders {
     {
 
         RendererProvider( AnnotationModelHelper helper ) {
-            super(helper, "javax.faces.render.FacesRenderer");
+            super(helper, "javax.faces.render.FacesRenderer", "jakarta.faces.render.FacesRenderer");
         }
 
         /* (non-Javadoc)
@@ -264,7 +287,7 @@ class ObjectProviders {
     {
 
         ClientBehaviorProvider( AnnotationModelHelper helper ) {
-            super(helper, "javax.faces.render.FacesBehaviorRenderer");
+            super(helper, "javax.faces.render.FacesBehaviorRenderer", "jakarta.faces.render.FacesBehaviorRenderer");
         }
 
         /* (non-Javadoc)
@@ -286,7 +309,7 @@ class ObjectProviders {
 
         SystemEventListenerProvider( AnnotationModelHelper helper )
         {
-            super(helper, "javax.faces.event.ListenerFor");         // NOI18N
+            super(helper, "javax.faces.event.ListenerFor", "jakarta.faces.event.ListenerFor");         // NOI18N
         }
 
         /* (non-Javadoc)
@@ -320,12 +343,16 @@ class ObjectProviders {
             boolean isComponentSystemEventListener = false;
             for (TypeElement typeElement : interfaces) {
                 if ( typeElement.getQualifiedName().contentEquals( 
-                        "javax.faces.event.SystemEventListener") )      // NOI18N
+                        "jakarta.faces.event.SystemEventListener") // NOI18N
+                    || typeElement.getQualifiedName().contentEquals(
+                        "javax.faces.event.SystemEventListener") ) // NOI18N
                 {
                     isSystemEventListener = true;
                 }
-                else if ( typeElement.getQualifiedName().contentEquals( 
-                        "javax.faces.event.ComponentSystemEventListener"))
+                else if ( typeElement.getQualifiedName().contentEquals(
+                                "jakarta.faces.event.ComponentSystemEventListener") // NOI18N
+                        || typeElement.getQualifiedName().contentEquals(
+                                "javax.faces.event.ComponentSystemEventListener")) // NOI18N
                 {
                     isComponentSystemEventListener = true;
                 }
@@ -365,35 +392,38 @@ class ObjectProviders {
     private abstract static class AbstractProvider<T extends Refreshable> 
         implements ObjectProvider<T>
     {
-        AbstractProvider(AnnotationModelHelper helper, String annotationName) {
-            myAnnotationName = annotationName;
+        AbstractProvider(AnnotationModelHelper helper, String... annotationNames) {
+            myAnnotationNames = annotationNames;
             myHelper = helper;
         }
 
         public List<T> createInitialObjects() throws InterruptedException {
             final List<T> result = new LinkedList<T>();
-            getHelper().getAnnotationScanner().findAnnotations(getAnnotationName(), 
-                    EnumSet.of( ElementKind.CLASS ), 
-                    new AnnotationHandler() {
-                        public void handleAnnotation(TypeElement type, 
-                                Element element, AnnotationMirror annotation) 
-                        {
-                            if ( checkType ( type )){
-                                result.add(createObject(getHelper(), type));
-                            }
+            for (String annotationName : myAnnotationNames) {
+                getHelper().getAnnotationScanner().findAnnotations(annotationName,
+                        EnumSet.of(ElementKind.CLASS),
+                        new AnnotationHandler() {
+                    public void handleAnnotation(TypeElement type,
+                            Element element, AnnotationMirror annotation) {
+                        if (checkType(type)) {
+                            result.add(createObject(getHelper(), type));
                         }
-            });
+                    }
+                });
+            }
             return result;
         }
 
         public List<T> createObjects(TypeElement type) {
             final List<T> result = new ArrayList<T>();
-            if (getHelper().hasAnnotation(getHelper().getCompilationController().
-                    getElements().getAllAnnotationMirrors( type ), 
-                    getAnnotationName())) 
-            {
-                if ( checkType ( type )){
-                    result.add(createObject(getHelper(), type));
+            for (String annotationName : myAnnotationNames) {
+                if (getHelper().hasAnnotation(getHelper().getCompilationController().
+                        getElements().getAllAnnotationMirrors( type ),
+                        annotationName))
+                {
+                    if ( checkType ( type )){
+                        result.add(createObject(getHelper(), type));
+                    }
                 }
             }
             return result;
@@ -421,11 +451,7 @@ class ObjectProviders {
             return myHelper;
         }
         
-        private String getAnnotationName(){
-            return myAnnotationName;
-        }
-        
-        private String myAnnotationName;
+        private String[] myAnnotationNames;
         private AnnotationModelHelper myHelper;
     }
 }

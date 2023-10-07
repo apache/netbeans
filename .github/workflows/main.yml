@@ -1323,6 +1323,10 @@ jobs:
         if: env.test_java == 'true' && success()
         run: ant $OPTS -f java/java.completion test
 
+      - name: java.editor.base
+        if: env.test_java == 'true' && success()
+        run: ant $OPTS -f java/java.editor.base test
+
       - name: java.editor
         if: env.test_java == 'true' && success()
         run: .github/retry.sh ant $OPTS -f java/java.editor test-unit

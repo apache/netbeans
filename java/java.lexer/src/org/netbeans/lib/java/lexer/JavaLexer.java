@@ -19,7 +19,10 @@
 
 package org.netbeans.lib.java.lexer;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -60,7 +63,15 @@ public class JavaLexer implements Lexer<JavaTokenId> {
     public JavaLexer(LexerRestartInfo<JavaTokenId> info) {
         this.input = info.input();
         this.tokenFactory = info.tokenFactory();
-        this.state = (Integer) info.state();
+        if (info.state() instanceof ComplexState) {
+            ComplexState complex = (ComplexState) info.state();
+            this.pendingStringLiteral = complex.pendingStringLiteral;
+            this.pendingBraces = complex.pendingBraces;
+            this.literalHistory = complex.literalHistory;
+            this.state = complex.state;
+        } else {
+            this.state = (Integer) info.state();
+        }
         if (state == null) {
             Supplier<String> fileName = (Supplier<String>)info.getAttributeValue("fileName"); //NOI18N
             if (fileName != null && "module-info.java".equals(fileName.get())) { //NOI18N
@@ -80,8 +91,60 @@ public class JavaLexer implements Lexer<JavaTokenId> {
         }
         this.version = (ver != null) ? ver.intValue() : 10; // TODO: Java 1.8 used by default        
     }
-    
+
+    private static final class ComplexState {
+        public final JavaTokenId pendingStringLiteral;
+        public final int pendingBraces;
+        public final LiteralHistoryNode literalHistory;
+        public final Integer state;
+
+        public ComplexState(JavaTokenId pendingStringLiteral, int pendingBraces,
+                            LiteralHistoryNode literalHistory, Integer state) {
+            this.pendingStringLiteral = pendingStringLiteral;
+            this.pendingBraces = pendingBraces;
+            this.literalHistory = literalHistory;
+            this.state = state;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 97 * hash + Objects.hashCode(this.pendingStringLiteral);
+            hash = 97 * hash + this.pendingBraces;
+            hash = 97 * hash + Objects.hashCode(this.literalHistory);
+            hash = 97 * hash + Objects.hashCode(this.state);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final ComplexState other = (ComplexState) obj;
+            if (this.pendingBraces != other.pendingBraces) {
+                return false;
+            }
+            if (this.pendingStringLiteral != other.pendingStringLiteral) {
+                return false;
+            }
+            if (!Objects.equals(this.literalHistory, other.literalHistory)) {
+                return false;
+            }
+            return Objects.equals(this.state, other.state);
+        }
+
+    }
     public Object state() {
+        if (pendingStringLiteral != null) {
+            return new ComplexState(pendingStringLiteral, 0, literalHistory, state);
+        }
         return state;
     }
     
@@ -159,11 +222,30 @@ public class JavaLexer implements Lexer<JavaTokenId> {
     public void consumeNewline() {
         if (nextChar() != '\n') backup(1);
     }
-    
+
+    private JavaTokenId pendingStringLiteral;
+    private int pendingBraces;
+
+    private class LiteralHistoryNode {
+        public final JavaTokenId pendingStringLiteral;
+        public final int pendingBraces;
+        public final LiteralHistoryNode next;
+
+        public LiteralHistoryNode(JavaTokenId pendingStringLiteral, int pendingBraces, LiteralHistoryNode next) {
+            this.pendingStringLiteral = pendingStringLiteral;
+            this.pendingBraces = pendingBraces;
+            this.next = next;
+        }
+
+    }
+
+    LiteralHistoryNode literalHistory = null;
+
     public Token<JavaTokenId> nextToken() {
+        boolean stringLiteralContinuation = false;
+        JavaTokenId lookupId = null;
         while(true) {
-            int c = nextChar();
-            JavaTokenId lookupId = null;
+            int c = stringLiteralContinuation ? '"' : nextChar();
             switch (c) {
                 case '#':
                     //Support for exotic identifiers has been removed 6999438
@@ -174,7 +256,7 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                         switch (nextChar()) {
                             case '"': // NOI18N
                                 String text = input.readText().toString();
-                                if (text.length() == 2) {
+                                if (text.length() == 2 && !stringLiteralContinuation) {
                                     int mark = input.readLength();
                                     if (nextChar() != '"') {
                                         input.backup(1); //TODO: EOF???
@@ -191,16 +273,24 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                                     lookupId = JavaTokenId.MULTILINE_STRING_LITERAL;
                                 }
                                 if (lookupId == JavaTokenId.MULTILINE_STRING_LITERAL) {
-                                    if (text.endsWith("\"\"\"") && !text.endsWith("\\\"\"\"") && text.length() > 6) {
-                                        return token(lookupId);
+                                    if (text.endsWith("\"\"\"") && !text.endsWith("\\\"\"\"") && (text.length() > 6 || stringLiteralContinuation)) {
+                                        return token(lookupId, stringLiteralContinuation ? PartType.END : PartType.COMPLETE);
                                     } else {
                                         break;
                                     }
                                 }
                                 
-                                return token(lookupId);
+                                return token(lookupId, stringLiteralContinuation ? PartType.END : PartType.COMPLETE);
                             case '\\':
-                                nextChar();
+                                switch (nextChar()) {
+                                    case '{':
+                                        if (pendingStringLiteral != null) {
+                                            literalHistory = new LiteralHistoryNode(pendingStringLiteral, pendingBraces, literalHistory);
+                                        }
+                                        pendingStringLiteral = lookupId;
+                                        pendingBraces = 0;
+                                        return token(lookupId, stringLiteralContinuation ? PartType.MIDDLE : PartType.START);
+                                }
                                 break;
                             case '\r': consumeNewline();
                             case '\n':
@@ -441,11 +531,27 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                 case ']':
                     return token(JavaTokenId.RBRACKET);
                 case '{':
+                    if (pendingStringLiteral != null ) {
+                        pendingBraces++;
+                    }
                     if (state != null && state == 2) {
                         state = 3; // inside module decl
                     }
                     return token(JavaTokenId.LBRACE);
                 case '}':
+                    if (pendingStringLiteral != null && pendingBraces-- == 0) {
+                        lookupId = pendingStringLiteral;
+                        if (literalHistory == null) {
+                            pendingStringLiteral = null;
+                            pendingBraces = 0;
+                        } else {
+                            pendingStringLiteral = literalHistory.pendingStringLiteral;
+                            pendingBraces = literalHistory.pendingBraces;
+                            literalHistory = literalHistory.next;
+                        }
+                        stringLiteralContinuation = true;
+                        break;
+                    }
                     state = null;
                     return token(JavaTokenId.RBRACE);
                 case '@':
@@ -1324,10 +1430,15 @@ public class JavaLexer implements Lexer<JavaTokenId> {
     }
     
     private Token<JavaTokenId> token(JavaTokenId id) {
+        return token(id, PartType.COMPLETE);
+    }
+
+    private Token<JavaTokenId> token(JavaTokenId id, PartType partType) {
         String fixedText = id.fixedText();
-        return (fixedText != null && fixedText.length() == input.readLength())
+        return (fixedText != null && fixedText.length() == input.readLength() && partType == PartType.COMPLETE)
                 ? tokenFactory.getFlyweightToken(id, fixedText)
-                : tokenFactory.createToken(id);
+                : partType == PartType.COMPLETE ? tokenFactory.createToken(id)
+                                                : tokenFactory.createToken(id, input.readLength(), partType);
     }
 
     private static final Set<JavaTokenId> AFTER_VAR_TOKENS = EnumSet.of(

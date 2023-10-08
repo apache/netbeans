@@ -561,11 +561,13 @@ public class JavaKit extends NbEditorKit {
             switch(insertedChar) {
                 case '(':
                 case '[':
+                case '{':
                     if (TypingCompletion.isCompletionSettingEnabled())
                         TypingCompletion.completeOpeningBracket(context);
                     break;
                 case ')':
                 case ']':
+                case '}':
                     if (TypingCompletion.isCompletionSettingEnabled())
                         caretPosition = TypingCompletion.skipClosingBracket(context);
                     break;

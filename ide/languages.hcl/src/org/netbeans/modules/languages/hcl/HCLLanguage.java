@@ -31,6 +31,7 @@ import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
@@ -150,6 +151,11 @@ public class HCLLanguage extends DefaultLanguageConfig {
     @Override
     public Parser getParser() {
         return new NbHCLParser<HCLParserResult>(HCLParserResult::new);
+    }
+
+    @Override
+    public SemanticAnalyzer getSemanticAnalyzer() {
+        return new HCLSemanticAnalyzer();
     }
 
     @Override

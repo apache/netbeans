@@ -23,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.netbeans.junit.NbTestCase;
-import org.openide.filesystems.FileUtil;
 import org.openide.modules.DummyInstalledFileLocator;
 import org.openide.util.test.MockLookup;
 
@@ -52,16 +51,9 @@ public class StatusProviderTest extends NbTestCase {
         MockLookup.setLayersAndInstances(new InstalledFileLocator());
         // new File(StatusProviderTest.class.getResource(...).toURI()) may not work in all environments, e.g. testdist
         File pom = new File(getWorkDir(), "pom.xml");
-        InputStream is = StatusProviderTest.class.getResourceAsStream("pom-with-warnings.xml");
-        try {
-            OutputStream os = new FileOutputStream(pom); 
-            try {
-                FileUtil.copy(is, os);
-            } finally {
-                os.close();
-            }
-        } finally {
-            is.close();
+        try (InputStream is = StatusProviderTest.class.getResourceAsStream("pom-with-warnings.xml");
+             OutputStream os = new FileOutputStream(pom)) {
+            is.transferTo(os);
         }
         String warnings = PomModelUtils.runMavenValidationImpl(pom, null).toString().replace(pom.getAbsolutePath(), "pom.xml");
         assertEquals("["

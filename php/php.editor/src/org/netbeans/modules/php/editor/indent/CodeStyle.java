@@ -172,6 +172,10 @@ public final class CodeStyle {
         return preferences.getInt(BLANK_LINES_BEFORE_USE_TRAIT, getDefaultAsInt(BLANK_LINES_BEFORE_USE_TRAIT));
     }
 
+    public int getBlankLinesAfterUseTrait() {
+        return preferences.getInt(BLANK_LINES_AFTER_USE_TRAIT, getDefaultAsInt(BLANK_LINES_AFTER_USE_TRAIT));
+    }
+
     public int getBlankLinesAfterUse() {
         return preferences.getInt(BLANK_LINES_AFTER_USE, getDefaultAsInt(BLANK_LINES_AFTER_USE));
     }

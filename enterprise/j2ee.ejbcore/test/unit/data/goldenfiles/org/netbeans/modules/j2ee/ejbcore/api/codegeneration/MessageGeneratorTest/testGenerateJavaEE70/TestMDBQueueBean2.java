@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/J2EE/EJB30/MessageDrivenBean.java to edit this template
  */
 
 package testGenerateJavaEE70;
@@ -16,8 +15,8 @@ import javax.jms.MessageListener;
  * @author {user}
  */
 @MessageDriven(activationConfig =  {
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-        @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "TestMessageDestination2")
+        @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "TestMessageDestination2"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")
     })
 public class TestMDBQueueBean2 implements MessageListener {
     

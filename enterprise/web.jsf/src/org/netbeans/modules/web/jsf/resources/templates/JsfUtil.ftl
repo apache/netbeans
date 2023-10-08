@@ -27,6 +27,7 @@
 
     packageName - package name (String)
     comment - always (Boolean; always FALSE)
+    jakartaJsfPackages - true if jakarta JSF is used, false if not (type: Boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category JavaServer Faces->JSF from Entity.
@@ -36,11 +37,19 @@
 package ${packageName};
 
 import java.util.List;
+<#if jakartaJsfPackages?? && jakartaJsfPackages==true>
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.convert.Converter;
+import jakarta.faces.model.SelectItem;
+<#else>
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
+</#if>
 
 public class JsfUtil {
 

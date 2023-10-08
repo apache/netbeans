@@ -58,7 +58,7 @@ public class IncorrectNamedArgumentsHintError extends HintErrorRule {
     @NbBundle.Messages({
         "# {0} - argument name",
         "IncorrectNamedArguments.desc.duplicate.name=Duplicate argument name: \"{0}\" already exists.",
-        "IncorrectNamedArguments.desc.combine.named.argument.and.argument.unpacking=Can't combine named arguments(name: arg) and argument unpacking(...).",
+        "IncorrectNamedArguments.desc.argument.unpacking.after.named.argument=Can't use argument unpacking(...) after named argument(name: arg).",
         "IncorrectNamedArguments.desc.positional.arguments.after.named.argument=Can't use positional argument after named argument.",
     })
     public void invoke(PHPRuleContext context, List<Hint> hints) {
@@ -80,12 +80,11 @@ public class IncorrectNamedArgumentsHintError extends HintErrorRule {
                 }
                 addHint(argument, Bundle.IncorrectNamedArguments_desc_duplicate_name(argument.getParameterName().getName()), hints);
             }
-            for (Map.Entry<NamedArgument, Variadic> entry : checkVisitor.getCombinedNamedArgumentsWithArgumentUnpacking().entrySet()) {
+            for (Variadic variadic : checkVisitor.getArgumentUnpackingAfterNamedArgument()) {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }
-                addHint(entry.getKey(), Bundle.IncorrectNamedArguments_desc_combine_named_argument_and_argument_unpacking(), hints);
-                addHint(entry.getValue(), Bundle.IncorrectNamedArguments_desc_combine_named_argument_and_argument_unpacking(), hints);
+                addHint(variadic, Bundle.IncorrectNamedArguments_desc_argument_unpacking_after_named_argument(), hints);
             }
             for (Expression argument : checkVisitor.getArgumentsAfterNamedArgument()) {
                 if (CancelSupport.getDefault().isCancelled()) {
@@ -115,7 +114,7 @@ public class IncorrectNamedArgumentsHintError extends HintErrorRule {
     private static final class CheckVisitor extends DefaultVisitor {
 
         private final Set<NamedArgument> duplicateNames = new HashSet<>();
-        private final Map<NamedArgument, Variadic> combinedNamedArgumentsWithArgumentUnpacking = new HashMap<>();
+        private final Set<Variadic> argumentUnpackingAfterNamedArgument = new HashSet<>();
         private final Set<Expression> argumentsAfterNamedArgument = new HashSet<>();
 
         @Override
@@ -152,7 +151,6 @@ public class IncorrectNamedArgumentsHintError extends HintErrorRule {
             }
             Set<String> names = new HashSet<>();
             NamedArgument firstNamedArgument = null;
-            Variadic variadic = null;
             for (Expression argument : arguments) {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
@@ -173,8 +171,9 @@ public class IncorrectNamedArgumentsHintError extends HintErrorRule {
                         names.add(name);
                     }
                 } else if (argument instanceof Variadic) {
-                    if (variadic == null) {
-                        variadic = (Variadic) argument;
+                    if (firstNamedArgument != null) {
+                        // e.g. (a: 'arg', ...[])
+                        argumentUnpackingAfterNamedArgument.add((Variadic) argument);
                     }
                 } else {
                     if (firstNamedArgument != null) {
@@ -183,23 +182,18 @@ public class IncorrectNamedArgumentsHintError extends HintErrorRule {
                     }
                 }
             }
-            if (firstNamedArgument != null && variadic != null) {
-                // e.g. (a: 'arg', ...[]), (...[], a: 'arg')
-                combinedNamedArgumentsWithArgumentUnpacking.put(firstNamedArgument, variadic);
-            }
         }
 
         public Set<NamedArgument> getDuplicateNames() {
             return Collections.unmodifiableSet(duplicateNames);
         }
 
-        public Map<NamedArgument, Variadic> getCombinedNamedArgumentsWithArgumentUnpacking() {
-            return Collections.unmodifiableMap(combinedNamedArgumentsWithArgumentUnpacking);
-        }
-
         public Set<Expression> getArgumentsAfterNamedArgument() {
             return Collections.unmodifiableSet(argumentsAfterNamedArgument);
         }
 
+        public Set<Variadic> getArgumentUnpackingAfterNamedArgument() {
+            return Collections.unmodifiableSet(argumentUnpackingAfterNamedArgument);
+        }
     }
 }

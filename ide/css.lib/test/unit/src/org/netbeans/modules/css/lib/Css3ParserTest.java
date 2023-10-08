@@ -27,7 +27,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.BadLocationException;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.TokenStream;
 import org.netbeans.modules.css.lib.api.*;
+import org.netbeans.modules.css.lib.nbparser.ProgressingTokenStream;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.openide.filesystems.FileObject;
 
@@ -882,7 +885,7 @@ public class Css3ParserTest extends CssTestBase {
         CssParserResult result = TestUtil.parse(invalidCss);
         assertTrue(result.getParserDiagnostics().size() > 0);
         
-        assertParses(validCss1);
+        assertParses(validCss1, true);
         assertParses(validCss2);
         
     }
@@ -907,7 +910,15 @@ public class Css3ParserTest extends CssTestBase {
         assertTrue(result5.getParserDiagnostics().size() > 0);
         
     }
-    
+
+    public void testSupportsFunctions() throws Exception {
+        assertParses("@supports selector(h2 > p) {}");
+        assertParses("@supports font-tech(color-COLRv1) {}");
+        assertParses("@supports font-format(opentype) {}");
+        assertParses("@supports font-format(opentype) and selector(h2 > p) {}");
+        assertParses("@supports font-format(opentype) and (color: hotpink) {}");
+    }
+
     public void testCounterStyle() throws ParseException, BadLocationException {
         String content = "@counter-style cool { glyph: '|'; }";
 
@@ -1628,5 +1639,41 @@ public class Css3ParserTest extends CssTestBase {
         assertParses("@page {  @top-center { content: attr(test) } @bottom-center { content: attr(test2) } background-color: red; }");
         assertParses("@page {  background-color: red; @top-center { content: attr(test) } @bottom-center { content: attr(test2) } }");
         assertParses("@page{@top-left{content: attr(test)}}");
+    }
+
+    public void testParseLayer() {
+        assertParses("@layer layer1;");
+        assertParses("@layer layer1, layer2;");
+        assertParses("@layer layer1 {}");
+        assertParses("@layer layer1 {h1 {font-weight: bold}}");
+        assertParses("@layer layer1 {h1 {font-weight: bold}} @layer layer2 {}");
+        assertParses("@layer layer1.sublayer1 {h1 {font-weight: bold}}");
+        assertParses("@layer layer1 { @layer sublayer1 {}}");
+        assertParses("@layer layer1 { @layer sublayer1 {h1 {font-weight: bold}}}");
+        assertParses("@layer layer1 { @layer sublayer1, sublayer2; @layer sublayer1 {} @layer sublayer2{}}");
+        assertParses("@layer {}");
+        assertParses("@layer {h1 {font-weight: bold}}");
+        assertParses("@layer {h1 {font-weight: bold}} @layer layer2 {}");
+        assertParses("@import \"test.css\" layer;");
+        assertParses("@import \"test.css\" layer(test);");
+        assertParses("@import \"test.css\" layer(test.test2);");
+        assertParses("@layer default;\n"
+                + "@import url(theme.css) layer(theme);\n"
+                + "@layer components;\n"
+                + "@layer default {}");
+    }
+
+    public void testParseContainer() throws Exception {
+        assertParses("@container test style(--responsive: true) {}");
+        assertParses("@container style(--responsive: true) {}");
+        assertParses("@container my-layout (inline-size > 45em) {}");
+        assertParses("@container my-layout (45em < inline-size) {}");
+        assertParses("@container (--cards: small) {}");
+        assertParses("@container (--cards: small) { h1 {background: green; border: 1px solid green; } }");
+        assertParses("@container my-component-library (inline-size > 30em) {}");
+        assertParses("@container card (inline-size > 30em) { @container style(--responsive: true) { } }");
+        assertParses("@container (width < 30em) { }");
+        assertParses("@container (20em < width < 30em) { }");
+        assertParses("@container name (max-height: 780px) {}");
     }
 }

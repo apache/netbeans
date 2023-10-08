@@ -1031,6 +1031,7 @@ public class JavacParser extends Parser {
                 }
                 options.add(sb.toString());
             }
+            options.add("-proc:full");
         } else {
             options.add("-proc:none"); // NOI18N, Disable annotation processors
         }

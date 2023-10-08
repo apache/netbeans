@@ -26,7 +26,7 @@ expression
     | left=expression op=(PLUS | MINUS) right=expression
     | left=expression op=(AND | OR) right=expression
     | left=expression op=(LTE | GTE | LT | GT | EQUALS | NOT_EQUALS) right=expression
-    | exprCond=expression QUESTION (exprTrue=expression COLON exprFalse=expression)
+    | exprCond=expression op=QUESTION (exprTrue=expression COLON exprFalse=expression)
     ;
 
 exprTerm
@@ -40,11 +40,11 @@ exprTerm
     | exprTerm index
     | exprTerm getAttr
     | exprTerm splat
-    | literalValue
     ;
 
 literalValue
-    : NUMERIC_LIT
+    : stringLit     // See: https://github.com/hashicorp/hcl/issues/619
+    | NUMERIC_LIT
     | TRUE
     | FALSE
     | NULL
@@ -57,24 +57,38 @@ collectionValue
 
 
 tuple
-    // The original separator in HCL is Comma or NewLine
-    : LBRACK expression (COMMA? expression)* COMMA? RBRACK
+    // The original separator in HCL is Comma or NewLine, TF says, it is Comma only
+    // See: https://github.com/hashicorp/hcl/issues/618
+    // Using TF which is stricter
+    : LBRACK expression (COMMA expression)* COMMA? RBRACK
     | LBRACK RBRACK
     ;
 
 object
-    // The original separator in HCL is Comma or NewLine
+    // The original separator in HCL is Comma or NewLine (NL)
+    // HCL uses NewLine sometimes inconsistent. To have things simplified NL
+    // is sent to the HIDDEN channel, so it is not available here.
+    // The only thing we can do is make COMMA optional, that's result more
+    // permissive grammar than HCL. { a = 1 b = 2 } is a valid object here.
     : LBRACE objectElem (COMMA? objectElem)* COMMA? RBRACE
     | LBRACE RBRACE
     ;
 
 objectElem
-    : (IDENTIFIER | expression) (EQUAL | COLON) expression
+    // HCL spec says (IDENTIFIER | expression) though a single IDENTIFIER
+    // would map to variableExpression, so this is redundant here
+    // AST implementation is easier simply using expression
+    : key=expression (EQUAL | COLON) value=expression
     ;
 
 templateExpr
     : quotedTemplate
-    | heredocTemplate
+    | heredoc
+    ;
+
+stringLit
+    : QUOTE QUOTE
+    | QUOTE stringContent QUOTE
     ;
 
 quotedTemplate
@@ -107,7 +121,11 @@ heredocContent
     ;
 
 heredocTemplate
-    : HEREDOC_START (heredocContent | interpolation | template)* HEREDOC_END
+    : (heredocContent | interpolation | template)*
+    ;
+
+heredoc
+    : HEREDOC_START heredocTemplate HEREDOC_END
     ;
 
 variableExpr
@@ -133,11 +151,11 @@ forTupleExpr
     ;
 
 forObjectExpr
-    : LBRACE forIntro expression RARROW expression ELLIPSIS? forCond? RBRACE
+    : LBRACE forIntro key=expression RARROW value=expression ELLIPSIS? forCond? RBRACE
     ;
 
 forIntro
-    : FOR IDENTIFIER (COMMA IDENTIFIER)? IN expression COLON
+    : FOR first=IDENTIFIER (COMMA second=IDENTIFIER)? IN expression COLON
     ;
 
 forCond

@@ -19,7 +19,6 @@
 package org.netbeans.modules.maven.hints.pom;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +29,7 @@ import javax.swing.text.Document;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.NbEditorUtilities;
+import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.hints.pom.spi.Configuration;
 import org.netbeans.modules.maven.hints.pom.spi.POMErrorFixProvider;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
@@ -40,8 +40,11 @@ import org.netbeans.modules.maven.model.pom.DependencyManagement;
 import org.netbeans.modules.maven.model.pom.POMComponent;
 import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.modules.maven.model.pom.POMModel;
+import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.maven.model.pom.PluginManagement;
 import org.netbeans.modules.maven.model.pom.Properties;
+import org.netbeans.modules.maven.model.pom.ReportPlugin;
+import org.netbeans.modules.maven.model.pom.Reporting;
 import org.netbeans.modules.maven.model.pom.VersionablePOMComponent;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -102,6 +105,13 @@ public class UpdateDependencyHint implements POMErrorFixProvider {
             }
         }
 
+        Reporting reporting = model.getProject().getReporting();
+        if (reporting != null) {
+            if (reporting.getReportPlugins() != null) {
+                addHintsTo(reporting.getReportPlugins(), hints);
+            }
+        }
+
         return new ArrayList<>(hints.values());
     }
 
@@ -109,10 +119,15 @@ public class UpdateDependencyHint implements POMErrorFixProvider {
 
         for (VersionablePOMComponent comp : components) {
 
-            String groupId = comp.getGroupId();
-            String artifactId = comp.getArtifactId();
+            String groupId = comp.getGroupId() != null && !comp.getGroupId().isBlank() ? comp.getGroupId() : null;
+            String artifactId = comp.getArtifactId() != null && !comp.getArtifactId().isBlank() ? comp.getArtifactId() : null;
 
-            if (groupId != null && artifactId != null && !groupId.isEmpty() && !artifactId.isEmpty()) {
+            // no group ID could indicate it is a default maven plugin
+            if (groupId == null && (comp instanceof Plugin || comp instanceof ReportPlugin)) {
+                groupId = Constants.GROUP_APACHE_PLUGINS;
+            }
+
+            if (artifactId != null && groupId != null) {
 
                 boolean property = false;
                 String version = comp.getVersion();
@@ -197,7 +212,7 @@ public class UpdateDependencyHint implements POMErrorFixProvider {
     private ErrorDescription createHintForComponent(POMExtensibilityElement comp, String version) {
         Document doc = comp.getModel().getBaseDocument();
         int line = NbEditorUtilities.getLine(doc, comp.findPosition(), false).getLineNumber() + 1;
-        List<Fix> fix =  Collections.singletonList(new UpdateVersionFix(comp, version));
+        List<Fix> fix = List.of(new UpdateVersionFix(comp, version));
         return ErrorDescriptionFactory.createErrorDescription(Severity.HINT, HINT_UpdateDependencyHint() + version, fix, doc, line);
     }
 

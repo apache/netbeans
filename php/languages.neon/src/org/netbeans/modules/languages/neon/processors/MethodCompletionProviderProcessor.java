@@ -22,8 +22,6 @@ import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.languages.neon.completion.CompletionProviders;
@@ -37,7 +35,6 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
 @ServiceProvider(service = Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 @SupportedAnnotationTypes("org.netbeans.modules.languages.neon.spi.completion.MethodCompletionProvider.Registration")
 public class MethodCompletionProviderProcessor extends LayerGeneratingProcessor {
 

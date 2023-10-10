@@ -26,7 +26,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -667,11 +666,11 @@ public class Utilities {
     }
 
     public static Element toRecordComponent(Element el) {
-        if (el == null ||el.getKind() != ElementKind.FIELD) {
+        if (el == null || el.getKind() != ElementKind.FIELD) {
             return el;
         }
         TypeElement owner = (TypeElement) el.getEnclosingElement();
-        if (!"RECORD".equals(owner.getKind().name())) {
+        if (!ElementKind.RECORD.equals(owner.getKind())) {
             return el;
         }
         for (Element encl : owner.getEnclosedElements()) {

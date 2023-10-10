@@ -240,6 +240,8 @@ jobs:
 
     - name: Tidy up and display artifacts
       run: |
+        cp myfiles/nativeexecution-external-sources/LICENSE myfiles/LICENSE
+        cp myfiles/nativeexecution-external-sources/NOTICE myfiles/NOTICE
         rm -rf myfiles/*sources*
         ls -l -R
 

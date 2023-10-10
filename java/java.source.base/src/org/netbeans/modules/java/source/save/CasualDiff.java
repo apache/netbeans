@@ -136,13 +136,11 @@ import com.sun.tools.javac.util.Position;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
 import static java.util.logging.Level.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -175,7 +173,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import javax.lang.model.type.TypeKind;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.modules.java.source.transform.TreeHelpers;
 
 public class CasualDiff {
@@ -5783,7 +5780,7 @@ public class CasualDiff {
      * Three sets representing different kind which can be matched. No need
      * to rewrite whole expression. Ensure that CompoundAssignementTrees,
      * UnaryTrees and BinaryTrees are matched, i.e. diff method is used
-     * instead of priting whole new tree.
+     * instead of printing whole new tree.
      */
     private static final EnumSet<Kind> compAssign = EnumSet.of(
         Kind.MULTIPLY_ASSIGNMENT,

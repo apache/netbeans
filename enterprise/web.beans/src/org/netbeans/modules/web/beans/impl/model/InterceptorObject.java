@@ -33,6 +33,7 @@ import org.netbeans.modules.web.beans.impl.model.AbstractObjectProvider.Refresha
  * @author ads
  *
  */
+// @todo: Support JakartaEE
 class InterceptorObject extends PersistentObject implements Refreshable {
     
     static final String INTERCEPTOR = "javax.interceptor.Interceptor";  // NOI18N

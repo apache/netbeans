@@ -311,7 +311,7 @@ public class TypesCompletion extends BaseCompletion {
         // If we are in situation: "String s = new String|" we don't want to show
         // String type as a option - we want to show String constructors + types
         // prefixed with String (e.g. StringBuffer)
-        if (constructorCompletion && typeName.toUpperCase().equals(request.getPrefix().toUpperCase())) {
+        if (constructorCompletion && typeName.equalsIgnoreCase(request.getPrefix())) {
             return;
         }
         

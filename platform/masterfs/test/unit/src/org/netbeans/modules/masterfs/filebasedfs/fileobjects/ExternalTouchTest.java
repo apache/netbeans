@@ -215,7 +215,7 @@ public class ExternalTouchTest extends NbTestCase {
             sub = obj.getParent().getParent();
             fsub = FileUtil.toFile(sub);
 
-            WeakReference<Object> ref = new WeakReference(obj);
+            WeakReference<Object> ref = new WeakReference<>(obj);
             obj = null;
             assertGC("File object can disappear", ref);
         }

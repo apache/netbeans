@@ -63,7 +63,7 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.BLOCK_COMMENT, "/* a");
         assertEquals(PartType.START, ts.token().partType());
     }
-    
+
     public void testIdentifiers() {
         String text = "a ab aB2 2a x\nyZ\r\nz";
         TokenHierarchy<?> hi = TokenHierarchy.create(text, JavaTokenId.language());
@@ -83,7 +83,7 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, "\r\n");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "z");
     }
-    
+
     public void testCharLiterals() {
         String text = "'' 'a''' '\\'' '\\\\' '\\\\\\'' '\\n' 'a";
         TokenHierarchy<?> hi = TokenHierarchy.create(text, JavaTokenId.language());
@@ -104,7 +104,7 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.CHAR_LITERAL, "'a");
         assertEquals(PartType.START, ts.token().partType());
     }
-    
+
     public void testStringLiterals() {
         String text = "\"\" \"a\" \"\" \"\\\"\" \"\\\\\" \"\\\\\\\"\" \"\\n\" \"a";
         TokenHierarchy<?> hi = TokenHierarchy.create(text, JavaTokenId.language());
@@ -126,9 +126,9 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"a");
         assertEquals(PartType.START, ts.token().partType());
     }
-    
+
     public void testNumberLiterals() {
-        String text = "0 00 09 1 12 0L 1l 12L 0x1 0xf 0XdE 0Xbcy" + 
+        String text = "0 00 09 1 12 0L 1l 12L 0x1 0xf 0XdE 0Xbcy" +
                 " 09.5 1.5f 2.5d 6d 7e3 6.1E-7f 0xa.5dp+12d .3 0x4l 0x5L";
         TokenHierarchy<?> hi = TokenHierarchy.create(text, JavaTokenId.language());
         TokenSequence<?> ts = hi.tokenSequence();
@@ -177,7 +177,7 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.LONG_LITERAL, "0x5L");
     }
-    
+
     public void testOperators() {
         String text = "^ ^= % %= * *= / /= = ==";
         TokenHierarchy<?> hi = TokenHierarchy.create(text, JavaTokenId.language());
@@ -352,22 +352,22 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "throwsx");
     }
-    
+
     public void testEmbedding() {
         String text = "ddx \"d\\t\\br\" /** @see X */";
-        
+
         TokenHierarchy<?> hi = TokenHierarchy.create(text, JavaTokenId.language());
         TokenSequence<?> ts = hi.tokenSequence();
-        
+
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "ddx");
         assertEquals(0, ts.offset());
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
         assertEquals(3, ts.offset());
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"d\\t\\br\"");
         assertEquals(4, ts.offset());
-        
+
         TokenSequence<?> es = ts.embedded();
-        
+
         LexerTestUtilities.assertNextTokenEquals(es, JavaStringTokenId.TEXT, "d");
         assertEquals(5, es.offset());
         LexerTestUtilities.assertNextTokenEquals(es, JavaStringTokenId.TAB, "\\t");
@@ -376,16 +376,16 @@ public class JavaLexerBatchTest extends TestCase {
         assertEquals(8, es.offset());
         LexerTestUtilities.assertNextTokenEquals(es, JavaStringTokenId.TEXT, "r");
         assertEquals(10, es.offset());
-        
+
         assertFalse(es.moveNext());
-        
+
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
         assertEquals(12, ts.offset());
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.JAVADOC_COMMENT, "/** @see X */");
         assertEquals(13, ts.offset());
-        
+
         TokenSequence<?> ds = ts.embedded();
-        
+
         LexerTestUtilities.assertNextTokenEquals(ds, JavadocTokenId.OTHER_TEXT, " ");
         assertEquals(16, ds.offset());
         LexerTestUtilities.assertNextTokenEquals(ds, JavadocTokenId.TAG, "@see");
@@ -396,9 +396,9 @@ public class JavaLexerBatchTest extends TestCase {
         assertEquals(22, ds.offset());
         LexerTestUtilities.assertNextTokenEquals(ds, JavadocTokenId.OTHER_TEXT, " ");
         assertEquals(23, ds.offset());
-        
+
         assertFalse(ds.moveNext());
-        
+
         assertFalse(ts.moveNext());
     }
 
@@ -493,7 +493,7 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.INT_LITERAL, "01_2");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.INT_LITERAL, "0x1_2");
     }
-    
+
     public void testUnicode() {
         String text = "//\\u000Aint\\u0020\\u002E\\uuuuuu002E\\u000A";
         InputAttributes attr = new InputAttributes();
@@ -508,7 +508,7 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.DOT, "\\uuuuuu002E");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, "\\u000A");
     }
-    
+
     public void testBrokenUnicode() {
         String text = "\\u000X\\u00";
         InputAttributes attr = new InputAttributes();
@@ -597,7 +597,7 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.RPAREN, ")");
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.SEMICOLON, ";");
     }
-    
+
     public void testVarKeywordWithStringVersion() {
         String text = "var /*comment*/ /**comment*/ var = 0;";
         InputAttributes attr = new InputAttributes();
@@ -763,6 +763,52 @@ public class JavaLexerBatchTest extends TestCase {
         TokenSequence<?> ts = hi.tokenSequence();
 
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.MULTILINE_STRING_LITERAL, "\"\"\" \n");
+        assertFalse(ts.moveNext());
+    }
+
+    public void testTemplates1() {
+        String text = "\"\\{1 + \"\\{a}\".length()}\";";
+        InputAttributes attr = new InputAttributes();
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"\\{");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.INT_LITERAL, "1");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.PLUS, "+");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"\\{");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "a");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "}\"");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.DOT, ".");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "length");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.LPAREN, "(");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.RPAREN, ")");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "}\"");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.SEMICOLON, ";");
+        assertFalse(ts.moveNext());
+    }
+
+    public void testTemplates2() {
+        String text = "\"\"\"\n\\{1 + \"\\{a}\".length()}\"\"\";";
+        InputAttributes attr = new InputAttributes();
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.MULTILINE_STRING_LITERAL, "\"\"\"\n\\{");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.INT_LITERAL, "1");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.PLUS, "+");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "\"\\{");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "a");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.STRING_LITERAL, "}\"");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.DOT, ".");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.IDENTIFIER, "length");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.LPAREN, "(");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.RPAREN, ")");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.MULTILINE_STRING_LITERAL, "}\"\"\"");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.SEMICOLON, ";");
         assertFalse(ts.moveNext());
     }
 

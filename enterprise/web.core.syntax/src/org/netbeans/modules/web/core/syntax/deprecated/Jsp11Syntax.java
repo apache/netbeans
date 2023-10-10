@@ -40,6 +40,7 @@ import org.netbeans.modules.web.core.api.JspColoringData;
  * @deprecated Use {@link JspLexer} instead.
  *
  */
+@Deprecated
 public class Jsp11Syntax extends JspMultiSyntax {
 
     /** Creates new Jsp11Syntax */

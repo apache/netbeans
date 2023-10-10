@@ -24,8 +24,6 @@ import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -43,6 +41,7 @@ import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 import org.netbeans.modules.options.editor.spi.PreviewProvider;
+import org.netbeans.modules.options.util.LanguagesComparator;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
@@ -109,9 +108,8 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
         if (this.selector != null) {
             // Languages combobox model
             DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
-            ArrayList<String> mimeTypes = new ArrayList<String>();
-            mimeTypes.addAll(selector.getMimeTypes());
-            Collections.sort(mimeTypes, new LanguagesComparator());
+            ArrayList<String> mimeTypes = new ArrayList<>(selector.getMimeTypes());
+            mimeTypes.sort(LanguagesComparator.INSTANCE);
 
             String preSelectMimeType = null;
             for (String mimeType : mimeTypes) {
@@ -140,9 +138,10 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
         }
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName() == null || CustomizerSelector.PROP_MIMETYPE.equals(evt.getPropertyName())) {
-            DefaultComboBoxModel<PreferencesCustomizer> model = new DefaultComboBoxModel();
+            DefaultComboBoxModel<PreferencesCustomizer> model = new DefaultComboBoxModel<>();
             List<? extends PreferencesCustomizer> nue = selector.getCustomizers(selector.getSelectedMimeType());
             int preSelectIndex = 0;
             int idx = 0;
@@ -200,13 +199,14 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
 
             if (c instanceof PreviewProvider) {
                 final PreviewProvider pp = (PreviewProvider) c;
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        pp.refreshPreview();
-                    }
-                });
+                SwingUtilities.invokeLater(pp::refreshPreview);
             }
             jSplitPane1.resetToPreferredSizes();
+            
+            // parent might need a scrollbar now due to category panel change
+            if (getParent() != null) {
+                getParent().validate();
+            }
         }
     }
     
@@ -233,8 +233,6 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setLayout(new java.awt.GridBagLayout());
 
-        jSplitPane1.setBorder(null);
-
         previewPanel.setMinimumSize(new java.awt.Dimension(150, 100));
         previewPanel.setOpaque(false);
         previewPanel.setPreferredSize(new java.awt.Dimension(150, 100));
@@ -244,6 +242,7 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         previewPanel.add(previewLabel, gridBagConstraints);
         previewLabel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FormattingPanel.class, "AN_Preview")); // NOI18N
         previewLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FormattingPanel.class, "AD_Preview")); // NOI18N
@@ -259,7 +258,7 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
 
         jSplitPane1.setRightComponent(previewPanel);
 
-        optionsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 8));
+        optionsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         optionsPanel.setOpaque(false);
 
         languageLabel.setLabelFor(languageCombo);
@@ -290,21 +289,18 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
         optionsPanelLayout.setHorizontalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(optionsPanelLayout.createSequentialGroup()
-                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(categoryPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, optionsPanelLayout.createSequentialGroup()
-                        .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(categoryLabel)
-                            .addComponent(languageLabel))
+                .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(optionsPanelLayout.createSequentialGroup()
+                        .addComponent(languageLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(languageCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(categoryCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(languageCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(optionsPanelLayout.createSequentialGroup()
+                        .addComponent(categoryLabel)
+                        .addGap(10, 10, 10)
+                        .addComponent(categoryCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addComponent(categoryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-
-        optionsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {categoryCombo, languageCombo});
-
         optionsPanelLayout.setVerticalGroup(
             optionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(optionsPanelLayout.createSequentialGroup()
@@ -316,7 +312,7 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
                     .addComponent(categoryLabel)
                     .addComponent(categoryCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(categoryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                .addComponent(categoryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE))
         );
 
         languageLabel.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FormattingPanel.class, "AD_Language")); // NOI18N
@@ -366,17 +362,4 @@ public final class FormattingPanel extends JPanel implements PropertyChangeListe
     private CustomizerSelector selector;
     private PropertyChangeListener weakListener;
 
-    private static final class LanguagesComparator implements Comparator<String> {
-        public int compare(String mimeType1, String mimeType2) {
-            if (mimeType1.length() == 0)
-                return mimeType2.length() == 0 ? 0 : -1;
-            if (mimeType2.length() == 0)
-                return 1;
-            
-            String langName1 = EditorSettings.getDefault().getLanguageName(mimeType1);
-            String langName2 = EditorSettings.getDefault().getLanguageName(mimeType2);
-            
-            return langName1.compareTo(langName2);
-        }
-    }
 }

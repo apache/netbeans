@@ -188,7 +188,9 @@ public abstract class WebServicesTestBase extends J2eeTestCase {
         JAVAEE7,
         JAVAEE8,
         JAKARTAEE8,
-        JAKARTAEE9;
+        JAKARTAEE9,
+        JAKARTAEE91,
+        JAKARTAEE10;
 
         @Override
         public String toString() {
@@ -214,6 +216,12 @@ public abstract class WebServicesTestBase extends J2eeTestCase {
                case JAKARTAEE9:
                      //Jakarta EE 9
                     return "Jakarta EE 9";
+               case JAKARTAEE91:
+                     //Jakarta EE 9.1
+                    return "Jakarta EE 9.1";
+               case JAKARTAEE10:
+                     //Jakarta EE 10
+                    return "Jakarta EE 10";
             }
             throw new AssertionError("Unknown type: " + this); //NOI18N
         }
@@ -487,7 +495,9 @@ public abstract class WebServicesTestBase extends J2eeTestCase {
                 jcboVersion.selectItem(javaeeVersion.toString());
             } else {
                 // cannot use display name for Maven project
-                if (JavaEEVersion.JAKARTAEE9.equals(javaeeVersion)) {
+                if (JavaEEVersion.JAKARTAEE91.equals(javaeeVersion) || JavaEEVersion.JAKARTAEE10.equals(javaeeVersion)) {
+                    jcboVersion.selectItem("11");
+                } else if (JavaEEVersion.JAKARTAEE9.equals(javaeeVersion)) {
                     jcboVersion.selectItem("1.8.0");
                 } else if (JavaEEVersion.JAKARTAEE8.equals(javaeeVersion)) {
                     jcboVersion.selectItem("1.8.0");

@@ -160,7 +160,7 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
         }, true);
 
         String version = System.getProperty("java.specification.version") + "/";
-        compareReferenceFiles(this.getName()+".ref",version+this.getName()+".pass",this.getName()+".diff");
+        compareReferenceFiles(this.getName()+".ref", findGoldenFile(), this.getName()+".diff");
     }
      
     private void performMethodProposalsTest(final String name) throws Exception {
@@ -229,8 +229,7 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
             ref(s);
         }
         
-        String version = System.getProperty("java.specification.version") + "/";
-        compareReferenceFiles(this.getName()+".ref",version+this.getName()+".pass",this.getName()+".diff");
+        compareReferenceFiles(this.getName()+".ref", findGoldenFile(), this.getName()+".diff");
     }
     
     private String dump(ExecutableElement ee) {
@@ -244,6 +243,30 @@ public class DelegateMethodGeneratorTest extends NbTestCase {
         result.append(ee.getReturnType().toString() + " " + ee.toString());
         
         return result.toString();
+    }
+
+    public String findGoldenFile() {
+        String version = System.getProperty("java.specification.version");
+        for (String variant : computeVersionVariantsFor(version)) {
+            String path = variant + "/" + this.getName() + ".pass";
+            File goldenFile = new File(getDataDir()+"/goldenfiles/"+ getClass().getName().replace(".", "/") + "/" + path);
+            if (goldenFile.exists())
+                return path;
+        }
+        throw new AssertionError();
+    }
+
+    private List<String> computeVersionVariantsFor(String version) {
+        int dot = version.indexOf('.');
+        version = version.substring(dot + 1);
+        int versionNum = Integer.parseInt(version);
+        List<String> versions = new ArrayList<>();
+
+        for (int v = versionNum; v >= 8; v--) {
+            versions.add(v != 8 ? "" + v : "1." + v);
+        }
+
+        return versions;
     }
 
     private FileObject testSourceFO;

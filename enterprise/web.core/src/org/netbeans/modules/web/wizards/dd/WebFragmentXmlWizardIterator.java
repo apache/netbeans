@@ -85,7 +85,7 @@ public final class WebFragmentXmlWizardIterator implements WizardDescriptor.Inst
         FileObject dir = panel.getSelectedLocation();
         WebModule wm = panel.getWebModule();
         // for Java Library projects, we suppose that the lastest JavaEE is used
-        Profile profile = wm != null ? wm.getJ2eeProfile() : Profile.JAVA_EE_7_FULL;
+        Profile profile = wm != null ? wm.getJ2eeProfile() : Profile.JAVA_EE_8_FULL;
         if (dir != null) {
             try {
                 dir = Utils.createDirs(dir, new String[]{META_INF});
@@ -149,7 +149,7 @@ public final class WebFragmentXmlWizardIterator implements WizardDescriptor.Inst
     private String[] createSteps() {
         String[] beforeSteps = null;
         Object prop = wizard.getProperty(WizardDescriptor.PROP_CONTENT_DATA);
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
 

@@ -76,7 +76,7 @@ public class LogViewer extends Thread {
     /**
      * List of listeners which are notified when the log viewer is stoped.
      */
-    private List/*<LogViewerStopListener>*/ stopListeners = Collections.synchronizedList(new LinkedList());
+    private List<LogViewerStopListener> stopListeners = Collections.synchronizedList(new LinkedList());
 
     private String displayName;
     
@@ -235,7 +235,7 @@ public class LogViewer extends Thread {
         if (displayName == null) {
             // cut off trailing dot
             displayName = this.prefix;
-            int trailingDot = displayName.lastIndexOf('.');
+            int trailingDot = displayName.lastIndexOf(".");
             if (trailingDot > -1) {
                 displayName = displayName.substring(0, trailingDot);
             }
@@ -394,12 +394,12 @@ public class LogViewer extends Thread {
             // look for unix file links (e.g. /foo/bar.java:51: 'error msg')
             if (logLine.startsWith("/")) {
                 error = true;
-                int colonIdx = logLine.indexOf(':');
+                int colonIdx = logLine.indexOf(":");
                 if (colonIdx > -1) {
                     path = logLine.substring(0, colonIdx);
                     accessible = true;
                     if (lineLenght > colonIdx) {
-                        int nextColonIdx = logLine.indexOf(':', colonIdx + 1);
+                        int nextColonIdx = logLine.indexOf(":", colonIdx + 1);
                         if (nextColonIdx > -1) {
                             String lineNum = logLine.substring(colonIdx + 1, nextColonIdx);
                             try {
@@ -419,12 +419,12 @@ public class LogViewer extends Thread {
             else if (lineLenght > 3 && Character.isLetter(logLine.charAt(0))
                         && (logLine.charAt(1) == ':') && (logLine.charAt(2) == '\\')) {
                 error = true;
-                int secondColonIdx = logLine.indexOf(':', 2);
+                int secondColonIdx = logLine.indexOf(":", 2);
                 if (secondColonIdx > -1) {
                     path = logLine.substring(0, secondColonIdx);
                     accessible = true;
                     if (lineLenght > secondColonIdx) {
-                        int thirdColonIdx = logLine.indexOf(':', secondColonIdx + 1);
+                        int thirdColonIdx = logLine.indexOf(":", secondColonIdx + 1);
                         if (thirdColonIdx > -1) {
                             String lineNum = logLine.substring(secondColonIdx + 1, thirdColonIdx);
                             try {
@@ -443,13 +443,13 @@ public class LogViewer extends Thread {
             //                                 at t.HyperlinkTest$1.run(HyperlinkTest.java:24))
             else if (logLine.startsWith("at ") && lineLenght > 3) {
                 error = true;
-                int parenthIdx = logLine.indexOf('(');
+                int parenthIdx = logLine.indexOf("(");
                 if (parenthIdx > -1) {
                     String classWithMethod = logLine.substring(3, parenthIdx);
-                    int lastDotIdx = classWithMethod.lastIndexOf('.');
+                    int lastDotIdx = classWithMethod.lastIndexOf(".");
                     if (lastDotIdx > -1) {  
-                        int lastParenthIdx = logLine.lastIndexOf(')');
-                        int lastColonIdx = logLine.lastIndexOf(':');
+                        int lastParenthIdx = logLine.lastIndexOf(")");
+                        int lastColonIdx = logLine.lastIndexOf(":");
                         if (lastParenthIdx > -1 && lastColonIdx > -1) {
                             String lineNum = logLine.substring(lastColonIdx + 1, lastParenthIdx);
                             try {
@@ -459,7 +459,7 @@ public class LogViewer extends Thread {
                             }
                             message = prevMessage;
                         }
-                        int firstDolarIdx = classWithMethod.indexOf('$'); // > -1 for inner classes
+                        int firstDolarIdx = classWithMethod.indexOf("$"); // > -1 for inner classes
                         String className = classWithMethod.substring(0, firstDolarIdx > -1 ? firstDolarIdx : lastDotIdx);
                         path = className.replace('.','/') + ".java"; // NOI18N              
                         accessible = globalPathReg.findResource(path) != null;
@@ -484,7 +484,7 @@ public class LogViewer extends Thread {
                 if (stdContextIdx > -1) {
                     lBracketIdx = stdContextIdx + STANDARD_CONTEXT_LENGTH;
                 }
-                int rBracketIdx = logLine.indexOf(']');
+                int rBracketIdx = logLine.indexOf("]");
                 if (lBracketIdx > -1 && rBracketIdx > -1 && rBracketIdx > lBracketIdx) {
                     context = logLine.substring(lBracketIdx, rBracketIdx);
                 }

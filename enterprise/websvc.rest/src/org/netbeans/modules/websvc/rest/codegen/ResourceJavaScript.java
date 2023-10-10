@@ -208,7 +208,7 @@ class ResourceJavaScript extends TokenReplacer {
             return str;
         }
         char first = str.charAt(0);
-        return Character.toUpperCase(first) + str.substring(1 , str.length());
+        return Character.toUpperCase(first) + str.substring(1);
     }
 
     private String getPostfix( String path ) {

@@ -42,7 +42,7 @@ public final class FormatTokenStream implements Iterable<FormatToken> {
 
     private static final Logger LOGGER = Logger.getLogger(FormatTokenStream.class.getName());
 
-    private final TreeMap<Integer, FormatToken> tokenPosition = new TreeMap<Integer, FormatToken>();
+    private final TreeMap<Integer, FormatToken> tokenPosition = new TreeMap<>();
 
     private final Map<FormatToken, Integer> originalIndents = new HashMap<>();
 
@@ -303,7 +303,7 @@ public final class FormatTokenStream implements Iterable<FormatToken> {
     }
 
     public List<FormatToken> getTokens() {
-        List<FormatToken> tokens = new ArrayList<FormatToken>((int) (tokenPosition.size() * 1.5));
+        List<FormatToken> tokens = new ArrayList<>((int) (tokenPosition.size() * 1.5));
         for (FormatToken token : this) {
             tokens.add(token);
         }

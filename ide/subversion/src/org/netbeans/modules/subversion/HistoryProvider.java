@@ -192,7 +192,7 @@ public class HistoryProvider implements VCSHistoryProvider {
                 FileUtils.copyFile(file, revisionFile); // XXX lets be faster - LH should cache that somehow ...
             } catch (IOException e) {
                 Exception ex = e;
-                if (e.getCause() != null && e.getCause() instanceof SVNClientException) {
+                if (e.getCause() instanceof SVNClientException) {
                     ex = (SVNClientException) e.getCause();
                 }
                 if (SvnClientExceptionHandler.isCancelledAction(ex.getMessage())) {

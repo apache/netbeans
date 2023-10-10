@@ -86,10 +86,11 @@ public final class NbClassPath extends Object implements java.io.Serializable {
 
     /** Creates class path describing additional libraries needed by the system.
      * Never use this class path as part of a user project!
-     * For more information consult the <a href="../doc-files/classpath.html">Module Class Path</a> document.
+     * For more information consult the <a href="@org-openide-modules@/org/openide/modules/doc-files/classpath.html">Module Class Path</a> document.
      * @deprecated There are generally no excuses to be using this method as part of a normal module;
      * its exact meaning is vague, and probably not what you want.
     */
+    @Deprecated
     public static NbClassPath createLibraryPath () {
         Thread.dumpStack();
         // modules & libs
@@ -103,10 +104,11 @@ public final class NbClassPath extends Object implements java.io.Serializable {
 
     /** Creates class path of the system.
      * Never use this class path as part of a user project!
-     * For more information consult the <a href="../doc-files/classpath.html">Module Class Path</a> document.
+     * For more information consult the <a href="@org-openide-modules@/org/openide/modules/doc-files/classpath.html">Module Class Path</a> document.
      * @deprecated There are generally no excuses to be using this method as part of a normal module;
      * its exact meaning is vague, and probably not what you want.
     */
+    @Deprecated
     public static NbClassPath createClassPath () {
         Thread.dumpStack();
         // ${java.class.path} minus openide-compat.jar
@@ -131,10 +133,11 @@ public final class NbClassPath extends Object implements java.io.Serializable {
     /** Creates path describing boot class path of the system.
      * Never use this class path as part of a user project!
      * There are generally no excuses to be using this method as part of a normal module.
-     * For more information consult the <a href="../doc-files/classpath.html">Module Class Path</a> document.
+     * For more information consult the <a href="@org-openide-modules@/org/openide/modules/doc-files/classpath.html">Module Class Path</a> document.
     * @return class path of system class including extensions
      * @deprecated Use the Java Platform API instead.
     */
+    @Deprecated
     public static NbClassPath createBootClassPath () {
         Thread.dumpStack();
         // boot
@@ -169,6 +172,7 @@ public final class NbClassPath extends Object implements java.io.Serializable {
     * @return disk file for that file object, or <code>null</code> if there is no corresponding disk file
     * @deprecated You should use {@link org.openide.filesystems.FileUtil#toFile} instead.
     */
+    @Deprecated
     public static File toFile (FileObject fo) {
         Thread.dumpStack();
         return FileUtil.toFile(fo);

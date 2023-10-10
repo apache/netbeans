@@ -93,7 +93,7 @@ public class PropertiesEditorTestCase extends JellyTestCase {
     private final String POPUP_MENU_ADD_LOCALE = "";//Bundle.getStringTrimmed("org.openide.actions.Bundle", "NewArg")+Bundle.getStringTrimmed("org.netbeans.modules.properties.Bundle", "LAB_NewLocaleAction");   // String : Add Locale...
     private final String POPUP_MENU_CUSTOMIZE = "";//Bundle.getStringTrimmed("org.openide.actions.Bundle", "Customize");    // String : Customize
     private final String POPUP_MENU_ADD_PROPERTY = "";//Bundle.getStringTrimmed("org.openide.actions.Bundle", "NewArg")+Bundle.getStringTrimmed("org.netbeans.modules.properties.Bundle", "LAB_NewPropertyAction");  // String : Add Property
-    private final String POPUP_MENU_DELETE_LOCALE = "";//Bundle.getStringTrimmed("org.openide.actions.Bundle", "Delete");;   // String : Delete
+    private final String POPUP_MENU_DELETE_LOCALE = "";//Bundle.getStringTrimmed("org.openide.actions.Bundle", "Delete");   // String : Delete
     private final String POPUP_MENU_EDIT = "";//Bundle.getStringTrimmed("org.openide.actions.Bundle", "Edit");  // String : Edit
     private final String LABEL_KEY = "";//Bundle.getStringTrimmed("org.netbeans.modules.properties.Bundle", "LBL_KeyLabel"); // String : Key
     private final String LABLE_VALUE = "";//Bundle.getStringTrimmed("org.netbeans.modules.properties.Bundle", "LBL_ValueLabel"); // String : Value

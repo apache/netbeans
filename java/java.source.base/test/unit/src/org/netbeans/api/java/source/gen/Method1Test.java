@@ -141,9 +141,7 @@ public class Method1Test extends GeneratorTestMDRCompat {
                 ClassTree clazz = (ClassTree) workingCopy.getCompilationUnit().getTypeDecls().get(0);
                 MethodTree method = (MethodTree) clazz.getMembers().get(1);
                 ModifiersTree origMods = method.getModifiers();
-                Set<Modifier> njuMods = new HashSet<Modifier>();
-                njuMods.add(Modifier.PRIVATE);
-                njuMods.add(Modifier.STATIC);
+                Set<Modifier> njuMods = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC);
                 workingCopy.rewrite(origMods, make.Modifiers(njuMods));
             }
             

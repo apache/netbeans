@@ -202,12 +202,7 @@ public class MetadataModelReadHelper<T, R> {
         changeSupport.fireChange();
         // ensure the model is not accessed in the calling thread in case
         // the calling thread is the AWT thread
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                reader.run();
-            }
-        });
+        RP.post( () -> reader.run() );
     }
 
     /**
@@ -237,26 +232,20 @@ public class MetadataModelReadHelper<T, R> {
      * javac lock).
      */
     private void fireChange() {
-        eventRP.post(new Runnable() {
-            public void run() {
-                changeSupport.fireChange();
-            }
-        });
+        eventRP.post( () -> changeSupport.fireChange() );
     }
 
     private final class Reader {
 
         public void run() {
             try {
-                Future<Void> future = model.runReadActionWhenReady(new MetadataModelAction<T, Void>() {
-                    public Void run(T metadata) throws Exception {
-                        state = State.READING_MODEL;
-                        fireChange();
-                        result = action.run(metadata);
-                        state = State.FINISHED;
-                        fireChange();
-                        return null;
-                    }
+                Future<Void> future = model.runReadActionWhenReady( (T metadata) -> {
+                    state = State.READING_MODEL;
+                    fireChange();
+                    result = action.run(metadata);
+                    state = State.FINISHED;
+                    fireChange();
+                    return null;
                 });
                 // get any exceptions thrown if the action was run asynchronously
                 future.get();

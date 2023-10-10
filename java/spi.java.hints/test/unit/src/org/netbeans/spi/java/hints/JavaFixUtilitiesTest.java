@@ -536,9 +536,7 @@ public class JavaFixUtilitiesTest extends TestBase {
                            "import java.io.InputStream;\n" +
                            "public class Test {\n" +
                            "    private void t() throws Exception {\n" +
-//                           "        try (InputStream in = null) {\n" +
-                           //XXX:
-                           "        try (final InputStream in = null) {\n" +
+                           "        try (InputStream in = null) {\n" +
                            "        } finally {\n" +
                            "            in.close()\n" +
                            "        }\n" +

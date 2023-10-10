@@ -145,6 +145,7 @@ public class FileArrayEditor extends PropertyEditorSupport implements ExProperty
     /** Returns human readable form of the edited value.
      * @return string reprezentation
      */
+    @Override
     public String getAsText() {
         File[] file = (File[])getValue();
         if (file == null) {
@@ -164,6 +165,7 @@ public class FileArrayEditor extends PropertyEditorSupport implements ExProperty
      * @param str string reprezentation of the file (used as a parameter for File).
      * @throws IllegalArgumentException If the given string cannot be parsed
      */
+    @Override
     public void setAsText(String str) throws IllegalArgumentException {
         if (str == null) {
             throw new IllegalArgumentException("null"); // NOI18N
@@ -180,6 +182,7 @@ public class FileArrayEditor extends PropertyEditorSupport implements ExProperty
     /** Custon editor.
      * @return Returns custom editor component.
      */
+    @Override
     public Component getCustomEditor() {
         if (!editable) {
             return new StringCustomEditor(getAsText(), false);
@@ -237,6 +240,7 @@ public class FileArrayEditor extends PropertyEditorSupport implements ExProperty
     /** Implements PropertyEditor method.
      * @return Returns true.
      */
+    @Override
     public boolean supportsCustomEditor() {
         return true;
     }
@@ -244,6 +248,7 @@ public class FileArrayEditor extends PropertyEditorSupport implements ExProperty
     /** Should create a string insertable to the newly generated source code.
      * @return initialization string
      */
+    @Override
     public String getJavaInitializationString() {
         File[] value = (File[]) getValue ();
         if (value == null) {

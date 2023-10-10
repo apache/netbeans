@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.AtomicLockDocument;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.Formatter;
-import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.editor.indent.api.IndentUtils;
@@ -77,7 +77,7 @@ public class GroovyFormatter implements Formatter {
     }
 
     /** Compute the initial balance of brackets at the given offset. */
-    private int getFormatStableStart(BaseDocument doc, int offset) {
+    private int getFormatStableStart(Document doc, int offset) {
         TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(doc, offset);
         if (ts == null) {
             return 0;
@@ -104,7 +104,7 @@ public class GroovyFormatter implements Formatter {
     }
 
     private int getTokenBalanceDelta(TokenId id, Token<GroovyTokenId> token,
-            BaseDocument doc, TokenSequence<GroovyTokenId> ts, boolean includeKeywords) {
+            LineDocument doc, TokenSequence<GroovyTokenId> ts, boolean includeKeywords) {
         if (id == GroovyTokenId.IDENTIFIER) {
             // In some cases, the [ shows up as an identifier, for example in this expression:
             //  for k, v in sort{|a1, a2| a1[0].id2name <=> a2[0].id2name}
@@ -134,7 +134,7 @@ public class GroovyFormatter implements Formatter {
     }
 
     // TODO RHTML - there can be many discontiguous sections, I've gotta process all of them on the given line
-    private int getTokenBalance(BaseDocument doc, int begin, int end, boolean includeKeywords) {
+    private int getTokenBalance(LineDocument doc, int begin, int end, boolean includeKeywords) {
         int balance = 0;
 
         TokenSequence<GroovyTokenId> ts = LexUtilities.getGroovyTokenSequence(doc, begin);
@@ -159,8 +159,8 @@ public class GroovyFormatter implements Formatter {
     }
 
     // This method will indent lines beginning with * by 1 space
-    private boolean isJavaDocComment(BaseDocument doc, int offset, int endOfLine) throws BadLocationException {
-        int pos = Utilities.getRowFirstNonWhite(doc, offset);
+    private boolean isJavaDocComment(LineDocument doc, int offset, int endOfLine) throws BadLocationException {
+        int pos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
         if (pos != -1) {
             Token<GroovyTokenId> token = LexUtilities.getToken(doc, pos);
             if (token != null) {
@@ -176,7 +176,7 @@ public class GroovyFormatter implements Formatter {
         return false;
     }
 
-    private boolean isInLiteral(BaseDocument doc, int offset) throws BadLocationException {
+    private boolean isInLiteral(LineDocument doc, int offset) throws BadLocationException {
         // TODO: Handle arrays better
         // %w(January February March April May June July
         //    August September October November December)
@@ -185,7 +185,7 @@ public class GroovyFormatter implements Formatter {
         // Can't reformat these at the moment because reindenting a line
         // that is a continued string array causes incremental lexing errors
         // (which further screw up formatting)
-        int pos = Utilities.getRowFirstNonWhite(doc, offset);
+        int pos = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
         //int pos = offset;
 
         if (pos != -1) {
@@ -226,8 +226,8 @@ public class GroovyFormatter implements Formatter {
         return false;
     }
 
-    private boolean isEndIndent(BaseDocument doc, int offset) throws BadLocationException {
-        int lineBegin = Utilities.getRowFirstNonWhite(doc, offset);
+    private boolean isEndIndent(LineDocument doc, int offset) throws BadLocationException {
+        int lineBegin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
         if (lineBegin != -1) {
             Token<GroovyTokenId> token = LexUtilities.getToken(doc, lineBegin);
@@ -248,8 +248,8 @@ public class GroovyFormatter implements Formatter {
         return false;
     }
 
-    private boolean isLineContinued(BaseDocument doc, int offset, int bracketBalance) throws BadLocationException {
-        offset = Utilities.getRowLastNonWhite(doc, offset);
+    private boolean isLineContinued(LineDocument doc, int offset, int bracketBalance) throws BadLocationException {
+        offset = LineDocumentUtils.getLineLastNonWhitespace(doc, offset);
         if (offset == -1) {
             return false;
         }
@@ -296,7 +296,7 @@ public class GroovyFormatter implements Formatter {
                 //    alias eql? ==
                 // or
                 //    def ==
-                token = LexUtilities.getToken(doc, Utilities.getRowFirstNonWhite(doc, offset));
+                token = LexUtilities.getToken(doc, LineDocumentUtils.getLineFirstNonWhitespace(doc, offset));
                 if (token != null) {
                     id = token.id();
                     if (id == GroovyTokenId.LBRACE) {
@@ -315,97 +315,94 @@ public class GroovyFormatter implements Formatter {
         Document document = context.document();
         final int endOffset = Math.min(context.endOffset(), document.getLength());
 
-        try {
-            final BaseDocument doc = (BaseDocument) document;
+        final LineDocument doc = (LineDocument) document;
 
-            final int startOffset = Utilities.getRowStart(doc, context.startOffset());
-            final int lineStart = startOffset;
-            int initialOffset = 0;
-            int initialIndent = 0;
-            if (startOffset > 0) {
-                int prevOffset = Utilities.getRowStart(doc, startOffset - 1);
-                initialOffset = getFormatStableStart(doc, prevOffset);
-                initialIndent = GsfUtilities.getLineIndent(doc, initialOffset);
-            }
+        final int startOffset = LineDocumentUtils.getLineStart(doc, context.startOffset());
+        final int lineStart = startOffset;
+        int initialOffset = 0;
+        int initialIndent = 0;
+        if (startOffset > 0) {
+            int prevOffset = LineDocumentUtils.getLineStart(doc, startOffset - 1);
+            initialOffset = getFormatStableStart(doc, prevOffset);
+            initialIndent = GsfUtilities.getLineIndent(doc, initialOffset);
+        }
 
-            // Build up a set of offsets and indents for lines where I know I need
-            // to adjust the offset. I will then go back over the document and adjust
-            // lines that are different from the intended indent. By doing piecemeal
-            // replacements in the document rather than replacing the whole thing,
-            // a lot of things will work better: breakpoints and other line annotations
-            // will be left in place, semantic coloring info will not be temporarily
-            // damaged, and the caret will stay roughly where it belongs.
-            final List<Integer> offsets = new ArrayList<Integer>();
-            final List<Integer> indents = new ArrayList<Integer>();
+        // Build up a set of offsets and indents for lines where I know I need
+        // to adjust the offset. I will then go back over the document and adjust
+        // lines that are different from the intended indent. By doing piecemeal
+        // replacements in the document rather than replacing the whole thing,
+        // a lot of things will work better: breakpoints and other line annotations
+        // will be left in place, semantic coloring info will not be temporarily
+        // damaged, and the caret will stay roughly where it belongs.
+        final List<Integer> offsets = new ArrayList<Integer>();
+        final List<Integer> indents = new ArrayList<Integer>();
 
-            // When we're formatting sections, include whitespace on empty lines; this
-            // is used during live code template insertions for example. However, when
-            // wholesale formatting a whole document, leave these lines alone.
-            boolean indentEmptyLines = (startOffset != 0 || endOffset != doc.getLength());
+        // When we're formatting sections, include whitespace on empty lines; this
+        // is used during live code template insertions for example. However, when
+        // wholesale formatting a whole document, leave these lines alone.
+        boolean indentEmptyLines = (startOffset != 0 || endOffset != doc.getLength());
 
-            boolean includeEnd = endOffset == doc.getLength() || indentOnly;
+        boolean includeEnd = endOffset == doc.getLength() || indentOnly;
 
-            // TODO - remove initialbalance etc.
-            computeIndents(doc, initialIndent, initialOffset, endOffset, info, offsets, indents, indentEmptyLines, includeEnd, indentOnly);
+        // TODO - remove initialbalance etc.
+        computeIndents(doc, initialIndent, initialOffset, endOffset, info, offsets, indents, indentEmptyLines, includeEnd, indentOnly);
 
-            doc.runAtomic(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // Iterate in reverse order such that offsets are not affected by our edits
-                        assert indents.size() == offsets.size();
-                        for (int i = indents.size() - 1; i >= 0; i--) {
-                            int indent = indents.get(i);
-                            int lineBegin = offsets.get(i);
+        AtomicLockDocument bdoc = LineDocumentUtils.as(doc, AtomicLockDocument.class);
+        bdoc.runAtomic(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Iterate in reverse order such that offsets are not affected by our edits
+                    assert indents.size() == offsets.size();
+                    for (int i = indents.size() - 1; i >= 0; i--) {
+                        int indent = indents.get(i);
+                        int lineBegin = offsets.get(i);
 
-                            if (lineBegin < lineStart) {
-                                // We're now outside the region that the user wanted reformatting;
-                                // these offsets were computed to get the correct continuation context etc.
-                                // for the formatter
-                                break;
-                            }
+                        if (lineBegin < lineStart) {
+                            // We're now outside the region that the user wanted reformatting;
+                            // these offsets were computed to get the correct continuation context etc.
+                            // for the formatter
+                            break;
+                        }
 
-                            if (lineBegin == lineStart && i > 0) {
-                                // Look at the previous line, and see how it's indented
-                                // in the buffer.  If it differs from the computed position,
-                                // offset my computed position (thus, I'm only going to adjust
-                                // the new line position relative to the existing editing.
-                                // This avoids the situation where you're inserting a newline
-                                // in the middle of "incorrectly" indented code (e.g. different
-                                // size than the IDE is using) and the newline position ending
-                                // up "out of sync"
-                                int prevOffset = offsets.get(i - 1);
-                                int prevIndent = indents.get(i - 1);
-                                int actualPrevIndent = GsfUtilities.getLineIndent(doc, prevOffset);
-                                if (actualPrevIndent != prevIndent) {
-                                    // For blank lines, indentation may be 0, so don't adjust in that case
-                                    if (!(Utilities.isRowEmpty(doc, prevOffset) || Utilities.isRowWhite(doc, prevOffset))) {
-                                        indent = actualPrevIndent + (indent - prevIndent);
-                                        if (indent < 0) {
-                                            indent = 0;
-                                        }
+                        if (lineBegin == lineStart && i > 0) {
+                            // Look at the previous line, and see how it's indented
+                            // in the buffer.  If it differs from the computed position,
+                            // offset my computed position (thus, I'm only going to adjust
+                            // the new line position relative to the existing editing.
+                            // This avoids the situation where you're inserting a newline
+                            // in the middle of "incorrectly" indented code (e.g. different
+                            // size than the IDE is using) and the newline position ending
+                            // up "out of sync"
+                            int prevOffset = offsets.get(i - 1);
+                            int prevIndent = indents.get(i - 1);
+                            int actualPrevIndent = GsfUtilities.getLineIndent(doc, prevOffset);
+                            if (actualPrevIndent != prevIndent) {
+                                // For blank lines, indentation may be 0, so don't adjust in that case
+                                if (!(LineDocumentUtils.isLineEmpty(doc, prevOffset) || LineDocumentUtils.isLineWhitespace(doc, prevOffset))) {
+                                    indent = actualPrevIndent + (indent - prevIndent);
+                                    if (indent < 0) {
+                                        indent = 0;
                                     }
                                 }
                             }
-
-                            // Adjust the indent at the given line (specified by offset) to the given indent
-                            int currentIndent = GsfUtilities.getLineIndent(doc, lineBegin);
-
-                            if (currentIndent != indent) {
-                                context.modifyIndent(lineBegin, indent);
-                            }
                         }
-                    } catch (BadLocationException ble) {
-                        Exceptions.printStackTrace(ble);
+
+                        // Adjust the indent at the given line (specified by offset) to the given indent
+                        int currentIndent = GsfUtilities.getLineIndent(doc, lineBegin);
+
+                        if (currentIndent != indent) {
+                            context.modifyIndent(lineBegin, indent);
+                        }
                     }
+                } catch (BadLocationException ble) {
+                    Exceptions.printStackTrace(ble);
                 }
-            });
-        } catch (BadLocationException ble) {
-            Exceptions.printStackTrace(ble);
-        }
+            }
+        });
     }
 
-    private void computeIndents(BaseDocument doc, int initialIndent, int startOffset, int endOffset, ParserResult info,
+    private void computeIndents(LineDocument doc, int initialIndent, int startOffset, int endOffset, ParserResult info,
             List<Integer> offsets,
             List<Integer> indents,
             boolean indentEmptyLines, boolean includeEnd, boolean indentOnly
@@ -429,7 +426,7 @@ public class GroovyFormatter implements Formatter {
             // This can be used either to reformat the buffer, or indent a new line.
 
             // State:
-            int offset = Utilities.getRowStart(doc, startOffset); // The line's offset
+            int offset = LineDocumentUtils.getLineStart(doc, startOffset); // The line's offset
             int end = endOffset;
 
             int indentSize = IndentUtils.indentLevelSize(doc);
@@ -466,7 +463,7 @@ public class GroovyFormatter implements Formatter {
                     indent = balance * indentSize + hangingIndent + initialIndent;
                 }
 
-                int endOfLine = Utilities.getRowEnd(doc, offset) + 1;
+                int endOfLine = LineDocumentUtils.getLineEnd(doc, offset) + 1;
 
                 if (isJavaDocComment(doc, offset, endOfLine)) {
                     indent++;
@@ -476,7 +473,7 @@ public class GroovyFormatter implements Formatter {
                     indent = 0;
                 }
 
-                int lineBegin = Utilities.getRowFirstNonWhite(doc, offset);
+                int lineBegin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
                 // Insert whitespace on empty lines too -- needed for abbreviations expansion
                 if (lineBegin != -1 || indentEmptyLines) {

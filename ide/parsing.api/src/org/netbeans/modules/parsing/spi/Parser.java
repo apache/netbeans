@@ -83,7 +83,7 @@ public abstract class Parser {
     
     /**
      * Called by the infrastructure to stop the parser operation.
-     * @param reason of the cancel, see {@link Parser#CancelReason}
+     * @param reason of the cancel, see {@link Parser.CancelReason}
      * @param event an additional info if the reason is SOURCE_MODIFICATION_EVENT, otherwise null
      * @since 
      */
@@ -121,7 +121,7 @@ public abstract class Parser {
         
         /**
          * Creates a {@link Result} for given snapshot
-         * @param snapshot
+         * @param _snapshot
          */
         protected Result (
             final Snapshot      _snapshot

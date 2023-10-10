@@ -755,7 +755,7 @@ public class WLJ2eePlatformFactory extends J2eePlatformFactory {
             library.setContent(J2eeLibraryTypeProvider.VOLUME_TYPE_CLASSPATH, list);
             File j2eeDoc = InstalledFileLocator.getDefault().locate(J2EE_API_DOC, null, false);
             if (j2eeDoc != null) {
-                list = new ArrayList();
+                list = new ArrayList<>();
                 addFileToList(list, j2eeDoc);
                 library.setContent(J2eeLibraryTypeProvider.VOLUME_TYPE_JAVADOC, list);
             }

@@ -247,12 +247,14 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
 
         }
 
+        @Override
         public void addNotify() {
             super.addNotify();
             ToolTipManager.sharedInstance().registerComponent(this);
             bg.add(this);
         }
 
+        @Override
         public void removeNotify() {
             super.removeNotify();
             ToolTipManager.sharedInstance().unregisterComponent(this);
@@ -263,7 +265,8 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
         public boolean isActive() {
             return displayer.isActive();
         }
-        
+
+        @Override
         public String getText() {
              //so the font height is included in super.getPreferredSize();
             return " ";
@@ -283,7 +286,8 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
             }
             return lastKnownText;
         }
-        
+
+        @Override
         public Dimension getPreferredSize() {
             Dimension result = super.getPreferredSize();
             String s = doGetText();
@@ -298,6 +302,7 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
             return result;
         }
 
+        @Override
         public void paintComponent (Graphics g) {
             super.paintComponent(g);
             
@@ -325,7 +330,8 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
             HtmlRenderer.renderString(s, g, x, y, w, h, getFont(), getForeground(), 
                 HtmlRenderer.STYLE_TRUNCATE, true);
         }
-        
+
+        @Override
         public String getToolTipText() {
             return displayer.getModel().getTab(getIndex()).getTooltip();
         }
@@ -342,7 +348,8 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
             }
             return -1;
         }
-        
+
+        @Override
         public Icon getIcon() {
             return null;
         }
@@ -515,6 +522,7 @@ public class ToolbarTabDisplayerUI extends AbstractTabDisplayerUI {
     }    
     
     static class TabToolbar extends JToolBar {
+        @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
 

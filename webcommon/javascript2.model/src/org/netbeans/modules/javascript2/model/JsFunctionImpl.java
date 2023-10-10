@@ -53,19 +53,19 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
     public JsFunctionImpl(DeclarationScope scope, JsObject parentObject, Identifier name,
             List<Identifier> parameters, OffsetRange offsetRange, String mimeType, String sourceLabel) {
         super(scope, parentObject, name, offsetRange, mimeType, sourceLabel);
-        this.parametersByName = new HashMap<String, JsObject>(parameters.size());
-        this.parameters = new ArrayList<JsObject>(parameters.size());
+        this.parametersByName = new HashMap<>(parameters.size());
+        this.parameters = new ArrayList<>(parameters.size());
         for (Identifier identifier : parameters) {
             JsObject parameter = new ParameterObject(this, identifier, mimeType, sourceLabel);
             addParameter(parameter);
         }
         setAnonymous(false);
-        this.returnTypes = new HashSet<TypeUsage>();
+        this.returnTypes = new HashSet<>();
         setDeclared(true);
         if (parentObject != null) {
             // creating arguments variable
-            JsObjectImpl arguments = new JsObjectImpl(this, 
-                    new Identifier(ModelUtils.ARGUMENTS, new OffsetRange(name.getOffsetRange().getStart(), name.getOffsetRange().getStart())), 
+            JsObjectImpl arguments = new JsObjectImpl(this,
+                    new Identifier(ModelUtils.ARGUMENTS, new OffsetRange(name.getOffsetRange().getStart(), name.getOffsetRange().getStart())),
                     name.getOffsetRange(),  false, EnumSet.of(Modifier.PRIVATE), mimeType, sourceLabel);
             arguments.addAssignment(new TypeUsage("Arguments", getOffset(), true), getOffset());    // NOI18N
             this.addProperty(arguments.getName(), arguments);
@@ -83,13 +83,13 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
         this(null, null, name, Collections.emptyList(), name.getOffsetRange(), mimeType, sourceLabel);
         this.setFileObject(file);
     }
-    
+
     public static JsFunctionImpl createGlobal(FileObject fileObject, int length, String mimeType) {
         String name = fileObject != null ? fileObject.getName() : "VirtualSource"; //NOI18N
         Identifier ident = new Identifier(name, new OffsetRange(0, length));
         return new JsFunctionImpl(fileObject, ident, mimeType, null);
     }
-    
+
     @Override
     public final Collection<? extends JsObject> getParameters() {
         return this.parameters;
@@ -120,7 +120,7 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
         if (getParent() != null /*&& getParent() instanceof JsFunction*/) {
              JsObject prototype = null;
             for (JsObject property : getProperties().values()) {
-                if (property.isDeclared() 
+                if (property.isDeclared()
                         && (property.getModifiers().contains(Modifier.PROTECTED)
                         || (property.getModifiers().contains(Modifier.PUBLIC) &&  !property.getModifiers().contains(Modifier.STATIC)))
                         && !isAnonymous() && !property.isAnonymous()
@@ -137,9 +137,6 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
                 return JsElement.Kind.CONSTRUCTOR;
             }
         }
-//        if (getParent() != null && !getParent().isDeclared()) {
-//            
-//        }
 
         JsElement.Kind result = JsElement.Kind.FUNCTION;
 
@@ -156,7 +153,7 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
     }
 
     private boolean areReturnTypesResolved = false;
-    
+
     @Override
     public Collection<? extends TypeUsage> getReturnTypes() {
         if (areReturnTypesResolved) {
@@ -207,8 +204,8 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
         }
         areReturnTypesResolved = false;
         return returns;
-    }    
-        
+    }
+
     @Override
     public void addReturnType(TypeUsage type) {
         boolean isThere = false;
@@ -221,13 +218,13 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
             this.returnTypes.add(type);
         }
     }
-    
+
     public void addReturnType(Collection<TypeUsage> types) {
         for (TypeUsage typeUsage : types) {
             addReturnType(typeUsage);
         }
     }
-    
+
     public boolean areReturnTypesEmpty() {
         return returnTypes.isEmpty();
     }
@@ -238,14 +235,14 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
         if (property != null && (newParent instanceof DeclarationScope)) {
             ModelUtils.changeDeclarationScope(property, (DeclarationScope)newParent);
         }
-        return super.moveProperty(name, newParent); 
+        return super.moveProperty(name, newParent);
     }
 
     @Override
     public void resolveTypes(JsDocumentationHolder docHolder) {
         super.resolveTypes(docHolder);
         if (!(returnTypes.size() == 1 && Type.UNDEFINED.equals(returnTypes.iterator().next().getType()))) {
-            HashSet<String> nameReturnTypes = new HashSet<String>();
+            HashSet<String> nameReturnTypes = new HashSet<>();
             Collection<TypeUsage> resolved = new ArrayList<>();
             for (TypeUsage type : returnTypes) {
                 if (!(type.getType().equals(Type.UNRESOLVED) && returnTypes.size() > 1)) {
@@ -318,7 +315,7 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
                 returnTypes.add(new TypeUsage(type.getType(), type.getOffset(), true));
             }
         }
-         
+
         // parameters and type type resolving for occurrences
         JsObject global = ModelUtils.getGlobalObject(this);
         for(JsObject param : parameters) {
@@ -358,7 +355,7 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
         super.correctTypes(fromType, toType);
         String typeR;
         String typeFQN;
-        Set<TypeUsage> copy = new HashSet<TypeUsage>(returnTypes);
+        Set<TypeUsage> copy = new HashSet<>(returnTypes);
         for (TypeUsage type : copy) {
             typeFQN = type.getType();
             typeR = replaceTypeInFQN(typeFQN, fromType, toType);
@@ -383,5 +380,5 @@ public class JsFunctionImpl extends DeclarationScopeImpl implements JsFunction {
     public void setStrict(boolean isStrict) {
         this.isStrict = isStrict;
     }
-    
+
 }

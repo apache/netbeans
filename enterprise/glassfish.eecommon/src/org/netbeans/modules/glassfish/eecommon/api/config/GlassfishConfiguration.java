@@ -136,6 +136,10 @@ public abstract class GlassfishConfiguration implements
         if (version == null) {
             return new int[]{0,1};
         }
+        // glassfish-resources.xml for v7
+        if (GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0)) {
+            return new int[]{0};
+        }
         // glassfish-resources.xml for v6
         if (GlassFishVersion.ge(version, GlassFishVersion.GF_6) || GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
             return new int[]{0};
@@ -506,10 +510,12 @@ public abstract class GlassfishConfiguration implements
         "gfv3",
         "gfv3ee6",
         "gfv3ee6wc",
+        "gfv4ee7",
         "gfv5ee8",
         "gfv510ee8",
         "gfv6ee9",
-        "gfv610ee9"
+        "gfv610ee9",
+        "gfv700ee10"
     };
 
     protected ASDDVersion getTargetAppServerVersion() {
@@ -560,7 +566,13 @@ public abstract class GlassfishConfiguration implements
 
         boolean geGF5 = false;
         boolean geGF6 = false;
+        boolean geGF7 = false;
         if(schemaFolder.exists()){
+            if(new File(schemaFolder, "jakartaee10.xsd").exists() &&
+                    new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()){
+              geGF7 = true;
+              return ASDDVersion.GLASSFISH_7;
+            }
             if(new File(schemaFolder, "jakartaee9.xsd").exists() &&
                     new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()){
               geGF6 = true;
@@ -572,7 +584,7 @@ public abstract class GlassfishConfiguration implements
               return ASDDVersion.GLASSFISH_5_1;
             }
         }
-        if (!geGF5 && !geGF6 && dtdFolder.exists()) {
+        if (!geGF5 && !geGF6 && !geGF7 && dtdFolder.exists()) {
             if (new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()) {
                 return ASDDVersion.SUN_APPSERVER_10_1;
             }

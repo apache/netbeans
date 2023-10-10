@@ -125,7 +125,7 @@ public class IpAddressUtils {
      * <u>Java's default DNS timeout:</u>
      * <p>
      * The default timeout DNS lookup is described 
-     * <a href="http://docs.oracle.com/javase/8/docs/technotes/guides/jndi/jndi-dns.html#PROP">
+     * <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/jndi/jndi-dns.html#PROP">
      * in the documentation for JNDI</a> in properties:
      * <p>
      * &nbsp;&nbsp;{@code com.example.jndi.dns.timeout.initial}  (defaults to 1 sec in Java 8)<br>
@@ -207,7 +207,7 @@ public class IpAddressUtils {
 
     /**
      * Performs a name service lookup with a timeout. Same as 
-     * {@link #nameResolveArr(java.lang.String, int, org.netbeans.network.IpAddressUtils.IpTypePreference) nameResolveArr()}
+     * {@link #nameResolveArr(java.lang.String, int, IpTypePreference) nameResolveArr()}
      * but only returns a single address. 
      * 
      * @see #nameResolveArr(String, int, IpTypePreference) 
@@ -235,7 +235,7 @@ public class IpAddressUtils {
     
     /**
      * Performs a name service lookup with a timeout. Same as 
-     * {@link #nameResolveArr(java.lang.String, int, org.netbeans.network.IpAddressUtils.IpTypePreference) nameResolveArr()}
+     * {@link #nameResolveArr(java.lang.String, int, IpTypePreference) nameResolveArr()}
      * but only returns a single address and uses 
      * {@link IpTypePreference#ANY_JDK_PREF IpTypePreference.ANY_JDK_PREF}.
      * 

@@ -99,7 +99,7 @@ public final class ScrollableContainer extends JScrollPane {
                 return true;
 
             Container parent = getParent();
-            if ((parent == null) || !(parent instanceof JViewport)) return false;
+            if (!(parent instanceof JViewport)) return false;
             return getMinimumSize().width < ((JViewport)parent).getWidth();
         }
 
@@ -108,7 +108,7 @@ public final class ScrollableContainer extends JScrollPane {
                 return true;
 
             Container parent = getParent();
-            if ((parent == null) || !(parent instanceof JViewport)) return false;
+            if (!(parent instanceof JViewport)) return false;
             return getMinimumSize().height < ((JViewport)parent).getHeight();
         }
 

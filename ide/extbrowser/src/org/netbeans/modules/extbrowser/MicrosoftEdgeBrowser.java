@@ -90,7 +90,7 @@ public class MicrosoftEdgeBrowser extends ExtWebBrowser {
     @Override
     protected NbProcessDescriptor defaultBrowserExecutable () {
         String command = "cmd"; // NOI18N
-        String params = "/C start microsoft-edge:{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}"; // NOI18N
+        String params = "/C start msedge {" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}"; // NOI18N
         if (ExtWebBrowser.getEM().isLoggable(Level.FINE)) {
             ExtWebBrowser.getEM().log(Level.FINE, "{0} MicrosoftEdge: defaultBrowserExecutable: {1}, {2}", new Object[] { System.currentTimeMillis(), params, command });
         }

@@ -135,8 +135,8 @@ import org.openide.util.WeakListeners;
  * 
  * <p>Related documentation:
  * <ul>
- * <li><a href="http://weblogs.java.net/blog/timboudreau/archive/2008/06/egads_an_actual.html">Egads! An actual Swing Tree-Table!</a>
- * <li><a href="http://blogs.oracle.com/geertjan/entry/swing_outline_component">Swing Outline Component</a>
+ * <li><a href="https://netbeans.apache.org/blogs/timboudreau/egads_an_actual.html">Egads! An actual Swing Tree-Table!</a>
+ * <li><a href="https://netbeans.apache.org/blogs/geertjan/swing_outline_component.html">Swing Outline Component</a>
  * </ul>
  * 
  * 
@@ -423,13 +423,14 @@ public class OutlineView extends JScrollPane {
      * @see #getTreeHorizontalScrollBarPolicy
      * @since 6.30
      *
-     * @beaninfo
+     * <pre> beaninfo taglet
      *   preferred: true
      *       bound: true
      * description: The tree column scrollbar policy
      *        enum: HORIZONTAL_SCROLLBAR_AS_NEEDED ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
      *              HORIZONTAL_SCROLLBAR_NEVER ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
      *              HORIZONTAL_SCROLLBAR_ALWAYS ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
+     * </pre>
      */
     public void setTreeHorizontalScrollBarPolicy(int policy) {
         if (policy == treeHorizontalScrollBarPolicy) {
@@ -691,7 +692,7 @@ public class OutlineView extends JScrollPane {
      * Enable/disable double click to invoke default action.
      * If the default action is not enabled, double click expand/collapse node.
      * @param defaultActionAllowed Provide <code>true</code> to enable
-     * @see {@link #isDefaultActionAllowed()}
+     * @see #isDefaultActionAllowed()
      * @since 6.32
      */
     public void setDefaultActionAllowed(boolean defaultActionAllowed) {
@@ -701,7 +702,7 @@ public class OutlineView extends JScrollPane {
     /**
      * Tells if double click invokes default action.
      * @return <code>true</code> if the default action is invoked, or <code>false</code> when it's not.
-     * @see {@link #setDefaultActionAllowed(boolean)}
+     * @see #setDefaultActionAllowed(boolean)
      * @since 6.32
      */
     public boolean isDefaultActionAllowed() {
@@ -2475,8 +2476,8 @@ public class OutlineView extends JScrollPane {
 
         @Override
         public boolean equals(Object o) {
-            return o != null && o instanceof Property &&
-                    getName().equals(((Property)o).getName());
+            return o instanceof Property &&
+                   getName().equals(((Property) o).getName());
         }
 
         @Override

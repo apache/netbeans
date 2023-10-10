@@ -136,7 +136,7 @@ public final class NbPlatformCustomizer extends JPanel {
             detailPane.addTab(CTL_JavadocTab(), javadocTab);
             detailPane.addTab(CTL_HarnessTab(), harnessTab);
             Container window = this.getTopLevelAncestor();
-            if (window != null && window instanceof Window) {
+            if (window instanceof Window) {
                 ((Window) window).pack();
             }
         }

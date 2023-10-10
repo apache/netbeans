@@ -95,7 +95,7 @@ public class SimplifiedJspServlet extends JSPProcessor {
     List<Embedding> beanDeclarations = new LinkedList<Embedding>();
     Embedding pageExtends = null;
     
-    private List<Embedding> implicitImports = new LinkedList<Embedding>();;
+    private List<Embedding> implicitImports = new LinkedList<Embedding>();
     private int expressionIndex = 1;
     
 

@@ -27,4 +27,5 @@ KEYWORD    readonly                                   null
 KEYWORD    self                                       null
 KEYWORD    static                                     null
 KEYWORD    string                                     null
+KEYWORD    true                                       null
 KEYWORD    var                                        null

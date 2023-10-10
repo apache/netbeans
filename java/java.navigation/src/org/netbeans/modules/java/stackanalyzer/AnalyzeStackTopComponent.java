@@ -37,6 +37,7 @@ import java.io.Serializable;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
+import javax.swing.UIManager;
 import javax.swing.text.DefaultEditorKit;
 
 import org.netbeans.modules.java.stackanalyzer.StackLineAnalyser.Link;
@@ -65,6 +66,7 @@ final class AnalyzeStackTopComponent extends TopComponent {
         getActionMap ().put (DefaultEditorKit.pasteAction, new PasteAction ());
         insertButton.getActionMap ().put (DefaultEditorKit.pasteAction, new PasteAction ());
         scrollPane.getActionMap ().put (DefaultEditorKit.pasteAction, new PasteAction ());
+        list.setBackground(UIManager.getColor("Tree.background"));
         list.getActionMap ().put (DefaultEditorKit.pasteAction, new PasteAction ());
         list.setCellRenderer (new AnalyserCellRenderer ());
         list.addKeyListener (new KeyAdapter () {
@@ -232,9 +234,7 @@ final class AnalyzeStackTopComponent extends TopComponent {
             Reader reader = DataFlavor.stringFlavor.getReaderForText (transferable);
             BufferedReader r = new BufferedReader (reader);
             fill(r);
-        } catch (UnsupportedFlavorException ex) {
-            Exceptions.printStackTrace (ex);
-        } catch (IOException ex) {
+        } catch (UnsupportedFlavorException | IOException ex) {
             Exceptions.printStackTrace (ex);
         }
     }//GEN-LAST:event_insertButtonActionPerformed

@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.project.JavaProjectConstants;
@@ -32,14 +31,13 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.TemplateWizard;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -94,7 +92,7 @@ public class ResourceLibraryIterator implements TemplateWizard.Iterator {
                     (String) wiz.getProperty(ResourceLibraryIteratorPanel.PROP_TEMPLATE_NAME),
                     contractFolder,
                     cssFolder,
-                    JSFVersion.JSF_2_2);
+                    JsfVersion.JSF_2_2);
             contractsParent.getFileSystem().runAtomicAction(templateAction);
             result.add(DataObject.find(templateAction.getResult()));
         }
@@ -216,7 +214,7 @@ public class ResourceLibraryIterator implements TemplateWizard.Iterator {
     private String[] createSteps() {
         String[] beforeSteps = null;
         Object prop = descriptor.getProperty(WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[]) prop;
         }
 

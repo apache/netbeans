@@ -79,16 +79,9 @@ public abstract class EnclosingBean extends BaseBean implements CommonDDBean, Cr
      */
     public void write(org.openide.filesystems.FileObject fo) throws java.io.IOException {
         // TODO: need to be implemented with Dialog opened when the file object is locked
-        FileLock lock = fo.lock();
-        try {
-            OutputStream os = fo.getOutputStream(lock);
-            try {
-                write(os);
-            } finally {
-                os.close();
-            }
-        } finally {
-            lock.releaseLock();
+        try (FileLock lock = fo.lock();
+                OutputStream os = fo.getOutputStream(lock)) {
+            write(os);
         }
     }
     
@@ -97,12 +90,12 @@ public abstract class EnclosingBean extends BaseBean implements CommonDDBean, Cr
             Object keyValue = null;
             if (propertyNames!=null)
                 for (int i=0;i<propertyNames.length;i++) {
-                if (keyProperty.equals(propertyNames[i])) {
-                    keyValue=propertyValues[i];
-                    break;
+                    if (keyProperty.equals(propertyNames[i])) {
+                        keyValue=propertyValues[i];
+                        break;
+                    }
                 }
-                }
-            if (keyValue!=null && keyValue instanceof String) {
+            if (keyValue instanceof String) {
                 if (findBeanByName(beanName, keyProperty,(String)keyValue)!=null) {
                     throw new NameAlreadyUsedException(beanName,  keyProperty, (String)keyValue);
                 }

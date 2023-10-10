@@ -47,7 +47,7 @@ public class MessagePart {
         if (other == this) {
             return true;
         }
-        if (other == null || !(other instanceof MessagePart)) {
+        if (!(other instanceof MessagePart)) {
             return false;
         }
 

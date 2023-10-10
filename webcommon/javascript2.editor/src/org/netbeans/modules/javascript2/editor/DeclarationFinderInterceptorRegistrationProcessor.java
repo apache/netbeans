@@ -40,7 +40,7 @@ public class DeclarationFinderInterceptorRegistrationProcessor extends LayerGene
     public DeclarationFinderInterceptorRegistrationProcessor() {
         super();
     }
-    
+
     @Override
     protected boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws LayerGenerationException {
         for (Element element : roundEnv.getElementsAnnotatedWith(DeclarationFinder.Registration.class)) {
@@ -51,5 +51,5 @@ public class DeclarationFinderInterceptorRegistrationProcessor extends LayerGene
         }
         return true;
     }
-    
+
 }

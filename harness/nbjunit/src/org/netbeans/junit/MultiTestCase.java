@@ -36,6 +36,7 @@ public abstract class MultiTestCase extends NbTestCase{
     
     /**
      * Creates a new instance of MultiTestCase with the given name.
+     * @param name name of test case
      */
     public MultiTestCase(String name) {
         super(name);

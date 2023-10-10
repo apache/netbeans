@@ -275,7 +275,7 @@ public class ASTUtils {
 
                     if (fieldName.length() > 0 && !field.isStatic() && (field.getModifiers() & Opcodes.ACC_PRIVATE) != 0) {
 
-                        fieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1, fieldName.length());
+                        fieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
                         if (!field.isFinal()) {
                             possibleMethods.add("set" + fieldName); // NOI18N
                         }
@@ -528,7 +528,7 @@ public class ASTUtils {
     }
 
     public static ClassNode getOwningClass(AstPath path) {
-        Iterator<ASTNode> it = path.rootToLeaf();
+        Iterator<ASTNode> it = path.leafToRoot();
         while (it.hasNext()) {
             ASTNode node = it.next();
             if (node instanceof ClassNode) {

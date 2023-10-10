@@ -249,7 +249,7 @@ public class ReplaceConstructorWithBuilderPanel extends javax.swing.JPanel imple
     }
 
     public List<ReplaceConstructorWithBuilderRefactoring.Setter> getSetters() {
-        List<ReplaceConstructorWithBuilderRefactoring.Setter> result = new ArrayList();
+        List<ReplaceConstructorWithBuilderRefactoring.Setter> result = new ArrayList<>();
         int size = parameterTypes.size();
         for (int i = 0; i < size; i++) {
             final String name = (String) ((DefaultTableModel) paramTable.getModel()).getValueAt(i, 0);

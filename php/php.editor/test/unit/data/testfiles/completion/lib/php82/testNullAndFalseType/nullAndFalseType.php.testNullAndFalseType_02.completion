@@ -1,0 +1,5 @@
+Code completion result for source line:
+public fal|se $false = false; // PHP 8.2: OK
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    false                                      null

@@ -323,6 +323,7 @@ final class DummyWindowManager extends WindowManager {
             final java.lang.ref.WeakReference<TopComponent> ref = new java.lang.ref.WeakReference<TopComponent>(tc);
             f.addWindowListener(
                 new WindowAdapter() {
+                    @Override
                     public void windowClosing(WindowEvent ev) {
                         TopComponent tc = ref.get();
 
@@ -333,6 +334,7 @@ final class DummyWindowManager extends WindowManager {
                         tc.close();
                     }
 
+                    @Override
                     public void windowActivated(WindowEvent e) {
                         TopComponent tc = ref.get();
 

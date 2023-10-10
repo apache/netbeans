@@ -165,7 +165,7 @@ final class ViewHelper {
         List visibleChildren = splitSnapshot.getVisibleChildSnapshots();
         
         ArrayList<ElementAccessor> children = new ArrayList<ElementAccessor>( visibleChildren.size() );
-        ArrayList<Double> weights = new ArrayList<Double>( visibleChildren.size() );
+        List<Double> weights = new ArrayList<Double>( visibleChildren.size() );
         
         int index = 0;
         for( Iterator i=visibleChildren.iterator(); i.hasNext(); index++ ) {
@@ -183,11 +183,11 @@ final class ViewHelper {
                 double[] weightsToMerge = subSplit.getSplitWeights();
                 for( int j=0; j<childrenToMerge.length; j++ ) {
                     children.add( childrenToMerge[j] );
-                    weights.add( Double.valueOf( weightsToMerge[j] * weight ) );
+                    weights.add(weightsToMerge[j] * weight);
                 }
             } else {
                 children.add( childAccessor );
-                weights.add( Double.valueOf( weight ) );
+                weights.add(weight);
             }
         }
         
@@ -195,7 +195,7 @@ final class ViewHelper {
         double[] splitWeights = new double[children.size()];
         for( int i=0; i<children.size(); i++ ) {
             ElementAccessor ea = (ElementAccessor)children.get( i );
-            Double weight = (Double)weights.get( i );
+            Double weight = weights.get(i);
             childrenAccessors[i] = ea;
             splitWeights[i] = weight.doubleValue();
         }

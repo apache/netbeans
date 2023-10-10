@@ -44,7 +44,7 @@ public class SourceElementsQueryImpl implements SourceElementsQuery {
 
     @Override
     public Collection<Var> getVarsAt(Source source, int offset) {
-        final Collection[] vars = new Collection[] { Collections.emptyList()};
+        final Collection<Var>[] vars = new Collection[] { Collections.emptyList()};
         try {
             ParserManager.parse(Collections.singleton(source), new UserTask() {
                 public @Override

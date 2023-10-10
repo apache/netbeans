@@ -32,8 +32,7 @@ import org.netbeans.spi.queries.CollocationQueryImplementation2;
 /**
  * Warning: VCS internal use only. Not to be implemented by clients.
  * 
- * Provides implementations for {@link org.netbeans.modules.versioning.spi.VersioningSystem} 
- * and {@link org.netbeans.modules.versioning.fileproxy.spi.VersioningSystem}
+ * Provides implementations for <a href="@org-netbeans-modules-versioning@/org/netbeans/modules/versioning/spi/VersioningSystem.html">org.netbeans.modules.versioning.spi.VersioningSystem</a>
  * 
  * @author Tomas Stupka
  */
@@ -59,8 +58,7 @@ public abstract class VCSSystemProvider {
     public abstract Collection<VersioningSystem> getVersioningSystems();
     
     /**
-     * Provides abstraction either over a {@link org.netbeans.modules.versioning.fileproxy.spi.VersioningSystem}
-     * or a {@link org.netbeans.modules.versioning.spi.VersioningSystem}
+     * Provides abstraction either over a <a href="@org-netbeans-modules-versioning@/org/netbeans/modules/versioning/spi/VersioningSystem.html">org.netbeans.modules.versioning.spi.VersioningSystem</a>
      * @param <S> 
      */
     public interface VersioningSystem<S> {

@@ -196,7 +196,7 @@ public class JvmOptions extends ModuleMBean implements Constants{
             String inMiddle = debugOptionsVal.substring(debugOptionsVal.indexOf(DEBUG_OPTIONS_ADDRESS) + DEBUG_OPTIONS_ADDRESS.length(), debugOptionsVal.length());
             int hasMore = inMiddle.indexOf(","); //NOI18N
             if(hasMore != -1){
-                String debugOptionsEnd = inMiddle.substring(hasMore, inMiddle.length());
+                String debugOptionsEnd = inMiddle.substring(hasMore);
                 debugOptionsStart = debugOptionsStart + debugOptionsEnd;
             }
             Attribute newAttr = new Attribute(DEBUG_OPTIONS, debugOptionsStart);

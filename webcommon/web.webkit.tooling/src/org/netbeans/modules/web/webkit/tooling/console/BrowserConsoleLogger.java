@@ -380,7 +380,7 @@ public class BrowserConsoleLogger implements Console.Listener {
         String s1 = line.substring(0, start);
         String s2 = "(" +  // NOI18N
                 getProjectPath(project, file) +
-            line.substring(fileEnd, line.length());
+            line.substring(fileEnd);
         MyListener l = new MyListener(project, file, lineNumber, columnNumber);
         return new Object[]{l,s1,s2};
     }
@@ -425,7 +425,7 @@ public class BrowserConsoleLogger implements Console.Listener {
             return null;
         }
         String s1 = line.substring(0, u1);
-        String s2 = line.substring(u1, line.length());
+        String s2 = line.substring(u1);
         MyListener l = new MyListener(project, file, lineNumber, columnNumber);
         return new Object[]{l,s1,s2};
     }

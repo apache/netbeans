@@ -1068,12 +1068,16 @@ public class NPECheck {
                 State targetState = null;
 
                 switch (e.getSimpleName().toString()) {
-                    case "assertNotNull": targetState = State.NOT_NULL; break;
+                    case "assertNotNull":
+                    case "requireNonNull":
+                    case "requireNonNullElse":
+                    case "requireNonNullElseGet": targetState = State.NOT_NULL; break;
                     case "assertNull": targetState = State.NULL; break;
                 }
 
                 switch (ownerFQN) {
-                    case "org.testng.Assert": argument = node.getArguments().get(0); break;
+                    case "org.testng.Assert":
+                    case "java.util.Objects": argument = node.getArguments().get(0); break;
                     case "junit.framework.Assert":
                     case "org.junit.Assert": 
                     case "org.junit.jupiter.api.Assertions": argument = node.getArguments().get(node.getArguments().size() - 1); break;

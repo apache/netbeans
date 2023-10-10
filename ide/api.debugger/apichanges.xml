@@ -298,7 +298,7 @@
              <p>
              In order to be able to register debugger services on System FileSystem,
              which brings more flexibility and better performance (see also
-             <a href="http://www.netbeans.org/issues/show_bug.cgi?id=153093#desc7"/>),
+             <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=153093#desc7"/>),
              we add non-recursive content of <code>org.openide.util.Lookups.forPath()</code>
              into debugger lookup.
              Since debugger needs retrieve context-aware services from the lookup,

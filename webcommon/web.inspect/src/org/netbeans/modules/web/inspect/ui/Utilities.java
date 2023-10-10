@@ -45,10 +45,10 @@ import org.openide.windows.WindowManager;
  */
 public class Utilities {
     /** MIME types of files with a content that can be styled. */
-    private static final Collection<String> STYLED_MIME_TYPES = new HashSet(
+    private static final Collection<String> STYLED_MIME_TYPES = new HashSet<>(
             Arrays.asList(new String[]{"text/html", "text/xhtml", "text/x-jsp", "text/x-php5"})); // NOI18N
     /** MIME types of files for which we have a special support in Navigator. */
-    private static final Collection<String> NAVIGATOR_MIME_TYPES = new HashSet(
+    private static final Collection<String> NAVIGATOR_MIME_TYPES = new HashSet<>(
             Arrays.asList(new String[]{"text/html", "text/xhtml"})); // NOI18N
     /** {@code RequestProcessor} for this class. */
     private static RequestProcessor RP = new RequestProcessor(Utilities.class);

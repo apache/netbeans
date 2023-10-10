@@ -122,19 +122,17 @@ public class PerfData {
     }
     
     public void merge(PerfData other) {
-        for (Integer i : other.parserPhaseTime.keySet()) {
-            addParserPhase(i, other.parserPhaseTime.get(i));
-        }
-        for (String s : other.perfCounters.keySet()) {
-            addPerfCounter(s, other.perfCounters.get(s));
-        }
+        parserPhaseTime.forEach(this::addParserPhase);
+        perfCounters.forEach(this::addPerfCounter);
+
         for (int i = Phases.INITIALIZATION; i <= Phases.ALL; i++) {
             Map<String, Long> vc = other.visitorCounters.get(i);
             if (vc == null) {
                 continue;
             }
-            for (String c : vc.keySet()) { 
-                addVisitorTime(i, c, vc.get(c));
+
+            for (Map.Entry<String, Long> it : vc.entrySet()) {
+                addVisitorTime(i, it.getKey(), it.getValue());
             }
         }
     }

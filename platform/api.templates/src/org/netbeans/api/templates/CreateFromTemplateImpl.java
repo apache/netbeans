@@ -239,11 +239,7 @@ final class CreateFromTemplateImpl {
      * <li>{@code time} system time : String
      * <li>{@code dateTime} java.util.Date representation of the current system time
      * </ul>
-     * 
-     * @param template
-     * @param folder
-     * @param name
-     * @param param
+     *
      * @return completed parameters
      */
     public Map<String,Object> findTemplateParameters() {
@@ -316,14 +312,14 @@ final class CreateFromTemplateImpl {
             MapFormat mf = (MapFormat)frm;
             Map<String, Object> m = mf.getMap();
             Map x = null;
-            for (String s: params.keySet()) {
-                if (m.containsKey(s)) {
+            for (Map.Entry<String, ?> entry : params.entrySet()) {
+                if (m.containsKey(entry.getKey())) {
                     continue;
                 }
                 if (x == null) {
                     x = new HashMap<>(m);
                 }
-                x.put(s, params.get(s));
+                x.put(entry.getKey(), entry.getValue());
             }
             if (x != null) {
                 mf.setMap(x);

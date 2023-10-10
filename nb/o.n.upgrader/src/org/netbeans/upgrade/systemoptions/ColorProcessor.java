@@ -36,7 +36,6 @@ class ColorProcessor extends PropertyProcessor {
     
     
     void processPropertyImpl(String propertyName, Object value) {
-        StringBuffer sb = new StringBuffer();
         if ("connectionBorderColor".equals(propertyName)||
                 "dragBorderColor".equals(propertyName)||
                 "formDesignerBackgroundColor".equals(propertyName)||

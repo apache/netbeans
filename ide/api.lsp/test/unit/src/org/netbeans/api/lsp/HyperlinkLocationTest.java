@@ -55,7 +55,7 @@ public class HyperlinkLocationTest extends NbTestCase {
     public void testHyperlinkResolve() {
         Document doc = createDocument("text/foo", "");
         int offset = 0;
-        // BEGIN: HyperlinkLocationTest#testHyperlinkResolve
+        // @start region="testHyperlinkResolve"
 
         // Resolve a hyperlink at the given document offset...
         CompletableFuture<List<HyperlinkLocation>> future = HyperlinkLocation.resolve(doc, offset);
@@ -77,14 +77,13 @@ public class HyperlinkLocationTest extends NbTestCase {
         // get location's end offset
         int endOffset = location.getEndOffset();
         assertEquals(20, endOffset);
-
-        // END: HyperlinkLocationTest#testHyperlinkResolve
+        // @end region="testHyperlinkResolve"
     }
 
     public void testHyperlinkTypeDefResolve() {
         Document doc = createDocument("text/foo", "");
         int offset = 0;
-        // BEGIN: HyperlinkLocationTest#testHyperlinkTypeDefResolve
+        // @start region="testHyperlinkTypeDefResolve"
 
         // Resolve a hyperlink at the given document offset...
         CompletableFuture<List<HyperlinkLocation>> future = HyperlinkLocation.resolveTypeDefinition(doc, offset);
@@ -106,8 +105,7 @@ public class HyperlinkLocationTest extends NbTestCase {
         // get location's end offset
         int endOffset = location.getEndOffset();
         assertEquals(20, endOffset);
-
-        // END: HyperlinkLocationTest#testHyperlinkTypeDefResolve
+        // @end region="testHyperlinkTypeDefResolve"
     }
 
     private Document createDocument(String mimeType, String contents) {

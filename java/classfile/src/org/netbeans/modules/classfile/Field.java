@@ -123,6 +123,7 @@ public abstract class Field {
      * Returns the generic type information associated with this field.  
      * If this field does not have generic type information, then null 
      * is returned.
+     * @return the generic type information associated with this field
      */
     public String getTypeSignature() {
 	if (typeSignature == null) {
@@ -147,8 +148,9 @@ public abstract class Field {
     }
 
     /**
-     * Returns al<ClassName,Annotation>l runtime annotations defined for this field.  Inherited
+     * Returns all &lt;ClassName,Annotation&gt; runtime annotations defined for this field.  Inherited
      * annotations are not included in this collection.
+     * @return all annotations
      */
     public final Collection<Annotation> getAnnotations() {
 	loadAnnotations();
@@ -158,6 +160,8 @@ public abstract class Field {
     /**
      * Returns the annotation for a specified annotation type, or null if
      * no annotation of that type exists for this field.
+     * @param annotationClass type of annotation
+     * @return annotation
      */
     public final Annotation getAnnotation(final ClassName annotationClass) {
 	loadAnnotations();
@@ -167,6 +171,8 @@ public abstract class Field {
     /**
      * Returns true if an annotation of the specified type is defined for
      * this field.
+     * @param annotationClass type of annotation
+     * @return true if annotation is present
      */
     public final boolean isAnnotationPresent(final ClassName annotationClass) {
 	loadAnnotations();
@@ -180,7 +186,7 @@ public abstract class Field {
      * hold the contents of the attribute.  If the ClassFile was
      * created with an <code>includeCode</code> parameter that is
      * false, then <b>Code</b> attributes are not included in this map.
-     *
+     * @return a map of attribute for this field
      * @see org.netbeans.modules.classfile.ClassFile#getAttributes
      */
     public final AttributeMap getAttributes(){

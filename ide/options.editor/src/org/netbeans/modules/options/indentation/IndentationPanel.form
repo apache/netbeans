@@ -81,36 +81,31 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lNumberOfSpacesPerIndent" alignment="0" min="-2" max="-2" attributes="2"/>
+                              <Component id="lRightMargin" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lTabSize" alignment="0" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="sNumberOfSpacesPerIndent" linkSize="3" alignment="1" min="-2" pref="53" max="-2" attributes="1"/>
+                              <Component id="sTabSize" linkSize="3" alignment="1" min="-2" pref="54" max="-2" attributes="1"/>
+                              <Component id="sRightMargin" linkSize="3" alignment="1" min="-2" pref="62" max="-2" attributes="1"/>
+                          </Group>
+                      </Group>
                       <Group type="102" attributes="0">
-                          <Component id="cbEnableIndentation" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="cbEnableIndentation" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbExpandTabsToSpaces" alignment="0" min="-2" max="-2" attributes="1"/>
+                          </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="lNumberOfSpacesPerIndent" min="-2" pref="207" max="-2" attributes="2"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="sNumberOfSpacesPerIndent" linkSize="3" min="-2" pref="53" max="-2" attributes="1"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="lTabSize" min="-2" pref="207" max="-2" attributes="1"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="sTabSize" linkSize="3" min="-2" pref="54" max="-2" attributes="1"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="lRightMargin" min="-2" pref="207" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="sRightMargin" linkSize="3" min="-2" pref="62" max="-2" attributes="1"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="lLineWrap" min="-2" pref="117" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cboLineWrap" min="-2" pref="152" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                          <Component id="lLineWrap" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="cboLineWrap" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="cbExpandTabsToSpaces" alignment="0" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>

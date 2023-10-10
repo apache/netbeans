@@ -182,7 +182,7 @@ public class ApplicationSubclassGenerator {
                         ClassTree classTree = (ClassTree) typeDeclaration;
                         List<? extends Tree> members = classTree.getMembers();
                         for (Tree member : members) {
-                            if ( member.getKind().equals(Tree.Kind.METHOD)){
+                            if ( member.getKind() == Tree.Kind.METHOD) {
                                 MethodTree method = (MethodTree)member;
                                 String name = method.getName().toString();
                                 if ( name.equals(RestConstants.GET_CLASSES)){

@@ -33,7 +33,7 @@ import org.netbeans.api.java.queries.JavadocForBinaryQuery;
  * this query, if it depends on the Java Project module and uses this style.
  * </p>
  * @see JavadocForBinaryQuery
- * @see org.netbeans.api.project.Project#getLookup
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--">Project#getLookup</a>
  * @author David Konecny, Jesse Glick
  * @since org.netbeans.api.java/1 1.4
  */
@@ -45,7 +45,7 @@ public interface JavadocForBinaryQueryImplementation {
      * <p>
      * Any absolute URL may be used but typically it will use the <code>file</code>
      * protocol for directory entries and <code>jar</code> protocol for JAR entries
-     * (e.g. <samp>jar:file:/tmp/foo.jar!/</samp>).
+     * (e.g. <code>jar:file:/tmp/foo.jar!/</code>).
      * </p>
      * <p>
      * {@link JavadocForBinaryQuery#findJavadoc} calls this method on instances registered

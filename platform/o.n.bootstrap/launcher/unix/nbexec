@@ -216,7 +216,7 @@ append_jars_to_cp() {
         if [ "`echo "${dir}"/*.$ex`" != "${dir}/*.$ex" ] ; then
             for x in "${dir}"/*.$ex ; do
                 subx=`basename "$x"`
-                if [ -z "`echo "$paths" | egrep "$subpath$subx"`" ] ; then
+                if [ -z "`echo "$paths" | grep -E "$subpath$subx"`" ] ; then
                     if [ ! -z "$cp" ] ; then cp="$cp:" ; fi
                     cp="$cp$x"
                     if [ ! -z "$paths" ] ; then paths="$paths:" ; fi

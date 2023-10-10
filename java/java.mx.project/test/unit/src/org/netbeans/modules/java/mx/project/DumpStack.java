@@ -43,8 +43,8 @@ final class DumpStack extends TimerTask {
     }
     
     public static void start() {
-        final int threeMinutes = 1000 * 60 * 3;
+        final int tenMinutes = 1000 * 60 * 10;
         final int tenSeconds = 10000;
-        TIMER.schedule(new DumpStack(), threeMinutes, tenSeconds);
+        TIMER.schedule(new DumpStack(), tenMinutes, tenSeconds);
     }
 }

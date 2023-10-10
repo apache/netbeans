@@ -23,7 +23,7 @@ import org.netbeans.jellytools.Bundle;
 /** Used to call "Add | Locale..." popup menu item on properties node.
  * @see Action
  * @see ActionNoBlock
- * @see org.netbeans.jellytools.nodes.PropertiesNode
+ * @see <a href="@org-netbeans-modules-jellytools-ide@/org/netbeans/jellytools/nodes/PropertiesNode.html">org.netbeans.jellytools.nodes.PropertiesNode</a>
  * @author <a href="mailto:vojtech.sigler@sun.com">Vojtech Sigler</a> */
 public class AddLocaleAction extends ActionNoBlock {
 

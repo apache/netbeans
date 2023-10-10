@@ -130,9 +130,7 @@ public class MatcherUtilities {
     private static <T> void outVariables(Map<String, T> outMap, Map<String, T> currentValues, Map<String, T> origValues) {
         if (outMap == null) return;
 
-        for (String key : origValues.keySet()) {
-            currentValues.remove(key);
-        }
+        currentValues.keySet().removeAll(origValues.keySet());
 
         outMap.putAll(currentValues);
     }

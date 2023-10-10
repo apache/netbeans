@@ -38,6 +38,7 @@ import javax.swing.ImageIcon;
 import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -50,7 +51,6 @@ import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementHandle.UrlHandle;
 import org.netbeans.modules.csl.api.ElementKind;
-import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.ParameterInfo;
 import org.netbeans.modules.csl.spi.DefaultCompletionResult;
 import org.netbeans.modules.csl.spi.ParserResult;
@@ -109,7 +109,7 @@ public class CssCompletion implements CodeCompletionHandler {
     @Override
     public CodeCompletionResult complete(CodeCompletionContext context) {
 
-        final List<CompletionProposal> completionProposals = new ArrayList<>();
+        List<CompletionProposal> completionProposals = new ArrayList<>();
 
         CssParserResult info = (CssParserResult) context.getParserResult();
         Snapshot snapshot = info.getSnapshot();
@@ -235,6 +235,13 @@ public class CssCompletion implements CodeCompletionHandler {
         completePropertyName(completionContext, completionProposals);
         completePropertyValue(completionContext, completionProposals, charAfterCaret);
 
+        String nodeImage = node.unescapedImage();
+        completionProposals.sort((a, b) -> {
+            int distA = levenshteinDistance(nodeImage, a.getName(), false);
+            int distB = levenshteinDistance(nodeImage, b.getName(), false);
+            return distA - distB;
+        });
+
         return new DefaultCompletionResult(completionProposals, false);
     }
 
@@ -246,7 +253,6 @@ public class CssCompletion implements CodeCompletionHandler {
     private List<CompletionProposal> completeHtmlSelectors(CompletionContext context, String prefix, int offset) {
         List<CompletionProposal> proposals = new ArrayList<>(20);
         Collection<String> items = new ArrayList<>(Arrays.asList(HtmlTags.getTags()));
-        items.add(UNIVERSAL_SELECTOR);
         for (String tagName : items) {
             if (tagName.startsWith(prefix.toLowerCase(Locale.ENGLISH))) {
                 proposals.add(CssCompletionItem.createSelectorCompletionItem(new CssElement(context.getSource().getFileObject(), tagName),
@@ -254,6 +260,14 @@ public class CssCompletion implements CodeCompletionHandler {
                         offset,
                         true));
             }
+        }
+        if(prefix.isEmpty()) {
+            proposals.add(CssCompletionItem.createSelectorCompletionItem(
+                    new CssElement(context.getSource().getFileObject(), UNIVERSAL_SELECTOR),
+                    UNIVERSAL_SELECTOR,
+                    offset,
+                    false,
+                    false));
         }
         return proposals;
     }
@@ -855,7 +869,8 @@ public class CssCompletion implements CodeCompletionHandler {
                 Collection<FileObject> refered = deps.getAllReferedFiles();
 
                 //get map of all fileobject declaring classes with the prefix
-                Map<FileObject, Collection<String>> search = index.findClassesByPrefix(prefix);
+                Map<FileObject, Collection<String>> search = index
+                        .findClassesByPrefix(NodeUtil.unescape(prefix));
                 for (FileObject fo : search.keySet()) {
                     allclasses.addAll(search.get(fo));
                     //is the file refered by the current file?
@@ -876,10 +891,13 @@ public class CssCompletion implements CodeCompletionHandler {
         //lets create the completion items
         List<CompletionProposal> proposals = new ArrayList<>(refclasses.size());
         for (String clazz : allclasses) {
-            proposals.add(CssCompletionItem.createSelectorCompletionItem(new CssElement(context.getFileObject(), clazz),
+            proposals.add(CssCompletionItem.createSelectorCompletionItem(
+                    new CssElement(context.getFileObject(), clazz),
                     clazz,
                     offset,
-                    refclasses.contains(clazz)));
+                    refclasses.contains(clazz),
+                    true
+            ));
         }
         completionProposals.addAll(proposals);
     }
@@ -899,7 +917,6 @@ public class CssCompletion implements CodeCompletionHandler {
             //complete class selectors
             Collection<String> allids = new HashSet<>();
             Collection<String> refids = new HashSet<>();
-            Collection<String> fileids = new HashSet<>();
 
             //adjust prefix - if there's just # before the caret, it is returned as a prefix
             //if there is some text behind the prefix the hash is part of the prefix
@@ -917,7 +934,8 @@ public class CssCompletion implements CodeCompletionHandler {
                     DependenciesGraph deps = index.getDependencies(file);
                     Collection<FileObject> refered = deps.getAllReferedFiles();
                     //get map of all fileobject declaring classes with the prefix
-                    Map<FileObject, Collection<String>> search = index.findIdsByPrefix(prefix); //cut off the dot (.)
+                    Map<FileObject, Collection<String>> search = index
+                            .findIdsByPrefix(NodeUtil.unescape(prefix));
                     for (FileObject fo : search.keySet()) {
                         allids.addAll(search.get(fo));
                         //is the file refered by the current file?
@@ -926,7 +944,6 @@ public class CssCompletion implements CodeCompletionHandler {
                             refids.addAll(search.get(fo));
                         }
                     }
-                    fileids = search.get(file);
                 }
             }
 
@@ -938,10 +955,13 @@ public class CssCompletion implements CodeCompletionHandler {
             //lets create the completion items
             List<CompletionProposal> proposals = new ArrayList<>(allids.size());
             for (String id : allids) {
-                proposals.add(CssCompletionItem.createSelectorCompletionItem(new CssElement(context.getFileObject(), id),
+                proposals.add(CssCompletionItem.createSelectorCompletionItem(
+                        new CssElement(context.getFileObject(), id),
                         id,
                         offset,
-                        fileids == null || !fileids.contains(id))); 
+                        refids.contains(id),
+                        true
+                ));
             }
             completionProposals.addAll(proposals);
 
@@ -1398,7 +1418,7 @@ public class CssCompletion implements CodeCompletionHandler {
                         expressionText = "";
                     } else {
                         //take the expression text from the existing property value
-                        expressionText = result[1].image().toString();
+                        expressionText = result[1].unescapedImage();
                     }
                 }
 
@@ -1435,7 +1455,7 @@ public class CssCompletion implements CodeCompletionHandler {
 
                 }
 
-                PropertyDefinition prop = Properties.getPropertyDefinition(property.image().toString().trim());
+                PropertyDefinition prop = Properties.getPropertyDefinition(property.unescapedImage().trim());
                 if (prop != null) {
 
                     ResolvedProperty propVal = new ResolvedProperty(context.getFileObject(), prop, expressionText);
@@ -1680,6 +1700,40 @@ public class CssCompletion implements CodeCompletionHandler {
 
             } //case
         } //switch
+    }
+
+    @SuppressWarnings("AssignmentToMethodParameter")
+    public final int levenshteinDistance(
+            @NonNull String str1,
+            @NonNull String str2,
+            final boolean caseSensitive) {
+        if (!caseSensitive) {
+            str1 = str1.toLowerCase();
+            str2 = str2.toLowerCase();
+        }
+        int[][] distance = new int[str1.length() + 1][str2.length() + 1];
+
+        for (int i = 0; i <= str1.length(); i++) {
+            distance[i][0] = i;
+        }
+        for (int j = 1; j <= str2.length(); j++) {
+            distance[0][j] = j;
+        }
+
+        for (int i = 1; i <= str1.length(); i++) {
+            for (int j = 1; j <= str2.length(); j++) {
+                distance[i][j] = minimum(
+                        distance[i - 1][j] + 1,
+                        distance[i][j - 1] + 1,
+                        distance[i - 1][j - 1] + ((str1.charAt(i - 1) == str2.charAt(j - 1)) ? 0 : 1));
+            }
+        }
+
+        return distance[str1.length()][str2.length()];
+    }
+
+    private static int minimum(int a, int b, int c) {
+        return Math.min(Math.min(a, b), c);
     }
 
     private static class CssFileCompletionResult extends DefaultCompletionResult {

@@ -138,7 +138,7 @@ public class TargetLister {
         
         /**
          * Gets the qualified name of the target.
-         * This consists of the name of the project followed by a dot (<samp>.</samp>)
+         * This consists of the name of the project followed by a dot (<code>.</code>)
          * followed by the simple target name.
          * (Or just the simple target name in case the project has no defined name;
          * questionable whether this is even legal.)
@@ -200,13 +200,13 @@ public class TargetLister {
         
         /**
          * Tests whether a target is marked as internal to the script.
-         * Currently this means that the target name begins with a hyphen (<samp>-</samp>),
+         * Currently this means that the target name begins with a hyphen (<code>-</code>),
          * though the precise semantics may be changed according to changes in Ant.
          * Conventionally, internal targets are not intended to be run directly, and only
          * exist to be called from other targets. As such, they should not normally
          * be presented in the context of targets you might want to run.
          * @return true if this is marked as an internal target, false for a regular target
-         * @see <a href="http://issues.apache.org/bugzilla/show_bug.cgi?id=22020">Ant issue #22020</a>
+         * @see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=22020">Ant issue #22020</a>
          */
         public boolean isInternal() {
             String n = getName();

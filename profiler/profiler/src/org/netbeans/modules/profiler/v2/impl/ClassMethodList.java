@@ -164,7 +164,7 @@ public final class ClassMethodList {
                     if (methods) {
                         Collection<SourceMethodInfo> mtd = ClassMethodSelector.selectMethods(session);
                         if (!mtd.isEmpty()) {
-                            sel = new HashSet();
+                            sel = new HashSet<>();
                             for (SourceMethodInfo smi : mtd) sel.add(
                                     new ClientUtils.SourceCodeSelection(smi.getClassName(),
                                                                         smi.getName(), smi.getSignature()));
@@ -172,7 +172,7 @@ public final class ClassMethodList {
                     } else {
                         Collection<SourceClassInfo> cls = ClassMethodSelector.selectClasses(session);
                         if (!cls.isEmpty()) {
-                            sel = new HashSet();
+                            sel = new HashSet<>();
                             for (SourceClassInfo sci : cls) sel.add(new ClientUtils.SourceCodeSelection(
                                     sci.getQualifiedName(), Wildcards.ALLWILDCARD, null));
                         }

@@ -73,6 +73,7 @@ public class NbObjectOutputStream extends ObjectOutputStream {
     /*
     * @param obj is an Object to be checked for replace
     */
+    @Override
     public Object replaceObject(Object obj) throws IOException {
         if (obj instanceof Image) {
             return null;
@@ -111,6 +112,7 @@ public class NbObjectOutputStream extends ObjectOutputStream {
         oo.write(bos.toByteArray());
     }
 
+    @Override
     protected void annotateClass(Class cl) throws IOException {
         super.annotateClass(cl);
 

@@ -97,7 +97,7 @@ public abstract class UnitCategoryTableModel extends AbstractTableModel {
     }
 
     public static boolean isMarkedAsDefault(Type type) {
-        return (type.equals(Type.LOCAL) || type.equals(Type.UPDATE)) ? true : false;
+        return type == Type.LOCAL || type == Type.UPDATE;
     }
     
     protected final boolean isMarkedAsDefault() {
@@ -393,8 +393,7 @@ public abstract class UnitCategoryTableModel extends AbstractTableModel {
     }
             
     public static boolean isExpandableType (Type type) {
-        return type.equals(UnitCategoryTableModel.Type.AVAILABLE) || 
-                type.equals(UnitCategoryTableModel.Type.UPDATE);
+        return type == UnitCategoryTableModel.Type.AVAILABLE || type == UnitCategoryTableModel.Type.UPDATE;
     }
             
     @Override

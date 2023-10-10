@@ -158,7 +158,7 @@ class Buttons<View, Button> {
         return null;
     }
 
-    @JavaScriptBody(args = {}, body = "window.close();")
+    @JavaScriptBody(args = {}, wait4js = false, body = "window.close();")
     private static void closeWindow0() {
     }
 

@@ -52,6 +52,7 @@ import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.common.api.WebUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
@@ -208,14 +209,14 @@ public class InjectCompositeComponent {
             //but since the library has just been created by adding an xhtml file
             //to the resources/xxx/ folder we need to wait until the files
             //get indexed and the library is created
-            final String compositeLibURL = LibraryUtils.getCompositeLibraryURL(compFolder, jsfs.isJsf22Plus());
+            final String compositeLibURL = LibraryUtils.getCompositeLibraryURL(compFolder, jsfs.getJsfVersion());
             Source documentSource = Source.create(document);
             ParserManager.parseWhenScanFinished(Collections.singletonList(documentSource), new UserTask() { //NOI18N
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
                     Library lib = jsfs.getLibrary(compositeLibURL);
                     if (lib != null) {
-                        if (!LibraryUtils.importLibrary(document, lib, prefix, jsfs.isJsf22Plus())) { //XXX: fix the damned static prefix !!!
+                        if (!LibraryUtils.importLibrary(document, lib, prefix)) { //XXX: fix the damned static prefix !!!
                             logger.log(Level.WARNING, "Cannot import composite components library {0}", compositeLibURL); //NOI18N
                         }
                     } else {
@@ -248,7 +249,7 @@ public class InjectCompositeComponent {
                             ((BaseDocument) templateInstanceDoc).runAtomic(new Runnable() {
                                 @Override
                                 public void run() {
-                                    LibraryUtils.importLibrary(templateInstanceDoc, importsMap, jsfs.isJsf22Plus());
+                                    LibraryUtils.importLibrary(templateInstanceDoc, importsMap);
                                 }
                             });
                             try {

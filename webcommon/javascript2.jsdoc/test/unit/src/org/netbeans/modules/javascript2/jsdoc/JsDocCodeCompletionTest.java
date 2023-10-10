@@ -22,7 +22,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import org.netbeans.modules.javascript2.editor.*;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -49,7 +48,7 @@ public class JsDocCodeCompletionTest extends JsCodeCompletionBase {
         // this breaks our assumption, that we can prepare the JS on-the-fly in the
         // build directory. This redirects the resolution of the reference files
         // to the build directory (they are also copied on test begin)
-        return FileUtil.toFile(getTestFile(relFilePath));
+        return new File(getDataDir(), relFilePath);
     }
 
     public void testAllCompletion() throws Exception {

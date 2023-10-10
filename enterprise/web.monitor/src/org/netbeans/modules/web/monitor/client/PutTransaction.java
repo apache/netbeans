@@ -24,8 +24,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -69,7 +68,7 @@ public class PutTransaction extends HttpServlet {
 	// As soon as you get the parameters, you've gotten an input
 	// string for this. Don't do that. 
 
-	String id = req.getQueryString(); 
+	String id = URLDecoder.decode(req.getQueryString(), "UTF-8");
 	if(id == null || id.length() == 0) { 
 	    if(debug) log("Bad request, exiting..."); //NOI18N
 	    return; 

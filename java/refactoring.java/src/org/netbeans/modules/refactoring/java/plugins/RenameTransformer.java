@@ -273,7 +273,7 @@ public class RenameTransformer extends RefactoringVisitor {
                     }
                 }
             }
-            if (elementToFind!=null && elementToFind.getKind().isField() || elementToFind.getKind().equals(ElementKind.METHOD)) {
+            if (elementToFind!=null && elementToFind.getKind().isField() || elementToFind.getKind() == ElementKind.METHOD) {
                 Scope scope = workingCopy.getTrees().getScope(elementPath);
                 TypeElement enclosingTypeElement = scope.getEnclosingClass();
                 TypeMirror superclass = enclosingTypeElement==null ? null:enclosingTypeElement.getSuperclass();
@@ -301,7 +301,7 @@ public class RenameTransformer extends RefactoringVisitor {
                     } else if(elementToFind.getKind() == ElementKind.METHOD) {
                         ElementUtilities utils = workingCopy.getElementUtilities();
                         if(utils.alreadyDefinedIn((CharSequence) newName, (ExecutableType) elementToFind.asType(), (TypeElement) enclosingTypeElement)) {
-                            boolean isSuper = false;;
+                            boolean isSuper = false;
                             if (tree.getKind() == Tree.Kind.MEMBER_SELECT) {
                                 String superString = ((MemberSelectTree) tree).getExpression().toString();
                                 if (superString.equals("super") || superString.endsWith(".super")) { // NOI18N
@@ -396,7 +396,7 @@ public class RenameTransformer extends RefactoringVisitor {
 
                 @Override
                 public boolean accept(Element element, TypeMirror type) {
-                    return !element.equals(p) && element.getKind().equals(p.getKind()) && element.getSimpleName().contentEquals(newName);
+                    return !element.equals(p) && element.getKind() == p.getKind() && element.getSimpleName().contentEquals(newName);
                 }
             });
         }

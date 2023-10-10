@@ -929,6 +929,7 @@ implements EditorCookie.Observable, OpenCookie, CloseCookie, PrintCookie {
         
         /** Finds delegating environment for this editor object.
         */
+        @Override
         public CloneableOpenSupport findCloneableOpenSupport() {
 	    // Svata: is this really needed ? EditorSupport does not implement CloneableOpenSupport anyway.
             CloneableOpenSupport o = super.findCloneableOpenSupport ();

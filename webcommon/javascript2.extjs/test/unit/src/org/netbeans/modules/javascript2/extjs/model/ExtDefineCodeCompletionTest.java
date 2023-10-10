@@ -19,8 +19,8 @@
 package org.netbeans.modules.javascript2.extjs.model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -70,7 +70,8 @@ public class ExtDefineCodeCompletionTest extends JsCodeCompletionBase {
     
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>(ClasspathProviderImplAccessor.getJsStubs());
+        List<FileObject> cpRoots = new ArrayList<>(2);
+        cpRoots.add(ClasspathProviderImplAccessor.getJsStubs().get(0)); // Only use core stubs in unittests
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/defineMethod")));
         return Collections.singletonMap(
             JS_SOURCE_ID,

@@ -14,9 +14,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-677D6A3009E8619D39E3F8BDB39352DD7CA7D155 org.apache.maven.indexer:indexer-core:6.0.0
-C34BCD9274859DC07CFED2A935AACA90C4F4B861 org.apache.lucene:lucene-core:5.5.5
-65642FBAD8D42403B679438B22A493EE114D8DE5 org.apache.lucene:lucene-highlighter:5.5.5
-6C965EB5838A2BA58B0DE0FD860A420DCDA11937 org.apache.lucene:lucene-queryparser:5.5.5
-E6B3F5D1B33ED24DA7EEF0A72F8062BD4652700C org.apache.lucene:lucene-analyzers-common:5.5.5
+0310415BFCC3D79B2FE62C2E51EF5F5DB086DD28 org.apache.maven.indexer:indexer-core:7.0.4
+CA5DEB6CF9BDB8DDCE3D847802B4241B16D7DA74 org.apache.maven.indexer:search-api:7.0.4
+72B65D6335E7F7253DEADBC413C17468D7259892 org.apache.maven.indexer:search-backend-smo:7.0.4
+5E8421C5F8573BCF22E9265FC7E19469545A775A org.apache.lucene:lucene-core:9.8.0
+E98FB408028F40170E6D87C16422BFDC0BB2E392 org.apache.lucene:lucene-backward-codecs:9.8.0
+1AC38C8278DBD63DFAB30744A41DD955A415A31C org.apache.lucene:lucene-highlighter:9.8.0
+982FAF2BFA55542BF57FBADEF54C19AC00F57CAE org.apache.lucene:lucene-queryparser:9.8.0
+36F0363325CA7BF62C180160D1ED5165C7C37795 org.apache.lucene:lucene-analysis-common:9.8.0
 479C1E06DB31C432330183F5CAE684163F186146 javax.annotation:javax.annotation-api:1.2
+B3ADD478D4382B78EA20B1671390A858002FEB6C com.google.code.gson:gson:2.10.1

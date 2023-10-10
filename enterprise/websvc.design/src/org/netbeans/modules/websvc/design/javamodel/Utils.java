@@ -454,12 +454,12 @@ public class Utils {
                 for (AnnotationMirror anMirror : faultAnnotations) {
                     if (controller.getTypes().isSameType(faultAnotationEl.asType(), anMirror.getAnnotationType())) {
                         Map<? extends ExecutableElement, ? extends AnnotationValue> expressions = anMirror.getElementValues();
-                        for(ExecutableElement ex:expressions.keySet()) {
-                            if (ex.getSimpleName().contentEquals("name")) { //NOI18N
-                                faultModel.setName((String)expressions.get(ex).getValue());
-                                faultFound=true;
-                            } else if (ex.getSimpleName().contentEquals("targetNamespace")) { //NOI18N
-                                faultModel.setTargetNamespace((String)expressions.get(ex).getValue());
+                        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> it : expressions.entrySet()) {
+                            if (it.getKey().getSimpleName().contentEquals("name")) { //NOI18N
+                                faultModel.setName((String) it.getValue().getValue());
+                                faultFound = true;
+                            } else if (it.getKey().getSimpleName().contentEquals("targetNamespace")) { //NOI18N
+                                faultModel.setTargetNamespace((String) it.getValue().getValue());
                             }
                         }
                     }

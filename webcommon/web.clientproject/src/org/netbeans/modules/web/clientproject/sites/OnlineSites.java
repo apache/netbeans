@@ -192,13 +192,13 @@ public abstract class OnlineSites implements SiteTemplateImplementation {
     public static class SiteHtml5Boilerplate extends OnlineSites {
 
         @NbBundle.Messages({
-            "SiteHtml5Boilerplate.name=HTML5 Boilerplate 5.3.0",
+            "SiteHtml5Boilerplate.name=HTML5 Boilerplate 8.0.0",
             "SiteHtml5Boilerplate.description=Site template from html5boilerplate.com.",
         })
         public SiteHtml5Boilerplate() {
             super("INIT.BOILER", Bundle.SiteHtml5Boilerplate_name(), Bundle.SiteHtml5Boilerplate_description(), // NOI18N
-                    "https://github.com/h5bp/html5-boilerplate/releases/download/5.3.0/html5-boilerplate_v5.3.0.zip", // NOI18N
-                    new File(SiteHelper.getJsLibsDirectory(), "html5-boilerplate-530.zip")); // NOI18N
+                    "https://github.com/h5bp/html5-boilerplate/releases/download/v8.0.0/html5-boilerplate_v8.0.0.zip", // NOI18N
+                    new File(SiteHelper.getJsLibsDirectory(), "html5-boilerplate-800.zip")); // NOI18N
         }
 
     }
@@ -207,13 +207,13 @@ public abstract class OnlineSites implements SiteTemplateImplementation {
     public static class SiteTwitterBootstrap extends OnlineSites {
 
         @NbBundle.Messages({
-            "SiteTwitterBootstrap.name=Twitter Bootstrap 3.3.6",
+            "SiteTwitterBootstrap.name=Twitter Bootstrap 5.2.3",
             "SiteTwitterBootstrap.description=Site template from getbootstrap.com.",
         })
         public SiteTwitterBootstrap() {
             super("TWITTER", Bundle.SiteTwitterBootstrap_name(), Bundle.SiteTwitterBootstrap_description(), // NOI18N
-                    "https://github.com/twbs/bootstrap/releases/download/v3.3.6/bootstrap-3.3.6-dist.zip", // NOI18N
-                    new File(SiteHelper.getJsLibsDirectory(), "twitter-bootstrap-336.zip")); // NOI18N
+                    "https://github.com/twbs/bootstrap/releases/download/v5.2.3/bootstrap-5.2.3-dist.zip", // NOI18N
+                    new File(SiteHelper.getJsLibsDirectory(), "twitter-bootstrap-523.zip")); // NOI18N
         }
 
     }

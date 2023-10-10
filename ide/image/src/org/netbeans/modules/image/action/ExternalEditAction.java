@@ -53,37 +53,34 @@ public final class ExternalEditAction implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                boolean showInBrowser = true;
-                for (FileObject imageFO : list) {
-                    File imageFile;
-                    imageFile = FileUtil.toFile(imageFO);
-                    if (imageFile == null) {
-                        continue;
-                    }
+        RP.post(() -> {
+            boolean showInBrowser = true;
+            for (FileObject imageFO : list) {
+                File imageFile;
+                imageFile = FileUtil.toFile(imageFO);
+                if (imageFile == null) {
+                    continue;
+                }
 
-                    // open with Desktop API if its supported
-                    if (Desktop.isDesktopSupported()) {
-                        Desktop desktop = Desktop.getDesktop();
-                        if (desktop.isSupported(Desktop.Action.EDIT)) {
-                            showInBrowser = false;
-                            try {
-                                desktop.edit(imageFile);
-                            } catch (IOException ex) {
-                                Logger.getLogger(ExternalEditAction.class.getName()).info(NbBundle.getMessage(ExternalEditAction.class, "ERR_ExternalEditFile"));
-                                showInBrowser = true;
-                            }
+                // open with Desktop API if its supported
+                if (Desktop.isDesktopSupported()) {
+                    Desktop desktop = Desktop.getDesktop();
+                    if (desktop.isSupported(Desktop.Action.EDIT)) {
+                        showInBrowser = false;
+                        try {
+                            desktop.edit(imageFile);
+                        } catch (IOException ex) {
+                            Logger.getLogger(ExternalEditAction.class.getName()).info(NbBundle.getMessage(ExternalEditAction.class, "ERR_ExternalEditFile"));
+                            showInBrowser = true;
                         }
                     }
-                    // if Desktop API is not supported open in browser
-                    if (showInBrowser) {
-                        try {
-                            HtmlBrowser.URLDisplayer.getDefault().showURL(imageFile.toURI().toURL());
-                        } catch (MalformedURLException ex) {
-                            Logger.getLogger(ExternalEditAction.class.getName()).info(NbBundle.getMessage(ExternalEditAction.class, "ERR_ExternalEditFile"));
-                        }
+                }
+                // if Desktop API is not supported open in browser
+                if (showInBrowser) {
+                    try {
+                        HtmlBrowser.URLDisplayer.getDefault().showURL(imageFile.toURI().toURL());
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(ExternalEditAction.class.getName()).info(NbBundle.getMessage(ExternalEditAction.class, "ERR_ExternalEditFile"));
                     }
                 }
             }

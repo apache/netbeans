@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.16.0
+#Version 2.4.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -15,13 +15,20 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractDiagnosticReporter
+cons public init()
+intf org.netbeans.spi.lsp.DiagnosticReporter
+meth public org.netbeans.api.lsp.Diagnostic$ReporterControl findDiagnosticControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)
+supr java.lang.Object
+
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractDialogDisplayer
 cons public init()
+meth public <%0 extends org.openide.NotifyDescriptor> java.util.concurrent.CompletableFuture<{%%0}> notifyFuture({%%0})
 meth public java.awt.Dialog createDialog(org.openide.DialogDescriptor)
 meth public java.lang.Object notify(org.openide.NotifyDescriptor)
 meth public void notifyLater(org.openide.NotifyDescriptor)
 supr org.openide.DialogDisplayer
-hfds context
+hfds LOG
 
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractGlobalActionContext
 cons public init()
@@ -32,6 +39,14 @@ meth public org.openide.util.Lookup getLookup()
 meth public static <%0 extends java.lang.Object> {%%0} withActionContext(org.openide.util.Lookup,java.util.concurrent.Callable<{%%0}>)
 supr java.lang.Object
 hcls ContextHolder
+
+CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractLspBrokenReferences
+cons protected init()
+intf org.netbeans.spi.project.ui.ProjectProblemsImplementation
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> showAlert(org.netbeans.api.project.Project)
+meth public java.util.concurrent.CompletableFuture<java.lang.Void> showCustomizer(org.netbeans.api.project.Project)
+supr java.lang.Object
+hfds delegate
 
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer
 cons protected init()
@@ -45,7 +60,6 @@ meth public void runLater(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtm
 meth public void setEnabled(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Object,boolean)
 meth public void setText(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Object,java.lang.String)
 supr java.lang.Object
-hfds initial
 
 CLSS protected final org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View
  outer org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer
@@ -113,22 +127,6 @@ meth protected void stdIn(java.lang.String) throws java.io.IOException
 supr java.lang.Object
 hfds lastCtx
 hcls StdErrContext
-
-CLSS public abstract org.netbeans.modules.java.lsp.server.ui.UIContext
-cons public init()
-meth protected abstract boolean isValid()
-meth protected abstract java.util.concurrent.CompletableFuture<org.eclipse.lsp4j.MessageActionItem> showMessageRequest(org.eclipse.lsp4j.ShowMessageRequestParams)
-meth protected abstract org.openide.awt.StatusDisplayer$Message showStatusMessage(org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams)
-meth protected abstract void logMessage(org.eclipse.lsp4j.MessageParams)
-meth protected abstract void showMessage(org.eclipse.lsp4j.MessageParams)
-meth protected java.util.concurrent.CompletableFuture<java.lang.String> showHtmlPage(org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams)
-meth public static org.netbeans.modules.java.lsp.server.ui.UIContext find()
- anno 0 org.netbeans.api.annotations.common.NonNull()
-meth public static org.netbeans.modules.java.lsp.server.ui.UIContext find(org.openide.util.Lookup)
- anno 0 org.netbeans.api.annotations.common.NonNull()
-supr java.lang.Object
-hfds lastCtx
-hcls LogImpl
 
 CLSS public abstract interface org.netbeans.modules.progress.spi.ProgressEnvironment
 meth public abstract org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,org.openide.util.Cancellable,boolean)
@@ -203,8 +201,21 @@ meth public abstract {org.netbeans.spi.io.InputOutputProvider%3} startFold({org.
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
 
+CLSS public abstract interface org.netbeans.spi.lsp.DiagnosticReporter
+meth public abstract org.netbeans.api.lsp.Diagnostic$ReporterControl findDiagnosticControl(org.openide.util.Lookup,org.openide.filesystems.FileObject)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+ anno 1 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+
+CLSS public abstract interface org.netbeans.spi.project.ui.ProjectProblemsImplementation
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> showAlert(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Void> showCustomizer(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
 CLSS public abstract org.openide.DialogDisplayer
 cons protected init()
+meth public <%0 extends org.openide.NotifyDescriptor> java.util.concurrent.CompletableFuture<{%%0}> notifyFuture({%%0})
 meth public abstract java.awt.Dialog createDialog(org.openide.DialogDescriptor)
 meth public abstract java.lang.Object notify(org.openide.NotifyDescriptor)
 meth public java.awt.Dialog createDialog(org.openide.DialogDescriptor,java.awt.Frame)

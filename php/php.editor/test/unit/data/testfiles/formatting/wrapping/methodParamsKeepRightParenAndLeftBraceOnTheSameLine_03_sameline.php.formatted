@@ -29,5 +29,4 @@ class Test {
     public function __construct(private int $test1, private string $test2) {
         
     }
-
 }

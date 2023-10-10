@@ -48,8 +48,9 @@ import org.openide.util.io.ReaderInputStream;
  * @author  Jaroslav Tulach
  */
 public final class XMLBeanConvertor extends Convertor implements PropertyChangeListener {
-    /** create convertor instance; should be used in module layers
-     * @param providerFO provider file object
+    /**
+     * Create convertor instance; should be used in module layers
+     * @return convertor instance
      */
     public static Convertor create() {
         return new XMLBeanConvertor();

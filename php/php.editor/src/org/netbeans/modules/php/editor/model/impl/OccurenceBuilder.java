@@ -34,6 +34,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.ElementQuery.Index;
 import org.netbeans.modules.php.editor.api.NameKind;
@@ -296,7 +297,7 @@ class OccurenceBuilder {
     }
 
     void prepare(final NamespaceName namespaceName, final Scope scope) {
-        Kind[] kinds = {Kind.CLASS, Kind.ENUM};
+        Kind[] kinds = {Kind.CLASS, Kind.IFACE, Kind.ENUM};
         prepare(kinds, namespaceName, scope);
     }
 
@@ -801,7 +802,7 @@ class OccurenceBuilder {
                             buildMethods(index, fileScope, cachedOccurences);
                             setElementInfo((TypeScope) scope.getInScope());
                             if (elementInfo.setDeclarations(index.getTypes(NameKind.exact(elementInfo.getQualifiedName())))) {
-                                buildClassInstanceCreation(elementInfo, fileScope, cachedOccurences);
+                                buildClassInstanceCreation(elementInfo, fileScope, cachedOccurences, true);
                             }
                         }
                     }
@@ -1006,12 +1007,12 @@ class OccurenceBuilder {
             if (EnumSet.<Occurence.Accuracy>of(Accuracy.EXACT, Accuracy.EXACT_TYPE,
                     Accuracy.UNIQUE, Accuracy.EXACT_TYPE, Accuracy.MORE_MEMBERS, Accuracy.MORE).contains(accuracy)) {
                 buildMethodInvocations(elementInfo, fileScope, accuracy, cachedOccurences);
-                if (OptionsUtils.codeCompletionNonStaticMethods()) {
-                    buildStaticMethodInvocations(elementInfo, fileScope, cachedOccurences, false);
-                } else {
-                    // we need to build also static methods on parent (syntax is always 'parent::...')
-                    buildStaticMethodInvocations(elementInfo, fileScope, cachedOccurences, true);
-                }
+                // these static invocations are valid
+                // previous fix: #208309
+                // $test->publicStaticMethod();
+                // $test::publicStaticMethod();
+                // Test::publicStaticMethod();
+                buildStaticMethodInvocations(elementInfo, fileScope, cachedOccurences, false);
                 buildMethodDeclarations(elementInfo, fileScope, cachedOccurences);
                 buildMagicMethodDeclarations(elementInfo, fileScope, cachedOccurences);
             } else if (!accuracy.equals(Accuracy.NO)) {
@@ -1773,6 +1774,12 @@ class OccurenceBuilder {
                 matchingTypeNames.add(constantElement.getType().getFullyQualifiedName());
                 QualifiedName typeQualifiedName = nodeCtxInfo.getTypeQualifiedName();
                 if (typeQualifiedName != null) {
+                    if (isParent(typeQualifiedName)) {
+                        TypeScope scope = ModelUtils.getTypeScope(nodeCtxInfo.getModelElemnt());
+                        if (scope != null) {
+                            typeQualifiedName = resolveClassName(typeQualifiedName, scope);
+                        }
+                    }
                     matchingTypeNames.add(typeQualifiedName);
                 }
                 final Exact constantName = NameKind.exact(phpElement.getName());
@@ -1783,6 +1790,11 @@ class OccurenceBuilder {
                     ASTNodeInfo<StaticConstantAccess> nodeInfo = entry.getKey();
                     final Expression dispatcher = nodeInfo.getOriginalNode().getDispatcher();
                     QualifiedName clzName = QualifiedName.create(dispatcher);
+                    // $this::CONSTANT;
+                    if (dispatcher instanceof Variable
+                            && "this".equalsIgnoreCase(CodeUtils.extractQualifiedName(((Variable) dispatcher).getName()))) { // NOI18N
+                        clzName = QualifiedName.create(Type.SELF);
+                    }
                     if (clzName != null) {
                         final TypeScope scope = ModelUtils.getTypeScope(entry.getValue());
                         clzName = resolveClassName(clzName, scope);
@@ -1896,6 +1908,10 @@ class OccurenceBuilder {
     }
 
     private void buildClassInstanceCreation(ElementInfo query, FileScopeImpl fileScope, final List<Occurence> occurences) {
+        buildClassInstanceCreation(query, fileScope, occurences, false);
+    }
+
+    private void buildClassInstanceCreation(ElementInfo query, FileScopeImpl fileScope, final List<Occurence> occurences, boolean forConstructMethod) {
         Set<? extends PhpElement> elements = query.getDeclarations();
         for (PhpElement phpElement : elements) {
             for (Entry<ASTNodeInfo<ClassInstanceCreation>, Scope> entry : clasInstanceCreations.entrySet()) {
@@ -1904,7 +1920,24 @@ class OccurenceBuilder {
                 }
                 ASTNodeInfo<ClassInstanceCreation> nodeInfo = entry.getKey();
                 final boolean isAliased = VariousUtils.isAliased(nodeInfo.getQualifiedName(), nodeInfo.getOriginalNode().getStartOffset(), entry.getValue());
-                if (!isAliased || nodeInfo.getQualifiedName().getSegments().size() > 1) {
+                // GH-4382: Find usages of the __construct method
+                // also add alias of class instance creation
+                // e.g.
+                // use Example as ExampleAlias;
+                // class Example {
+                //	public function __construct(){}
+                // }
+                // $alias = new ExampleAlias();
+                // $original = new Example();
+                boolean isConstructorAlias = false;
+                if (forConstructMethod) {
+                    AliasedName aliasedName = VariousUtils.getAliasedName(nodeInfo.getQualifiedName(), nodeInfo.getOriginalNode().getStartOffset(), query.getScope());
+                    if (aliasedName != null) {
+                        QualifiedName realName = aliasedName.getRealName();
+                        isConstructorAlias = phpElement.getName().equals(realName.getName());
+                    }
+                }
+                if (!isAliased || nodeInfo.getQualifiedName().getSegments().size() > 1 || isConstructorAlias) {
                     final QualifiedName qualifiedName = VariousUtils.getFullyQualifiedName(
                             nodeInfo.getQualifiedName(),
                             nodeInfo.getOriginalNode().getStartOffset(),

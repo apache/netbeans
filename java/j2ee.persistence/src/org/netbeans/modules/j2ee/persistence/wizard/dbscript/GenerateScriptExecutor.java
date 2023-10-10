@@ -55,11 +55,7 @@ public class GenerateScriptExecutor {
                 p.generateSchema(pu.getName(), map);
                 handle.progress(95);
             }
-        } catch (ClassNotFoundException ex) {
-                problems.add( NbBundle.getMessage(GenerateScriptExecutor.class, "ERR_Classpath", file.getPath()));
-        } catch (IllegalAccessException ex) {
-                problems.add( NbBundle.getMessage(GenerateScriptExecutor.class, "ERR_Classpath", file.getPath()));
-        } catch (InstantiationException ex) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException ex) {
                 problems.add( NbBundle.getMessage(GenerateScriptExecutor.class, "ERR_Classpath", file.getPath()));
         }
 

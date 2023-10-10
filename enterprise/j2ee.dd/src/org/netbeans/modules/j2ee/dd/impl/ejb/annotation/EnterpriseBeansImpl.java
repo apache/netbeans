@@ -120,6 +120,21 @@ public class EnterpriseBeansImpl implements EnterpriseBeans {
 
         public List<SessionImpl> createInitialObjects() throws InterruptedException {
             final List<SessionImpl> result = new ArrayList<SessionImpl>();
+            helper.getAnnotationScanner().findAnnotations("jakarta.ejb.Stateless", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
+                public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
+                    result.add(new SessionImpl(SessionImpl.Kind.STATELESS, helper, type));
+                }
+            });
+            helper.getAnnotationScanner().findAnnotations("jakarta.ejb.Stateful", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
+                public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
+                    result.add(new SessionImpl(SessionImpl.Kind.STATEFUL, helper, type));
+                }
+            });
+            helper.getAnnotationScanner().findAnnotations("jakarta.ejb.Singleton", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
+                public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
+                    result.add(new SessionImpl(SessionImpl.Kind.SINGLETON, helper, type));
+                }
+            });
             helper.getAnnotationScanner().findAnnotations("javax.ejb.Stateless", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
                 public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
                     result.add(new SessionImpl(SessionImpl.Kind.STATELESS, helper, type));
@@ -140,6 +155,15 @@ public class EnterpriseBeansImpl implements EnterpriseBeans {
 
         public List<SessionImpl> createObjects(TypeElement type) {
             final List<SessionImpl> result = new ArrayList<SessionImpl>();
+            if (helper.hasAnnotation(type.getAnnotationMirrors(), "jakarta.ejb.Stateless")) { // NOI18N
+                result.add(new SessionImpl(SessionImpl.Kind.STATELESS, helper, type));
+            }
+            if (helper.hasAnnotation(type.getAnnotationMirrors(), "jakarta.ejb.Stateful")) { // NOI18N
+                result.add(new SessionImpl(SessionImpl.Kind.STATEFUL, helper, type));
+            }
+            if (helper.hasAnnotation(type.getAnnotationMirrors(), "jakarta.ejb.Singleton")) { // NOI18N
+                result.add(new SessionImpl(SessionImpl.Kind.SINGLETON, helper, type));
+            }
             if (helper.hasAnnotation(type.getAnnotationMirrors(), "javax.ejb.Stateless")) { // NOI18N
                 result.add(new SessionImpl(SessionImpl.Kind.STATELESS, helper, type));
             }
@@ -170,6 +194,11 @@ public class EnterpriseBeansImpl implements EnterpriseBeans {
 
         public List<MessageDrivenImpl> createInitialObjects() throws InterruptedException {
             final List<MessageDrivenImpl> result = new ArrayList<MessageDrivenImpl>();
+            helper.getAnnotationScanner().findAnnotations("jakarta.ejb.MessageDriven", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
+                public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
+                    result.add(new MessageDrivenImpl(helper, type));
+                }
+            });
             helper.getAnnotationScanner().findAnnotations("javax.ejb.MessageDriven", AnnotationScanner.TYPE_KINDS, new AnnotationHandler() { // NOI18N
                 public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
                     result.add(new MessageDrivenImpl(helper, type));
@@ -180,6 +209,9 @@ public class EnterpriseBeansImpl implements EnterpriseBeans {
 
         public List<MessageDrivenImpl> createObjects(TypeElement type) {
             final List<MessageDrivenImpl> result = new ArrayList<MessageDrivenImpl>();
+            if (helper.hasAnnotation(type.getAnnotationMirrors(), "jakarta.ejb.MessageDriven")) { // NOI18N
+                result.add(new MessageDrivenImpl(helper, type));
+            }
             if (helper.hasAnnotation(type.getAnnotationMirrors(), "javax.ejb.MessageDriven")) { // NOI18N
                 result.add(new MessageDrivenImpl(helper, type));
             }

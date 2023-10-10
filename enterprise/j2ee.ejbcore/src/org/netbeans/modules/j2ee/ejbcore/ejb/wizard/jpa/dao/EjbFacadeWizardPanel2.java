@@ -90,7 +90,8 @@ public class EjbFacadeWizardPanel2 implements WizardDescriptor.Panel, ChangeList
             return false;
         }
         if (!(component.isRemote() || component.isLocal())) {
-            if(J2eeProjectCapabilities.forProject(project).isEjb31LiteSupported()) {
+            J2eeProjectCapabilities projectCap = J2eeProjectCapabilities.forProject(project);
+            if(projectCap.isEjb31LiteSupported() || projectCap.isEjb40LiteSupported()) {
                 //if it's jee6 project, ejb 3.1 allow to omit any interfaces
             } else {
                 wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(EjbFacadeWizardPanel2.class, "ERR_ChooseInterface")); // NOI18N

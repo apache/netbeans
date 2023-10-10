@@ -82,7 +82,7 @@ public class LocalFSTest extends FSTest implements DataManager {
     
     /** Creates a given number of files in a given folder (actually in a subfolder)
      * @param 
-     * @retun a folder in which reside the created files (it is a sub folder of destRoot)
+     * @return a folder in which reside the created files (it is a sub folder of destRoot)
      */
     public static File createFiles(int foCount, int foBase, File destRoot) throws Exception {
         InputStream is = LocalFSTest.class.getClassLoader().getResourceAsStream(getResource(0));

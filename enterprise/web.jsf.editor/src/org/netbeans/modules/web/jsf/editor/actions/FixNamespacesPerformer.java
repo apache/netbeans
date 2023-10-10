@@ -96,7 +96,7 @@ class FixNamespacesPerformer {
 
     private void includeMissingNamespaces() {
         for (VariantItem variant : selections) {
-            LibraryUtils.importLibrary(baseDocument, variant.getLibrary(), variant.getPrefix(), importData.isJsf22);
+            LibraryUtils.importLibrary(baseDocument, variant.getLibrary(), variant.getPrefix());
         }
     }
 }

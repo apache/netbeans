@@ -105,8 +105,9 @@ public class DDChangesPanel extends JPanel {
         listModel.clear ();
         if (changes != null) {
             Iterator it = changes.iterator ();
-            while (it.hasNext ())
+            while (it.hasNext ()) {
                 listModel.addElement (it.next ());
+            }
         }
     }
 

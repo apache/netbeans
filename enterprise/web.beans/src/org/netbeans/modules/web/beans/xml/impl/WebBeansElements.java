@@ -57,7 +57,7 @@ public enum WebBeansElements {
 
     public QName getQName(WebBeansModelImpl model) {
         String ns = WebBeansComponent.WEB_BEANS_NAMESPACE;
-        if( model.getRootComponent()!=null && model.getRootComponent() instanceof AbstractDocumentComponent) {
+        if( model.getRootComponent() instanceof AbstractDocumentComponent) {
             ns = ((AbstractDocumentComponent)model.getRootComponent()).getQName().getNamespaceURI();
         }
         return new QName( ns, getName() );

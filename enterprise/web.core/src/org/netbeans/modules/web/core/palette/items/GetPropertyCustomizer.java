@@ -30,6 +30,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import org.netbeans.modules.web.core.palette.JspPaletteUtilities;
+import org.netbeans.modules.web.core.palette.items.GetProperty.BeanDescr;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.Exceptions;
@@ -54,7 +55,7 @@ public class GetPropertyCustomizer extends javax.swing.JPanel {
 
         initComponents();
 
-        beanNameCb.setModel(new DefaultComboBoxModel(getProperty.getAllBeans().toArray()));
+        beanNameCb.setModel(new DefaultComboBoxModel<>(getProperty.getAllBeans().toArray(new BeanDescr[]{})));
         beanNameCb.setSelectedIndex(getProperty.getBeanIndex());
         addDocumentListener(beanNameCb);
     }
@@ -129,10 +130,10 @@ public class GetPropertyCustomizer extends javax.swing.JPanel {
         }
 
         if (currentBean == null) {
-            propertyNameCb.setModel(new DefaultComboBoxModel());
+            propertyNameCb.setModel(new DefaultComboBoxModel<>());
         } else {
             String[] pref = {"get", "is"};  // NOI18N
-            propertyNameCb.setModel(new DefaultComboBoxModel(JspPaletteUtilities.getTypeProperties(target, currentBean.getFqcn(), pref).toArray()));
+            propertyNameCb.setModel(new DefaultComboBoxModel<>(JspPaletteUtilities.getTypeProperties(target, currentBean.getFqcn(), pref).toArray(new String[]{})));
         }
     }
 
@@ -146,9 +147,9 @@ public class GetPropertyCustomizer extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         jLabel1 = new javax.swing.JLabel();
-        beanNameCb = new javax.swing.JComboBox();
+        beanNameCb = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        propertyNameCb = new javax.swing.JComboBox();
+        propertyNameCb = new javax.swing.JComboBox<>();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -204,9 +205,9 @@ public class GetPropertyCustomizer extends javax.swing.JPanel {
         updateProperties();
 }//GEN-LAST:event_beanNameCbActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox beanNameCb;
+    private javax.swing.JComboBox<BeanDescr> beanNameCb;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JComboBox propertyNameCb;
+    private javax.swing.JComboBox<String> propertyNameCb;
     // End of variables declaration//GEN-END:variables
 }

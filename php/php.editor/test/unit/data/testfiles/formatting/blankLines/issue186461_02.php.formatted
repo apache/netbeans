@@ -15,7 +15,6 @@ class Test {
 
     /* comment 10 */
     private $field7; // comment 11
-
 }
 
 /*
@@ -27,7 +26,6 @@ class Test2 {
     function __construct() {
         
     }
-
 }
 
 ?>

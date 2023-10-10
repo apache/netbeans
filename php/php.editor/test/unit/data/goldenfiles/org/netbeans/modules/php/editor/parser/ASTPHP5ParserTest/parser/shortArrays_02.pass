@@ -88,7 +88,9 @@
                 <FormalParameters>
                     <FormalParameter start='38' end='48' isMandatory='true' isVariadic='false'>
                         <ParametrType>
-                            <Identifier start='38' end='43' name='array'/>
+                            <NamespaceName start='38' end='43' isCurrent='false' isGlobal='false'>
+                                <Identifier start='38' end='43' name='array'/>
+                            </NamespaceName>
                         </ParametrType>
                         <ParametrName>
                             <Variable start='44' end='48' isDollared='true'>

@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -38,6 +39,8 @@ import javax.swing.JOptionPane;
 import org.netbeans.util.Util;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.EditableProperties;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /** Does copy of files according to include/exclude patterns.
  *
@@ -136,6 +139,14 @@ final class CopyFiles extends Object {
      * @throws java.io.IOException if copying fails
      */
     private void copyFile(File sourceFile) throws IOException {
+
+        // invalid code point check JDK-8075156
+        if (sourceFile.getName().endsWith(".properties")
+                && new String(Files.readAllBytes(sourceFile.toPath()), UTF_8).indexOf('\u0000') != -1) {
+            LOGGER.log(Level.WARNING, "{0} contains invalid code points -> skipping", sourceFile);  //NOI18N
+            return;
+        }
+
         String relativePath = getRelativePath(sourceRoot, sourceFile);
         currentProperties = null;
         boolean includeFile = false;

@@ -19,6 +19,7 @@
 package org.netbeans.modules.javascript2.editor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,7 @@ import org.openide.filesystems.FileUtil;
  * @author Petr Hejl
  */
 public class JsCodeCompletionWithAnonymousTest extends JsCodeCompletionBase {
-    
+
     public JsCodeCompletionWithAnonymousTest(String testName) {
         super(testName);
     }
@@ -46,14 +47,15 @@ public class JsCodeCompletionWithAnonymousTest extends JsCodeCompletionBase {
     public void testWith6() throws Exception {
         checkCompletion("testfiles/completion/withAnonymous/with6.js", "   ( z.^ );", false);
     }
-    
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>(ClasspathProviderImplAccessor.getJsStubs());
+        List<FileObject> cpRoots = new ArrayList<>(2);
+        cpRoots.add(ClasspathProviderImplAccessor.getJsStubs().get(0)); // Only use core stubs in unittests
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/withAnonymous")));
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

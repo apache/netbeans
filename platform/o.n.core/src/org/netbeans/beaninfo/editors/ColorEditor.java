@@ -157,6 +157,7 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
     public static JColorChooser getStaticChooser(ColorEditor ce) {
         JColorChooser staticChooser = new JColorChooser(new SuperColorSelectionModel())
                             {
+                                @Override
                                 public void setColor (Color c) {
                                     if (c == null) return;
                                     super.setColor (c);
@@ -224,7 +225,7 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
 
     /** Sets value. Implements <code>PropertyEditor</code> interface.
      * @param object object to set, accepts <code>Color</code> 
-     * or <code>SuperColor<code> types */
+     * or <code>SuperColor</code> types */
     public void setValue (Object object) {
         if(object != null) {
             if (object instanceof SuperColor) {
@@ -571,12 +572,14 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
         }
 
         /** Overrides superclass method. Adds removing of change listener. */
+        @Override
         public void removeNotify () {
             super.removeNotify();
             selectionModel.removeChangeListener (this);
         }
 
         /** Overrides superclass method. Adds 50 pixels to each side. */
+        @Override
         public Dimension getPreferredSize () {
             Dimension s = super.getPreferredSize ();
             return new Dimension (s.width + 50, s.height + 10);
@@ -623,6 +626,7 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
         }
 
         /** Overrides the equals(Object obj) method of java.awt.Color */
+        @Override
         public boolean equals(Object obj) {
             boolean superEquals = super.equals(obj);
             String objID = null;
@@ -940,6 +944,7 @@ public final class ColorEditor implements PropertyEditor, XMLPropertyEditor {
     /**
      * @deprecated Use {@link GraphicsUtils#configureDefaultRenderingHints(java.awt.Graphics)} instead
      */
+    @Deprecated
     public static final boolean gtkShouldAntialias() {
         if (gtkAA == null) {
             Object o = Toolkit.getDefaultToolkit().getDesktopProperty("gnome.Xft/Antialias"); //NOI18N

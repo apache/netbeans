@@ -168,8 +168,7 @@ public class LayeredGraph<N, E> {
         int upperLayerSize = upperLayer.size();
         int lowerLayerSize = lowerLayer.size();
         float lowerBarycenters[] = new float[lowerLayerSize];
-        
-        float[] barycenters = new float[lowerLayerSize];
+
         for (int k = 0; k < lowerLayerSize; k++) {
             float sum = 0;
             float count = 0;
@@ -182,7 +181,6 @@ public class LayeredGraph<N, E> {
             }
             Vertex<N> kv = lowerLayer.get(k);
             lowerBarycenters[k] = sum/count;
-            //System.out.println("kv = " + kv + " barycenter = " + lowerBarycenters[k]);
         }
         
         return lowerBarycenters;

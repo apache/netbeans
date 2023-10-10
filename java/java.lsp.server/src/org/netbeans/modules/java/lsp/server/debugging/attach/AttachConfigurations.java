@@ -20,6 +20,8 @@ package org.netbeans.modules.java.lsp.server.debugging.attach;
 
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.connect.AttachingConnector;
+import com.sun.jdi.connect.Connector;
+import com.sun.jdi.connect.ListeningConnector;
 import com.sun.tools.attach.AttachNotSupportedException;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
@@ -40,8 +42,8 @@ import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.modules.java.lsp.server.protocol.DebugConnector;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 
@@ -52,23 +54,28 @@ import org.openide.util.RequestProcessor;
  */
 public final class AttachConfigurations {
 
-    static final String CONFIG_TYPE = "java8+";     // NOI18N
+    static final String CONFIG_TYPE = "java+";     // NOI18N
     static final String CONFIG_REQUEST = "attach";  // NOI18N
 
     static final RequestProcessor RP = new RequestProcessor(AttachConfigurations.class);
 
     private final List<ConfigurationAttributes> configurations;
 
-    private AttachConfigurations(List<AttachingConnector> attachingConnectors) {
+    private AttachConfigurations(List<Connector> attachingConnectors) {
         List<ConfigurationAttributes> configs = new ArrayList<>(5);
-        for (AttachingConnector ac : attachingConnectors) {
+        for (Connector ac : attachingConnectors) {
             configs.add(new ConfigurationAttributes(ac));
         }
         this.configurations = Collections.unmodifiableList(configs);
     }
 
     public static AttachConfigurations get() {
-        return new AttachConfigurations(Bootstrap.virtualMachineManager().attachingConnectors());
+        List<AttachingConnector> attachingConnectors = Bootstrap.virtualMachineManager().attachingConnectors();
+        List<ListeningConnector> listeningConnectors = Bootstrap.virtualMachineManager().listeningConnectors();
+        List<Connector> connectors = new ArrayList<>(attachingConnectors.size() + listeningConnectors.size());
+        connectors.addAll(attachingConnectors);
+        connectors.addAll(listeningConnectors);
+        return new AttachConfigurations(connectors);
     }
 
     public static CompletableFuture<Object> findConnectors() {
@@ -111,7 +118,12 @@ public final class AttachConfigurations {
             return null;
         }
         Set<String> names = attributes.keySet();
+        Object listenValue = attributes.get("listen");
+        boolean listen = listenValue != null && ("true".equals(listenValue) || Boolean.TRUE.equals(listenValue));
         for (ConfigurationAttributes config : configurations) {
+            if (listen != (config.getConnector() instanceof ListeningConnector)) {
+                continue;
+            }
             if (config.areMandatoryAttributesIn(names)) {
                 return config;
             }

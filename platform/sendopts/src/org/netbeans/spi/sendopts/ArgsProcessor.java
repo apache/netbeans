@@ -32,7 +32,7 @@ import org.netbeans.api.sendopts.CommandException;
  * use the platform.
  * </p>
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 2.20
  */
 public interface ArgsProcessor {

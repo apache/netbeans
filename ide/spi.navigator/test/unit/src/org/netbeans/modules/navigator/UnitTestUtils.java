@@ -20,15 +20,10 @@
 package org.netbeans.modules.navigator;
 
 import java.beans.PropertyVetoException;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javax.swing.text.Utilities;
-import junit.framework.Assert;
-import org.netbeans.junit.NbTestCase;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.LocalFileSystem;
+import org.junit.Assert;
 import org.openide.filesystems.Repository;
 import org.openide.filesystems.XMLFileSystem;
 import org.openide.util.Lookup;

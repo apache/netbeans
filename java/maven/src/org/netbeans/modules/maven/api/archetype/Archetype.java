@@ -251,8 +251,8 @@ public final class Archetype {
 //            } catch (ComponentLookupException ex) {
 //                Exceptions.printStackTrace(ex);
 //            }
-            online.resolve(getPomArtifact(), repos, online.getLocalRepository());
-            online.resolve(getArtifact(), repos, online.getLocalRepository());
+            online.resolveArtifact(getPomArtifact(), repos, online.getLocalRepository());
+            online.resolveArtifact(getArtifact(), repos, online.getLocalRepository());
         } catch (ThreadDeath d) { // download interrupted
         } catch (IllegalStateException ise) { //download interrupted in dependent thread. #213812
             if (!(ise.getCause() instanceof ThreadDeath)) {

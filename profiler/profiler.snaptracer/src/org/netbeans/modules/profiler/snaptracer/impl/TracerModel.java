@@ -53,10 +53,10 @@ public final class TracerModel {
 
     private final IdeSnapshot snapshot;
 
-    private final Map<TracerPackage, List<TracerProbe>> probesCache = new HashMap();
-    private final Map<TracerProbe, TracerProbeDescriptor> descriptorsCache = new HashMap();
+    private final Map<TracerPackage, List<TracerProbe>> probesCache = new HashMap<>();
+    private final Map<TracerProbe, TracerProbeDescriptor> descriptorsCache = new HashMap<>();
 
-    private final Set<Listener> listeners = new HashSet();
+    private final Set<Listener> listeners = new HashSet<>();
 
     private final TimelineSupport timelineSupport;
 
@@ -147,7 +147,7 @@ public final class TracerModel {
 
     // Must be called in EDT
     List<TracerProbe> getDefinedProbes() {
-        List<TracerProbe> probes = new ArrayList();
+        List<TracerProbe> probes = new ArrayList<>();
         probes.addAll(timelineSupport.getProbes());
         return probes;
     }
@@ -160,7 +160,7 @@ public final class TracerModel {
                 return Positionable.STRONG_COMPARATOR.compare(o1.getKey(), o2.getKey());
             }
         };
-        Set<Map.Entry<TracerPackage, List<TracerProbe>>> probes = new TreeSet(comp);
+        Set<Map.Entry<TracerPackage, List<TracerProbe>>> probes = new TreeSet<>(comp);
         synchronized(probesCache) { probes.addAll(probesCache.entrySet()); }
         return probes;
     }
@@ -178,7 +178,7 @@ public final class TracerModel {
         synchronized(probesCache) {
             List<TracerProbe> probes = probesCache.get(p);
             if (probes == null) {
-                probes = new ArrayList();
+                probes = new ArrayList<>();
                 probesCache.put(p, probes);
             }
             probes.add(r);
@@ -265,7 +265,7 @@ public final class TracerModel {
     }
 
     private void fireProbeAdded(final TracerProbe probe) {
-        final Set<Listener> toNotify = new HashSet();
+        final Set<Listener> toNotify = new HashSet<>();
         synchronized(listeners) { toNotify.addAll(listeners); }
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -277,7 +277,7 @@ public final class TracerModel {
     }
 
     private void fireProbeRemoved(final TracerProbe probe, final boolean probesDefined) {
-        final Set<Listener> toNotify = new HashSet();
+        final Set<Listener> toNotify = new HashSet<>();
         synchronized(listeners) { toNotify.addAll(listeners); }
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

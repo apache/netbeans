@@ -37,7 +37,7 @@ public class TypeNamedTag extends AnnotationCompletionTag {
 
     @Override
     public List<ParameterFormat> getParameters() {
-        List<ParameterFormat> ret = new ArrayList<ParameterFormat>(3);
+        List<ParameterFormat> ret = new ArrayList<>(3);
         ret.add(new ParameterFormat(" {", "type", "}")); //NOI18N
         ret.add(new ParameterFormat(" ", "name", null)); //NOI18N
         ret.add(new ParameterFormat(" ", "description", null)); //NOI18N

@@ -21,6 +21,7 @@ package org.netbeans.modules.java.api.common.singlesourcefile;
 import java.util.concurrent.Future;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
+import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
@@ -55,6 +56,7 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
         if (fileObject == null) 
             return;
 
+        ExplicitProcessParameters params = ExplicitProcessParameters.buildExplicitParameters(context);
         InputOutput io = IOProvider.getDefault().getIO(Bundle.CTL_SingleJavaFile(), false);
         ActionProgress progress = ActionProgress.start(context);
         ExecutionDescriptor descriptor = new ExecutionDescriptor().
@@ -65,7 +67,7 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
             postExecution((exitCode) -> {
                 progress.finished(exitCode == 0);
             });
-        LaunchProcess process = invokeActionHelper(io, command, fileObject);
+        LaunchProcess process = invokeActionHelper(io, command, fileObject, params);
         ExecutionService exeService = ExecutionService.newService(
                     process,
                     descriptor, "Running Single Java File");
@@ -78,10 +80,10 @@ public final class SingleJavaSourceRunActionProvider implements ActionProvider {
         return fileObject != null;
     }
     
-    final LaunchProcess invokeActionHelper (InputOutput io, String command, FileObject fo) {
+    final LaunchProcess invokeActionHelper (InputOutput io, String command, FileObject fo, ExplicitProcessParameters params) {
         JPDAStart start = ActionProvider.COMMAND_DEBUG_SINGLE.equals(command) ?
                 new JPDAStart(io, fo) : null;
-        return new LaunchProcess(fo, start);
+        return new LaunchProcess(fo, start, params);
     }
         
 }

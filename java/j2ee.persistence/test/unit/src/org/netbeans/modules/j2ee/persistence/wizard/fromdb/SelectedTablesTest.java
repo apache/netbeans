@@ -46,6 +46,7 @@ public class SelectedTablesTest extends NbTestCase {
         class CL implements ChangeListener {
             private int changeCount;
 
+            @Override
             public void stateChanged(ChangeEvent event) {
                 changeCount++;
             }
@@ -61,7 +62,7 @@ public class SelectedTablesTest extends NbTestCase {
         package1FO.createData("Table3", "java");
         SourceGroup location = new SourceGroupImpl(locationFO);
 
-        Map<String, Set<String>> tablesAndRefs = new HashMap<String, Set<String>>();
+        Map<String, Set<String>> tablesAndRefs = new HashMap<>();
         tablesAndRefs.put("TABLE1", Collections.<String>emptySet());
         tablesAndRefs.put("TABLE2", Collections.<String>emptySet());
 
@@ -124,28 +125,35 @@ public class SelectedTablesTest extends NbTestCase {
             this.rootFolder = rootFolder;
         }
 
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener listener) {
         }
 
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
         }
 
+        @Override
         public boolean contains(FileObject file) throws IllegalArgumentException {
             return rootFolder.equals(file) || FileUtil.isParentOf(rootFolder, file);
         }
 
+        @Override
         public Icon getIcon(boolean opened) {
             return null;
         }
 
+        @Override
         public FileObject getRootFolder() {
             return rootFolder;
         }
 
+        @Override
         public String getName() {
             return null;
         }
 
+        @Override
         public String getDisplayName() {
             return null;
         }

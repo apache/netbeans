@@ -74,7 +74,7 @@ public class QuickSearchProvider implements SearchProvider {
 	String categoryID = it.getId();
 
 	Map<String, Set<String>> kws = new HashMap<String, Set<String>>();
-	if (category != null && (category instanceof OptionsCategoryImpl)) {
+	if (category instanceof OptionsCategoryImpl) {
 	    Set<String> categoryKeywords = ((OptionsCategoryImpl) category).getKeywordsByCategory();
 	    String categoryPath = categoryID.substring(categoryID.indexOf('/') + 1);
 	    Map<String, Set<String>> mergedMap = new HashMap<String, Set<String>>();

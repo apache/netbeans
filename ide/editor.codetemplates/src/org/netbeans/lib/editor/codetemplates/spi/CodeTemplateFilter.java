@@ -44,7 +44,7 @@ public interface CodeTemplateFilter {
     
     /**
      * Factory for producing of the code template filters.
-     * <br/>
+     * <br>
      * It should be registered in the MimeLookup for a given mime-type.
      */
     @MimeLocation(subfolderName="CodeTemplateFilterFactories")
@@ -79,7 +79,7 @@ public interface CodeTemplateFilter {
     /**
      * Factory for producing of the code template filters that filter templates
      * based on their contexts.
-     * <br/>
+     * <br>
      * It should be registered in the MimeLookup for a given mime-type.
      * 
      * @since 1.34

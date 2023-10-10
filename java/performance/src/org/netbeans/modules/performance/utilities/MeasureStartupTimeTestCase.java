@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
 
 /**
  * Measure startup time by org.netbeans.core.perftool.StartLog. Number of starts
@@ -366,24 +365,24 @@ public class MeasureStartupTimeTestCase extends org.netbeans.junit.NbPerformance
         try {
             Class<?> lookup = Class.forName("org.openide.util.Lookup"); // NOI18N
             File util = new File(lookup.getProtectionDomain().getCodeSource().getLocation().toURI());
-            Assert.assertTrue("Util exists: " + util, util.exists());
+            assertTrue("Util exists: " + util, util.exists());
 
             return util.getParentFile().getParentFile();
         } catch (Exception ex) {
             try {
                 File nbjunit = new File(MeasureStartupTimeTestCase.class.getProtectionDomain().getCodeSource().getLocation().toURI());
                 File harness = nbjunit.getParentFile().getParentFile();
-                Assert.assertEquals("NbJUnit is in harness", "harness", harness.getName());
+                assertEquals("NbJUnit is in harness", "harness", harness.getName());
                 TreeSet<File> sorted = new TreeSet<>();
                 for (File p : harness.getParentFile().listFiles()) {
                     if (p.getName().startsWith("platform")) {
                         sorted.add(p);
                     }
                 }
-                Assert.assertFalse("Platform shall be found in " + harness.getParent(), sorted.isEmpty());
+                assertFalse("Platform shall be found in " + harness.getParent(), sorted.isEmpty());
                 return sorted.last();
             } catch (Exception ex2) {
-                Assert.fail("Cannot find utilities JAR: " + ex + " and: " + ex2);
+                fail("Cannot find utilities JAR: " + ex + " and: " + ex2);
             }
             return null;
         }

@@ -92,7 +92,7 @@ public class SQLStmtCustomizer extends javax.swing.JPanel {
             });
         }
         
-        jComboBox2.setModel(new DefaultComboBoxModel(SQLStmt.scopes));
+        jComboBox2.setModel(new DefaultComboBoxModel<>(SQLStmt.scopes));
         jComboBox2.setSelectedIndex(stmt.getScopeIndex());        
         jTextField2.setText(stmt.getDataSource());
         jTextArea1.setText(stmt.getStmt());
@@ -164,7 +164,7 @@ public class SQLStmtCustomizer extends javax.swing.JPanel {
         jFileChooser1 = new javax.swing.JFileChooser();
         jLabel4 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -267,7 +267,7 @@ public class SQLStmtCustomizer extends javax.swing.JPanel {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

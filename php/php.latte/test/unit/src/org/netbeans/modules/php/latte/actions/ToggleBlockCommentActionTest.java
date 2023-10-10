@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import javax.swing.JEditorPane;
 import javax.swing.text.Caret;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.editor.BaseDocument;
 import org.openide.filesystems.FileObject;
 

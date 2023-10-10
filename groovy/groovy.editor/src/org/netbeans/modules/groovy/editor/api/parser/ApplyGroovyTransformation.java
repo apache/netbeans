@@ -32,13 +32,13 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
  * applied (value will default to the annotated class' name). The ASTTransformation <b>must be also annotated by {@link GroovyASTTransformation}</b> that specifies the {@link CompilePhase}
  * the transformation is applied in. 
  * <div class="nonnormative">
- * An example of an additional ASTTransformation registered for parsing only (default) in PARSING phase: {@codesnippet GroovyTestTransformer}
+ * An example of an additional ASTTransformation registered for parsing only (default) in PARSING phase: {@snippet file="org/netbeans/modules/groovy/editor/test/GroovyTestTransformer.java" region="transformer"}
  * </div>
  * <p>
  * Any other type (or package element) can be also annotated by this annotation, but {@link #value} must identify fully qualified class name(s) of
  * transformation(s) to be affected. 
  * <div class="nonnormative">
- * An example of an some "foreign" global transformations disabled for parsing tasks: {@codesnippet DisableTransformersStub}
+ * An example of an some "foreign" global transformations disabled for parsing tasks: {@snippet file="org/netbeans/modules/groovy/editor/test/DisableTransformersStub.java" region="DisableTransformersStub"}
  * </div>
  * <p>
  * If {@link #enable} attribute is not specified when ASTTransformation is annotated, it will default to {@link #APPLY_PARSE}. 

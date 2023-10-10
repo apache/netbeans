@@ -2,14 +2,15 @@ Code completion result for source line:
 return this._name.s|mall();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     seal(obj: Object): Object       [PUBLIC,   JS Platform
-METHOD     search(regexp: RegExp): Number  [PUBLIC]   JS Platform
-METHOD     slice(beginSlice: Number): Str  [PUBLIC]   JS Platform
-METHOD     small(): String                 [PUBLIC,   JS Platform
-METHOD     split(): Array                  [PUBLIC]   JS Platform
+METHOD     seal(o: Object): Object         [PUBLIC,   JS Platform
+METHOD     search(searcher: Object): Numb  [PUBLIC]   JS Platform
+METHOD     setPrototypeOf(o: Object, prot  [PUBLIC,   JS Platform
+METHOD     slice(): String                 [PUBLIC]   JS Platform
+METHOD     small(): String                 [PUBLIC]   JS Platform
+METHOD     split(splitter: Object): Strin  [PUBLIC]   JS Platform
 METHOD     startsWith(searchString: Strin  [PUBLIC]   JS Platform
-METHOD     strike(): String                [PUBLIC,   JS Platform
-METHOD     sub(): String                   [PUBLIC,   JS Platform
-METHOD     substr(start: Number): String   [PUBLIC]   JS Platform
-METHOD     substring(indexStart: Number):  [PUBLIC]   JS Platform
-METHOD     sup(): String                   [PUBLIC,   JS Platform
+METHOD     strike(): String                [PUBLIC]   JS Platform
+METHOD     sub(): String                   [PUBLIC]   JS Platform
+METHOD     substr(from: Number): String    [PUBLIC]   JS Platform
+METHOD     substring(start: Number): Stri  [PUBLIC]   JS Platform
+METHOD     sup(): String                   [PUBLIC]   JS Platform

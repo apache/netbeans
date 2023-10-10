@@ -21,7 +21,6 @@ package org.netbeans.modules.java.completion;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -39,10 +38,11 @@ import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
+import java.util.Collections;
+import javax.lang.model.element.AnnotationValue;
 
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.source.*;
-import org.openide.util.NbBundle;
 
 /**
  *
@@ -60,7 +60,9 @@ public final class JavaTooltipTask extends BaseTask {
 
     private int anchorOffset;
     private List<List<String>> toolTipData;
+    private List<String> toolTipSignatures;
     private int toolTipIndex;
+    private int activeSignatureIndex;
     private int toolTipOffset;
 
     private JavaTooltipTask(final int caretOffset, final Callable<Boolean> cancel) {
@@ -71,8 +73,16 @@ public final class JavaTooltipTask extends BaseTask {
         return toolTipData;
     }
 
+    public List<String> getTooltipSignatures() {
+        return toolTipSignatures;
+    }
+
     public int getTooltipIndex() {
         return toolTipIndex;
+    }
+
+    public int getActiveSignatureIndex() {
+        return activeSignatureIndex;
     }
 
     public int getAnchorOffset() {
@@ -85,7 +95,7 @@ public final class JavaTooltipTask extends BaseTask {
 
     @Override
     protected void resolve(CompilationController controller) throws IOException {
-        Env env = getCompletionEnvironment(controller, true);
+        Env env = getCompletionEnvironment(controller, false);
         if (env == null) {
             return;
         }
@@ -102,18 +112,19 @@ public final class JavaTooltipTask extends BaseTask {
                 List<Tree> argTypes = getArgumentsUpToPos(env, mi.getArguments(), (int) sourcePositions.getEndPosition(root, mi.getMethodSelect()), startPos, false);
                 if (argTypes != null) {
                     controller.toPhase(JavaSource.Phase.RESOLVED);
+                    final Trees trees = controller.getTrees();
                     TypeMirror[] types = new TypeMirror[argTypes.size()];
                     int j = 0;
                     for (Tree t : argTypes) {
-                        types[j++] = controller.getTrees().getTypeMirror(new TreePath(path, t));
+                        types[j++] = trees.getTypeMirror(new TreePath(path, t));
                     }
-                    Tree mid = mi.getMethodSelect();
+                    final Tree mid = mi.getMethodSelect();
+                    final Element activeElement = trees.getElement(path);
                     path = new TreePath(path, mid);
                     switch (mid.getKind()) {
                         case MEMBER_SELECT: {
                             ExpressionTree exp = ((MemberSelectTree) mid).getExpression();
                             path = new TreePath(path, exp);
-                            final Trees trees = controller.getTrees();
                             final TypeMirror type = trees.getTypeMirror(path);
                             final Element element = trees.getElement(path);
                             final boolean isStatic = element != null && (element.getKind().isClass() || element.getKind().isInterface() || element.getKind() == TYPE_PARAMETER);
@@ -127,13 +138,12 @@ public final class JavaTooltipTask extends BaseTask {
                                     return (!isStatic || e.getModifiers().contains(STATIC) || e.getKind() == CONSTRUCTOR) && (t.getKind() != TypeKind.DECLARED || trees.isAccessible(scope, e, (DeclaredType) (isSuperCall && enclType != null ? enclType : t)));
                                 }
                             };
-                            toolTipData = getMatchingParams(controller, type, controller.getElementUtilities().getMembers(type, acceptor), ((MemberSelectTree) mid).getIdentifier().toString(), types, controller.getTypes());
+                            handleMatchingParams(controller, type, activeElement, controller.getElementUtilities().getMembers(type, acceptor), ((MemberSelectTree) mid).getIdentifier().toString(), types);
                             break;
                         }
                         case IDENTIFIER: {
                             final Scope scope = env.getScope();
                             final TreeUtilities tu = controller.getTreeUtilities();
-                            final Trees trees = controller.getTrees();
                             final TypeElement enclClass = scope.getEnclosingClass();
                             final boolean isStatic = enclClass != null ? (tu.isStaticContext(scope) || (env.getPath().getLeaf().getKind() == Tree.Kind.BLOCK && ((BlockTree) env.getPath().getLeaf()).isStatic())) : false;
                             ElementUtilities.ElementAcceptor acceptor = new ElementUtilities.ElementAcceptor() {
@@ -152,12 +162,12 @@ public final class JavaTooltipTask extends BaseTask {
                             String name = ((IdentifierTree) mid).getName().toString();
                             if (SUPER_KEYWORD.equals(name) && enclClass != null) {
                                 TypeMirror superclass = enclClass.getSuperclass();
-                                toolTipData = getMatchingParams(controller, superclass, controller.getElementUtilities().getMembers(superclass, acceptor), INIT, types, controller.getTypes());
+                                handleMatchingParams(controller, superclass, activeElement, controller.getElementUtilities().getMembers(superclass, acceptor), INIT, types);
                             } else if (THIS_KEYWORD.equals(name) && enclClass != null) {
                                 TypeMirror thisclass = enclClass.asType();
-                                toolTipData = getMatchingParams(controller, thisclass, controller.getElementUtilities().getMembers(thisclass, acceptor), INIT, types, controller.getTypes());
+                                handleMatchingParams(controller, thisclass, activeElement, controller.getElementUtilities().getMembers(thisclass, acceptor), INIT, types);
                             } else {
-                                toolTipData = getMatchingParams(controller, enclClass != null ? enclClass.asType() : null, controller.getElementUtilities().getLocalMembersAndVars(scope, acceptor), name, types, controller.getTypes());
+                                handleMatchingParams(controller, enclClass != null ? enclClass.asType() : null, activeElement, controller.getElementUtilities().getLocalMembersAndVars(scope, acceptor), name, types);
                             }
                             break;
                         }
@@ -183,13 +193,14 @@ public final class JavaTooltipTask extends BaseTask {
                 List<Tree> argTypes = getArgumentsUpToPos(env, nc.getArguments(), pos, startPos, false);
                 if (argTypes != null) {
                     controller.toPhase(JavaSource.Phase.RESOLVED);
+                    final Trees trees = controller.getTrees();
                     TypeMirror[] types = new TypeMirror[argTypes.size()];
                     int j = 0;
                     for (Tree t : argTypes) {
-                        types[j++] = controller.getTrees().getTypeMirror(new TreePath(path, t));
+                        types[j++] = trees.getTypeMirror(new TreePath(path, t));
                     }
+                    final Element activeElement = trees.getElement(path);
                     path = new TreePath(path, nc.getIdentifier());
-                    final Trees trees = controller.getTrees();
                     TypeMirror type = trees.getTypeMirror(path);
                     if (type != null && type.getKind() == TypeKind.ERROR && path.getLeaf().getKind() == Tree.Kind.PARAMETERIZED_TYPE) {
                         path = new TreePath(path, ((ParameterizedTypeTree) path.getLeaf()).getType());
@@ -204,12 +215,54 @@ public final class JavaTooltipTask extends BaseTask {
                             return e.getKind() == CONSTRUCTOR && (trees.isAccessible(scope, e, (DeclaredType) t) || isAnonymous && e.getModifiers().contains(PROTECTED));
                         }
                     };
-                    toolTipData = getMatchingParams(controller, type, controller.getElementUtilities().getMembers(type, acceptor), INIT, types, controller.getTypes());
+                    handleMatchingParams(controller, type, activeElement, controller.getElementUtilities().getMembers(type, acceptor), INIT, types);
                     toolTipIndex = types.length;
                     if (pos < 0) {
                         path = path.getParentPath();
                         pos = (int) sourcePositions.getStartPosition(root, path.getLeaf());
                     }
+                    String text = controller.getText().substring(pos, offset);
+                    int idx = text.indexOf('('); //NOI18N
+                    anchorOffset = idx < 0 ? pos : pos + controller.getSnapshot().getOriginalOffset(idx);
+                    idx = text.lastIndexOf(','); //NOI18N
+                    toolTipOffset = idx < 0 ? pos : pos + controller.getSnapshot().getOriginalOffset(idx);
+                    if (toolTipOffset < anchorOffset) {
+                        toolTipOffset = anchorOffset;
+                    }
+                    return;
+                }
+            } else if (tree.getKind() == Tree.Kind.ANNOTATION) {
+                AnnotationTree at = (AnnotationTree) tree;
+                controller.toPhase(JavaSource.Phase.RESOLVED);
+                final Trees trees = controller.getTrees();
+                final Element element = trees.getElement(path);
+                if (element != null && element.getKind() == ANNOTATION_TYPE) {
+                    final Element activeElement = lastTree != null && lastTree.getKind() == Tree.Kind.ASSIGNMENT ? trees.getElement(new TreePath(path, ((AssignmentTree) lastTree).getVariable())) : null;
+                    TypeUtilities tu = controller.getTypeUtilities();
+                    List<List<String>> data = new ArrayList<>();
+                    List<String> signatures = new ArrayList<>();
+                    for (Element e : element.getEnclosedElements()) {
+                        if (e.getKind() == METHOD && e.asType().getKind() == TypeKind.EXECUTABLE) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append(tu.getTypeName(((ExecutableType) e.asType()).getReturnType())).append(' '); //NOI18N
+                            sb.append(e.getSimpleName()).append("()"); //NOI18N
+                            AnnotationValue defaultValue = ((ExecutableElement) e).getDefaultValue();
+                            if (defaultValue != null) {
+                                sb.append(" default ").append(defaultValue.toString());
+                            }
+                            if (e == activeElement) {
+                                activeSignatureIndex = signatures.size();
+                            }
+                            data.add(Collections.singletonList(sb.toString()));
+                            signatures.add(sb.toString());
+                        }
+                    }
+                    toolTipData = data.isEmpty() ? null : data;
+                    toolTipSignatures = signatures.isEmpty() ? null : signatures;
+                    toolTipIndex = -1;
+                    CompilationUnitTree root = env.getRoot();
+                    SourcePositions sourcePositions = env.getSourcePositions();
+                    int pos = (int) sourcePositions.getEndPosition(root, at.getAnnotationType());
                     String text = controller.getText().substring(pos, offset);
                     int idx = text.indexOf('('); //NOI18N
                     anchorOffset = idx < 0 ? pos : pos + controller.getSnapshot().getOriginalOffset(idx);
@@ -226,9 +279,12 @@ public final class JavaTooltipTask extends BaseTask {
         }
     }
 
-    private List<List<String>> getMatchingParams(CompilationInfo info, TypeMirror type, Iterable<? extends Element> elements, String name, TypeMirror[] argTypes, Types types) {
-        List<List<String>> ret = new ArrayList<>();
+    private void handleMatchingParams(CompilationInfo info, TypeMirror type, Element activeElement, Iterable<? extends Element> elements, String name, TypeMirror[] argTypes) {
+        List<List<String>> data = new ArrayList<>();
+        List<String> signatures = new ArrayList<>();
+        Types types = info.getTypes();
         TypeUtilities tu = info.getTypeUtilities();
+        activeSignatureIndex = 0;
         for (Element e : elements) {
             if ((e.getKind() == CONSTRUCTOR || e.getKind() == METHOD) && name.contentEquals(e.getSimpleName())) {
                 List<? extends VariableElement> params = ((ExecutableElement) e).getParameters();
@@ -237,10 +293,19 @@ public final class JavaTooltipTask extends BaseTask {
                 if (!varArgs && (parSize < argTypes.length)) {
                     continue;
                 }
+                if (e == activeElement) {
+                    activeSignatureIndex = signatures.size();
+                }
+                ExecutableType eType = (ExecutableType) asMemberOf(e, type, types);
+                StringBuilder sig = new StringBuilder(INIT.equals(name) && type != null && type.getKind() == TypeKind.DECLARED ? ((DeclaredType) type).asElement().getSimpleName() : name).append('(');
                 if (parSize == 0) {
-                    ret.add(Collections.<String>singletonList(NbBundle.getMessage(JavaCompletionTask.class, "JCP-no-parameters")));
+                    data.add(new ArrayList<>());
+                    sig.append(')');
+                    if (e.getKind() == METHOD) {
+                        sig.append(" : ").append(tu.getTypeName(eType.getReturnType()));
+                    }
+                    signatures.add(sig.toString());
                 } else {
-                    ExecutableType eType = (ExecutableType) asMemberOf(e, type, types);
                     Iterator<? extends TypeMirror> parIt = eType.getParameterTypes().iterator();
                     TypeMirror param = null;
                     for (int i = 0; i <= argTypes.length; i++) {
@@ -258,30 +323,49 @@ public final class JavaTooltipTask extends BaseTask {
                             for (Iterator<? extends VariableElement> it = params.iterator(); it.hasNext();) {
                                 VariableElement ve = it.next();
                                 StringBuilder sb = new StringBuilder();
-                                sb.append(tu.getTypeName(tIt.next()));
+                                CharSequence typeName = tu.getTypeName(tIt.next());
+                                sb.append(typeName);
+                                sig.append(typeName);
                                 if (varArgs && !tIt.hasNext()) {
                                     sb.delete(sb.length() - 2, sb.length()).append("..."); //NOI18N
+                                    sig.delete(sig.length() - 2, sig.length()).append("..."); //NOI18N
                                 }
                                 CharSequence veName = ve.getSimpleName();
                                 if (veName != null && veName.length() > 0) {
-                                    sb.append(" "); // NOI18N
-                                    sb.append(veName);
+                                    sb.append(" ").append(veName); // NOI18N
+                                    sig.append(" ").append(veName); // NOI18N
                                 }
                                 if (it.hasNext()) {
-                                    sb.append(", "); // NOI18N
+                                    sig.append(", "); // NOI18N
                                 }
                                 paramStrings.add(sb.toString());
                             }
-                            ret.add(paramStrings);
+                            data.add(paramStrings);
+                            sig.append(')');
+                            if (e.getKind() == METHOD) {
+                                sig.append(" : ").append(tu.getTypeName(eType.getReturnType()));
+                            }
+                            signatures.add(sig.toString());
                             break;
                         }
-                        if (argTypes[i] == null || argTypes[i].getKind() != TypeKind.ERROR && !types.isAssignable(argTypes[i], param)) {
+                        if (argTypes[i] == null || argTypes[i].getKind() != TypeKind.ERROR && !isAssignable(types, argTypes[i], param)) {
                             break;
                         }
                     }
                 }
             }
         }
-        return ret.isEmpty() ? null : ret;
+        toolTipData = data.isEmpty() ? null : data;
+        toolTipSignatures = signatures.isEmpty() ? null : signatures;
+    }
+
+    private static boolean isAssignable(Types types, TypeMirror arg, TypeMirror parameter) {
+        if(types.isAssignable(arg, parameter)) {
+            return true;
+        } else if (parameter instanceof TypeVariable) {
+            TypeMirror requiredTypes = ((TypeVariable) parameter).getUpperBound();
+            return types.isAssignable(arg, requiredTypes);
+        }
+        return false;
     }
 }

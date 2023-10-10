@@ -18,27 +18,25 @@
  */
 package org.netbeans.modules.javascript2.editor;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.javascript2.editor.classpath.ClasspathProviderImplAccessor;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
  * @author Petr Hejl
  */
 public class JsCodeCompletionWithTest extends JsCodeCompletionBase {
-    
+
     public JsCodeCompletionWithTest(String testName) {
         super(testName);
     }
-    
+
     public void testWith1() throws Exception {
         checkCompletion("testfiles/completion/with/with1.js", "    ^ // test", false);
     }
@@ -53,11 +51,11 @@ public class JsCodeCompletionWithTest extends JsCodeCompletionBase {
 
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>(ClasspathProviderImplAccessor.getJsStubs());
-        //cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/with")));
+        List<FileObject> cpRoots = new ArrayList<>(1);
+        cpRoots.add(ClasspathProviderImplAccessor.getJsStubs().get(0)); // Only use core stubs in unittests
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

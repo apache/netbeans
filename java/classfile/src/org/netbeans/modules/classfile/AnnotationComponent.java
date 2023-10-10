@@ -50,6 +50,7 @@ public class AnnotationComponent {
 
     /**
      * Returns the name of this component.
+     * @return name of the component
      */
     public final String getName() {
 	return name;
@@ -57,6 +58,7 @@ public class AnnotationComponent {
 
     /**
      * Returns the value for this component.
+     * @return value of the component
      */
     public final ElementValue getValue() {
 	return value;

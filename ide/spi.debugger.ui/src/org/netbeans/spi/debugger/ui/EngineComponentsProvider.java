@@ -132,7 +132,7 @@ public interface EngineComponentsProvider {
         /**
          * Create a component information about a {@link TopComponent},
          * which is opened by default.
-         * @param tcName The ID of the {@link TopComponent}
+         * @param tcId The ID of the {@link TopComponent}
          * @return A component information.
          */
         public static ComponentInfo create(String tcId) {
@@ -141,7 +141,7 @@ public interface EngineComponentsProvider {
         
         /**
          * Create a component information about a {@link TopComponent}.
-         * @param tcName The ID of the {@link TopComponent}
+         * @param tcId The ID of the {@link TopComponent}
          * @param opened <code>true</code> if the component should be opened,
          *               <code>false</code> otherwise.
          * @return A component information.
@@ -152,7 +152,7 @@ public interface EngineComponentsProvider {
         
         /**
          * Create a component information about a {@link TopComponent}.
-         * @param tcName The ID of the {@link TopComponent}
+         * @param tcId The ID of the {@link TopComponent}
          * @param opened <code>true</code> if the component should be opened,
          *               <code>false</code> otherwise.
          * @param minimized <code>true</code> if the component should be opened in a minimized state,

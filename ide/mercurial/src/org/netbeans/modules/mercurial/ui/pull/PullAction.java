@@ -69,6 +69,7 @@ import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.util.Utilities;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.Lookups;
 
@@ -193,7 +194,7 @@ public class PullAction extends ContextAction {
         if (listIncomingAndLocalMod.size() > 0) {
             logger.outputInRed(NbBundle.getMessage(PullAction.class, "MSG_PULL_OVERWRITE_LOCAL")); // NOI18N
             logger.output(listIncomingAndLocalMod);
-            int response = JOptionPane.showOptionDialog(null, 
+            int response = JOptionPane.showOptionDialog(Utilities.findDialogParent(), 
                     NbBundle.getMessage(bundleLocation, query), NbBundle.getMessage(bundleLocation, title), 
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
 
@@ -392,7 +393,7 @@ public class PullAction extends ContextAction {
             for (Map.Entry<File, FileInformation> e : statuses.entrySet()) {
                 FileInformation info = e.getValue();
                 if ((info.getStatus() & interestingStatus) != 0) {
-                    confirmed = JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null, 
+                    confirmed = JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(Utilities.findDialogParent(), 
                             Bundle.MSG_PullAction_localModifications_text(),
                             Bundle.LBL_PullAction_localModifications_title(), 
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);

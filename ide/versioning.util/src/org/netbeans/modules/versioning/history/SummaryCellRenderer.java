@@ -162,14 +162,14 @@ class SummaryCellRenderer implements ListCellRenderer {
             ListCellRenderer ren = getRenderer(value);
             if (ren == null) {
                 ren = new RevisionRenderer();
-                renderers.put(value, new SoftReference<ListCellRenderer>(ren));
+                renderers.put(value, new SoftReference<>(ren));
             }
             return ren.getListCellRendererComponent(list, value, index, selected, hasFocus);
         } else if (value instanceof AbstractSummaryView.EventItem) {
             ListCellRenderer ren = getRenderer(value);
             if (ren == null) {
                 ren = new EventRenderer();
-                renderers.put(value, new SoftReference<ListCellRenderer>(ren));
+                renderers.put(value, new SoftReference<>(ren));
             }
             return ren.getListCellRendererComponent(list, value, index, selected, hasFocus);
         } else if (value instanceof AbstractSummaryView.LoadingEventsItem) {
@@ -787,7 +787,7 @@ class SummaryCellRenderer implements ListCellRenderer {
                     } else {
                         ++idx;
                         sb.append("<font color=\"").append(PATH_COLOR).append("\">").append(path.substring(0, idx)).append("</font>"); //NOI18N
-                        sb.append(path.substring(idx, path.length()));
+                        sb.append(path.substring(idx));
                     }
                 }
                 pathLabel.setText(sb.append("</body></html>").toString()); //NOI18N

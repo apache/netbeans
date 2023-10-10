@@ -67,7 +67,7 @@ public class ImageDataLoader extends UniFileLoader {
 
     /** Generated serial version UID. */
     static final long serialVersionUID =-8188309025795898449L;
-    
+
     public static final String GIF_MIME_TYPE = "image/gif";
     public static final String BMP_MIME_TYPE = "image/bmp";
     public static final String PNG_MIME_TYPE = "image/png";
@@ -75,24 +75,25 @@ public class ImageDataLoader extends UniFileLoader {
     /** is BMP format support status known? */
     private static boolean bmpSupportStatusKnown = false;
     static final String ACTIONS = "Loaders/image/png-gif-jpeg-bmp/Actions";
-    
+
     /** Creates new image loader. */
     public ImageDataLoader() {
         // Set the representation class.
         super("org.netbeans.modules.image.ImageDataObject"); // NOI18N
-        
+
         ExtensionList ext = new ExtensionList();
         ext.addMimeType(GIF_MIME_TYPE);
         ext.addMimeType(JPEG_MIME_TYPE);
         ext.addMimeType(PNG_MIME_TYPE);
         setExtensions(ext);
     }
-    
+
+    @Override
     protected FileObject findPrimaryFile(FileObject fo){
         FileObject primFile = super.findPrimaryFile(fo);
-        
+
         if ((primFile == null)
-                && !bmpSupportStatusKnown 
+                && !bmpSupportStatusKnown
                 && !fo.isFolder()
                 && fo.getMIMEType().equals(BMP_MIME_TYPE)) {
             try {
@@ -104,32 +105,35 @@ public class ImageDataLoader extends UniFileLoader {
                 bmpSupportStatusKnown = true;
             }
         }
-        
+
         return primFile;
     }
-    
+
     /** Gets default display name. Overrides superclass method. */
     @Messages("PROP_ImageLoader_Name=Image Objects")
+    @Override
     protected String defaultDisplayName() {
         return PROP_ImageLoader_Name();
     }
-    
+
     /**
      * This methods uses the layer action context so it returns
      * a non-<code>null</code> value.
      *
      * @return  name of the context on layer files to read/write actions to
      */
+    @Override
     protected String actionsContext () {
         return ACTIONS;
     }
-    
+
     /** Create the image data object.
      * @param primaryFile the primary file (e.g. <code>*.gif</code>)
      * @return the data object for this file
      * @exception DataObjectExistsException if the primary file already has a data object
      * @exception java.io.IOException should not be thrown
      */
+    @Override
     protected MultiDataObject createMultiObject (FileObject primaryFile)
     throws DataObjectExistsException, java.io.IOException {
         return new ImageDataObject(primaryFile, this);

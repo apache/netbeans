@@ -539,7 +539,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
                     javax.lang.model.element.Element element = controller.getTrees().getElement(mainPath);
                     if (element != null) {
                         ElementKind ek = element.getKind();
-                        if (ElementKind.FIELD.equals(ek)) {
+                        if (ElementKind.FIELD == ek) {
                             String name = element.getSimpleName().toString();
                             if (name.equals(expr)) {
                                 javax.lang.model.element.Element typeElement = element.getEnclosingElement();

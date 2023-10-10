@@ -41,7 +41,6 @@ class AttributeSyntax {
     public static function staticMethod(#[ Class1\Test(9) ] int|string $param1): bool|int {
         return false;
     }
-
 }
 
 #[ ChildClass1(1) ]
@@ -69,7 +68,6 @@ trait TestTrait {
     public static function staticMethod(#[ Trait1 ] int|string $param1): bool|int {
         return false;
     }
-
 }
 
 $anon = new #[ Anon1(1) ] class() {

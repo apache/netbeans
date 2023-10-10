@@ -19,7 +19,6 @@
 package org.netbeans.test.html5.debug;
 
 import java.util.logging.Level;
-import static junit.framework.Assert.assertEquals;
 import junit.framework.Test;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.jellytools.EditorWindowOperator;

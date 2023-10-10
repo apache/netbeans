@@ -33,6 +33,7 @@
                 <!-- Ensure that the necessary modules/bundles are made available to JSch -->
                 <attribute name="Require-Bundle" value="com.jcraft.jzlib,bcprov,libs.c.kohlschutter.junixsocket,org.netbeans.libs.jna,org.netbeans.libs.jna.platform"/>
                 <attribute name="NB-Original-CRC" value="${c.jcraft.jsch.crc32}"/>
+                <attribute name="Multi-Release" value="true"/>
             </manifest>
         </jar>
     </target>

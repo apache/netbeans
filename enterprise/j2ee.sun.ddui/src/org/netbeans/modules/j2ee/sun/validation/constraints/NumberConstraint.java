@@ -63,7 +63,7 @@ public class NumberConstraint extends ConstraintUtils
         ArrayList failed_constrained_list = new ArrayList();
         if(null != value){
             try {
-                new Double(value);
+                Double.valueOf(value);
                 return failed_constrained_list;
             } catch(NumberFormatException e) {
                 String failureMessage = formatFailureMessage(toString(), value,

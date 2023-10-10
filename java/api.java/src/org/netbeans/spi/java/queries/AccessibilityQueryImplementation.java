@@ -35,8 +35,8 @@ import org.openide.filesystems.FileObject;
  * this query, if it depends on the Java Project module and uses this style.
  * </p>
  * @see org.netbeans.api.java.queries.AccessibilityQuery
- * @see org.netbeans.api.queries.FileOwnerQuery
- * @see org.netbeans.api.project.Project#getLookup
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/FileOwnerQuery.html">FileOwnerQuery</a>
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--">Project#getLookup</a>
  * @author Jesse Glick
  * @since org.netbeans.api.java/1 1.4
  */

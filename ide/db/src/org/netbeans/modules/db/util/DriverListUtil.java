@@ -237,6 +237,46 @@ public class DriverListUtil {
         url.setSampleUser("root");
         url.setSamplePassword("");
 
+        /* Use the class com.simba.athena.jdbc.Driver instead of
+        com.simba.athena.jdbc42.Driver, per the documentation: "The connector supports the following
+        fully-qualified class names (FQCNs) that are independent of the JDBC version:
+        com.simba.athena.jdbc.Driver". */
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_Athena"),
+                NbBundle.getMessage(DriverListUtil.class, "TYPE_Standard"),
+                "com.simba.athena.jdbc.Driver",
+                "jdbc:awsathena://[<ADDITIONAL>]", true); // NOI18N
+        url.setSampleUser("");
+        url.setSamplePassword("");
+        url.setSampleUrl("jdbc:awsathena://AwsRegion=us-west-1;S3OutputLocation=s3://working/dir");
+
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_Athena"),
+                NbBundle.getMessage(DriverListUtil.class, "TYPE_Endpoint"),
+                "com.simba.athena.jdbc.Driver",
+                "jdbc:awsathena://<HOST>[:<PORT>][;<ADDITIONAL>]", true); // NOI18N
+        url.setSampleUser("");
+        url.setSamplePassword("");
+        url.setSampleUrl("jdbc:awsathena://athena.us-east-1.amazonaws.com:443;S3OutputLocation=s3://working/dir"); // Make sure the default port gets set.
+
+        /* Use the class com.amazon.redshift.jdbc.Driver instead of
+        com.amazon.redshift.jdbc42.Driver, per the documentation: "The connector supports the
+        following fully-qualified class names (FQCNs) that are independent of the JDBC version:
+        com.amazon.redshift.jdbc.Driver". */
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_Redshift"),
+                NbBundle.getMessage(DriverListUtil.class, "TYPE_UserName"),
+                "com.amazon.redshift.jdbc.Driver",
+                "jdbc:redshift://[<HOST>[:<PORT>]][/<DB>][;<ADDITIONAL>]", true); // NOI18N
+        url.setSampleUser("");
+        url.setSamplePassword("");
+        url.setSampleUrl("jdbc:redshift://examplecluster.abc123xyz789.us-west-2.redshift.amazonaws.com:5439/dev"); // Make sure the default port gets set.
+
+        url = add(NbBundle.getMessage(DriverListUtil.class, "DRIVERNAME_Redshift"),
+                NbBundle.getMessage(DriverListUtil.class, "TYPE_IAM"),
+                "com.amazon.redshift.jdbc.Driver",
+                "jdbc:redshift:iam://[<HOST>[:<PORT>]][/<DB>][;<ADDITIONAL>]", true); // NOI18N
+        url.setSampleUser("");
+        url.setSamplePassword("");
+        url.setSampleUrl("jdbc:redshift:iam://examplecluster.abc123xyz789.us-west-2.redshift.amazonaws.com:5439/dev"); // Make sure the default port gets set.
+
         add("MySQL (MM.MySQL driver)",
         "org.gjt.mm.mysql.Driver",
         "jdbc:mysql://<HOST>[:<PORT>]/<DB>");

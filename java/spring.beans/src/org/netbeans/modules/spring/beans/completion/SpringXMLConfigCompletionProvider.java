@@ -180,7 +180,7 @@ public class SpringXMLConfigCompletionProvider implements CompletionProvider {
                 String text = evt.getDocument().getText(offset, length).trim();
                 if (text.startsWith("xmlns:")) {    //NOI18N
                     String namespace = parseNamespace(text);
-                    if (!declaredNamespaces.values().contains(namespace)) {
+                    if (!declaredNamespaces.containsValue(namespace)) {
                         String schemaLocation = findSchemaLocation(doc, namespace);
                         updateSchemaLocation(doc, offset, namespace, schemaLocation);
                     }

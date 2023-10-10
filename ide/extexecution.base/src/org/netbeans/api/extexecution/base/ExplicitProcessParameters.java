@@ -58,14 +58,16 @@ import org.openide.util.Lookup;
  * <p>
  * Since these parameters are passed <b>externally</b>, there's an utility method, {@link #buildExplicitParameters(org.openide.util.Lookup)}
  * that builds the explicit parameter instruction based on {@link Lookup} contents. The parameters are
- * merged in the order of the {@link Builder#position configured rank} and appearance (in the sort ascending order). 
+ * merged in the order of the {@link Builder#position(int)  configured rank} and appearance (in the sort ascending order). 
  * The default rank is {@code 0}, which allows both append or prepend parameters. If an item's 
- * {@link ExplicitProcessParametersTest#isArgReplacement()} is true, all arguments collected so far are discarded.
+ * {@link #isArgReplacement()} is true, all arguments collected so far are discarded.
  * <p>
  * <div class="nonnormative">
  * If the combining algorithm is acceptable for the caller's purpose, the following pattern may be used to build the final
  * command line:
- * {@codesnippet ExplicitProcessParametersTest#decorateWithExplicitParametersSample}
+ * <div>
+ * {@snippet file="org/netbeans/api/extexecution/base/ExplicitProcessParametersTest.java" region="decorateWithExplicitParametersSample"}
+ * </div>
  * This example will combine some args and extra args from project, or configuration with arguments passed from the
  * {@code runContext} Lookup. 
  * Supposing that a Maven project module supports {@code ExplicitProcessParameters} (it does from version 2/2.144), the caller may influence or override the
@@ -81,7 +83,7 @@ import org.openide.util.Lookup;
  * By default, <b>args</b> instruction(s) will discard the default parameters, so the above example will also <b>ignore</b> all application
  * parameters provided in maven action mapping. The caller may, for example, want to just <b>append</b> parameters (i.e. list of files ?) and
  * completely replace (default) VM parameters which may be unsuitable for the operation:
- * {@codesnippet ExplicitProcessParametersTest#testDiscardDefaultVMParametersAppendAppParameters}
+ * {@snippet file="org/netbeans/api/extexecution/base/ExplicitProcessParametersTest.java" region="testDiscardDefaultVMParametersAppendAppParameters"}
  * <p>
  * Note that multiple {@code ExplicitProcessParameters} instances may be added to the Lookup, acting as append or replacement
  * for the parameters collected so far.
@@ -238,7 +240,7 @@ public final class ExplicitProcessParameters {
      * Merges individual instruction. 
      * This method serves as a convenience and uniform ("standard") methods to merge argument lists for process execution. Should be used
      * whenever a process (build, run, tool, ...) is executed. If the feature diverges, it should document how it processes the
-     * {@link ExplicitProcessParamters}. It is <b>strongly recommended</b> to support explicit parameters in order to allow for 
+     * {@link ExplicitProcessParameters}. It is <b>strongly recommended</b> to support explicit parameters in order to allow for 
      * customizations and automation.
      * <p>
      * Processes instructions in the order of {@link Builder#position(int)} and appearance. Whenever an item is flagged as
@@ -257,7 +259,7 @@ public final class ExplicitProcessParameters {
     public static ExplicitProcessParameters buildExplicitParameters(Collection<? extends ExplicitProcessParameters> items) {
         List<? extends ExplicitProcessParameters> all = new ArrayList<>(items);
         Collections.sort(all, (a, b) -> a.position - b.position);
-        Builder b = builder();;
+        Builder b = builder();
         for (ExplicitProcessParameters item : all) {
             b.combine(item);
         }

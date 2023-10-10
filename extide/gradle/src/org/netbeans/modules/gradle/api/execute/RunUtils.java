@@ -26,6 +26,8 @@ import org.netbeans.modules.gradle.execute.GradleDaemonExecutor;
 import org.netbeans.modules.gradle.execute.GradleExecutor;
 import org.netbeans.modules.gradle.execute.ProxyNonSelectableInputOutput;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
@@ -53,18 +55,24 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Function;
-import org.gradle.util.GradleVersion;
 import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
 
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.gradle.ProjectTrust;
+import org.netbeans.modules.gradle.actions.ActionToTaskUtils;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
 import org.netbeans.modules.gradle.api.execute.RunConfig.ExecFlag;
+import static org.netbeans.modules.gradle.customizer.GradleExecutionPanel.HINT_JDK_PLATFORM;
 import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager.JavaRuntime;
+import org.netbeans.spi.project.AuxiliaryProperties;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.DialogDescriptor;
@@ -214,7 +222,56 @@ public final class RunUtils {
         RunConfig ret = new RunConfig(project, action, displayName, flags, cmd, cfg);
         return ret;
     }
+    
+    /**
+     * Finds an action mapping for the given action and (optional) configuration. The configuration may be {@code null},
+     * which means the project's active configuration.
+     * 
+     * @param project the project
+     * @param action action name
+     * @param cfg optional configuration or {@code null}
+     * @return action mapping instance, or {@code null}, if the action is not defined for the project or is disabled.
+     * @since 2.28
+     */
+    public static ActionMapping findActionMapping(Project project, String action, GradleExecConfiguration cfg) {
+        return ActionToTaskUtils.getActiveMapping(action, project, cfg);
+    }
 
+    /**
+     * Create Gradle execution configuration (context). It applies the specified configuration
+     * (default / active, if the parameter is null). The RunConfig is further configured using the
+     * action mapping for the project action.
+     * 
+     * @param project The Gradle project
+     * @param action The name of the IDE action 
+     * @param displayName The display name of the output tab
+     * @param flags Execution flags.
+     * @param args Gradle command line arguments
+     * @return the Gradle execution configuration.
+     * @param context action infocation context
+     * @param cfg the desired configuration, or {@code null}.
+     * @since 2.28
+     */
+    public static RunConfig createRunConfigForAction(Project project, String action, String displayName, Lookup context, 
+            GradleExecConfiguration cfg, Set<ExecFlag> flags, boolean allowDisabled, String... args) {
+        NbGradleProject gp = NbGradleProject.get(project);
+        GradleExecConfiguration execCfg = ProjectConfigurationSupport.getEffectiveConfiguration(project, context);
+        return ProjectConfigurationSupport.executeWithConfiguration(project, execCfg, () -> {
+            ActionMapping mapping = ActionToTaskUtils.getActiveMapping(action, project, execCfg);
+            if (ActionMapping.isDisabled(mapping) && !allowDisabled) {
+                return null;
+            }
+            if (!ActionToTaskUtils.isActionEnabled(action, mapping, project, context) && !allowDisabled) {
+                return null;
+            }
+            String argLine = mapping.getArgs();
+            final StringWriter writer = new StringWriter();
+            PrintWriter out = new PrintWriter(writer);
+            final String[] evalArgs = RunUtils.evaluateActionArgs(project, action, argLine, Lookup.EMPTY);
+            return RunUtils.createRunConfig(project, action, displayName, Lookup.EMPTY, execCfg, flags, evalArgs);
+        });
+    }
+    
     /**
      * Create Gradle execution configuration (context). It applies the default
      * setting from the project and the Global Gradle configuration on the
@@ -259,6 +316,7 @@ public final class RunUtils {
     public static GradleDistribution getCompatibleGradleDistribution(Project prj) {
         GradleDistributionProvider pvd = prj.getLookup().lookup(GradleDistributionProvider.class);
         GradleDistribution ret = pvd != null ? pvd.getGradleDistribution() : GradleDistributionManager.get().defaultDistribution();
+        ret = ret != null ? ret : GradleDistributionManager.get().defaultDistribution();
         ret = ret.isCompatibleWithSystemJava() ? ret : GradleDistributionManager.get().defaultDistribution();
         return ret;
 
@@ -337,7 +395,7 @@ public final class RunUtils {
      * </ol>
      * <div class="nonnormative">
      * Example of branding: 
-     * {@codesnippet org.netbeans.modules.gradle.api.execute.Bundle#trustDialgoBranding}
+     * {@snippet file="org/netbeans/modules/gradle/api/execute/TestBundle.properties" region="trustDialogBranding"}
      * This branding enables all supported options, and will make the "Trust Permanently" the default one.
      * </div>
      * 
@@ -503,13 +561,14 @@ public final class RunUtils {
     }
 
     private static boolean isOptionEnabled(Project project, String option, boolean defaultValue) {
-        GradleBaseProject gbp = GradleBaseProject.get(project);
+        Project root = ProjectUtils.rootOf(project);
+        GradleBaseProject gbp = GradleBaseProject.get(root);
         if (gbp != null) {
             String value = gbp.getNetBeansProperty(option);
             if (value != null) {
                 return Boolean.valueOf(value);
             } else {
-                return NbGradleProject.getPreferences(project, false).getBoolean(option, defaultValue);
+                return NbGradleProject.getPreferences(root, false).getBoolean(option, defaultValue);
             }
         }
         return false;
@@ -615,6 +674,56 @@ public final class RunUtils {
     @Deprecated
     public static Pair getActivePlatform(Project project) {
         return getActivePlatform("deprecated"); //NOI18N
+    }
+
+    /**
+     * Return the current active JavaRuntime used by the specified project.
+     * JavaRuntime is defined in the root project level. If there is no
+     * runtime specified on the root project, then this method would return the
+     * default runtime. Usually the one, which is used by the IDE.
+     * <p>
+     * It is possible that the ID representing the project runtime, has no
+     * associated runtime in the IDE. In this case a broken JavaRuntime would be
+     * returned with the ID, that would be used.
+     *
+     * @param project the project which root project specifies the runtime.
+     * @return the JavaRuntime to be used by the project, could be broken, but
+     *         not {@code null}
+     *
+     * @since 2.32
+     */
+    public static JavaRuntime getActiveRuntime(Project project) {
+        return ProjectManager.mutex().readAccess(() -> {
+            Project root = ProjectUtils.rootOf(project);
+            AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
+            String id = aux.get(HINT_JDK_PLATFORM, true);
+            id = id != null ? id : JavaRuntimeManager.DEFAULT_RUNTIME_ID;
+
+            JavaRuntimeManager mgr = Lookup.getDefault().lookup(JavaRuntimeManager.class);
+            Map<String, JavaRuntime> runtimes = mgr.getAvailableRuntimes();
+            if (runtimes.containsKey(id)) {
+                return runtimes.get(id);
+            }
+            return JavaRuntimeManager.createJavaRuntime(id, null);
+        });
+    }
+
+    /**
+     * Sets the active JavaRuntime on the specified project root.
+     * 
+     * @param project the project , which root project shall be set the runtime on
+     * @param runtime The JavaRuntime to activate on the project or {@code null}
+     *                can be used to set the default runtime.
+     * 
+     * @since 2.32
+     */
+    public static void setActiveRuntime(Project project, JavaRuntime runtime) {
+        ProjectManager.mutex().postWriteRequest(() -> {
+            Project root = ProjectUtils.rootOf(project);
+            AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
+            String id = (runtime != null) && !JavaRuntimeManager.DEFAULT_RUNTIME_ID.equals(runtime.getId()) ? runtime.getId() : null;
+            aux.put(HINT_JDK_PLATFORM, id, true);
+        });
     }
 
     static GradleCommandLine getIncludedOpenProjects(Project project) {

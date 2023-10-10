@@ -128,7 +128,7 @@ public class WebPersistenceProvider implements PersistenceLocationProvider, Pers
     public PersistenceScope findPersistenceScope(FileObject fo) {
         Project proj = FileOwnerQuery.getOwner(fo);
         if (proj != null) {
-            WebPersistenceProvider provider = (WebPersistenceProvider) proj.getLookup().lookup(WebPersistenceProvider.class);
+            WebPersistenceProvider provider = proj.getLookup().lookup(WebPersistenceProvider.class);
             return provider.getPersistenceScope();
         }
         return null;
@@ -138,7 +138,7 @@ public class WebPersistenceProvider implements PersistenceLocationProvider, Pers
     public EntityClassScope findEntityClassScope(FileObject fo) {
         Project proj = FileOwnerQuery.getOwner(fo);
         if (proj != null) {
-            WebPersistenceProvider provider = (WebPersistenceProvider) proj.getLookup().lookup(WebPersistenceProvider.class);
+            WebPersistenceProvider provider = proj.getLookup().lookup(WebPersistenceProvider.class);
             return provider.getEntityClassScope();
         }
         return null;

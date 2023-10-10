@@ -324,7 +324,7 @@ public abstract class ProjectHudsonProvider {
         }
 
         public @Override boolean equals(Object obj) {
-            if (obj == null || !(obj instanceof Association)) {
+            if (!(obj instanceof Association)) {
                 return false;
             }
             return toString().equals(obj.toString());

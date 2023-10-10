@@ -179,7 +179,7 @@ public class ModuleDependencies extends Task {
                         majorVersion = -1;
                     } else {
                         codebasename = module.substring (0, slash);
-                        majorVersion = Integer.valueOf(module.substring(slash + 1));
+                        majorVersion = Integer.parseInt(module.substring(slash + 1));
                     }
                     m = new ModuleInfo (input.name, f, codebasename);
                     m.majorVersion = majorVersion;
@@ -486,9 +486,8 @@ public class ModuleDependencies extends Task {
             if (!regular.contains(entry.getKey())) {
                 continue;
             }
-            for (String dep : entry.getValue()) {
-                considered.remove(dep);
-            }
+
+            considered.keySet().removeAll(entry.getValue());
         }
         for (ModuleInfo m : considered.values()) {
             Set<ModuleInfo> group = disabled.get(m.group);
@@ -551,8 +550,10 @@ public class ModuleDependencies extends Task {
             // now check that there is one canonical kit that "contains" the module
             // at the same time create a map of <kit, set of <module>>
             TreeMap<String, TreeSet<String>> allKits = new TreeMap<>();
-            for (ModuleInfo module : dependingKits.keySet()) {
-                Set<String> kits = dependingKits.get(module);
+            for (Map.Entry<ModuleInfo, Set<String>> it : dependingKits.entrySet()) {
+                Set<String> kits = it.getValue();
+                ModuleInfo module = it.getKey();
+
                 // candidate for the lowest kit
                 String lowestKitCandidate = null;
                 for (String kit : kits) {
@@ -603,11 +604,11 @@ public class ModuleDependencies extends Task {
                 }
             }
             // now actually print out the kit contents
-            for (String kit : allKits.keySet()) {
+            for (Map.Entry<String, TreeSet<String>> it : allKits.entrySet()) {
                 w.print("KIT ");
-                w.print(kit);
+                w.print(it.getKey());
                 w.println();
-                for (String m : allKits.get(kit)) {
+                for (String m : it.getValue()) {
                     w.print("  CONTAINS " + m);
                     w.println();
                 }
@@ -1172,11 +1173,11 @@ public class ModuleDependencies extends Task {
                 String major = token.substring (slash + 1);
                 int range = major.indexOf ('-');
                 if (range == -1) {
-                    this.majorVersionFrom = Integer.valueOf(major);
+                    this.majorVersionFrom = Integer.parseInt(major);
                     this.majorVersionTo = majorVersionFrom;
                 } else {
-                    this.majorVersionFrom = Integer.valueOf(major.substring(0, range));
-                    this.majorVersionTo = Integer.valueOf(major.substring(range + 1));
+                    this.majorVersionFrom = Integer.parseInt(major.substring(0, range));
+                    this.majorVersionTo = Integer.parseInt(major.substring(range + 1));
                 }
             }
             this.type = type;

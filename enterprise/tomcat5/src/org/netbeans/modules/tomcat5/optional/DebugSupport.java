@@ -60,11 +60,8 @@ public class DebugSupport {
         }
         boolean needsSave = setMappedProperty(webApp);
         if (needsSave) {
-            OutputStream os = new FileOutputStream(webXML);
-            try {
+            try (OutputStream os = new FileOutputStream(webXML)) {
                 webApp.write(os);
-            } finally {
-                os.close();
             }
         }
     }
@@ -72,8 +69,9 @@ public class DebugSupport {
     private static File getDefaultWebXML(TomcatManager tm) {
         File cb = tm.getTomcatProperties().getCatalinaDir();
         File webXML = new File(cb, "conf" + File.separator + "web.xml");
-        if (webXML.exists())
+        if (webXML.exists()) {
             return webXML;
+        }
         return null;
     }
     

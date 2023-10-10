@@ -19,7 +19,11 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.netbeans.modules.csl.api.OffsetRange;
 
 /**
  * Represents a class declaration.
@@ -41,12 +45,40 @@ public class ClassDeclaration extends TypeDeclaration {
     public enum Modifier {
         NONE,
         ABSTRACT,
-        FINAL
+        FINAL,
+        READONLY, // PHP 8.2 gh-4725
+        ;
+
+        @Override
+        public String toString() {
+            if (this == NONE) {
+                return ""; // NOI18N
+            }
+            return this.name().toLowerCase();
+        }
     }
 
+    private final Map<Modifier, Set<OffsetRange>> modifiers = new EnumMap<>(Modifier.class);
     private ClassDeclaration.Modifier modifier;
     private Expression superClass;
 
+    private ClassDeclaration(int start, int end, Map<Modifier, Set<OffsetRange>> modifiers, Identifier className, Expression superClass, Expression[] interfaces, Block body, List<Attribute> attributes) {
+        super(start, end, className, interfaces, body, attributes);
+        this.modifiers.putAll(modifiers);
+        this.superClass = superClass;
+    }
+
+    private ClassDeclaration(int start, int end, Map<Modifier, Set<OffsetRange>> modifiers, Identifier className, Expression superClass, List<Expression> interfaces, Block body, List<Attribute> attributes) {
+        this(start, end, modifiers, className, superClass, interfaces == null ? null : interfaces.toArray(new Expression[0]), body, attributes);
+    }
+
+    public ClassDeclaration(int start, int end, Map<Modifier, Set<OffsetRange>>modifiers, Identifier className, Expression superClass, List<Expression> interfaces, Block body) {
+        this(start, end, modifiers, className, superClass, interfaces, body, Collections.emptyList());
+    }
+
+    /**
+     * @deprecated Classes can have multiple modifers since PHP 8.2
+     */
     private ClassDeclaration(int start, int end, ClassDeclaration.Modifier modifier, Identifier className, Expression superClass, Expression[] interfaces, Block body, List<Attribute> attributes) {
         super(start, end, className, interfaces, body, attributes);
 
@@ -54,10 +86,16 @@ public class ClassDeclaration extends TypeDeclaration {
         this.superClass = superClass;
     }
 
+    /**
+     * @deprecated Classes can have multiple modifers since PHP 8.2
+     */
     private ClassDeclaration(int start, int end, ClassDeclaration.Modifier modifier, Identifier className, Expression superClass, List<Expression> interfaces, Block body, List<Attribute> attributes) {
-        this(start, end, modifier, className, superClass, interfaces == null ? null : interfaces.toArray(new Expression[interfaces.size()]), body, attributes);
+        this(start, end, modifier, className, superClass, interfaces == null ? null : interfaces.toArray(new Expression[0]), body, attributes);
     }
 
+    /**
+     * @deprecated Classes can have multiple modifers since PHP 8.2
+     */
     public ClassDeclaration(int start, int end, ClassDeclaration.Modifier modifier, Identifier className, Expression superClass, List<Expression> interfaces, Block body) {
         this(start, end, modifier, className, superClass, interfaces, body, Collections.emptyList());
     }
@@ -68,7 +106,7 @@ public class ClassDeclaration extends TypeDeclaration {
         return new ClassDeclaration(
                 start,
                 declaration.getEndOffset(),
-                declaration.getModifier(),
+                declaration.getModifiers(),
                 declaration.getName(),
                 declaration.getSuperClass(),
                 declaration.getInterfaes(),
@@ -77,8 +115,20 @@ public class ClassDeclaration extends TypeDeclaration {
         );
     }
 
+    /**
+     * @deprecated Classes can have multiple modifers since PHP 8.2
+     */
     public ClassDeclaration.Modifier getModifier() {
-        return modifier;
+        if (modifier != null) {
+            return modifier;
+        }
+        assert !modifiers.keySet().isEmpty();
+        assert false : "Use getModifiers() instead"; // NOI18N
+        return modifiers.keySet().iterator().next();
+    }
+
+    public Map<Modifier, Set<OffsetRange>> getModifiers() {
+        return Collections.unmodifiableMap(modifiers);
     }
 
     public Expression getSuperClass() {
@@ -94,11 +144,18 @@ public class ClassDeclaration extends TypeDeclaration {
     public String toString() {
         StringBuilder sbAttributes = new StringBuilder();
         getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
+        StringBuilder sbModifiers = new StringBuilder();
+        for (Modifier mod : getModifiers().keySet()) {
+            if (mod == Modifier.NONE) {
+                break;
+            }
+            sbModifiers.append(mod).append(" "); // NOI18N
+        }
         StringBuilder sb = new StringBuilder();
         for (Expression expression : getInterfaes()) {
             sb.append(expression).append(","); //NOI18N
         }
-        return sbAttributes.toString() + getModifier() + "class " + getName() + " extends " + getSuperClass() + " implements " + sb + getBody(); //NOI18N
+        return sbAttributes.toString() + sbModifiers + "class " + getName() + " extends " + getSuperClass() + " implements " + sb + getBody(); //NOI18N
     }
 
 }

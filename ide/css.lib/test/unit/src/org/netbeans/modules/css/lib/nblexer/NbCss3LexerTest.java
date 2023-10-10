@@ -18,16 +18,12 @@
  */
 package org.netbeans.modules.css.lib.nblexer;
 
-import org.antlr.runtime.ANTLRStringStream;
-import org.antlr.runtime.CharStream;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.lib.lexer.test.LexerTestUtilities;
-import org.netbeans.modules.css.lib.Css3Lexer;
 import org.netbeans.modules.css.lib.Css3Parser;
-import org.netbeans.modules.css.lib.ExtCss3Lexer;
 import org.netbeans.modules.css.lib.api.CssTokenId;
 
 /**
@@ -61,8 +57,8 @@ public class NbCss3LexerTest extends NbTestCase {
     //http://www.netbeans.org/issues/show_bug.cgi?id=161642
     public void testIssue161642() throws Exception {
         String input = "/* c */;";
-        TokenHierarchy th = TokenHierarchy.create(input, CssTokenId.language());
-        TokenSequence ts = th.tokenSequence();
+        TokenHierarchy<String> th = TokenHierarchy.create(input, CssTokenId.language());
+        TokenSequence<?> ts = th.tokenSequence();
         ts.moveStart();
 
         assertTrue(ts.moveNext());
@@ -77,8 +73,8 @@ public class NbCss3LexerTest extends NbTestCase {
 
     public void testOnlyAtSymbolLexing() throws Exception {
         String input = "@";
-        TokenHierarchy th = TokenHierarchy.create(input, CssTokenId.language());
-        TokenSequence ts = th.tokenSequence();
+        TokenHierarchy<String> th = TokenHierarchy.create(input, CssTokenId.language());
+        TokenSequence<CssTokenId> ts = th.tokenSequence(CssTokenId.language());
         ts.moveStart();
 
         assertTrue(ts.moveNext());
@@ -100,8 +96,8 @@ public class NbCss3LexerTest extends NbTestCase {
                 + " background: red; \n"
                 + "}";
 
-        TokenHierarchy th = TokenHierarchy.create(code, CssTokenId.language());
-        TokenSequence ts = th.tokenSequence();
+        TokenHierarchy<String> th = TokenHierarchy.create(code, CssTokenId.language());
+        TokenSequence<?> ts = th.tokenSequence();
         ts.moveStart();
 
         while (ts.moveNext()) {
@@ -120,8 +116,8 @@ public class NbCss3LexerTest extends NbTestCase {
          */
         String source = "padding: .5em; ";
 
-        TokenHierarchy th = TokenHierarchy.create(source, CssTokenId.language());
-        TokenSequence ts = th.tokenSequence();
+        TokenHierarchy<String> th = TokenHierarchy.create(source, CssTokenId.language());
+        TokenSequence<CssTokenId> ts = th.tokenSequence(CssTokenId.language());
         ts.moveStart();
 
         assertToken("padding", CssTokenId.IDENT, ts);
@@ -134,8 +130,8 @@ public class NbCss3LexerTest extends NbTestCase {
     public void testCounterStyle() throws Exception {
         String source = "@counter-style x { }";
 
-        TokenHierarchy th = TokenHierarchy.create(source, CssTokenId.language());
-        TokenSequence ts = th.tokenSequence();
+        TokenHierarchy<String> th = TokenHierarchy.create(source, CssTokenId.language());
+        TokenSequence<CssTokenId> ts = th.tokenSequence(CssTokenId.language());
         ts.moveStart();
 
         assertToken("@counter-style", CssTokenId.COUNTER_STYLE_SYM, ts);
@@ -145,17 +141,17 @@ public class NbCss3LexerTest extends NbTestCase {
     public void testLexingOfSemicolonAtTheEndOfFile() throws Exception {
         String source = "div:";
 
-        TokenHierarchy th = TokenHierarchy.create(source, CssTokenId.language());
-        TokenSequence ts = th.tokenSequence();
+        TokenHierarchy<String> th = TokenHierarchy.create(source, CssTokenId.language());
+        TokenSequence<CssTokenId> ts = th.tokenSequence(CssTokenId.language());
         ts.moveStart();
 
         assertToken("div", CssTokenId.IDENT, ts);
         assertToken(":", CssTokenId.COLON, ts);
     }
 
-    private void assertToken(String expectedImage, CssTokenId expectedType, TokenSequence ts) {
+    private void assertToken(String expectedImage, CssTokenId expectedType, TokenSequence<CssTokenId> ts) {
         assertTrue(ts.moveNext());
-        Token token = ts.token();
+        Token<CssTokenId> token = ts.token();
         assertNotNull(token);
         assertEquals(expectedType, token.id());
         assertEquals(expectedImage, token.text().toString());
@@ -210,12 +206,12 @@ public class NbCss3LexerTest extends NbTestCase {
             source.append('\n');
         }
         
-        TokenHierarchy th = TokenHierarchy.create(source, CssTokenId.language());
-        TokenSequence ts = th.tokenSequence();
+        TokenHierarchy<StringBuilder> th = TokenHierarchy.create(source, CssTokenId.language());
+        TokenSequence<CssTokenId> ts = th.tokenSequence(CssTokenId.language());
         ts.moveStart();
         
         assertTrue(ts.moveNext());
-        Token token = ts.token();
+        Token<CssTokenId> token = ts.token();
         
         assertEquals(token.id(), CssTokenId.NL);
         assertEquals(ts.offset(), 0);

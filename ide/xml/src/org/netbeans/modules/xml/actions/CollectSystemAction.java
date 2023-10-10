@@ -44,7 +44,7 @@ public abstract class CollectSystemAction extends SystemAction implements Presen
     /** empty array of menu items */
     static JMenuItem[] NONE = new JMenuItem[] {};
 
-    protected final List registeredAction = new ArrayList<>();
+    protected final List<Object> registeredAction = new ArrayList<>();
 
     /** Which Class should be used for Lookup? */
     protected abstract Class getActionLookClass ();

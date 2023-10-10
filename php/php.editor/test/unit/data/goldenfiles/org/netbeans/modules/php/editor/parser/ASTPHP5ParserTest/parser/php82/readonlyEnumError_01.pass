@@ -1,0 +1,42 @@
+<testresult testFile='readonlyEnumError_01.php'>
+    <scanner>
+        <token id='T_READONLY' start='815' end='823'>
+            <text>readonly</text>
+        </token>
+        <token id='T_ENUM' start='824' end='828'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='829' end='841'>
+            <text>ReadonlyEnum</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='842' end='843'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='843' end='844'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='845' end='845'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='845'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='823'/>
+            <EnumDeclaration start='824' end='844'>
+                <EnumName>
+                    <Identifier start='829' end='841' name='ReadonlyEnum'/>
+                </EnumName>
+                <BackingType>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='842' end='844' isCurly='true'>
+                </Block>
+            </EnumDeclaration>
+        </Statements>
+    </Program>
+</testresult>

@@ -36,11 +36,11 @@ import org.netbeans.modules.gradle.api.execute.RunUtils;
  *     ProjectActionMappingProvider pamp = project.getLookup().lookup(ProjectActionMappingProvider.class);
  *     ActionMapping actionMapping = pamp.findMapping(action);
  *     GradleCommandLine cli = new GradleCommandLine(
- *             RunUtils.evaluateAcrionArgs(project, actionMapping.getArgs(), action, context));
+ *             RunUtils.evaluateActionArgs(project, actionMapping.getArgs(), action, context));
  * </pre>
  * <p>
  * Since 2.14, the Provider may return a disabled {@link ActionMapping}. Check using 
- * {@link RunUtils#isActionDisabled}, rather than just {@code == null}.
+ * {@link ActionMapping#isDisabled}, rather than just {@code == null}.
  * 
  * @author Laszlo Kishalmi
  * @since 2.6

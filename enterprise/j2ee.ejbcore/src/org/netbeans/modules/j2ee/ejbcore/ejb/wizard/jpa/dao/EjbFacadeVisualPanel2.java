@@ -69,11 +69,16 @@ public final class EjbFacadeVisualPanel2 extends JPanel implements DocumentListe
         handleCheckboxes();
 
         J2eeProjectCapabilities projectCap = J2eeProjectCapabilities.forProject(project);
-        if (projectCap.isEjb31LiteSupported()){
+        if (projectCap.isEjb31LiteSupported() || projectCap.isEjb40LiteSupported()){
             boolean serverSupportsEJB31 = ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_6_FULL) ||
                     ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL) ||
-                    ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_8_FULL);
-            if (!projectCap.isEjb31Supported() && !serverSupportsEJB31){
+                    ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_8_FULL) ||
+                    ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_8_FULL);
+            boolean serverSupportsEJB40 = ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_FULL)
+                    || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_1_FULL)
+                    || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_10_FULL);
+            if (!projectCap.isEjb31Supported() && !serverSupportsEJB31 
+                    && !projectCap.isEjb40Supported()&& !serverSupportsEJB40){
                 remoteCheckBox.setVisible(false);
                 remoteCheckBox.setEnabled(false);
             }
@@ -376,8 +381,9 @@ public final class EjbFacadeVisualPanel2 extends JPanel implements DocumentListe
     // End of variables declaration//GEN-END:variables
 
     private void updateCheckboxes() {
+        J2eeProjectCapabilities projectCap = J2eeProjectCapabilities.forProject(project);
         //by default for ejb 3.1 no interfaces will be created
-        localCheckBox.setSelected(!J2eeProjectCapabilities.forProject(project).isEjb31LiteSupported());
+        localCheckBox.setSelected(!(projectCap.isEjb31LiteSupported() || projectCap.isEjb40LiteSupported()));
         changeSupport.fireChange();
     }
     

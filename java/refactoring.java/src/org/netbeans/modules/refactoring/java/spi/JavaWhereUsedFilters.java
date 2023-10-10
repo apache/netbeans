@@ -21,7 +21,7 @@ package org.netbeans.modules.refactoring.java.spi;
 /**
  * Filters used by Java Find Usages plugins.
  * 
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  * @since 1.39
  */
 public enum JavaWhereUsedFilters {

@@ -81,6 +81,8 @@ public interface Visitor {
     //public void endVisit(CloneExpression cloneExpression);
     public void visit(Comment comment);
 
+    public void visit(ConstantVariable constantVariable);
+
     //public void endVisit(Comment comment);
     public void visit(ConditionalExpression conditionalExpression);
 
@@ -115,6 +117,8 @@ public interface Visitor {
     public void visit(FieldsDeclaration fieldsDeclaration);
 
     public void visit(FinallyClause finallyClause);
+
+    public void visit(FirstClassCallableArg firstClassCallableArg);
 
     //public void endVisit(FieldsDeclaration fieldsDeclaration);
     public void visit(ForEachStatement forEachStatement);

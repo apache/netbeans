@@ -18,12 +18,10 @@
  */
 package org.netbeans.modules.web.jsf.editor.facelets.mojarra;
 
-import com.sun.faces.config.ConfigurationException;
 import org.netbeans.modules.web.jsf.editor.facelets.*;
 import com.sun.faces.config.DocumentInfo;
 import com.sun.faces.config.processor.AbstractConfigProcessor;
 import com.sun.faces.facelets.tag.TagLibraryImpl;
-import com.sun.faces.facelets.tag.jsf.CompositeComponentTagLibrary;
 import com.sun.faces.util.FacesLogger;
 import com.sun.faces.facelets.util.ReflectionUtil;
 import org.netbeans.modules.web.jsf.editor.facelets.FaceletsLibrarySupport.Compiler;
@@ -37,9 +35,13 @@ import java.text.MessageFormat;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.lang.reflect.Method;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.faces.FacesException;
 import javax.servlet.ServletContext;
+import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.LibraryInfo;
 import org.w3c.dom.Document;
 
 /**
@@ -232,12 +234,6 @@ public class FaceletsTaglibConfigProcessor extends AbstractConfigProcessor {
                 processTagLibrary(sc, documentInfos[i], documentElement, namespace, compiler);
             }
         }
-
-//        try {
-//            invokeNext(sc, documentInfos);
-//        } catch (Exception e) {
-//            //ignore
-//        }
     }
 
     // --------------------------------------------------------- Private Methods
@@ -272,6 +268,11 @@ public class FaceletsTaglibConfigProcessor extends AbstractConfigProcessor {
                 }
             }
 
+            if (taglibNamespace == null && compositeLibraryName == null) {
+                LOGGER.log(Level.WARNING, "Could not find a valid namespace or composite library name! Skipping {0}", info.getSourceURI().toString()); //NOI18N
+                return;
+            }
+
             URL sourceUrl;
             try {
                 sourceUrl = info.getSourceURI().toURL();
@@ -282,9 +283,28 @@ public class FaceletsTaglibConfigProcessor extends AbstractConfigProcessor {
 
             NodeList tags = documentElement.getElementsByTagNameNS(namespace, TAG);
             NodeList functions = documentElement.getElementsByTagNameNS(namespace, FUNCTION);
+
+            Set<String> taglibNamespaces = new LinkedHashSet<>();
+            taglibNamespaces.add(taglibNamespace);
+
+            // Try to find all prior valid namespaces. This only works since namespaces are stored as
+            LibraryInfo libraryInfo = DefaultLibraryInfo.forNamespace(taglibNamespace);
+            if (libraryInfo != null) {
+                boolean found = false;
+                for (String validNamespace : libraryInfo.getValidNamespaces()) {
+                    if (validNamespace.equals(taglibNamespace)) {
+                        found = true;
+                        continue;
+                    }
+                    if (found) {
+                        taglibNamespaces.add(validNamespace);
+                    }
+                }
+            }
+
             FaceletsLibrary taglibrary = compositeLibraryName != null
-                    ? new CompositeComponentLibrary(support, compositeLibraryName, taglibNamespace, sourceUrl)
-                    : new FaceletsLibrary(support, taglibNamespace, sourceUrl);
+                    ? new CompositeComponentLibrary(support, compositeLibraryName, taglibNamespaces, sourceUrl)
+                    : new FaceletsLibrary(support, taglibNamespaces, sourceUrl);
 
             processTags(sc, documentElement, tags, taglibrary);
             processFunctions(sc, functions, taglibrary);

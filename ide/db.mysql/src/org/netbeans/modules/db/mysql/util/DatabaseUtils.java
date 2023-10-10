@@ -331,7 +331,7 @@ public class DatabaseUtils {
     }
 
     public static boolean isCommunicationsException(DatabaseException dbe) {
-        if (dbe.getCause() == null || !(dbe.getCause() instanceof SQLException)) {
+        if (!(dbe.getCause() instanceof SQLException)) {
             return false;
         }
 

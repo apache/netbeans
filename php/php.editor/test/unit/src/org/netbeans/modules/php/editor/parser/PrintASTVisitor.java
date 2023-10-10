@@ -323,8 +323,15 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(ClassDeclaration classDeclaration) {
+        StringBuilder modifiers = new StringBuilder();
+        for (ClassDeclaration.Modifier modifier : classDeclaration.getModifiers().keySet()) {
+            if (modifiers.length() != 0) {
+                modifiers.append(" "); // NOI18N
+            }
+            modifiers.append(modifier.name());
+        }
         XMLPrintNode printNode = new XMLPrintNode(classDeclaration, "ClassDeclaration",
-                new String[]{"modifier", classDeclaration.getModifier().name()});
+                new String[]{"modifier", modifiers.toString()});
         if (classDeclaration.isAttributed()) {
             printNode.addChildrenGroup("Attributes", classDeclaration.getAttributes());
         }
@@ -379,6 +386,13 @@ public class PrintASTVisitor implements Visitor {
         printNode.addChild("Condition", node.getCondition());
         printNode.addChild("Then", node.getIfTrue());
         printNode.addChild("Else", node.getIfFalse());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(ConstantVariable node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "ConstantVariable");
+        printNode.addChild(node.getName());
         printNode.print(this);
     }
 
@@ -479,6 +493,11 @@ public class PrintASTVisitor implements Visitor {
         XMLPrintNode printNode = new XMLPrintNode(node, "FinallyClause");
         printNode.addChild(node.getBody());
         printNode.print(this);
+    }
+
+    @Override
+    public void visit(FirstClassCallableArg firstClassCallableArg) {
+        (new XMLPrintNode(firstClassCallableArg, "FirstClassCallableArg")).print(this);
     }
 
     @Override

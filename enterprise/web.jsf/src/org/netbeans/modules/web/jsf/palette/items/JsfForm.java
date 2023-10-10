@@ -257,7 +257,8 @@ public final class JsfForm extends EntityClass implements ActiveEditorDrop, Pale
             String temporal = controller.getTypes().isSameType(dateTypeMirror, method.getReturnType()) ? getTemporal(method, fieldAccess) : null;
             String template = temporal == null ? "<h:outputText value=\"{0}:\"/>\n" : "<h:outputText value=\"{0} ({4}):\"/>\n";
             Element fieldElement = fieldAccess ? JpaControllerUtil.guessField(method) : method;
-            boolean isLob = JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Lob");
+            boolean isLob = JpaControllerUtil.isAnnotatedWith(fieldElement, "jakarta.persistence.Lob")
+                    || JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Lob");
             template += isLob ? "<h:inputTextarea rows=\"4\" cols=\"30\"" : "<h:inputText";
             template += " id=\"{2}\" value=\"#'{'{1}.{2}'}'\" title=\"{0}\" ";
             template += requiredMessage == null ? "" : "required=\"true\" requiredMessage=\"{5}\" ";

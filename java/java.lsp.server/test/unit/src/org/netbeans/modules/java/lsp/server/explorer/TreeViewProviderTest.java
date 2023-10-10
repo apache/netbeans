@@ -27,6 +27,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangeType;
 import org.openide.explorer.ExplorerManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -161,10 +162,11 @@ public class TreeViewProviderTest {
             super("", em, r, Lookup.EMPTY);
         }
 
-        public void onDidChangeTreeData(Node n, int id) {
+        @Override
+        protected void onDidChangeTreeData(Node n, NodeChangeType type, String property) {
             changed.add(n);
         }
-
+        
         public void assertChanged(Node n) {
             assertTrue("Expecting " + n + " among " + changed, changed.remove(n));
         }

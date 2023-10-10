@@ -81,12 +81,12 @@ public final class JspParseData {
         StringBuffer buf = new StringBuffer();
         buf.append("JspParseData[prefixes=");
         if (prefixMap != null) {
-            for (String prefix : prefixMap.keySet()) {
+            prefixMap.forEach((prefix, v) -> {
                 buf.append(prefix);
                 buf.append('-');
-                buf.append(prefixMap.get(prefix));
+                buf.append(v);
                 buf.append(',');
-            }
+            });
         } else {
             buf.append("null");
         }

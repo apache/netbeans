@@ -900,7 +900,7 @@ public class GraphManager extends Object {
 	    case Common.TYPE_FLOAT:
 		return 0.0F;
 	    case Common.TYPE_DOUBLE:
-		return new Double(0.0);
+		return 0.0D;
 	    default:
                 throw new IllegalArgumentException(Common.getMessage("UnknownType", type));
 	}

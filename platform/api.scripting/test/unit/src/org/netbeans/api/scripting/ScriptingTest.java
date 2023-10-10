@@ -57,11 +57,11 @@ public class ScriptingTest {
 
     @Test
     public void testBuilderAllowAccess() {
-        // BEGIN: org.netbeans.api.scripting.ScriptingTest#testBuilderAllowAccess
+        // @start region="testBuilderAllowAccess"
         ScriptEngineManager manager = Scripting.newBuilder().
             allowAllAccess(true).build();
         assertEquals(Boolean.TRUE, manager.getBindings().get("allowAllAccess"));
-        // END: org.netbeans.api.scripting.ScriptingTest#testBuilderAllowAccess
+        // @end region="testBuilderAllowAccess"
     }
 
     private static void assertMyFactory(List<ScriptEngineFactory> factories) {

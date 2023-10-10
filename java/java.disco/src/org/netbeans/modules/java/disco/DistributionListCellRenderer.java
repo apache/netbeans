@@ -22,7 +22,6 @@ import io.foojay.api.discoclient.pkg.Distribution;
 
 import javax.swing.*;
 import java.awt.*;
-import org.checkerframework.checker.guieffect.qual.UIEffect;
 import org.checkerframework.checker.guieffect.qual.UIType;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

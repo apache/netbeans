@@ -116,7 +116,7 @@ public final class VCSContext {
      * returns both of them and getRootFiles returns only the folder /var. 
      * This method is suitable for versioning systems that DO manage folders, such as Clearcase. 
      * 
-     * @return Set<File> set of Files this context represents
+     * @return Set&lt;File&gt; set of Files this context represents
      * @see #getRootFiles() 
      * @since 1.6
      */ 
@@ -134,7 +134,7 @@ public final class VCSContext {
      * returns both of them and getRootFiles returns only the folder /var. 
      * This method is suitable for versioning systems that do not manage folders, such as CVS. 
      * 
-     * @return Set<File> set of Files this context represents
+     * @return Set&lt;File&gt; set of Files this context represents
      * @see #getFiles() 
      */ 
     public Set<File> getRootFiles() {
@@ -150,7 +150,7 @@ public final class VCSContext {
      * run on a project that contains a subproject should not touch any files in the subproject. Therefore the VCSContext for
      * the action would contain one root file (the project's root) and one exclusion (subproject root).
      * 
-     * @return Set<File> set of files and folders that are not part of (are excluded from) this context. 
+     * @return Set&lt;File&gt; set of files and folders that are not part of (are excluded from) this context. 
      * All their descendands are excluded too.
      */ 
     public Set<File> getExclusions() {

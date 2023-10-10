@@ -693,7 +693,7 @@ public class JspCompletionQuery {
                 attr = ((TagAttributeInfo)item).getName();
             else
                 attr = (String)item;
-            boolean isThere = tagDir.getAttributes().keySet().contains(attr);
+            boolean isThere = tagDir.getAttributes().containsKey(attr);
             if (!isThere || attr.equalsIgnoreCase(currentAttr) ||
                     (currentAttr != null && attr.startsWith(currentAttr) && attr.length()>currentAttr.length() && !isThere)) {
                 if (item instanceof TagAttributeInfo)
@@ -704,8 +704,8 @@ public class JspCompletionQuery {
                     //to do it.
                     if ("taglib".equalsIgnoreCase(tagDir.getName())){ //NOI18N
                         if (attr.equalsIgnoreCase("prefix")  //NOI18N
-                                || (attr.equalsIgnoreCase("uri") && !tagDir.getAttributes().keySet().contains("tagdir")) //NOI18N
-                                || (attr.equalsIgnoreCase("tagdir") && !tagDir.getAttributes().keySet().contains("uri"))) //NOI18N
+                            || (attr.equalsIgnoreCase("uri") && !tagDir.getAttributes().containsKey("tagdir")) //NOI18N
+                            || (attr.equalsIgnoreCase("tagdir") && !tagDir.getAttributes().containsKey("uri"))) //NOI18N
                             result.addItem(JspCompletionItem.createAttribute(offset, (TagAttributeInfo)item));
                     } else {
                         result.addItem(JspCompletionItem.createAttribute(offset, (TagAttributeInfo)item));

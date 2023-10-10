@@ -69,7 +69,7 @@ public class WsdlModelerFactory {
         if (wr == null) {
             return null;
         }
-        WsdlModeler modeler = (WsdlModeler) wr.get();
+        WsdlModeler modeler = wr.get();
         if (modeler == null) {
             modelers.remove(url);
         }

@@ -41,7 +41,7 @@ CHAR_LITERAL    "'a", la=1
 ----- EOF -----
 
 .t.e.s.t. String Literals
-STRING_LITERAL  """"
+STRING_LITERAL  """", la=1
 WHITESPACE      " ", la=1
 STRING_LITERAL  ""a""
 WHITESPACE      "\n", la=1

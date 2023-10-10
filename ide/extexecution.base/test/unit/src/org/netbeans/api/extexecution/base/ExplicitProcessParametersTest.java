@@ -351,7 +351,7 @@ public class ExplicitProcessParametersTest extends NbTestCase {
         
         String[] files = new String[] { "fileA", "fileB" };
         
-        // BEGIN: ExplicitProcessParametersTest#testDiscardDefaultVMParametersAppendAppParameters
+        // @start region="testDiscardDefaultVMParametersAppendAppParameters"
         ExplicitProcessParameters override = ExplicitProcessParameters.builder().
                 // override the default: do not append to the base ones, but discard them
                 replaceLauncherArgs(true).
@@ -367,7 +367,7 @@ public class ExplicitProcessParametersTest extends NbTestCase {
                 args(files).
                 build();
         
-        // END: ExplicitProcessParametersTest#testDiscardDefaultVMParametersAppendAppParameters
+        // @end region="testDiscardDefaultVMParametersAppendAppParameters"
         
         ExplicitProcessParameters result = ExplicitProcessParameters.builder().
                 launcherArgs(projectVMArgs).
@@ -389,7 +389,7 @@ public class ExplicitProcessParametersTest extends NbTestCase {
     
     public static void decorateWithExplicitParametersSample() {
         Lookup runContext = Lookup.getDefault();
-        // BEGIN: ExplicitProcessParametersTest#decorateWithExplicitParametersSample
+        // @start region="decorateWithExplicitParametersSample"
         // collect all instructions from the Lookup and build decorating parameters
         ExplicitProcessParameters decorator = ExplicitProcessParameters.buildExplicitParameters(runContext);
         
@@ -406,6 +406,6 @@ public class ExplicitProcessParametersTest extends NbTestCase {
         // build a commandline for e.g. launcher or VM: include launcher args first
         // then the fixed "middle part" (e.g. the main class name), then application arguments.
         List<String> commandLine = params.getAllArguments("theMainClass");
-        // END: ExplicitProcessParametersTest#decorateWithExplicitParametersSample
+        // @end region="decorateWithExplicitParametersSample"
     }
 }

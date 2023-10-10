@@ -20,6 +20,9 @@ package org.netbeans.modules.css.lib.api.properties;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.openide.filesystems.FileObject;
 
@@ -144,24 +147,26 @@ public class Properties {
         final GroupGrammarElement grammarElement = propertyDefinition.getGrammarElement(context);
         final AtomicBoolean isAggregated = new AtomicBoolean(false);
         grammarElement.accept(new GrammarElementVisitor() {
-            private boolean cancelled = false;
+            private final Set<GroupGrammarElement> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+
             @Override
-            public void visit(GroupGrammarElement element) {
-                if(element == grammarElement) {
-                    //skip itself
-                    return ;
+            public boolean visit(GroupGrammarElement element) {
+                if(seen.contains(element)) {
+                    return false;
                 }
-                if(cancelled) {
-                    return ;
+                seen.add(element);
+                if(element == grammarElement) {
+                    return true;
                 }
                 String elementName = element.getName();
                 if (elementName != null) {
                     PropertyDefinition subDef = Properties.getPropertyDefinition(elementName);
                     if (subDef != null && isVisibleProperty(subDef)) {
                         isAggregated.set(true); //contains visible sub properties
-                        cancelled = true;
+                        return false;
                     }
                 }
+                return true;
             }
         });
         return isAggregated.get();

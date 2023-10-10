@@ -178,7 +178,7 @@ public class ArchiveURLMapper extends URLMapper {
             URI nestedRootURI = null;
             FileObject rootFo = null;
             synchronized (copiedJARs) {
-                if (copiedJARs.values().contains(root)) {
+                if (copiedJARs.containsValue(root)) {
                     // nested jar
                     for (Map.Entry<URI, File> entry : copiedJARs.entrySet()) {
                         if (entry.getValue().equals(root)) {

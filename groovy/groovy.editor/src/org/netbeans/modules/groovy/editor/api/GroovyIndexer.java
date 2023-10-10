@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import org.codehaus.groovy.ast.FieldNode;
 import org.netbeans.modules.csl.api.Modifier;
+import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTField;
 import org.netbeans.modules.groovy.editor.api.elements.ast.ASTMethod;
@@ -68,6 +69,7 @@ public class GroovyIndexer extends EmbeddingIndexer {
     static final String CASE_INSENSITIVE_CLASS_NAME = "class-ig"; //NOI18N
     // not indexed
     static final String IN = "in"; //NOI18N
+    static final String CLASS_OFFSET = "class-range"; //NOI18N
     /** Attributes: hh;nnnn where hh is a hex representing flags in IndexedClass, and nnnn is the documentation length */
     static final String CLASS_ATTRS = "attrs"; //NOI18N
 
@@ -160,7 +162,7 @@ public class GroovyIndexer extends EmbeddingIndexer {
     public static final class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "groovy"; // NOI18N
-        public static final int VERSION = 8;
+        public static final int VERSION = 9;
 
         @Override
         public EmbeddingIndexer createIndexer(Indexable indexable, Snapshot snapshot) {
@@ -321,6 +323,9 @@ public class GroovyIndexer extends EmbeddingIndexer {
             document.addPair(FQN_NAME, element.getFqn(), true, true);
             document.addPair(CLASS_NAME, name, true, true);
             document.addPair(CASE_INSENSITIVE_CLASS_NAME, name.toLowerCase(), true, true);
+            StringBuilder sb = new StringBuilder();
+            appendOffsetRange(sb, element.getNode(), doc);
+            document.addPair(CLASS_OFFSET, sb.toString(), false, true);
         }
 
         private void indexField(ASTField child, IndexDocument document) {
@@ -333,16 +338,19 @@ public class GroovyIndexer extends EmbeddingIndexer {
 
             // maintain index compatibility; althogh
             int flags = getFieldModifiersFlag(child.isProperty(), child.getModifiers());
+            sb.append(';');
             if (flags != 0 || child.isProperty()) {
-                sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
                 sb.append(IndexedElement.flagToSecondChar(flags));
             }
 
+            sb.append(';');
             if (child.isProperty()) {
-                sb.append(';');
                 sb.append(child.isProperty());
             }
+
+            sb.append(';');
+            appendOffsetRange(sb, node, doc);
 
             // TODO - gather documentation on fields? naeh
             document.addPair(FIELD_NAME, sb.toString(), true, true);
@@ -363,16 +371,19 @@ public class GroovyIndexer extends EmbeddingIndexer {
                 // Removing last ","
                 sb.deleteCharAt(sb.length() - 1);
             }
-
+            
             Set<Modifier> modifiers = constructor.getModifiers();
 
             int flags = getMethodModifiersFlag(modifiers);
+            sb.append(';');
             if (flags != 0) {
-                sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
                 sb.append(IndexedElement.flagToSecondChar(flags));
             }
-
+            
+            sb.append(';');
+            appendOffsetRange(sb, constructor.getNode(), doc);
+            
             document.addPair(CONSTRUCTOR, sb.toString(), true, true);
         }
 
@@ -387,14 +398,22 @@ public class GroovyIndexer extends EmbeddingIndexer {
             Set<Modifier> modifiers = child.getModifiers();
 
             int flags = getMethodModifiersFlag(modifiers);
-
+            
+            sb.append(';');
             if (flags != 0) {
-                sb.append(';');
                 sb.append(IndexedElement.flagToFirstChar(flags));
                 sb.append(IndexedElement.flagToSecondChar(flags));
             }
 
+            sb.append(';');
+            appendOffsetRange(sb, childNode, doc);
+            
             document.addPair(METHOD_NAME, sb.toString(), true, true);
+        }
+        
+        private static void appendOffsetRange(StringBuilder sb, ASTNode node, BaseDocument document) {
+            OffsetRange range = ASTUtils.getRange(node, document);
+            sb.append('[').append(range.getStart()).append(',').append(range.getEnd()).append(']');
         }
 
     }

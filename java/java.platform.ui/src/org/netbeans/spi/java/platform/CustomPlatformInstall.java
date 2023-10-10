@@ -24,7 +24,7 @@ import org.openide.WizardDescriptor;
 
 /**
  * Defines an API for registering custom Java platform installer. The installer
- * is responsible for instantiation of {@link JavaPlatform} through the provided
+ * is responsible for instantiation of {@link org.netbeans.api.java.platform.JavaPlatform} through the provided
  * TemplateWizard.Iterator. If your installer selects the platform on the local disk you
  * probably don't want to use this class, the {@link PlatformInstall} class
  * creates an platform chooser for you. You want to use this class if the
@@ -38,7 +38,7 @@ import org.openide.WizardDescriptor;
 public abstract class CustomPlatformInstall extends GeneralPlatformInstall {
     
     /**
-     * Returns the {@link WizardDescriptor#InstantiatingIterator} used to install
+     * Returns the {@link WizardDescriptor.InstantiatingIterator} used to install
      * the platform. The platform definition file returned by the instantiate method
      * should be created in the Services/Platforms/org-netbeans-api-java-Platform
      * folder on the system filesystem.

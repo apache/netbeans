@@ -609,10 +609,10 @@ public class SourcePath {
     private static List annotateOperations(JPDADebugger debugger, String url,
                                            Operation currentOperation, List lastOperations,
                                            int locLineNumber) {
-        List annotations = null;
+        List<Object> annotations = null;
         int currentOperationLine = -1;
         if (currentOperation != null) {
-            annotations = new ArrayList();
+            annotations = new ArrayList<>();
             Object ann = createAnnotation(debugger, url, currentOperation,
                                           EditorContext.CURRENT_LINE_ANNOTATION_TYPE,
                                           true);
@@ -635,7 +635,7 @@ public class SourcePath {
         boolean isNewLineExp = false;
         if (lastOperations != null && lastOperations.size() > 0) {
             if (annotations == null) {
-                annotations = new ArrayList();
+                annotations = new ArrayList<>();
             }
             isNewLineExp = currentOperation == null;
             for (int i = 0; i < lastOperations.size(); i++) {

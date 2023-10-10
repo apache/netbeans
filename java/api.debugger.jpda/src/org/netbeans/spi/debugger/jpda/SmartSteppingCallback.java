@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
 import java.util.Map;
 import java.util.Objects;
 import org.netbeans.api.debugger.jpda.CallStackFrame;
+import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDAStep;
 import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.api.debugger.jpda.SmartSteppingFilter;
@@ -55,10 +56,14 @@ public abstract class SmartSteppingCallback {
      * This method is called during stepping through debugged application.
      * The execution is stopped when all registered <code>SmartSteppingCallback</code>s
      * returns true.
+     * <p>
+     * The {@link SmartSteppingFilter} instance is unique per step. Any changes to it applies
+     * to one ongoing step only. Use {@link JPDADebugger#getSmartSteppingFilter()} to make
+     * persistent changes.
      *
      * @param thread contains all available information about current position
      *        in debugged application
-     * @param f a filter
+     * @param f a filter, unique to the ongoing step
      * @return true if execution should be stopped on the current position
      */
     public abstract boolean stopHere (ContextProvider lookupProvider, JPDAThread thread, SmartSteppingFilter f);
@@ -70,13 +75,17 @@ public abstract class SmartSteppingCallback {
      * to check if the execution could be suspended there. This is valuable e.g. for step out.
      * When a top frame is provided, this method can suggest a specific step to continue with,
      * in case it's not possible to stop at the given location.
+     * <p>
+     * The {@link SmartSteppingFilter} instance is unique per step. Any changes to it applies
+     * to one ongoing step only. Register a {@link SmartSteppingFilter} implementation
+     * to make persistent changes.
      * 
      * The default implementation calls {@link #stopHere(org.netbeans.spi.debugger.ContextProvider, org.netbeans.api.debugger.jpda.JPDAThread, org.netbeans.api.debugger.jpda.SmartSteppingFilter)}
      * when called with a top frame and throws an {@link UnsupportedOperationException} otherwise.
      * 
      * @param lookupProvider The debugger services lookup
      * @param frame The frame in question
-     * @param f a filter
+     * @param f a filter, unique to the ongoing step
      * @return whether the debugger can stop at this location, or whether it should continue with a step.
      * @since 3.5
      */
@@ -124,11 +133,11 @@ public abstract class SmartSteppingCallback {
         /**
          * Express the necessity to perform a step at the given location.
          * @param stepSize the step size,
-         *  one of {@link #JPDAStep.STEP_LINE} or {@link #JPDAStep.STEP_MIN},
+         *  one of {@link JPDAStep#STEP_LINE} or {@link JPDAStep#STEP_MIN},
          *  or <code>0</code> for the default size.
          * @param stepDepth the step depth,
-         *  one of {@link #JPDAStep.STEP_INTO}, {@link #JPDAStep.STEP_OVER},
-         *  {@link #JPDAStep.STEP_OUT}, or <code>0</code> for the default depth.
+         *  one of {@link JPDAStep#STEP_INTO}, {@link JPDAStep#STEP_OVER},
+         *  {@link JPDAStep#STEP_OUT}, or <code>0</code> for the default depth.
          * @return the step information instance.
          * throws {@link IllegalArgumentException} when the size or depth is wrong.
          */
@@ -172,7 +181,7 @@ public abstract class SmartSteppingCallback {
         
         /**
          * Get the step size.
-         * @return One of {@link #JPDAStep.STEP_LINE} or {@link #JPDAStep.STEP_MIN},
+         * @return One of {@link JPDAStep#STEP_LINE} or {@link JPDAStep#STEP_MIN},
          *  or <code>0</code> for the default size.
          */
         public int getStepSize() {
@@ -181,8 +190,8 @@ public abstract class SmartSteppingCallback {
         
         /**
          * Get the step depth.
-         * @return One of {@link #JPDAStep.STEP_INTO}, {@link #JPDAStep.STEP_OVER},
-         *  {@link #JPDAStep.STEP_OUT}, or <code>0</code> for the default depth.
+         * @return One of {@link JPDAStep#STEP_INTO}, {@link JPDAStep#STEP_OVER},
+         *  {@link JPDAStep#STEP_OUT}, or <code>0</code> for the default depth.
          */
         public int getStepDepth() {
             return stepDepth;

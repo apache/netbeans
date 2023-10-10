@@ -71,7 +71,7 @@ public class CodeCommentAction extends CommentAction {
                                 int end = (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) ?
                                     endPos-1 : endPos;
                                 int lineCnt = Utilities.getRowCount(doc, startPos, end);
-                                List mimeTypes = new ArrayList(lineCnt);
+                                List<String> mimeTypes = new ArrayList<>(lineCnt);
                                 int pos = startPos;
                                 for (int x = lineCnt ; x > 0; x--) {
                                     mimeTypes.add(getRealMimeType(ts, pos));

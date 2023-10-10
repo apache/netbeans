@@ -102,8 +102,7 @@ public enum GitRefUpdateResult {
     IO_FAILURE,
 
     /**
-     * The ref was renamed from another name
-     * <p>
+     * The ref was renamed from another name.
      */
     RENAMED,
 

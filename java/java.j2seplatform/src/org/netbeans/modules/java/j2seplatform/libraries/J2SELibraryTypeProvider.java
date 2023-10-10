@@ -304,7 +304,7 @@ public final class J2SELibraryTypeProvider implements LibraryTypeProvider {
             if (path == null) {
                 throw new IllegalArgumentException ();
             }
-            if (this.contents.keySet().contains(contentType)) {
+            if (this.contents.containsKey(contentType)) {
                 if (VOLUME_TYPES_REQUIRING_FOLDER.contains(contentType)) {
                     path = check (path, name);
                 }

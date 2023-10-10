@@ -71,6 +71,8 @@ import org.netbeans.modules.php.editor.api.elements.AliasedElement.Trait;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ConstantElement;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.FunctionElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
@@ -87,6 +89,7 @@ import org.netbeans.modules.php.editor.completion.CompletionContextFinder.Comple
 import org.netbeans.modules.php.editor.completion.CompletionContextFinder.KeywordCompletionType;
 import static org.netbeans.modules.php.editor.completion.CompletionContextFinder.lexerToASTOffset;
 import org.netbeans.modules.php.editor.completion.PHPCompletionItem.CompletionRequest;
+import org.netbeans.modules.php.editor.completion.PHPCompletionItem.EnumCaseItem;
 import org.netbeans.modules.php.editor.completion.PHPCompletionItem.FieldItem;
 import org.netbeans.modules.php.editor.completion.PHPCompletionItem.MethodElementItem;
 import org.netbeans.modules.php.editor.completion.PHPCompletionItem.TypeConstantItem;
@@ -103,6 +106,7 @@ import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.ParameterInfoSupport;
 import org.netbeans.modules.php.editor.model.Scope;
+import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.VariableName;
 import org.netbeans.modules.php.editor.model.VariableScope;
@@ -115,6 +119,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TypeDeclaration;
@@ -143,6 +148,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         PHP_KEYWORDS.put("use", KeywordCompletionType.SIMPLE); //NOI18N
         PHP_KEYWORDS.put("namespace", KeywordCompletionType.SIMPLE); //NOI18N
         PHP_KEYWORDS.put("class", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("trait", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
+        PHP_KEYWORDS.put("enum", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("const", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
         PHP_KEYWORDS.put("continue", KeywordCompletionType.ENDS_WITH_SEMICOLON); //NOI18N
         PHP_KEYWORDS.put("function", KeywordCompletionType.ENDS_WITH_SPACE); //NOI18N
@@ -261,7 +268,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING, PHPTokenId.PHP_NS_SEPARATOR,
             PHPTokenId.PHP_TYPE_BOOL, PHPTokenId.PHP_TYPE_FLOAT, PHPTokenId.PHP_TYPE_INT, PHPTokenId.PHP_TYPE_STRING, PHPTokenId.PHP_TYPE_VOID,
             PHPTokenId.PHP_TYPE_OBJECT, PHPTokenId.PHP_TYPE_MIXED, PHPTokenId.PHP_SELF, PHPTokenId.PHP_PARENT, PHPTokenId.PHP_STATIC,
-            PHPTokenId.PHP_NULL, PHPTokenId.PHP_FALSE, PHPTokenId.PHP_ARRAY, PHPTokenId.PHP_ITERABLE, PHPTokenId.PHP_CALLABLE,
+            PHPTokenId.PHP_NULL, PHPTokenId.PHP_FALSE, PHPTokenId.PHP_TRUE, PHPTokenId.PHP_ARRAY, PHPTokenId.PHP_ITERABLE, PHPTokenId.PHP_CALLABLE,
             PHPTokenId.PHPDOC_COMMENT_START, PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END,
             PHPTokenId.PHP_COMMENT_START, PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END
     );
@@ -314,7 +321,6 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         if (CancelSupport.getDefault().isCancelled()) {
             return CodeCompletionResult.NONE;
         }
-
         CompletionContext context = CompletionContextFinder.findCompletionContext(info, caretOffset);
         LOGGER.log(Level.FINE, "CC context: {0}", context);
 
@@ -324,8 +330,15 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
         PHPCompletionItem.CompletionRequest request = new PHPCompletionItem.CompletionRequest();
         request.context = context;
-        String prefix = getPrefix(info, caretOffset, true, PrefixBreaker.WITH_NS_PARTS);
-        if (prefix == null) {
+        QueryType queryType = completionContext.getQueryType();
+        String prefix;
+        // GH-4494 if query type is documentation, get a whole identifier as a prefix
+        boolean upToOffset = queryType != QueryType.DOCUMENTATION;
+        prefix = getPrefix(info, caretOffset, upToOffset, PrefixBreaker.WITH_NS_PARTS);
+        String prefixUntilCaret = upToOffset ? prefix : getPrefix(info, caretOffset, true, PrefixBreaker.WITH_NS_PARTS); // GH-5881
+        if (prefix == null
+                || prefixUntilCaret == null
+                || (queryType == QueryType.DOCUMENTATION && prefix.isEmpty())) {
             return CodeCompletionResult.NONE;
         }
         prefix = prefix.trim().isEmpty() ? completionContext.getPrefix() : prefix;
@@ -347,10 +360,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         }
         request.extraPrefix = searchPrefix;
 
+        int prefixLengthForAnchor = upToOffset ? prefix.length() : prefixUntilCaret.length();
         request.anchor = caretOffset
                 // can't just use 'prefix.getLength()' here cos it might have been calculated with
                 // the 'upToOffset' flag set to false
-                - prefix.length();
+                - prefixLengthForAnchor;
 
         request.result = result;
         request.info = info;
@@ -462,6 +476,14 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteInterfaceNames(completionResult, request);
                 break;
+            case BACKING_TYPE:
+                List<String> backingTypes = Type.getTypesForBackingType();
+                for (String keyword : backingTypes) {
+                    if (startsWith(keyword, request.prefix)) {
+                        completionResult.add(new PHPCompletionItem.KeywordItem(keyword, request));
+                    }
+                }
+                break;
             case GROUP_USE_KEYWORD:
                 autoCompleteGroupUse(UseType.TYPE, completionResult, request);
                 List<String> keywords = Arrays.asList("const", "function"); // NOI18N
@@ -521,7 +543,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         typesForTypeName.addAll(Type.getSpecialTypesForType());
                     }
                     if (isNullableType(info, caretOffset)) {
-                        typesForTypeName.remove(Type.FALSE);
+                        // ?false, ?true is OK since PHP 8.2
                         typesForTypeName.remove(Type.NULL);
                     }
                     if (isUnionType(info, caretOffset)) {
@@ -542,7 +564,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         typesForReturnTypeName.add(Type.STATIC);
                     }
                     if (isNullableType(info, caretOffset)) {
-                        typesForReturnTypeName.remove(Type.FALSE);
+                        // ?false, ?true is OK since PHP 8.2
                         typesForReturnTypeName.remove(Type.NULL);
                         typesForReturnTypeName.remove(Type.VOID);
                         typesForReturnTypeName.remove(Type.NEVER);
@@ -866,6 +888,33 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         }
     }
 
+    private void autoCompleteEnumNames(final PHPCompletionResult completionResult,
+            PHPCompletionItem.CompletionRequest request, boolean endWithDoubleColon) {
+        autoCompleteEnumNames(completionResult, request, endWithDoubleColon, null);
+    }
+
+    private void autoCompleteEnumNames(final PHPCompletionResult completionResult,
+            PHPCompletionItem.CompletionRequest request, boolean endWithDoubleColon, QualifiedNameKind kind) {
+        if (CancelSupport.getDefault().isCancelled()) {
+            return;
+        }
+        final boolean isCamelCase = isCamelCaseForTypeNames(request.prefix);
+        final NameKind nameQuery = NameKind.create(request.prefix,
+                isCamelCase ? Kind.CAMEL_CASE : Kind.CASE_INSENSITIVE_PREFIX);
+        Model model = request.result.getModel();
+        Set<EnumElement> enums = request.index.getEnums(nameQuery, ModelUtils.getAliasedNames(model, request.anchor), Trait.ALIAS);
+
+        if (!enums.isEmpty()) {
+            completionResult.setFilterable(false);
+        }
+        for (EnumElement enumElement : enums) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            completionResult.add(new PHPCompletionItem.EnumItem(enumElement, request, endWithDoubleColon, kind));
+        }
+    }
+
     private void autoCompleteInterfaceNames(final PHPCompletionResult completionResult, PHPCompletionItem.CompletionRequest request) {
         autoCompleteInterfaceNames(completionResult, request, null);
     }
@@ -1020,6 +1069,12 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     }
                     completionResult.add(new PHPCompletionItem.TraitItem(trait, request));
                 }
+                for (EnumElement enumElement : request.index.getEnums(nameQuery)) {
+                    if (CancelSupport.getDefault().isCancelled()) {
+                        return;
+                    }
+                    completionResult.add(new PHPCompletionItem.EnumItem(enumElement, request, false, kind));
+                }
                 break;
             case CONST:
                 for (ConstantElement constant : request.index.getConstants(nameQuery)) {
@@ -1055,6 +1110,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         }
         if (request.prefix.trim().length() > 0) {
             autoCompleteClassNames(completionResult, request, endWithDoubleColon, kind);
+            autoCompleteEnumNames(completionResult, request, endWithDoubleColon, kind);
             autoCompleteInterfaceNames(completionResult, request, kind);
         } else {
             Model model = request.result.getModel();
@@ -1071,6 +1127,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     }
                 } else if (element instanceof InterfaceElement) {
                     completionResult.add(new PHPCompletionItem.InterfaceItem((InterfaceElement) element, request, kind, endWithDoubleColon));
+                } else if (element instanceof EnumElement) {
+                    EnumElement enumElement = (EnumElement) element;
+                    completionResult.add(new PHPCompletionItem.EnumItem(enumElement, request, endWithDoubleColon, kind));
                 }
             }
         }
@@ -1104,7 +1163,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 String prefix = doc.getText(start, 1);
                 if (CodeUtils.NULLABLE_TYPE_PREFIX.equals(prefix)) {
                     List<String> keywords = new ArrayList<>(Type.getTypesForEditor());
-                    keywords.remove(Type.FALSE);
+                    // ?false, ?true is OK since PHP 8.2
                     keywords.remove(Type.NULL);
                     autoCompleteKeywords(completionResult, request, keywords);
                 } else {
@@ -1251,7 +1310,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             }
         }
         if (isNullableType) {
-            keywords.remove(Type.FALSE);
+            // ?false, ?true is OK since PHP 8.2
             keywords.remove(Type.NULL);
         }
         if (isUnionType(info, caretOffset)) {
@@ -1300,6 +1359,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 PHPTokenId.PHP_ITERABLE,
                 PHPTokenId.PHP_SELF,
                 PHPTokenId.PHP_PARENT,
+                PHPTokenId.PHP_TRUE,
                 PHPTokenId.PHP_FALSE,
                 PHPTokenId.PHP_NULL,
                 PHPTokenId.PHP_STRING,
@@ -1419,6 +1479,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                             ElementFilter.forKind(PhpElementKind.TYPE_CONSTANT),
                             ElementFilter.forName(NameKind.caseInsensitivePrefix(request.prefix)),
                             ElementFilter.forInstanceOf(TypeConstantElement.class));
+                    final ElementFilter enumCasesFilter = ElementFilter.allOf(
+                            ElementFilter.forKind(PhpElementKind.ENUM_CASE),
+                            ElementFilter.forName(NameKind.caseInsensitivePrefix(request.prefix)),
+                            ElementFilter.forInstanceOf(EnumCaseElement.class));
                     HashSet<TypeMemberElement> accessibleTypeMembers = new HashSet<>();
                     accessibleTypeMembers.addAll(request.index.getAccessibleTypeMembers(typeScope, enclosingType));
                     // for @mixin tag #241740
@@ -1428,10 +1492,41 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                             // XXX currently, only when mixins are used directly in the class. should support all cases?
                             accessibleTypeMembers.addAll(request.index.getAccessibleMixinTypeMembers(typeScope, enclosingType));
                         }
+                    } else if (typeScope instanceof EnumElement) {
+                        // add methods of BackedEnum/UnitEnum interface
+                        EnumElement enumElement = (EnumElement) typeScope;
+                        String backingTypeName = enumElement.getBackingType() != null ? enumElement.getBackingType().toString() : ""; // NOI18N
+                        String enumInterfaceName = !backingTypeName.isEmpty() ? "\\BackedEnum" : "\\UnitEnum"; // NOI18N
+                        final NameKind nameQuery = NameKind.exact(QualifiedName.create(enumInterfaceName));
+                        Set<InterfaceElement> enums = request.index.getInterfaces(nameQuery);
+                        for (InterfaceElement backedEnum : enums) {
+                            accessibleTypeMembers.addAll(request.index.getAccessibleTypeMembers(backedEnum, backedEnum));
+                        }
+                        if (!staticContext && "name".startsWith(request.prefix)) { // NOI18N
+                            // All Cases have a read-only property, name
+                            // see: https://www.php.net/manual/en/language.enumerations.basics.php
+                            // e.g. E::Case->name;
+                            completionResult.add(PHPCompletionItem.AdditionalFieldItem.getItem("name", Type.STRING, enumElement.getFullyQualifiedName().toString(), request)); // NOI18N
+                        }
+                        if (!staticContext
+                                && !backingTypeName.isEmpty()
+                                && "value".startsWith(request.prefix)) { // NOI18N
+                            completionResult.add(PHPCompletionItem.AdditionalFieldItem.getItem("value", backingTypeName, enumElement.getFullyQualifiedName().toString(), request)); // NOI18N
+                        }
                     }
                     for (final PhpElement phpElement : accessibleTypeMembers) {
                         if (CancelSupport.getDefault().isCancelled()) {
                             return;
+                        }
+                        // https://wiki.php.net/rfc/deprecations_php_8_1 Accessing static members on traits
+                        // e.g. T::$staticField, T::staticMethod() : deprecated since PHP 8.1
+                        // we can fix this here in the future
+                        if (typeScope instanceof TraitScope
+                                && !specialVariable
+                                && phpElement instanceof TypeConstantElement) {
+                            // PHP 8.2: prohibit direct access through a trait name
+                            // e.g. T::CONSTANT;
+                            continue;
                         }
                         if (duplicateElementCheck.add(phpElement)) {
                             if (methodsFilter.isAccepted(phpElement)) {
@@ -1451,6 +1546,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                                 TypeConstantElement constant = (TypeConstantElement) phpElement;
                                 TypeConstantItem constantItem = PHPCompletionItem.TypeConstantItem.getItem(constant, request, completeAccessPrefix);
                                 completionResult.add(constantItem);
+                            } else if ((staticContext || completeAccessPrefix) && enumCasesFilter.isAccepted(phpElement)) {
+                                EnumCaseElement enumCase = (EnumCaseElement) phpElement;
+                                EnumCaseItem enumCaseItem = EnumCaseItem.getItem(enumCase, request, completeAccessPrefix);
+                                completionResult.add(enumCaseItem);
                             }
                         }
                     }
@@ -1894,6 +1993,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 if (!classElement.isAnonymous()) {
                     completionResult.add(new PHPCompletionItem.ClassItem(classElement, request, true, null));
                 }
+            } else if (element instanceof EnumElement) {
+                EnumElement enumElement = (EnumElement) element;
+                completionResult.add(new PHPCompletionItem.EnumItem(enumElement, request, true, null));
             } else if (element instanceof InterfaceElement) {
                 completionResult.add(new PHPCompletionItem.InterfaceItem((InterfaceElement) element, request, true));
             } else if (offerGlobalVariables && element instanceof VariableElement) {
@@ -1906,10 +2008,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         final ElementFilter forCurrentFile = ElementFilter.forFiles(fileObject);
         completionResult.addAll(getVariableProposals(request, forCurrentFile.reverseFilter(globalVariables)));
 
-        // Special keywords applicable only inside a class or trait
+        // Special keywords applicable only inside a class, enum, or trait
         final EnclosingType enclosingType = findEnclosingType(request.info, lexerToASTOffset(request.result, request.anchor));
         if (enclosingType != null
-                && (enclosingType.isClassDeclaration() || enclosingType.isTraitDeclaration())) {
+                && (enclosingType.isClassDeclaration() || enclosingType.isTraitDeclaration() || enclosingType.isEnumDeclaration())) {
             final String typeName = enclosingType.extractTypeName();
             if (typeName != null) {
                 for (final String keyword : PHP_CLASS_KEYWORDS) {
@@ -2437,6 +2539,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
         boolean isTraitDeclaration();
 
+        boolean isEnumDeclaration();
+
         String extractTypeName();
 
         //~ Factories
@@ -2451,6 +2555,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 @Override
                 public boolean isTraitDeclaration() {
                     return typeDeclaration instanceof TraitDeclaration;
+                }
+
+                @Override
+                public boolean isEnumDeclaration() {
+                    return typeDeclaration instanceof EnumDeclaration;
                 }
 
                 @Override
@@ -2470,6 +2579,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
                 @Override
                 public boolean isTraitDeclaration() {
+                    return false;
+                }
+
+                @Override
+                public boolean isEnumDeclaration() {
                     return false;
                 }
 

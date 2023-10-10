@@ -2,5 +2,4 @@ Code completion result for source line:
 do|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-FIELD      document: document              [PUBLIC]   JS Platform
 KEYWORD    do                                         null

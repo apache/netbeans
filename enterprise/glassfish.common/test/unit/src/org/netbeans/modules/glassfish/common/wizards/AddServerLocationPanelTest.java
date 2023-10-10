@@ -35,7 +35,6 @@ public class AddServerLocationPanelTest {
      */
     @Test
     public void testCanCreate() throws IOException {
-        System.out.println("canCreate");  // NOI18N
         File dir = File.createTempFile("foo", "bar");  // NOI18N
         boolean expResult = false;
         boolean result = AddServerLocationPanel.canCreate(dir);

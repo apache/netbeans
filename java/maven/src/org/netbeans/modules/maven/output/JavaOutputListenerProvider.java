@@ -83,7 +83,7 @@ public class JavaOutputListenerProvider implements OutputProcessor {
         this.config = config;
         //[javac] required because of forked compilation
         //DOTALL seems to fix MEVENIDE-455 on windows. one of the characters seems to be a some kind of newline and that's why the line doesnt' get matched otherwise.
-        failPattern = Pattern.compile("\\s*(?:\\[(WARNING|ERROR)\\])?(?:\\[javac\\])?(?:Compilation failure)?\\s*(?<" + GROUP_CLAZZ_NAME + ">.*)\\.java\\:\\[(?<" + GROUP_LINE_NR + ">[0-9]*),([0-9]*)\\] (?<" + GROUP_TEXT + ">.*)", Pattern.DOTALL); //NOI18N
+        failPattern = Pattern.compile("\\s*(?:\\[(WARNING|WARN|ERROR)\\])?(?:\\[javac\\])?(?:Compilation failure)?\\s*(?<" + GROUP_CLAZZ_NAME + ">.*)\\.java\\:\\[(?<" + GROUP_LINE_NR + ">[0-9]*),([0-9]*)\\] (?<" + GROUP_TEXT + ">.*)", Pattern.DOTALL); //NOI18N
     }
     
     private static final Pattern COMPILER_PROBLEM = Pattern.compile(".*module-info\\.java:.*module not found: .*");

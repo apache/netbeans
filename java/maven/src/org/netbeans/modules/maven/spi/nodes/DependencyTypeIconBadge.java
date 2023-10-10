@@ -27,8 +27,8 @@ import org.openide.filesystems.FileObject;
 
 /**
  * global service providing an icon badge to dependency artifact's node
- * @see Lookup
- * @see ServiceProvider
+ * @see org.openide.util.Lookup
+ * @see org.openide.util.lookup.ServiceProvider
  * @author mkleint
  * @since 2.89
  */

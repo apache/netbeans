@@ -103,7 +103,7 @@ public abstract class NodeVisitor<T> {
         List<Node> children = node.children();
         if (children != null) {
             for (Node child : children) {
-                for(NodeVisitor v : visitors) {
+                for(NodeVisitor<TE> v : visitors) {
                     if(v.isCancelled()) {
                         continue; //skip the cancelled visitors
                     }

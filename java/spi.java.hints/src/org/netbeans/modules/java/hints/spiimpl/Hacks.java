@@ -113,7 +113,7 @@ public class Hacks {
             if (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
                 Element currentElement = info.getTrees().getElement(tp);
 
-                if (currentElement == null || !(currentElement instanceof ClassSymbol)) return null;
+                if (!(currentElement instanceof ClassSymbol)) return null;
 
                 Enter enter = Enter.instance(JavaSourceAccessor.getINSTANCE().getJavacTask(info).getContext());
                 Env<AttrContext> env = enter.getEnv((ClassSymbol) currentElement);

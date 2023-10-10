@@ -94,13 +94,13 @@ public final class BaseProgressUtils {
      * Show a modal progress dialog that blocks the main window and all other
      * currently displayed frames or dialogs, while running the passed runnable
      * on a background thread.
-     * <p/>
+     * <p>
      * This method is thread-safe, and will block until the operation has
      * completed, regardless of what thread calls this method.
-     * <p/>
+     * <p>
      * The resulting progress UI should show a cancel button if the passed
      * runnable implements org.openide.util.Cancellable.
-     * <p/>
+     * <p>
      * Unless you are being passed the runnable or progress handle from foreign
      * code (such as in WizardDescriptor.progressInstantiatingIterator), it
      * is usually simpler to use {@link #showProgressDialogAndRun(ProgressRunnable, String, boolean)}.
@@ -167,10 +167,10 @@ public final class BaseProgressUtils {
      * Show a modal progress dialog that blocks the main window and all other
      * currently displayed frames or dialogs, while running the passed runnable
      * on a background thread.
-     * <p/>
+     * <p>
      * This method is thread-safe, and will block until the operation has
      * completed, regardless of what thread calls this method.
-     * <p/>
+     * <p>
      * The resulting progress UI should show a cancel button if the passed
      * runnable implements org.openide.util.Cancellable.
      *
@@ -209,10 +209,10 @@ public final class BaseProgressUtils {
      * Show a modal progress dialog that blocks the main window and all other
      * currently displayed frames or dialogs, while running the passed runnable
      * on a background thread with an indeterminate-state progress bar.
-     * <p/>
+     * <p>
      * This method is thread-safe, and will block until the operation has
      * completed, regardless of what thread calls this method.
-     * <p/>
+     * <p>
      * The resulting progress UI should show a cancel button if the passed
      * runnable implements org.openide.util.Cancellable.
      * .
@@ -237,7 +237,7 @@ public final class BaseProgressUtils {
      * which can be monitored for completion or cancellation. This method will
      * not block while the work is run, only until the progress UI is
      * initialized.
-     * <p/>
+     * <p>
      * The resulting progress UI should show a cancel button if the passed
      * runnable implements org.openide.util.Cancellable.
      *

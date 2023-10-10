@@ -354,7 +354,7 @@ public class LocMakeNBM extends Task {
   protected void addLocalePatterns( LinkedList<String> list,
 				    String loc) {
 //    String dir = new String() ;
-    String re = new String() ;
+    String re;
 
 
 //    dir = mainDir ;        // modified for clusterization

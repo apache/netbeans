@@ -151,7 +151,7 @@ public class Installer implements FinishHandler {
     public void finish() {
         int exitCode = NORMAL_ERRORCODE;
         final Object prop = System.getProperties().get(EXIT_CODE_PROPERTY);
-        if ( prop!= null && prop instanceof Integer) {
+        if (prop instanceof Integer) {
             try {
                 exitCode = ((Integer)prop).intValue();
             } catch (NumberFormatException e) {

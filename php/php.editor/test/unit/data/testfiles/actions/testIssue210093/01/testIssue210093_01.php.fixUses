@@ -8,7 +8,7 @@ namespace Issue\Martin {
 
 namespace {
 
-use \Issue\Martin\Pondeli;
+    use \Issue\Martin\Pondeli;
 
     function testOk(Pondeli $param) {}
 

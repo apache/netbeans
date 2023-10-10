@@ -124,12 +124,12 @@ public final class NetworkSettings {
     /** Suppress asking user a question about the authentication credentials while
      * running <code>blockOfCode</code>. It's a contract with NetBeans implementation
      * of {@link Authenticator}.
-     * In case a system is using other Authenticator implementation, it must call {@link #isAuthenticationDialogSuppressed} method. 
+     * In case a system is using other Authenticator implementation, it must call {@link #isAuthenticationDialogSuppressed()} method. 
      * 
      * @param blockOfCode {@link Callable} containing code which will be executed while authentication is suppressed
      * @return a result of calling of <code>blockOfCode</code> and may throw an exception.
      * @throws Exception 
-     * @see #isAuthenticationDialogSuppressed
+     * @see #isAuthenticationDialogSuppressed()
      * @since 8.17
      */
     public static <R> R suppressAuthenticationDialog(Callable<R> blockOfCode) throws Exception {
@@ -143,11 +143,11 @@ public final class NetworkSettings {
 
     /** A utility method for implementations of {@link Authenticator}
      * to suppress asking users a authentication question while running code posted
-     * in {@link #authenticationDialogSuppressed}.
+     * in {@code #authenticationDialogSuppressed}.
      * 
-     * @return true while running code posted in {@link #authenticationDialogSuppressed} method.
+     * @return true while running code posted in {@code #authenticationDialogSuppressed} method.
      * @since 8.17
-     * @see #authenticationDialogSuppressed
+     * @see authenticationDialogSuppressed
      */
     public static boolean isAuthenticationDialogSuppressed() {
         return Boolean.TRUE.equals(authenticationDialogSuppressed.get());
@@ -156,7 +156,7 @@ public final class NetworkSettings {
     /** Allows
      * NetBeans Platform users to provide own proxy and network credentials separately.
      * 
-     * @see <a href="http://wiki.netbeans.org/Authenticator">http://wiki.netbeans.org/Authenticator</a>
+     * @see <a href="https://netbeans.apache.org/wiki/Authenticator">https://netbeans.apache.org/wiki/Authenticator</a>
      * @author Jiri Rechtacek, Ondrej Vrabec
      * @since 8.17
      */

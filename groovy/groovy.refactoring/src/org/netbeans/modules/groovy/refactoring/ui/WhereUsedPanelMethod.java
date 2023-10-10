@@ -146,7 +146,7 @@ public class WhereUsedPanelMethod extends WhereUsedPanel.WhereUsedInnerPanel {
                 boolean cellHasFocus) {
             setName("ComboBox.listRenderer"); // NOI18N
 
-            if (value != null && value instanceof ClassNode) {
+            if (value instanceof ClassNode) {
                 ClassNode classNode = ((ClassNode) value);
                 setText(ElementUtils.getNameWithoutPackage(classNode));
 

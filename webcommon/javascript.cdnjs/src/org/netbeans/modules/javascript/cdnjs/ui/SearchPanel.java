@@ -182,9 +182,9 @@ class SearchPanel extends javax.swing.JPanel {
      */
     private void preSelectSearchedLibrary(Library[] libraries) {
         int index = 0;
-        String term = lastSearchTerm == null ? "" : lastSearchTerm.toLowerCase(); // NOI18N
+        String term = lastSearchTerm == null ? "" : lastSearchTerm; // NOI18N
         for (int i=0; i<libraries.length; i++) {
-            if (libraries[i].getName().toLowerCase().equals(term)) {
+            if (libraries[i].getName().equalsIgnoreCase(term)) {
                 index = i;
                 break;
             }

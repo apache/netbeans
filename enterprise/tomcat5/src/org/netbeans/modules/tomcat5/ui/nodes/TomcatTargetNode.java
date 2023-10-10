@@ -70,14 +70,17 @@ public class TomcatTargetNode extends AbstractNode {
             getCookieSet().add(new RefreshWebModuleChildren(factory));
         }
 
+        @Override
         public Image getIcon(int type) {
             return UISupport.getIcon(ServerIcon.WAR_FOLDER);
         }
 
+        @Override
         public Image getOpenedIcon(int type) {
             return UISupport.getIcon(ServerIcon.WAR_OPENED_FOLDER);
         }
 
+        @Override
         public javax.swing.Action[] getActions(boolean context) {
             return new SystemAction[] {
                    SystemAction.get(RefreshWebModulesAction.class)
@@ -94,6 +97,7 @@ public class TomcatTargetNode extends AbstractNode {
             this.factory = factory;
         }
 
+        @Override
         public void refresh() {
             factory.updateKeys();
         }

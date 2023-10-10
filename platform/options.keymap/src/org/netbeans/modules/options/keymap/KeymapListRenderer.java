@@ -42,7 +42,8 @@ public class KeymapListRenderer extends DefaultTreeCellRenderer {
         //Image i = Utilities.loadImage ("org/openide/resources/actions/empty.gif");
         setLeafIcon (null);
     }
-    
+
+    @Override
     public Component getTreeCellRendererComponent (
         JTree tree, 
         Object value,

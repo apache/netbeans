@@ -36,7 +36,7 @@ import org.openide.util.LookupListener;
 /**
  * Class for registering property editors.
  * 
- * @author Jan Horvath <jhorvath@netbeans.org>
+ * @author Jan Horvath &lt;jhorvath@netbeans.org&gt;
  */
 public final class NodesRegistrationSupport {
     

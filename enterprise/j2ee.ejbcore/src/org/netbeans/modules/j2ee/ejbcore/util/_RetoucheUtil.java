@@ -158,8 +158,8 @@ public final class _RetoucheUtil {
                 }
 
                 // modifiers
-                Set<Modifier> modifiers = new HashSet<>();
-                modifiers.add(Modifier.PRIVATE);
+                Set<Modifier> modifiers = EnumSet.of(Modifier.PRIVATE);
+
                 if (isStatic) {
                     modifiers.add(Modifier.STATIC);
                 }

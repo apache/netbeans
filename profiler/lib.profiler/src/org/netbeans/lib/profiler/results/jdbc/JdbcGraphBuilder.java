@@ -183,10 +183,10 @@ public class JdbcGraphBuilder extends BaseCallGraphBuilder implements CPUProfili
     protected void doStartup(ProfilerClient profilerClient) {
         statements = new HashMap();
         connections = new HashMap();
-        selectsToId = new HashMap();
-        idsToSelect = new HashMap();
-        currentObject = new HashMap();
-        currentSqlLevel = new HashMap();
+        selectsToId = new HashMap<>();
+        idsToSelect = new HashMap<>();
+        currentObject = new HashMap<>();
+        currentSqlLevel = new HashMap<>();
         threadInfos.reset();
         stacksForSelects = null;
         lastSelectId = 0;

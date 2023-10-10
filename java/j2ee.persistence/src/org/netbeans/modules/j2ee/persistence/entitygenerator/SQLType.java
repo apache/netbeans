@@ -50,6 +50,7 @@ class SQLType {
    /** 
     * Override Object.equals
     */
+    @Override
     public boolean equals(Object other) {
         if (other == null || !getClass().isInstance(other)){
 	    return false;
@@ -60,6 +61,7 @@ class SQLType {
     /**
      * Override Object.hashCode
      */
+    @Override
     public int hashCode() {
         return sqlType;
     }
@@ -68,6 +70,7 @@ class SQLType {
      * Provide string representation of sql type. For example, 
      * java.sql.Types.BIT returns BIT.
      */
+    @Override
     public String toString() {
         return stringValue;
     }
@@ -132,7 +135,7 @@ class SQLType {
     private Class getClassForCharType (Integer length, boolean isNullable) {
         switch (sqlType) {
             case Types.CHAR:
-                if ((length != null) && (length.intValue() == 1)) {
+                if ((length != null) && (length == 1)) {
                      return typeList[1];//typeList[isNullable ? 1 : 2] is replaced with String always because of issue #195674 (openjpa fo Character handling)
                 }
             default:
@@ -145,8 +148,8 @@ class SQLType {
     // the no-arg getMemberType method are sufficient
     private Class getClassForNumericType(Integer precision, 
             Integer scale, boolean isNullable) {
-        int precValue = ((precision == null) ? -1 : precision.intValue());
-        int scaleValue = ((scale == null) ? -1 : scale.intValue());
+        int precValue = (precision == null) ? -1 : precision;
+        int scaleValue = (scale == null) ? -1 : scale;
 
         switch (sqlType) {
             case Types.DECIMAL:
@@ -157,7 +160,6 @@ class SQLType {
                 if ((precValue <= 0) && (scaleValue <= 0)){
                     return BigInteger.class;
                 }
-
                 if (scaleValue > 0) {
                     return BigDecimal.class;
                 }

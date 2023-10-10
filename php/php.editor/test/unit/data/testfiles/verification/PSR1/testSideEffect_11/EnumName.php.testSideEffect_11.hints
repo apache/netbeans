@@ -1,0 +1,4 @@
+    require_once '';
+    ----------------
+HINT:PSR-1 Violation:
+A file SHOULD declare new symbols and cause no other side effects, or it SHOULD execute logic with side effects, but SHOULD NOT do both.

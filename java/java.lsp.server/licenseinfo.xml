@@ -24,14 +24,10 @@
         <file>vscode/package-lock.json</file>
         <file>vscode/package.json</file>
         <file>vscode/tsconfig.json</file>
+        <file>vscode/esbuild.js</file>
         <file>vscode/schemas/package.schema.json</file>
         <license ref="Apache-2.0" />
         <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-    <fileset>
-        <file>src/org/netbeans/modules/java/lsp/server/refactoring/ui/codicon.ttf</file>
-        <file>src/org/netbeans/modules/java/lsp/server/refactoring/ui/codicon.css</file>
-        <license ref="MIT" />
     </fileset>
     <fileset>
         <file>vscode/.vscodeignore</file>

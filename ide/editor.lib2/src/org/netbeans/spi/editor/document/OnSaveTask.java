@@ -70,7 +70,7 @@ public interface OnSaveTask extends Cancellable {
      * Currently there are two default global factories:
      * <ul>
      *   <li> Reformat before save uses position=500. </li>
-     *   <li> Trailing-whitespace-removal task uses position=1000. </li.
+     *   <li> Trailing-whitespace-removal task uses position=1000. </li>
      * </ul>
      */
     @MimeLocation(subfolderName="OnSave")

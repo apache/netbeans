@@ -480,7 +480,7 @@
  <answer id="deploy-packages">
   <p>
    Only API packages are exported. JDK bug workarounded in build harness
-   (<a href="http://www.netbeans.org/issues/show_bug.cgi?id=152562">#152562</a>).
+   (<a href="https://bz.apache.org/netbeans/show_bug.cgi?id=152562">#152562</a>).
   </p>
  </answer>
 

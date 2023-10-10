@@ -30,7 +30,7 @@ import org.netbeans.spi.settings.Convertor;
  * {@link Convertor}s.
  * 
  * @since 1.40
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

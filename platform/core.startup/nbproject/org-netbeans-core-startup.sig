@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.77.0
+#Version 1.84.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -150,7 +150,7 @@ meth public static java.lang.String getLogDir()
 meth public static java.lang.String getUserDir()
 meth public static void initialize()
 supr org.netbeans.CLIHandler
-hfds DIR_MODULES,cacheDir,defaultsLoaded,fallbackToMemory,gui,homeDir,noSplash,systemDir,uiFontSize,userDir
+hfds DIR_MODULES,cacheDir,defaultsLoaded,fallbackToMemory,gui,homeDir,noSplash,systemDir,uiClassName,uiFontSize,userDir
 
 CLSS public final org.netbeans.core.startup.CLITestModuleReload
 cons public init()
@@ -331,6 +331,7 @@ intf org.netbeans.Stamps$Updater
 meth public java.awt.Component getComponent()
 meth public static java.awt.Image loadContent(boolean)
 meth public static org.netbeans.core.startup.Splash getInstance()
+meth public static void configureDefaultRenderingHints(java.awt.Graphics2D)
 meth public static void showAboutDialog(java.awt.Frame,javax.swing.JComponent)
 meth public void addToMaxSteps(int)
 meth public void cacheReady()

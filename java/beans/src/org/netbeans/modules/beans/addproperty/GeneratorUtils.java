@@ -50,7 +50,7 @@ public final class GeneratorUtils {
         GuardedDocument gdoc = null;
         try {
             Document doc = wc.getDocument();
-            if (doc != null && doc instanceof GuardedDocument)
+            if (doc instanceof GuardedDocument)
                 gdoc = (GuardedDocument)doc;
         } catch (IOException ioe) {}
         Tree lastMember = null;

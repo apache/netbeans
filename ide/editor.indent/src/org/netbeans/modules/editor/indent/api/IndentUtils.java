@@ -50,7 +50,7 @@ public final class IndentUtils {
     
     /**
      * Cached indentation string containing tabs.
-     * <br/>
+     * <br>
      * The cache does not contain indents smaller than the particular tabSize
      * since they are only spaces contained in cachedSpacesStrings.
      */
@@ -164,7 +164,7 @@ public final class IndentUtils {
     
     /**
      * Create (or get from cache) indentation string for the given indent.
-     * <br/>
+     * <br>
      * The indentation settings (tab-size etc. are determined based on the given
      * document).
      * 
@@ -188,8 +188,8 @@ public final class IndentUtils {
      * @param expandTabs true if no tab characters '\t' should be used for indentation string
      * (only spaces will be used).
      * @param tabSize number of spaces equal to each '\t' character used in indentation string.
-     *  <br/>This only applies if expandTabs == false.
-     *  <br/>For example if indent == 20 and tabSize == 8 then indent string
+     *  <br>This only applies if expandTabs == false.
+     *  <br>For example if indent == 20 and tabSize == 8 then indent string
      *  would contain two tabs followed by four spaces.
      * @return indentation string containing tabs and spaces according to the given parameters
      * @since 1.22

@@ -61,7 +61,6 @@ class Test {
     ): void {
         echo "Trailing Comma in Parameter List" . PHP_EOL;
     }
-
 }
 
 $closure = function (

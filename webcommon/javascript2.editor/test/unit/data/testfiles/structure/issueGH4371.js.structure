@@ -1,0 +1,13 @@
+test:CLASS:[PUBLIC]:ESCAPED{test}:
+  #fieldTest2:FIELD:[PROTECTED]:ESCAPED{#fieldTest2}<font color="#999999">ESCAPED{ : }Number</font>:
+  #fieldTest4:FIELD:[STATIC, PROTECTED]:ESCAPED{#fieldTest4}<font color="#999999">ESCAPED{ : }Number</font>:
+  #test1:METHOD:[PROTECTED]:ESCAPED{#test1}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  #test2:METHOD:[PROTECTED]:ESCAPED{#test2}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  #test5:METHOD:[STATIC, PROTECTED]:ESCAPED{#test5}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  #test6:METHOD:[STATIC, PROTECTED]:ESCAPED{#test6}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  fieldTest1:FIELD:[PUBLIC]:ESCAPED{fieldTest1}<font color="#999999">ESCAPED{ : }Number</font>:
+  fieldTest3:FIELD:[PUBLIC, STATIC]:ESCAPED{fieldTest3}<font color="#999999">ESCAPED{ : }Number</font>:
+  test3:METHOD:[PUBLIC]:ESCAPED{test3}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  test4:METHOD:[PUBLIC]:ESCAPED{test4}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  test7:METHOD:[PUBLIC, STATIC]:ESCAPED{test7}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:
+  test8:METHOD:[PUBLIC, STATIC]:ESCAPED{test8}ESCAPED{(}ESCAPED{)}<font color="#999999">ESCAPED{ : }undefined</font>:

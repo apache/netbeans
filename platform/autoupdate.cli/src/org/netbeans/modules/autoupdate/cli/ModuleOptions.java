@@ -69,6 +69,7 @@ public class ModuleOptions extends OptionProcessor {
     private Option updateAll;
     private Option both;
     private Option extraUC;
+    private Option directDisable;
     private final Collection<UpdateUnitProvider> ownUUP = new HashSet<> ();
     
     /** Creates a new instance of ModuleOptions */
@@ -103,8 +104,10 @@ public class ModuleOptions extends OptionProcessor {
             Option.withoutArgument(Option.NO_SHORT_NAME, "update-all"), b, "MSG_UpdateAll"); // NOI18N
         extraUC = Option.shortDescription(
             Option.requiredArgument(Option.NO_SHORT_NAME, "extra-uc"), b, "MSG_ExtraUC"); // NOI18N
+        directDisable = Option.shortDescription(
+            Option.additionalArguments(Option.NO_SHORT_NAME, "direct-disable"), b, "MSG_DirectDisableModule"); // NOI18N
         
-        Option oper = OptionGroups.someOf(refresh, list, install, disable, enable, update, updateAll, extraUC);
+        Option oper = OptionGroups.someOf(refresh, list, install, disable, enable, update, updateAll, extraUC, directDisable);
         Option modules = Option.withoutArgument(Option.NO_SHORT_NAME, "modules");
         both = OptionGroups.allOf(modules, oper);
         return both;
@@ -175,11 +178,15 @@ public class ModuleOptions extends OptionProcessor {
                 }
 
                 if (optionValues.containsKey(disable)) {
-                    changeModuleState(env, optionValues.get(disable), false);
+                    changeModuleState(env, optionValues.get(disable), false, false);
                 }
 
                 if (optionValues.containsKey(enable)) {
-                    changeModuleState(env, optionValues.get(enable), true);
+                    changeModuleState(env, optionValues.get(enable), true, false);
+                }
+
+                if (optionValues.containsKey(directDisable)) {
+                    changeModuleState(env, optionValues.get(directDisable), false, true);
                 }
             } catch (InterruptedException | IOException | OperationException ex) {
                 throw initCause(new CommandException(4), ex);
@@ -205,11 +212,13 @@ public class ModuleOptions extends OptionProcessor {
         "# {0} - requested patterns",
         "MSG_CannotFindAnyPattern=Cannot find any module matching {0}\n"
     })
-    private void changeModuleState(Env env, String[] cnbs, boolean enable) throws IOException, CommandException, InterruptedException, OperationException {
+    private void changeModuleState(Env env, String[] cnbs, boolean enable, boolean direct) throws IOException, CommandException, InterruptedException, OperationException {
         CodeNameMatcher cnm = CodeNameMatcher.create(env, cnbs);
 
         List<UpdateUnit> units = UpdateManager.getDefault().getUpdateUnits();
-        OperationContainer<OperationSupport> operate = enable ? OperationContainer.createForEnable() : OperationContainer.createForDisable();
+        OperationContainer<OperationSupport> operate = 
+                enable ? OperationContainer.createForEnable()  :
+                    (direct ? OperationContainer.createForDirectDisable() : OperationContainer.createForDisable());
         StringBuilder sb = new StringBuilder();
         boolean found = false;
         for (UpdateUnit updateUnit : units) {

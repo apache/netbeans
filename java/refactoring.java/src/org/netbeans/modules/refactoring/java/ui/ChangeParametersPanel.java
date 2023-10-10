@@ -269,7 +269,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
     }
     
     protected Set<Modifier> getModifier() {
-        Set<Modifier> modifiers = new HashSet<Modifier>(1);
+        Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
 //        modifiers.remove(Modifier.PRIVATE);
 //        modifiers.remove(Modifier.PUBLIC);
 //        modifiers.remove(Modifier.PROTECTED);
@@ -853,7 +853,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
         }
     }
 
-    private Set<Modifier> modifiers = new HashSet<Modifier>();
+    private Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
     private List<String> typeParameters = new LinkedList<String>();
     private Modifier currentModifier = null;
     

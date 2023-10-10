@@ -33,7 +33,7 @@ public class Catalog {
     private final DBMetaDataProvider provider;
     private final String name;
     
-    private Map/*<String, Schema>*/ schemas;
+    private Map<String, Schema> schemas;
     
     Catalog(DBMetaDataProvider provider, String name) {
         this.provider = provider;
@@ -47,34 +47,31 @@ public class Catalog {
     public synchronized Schema[] getSchemas() throws SQLException {
         if (schemas == null) {
             schemas = new TreeMap();
-            ResultSet rs = null;
-            
-            if (name == null) {
-                // assuming the current catalog when the catalog name is null
-                rs = provider.getMetaData().getSchemas();
-            } else {
-                // DatabaseMetaData.getSchemas() can not be used to retrieved the
-                // list of schemas in a given catalog, since it (e.g. for the JTDS
-                // driver) only returns the schemas in the current catalog. The 
-                // workaround is to retrieve all tables from all schemas in the given
-                // catalog and obtain a schema list from that. This is not perfect, 
-                // since it will not return the schemas containig neither tables nor views.
-                rs = provider.getMetaData().getTables(name, "%", "%", new String[] { "TABLE", "VIEW" }); // NOI18N
-            }
 
-            try {
+            // (if name == null)
+            //      assuming the current catalog when the catalog name is null
+            // else
+            //      DatabaseMetaData.getSchemas() can not be used to retrieved the
+            //      list of schemas in a given catalog, since it (e.g. for the JTDS
+            //      driver) only returns the schemas in the current catalog. The 
+            //      workaround is to retrieve all tables from all schemas in the given
+            //      catalog and obtain a schema list from that. This is not perfect, 
+            //      since it will not return the schemas containig neither tables nor views.
+            try (ResultSet rs = (name == null) 
+                    ? provider.getMetaData().getSchemas() 
+                    : provider.getMetaData().getTables(name, "%", "%", new String[] { "TABLE", "VIEW" })) {
                 while (rs.next()) {
                     String schemaName = rs.getString("TABLE_SCHEM"); // NOI18N
-                    if(schemaName == null) schemaName = "";//handle null as empty name
+                    if(schemaName == null) {
+                        schemaName = "";//handle null as empty name
+                    }
                     Schema schema = new Schema(provider, this, schemaName);
                     schemas.put(schemaName, schema);
                 }
-            } finally {
-                rs.close();
             }
         }
         
-        return (Schema[])schemas.values().toArray(new Schema[schemas.size()]);
+        return schemas.values().toArray(new Schema[schemas.size()]);
     }
     
     public synchronized Schema getSchema(String name) throws SQLException {
@@ -82,9 +79,10 @@ public class Catalog {
             getSchemas();
         }
         
-        return (Schema)schemas.get(name);
+        return schemas.get(name);
     }
     
+    @Override
     public String toString() {
         return "Catalog[name='" + name + "']"; // NOI18N
     }

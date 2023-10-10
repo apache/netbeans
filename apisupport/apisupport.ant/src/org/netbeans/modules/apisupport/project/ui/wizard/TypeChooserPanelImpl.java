@@ -636,7 +636,7 @@ JFileChooser chooser = ProjectChooser.projectChooser();
         static File getProjectFolder( WizardDescriptor settings) {
             if (settings != null) {
                 Object value = settings.getProperty(PROJECT_FOLDER);
-                if (value != null && value instanceof File) {
+                if (value instanceof File) {
                     return (File) value;
                 }
             }

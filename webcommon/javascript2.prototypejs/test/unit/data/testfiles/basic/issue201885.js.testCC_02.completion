@@ -1,0 +1,6 @@
+Code completion result for source line:
+person.|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     say(message: String): undefine  [PUBLIC]   issue201885.js
+FIELD      name:                           [PUBLIC]   issue201885.js

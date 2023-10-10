@@ -41,6 +41,7 @@ public abstract class ProgressMonitor {
      * Returns <code>true</code> if the progress should be canceled.
      * Git commands periodically check the result of the method and end their
      * progress immediately when the method returns <code>true</code>
+     * @return true if the progress should be canceled
      */
     public abstract boolean isCanceled ();
 

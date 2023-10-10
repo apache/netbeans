@@ -24,7 +24,6 @@ package org.netbeans.performance.enterprise.actions;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
 import org.netbeans.jellytools.JellyTestCase;
 import org.netbeans.jellytools.ProjectsTabOperator;
 import org.netbeans.jemmy.EventTool;
@@ -64,7 +63,7 @@ public class WatchProjectsTest extends JellyTestCase {
         Log.enableInstances(Logger.getLogger("TIMER"), "Project", Level.FINEST);
         
         final ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
-        Assert.assertNotNull("Classloader must exists", loader);
+        assertNotNull("Classloader must exists", loader);
         LOG.fine("Classloader: " + loader);
         Class pmClass = Class.forName(
             "org.netbeans.api.project.ui.OpenProjects", false, loader); //NOI18N

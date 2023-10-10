@@ -36,6 +36,7 @@ import org.netbeans.libs.git.GitRevisionInfo;
 public interface RevisionInfoListener extends NotificationListener {
     /**
      * Invoked when a revision is processed by a certain git command.
+     * @param revisionInfo git revision info
      */
     public void notifyRevisionInfo (GitRevisionInfo revisionInfo);
 }

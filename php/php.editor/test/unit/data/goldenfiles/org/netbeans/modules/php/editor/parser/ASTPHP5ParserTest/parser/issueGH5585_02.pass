@@ -1,0 +1,462 @@
+<testresult testFile='issueGH5585_02.php'>
+    <scanner>
+        <token id='T_CLASS' start='814' end='819'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='820' end='821'>
+            <text>T</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='822' end='823'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='829' end='835'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='836' end='844'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='845' end='849'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='849' end='850'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='850' end='851'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='851' end='852'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='853' end='859'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='860' end='861'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='870' end='876'>
+            <text>return</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='877' end='890'>
+            <text>"test method"</text>
+        </token>
+        <token id='T_SEMICOLON' start='890' end='891'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='896' end='897'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='903' end='909'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='910' end='918'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='919' end='924'>
+            <text>test2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='924' end='925'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='925' end='931'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='931' end='932'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='932' end='933'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='934' end='940'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='941' end='942'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='951' end='957'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='958' end='964'>
+            <text>$param</text>
+        </token>
+        <token id='T_NEKUDA' start='965' end='966'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='967' end='974'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='974' end='975'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='980' end='981'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='982' end='983'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='985' end='987'>
+            <text>$t</text>
+        </token>
+        <token id='T_EQUAL' start='988' end='989'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='990' end='993'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='994' end='995'>
+            <text>T</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='995' end='996'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='996' end='997'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='997' end='998'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='999' end='1003'>
+            <text>echo</text>
+        </token>
+        <token id='T_START_HEREDOC' start='1004' end='1013'>
+            <text>&lt;&lt;&lt; HTML\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1013' end='1023'>
+            <text>    &lt;span&gt;</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='1023' end='1024'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1024' end='1026'>
+            <text>$t</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1026' end='1028'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1028' end='1032'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1032' end='1033'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1033' end='1034'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1034' end='1035'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1035' end='1047'>
+            <text>&lt;/span&gt;\n    </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='1047' end='1048'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1048' end='1050'>
+            <text>$t</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1050' end='1052'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1052' end='1057'>
+            <text>test2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1057' end='1058'>
+            <text>(</text>
+        </token>
+        <token id='T_START_HEREDOC' start='1058' end='1064'>
+            <text>&lt;&lt;&lt; X\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1064' end='1104'>
+            <text>        something\n        something\n    </text>
+        </token>
+        <token id='T_END_HEREDOC' start='1104' end='1105'>
+            <text>X</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1105' end='1106'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1106' end='1107'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1107' end='1113'>
+            <text>\n\n    </text>
+        </token>
+        <token id='T_END_HEREDOC' start='1113' end='1117'>
+            <text>HTML</text>
+        </token>
+        <token id='T_SEMICOLON' start='1117' end='1118'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='1120' end='1124'>
+            <text>echo</text>
+        </token>
+        <token id='T_START_HEREDOC' start='1125' end='1134'>
+            <text>&lt;&lt;&lt; HTML\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1134' end='1144'>
+            <text>    &lt;span&gt;</text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='1144' end='1145'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1145' end='1147'>
+            <text>$t</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1147' end='1149'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1149' end='1153'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1153' end='1154'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1154' end='1155'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1155' end='1156'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1156' end='1168'>
+            <text>&lt;/span&gt;\n    </text>
+        </token>
+        <token id='T_CURLY_OPEN_WITH_DOLAR' start='1168' end='1169'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1169' end='1171'>
+            <text>$t</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1171' end='1173'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1173' end='1178'>
+            <text>test2</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1178' end='1179'>
+            <text>(</text>
+        </token>
+        <token id='T_START_NOWDOC' start='1179' end='1187'>
+            <text>&lt;&lt;&lt; &apos;X&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1187' end='1227'>
+            <text>\n\n\n        something\n        something\n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='1227' end='1232'>
+            <text>    X</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1232' end='1233'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1233' end='1234'>
+            <text>}</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1234' end='1242'>
+            <text>\n\n\n\n    </text>
+        </token>
+        <token id='T_END_HEREDOC' start='1242' end='1246'>
+            <text>HTML</text>
+        </token>
+        <token id='T_SEMICOLON' start='1246' end='1247'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='1249' end='1253'>
+            <text>echo</text>
+        </token>
+        <token id='T_START_NOWDOC' start='1254' end='1265'>
+            <text>&lt;&lt;&lt; &apos;HTML&apos;\n</text>
+        </token>
+        <token id='T_ENCAPSED_AND_WHITESPACE' start='1265' end='1363'>
+            <text>    &lt;span&gt;{$t-&gt;test()}&lt;/span&gt;\n    {$t-&gt;test2(&lt;&lt;&lt; X\n        something\n\n        something\n    X)}\n\n\n</text>
+        </token>
+        <token id='T_END_NOWDOC' start='1363' end='1371'>
+            <text>    HTML</text>
+        </token>
+        <token id='T_SEMICOLON' start='1371' end='1372'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1373' end='1373'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1373'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='814' end='983' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='820' end='821' name='T'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='822' end='983' isCurly='true'>
+                    <MethodDeclaration start='829' end='897' modifiers='public'>
+                        <FunctionDeclaration start='836' end='897' isReference='false'>
+                            <Identifier start='845' end='849' name='test'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='853' end='859' isCurrent='false' isGlobal='false'>
+                                <Identifier start='853' end='859' name='string'/>
+                            </NamespaceName>
+                            <Block start='860' end='897' isCurly='true'>
+                                <ReturnStatement start='870' end='891'>
+                                    <Scalar start='877' end='890' type='STRING' value='"test method"'/>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                    <MethodDeclaration start='903' end='981' modifiers='public'>
+                        <FunctionDeclaration start='910' end='981' isReference='false'>
+                            <Identifier start='919' end='924' name='test2'/>
+                            <FormalParameters>
+                                <FormalParameter start='925' end='931' isMandatory='true' isVariadic='false'>
+                                    <ParametrType>
+                                    </ParametrType>
+                                    <ParametrName>
+                                        <Variable start='925' end='931' isDollared='true'>
+                                            <Identifier start='926' end='931' name='param'/>
+                                        </Variable>
+                                    </ParametrName>
+                                    <DefaultValue>
+                                    </DefaultValue>
+                                </FormalParameter>
+                            </FormalParameters>
+                            <NamespaceName start='934' end='940' isCurrent='false' isGlobal='false'>
+                                <Identifier start='934' end='940' name='string'/>
+                            </NamespaceName>
+                            <Block start='941' end='981' isCurly='true'>
+                                <ReturnStatement start='951' end='975'>
+                                    <InfixExpression start='958' end='974' operator='CONCAT'>
+                                        <Variable start='958' end='964' isDollared='true'>
+                                            <Identifier start='959' end='964' name='param'/>
+                                        </Variable>
+                                        <NamespaceName start='967' end='974' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='967' end='974' name='PHP_EOL'/>
+                                        </NamespaceName>
+                                    </InfixExpression>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='985' end='998'>
+                <Assignment start='985' end='997' operator='EQUAL'>
+                    <Variable start='985' end='987' isDollared='true'>
+                        <Identifier start='986' end='987' name='t'/>
+                    </Variable>
+                    <ClassInstanceCreation start='990' end='997' anonymous='false'>
+                        <ClassName start='994' end='995'>
+                            <NamespaceName start='994' end='995' isCurrent='false' isGlobal='false'>
+                                <Identifier start='994' end='995' name='T'/>
+                            </NamespaceName>
+                        </ClassName>
+                        <Parameters>
+                        </Parameters>
+                    </ClassInstanceCreation>
+                </Assignment>
+            </ExpressionStatement>
+            <EchoStatement start='999' end='1118'>
+                <Quote start='1004' end='1117' type='HEREDOC'>
+                    <Expressions>
+                        <Scalar start='1013' end='1023' type='STRING' value='    &lt;span&gt;'/>
+                        <ReflectionVariable start='1023' end='1035'>
+                            <MethodInvocation start='1024' end='1034' isNullsafe='false'>
+                                <Variable start='1024' end='1026' isDollared='true'>
+                                    <Identifier start='1025' end='1026' name='t'/>
+                                </Variable>
+                                <Method>
+                                    <FunctionInvocation start='1028' end='1034'>
+                                        <FucntionName start='1028' end='1032'>
+                                            <Variable start='1028' end='1032' isDollared='false'>
+                                                <Identifier start='1028' end='1032' name='test'/>
+                                            </Variable>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Method>
+                            </MethodInvocation>
+                        </ReflectionVariable>
+                        <Scalar start='1035' end='1047' type='STRING' value='&lt;/span&gt;\n    '/>
+                        <ReflectionVariable start='1047' end='1107'>
+                            <MethodInvocation start='1048' end='1106' isNullsafe='false'>
+                                <Variable start='1048' end='1050' isDollared='true'>
+                                    <Identifier start='1049' end='1050' name='t'/>
+                                </Variable>
+                                <Method>
+                                    <FunctionInvocation start='1052' end='1106'>
+                                        <FucntionName start='1052' end='1057'>
+                                            <Variable start='1052' end='1057' isDollared='false'>
+                                                <Identifier start='1052' end='1057' name='test2'/>
+                                            </Variable>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Quote start='1058' end='1105' type='HEREDOC'>
+                                                <Expressions>
+                                                    <Scalar start='1064' end='1104' type='STRING' value='        something\n        something\n    '/>
+                                                </Expressions>
+                                            </Quote>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Method>
+                            </MethodInvocation>
+                        </ReflectionVariable>
+                        <Scalar start='1107' end='1113' type='STRING' value='\n\n    '/>
+                    </Expressions>
+                </Quote>
+            </EchoStatement>
+            <EchoStatement start='1120' end='1247'>
+                <Quote start='1125' end='1246' type='HEREDOC'>
+                    <Expressions>
+                        <Scalar start='1134' end='1144' type='STRING' value='    &lt;span&gt;'/>
+                        <ReflectionVariable start='1144' end='1156'>
+                            <MethodInvocation start='1145' end='1155' isNullsafe='false'>
+                                <Variable start='1145' end='1147' isDollared='true'>
+                                    <Identifier start='1146' end='1147' name='t'/>
+                                </Variable>
+                                <Method>
+                                    <FunctionInvocation start='1149' end='1155'>
+                                        <FucntionName start='1149' end='1153'>
+                                            <Variable start='1149' end='1153' isDollared='false'>
+                                                <Identifier start='1149' end='1153' name='test'/>
+                                            </Variable>
+                                        </FucntionName>
+                                        <Parameters>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Method>
+                            </MethodInvocation>
+                        </ReflectionVariable>
+                        <Scalar start='1156' end='1168' type='STRING' value='&lt;/span&gt;\n    '/>
+                        <ReflectionVariable start='1168' end='1234'>
+                            <MethodInvocation start='1169' end='1233' isNullsafe='false'>
+                                <Variable start='1169' end='1171' isDollared='true'>
+                                    <Identifier start='1170' end='1171' name='t'/>
+                                </Variable>
+                                <Method>
+                                    <FunctionInvocation start='1173' end='1233'>
+                                        <FucntionName start='1173' end='1178'>
+                                            <Variable start='1173' end='1178' isDollared='false'>
+                                                <Identifier start='1173' end='1178' name='test2'/>
+                                            </Variable>
+                                        </FucntionName>
+                                        <Parameters>
+                                            <Scalar start='1179' end='1232' type='STRING' value='\n\n\n        something\n        something\n\n'/>
+                                        </Parameters>
+                                    </FunctionInvocation>
+                                </Method>
+                            </MethodInvocation>
+                        </ReflectionVariable>
+                        <Scalar start='1234' end='1242' type='STRING' value='\n\n\n\n    '/>
+                    </Expressions>
+                </Quote>
+            </EchoStatement>
+            <EchoStatement start='1249' end='1372'>
+                <Scalar start='1254' end='1371' type='STRING' value='    &lt;span&gt;{$t-&gt;test()}&lt;/span&gt;\n    {$t-&gt;test2(&lt;&lt;&lt; X\n        something\n\n        something\n    X)}\n\n\n'/>
+            </EchoStatement>
+        </Statements>
+    </Program>
+</testresult>

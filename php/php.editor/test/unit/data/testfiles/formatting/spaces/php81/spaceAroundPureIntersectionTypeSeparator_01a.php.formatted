@@ -50,7 +50,6 @@ class TestClass {
     public function returnType(): X & Y {
         return $this->test;
     }
-
 }
 
 trait TestTrait {
@@ -64,7 +63,6 @@ trait TestTrait {
     public function returnType(): X & Y {
         return $this->test;
     }
-
 }
 
 interface TestInterfase {

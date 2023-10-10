@@ -336,39 +336,49 @@ public class ProcedureNode extends BaseNode {
             String source = "";
             try {
                 String query = "";
-                String escapedName = "";
+                String escapedName = getName().replace("'", "''"); // NOI18N
                 boolean function = false;
                 switch (getType()) {
                     case Function:
                         function = true;
                     case Procedure:
-                        escapedName = getName().replace("'", "''");
-                        query = "SELECT param_list, returns, body, db FROM mysql.proc WHERE name = '"
-                                + escapedName + "';"; // NOI18N
-                        try (Statement stat = connection.getJDBCConnection().createStatement();
+                        query = "SELECT routine_schema,routine_definition,dtd_identifier,is_deterministic,sql_data_access,routine_comment," // NOI18N
+                              + "IFNULL((SELECT GROUP_CONCAT(CONCAT(" + (function ? "" : "parameter_mode,' ',") + "parameter_name,' ',dtd_identifier))" // NOI18N
+                              + " FROM information_schema.parameters" // NOI18N
+                              + " WHERE specific_name=routine_name AND ordinal_position>0 ORDER BY ordinal_position), '') AS routine_params" // NOI18N
+                              + " FROM information_schema.routines" // NOI18N
+                              + " WHERE routine_name='" + escapedName + "';"; // NOI18N
+                        try (Statement stat = connection.getJDBCConnection().createStatement(); 
                                 ResultSet rs = stat.executeQuery(query);) {
 
                             while (rs.next()) {
-                                String parent = rs.getString("db"); // NOI18N
+                                String parent = rs.getString("routine_schema"); // NOI18N
                                 if (parent != null && parent.trim().length() > 0) {
                                     parent += '.'; //  NOI18N
                                 } else {
                                     parent = "";
                                 }
-                                String params = rs.getString("param_list"); // NOI18N
 
-                                String returns = null;
-                                if (function) {
-                                    returns = rs.getString("returns"); // NOI18N
-                                }
-                                String body = rs.getString("body"); // NOI18N
-                                source = getTypeName(getType()) + " " + parent
-                                        + getName() + "\n" + // NOI18N
-                                        "(" + params + ")" + "\n"
-                                        + // NOI18N
-                                        (function ? "RETURNS " + returns + "\n" : "")
-                                        + // NOI18N                                   
-                                        body;
+                                //Concatenated list of routine parameters
+                                String params = rs.getString("routine_params"); // NOI18N
+
+                                //Data access characteristic: CONTAINS SQL, NO SQL, READS SQL DATA, or MODIFIES SQL DATA.
+                                String sql_data_access = rs.getString("sql_data_access"); // NOI18N
+
+                                //YES or NO, depending on whether the routine is defined with the DETERMINISTIC characteristic.
+                                String is_deterministic = rs.getString("is_deterministic"); // NOI18N
+
+                                //Routine comment
+                                String comment = rs.getString("routine_comment"); // NOI18N
+
+                                source = rs.getString("routine_definition"); // NOI18N
+
+                                source = getTypeName(getType()) + " " + parent + getName() + "(" + params + ")" + "\n" // NOI18N
+                                       + (function ? "RETURNS " + rs.getString("dtd_identifier") + "\n" : "") // NOI18N
+                                       + sql_data_access + "\n" // NOI18N
+                                       + (is_deterministic == "YES" ? "" : "NOT ") + "DETERMINISTIC\n" // NOI18N
+                                       + (comment.length() > 0 ? "COMMENT '" + comment +"'\n" : "") // NOI18N
+                                       + rs.getString("routine_definition"); // NOI18N
                             }
                         }
                         break;
@@ -415,7 +425,7 @@ public class ProcedureNode extends BaseNode {
                         }
                         break;
                     default:
-                        assert false : "Unknown type" + getType();
+                        assert false : "Unknown type " + getType(); // NOI18N
                 }
             } catch (SQLException ex) {
                 LOG.log(Level.INFO, "{0} while get source of {1} {2}", new Object[] {ex, getTypeName(getType()), getName()});
@@ -429,16 +439,19 @@ public class ProcedureNode extends BaseNode {
             String escapedName = "";
             String query = "";
             try {
+                boolean function = false;
                 switch (getType()) {
                     case Function:
+                        function = true;
                     case Procedure:
                         escapedName = getName().replace("'", "''");
-                        query = "SELECT param_list FROM mysql.proc WHERE name = '" // NOI18N
-                                + escapedName + "';"; // NOI18N
-                        try (Statement stat = connection.getJDBCConnection().createStatement();
+                        query = "SELECT GROUP_CONCAT(CONCAT(" + (function ? "" : "parameter_mode,' ',") + "parameter_name,' ',dtd_identifier)) AS routine_params" // NOI18N
+                              + " FROM information_schema.parameters" // NOI18N
+                              + " WHERE ordinal_position>0 AND specific_name='" + escapedName + "' ORDER BY ordinal_position;"; // NOI18N
+                        try (Statement stat = connection.getJDBCConnection().createStatement(); 
                                 ResultSet rs = stat.executeQuery(query);) {
                             while (rs.next()) {
-                                params = rs.getString("param_list"); // NOI18N
+                                params = rs.getString("routine_params"); // NOI18N
                             }
                         }
                         break;
@@ -485,11 +498,13 @@ public class ProcedureNode extends BaseNode {
                     case Function:
                     case Procedure:
                         escapedName = getName().replace("'", "''");
-                        query = "SELECT body FROM mysql.proc WHERE name = '" + escapedName + "';"; // NOI18N
-                        try (Statement stat = connection.getJDBCConnection().createStatement();
+                        query = "SELECT routine_definition" // NOI18N
+                              + " FROM information_schema.routines" // NOI18N
+                              + " WHERE routine_name='" + escapedName + "';"; // NOI18N
+                        try (Statement stat = connection.getJDBCConnection().createStatement(); 
                                 ResultSet rs = stat.executeQuery(query);) {
                             while (rs.next()) {
-                                body = rs.getString("body"); // NOI18N
+                                body = rs.getString("routine_definition"); // NOI18N
                             }
                         }
                         break;
@@ -505,7 +520,7 @@ public class ProcedureNode extends BaseNode {
                         }
                         break;
                     default:
-                        assert false : "Unknown type" + getType();
+                        assert false : "Unknown type " + getType(); // NOI18N
                 }
             } catch (SQLException ex) {
                 LOG.log(Level.INFO, "{0} while get body of {1} {2}", new Object[] {ex, getTypeName(getType()), getName()});

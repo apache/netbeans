@@ -1,0 +1,4 @@
+        static::introduceStaticMeth^od();
+        -------------------------------
+HINT:Introduce Hint
+FIX:Create Method " introduceStaticMethod()" in Enum "BackedEnumInt" (testEnumMethods.php)

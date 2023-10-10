@@ -207,12 +207,12 @@ public class NetworkProxyReloader extends ProxySettings.Reloader {
             if (Utilities.isUnix()){
                 String env = System.getProperty(RUNNING_ENV_SYS_PROPERTY);
                 if (env != null) {
-                    if (env.toLowerCase().equals(GNOME)) {
+                    if (env.equalsIgnoreCase(GNOME)) {
                         LOGGER.log(Level.INFO, "System network proxy resolver: Gnome"); //NOI18N
                         return new GnomeNetworkProxy();
                     }
                     
-                    if (env.toLowerCase().equals(KDE)) {
+                    if (env.equalsIgnoreCase(KDE)) {
                         LOGGER.log(Level.INFO, "System network proxy resolver: KDE"); //NOI18N
                         return new KdeNetworkProxy();
                     }

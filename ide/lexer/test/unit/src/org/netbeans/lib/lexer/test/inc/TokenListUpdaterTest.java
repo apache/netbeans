@@ -58,7 +58,7 @@ public class TokenListUpdaterTest extends NbTestCase {
     @Override
     protected Level logLevel() {
         return Level.INFO;
-//        return super.logLevel();;
+//        return super.logLevel();
     }
 
     public void testInsertUnfinishedLexing() throws Exception {

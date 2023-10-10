@@ -104,22 +104,26 @@ public class LayerOptionsImport extends Task {
 
         try {
             PrintWriter pw = output != null ? new PrintWriter(output) : null;
-            for (String path : files.keySet()) {
+            for (Map.Entry<String, String> it : files.entrySet()) {
+                String path = it.getKey();
+
                 if (!path.startsWith("OptionsExport")) {
                     continue;
                 }
                 Map<String, String> name2value = attributesMap.get(path);
                 if (name2value != null) {
-                    String cnb = files.get(path);
+                    String cnb = it.getValue();
                     String origin = String.format("#%s %s", cnb, path);
                     if (pw != null) {
                         pw.println(origin);
                     } else {
                         log(origin);
                     }
-                    for (String name : name2value.keySet()) {
+                    for (Map.Entry<String, String> entry : name2value.entrySet()) {
+                        String name = entry.getKey();
+
                         if (name.matches("(in|ex)clude") || name.equals("translate")) {
-                            String value = name2value.get(name);
+                            String value = entry.getValue();
                             if (value != null && value.length() > 0) {
                                 String line = String.format("%s %s", name, value);
                                 if (pw != null) {

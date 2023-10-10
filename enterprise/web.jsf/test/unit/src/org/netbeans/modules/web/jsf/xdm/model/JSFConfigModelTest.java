@@ -36,6 +36,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.web.jsf.api.facesmodel.*;
 import org.netbeans.modules.web.jsf.impl.facesmodel.FacesAttributes;
 import org.netbeans.modules.web.jsf.impl.facesmodel.JSFConfigModelImpl;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.xml.xam.Model;
 import org.netbeans.modules.xml.xam.ModelSource;
 import org.openide.filesystems.FileObject;
@@ -112,7 +113,7 @@ public class JSFConfigModelTest extends NbTestCase {
     public void testReadJSFVersion2_2() throws Exception {
         // TODO finish with JSF2.2 update
         JSFConfigModel model = Util.loadRegistryModel("faces-config_2_2.xml");
-        assertEquals(JSFVersion.JSF_2_2, model.getVersion());
+        assertEquals(JsfVersion.JSF_2_2, model.getVersion());
         FacesConfig facesConfig = model.getRootComponent();
         assertNotNull(facesConfig);
         System.out.println("facesConfig: " + facesConfig);
@@ -329,9 +330,9 @@ public class JSFConfigModelTest extends NbTestCase {
 
     public void testJSFVersion() throws Exception{
         JSFConfigModel model = Util.loadRegistryModel("faces-config-jsfjpa-example.xml");
-        assertEquals(JSFVersion.JSF_1_2, model.getVersion());
+        assertEquals(JsfVersion.JSF_1_2, model.getVersion());
         model = Util.loadRegistryModel("faces-config-01.xml");
-        assertEquals(JSFVersion.JSF_1_1, model.getVersion());
+        assertEquals(JsfVersion.JSF_1_1, model.getVersion());
     }
 
     public void testComments() throws Exception {

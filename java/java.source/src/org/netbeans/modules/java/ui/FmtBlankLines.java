@@ -133,12 +133,6 @@ public class FmtBlankLines extends javax.swing.JPanel {
         inDeclarationsLabel.setLabelFor(inDeclarationsField);
         org.openide.awt.Mnemonics.setLocalizedText(inDeclarationsLabel, org.openide.util.NbBundle.getMessage(FmtBlankLines.class, "LBL_blInDeclarations")); // NOI18N
 
-        inDeclarationsField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inDeclarationsFieldActionPerformed(evt);
-            }
-        });
-
         inCodeLabel.setLabelFor(inCodeField);
         org.openide.awt.Mnemonics.setLocalizedText(inCodeLabel, org.openide.util.NbBundle.getMessage(FmtBlankLines.class, "LBL_blInCode")); // NOI18N
 
@@ -254,26 +248,25 @@ public class FmtBlankLines extends javax.swing.JPanel {
                                     .addComponent(anEnumFooterLabel)
                                     .addComponent(bFieldsLabel))
                                 .addGap(14, 14, 14)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(bMethodsField, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(aClassHeaderField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                        .addComponent(aClassField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                        .addComponent(bClassField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                        .addComponent(aImportsField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                        .addComponent(bImportsField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                        .addComponent(aPackageField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                        .addComponent(bPackageField)
-                                        .addComponent(inCodeField)
-                                        .addComponent(inDeclarationsField)
-                                        .addComponent(anAnonymousClassHeaderField)
-                                        .addComponent(anEnumHeaderField)
-                                        .addComponent(aClassFooterField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                        .addComponent(anAnonymousClassFooterField)
-                                        .addComponent(anEnumFooterField)
-                                        .addComponent(bFieldsField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                                        .addComponent(aFieldsField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                                    .addComponent(aMethodsField, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(aClassHeaderField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(aClassField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(bClassField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(aImportsField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(bImportsField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(aPackageField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(bPackageField)
+                                    .addComponent(inCodeField)
+                                    .addComponent(inDeclarationsField)
+                                    .addComponent(anAnonymousClassHeaderField)
+                                    .addComponent(anEnumHeaderField)
+                                    .addComponent(aClassFooterField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(anAnonymousClassFooterField)
+                                    .addComponent(anEnumFooterField)
+                                    .addComponent(bFieldsField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(aFieldsField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(bMethodsField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                    .addComponent(aMethodsField, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -367,10 +360,6 @@ public class FmtBlankLines extends javax.swing.JPanel {
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {aClassField, aClassHeaderField, aImportsField, aMethodsField, aPackageField, bClassField, bFieldsField, bImportsField, bMethodsField, bPackageField});
 
     }// </editor-fold>//GEN-END:initComponents
-
-    private void inDeclarationsFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inDeclarationsFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inDeclarationsFieldActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.netbeans.modules.maven.grammar.spi.AbstractSchemaBasedGrammar;
 import org.netbeans.modules.xml.api.model.GrammarEnvironment;
 import org.netbeans.modules.xml.api.model.GrammarResult;

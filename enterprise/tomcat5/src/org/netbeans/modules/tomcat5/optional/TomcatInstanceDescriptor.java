@@ -34,14 +34,17 @@ public class TomcatInstanceDescriptor implements ServerInstanceDescriptor {
         this.manager = manager;
     }
     
+    @Override
     public String getHostname() {
         return  manager.getTomcatProperties().getHost();
     }
 
+    @Override
     public int getHttpPort() {
         return manager.getTomcatProperties().getServerPort();
     }
 
+    @Override
     public boolean isLocal() {
         return true;
     }

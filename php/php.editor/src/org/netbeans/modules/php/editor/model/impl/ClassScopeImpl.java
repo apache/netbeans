@@ -39,6 +39,7 @@ import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.TraitElement;
 import org.netbeans.modules.php.editor.api.elements.TypeConstantElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
+import org.netbeans.modules.php.editor.api.elements.TypeMemberElement;
 import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
 import org.netbeans.modules.php.editor.model.CaseElement;
@@ -335,11 +336,19 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
                 allFields.add(new FieldElementImpl(traitScope, field));
             }
         }
+        // GH-4683 get fields of mixin
+        Set<TypeMemberElement> mixinTypeMembers = index.getAccessibleMixinTypeMembers(this, this);
+        for (TypeMemberElement mixinTypeMember : mixinTypeMembers) {
+            if (mixinTypeMember instanceof org.netbeans.modules.php.editor.api.elements.FieldElement) {
+                allFields.add((new FieldElementImpl(this, (org.netbeans.modules.php.editor.api.elements.FieldElement) mixinTypeMember)));
+            }
+        }
         return allFields;
     }
 
     @Override
     public final Collection<? extends ClassConstantElement> getInheritedConstants() {
+        // show items in Navigator Window
         Set<ClassConstantElement> allConstants = new HashSet<>();
         IndexScope indexScope = ModelUtils.getIndexScope(this);
         ElementQuery.Index index = indexScope.getIndex();
@@ -349,7 +358,12 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             Set<TypeConstantElement> indexedConstants = filterForPrivate.filter(index.getAllTypeConstants(classScope));
             for (TypeConstantElement classMember : indexedConstants) {
                 TypeConstantElement constant = classMember;
-                allConstants.add(new ClassConstantElementImpl(classScope, constant));
+                TypeElement type = constant.getType();
+                Scope inScope = classScope;
+                if (type instanceof TraitElement) {
+                    inScope = new TraitScopeImpl(indexScope, (TraitElement) type);
+                }
+                allConstants.add(new ClassConstantElementImpl(inScope, constant));
             }
         }
         Set<InterfaceScope> interfaceScopes = new HashSet<>();
@@ -359,6 +373,16 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             for (TypeConstantElement classMember : indexedConstants) {
                 TypeConstantElement constant = classMember;
                 allConstants.add(new ClassConstantElementImpl(iface, constant));
+            }
+        }
+
+        // [GH-4725] PHP 8.2 Support: Constants in Traits
+        Set<TraitScope> traits = new HashSet<>(getTraits());
+        for (TraitScope trait : traits) {
+            // do not filter private constants (private constants are available)
+            Set<TypeConstantElement> indexedConstants = index.getAllTypeConstants(trait);
+            for (TypeConstantElement constant : indexedConstants) {
+                allConstants.add(new ClassConstantElementImpl(trait, constant));
             }
         }
         return allConstants;
@@ -391,7 +415,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
                     return QualifiedName.create(superClasName);
 
                 }
-            } else if (retval.size() > 0) {
+            } else if (!retval.isEmpty()) {
                 ClassScope cls = ModelUtils.getFirst(retval);
                 if (cls != null) {
                     return QualifiedName.create(cls.getName());
@@ -616,6 +640,11 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     @Override
     public boolean isAbstract() {
         return getPhpModifiers().isAbstract();
+    }
+
+    @Override
+    public boolean isReadonly() {
+        return getPhpModifiers().isReadonly();
     }
 
     @Override

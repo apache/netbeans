@@ -274,7 +274,7 @@ class CaretUndoEdit extends AbstractUndoableEdit {
         protected void restoreEditorCaret(EditorCaret caret) throws BadLocationException {
             List<Position> dotAndMarkPosPairs;
             Position dotPos = doc.createPosition(getOffset(dotOffsetAndBias));
-            List<Position.Bias> biases = addBias(null, dotOffsetAndBias, 0);;
+            List<Position.Bias> biases = addBias(null, dotOffsetAndBias, 0);
             int biasIndex = 1;
             if (markOffsetAndBias != COMPLEX_POSITIONS_MARKER) {
                 Position markPos = doc.createPosition(getOffset(markOffsetAndBias));

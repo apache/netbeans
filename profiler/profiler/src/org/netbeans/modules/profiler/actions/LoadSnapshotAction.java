@@ -114,8 +114,8 @@ public final class LoadSnapshotAction extends AbstractAction {
 
         if (chooser.showOpenDialog(WindowManager.getDefault().getMainWindow()) == JFileChooser.APPROVE_OPTION) {
             final File[] files = chooser.getSelectedFiles();
-            final ArrayList<FileObject> snapshotsFOArr = new ArrayList();
-            final ArrayList<File> heapdumpsFArr = new ArrayList();
+            final ArrayList<FileObject> snapshotsFOArr = new ArrayList<>();
+            final ArrayList<File> heapdumpsFArr = new ArrayList<>();
 
             for (int i = 0; i < files.length; i++) {
                 File file = files[i];

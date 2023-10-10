@@ -31,7 +31,6 @@ class NbClassPathProcessor extends PropertyProcessor {
     }
 
     void processPropertyImpl(String propertyName, Object value) {
-        StringBuffer sb = new StringBuffer();
         List l = ((SerParser.ObjectWrapper)value).data;
         for (Iterator it = l.iterator(); it.hasNext();) {
             Object elem = (Object) it.next();

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import static junit.framework.Assert.*;
+import static junit.framework.TestCase.*;
 import junit.framework.AssertionFailedError;
 
 /**

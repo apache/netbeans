@@ -38,8 +38,7 @@ public interface LogicalViewProvider extends PathFinder {
      * this call should always create a fresh node with no parent.
      * The node's lookup should contain the project object.
      * <p>
-     * The node need not bother implementing {@linkplain org.openide.filesystems.FileSystem.Status badging}
-     * for the root node; any files {@linkplain org.netbeans.api.project.Sources contained} in the project will
+     * For the root node; any files {@linkplain org.netbeans.api.project.Sources contained} in the project will
      * be considered as badging sources automatically. Other subnodes representing
      * various collections of files may still need explicit badging logic.
      * <em>As of <code>org.netbeans.modules.projectuiapi/1 1.31</code></em>

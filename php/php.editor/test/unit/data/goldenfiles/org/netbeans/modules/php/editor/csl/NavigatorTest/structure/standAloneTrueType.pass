@@ -1,0 +1,8 @@
+|-TrueType [820, 1281] : ESCAPED{TrueType}
+|--$true [848, 852] : ESCAPED{$true}<font color="#999999">:ESCAPED{true}</font>
+|--$true2 [894, 899] : ESCAPED{$true2}<font color="#999999">:ESCAPED{?}ESCAPED{true}</font>
+|--$true3 [944, 949] : ESCAPED{$true3}<font color="#999999">:ESCAPED{int}ESCAPED{|}ESCAPED{true}</font>
+|--$true4 [995, 1000] : ESCAPED{$true4}<font color="#999999">:ESCAPED{true}ESCAPED{|}ESCAPED{int}</font>
+|--test [1046, 1098] : ESCAPED{test}ESCAPED{(}<font color="#999999">ESCAPED{true}ESCAPED{ }</font>ESCAPED{$true}ESCAPED{)}<font color="#999999">:ESCAPED{true}</font>
+|--testNullable [1120, 1182] : ESCAPED{testNullable}ESCAPED{(}<font color="#999999">ESCAPED{?}ESCAPED{true}ESCAPED{ }</font>ESCAPED{$true}ESCAPED{)}<font color="#999999">:ESCAPED{?}ESCAPED{true}</font>
+|--testUnionType [1204, 1279] : ESCAPED{testUnionType}ESCAPED{(}<font color="#999999">ESCAPED{true}ESCAPED{|}ESCAPED{string}ESCAPED{ }</font>ESCAPED{$true}ESCAPED{)}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{true}</font>

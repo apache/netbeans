@@ -189,15 +189,15 @@ public class JSEDeploymentPanel extends javax.swing.JPanel implements HelpCtx.Pr
                 
                 // extract listeners if exist
                 Object okObject = comp.getClientProperty(J2SEDeployConstants.PASS_OK_LISTENER);
-                if(okObject != null && okObject instanceof ActionListener) {
+                if(okObject instanceof ActionListener) {
                     okListener.add((ActionListener)okObject);
                 }
                 Object storeObject = comp.getClientProperty(J2SEDeployConstants.PASS_STORE_LISTENER);
-                if(storeObject != null && storeObject instanceof ActionListener) {
+                if(storeObject instanceof ActionListener) {
                     storeListener.add((ActionListener)storeObject);
                 }
                 Object closeObject = comp.getClientProperty(J2SEDeployConstants.PASS_CLOSE_LISTENER);
-                if(closeObject != null && closeObject instanceof ActionListener) {
+                if(closeObject instanceof ActionListener) {
                     closeListener.add((ActionListener)closeObject);
                 }
                 

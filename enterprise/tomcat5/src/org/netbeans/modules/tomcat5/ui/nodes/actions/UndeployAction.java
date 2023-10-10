@@ -54,10 +54,12 @@ public class UndeployAction extends NodeAction {
     }
 
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(UndeployAction.class, "LBL_UndeployAction"); //NOI18N
     }
 
+    @Override
     protected void performAction(Node[] nodes) {
         NodeRefreshTask refresh = new NodeRefreshTask(rp());
         for (int i=0; i<nodes.length; i++) {
@@ -72,14 +74,17 @@ public class UndeployAction extends NodeAction {
         rp().post(refresh);
     }
 
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return null;
     }
 
+    @Override
     protected boolean enable(Node[] nodes) {
         for (int i = 0; i < nodes.length; i++) {
             TomcatWebModule module = (TomcatWebModule) nodes[i].getLookup().lookup(TomcatWebModule.class);
@@ -107,7 +112,7 @@ public class UndeployAction extends NodeAction {
 
         private final RequestProcessor requestProcessor;
 
-        private Map<Node, Set<Task>> taskMap = new HashMap<Node, Set<Task>>();
+        private Map<Node, Set<Task>> taskMap = new HashMap<>();
 
         /**
          * Constructs the NodeRefreshTask using the given RequestProcessor.
@@ -133,7 +138,7 @@ public class UndeployAction extends NodeAction {
 
             Set<Task> tasks = taskMap.get(node);
             if (tasks == null) {
-                tasks = new HashSet<Task>();
+                tasks = new HashSet<>();
                 taskMap.put(node, tasks);
             }
 
@@ -145,19 +150,18 @@ public class UndeployAction extends NodeAction {
          * it post a new task that waits until all tasks asscociated with the node
          * are finished and after that refreshes the node.
          */
+        @Override
         public synchronized void run() {
             for (Map.Entry<Node, Set<Task>> entry : taskMap.entrySet()) {
 
                 final Node node = entry.getKey();
                 final Set<Task> tasks = entry.getValue();
 
-                requestProcessor.post(new Runnable() {
-                    public void run() {
-                        for (Task task : tasks) {
-                            task.waitFinished();
-                        }
-                        NodeRefreshTask.this.refresh(node);
+                requestProcessor.post( () -> {
+                    for (Task task : tasks) {
+                        task.waitFinished();
                     }
+                    NodeRefreshTask.this.refresh(node);
                 });
             }
         }

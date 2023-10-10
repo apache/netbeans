@@ -445,8 +445,8 @@
 
   <p>
   The usecases listed here were heavily inspired by comments in issues
-  <a href="http://www.netbeans.org/issues/show_bug.cgi?id=95126">95126</a> and
-  <a href="http://www.netbeans.org/issues/show_bug.cgi?id=66037">66037</a>.
+  <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=95126">95126</a> and
+  <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=66037">66037</a>.
   </p>
   
   <usecase id="usecase-1" name="Usecase 1. - Highlighting results">

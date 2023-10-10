@@ -20,7 +20,6 @@ package org.netbeans.test.syntax;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import static junit.framework.Assert.assertEquals;
 import junit.framework.Test;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.jellytools.modules.editor.CompletionJListOperator;

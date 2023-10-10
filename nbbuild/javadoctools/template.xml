@@ -62,9 +62,9 @@ cause it to fail.
     </target>
 
     <!-- javadoc -->
-    
+
     <target name="javadoc-init" >
-    
+
         <!-- Output dir (will create ${javadoc.name}/ and ${javadoc.name}.zip beneath this): -->
         <property name="javadoc.out" location="${netbeans.javadoc.dir}"/>
         <property name="javadoc.out.dir" location="${javadoc.out}/${javadoc.name}"/>
@@ -82,11 +82,10 @@ cause it to fail.
         <mkdir dir="${javadoc.overview}/../" />
         <property name="javadoc.apichanges" location="apichanges-empty.xml"/>
         <property name="javadoc.arch" location="arch-empty.xml"/>
-        
-        
+
         <!-- Docs to link to: -->
         <property name="javadoc.web.root" value="http://root/"/>
-        <property name="javadoc.docs.jdk" value="http://download.oracle.com/javase/8/docs/api"/>
+        <property name="javadoc.docs.jdk" value="https://docs.oracle.com/javase/8/docs/api"/>
         &properties;
         <!-- add more here as needed... -->
         <property name="javadoc.css.dir" location="."/>
@@ -117,19 +116,19 @@ cause it to fail.
                 <isset property="stability.image"/>
             </not>
         </condition>
-        
+
         <mkdir dir="${javadoc.out.dir}"/>
-        
+
         <condition property="javadoc.files.provided">
         	<isset property="javadoc.files" />
         </condition>
-        
+
         <!-- default value for javadoc-files -->
         <selector id="all-java-files" >
             <filename name="**/*.java" />
         </selector>
         <property name="javadoc.files" value="all-java-files" />
-        
+
         <property file="../build.properties" />
 
         <condition property="javadoc.reference.generated" >
@@ -147,21 +146,21 @@ cause it to fail.
 </concat>
 
         <replace
-            token="${netbeans.javadoc.dir}" 
-            value="$${netbeans.javadoc.dir}" 
+            token="${netbeans.javadoc.dir}"
+            value="$${netbeans.javadoc.dir}"
             file="links.xml"
         />
-        
+
         <!-- set the property for use in this script -->
         <property name="javadoc.docs.${javadoc.name}" value="${javadoc.web.root}/${javadoc.name}" />
     </target>
-    
+
     <target name="javadoc-generate-overview" depends="javadoc-init,javadoc-check-timestamps" unless="javadoc.overview.should.not.be.generated" >
         <delete file="${javadoc.overview}" />
 
         <property file="${export.interfaces}/properties/all.properties" />
         <arch xsl="exportOverview.xsl" answers="${javadoc.arch}" output="${javadoc.overview}" stylesheet="prose.css"
-            apichanges="${javadoc.apichanges}" project="${javadoc.project}" 
+            apichanges="${javadoc.apichanges}" project="${javadoc.project}"
         >
             <!--
             <param name="changes-since-year" expression="${previous.release.year}"/>
@@ -243,7 +242,7 @@ cause it to fail.
         <!-- if no packages are specified, this is used to generate index.html from the overview page -->
         <copy file="${javadoc.overview}" tofile="${javadoc.out.dir}/index.html" />
     </target>
-    
+
     <target name="javadoc-stage-main" depends="javadoc-init,javadoc-check-timestamps,javadoc-exec-files,javadoc-exec-packages" unless="javadoc.should.not.be.generated" >
         <tstamp>
             <format property="YEAR" pattern="yyyy"/>
@@ -263,7 +262,7 @@ cause it to fail.
             <fileset refid="javadoc.resources.files"/>
         </copy>
     </target>
-    
+
     <target name="javadoc-exec-condition" depends="javadoc-check-timestamps" >
         <condition property="javadoc.exec.packages">
             <or>
@@ -280,19 +279,29 @@ cause it to fail.
         <!-- Timestamp is handled in javadoc.css to avoid too many commits on generated HTML files. -->
         <property name="javadoc.footer" value='&lt;span class="footnote"&gt;&lt;/span&gt;&lt;!-- See javadoc.css for timestamp information --&gt;'/>
     </target>
+
+    <condition property="apidoc.check" value="true" else="false">
+        <isset property="apidocfullcheck"/>
+        <!-- CI parameter -->
+        <!-- fail on error and warning as error means no javadoc content and missing page on bits.netbeans.org -->        
+    </condition>
     
     <target name="javadoc-exec-packages" depends="javadoc-init,javadoc-generate-references,javadoc-generate-overview,javadoc-exec-condition,javadoc-check-timestamps,javadoc-make-plain-title,javadoc-make-hyperlinked-title,javadoc-exec-condition,-javadoc-set-footer" unless="javadoc.exec.packages">
-        <javadoc source="${javac.source}" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="true" encoding="UTF-8">
+        <!-- -->
+        <javadoc source="${javac.source}" failonerror="${apidoc.check}" failonwarning="false" author="false" destdir="${javadoc.out.dir}" packagenames="${javadoc.packages}" stylesheetfile="${javadoc.css.main}" windowtitle="${javadoc.title}" overview="${javadoc.overview}" splitindex="true" use="true" version="false" useexternalfile="true" encoding="UTF-8">
             <sourcepath>
                 <pathelement location="${javadoc.docfiles}"/>
                 <pathelement location="${javadoc.src}"/>
+                <pathelement location="${javadoc.src}/../build/classes-generated"/>
             </sourcepath>
             <doclet
                 name="org.apidesign.javadoc.codesnippet.Doclet"
-                path="${nb_all}/nbbuild/external/codesnippet-doclet-0.30.jar"
+                path="${nb_all}/nbbuild/external/codesnippet-doclet-0.82.jar"
             >
-                <param name="-snippetpath" value="${javadoc.base}"/>
-                <param name="-maxLineLength" value="120"/>
+                <param name="-snippetpath" value="${javadoc.base}/src"/>
+                <param name="-snippetpath" value="${javadoc.base}/test/unit/src"/>
+                <param name="-maxLineLength" value="240"/> <!-- 120 was too short -->
+                <param name="-snippetmode" value="jep413"/>
             </doclet>
             <classpath path="${javadoc.classpath}"/>
             <!-- XXX note, this does not support more than one group -->
@@ -306,7 +315,8 @@ cause it to fail.
             <bottom>${javadoc.footer}</bottom>
             <!-- Avoid timestamp comments in _all_ html generated files, to reduce unnecessary git commits -->
             <arg value="-notimestamp" />
-            <arg value="--allow-script-in-comments" />
+            <arg value="-Xdoclint:all" />
+            <arg value="-Xdoclint:-missing" />
         </javadoc>
     </target>
     
@@ -329,6 +339,8 @@ cause it to fail.
             <doctitle>${javadoc.title}&lt;br/&gt;${javadoc.stability.label}</doctitle>
             <header>${javadoc.header}</header>
             <bottom>${javadoc.footer}</bottom>
+            <arg value="-Xdoclint:all" />
+            <arg value="-Xdoclint:-missing" />
         </javadoc>
     </target>
 
@@ -367,12 +379,12 @@ cause it to fail.
         </taskdef>
         <!-- Warn about incorrect question version, but do not make build fail: -->
         <property name="arch.warn" value="true"/>
-        <arch answers="${javadoc.arch}" 
-            output="${javadoc.out.dir}/architecture-summary.html" 
-            stylesheet="prose.css" 
-            overviewlink="overview-summary.html" 
-            footer="@FOOTER@" 
-            project="${javadoc.project}" 
+        <arch answers="${javadoc.arch}"
+            output="${javadoc.out.dir}/architecture-summary.html"
+            stylesheet="prose.css"
+            overviewlink="overview-summary.html"
+            footer="@FOOTER@"
+            project="${javadoc.project}"
         />
     </target>
 
@@ -399,9 +411,9 @@ cause it to fail.
             </fileset>
         </concat>
     </target>
-    
+
     <target name="javadoc-stage-replace-apichanges" depends="javadoc-stage-main,javadoc-generate-references,javadoc-stage-alternative,javadoc-stage-apichanges,javadoc-stage-arch,javadoc-stage-export-interfaces" unless="javadoc.up.to.date" if="export.apichanges" >
-        <replace dir="${export.apichanges}" >        
+        <replace dir="${export.apichanges}" >
             <include name="${javadoc.name}"/>
             <replacefilter token="@JDK@" value="${javadoc.docs.jdk}"/>
             <replacefilter token="@FOOTER@" value="${javadoc.footer}"/>
@@ -420,7 +432,7 @@ cause it to fail.
             &replaces;
         </replace>
     </target>
-    
+
     <target name="javadoc-stage-replace" depends="javadoc-stage-main,javadoc-generate-references,javadoc-stage-alternative,javadoc-stage-apichanges,javadoc-stage-arch,javadoc-stage-export-interfaces,javadoc-stage-replace-interfaces,javadoc-stage-replace-apichanges" unless="javadoc.up.to.date">
         <replace dir="${javadoc.out.dir}">
             <include name="**/*.html"/>
@@ -428,7 +440,7 @@ cause it to fail.
             &replaces;
             <replacefilter token="@FOOTER@" value="${javadoc.footer}"/>
         </replace>
-        
+
         <replace dir="${javadoc.out.dir}">
             <include name="**/*.html"/>
             <replacefilter token="http://root/" value="@TOP@.." />
@@ -440,6 +452,17 @@ cause it to fail.
         <replace dir="${javadoc.out.dir}" token="@TOP@/" value="@TOP@">
             <include name="**/*.html"/>
         </replace>
+        <replaceregexp match="href=&quot;.*\@TOP\@" replace="href=&quot;\@TOP\@" flags="g" >
+            <fileset dir="${javadoc.out.dir}" includes="index-files/**/*.html"/>
+        </replaceregexp>
+        <replaceregexp match="href=&quot;.*\@TOP\@" replace="href=&quot;\@TOP\@" flags="g" >
+            <fileset dir="${javadoc.out.dir}" includes="**/**/deprecated-list.html"/>
+        </replaceregexp>
+        <replaceregexp match="href=&quot;.*\@TOP\@" replace="href=&quot;\@TOP\@" flags="g" >
+            <fileset dir="${javadoc.out.dir}" includes="**/**/class-use/*.html"/>
+        </replaceregexp>
+
+
         <replace dir="${javadoc.out.dir}">
             <replacetoken><![CDATA[<ul class="navList" title="Navigation">]]></replacetoken>
             <replacevalue><![CDATA[<ul class="navList" title="Navigation"><li><a href="@TOP@apichanges.html">API Changes</a></li><li><a href="@TOP@architecture-summary.html">Architecture Summary</a></li>]]></replacevalue>
@@ -473,8 +496,14 @@ cause it to fail.
         <replace dir="${javadoc.out.dir}" token="@TOP@" value="../../../../../../../../">
             <include name="*/*/*/*/*/*/*/*/*.html"/>
         </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="../../../../../../../../../">
+            <include name="*/*/*/*/*/*/*/*/*/*.html"/>
+        </replace>
+        <replace dir="${javadoc.out.dir}" token="@TOP@" value="../../../../../../../../../../">
+            <include name="*/*/*/*/*/*/*/*/*/*/*.html"/>
+        </replace>
     </target>
-    
+
     <target name="javadoc-stage-check" depends="javadoc-stage-replace" unless="javadoc.up.to.date">
         <taskdef name="checklinks" classname="org.netbeans.nbbuild.CheckLinks">
             <classpath>
@@ -487,10 +516,12 @@ cause it to fail.
             <include name="apichanges.html"/>
             <include name="architecture-summary.html"/>
             <include name="**/package-summary.html"/>
-            <include name="**/doc-files/**/*.html"/>
+            <!--<include name="**/doc-files/**/*.html"/>-->
+            <include name="**/*.html"/>
             <!-- XXX why are not all **/*.html checked? Would then need to allow e.g. http://blogs.sun.com/geertjan/entry/swing_outline_component from OutlineView.html -->
             <!-- Make hyperlinks point to the source files, not the copied files: -->
             <!-- XXX but line numbers are wrong in several cases! -->
+            <!-- checking all html file for now on -->
             <mapper type="glob" from="${javadoc.out.dir}/overview-summary.html" to="${javadoc.arch}"/>
             <mapper type="glob" from="${javadoc.out.dir}/*/package-summary.html" to="${javadoc.docfiles}/*/package.html"/>
             <mapper type="glob" from="${javadoc.out.dir}/*/package-summary.html" to="${javadoc.src}/*/package.html"/>
@@ -499,7 +530,7 @@ cause it to fail.
             <mapper type="glob" from="${javadoc.out.dir}/*.html" to="${javadoc.docfiles}/*.html"/>
             <mapper type="glob" from="${javadoc.out.dir}/*.html" to="${javadoc.src}/*.html"/>
 
-						&disallowed-links;    
+						&disallowed-links;
         </checklinks>
         <!-- XXX run doctorj (doctorj.sf.net) if it is installed? -->
     </target>

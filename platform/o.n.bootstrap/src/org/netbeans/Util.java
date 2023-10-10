@@ -232,7 +232,7 @@ public final class Util {
      * list of modules (suitable for disabling; reverse for enabling).
      * @param modules some modules
      * @param modulesByName map from module cnbs to modules (may contain unrelated modules)
-     * @param providersOf map from tokens to sets of modules providing them (may mention unrelated modules)
+     * @param _providersOf map from tokens to sets of modules providing them (may mention unrelated modules)
      * @return a map from modules to lists of modules they depend on
      * @see Utilities#topologicalSort
      * JST-PENDING needed from tests
@@ -261,7 +261,7 @@ public final class Util {
             for (Dependency dep : m1.getDependenciesArray()) {
                 if (dep.getType() == Dependency.TYPE_REQUIRES) {
                     List<Module> providers = providersOf.get(dep.getName());
-
+                    
                     if (providers != null) {
                         l = fillMapSlot(m, m1);
                         l.addAll(providers);
@@ -284,9 +284,10 @@ public final class Util {
             if (frags != null && !frags.isEmpty()) {
                 frags = new HashSet<>(frags);
                 frags.retainAll(modules);
-            
+                
                 for (Module f : frags) {
                     List<Module> fragmentDep = fillMapSlot(m, f);
+                    // move fragment after its host module in the sort order
                     fragmentDep.add(m1);
                     for (Dependency dep : f.getDependenciesArray()) {
                         if (dep.getType() == Dependency.TYPE_REQUIRES) {
@@ -294,7 +295,6 @@ public final class Util {
                             if (providers != null) {
                                 if (providers.contains(m1)) {
                                     providers = new ArrayList<>(providers);
-                                    providers.remove(m1);
                                 }
                                 l = fillMapSlot(m, m1);
                                 l.addAll(providers);
@@ -313,6 +313,8 @@ public final class Util {
                 }
                 if (l != null) {
                     l.remove(m1);
+                    // remove fragments for m1 from m1's dependencies
+                    l.removeAll(frags);
                 }
             }
             if (l != null) {

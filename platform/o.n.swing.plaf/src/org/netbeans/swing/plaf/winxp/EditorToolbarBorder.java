@@ -37,12 +37,14 @@ import java.awt.*;
 class EditorToolbarBorder extends AbstractBorder {
     private static final Insets insets = new Insets(1, 0, 1, 0);
 
+    @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
         Color borderC = UIManager.getColor (LFCustoms.SCROLLPANE_BORDER_COLOR);
         g.setColor(borderC);
         g.drawLine(x, y + h - 1, x + w - 1, y + h - 1);
     }
 
+    @Override
     public Insets getBorderInsets(Component c) {
         return insets;
     }  

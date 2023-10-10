@@ -464,7 +464,12 @@ final class JUnit4TestGenerator extends AbstractTestGenerator {
         boolean flagsModified = false;
         
         Set<Modifier> currFlags = modifiers.getFlags();
-        Set<Modifier> flags = currFlags.isEmpty() ? EnumSet.noneOf(Modifier.class) : EnumSet.copyOf(currFlags);
+        Set<Modifier> flags = EnumSet.noneOf(Modifier.class);
+
+        if (!currFlags.isEmpty()) {
+            flags.addAll(currFlags);
+        }
+
         flagsModified |= flags.remove(PRIVATE);
         flagsModified |= flags.remove(PROTECTED);
         flagsModified |= flags.add(PUBLIC);

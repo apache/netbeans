@@ -37,7 +37,7 @@ public final class Hover {
     /**
      * Resolves a hover information at the given document offset and returns its
      * content. Example usage can be illustrated by:
-     * {@codesnippet HoverTest#testHoverContent}
+     * {@snippet file="org/netbeans/api/lsp/HoverTest.java" region="testHoverContent"}
      *
      * @param doc document on which to operate.
      * @param offset offset within document

@@ -36,7 +36,7 @@ public final class Symbol {
     }
 
     /**
-     * Get the symbol name. Never <code>null<code>.
+     * Get the symbol name. Never <code>null</code>.
      *
      * @since 0.2
      */

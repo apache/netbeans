@@ -221,7 +221,11 @@ public final class Main extends Object {
         jdkHome = System.getProperty("java.home");  // NOI18N
 
         if (!BaseUtilities.isMac()) {
-            jdkHome += File.separator + "..";  // NOI18N
+            File binDir = new File(new File(new File(jdkHome), ".."), "bin"); // NOI18N
+            // do not reset jdk.home in the most apparent situation, where the bin/ subdirectory does not exist at all.
+            if (binDir.exists()) {
+                jdkHome += File.separator + "..";  // NOI18N
+            }
         }
 
         System.setProperty("jdk.home", jdkHome);  // NOI18N

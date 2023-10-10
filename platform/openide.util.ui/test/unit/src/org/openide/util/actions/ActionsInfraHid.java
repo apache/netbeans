@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import javax.swing.ActionMap;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.openide.util.ContextGlobalProvider;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;

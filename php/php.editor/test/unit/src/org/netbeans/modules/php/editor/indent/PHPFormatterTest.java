@@ -943,6 +943,12 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/php80/matchExpression_SameLine_02.php", options);
     }
 
+    // GH-5186
+    public void testMatchExpressionWithArray_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php80/matchExpressionWithArray_01.php", options);
+    }
+
     public void testAttributeSyntax_01() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/php80/attributeSyntax_01.php", options);
@@ -1082,5 +1088,15 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE_INDENTED);
         reformatFileContents("testfiles/formatting/php81/enumerationsBP_04.php", options);
+    }
+
+    public void testReadonlyClasses_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php82/readonlyClasses_01a.php", options);
+    }
+
+    public void testReadonlyClasses_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php82/readonlyClasses_01b.php", options);
     }
 }

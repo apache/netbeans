@@ -21,24 +21,35 @@ package org.netbeans.modules.php.dbgp.ui;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.Properties;
+import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.dbgp.breakpoints.LineBreakpoint;
 import org.netbeans.modules.php.dbgp.breakpoints.Utils;
 import org.netbeans.spi.debugger.ui.Controller;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.Line;
+import org.openide.text.NbDocument;
 import org.openide.util.NbBundle;
 
 public class DbgpLineBreakpointCustomizerPanel extends JPanel implements ControllerProvider {
+
+    private static final Logger LOGGER = Logger.getLogger(DbgpLineBreakpointCustomizerPanel.class.getName());
 
     private static final int MAX_SAVED_CONDITIONS = 10;
     private static final String BP_CONDITIONS = "BPConditions"; // NOI18N
@@ -46,7 +57,7 @@ public class DbgpLineBreakpointCustomizerPanel extends JPanel implements Control
     private static final long serialVersionUID = 6364512868561614302L;
 
     private final LineBreakpoint lineBreakpoint;
-    private final Controller controller;
+    private final CustomizerController controller;
     private boolean createBreakpoint;
 
     private static LineBreakpoint createLineBreakpoint() {
@@ -97,7 +108,7 @@ public class DbgpLineBreakpointCustomizerPanel extends JPanel implements Control
             }
 
             private void processUpdate() {
-                ((CustomizerController) controller).firePropertyChange();
+                controller.checkValid();
             }
         };
         fileTextField.setEditable(isEditable);
@@ -112,6 +123,13 @@ public class DbgpLineBreakpointCustomizerPanel extends JPanel implements Control
             FileObject fo = line.getLookup().lookup(FileObject.class);
             updateComponents(fo, line.getLineNumber() + 1, lineBreakpoint.getCondition());
         }
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                controller.checkValid();
+            }
+        });
     }
 
     private void updateComponents(FileObject fileObject, int lineNumber, String condition) {
@@ -175,13 +193,35 @@ public class DbgpLineBreakpointCustomizerPanel extends JPanel implements Control
                 .setArray(BP_CONDITIONS, conditions);
     }
 
-    private Controller createController() {
+    private CustomizerController createController() {
         return new CustomizerController();
     }
 
     @Override
     public Controller getController() {
         return controller;
+    }
+
+    private static int findNumLines(FileObject file) {
+        DataObject dataObject;
+        try {
+            dataObject = DataObject.find(file);
+        } catch (DataObjectNotFoundException ex) {
+            LOGGER.log(Level.WARNING, "Can''t find DataObject for {0}", file.getPath()); // NOI18N
+            return 0;
+        }
+        EditorCookie editortCookie = (EditorCookie) dataObject.getCookie(EditorCookie.class);
+        if (editortCookie == null) {
+            return 0;
+        }
+        editortCookie.prepareDocument().waitFinished();
+        Document document = editortCookie.getDocument();
+        if (!(document instanceof StyledDocument)) {
+            return 0;
+        }
+        StyledDocument styledDocument = (StyledDocument) document;
+        //NbDocument.findLineNumber() always returns a line number one less than the actual line number.
+        return NbDocument.findLineNumber(styledDocument, styledDocument.getLength()) + 1;
     }
 
     /**
@@ -307,10 +347,11 @@ public class DbgpLineBreakpointCustomizerPanel extends JPanel implements Control
 
         private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
         private String errorMessage;
+        private volatile boolean valid;
 
         @Override
         public boolean ok() {
-            if (!isValid()) {
+            if (!valid) {
                 final String message = getErrorMessage();
                 if (message != null) {
                     if (SwingUtilities.isEventDispatchThread()) {
@@ -367,49 +408,76 @@ public class DbgpLineBreakpointCustomizerPanel extends JPanel implements Control
 
         @NbBundle.Messages({
             "CustomizerController.invalid.file=Existing file must be set.",
-            "CustomizerController.invalid.line=Valid line number must be set."
+            "CustomizerController.non.php.file=PHP source file is expected.",
+            "CustomizerController.invalid.line=Valid line number must be set.",
+            "# {0} - entered line number",
+            "# {1} - maximum line number in file",
+            "CustomizerController.too.big.line.number=The line number {0} is too big. Maximum line number is {1}."
         })
-        @Override
-        public boolean isValid() {
+        public void checkValid() {
             boolean isValid = true;
             // file
             String fileName = fileTextField.getText();
             if (fileName == null || fileName.trim().length() == 0) {
                 setErrorMessage(Bundle.CustomizerController_invalid_file());
-                return false;
+                setValid(false);
+                return;
             }
             File file = new File(fileName.trim());
             if (!file.exists()) {
                 setErrorMessage(Bundle.CustomizerController_invalid_file());
-                return false;
+                setValid(false);
+                return;
             }
             FileObject fileObject = FileUtil.toFileObject(file);
             if (fileObject == null) {
                 setErrorMessage(Bundle.CustomizerController_invalid_file());
-                return false;
+                setValid(false);
+                return;
+            } else if (!FileUtils.isPhpFile(fileObject)) {
+                setErrorMessage(Bundle.CustomizerController_non_php_file());
+                setValid(false);
+                return;
             }
 
             // line number
             String lineNumberString = lineNumberTextField.getText();
             if (lineNumberString == null || lineNumberString.trim().length() == 0) {
                 setErrorMessage(Bundle.CustomizerController_invalid_line());
-                return false;
+                setValid(false);
+                return;
             }
             try {
                 int lineNumber = Integer.parseInt(lineNumberTextField.getText());
                 if (lineNumber <= 0) {
                     setErrorMessage(Bundle.CustomizerController_invalid_line());
-                    return false;
+                    setValid(false);
+                    return;
+                }
+                int maxLine = findNumLines(fileObject);
+                if (maxLine == 0) { // Not found
+                    maxLine = Integer.MAX_VALUE - 1; // Not to bother the user when we did not find it
+                }
+                if (lineNumber > maxLine) {
+                        setErrorMessage(Bundle.CustomizerController_too_big_line_number(Integer.toString(lineNumber), Integer.toString(maxLine)));
+                        setValid(false);
+                        return;
                 }
             } catch (NumberFormatException nfe) {
                 setErrorMessage(Bundle.CustomizerController_invalid_line());
+                setValid(false);
                 isValid = false;
             }
 
             if (isValid) {
                 setErrorMessage(null);
+                setValid(true);
             }
-            return isValid;
+        }
+
+        @Override
+        public boolean isValid() {
+            return valid;
         }
 
         @Override
@@ -422,13 +490,14 @@ public class DbgpLineBreakpointCustomizerPanel extends JPanel implements Control
             propertyChangeSupport.removePropertyChangeListener(l);
         }
 
-        void firePropertyChange() {
-            propertyChangeSupport.firePropertyChange(Controller.PROP_VALID, null, null);
-        }
-
         void setErrorMessage(String message) {
             errorMessage = message;
             propertyChangeSupport.firePropertyChange(NotifyDescriptor.PROP_ERROR_NOTIFICATION, null, message);
+        }
+
+        private void setValid(boolean valid) {
+            this.valid = valid;
+            propertyChangeSupport.firePropertyChange(PROP_VALID, !valid, valid);
         }
 
         String getErrorMessage() {

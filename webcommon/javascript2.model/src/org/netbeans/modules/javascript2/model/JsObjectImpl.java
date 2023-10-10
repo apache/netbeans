@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.javascript2.model;
 
-import org.netbeans.modules.javascript2.model.api.Occurrence;
 import org.netbeans.modules.javascript2.model.api.ModelUtils;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,14 +50,12 @@ import org.netbeans.modules.javascript2.types.api.TypeUsage;
  */
 public class JsObjectImpl extends JsElementImpl implements JsObject {
 
-//    final protected HashMap<String, JsObject> properties = new HashMap<String, JsObject>();
-    protected final LinkedHashMap<String, JsObject> properties = new LinkedHashMap<String, JsObject>();
+    protected final LinkedHashMap<String, JsObject> properties = new LinkedHashMap<>();
     private Identifier declarationName;
     private JsObject parent;
-    private final List<Occurrence> occurrences = new ArrayList<Occurrence>();
+    private final List<Occurrence> occurrences = new ArrayList<>();
     private final NavigableMap<Integer, Collection<TypeUsage>> assignments = new TreeMap<>();
     private final Map<String, Integer>assignmentsReverse = new HashMap<>();
-    private int countOfAssignments = 0;
     private boolean hasName;
     private Documentation documentation;
     protected JsElement.Kind kind;
@@ -111,7 +108,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
     public String getName() {
         return declarationName != null ? declarationName.getName() : super.getName();
     }
-    
+
     public void setDeclarationName(Identifier declaration) {
         declarationName = declaration;
         hasName = declaration.getOffsetRange().getLength() > 0;
@@ -194,7 +191,17 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
         return parent;
     }
 
+    @SuppressWarnings({"NestedAssignment", "AssertWithSideEffects"})
     public void setParent(JsObject newParent) {
+        boolean assertionsEnabled = false;
+        assert assertionsEnabled = true;
+        if (assertionsEnabled) {
+            for (JsObject checkParent = newParent; checkParent != null; checkParent = checkParent.getParent()) {
+                if (checkParent == this) {
+                    throw new AssertionError("Cycle detected in " + getFileObject().getPath());
+                }
+            }
+        }
         this.parent = newParent;
     }
 
@@ -219,16 +226,6 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
 
     @Override
     public void addOccurrence(OffsetRange offsetRange) {
-//        boolean isThere = false;
-//        for (Occurrence occurrence : occurrences) {
-//            if (occurrence.getOffsetRange().equals(offsetRange)) {
-//                isThere = true;
-//                break;
-//            }
-//        }
-//        if (!isThere) {
-//            occurrences.add(new OccurrenceImpl(offsetRange, this));
-//        }
         Occurrence occurrence = new Occurrence(offsetRange, this);
         if (!occurrences.contains(occurrence)) {
             occurrences.add(occurrence);
@@ -248,17 +245,17 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
 
     @Override
     public void addAssignment(TypeUsage typeName, int offset) {
-        if (typeName == null || (Type.UNDEFINED.equals(typeName.getType()) && assignments.size() > 0)) {
+        if (typeName == null || (Type.UNDEFINED.equals(typeName.getType()) && !assignments.isEmpty())) {
             // don't add undefined type, if there are already some types
             return;
         }
         Collection<TypeUsage> types = assignments.get(offset);
         if (types == null) {
             // create always empty list, need to be counted for number of assignments.
-            types = new ArrayList<TypeUsage>();
+            types = new ArrayList<>();
             assignments.put(offset, types);
         }
-        
+
         Integer alreadyDefinedOffset = assignmentsReverse.get(typeName.getType());
         if (alreadyDefinedOffset != null) {
             // there is already assignment of this type. It's enough to store the
@@ -285,37 +282,16 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
     public Collection<? extends TypeUsage> getAssignmentForOffset(int offset) {
         List<? extends TypeUsage> result = new ArrayList<>();
         Map.Entry<Integer, Collection<TypeUsage>> found = assignments.floorEntry(offset);
-        int tmpOffset = offset;
         while (found != null) {
             result.addAll((Collection)found.getValue());
-            tmpOffset = found.getKey() - 1;
+            int tmpOffset = found.getKey() - 1;
             found = assignments.floorEntry(tmpOffset);
         }
-//        if (result.isEmpty()) {
-//            Collection<TypeUsage> resolved = new HashSet();
-//            for(TypeUsage item : result) {
-//                TypeUsage type = (TypeUsage)item;
-//                if (type.isResolved()) {
-//                    resolved.add(type);
-//                } else {
-//                    JsObject jsObject = ModelUtils.findJsObjectByName(ModelUtils.getGlobalObject(this), type.getType());
-//                    if(jsObject != null) {
-//                        resolved.addAll(resolveAssignments(jsObject, offset));
-//                    }
-//                }
-//            }
-//            if(resolved.isEmpty()) {
-//                // keep somthink in the assignments. 
-//                resolved.add(new TypeUsage("Object", offset, true));
-//            }
-//            Collection<TypeUsage> resolved = new HashSet();
-//            //resolved.add(new TypeUsage("Object", offset, true));
-//            result = resolved;
-//        }
 
         return result;
     }
 
+    @Override
     public int getAssignmentCount() {
         return assignments.size();
     }
@@ -323,7 +299,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
     @Override
     public Collection<? extends TypeUsage> getAssignments() {
         List<TypeUsage> values;
-        values = new ArrayList<TypeUsage>();
+        values = new ArrayList<>();
         for (Collection<? extends TypeUsage> types : assignments.values()) {
             values.addAll(types);
         }
@@ -435,7 +411,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
     }
 
     public void resolveTypes(JsDocumentationHolder jsDocHolder) {
-        if (parent == null 
+        if (parent == null
                 || (parent != null && parent.getOffset() == getOffset() && ModelUtils.ARGUMENTS.equals(getName())) ) {
             return;
         }
@@ -444,7 +420,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
             resolved.clear();
             JsObject global = ModelUtils.getGlobalObject(parent);
             for (TypeUsage type : unresolved) {
-                Collection<TypeUsage> resolvedHere = new ArrayList<TypeUsage>();
+                Collection<TypeUsage> resolvedHere = new ArrayList<>();
                 if (!type.isResolved()) {
                     resolvedHere.addAll(ModelUtils.resolveTypeFromSemiType(this, type));
                 } else {
@@ -459,7 +435,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
                             }
                             String rType = ModelUtils.getFQNFromType(newType);
                             JsObject jsObject = ModelUtils.findJsObjectByName(global, rType);
-                            
+
                             if (jsObject == null && rType.indexOf('.') == -1 && global instanceof DeclarationScope) {
                                 DeclarationScope declarationScope = ModelUtils.getDeclarationScope((DeclarationScope) global, typeHere.getOffset());
                                 jsObject = ModelUtils.getJsObjectByName(declarationScope, rType);
@@ -506,10 +482,10 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
                         // the new object is needed for setting new assignment.
                         JsObject newObject = new JsObjectImpl(this.parent, this.declarationName,
                                 this.getOffsetRange(), this.isDeclared(), this.getModifiers(), this.getMimeType(), this.getSourceLabel());
-                        // replace the object with object without the properties 
+                        // replace the object with object without the properties
                         parent.addProperty(this.getName(), newObject);
                         // copy all the properties to the original object that represents this
-                        List <JsObject> propertiesCopy = new ArrayList<JsObject>(this.properties.values());
+                        List <JsObject> propertiesCopy = new ArrayList<>(this.properties.values());
                         for (JsObject property : propertiesCopy) {
                             ModelUtils.moveProperty(originalObject, property);
                         }
@@ -534,18 +510,18 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
                 }
             }
         }
-        
+
         if (!isAnonymous() && assignments.isEmpty()) {
             // try to recount occurrences
             JsObject global = ModelUtils.getGlobalObject(parent);
-            List<Occurrence> correctedOccurrences = new ArrayList<Occurrence>();
+            List<Occurrence> correctedOccurrences = new ArrayList<>();
 
             JsObjectImpl obAssignment = findRightTypeAssignment(getDeclarationName().getOffsetRange().getStart(), global);
             if (obAssignment != null && !obAssignment.getModifiers().contains(Modifier.PRIVATE)) {
                 obAssignment.addOccurrence(getDeclarationName().getOffsetRange());
             }
 
-            for (Occurrence occurrence : new ArrayList<Occurrence>(occurrences)) {
+            for (Occurrence occurrence : new ArrayList<>(occurrences)) {
                 obAssignment = findRightTypeAssignment(occurrence.getOffsetRange().getStart(), global);
                 if (obAssignment != null && !obAssignment.getModifiers().contains(Modifier.PRIVATE)) {
                     obAssignment.addOccurrence(occurrence.getOffsetRange());
@@ -621,9 +597,9 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
                 moveOccurrenceOfProperties((JsObjectImpl) prototype, created);
             }
         }
-        
+
         if (!original.getAssignments().isEmpty() && created.getAssignments().isEmpty()) {
-            // we are add type to help resolve other properties. 
+            // we are add type to help resolve other properties.
             for(TypeUsage type : original.getAssignments()) {
                 created.addAssignment(type, -1);
             }
@@ -649,14 +625,14 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
      * @return
      */
     public static Collection<JsObject> findPrototypeChain(JsObject object) {
-        List<JsObject> chain = new ArrayList<JsObject>();
+        List<JsObject> chain = new ArrayList<>();
         chain.add(object);
-        chain.addAll(findPrototypeChain(object, new HashSet<String>()));
+        chain.addAll(findPrototypeChain(object, new HashSet<>()));
         return chain;
     }
 
     private static List<JsObject> findPrototypeChain(JsObject object, Set<String> alreadyCheck) {
-        List<JsObject> result = new ArrayList<JsObject>();
+        List<JsObject> result = new ArrayList<>();
         String fqn = object.getFullyQualifiedName();
         if (!alreadyCheck.contains(fqn)) {
             alreadyCheck.add(fqn);
@@ -699,7 +675,7 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
         JsObject current;
         JsObject currentParent = this;
         // save the properties in a list to reuse it later
-        List<String> propertyPath = new ArrayList<String>();
+        List<String> propertyPath = new ArrayList<>();
         do {
             current = currentParent;
             findedAssignments = current.getAssignmentForOffset(offset);
@@ -745,13 +721,6 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
             getModifiers().remove(Modifier.DEPRECATED);
         }
     }
-    
-    
-
-//    @Override
-//    public String toString() {
-//        return "JsObjectImpl{" + "declarationName=" + declarationName + ", parent=" + parent + ", kind=" + kind + '}';
-//    }
 
     @Override
     public boolean moveProperty(String name, JsObject newParent) {
@@ -766,13 +735,13 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
             String newFQN = property.getFullyQualifiedName();
             JsObject global = ModelUtils.getGlobalObject(this);
             if (global instanceof JsObjectImpl) {
-                ((JsObjectImpl)global).correctAssignmentsInModel(oldFQN, newFQN, new HashSet<String>());
+                ((JsObjectImpl)global).correctAssignmentsInModel(oldFQN, newFQN, new HashSet<>());
             }
             return properties.remove(name) != null;
         }
         return false;
     }
-    
+
     private void correctAssignmentsInModel (String fromType, String toType, Set<String> done) {
         if (!done.contains(getFullyQualifiedName())) {
             done.add(getFullyQualifiedName());
@@ -784,13 +753,12 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
             }
         }
     }
-    
+
     protected void correctTypes(String fromType, String toType) {
         for (Collection<TypeUsage> types: assignments.values()) {
             List<TypeUsage> copy = new ArrayList<>(types);
-            String typeR = null;
             for (TypeUsage type : copy) {
-                typeR = replaceTypeInFQN(type.getType(), fromType, toType);
+                String typeR = replaceTypeInFQN(type.getType(), fromType, toType);
                 if (typeR != null) {
                     types.remove(type);
                     types.add(new TypeUsage(typeR, type.getOffset(), type.isResolved()));
@@ -798,9 +766,9 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
             }
         }
     }
-    
+
     /**
-     * 
+     *
      * @param typeFQN type that where should be changed
      * @param fromType  the old type or part of a type
      * @param toType    the new type or part of a type
@@ -820,8 +788,8 @@ public class JsObjectImpl extends JsElementImpl implements JsObject {
                 int delEndIndex = typeFQN.indexOf(';');
                 if (delEndIndex > 0 && index < delEndIndex) {
                     index = typeFQN.indexOf(fromType, delEndIndex);
-                } 
-                 
+                }
+
             }
             if (index > -1 && !typeFQN.contains(toType)
                     && (index == 0 || typeFQN.charAt(index - 1) == '.' || typeFQN.charAt(index - 1) == ';')

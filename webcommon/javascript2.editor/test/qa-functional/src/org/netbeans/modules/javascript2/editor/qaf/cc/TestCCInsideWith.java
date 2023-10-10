@@ -19,8 +19,6 @@
 package org.netbeans.modules.javascript2.editor.qaf.cc;
 
 import java.awt.event.InputEvent;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import junit.framework.Test;
 import org.netbeans.jellytools.EditorOperator;
 import org.netbeans.jellytools.modules.editor.CompletionJListOperator;

@@ -148,7 +148,7 @@ public class XMLDataObject extends MultiDataObject {
     /** 
      * Create new XMLDataObject. It is usually called by a loader.
      * A user can get existing XMLDataObject by calling {@link DataObject#find(FileObject) 
-     * <code>DataObject.find(FileObject f)</code>} instead.
+     * DataObject.find(FileObject f)} instead.
      *
      * @param fo the primary file object, never <code>null</code>
      * @param loader loader of this data object, never <code>null</code>
@@ -654,13 +654,13 @@ public class XMLDataObject extends MultiDataObject {
      *             It directly violates DOM's root element reference read-only status.
      *             If you can not move to XMLUtil for compatabilty reasons please
      *             replace with following workaround:
-     * <pre>
+     * <pre>{@code
      * String templ = "<myroot/>";
      * InputSource in = new InputSource(new StringReader(templ));
      * in.setSystemId("StringReader");  //workaround
      * DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
      * Document doc = builder.parse(in);
-     * </pre>
+     * }</pre>
      */
     @Deprecated
     public static Document createDocument() {

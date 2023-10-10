@@ -83,7 +83,7 @@ class GotoPluginSourceAction extends AbstractAction {
             try {
                 ProgressTransferListener.setAggregateHandle(handle);
                 NbMavenProject pr = prj.getLookup().lookup(NbMavenProject.class);
-                onlineEmbedder.resolve(art, pr.getMavenProject().getPluginArtifactRepositories(), onlineEmbedder.getLocalRepository());
+                onlineEmbedder.resolveArtifact(art, pr.getMavenProject().getPluginArtifactRepositories(), onlineEmbedder.getLocalRepository());
                 if (art.getFile().exists() && !cancel.get()) {
                     Artifact sourceArt = DependencyNode.downloadJavadocSources(contributor, false, art, prj);
                     FileObject binaryRoot = FileUtil.toFileObject(art.getFile());

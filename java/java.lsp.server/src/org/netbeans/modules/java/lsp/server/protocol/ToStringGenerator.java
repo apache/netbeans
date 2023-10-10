@@ -48,6 +48,8 @@ import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
@@ -75,7 +77,7 @@ public final class ToStringGenerator extends CodeActionsProvider {
         if (only == null || !only.contains(CodeActionKind.Source)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null) {
             return Collections.emptyList();
         }
@@ -132,7 +134,7 @@ public final class ToStringGenerator extends CodeActionsProvider {
                 }
                 future.complete(codeAction);
             } else {
-                client.showQuickPick(new ShowQuickPickParams(Bundle.DN_SelectToString(), true, fields)).thenAccept(selected -> {
+                client.showQuickPick(new ShowQuickPickParams(Bundle.DN_GenerateToString(), Bundle.DN_SelectToString(), true, fields)).thenAccept(selected -> {
                     try {
                         if (selected != null) {
                             WorkspaceEdit edit = generate(uri, offset, fields);

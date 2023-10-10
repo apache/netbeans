@@ -313,7 +313,8 @@ class DynaMenuModel {
     }
     
     static final class InvisibleMenuItem extends JMenuItem {
-        
+
+        @Override
         public boolean isVisible() {
             return false;
         }

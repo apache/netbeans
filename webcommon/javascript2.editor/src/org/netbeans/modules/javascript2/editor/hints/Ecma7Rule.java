@@ -21,6 +21,7 @@ package org.netbeans.modules.javascript2.editor.hints;
 import com.oracle.js.parser.Token;
 import com.oracle.js.parser.TokenType;
 import com.oracle.js.parser.ir.BinaryNode;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.ExportNode;
 import com.oracle.js.parser.ir.Expression;
@@ -37,7 +38,9 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.OffsetRange;
+
 import static org.netbeans.modules.javascript2.editor.JsVersion.ECMA7;
+
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
 import org.netbeans.modules.javascript2.model.api.ModelUtils;
@@ -159,6 +162,22 @@ public class Ecma7Rule extends EcmaLevelRule {
                 return false;
             }
             return super.enterPropertyNode(propertyNode);
+        }
+
+        @Override
+        public boolean enterClassElement(ClassElement classElement) {
+            for (Expression decorator : classElement.getDecorators()) {
+                addHint(context, hints, new OffsetRange(decorator.getStart(), decorator.getFinish()));
+            }
+            Expression key = classElement.getKey();
+            if (key.isTokenType(TokenType.SPREAD_OBJECT)) {
+                long token = key.getToken();
+                int position = Token.descPosition(token);
+                addHint(context, hints, new OffsetRange(position, position + Token.descLength(token)));
+                key.accept(this);
+                return false;
+            }
+            return super.enterClassElement(classElement);
         }
 
         @Override

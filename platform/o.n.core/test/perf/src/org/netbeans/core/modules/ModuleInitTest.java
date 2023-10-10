@@ -545,6 +545,7 @@ public class ModuleInitTest extends Benchmark {
             this.is = is;
             this.ps = ps;
         }
+        @Override
         public void run() {
             try {
                 copyStream(is, ps);

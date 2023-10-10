@@ -244,7 +244,7 @@ public class ModuleActions extends ActionManager
             err.warning("showWaitCursor could not find a suitable glass pane; key=" + key);
             return;
         }
-        if (glassPaneUses.values().contains(c)) {
+        if (glassPaneUses.containsValue(c)) {
             err.fine("wait cursor already displayed on " + c);
         } else {
             err.fine("wait cursor will be displayed on " + c);
@@ -265,7 +265,7 @@ public class ModuleActions extends ActionManager
             return;
         }
         glassPaneUses.remove(key);
-        if (glassPaneUses.values().contains(c)) {
+        if (glassPaneUses.containsValue(c)) {
             err.fine("wait cursor still displayed on " + c);
         } else {
             err.fine("wait cursor will be hidden on " + c);

@@ -85,6 +85,23 @@ is the proper place.
 
 <changes>
 
+    <change>
+        <api name="tabcontrol"/>
+        <summary>Allow tab control renderers to override text position calculation</summary>
+        <version major="1" minor="74"/>
+        <date day="8" month="7" year="2022"/>
+        <author login="ebakke"/>
+        <compatibility addition="yes"/>
+        <description>
+            A new method <code>AbstractTabCellRenderer.getCaptionYPosition</code>
+            may now be overridden by subclasses, to customize the calculation of
+            the tab label's Y position. This allows specific implementations to
+            improve the calculation code without affecting other LAFs (which
+            may contain adjustments hard-coded to work with the old calculation.)
+        </description>
+        <class package="org.netbeans.swing.tabcontrol.plaf" name="AbstractTabCellRenderer"/>
+    </change>
+
     <change id="autoscroll">
       <api name="tabcontrol"/>
       <summary>Added ability to scroll document tabs when dragging a TopComponent

@@ -134,7 +134,7 @@ public interface RefactoringElementImplementation {
     
     /**
      * Shows this element in refactoring preview are
-     * @see org.netbeans.modules.refactoring.api.ui.UI#setComponentForRefactoringPreview
+     * @see org.netbeans.modules.refactoring.spi.ui.UI#setComponentForRefactoringPreview
      */
     void showPreview();
     

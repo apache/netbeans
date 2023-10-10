@@ -20,7 +20,7 @@
 package org.netbeans.modules.web.core.syntax;
 
 import javax.swing.text.EditorKit;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;

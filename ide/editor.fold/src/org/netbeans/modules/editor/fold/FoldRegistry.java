@@ -49,13 +49,13 @@ import org.openide.util.WeakListeners;
  * It looks up
  * {@link ExtEnum.MimeEnumProvider} in the {@link MimeLookup}. It supports efficient
  * valueOf lookup and changes to the set of the values.
- * <p/>
+ * <p>
  * Clients <b>must not cache</b> the set of values and treat it as
  * an universe. As modules are enabled / disabled,
  * the set of available values may change and further queries to {@link #valueSet}
  * may return different results.
  * 
- * <p/>
+ * <p>
  * Note: this class was trimmed down from generic enum registry. When other extensible
  * enums are introduced, fold registry will just wrap the real enum. Some constructions may
  * be unnecessary general ;)
@@ -79,7 +79,7 @@ public final class FoldRegistry  {
         this.enumType = enumType;
     }
     
-    private static volatile Reference<FoldRegistry>     INSTANCE = new WeakReference(null);
+    private static volatile Reference<FoldRegistry>     INSTANCE = new WeakReference<>(null);
     
     public static FoldRegistry get() {
         FoldRegistry fr = INSTANCE.get();
@@ -122,7 +122,7 @@ public final class FoldRegistry  {
      * Representation of the domain for a specific MIMEtype. It listens on a Lookup.Result
      * and refreshes the contents iff lookup changes - that is if a module is (un)loaded,
      * or the value provider set changes.
-     * <p/>
+     * <p>
      * Updates to enums must occur under synchro
      * 
      */

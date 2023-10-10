@@ -312,6 +312,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
 
                                 @Override
                                 public void run(CompilationController parameter) throws Exception {
+                                    parameter.toPhase(JavaSource.Phase.RESOLVED);
                                     for (ElementHandle<TypeElement> elementHandle : result) {
                                         TypeElement element = elementHandle.resolve(parameter);
                                         if (element != null) {
@@ -900,8 +901,8 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
     public List<? extends TreePathHandle> getHandles() {
         List<TreePathHandle> result = new LinkedList<TreePathHandle>();
         ElementNode rootNode = getRootNode();
-        if(rootNode != null && rootNode.getDescritption() != null) {
-            for (Description description : rootNode.getDescritption().getSubs()) {
+        if(rootNode != null && rootNode.getDescription() != null) {
+            for (Description description : rootNode.getDescription().getSubs()) {
                 if (description.getSelected() == Boolean.TRUE) {
                     result.add(TreePathHandle.from(description.getElementHandle(), description.getCpInfo()));
                 }
@@ -1036,6 +1037,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
             switch (e.getKind()) {
                 case CLASS:
                 case INTERFACE:
+                case RECORD:
                 case ENUM:
                 case ANNOTATION_TYPE:
                     if(parent == null) {

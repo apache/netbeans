@@ -46,7 +46,10 @@ public class SecurityRoles extends PersistentObject implements Refreshable {
 
     public boolean refresh(TypeElement typeElement) {
         Map<String, ? extends AnnotationMirror> annByType = getHelper().getAnnotationsByType(typeElement.getAnnotationMirrors());
-        AnnotationMirror annotationMirror = annByType.get("javax.annotation.security.DeclareRoles"); // NOI18N
+        AnnotationMirror annotationMirror = annByType.get("jakarta.annotation.security.DeclareRoles"); // NOI18N
+        if(annotationMirror == null) {
+            annotationMirror = annByType.get("javax.annotation.security.DeclareRoles"); // NOI18N
+        }
         if (annotationMirror == null) {
             return false;
         }

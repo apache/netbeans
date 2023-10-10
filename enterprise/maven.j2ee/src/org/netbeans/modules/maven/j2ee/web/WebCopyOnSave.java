@@ -95,7 +95,7 @@ public class WebCopyOnSave extends CopyOnSave implements PropertyChangeListener,
 
     private WebModule getWebModule() {
         final J2eeModuleProvider moduleProvider = getJ2eeModuleProvider();
-        if (moduleProvider != null && moduleProvider instanceof WebModuleProviderImpl) {
+        if (moduleProvider instanceof WebModuleProviderImpl) {
             return ((WebModuleProviderImpl) moduleProvider).findWebModule(getProject().getProjectDirectory());
         }
         return null;

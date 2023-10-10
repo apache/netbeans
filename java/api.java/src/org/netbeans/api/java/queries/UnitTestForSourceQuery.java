@@ -53,6 +53,7 @@ public class UnitTestForSourceQuery {
      *     when the mapping from source to unit test is not known.
      * @deprecated Use {@link #findUnitTests} instead.
      */
+    @Deprecated
     public static URL findUnitTest(FileObject source) {
         URL[] result = findUnitTests (source);
         return result.length == 0 ? null : result[0];
@@ -96,6 +97,7 @@ public class UnitTestForSourceQuery {
      *     when the mapping from unit test to source is not known.
      * @deprecated Use {@link #findSources} instead.
      */
+    @Deprecated
     public static URL findSource(FileObject unitTest) {
         URL[] result =  findSources (unitTest);
         return result.length == 0 ? null : result[0];

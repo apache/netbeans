@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.editor.model.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
@@ -50,10 +51,19 @@ import org.netbeans.modules.php.editor.parser.astnodes.Variable;
  * @author Radek Matous
  */
 final class MethodScopeImpl extends FunctionScopeImpl implements MethodScope, VariableNameFactory, LazyBuild {
+
+    private static final Set<String> MAGIC_METHODS = new HashSet<>();
+
     private final String classNormName;
     private boolean scanned;
     private MethodDeclaration originalNode;
     private ModelVisitor visitor;
+
+    static {
+        for (String methodName : PredefinedSymbols.MAGIC_METHODS) {
+            MAGIC_METHODS.add(methodName.toLowerCase());
+        }
+    }
 
     //new contructors
     MethodScopeImpl(Scope inScope, String returnType, MethodDeclarationInfo nodeInfo, ModelVisitor visitor, boolean isDeprecated) {
@@ -141,7 +151,7 @@ final class MethodScopeImpl extends FunctionScopeImpl implements MethodScope, Va
 
     @Override
     public boolean isMagic() {
-        return PredefinedSymbols.MAGIC_METHODS.contains(getName().toLowerCase());
+        return MAGIC_METHODS.contains(getName().toLowerCase());
     }
 
     @Override
@@ -151,7 +161,7 @@ final class MethodScopeImpl extends FunctionScopeImpl implements MethodScope, Va
 
     @Override
     public boolean isConstructor() {
-        return isMagic() ? getName().contains("__construct") : false; //NOI18N
+        return isMagic() ? getName().equalsIgnoreCase("__construct") : false; //NOI18N
     }
 
     @Override
@@ -177,16 +187,16 @@ final class MethodScopeImpl extends FunctionScopeImpl implements MethodScope, Va
                     sb.append(", "); //NOI18N
                 }
                 final ParameterElement param = parameterList.get(i);
-                    if (param.hasDeclaredType()) {
-                        Set<TypeResolver> types = param.getTypes();
-                        if (types.size() == 1) {
-                            for (TypeResolver typeResolver : types) {
-                                if (typeResolver.isResolved()) {
-                                    sb.append(typeResolver.getTypeName(false)).append(' '); //NOI18N
-                                }
+                if (param.hasDeclaredType()) {
+                    Set<TypeResolver> types = param.getTypes();
+                    if (types.size() == 1) {
+                        for (TypeResolver typeResolver : types) {
+                            if (typeResolver.isResolved()) {
+                                sb.append(typeResolver.getTypeName(false)).append(' '); //NOI18N
                             }
                         }
                     }
+                }
 
                 sb.append(param.getName());
                 if (!param.isMandatory()) {
@@ -285,7 +295,7 @@ final class MethodScopeImpl extends FunctionScopeImpl implements MethodScope, Va
     @Override
     public void scan() {
         if (!scanned && visitor != null) {
-            scanned =  true;
+            scanned = true;
             visitor.scanNoLazy(originalNode, this);
         }
 

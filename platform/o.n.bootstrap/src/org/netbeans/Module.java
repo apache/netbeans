@@ -63,7 +63,7 @@ public abstract class Module extends ModuleInfo {
     /** event logging (should not be much here) */
     protected final Events events;
     /** associated history object
-     * @see ModuleHistory
+     * @see <a href="@org-netbeans-core-startup@/org/netbeans/core/startup/ModuleHistory.html">ModuleHistory</a>
      */
     private final Object history;
     /** true if currently enabled; manipulated by ModuleManager */
@@ -203,7 +203,7 @@ public abstract class Module extends ModuleInfo {
      * permanently beyond the existence of its JAR file;
      * it is enabled when some real module needs it to be,
      * and disabled when this is no longer the case.
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=9779">#9779</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=9779">#9779</a>
      */
     public boolean isAutoload() {
         return autoload;
@@ -215,7 +215,7 @@ public abstract class Module extends ModuleInfo {
      * its dependencies. This may be used to implement "bridge" modules with
      * simple functionality that just depend on two normal modules.
      * A module may not be simultaneously eager and autoload.
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=17501">#17501</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=17501">#17501</a>
      * @since org.netbeans.core/1 1.3
      */
     public boolean isEager() {
@@ -440,7 +440,7 @@ public abstract class Module extends ModuleInfo {
 
     /** Turn off the classloader and release all resources. */
     protected abstract void classLoaderDown();
-    /** Should be called after turning off the classloader of one or more modules & GC'ing. */
+    /** Should be called after turning off the classloader of one or more modules &amp; GC'ing. */
     protected abstract void cleanup();
     
     /** Notify the module that it is being deleted. */
@@ -520,7 +520,7 @@ public abstract class Module extends ModuleInfo {
     }
     
     /** Get the history object representing what has happened to this module before.
-     * @see org.netbeans.core.startup.ModuleHistory
+     * @see <a href="@org-netbeans-core-startup@/org/netbeans/core/startup/ModuleHistory.html">ModuleHistory</a>
      */
     public final Object getHistory() {
         return history;
@@ -605,13 +605,21 @@ public abstract class Module extends ModuleInfo {
     void unregisterInstrumentation() {
         NbInstrumentation.unregisterAgent(instr);
     }
+    
+    /**
+     * Release references to the ClassLoader. Package-private for now as only (?) FixedModule
+     * should retain the CL instance.
+     */
+    void releaseClassLoader() {
+       this.classloader = null; 
+    }
 
     /** Struct representing a package exported from a module.
      * @since org.netbeans.core/1 > 1.4
      * @see Module#getPublicPackages
      */
     public static final class PackageExport {
-        /** Package to export, in the form <samp>org/netbeans/modules/foo/</samp>. */
+        /** Package to export, in the form <code>org/netbeans/modules/foo/</code>. */
         public final String pkg;
         /** If true, export subpackages also. */
         public final boolean recursive;

@@ -223,6 +223,53 @@
                 </file>
             </folder>
 
+            <folder name="EJB40">
+                <attr name="position" intvalue="0"/>
+                <file name="StatelessEjbClass.java" url="templates/EJB40StatelessEjbClass.template">
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateCategory" stringvalue="ejb-templates"/>
+                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejb/session/SessionNodeIcon.gif"/>
+                </file>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ejbcore.resources.Bundle"/>
+                <file name="StatefulEjbClass.java" url="templates/EJB40StatefulEjbClass.template">
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateCategory" stringvalue="ejb-templates"/>
+                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejb/session/SessionNodeIcon.gif"/>
+                </file>
+                <file name="SessionLocal.java" url="templates/EJB40SessionLocal.template">
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateCategory" stringvalue="ejb-templates"/>
+                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+                </file>
+                <file name="SessionRemote.java" url="templates/EJB40SessionRemote.template">
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateCategory" stringvalue="ejb-templates"/>
+                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
+                </file>
+                <file name="MessageDrivenBean.java" url="templates/EJB40MessageDrivenBean.template">
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateCategory" stringvalue="ejb-templates"/>
+                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ejbcore.ejb.wizard.mdb.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejb/mdb/MessageNodeIcon.gif"/>
+                </file>
+               <file name="SingletonEjbClass.java" url="templates/EJB40SingletonEjbClass.template">
+                    <attr name="template" boolvalue="true"/>
+                    <attr name="templateCategory" stringvalue="ejb-templates"/>
+                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                    <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.j2ee.ejbcore.ejb.wizard.session.Bundle"/>
+                    <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/j2ee/ejbcore/ui/logicalview/ejb/session/SessionNodeIcon.gif"/>
+                </file>
+            </folder>
+
             <folder name="EJB31">
                 <attr name="position" intvalue="0"/>
                 <file name="SingletonEjbClass.java" url="templates/EJB31SingletonEjbClass.template">

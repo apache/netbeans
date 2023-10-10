@@ -145,7 +145,7 @@ public class MylynUtils {
                 dontUseProxy = host.startsWith(start) && host.endsWith(end);
                 if(!dontUseProxy) {
                     if(end.length() > 1 && end.charAt(0) == '.') {                      // NOI18N
-                        end = end.substring(1, end.length());
+                        end = end.substring(1);
                     }
                     if(start.length() > 1 && start.charAt(start.length() - 1) == '.') { // NOI18N
                         start = start.substring(0, start.length() - 1);

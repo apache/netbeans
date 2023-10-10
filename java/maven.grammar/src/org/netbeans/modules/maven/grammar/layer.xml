@@ -150,8 +150,7 @@
                 </folder>                
             </folder>
             <folder name="x-maven-pom+xml">
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.maven.grammar.Bundle"/>
-                
+                <attr name="displayName" bundlevalue="org.netbeans.modules.maven.grammar.Bundle#Editors/text/x-maven-pom+xml"/>
                 <folder name="CodeTemplates">
                     <folder name="Defaults">
                         <file name="org-netbeans-modules-maven-grammar-CodeTemplates.xml" url="POM-abbreviations.xml"/>

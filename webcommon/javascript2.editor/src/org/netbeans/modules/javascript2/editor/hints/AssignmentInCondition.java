@@ -42,5 +42,5 @@ public class AssignmentInCondition extends JsConventionHint {
     public String getDisplayName() {
         return Bundle.AssignmentInConditionDisplayName();
     }
-    
+
 }

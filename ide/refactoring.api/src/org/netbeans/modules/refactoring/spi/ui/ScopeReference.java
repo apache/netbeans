@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 /**
  * A reference to a Scope Description to be used by a {@link ScopePanel}
  *
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  * @since 1.30
  */
 @Target({ElementType.TYPE})
@@ -35,14 +35,13 @@ public @interface ScopeReference {
 
     /**
      * Into which location one wants to place the reference? Translates to
-     * {@link FileUtil#getConfigFile(java.lang.String)}.
+     * {@link org.openide.filesystems.FileUtil#getConfigFile(java.lang.String)}.
      */
     String path();
 
     /**
-     * Identification of the scope this reference shall point to. Usually this
-     * is specified as {@link ScopeDescription} peer annotation, but in case one
-     * was to create references to scopes defined by someone else, one can
+     * Identification of the scope this reference shall point to. 
+     * In case one was to create references to scopes defined by someone else, one can
      * specify the id() here.
      */
     String id() default "";

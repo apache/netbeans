@@ -48,16 +48,15 @@ import org.openide.util.lookup.Lookups;
  */
 
 public class WhereUsedElement extends SimpleRefactoringElementImplementation {
-    private PositionBounds bounds;
-    private String displayText;
-    private FileObject parentFile;
+    private final PositionBounds bounds;
+    private final String displayText;
+    private final FileObject parentFile;
 
     public WhereUsedElement(PositionBounds bounds, String displayText, FileObject parentFile, String name,
         OffsetRange range, Icon icon) {
         this.bounds = bounds;
         this.displayText = displayText;
         this.parentFile = parentFile;
-//        ElementGripFactory.getDefault().put(parentFile, name, range, icon);
     }
 
     @Override
@@ -68,7 +67,6 @@ public class WhereUsedElement extends SimpleRefactoringElementImplementation {
     @Override
     public Lookup getLookup() {
         Object composite = null;
-//            ElementGripFactory.getDefault().get(parentFile, bounds.getBegin().getOffset());
 
         if (composite == null) {
             composite = parentFile;

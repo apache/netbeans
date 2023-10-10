@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * At runtime the editors are registered by {@link NodeOp#registerPropertyEditors() }
  * 
  * @since 7.30
- * @author Jan Horvath <jhorvath@netbeans.org>
+ * @author Jan Horvath &lt;jhorvath@netbeans.org&gt;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

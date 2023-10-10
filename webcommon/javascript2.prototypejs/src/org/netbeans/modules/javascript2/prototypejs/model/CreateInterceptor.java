@@ -74,7 +74,7 @@ public class CreateInterceptor implements FunctionInterceptor {
                 JsObject newObject = ((JsObject) scope).getProperty(objectName);
                 if (newObject != null) {
                     JsObject constructor = configObject.getProperty(INITIALIZE_METHOD_NAME);
-                    if (constructor != null && constructor instanceof JsFunction) {
+                    if (constructor instanceof JsFunction) {
                         // we need to replace the original object with this constructor
                         List<Identifier> paramNames = new ArrayList<>();
                         for (JsObject param : ((JsFunction) constructor).getParameters()) {

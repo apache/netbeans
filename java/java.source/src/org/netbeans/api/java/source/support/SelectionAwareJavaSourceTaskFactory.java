@@ -45,7 +45,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
 
-/**A {@link JavaSourceTaskFactorySupport} that registers tasks to all files that are
+/**A {@link JavaSourceTaskFactory} that registers tasks to all files that are
  * opened in the editor and are visible. This factory also listens on the selection in
  * opened and visible JTextComponents and reschedules the tasks as necessary.
  *
@@ -111,7 +111,7 @@ public abstract class SelectionAwareJavaSourceTaskFactory extends JavaSourceTask
         this.supportedMimeTypes = supportedMimeTypes.length > 0 ? supportedMimeTypes.clone() : null;
     }
     
-    /**@inheritDoc*/
+    /**{@inheritDoc}*/
     public List<FileObject> getFileObjects() {
         List<FileObject> files = OpenedEditors.filterSupportedMIMETypes(OpenedEditors.getDefault().getVisibleEditorsFiles(), supportedMimeTypes);
 

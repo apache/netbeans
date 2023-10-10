@@ -408,9 +408,9 @@ public final class WebBrowsers {
 
     static BrowserFamilyId getIDEOptionsBrowserFamily() {
         HtmlBrowser.Factory factory = IDESettings.getWWWBrowser();
-        if (factory != null && factory instanceof ExtWebBrowser) {
+        if (factory instanceof ExtWebBrowser) {
             return WebBrowserFactoryDescriptor.convertBrowserFamilyId(((ExtWebBrowser)factory).getPrivateBrowserFamilyId());
-        } else if (factory != null && factory instanceof EnhancedBrowserFactory) {
+        } else if (factory instanceof EnhancedBrowserFactory) {
             return ((EnhancedBrowserFactory)factory).getBrowserFamilyId();
         }
         return BrowserFamilyId.UNKNOWN;

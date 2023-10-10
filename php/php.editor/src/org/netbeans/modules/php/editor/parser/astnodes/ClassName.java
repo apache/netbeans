@@ -27,6 +27,8 @@ package org.netbeans.modules.php.editor.parser.astnodes;
  * MyClass,
  * getClassName() - the function getClassName return a class name
  * $className - the variable $a holds the class name
+ * $boolean = $a instanceof ((string) $className);,
+ *                          ^^^^^^^^^^^^^^^^^^^^^
  * new $this->property,
  *     ^^^^^^^^^^^^^^^
  * if ($a instanceof $this->test){}

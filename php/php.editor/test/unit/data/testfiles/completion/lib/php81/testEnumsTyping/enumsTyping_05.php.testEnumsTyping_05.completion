@@ -1,0 +1,7 @@
+Code completion result for source line:
+/*test */ Simple::CASE1::pub|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     publicStaticEnumMethod()        [STATIC]   \Enum1\Simple
+METHOD     publicStaticTraitMethod()       [STATIC]   \Enum1\TestTrait
+CONSTANT   PUBLIC_CONST "public"           [PUBLIC]   \Enum1\Simple

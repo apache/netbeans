@@ -1016,7 +1016,7 @@ public final class CompletionContext {
         if (prefix == null) {
             return name;
         }
-        if (!rootNamespacePrefixes.values().contains(prefix)) {
+        if (!rootNamespacePrefixes.containsValue(prefix)) {
             return null;
         }
         return prefix + ":" + name; // NOI18N

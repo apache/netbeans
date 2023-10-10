@@ -1,0 +1,6 @@
+ExampleEnum::Ca^se3;
+------------------
+HINT:Introduce Hint
+FIX:Create Constant "Case3" in Enum "ExampleEnum" (testEnumCase.php)
+HINT:Introduce Hint
+FIX:Create Enum Case "Case3" in Enum "ExampleEnum" (testEnumCase.php)

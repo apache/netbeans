@@ -35,10 +35,7 @@ public abstract class ExtBrowserImpl extends HtmlBrowser.Impl {
 
     private static final RequestProcessor RP = new RequestProcessor(ExtBrowserImpl.class);
 
-    /** Lookup of this {@code HtmlBrowser.Impl}.  */
-    private Lookup lookup;
-
-    /** standart helper variable */
+    /** standard helper variable */
     protected PropertyChangeSupport pcs;
 
     /** requested URL */
@@ -82,9 +79,7 @@ public abstract class ExtBrowserImpl extends HtmlBrowser.Impl {
     @Override
     public void stopLoading() { }
     
-    protected void setTitle (String title) {
-        return;
-    }
+    protected void setTitle (String title) { }
     
     @Override
     public String getTitle() {
@@ -135,11 +130,8 @@ public abstract class ExtBrowserImpl extends HtmlBrowser.Impl {
     }
 
     protected final void loadURLInBrowser(final URL url) {
-        RP.post(new Runnable() {
-            @Override
-            public void run() {
-                loadURLInBrowserInternal(url);
-            }
+        RP.post(() -> {
+            loadURLInBrowserInternal(url);
         });
     }
 
@@ -179,6 +171,7 @@ public abstract class ExtBrowserImpl extends HtmlBrowser.Impl {
         pcs.removePropertyChangeListener (l);
     }
 
+    @Override
     public final Lookup getLookup() {
         return Lookup.EMPTY;
     }

@@ -34,42 +34,52 @@ class KodoProvider extends Provider{
         super("kodo.persistence.PersistenceProviderImpl");
     }
     
+    @Override
     public String getDisplayName() {
         return NbBundle.getMessage(KodoProvider.class, "LBL_Kodo"); //NOI18N
     }
     
+    @Override
     public String getJdbcUrl() {
         return "kodo.ConnectionURL";
     }
     
+    @Override
     public String getJdbcDriver() {
         return "kodo.ConnectionDriverName";
     }
     
+    @Override
     public String getJdbcUsername() {
         return "kodo.ConnectionUserName";
     }
     
+    @Override
     public String getJdbcPassword() {
         return "kodo.ConnectionPassword";
     }
 
+    @Override
     public String getTableGenerationPropertyName() {
         return "";
     }
 
+    @Override
     public String getTableGenerationDropCreateValue() {
         return "";
     }
 
+    @Override
     public String getTableGenerationCreateValue() {
         return "";
     }
 
+    @Override
     public Map getUnresolvedVendorSpecificProperties() {
         return Collections.emptyMap();
     }
 
+    @Override
     public Map getDefaultVendorSpecificProperties() {
         return Collections.emptyMap();
     }

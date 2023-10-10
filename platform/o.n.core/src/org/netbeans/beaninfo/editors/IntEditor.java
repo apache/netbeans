@@ -33,12 +33,14 @@ import org.openide.util.NbBundle;
  *  values and handles whitespace in setAsText better than the default
  *  JDK one.  The following hints are supported:
  *  <UL><LI><B>stringKeys</B> - an array of Strings that should be supplied
- *  from getTags()</LI><LI><B>intValues - an array of ints corresponding to
+ *  from getTags()</LI><LI><B>intValues</B> - an array of ints corresponding to
  *  the values represented by stringKeys. <I>This hint must be present if
- *  the stringKeys hint is used, and the arrays must be of the same length.</LI>
+ *  the stringKeys hint is used, and the arrays must be of the same length.</I></LI>
  *  <LI><B>codeValues</B> - an array of strings that should be returned from
  *  getJavaInitializationString.  This hint is optional when using the
- *  aforementioned hints.  <P>These hints will also work for the Integer
+ *  aforementioned hints. 
+ *  </UL>
+ *  <P>These hints will also work for the Integer
  *  editor, which wraps an instance of this editor.
  *
  * @author  Tim Boudreau

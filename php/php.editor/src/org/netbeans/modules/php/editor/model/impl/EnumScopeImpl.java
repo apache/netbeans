@@ -31,7 +31,6 @@ import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
-import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
@@ -300,9 +299,9 @@ class EnumScopeImpl extends TypeScopeImpl implements EnumScope, VariableNameFact
 
     @Override
     public QualifiedName getNamespaceName() {
-        if (indexedElement instanceof ClassElement) {
-            ClassElement indexedClass = (ClassElement) indexedElement;
-            return indexedClass.getNamespaceName();
+        if (indexedElement instanceof EnumElement) {
+            EnumElement indexedEnum = (EnumElement) indexedElement;
+            return indexedEnum.getNamespaceName();
         }
         return super.getNamespaceName();
     }

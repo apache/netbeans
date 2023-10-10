@@ -36,5 +36,6 @@ public interface ClassElement extends TraitedElement {
     Collection<QualifiedName> getFQMixinClassNames();
     boolean isFinal();
     boolean isAbstract();
+    boolean isReadonly();
     boolean isAnonymous();
 }

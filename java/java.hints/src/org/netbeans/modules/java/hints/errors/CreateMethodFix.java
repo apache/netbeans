@@ -67,7 +67,7 @@ import org.openide.util.NbBundle;
  *
  * @author Jan lahoda
  */
-public final class CreateMethodFix extends CreateFixBase implements Fix {
+public final class CreateMethodFix extends ModificationResultBasedFix implements Fix {
     
     private FileObject targetFile;
     private ElementHandle<TypeElement> target;

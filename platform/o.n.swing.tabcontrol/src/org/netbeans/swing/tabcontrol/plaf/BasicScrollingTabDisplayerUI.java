@@ -383,7 +383,7 @@ public abstract class BasicScrollingTabDisplayerUI extends BasicTabDisplayerUI {
 
     /**
      * Provides an offscreen graphics context so that widths based on character
-     * size can be calculated correctly before the component is shown.
+     * size can be calculated correctly before the component is shown. Never returns null.
      *
      * <p>For more accurate text measurements, clients should prefer calling
      * {@link #getOffscreenGraphics(JComponent)}.
@@ -399,7 +399,7 @@ public abstract class BasicScrollingTabDisplayerUI extends BasicTabDisplayerUI {
 
     /**
      * Provides an offscreen graphics context so that widths based on character
-     * size can be calculated correctly before the component is shown
+     * size can be calculated correctly before the component is shown. Never returns null.
      *
      * @param component may be null without causing fatal errors, but should be set for accurate
      *        text measurement (especially on displays with HiDPI scaling enabled)
@@ -468,20 +468,7 @@ public abstract class BasicScrollingTabDisplayerUI extends BasicTabDisplayerUI {
     
     @Override
     public Dimension getMinimumSize(JComponent c) {
-        int index = displayer.getSelectionModel().getSelectedIndex();
-        TabDataModel model = displayer.getModel();
-        if (model.size() == 0) {
-            return new Dimension(0, 0);
-        }
-        if( index < 0 || index >= model.size() )
-            index = 0;
-        Component comp = model.getTab(index).getComponent();
-        if( null == comp )
-            comp = displayer.getComponentConverter().getComponent( model.getTab( index ) );
-        Dimension minSize = null == comp ? new Dimension( 100, 10 ) : comp.getMinimumSize();
-        minSize.width = Math.max(minSize.width, 100);
-        minSize.height = Math.max(minSize.height, 10);
-        return minSize;
+        return new Dimension( 100,  displayer.getPreferredSize().height);
     }
     
     /**

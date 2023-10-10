@@ -31,25 +31,25 @@ import java.util.Set;
 /**
  * Map implementation that allows to define the class that implements
  * the <code>Map.Entry</code>.
- * <br/>
+ * <br>
  * The present implementation does not allow <code>null</code> to be used
  * as a key in the map. The client may use NULL_KEY masking on its own side
  * if it wants to use null keys (see <code>java.util.HashMap</code> impl).
- * <br/>
+ * <br>
  * The load factor is fixed to <code>1.0</code> but if the approximate map size
  * is known there is a constructor that allows to pass the initial capacity.
- * <br/>
+ * <br>
  * There are no additional attempts to generally improve hashing for poor hashing functions
  * like those in <code>HashMap.hash()</code>.
- * <br/>
+ * <br>
  * The iterators produced by this map are not fail-fast - they will continue iteration
  * and their behavior is generally undefined after the modification.
  * The caller should ensure that there will be no pending iterators during modification
  * of this map.
- * <br/>
+ * <br>
  * When iterating through entries in a bucket the <code>Object.equals()</code>
  * is used for comparison.
- * <br/>
+ * <br>
  *
  * @author Miloslav Metelka
  * @version 1.00
@@ -82,7 +82,7 @@ public class CompactMap<K,V> implements Map<K,V> {
     
     /**
      * Get an entry from a bucket that corresponds to the given hash code.
-     * <br/>
+     * <br>
      * This may be useful if the hash code can be computed without creating
      * an actual object being stored in the map. The target object should
      * provide some method for comparing itself to the passed arguments that represent
@@ -117,12 +117,12 @@ public class CompactMap<K,V> implements Map<K,V> {
 
     /**
      * Put the given entry into the map.
-     * <br/>
+     * <br>
      * The given entry should only be added to one compact map instance.
-     * <br/>
+     * <br>
      * Adding a single entry into multiple compact maps will break
      * internal consistency of all the intended maps!
-     * <br/>
+     * <br>
      * If there will be an existing entry with a key that equals to the key
      * in the entry parameter then the original entry will be replaced
      * by the given entry.
@@ -193,7 +193,7 @@ public class CompactMap<K,V> implements Map<K,V> {
     
     /**
      * Remove the given entry from the map.
-     * <br/>
+     * <br>
      * This method will search for the entry instance (not its key)
      * so the given entry must be physically used in the map
      * otherwise this method will not do anything.
@@ -346,7 +346,7 @@ public class CompactMap<K,V> implements Map<K,V> {
 
     /**
      * Abstract implementation of the map entry.
-     * <br/>
+     * <br>
      * This is suitable for the cases when e.g. the value is a primitive
      * data type.
      */
@@ -365,7 +365,7 @@ public class CompactMap<K,V> implements Map<K,V> {
         /**
          * Used by {@link #hashCode()} to return the real hashCode for the value
          * held by this map entry.
-         * <br/>
+         * <br>
          * <code>getValue().hashCode</code> cannot be used in general because
          * <code>getValue()</code> may return <code>this</code> e.g. in case
          * the value is represented by primitive data type. The method should
@@ -376,7 +376,7 @@ public class CompactMap<K,V> implements Map<K,V> {
         /**
          * Used by {@link #equals(Object)} to check whether the value
          * held by this map entry equals to the the given value.
-         * <br/>
+         * <br>
          * <code>getValue().equals()</code> cannot be used in general because
          * <code>getValue()</code> may return <code>this</code> e.g. in case
          * the value is represented by primitive data type. The method should
@@ -390,7 +390,7 @@ public class CompactMap<K,V> implements Map<K,V> {
         
         /**
          * Get next map entry linked to this one.
-         * <br/>
+         * <br>
          * This method may be useful after using {@link #getFirstEntry(int)}.
          */
         public final MapEntry<K,V> nextMapEntry() {
@@ -403,7 +403,7 @@ public class CompactMap<K,V> implements Map<K,V> {
         
         /**
          * Get stored hash code of the key contained in this entry.
-         * <br/>
+         * <br>
          * This method may be useful after using {@link #getFirstEntry(int)}
          * to quickly exclude entries which hash code differs from the requested one.
          */
@@ -448,7 +448,7 @@ public class CompactMap<K,V> implements Map<K,V> {
     
     /**
      * Default implementation of the map entry similar to e.g. the <code>HashMap</code>.
-     * <br/>
+     * <br>
      * It may be extended as well if the should be an additional information stored
      * in the map entry.
      */

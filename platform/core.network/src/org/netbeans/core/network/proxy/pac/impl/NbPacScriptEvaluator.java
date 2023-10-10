@@ -51,12 +51,15 @@ import org.openide.util.NbBundle;
  * NetBeans implementation of a PAC script evaluator. This implementation
  * is the one returned by {@link NbPacScriptEvaluatorFactory}.
  *
- * <h3>Features comparison</h3>
+ * <p>
+ * <strong>Features comparison</strong>
+ * <p>
  * There are differences between how browsers have implemented the PAC
  * evaluation functionality. In the following the Apache NetBeans implementation
  * (this class) is pitched against some of the major browsers.<br><br>
  *
- * <table summary="" style="table-layout: fixed; width:100%;" border="1" cellpadding="10" cellspacing="0">
+ * <table>
+ *   <caption>Features comparison</caption>
  *   <tr><th class="tablersh">Behavior</th>
  *       <th>Apache<br>NetBeans</th>
  *       <th>Chrome<br>{@code 61.0.3163.100}</th>
@@ -105,7 +108,7 @@ import org.openide.util.NbBundle;
  *       <td>???</td>
  *   </tr>
  *   <tr>
- *       <td class="tablersh">Support for <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/gg308476(v=vs.85).aspx">getClientVersion()</a></td>
+ *       <td class="tablersh">Support for <a href="https://docs.microsoft.com/windows/win32/winhttp/getclientversion?redirectedfrom=MSDN">getClientVersion()</a></td>
  *       <td>Yes<br>(returns "1.0")</td>
  *       <td>No</td>
  *       <td>No</td>
@@ -167,7 +170,9 @@ import org.openide.util.NbBundle;
  *    at finding the host's correct IP address, in particular on a multi-homed
  *    computer.
  *
- * <h3>Customization</h3>
+ * <p>
+ * <strong>Customization</strong>
+ * <p>
  * The implementation for
  * {@link org.netbeans.core.network.proxy.pac.PacHelperMethods PacHelperMethods} is
  * found via the global lookup. If you are unhappy with the implementation

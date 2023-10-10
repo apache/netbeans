@@ -209,9 +209,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
     }
 
     public static void sourceRootUnregistered(Iterable<? extends URL> roots) {
-        for (URL root : roots) {
-            knownSourceRootsMap.remove(root);
-        }
+        roots.forEach(knownSourceRootsMap::remove);
         //XXX hack make sure we are not holding APTUtils for any unknown roots
         //just in case something goes wrong:
         for (URL unknown : PathRegistry.getDefault().getUnknownRoots()) {
@@ -955,22 +953,44 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
 
         @Override
         public Set<String> getSupportedOptions() {
+            if (!valid) {
+                return Collections.emptySet();
+            }
             return delegate.getSupportedOptions();
         }
 
         @Override
         public Set<String> getSupportedAnnotationTypes() {
+            if (!valid) {
+                return Collections.emptySet();
+            }
             return delegate.getSupportedAnnotationTypes();
         }
 
         @Override
         public SourceVersion getSupportedSourceVersion() {
+            if (!valid) {
+                return SourceVersion.latest();
+            }
             return delegate.getSupportedSourceVersion();
         }
 
         @Override
         public void init(ProcessingEnvironment processingEnv) {
-            delegate.init(processingEnv);
+            try {
+                delegate.init(processingEnv);
+            } catch (ClientCodeException | ThreadDeath | Abort err) {
+                valid = false;
+                throw err;
+            } catch (Throwable t) {
+                valid = false;
+                StringBuilder exception = new StringBuilder();
+                exception.append(t.getMessage()).append("\n");
+                for (StackTraceElement ste : t.getStackTrace()) {
+                    exception.append(ste).append("\n");
+                }
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, Bundle.ERR_ProcessorException(delegate.getClass().getName(), exception.toString()));
+            }
             this.processingEnv = processingEnv;
         }
 
@@ -1000,6 +1020,9 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
 
         @Override
         public Iterable<? extends Completion> getCompletions(Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
+            if (!valid) {
+                return Collections.emptySet();
+            }
             return delegate.getCompletions(element, annotation, member, userText);
         }
 

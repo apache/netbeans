@@ -22,7 +22,7 @@ package org.netbeans.modules.editor;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.net.URL;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.openide.filesystems.Repository;
 import org.openide.filesystems.XMLFileSystem;
 import org.openide.util.Lookup;

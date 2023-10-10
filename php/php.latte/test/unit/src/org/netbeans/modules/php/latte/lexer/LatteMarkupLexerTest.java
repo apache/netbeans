@@ -46,6 +46,10 @@ public class LatteMarkupLexerTest extends LatteLexerTestBase {
         performTest("testIssue2340146_03");
     }
 
+    public void testIssueGH5862_01() throws Exception {
+        performTest("testIssueGH5862_01");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         String content = TestUtils.getFileContent(new File(getDataDir(), "testfiles/lexer/markup/" + filename + ".latte-markup"));

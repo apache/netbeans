@@ -58,6 +58,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+import org.openide.util.Utilities;
 
 
 /**
@@ -177,7 +178,7 @@ public class LocationCustomizer extends ValidityAwarePanel implements ActionList
             JFileChooser fileChooser = getFileChooser();
             fileChooser.setCurrentDirectory(new File(fileTextField.getText()));
 
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showOpenDialog(Utilities.findDialogParent()) == JFileChooser.APPROVE_OPTION) {
                 fileTextField.setText(fileChooser.getSelectedFile().getAbsolutePath());
             }
         } else if (e.getSource() == fromEditorButton) {

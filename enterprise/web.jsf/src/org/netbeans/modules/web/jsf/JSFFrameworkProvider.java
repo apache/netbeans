@@ -67,13 +67,14 @@ import org.netbeans.modules.web.jsf.api.JsfComponentUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.Application;
 import org.netbeans.modules.web.jsf.api.facesmodel.FacesConfig;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModel;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.ViewHandler;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.jsf.spi.components.JsfComponentCustomizer;
 import org.netbeans.modules.web.jsf.spi.components.JsfComponentImplementation;
 import org.netbeans.modules.web.jsf.wizards.JSFConfigurationPanel;
 import org.netbeans.modules.web.jsf.wizards.JSFConfigurationPanel.PreferredLanguage;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.project.api.WebPropertyEvaluator;
 import org.netbeans.modules.web.spi.webmodule.WebFrameworkProvider;
 import org.netbeans.modules.web.spi.webmodule.WebModuleExtender;
@@ -97,15 +98,15 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
 
     private static final Logger LOGGER = Logger.getLogger(JSFFrameworkProvider.class.getName());
 
-    private static String HANDLER = "com.sun.facelets.FaceletViewHandler";                          //NOI18N
+    private static final String HANDLER = "com.sun.facelets.FaceletViewHandler";    //NOI18N
 
     private static final String J2EE_SERVER_INSTANCE = "j2ee.server.instance";  //NOI18N
-    private static String WELCOME_JSF = "welcomeJSF.jsp";   //NOI18N
-    private static String WELCOME_XHTML = "index.xhtml"; //NOI18N
-    private static String WELCOME_XHTML_TEMPLATE = "/Templates/JSP_Servlet/JSP.xhtml"; //NOI18N
-    private static String FORWARD_JSF = "forwardToJSF.jsp"; //NOI18N
-    private static String RESOURCE_FOLDER = "/org/netbeans/modules/web/jsf/resources/"; //NOI18N
-    private static String DEFAULT_MAPPING = "/faces/*";  //NOI18N
+    private static final String WELCOME_JSF = "welcomeJSF.jsp";   //NOI18N
+    private static final String WELCOME_XHTML = "index.xhtml"; //NOI18N
+    private static final String WELCOME_XHTML_TEMPLATE = "/Templates/JSP_Servlet/JSP.xhtml"; //NOI18N
+    private static final String FORWARD_JSF = "forwardToJSF.jsp"; //NOI18N
+    private static final String RESOURCE_FOLDER = "/org/netbeans/modules/web/jsf/resources/"; //NOI18N
+    private static final String DEFAULT_MAPPING = "/faces/*";  //NOI18N
 
     private boolean createWelcome = true;
 
@@ -254,9 +255,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             if (welcomeFile != null) {
                 result.add(welcomeFile);
             }
-        } catch (IOException exception) {
-           LOGGER.log(Level.WARNING, "Exception during extending an web project", exception); //NOI18N
-        } catch (ConfigurationException exception) {
+        } catch (IOException | ConfigurationException exception) {
            LOGGER.log(Level.WARNING, "Exception during extending an web project", exception); //NOI18N
         }
         createWelcome = true;
@@ -268,14 +267,14 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
         // read the config from resource first
         StringBuilder sbuffer = new StringBuilder();
         String lineSep = System.getProperty("line.separator");//NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding));
-        String line = br.readLine();
-        while (line != null) {
-            sbuffer.append(line);
-            sbuffer.append(lineSep);
-            line = br.readLine();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding))) {
+            String line = br.readLine();
+            while (line != null) {
+                sbuffer.append(line);
+                sbuffer.append(lineSep);
+                line = br.readLine();
+            }
         }
-        br.close();
         return sbuffer.toString();
     }
 
@@ -384,19 +383,15 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
     }
 
     public static void createFile(FileObject target, String content, String encoding) throws IOException{
-        FileLock lock = target.lock();
-        try {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(lock), encoding));
+        try (FileLock lock = target.lock();
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(lock), encoding))) {
             bw.write(content);
-            bw.close();
-
-        } finally {
-            lock.releaseLock();
         }
     }
 
     private class  CreateFacesConfig implements FileSystem.AtomicAction{
         private static final String FACES_SERVLET_CLASS = "javax.faces.webapp.FacesServlet";  //NOI18N
+        private static final String FACES_SERVLET_CLASS_JAKARTAEE = "jakarta.faces.webapp.FacesServlet";  //NOI18N
         private static final String FACES_SERVLET_NAME = "Faces Servlet";                     //NOI18N
         private static final String MYFACES_STARTUP_LISTENER_CLASS = "org.apache.myfaces.webapp.StartupServletContextListener";//NOI18N
 
@@ -426,15 +421,15 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 jsfLibrary = LibraryManager.getDefault().getLibrary(panel.getNewLibraryName());
             }
 
-            JSFVersion jsfVersion;
+            JsfVersion jsfVersion;
             if (jsfLibrary != null) {
                 List<URL> content = jsfLibrary.getContent("classpath"); //NOI18N
-                jsfVersion = JSFVersion.forClasspath(content);
+                jsfVersion = JsfVersionUtils.forClasspath(content);
             } else {
                 if (panel.getLibraryType() == JSFConfigurationPanel.LibraryType.SERVER && panel.getServerLibrary() != null) {
-                    jsfVersion = JSFVersion.forServerLibrary(panel.getServerLibrary());
+                    jsfVersion = JsfVersionUtils.forServerLibrary(panel.getServerLibrary());
                 } else {
-                    jsfVersion = JSFVersion.forWebModule(webModule);
+                    jsfVersion = JsfVersionUtils.forWebModule(webModule);
                 }
             }
 
@@ -460,7 +455,11 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                             servlet = (Servlet)ddRoot.createBean("Servlet"); //NOI18N
                             String servletName = (panel == null) ? FACES_SERVLET_NAME : panel.getServletName();
                             servlet.setServletName(servletName);
-                            servlet.setServletClass(FACES_SERVLET_CLASS);
+                            if (jsfVersion.isAtLeast(JsfVersion.JSF_3_0)) {
+                                servlet.setServletClass(FACES_SERVLET_CLASS_JAKARTAEE);
+                            } else {
+                                servlet.setServletClass(FACES_SERVLET_CLASS);
+                            }
                             servlet.setLoadOnStartup(new BigInteger("1"));//NOI18N
                             ddRoot.addServlet(servlet);
 
@@ -473,9 +472,13 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                     }
                     boolean faceletsEnabled = panel.isEnableFacelets();
 
-                    if (jsfVersion != null && jsfVersion.isAtLeast(JSFVersion.JSF_2_0)) {
+                    if (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_2_0)) {
                         InitParam contextParam = (InitParam) ddRoot.createBean("InitParam");    //NOI18N
-                        contextParam.setParamName(JSFUtils.FACES_PROJECT_STAGE);
+                        if (jsfVersion.isAtLeast(JsfVersion.JSF_3_0)) {
+                            contextParam.setParamName(JSFUtils.FACES_PROJECT_STAGE_JAKARTAEE);
+                        } else {
+                            contextParam.setParamName(JSFUtils.FACES_PROJECT_STAGE);
+                        }
                         contextParam.setParamValue("Development"); //NOI18N
                         ddRoot.addContextParam(contextParam);
                     }
@@ -498,7 +501,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                     WelcomeFileList welcomeFiles = ddRoot.getSingleWelcomeFileList();
                     List<String> welcomeFileList = new ArrayList<String>();
 
-                    // add the welcome file only if there not any
+                    // add the welcome file only if there isn't any
                     if (!faceletsEnabled) {
                         if (welcomeFiles == null) {
                             if (facesMapping.charAt(0) == '/') {
@@ -561,7 +564,6 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                         DialogDisplayer.getDefault().notify(warningDialog);
                     }
                 });
-
             }
 
             // copy faces-config.xml
@@ -575,20 +577,24 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 if (ddRoot != null) {
                     Profile profile = webModule.getJ2eeProfile();
                     if (profile != null && profile.isAtLeast(Profile.JAVA_EE_5) && jsfVersion != null) {
-                        if (jsfVersion.isAtLeast(JSFVersion.JSF_2_3)) {
-                          facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_3;
-                        } else if (jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
+                        if (jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
+                            facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_4_0;
+                        } else if (jsfVersion.isAtLeast(JsfVersion.JSF_3_0)) {
+                            facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_3_0;
+                        } else if (jsfVersion.isAtLeast(JsfVersion.JSF_2_3)) {
+                            facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_3;
+                        } else if (jsfVersion.isAtLeast(JsfVersion.JSF_2_2)) {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_2;
-                        } else if (jsfVersion.isAtLeast(JSFVersion.JSF_2_1)) {
+                        } else if (jsfVersion.isAtLeast(JsfVersion.JSF_2_1)) {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_1;
-                        } else if (jsfVersion.isAtLeast(JSFVersion.JSF_2_0)) {
+                        } else if (jsfVersion.isAtLeast(JsfVersion.JSF_2_0)) {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_2_0;
                         } else {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_1_2;
                         }
                     }
                     if (profile != null && !profile.isAtLeast(Profile.JAVA_EE_6_WEB)
-                            && (jsfVersion == null || !jsfVersion.isAtLeast(JSFVersion.JSF_2_0))) {
+                            && (jsfVersion == null || !jsfVersion.isAtLeast(JsfVersion.JSF_2_0))) {
                         createFacesConfig = true;
                     }
                 }
@@ -634,7 +640,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                                 jsfConfig.addApplication(application);
                             }
                             //In JSF2.0 no need to add HANDLER need to change version of faces-config instead
-                            if (jsfVersion != null && !jsfVersion.isAtLeast(JSFVersion.JSF_2_0) && !isMyFaces) {
+                            if (jsfVersion != null && !jsfVersion.isAtLeast(JsfVersion.JSF_2_0) && !isMyFaces) {
                                 ViewHandler viewHandler = model.getFactory().createViewHandler();
                                 viewHandler.setFullyQualifiedClassType(HANDLER);
                                 application.addViewHandler(viewHandler);
@@ -690,11 +696,13 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 if (webModule.getDocumentBase().getFileObject(WELCOME_XHTML) == null) {
                     FileObject target = FileUtil.createData(webModule.getDocumentBase(), WELCOME_XHTML);
                     FileObject template = FileUtil.getConfigRoot().getFileObject(WELCOME_XHTML_TEMPLATE);
-                    HashMap<String, Object> params = new HashMap<String, Object>();
+                    HashMap<String, Object> params = new HashMap<>();
                     if (jsfVersion != null) {
-                        if (jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
+                        if (jsfVersion.isAtLeast(JsfVersion.JSF_3_0)) {
+                            params.put("isJSF30", Boolean.TRUE);    //NOI18N
+                        } else if (jsfVersion.isAtLeast(JsfVersion.JSF_2_2)) {
                             params.put("isJSF22", Boolean.TRUE);    //NOI18N
-                        } else {
+                        } else if (jsfVersion.isAtLeast(JsfVersion.JSF_2_0)) {
                             params.put("isJSF20", Boolean.TRUE);    //NOI18N
                         }
                     }
@@ -717,14 +725,14 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
         }
         private boolean shouldAddMappings(WebModule webModule) {
             assert webModule != null;
-            JSFVersion jsfVersion = JSFVersion.forWebModule(webModule);
+            JsfVersion jsfVersion = JsfVersionUtils.forWebModule(webModule);
             FileObject projectFO = JSFUtils.getFileObject(webModule);
             if (jsfVersion != null && projectFO != null) {
                 Project project = FileOwnerQuery.getOwner(projectFO);
                 WebPropertyEvaluator evaluator = project.getLookup().lookup(WebPropertyEvaluator.class);
                 if (evaluator != null) {
                     String serverInstanceID = evaluator.evaluator().getProperty(J2EE_SERVER_INSTANCE);
-                    if (jsfVersion.isAtLeast(JSFVersion.JSF_2_0)
+                    if (jsfVersion.isAtLeast(JsfVersion.JSF_2_0)
                             && isGlassFishv3(serverInstanceID)
                             && JSFConfigUtilities.hasJsfFramework(webModule.getDocumentBase())) {
                         return false;
@@ -741,7 +749,11 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             String shortName;
             try {
                 shortName = Deployment.getDefault().getServerInstance(serverInstanceID).getServerID();
-                if ("gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) || "gfv5".equals(shortName) || "gfv3ee6".equals(shortName) || "gfv3".equals(shortName)) {
+                if ("gfv700ee10".equals(shortName) || "gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) 
+                        || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) 
+                        || "gfv5".equals(shortName) || "gfv4ee7".equals(shortName) 
+                        || "gfv4".equals(shortName) || "gfv3ee6".equals(shortName) 
+                        || "gfv3".equals(shortName)) {
                     return true;
                 }
             } catch (InstanceRemovedException ex) {

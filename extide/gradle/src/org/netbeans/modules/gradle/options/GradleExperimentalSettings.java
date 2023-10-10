@@ -29,6 +29,7 @@ public final class GradleExperimentalSettings {
     public static final String PROP_DISABLE_CACHE = "disableCache";
     public static final String PROP_LAZY_OPEN_GROUPS = "lazyOpen";
     public static final String PROP_BUNDLED_LOADING = "bundledLoading";
+    public static final String PROP_NETWORK_PROXY = "networkProxy";
 
     private static final GradleExperimentalSettings INSTANCE = new GradleExperimentalSettings(NbPreferences.forModule(GradleExperimentalSettings.class));
     private final Preferences preferences;
@@ -67,5 +68,18 @@ public final class GradleExperimentalSettings {
 
     public boolean isBundledLoading() {
         return getPreferences().getBoolean(PROP_BUNDLED_LOADING, false);
+    }
+    
+    public NetworkProxySettings getNetworkProxy() {
+        String s = getPreferences().get(PROP_NETWORK_PROXY, NetworkProxySettings.ASK.name());
+        try {
+            return NetworkProxySettings.valueOf(s);
+        } catch (IllegalArgumentException ex) {
+            return NetworkProxySettings.ASK;
+        }
+    }
+    
+    public void setNetworkProxy(NetworkProxySettings s) {
+        getPreferences().put(PROP_NETWORK_PROXY, s.name());
     }
 }

@@ -210,13 +210,11 @@ public class PreInstallSummaryPanel extends ErrorMessagePanel {
             
             installationSizeLabel.setText(
                     panel.getProperty(INSTALLATION_SIZE_PROPERTY));
-            installationSizeValue.setText(StringUtils.formatSize(
-                    installationSize));
+            installationSizeValue.setText(StringUtils.formatSize(installationSize));
 
             downloadSizeLabel.setText(
                     panel.getProperty(DOWNLOAD_SIZE_PROPERTY));
-            downloadSizeValue.setText(StringUtils.formatSize(
-                    downloadSize));
+            downloadSizeValue.setText(StringUtils.formatSize(downloadSize));
 
             if (registry.getProductsToInstall().size() == 0) {
                 locationsPane.setVisible(false);
@@ -340,12 +338,12 @@ public class PreInstallSummaryPanel extends ErrorMessagePanel {
                         }
                     }
 
-                    for (File root : spaceMap.keySet()) {
+                    for (Map.Entry<File, Long> it : spaceMap.entrySet()) {
+                        File root = it.getKey();
+
                         try {
-                            final long availableSpace =
-                                    SystemUtils.getFreeSpace(root);
-                            final long requiredSpace =
-                                    spaceMap.get(root) + REQUIRED_SPACE_ADDITION;
+                            final long availableSpace = SystemUtils.getFreeSpace(root);
+                            final long requiredSpace = it.getValue() + REQUIRED_SPACE_ADDITION;
 
                             if (availableSpace < requiredSpace) {
                                 return StringUtils.format(

@@ -24,7 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /** Implementation of Places to deal with command line --cachedir argument.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 @ServiceProvider(service=Places.class)
 public final class NbPlaces extends Places {

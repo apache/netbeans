@@ -786,8 +786,8 @@ public class ManagerBean implements Manager {
     public void deleteBundles() throws ManagerException {
         bundlesLock.lock();
         try {
-            for (String key: bundles.keySet()) {
-                FileUtils.deleteFile(bundles.get(key));
+            for (File file: bundles.values()) {
+                FileUtils.deleteFile(file);
             }
             
             bundles.clear();
@@ -823,9 +823,7 @@ public class ManagerBean implements Manager {
                     new OutputStreamWriter(new FileOutputStream(REGISTRIES_LIST)));
             
             try {
-                for (String key: registries.keySet()) {
-                    writer.println(key);
-                }
+                registries.keySet().forEach(writer::println);
             } finally {
                 writer.close();
             }

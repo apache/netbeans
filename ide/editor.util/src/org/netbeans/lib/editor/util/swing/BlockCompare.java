@@ -66,7 +66,7 @@ public final class BlockCompare {
     /**
      * Check if block X is before block Y.
      *
-     * @return true if end offset of block X is &lt;= start offset of block Y i.e.<br/>
+     * @return true if end offset of block X is &lt;= start offset of block Y i.e.<br>
      *   xEndOffset &lt;= yStartOffset.
      * 
      */
@@ -77,7 +77,7 @@ public final class BlockCompare {
     /**
      * Check if block X is after block Y.
      *
-     * @return true if start offset of block X is &gt;= end offset of block Y i.e.<br/>
+     * @return true if start offset of block X is &gt;= end offset of block Y i.e.<br>
      *   xStartOffset &gt;= yEndOffset.
      *   
      */
@@ -144,8 +144,8 @@ public final class BlockCompare {
      * Check if block X overlaps block Y at its begining.
      *
      * @return true if start offset of block X is before start offset of block Y
-     *  and end offset of block X is inside block Y i.e.<br/>
-     *   xStartOffset &lt; yStartOffset and <br/>
+     *  and end offset of block X is inside block Y i.e.<br>
+     *   xStartOffset &lt; yStartOffset and <br>
      *   xEndOffset &gt; yStartOffset and xEndOffset &lt; yEndOffset.
     */
     public boolean overlapStart() {
@@ -156,8 +156,8 @@ public final class BlockCompare {
      * Check if block X overlaps block Y at its end.
      *
      * @return true if start offset of block X is inside block Y
-     *  and end offset of block X is above end of block Y i.e.<br/>
-     *  xStartOffset &gt; yStartOffset && xStartOffset &lt; yEndOffset<br/>
+     *  and end offset of block X is above end of block Y i.e.<br>
+     *  xStartOffset &gt; yStartOffset &amp;&amp; xStartOffset &lt; yEndOffset<br>
      *  xEndOffset &gt; yEndOffset.
     */
     public boolean overlapEnd() {
@@ -185,9 +185,9 @@ public final class BlockCompare {
     /**
      * Check if block X has invalid bounds (start offset higher than its end offset).
      *
-     * @return true if X has start offset higher than end offset i.e.<br/>
+     * @return true if X has start offset higher than end offset i.e.<br>
      *   xStartOffset &gt; xEndOffset.
-     *  <br/>
+     *  <br>
      *   If true the block is treated as empty (end offset value is explicitly corrected to the start offset value)
      *   and the rest of flags is set accordingly.
      * @since 1.49
@@ -199,9 +199,9 @@ public final class BlockCompare {
     /**
      * Check if block Y has invalid bounds (start offset higher than its end offset).
      *
-     * @return true if Y has start offset higher than end offset i.e.<br/>
+     * @return true if Y has start offset higher than end offset i.e.<br>
      *   yStartOffset &gt; yEndOffset.
-     *   <br/>
+     *   <br>
      *   If true the block is treated as empty (end offset value is explicitly corrected to the start offset value)
      *   and the rest of flags is set accordingly.
      * @since 1.49

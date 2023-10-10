@@ -22,7 +22,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
@@ -88,8 +89,8 @@ class FacesComponentPanel implements WizardDescriptor.Panel<WizardDescriptor>, C
         Project project = Templates.getProject(descriptor);
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
-            JSFVersion jsfVersion = JSFVersion.forWebModule(webModule);
-            if (jsfVersion != null && !jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
+            JsfVersion jsfVersion = JsfVersionUtils.forWebModule(webModule);
+            if (jsfVersion != null && !jsfVersion.isAtLeast(JsfVersion.JSF_2_2)) {
                 descriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, Bundle.FacesComponentPanel_err_jsf_version_not_suficient());
                 return false;
             }

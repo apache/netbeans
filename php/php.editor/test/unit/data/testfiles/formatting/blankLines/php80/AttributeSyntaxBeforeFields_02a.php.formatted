@@ -24,13 +24,11 @@
 class AttributeSyntax1 {
     #[A(1)]
     public int|string $field1 = 1;
-
 }
 
 class AttributeSyntax2 {
     #[A(1)] // comment
     public int $field2 = 1;
-
 }
 
 class AttributeSyntax3 {
@@ -39,7 +37,6 @@ class AttributeSyntax3 {
      */
     #[A(1)]
     public $field3 = 1;
-
 }
 
 class AttributeSyntax4 {
@@ -48,7 +45,6 @@ class AttributeSyntax4 {
      * comment1
      */
     public static $field4 = 1;
-
 }
 
 class AttributeSyntax5 {
@@ -60,40 +56,34 @@ class AttributeSyntax5 {
      * comment2
      */
     public $field5;
-
 }
 
 class AttributeSyntax6 {
     #[A(1)]
     // comment
     private int|bool $field6 = 1;
-
 }
 
 class AttributeSyntax7 {
     // comment
     #[A]
     private int|bool $field7 = 1;
-
 }
 
 class AttributeSyntax8 {
     #[A(1)]
     #[A(2)]
     private Test $field8;
-
 }
 
 class AttributeSyntaxConst1 {
     #[A(1)]
     public const CONSTANT1 = 1;
-
 }
 
 class AttributeSyntaxConst2 {
     #[A(1)] // comment
     public const CONSTANT2 = 1;
-
 }
 
 class AttributeSyntaxConst3 {
@@ -102,7 +92,6 @@ class AttributeSyntaxConst3 {
      */
     #[A(1)]
     public const CONSTANT3 = 3;
-
 }
 
 class AttributeSyntaxConst4 {
@@ -111,7 +100,6 @@ class AttributeSyntaxConst4 {
      * comment1
      */
     public const CONSTANT4 = 4;
-
 }
 
 class AttributeSyntaxConst5 {
@@ -123,26 +111,22 @@ class AttributeSyntaxConst5 {
      * comment2
      */
     private const CONSTANT5 = 5;
-
 }
 
 class AttributeSyntaxConst6 {
     #[A(1)]
     // comment
     const CONSTANT6 = 6;
-
 }
 
 class AttributeSyntaxConst7 {
     // comment
     #[A]
     public const CONSTANT7 = 7;
-
 }
 
 class AttributeSyntaxConst8 {
     #[A(1)]
     #[A(2)]
     public const CONSTANT8 = 8;
-
 }

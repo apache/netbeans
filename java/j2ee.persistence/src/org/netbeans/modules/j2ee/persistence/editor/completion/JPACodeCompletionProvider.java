@@ -146,7 +146,7 @@ public class JPACodeCompletionProvider implements CompletionProvider {
                 if (anchorOffset > -1) {
                     resultSet.setAnchorOffset(anchorOffset);
                 }
-            } catch (Exception e) {
+            } catch (MissingResourceException | ParseException e) {
                 Exceptions.printStackTrace(e);
             } finally {
                 resultSet.finish();

@@ -86,7 +86,7 @@ public final class ConnectionWidgetLayout implements Layout {
 
         connectionWidget.calculateRouting ();
         java.util.List<Point> controlPoints = connectionWidget.getControlPoints ();
-        boolean empty = controlPoints == null  ||  controlPoints.size () <= 0;
+        boolean empty = controlPoints == null  ||  controlPoints.size () <= 1;
 
         double totalDistance = 0.0;
         double[] distances = new double[empty ? 0 : controlPoints.size () - 1];

@@ -1,0 +1,14 @@
+Name: Exception
+\Exception
+
+Name: Exception
+\Exception()
+
+Name: Exception
+\Exception(${php-cc-0  default="$message"})
+
+Name: Exception
+\Exception(${php-cc-0  default="$message"}, ${php-cc-1  default="$code"})
+
+Name: Exception
+\Exception(${php-cc-0  default="$message"}, ${php-cc-1  default="$code"}, ${php-cc-2  default="$previous"})

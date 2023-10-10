@@ -69,18 +69,22 @@ public class TopLoggingTest extends NbTestCase {
         TopLogging.initialize();
 
         w = new ByteArrayOutputStream() {
+            @Override
             public void write(byte[] b, int off, int len) {
                 super.write(b, off, len);
             }
 
+            @Override
             public void write(byte[] b) throws IOException {
                 super.write(b);
             }
 
+            @Override
             public void write(int b) {
                 super.write(b);
             }
 
+            @Override
             public String toString() {
                 handler.flush();
 

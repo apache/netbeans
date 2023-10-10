@@ -24,6 +24,6 @@
 <!-- for some information on what you could do (e.g. targets to override). -->
 <!-- If you delete this file and reopen the project it will be recreated. -->
 <project name="ide/libs.antlr4.runtime" default="build" basedir=".">
-    <description>Builds, tests, and runs the lib antlr 4.7.2 runtime.</description>
+    <description>Builds, tests, and runs the lib antlr 4.11.1 runtime.</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

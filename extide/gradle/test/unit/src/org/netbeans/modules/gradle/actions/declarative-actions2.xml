@@ -20,7 +20,7 @@
 
 -->
 <!DOCTYPE actions SYSTEM "action-mapping.dtd">
-<!-- BEGIN:disable-action-xml -->
+<!-- @start region="disable-action-xml" -->
 <actions>
     <profiles>
         <profile id="provided-config" displayName="Example Provided Config">
@@ -32,5 +32,5 @@
             </actions>
         </profile>
     </profiles>
-<!-- END:disable-action-xml -->
+<!-- @end region="disable-action-xml" -->
 </actions>

@@ -147,7 +147,7 @@ public class LanguagesManager extends org.netbeans.api.languages.LanguagesManage
     
     private void languageChanged (String mimeType) {
         Language language = mimeTypeToLanguage.get (mimeType);
-        if (language != null && language instanceof LanguageImpl) {
+        if (language instanceof LanguageImpl) {
             try {
                 FileSystem fs = Repository.getDefault ().getDefaultFileSystem ();
                 FileObject fo = fs.findResource ("Editors/" + mimeType + "/language.nbs");

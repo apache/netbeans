@@ -93,7 +93,7 @@ is the proper place.
             <description>
                 <p>
                     <a href="@TOP@/org/netbeans/api/project/ui/ProjectProblems.html">ProjectProblems API</a> now delegates to 
-                    <a href="@TOP@/org/netbeans/spi/project/ui/ProjectProblemsImplementation .html">ProjectProblemsImplementation</a> 
+                    <a href="@TOP@/org/netbeans/spi/project/ui/ProjectProblemsImplementation.html">ProjectProblemsImplementation</a>
                     registered in default Lookup.
                 </p>
             </description>

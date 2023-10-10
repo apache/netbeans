@@ -80,7 +80,8 @@ public class NotifyLaterTest extends NbTestCase {
     public void testIfLasterWhenSplashShownThanWaitTillItFinished() throws Exception {
         class MyObj extends JComponent {
             public int called;
-            
+
+            @Override
             public void addNotify() {
                 called = 1;
                 LOG.log(Level.INFO, "addNotify called=" + called, new Exception("Stacktrace"));

@@ -337,7 +337,7 @@ public abstract class OptionsPanelController {
 
     /**
      * Registers keywords for some panel in the Options dialog. Should be placed
-     * on a {@link JPanel} instance.
+     * on a {@link javax.swing.JPanel} instance.
      *
      * @since org.netbeans.modules.options.api/1 1.29
      */
@@ -352,30 +352,25 @@ public abstract class OptionsPanelController {
          * <p> Each entry in the provided array is split around comma character.
          * For example:
          *
-         * <blockquote><table cellpadding=1 cellspacing=0 summary="Split
-         * examples showing array and keywords"> <tr> <th>Provided array</th>
-         * <th>Keywords</th> </tr> <tr><td align=center>{ "Boo", "fOo" }</td>
-         * <td><tt>{ "BOO", "FOO" }</tt></td></tr>
-         * </tr> <tr><td align=center>{ "boo and", "foo" }</td>
-         * <td><tt>{ "BOO AND", "FOO" }</tt></td></tr>
-         * </tr> <tr><td align=center>{ "boo,and", "foo" }</td>
-         * <td><tt>{ "BOO", "AND", "FOO" }</tt></td></tr> 
+         * <blockquote><table>
+         * <caption>Split examples showing array and keywords</caption>
+         * <tr><th>Provided array</th><th>Keywords</th></tr> 
+         * <tr><td align=center>{ "Boo", "fOo" }</td><td><tt>{ "BOO", "FOO" }</tt></td></tr>
+         * <tr><td align=center>{ "boo and", "foo" }</td><td><tt>{ "BOO AND", "FOO" }</tt></td></tr>
+         * <tr><td align=center>{ "boo,and", "foo" }</td><td><tt>{ "BOO", "AND", "FOO" }</tt></td></tr> 
          * </table></blockquote>
          *
          * <p> The user's search-text is split around the space character to form words.
          * All words need to be present in a panel to yield a successful search.
          * The registered keywords {"Boo,anD", "fOo"}, for example, yield the following results with these search-texts:
          *
-         * <blockquote><table cellpadding=1 cellspacing=0 summary="Search
-         * examples showing search-text and results"> <tr> <th>User's search-text</th>
-         * <th>Result</th> </tr> <tr><td align=center>"boo"</td>
-         * <td><tt>keyword found</tt></td></tr>
-         * <tr><td align=center>"nd"</td>
-         * <td><tt>keyword found</tt></td></tr>
-         * <tr><td align=center>"boo and"</td>
-         * <td><tt>keyword found</tt></td></tr>
-         * <tr><td align=center>"boo moo"</td>
-         * <td><tt>keyword NOT found</tt></td></tr>
+         * <blockquote><table> 
+         * <caption>Search examples showing search-text and results</caption>
+         * <tr><th>User's search-text</th><th>Result</th></tr>
+         * <tr><td align=center>"boo"</td><td><tt>keyword found</tt></td></tr>
+         * <tr><td align=center>"nd"</td><td><tt>keyword found</tt></td></tr>
+         * <tr><td align=center>"boo and"</td><td><tt>keyword found</tt></td></tr>
+         * <tr><td align=center>"boo moo"</td><td><tt>keyword NOT found</tt></td></tr>
          * </table></blockquote>
          */
         String[] keywords();
@@ -394,7 +389,7 @@ public abstract class OptionsPanelController {
 
         /**
          * Optional title that must be used if the panel is part of a tabbed pane, such as when it is
-         * in the Editor, Fonts & Colors, Java, PHP, C/C++ or Miscellaneous categories, matching the
+         * in the Editor, Fonts &amp; Colors, Java, PHP, C/C++ or Miscellaneous categories, matching the
          * {@link SubRegistration#displayName}.
          * 
          * You may use {@code #key} syntax.

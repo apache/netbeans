@@ -94,7 +94,7 @@ public class UnusedVariableCustomizer extends javax.swing.JPanel {
                 .addComponent(checkUnusedFormalParametersCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(checkInheritedMethodParametersCheckBox)
-                .addContainerGap(236, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

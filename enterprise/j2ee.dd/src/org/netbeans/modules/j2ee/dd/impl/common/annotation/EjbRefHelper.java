@@ -48,7 +48,9 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.Pa
 public class EjbRefHelper {
     
     private static final String EJB_ANN = "javax.ejb.EJB"; // NOI18N
+    private static final String EJB_ANN_JAKARTA = "jakarta.ejb.EJB"; // NOI18N
     private static final String EJBS_ANN = "javax.ejb.EJBs"; // NOI18N
+    private static final String EJBS_ANN_JAKARTA = "jakarta.ejb.EJBs"; // NOI18N
     
     private EjbRefHelper() {
     }
@@ -60,6 +62,22 @@ public class EjbRefHelper {
      */
     public static void setEjbRefs(final AnnotationModelHelper helper, final List<EjbRef> resultEjbRefs, final List<EjbLocalRef> resultEjbLocalRefs) {
         try {
+            helper.getAnnotationScanner().findAnnotations(
+                EJBS_ANN_JAKARTA,
+                EnumSet.of(ElementKind.CLASS),
+                new AnnotationHandler() {
+                    public void handleAnnotation(TypeElement typeElement, Element element, AnnotationMirror annotation) {
+                        parseEJBsAnnotation(helper, typeElement, resultEjbRefs, resultEjbLocalRefs);
+                    }
+                });
+            helper.getAnnotationScanner().findAnnotations(
+                EJB_ANN_JAKARTA,
+                EnumSet.of(ElementKind.CLASS, ElementKind.METHOD, ElementKind.FIELD),
+                new AnnotationHandler() {
+                    public void handleAnnotation(TypeElement typeElement, Element element, AnnotationMirror annotation) {
+                        parseElement(helper, typeElement, element, resultEjbRefs, resultEjbLocalRefs, EJB_ANN_JAKARTA);
+                    }
+                });
             helper.getAnnotationScanner().findAnnotations(
                 EJBS_ANN, 
                 EnumSet.of(ElementKind.CLASS), 
@@ -73,7 +91,7 @@ public class EjbRefHelper {
                 EnumSet.of(ElementKind.CLASS, ElementKind.METHOD, ElementKind.FIELD), 
                 new AnnotationHandler() {
                     public void handleAnnotation(TypeElement typeElement, Element element, AnnotationMirror annotation) {
-                        parseElement(helper, typeElement, element, resultEjbRefs, resultEjbLocalRefs);
+                        parseElement(helper, typeElement, element, resultEjbRefs, resultEjbLocalRefs, EJB_ANN);
                     }
                 });
         } catch (InterruptedException ie) {
@@ -91,19 +109,25 @@ public class EjbRefHelper {
         parseEJBsAnnotation(helper, typeElement, resultEjbRefs, resultEjbLocalRefs);
         
         // @EJB at class
-        if (helper.hasAnnotation(typeElement.getAnnotationMirrors(), EJB_ANN)) {
-            parseElement(helper, typeElement, typeElement, resultEjbRefs, resultEjbLocalRefs);
+        if (helper.hasAnnotation(typeElement.getAnnotationMirrors(), EJB_ANN_JAKARTA)) {
+            parseElement(helper, typeElement, typeElement, resultEjbRefs, resultEjbLocalRefs, EJB_ANN_JAKARTA);
+        } else if (helper.hasAnnotation(typeElement.getAnnotationMirrors(), EJB_ANN)) {
+            parseElement(helper, typeElement, typeElement, resultEjbRefs, resultEjbLocalRefs, EJB_ANN);
         }
         // @EJB at field
         for (VariableElement variableElement : ElementFilter.fieldsIn(typeElement.getEnclosedElements())) {
-            if (helper.hasAnnotation(variableElement.getAnnotationMirrors(), EJB_ANN)) {
-                parseElement(helper, typeElement, variableElement, resultEjbRefs, resultEjbLocalRefs);
+            if (helper.hasAnnotation(variableElement.getAnnotationMirrors(), EJB_ANN_JAKARTA)) {
+                parseElement(helper, typeElement, variableElement, resultEjbRefs, resultEjbLocalRefs, EJB_ANN_JAKARTA);
+            } else if (helper.hasAnnotation(variableElement.getAnnotationMirrors(), EJB_ANN)) {
+                parseElement(helper, typeElement, variableElement, resultEjbRefs, resultEjbLocalRefs, EJB_ANN);
             }
         }
         // @EJB at method
         for (ExecutableElement executableElement : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
-            if (helper.hasAnnotation(executableElement.getAnnotationMirrors(), EJB_ANN)) {
-                parseElement(helper, typeElement, executableElement, resultEjbRefs, resultEjbLocalRefs);
+            if (helper.hasAnnotation(executableElement.getAnnotationMirrors(), EJB_ANN_JAKARTA)) {
+                parseElement(helper, typeElement, executableElement, resultEjbRefs, resultEjbLocalRefs, EJB_ANN_JAKARTA);
+            } else if (helper.hasAnnotation(executableElement.getAnnotationMirrors(), EJB_ANN)) {
+                parseElement(helper, typeElement, executableElement, resultEjbRefs, resultEjbLocalRefs, EJB_ANN);
             }
         }
         
@@ -112,9 +136,14 @@ public class EjbRefHelper {
     private static void parseEJBsAnnotation(final AnnotationModelHelper helper, TypeElement typeElement,
             final List<EjbRef> resultEjbRefs, final List<EjbLocalRef> resultEjbLocalRefs) {
         Map<String, ? extends AnnotationMirror> annByType = helper.getAnnotationsByType(typeElement.getAnnotationMirrors());
-        AnnotationMirror ejbsAnnotation = annByType.get(EJBS_ANN); // NOI18N
+        AnnotationMirror ejbsAnnotation = annByType.get(EJBS_ANN_JAKARTA);
+        String typeName = EJB_ANN_JAKARTA;
+        if(ejbsAnnotation == null) {
+            ejbsAnnotation = annByType.get(EJBS_ANN);
+            typeName = EJB_ANN;
+        }
         AnnotationParser parser = AnnotationParser.create(helper);
-        parser.expectAnnotationArray("value", helper.resolveType(EJB_ANN), new ArrayValueHandler() { // NOI18N
+        parser.expectAnnotationArray("value", helper.resolveType(typeName), new ArrayValueHandler() { // NOI18N
             public Object handleArray(List<AnnotationValue> arrayMembers) {
                 for (AnnotationValue arrayMember : arrayMembers) {
                     Object arrayMemberValue = arrayMember.getValue();
@@ -131,7 +160,7 @@ public class EjbRefHelper {
     /**
      * Parses element
      */
-    private static void parseElement(AnnotationModelHelper helper, TypeElement ownerClass, Element element, List<EjbRef> resultEjbRefs, List<EjbLocalRef> resultEjbLocalRefs) {
+    private static void parseElement(AnnotationModelHelper helper, TypeElement ownerClass, Element element, List<EjbRef> resultEjbRefs, List<EjbLocalRef> resultEjbLocalRefs, String ejbAnnotation) {
         
         String name = null;
         String beanInterface = null;
@@ -151,7 +180,7 @@ public class EjbRefHelper {
             parser.expectString("beanName", null); // NOI18N
             parser.expectString("mappedName", null); // NOI18N
             parser.expectString("description", null); // NOI18N
-            ParseResult parseResult = parser.parse(annByType.get(EJB_ANN));
+            ParseResult parseResult = parser.parse(annByType.get(ejbAnnotation));
             
             name = parseResult.get("name", String.class); // NOI18N
             beanInterface = parseResult.get("beanInterface", String.class); // NOI18N
@@ -193,7 +222,7 @@ public class EjbRefHelper {
                 }
             }
             
-            ParseResult parseResult = parser.parse(annByType.get(EJB_ANN));
+            ParseResult parseResult = parser.parse(annByType.get(ejbAnnotation));
             name = parseResult.get("name", String.class); // NOI18N
         } else {
             return;
@@ -243,7 +272,7 @@ public class EjbRefHelper {
         // this one just checks if there is @Remote annotation; if not, it is local
         boolean isLocal = true;
         Map<String, ? extends AnnotationMirror> memberAnnByType = helper.getAnnotationsByType(interfaceTypeElement.getAnnotationMirrors());
-        if (memberAnnByType.get("javax.ejb.Remote") != null) { // NOI18N
+        if (memberAnnByType.get("jakarta.ejb.Remote") != null || memberAnnByType.get("javax.ejb.Remote") != null) { // NOI18N
             isLocal = false;
         }
         

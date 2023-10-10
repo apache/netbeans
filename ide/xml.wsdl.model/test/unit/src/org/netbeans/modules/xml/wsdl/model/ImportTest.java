@@ -95,7 +95,7 @@ public class ImportTest extends TestCase {
         NamespaceLocation.PO.refreshResourceFile();
         WSDLModel model = TestCatalogModel.getDefault().getWSDLModel(NamespaceLocation.TESTOP);
         Definitions d = model.getDefinitions();
-        List<Message> messages = new ArrayList(d.getMessages());
+        List<Message> messages = new ArrayList<>(d.getMessages());
         
         Message m1 = messages.get(0);
         NamedComponentReference<GlobalType> type = m1.getParts().iterator().next().getType();
@@ -109,7 +109,7 @@ public class ImportTest extends TestCase {
         NamespaceLocation.PO_1.refreshResourceFile();
         WSDLModel model = TestCatalogModel.getDefault().getWSDLModel(NamespaceLocation.TESTIMPORT);
         Definitions d = model.getDefinitions();
-        List<Message> messages = new ArrayList(d.getMessages());
+        List<Message> messages = new ArrayList<>(d.getMessages());
         Message m1 = messages.get(0);
         GlobalElement ge = m1.getParts().iterator().next().getElement().get();
         assertEquals("purchaseOrder", ge.getName());
@@ -118,7 +118,7 @@ public class ImportTest extends TestCase {
     public void testXsdTypeWithoutImport() throws Exception {
         WSDLModel model = TestCatalogModel.getDefault().getWSDLModel(NamespaceLocation.ECHO);
         Definitions d = model.getDefinitions();
-        List<Message> messages = new ArrayList(d.getMessages());
+        List<Message> messages = new ArrayList<>(d.getMessages());
         Message m1 = messages.get(0);
         assertEquals("message_0", m1.getName());
         Part part = m1.getParts().iterator().next();

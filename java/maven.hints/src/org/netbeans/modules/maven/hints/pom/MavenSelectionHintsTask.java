@@ -24,6 +24,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.hints.pom.spi.SelectionPOMFixProvider;
@@ -68,17 +69,18 @@ public class MavenSelectionHintsTask extends ParserResultTask<MavenResult> {
         List<ErrorDescription> errors = computeErrors(result, ss, se, cursorEvent.getCaretOffset());
         HintsController.setErrors(result.getPomFile(), PomModelUtils.LAYER_POM_SELECTION, errors);
     }
-    
+
+    @NonNull
     static List<ErrorDescription> computeErrors(MavenResult result, int ss, int se, int co) {
+        final List<ErrorDescription> errors = new ArrayList<>();
         FileObject fo = result.getPomFile();
         Project project = FileOwnerQuery.getOwner(fo);
         Document document = result.getSnapshot().getSource().getDocument(false);
         if (fo == null || project == null || project.getProjectDirectory() != fo.getParent()) {
             // ?? pom file ought to form a project!
-            return null;
+            return errors;
         }
         final POMModel model = result.getProjectModel();
-        final List<ErrorDescription> errors = new ArrayList<ErrorDescription>();
         // clear selection hints in case of an error; validation errors are handled by 
         // MavenFileHintsTask.
         StyledDocument styled = null;

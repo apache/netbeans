@@ -329,8 +329,8 @@ public final class ClassIndex {
     /**
      * Returns a set of {@link ElementHandle}s containing reference(s) to given type element.
      * @param element the {@link ElementHandle} of a {@link TypeElement} for which usages should be found
-     * @param searchKind type of reference, {@see SearchKind}
-     * @param scope to search in {@see SearchScope}
+     * @param searchKind type of reference, {@link SearchKind}
+     * @param scope to search in {@link SearchScope}
      * @return set of {@link ElementHandle}s containing the reference(s)
      * It may return null when the caller is a CancellableTask&lt;CompilationInfo&gt; and is cancelled
      * inside call of this method.
@@ -355,8 +355,8 @@ public final class ClassIndex {
     /**
      * Returns a set of {@link ElementHandle}s containing reference(s) to given package element.
      * @param element the {@link ElementHandle} of a {@link PackageElement} for which usages should be found
-     * @param searchKind type of reference, {@see SearchKind}
-     * @param scope to search in {@see SearchScope}
+     * @param searchKind type of reference, {@link SearchKind}
+     * @param scope to search in {@link SearchScope}
      * @return set of {@link ElementHandle}s containing the reference(s)
      * It may return null when the caller is a CancellableTask&lt;CompilationInfo&gt; and is cancelled
      * inside call of this method.
@@ -382,8 +382,8 @@ public final class ClassIndex {
     /**
      * Returns a set of source files containing reference(s) to given type element.
      * @param element the {@link ElementHandle} of a {@link TypeElement} for which usages should be found
-     * @param searchKind type of reference, {@see SearchKind}
-     * @param scope to search in {@see SearchScope}
+     * @param searchKind type of reference, {@link SearchKind}
+     * @param scope to search in {@link SearchScope}
      * @return set of {@link FileObject}s containing the reference(s)
      * It may return null when the caller is a CancellableTask&lt;CompilationInfo&gt; and is cancelled
      * inside call of this method.
@@ -408,9 +408,9 @@ public final class ClassIndex {
     /**
      * Returns a set of source or binary files containing reference(s) to given type element.
      * @param element the {@link ElementHandle} of a {@link TypeElement} for which usages should be found
-     * @param searchKind type of reference, {@see SearchKind}
-     * @param scope to search in {@see SearchScope}
-     * @param resourceType to return resource in, {@see ResourceType}. The {@link ResourceType#BINARY}
+     * @param searchKind type of reference, {@link SearchKind}
+     * @param scope to search in {@link SearchScope}
+     * @param resourceType to return resource in, {@link ResourceType}. The {@link ResourceType#BINARY}
      * produces no result for source roots. For binary roots it does not do SourceForBinaryQuery translation and
      * returns class files. The {@link ResourceType#SOURCE} for binary roots does SourceForBinaryQuery translation
      * and returns corresponding java files or no result when there is no SourceForBinaryQuery configured for given binary root.
@@ -454,8 +454,8 @@ public final class ClassIndex {
     /**
      * Returns a set of source files containing reference(s) to given package element.
      * @param element the {@link ElementHandle} of a {@link PackageElement} for which usages should be found
-     * @param searchKind type of reference, {@see SearchKind}
-     * @param scope to search in {@see SearchScope}
+     * @param searchKind type of reference, {@link SearchKind}
+     * @param scope to search in {@link SearchScope}
      * @return set of {@link FileObject}s containing the reference(s)
      * It may return null when the caller is a CancellableTask&lt;CompilationInfo&gt; and is cancelled
      * inside call of this method.
@@ -518,8 +518,8 @@ public final class ClassIndex {
      * Returns {@link ElementHandle}s for all declared types in given classpath corresponding to the name.
      * @param name case sensitive prefix, case insensitive prefix, exact simple name,
      * camel case or regular expression depending on the kind parameter.
-     * @param kind of the name {@see NameKind}
-     * @param scope to search in {@see SearchScope}
+     * @param kind of the name {@link NameKind}
+     * @param scope to search in {@link SearchScope}
      * @return set of all matched declared types
      * It may return null when the caller is a CancellableTask&lt;CompilationInfo&gt; and is cancelled
      * inside call of this method.
@@ -535,8 +535,8 @@ public final class ClassIndex {
      * Returns {@link ElementHandle}s for all declared modules in given classpath corresponding to the name.
      * @param name case sensitive prefix, case insensitive prefix, exact simple name,
      * camel case or regular expression depending on the kind parameter.
-     * @param kind of the name {@see NameKind}
-     * @param scope to search in {@see SearchScope}
+     * @param kind of the name {@link NameKind}
+     * @param scope to search in {@link SearchScope}
      * @return set of all matched modules
      * It may return null when the caller is a CancellableTask&lt;CompilationInfo&gt; and is cancelled
      * inside call of this method.
@@ -592,8 +592,8 @@ public final class ClassIndex {
      * Returns descriptions of symbols found on the given classpath and matching the additional criteria.
      * @param name case sensitive prefix, case insensitive prefix, exact simple name,
      * camel case or regular expression depending on the kind parameter.
-     * @param kind of the name {@see NameKind}
-     * @param scope to search in {@see SearchScope}
+     * @param kind of the name {@link NameKind}
+     * @param scope to search in {@link SearchScope}
      * @return iterable of {@link Symbols} describing found symbols matching the specified criteria.
      * It may return null when the caller is a CancellableTask&lt;CompilationInfo&gt; and is cancelled
      * inside call of this method.
@@ -675,7 +675,7 @@ public final class ClassIndex {
      * @param prefix of the package name
      * @param directOnly if true treats the packages as folders and returns only
      * the nearest component of the package.
-     * @param scope to search in {@see SearchScope}
+     * @param scope to search in {@link SearchScope}
      * @return set of all matched package names
      * It may return null when the caller is a CancellableTask&lt;CompilationInfo&gt; and is cancelled
      * inside call of this method.

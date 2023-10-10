@@ -43,9 +43,9 @@ public abstract class MutableTextInput<I> {
      * Get the language suitable for lexing of this input.
      *
      * @return language language by which the text of this input should be lexed.
-     *  <br/>
+     *  <br>
      *  This method is only checked upon creation of token hierarchy.
-     *  <br/>
+     *  <br>
      *  If this method returns null the token hierarchy cannot be created
      *  and will be returned as null upon asking until this method will return
      *  non-null value.
@@ -68,7 +68,7 @@ public abstract class MutableTextInput<I> {
     /**
      * Get object that logically provides the text
      * for this mutable text input.
-     * <br/>
+     * <br>
      * For example it may be a swing text document instance
      * {@link javax.swing.text.Document} in case the result of {@link #text()}
      * is the content of the document.
@@ -80,13 +80,13 @@ public abstract class MutableTextInput<I> {
     /**
      * Called by infrastructure to check if the underlying input source is currently
      * read-locked by the current thread.
-     * <br/>
+     * <br>
      * This method is only called when turning on the logger for token hierarchy updates:
      * <code>-J-Dorg.netbeans.lib.lexer.TokenHierarchyUpdate.level=FINE</code>
-     * <br/>
+     * <br>
      * It is expected that if write-lock means read-lock too i.e. if {@link #isWriteLocked()}
      * returns true that this method will also return true automatically.
-     * <br/>
+     * <br>
      * The following operations require read-locking:
      * <ul>
      *   <li>Creation and using of token sequence {@link org.netbeans.api.lexer.TokenHierarchy#tokenSequence()}.</li>
@@ -96,7 +96,7 @@ public abstract class MutableTextInput<I> {
      * @return true if the underlying input source is read-locked by the current thread
      * (or if unsure e.g. if there is a read-lock present but it's not possible
      *  to determine whether it was this or other thread that performed the locking).
-     *  <br/>
+     *  <br>
      *  Returning false means that the input source is surely unlocked which will be
      *  reported as a serious error by the infrastructure.
      */
@@ -105,10 +105,10 @@ public abstract class MutableTextInput<I> {
     /**
      * Called by infrastructure to check if the underlying input source is currently
      * write-locked by the current thread.
-     * <br/>
+     * <br>
      * This method is only called when turning on the logger for token hierarchy updates:
      * <code>-J-Dorg.netbeans.lib.lexer.TokenHierarchyUpdate.level=FINE</code>
-     * <br/>
+     * <br>
      * The following operations require write-locking:
      * <ul>
      *   <li>Text modification {@link org.netbeans.spi.lexer.TokenHierarchyControl#textModified(int,int,CharSequence,int)}</li>

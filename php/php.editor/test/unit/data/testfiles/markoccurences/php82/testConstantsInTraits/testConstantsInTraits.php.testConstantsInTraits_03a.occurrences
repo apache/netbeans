@@ -1,0 +1,4 @@
+    protected const |>MARK_OCCURRENCES:PROTECTED_TRA^IT<| = 'ExampleTrait protected';
+        echo $this::|>MARK_OCCURRENCES:PROTECTED_TRAIT<| . PHP_EOL;
+        echo $this::|>MARK_OCCURRENCES:PROTECTED_TRAIT<| . PHP_EOL; // use
+        echo $this::|>MARK_OCCURRENCES:PROTECTED_TRAIT<| . PHP_EOL; // class

@@ -197,6 +197,7 @@
             <friend-packages>
                 <friend>org.netbeans.modules.gradle.test</friend>
                 <friend>org.netbeans.modules.java.lsp.server</friend>
+                <friend>org.netbeans.modules.java.openjdk.project</friend>
                 <friend>org.netbeans.modules.junit.ant.ui</friend>
                 <friend>org.netbeans.modules.junit.ui</friend>
                 <friend>org.netbeans.modules.maven.junit.ui</friend>

@@ -59,10 +59,10 @@ import org.openide.util.WeakListeners;
  * and makes them safely serializable (stores only classnames, etc.).
  * <p>
  * All task and type names may be namespace-qualified for use
- * in Ant 1.6: a name of the form <samp>nsuri:localname</samp> refers to
- * an XML element with namespace <samp>nsuri</samp> and local name <samp>localname</samp>.
+ * in Ant 1.6: a name of the form <code>nsuri:localname</code> refers to
+ * an XML element with namespace <code>nsuri</code> and local name <code>localname</code>.
  * Attribute names could also be similarly qualified, but in practice attributes
- * used in Ant never have a defined namespace. The prefix <samp>antlib:org.apache.tools.ant:</samp>
+ * used in Ant never have a defined namespace. The prefix <code>antlib:org.apache.tools.ant:</code>
  * is implied, not expressed, on Ant core element names (for backwards compatibility).
  * Subelement names are *not* namespace-qualified here, even though in the script
  * they would be - because the namespace used in the script will actually vary
@@ -674,22 +674,30 @@ public final class IntrospectedInfo {
             null | String[] enumTags: .enumTags=whenempty,always,never
              */
             Pattern p = Pattern.compile("(.+)\\.(supportsText|attrs\\.(.+)|subs\\.(.+)|enumTags)");
+            @Override
             public IntrospectedInfo load(Preferences node) {
                 IntrospectedInfo ii = new IntrospectedInfo();
                 try {
                     for (String k : node.keys()) {
-                        String v = node.get(k, null);
+                        String v;
+                        try {
+                            v = node.get(k, null);
+                        } catch (IllegalArgumentException ex) { // e.g invalid code point JDK-8075156
+                            LOG.log(Level.WARNING, "malformed key: {0}, pref path: {1}, msg: {2}",
+                                    new Object[] {k, node.absolutePath(), ex.getMessage()});
+                            continue;
+                        }
                         assert v != null : k;
                         String[] ss = k.split("\\.", 2);
                         if (ss.length != 2) {
-                            LOG.log(Level.WARNING, "malformed key: {0}", k);
+                            LOG.log(Level.WARNING, "malformed key: {0}, pref path: {1}", new Object[] {k, node.absolutePath()});
                             continue;
                         }
                         if (ss[0].equals("class")) {
                             Matcher m = p.matcher(ss[1]);
                             boolean match = m.matches();
                             if (!match) {
-                                LOG.log(Level.WARNING, "malformed key: {0}", k);
+                                LOG.log(Level.WARNING, "malformed key: {0}, pref path: {1}", new Object[] {k, node.absolutePath()});
                                 continue;
                             }
                             String c = m.group(1);
@@ -742,6 +750,7 @@ public final class IntrospectedInfo {
                 }
                 return ic;
             }
+            @Override
             public void store(Preferences node, IntrospectedInfo info) {
                 try {
                     node.clear();

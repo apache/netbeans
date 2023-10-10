@@ -61,6 +61,7 @@ import java.util.regex.Pattern;
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
+import org.junit.AssumptionViolatedException;
 import org.junit.Ignore;
 import org.netbeans.insane.live.LiveReferences;
 import org.netbeans.insane.live.Path;
@@ -74,9 +75,11 @@ import org.netbeans.junit.internal.NbModuleLogHandler;
  * Adds various abilities such as comparing golden files, getting a working
  * directory for test files, testing memory usage, etc.
  */
+
 public abstract class NbTestCase extends TestCase implements NbTest {
     static {
         MethodOrder.initialize();
+        System.setProperty("bootstrap.disableJDKCheck", "true");
     }
     /**
      * active filter
@@ -465,7 +468,12 @@ public abstract class NbTestCase extends TestCase implements NbTest {
             // need to have timeout because previous test case can block AWT thread
             setUp.waitFinished(computeTimeOut());
         } else {
-            setUp();
+            try {
+                setUp();
+            } catch (AssumptionViolatedException ex) {
+                // ignore, the test is assumed to be meaningless.
+                return;
+            }
         }
         try {
             // runTest
@@ -474,6 +482,8 @@ public abstract class NbTestCase extends TestCase implements NbTest {
                     long now = System.nanoTime();
                     try {
                         runTest();
+                    } catch (AssumptionViolatedException ex) {
+                        // ignore, the test is assumed to be meaningless.
                     } catch (Throwable t) {
                         noteWorkDir(workdirNoCreate());
                         throw noteRandomness(t);
@@ -592,7 +602,6 @@ public abstract class NbTestCase extends TestCase implements NbTest {
     /** Parses the test name to find out whether it encodes a number. The
      * testSomeName1343 represents number 1343.
      * @return the number
-     * @exception may throw AssertionFailedError if the number is not found in the test name
      */
     protected final int getTestNumber() {
         try {
@@ -1409,7 +1418,7 @@ public abstract class NbTestCase extends TestCase implements NbTest {
      * rootset for this scan. This is useful if you want to verify that one structure
      * (usually long living in real application) is not holding another structure
      * in memory, without setting a static reference to the former structure.
-     * <h3>Example:</h3>
+     * <p><strong>Example:</strong></p>
      * <pre>
      *  // test body
      *  WeakHashMap map = new WeakHashMap();

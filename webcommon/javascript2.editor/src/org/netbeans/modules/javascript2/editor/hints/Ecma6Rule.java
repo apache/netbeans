@@ -20,6 +20,7 @@ package org.netbeans.modules.javascript2.editor.hints;
 
 import com.oracle.js.parser.Token;
 import com.oracle.js.parser.TokenType;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.IdentNode;
@@ -36,8 +37,10 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.csl.api.OffsetRange;
+
 import static org.netbeans.modules.javascript2.editor.JsVersion.ECMA6;
 import static org.netbeans.modules.javascript2.editor.hints.EcmaLevelRule.ecmaEditionProjectBelow;
+
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
 import org.netbeans.modules.javascript2.model.api.ModelUtils;
@@ -176,6 +179,14 @@ public class Ecma6Rule extends EcmaLevelRule {
                 addHint(context, hints, new OffsetRange(propertyNode.getStart(), propertyNode.getFinish()));
             }
             return super.enterPropertyNode(propertyNode);
+        }
+
+        @Override
+        public boolean enterClassElement(ClassElement classElement) {
+            if (classElement.isComputed()) {
+                addHint(context, hints, new OffsetRange(classElement.getStart(), classElement.getFinish()));
+            }
+            return super.enterClassElement(classElement);
         }
 
         @Override

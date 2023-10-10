@@ -27,7 +27,6 @@ class Nullsafe {
         $this->test ?-> test();
         $this->test() ?-> foo::$bar;
     }
-
 }
 
 $instance ?-> test();

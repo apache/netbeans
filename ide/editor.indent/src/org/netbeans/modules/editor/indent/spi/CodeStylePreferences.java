@@ -181,7 +181,7 @@ public final class CodeStylePreferences {
      * in order to seprate the project-dependent implementation of code style preferences
      * storage from the rest of the editor infrastructure.
      * 
-     * @Since 1.18
+     * @since 1.18
      */
     public static interface Provider {
         Preferences forFile(FileObject file, String mimeType);

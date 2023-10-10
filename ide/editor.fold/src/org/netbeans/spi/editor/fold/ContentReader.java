@@ -31,7 +31,7 @@ import org.netbeans.spi.editor.mimelookup.MimeLocation;
  * folded view. The reader will be called under document lock, although the fold
  * hierarchy will not be locked. You may query the fold properties, but may not
  * traverse the fold hierarchy.
- * <p/>
+ * <p>
  * An instance of ContentReader is used repeatedly, i.e. if the same FoldTemplate
  * is assigned to multiple folds. It is advised that the implementation of ContentReader
  * is stateless.
@@ -45,7 +45,7 @@ public interface ContentReader {
      * The method is executed under <i>read lock</i> on the Document. However, the Fold Hierarchy
      * is not locked. Accessing fold offsets should be safe, but relationships with other Folds
      * (parents, children, root) are not guarded.
-     * <p/>
+     * <p>
      * If the ContentReader cannot extract the contents (i.e. it does not want to handle the fold), 
      * {@code null} may be returned. If more ContentReaders are registered, some other instance might
      * handle the fold properly. If not, the placeholder will be retained and presented in the fold 

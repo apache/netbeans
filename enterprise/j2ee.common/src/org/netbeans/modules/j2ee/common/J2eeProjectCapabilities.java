@@ -96,41 +96,42 @@ public final class J2eeProjectCapabilities {
     public boolean isEjb30Supported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
         boolean eeOk = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_5) ||
-                ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_FULL));
+                ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_FULL));
         return J2eeModule.Type.EJB.equals(moduleType) && eeOk;
     }
 
     /**
      * EJB 3.1 functionality is supported in EjbJar and Web project which is targeting
      * full Java EE 6 platform.
+     * @return {@code true} if the project is targeting full Java EE 6 or newer platform
      */
     public boolean isEjb31Supported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee6or7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_FULL));
+        boolean ee6or7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_FULL));
         return ee6or7 && (J2eeModule.Type.EJB.equals(moduleType) ||
                 J2eeModule.Type.WAR.equals(moduleType));
     }
 
     /**
      * EJB 3.1 Lite functionality is supported in Web project targeting Java EE 6
-     * web profile and wherever full EJB 3.1 is supported.
+     * web profile or newer and wherever full EJB 3.1 is supported.
      */
     public boolean isEjb31LiteSupported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee6or7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_7_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_8_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_WEB));
+        boolean ee6or7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_6_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_7_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_8_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_WEB));
         return isEjb31Supported() || (J2eeModule.Type.WAR.equals(moduleType) && ee6or7Web);
     }
 
     /**
      * EJB 3.2 functionality is supported in EjbJar and Web project which is targeting
-     * full Java EE 7 platform.
+     * full Java EE or newer platform.
      *
-     * @return {@code true} if the project is targeting full Java EE 7 platform
+     * @return {@code true} if the project is targeting full Java EE 7 or newer platform
      * @since 1.76
      */
     public boolean isEjb32Supported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_FULL));
+        boolean ee7 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_7_FULL) || ejbJarProfile.equals(Profile.JAVA_EE_8_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_FULL));
         return ee7 && (J2eeModule.Type.EJB.equals(moduleType) || J2eeModule.Type.WAR.equals(moduleType));
     }
 
@@ -138,15 +139,41 @@ public final class J2eeProjectCapabilities {
      * EJB 3.2 Lite functionality is supported in Web project targeting Java EE 7
      * web profile and wherever full EJB 3.2 is supported.
      *
-     * @return {@code true} if the project is targeting full or web profile Java EE 7 platform
+     * @return {@code true} if the project is targeting full or web profile Java EE 7 or newer platform
      * @since 1.76
      */
     public boolean isEjb32LiteSupported() {
         J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
-        boolean ee7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_7_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_8_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_WEB));
+        boolean ee7Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAVA_EE_7_WEB) || ejbJarProfile.equals(Profile.JAVA_EE_8_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_8_WEB));
         return isEjb32Supported() || (J2eeModule.Type.WAR.equals(moduleType) && ee7Web);
     }
 
+    /**
+     * EJB 4.0 functionality is supported in EjbJar and Web project which is targeting
+     * full Jakarta EE 9/9.1 platform.
+     *
+     * @return {@code true} if the project is targeting full Jakarta EE 9/9.1 or newer platform
+     * @since 1.76
+     */
+    public boolean isEjb40Supported() {
+        J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
+        boolean ee9 = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAKARTA_EE_9_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_1_FULL) || ejbJarProfile.equals(Profile.JAKARTA_EE_10_FULL));
+        return ee9 && (J2eeModule.Type.EJB.equals(moduleType) || J2eeModule.Type.WAR.equals(moduleType));
+    }
+    
+    /**
+     * EJB 4.0 Lite functionality is supported in Web project targeting Jakarta EE 9/9.1
+     * web profile and wherever full EJB 4.0 is supported.
+     *
+     * @return {@code true} if the project is targeting full or web profile Jakarta EE 9/9.1 or newer platform
+     * @since 1.76
+     */
+    public boolean isEjb40LiteSupported() {
+        J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
+        boolean ee9Web = ejbJarProfile != null && (ejbJarProfile.equals(Profile.JAKARTA_EE_9_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_9_1_WEB) || ejbJarProfile.equals(Profile.JAKARTA_EE_10_WEB));
+        return isEjb40Supported() || (J2eeModule.Type.WAR.equals(moduleType) && ee9Web);
+    }
+    
     /**
      * Is CDI 1.0 supported in this project?
      * @return {@code true} if the project targets EE6 profile, {@code false} otherwise
@@ -187,6 +214,33 @@ public final class J2eeProjectCapabilities {
             Profile.JAKARTA_EE_8_FULL.equals(ejbJarProfile) ||
             Profile.JAKARTA_EE_8_WEB.equals(webProfile) ||
             Profile.JAKARTA_EE_8_FULL.equals(carProfile);
+    }
+    
+    /**
+     * Is CDI 3.0 supported in this project?
+     * @return {@code true} if the project targets Jakarta EE 9/9.1 profile,
+     * {@code false} otherwise
+     * @since 1.113
+     */
+    public boolean isCdi30Supported() {
+        return Profile.JAKARTA_EE_9_FULL.equals(ejbJarProfile) ||
+            Profile.JAKARTA_EE_9_WEB.equals(webProfile) ||
+            Profile.JAKARTA_EE_9_FULL.equals(carProfile) ||
+            Profile.JAKARTA_EE_9_1_FULL.equals(ejbJarProfile) ||
+            Profile.JAKARTA_EE_9_1_WEB.equals(webProfile) ||
+            Profile.JAKARTA_EE_9_1_FULL.equals(carProfile);
+    }
+
+    /**
+     * Is CDI 4.0 supported in this project?
+     *
+     * @return {@code true} if the project targets Jakarta EE 10 profile,
+     * {@code false} otherwise
+     */
+    public boolean isCdi40Supported() {
+        return Profile.JAKARTA_EE_10_FULL.equals(ejbJarProfile)
+                || Profile.JAKARTA_EE_10_WEB.equals(webProfile)
+                || Profile.JAKARTA_EE_10_FULL.equals(carProfile);
     }
 
     /**

@@ -59,6 +59,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.lib.profiler.ui.UIUtils;
 import org.netbeans.modules.profiler.api.ProjectUtilities;
+import org.openide.util.Utilities;
 
 
 /**
@@ -194,7 +195,7 @@ public class LoadGeneratorCustomizer extends ValidityAwarePanel implements Actio
                 fileChooser.setCurrentDirectory(FileUtil.toFile(ProjectUtilities.getProjectDirectory(project)));
             }
 
-            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showOpenDialog(Utilities.findDialogParent()) == JFileChooser.APPROVE_OPTION) {
                 scriptTextField.setText(fileChooser.getSelectedFile().getAbsolutePath());
             }
         }

@@ -31,11 +31,11 @@ import org.netbeans.modules.java.classpath.QueriesAccessor;
  * to specify whether {@link #computePreferBinaries(java.lang.Object) binaries are preferred}
  * - e.g. copied instead of obtaining them by compiling the sources.
  * The typical implementation of the query looks like:
- * {@codesnippet org.netbeans.api.java.queries.BinaryForSourceQuery2Test.SampleQuery}
+ * {@snippet file="org/netbeans/api/java/queries/BinaryForSourceQuery2Test.java" region="SampleQuery"}
  * 
  * @param <Result> any type this implementation wants to use as a result
  * @see BinaryForSourceQuery
- * @see SourceForBinaryQuery
+ * @see org.netbeans.api.java.queries.SourceForBinaryQuery
  * @see BinaryForSourceQueryImplementation
  * @see SourceForBinaryQueryImplementation
  * @since 1.58
@@ -45,7 +45,7 @@ public interface BinaryForSourceQueryImplementation2<Result> extends BinaryForSo
     /** Default
      * implementation of {@link BinaryForSourceQueryImplementation#findBinaryRoots(java.net.URL)}.
      * Calls {@link #findBinaryRoots2(java.net.URL)} and if the method returns non-{@code null}
-     * value, then it creates instances of {@link BinaryForSourceQuery.Result2} and returns
+     * value, then it creates instances of {@link org.netbeans.api.java.queries.BinaryForSourceQuery.Result2} and returns
      * it. Otherwise it returns {@code null}.
      * <p>
      * Override {@link #findBinaryRoots2(java.net.URL)}, not this method!
@@ -71,12 +71,12 @@ public interface BinaryForSourceQueryImplementation2<Result> extends BinaryForSo
      * return the {@link Object#equals(java.lang.Object) equal} result with the
      * same {@link Object#hashCode()}. The implementation of the
      * {@link #findBinaryRoots(java.net.URL)} method makes sure the same
-     * {@link BinaryForSourceQuery.Result2} instance is returned for two
+     * {@link org.netbeans.api.java.queries.BinaryForSourceQuery.Result2} instance is returned for two
      * equal {@code Result} objects.
      *
      * @param sourceRoot the source path root
      * @return {@code null} if the sourceRoot is not recognized, or any object
-     *   to feed into {@link #computeRoots(java.lang.Object)} & co. methods
+     *   to feed into {@link #computeRoots(java.lang.Object)} &amp; co. methods
      *   any time later
      * @since 1.58
      */

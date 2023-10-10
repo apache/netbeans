@@ -20,7 +20,6 @@ package org.netbeans.modules.java.lsp.server.debugging;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.eclipse.lsp4j.debug.launch.DSPLauncher;
@@ -33,7 +32,6 @@ import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.netbeans.modules.java.lsp.server.LspSession;
 import org.netbeans.modules.java.lsp.server.progress.OperationContext;
 
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.lookup.AbstractLookup;
@@ -55,7 +53,7 @@ public final class Debugger {
         NbProtocolServer server = new NbProtocolServer(context);
 
         Launcher<IDebugProtocolClient> serverLauncher = DSPLauncher.createServerLauncher(
-                server, io.first(), io.second(), null, ConsumeWithLookup::new);
+                server, io.first(), io.second(), null, (d) -> new ConsumeWithLookup(d, session));
         context.setClient(serverLauncher.getRemoteProxy());
         Future<Void> runningServer = serverLauncher.startListening();
         server.setRunningFuture(runningServer);
@@ -64,22 +62,32 @@ public final class Debugger {
 
     private static class ConsumeWithLookup implements MessageConsumer {
         private final MessageConsumer delegate;
+        private final LspSession lspSession;
         private OperationContext topContext;
+        private Lookup debugSessionLookup;
 
-        public ConsumeWithLookup(MessageConsumer delegate) {
+        public ConsumeWithLookup(MessageConsumer delegate, LspSession session) {
             this.delegate = delegate;
+            this.lspSession = session;
         }
         
         @Override
         public void consume(Message message) throws MessageIssueException, JsonRpcException {
             InstanceContent ic = new InstanceContent();
-            ProxyLookup ll = new ProxyLookup(new AbstractLookup(ic), Lookup.getDefault());
-            // HACK: piggyback on LSP's client.
-            if (topContext == null) {
-                topContext = OperationContext.find(null);
-            }
+            Lookup ll = debugSessionLookup;
             final OperationContext ctx;
-            
+            if (ll == null) {
+                ll = new ProxyLookup(new AbstractLookup(ic), lspSession.getLookup());
+                synchronized (this) {
+                    if (debugSessionLookup == null) {
+                        debugSessionLookup = ll;
+                    }
+                }
+                // HACK: piggyback on LSP's client.
+            }
+            if (topContext == null) {
+                topContext = OperationContext.find(lspSession.getLookup());
+            }
             if (topContext != null) {
                 ctx = topContext.operationContext();
                 ctx.disableCancels();

@@ -1,0 +1,12 @@
+Code completion result for source line:
+static::CASE1::p|ublicEnumMethod();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     privateStaticEnumMethod()       [PRIVATE,  \Enum1\Simple
+METHOD     privateStaticTraitMethod()      [PRIVATE,  \Enum1\TestTrait
+METHOD     protectedStaticEnumMethod()     [PROTECTE  \Enum1\Simple
+METHOD     protectedStaticTraitMethod()    [PROTECTE  \Enum1\TestTrait
+METHOD     publicStaticEnumMethod()        [STATIC]   \Enum1\Simple
+METHOD     publicStaticTraitMethod()       [STATIC]   \Enum1\TestTrait
+CONSTANT   PRIVATE_CONST "private"         [PRIVATE]  \Enum1\Simple
+CONSTANT   PROTECTED_CONST "protected"     [PROTECTE  \Enum1\Simple
+CONSTANT   PUBLIC_CONST "public"           [PUBLIC]   \Enum1\Simple

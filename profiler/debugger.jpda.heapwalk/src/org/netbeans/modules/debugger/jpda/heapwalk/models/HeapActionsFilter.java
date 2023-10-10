@@ -111,7 +111,7 @@ public class HeapActionsFilter implements NodeActionsProviderFilter {
         new Models.ActionPerformer () {
             @Override
             public boolean isEnabled (Object node) {
-                if ((node == null) || (!(node instanceof ObjectVariable))) {
+                if ((!(node instanceof ObjectVariable))) {
                     return false;
                 }
                 ObjectVariable var = (ObjectVariable) node;

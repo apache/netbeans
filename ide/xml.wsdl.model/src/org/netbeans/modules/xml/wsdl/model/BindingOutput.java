@@ -33,5 +33,6 @@ public interface BindingOutput extends Nameable<WSDLComponent> , WSDLComponent {
     /**
      * @deprecated use setName() instead.
      */
+    @Deprecated
     void setOutput(Reference<Output> outRef);
 }

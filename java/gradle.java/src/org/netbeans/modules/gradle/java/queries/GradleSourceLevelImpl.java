@@ -78,7 +78,7 @@ public class GradleSourceLevelImpl implements SourceLevelQueryImplementation2 {
 
         private final FileObject javaFile;
         private final ChangeSupport cs = new ChangeSupport(this);
-        private final PropertyChangeListener pcl = WeakListeners.propertyChange(this, project.getLookup().lookup(NbGradleProject.class));
+        private final PropertyChangeListener pcl = WeakListeners.propertyChange(this, NbGradleProject.get(project));
         private String cachedLevel = null;
         private SourceLevelQuery.Profile cachedProfile;
         private final Object CACHE_LOCK = new Object();

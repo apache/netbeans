@@ -33,6 +33,7 @@ public class PUDataNode extends DataNode {
     }
 
 //    /** Creates a property sheet. */
+    @Override
     protected Sheet createSheet() {
         Sheet s = super.createSheet();
         Sheet.Set ss = s.get(Sheet.PROPERTIES);

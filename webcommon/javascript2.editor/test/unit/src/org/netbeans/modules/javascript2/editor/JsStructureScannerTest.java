@@ -754,4 +754,24 @@ public class JsStructureScannerTest extends JsTestBase {
     public void testIssue269106() throws Exception {
         checkStructure("testfiles/structure/issue269106.js");
     }
+
+    public void testIssueGH4371() throws Exception {
+        checkStructure("testfiles/structure/issueGH4371.js");
+    }
+
+    public void testIssueGH4262() throws Exception {
+        checkStructure("testfiles/structure/issueGH4262.js");
+    }
+
+    public void testObjectNameMatchingNestedFunction() throws Exception {
+        checkStructure("testfiles/structure/objectNameMatchingNestedFunction.js");
+    }
+
+    public void testClassInAnonymousFunction() throws Exception {
+        checkStructure("testfiles/structure/classInAnonymousFunction.js");
+    }
+
+    public void testClassInAnonymousFunction2() throws Exception {
+        checkStructure("testfiles/structure/classInAnonymousFunction2.js");
+    }
 }

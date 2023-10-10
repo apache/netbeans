@@ -69,15 +69,15 @@ import org.openide.util.NbBundle.Messages;
  * @author Petr Pisl
  */
 public class JsCompletionItem implements CompletionProposal {
-    
+
     protected final CompletionRequest request;
     protected final ElementHandle element;
-    
+
     protected JsCompletionItem(ElementHandle element, CompletionRequest request) {
         this.element = element;
         this.request = request;
     }
-    
+
     @Override
     public int getAnchorOffset() {
         return LexUtilities.getLexerOffset((JsParserResult)request.info, request.anchor);
@@ -114,14 +114,14 @@ public class JsCompletionItem implements CompletionProposal {
                 }
             }
         }
-        sb.append(getName());    
+        sb.append(getName());
         return sb.toString();
     }
-    
+
     protected boolean isDeprecated() {
         return element.getModifiers().contains(Modifier.DEPRECATED);
     }
-    
+
     @Override
     public String getLhsHtml(HtmlFormatter formatter) {
         formatName(formatter);
@@ -137,7 +137,7 @@ public class JsCompletionItem implements CompletionProposal {
             formatter.appendText(getName());
         }
     }
-    
+
     @Messages("JsCompletionItem.lbl.js.platform=JS Platform")
     @Override
     public String getRhsHtml(HtmlFormatter formatter) {
@@ -181,7 +181,15 @@ public class JsCompletionItem implements CompletionProposal {
 
     @Override
     public Set<Modifier> getModifiers() {
-        Set<Modifier> modifiers = (getElement() == null || getElement().getModifiers().isEmpty() ? Collections.EMPTY_SET : EnumSet.copyOf(getElement().getModifiers()));
+        Set<Modifier> modifiers;
+
+        if (getElement() == null || getElement().getModifiers().isEmpty()) {
+            modifiers = Collections.EMPTY_SET;
+        } else {
+            modifiers = EnumSet.noneOf(Modifier.class);
+            modifiers.addAll(getElement().getModifiers());
+        }
+
         if (modifiers.contains(Modifier.PRIVATE) && (modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED))) {
             modifiers.remove(Modifier.PUBLIC);
             modifiers.remove(Modifier.PROTECTED);
@@ -198,7 +206,7 @@ public class JsCompletionItem implements CompletionProposal {
     @Override
     public int getSortPrioOverride() {
         int order = 100;
-        if (element != null && element instanceof JsElement) {
+        if (element instanceof JsElement) {
             if (((JsElement)element).isPlatform()) {
                 if (ModelUtils.PROTOTYPE.equals(element.getName())) { //NOI18N
                     order = 1;
@@ -230,7 +238,7 @@ public class JsCompletionItem implements CompletionProposal {
         }
         return getName();
      }
-    
+
     public static class CompletionRequest {
         public int anchor;
         public JsParserResult result;
@@ -241,14 +249,14 @@ public class JsCompletionItem implements CompletionProposal {
         public CancelSupport cancelSupport;
         public Collection<String> fqnTypes = new LinkedHashSet<>();
     }
-    
+
     private static ImageIcon priviligedIcon = null;
     private static ImageIcon publicGenerator = null;
     private static ImageIcon privateGenerator = null;
     private static ImageIcon priviligedGenerator = null;
-    
+
     public static class JsFunctionCompletionItem extends JsCompletionItem {
-        
+
         private final Set<String> returnTypes;
         private final Map<String, Set<String>> parametersTypes;
         JsFunctionCompletionItem(ElementHandle element, CompletionRequest request, Set<String> resolvedReturnTypes, Map<String, Set<String>> parametersTypes) {
@@ -292,7 +300,7 @@ public class JsCompletionItem implements CompletionProposal {
                 }
                 if (it.hasNext()) {
                     formatter.appendText(", ");  //NOI18N
-                }    
+                }
             }
         }
 
@@ -336,7 +344,7 @@ public class JsCompletionItem implements CompletionProposal {
             }
             return super.getIcon(); //To change body of generated methods, choose Tools | Templates.
         }
-        
+
         private boolean isAfterNewKeyword() {
             boolean isAfterNew = false;
             Snapshot snapshot = request.result.getSnapshot();
@@ -353,9 +361,9 @@ public class JsCompletionItem implements CompletionProposal {
             }
             return isAfterNew;
         }
-        
+
         /**
-         * 
+         *
          * @return true if the element should be treated as an object or function in the context
          */
         private boolean asObject() {
@@ -377,9 +385,9 @@ public class JsCompletionItem implements CompletionProposal {
                     if (returnTypes.isEmpty()) {
                         result = true;
                     } else if (returnTypes.size() == 1) {
-                        String type = returnTypes.iterator().next(); 
+                        String type = returnTypes.iterator().next();
                         firstChar = type.charAt(0);
-                        if (Character.isUpperCase(firstChar) && !(Type.NUMBER.equals(type) || Type.BOOLEAN.equals(type) 
+                        if (Character.isUpperCase(firstChar) && !(Type.NUMBER.equals(type) || Type.BOOLEAN.equals(type)
                                 || Type.STRING.equals(type) || Type.ARRAY.equals(type))) {
                             result = true;
                         }
@@ -395,7 +403,7 @@ public class JsCompletionItem implements CompletionProposal {
         public JsGeneratorCompletionItem(ElementHandle element, CompletionRequest request, Set<String> resolvedReturnTypes, Map<String, Set<String>> parametersTypes) {
             super(element, request, resolvedReturnTypes, parametersTypes);
         }
-        
+
         @Override
         public ImageIcon getIcon() {
             if (getModifiers().contains(Modifier.PUBLIC)) {
@@ -416,18 +424,18 @@ public class JsCompletionItem implements CompletionProposal {
             }
             return super.getIcon();
         }
-        
+
     }
-    
+
     public static class JsCallbackCompletionItem extends JsCompletionItem {
         private static ImageIcon callbackIcon = null;
         private IndexedElement.FunctionIndexedElement function;
-                
+
         public JsCallbackCompletionItem(IndexedElement.FunctionIndexedElement element, CompletionRequest request) {
             super(element, request);
             function = element;
         }
-        
+
         @Override
         public ImageIcon getIcon() {
             if (callbackIcon == null) {
@@ -435,7 +443,7 @@ public class JsCompletionItem implements CompletionProposal {
             }
             return callbackIcon;
         }
-        
+
         @Override
         public String getLhsHtml(HtmlFormatter formatter) {
             formatter.setMaxLength(OptionsUtils.forLanguage(JsTokenId.javascriptLanguage()).getCodeCompletionItemSignatureWidth());
@@ -452,8 +460,8 @@ public class JsCompletionItem implements CompletionProposal {
         public int getSortPrioOverride() {
             return 90;      // display as first items?
         }
-    
-        
+
+
         private void appendParamsStr(HtmlFormatter formatter){
             for (Iterator<Map.Entry<String, Collection<String>>> it = function.getParameters().entrySet().iterator(); it.hasNext();) {
                 Map.Entry<String, Collection<String>> entry = it.next();
@@ -474,10 +482,10 @@ public class JsCompletionItem implements CompletionProposal {
                 }
                 if (it.hasNext()) {
                     formatter.appendText(", ");  //NOI18N
-                }    
+                }
             }
         }
-        
+
         @Override
         public String getCustomInsertTemplate() {
             StringBuilder template = new StringBuilder();
@@ -518,13 +526,13 @@ public class JsCompletionItem implements CompletionProposal {
         }
 
     }
-    
+
     static class KeywordItem extends JsCompletionItem {
-        
+
         private static  ImageIcon keywordIcon = null;
-        
+
         private final String keyword;
-        
+
         private final JsKeywords.CompletionDescription description;
 
         public KeywordItem(String keyword, JsKeywords.CompletionDescription description, CompletionRequest request) {
@@ -568,21 +576,21 @@ public class JsCompletionItem implements CompletionProposal {
             }
             return keywordIcon;
         }
-        
+
         @Override
         public String getInsertPrefix() {
             return getName();
         }
-        
+
         @Override
         public String getCustomInsertTemplate() {
             StringBuilder builder = new StringBuilder();
-            
+
             JsKeywords.CompletionType type = description.getType();
             if (type == null) {
                 return getName();
             }
-            
+
             switch(type) {
                 case SIMPLE:
                     builder.append(getName());
@@ -627,11 +635,11 @@ public class JsCompletionItem implements CompletionProposal {
             return 130;
         }
     }
-    
+
     public static class JsPropertyCompletionItem extends JsCompletionItem {
 
         private final Set<String> resolvedTypes;
-        
+
         JsPropertyCompletionItem(ElementHandle element, CompletionRequest request, Set<String> resolvedTypes) {
             super(element, request);
             this.resolvedTypes = resolvedTypes != null ? resolvedTypes : Collections.EMPTY_SET;
@@ -661,24 +669,24 @@ public class JsCompletionItem implements CompletionProposal {
             }
             return super.getCustomInsertTemplate(); //To change body of generated methods, choose Tools | Templates.
         }
-        
+
     }
 
     public static class Factory {
-        
+
         public static void create( Map<String, List<JsElement>> items, CompletionRequest request, List<CompletionProposal> result) {
             CancelSupport cancelSupport = request.cancelSupport;
             if (cancelSupport.isCancelled()) {
                 return;
             }
-            // This maps unresolved types to the display name of the resolved type. 
+            // This maps unresolved types to the display name of the resolved type.
             // It should save time to not resolve one type more times
-            HashMap<String, Set<String>> resolvedTypes = new HashMap<String, Set<String>>();
+            HashMap<String, Set<String>> resolvedTypes = new HashMap<>();
 
             for (Map.Entry<String, List<JsElement>> entry: items.entrySet()) {
 
                 // this helps to eleminate items that will look as the same items in the cc
-                HashMap<String, JsCompletionItem> signatures = new HashMap<String, JsCompletionItem>();
+                HashMap<String, JsCompletionItem> signatures = new HashMap<>();
                 Index jsIndex = null;
                 if (OptionsUtils.forLanguage(JsTokenId.javascriptLanguage()).autoCompletionTypeResolution()) {
                     jsIndex = Index.get(request.info.getSnapshot().getSource().getFileObject());
@@ -692,8 +700,9 @@ public class JsCompletionItem implements CompletionProposal {
                         case FUNCTION:
                         case METHOD:
                         case GENERATOR:
-                            Set<String> returnTypes = new HashSet<String>();
-                            HashMap<String, Set<String>> allParameters = new LinkedHashMap<String, Set<String>>();
+                        case ARROW_FUNCTION:
+                            Set<String> returnTypes = new HashSet<>();
+                            HashMap<String, Set<String>> allParameters = new LinkedHashMap<>();
                             if (element instanceof JsFunction) {
                                 // count return types
                                 Collection<TypeUsage> resolveTypes = ModelUtils.resolveTypes(((JsFunction) element).getReturnTypes(),
@@ -702,7 +711,7 @@ public class JsCompletionItem implements CompletionProposal {
                                 returnTypes.addAll(Utils.getDisplayNames(resolveTypes));
                                 // count parameters type
                                 for (JsObject jsObject : ((JsFunction) element).getParameters()) {
-                                    Set<String> paramTypes = new HashSet<String>();
+                                    Set<String> paramTypes = new HashSet<>();
                                     for (TypeUsage type : jsObject.getAssignmentForOffset(jsObject.getOffset() + 1)) {
                                         Set<String> resolvedType = resolvedTypes.get(type.getType());
                                         if (resolvedType == null) {
@@ -719,7 +728,7 @@ public class JsCompletionItem implements CompletionProposal {
                                 }
                             } else if (element instanceof IndexedElement.FunctionIndexedElement) {
                                 // count return types
-                                HashSet<TypeUsage> returnTypeUsages = new HashSet<TypeUsage>();
+                                HashSet<TypeUsage> returnTypeUsages = new HashSet<>();
                                 for (String type : ((IndexedElement.FunctionIndexedElement) element).getReturnTypes()) {
                                     returnTypeUsages.add(new TypeUsage(type, -1, false));
                                 }
@@ -730,7 +739,7 @@ public class JsCompletionItem implements CompletionProposal {
                                 // count parameters type
                                 LinkedHashMap<String, Collection<String>> parameters = ((IndexedElement.FunctionIndexedElement) element).getParameters();
                                 for (Map.Entry<String, Collection<String>> paramEntry : parameters.entrySet()) {
-                                    Set<String> paramTypes = new HashSet<String>();
+                                    Set<String> paramTypes = new HashSet<>();
                                     for (String type : paramEntry.getValue()) {
                                         Set<String> resolvedType = resolvedTypes.get(type);
                                         if (resolvedType == null) {
@@ -749,7 +758,7 @@ public class JsCompletionItem implements CompletionProposal {
                             // create signature
                             String signature = createFnSignature(entry.getKey(), allParameters, returnTypes);
                             if (!signatures.containsKey(signature)) {
-                                JsCompletionItem item = element.getJSKind() != JsElement.Kind.GENERATOR 
+                                JsCompletionItem item = element.getJSKind() != JsElement.Kind.GENERATOR
                                         ? new JsFunctionCompletionItem(element, request, returnTypes, allParameters)
                                         : new JsGeneratorCompletionItem(element, request, returnTypes, allParameters);
                                 signatures.put(signature, item);
@@ -761,7 +770,7 @@ public class JsCompletionItem implements CompletionProposal {
                         case PROPERTY_SETTER:
                         case FIELD:
                         case VARIABLE:
-                            Set<String> typesToDisplay = new HashSet<String>();
+                            Set<String> typesToDisplay = new HashSet<>();
                             Collection<? extends TypeUsage> assignment = null;
                             if (element instanceof JsObject) {
                                 JsObject jsObject = (JsObject) element;
@@ -771,7 +780,7 @@ public class JsCompletionItem implements CompletionProposal {
                                 assignment = iElement.getAssignments();
                             }
                             if (assignment != null && !assignment.isEmpty()) {
-                                HashSet<TypeUsage> toResolve = new HashSet<TypeUsage>();
+                                HashSet<TypeUsage> toResolve = new HashSet<>();
                                 for (TypeUsage type : assignment) {
                                     if (type.isResolved()) {
                                         if (!Type.UNDEFINED.equals(type.getType())) {
@@ -819,7 +828,7 @@ public class JsCompletionItem implements CompletionProposal {
                 }
             }
         }
-        
+
         private static String createFnSignature(String name, HashMap<String, Set<String>> params, Set<String> returnTypes) {
             StringBuilder sb = new StringBuilder();
             sb.append(name).append('(');
@@ -832,7 +841,7 @@ public class JsCompletionItem implements CompletionProposal {
             sb.append(createTypeSignature(returnTypes));
             return sb.toString();
         }
-        
+
         private static String createTypeSignature(Set<String> types) {
             StringBuilder sb = new StringBuilder();
             for(String name: types){
@@ -841,7 +850,7 @@ public class JsCompletionItem implements CompletionProposal {
             return sb.toString();
         }
     }
-    
+
     public abstract static class SimpleDocElement implements ElementHandle, ElementDocumentation {
 
         private final String name;
@@ -851,8 +860,8 @@ public class JsCompletionItem implements CompletionProposal {
             this.name = name;
             this.kind = kind;
         }
-        
-        
+
+
         @Override
         public FileObject getFileObject() {
             return null;
@@ -893,7 +902,7 @@ public class JsCompletionItem implements CompletionProposal {
             return OffsetRange.NONE;
         }
     }
-    
+
     /**
      * Creates default ProposalRequest. Used by compatibility bridge in new CC interface.
      * @param ccContext parser context

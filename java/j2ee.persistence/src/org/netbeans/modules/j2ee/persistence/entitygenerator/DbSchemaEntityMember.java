@@ -80,18 +80,22 @@ class DbSchemaEntityMember extends EntityMember {
         }
     }
 
+    @Override
     public boolean isNullable() {
         return columnElement.isNullable();
     }
 
+    @Override
     public boolean isPrimaryKey() {
         return isPrimaryKey;
     }
     
+    @Override
     public boolean isAutoIncrement() {
         return isAutoIncrement;
     }
     
+    @Override
     public void setPrimaryKey(boolean isPk, boolean isPkField) {
         isPrimaryKey = isPk;
 
@@ -112,40 +116,50 @@ class DbSchemaEntityMember extends EntityMember {
      */ 
     private String getRespectiveNonPrimitiveType(){
         String type = getMemberType();
-        if ("int".equals(type)){//NOI18N
-            return Integer.class.getName();
-        } else if ("long".equals(type)){//NOI18N
-            return Long.class.getName();
-        } else if ("short".equals(type)){//NOI18N
-            return Short.class.getName();
-        } else if ("byte".equals(type)){//NOI18N
-            return Byte.class.getName();
-        } else if ("double".equals(type)){//NOI18N
-            return Double.class.getName();
-        } else if ("float".equals(type)){//NOI18N
-            return Float.class.getName();
-        } else if ("char".equals(type)){//NOI18N
-            return Character.class.getName();
+        if (null == type){
+            return sqlType.getFirstNonPrimitiveType();
+        } else {
+            switch (type) {
+                case "int": //NOI18N
+                    return Integer.class.getName();
+                case "long": //NOI18N
+                    return Long.class.getName();
+                case "short": //NOI18N
+                    return Short.class.getName();
+                case "byte": //NOI18N
+                    return Byte.class.getName();
+                case "double": //NOI18N
+                    return Double.class.getName();
+                case "float": //NOI18N
+                    return Float.class.getName();
+                case "char": //NOI18N
+                    return Character.class.getName();
+                default:
+                    return sqlType.getFirstNonPrimitiveType();
+            }
         }
-        return sqlType.getFirstNonPrimitiveType();
     }
     
     private ColumnElement getColumnElement() {
         return columnElement;
     }
     
+    @Override
     public boolean supportsFinder() {
         return sqlType.supportsFinder();
     }
     
+    @Override
     public String getColumnName() {
         return getColumnElement().getName().getName();
     }
     
+    @Override
     public String getTableName() {
         return getColumnElement().getDeclaringTable().getName().getName();
     }
 
+    @Override
     public boolean isLobType() {
         return SQLTypeUtil.isLob(getColumnElement().getType());
     }
@@ -156,6 +170,7 @@ class DbSchemaEntityMember extends EntityMember {
      * @return the length, <code>null</code> if it is not a character type
      * field or there is no length.
      */
+    @Override
     public Integer getLength() {
         return length;
     }
@@ -166,6 +181,7 @@ class DbSchemaEntityMember extends EntityMember {
      * @return the precision, <code>null</code> if it is not a numeric type
      * field or there is no precision.
      */
+    @Override
     public Integer getPrecision() {
         return precision;
     }
@@ -176,6 +192,7 @@ class DbSchemaEntityMember extends EntityMember {
      * @return the scale, <code>null</code> if it is not a numeric type
      * field or there is no scale.
      */
+    @Override
     public Integer getScale() {
         return scale;
     }

@@ -125,7 +125,7 @@ public class CheckTreeNode extends DefaultMutableTreeNode {
         // Update checkState of parent
         TreeNode parent = getParent();
 
-        if ((parent != null) && parent instanceof CheckTreeNode) {
+        if (parent instanceof CheckTreeNode) {
             changedNodes.addAll(((CheckTreeNode) parent).setPartiallyChecked());
         }
 
@@ -162,7 +162,7 @@ public class CheckTreeNode extends DefaultMutableTreeNode {
         // Update checkState of parent
         TreeNode parent = getParent();
 
-        if ((parent != null) && parent instanceof CheckTreeNode) {
+        if (parent instanceof CheckTreeNode) {
             if (areSiblingsFullyChecked()) {
                 changedNodes.addAll(((CheckTreeNode) parent).setFullyChecked());
             } else {
@@ -200,7 +200,7 @@ public class CheckTreeNode extends DefaultMutableTreeNode {
         // Update checkState of parent
         TreeNode parent = getParent();
 
-        if ((parent != null) && parent instanceof CheckTreeNode) {
+        if (parent instanceof CheckTreeNode) {
             if (areSiblingsUnchecked()) {
                 changedNodes.addAll(((CheckTreeNode) parent).setUnchecked());
             } else {

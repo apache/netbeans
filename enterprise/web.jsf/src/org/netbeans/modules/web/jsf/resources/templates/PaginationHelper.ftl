@@ -27,6 +27,7 @@
 
     packageName - package name (String)
     comment - always (Boolean; always FALSE)
+    jakartaJsfPackages - true if jakarta JSF is used, false if not (type: Boolean)
 
   This template is accessible via top level menu Tools->Templates and can
   be found in category JavaServer Faces->JSF from Entity.
@@ -35,7 +36,11 @@
 
 package ${packageName};
 
+<#if jakartaJsfPackages?? && jakartaJsfPackages==true>
+import jakarta.faces.model.DataModel;
+<#else>
 import javax.faces.model.DataModel;
+</#if>
 
 public abstract class PaginationHelper {
 

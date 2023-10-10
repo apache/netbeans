@@ -1,0 +1,4 @@
+ExampleEnum::introduceStat^icMethod();
+------------------------------------
+HINT:Introduce Hint
+FIX:Create Method " introduceStaticMethod()" in Enum "ExampleEnum" (testEnumMethods.php)

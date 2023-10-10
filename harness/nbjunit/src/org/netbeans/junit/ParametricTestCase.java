@@ -35,6 +35,7 @@ public abstract class ParametricTestCase extends MultiTestCase{
     
     /**
      * Creates a new instance of ParametricTestCase with the given name.
+     * @param name name of test case
      */
     public ParametricTestCase(String name) {
         super(name);

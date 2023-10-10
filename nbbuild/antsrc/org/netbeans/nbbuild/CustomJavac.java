@@ -20,6 +20,8 @@
 package org.netbeans.nbbuild;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -114,6 +116,17 @@ public class CustomJavac extends Javac {
             }
         } else {
             log("Warning: could not create " + generatedClassesDir, Project.MSG_WARN);
+        }
+        try {
+            Class<?> mainClazz = CustomJavacClassLoader.findMainCompilerClass(getProject());
+            if (mainClazz != null) {
+                super.add(CustomJavacClassLoader.createCompiler(mainClazz));
+            }
+        } catch (ClassNotFoundException | MalformedURLException | URISyntaxException ex) {
+            if (ex instanceof BuildException) {
+                throw (BuildException) ex;
+            }
+            throw new BuildException(ex);
         }
         super.compile();
     }
@@ -226,12 +239,16 @@ public class CustomJavac extends Javac {
                 continue;
             }
             int i = clazz.indexOf('$');
-            File enclosing = new File(d, clazz.substring(0, i) + ".class");
-            if (!enclosing.isFile()) {
-                File enclosed = new File(d, clazz);
-                log(clazz + " will be deleted since " + enclosing.getName() + " is missing", Project.MSG_VERBOSE);
-                if (!enclosed.delete()) {
-                    throw new BuildException("could not delete " + enclosed, getLocation());
+            // ignore filenames that start right with '$' (separatorChar preceded), these could not be inner classes.
+            if (i > 0 && clazz.charAt(i - 1) != File.separatorChar) {
+                File enclosing = new File(d, clazz.substring(0, i) + ".class");
+                // no inner class' filename may begin directly with '$', it must be preceded by an outer class' name.
+                if (!enclosing.isFile()) {
+                    File enclosed = new File(d, clazz);
+                    log(clazz + " will be deleted since " + enclosing.getName() + " is missing", Project.MSG_VERBOSE);
+                    if (!enclosed.delete()) {
+                        throw new BuildException("could not delete " + enclosed, getLocation());
+                    }
                 }
             }
         }
@@ -247,5 +264,4 @@ public class CustomJavac extends Javac {
         }
         return false;
     }
-
 }

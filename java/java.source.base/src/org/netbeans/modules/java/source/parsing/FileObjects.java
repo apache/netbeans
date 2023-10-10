@@ -949,6 +949,34 @@ public class FileObjects {
         return null;
     }
 
+    public static URI getZipPathURI(URI zipURI, String resourceName) {
+        try {
+            //Optimistic try and see
+            return new URI ("jar:"+zipURI.toString()+"!/"+resourceName); //NOI18N
+        } catch (URISyntaxException e) {
+            //Need to encode the resName part (slower)
+            final StringBuilder sb = new StringBuilder ();
+            final String[] elements = resourceName.split("/");           //NOI18N
+            try {
+                for (int i = 0; i< elements.length; i++) {
+                    String element = elements[i];
+                    element = URLEncoder.encode(element, "UTF-8");       //NOI18N
+                    element = element.replace("+", "%20");               //NOI18N
+                    sb.append(element);
+                    if (i< elements.length - 1) {
+                        sb.append(NBFS_SEPARATOR_CHAR);
+                    }
+                }
+                return new URI("jar:"+zipURI.toString()+"!/"+sb.toString());    //NOI18N
+            } catch (final UnsupportedEncodingException e2) {
+                throw new IllegalStateException(e2);
+            }
+            catch (final URISyntaxException e2) {
+                throw new IllegalStateException(e2);
+            }
+        }
+    }
+
     // <editor-fold defaultstate="collapsed" desc="Private helper methods">
     private static CharSequence getCharContent(InputStream ins, Charset encoding, JavaFileFilterImplementation filter, long expectedLength, boolean ignoreEncodingErrors) throws IOException {
         char[] result;
@@ -1642,31 +1670,8 @@ public class FileObjects {
         @Override
         public final URI toUri () {
             URI  zdirURI = this.getArchiveURI();
-            try {
-                //Optimistic try and see
-                return new URI ("jar:"+zdirURI.toString()+"!/"+resName);  //NOI18N
-            } catch (URISyntaxException e) {
-                //Need to encode the resName part (slower)
-                final StringBuilder sb = new StringBuilder ();
-                final String[] elements = resName.split("/");                 //NOI18N
-                try {
-                    for (int i = 0; i< elements.length; i++) {
-                        String element = elements[i];
-                        element = URLEncoder.encode(element, "UTF-8");       //NOI18N
-                        element = element.replace("+", "%20");               //NOI18N
-                        sb.append(element);
-                        if (i< elements.length - 1) {
-                            sb.append(NBFS_SEPARATOR_CHAR);
-                        }
-                    }
-                    return new URI("jar:"+zdirURI.toString()+"!/"+sb.toString());    //NOI18N
-                } catch (final UnsupportedEncodingException e2) {
-                    throw new IllegalStateException(e2);
-                }
-                catch (final URISyntaxException e2) {
-                    throw new IllegalStateException(e2);
-                }
-            }
+
+            return getZipPathURI(zdirURI, resName);
         }
 
         @Override

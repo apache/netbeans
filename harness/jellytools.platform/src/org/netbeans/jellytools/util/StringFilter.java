@@ -119,7 +119,7 @@ public class StringFilter {
                     break;
                 to += end.length();
             }
-            original = original.substring(0, from) + replace  + original.substring(to, original.length());
+            original = original.substring(0, from) + replace  + original.substring(to);
             offset = from + replace.length();
         } while (replaceAll);
         

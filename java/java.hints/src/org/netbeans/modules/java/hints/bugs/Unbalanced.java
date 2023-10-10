@@ -103,14 +103,6 @@ public class Unbalanced {
 
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unbalanced.Array", description = "#DESC_org.netbeans.modules.java.hints.bugs.Unbalanced.Array", category="bugs", options=Options.QUERY, suppressWarnings="MismatchedReadAndWriteOfArray")
     public static final class Array {
-        private static final Set<Kind> ARRAY_WRITE = EnumSet.of(
-            Kind.AND_ASSIGNMENT, Kind.ASSIGNMENT, Kind.CONDITIONAL_AND, Kind.CONDITIONAL_OR,
-            Kind.DIVIDE_ASSIGNMENT, Kind.LEFT_SHIFT_ASSIGNMENT, Kind.MINUS_ASSIGNMENT,
-            Kind.MULTIPLY_ASSIGNMENT, Kind.OR_ASSIGNMENT, Kind.PLUS_ASSIGNMENT,
-            Kind.POSTFIX_DECREMENT, Kind.POSTFIX_INCREMENT, Kind.PREFIX_DECREMENT,
-            Kind.PREFIX_INCREMENT, Kind.REMAINDER_ASSIGNMENT, Kind.RIGHT_SHIFT_ASSIGNMENT,
-            Kind.UNSIGNED_RIGHT_SHIFT_ASSIGNMENT, Kind.XOR_ASSIGNMENT
-        );
 
         private static VariableElement testElement(HintContext ctx) {
             Element el = ctx.getInfo().getTrees().getElement(ctx.getPath());
@@ -204,8 +196,11 @@ public class Unbalanced {
 
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Unbalanced.Collection", description = "#DESC_org.netbeans.modules.java.hints.bugs.Unbalanced.Collection", category="bugs", options=Options.QUERY, suppressWarnings="MismatchedQueryAndUpdateOfCollection")
     public static final class Collection {
-        private static final Set<String> READ_METHODS = new HashSet<String>(Arrays.asList("get", "contains", "remove", "containsAll", "removeAll", "retain", "retainAll", "containsKey", "containsValue", "iterator", "isEmpty", "size", "toArray", "listIterator", "indexOf", "lastIndexOf"));
-        private static final Set<String> WRITE_METHODS = new HashSet<String>(Arrays.asList("add", "addAll", "set"));
+        private static final Set<String> READ_METHODS = new HashSet<>(Arrays.asList(
+                "get", "getOrDefault", "contains", "remove", "containsAll", "removeAll", "removeIf", "retain", "retainAll", "containsKey",
+                "containsValue", "iterator", "listIterator", "isEmpty", "size", "toArray", "entrySet", "keySet", "values", "indexOf", "lastIndexOf",
+                "stream", "parallelStream", "spliterator", "forEach"));
+        private static final Set<String> WRITE_METHODS = new HashSet<>(Arrays.asList("add", "addAll", "set", "put", "putAll", "putIfAbsent"));
 
         private static boolean testType(CompilationInfo info, TypeMirror actualType, String superClass) {
             TypeElement juCollection = info.getElements().getTypeElement(superClass);

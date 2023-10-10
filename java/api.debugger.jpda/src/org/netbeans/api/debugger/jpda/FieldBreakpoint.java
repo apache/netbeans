@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -117,12 +118,7 @@ public class FieldBreakpoint extends JPDABreakpoint {
      * @param className a new name of class the field is defined in
      */
     public void setClassName (String className) {
-        if ( (className == this.className) ||
-             ( (className != null) && 
-               (this.className != null) && 
-               this.className.equals (className)
-             )
-        ) return;
+        if (Objects.equals(className, this.className)) return;
         Object old = this.className;
         this.className = className;
         firePropertyChange (PROP_CLASS_NAME, old, className);
@@ -146,9 +142,7 @@ public class FieldBreakpoint extends JPDABreakpoint {
         if (name != null) {
             name = name.trim();
         }
-        if ( (name == fieldName) ||
-             ((name != null) && (fieldName != null) && fieldName.equals (name))
-        ) return;
+        if (Objects.equals(name, fieldName)) return;
         String old = fieldName;
         fieldName = name;
         firePropertyChange (PROP_FIELD_NAME, old, fieldName);

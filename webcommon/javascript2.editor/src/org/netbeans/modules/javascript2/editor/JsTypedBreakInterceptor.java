@@ -133,7 +133,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
             int carretOffset = 0;
             int curlyOffset = getUnbalancedCurlyOffset(doc, offset);
             if (offset > afterLastNonWhite) {
-                
+
                 sb.append("\n"); // XXX On Windows, do \r\n?
                 sb.append(IndentUtils.createIndentString(doc, indent + IndentUtils.indentLevelSize(doc)));
                 carretOffset = sb.length();
@@ -167,7 +167,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
                     sb.append("}"); // NOI18N
                     doc.remove(offset, restOfLine.length());
                 }
-                
+
             }
 
             if (sb.length() > 0) {
@@ -324,7 +324,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
                 if (isBlockStart) {
                     indent++;
                 }
-                int carretPosition = 0;
+                int carretPosition;
                 sb.append(IndentUtils.createIndentString(doc, indent));
                 if (isBlockStart) {
                     // First comment should be propertly indented
@@ -476,7 +476,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
                 return;
             }
         }
-        
+
         // Just indent the line properly
         int indentSize = getNextLineIndentation(doc, offset);
         if (indentSize > 0) {
@@ -508,11 +508,11 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
 
     /**
      * Computes the indentation of the next line (after the line break).
-     * 
+     *
      * @param doc document
      * @param offset current offset
      * @return indentation size
-     * @throws BadLocationException 
+     * @throws BadLocationException
      */
     private int getNextLineIndentation(BaseDocument doc, int offset) throws BadLocationException {
         int indent = GsfUtilities.getLineIndent(doc, offset);
@@ -639,7 +639,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
 
     /**
      * From Java.
-     * 
+     *
      * Returns position of the first unpaired closing paren/brace/bracket from the caretOffset
      * till the end of caret row. If there is no such element, position after the last non-white
      * character on the caret row is returned.
@@ -796,7 +796,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
         }
         return false;
     }
-    
+
     /**
      * Return true iff the line for the given offset is a JavaScript comment line.
      * This will return false for lines that contain comments (even when the
@@ -886,7 +886,7 @@ public class JsTypedBreakInterceptor implements TypedBreakInterceptor {
         }
 
     }
-    
+
     private static class CommentGenerator {
 
         private final int offset;

@@ -57,7 +57,7 @@ public interface NbModuleProvider {
     
     /** Returns a relative path to a project's test source directory. 
      * @return relative path to test sources..
-     * @Since 1.56
+     * @since 1.56
      */
     String getTestSourceDirectoryPath();
     /**

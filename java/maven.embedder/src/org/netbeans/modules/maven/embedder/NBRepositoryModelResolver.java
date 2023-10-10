@@ -71,12 +71,10 @@ class NBRepositoryModelResolver
             throws UnresolvableModelException {
         Artifact artifactParent = embedder.lookupComponent(RepositorySystem.class).createProjectArtifact(groupId, artifactId, version);
         try {
-            embedder.resolve(artifactParent, remoteRepositories, embedder.getLocalRepository());
+            embedder.resolveArtifact(artifactParent, remoteRepositories, embedder.getLocalRepository());
         } catch (ArtifactResolutionException ex) {
-            Exceptions.printStackTrace(ex);
              throw new UnresolvableModelException(ex.getMessage(),  groupId , artifactId , version );
         } catch (ArtifactNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
             throw new UnresolvableModelException( ex.getMessage(),  groupId , artifactId , version );
         }
 

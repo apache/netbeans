@@ -107,13 +107,14 @@ public class TestCatalogModel extends CatalogWriteModelImpl{
         try {
             
             File file = FileUtil.toFile(fo);
-            FileInputStream fis = new FileInputStream(file);
-            byte buffer[] = new byte[fis.available()];
-            result = new org.netbeans.editor.BaseDocument(
-                    org.netbeans.modules.xml.text.syntax.XMLKit.class, false);
-            result.remove(0, result.getLength());
-            fis.read(buffer);
-            fis.close();
+            byte[] buffer;
+            try (FileInputStream fis = new FileInputStream(file)) {
+                buffer = new byte[fis.available()];
+                result = new org.netbeans.editor.BaseDocument(
+                        org.netbeans.modules.xml.text.syntax.XMLKit.class, false);
+                result.remove(0, result.getLength());
+                fis.read(buffer);
+            }
             String str = new String(buffer);
             result.insertString(0,str,null);
             

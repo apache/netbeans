@@ -136,6 +136,7 @@ public class FileEntryNode extends AbstractNode {
      * @deprecated
      * @return no action if the underlying entry is a template. Otherwise the abstract node's default action is returned, possibly <code>null</code>.
      */
+    @Deprecated
     public SystemAction getDefaultAction () {
         if (entry.isTemplate ()) {
             return null;

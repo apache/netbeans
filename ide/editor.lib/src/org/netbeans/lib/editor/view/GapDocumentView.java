@@ -145,10 +145,6 @@ public class GapDocumentView extends GapBoxView {
      * Construct a view intended to cover the whole document.
      *
      * @param elem the element of the model to represent.
-     * @param majorAxis the axis to tile along.  This can be
-     *  either X_AXIS or Y_AXIS.
-     * @param baselineLayout whether baseline layout should be used
-     *  instead of default layout.
      */
     public GapDocumentView(Element elem) {
         this(elem, false);
@@ -159,10 +155,6 @@ public class GapDocumentView extends GapBoxView {
      *
      * @param elem the element of the model to represent.
      * @param hideBottomPadding to avoid adding bottom padding to view
-     * @param majorAxis the axis to tile along.  This can be
-     *  either X_AXIS or Y_AXIS.
-     * @param baselineLayout whether baseline layout should be used
-     *  instead of default layout.
      */
     public GapDocumentView(Element elem, boolean hideBottomPadding) {
         super(elem, View.Y_AXIS);

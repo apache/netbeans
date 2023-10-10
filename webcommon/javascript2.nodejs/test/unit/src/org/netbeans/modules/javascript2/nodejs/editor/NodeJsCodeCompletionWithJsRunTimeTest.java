@@ -75,8 +75,8 @@ public class NodeJsCodeCompletionWithJsRunTimeTest extends JsCodeCompletionBase 
     
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>(ClasspathProviderImplAccessor.getJsStubs());
-
+        List<FileObject> cpRoots = new ArrayList<>(2);
+        cpRoots.add(ClasspathProviderImplAccessor.getJsStubs().get(0)); // Only use core stubs in unittests
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/TestNavigation/public_html/")));
         return Collections.singletonMap(
                 JS_SOURCE_ID,

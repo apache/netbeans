@@ -51,7 +51,7 @@ public class SwingBrowser implements HtmlBrowser.Factory, java.io.Serializable {
     /** Getter for browser name
      *  @return browserName name of browser
      */
-    public String getDescritpion () {
+    public String getDescription () {
         return NbBundle.getMessage (SwingBrowser.class, "LBL_SwingBrowserDescription");
     }
     

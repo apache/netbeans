@@ -252,7 +252,7 @@ public final class ElementHeaders {
      * Converts Javac {@link ElementKind} to a suitable LSP structure kind. Note
      * that not all kinds are supported - such ElementKinds are converted to
      *
-     * @param kind
+     * @param el
      * @return LSP kind suitable for DocumentSymbol - like structures.
      */
     public static StructureElement.Kind javaKind2Structure(Element el) {

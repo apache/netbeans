@@ -2,14 +2,11 @@ Code completion result for source line:
 g| //cc
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     getAttention(): undefined       [PUBLIC,   JS Platform
-METHOD     getComputedStyle(element: Elem  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptor(obj:   [PUBLIC,   JS Platform
-METHOD     getOwnPropertyDescriptors(obj:  [PUBLIC,   JS Platform
-METHOD     getOwnPropertyNames(obj: Objec  [PUBLIC,   JS Platform
-METHOD     getOwnPropertySymbols(obj: Obj  [PUBLIC,   JS Platform
-METHOD     getPrototypeOf(obj: Object): O  [PUBLIC,   JS Platform
-METHOD     getSelection(): Selection       [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptor(o: Ob  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyDescriptors(o: O  [PUBLIC,   JS Platform
+METHOD     getOwnPropertyNames(o: Object)  [PUBLIC,   JS Platform
+METHOD     getOwnPropertySymbols(o: Objec  [PUBLIC,   JS Platform
+METHOD     getPrototypeOf(o: Object): Obj  [PUBLIC,   JS Platform
 FIELD      globalThree235206: Number       [PUBLIC]   issue235206.js
 FIELD      globalTwo235206: Number         [PUBLIC]   issue235206.js
 VARIABLE   globalOne235206: Number         [PUBLIC]   issue235206.js

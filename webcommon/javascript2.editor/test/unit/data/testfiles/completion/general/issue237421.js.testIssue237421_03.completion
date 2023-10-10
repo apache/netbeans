@@ -2,6 +2,6 @@ Code completion result for source line:
 var foo3 = this.getTest().property1.a|;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     assign(target: Object): Object  [PUBLIC,   JS Platform
+METHOD     assign(target: Object, sources  [PUBLIC,   JS Platform
 FIELD      aa: Number                      [PUBLIC]   issue237421.js
 FIELD      abb: String                     [PUBLIC]   issue237421.js

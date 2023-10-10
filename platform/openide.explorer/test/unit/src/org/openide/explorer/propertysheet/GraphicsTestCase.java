@@ -304,6 +304,7 @@ public class GraphicsTestCase extends ExtTestCase {
         
         private void showFrameForImage(final BufferedImage bi) throws Exception {
             JFrame jf = new JFrame("assertPixelFromImage " + (count ++) + " (look for the yellow line)") {
+                @Override
                 public void paint(Graphics g) {
                     new ImageIcon(bi).paintIcon(this, g, 25, 25);
                     g.setColor(Color.YELLOW);
@@ -350,6 +351,7 @@ public class GraphicsTestCase extends ExtTestCase {
         
         private void showFrameForImage(final BufferedImage bi, final Point p) throws Exception {
             JFrame jf = new JFrame("assertPixelFromImage " + (count ++) + " (look for the yellow line)") {
+                @Override
                 public void paint(Graphics g) {
                     new ImageIcon(bi).paintIcon(this, g, 25, 25);
                     g.setColor(Color.YELLOW);

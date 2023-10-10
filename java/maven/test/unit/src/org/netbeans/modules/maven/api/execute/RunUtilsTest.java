@@ -38,14 +38,14 @@ public class RunUtilsTest {
     public void testIsCompileOnSaveEnabledByDefault() {
         NbBundle.setBranding(null);
         boolean result = RunUtils.isCompileOnSaveEnabled(new MockPrj());
-        assertTrue("By default use CoS in NetBeans IDE", result);
+        assertFalse("CoS is off by default in the NetBeans IDE", result);
     }
     
     @Test
     public void testIsCompileOnSaveEnabledWithBranding() {
         NbBundle.setBranding("test");
         boolean result = RunUtils.isCompileOnSaveEnabled(new MockPrj());
-        assertFalse("Allow branding to disable CoS", result);
+        assertTrue("Allow branding to enable CoS", result);
     }
 
     private static class MockPrj implements Project {
@@ -83,7 +83,7 @@ public class RunUtilsTest {
         }
     }
 
-    // BEGIN:RunUtilsTest.GeneralPrerequisiteChecker
+    // @start region="GeneralPrerequisiteChecker"
     /**
      * Registers a service provider in project's lookup, for all packaging types.
      */
@@ -94,9 +94,9 @@ public class RunUtilsTest {
             return true;
         }
     }
-    // END:RunUtilsTest.GeneralPrerequisiteChecker
+    // @end region="GeneralPrerequisiteChecker"
 
-    // BEGIN:RunUtilsTest.SpecificPrerequisiteChecker
+    // @start region="SpecificPrerequisiteChecker"
     /**
      * Registers a service provider for "jar" packaging type only.
      */
@@ -107,9 +107,9 @@ public class RunUtilsTest {
             return true;
         }
     }
-    // END:RunUtilsTest.SpecificPrerequisiteChecker
+    // @end region="SpecificPrerequisiteChecker"
 
-    // BEGIN:RunUtilsTest.FallbackPrerequisiteChecker
+    // @start region="FallbackPrerequisiteChecker"
     /**
      * Registers a service fallback, which will be run after all generics and services specific for a packaging type.
      */
@@ -120,5 +120,5 @@ public class RunUtilsTest {
             return true;
         }
     }
-    // END:RunUtilsTest.FallbackPrerequisiteChecker
+    // @end region="FallbackPrerequisiteChecker"
 }

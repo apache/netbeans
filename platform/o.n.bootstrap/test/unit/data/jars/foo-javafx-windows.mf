@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.foo.javafx.windows
+OpenIDE-Module-Name: Simulated Windows Javafx package
+OpenIDE-Module-Public-Packages: org.foo.javafx.*
+OpenIDE-Module-Requires: org.openide.modules.os.Windows
+OpenIDE-Module-Provides: org.openide.modules.jre.JavaFX
+OpenIDE-Module-Fragment-Host: org.foo.javafx
+OpenIDE-Module-Module-Dependencies: org.foo.javafx, org.agent/1

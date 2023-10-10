@@ -2,8 +2,8 @@ Code completion result for source line:
 p.d|
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     defineProperties(obj: Object,   [PUBLIC,   JS Platform
-METHOD     defineProperty(obj: Object, pr  [PUBLIC,   JS Platform
+METHOD     defineProperties(o: Object, pr  [PUBLIC,   JS Platform
+METHOD     defineProperty(o: Object, p: N  [PUBLIC,   JS Platform
 METHOD     displayRoute(routes: Array, el  [PUBLIC]   issue245252.js
 FIELD      directionsDisplay: google.maps  [PUBLIC]   issue245252.js
 FIELD      directionsService: google.maps  [PUBLIC]   issue245252.js

@@ -139,7 +139,7 @@ public class JsfCompletionItem {
         private void autoimportLibrary(JTextComponent component) {
             final BaseDocument doc = (BaseDocument) component.getDocument();
             Library lib = JsfTag.this.component.getLibrary();
-            LibraryUtils.importLibrary(doc, lib, null, isJsf22Plus);
+            LibraryUtils.importLibrary(doc, lib, null);
         }
 
         //use bold font
@@ -317,10 +317,7 @@ public class JsfCompletionItem {
         sb.append("<div><b>"); //NOI18N
         sb.append(NbBundle.getMessage(JsfCompletionItem.class, "MSG_Library"));
         sb.append(":</b> "); //NOI18N
-        sb.append(library.getNamespace());
-        if (library.getLegacyNamespace() != null) {
-            sb.append(", ").append(library.getLegacyNamespace()); //NOI18N
-        }
+        sb.append(String.join(", ", library.getValidNamespaces()));
         if (library.getDisplayName() != null && !library.getDisplayName().equals(library.getNamespace())) {
             sb.append(" ("); //NOI18N
             sb.append(library.getDisplayName());

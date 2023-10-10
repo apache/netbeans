@@ -286,7 +286,7 @@ public class GenerateDOMScannerSupport implements XMLGenerateCookie {
                                 varTree,
                                 Collections.<ExpressionTree>emptyList(),
                                 sb.toString(),
-                                null );;
+                                null );
                             commentText = "Scan through org.w3c.dom.Element named " + tagName + ".";
                             comment = Comment.create(Comment.Style.JAVADOC, -2, -2, -2, commentText);
                             make.addComment(method, comment, true);

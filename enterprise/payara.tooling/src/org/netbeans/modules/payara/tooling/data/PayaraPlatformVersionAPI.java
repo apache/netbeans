@@ -77,6 +77,10 @@ public interface PayaraPlatformVersionAPI {
     public boolean isEE7Supported();
 
     public boolean isEE8Supported();
+
+    public boolean isEE9Supported();
+
+    public boolean isEE10Supported();
     
     /**
      * Compare major and minor parts of version number <code>String</code>s.

@@ -63,6 +63,7 @@
                 <friend>org.netbeans.modules.websvc.saas.codegen</friend>
                 <friend>org.netbeans.modules.websvc.saas.codegen.j2ee</friend>
                 <friend>org.netbeans.modules.websvc.saas.codegen.java</friend>
+                <friend>org.netbeans.modules.websvc.saas.codegen.php</friend>
                 <friend>org.netbeans.modules.websvc.saas.ui</friend>
                 <friend>org.netbeans.modules.websvc.wsitconf</friend>
                 <package>org.netbeans.modules.websvc.jaxwsmodelapi</package>

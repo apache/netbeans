@@ -28,7 +28,14 @@ import org.openide.util.NbBundle;
  *
  * @author mkleint
  */
-@TemplateRegistration(folder=ArchetypeWizards.TEMPLATE_FOLDER, position=980, displayName="#LBL_Maven_POM_Archetype", iconBase="org/netbeans/modules/maven/resources/Maven2Icon.gif", description="pom-root.html")
+@TemplateRegistration(
+        displayName="#LBL_Maven_POM_Archetype",
+        iconBase="org/netbeans/modules/maven/resources/Maven2Icon.gif",
+        description="pom-root.html",
+        folder=ArchetypeWizards.TEMPLATE_FOLDER,
+        position=980,
+        createHandlerClass = IDENativeTemplateHandler.class
+)
 @NbBundle.Messages("LBL_Maven_POM_Archetype=POM Project")
 public class PomJavaNativeMWI extends IDENativeMavenWizardIterator {
 

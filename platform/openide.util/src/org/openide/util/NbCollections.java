@@ -55,6 +55,7 @@ public class NbCollections {
 
     /**
      * Create a typesafe copy of a raw set.
+     * @param <E> desired type of the entry
      * @param rawSet an unchecked set
      * @param type the desired supertype of the entries
      * @param strict true to throw a <code>ClassCastException</code> if the raw set has an invalid entry,
@@ -83,6 +84,7 @@ public class NbCollections {
 
     /**
      * Create a typesafe copy of a raw list.
+     * @param <E> desired type of the entry
      * @param rawList an unchecked list
      * @param type the desired supertype of the entries
      * @param strict true to throw a <code>ClassCastException</code> if the raw list has an invalid entry,
@@ -111,6 +113,8 @@ public class NbCollections {
 
     /**
      * Create a typesafe copy of a raw map.
+     * @param <K> type of key
+     * @param <V> type of value
      * @param rawMap an unchecked map
      * @param keyType the desired supertype of the keys
      * @param valueType the desired supertype of the values
@@ -176,6 +180,7 @@ public class NbCollections {
             return x;
         }
 
+        @Override
         public void remove() {
             it.remove();
         }
@@ -185,6 +190,7 @@ public class NbCollections {
     /**
      * Create a typesafe filter of an unchecked iterator.
      * {@link Iterator#remove} will work if it does in the unchecked iterator.
+     * @param <E> type of element
      * @param rawIterator an unchecked iterator
      * @param type the desired enumeration type
      * @param strict if false, elements which are not null but not assignable to the requested type are omitted;
@@ -215,6 +221,7 @@ public class NbCollections {
      * {@link Set#contains} also performs a type check and will throw {@link ClassCastException}
      * for an illegal argument.
      * The view is serializable if the underlying set is.
+     * @param <E> type of element
      * @param rawSet an unchecked set
      * @param type the desired element type
      * @param strict if false, elements in the underlying set which are not null and which are not assignable
@@ -294,6 +301,8 @@ public class NbCollections {
      * {@link Map#get}, {@link Map#containsKey}, and {@link Map#containsValue} also perform a type check
      * and will throw {@link ClassCastException} for an illegal argument.
      * The view is serializable if the underlying map is.
+     * @param <K> type of key
+     * @param <V> type of value
      * @param rawMap an unchecked map
      * @param keyType the desired entry key type
      * @param valueType the desired entry value type
@@ -445,6 +454,7 @@ public class NbCollections {
 
     /**
      * Create a typesafe filter of an unchecked enumeration.
+     * @param <E> type of element
      * @param rawEnum an unchecked enumeration
      * @param type the desired enumeration type
      * @param strict if false, elements which are not null but not assignable to the requested type are omitted;
@@ -486,6 +496,7 @@ public class NbCollections {
      * }
      * </pre>
      * </div>
+     * @param <E> type of element
      * @param iterator an iterator
      * @return an iterable wrapper which will traverse the iterator once
      * @throws NullPointerException if the iterator is null
@@ -519,6 +530,7 @@ public class NbCollections {
      * }
      * </pre>
      * </div>
+     * @param <E> type of element
      * @param enumeration an enumeration
      * @return an iterable wrapper which will traverse the enumeration once
      *         ({@link Iterator#remove} is not supported)
@@ -539,6 +551,7 @@ public class NbCollections {
                     public E next() {
                         return enumeration.nextElement();
                     }
+                    @Override
                     public void remove() {
                         throw new UnsupportedOperationException();
                     }

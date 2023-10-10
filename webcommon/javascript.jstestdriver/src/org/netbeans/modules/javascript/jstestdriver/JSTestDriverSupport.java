@@ -408,7 +408,7 @@ public class JSTestDriverSupport {
             //res.add(ConvertedLine.forText(line.substring(0, start), null));
             ListenerImpl l = new ListenerImpl(fo, lineNumber, columnNumber);
             res.add(ConvertedLine.forText(/*line.substring(start, line.length()-1)*/line, l.isValidHyperlink() ? l : null));
-            //res.add(ConvertedLine.forText(line.substring(line.length()-1, line.length()), null));
+            //res.add(ConvertedLine.forText(line.substring(line.length()-1), null));
             return res;
         }
         
@@ -475,7 +475,7 @@ public class JSTestDriverSupport {
             //res.add(ConvertedLine.forText(line.substring(0, start), null));
             ListenerImpl l = new ListenerImpl(fo, lineNumber, columnNumber);
             res.add(ConvertedLine.forText(/*line.substring(start, line.length()-1)*/line, l.isValidHyperlink() ? l : null));
-            //res.add(ConvertedLine.forText(line.substring(line.length()-1, line.length()), null));
+            //res.add(ConvertedLine.forText(line.substring(line.length()-1), null));
             return res;
         }
     

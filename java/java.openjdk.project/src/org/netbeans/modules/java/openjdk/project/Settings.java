@@ -36,7 +36,7 @@ public class Settings {
     private static final String KEY_USE_ANT_BUILD = "use-langtools-ant-build";
     private static final String KEY_ANT_BUILD_LOCATION = "langtools-ant-build-location";
 
-    private static final String DEF_ANT_BUILD_LOCATION = "make/langtools/netbeans/langtools/build.xml";
+    private static final String DEF_ANT_BUILD_LOCATION = "make/ide/netbeans/langtools/build.xml";
 
     private final Project prj;
 

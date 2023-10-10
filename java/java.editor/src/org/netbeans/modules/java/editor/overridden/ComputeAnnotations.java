@@ -20,7 +20,6 @@ package org.netbeans.modules.java.editor.overridden;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import java.awt.event.KeyEvent;
 import com.sun.source.tree.Tree;
 import java.util.Collection;
 import java.util.Collections;
@@ -49,6 +48,7 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.*;
 import org.netbeans.modules.parsing.spi.Parser.Result;
+import org.openide.awt.Actions;
 import org.openide.text.NbDocument;
 import org.openide.util.NbBundle;
 
@@ -245,7 +245,7 @@ public class ComputeAnnotations extends JavaParserResultTask<Result> {
         for (MultiKeyBinding mkb : kbs.getKeyBindings()) {
             if (actionName.equals(mkb.getActionName())) {
                 KeyStroke ks = mkb.getKeyStrokeCount() > 0 ? mkb.getKeyStroke(0) : null;
-                return ks != null ? KeyEvent.getKeyModifiersText(ks.getModifiers()) + '+' + KeyEvent.getKeyText(ks.getKeyCode()) : null;
+                return ks != null ? Actions.keyStrokeToString(ks) : null;
             }
         }
         return null;

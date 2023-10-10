@@ -48,7 +48,7 @@ import org.netbeans.modules.xml.xdm.nodes.Text;
 import org.w3c.dom.Element;
 
 /**
- * @auther Nam Nguyen
+ * @author Nam Nguyen
  * @author Vidhya Narayanan
  */
 public class AnnotationImplTest extends TestCase {

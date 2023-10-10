@@ -439,7 +439,7 @@ final class RepositoryRevision {
                     for (File f : selectionRoots) {
                         String p = SvnUtils.getRelativePath(f);
                         if (p != null && p.startsWith("/")) { //NOI18N
-                            p = p.substring(1, p.length());
+                            p = p.substring(1);
                         }
                         messages = client.getLogMessages(repositoryRootUrl.appendPath(p), pegRevisions.get(p),
                                 message.getRevision(), message.getRevision(), false, true, 0);

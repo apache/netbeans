@@ -30,7 +30,7 @@ import org.openide.nodes.Node;
  * static method that returns {@link Node}. Its presence means that
  * the node shall appear in the <em>Services</em> tab.
  * @since org.netbeans.core.ide/1 1.15
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ ElementType.METHOD, ElementType.TYPE })

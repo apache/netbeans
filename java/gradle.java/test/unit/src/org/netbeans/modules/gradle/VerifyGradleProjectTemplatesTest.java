@@ -21,11 +21,12 @@ package org.netbeans.modules.gradle;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbModuleSuite;
@@ -82,6 +83,14 @@ public class VerifyGradleProjectTemplatesTest extends NbTestCase {
                 pw.append("Exception instantiating ").append(fo.getPath()).append("\n");
                 ex.printStackTrace(pw);
                 err++;
+                
+                try {
+                    LogManager.getLogManager().getLogger("org.netbeans.modules.gradle.loaders.LegacyProjectLoader").setLevel(Level.FINER);
+                    pw.append("Running again with increased loglevel:").append(fo.getPath()).append("\n");
+                    verifySingleTemplate(cnt + 1000, template);
+                } finally {
+                    LogManager.getLogManager().getLogger("org.netbeans.modules.gradle.loaders.LegacyProjectLoader").setLevel(Level.INFO);
+                }
             }
         }
         pw.flush();

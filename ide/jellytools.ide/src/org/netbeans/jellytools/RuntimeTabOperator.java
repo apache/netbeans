@@ -28,7 +28,7 @@ import org.netbeans.jemmy.operators.JTreeOperator;
 /** Operator handling Services TopComponent.<p>
  * Functionality related to Services tree is delegated to JTreeOperator (method
  * tree()) and nodes (method getRootNode()).<p>
- * Example:<p>
+ * Example:
  * <pre>
  *      RuntimeTabOperator rto = RuntimeTabOperator.invoke();
  *      // or when Runtime pane is already opened

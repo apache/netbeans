@@ -1,0 +1,11 @@
+Code completion result for source line:
+$this->|data;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     protectedMethod()               [PROTECTE  MixinClass
+METHOD     protectedStaticMethod()         [PROTECTE  MixinClass
+METHOD     publicMethod()                  [PUBLIC]   MixinClass
+METHOD     publicStaticMethod()            [STATIC]   MixinClass
+METHOD     test()                          [PUBLIC]   TestClass
+VARIABLE   TestData data                   [PUBLIC]   MixinClass
+VARIABLE   array publicField               [PUBLIC]   MixinClass
+VARIABLE   int protectedField              [PROTECTE  MixinClass

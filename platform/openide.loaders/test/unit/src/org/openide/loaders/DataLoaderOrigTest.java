@@ -206,6 +206,7 @@ public class DataLoaderOrigTest extends NbTestCase {
             final FileObject filefolder = lfs.findResource("folder");
             final boolean[] stop = new boolean[] {false};
             Thread t = new Thread("recognizing objects sometimes") {
+                @Override
                 public void run() {
                     try {
                         DataFolder folder = DataFolder.findFolder(filefolder);

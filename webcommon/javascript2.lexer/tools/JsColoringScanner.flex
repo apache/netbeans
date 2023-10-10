@@ -712,7 +712,7 @@ RegexpFirstCharacter = [^*\x5b/\r\n\\] | {RegexpBackslashSequence} | {RegexpClas
 }
 
 <JSX> {
-   "/>" | "</"{JSXCharacter}+">"       
+   "/>" | "</"{JSXCharacter}*">"
                                 {
                                      Integer balance = jsxBalances.isEmpty() ? 0 : jsxBalances.pop() - 1;
                                      if (balance <= 0) {

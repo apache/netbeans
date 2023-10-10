@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.xml.schema.completion.util;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +35,7 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.xml.lexer.XMLTokenId;
+import org.netbeans.api.xml.services.UserCatalog;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.xml.axi.AbstractAttribute;
 import org.netbeans.modules.xml.axi.Element;
@@ -52,6 +55,8 @@ import org.openide.util.Lookup;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Helps in populating the completion list.
@@ -82,21 +87,16 @@ public class CompletionContextImpl extends CompletionContext {
      * Tags on the path from root to the context element (the one the CC tries to fill)
      */
     private List<SyntaxElement> elementsFromRoot;
-    private Map<String, String>  schemaLocationMap = new HashMap<String, String>();
+    private Map<String, String>  schemaLocationMap = new HashMap<>();
     private String schemaLocation;
     private String noNamespaceSchemaLocation;
     private String defaultNamespace;
     private Document document;
-    private HashMap<String, CompletionModel> nsModelMap =
-            new HashMap<String, CompletionModel>();
-    private List<CompletionModel> noNSModels =
-            new ArrayList<CompletionModel>();
-    private HashMap<String, String> declaredNamespaces =
-            new HashMap<String, String>();
-    private HashMap<String, String> suggestedNamespaces =
-            new HashMap<String, String>();
-    private HashMap<String, String> specialNamespaceMap =
-            new HashMap<String, String>();
+    private HashMap<String, CompletionModel> nsModelMap = new HashMap<>();
+    private List<CompletionModel> noNSModels = new ArrayList<>();
+    private HashMap<String, String> declaredNamespaces = new HashMap<>();
+    private HashMap<String, String> suggestedNamespaces = new HashMap<>();
+    private HashMap<String, String> specialNamespaceMap = new HashMap<>();
     private CompletionModel noNamespaceModel;
     private transient List<String> existingAttributes;
     private boolean specialCompletion;
@@ -121,57 +121,57 @@ public class CompletionContextImpl extends CompletionContext {
             this.tokenOffset = off[0];
             this.docRoot = CompletionUtil.getDocRoot(document);
             this.lastTypedChar = support.lastTypedChar();
-            populateNamespaces();            
-        } catch(Exception ex) {
+            populateNamespaces();
+        } catch(BadLocationException | RuntimeException ex) {
             //in the worst case, there won't be any code completion help
             _logger.log(Level.SEVERE, ex.getMessage());
         }
     }
-    
+
     ////////////////START CompletionContext Implementations////////////////
     @Override
     public CompletionType getCompletionType() {
         return completionType;
     }
-        
+
     @Override
     public String getDefaultNamespace() {
         return defaultNamespace;
     }
-    
+
     @Override
     public List<QName> getPathFromRoot() {
         return pathFromRoot;
     }
-    
+
     @Override
     public FileObject getPrimaryFile() {
         return primaryFile;
     }
-            
+
     @Override
     public BaseDocument getBaseDocument() {
         return (BaseDocument)document;
     }
-    
+
     @Override
     public HashMap<String, String> getDeclaredNamespaces() {
         return declaredNamespaces;
     }
-    
+
     @Override
     public String getTypedChars() {
         return typedChars;
-    }    
+    }
     ////////////////END CompletionContext Implementations////////////////
-    
+
     public boolean isSchemaAwareCompletion() {
         return (schemaLocation != null) || (noNamespaceSchemaLocation != null);
     }
-    
+
     /**
      * Namespaces suggested by the context, but NOT DECLARED yet in the document
-     * 
+     *
      * @return suggested namespaces
      */
     public Map<String, String> getSuggestedNamespace() {
@@ -179,22 +179,38 @@ public class CompletionContextImpl extends CompletionContext {
     }
 
     public List<URI> getSchemas() {
-        List<URI> uris = new ArrayList<URI>();
+        List<URI> uris = new ArrayList<>();
+
         if(schemaLocation != null) {
             CompletionUtil.loadSchemaURIs(schemaLocation, uris, schemaLocationMap);
-            return uris;
         }
+
         if(noNamespaceSchemaLocation != null) {
             CompletionUtil.loadSchemaURIs(noNamespaceSchemaLocation, uris, null);
-            return uris;
-        }                        
+        }
+
+        // If there are schemas, that have no mapping, try to lookup the
+        // systemId using the namespace as systemId.
+        for(String ns: getDeclaredNamespaces().values()) {
+            if(! schemaLocationMap.containsKey(ns)) {
+                try {
+                    InputSource is = UserCatalog.getDefault().getEntityResolver().resolveEntity(ns, null);
+                    if(is != null && is.getSystemId() != null) {
+                        schemaLocationMap.put(ns, is.getSystemId());
+                        uris.add(URI.create(is.getSystemId()));
+                    }
+                } catch (SAXException | IOException | IllegalArgumentException ex) {
+                    _logger.log(Level.FINE, "Failed to resolve namespace: " + ns, ex);
+                }
+            }
+        }
         return uris;
     }
-    
+
     /**
      * Extracts prefix from the tagname, returns "" or {@code null} if there's no
      * prefix
-     * 
+     *
      * @param tagName tag name string, incl. possible prefix (DOM Level 1)
      * @param empty if true, "" is returned for no prefix.
      * @return namespace prefix, "" or {@code null) for no prefix
@@ -206,7 +222,7 @@ public class CompletionContextImpl extends CompletionContext {
         }
         return tagName.substring(index + 1);
     }
-    
+
     /**
      * Adds namespaces from the tag to this context, possibly overriding namespaces
      * from previously added tags. Tags should be added starting from the root down
@@ -218,7 +234,7 @@ public class CompletionContextImpl extends CompletionContext {
         String nodePrefix = getPrefix(e.getNodeName(), false);
         String version = null;
         String xsltAttrName = null;
-        
+
         for (int i = attrs.getLength() - 1; i >= 0; i--) {
             Node n = attrs.item(i);
             if (n.getNodeType() == Node.ATTRIBUTE_NODE) {
@@ -227,7 +243,7 @@ public class CompletionContextImpl extends CompletionContext {
                 String value = a.getValue();
                 addNamespace(attrName, value, nodePrefix);
 
-            
+
                 if(value.trim().equals("http://www.w3.org/1999/XSL/Transform")) { //NOI18N
                     xsltAttrName = attrName;
                 }
@@ -235,9 +251,9 @@ public class CompletionContextImpl extends CompletionContext {
                         equals("version")) { //NOI18N
                     version = value.trim();
                 }
-            } 
+            }
         }
-        
+
         if (xsltAttrName != null && "2.0".equals(version)) {
             String prefix = getPrefix(xsltAttrName, false);
             if (prefix == null) {
@@ -253,7 +269,7 @@ public class CompletionContextImpl extends CompletionContext {
      * Initializes the declared namespaces from the context path.
      * Adds all declared namespaces from context element and its parents - these are
      * in scope and will form {@link #declaredNamespaces} map.
-     * 
+     *
      * @param stack path from the context element (index 0) to the root (index N-1).
      */
     private void addContextNamespaces(List<SyntaxElement> stack) {
@@ -278,12 +294,12 @@ public class CompletionContextImpl extends CompletionContext {
                 equals(XSI_SCHEMALOCATION)) {
             schemaLocation = value.trim();
             return;
-        } 
+        }
         if(CompletionUtil.getLocalNameFromTag(attrName).
                 equals(XSI_NONS_SCHEMALOCATION)) {
             noNamespaceSchemaLocation = value.trim();
             return;
-        }  
+        }
         if (CompletionUtil.getLocalNameFromTag(attrName).
                 equals(XSD_TARGET_NAMESPACE)) {
             targetNamespace = value.trim();
@@ -291,14 +307,14 @@ public class CompletionContextImpl extends CompletionContext {
         }
 
         if(! attrName.startsWith(XMLConstants.XMLNS_ATTRIBUTE))
-            return;            
+            return;
 
         if(attrName.equals(defNS)) {
             this.defaultNamespace = value;
         }
         declaredNamespaces.put(attrName, value);
     }
-    
+
     private void addSchemaLocation(String s) {
         if (schemaLocation == null) {
             schemaLocation = s;
@@ -306,7 +322,7 @@ public class CompletionContextImpl extends CompletionContext {
             schemaLocation = schemaLocation + " " + s; // NO18N
         }
     }
-    
+
     /**
      * Keeps all namespaces along with their prefixes in a HashMap.
      * This is obtained from the root element's attributes, with
@@ -327,10 +343,10 @@ public class CompletionContextImpl extends CompletionContext {
         String temp = CompletionUtil.getPrefixFromTag(tagName);
         if(temp != null) defNS = defNS+":"+temp; //NOI18N
         List<DocRootAttribute> attributes = docRoot.getAttributes();
-        
+
         String version = null;
         boolean xsltDeclared = false;
-        
+
         for(int index=0; index<attributes.size(); index++) {
             DocRootAttribute attr = attributes.get(index);
             String attrName = attr.getName();
@@ -340,9 +356,9 @@ public class CompletionContextImpl extends CompletionContext {
             //resolve xsl stylesheets w/o the schema location specification.
             //In such case the root element only contains the xmlns:xsl=""http://www.w3.org/1999/XSL/Transform"
             //along with the version attribute.
-            //If such ns is declared and the version is 2.0 then use the 
+            //If such ns is declared and the version is 2.0 then use the
             //http://www.w3.org/2007/schema-for-xslt20.xsd schema for the completion model
-            
+
             if(attr.getValue().trim().equals("http://www.w3.org/1999/XSL/Transform")) { //NOI18N
                 xsltDeclared = true;
             }
@@ -351,12 +367,12 @@ public class CompletionContextImpl extends CompletionContext {
                 version = attr.getValue().trim();
             }
         }
-        
+
         if(schemaLocation == null && xsltDeclared && "2.0".equals(version)) {
             //only the second "token" from the schemaLocation is considered as the schema
             schemaLocation = "schema http://www.w3.org/2007/schema-for-xslt20.xsd"; //NOI18N
         }
-        
+
     }
 
     private TokenSequence getTokenSequence() {
@@ -382,13 +398,13 @@ public class CompletionContextImpl extends CompletionContext {
 
         Token tok = tokenSequence.token();
         if (tok == null) return false;
-        
+
         TokenId tokID = tok.id();
         if (tokID.equals(XMLTokenId.TAG) && CompletionUtil.isEndTagSuffix(tok) &&
            (tokenSequence.offset() + 1 == caretPos)) { // <... /|>, | - a caret position
             return false;
         }
-        boolean 
+        boolean
             isAttributeOrSpace = tokID.equals(XMLTokenId.ARGUMENT) ||
                                  tokID.equals(XMLTokenId.WS),
             isTagLastCharFound = tokID.equals(XMLTokenId.TAG) &&
@@ -399,8 +415,6 @@ public class CompletionContextImpl extends CompletionContext {
             //like: <tag att|#$#$#>
             isJustBeforeTagErrorToken = false;
         if (tokID.equals(XMLTokenId.ERROR)) {
-            isJustBeforeTagErrorToken 
-                                = tokID.equals(XMLTokenId.ERROR);
             String tokenText = tok.text().toString();
             isJustBeforeTagErrorToken = tokenText.subSequence(0, diff).toString().trim().isEmpty() ||
                     diff == 0;
@@ -414,7 +428,7 @@ public class CompletionContextImpl extends CompletionContext {
                         int tokOffset = tokenSequence.offset(),
                             tagNameEndPos = tokOffset + CompletionUtil.TAG_FIRST_CHAR.length() +
                                             tagName.length();
-                        if ((tagNameEndPos < caretPos) && 
+                        if ((tagNameEndPos < caretPos) &&
                             (isAttributeOrSpace || isTagLastCharFound || isJustBeforeTagErrorToken)) {
                             return true;
                         }
@@ -422,7 +436,7 @@ public class CompletionContextImpl extends CompletionContext {
                 }
             }
             if (! tokenSequence.movePrevious()) break;
-            
+
             tok = tokenSequence.token();
             tokID = tok.id();
             if (CompletionUtil.isEndTagSuffix(tok) || CompletionUtil.isTagLastChar(tok)) break;
@@ -444,7 +458,7 @@ public class CompletionContextImpl extends CompletionContext {
         }
         return res;
     }
-    
+
     private boolean doInitContext() {
         TokenSequence tokenSequence = getTokenSequence();
         try {
@@ -464,26 +478,26 @@ public class CompletionContextImpl extends CompletionContext {
                 createPathFromRoot(element);
                 return true;
             }
-            
+
             XMLTokenId id = token.id();
             switch (id) {
                 //user enters < character
                 case TEXT:
                     String chars = token.text().toString().trim();
                     Token previous = support.getPreviousToken(tokenOffset);
-                    String previousTokenText = previous == null ? 
+                    String previousTokenText = previous == null ?
                             "" : previous.text().toString().trim();
                     if(chars != null && chars.startsWith("&")) {
                         completionType = CompletionType.COMPLETION_TYPE_UNKNOWN;
                         break;
-                    }                    
+                    }
                     if (chars != null && chars.equals("") && //previousTokenText.equals("/>")) {
                         previousTokenText.endsWith(">")) {
                         //completionType = CompletionType.COMPLETION_TYPE_UNKNOWN;
                         completionType = CompletionType.COMPLETION_TYPE_ELEMENT;
                         createPathFromRoot(element);
                         break;
-                    }                    
+                    }
                     if(chars != null && chars.startsWith("<")) {
                         typedChars = chars.substring(1);
                         completionType = CompletionType.COMPLETION_TYPE_ELEMENT;
@@ -538,7 +552,7 @@ public class CompletionContextImpl extends CompletionContext {
                                 tagName.substring(0, index);
                             createPathFromRoot(element.getPrevious());
                             break;
-                        }                        
+                        }
 //***???completionType = CompletionType.COMPLETION_TYPE_ATTRIBUTE;
 //***???pathFromRoot = getPathFromRoot(element);
                         break;
@@ -575,12 +589,12 @@ public class CompletionContextImpl extends CompletionContext {
                 case CHARACTER:
                     completionType = CompletionType.COMPLETION_TYPE_UNKNOWN;
                     break;
-                    
+
                 //user enters = character, we should ignore all other operators
                 case OPERATOR:
                     completionType = CompletionType.COMPLETION_TYPE_UNKNOWN;
                     break;
-                    
+
                 //user enters either ' or "
                 case VALUE: {
                     //user enters start quote and no end quote exists
@@ -592,8 +606,8 @@ public class CompletionContextImpl extends CompletionContext {
                             String tt = token.text().toString();
                             typedChars = tt.substring(1, tt.indexOf(">"));
                         }
-                    }                    
-                    
+                    }
+
                     //user is inside start/end quotes
                     if(lastTypedChar != '\'' && lastTypedChar != '\"') {
                         String str = token.text().toString();
@@ -609,7 +623,7 @@ public class CompletionContextImpl extends CompletionContext {
                     }
                     attribute = findAttributeName();
                     completionType = attribute == null ?
-                            CompletionType.COMPLETION_TYPE_UNKNOWN : 
+                            CompletionType.COMPLETION_TYPE_UNKNOWN :
                             CompletionType.COMPLETION_TYPE_ATTRIBUTE_VALUE;
                     createPathFromRoot(element);
                     break;
@@ -638,7 +652,7 @@ public class CompletionContextImpl extends CompletionContext {
                                     completionType = CompletionType.COMPLETION_TYPE_ATTRIBUTE;
                                     createPathFromRoot(element);
                                 }
-                                
+
                                 //***???completionType = CompletionType.COMPLETION_TYPE_ATTRIBUTE;
                                 //***???pathFromRoot = getPathFromRoot(element);
                             }
@@ -651,21 +665,21 @@ public class CompletionContextImpl extends CompletionContext {
                     completionType = CompletionType.COMPLETION_TYPE_UNKNOWN;
                     break;
             }
-        } catch (Exception e) {
+        } catch (BadLocationException | RuntimeException e) {
             _logger.log(Level.INFO,
                 e.getMessage() == null ? e.getClass().getName() : e.getMessage(), e);
             return false;
         }
         // TODO - complete namespaces based on 'pathToRoot'
-        
-        return true;        
+
+        return true;
     }
-    
+
     /**
      * Assumes that the current token is at the attribute name, operator or
      * somewhere in the attribute value. In all cases, attempt to return the
      * context attribute name.
-     * 
+     *
      * @return attribute name, or <code>null</code> in unexpected situations
      */
     private String findAttributeName() {
@@ -700,15 +714,15 @@ public class CompletionContextImpl extends CompletionContext {
     public List<DocRootAttribute> getDocRootAttributes() {
         return docRoot.getAttributes();
     }
-    
+
     public DocRoot getDocRoot() {
         return docRoot;
     }
-    
+
     public String getAttribute() {
         return attribute;
     }
-        
+
     /**
      * This is a 2-pass algorithm. In the 1st pass, it pushes all the relevant
      * start tags all the way to the root into the stack, root being at the top.
@@ -724,7 +738,7 @@ public class CompletionContextImpl extends CompletionContext {
         if(support.isEmptyTag(se)) {
             stack.push(se);
         }
-        
+
         while( se != null) {
             if (
                 (stack.isEmpty() && support.isStartTag(se)) ||
@@ -745,11 +759,11 @@ public class CompletionContextImpl extends CompletionContext {
             }
             se = se.getPrevious();
         }
-        
+
         this.elementsFromRoot = stack;
         //2nd pass
         this.pathFromRoot = createPath(stack);
-    }    
+    }
 
     /**
      * Peeks items from the stack in reverse order and checks if that tag is a
@@ -758,7 +772,7 @@ public class CompletionContextImpl extends CompletionContext {
      * that the returned path starts from root, all the way to the current tag.
      */
     private ArrayList<QName> createPath(Stack<SyntaxElement> stack) {
-        ArrayList<QName> path = new ArrayList<QName>();
+        ArrayList<QName> path = new ArrayList<>();
         ListIterator<SyntaxElement> tags = stack.listIterator();
         while(tags.hasNext()) {
             SyntaxElement tag = tags.next();
@@ -771,8 +785,8 @@ public class CompletionContextImpl extends CompletionContext {
         }
         //CompletionUtil.printPath(path);
         return path;
-    }       
-    
+    }
+
     /**
      * If namespace differs from previous, then this one is considered a root.
      * However, there are exceptions to this and may not work well for cases when
@@ -783,10 +797,10 @@ public class CompletionContextImpl extends CompletionContext {
         Node thisTag = elem.getNode();
         if(previousTag == null)
             return true;
-        
+
         //if the tag declares a namespace and is diff from default, then it is root
         String prefix = CompletionUtil.getPrefixFromTag(thisTag.getNodeName());
-        Attr namespaceAttr = null;
+        Attr namespaceAttr;
         NamedNodeMap attrs = thisTag.getAttributes();
         if(prefix==null) {
             namespaceAttr = (Attr)attrs.getNamedItem(XMLConstants.XMLNS_ATTRIBUTE);
@@ -808,10 +822,10 @@ public class CompletionContextImpl extends CompletionContext {
                 return true;
             }
         }
-        
+
         return !fromSameNamespace(thisTag, previousTag.getNode());
     }
-    
+
     private String getAttributeValue(Node tag, String attrName) {
         NamedNodeMap attrs = tag.getAttributes();
         for(int i=0; i<attrs.getLength(); i++) {
@@ -823,19 +837,19 @@ public class CompletionContextImpl extends CompletionContext {
         }
         return null;
     }
-    
+
     /**
      * This is onlyused from createPath() for the path from the current element to the root.
      * It's possible to use elementsFromRoot so that content need not to be lexed (so much)
      * as with navigation using tag.getParent().
      * @param tag
-     * @return 
+     * @return
      */
     private QName createQName(SyntaxElement tag) {
         String tagName = tag.getNode().getNodeName();
         String prefix = CompletionUtil.getPrefixFromTag(tagName);
-        String lName = CompletionUtil.getLocalNameFromTag(tagName);     
-        
+        String lName = CompletionUtil.getLocalNameFromTag(tagName);
+
         int index = elementsFromRoot.indexOf(tag);
         if (index == -1) {
             throw new IllegalStateException();
@@ -861,7 +875,7 @@ public class CompletionContextImpl extends CompletionContext {
             return new QName(null, lName, prefix);
         }
     }
-    
+
     /**
      * Determines if this and previous tags are from same namespaces.
      */
@@ -874,19 +888,19 @@ public class CompletionContextImpl extends CompletionContext {
         String prevNS = (prevPrefix == null) ? declaredNamespaces.get(
             XMLConstants.XMLNS_ATTRIBUTE) :
             declaredNamespaces.get(XMLConstants.XMLNS_ATTRIBUTE+":"+prevPrefix);
-        
+
         return (thisNS == null && prevNS == null) ||
                (thisNS != null && thisNS.equals(prevNS)) ||
                (prevNS != null && prevNS.equals(thisNS));
     }
-                        
+
     /**
      * Returns the active no namespace model.
      */
     public CompletionModel getActiveNoNSModel() {
         return noNamespaceModel;
     }
-    
+
     /**
      * Returns the CompletionModel map.
      * Maps target namespaces to the CompletionModels
@@ -894,19 +908,19 @@ public class CompletionContextImpl extends CompletionContext {
     public HashMap<String, CompletionModel> getCompletionModelMap() {
         return nsModelMap;
     }
-    
+
     /**
      * Returns the list of no namespace CompletionModels.
      */
     public List<CompletionModel> getNoNamespaceModels() {
         return noNSModels;
     }
-    
+
     /**
      * Returns the combined list of CompletionModels.
      */
     public List<CompletionModel> getCompletionModels() {
-        List<CompletionModel> models = new ArrayList<CompletionModel>();
+        List<CompletionModel> models = new ArrayList<>();
         models.addAll(nsModelMap.values());
         models.addAll(noNSModels);
         return models;
@@ -921,7 +935,7 @@ public class CompletionContextImpl extends CompletionContext {
         if(nsModelMap.get(tns) == null)
             nsModelMap.put(tns, cm);
     }
-    
+
     /**
      * Finds all CompletionModelProviders and builds a model map for schemas having TNS
      * and builds a list for all no namespace models.
@@ -930,29 +944,29 @@ public class CompletionContextImpl extends CompletionContext {
         Lookup.Template templ = new Lookup.Template(CompletionModelProvider.class);
         Lookup.Result result = Lookup.getDefault().lookup(templ);
         Collection impls = result.allInstances();
-        if(impls == null || impls.size() == 0)
+        if(impls == null || impls.isEmpty())
             return false;
         //first try all providers
         for(Object obj: impls) {
             CompletionModelProvider modelProvider = (CompletionModelProvider)obj;
             List<CompletionModel> models = modelProvider.getModels(this);
-            if(models == null || models.size() == 0)
+            if(models == null || models.isEmpty())
                 continue;
             for(CompletionModel m: models) {
                 populateModelMap(m);
             }
         }
-        
+
         if(noNamespaceSchemaLocation != null && noNSModels.size() == 1) {
             noNamespaceModel = noNSModels.get(0);
         }
-        
+
         //last resort: try special completion
         specialCompletion();
-        
-        return !(nsModelMap.size() == 0 && noNSModels.size() == 0);
+
+        return !(nsModelMap.isEmpty() && noNSModels.isEmpty());
     }
-    
+
     private void populateModelMap(CompletionModel m) {
         if (m != null) {
             SchemaModel sm = m.getSchemaModel();
@@ -971,7 +985,7 @@ public class CompletionContextImpl extends CompletionContext {
         //
         noNSModels.add(m); //no namespace models
     }
-    
+
     /**
      *  Special completion comes into play when all register providers fail.
      *  And we try to provide completion for docs like project.xml.
@@ -981,7 +995,7 @@ public class CompletionContextImpl extends CompletionContext {
         //noNamespaceSchemaLocation attribute, e.g. project.xml
         if(primaryFile == null)
             return;
-        
+
 //        specialCompletion = true;
         for(String temp : declaredNamespaces.values()) {
             try {
@@ -1002,12 +1016,12 @@ public class CompletionContextImpl extends CompletionContext {
                     populateModelMap(cm);
                     continue;
                 }
-            } catch (Exception ex) {
+            } catch (URISyntaxException | RuntimeException ex) {
                 _logger.log(Level.INFO, ex.getLocalizedMessage(), ex);
             }
         }
     }
-    
+
     /**
      * Lets first try with "xmlns:ns1". If not used, use it. If used, we
      * keep trying with ns2, ns3 etc.
@@ -1036,23 +1050,23 @@ public class CompletionContextImpl extends CompletionContext {
             if(ns.equals(tns))
                 return key;
         }
-        
+
         int index = suggestedNamespaces.size() + 1;
         String prefix = PREFIX + index;
         String nsDecl = XMLConstants.XMLNS_ATTRIBUTE+":"+prefix;
         while(getDeclaredNamespaces().get(nsDecl) != null) {
             prefix = PREFIX + index++;
             nsDecl = XMLConstants.XMLNS_ATTRIBUTE+":" + prefix;
-        }        
-        suggestedNamespaces.put(prefix, tns);        
+        }
+        suggestedNamespaces.put(prefix, tns);
         return prefix;
     }
-    
+
     public boolean isPrefixBeingUsed(String prefix) {
         return getDeclaredNamespaces().
                 get(XMLConstants.XMLNS_ATTRIBUTE+":"+prefix) != null;
     }
-    
+
     public Boolean prefixConflicts(String prefix, String namespaceURI) {
         String n = getDeclaredNamespaces().get(XMLConstants.XMLNS_ATTRIBUTE+":"+prefix);
         if (n == null) {
@@ -1061,13 +1075,13 @@ public class CompletionContextImpl extends CompletionContext {
             return n.equals(namespaceURI);
         }
     }
-    
+
     public boolean isSpecialCompletion() {
         return specialCompletion;
     }
-    
+
     public boolean canReplace(String text) {
-        if(completionType == CompletionType.COMPLETION_TYPE_ELEMENT && 
+        if(completionType == CompletionType.COMPLETION_TYPE_ELEMENT &&
                 element.getType() == Node.ELEMENT_NODE) {
             String name = element.getNode().getNodeName();
             if(name != null && name.equals(typedChars) && text.equals(name))
@@ -1080,10 +1094,10 @@ public class CompletionContextImpl extends CompletionContext {
                     return false;
             }
         }
-        
+
         return true;
     }
-    
+
     /**
      * Returns target namespace for a given prefix.
      */
@@ -1092,24 +1106,24 @@ public class CompletionContextImpl extends CompletionContext {
             if(prefix.equals(cm.getSuggestedPrefix()))
                 return cm.getTargetNamespace();
         }
-        
+
         return null;
     }
-        
+
     /**
      * Issue 108636 : Eliminate existing attibutes.
      */
     List<String> getExistingAttributes() {
         if(existingAttributes != null)
             return existingAttributes;
-        existingAttributes = new ArrayList<String>();
+        existingAttributes = new ArrayList<>();
         try {
             support.runWithSequence(tokenOffset, (TokenSequence ts) -> {
                 if (ts.movePrevious()) {
                     return null;
                 }
                 Token<XMLTokenId> item;
-                
+
                 while(ts.movePrevious()) {
                     item = ts.token();
                     if(item.id() == XMLTokenId.TAG)

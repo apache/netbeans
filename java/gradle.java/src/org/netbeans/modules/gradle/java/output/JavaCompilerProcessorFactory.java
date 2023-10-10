@@ -68,12 +68,16 @@ public final class JavaCompilerProcessorFactory implements OutputProcessorFactor
         private StackTraceProcessor(RunConfig cfg) {
             project = cfg.getProject();
             ProjectSourcesClassPathProvider cpProvider = project.getLookup().lookup(ProjectSourcesClassPathProvider.class);
-            ClassPath[] projectClassPath = cpProvider.getProjectClassPath(ClassPath.EXECUTE);
-            ClassPath[] bootClassPath = cpProvider.getProjectClassPath(ClassPath.BOOT);
-            classPath = ClassPathSupport.createProxyClassPath(
-                    ClassPathSupport.createProxyClassPath(projectClassPath),
-                    ClassPathSupport.createProxyClassPath(bootClassPath)
-            );
+            if (cpProvider != null) {
+                ClassPath[] projectClassPath = cpProvider.getProjectClassPath(ClassPath.EXECUTE);
+                ClassPath[] bootClassPath = cpProvider.getProjectClassPath(ClassPath.BOOT);
+                classPath = ClassPathSupport.createProxyClassPath(
+                        ClassPathSupport.createProxyClassPath(projectClassPath),
+                        ClassPathSupport.createProxyClassPath(bootClassPath)
+                );
+            } else {
+                classPath = ClassPath.EMPTY;
+            }
         }
 
         @Override

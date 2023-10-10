@@ -28,6 +28,7 @@ import java.awt.Color;
 
 
 /** @deprecated Not useful for anything. */
+@Deprecated
 public final class NbDocument$Colors extends org.openide.options.SystemOption {
     public static final String PROP_BREAKPOINT = "NbBreakpointStyle"; // NOI18N
     public static final String PROP_ERROR = "NbErrorStyle"; // NOI18N

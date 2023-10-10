@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.41
+#Version 1.47
 
 CLSS public java.beans.FeatureDescriptor
 cons public init()
@@ -138,8 +138,10 @@ meth public abstract org.netbeans.modules.websvc.jaxws.api.JAXWSView findJAXWSVi
 
 CLSS public abstract org.netbeans.modules.websvc.jaxws.spi.ProjectJAXWSSupport
 cons public init(org.netbeans.api.project.Project,org.netbeans.spi.project.support.ant.AntProjectHelper)
+fld protected final static java.lang.String JAKARTA_EE_VERSION_10 = "jakarta-ee-version-10"
 fld protected final static java.lang.String JAKARTA_EE_VERSION_8 = "jakarta-ee-version-8"
 fld protected final static java.lang.String JAKARTA_EE_VERSION_9 = "jakarta-ee-version-9"
+fld protected final static java.lang.String JAKARTA_EE_VERSION_91 = "jakarta-ee-version-91"
 fld protected final static java.lang.String JAVA_EE_VERSION_15 = "java-ee-version-15"
 fld protected final static java.lang.String JAVA_EE_VERSION_16 = "java-ee-version-16"
 fld protected final static java.lang.String JAVA_EE_VERSION_17 = "java-ee-version-17"

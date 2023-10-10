@@ -42,11 +42,11 @@ import javax.swing.text.Document;
  *   } finally {
  *     doc.atomicUnlock();
  *   }
- *   <PRE>
+ *   </PRE>
  *   <P>The external clients can watch for atomic operations
  *   by registering an listener through
- *   {@link addAtomicLockListener(AtomicLockListener)}
- * @deprecated Use {@link org.netbeans.api.editor.AtomicLockDocument}
+ *   {@link #addAtomicLockListener(AtomicLockListener)}
+ * @deprecated Use {@link org.netbeans.api.editor.document.AtomicLockDocument}
  */
 @Deprecated
 public interface AtomicLockDocument extends Document {

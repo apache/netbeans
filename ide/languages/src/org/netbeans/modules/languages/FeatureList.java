@@ -87,7 +87,7 @@ public class FeatureList {
         return features.get (0);
     }
     
-    private void collectFeatures(List result, String featureName) {
+    private void collectFeatures(List<Feature> result, String featureName) {
         if (features != null) {
             List<Feature> list = features.get(featureName);
             if (list != null) {

@@ -1,0 +1,78 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='31'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='31'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='31'>
+      <Block start='0' end='31'>
+        <!-- Block Statements -->
+        <VarNode name='x' start='6' end='12'>
+          <hasInit/>
+          <isAssignment/>
+          <isBlockScoped/>
+          <isLet/>
+          <!-- VarNode Assignment Dest -->
+          <IdentNode start='6' end='7'>
+            <name>x</name>
+            <isDeclaredHere/>
+            <isInitializedHere/>
+          </IdentNode>
+          <!-- VarNode Init -->
+          <NumberLiteralNode value='14' start='10' end='12'/>
+        </VarNode>
+        <VarNode name='y' start='14' end='19'>
+          <hasInit/>
+          <isAssignment/>
+          <isBlockScoped/>
+          <isLet/>
+          <!-- VarNode Assignment Dest -->
+          <IdentNode start='14' end='15'>
+            <name>y</name>
+            <isDeclaredHere/>
+            <isInitializedHere/>
+          </IdentNode>
+          <!-- VarNode Init -->
+          <NumberLiteralNode value='3' start='18' end='19'/>
+        </VarNode>
+        <VarNode name='z' start='21' end='29'>
+          <hasInit/>
+          <isAssignment/>
+          <isBlockScoped/>
+          <isLet/>
+          <!-- VarNode Assignment Dest -->
+          <IdentNode start='21' end='22'>
+            <name>z</name>
+            <isDeclaredHere/>
+            <isInitializedHere/>
+          </IdentNode>
+          <!-- VarNode Init -->
+          <NumberLiteralNode value='1977' start='25' end='29'/>
+        </VarNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

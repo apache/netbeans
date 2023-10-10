@@ -85,9 +85,7 @@ public class ElementFactoryRegistry {
     }
     
     public void unregister(ElementFactory fac){
-        for (QName q : fac.getElementQNames()) {
-            factories.remove(q);
-        }
+        factories.keySet().removeAll(fac.getElementQNames());
         resetQNameCache();
     }
     
@@ -140,7 +138,7 @@ public class ElementFactoryRegistry {
     
     public void addEmbeddedModelQNames(AbstractDocumentModel embeddedModel) {
         if (knownEmbeddedModelTypes == null) {
-            knownEmbeddedModelTypes = new HashSet();
+            knownEmbeddedModelTypes = new HashSet<>();
         }
         if (! knownEmbeddedModelTypes.contains(embeddedModel.getClass())) {
             knownQNames().addAll(embeddedModel.getQNames());

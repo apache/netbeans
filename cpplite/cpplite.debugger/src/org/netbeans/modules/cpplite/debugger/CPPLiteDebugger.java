@@ -60,6 +60,7 @@ import org.netbeans.modules.cnd.debugger.gdb2.mi.MITList;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MITListItem;
 import org.netbeans.modules.cnd.debugger.gdb2.mi.MIValue;
 import org.netbeans.modules.cpplite.debugger.breakpoints.CPPLiteBreakpoint;
+import org.netbeans.modules.cpplite.debugger.utils.InputStreamWithCloseDetection;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironmentFactory;
 import org.netbeans.modules.nativeexecution.api.pty.Pty;
 import org.netbeans.modules.nativeexecution.api.pty.PtySupport;
@@ -77,6 +78,7 @@ import org.openide.text.Annotatable;
 import org.openide.text.Line;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 
@@ -89,10 +91,8 @@ public final class CPPLiteDebugger {
 
     private static final Logger LOGGER = Logger.getLogger(CPPLiteDebugger.class.getName());
 
-    private CPPLiteDebuggerConfig       configuration;
-    private CPPLiteDebuggerEngineProvider   engineProvider;
-    private ContextProvider             contextProvider;
-    private Process                     debuggee;
+    private final CPPLiteDebuggerEngineProvider   engineProvider;
+    private final ContextProvider       contextProvider;
     private LiteMIProxy                 proxy;
     private volatile Object             currentLine;
     private volatile boolean            suspended = false;
@@ -102,18 +102,15 @@ public final class CPPLiteDebugger {
     private final ThreadsCollector      threadsCollector = new ThreadsCollector(this);
     private volatile CPPThread          currentThread;
     private volatile CPPFrame           currentFrame;
-    private AtomicInteger               exitCode = new AtomicInteger();
+    private final AtomicInteger         exitCode = new AtomicInteger();
 
     public CPPLiteDebugger(ContextProvider contextProvider) {
         this.contextProvider = contextProvider;
-        configuration = contextProvider.lookupFirst(null, CPPLiteDebuggerConfig.class);
         // init engineProvider
         engineProvider = (CPPLiteDebuggerEngineProvider) contextProvider.lookupFirst(null, DebuggerEngineProvider.class);
     }
 
     void setDebuggee(Process debuggee, boolean printObjects) {
-        this.debuggee = debuggee;
-
         CPPLiteInjector injector = new CPPLiteInjector(debuggee.getOutputStream());
 
         this.proxy = new LiteMIProxy(injector, "(gdb)", "UTF-8");
@@ -129,7 +126,7 @@ public final class CPPLiteDebugger {
                 Exceptions.printStackTrace(ex);
             }
             // Debug I/O has finished.
-            finish(false);
+            proxy.close();
         }).start();
 
         proxy.waitStarted();
@@ -148,6 +145,7 @@ public final class CPPLiteDebugger {
         proxy.send(new Command("-exec-run"));
     }
 
+    @NbBundle.Messages("MSG_DebuggerDisconnected=Debugger is disconnected")
     private static class CPPLiteInjector implements MICommandInjector {
 
         private final OutputStream out;
@@ -163,8 +161,14 @@ public final class CPPLiteDebugger {
                 out.write(data.getBytes());
                 out.flush();
             } catch (IOException ex) {
-                throw new IllegalStateException(ex);
+                Exceptions.printStackTrace(Exceptions.attachLocalizedMessage(ex, Bundle.MSG_DebuggerDisconnected()));
             }
+        }
+
+        void close() {
+            try {
+                out.close();
+            } catch (IOException ex) {}
         }
 
         @Override
@@ -384,7 +388,7 @@ public final class CPPLiteDebugger {
             return ;
         }
         breakpointsHandler.dispose();
-        if (sendExit) {
+        if (sendExit && proxy != null) {
             proxy.send(new Command("-gdb-exit"));
         }
         Utils.unmarkCurrent ();
@@ -394,16 +398,39 @@ public final class CPPLiteDebugger {
         LOGGER.fine("finish() done, build finished.");
     }
 
+    private void programExited(int exitCode) {
+        this.exitCode.set(exitCode);
+        proxy.close(); // We close the communication with GDB when the program finishes.
+    }
+
+    private void spawnFinishWhenClosed(Pty pty, InputStreamWithCloseDetection... ins) {
+        new RequestProcessor("GDB finish and pty deallocator").post(() -> {
+            try {
+                for (InputStreamWithCloseDetection in : ins) {
+                    if (in != null) {
+                        in.waitForClose();
+                    }
+                }
+            } catch (InterruptedException ex) {}
+            try {
+                PtySupport.deallocate(pty);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            finish(false);
+        });
+    }
+
     public String readMemory(String address, long offset, int length) {
         MIRecord memory;
         String offsetArg;
         if (offset != 0) {
-            offsetArg = "-o " + offset + " ";
+            offsetArg = "-o " + offset + " \"";
         } else {
-            offsetArg = "";
+            offsetArg = "\"";
         }
         try {
-            memory = sendAndGet("-data-read-memory-bytes " + offsetArg + address + " " + length);
+            memory = sendAndGet("-data-read-memory-bytes " + offsetArg + address + "\" " + length);
         } catch (InterruptedException ex) {
             return null;
         }
@@ -434,7 +461,7 @@ public final class CPPLiteDebugger {
     public List<Location> listLocations(String filePath) {
         MIRecord lines;
         try {
-            lines = sendAndGet("-symbol-list-lines " + filePath);
+            lines = sendAndGet("-symbol-list-lines \"" + filePath + "\"");
         } catch (InterruptedException ex) {
             return null;
         }
@@ -576,14 +603,16 @@ public final class CPPLiteDebugger {
 
     private class LiteMIProxy extends MIProxy {
 
+        private final CPPLiteInjector injector;
         private final CountDownLatch startedLatch = new CountDownLatch(1);
         private final CountDownLatch runningLatch = new CountDownLatch(1);
         private final CountDownLatch runningCommandLatch = new CountDownLatch(0);
         private final Semaphore runningCommandSemaphore = new Semaphore(1);
         private final Object sendLock = new Object();
 
-        LiteMIProxy(MICommandInjector injector, String prompt, String encoding) {
+        LiteMIProxy(CPPLiteInjector injector, String prompt, String encoding) {
             super(injector, prompt, encoding);
+            this.injector = injector;
         }
 
         @Override
@@ -635,7 +664,7 @@ public final class CPPLiteDebugger {
                                         exitCode = 0;
                                     }
                                 }
-                                finish(true, exitCode);
+                                programExited(exitCode);
                             } else {
                                 threadsCollector.remove(threadId);
                             }
@@ -765,6 +794,10 @@ public final class CPPLiteDebugger {
                 Exceptions.printStackTrace(ex);
             }
         }
+
+        void close() {
+            injector.close();
+        }
     }
 
     public interface StateListener extends EventListener {
@@ -828,40 +861,33 @@ public final class CPPLiteDebugger {
         ProcessBuilder processBuilder = new ProcessBuilder(executable);
         setParameters(processBuilder, configuration);
         Process debuggee = processBuilder.start();
-        new RequestProcessor(configuration.getDisplayName() + " (pty deallocator)").post(() -> {    // NOI18N
-            try {
-                while (debuggee.isAlive()) {
-                    try {
-                        debuggee.waitFor();
-                    } catch (InterruptedException ex) {
-                        //ignore...
-                    }
-                }
-            } finally {
-                try {
-                    PtySupport.deallocate(pty);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        });
         debugger.setDebuggee(debuggee, configuration.isPrintObjects());
         AtomicInteger exitCode = debugger.exitCode;
 
         return new Process() {
+
+            private InputStreamWithCloseDetection std;
+            private InputStreamWithCloseDetection err;
+
             @Override
             public OutputStream getOutputStream() {
                 return pty.getOutputStream();
             }
 
             @Override
-            public InputStream getInputStream() {
-                return pty.getInputStream();
+            public synchronized InputStream getInputStream() {
+                if (std == null) {
+                    std = new InputStreamWithCloseDetection(pty.getInputStream());
+                }
+                return std;
             }
 
             @Override
-            public InputStream getErrorStream() {
-                return pty.getErrorStream();
+            public synchronized InputStream getErrorStream() {
+                if (err == null) {
+                    err = new InputStreamWithCloseDetection(pty.getErrorStream());
+                }
+                return err;
             }
 
             @Override
@@ -872,12 +898,24 @@ public final class CPPLiteDebugger {
             @Override
             public int waitFor() throws InterruptedException {
                 debuggee.waitFor();
+                // We do not plan to write to PTY any more, close its input,
+                // PTY will close its output then.
+                try {
+                    pty.getOutputStream().close();
+                } catch (IOException ex) {}
+                debugger.spawnFinishWhenClosed(pty, std, err);
                 return exitCode.get();
             }
 
             @Override
             public int exitValue() {
-                return debuggee.exitValue();
+                int debugExit = debuggee.exitValue();
+                int programExit = exitCode.get();
+                if (programExit != 0) {
+                    return programExit;
+                } else {
+                    return debugExit;
+                }
             }
 
             @Override

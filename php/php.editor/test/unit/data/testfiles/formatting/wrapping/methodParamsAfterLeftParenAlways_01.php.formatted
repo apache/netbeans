@@ -68,7 +68,6 @@ class Test {
             string $param3,): int {
         
     }
-
 }
 
 $labmda = function () {

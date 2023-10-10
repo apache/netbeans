@@ -87,6 +87,7 @@ public class ButtonPopupSwitcherTestHid extends TestCase {
         frame.getContentPane().setLayout(new FlowLayout());
         JButton pBut = new JButton("Popup");
         pBut.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent e) {
                 pButAction(e);
             }

@@ -230,7 +230,8 @@ public class InplaceEditorNoModifyOnTextChangeContractComboEditorTest extends Nb
         
         public TagsEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[] {"a","b","c","d","Value"};
         }
@@ -238,11 +239,13 @@ public class InplaceEditorNoModifyOnTextChangeContractComboEditorTest extends Nb
         public void attachEnv(PropertyEnv env) {
             this.env = env;
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }

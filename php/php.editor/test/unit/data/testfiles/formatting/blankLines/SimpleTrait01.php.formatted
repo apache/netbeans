@@ -9,7 +9,6 @@ trait SimpleClass {
     public function displayVar() {
         echo $this->var;
     }
-
 }
 
 ?>

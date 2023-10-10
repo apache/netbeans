@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2012, 2020 International Business Machines Corp. and others
+
+   See the NOTICE file distributed with this work for additional information
+   regarding copyright ownership. Licensed under the Apache License,
+   Version 2.0 (the "License"); you may not use this file except in compliance
+   with the License. You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   SPDX-License-Identifier: Apache-2.0
+ -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
+    targetNamespace="https://jakarta.ee/xml/ns/jakartaee"
+    xmlns:jsl="https://jakarta.ee/xml/ns/jakartaee" version="2.0">
+    <xs:annotation>
+        <xs:documentation>
+            Job Specification Language (JSL) specifies a job,
+            its steps, and directs their execution.
+            JSL also can be referred to as "Job XML".
+        </xs:documentation>
+    </xs:annotation>
+
+    <xs:simpleType name="batchVersionType">
+      <xs:annotation>
+        <xs:documentation>
+
+            Defines a decimal type used for versioning documents
+            defined via this scheam.  Intended to be identical
+            to the "dewey-versionType" dewey decimal restriction
+            type defined in
+            https://jakarta.ee/xml/ns/jakartaee/jakartaee_9.xsd
+            but without the need to include that schema definition
+            file.
+
+        </xs:documentation>
+      </xs:annotation>
+
+      <xs:restriction base="xs:token">
+        <xs:pattern value="\.?[0-9]+(\.[0-9]+)*"/>
+      </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="artifactRef">
+        <xs:annotation>
+            <xs:documentation>
+                This is a helper type. Though it is not otherwise
+                called out by this name
+                in the specification, it captures the fact
+                that the xs:string value refers
+                to a batch artifact, across numerous
+                other JSL type definitions.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string" />
+    </xs:simpleType>
+
+    <xs:complexType name="Job">
+        <xs:annotation>
+            <xs:documentation>
+                The type of a job definition, whether concrete or
+                abstract. This is the type of the root element of any JSL document.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        The job-level properties, which are accessible
+                        via the JobContext.getProperties() API in a batch artifact.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="listeners" type="jsl:Listeners"
+                minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Note that "listeners" sequence order in XML does
+                        not imply order of execution by
+                        the batch runtime, per the
+                        specification.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="decision" type="jsl:Decision" />
+                <xs:element name="flow" type="jsl:Flow" />
+                <xs:element name="split" type="jsl:Split" />
+                <xs:element name="step" type="jsl:Step" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="version" use="required" type="jsl:batchVersionType" fixed="2.0" />
+        <xs:attribute name="id" use="required" type="xs:ID" />
+        <xs:attribute name="restartable" use="optional" type="xs:string" />
+    </xs:complexType>
+
+    <xs:element name="job" type="jsl:Job">
+        <xs:annotation>
+            <xs:documentation>
+                The definition of an job, whether concrete or
+                abstract. This is the
+                type of the root element of any JSL document.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="Listener">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+    <xs:complexType name="Split">
+        <xs:sequence>
+            <xs:element name="flow" type="jsl:Flow" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="id" use="required" type="xs:ID" />
+        <xs:attribute name="next" use="optional" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="Flow">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="decision" type="jsl:Decision" />
+                <xs:element name="flow" type="jsl:Flow" />
+                <xs:element name="split" type="jsl:Split" />
+                <xs:element name="step" type="jsl:Step" />
+            </xs:choice>
+            <xs:group ref="jsl:TransitionElements" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="id" use="required" type="xs:ID" />
+        <xs:attribute name="next" use="optional" type="xs:string" />
+    </xs:complexType>
+
+    <xs:group name="TransitionElements">
+        <xs:annotation>
+            <xs:documentation>
+                This grouping provides allows for the reuse of the
+                'end', 'fail', 'next', 'stop' element sequences which
+                may appear at the end of a 'step', 'flow', 'split' or 'decision'.
+                The term 'TransitionElements' does not formally appear in the spec, it is
+                a schema convenience.            
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="end" type="jsl:End" />
+            <xs:element name="fail" type="jsl:Fail" />
+            <xs:element name="next" type="jsl:Next" />
+            <xs:element name="stop" type="jsl:Stop" />
+        </xs:choice>
+    </xs:group>
+
+    <xs:complexType name="Decision">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+            <xs:group ref="jsl:TransitionElements" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="id" use="required" type="xs:ID" />
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+    <xs:attributeGroup name="TerminatingAttributes">
+        <xs:attribute name="on" use="required" type="xs:string" />
+        <xs:attribute name="exit-status" use="optional" type="xs:string" />
+    </xs:attributeGroup>
+
+    <xs:complexType name="Fail">
+        <xs:attributeGroup ref="jsl:TerminatingAttributes" />
+    </xs:complexType>
+
+    <xs:complexType name="End">
+        <xs:attributeGroup ref="jsl:TerminatingAttributes" />
+    </xs:complexType>
+
+    <xs:complexType name="Stop">
+        <xs:attributeGroup ref="jsl:TerminatingAttributes" />
+        <xs:attribute name="restart" use="optional" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="Next">
+        <xs:attribute name="on" use="required" type="xs:string" />
+        <xs:attribute name="to" use="required" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="CheckpointAlgorithm">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+    <xs:complexType name="ExceptionClassFilter">
+        <xs:sequence>
+            <xs:element name="include" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence />
+                    <xs:attribute name="class" use="required" type="xs:string" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="exclude" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence />
+                    <xs:attribute name="class" use="required" type="xs:string" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Step">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+            <xs:element name="listeners" type="jsl:Listeners"
+                minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Note that "listeners" sequence order in XML does
+                        not imply order of execution by
+                        the batch runtime, per the
+                        specification.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice minOccurs="0" maxOccurs="1"> 
+                <xs:element name="batchlet" type="jsl:Batchlet" />
+                <xs:element name="chunk" type="jsl:Chunk" />
+            </xs:choice>
+            <xs:element name="partition" type="jsl:Partition"
+                minOccurs="0" maxOccurs="1" />
+            <xs:group ref="jsl:TransitionElements" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="id" use="required" type="xs:ID" />
+        <xs:attribute name="start-limit" use="optional" type="xs:string" />
+        <xs:attribute name="allow-start-if-complete" use="optional"
+            type="xs:string" />
+        <xs:attribute name="next" use="optional" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="Batchlet">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+    <xs:complexType name="Chunk">
+        <xs:sequence>
+            <xs:element name="reader" type="jsl:ItemReader" />
+            <xs:element name="processor" type="jsl:ItemProcessor"
+                minOccurs="0" maxOccurs="1" />
+            <xs:element name="writer" type="jsl:ItemWriter" />
+            <xs:element name="checkpoint-algorithm" type="jsl:CheckpointAlgorithm"
+                minOccurs="0" maxOccurs="1" />
+            <xs:element name="skippable-exception-classes" type="jsl:ExceptionClassFilter"
+                minOccurs="0" maxOccurs="1" />
+            <xs:element name="retryable-exception-classes" type="jsl:ExceptionClassFilter"
+                minOccurs="0" maxOccurs="1" />
+            <xs:element name="no-rollback-exception-classes" type="jsl:ExceptionClassFilter"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="checkpoint-policy" use="optional"
+            type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Specifies the checkpoint policy that governs
+                    commit behavior for this chunk.
+                    Valid values are: "item" or
+                    "custom". The "item" policy means the
+                    chunk is checkpointed after a
+                    specified number of items are
+                    processed. The "custom" policy means
+                    the chunk is checkpointed
+                    according to a checkpoint algorithm
+                    implementation. Specifying
+                    "custom" requires that the
+                    checkpoint-algorithm element is also
+                    specified. It is an optional
+                    attribute. The default policy is
+                    "item". However, we chose not to define
+                    a schema-specified default for this attribute.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="item-count" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Specifies the number of items to process per chunk
+                    when using the item
+                    checkpoint policy. It must be valid XML integer.
+                    It is an optional
+                    attribute. The default is 10. The item-count
+                    attribute is ignored
+                    for "custom" checkpoint policy. However, to
+                    make it easier for implementations to support JSL inheritance
+                    we
+                    abstain from defining a schema-specified default for this
+                    attribute.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="time-limit" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Specifies the amount of time in seconds before
+                    taking a checkpoint for the
+                    item checkpoint policy. It must be valid
+                    XML integer. It is an
+                    optional attribute. The default is 0, which
+                    means no limit. However, to
+                    make it easier for implementations to
+                    support JSL inheritance
+                    we abstain from defining a schema-specified
+                    default for this attribute.
+                    When a value greater than zero is
+                    specified, a checkpoint is taken when
+                    time-limit is reached or
+                    item-count items have been processed,
+                    whichever comes first. The
+                    time-limit attribute is ignored for
+                    "custom" checkpoint policy.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="skip-limit" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Specifies the number of exceptions a step will
+                    skip if any configured
+                    skippable exceptions are thrown by chunk
+                    processing. It must be a
+                    valid XML integer value. It is an optional
+                    attribute. The default
+                    is no limit.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="retry-limit" use="optional" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    Specifies the number of times a step will retry if
+                    any configured retryable
+                    exceptions are thrown by chunk processing.
+                    It must be a valid XML
+                    integer value. It is an optional attribute.
+                    The default is no
+                    limit.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="ItemReader">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+    <xs:complexType name="ItemProcessor">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+    <xs:complexType name="ItemWriter">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+    <xs:complexType name="Property">
+        <xs:attribute name="name" type="xs:string" use="required" />
+        <xs:attribute name="value" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="Properties">
+        <xs:sequence>
+            <xs:element name="property" type="jsl:Property" maxOccurs="unbounded" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="partition" use="optional" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="Listeners">
+        <xs:sequence>
+            <xs:element name="listener" type="jsl:Listener" maxOccurs="unbounded" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Partition">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="1"> 
+                <xs:element name="mapper" type="jsl:PartitionMapper" />
+                <xs:element name="plan" type="jsl:PartitionPlan" />
+            </xs:choice>
+            <xs:element name="collector" type="jsl:Collector"
+                minOccurs="0" maxOccurs="1" />
+            <xs:element name="analyzer" type="jsl:Analyzer" minOccurs="0"
+                maxOccurs="1" />
+            <xs:element name="reducer" type="jsl:PartitionReducer"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PartitionPlan">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="partitions" use="optional" type="xs:string" />
+        <xs:attribute name="threads" use="optional" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="PartitionMapper">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+    <xs:complexType name="Collector">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+    <xs:complexType name="Analyzer">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+    <xs:complexType name="PartitionReducer">
+        <xs:sequence>
+            <xs:element name="properties" type="jsl:Properties"
+                minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="ref" use="required" type="jsl:artifactRef" />
+    </xs:complexType>
+
+</xs:schema>

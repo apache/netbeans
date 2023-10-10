@@ -297,6 +297,7 @@ class PSheet extends JPanel implements MouseListener {
     /**
      * Overridden to handle our layout requirements
      */
+    @Override
     public void doLayout() {
         Component[] c = getComponents();
 
@@ -327,6 +328,7 @@ class PSheet extends JPanel implements MouseListener {
     }
 
     /** Transfers focus to the table */
+    @Override
     public void requestFocus() {
         JScrollPane jsc = findScrollPane();
 
@@ -336,6 +338,7 @@ class PSheet extends JPanel implements MouseListener {
     }
 
     /** Transfers focus to the table */
+    @Override
     public boolean requestFocusInWindow() {
         JScrollPane jsc = findScrollPane();
 
@@ -484,6 +487,7 @@ class PSheet extends JPanel implements MouseListener {
      * add/remove things, or even more simply, call setState(), which handles
      * that.
      */
+    @Override
     protected void addImpl(Component comp, Object constraints, int idx) {
         if (
             !(comp instanceof JSplitPane || comp instanceof JScrollPane || comp instanceof DescriptionComponent ||
@@ -605,6 +609,7 @@ class PSheet extends JPanel implements MouseListener {
      * (for convenience), or with a component that is a child of a child of
      * this container.
      */
+    @Override
     public void remove(Component c) {
         if (c == null) {
             return;

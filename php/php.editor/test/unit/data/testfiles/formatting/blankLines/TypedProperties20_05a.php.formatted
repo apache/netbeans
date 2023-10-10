@@ -27,5 +27,4 @@ class Simple {
     // comment 3
 
     public \Foo\MyClass $field2;
-
 }

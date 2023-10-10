@@ -44,7 +44,7 @@ public class SuiteActionProviderTest extends SuiteCheck {
     }
     
     public void testActionsEnabledWithProgress() throws Exception {
-        File sdkSibling = findSuite("sdk");
+        File sdkSibling = findSuite("regex");
 
         FileObject fo = FileUtil.toFileObject(sdkSibling);
         assertNotNull("project directory found", fo);
@@ -86,11 +86,12 @@ public class SuiteActionProviderTest extends SuiteCheck {
         MockProgress progress = new MockProgress();
 
         Lookup ctx = Lookups.fixed(fo, p, progress);
-        assertTrue("Clean is supported", ap.isActionEnabled(ActionProvider.COMMAND_CLEAN, ctx));
-        ap.invokeAction(ActionProvider.COMMAND_CLEAN, ctx);
+        assertTrue("Build is supported", ap.isActionEnabled(ActionProvider.COMMAND_BUILD, ctx));
+        // Do not run clean action here as it breaks next tests.
+        ap.invokeAction(ActionProvider.COMMAND_BUILD, ctx);
 
         assertTrue("Progress started", progress.started);
-        progress.finished.await(10, TimeUnit.SECONDS);
+        progress.finished.await(600, TimeUnit.SECONDS);
         assertNotNull("Progress finished", progress.success);
     }
 

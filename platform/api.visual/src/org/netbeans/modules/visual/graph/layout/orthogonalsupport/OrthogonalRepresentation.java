@@ -149,9 +149,7 @@ public class OrthogonalRepresentation<N, E> {
                 return;
             }
 
-            for (Dart d : removedDarts) {
-                tupleMap.remove(d);
-            }
+            tupleMap.keySet().removeAll(removedDarts);
 
             // Create the new tuple
             Dart newDart = face.getDart(edge);

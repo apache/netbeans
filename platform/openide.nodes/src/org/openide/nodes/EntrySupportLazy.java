@@ -499,8 +499,8 @@ class EntrySupportLazy extends EntrySupport {
     }
 
     /** Updates the order of entries.
-     * @param current current state of nodes
-     * @param entries new set of entries
+     * @param stateHolder current state of nodes
+     * @param newEntries new set of entries
      * @return list of infos that should be added
      */
     private List<Entry> updateOrder(EntrySupportLazyState[] stateHolder, Collection<? extends Entry> newEntries) {
@@ -588,7 +588,7 @@ class EntrySupportLazy extends EntrySupport {
     }
 
     /** @param added added or removed
-     *  @param indices list of integers with indexes that changed
+     *  @param idxs list of integers with indexes that changed
      */
     protected void fireSubNodesChangeIdx(boolean added, int[] idxs, Entry sourceEntry, List<Node> current, List<Node> previous) {
         if (children.parent != null && children.getEntrySupport() == this) {

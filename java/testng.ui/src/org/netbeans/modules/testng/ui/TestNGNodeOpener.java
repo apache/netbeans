@@ -59,7 +59,7 @@ public final class TestNGNodeOpener extends NodeOpener {
 
     public void openTestsuite(TestsuiteNode node) {
         TestSuite suite = node.getSuite();
-        if ((suite != null) && (suite instanceof TestSuite)) {
+        if (suite instanceof TestSuite) {
             final FileObject fo = ((TestNGTestSuite) suite).getSuiteFO();
             if (fo != null) {
                 int[] location = XmlSuiteHandler.getSuiteLocation(fo, suite.getName());

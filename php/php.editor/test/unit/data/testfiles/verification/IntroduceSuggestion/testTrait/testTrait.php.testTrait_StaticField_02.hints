@@ -1,0 +1,4 @@
+TraitA::$staticField2;^
+---------------------
+HINT:Introduce Hint
+FIX:Create Field "$staticField2" in Trait "TraitA" (testTrait.php)

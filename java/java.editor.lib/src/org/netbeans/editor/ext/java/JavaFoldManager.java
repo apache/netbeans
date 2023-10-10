@@ -42,7 +42,9 @@ public abstract class JavaFoldManager implements FoldManager {
     
     public static final FoldType JAVADOC_FOLD_TYPE = JavaElementFoldManager.JAVADOC_FOLD_TYPE;
 
-    public static final FoldType CODE_BLOCK_FOLD_TYPE = JavaElementFoldManager.CODE_BLOCK_FOLD_TYPE;
+    public static final FoldType CODE_BLOCK_FOLD_TYPE = JavaElementFoldManager.METHOD_BLOCK_FOLD_TYPE;
+
+    public static final FoldType METHOD_BLOCK_FOLD_TYPE = JavaElementFoldManager.METHOD_BLOCK_FOLD_TYPE;
     
     public static final FoldType INNERCLASS_TYPE = JavaElementFoldManager.INNERCLASS_TYPE;
     
@@ -68,7 +70,11 @@ public abstract class JavaFoldManager implements FoldManager {
 
     @Deprecated
     public static final FoldTemplate CODE_BLOCK_FOLD_TEMPLATE
-        = new FoldTemplate(CODE_BLOCK_FOLD_TYPE, CODE_BLOCK_FOLD_DESCRIPTION, 1, 1);
+            = new FoldTemplate(CODE_BLOCK_FOLD_TYPE, CODE_BLOCK_FOLD_DESCRIPTION, 1, 1);
+
+    @Deprecated
+    public static final FoldTemplate METHOD_BLOCK_FOLD_TEMPLATE
+            = new FoldTemplate(METHOD_BLOCK_FOLD_TYPE, CODE_BLOCK_FOLD_DESCRIPTION, 1, 1);
 
     @Deprecated
     public static final FoldTemplate INNER_CLASS_FOLD_TEMPLATE

@@ -21,6 +21,7 @@ package org.netbeans.modules.debugger.jpda.visual.breakpoints;
 import com.sun.jdi.ObjectReference;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
@@ -144,7 +145,7 @@ public abstract class ComponentBreakpoint extends Breakpoint {
     void setPrintText(String printText) {
         String old;
         synchronized (this) {
-            if (printText == this.printText || (printText != null && printText.equals(this.printText))) {
+            if (Objects.equals(printText, this.printText)) {
                 return;
             }
             old = this.printText;

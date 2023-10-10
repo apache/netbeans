@@ -22,7 +22,6 @@ package org.netbeans.modules.j2ee.persistence.action;
 import org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator.ApplicationManagedResourceTransactionInJ2SE;
 import org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator.EntityManagerGenerationStrategy;
 import java.io.File;
-import junit.framework.*;
 import org.netbeans.modules.j2ee.metadata.model.support.TestUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

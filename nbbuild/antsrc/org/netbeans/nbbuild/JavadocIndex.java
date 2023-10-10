@@ -24,13 +24,18 @@ import java.io.File;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.*;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 
 /** Generates a file with index of all files.
  *
@@ -40,7 +45,7 @@ public class JavadocIndex extends Task {
     private File target;
     private FileSet set;
     private Map<String,List<Clazz>> classes = new HashMap<>(101);
-    
+
     /** The file to generate the index to.
      */
     public void setTarget (File f) {
@@ -49,13 +54,14 @@ public class JavadocIndex extends Task {
 
     /** List of indexes to search in.
      */
-    public void addPackagesList(FileSet set) throws BuildException {        
+    public void addPackagesList(FileSet set) throws BuildException {
         if (this.set != null) {
             throw new BuildException ("Package list can be associated only once");
         }
         this.set = set;
     }
-    
+
+    @Override
     public void execute() throws BuildException {
         if (target == null) {
             throw new BuildException ("Target must be set"); // NOI18N
@@ -63,7 +69,7 @@ public class JavadocIndex extends Task {
         if (set == null) {
             throw new BuildException ("Set of files must be provided: " + set); // NOI18N
         }
-        
+
         DirectoryScanner scan =  set.getDirectoryScanner(this.getProject());
         File bdir = scan.getBasedir();
         for (String n : scan.getIncludedFiles()) {
@@ -85,90 +91,72 @@ public class JavadocIndex extends Task {
         } catch (IOException ex) {
             throw new BuildException (ex);
         }
-    }    
+    }
 
-    
-    
+
+
     /** Stores parsed info in classes variable */
     private void parseForClasses (File f) throws BuildException {
         log ("Parsing file: " + f, Project.MSG_DEBUG);
         try {
-            BufferedReader is = new BufferedReader (new FileReader (f));
-            
-            
             String urlPrefix;
             try {
                 String fullDir = f.getParentFile ().getCanonicalPath ();
                 String fullTgz = target.getParentFile ().getCanonicalPath ();
-                
+
                 if (!fullDir.startsWith (fullTgz)) {
                     throw new BuildException ("The directory of target file must be above all parsed files. Directory: " + fullTgz + " the file dir: " + fullDir);
                 }
-                
+
                 urlPrefix = fullDir.substring (fullTgz.length () + 1);
             } catch (IOException ex) {
                 throw new BuildException (ex);
             }
-            
-            // parse following string
-            // <A HREF="org/openide/xml/XMLUtil.html" title="class in org.openide.xml">XMLUtil</A
-            String mask = ".*<A HREF=\"([^\"]*)\" title=\"(class|interface|annotation) in ([^\"]*)\"[><I]*>([\\p{Alnum}\\.]*)</.*A>.*";
-            Pattern p = Pattern.compile (mask, Pattern.CASE_INSENSITIVE);
-            // group 1: relative URL to a class or interface
-            // group 2: interface, class or annotation string
-            // group 3: name of package
-            // group 4: name of class
-            
+
+            Document doc = Jsoup.parse(f, "UTF-8", "");
+            Elements ul = doc.getElementsByTag("ul");
+            // should be only one list
+            if (ul.size() != 1) {
+                throw new BuildException("File is not valid for parsing classes : " + f);
+            }
             int matches = 0;
-            for (;;) {
-                String line = is.readLine ();
-                if (line == null) break;
-                
-                Matcher m = p.matcher (line);
-                if (m.matches ()) {
+            for (Element li : ul.first().getElementsByTag("li")) {
+                // class Name is the only text in all the tag
+                String className = li.text();
+                // we need anchor to get the inforation
+                Element anchor = li.getElementsByTag("a").first();
+                // left of title is type of element (interface,annotation,class,enum ....)
+                // right of title is package of element
+                String[] title = anchor.attr("title").split(" in ");
+                if (title.length == 2) {
                     matches++;
-                    log ("Accepted line: " + line, Project.MSG_DEBUG);
-                    
-                    if (m.groupCount () != 4) {
-                        StringBuffer sb = new StringBuffer ();
-                        sb.append ("Line " + line + " has " + m.groupCount () + " groups and not four");
-                        for (int i = 0; i <= m.groupCount (); i++) {
-                            sb.append ("\n  " + i + " grp: " + m.group (i));
-                        }
-                        throw new BuildException (sb.toString ());
-                    }
-                   
-                    Clazz c = new Clazz (
-                        m.group (3),
-                        m.group (4),
-                        "interface".equals (m.group (2)),
-                        urlPrefix + "/" + m.group (1)
+                    Clazz c = new Clazz(
+                            title[1].trim(),
+                            className,
+                            "interface".equals(title[0].trim()),
+                            urlPrefix + "/" + anchor.attr("href")
                     );
-                    if (c.name == null) throw new NullPointerException ("Null name for " + line + "\nclass: " + c);
-                    if (c.name.length () == 0) throw new IllegalStateException ("Empty name for " + line + "\nclass: " + c);
-                    
-                    log ("Adding class: " + c, Project.MSG_DEBUG);
-                    
+                    if (c.name.isEmpty()) {
+                        throw new IllegalStateException("Empty name for " + li.html() + "\nclass: " + c);
+                    }
+                    log("Adding class: " + c, Project.MSG_DEBUG);
                     List<Clazz> l = classes.get(c.pkg);
                     if (l == null) {
                         l = new ArrayList<>();
                         classes.put (c.pkg, l);
                     }
                     l.add (c);
-                } else {
-                    log ("Refused line: " + line, Project.MSG_DEBUG);
                 }
             }
-            
             if (matches == 0) {
                 throw new BuildException ("No classes defined in file: " + f);
             }
-            
+
         } catch (java.io.IOException ex) {
             throw new BuildException (ex);
         }
     }
-    
+
     private void printClassesAsHtml (PrintStream ps) {
         ps.println ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">");
         ps.println ("<HTML>\n<HEAD><TITLE>List of All Classes</TITLE></HEAD>");
@@ -212,7 +200,7 @@ public class JavadocIndex extends Task {
         }
         ps.println ("</classes>");
     }
-    
+
     /** An information about one class in api */
     private static final class Clazz extends Object implements Comparable<Clazz> {
         public final String pkg;
@@ -225,12 +213,14 @@ public class JavadocIndex extends Task {
             this.isInterface = isInterface;
             this.url = url;
         }
-        
+
         /** Compares based on class names */
+        @Override
         public int compareTo(Clazz o) {
             return name.compareTo(o.name);
         }
 
+        @Override
         public String toString () {
             return "PKG: " + pkg + " NAME: " + name + " INTERFACE: " + isInterface + " url: " + url;
         }

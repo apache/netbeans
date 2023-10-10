@@ -43,7 +43,7 @@ public class ServerUtilTest extends CommonTest {
      * <p/>
      * @param server Glassfish server instance to be tested.
      */
-    public void doTestGetServerVersion(final GlassFishServer server) {
+    private void doTestGetServerVersion(final GlassFishServer server) {
         GlassFishVersion version = ServerUtils.getServerVersion(
                 server.getServerHome());
         assertNotNull(version);
@@ -100,7 +100,7 @@ public class ServerUtilTest extends CommonTest {
         assertTrue(items != null && items.length > 0);
         for (String item : items) {
             try {
-                Integer.parseInt(item);
+                Integer.valueOf(item);
             } catch (NumberFormatException nfe) {
                 fail("Version component is not a number.");
             }

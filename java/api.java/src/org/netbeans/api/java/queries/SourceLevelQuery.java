@@ -128,7 +128,7 @@ public class SourceLevelQuery {
      * <code>javac</code> compiler .
      * @param javaFile Java source file, Java package or source folder in question
      * @return a {@link Result} object encapsulating the source level of the Java file. Results created for source
-     * levels provided by the {@link SourceLevelQueryImplementation} do not support listening. Use {@link Result#supportsChanges()}
+     * levels provided by the {@link org.netbeans.spi.java.queries.SourceLevelQueryImplementation} do not support listening. Use {@link Result#supportsChanges()}
      * to check if the result supports listening.
      * @since 1.30
      */
@@ -378,7 +378,7 @@ public class SourceLevelQuery {
          * Returns true if the result support updates and client may
          * listen on it. If false client should always ask again to
          * obtain current value. The results created for values returned
-         * by the {@link SourceLevelQueryImplementation} do not support
+         * by the {@link org.netbeans.spi.java.queries.SourceLevelQueryImplementation} do not support
          * listening.
          * @return true if the result supports changes and listening
          */

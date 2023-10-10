@@ -40,8 +40,7 @@ public class LTSes {
             case NONE:
             case NOT_FOUND:
             default:
-                ui = "";
-                break;
+                return value.toString();
         }
         return String.format("%s (%s)", value, ui);
     }

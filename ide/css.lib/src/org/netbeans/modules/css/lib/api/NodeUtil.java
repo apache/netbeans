@@ -26,6 +26,8 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.netbeans.modules.css.lib.TokenNode;
 
 /**
@@ -134,7 +136,7 @@ public final class NodeUtil {
 
     public static Node getAncestorByType(Node node, final NodeType type) {
         AtomicReference<Node> found = new AtomicReference<>();
-        NodeVisitor visitor = new NodeVisitor<AtomicReference<Node>>(found) {
+        NodeVisitor<AtomicReference<Node>> visitor = new NodeVisitor<AtomicReference<Node>>(found) {
 
             @Override
             public boolean visit(Node node) {
@@ -283,7 +285,7 @@ public final class NodeUtil {
             if (caseInsensitive) {
                 nodeName = nodeName.toLowerCase(Locale.ENGLISH);
             }
-            String sindex = indexDelim >= 0 ? token.substring(indexDelim + 1, token.length()) : "0";
+            String sindex = indexDelim >= 0 ? token.substring(indexDelim + 1) : "0";
             int index = Integer.parseInt(sindex);
 
             int count = 0;
@@ -391,5 +393,44 @@ public final class NodeUtil {
         visitor.visitChildren(node);
         
         return visitor.getResult().get();
+    }
+
+    // CSS escapes are always prefixed with a backslash. The backslash is either
+    // followed by 1-6 hexadecimal characters (0-9, A-F, a-f) and a trailing
+    // whitespace character, that is required, if the following charachter is
+    // from the hexadecimal range and not all 6 hexadecimal characters are used.
+    // The alternative is a single character, that is not from the list of
+    // hexadecimal characters.
+    private static final Pattern ESCAPE = Pattern.compile("\\\\(?:(?:(?<hex>[0-9a-fA-F]{1,6})[\n\r\f\t ]?)|(?<direct>[^\n\r0-9A-Fa-f]))");
+    public static String unescape(CharSequence image) {
+        if(image == null) {
+            return null;
+        }
+        Matcher m = ESCAPE.matcher(image);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            if (m.group("hex") != null) {
+                String hexString = m.group(1);
+                try {
+                    int codePoint = Integer.parseInt(hexString, 16);
+                    if (Character.isBmpCodePoint(codePoint)) {
+                        m.appendReplacement(sb, "");
+                        sb.append((char) codePoint);
+                    } else if (Character.isValidCodePoint(codePoint)) {
+                        m.appendReplacement(sb, "");
+                        sb.append(Character.highSurrogate(codePoint));
+                        sb.append(Character.lowSurrogate(codePoint));
+                    } else {
+                        m.appendReplacement(sb, m.group());
+                    }
+                } catch (NumberFormatException ex) {
+                    return m.group();
+                }
+            } else {
+                m.appendReplacement(sb, Matcher.quoteReplacement(m.group("direct")));
+            }
+        }
+        m.appendTail(sb);
+        return sb.toString();
     }
 }

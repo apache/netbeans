@@ -224,8 +224,8 @@ public class JavaEEWSOpenHook extends ProjectOpenedHook {
                 
                 // remove old services
                 boolean needToSave = false;
-                for (String key : oldServices.keySet()) {
-                    jaxWsModel.removeService(oldServices.get(key).getName());
+                for (Service service : oldServices.values()) {
+                    jaxWsModel.removeService(service.getName());
                     needToSave = true;
                 }
                 Set<String> removedFromWsdl = new HashSet<String>( 
@@ -240,10 +240,12 @@ public class JavaEEWSOpenHook extends ProjectOpenedHook {
 
                 
                 // add new services
-                for (String key : services.keySet()) { // services from WSDL
+                for (Map.Entry<String, String> it : services.entrySet()) { // services from WSDL
+                    String key = it.getKey();
+
                     if (key.startsWith("fromWsdl:")) { //NOI18N
                         Service oldServiceFromWsdl = oldServicesFromWsdl.get(key);
-                        String newImplClass = services.get(key);
+                        String newImplClass = it.getValue();
                         if (oldServiceFromWsdl != null && !oldServiceFromWsdl.getImplementationClass().equals(newImplClass)) {
                             oldServiceFromWsdl.setImplementationClass(newImplClass);
                             needToSave = true;
@@ -252,7 +254,7 @@ public class JavaEEWSOpenHook extends ProjectOpenedHook {
                         // add only if doesn't exists
                         if (jaxWsModel.findServiceByImplementationClass(key) == null) {
                             try {
-                                jaxWsModel.addService(services.get(key), key);
+                                jaxWsModel.addService(it.getValue(), key);
                                 needToSave = true;
                             } catch (ServiceAlreadyExistsExeption ex) {
                             // TODO: need to handle this

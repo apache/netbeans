@@ -20,8 +20,11 @@ package org.netbeans.modules.java.source.parsing;
 
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticFlag;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.tools.Diagnostic;
 import org.netbeans.modules.java.source.parsing.CompilationInfoImpl.RichDiagnostic;
 
@@ -30,6 +33,8 @@ import org.netbeans.modules.java.source.parsing.CompilationInfoImpl.RichDiagnost
  * @author lahvac
  */
 public class Hacks {
+    private static final Logger LOG = Logger.getLogger(Hacks.class.getName());
+
     public static boolean isSyntaxError(Diagnostic<?> d) {
         JCDiagnostic jcd = getJCDiagnostic(d);
         if (jcd == null) {
@@ -70,6 +75,14 @@ public class Hacks {
             return ((JCDiagnostic)d);
         } else if (d instanceof RichDiagnostic && ((RichDiagnostic) d).getDelegate() instanceof JCDiagnostic) {
             return (JCDiagnostic)((RichDiagnostic)d).getDelegate();
+        } else if ("org.netbeans.modules.java.source.parsing.CompilationInfoImpl$DiagnosticListenerImpl$D".equals(d.getClass().getName())) {
+            try {
+                Field delegate = d.getClass().getDeclaredField("delegate");
+                delegate.setAccessible(true);
+                return getJCDiagnostic((Diagnostic<?>) delegate.get(d));
+            } catch (Exception ex) {
+                LOG.log(Level.FINE, null, ex);
+            }
         }
         return null;
     }

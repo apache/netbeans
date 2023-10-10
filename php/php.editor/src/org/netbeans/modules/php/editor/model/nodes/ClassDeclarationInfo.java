@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.editor.model.nodes;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -93,14 +94,28 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
     }
 
     public PhpModifiers getAccessModifiers() {
-        Modifier modifier = getOriginalNode().getModifier();
-
-        if (modifier.equals(Modifier.ABSTRACT)) {
-            return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC, PhpModifiers.ABSTRACT);
-        } else if (modifier.equals(Modifier.FINAL)) {
-            return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC, PhpModifiers.FINAL);
+        List<Integer> phpModifiers = new ArrayList<>(getOriginalNode().getModifiers().keySet().size());
+        phpModifiers.add(PhpModifiers.PUBLIC);
+        for (Modifier modifier : getOriginalNode().getModifiers().keySet()) {
+            switch (modifier) {
+                case ABSTRACT:
+                    phpModifiers.add(PhpModifiers.ABSTRACT);
+                    break;
+                case FINAL:
+                    phpModifiers.add(PhpModifiers.FINAL);
+                    break;
+                case READONLY:
+                    phpModifiers.add(PhpModifiers.READONLY);
+                    break;
+                case NONE:
+                    // no-op
+                    break;
+                default:
+                    assert false : "Handle " + modifier + " modifier"; // NOI18N
+                    break;
+            }
         }
-        return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC);
+        return PhpModifiers.fromBitMask(phpModifiers.stream().mapToInt(i->i).toArray());
     }
 
     public Collection<QualifiedName> getUsedTraits() {

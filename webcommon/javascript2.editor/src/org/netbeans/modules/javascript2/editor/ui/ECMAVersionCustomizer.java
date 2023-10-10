@@ -59,7 +59,7 @@ public class ECMAVersionCustomizer implements ProjectCustomizer.CompositeCategor
         return new ECMAVersionCustomizer();
     }
 
-    
+
     @Override
     public ProjectCustomizer.Category createCategory(Lookup context) {
         return ProjectCustomizer.Category.create(

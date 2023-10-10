@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumSet;
 import java.util.concurrent.Future;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -282,7 +283,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         return basic;
     }
     
-    abstract static class ImplementFixBase extends CreateFixBase implements Task<WorkingCopy>, DebugFix {
+    abstract static class ImplementFixBase extends ModificationResultBasedFix implements Task<WorkingCopy>, DebugFix {
         protected final JavaSource      source;
         protected final TreePathHandle  handle;
         protected final ElementHandle<TypeElement>  implementType;
@@ -518,9 +519,10 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
             }
             ClassTree ct = (ClassTree)ctx.getPath().getLeaf();
             ModifiersTree mt = ct.getModifiers();
-            Set<Modifier> mods = new HashSet<>(mt.getFlags());
+
+            Set<Modifier> mods = EnumSet.of(Modifier.ABSTRACT);
+            mods.addAll(mt.getFlags());
             mods.remove(Modifier.FINAL);
-            mods.add(Modifier.ABSTRACT);
             ModifiersTree newMt = wc.getTreeMaker().Modifiers(mods, mt.getAnnotations());
             wc.rewrite(mt, newMt);
         }

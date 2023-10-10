@@ -83,26 +83,35 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
-        
-        <!--change id="ProjectsRootNode-badging">
-           <api name="general"/>
-           <summary>Project root nodes automatically badged</summary>
-           <version major="1" minor="31"/>
-           <date day="9" month="6" year="2008"/>
-           <author login="jglick"/>
-           <compatibility modification="yes" semantic="compatible"/>
-           <description>
-               <p>
-                   Project root nodes will now automatically be badged
-                   according to VCS status of contained files.
-               </p>
-           </description>
-           <class package="org.netbeans.spi.project.ui" name="LogicalViewProvider"/>
-           <issue number="135399"/>
-        </change-->
-
-    
-        
+        <change id="artifact-resolution">
+            <api name="general"/>
+            <summary>Multiple scopes allowed for dependency tree query</summary>
+            <version major="2" minor="77"/>
+            <date day="16" month="8" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" modification="yes" semantic="compatible" deprecation="yes"/>
+            <description>
+                The API used to resolve artifact (<a href="@TOP@/org/netbeans/modules/maven/embedder/MavenEmbedder.html#resolve-org.apache.maven.artifact.Artifact-java.util.List-org.apache.maven.artifact.repository.ArtifactRepository-">MavenEmbedder.resolve()</a>
+                swallows artifact not found condition in some cases. A new 
+                <a href="@TOP@/org/netbeans/modules/maven/embedder/MavenEmbedder.html#resolveArtifact-org.apache.maven.artifact.Artifact-java.util.List-org.apache.maven.artifact.repository.ArtifactRepository-">MavenEmbedder.resolveArtifact</a> should be used instead.
+            </description>
+            <class package="org.netbeans.modules.maven.embedder" name="MavenEmbedder"/>
+        </change>
+        <change id="dependency-multiple-scopes">
+            <api name="general"/>
+            <summary>Multiple scopes allowed for dependency tree query</summary>
+            <version major="2" minor="71"/>
+            <date day="1" month="6" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" modification="yes" semantic="compatible" deprecation="yes"/>
+            <description>
+                Multiple scopes can be specified when building dependency tree. Exceptions thrown from the
+                maven operations can be checked if the operation failed because of offline mode was selected.
+                See <a href="@TOP@/org/netbeans/modules/maven/embeddder/EmbedderFactory.html#isOfflineException-java.lang.Throwable-">EmbedderFactory.isOfflineException()</a>.
+            </description>
+            <class package="org.netbeans.modules.maven.embedder" name="EmbedderFactory"/>
+            <class package="org.netbeans.modules.maven.embedder" name="DependencyTreeFactory"/>
+        </change>
     </changes>
 
     <!-- Now the surrounding HTML text and document structure: -->

@@ -253,7 +253,7 @@ public class Utilities {
         OK, WRONG_VERSION, INCORRECT_REDIRECTS, OTHER_ERROR;
 
         public boolean isOK() {
-            return this.equals(OK);
+            return this == OK;
         }
     }
 }

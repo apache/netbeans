@@ -1,0 +1,12 @@
+$test?->method(...);
+               ---
+HINT:Cannot use "(...)"  with null safe operator
+$test?->prop->method(...);
+                     ---
+HINT:Cannot use "(...)"  with null safe operator
+$test = new Test(...);
+                 ---
+HINT:Cannot use "(...)"  with new expression
+#[A(...)]
+    ---
+HINT:Cannot use "(...)"  as attribute argument

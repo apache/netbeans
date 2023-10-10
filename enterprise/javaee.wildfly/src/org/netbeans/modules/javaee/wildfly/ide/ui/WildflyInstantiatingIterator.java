@@ -146,6 +146,7 @@ public class WildflyInstantiatingIterator implements WizardDescriptor.Instantiat
             initialProperties.put(WildflyPluginProperties.PROPERTY_ROOT_DIR, installLocation);
             initialProperties.put(WildflyPluginProperties.PROPERTY_HOST, host);
             initialProperties.put(WildflyPluginProperties.PROPERTY_PORT, port);
+            initialProperties.put(WildflyPluginProperties.PROPERTY_PORT_OFFSET, portOffset);
             initialProperties.put(WildflyPluginProperties.PROPERTY_CONFIG_FILE, configFile);
             initialProperties.put(WildflyPluginProperties.PROPERTY_ADMIN_PORT, adminPort);
             initialProperties.put(WildflyPluginProperties.PROPERTY_JAVA_OPTS, WILDFLY_JAVA_OPTS);
@@ -261,6 +262,7 @@ public class WildflyInstantiatingIterator implements WizardDescriptor.Instantiat
     private String host;
     private String port;
     private String adminPort;
+    private String portOffset;
     private String userName="";
     private String password="";
     private String server;
@@ -291,6 +293,10 @@ public class WildflyInstantiatingIterator implements WizardDescriptor.Instantiat
 
     public void setAdminPort(String port){
         this.adminPort = port.trim();
+    }
+
+    public void setPortOffset(String portOffset){
+        this.portOffset = portOffset;
     }
 
     public void setServer(String server){

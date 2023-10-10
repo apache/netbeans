@@ -84,6 +84,7 @@ public class ParseUtils {
         private int errorType=-1;
         SAXParseException error;
         
+        @Override
         public void warning(org.xml.sax.SAXParseException sAXParseException) throws org.xml.sax.SAXException {
             if (errorType<0) {
                 errorType=0;
@@ -91,6 +92,7 @@ public class ParseUtils {
             }
             //throw sAXParseException;
         }
+        @Override
         public void error(org.xml.sax.SAXParseException sAXParseException) throws org.xml.sax.SAXException {
             if (errorType<1) {
                 errorType=1;
@@ -98,6 +100,7 @@ public class ParseUtils {
             }
             //throw sAXParseException;
         }
+        @Override
         public void fatalError(org.xml.sax.SAXParseException sAXParseException) throws org.xml.sax.SAXException {
             errorType=2;
             throw sAXParseException;
@@ -127,7 +130,9 @@ public class ParseUtils {
             reader.setFeature("http://xml.org/sax/features/namespaces",  true); // NOI18N
             reader.parse(is);
             SAXParseException error = errorHandler.getError();
-            if (error!=null) return error;
+            if (error!=null) {
+                return error;
+            }
         } catch (IllegalArgumentException ex) {
             // yes, this may happen, see issue #71738
             SAXException sax = new SAXException(ex.getMessage(), ex);

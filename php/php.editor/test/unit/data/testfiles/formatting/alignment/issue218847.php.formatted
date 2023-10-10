@@ -36,7 +36,6 @@ abstract
             function functionName3() {
         
     }
-
 }
 
 class Foo {
@@ -52,7 +51,6 @@ trait Trt {
             function foo() {
         
     }
-
 }
 
 interface Iface {

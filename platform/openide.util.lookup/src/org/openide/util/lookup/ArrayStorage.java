@@ -157,7 +157,7 @@ implements AbstractLookup.Storage<ArrayStorage.Transaction> {
 
     /** Removes all items that are not present in the provided collection.
     * @param retain Pair -> AbstractLookup.Info map
-    * @param notify set of Classes that has possibly changed
+    * @param changed set of Classes that has possibly changed
     */
     public void retainAll(Map retain, Transaction changed) {
         Object[] arr = changed.current;

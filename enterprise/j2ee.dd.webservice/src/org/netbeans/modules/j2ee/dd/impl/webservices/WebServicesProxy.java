@@ -405,7 +405,7 @@ public class WebServicesProxy implements Webservices {
             } catch (org.openide.filesystems.FileAlreadyLockedException ex) {
                 // trying to use OutputProvider for writing changes
                 org.openide.loaders.DataObject dobj = org.openide.loaders.DataObject.find(fo);
-                if (dobj != null && dobj instanceof WebServicesProxy.OutputProvider)
+                if (dobj instanceof OutputProvider)
                     ((WebServicesProxy.OutputProvider)dobj).write(this);
                 else 
                     throw ex;

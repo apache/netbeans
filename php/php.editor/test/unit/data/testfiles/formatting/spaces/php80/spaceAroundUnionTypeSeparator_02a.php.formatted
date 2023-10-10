@@ -41,7 +41,6 @@ class UnionTypes {
     public static function testStaticMethod(self | parent | null $param1, iterable | false $param2): self | parent | null {
         return null;
     }
-
 }
 
 trait UnionTypesTrait {
@@ -55,5 +54,4 @@ trait UnionTypesTrait {
     ): iterable | false | Type1 | null {
         return null;
     }
-
 }

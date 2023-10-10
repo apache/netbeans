@@ -230,11 +230,13 @@ public class IndexedPropertyTest extends ExtTestCase {
             setDisplayName("Fancy");
             setName(getDisplayName());
         }
-        
+
+        @Override
         public PropertyEditor getPropertyEditor() {
             return te;
         }
-        
+
+        @Override
         public int hashCode() {
             return 24;
         }
@@ -257,14 +259,17 @@ public class IndexedPropertyTest extends ExtTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener l) {
             super.addPropertyChangeListener(l);
         }
-        
+
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener l) {
             super.removePropertyChangeListener(l);
         }
@@ -272,10 +277,12 @@ public class IndexedPropertyTest extends ExtTestCase {
         
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public void firePropertyChange() {
             super.firePropertyChange();
         }

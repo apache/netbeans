@@ -31,9 +31,10 @@ import org.netbeans.spi.debugger.ContextProvider;
  * be simple bean with properties like process ID, session name, etc.
  * All other functionality is delegated to current debugger engine.
  *
- * <p><br><table border="1" cellpadding="3" cellspacing="0" width="100%">
- * <tbody><tr bgcolor="#ccccff">
- * <td colspan="2"><font size="+2"><b>Description </b></font></td>
+ * <table>
+ * <caption>Description of Session</caption>
+ * <tbody><tr>
+ * <td colspan="2" style="background-color:#4D7A97"><font size="+2"><b>Description </b></font></td>
  * </tr><tr><td align="left" valign="top" width="1%"><font size="+1">
  * <b>Functionality</b></font></td><td>
  *
@@ -62,8 +63,8 @@ import org.netbeans.spi.debugger.ContextProvider;
  * <br><br>
  * <b>Support for additional services:</b>
  *    Session is final class. The standard method how to 
- *    extend its functionality is using lookup methods ({@link #lookup} and 
- *    {@link #lookupFirst}).
+ *    extend its functionality is using lookup methods ({@link #lookup(String,Class)} and 
+ *    {@link #lookupFirst(String,Class)}).
  *    There are two ways how to register some service provider for some
  *    type of Session:
  *    <ul>

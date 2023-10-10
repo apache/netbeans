@@ -33,6 +33,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
@@ -104,10 +105,10 @@ public class XMLJ2eeEditorSupport extends DataEditorSupport
         // kit and kit() are not accessible so we pretend
         // to create the kit; actually this should just return kit.
         EditorKit k = this.createEditorKit();
-        OutputStreamWriter osw = new OutputStreamWriter(stream, "UTF8"); // NOI18N
-        Writer writer = new BufferedWriter(osw);
-        k.write(writer, doc, 0, doc.getLength());
-        writer.close();
+        try (OutputStreamWriter osw = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
+                Writer writer = new BufferedWriter(osw)) {
+            k.write(writer, doc, 0, doc.getLength());
+        }
     }
  
     /**
@@ -119,10 +120,10 @@ public class XMLJ2eeEditorSupport extends DataEditorSupport
         // kit and kit() are not accessible so we pretend
         // to create the kit; actually this should just return kit.
         EditorKit k = this.createEditorKit();
-        InputStreamReader isr = new InputStreamReader(stream, "UTF8"); // NOI18N
-        Reader reader = new BufferedReader(isr);
-        k.read(reader, doc, 0);
-        reader.close();
+        try (InputStreamReader isr = new InputStreamReader(stream, StandardCharsets.UTF_8);
+                Reader reader = new BufferedReader(isr)) {
+            k.read(reader, doc, 0);
+        }
     }
 
     /** Restart the timer which starts the parser after the specified delay.

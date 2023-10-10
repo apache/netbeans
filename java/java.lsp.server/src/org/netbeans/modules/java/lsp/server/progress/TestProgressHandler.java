@@ -98,13 +98,13 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
                 }
                 return fileLocator != null ? fileLocator.find(loc) : null;
             }) : null;
-            TestSuiteInfo.TestCaseInfo info = testCases.get(id);
-            if (info != null) {
-                updateState(info, state);
-            } else {
-                info = new TestSuiteInfo.TestCaseInfo(id, name, fo != null ? Utils.toUri(fo) : null, null, state, stackTrace);
-                testCases.put(id, info);
+            int cnt = 1;
+            String base = id;
+            while (testCases.containsKey(id)) {
+                id = base + '-' + cnt++;
             }
+            TestSuiteInfo.TestCaseInfo info = new TestSuiteInfo.TestCaseInfo(id, name, fo != null ? Utils.toUri(fo) : null, null, state, stackTrace);
+            testCases.put(id, info);
         }
         String state = statusToState(report.getStatus());
         FileObject fo = fileLocations.size() == 1 ? fileLocations.values().iterator().next() : null;
@@ -142,29 +142,6 @@ public final class TestProgressHandler implements TestResultDisplayHandler.Spi<T
                 return TestSuiteInfo.State.Started;
             default:
                 throw new IllegalStateException("Unexpected testsuite status: " + status);
-        }
-    }
-
-    private void updateState(TestSuiteInfo.TestCaseInfo info, String state) {
-        switch (state) {
-            case TestSuiteInfo.State.Errored:
-                info.setState(state);
-                break;
-            case TestSuiteInfo.State.Failed:
-                if (!TestSuiteInfo.State.Errored.equals(info.getState())) {
-                    info.setState(state);
-                }
-                break;
-            case TestSuiteInfo.State.Passed:
-                if (TestSuiteInfo.State.Skipped.equals(info.getState()) || TestSuiteInfo.State.Started.equals(info.getState())) {
-                    info.setState(state);
-                }
-                break;
-            case TestSuiteInfo.State.Skipped:
-                if (TestSuiteInfo.State.Started.equals(info.getState())) {
-                    info.setState(state);
-                }
-                break;
         }
     }
 }

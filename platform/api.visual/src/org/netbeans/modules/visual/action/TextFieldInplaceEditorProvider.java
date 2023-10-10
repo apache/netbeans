@@ -65,6 +65,7 @@ public final class TextFieldInplaceEditorProvider implements InplaceEditorProvid
     public void notifyOpened (final EditorController controller, Widget widget, JTextField editor) {
         editor.setMinimumSize (new Dimension (64, 19));
         keyListener = new KeyAdapter() {
+            @Override
             public void keyPressed (KeyEvent e) {
                 switch (e.getKeyChar ()) {
                     case KeyEvent.VK_ESCAPE:
@@ -79,6 +80,7 @@ public final class TextFieldInplaceEditorProvider implements InplaceEditorProvid
             }
         };
         focusListener = new FocusAdapter() {
+            @Override
             public void focusLost (FocusEvent e) {
                 controller.closeEditor (true);
             }

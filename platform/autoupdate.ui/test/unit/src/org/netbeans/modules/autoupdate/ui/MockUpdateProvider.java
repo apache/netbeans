@@ -21,7 +21,7 @@ package org.netbeans.modules.autoupdate.ui;
 
 import java.io.IOException;
 import java.util.Map;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.autoupdate.UpdateUnitProvider.CATEGORY;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.spi.autoupdate.UpdateProvider;

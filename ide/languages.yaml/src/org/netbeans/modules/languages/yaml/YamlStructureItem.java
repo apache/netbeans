@@ -129,7 +129,7 @@ public abstract class YamlStructureItem implements StructureItem, ElementHandle 
 
     @Override
     public String getMimeType() {
-        return YamlTokenId.YAML_MIME_TYPE;
+        return YamlLanguage.MIME_TYPE;
     }
 
     @Override

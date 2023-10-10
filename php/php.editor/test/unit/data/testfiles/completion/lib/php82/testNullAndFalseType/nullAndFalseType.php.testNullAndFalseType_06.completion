@@ -1,0 +1,5 @@
+Code completion result for source line:
+public function testFalse(fal|se $false): false {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    false                                      null

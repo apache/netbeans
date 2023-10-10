@@ -71,7 +71,7 @@ public abstract class OptionProcessor {
     /** Method to override in subclasses to create 
      * the right set of {@link Option}s.
      * See the factory methods that are part of the {@link Option}'s javadoc
-     * or read the <a href="@TOP@/architecture-summary.html#answer-usecases">
+     * or read the <a href="@TOP@/architecture-summary.html#answer-arch-usecases">
      * usecases</a> for the sendopts API.
      * <p>
      * 

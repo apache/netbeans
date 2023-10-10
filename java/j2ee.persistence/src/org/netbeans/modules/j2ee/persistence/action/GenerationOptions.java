@@ -20,7 +20,6 @@
 package org.netbeans.modules.j2ee.persistence.action;
 
 import java.text.MessageFormat;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -88,7 +87,9 @@ public final class GenerationOptions {
             {
                 return body2_0;
             }
-            else return body;
+            else {
+                return body;
+            }
         }
     }
     
@@ -142,7 +143,9 @@ public final class GenerationOptions {
     }
 
     public void setModifiers(Set<Modifier> modifiers) {
-        this.modifiers = new HashSet<Modifier>(modifiers);
+        EnumSet<Modifier> mod = EnumSet.noneOf(Modifier.class);
+        mod.addAll(modifiers);
+        this.modifiers = mod;
     }
 
 

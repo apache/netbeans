@@ -105,10 +105,9 @@ public class BreakpointsReader implements Properties.Reader, PropertyChangeListe
         // Read both LineBreakpoint and LineBreakpoint$LineBreakpointImpl
         if (typeID.equals (LineBreakpoint.class.getName ()) ||
                 typeID.equals (LineBreakpoint.class.getName ()+"$LineBreakpointImpl")) {
-            LineBreakpoint lb = LineBreakpoint.create (
-                properties.getString (LineBreakpoint.PROP_URL, null),
-                properties.getInt (LineBreakpoint.PROP_LINE_NUMBER, 1)
-            );
+            LineBreakpoint lb = LineBreakpoint.create ("", 0);
+            lb.setURL(properties.getString (LineBreakpoint.PROP_URL, null));
+            lb.setLineNumber(properties.getInt (LineBreakpoint.PROP_LINE_NUMBER, 1));
             lb.setCondition (
                 properties.getString (LineBreakpoint.PROP_CONDITION, "")
             );

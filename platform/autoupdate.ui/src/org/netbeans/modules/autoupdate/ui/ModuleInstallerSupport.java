@@ -107,7 +107,7 @@ public class ModuleInstallerSupport  {
             final String resolveTitle = displayName != null
                     ? resolve_title_single(displayName) : resolve_title();
 
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(searchMessage);
+            final ProgressHandle handle = ProgressHandle.createHandle(searchMessage);
             initButtons();
             final DialogDescriptor searching = new DialogDescriptor(searchingPanel(new JLabel(searchMessage),
                     ProgressHandleFactory.createProgressComponent(handle)), resolveTitle, true, null);

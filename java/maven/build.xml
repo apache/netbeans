@@ -30,8 +30,7 @@
         <javac srcdir="mavensrc" destdir="build/mavenclasses" 
             debug="${build.compiler.debug}" 
             deprecation="${build.compiler.deprecation}" 
-            source="1.7"
-            target="1.7"
+            release="8"
             includeantruntime="false">
             <classpath>
                 <fileset dir="${maven.embedder.dir}/maven/lib">
@@ -55,7 +54,13 @@
         </jar>
         <copy overwrite="true" tofile="build/mavenclasses/META-INF/plexus/components.xml" file="mavensrc/org/netbeans/modules/maven/event/components.xml"/>
         <!-- we use jarjar to repackage simple json, to avoid clashes with 3rd party maven plugins possibly including it in their dependencies -->
-        <taskdef name="jarjar" classpath="./external/jarjar-1.5.jar" classname="org.pantsbuild.jarjar.JarJarTask" loaderref="lib.path.loader"/>
+        <taskdef name="jarjar" classname="org.pantsbuild.jarjar.JarJarTask" loaderref="lib.path.loader">
+            <classpath>
+                <pathelement location="${libs.asm.dir}/core/asm-9.5.jar"/>
+                <pathelement location="${libs.asm.dir}/core/asm-commons-9.5.jar"/>
+                <pathelement location="./external/jarjar-1.7.2.jar"/>
+            </classpath>
+        </taskdef>
         <jarjar jarfile="${cluster}/maven-nblib/netbeans-eventspy.jar" compress="false">
             <fileset dir="build/mavenclasses" >
                 <include name="org/netbeans/modules/maven/event/**"/>
@@ -87,6 +92,14 @@
          <package-artifact-from-dir jarbasename="test-lib3-12.6" relpath="projects/processors/repo/grp/test-lib3/12.6"/>
          <package-artifact-from-dir jarbasename="test-lib4-12.6" relpath="projects/processors/repo/grp/test-lib4/12.6"/>
          <package-artifact-from-dir jarbasename="test-processor-12.6" relpath="projects/processors/repo/grp/test-processor/12.6"/>
+
+         <package-artifact-from-dir jarbasename="annotation-12.6" relpath="projects/dependencies/repo/grp/annotation/12.6"/>
+         <package-artifact-from-dir jarbasename="test-lib-12.6" relpath="projects/dependencies/repo/grp/test-lib/12.6"/>
+         <package-artifact-from-dir jarbasename="test-lib-13" relpath="projects/dependencies/repo/grp/test-lib/13"/>
+         <package-artifact-from-dir jarbasename="test-lib3-12.6" relpath="projects/dependencies/repo/grp/test-lib3/12.6"/>
+         <package-artifact-from-dir jarbasename="test-lib4-12.6" relpath="projects/dependencies/repo/grp/test-lib4/12.6"/>
+         <package-artifact-from-dir jarbasename="test-processor-12.6" relpath="projects/dependencies/repo/grp/test-processor/12.6"/>
+
     </target>
 
 </project>

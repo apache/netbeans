@@ -377,7 +377,7 @@ public class DBScriptPanel extends javax.swing.JPanel {
             }
             
             String packageName = getComponent().getPackageName();
-            if (packageName.trim().equals("")) { // NOI18N
+            if (packageName.trim().isEmpty()) { // NOI18N
                 setErrorMessage(NbBundle.getMessage(DBScriptPanel.class, "ERR_JavaTargetChooser_CantUseDefaultPackage"));
                 return false;
             }

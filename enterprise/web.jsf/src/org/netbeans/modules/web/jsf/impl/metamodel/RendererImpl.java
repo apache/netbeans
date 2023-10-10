@@ -58,7 +58,12 @@ class RendererImpl extends AnnotationRenderer implements Refreshable {
             getHelper().getAnnotationsByType(getHelper().getCompilationController()
                     .getElements().getAllAnnotationMirrors(type));
         AnnotationMirror annotationMirror = types.get(
-                "javax.faces.render.FacesRenderer");                     // NOI18N
+                "jakarta.faces.render.FacesRenderer");                     // NOI18N
+        if (annotationMirror == null) {
+            annotationMirror = types.get(
+                    "javax.faces.render.FacesRenderer");        // NOI18N
+
+        }
         if (annotationMirror == null) {
             return false;
         }

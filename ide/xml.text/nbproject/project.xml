@@ -437,6 +437,7 @@
             <friend-packages>
                 <friend>org.netbeans.modules.hibernate</friend>
                 <friend>org.netbeans.modules.j2ee.persistence</friend>
+                <friend>org.netbeans.modules.jakarta.web.beans</friend>
                 <friend>org.netbeans.modules.javafx2.editor</friend>
                 <friend>org.netbeans.modules.spring.beans</friend>
                 <friend>org.netbeans.modules.wag.manager</friend>

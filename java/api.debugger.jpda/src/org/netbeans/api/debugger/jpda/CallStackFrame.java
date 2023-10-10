@@ -94,7 +94,7 @@ public interface CallStackFrame {
      *
      * @param struts a language name or null for default language
      * @return name of file this stack frame is stopped in
-     * @throws NoInformationException if information about source is not 
+     * @throws AbsentInformationException if information about source is not 
      *   included in class file
      */
     public abstract String getSourceName (String struts) 

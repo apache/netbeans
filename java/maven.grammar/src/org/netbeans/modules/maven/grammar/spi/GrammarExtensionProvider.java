@@ -21,7 +21,7 @@ package org.netbeans.modules.maven.grammar.spi;
 
 import java.util.Enumeration;
 import java.util.List;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.xml.api.model.GrammarResult;
 import org.netbeans.modules.xml.api.model.HintContext;

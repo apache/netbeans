@@ -24,66 +24,7 @@
     <folder name="Loaders">
         <folder name="text">
             <folder name="x-dockerfile">
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/docker/editor/resources/docker_file.png"/>
                 <attr name="iconBase" stringvalue="org/netbeans/modules/docker/editor/resources/docker_file.png"/>
-                <folder name="Actions">
-                    <file name="OpenAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-OpenAction.instance"/>
-                        <attr name="position" intvalue="100"/>
-                    </file>
-                    <file name="Separator1.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="200"/>
-                    </file>
-                    <file name="CutAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
-                        <attr name="position" intvalue="300"/>
-                    </file>
-                    <file name="CopyAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
-                        <attr name="position" intvalue="400"/>
-                    </file>
-                    <file name="PasteAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
-                        <attr name="position" intvalue="500"/>
-                    </file>
-                    <file name="Separator2.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="600"/>
-                    </file>
-                    <file name="NewAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-NewAction.instance"/>
-                        <attr name="position" intvalue="700"/>
-                    </file>
-                    <file name="DeleteAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
-                        <attr name="position" intvalue="800"/>
-                    </file>
-                    <file name="SaveAsTemplateAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
-                        <attr name="position" intvalue="1100"/>
-                    </file>
-                    <file name="Separator3.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="1200"/>
-                    </file>
-                    <file name="FileSystemAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
-                        <attr name="position" intvalue="1300"/>
-                    </file>
-                    <file name="Separator4.instance">
-                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                        <attr name="position" intvalue="1400"/>
-                    </file>
-                    <file name="ToolsAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
-                        <attr name="position" intvalue="1500"/>
-                    </file>
-                    <file name="PropertiesAction.shadow">
-                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
-                        <attr name="position" intvalue="1600"/>
-                    </file>
-                </folder>
             </folder>
         </folder>
     </folder>

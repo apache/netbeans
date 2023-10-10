@@ -29,5 +29,4 @@ abstract class Test {
     public function testMethod($param1, $param2,) {
         
     }
-
 }

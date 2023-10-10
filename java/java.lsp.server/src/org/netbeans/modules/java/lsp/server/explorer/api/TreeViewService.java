@@ -51,4 +51,7 @@ public interface TreeViewService {
     
     @JsonRequest("findpath")
     public CompletableFuture<int[]> findPath(FindPathParams params);
+    
+    @JsonRequest("changes")
+    public CompletableFuture<Long> changes(NodeChangesParams params);
 }

@@ -273,7 +273,7 @@ public class VersionNode extends AbstractNode {
                         hndl.start();
                         //mkleint: XXX theoretically using info from RepositoryPreferences.getRepositoryInfos() here could cause problems as the 
                         // maven embedder code might want to retry applying mirrors on it.
-                        online.resolve(art, Collections.<ArtifactRepository>singletonList(online.createRemoteRepository(info.getRepositoryUrl(), info.getId())), online.getLocalRepository());
+                        online.resolveArtifact(art, Collections.<ArtifactRepository>singletonList(online.createRemoteRepository(info.getRepositoryUrl(), info.getId())), online.getLocalRepository());
                     } catch (ThreadDeath d) {
                         return;
                     } catch (IllegalStateException ise) { //download interrupted in dependent thread. #213812

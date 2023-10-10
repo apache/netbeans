@@ -124,7 +124,7 @@ public final class Utils {
     /**
      * Notifies about visibility changes according to {@link VisibilityQueryImplementation}
      * 
-     * @param File[] the files with a changed visibility
+     * @param files the files with a changed visibility
      */
     public static void fireVisibilityChanged(File... files) {
         VCSFileProxy[] proxies = new VCSFileProxy[files.length];

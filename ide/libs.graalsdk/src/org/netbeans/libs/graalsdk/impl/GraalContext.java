@@ -26,9 +26,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.SimpleBindings;
@@ -46,8 +46,9 @@ final class GraalContext implements ScriptContext {
     private final Bindings globals;
     private SimpleBindings bindings;
     private boolean allowAllAccess;
+    private final ClassLoader languagesClassLoader;
 
-    // BEGIN: org.netbeans.libs.graalsdk.impl.GraalContext#SANDBOX
+    // @start region="SANDBOX"
     private static final HostAccess SANDBOX = HostAccess.newBuilder().
             allowPublicAccess(true).
             allowArrayAccess(true).
@@ -59,10 +60,11 @@ final class GraalContext implements ScriptContext {
             denyAccess(Proxy.class).
             denyAccess(Object.class, false).
             build();
-    // END: org.netbeans.libs.graalsdk.impl.GraalContext#SANDBOX
+    // @end region="SANDBOX"
 
-    GraalContext(Bindings globals) {
+    GraalContext(Bindings globals, ClassLoader langClassLoader) {
         this.globals = globals;
+        this.languagesClassLoader = langClassLoader;
     }
     
     final synchronized Context ctx() {
@@ -84,7 +86,11 @@ final class GraalContext implements ScriptContext {
             } else {
                 b.allowHostAccess(SANDBOX);
             }
-            ctx = b.build();
+            // allow hosts access to all available classes
+            b.hostClassLoader(Thread.currentThread().getContextClassLoader());
+            // but ensure the context classsloader during build() is the 'correct one' - see
+            // Context javadocs.
+            ctx = executeWithClassLoader(() -> b.build(), languagesClassLoader);
             if (globals != null) {
                 for (String k : globals.keySet()) {
                     if (!ALLOW_ALL_ACCESS.equals(k)) {
@@ -96,6 +102,24 @@ final class GraalContext implements ScriptContext {
         return ctx;
     }
     
+    /**
+     * Executes code under a specific thread context classloader. Restores the context classloader
+     * after executing the code.
+     * @param <T> type of the return value
+     * @param code code that produces the return value
+     * @param loader context classloader to be used during `code' execution
+     * @return the value returned by the `code'.
+     */
+    static <T> T executeWithClassLoader(Supplier<T> code, ClassLoader loader) {
+        final ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(loader);
+            return code.get();
+        } finally {
+            Thread.currentThread().setContextClassLoader(ctxLoader);
+        }
+    }
+
     Bindings getGlobals() {
         return globals;
     }

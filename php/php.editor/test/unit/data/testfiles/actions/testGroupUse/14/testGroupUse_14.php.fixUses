@@ -29,15 +29,15 @@ function fcc() {
 
 namespace Run;
 
-use \A\ {
+use \A\{
     fa,
     faa
 };
-use \B\ {
+use \B\{
     fb,
     fbb
 };
-use \C\ {
+use \C\{
     fc,
     fcc
 };

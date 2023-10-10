@@ -49,7 +49,7 @@ public class LogViewerSupport implements Runnable {
     
     /** Connects a given process to the output window. Returns immediately, but threads are started that
      * copy streams of the process to/from the output window.
-     * @param process process whose streams to connect to the output window
+     * @param fileName process whose streams to connect to the output window
      * @param ioName name of the output window tab to use
      */
     public LogViewerSupport(final File fileName, final String ioName) {

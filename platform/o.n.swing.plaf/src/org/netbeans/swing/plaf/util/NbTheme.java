@@ -121,6 +121,7 @@ public class NbTheme extends DefaultMetalTheme implements org.xml.sax.DocumentHa
     private URL themeURL = null;
     
     private UIDefaults defaults;
+    @Override
     public String getName(){ return "NetBeans XML Theme"; } // NOI18N
     /** Create a new instance of NBTheme */
     public NbTheme(URL themeURL, LookAndFeel lf) {
@@ -403,20 +404,34 @@ public class NbTheme extends DefaultMetalTheme implements org.xml.sax.DocumentHa
     private final FontUIResource getFont(String key) {
         return (FontUIResource) defaults.get (key);
     }
-    
+
+    @Override
     public FontUIResource getControlTextFont() { return getFont (CONTROLFONT); }
+    @Override
     public FontUIResource getSystemTextFont() { return getFont (SYSTEMFONT); }
+    @Override
     public FontUIResource getUserTextFont() { return getFont (USERFONT); }
+    @Override
     public FontUIResource getMenuTextFont() { return getFont (MENUFONT); }
+    @Override
     public FontUIResource getWindowTitleFont() { return getFont (WINDOWTITLEFONT); }
+    @Override
     public FontUIResource getSubTextFont() { return getFont (SUBFONT); }
+    @Override
     protected ColorUIResource getPrimary1() { return getColor (PRIMARY1); }
+    @Override
     protected ColorUIResource getPrimary2() { return getColor (PRIMARY2); }
+    @Override
     protected ColorUIResource getPrimary3() { return getColor (PRIMARY3); }
+    @Override
     protected ColorUIResource getSecondary1() { return getColor (SECONDARY1); }
+    @Override
     protected ColorUIResource getSecondary2() { return getColor (SECONDARY2); }
+    @Override
     protected ColorUIResource getSecondary3() { return getColor (SECONDARY3); }
+    @Override
     protected ColorUIResource getWhite() { return getColor (WHITE); }
+    @Override
     protected ColorUIResource getBlack() { return getColor (BLACK); }
     
 }

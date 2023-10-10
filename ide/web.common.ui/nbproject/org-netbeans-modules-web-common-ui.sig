@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.16
+#Version 1.22
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -701,6 +701,7 @@ CLSS public org.netbeans.modules.web.common.ui.refactoring.RenamePanel
 cons public init(java.lang.String,javax.swing.event.ChangeListener,java.lang.String)
 intf org.netbeans.modules.refactoring.spi.ui.CustomRefactoringPanel
 meth public boolean isRenameWithoutRefactoring()
+meth public boolean requestFocusInWindow()
 meth public java.awt.Component getComponent()
 meth public java.lang.String getNameValue()
 meth public void initialize()

@@ -276,6 +276,7 @@ public final class Utils {
      * @since 1.54
      * @deprecated  use isForbiddenFolder(File) or isForbiddenFolder(VCSFileProxy)
      */
+    @Deprecated
     public static boolean isForbiddenFolder (String folderPath) {
         return forbiddenFolders.contains(folderPath);
     }
@@ -874,6 +875,7 @@ public final class Utils {
      * @link http://www.netbeans.org/issues/show_bug.cgi?id=105161
      * @return true if scanning for versioning system metadata is forbidden in the given folder, false otherwise
      */
+    @Deprecated
     public static boolean isScanForbidden(File folder) {
         return VersioningSupport.isExcluded(folder);
     }
@@ -1279,6 +1281,7 @@ public final class Utils {
      * @return priority or {@link Integer#MAX_VALUE} as default
      * @deprecated should not be used any more
      */
+    @Deprecated
     public static Integer getPriority (String versioningSystem) {
         Integer value = null;
         String propName = "versioning." + versioningSystem + ".priority"; //NOI18N

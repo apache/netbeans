@@ -148,6 +148,7 @@ public class AddServerLocationPanel implements WizardDescriptor.FinishablePanel,
         instantiatingIterator.setAdminPort("" + WildflyPluginProperties.getInstance().getAdminPort());
         instantiatingIterator.setHost("localhost");
         instantiatingIterator.setPort("8080");
+        instantiatingIterator.setPortOffset("0");
     }
 
     @Override

@@ -24,7 +24,7 @@ package org.netbeans.editor;
  * of the arrays of objects (especially gap arrays).
  * <p>Once an object implements this interface
  * it's easy to build a list on top of it by using
- * {@link org.netbeans.spi.lexer.util.LexerUtilities#createList(ObjectArray)}.
+ * {@code org.netbeans.spi.lexer.util.LexerUtilities#createList(ObjectArray)}.
  *
  * @author Miloslav Metelka
  * @version 1.00
@@ -51,8 +51,8 @@ public interface ObjectArray {
      * Interface allowing more efficient getting of the objects
      * from the object array. If the particular object array
      * does not implement this interface then its items
-     * are accessed by {@link ObjectArray.getItem(int)} calls.
-     * The {@link ObjectArrayUtilities.copyItems(ObjectArray, int, int, Object[], int)}
+     * are accessed by {@link ObjectArray#getItem(int)} calls.
+     * The {@link ObjectArrayUtilities#copyItems(ObjectArray, int, int, Object[], int)}
      * presents uniform access for obtaining of the items.
      */
     public interface CopyItems {

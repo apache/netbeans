@@ -31,7 +31,9 @@ import org.netbeans.lib.editor.codetemplates.api.CodeTemplate;
  * to gather the data necessary to insert
  * the particular code template into the document (such as the template's parameters).
  *
- * <h3>State</h3>
+ * <p>
+ * <strong>State</strong>
+ * </p>
  * The insert request can be in three states:
  * <ul>
  *   <li>It is not inserted into the document yet.
@@ -44,7 +46,9 @@ import org.netbeans.lib.editor.codetemplates.api.CodeTemplate;
  *     work to do. Code templates processor(s) servicing the request will be released.
  * </ul>
  *
- * <h3>Parameters</h3>
+ * <p>
+ * <strong>Parameters</strong>
+ * </p>
  * The code template's text is first parsed to find the parameters.
  * Each first occurrence of a parameter with particular name define
  * a master parameter. All the other occurrences of a parameter with the same name
@@ -132,7 +136,7 @@ public final class CodeTemplateInsertRequest {
      *  and the inserted default values are being modified by the user
      *  which can result into
      *  {@link CodeTemplateProcessor#parameterValueChanged(CodeTemplateParameter, boolean)}.
-     *  <p/>
+     *  <p>
      *  Returns false if the code template was not yet inserted into the document
      *  i.e. the {@link CodeTemplateProcessor#updateDefaultValues()}
      *  is currently being called on the registered processors.
@@ -158,10 +162,10 @@ public final class CodeTemplateInsertRequest {
     
     /**
      * Get the present parametrized text handled by this request.
-     * <br/>
+     * <br>
      * By default the code template's parametrized text obtained
      * by {@link CodeTemplate#getParametrizedText()} is used.
-     * <br/>
+     * <br>
      * The parametrized text can be modified by {@link #setParametrizedText(String)}.
      */
     public String getParametrizedText() {
@@ -170,11 +174,11 @@ public final class CodeTemplateInsertRequest {
     
     /**
      * Set the parametrized text to a new value.
-     * <br/>
+     * <br>
      * This may be necessary if some parameters are just artificial
      * and should be expanded by a particular code template processor
      * before the regular processing.
-     * <br/>
+     * <br>
      * Once this method is called the new parametrized text will be parsed
      * and a fresh new list of parameters will be created.
      *
@@ -187,10 +191,10 @@ public final class CodeTemplateInsertRequest {
     /**
      * Get the text where all the parameters are replaced
      * by their present values.
-     * <br/>
+     * <br>
      * This is the text to be physically inserted into the document
      * once the template processors possibly update the parameter's values.
-     * <br/>
+     * <br>
      * After the text gets physically inserted into the document this method
      * continues to return the "living" text of the document with the inserted template.
      */
@@ -200,10 +204,10 @@ public final class CodeTemplateInsertRequest {
 
     /**
      * Return offset of the inserted template in the document's text.
-     * <br/>
+     * <br>
      * The offset is physically represented as a swing position
      * so it will reflect possible subsequent document mutations.
-     * <br/>
+     * <br>
      * Before the template gets inserted into the document this method
      * returns zero.
      */

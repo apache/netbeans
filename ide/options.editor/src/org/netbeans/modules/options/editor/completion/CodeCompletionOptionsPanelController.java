@@ -111,6 +111,7 @@ public final class CodeCompletionOptionsPanelController extends OptionsPanelCont
                 prefs.remove(SimpleValueNames.COMPLETION_AUTO_POPUP);
                 prefs.remove(SimpleValueNames.JAVADOC_AUTO_POPUP);
                 prefs.remove(SimpleValueNames.JAVADOC_POPUP_NEXT_TO_CC);
+                prefs.remove(SimpleValueNames.COMPLETION_PARAMETER_TOOLTIP);
                 prefs.remove(SimpleValueNames.SHOW_DEPRECATED_MEMBERS);
                 prefs.remove(SimpleValueNames.COMPLETION_INSTANT_SUBSTITUTION);
                 prefs.remove(SimpleValueNames.COMPLETION_CASE_SENSITIVE);

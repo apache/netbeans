@@ -18,7 +18,7 @@
  */
 package org.openide.awt;
 
-/** Provides a UI for <code>Check for Updates<code> feature, for example in <code>About</code> dialog.
+/** Provides a UI for <code>Check for Updates</code> feature, for example in <code>About</code> dialog.
  * An instance of the provider should be installed in the default lookup using {@link org.openide.util.lookup.ServiceProvider}.
  *
  * @author Jiri Rechtacek

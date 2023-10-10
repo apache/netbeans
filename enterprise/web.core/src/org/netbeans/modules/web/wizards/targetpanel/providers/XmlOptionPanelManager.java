@@ -64,7 +64,6 @@ abstract class XmlOptionPanelManager extends AbstractOptionPanelManager {
         });
 
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = gridy++;
         gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);

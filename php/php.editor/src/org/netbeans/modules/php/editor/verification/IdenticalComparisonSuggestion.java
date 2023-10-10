@@ -197,7 +197,6 @@ public class IdenticalComparisonSuggestion extends SuggestionRule {
                 case Type.DOUBLE:
                 case Type.FLOAT:
                 case Type.BOOL:
-                case Type.BOOLEAN:
                 case Type.STRING:
                 case Type.ARRAY:
                     retval = typeName;

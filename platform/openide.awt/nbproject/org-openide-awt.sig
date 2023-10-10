@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.83
+#Version 7.89
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -1607,6 +1607,7 @@ innr public static ToolbarButton
 innr public static ToolbarToggleButton
 meth public static java.lang.String cutAmpersand(java.lang.String)
 meth public static java.lang.String findKey(org.openide.util.actions.SystemAction)
+meth public static java.lang.String keyStrokeToString(javax.swing.KeyStroke)
 meth public static javax.swing.Action alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)
 meth public static javax.swing.Action checkbox(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public static javax.swing.Action forID(java.lang.String,java.lang.String)

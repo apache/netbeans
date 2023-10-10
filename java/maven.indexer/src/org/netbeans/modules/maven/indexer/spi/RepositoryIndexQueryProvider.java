@@ -20,7 +20,6 @@ package org.netbeans.modules.maven.indexer.spi;
 
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 
 /**

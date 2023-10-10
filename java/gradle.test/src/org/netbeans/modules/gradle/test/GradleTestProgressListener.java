@@ -140,7 +140,7 @@ public final class GradleTestProgressListener implements ProgressListener, Gradl
             if (manager != null) {
                 manager.displayOutput(session, msg, desc.getDestination().equals(Destination.StdErr));
             }
-            if ((parent != null) && (parent instanceof JvmTestOperationDescriptor)) {
+            if (parent instanceof JvmTestOperationDescriptor) {
                 Testcase tc = runningTests.get(getTestOpKey((JvmTestOperationDescriptor) parent));
                 if (tc != null) {
                     tc.addOutputLines(Arrays.asList(msg.split("\\R")));

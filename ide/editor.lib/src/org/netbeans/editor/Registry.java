@@ -42,6 +42,7 @@ import org.openide.modules.PatchedPublic;
  * @deprecated Use <code>EditorRegistry</code> from 
  *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a> instead.
  */
+@Deprecated
 public class Registry {
 
     /** List of the registered changes listeners */

@@ -92,7 +92,7 @@ public final class ComplexValueSettingsFactory {
         String handle = prefs.get(NbEditorDocument.INDENT_ENGINE, null);
         if (handle != null && handle.indexOf('.') == -1) { //NOI18N
             // looks like Lookup handle from previous version
-            Lookup.Template<IndentEngine> query = new Lookup.Template(IndentEngine.class, handle, null);
+            Lookup.Template<IndentEngine> query = new Lookup.Template<>(IndentEngine.class, handle, null);
             Collection<? extends IndentEngine> all = Lookup.getDefault().lookup(query).allInstances();
             if (!all.isEmpty()) {
                 eng = all.iterator().next();

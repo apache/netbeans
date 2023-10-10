@@ -1,0 +1,126 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='274'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='273'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='224'>
+      <CallNode start='1' end='222'>
+        <!-- CallNode Arguments -->
+        <FunctionNode name='L:2' kind='NORMAL' start='23' end='221'>
+          <isAnonymous/>
+          <!-- FunctionNode Parameters -->
+          <IdentNode start='32' end='36'>
+            <name>root</name>
+          </IdentNode>
+          <IdentNode start='38' end='46'>
+            <name>Backbone</name>
+          </IdentNode>
+          <IdentNode start='48' end='49'>
+            <name>_</name>
+          </IdentNode>
+          <IdentNode start='51' end='52'>
+            <name>$</name>
+          </IdentNode>
+          <!-- FunctionNode Body -->
+          <Block start='54' end='217'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+            <VarNode name='previousBackbone' start='184' end='216'>
+              <hasInit/>
+              <isAssignment/>
+              <!-- VarNode Assignment Dest -->
+              <IdentNode start='184' end='200'>
+                <name>previousBackbone</name>
+                <isDeclaredHere/>
+                <isInitializedHere/>
+              </IdentNode>
+              <!-- VarNode Init -->
+              <AccessNode property='Backbone' start='203' end='216'>
+                <!-- AccessNode Base -->
+                <IdentNode start='203' end='207'>
+                  <name>root</name>
+                </IdentNode>
+              </AccessNode>
+            </VarNode>
+          </Block>
+        </FunctionNode>
+        <!-- CallNode Function -->
+        <FunctionNode name='L:1' kind='NORMAL' start='1' end='22'>
+          <isAnonymous/>
+          <!-- FunctionNode Parameters -->
+          <IdentNode start='10' end='17'>
+            <name>factory</name>
+          </IdentNode>
+          <!-- FunctionNode Body -->
+          <Block start='19' end='20'>
+            <isFunctionBody/>
+            <!-- Block Statements -->
+          </Block>
+        </FunctionNode>
+      </CallNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='226' end='273'>
+      <CallNode start='231' end='273'>
+        <!-- CallNode Arguments -->
+        <RuntimeNode start='231' end='273'>
+          <ArrayLiteralNode start='231' end='273'>
+            <StringLiteralNode value='token' start='231' end='237'/>
+            <StringLiteralNode value='' start='273' end='273'/>
+          </ArrayLiteralNode>
+          <ArrayLiteralNode start='231' end='273'>
+            <StringLiteralNode value='token' start='231' end='237'/>
+            <StringLiteralNode value='' start='273' end='273'/>
+          </ArrayLiteralNode>
+        </RuntimeNode>
+        <BinaryNode type='ADD' start='241' end='271'>
+          <!-- BinaryNode lhs -->
+          <BinaryNode type='ADD' start='241' end='264'>
+            <!-- BinaryNode lhs -->
+            <StringLiteralNode value='nested' start='241' end='248'/>
+            <!-- BinaryNode rhs -->
+            <RuntimeNode start='260' end='264'>
+              <BinaryNode type='ADD' start='252' end='264'>
+                <!-- BinaryNode lhs -->
+                <StringLiteralNode value='deeply' start='252' end='258'/>
+                <!-- BinaryNode rhs -->
+                <ObjectNode start='262' end='264'>
+                  <!-- ObjectNode Elements -->
+                </ObjectNode>
+              </BinaryNode>
+            </RuntimeNode>
+          </BinaryNode>
+          <!-- BinaryNode rhs -->
+          <StringLiteralNode value='blah' start='266' end='271'/>
+        </BinaryNode>
+        <!-- CallNode Function -->
+        <IdentNode start='226' end='229'>
+          <name>raw</name>
+        </IdentNode>
+      </CallNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

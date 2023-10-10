@@ -12,7 +12,6 @@ class G_Check {
                 "invalid" => "Tato položka byla špatně vyplněna")),
         ));
     }
-
 }
 
 ?>

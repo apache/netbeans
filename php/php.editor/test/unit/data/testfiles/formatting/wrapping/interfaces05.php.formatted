@@ -8,7 +8,6 @@ class VeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongNameVeryLongName
     public function test() {
         
     }
-
 }
 
 ?>

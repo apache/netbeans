@@ -47,7 +47,7 @@ public class HoverTest extends NbTestCase {
     public void testHoverContent() {
         Document doc = createDocument("text/foo", "");
         int offset = 0;
-        // BEGIN: HoverTest#testHoverContent
+        // @start region="testHoverContent"
 
         // Resolve a hover information at the given document offset...
         CompletableFuture<String> future = Hover.getContent(doc, offset);
@@ -55,8 +55,7 @@ public class HoverTest extends NbTestCase {
         // ...and get its content
         String content = future.getNow(null);
         assertEquals("Foo hover information", content);
-
-        // END: HoverTest#testHoverContent
+        // @end region="testHoverContent"
     }
 
     private Document createDocument(String mimeType, String contents) {

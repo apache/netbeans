@@ -127,7 +127,7 @@ public final class ScenePrinter {
      * since this is required to determine the selected objects.
      * @param visibleOnly Print only the object in the visible window.
      * @param region The rectangle representing the are of the Scene to be printed.
-     * @param hiddenLayerWidgets Layer that are not to be printed. Might be used to 
+     * @param hiddenLayers Layer that are not to be printed. Might be used to
      * hide the background while printing.
      */
     public static void print(Scene scene, PageFormat format, ScaleStrategy scaleStrategy,

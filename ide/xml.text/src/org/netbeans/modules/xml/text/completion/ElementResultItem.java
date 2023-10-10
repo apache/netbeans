@@ -118,11 +118,11 @@ class ElementResultItem extends XMLResultItem {
         return false;
     }
     
-    /**
-     * @deprecated we use startElement flag
-     */
+//    /**
+//     * @deprecated we use startElement flag
+//     */
 //    static class EndTag extends ElementResultItem {
 //    }
-    
+
     Color getPaintColor() { return LFCustoms.shiftColor(COLOR); }
 }

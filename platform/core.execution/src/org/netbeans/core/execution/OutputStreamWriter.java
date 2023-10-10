@@ -50,6 +50,7 @@ final class OutputStreamWriter extends Writer {
      *
      * @exception  IOException  If an I/O error occurs
      */
+    @Override
     public void write(int c) throws IOException {
         char cbuf[] = new char[1];
         cbuf[0] = (char) c;
@@ -87,6 +88,7 @@ final class OutputStreamWriter extends Writer {
      *
      * @exception  IOException  If an I/O error occurs
      */
+    @Override
     public void write(String str, int off, int len) throws IOException {
         synchronized (lock) {
             ensureOpen();

@@ -235,7 +235,7 @@ key:TabbedPane:TabbedPaneTab[Selected].backgroundPainter
             }
         }
 
-        if ((o != null) && (o instanceof javax.swing.Painter)) {
+        if (o instanceof javax.swing.Painter) {
             javax.swing.Painter painter = (javax.swing.Painter) o;
             BufferedImage bufIm = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2d = bufIm.createGraphics();
@@ -261,7 +261,7 @@ key:TabbedPane:TabbedPaneTab[Selected].backgroundPainter
         Object o = null;
         o = UIManager.get("TabbedPane:TabbedPaneTab[Enabled].backgroundPainter");
 
-        if ((o != null) && (o instanceof javax.swing.Painter)) {
+        if (o instanceof javax.swing.Painter) {
             javax.swing.Painter painter = (javax.swing.Painter) o;
             BufferedImage bufIm = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2d = bufIm.createGraphics();

@@ -24,18 +24,19 @@ import org.netbeans.modules.db.sql.visualeditor.querymodel.Column;
 import org.netbeans.modules.db.sql.visualeditor.api.VisualSQLEditorMetaData;
 import org.netbeans.modules.db.sql.visualeditor.Log;
 
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import java.sql.SQLException;
 
 public class QueryBuilderMetaData {
 
     // Metadata managed by the QueryEditor
-    private Hashtable 		importKcTable = new Hashtable();
-    private Hashtable 		allColumnNames = null;
+    private Map<String, List<String>>   importKcTable = new Hashtable<>();
+    private Map<String, String>         allColumnNames = null;
 
     // Metadata object
     // This will contain *either* a metadata object provided by the client,
@@ -99,7 +100,7 @@ public class QueryBuilderMetaData {
     // Implemented by fetching all columns for all known tables
     // ToDo: Decide how to avoid re-fetching all the information
     void getAllColumnNames() throws SQLException {
-        allColumnNames = new Hashtable(500);
+        allColumnNames = new Hashtable<>(500);
         List<List<String>> tables = getTables();
         for (List<String> table : tables) {
             List<String> columns = getColumns(table.get(0), table.get(1));
@@ -259,7 +260,7 @@ public class QueryBuilderMetaData {
         boolean retVal = false;
 
         // TODO JFB should not catch this.
-        List cols;
+        List<String> cols;
         String checkedTable;
         try {
             checkedTable = checkTableName(tableName);
@@ -432,8 +433,8 @@ public class QueryBuilderMetaData {
         List<List<String>> tables = getTables();
 
         // Convert from List<table, schema> to "table.schema", expected by query editor
-        List<String> result = new ArrayList<String>();
-        for (List fullTable : tables) {
+        List<String> result = new ArrayList<>();
+        for (List<String> fullTable : tables) {
             String schema = (String) fullTable.get(0);
             String table = (String) fullTable.get(1);
             result.add(((schema == null) || (schema.equals(""))) ? table : schema + "." + table);
@@ -609,14 +610,14 @@ public class QueryBuilderMetaData {
      * This was formerly included in SqlStatementMetaDataCache, now implemented
      * in the QueryEditor
      */
-    List getImportedKeyColumns(String fullTableName) throws SQLException {
-        List keys = (List) importKcTable.get(fullTableName);
+    List<String> getImportedKeyColumns(String fullTableName) throws SQLException {
+        List<String> keys = importKcTable.get(fullTableName);
         if (keys != null) {
             return keys;
         }
         String[] tb = parseTableName(fullTableName);
         List<List<String>> importedKeys = getImportedKeys(tb[0], tb[1]);
-        keys = new ArrayList();
+        keys = new ArrayList<>();
         for (List<String> key : importedKeys) {
             keys.add(key.get(1));
         }
@@ -682,7 +683,7 @@ public class QueryBuilderMetaData {
         keys.addAll(getExportedKeys(tableSpec[0], tableSpec[1]));
 
         // Convert to a List(String[]), for compatibility with the rest of the QueryEditor
-        List result = new ArrayList();
+        List<Object> result = new ArrayList<>();
         for (List<String> key : keys) {
             result.add(key.toArray());
         }
@@ -796,7 +797,7 @@ public class QueryBuilderMetaData {
 
 
     // Get the list of column names associated with the specified table name, with no Exception
-    public void getColumnNames(String fullTableName, List columnNames) {
+    public void getColumnNames(String fullTableName, List<String> columnNames) {
         try {
             columnNames.addAll(getColumnNames(fullTableName));
         } catch (SQLException sqle) {
@@ -804,7 +805,7 @@ public class QueryBuilderMetaData {
         }
     }
 
-    public List getColumnNames(String fullTableName) throws SQLException {
+    public List<String> getColumnNames(String fullTableName) throws SQLException {
 
         // Log.getLogger().entering("QueryBuilderMetaData", "getColumnNames", fullTableName ); // NOI18N
         String[] tb = parseTableName(fullTableName);
@@ -845,7 +846,7 @@ public class QueryBuilderMetaData {
     /**
      * Returns the primary key columns of the specified table
      */
-    List getPrimaryKeys(String fullTableName) throws SQLException {
+    List<String> getPrimaryKeys(String fullTableName) throws SQLException {
 
         Log.getLogger().entering("QueryBuilderMetaData", "getPrimaryKeys", fullTableName); // NOI18N
         String schemaName = null;
@@ -858,42 +859,6 @@ public class QueryBuilderMetaData {
             tableName = table[0];
         }
         return getPrimaryKeys(schemaName, tableName);
-
-        /*
-        List primaryKeys = new ArrayList();
-        String tableName, schemaName=null;
-        String[] table = fullTableName.split("\\."); // NOI18N
-        if (table.length>1) {
-	    schemaName=table[0];
-	    tableName = table[1];
-        } else
-	    tableName=table[0];
-        boolean firstTime = true;
-        while ( true ) {
-	    try {
-		checkMetaData();
-		ResultSet rs = _databaseMetaData.getPrimaryKeys(null, schemaName, tableName);
-		if (rs != null) {
-		    String name;
-		    while (rs.next()) {
-			name = rs.getString("COLUMN_NAME"); // NOI18N
-			primaryKeys.add(name);
-		    }
-		    rs.close();
-		}
-		break;
-	    } catch (SQLException sqle) {
-		if ( firstTime ) {
-		    refreshDataBaseMetaData();
-		    firstTime = false;
-		} else {
-		    reportDatabaseError("DATABASE_ERROR", sqle); // NOI18N
-		    break;
-		}
-	    }
-        }
-        return primaryKeys;
-        **/
     }
 
     //    private List<List<String>> allTables = null ;

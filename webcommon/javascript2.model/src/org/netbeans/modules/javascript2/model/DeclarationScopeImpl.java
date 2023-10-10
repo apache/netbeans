@@ -25,7 +25,6 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.javascript2.model.api.JsObject;
 import org.netbeans.modules.javascript2.types.api.DeclarationScope;
 import org.netbeans.modules.javascript2.types.api.Identifier;
-import org.netbeans.modules.javascript2.types.api.TypeUsage;
 
 /**
  *
@@ -41,7 +40,7 @@ public class DeclarationScopeImpl extends JsObjectImpl implements DeclarationSco
             Identifier name, OffsetRange offsetRange, String mimeType, String sourceLabel) {
         super(inObject, name, offsetRange, mimeType, sourceLabel);
         this.parentScope = inScope;
-        this.childrenScopes = new ArrayList<DeclarationScope>();
+        this.childrenScopes = new ArrayList<>();
     }
 
     @Override
@@ -62,25 +61,4 @@ public class DeclarationScopeImpl extends JsObjectImpl implements DeclarationSco
     public void setParentScope(DeclarationScope parentScope) {
         this.parentScope = parentScope;
     }
-
-    private static class With {
-
-        private final OffsetRange range;
-
-        private final Collection<? extends TypeUsage> types;
-
-        public With(OffsetRange range, Collection<? extends TypeUsage> types) {
-            this.range = range;
-            this.types = types;
-        }
-
-        public OffsetRange getRange() {
-            return range;
-        }
-
-        public Collection<? extends TypeUsage> getTypes() {
-            return types;
-        }
-    }
-
 }

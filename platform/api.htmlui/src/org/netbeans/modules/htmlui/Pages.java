@@ -71,7 +71,7 @@ public final class Pages {
                 pageUrl = new URL("nbresloc:/" + u);
 
                 ClassLoader loader = findClassLoader();
-                HTMLViewerSpi.Context ctx = ContextAccessor.getDefault().newContext(loader, pageUrl, getTechIds(), null, null, () -> {
+                HTMLViewerSpi.Context ctx = ContextAccessor.getDefault().newContext(loader, pageUrl, new String[0], getTechIds(), null, null, () -> {
                     Method method = clazz.getMethod(methodName);
                     Object value = method.invoke(null);
                     return new PagesLookup(loader, value);

@@ -47,7 +47,7 @@ public interface MavenActionsProvider {
     /**
      * Create an instance of RunConfig configured for execution.
      * @param actionName one of the ActionProvider constants
-     * @returns RunConfig or null, if action not supported
+     * @return RunConfig or null, if action not supported
      */
     RunConfig createConfigForDefaultAction(String actionName, Project project, Lookup lookup);
 

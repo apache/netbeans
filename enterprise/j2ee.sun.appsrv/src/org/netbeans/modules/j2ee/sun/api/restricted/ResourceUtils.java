@@ -1285,7 +1285,7 @@ public class ResourceUtils implements WizardConstants{
 
     public static void createSampleDataSource(J2eeModuleProvider provider){
         DeploymentManager dm = getDeploymentManager(provider);
-        if ((dm != null) && (dm instanceof SunDeploymentManagerInterface)) {
+        if (dm instanceof SunDeploymentManagerInterface) {
             SunDeploymentManagerInterface eightDM = (SunDeploymentManagerInterface) dm;
             try {
                 ObjectName configObjName = new ObjectName(MAP_RESOURCES);
@@ -1833,6 +1833,7 @@ public class ResourceUtils implements WizardConstants{
      * @param baseName     Resources file base name.
      * @deprecated Use {@link #createFile(ResourceConfigData, Resources, String)}
      */
+    @Deprecated
     public static void createFile(
             final File targetFolder, final Resources res, final String baseName
     ) {
@@ -1847,6 +1848,7 @@ public class ResourceUtils implements WizardConstants{
      * @param baseName     Resources file base name.
      * @deprecated Use {@link #createFile(ResourceConfigData, Resources, String)}
      */
+    @Deprecated
     public static void createFile (
             final FileObject targetFolder, final Resources res, final String baseName
     ) {

@@ -35,6 +35,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.KeyStroke;
 import javax.swing.Action;
 import javax.swing.AbstractAction;
+import org.openide.awt.Actions;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Lookup;
 
@@ -134,7 +135,7 @@ public class MultiKeymap implements Keymap {
             
             StringBuffer text = new StringBuffer();
             for (Iterator it = globalContextList.iterator(); it.hasNext();) {
-                text.append(getKeyText((KeyStroke)it.next())).append(' ');
+                text.append(Actions.keyStrokeToString((KeyStroke) it.next())).append(' ');
             }
             StatusDisplayer.getDefault().setStatusText(text.toString());        
         }

@@ -46,6 +46,7 @@ import com.oracle.js.parser.ir.WhileNode;
 import com.oracle.js.parser.ir.WithNode;
 import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import com.oracle.js.parser.TokenType;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.ExportNode;
 import com.oracle.js.parser.ir.ExpressionStatement;
@@ -81,7 +82,7 @@ public class JsFormatVisitor extends NodeVisitor {
     private final FormatTokenStream tokenStream;
 
     private final int formatFinish;
-    
+
     private final TokenUtils tokenUtils;
 
     public JsFormatVisitor(FormatTokenStream tokenStream, TokenSequence<? extends JsTokenId> ts, int formatFinish) {
@@ -158,7 +159,7 @@ public class JsFormatVisitor extends NodeVisitor {
                     TokenUtils.appendTokenAfterLastVirtual(jsxTokenPrev, FormatToken.forFormat(FormatToken.Kind.BEFORE_JSX_BLOCK_START), true);
                 }
             }
-        
+
             jsxToken = tokenUtils.getPreviousToken(getFinish(jsxElementNode) - 1, JsTokenId.JSX_TEXT);
             if (jsxToken != null && jsxToken.getText().toString().endsWith(">")) {
                 assert jsxToken.getId() == JsTokenId.JSX_TEXT : jsxToken;
@@ -274,7 +275,7 @@ public class JsFormatVisitor extends NodeVisitor {
             Node init = forNode.getInit();
             Node test = forNode.getTest();
 
-            FormatToken formatToken = null;
+            FormatToken formatToken;
 
             // unfortunately init and test may be null
             if (init != null) {
@@ -627,7 +628,7 @@ public class JsFormatVisitor extends NodeVisitor {
     @Override
     public boolean enterClassNode(ClassNode classNode) {
         handleDecorators(classNode.getDecorators());
-        
+
         Expression heritage = classNode.getClassHeritage();
         if (heritage != null) {
             heritage.accept(this);
@@ -754,7 +755,7 @@ public class JsFormatVisitor extends NodeVisitor {
             TokenUtils.appendTokenAfterLastVirtual(formatToken, FormatToken.forFormat(FormatToken.Kind.AFTER_BLOCK_START));
         }
 
-        List<CaseNode> nodes = new ArrayList<CaseNode>(switchNode.getCases());
+        List<CaseNode> nodes = new ArrayList<>(switchNode.getCases());
         if (switchNode.getDefaultCase() != null) {
             nodes.add(switchNode.getDefaultCase());
         }
@@ -903,7 +904,7 @@ public class JsFormatVisitor extends NodeVisitor {
         if (value instanceof Node[]) {
             int start = getStart(literalNode);
             int finish = getFinish(literalNode);
-            FormatToken leftBracket = tokenUtils.getNextToken(start, JsTokenId.BRACKET_LEFT_BRACKET, finish);            
+            FormatToken leftBracket = tokenUtils.getNextToken(start, JsTokenId.BRACKET_LEFT_BRACKET, finish);
             if (leftBracket != null) {
                 if (leftBracket.previous() != null) {
                     // mark beginning of the array (see issue #250150)
@@ -963,6 +964,20 @@ public class JsFormatVisitor extends NodeVisitor {
         }
 
         return super.enterVarNode(varNode);
+    }
+
+    @Override
+    public boolean enterClassElement(ClassElement propertyNode) {
+        FormatToken colon = tokenUtils.getNextToken(getFinish(propertyNode.getKey()),
+                JsTokenId.OPERATOR_COLON, getFinish(propertyNode));
+        if (colon != null) {
+            TokenUtils.appendToken(colon, FormatToken.forFormat(FormatToken.Kind.AFTER_PROPERTY_OPERATOR));
+            FormatToken before = colon.previous();
+            if (before != null) {
+                TokenUtils.appendTokenAfterLastVirtual(before, FormatToken.forFormat(FormatToken.Kind.BEFORE_PROPERTY_OPERATOR));
+            }
+        }
+        return super.enterPropertyNode(propertyNode);
     }
 
     // handles both standard and arrow functions
@@ -1237,14 +1252,14 @@ public class JsFormatVisitor extends NodeVisitor {
         markClassElementFinish(getStart(property), getFinish(property), start,
                 true, propertyNode.getValue());
     }
-    
+
     private void handleDecorators(List<Expression> decorators) {
         for (Expression decorator : decorators) {
             FormatToken formatToken = tokenUtils.getPreviousNonWhiteToken(getFinish(decorator) - 1, -1, null, true);
             if (formatToken != null) {
                 TokenUtils.appendTokenAfterLastVirtual(formatToken, FormatToken.forFormat(FormatToken.Kind.AFTER_DECORATOR));
             }
-        }        
+        }
     }
 
     private void markSpacesWithinParentheses(SwitchNode node) {
@@ -1407,9 +1422,7 @@ public class JsFormatVisitor extends NodeVisitor {
                 }
             }
 
-            if (ret != null) {
-                return tokenUtils.getFallback(ts.offset(), true);
-            }
+            return tokenUtils.getFallback(ts.offset(), true);
         }
         return null;
     }
@@ -1484,7 +1497,7 @@ public class JsFormatVisitor extends NodeVisitor {
             }
         } else if (node instanceof VarNode) {
             VarNode var = (VarNode) node;
-            if (var.getInit() != null && (var.getInit() instanceof ClassNode)) {
+            if (var.getInit() instanceof ClassNode) {
                 return getFinish(var.getInit());
             }
             Token token = tokenUtils.getNextNonEmptyToken(getFinishFixed(node) - 1);

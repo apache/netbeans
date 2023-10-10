@@ -28,8 +28,6 @@ import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
@@ -54,6 +52,7 @@ import org.apache.maven.project.ProjectBuildingResult;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
+import org.openide.util.Exceptions;
 
 class ArtifactDependencyIndexCreator extends AbstractIndexCreator {
 
@@ -63,12 +62,13 @@ class ArtifactDependencyIndexCreator extends AbstractIndexCreator {
     private static final String NB_DEPENDENCY_GROUP = "nbdg";
     private static final String NB_DEPENDENCY_ARTIFACT = "nbda";
     private static final String NB_DEPENDENCY_VERSION = "nbdv";
-    private static IndexerField FLD_NB_DEPENDENCY_GROUP = new IndexerField(new Field(null, NS, NB_DEPENDENCY_GROUP, "Dependency group"), IndexerFieldVersion.V3, NB_DEPENDENCY_GROUP, "Dependency group", Store.NO, Index.NOT_ANALYZED);
-    private static IndexerField FLD_NB_DEPENDENCY_ARTIFACT = new IndexerField(new Field(null, NS, NB_DEPENDENCY_ARTIFACT, "Dependency artifact"), IndexerFieldVersion.V3, NB_DEPENDENCY_ARTIFACT, "Dependency artifact", Store.NO, Index.NOT_ANALYZED);
-    private static IndexerField FLD_NB_DEPENDENCY_VERSION = new IndexerField(new Field(null, NS, NB_DEPENDENCY_VERSION, "Dependency version"), IndexerFieldVersion.V3, NB_DEPENDENCY_VERSION, "Dependency version", Store.NO, Index.NOT_ANALYZED);
+
+    private static final IndexerField FLD_NB_DEPENDENCY_GROUP = new IndexerField(new Field(null, NS, NB_DEPENDENCY_GROUP, "Dependency group"), IndexerFieldVersion.V3, NB_DEPENDENCY_GROUP, "Dependency group", IndexerField.KEYWORD_NOT_STORED);
+    private static final IndexerField FLD_NB_DEPENDENCY_ARTIFACT = new IndexerField(new Field(null, NS, NB_DEPENDENCY_ARTIFACT, "Dependency artifact"), IndexerFieldVersion.V3, NB_DEPENDENCY_ARTIFACT, "Dependency artifact", IndexerField.KEYWORD_NOT_STORED);
+    private static final IndexerField FLD_NB_DEPENDENCY_VERSION = new IndexerField(new Field(null, NS, NB_DEPENDENCY_VERSION, "Dependency version"), IndexerFieldVersion.V3, NB_DEPENDENCY_VERSION, "Dependency version", IndexerField.KEYWORD_NOT_STORED);
 
     private final List<ArtifactRepository> remoteRepos;
-    private final Map<ArtifactInfo, List<Dependency>> dependenciesByArtifact = new WeakHashMap<ArtifactInfo, List<Dependency>>();
+    private final Map<ArtifactInfo, List<Dependency>> dependenciesByArtifact = new WeakHashMap<>();
     private final MavenEmbedder embedder;
 
     ArtifactDependencyIndexCreator() {
@@ -90,7 +90,7 @@ class ArtifactDependencyIndexCreator extends AbstractIndexCreator {
                 dependenciesByArtifact.put(ai, dependencies);
             }
         } catch (InvalidArtifactRTException ex) {
-            ex.printStackTrace();
+            Exceptions.printStackTrace(ex);
         }
     }
     
@@ -106,15 +106,15 @@ class ArtifactDependencyIndexCreator extends AbstractIndexCreator {
     }
 
     static Query query(String groupId, String artifactId, String version) {
-        final BooleanQuery q = new BooleanQuery();
-        q.add(new BooleanClause(new TermQuery(new Term(NB_DEPENDENCY_GROUP, groupId)), BooleanClause.Occur.MUST));
-        q.add(new BooleanClause(new TermQuery(new Term(NB_DEPENDENCY_ARTIFACT, artifactId)), BooleanClause.Occur.MUST));
-        q.add(new BooleanClause(new TermQuery(new Term(NB_DEPENDENCY_VERSION, version)), BooleanClause.Occur.MUST));
-        return q;
+        return new BooleanQuery.Builder()
+            .add(new BooleanClause(new TermQuery(new Term(NB_DEPENDENCY_GROUP, groupId)), BooleanClause.Occur.MUST))
+            .add(new BooleanClause(new TermQuery(new Term(NB_DEPENDENCY_ARTIFACT, artifactId)), BooleanClause.Occur.MUST))
+            .add(new BooleanClause(new TermQuery(new Term(NB_DEPENDENCY_VERSION, version)), BooleanClause.Occur.MUST))
+            .build();
     }
 
     @Override public Collection<IndexerField> getIndexerFields() {
-        return Arrays.asList(FLD_NB_DEPENDENCY_GROUP, FLD_NB_DEPENDENCY_ARTIFACT, FLD_NB_DEPENDENCY_VERSION);
+        return List.of(FLD_NB_DEPENDENCY_GROUP, FLD_NB_DEPENDENCY_ARTIFACT, FLD_NB_DEPENDENCY_VERSION);
     }
 
     private MavenProject load(ArtifactInfo ai) {

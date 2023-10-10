@@ -1,0 +1,16 @@
+FUNCTION objectNameMatchingNestedFunction [ANONYMOUS: false, DECLARED: true - objectNameMatchingNestedFunction, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Base : OBJECT Base [ANONYMOUS: false, DECLARED: true - Base, MODIFIERS: PUBLIC, OBJECT]
+     # PROPERTIES
+     objectNameMatchingNestedFunctionBase : FUNCTION objectNameMatchingNestedFunctionBase [ANONYMOUS: true, DECLARED: true - objectNameMatchingNestedFunctionBase, MODIFIERS: PRIVATE, CONSTRUCTOR]
+                                          # RETURN TYPES
+                                          Base.objectNameMatchingNestedFunctionBase, RESOLVED: true
+                                          # PROPERTIES
+                                          Base      : FUNCTION Base [ANONYMOUS: false, DECLARED: true - Base, MODIFIERS: PRIVATE, METHOD]
+                                                    # RETURN TYPES
+                                                    undefined, RESOLVED: true
+                                                    # PROPERTIES
+                                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                                          arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

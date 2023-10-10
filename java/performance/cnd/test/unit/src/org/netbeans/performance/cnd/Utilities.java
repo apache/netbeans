@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.logging.*;
 import java.util.zip.*;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.openide.filesystems.*;
 import org.openide.util.*;

@@ -99,7 +99,7 @@ public class ValidateActionTest extends AbstractCheckTest {
         QaIOReporter reporter = new QaIOReporter();
         for (int i = 0; i<nodes.length; i++) {
             ValidateXMLCookie cake = (ValidateXMLCookie) nodes[i].getCookie(ValidateXMLCookie.class);
-            if (cake == null) fail("Cannot get 'ValidateXMLCookie'.");;
+            if (cake == null) fail("Cannot get 'ValidateXMLCookie'.");
             cake.validateXML(reporter);
         }
         return reporter;

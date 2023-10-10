@@ -35,7 +35,7 @@ import org.openide.util.Lookup;
 /** This class contains abstracted calls to OSGi provided by core.netigso
  * module. No other module can implement this class, except core.netigso.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 public abstract class NetigsoFramework {
     private ModuleManager mgr;
@@ -82,7 +82,7 @@ public abstract class NetigsoFramework {
     protected abstract void shutdown();
 
     /** Initializes a classloader for given module.
-     * @parma m the module description
+     * @param m the module description
      * @param pcl proxy classloader that shall be configured
      * @param jar the module JAR file
      * @return set of covered packages
@@ -135,11 +135,11 @@ public abstract class NetigsoFramework {
     //
     
     /** Get an array of bytes from archive. If not found, it remembers the
-     * request and later calls {@link #toArchive(java.lang.String, java.lang.String)}
+     * request and later calls <code>#toArchive(java.lang.String, java.lang.String)</code>
      * method to store it for next time.
      *
      * @param name name of the resource inside the JAR
-     * @parma resources the provider of the real resources
+     * @param resources the provider of the real resources
      * @return either cached value or the one returned by resources (or null)
      * @throws IOException if something goes wrong
      * @since 2.29
@@ -170,7 +170,7 @@ public abstract class NetigsoFramework {
     
     /** Gives OSGi support access to NetBeans bytecode manipulation libraries.
      * They are built over {@link Instrumentation} specification 
-     * read more at <a href="@TOP@architecture-overview.html#usecase-bytecode.patching">
+     * read more at <a href="@TOP@/architecture-summary.html#usecase-patch">
      * architecture document</a>.
      * 
      * @param l the classloader that is loading the class

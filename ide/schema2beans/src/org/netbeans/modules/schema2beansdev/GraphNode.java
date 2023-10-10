@@ -213,7 +213,7 @@ public class GraphNode {
         // separate out the namespace
         if (name.charAt(0) == '{') {
             int closingBracket = name.indexOf('}');
-            this.name = name.substring(closingBracket+1, name.length());
+            this.name = name.substring(closingBracket+1);
             this.namespace = name.substring(1, closingBracket);
         } else {
             this.name = name;

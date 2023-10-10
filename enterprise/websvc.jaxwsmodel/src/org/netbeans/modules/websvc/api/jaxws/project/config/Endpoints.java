@@ -58,11 +58,11 @@ public class Endpoints {
     }
     
     public void addEnpoint(Endpoint endpoint) {
-        endpoints.addEndpoint((org.netbeans.modules.websvc.jaxwsmodel.endpoints_config1_0.Endpoint)endpoint.getOriginal());
+        endpoints.addEndpoint(endpoint.getOriginal());
     }
     
     public void removeEndpoint(Endpoint endpoint) {
-        endpoints.removeEndpoint((org.netbeans.modules.websvc.jaxwsmodel.endpoints_config1_0.Endpoint)endpoint.getOriginal());
+        endpoints.removeEndpoint(endpoint.getOriginal());
     }
     
     public Endpoint findEndpointByName(String endpointName) {

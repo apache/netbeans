@@ -1,0 +1,13 @@
+
+dependencies {
+    if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15)) {
+        testImplementation libs.bcpkix  // this should be skipped
+    }
+    whatever = runtimeOnly("ignoredIdentifier") // should be ignored, it's not configuration, but function invocation
+
+    runtimeOnly('org.hibernate:hibernate:3.0.5') {
+        transitive = true
+    }
+    runtimeOnly group: 'org.hibernate', name: 'hibernate', version: '3.0.5', transitive: true
+}
+

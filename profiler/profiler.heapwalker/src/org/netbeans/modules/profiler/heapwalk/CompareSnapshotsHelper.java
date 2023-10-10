@@ -108,7 +108,7 @@ class CompareSnapshotsHelper {
             if (fromProjectRadio.isSelected()) {
                 Object selectedItem = projectSnapshotsList.getSelectedValue();
 
-                if ((selectedItem == null) || !(selectedItem instanceof FileObject)) {
+                if (!(selectedItem instanceof FileObject)) {
                     return null;
                 }
 

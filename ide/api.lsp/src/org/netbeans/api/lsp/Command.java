@@ -18,6 +18,8 @@
  */
 package org.netbeans.api.lsp;
 
+import java.util.List;
+
 /**
  * A command. The exact list of known commands depends on
  * the implementation of the server.
@@ -28,6 +30,7 @@ public class Command {
 
     private final String title;
     private final String command;
+    private final List<Object> arguments;
 
     /**
      * Construct a new {@code Command}.
@@ -36,8 +39,20 @@ public class Command {
      * @param command the code of the command that should be invoked
      */
     public Command(String title, String command) {
+        this(title, command, null);
+    }
+
+    /**
+     * Construct a new {@code Command}.
+     *
+     * @param title the title of the command
+     * @param command the code of the command that should be invoked
+     * @param arguments command arguments
+     */
+    public Command(String title, String command, List<Object> arguments) {
         this.title = title;
         this.command = command;
+        this.arguments = arguments;
     }
 
     /**
@@ -56,6 +71,15 @@ public class Command {
      */
     public String getCommand() {
         return command;
+    }
+
+    /**
+     * The arguments of the command that should be invoked.
+     *
+     * @return the arguments of the command that should be invoked
+     */
+    public List<Object> getArguments() {
+        return arguments;
     }
 
 }

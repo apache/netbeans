@@ -2,8 +2,8 @@
 <script id="source">
     $(document).ready(function () {
         $(function () {
-    <?php $iteration = 0 ?>
-    <?php foreach ($data as $os) { ?>
+<?php $iteration = 0 ?>
+<?php foreach ($data as $os) { ?>
             try {
                 var pointer = <?php echo $iteration ?>;
                 var added = [];
@@ -12,8 +12,8 @@
             } catch (e) {
                 console.error(e);
             }
-    <?php $iteration++ ?>
-    <?php } ?>
+<?php $iteration++ ?>
+<?php } ?>
         });
     });
 </script>

@@ -1,0 +1,5 @@
+Code completion result for source line:
+/*test */ Si|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      Simple                          [PUBLIC]   Enum1

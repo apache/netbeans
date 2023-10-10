@@ -22,52 +22,61 @@ package org.netbeans.modules.httpserver;
 import java.util.EventObject;
 import java.net.InetAddress;
 
-/** This event is sent to access listeners to
-* ask them, whether the access to specified resource is
-* allowed.
-*
-* @author Jaroslav Tulach
-*/
+/**
+ * This event is sent to access listeners to
+ * ask them, whether the access to specified resource is
+ * allowed.
+ *
+ * @author Jaroslav Tulach
+ */
 public class GrantAccessEvent extends EventObject {
     /** is access granted */
     private boolean granted = false;
-    private InetAddress clientAddress;
-    private String resource;
+    private final InetAddress clientAddress;
+    private final String resource;
 
-    /** Creates new AccessEvent. Used only in this package by
-    * the HttpServer to create new access event when a resource
-    * is requested.
-    *
-    * @param httpServer the server 
-    */
+    /**
+     * Creates new AccessEvent. Used only in this package by
+     * the HttpServer to create new access event when a resource
+     * is requested.
+     *
+     * @param httpServer the server
+     */
     GrantAccessEvent(Object source, InetAddress clientAddress, String resource) {
         super (source);
         this.clientAddress = clientAddress;
         this.resource = resource;
     }
 
-    /** The Inet address that initiated the connection.
-    * @return the inet address
-    */
+    /**
+     * The Inet address that initiated the connection.
+     *
+     * @return the inet address
+     */
     public InetAddress getClientAddress () {
         return clientAddress;
     }
 
-    /** The resource to which access is requested */
+    /**
+     * The resource to which access is requested
+     */
     public String getResource() {
         return resource;
     }
 
-    /** Allows access. The listener can use this method to grant
-    * access the client and resource.
-    */
+    /**
+     * Allows access. The listener can use this method to grant
+     * access the client and resource.
+     */
     public void grantAccess () {
         granted = true;
     }
 
-    /** Getter to test whether the access has been granted.
-    * @return true if a listener granted the access
-    */
+    /**
+     * Getter to test whether the access has been granted.
+     *
+     * @return true if a listener granted the access
+     */
     boolean isGranted () {
         return granted;
     }

@@ -159,7 +159,7 @@ public class AddTagFixTest extends NbTestCase {
                 + "}\n");
     }
 
-    public void testAddReturnTagFixInEmpty1LineJavadoc() throws Exception {
+    public void DISABLE_testAddReturnTagFixInEmpty1LineJavadoc() throws Exception { //JDK-8312093
         HintTest.create()
                 .input(
                 "package test;\n"
@@ -638,6 +638,32 @@ public class AddTagFixTest extends NbTestCase {
                 + "     */\n"
                 + "    void leden() throws IOException {\n"
                 + "    }\n"
+                + "}\n");
+    }
+
+    public void testAddThrowsTagFix_NETBEANS_1615() throws Exception {
+        // issue NETBEANS-1615
+        HintTest.create()
+                .input(
+                "package test;\n"
+                + "interface Zima {\n"
+                + "    /**\n"
+                + "     */\n"
+                + "    <X extends Exception> void leden() throws X;\n"
+                + "}\n")
+                .preference(AVAILABILITY_KEY + true, true)
+                .preference(SCOPE_KEY, "private")
+                .run(JavadocHint.class)
+                .findWarning("4:46-4:47:warning:Missing @throws tag for X")
+                .applyFix("Add @throws X tag")
+                .assertCompilable()
+                .assertOutput(
+                "package test;\n"
+                + "interface Zima {\n"
+                + "    /**\n"
+                + "     * @throws X\n"
+                + "     */\n"
+                + "    <X extends Exception> void leden() throws X;\n"
                 + "}\n");
     }
 

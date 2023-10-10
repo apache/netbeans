@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
     body = "<br>",
     name = "New Line",
     tooltip = "<br>")}</li>
- * <li><b>at class level</b> on class implementing {@link ActiveEditorDrop}.<br><br>
+ * <li><b>at class level</b> on class implementing {@link org.openide.text.ActiveEditorDrop}.<br><br>
  * {@code @PaletteItemRegistration(
     paletteid = "HTMLPalette",
     category = "HTML",
@@ -50,7 +50,7 @@ import java.lang.annotation.Target;
  * </li>
  * </ul>
  * 
- * @author Eric Barboni <skygo@netbeans.org>
+ * @author Eric Barboni &lt;skygo@netbeans.org&gt;
  * @since 1.40
  */
 @Retention(RetentionPolicy.SOURCE)

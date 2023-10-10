@@ -19,24 +19,26 @@
 package org.netbeans.modules.css.refactoring;
 
 import java.awt.EventQueue;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.modules.css.editor.Css3Utils;
 import org.netbeans.modules.css.editor.csl.CssLanguage;
 import org.netbeans.modules.css.lib.api.CssParserResult;
 import org.netbeans.modules.css.lib.api.CssTokenId;
-import org.netbeans.modules.parsing.api.Embedding;
+import org.netbeans.modules.css.lib.api.NodeUtil;
+import org.netbeans.modules.css.refactoring.api.CssRefactoringInfo;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
@@ -50,13 +52,19 @@ import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
 import org.openide.text.CloneableEditorSupport;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
+
+import static org.netbeans.modules.css.lib.api.NodeType.cssClass;
+import static org.netbeans.modules.css.lib.api.NodeType.cssId;
+import static org.netbeans.modules.css.lib.api.NodeType.elementName;
+import static org.netbeans.modules.css.lib.api.NodeType.hexColor;
+import static org.netbeans.modules.css.lib.api.NodeType.resourceIdentifier;
+import static org.netbeans.modules.css.lib.api.NodeType.term;
 
 /**
  * Folder rename refactoring is enabled by the
@@ -96,8 +104,8 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
             //editor refactoring
             task = new TextComponentTask(ec) {
                 @Override
-                protected RefactoringUI createRefactoringUI(CssElementContext context) {
-                    return new CssRenameRefactoringUI(context);
+                protected RefactoringUI createRefactoringUI(String elementName, Object... lookupContent) {
+                    return new CssRenameRefactoringUI(elementName, lookupContent);
                 }
             };
         } else {
@@ -107,8 +115,8 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
             Node currentNode = nodes.iterator().next();
             task = new NodeToFileTask(currentNode) {
                 @Override
-                protected RefactoringUI createRefactoringUI(CssElementContext context) {
-                    return new CssRenameRefactoringUI(context);
+                protected RefactoringUI createRefactoringUI(String elementName, Object... lookupContent) {
+                    return new CssRenameRefactoringUI(elementName, lookupContent);
                 }
             };
         }
@@ -137,8 +145,8 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
             task = new TextComponentTask(ec) {
                 //editor element context
                 @Override
-                protected RefactoringUI createRefactoringUI(CssElementContext context) {
-                    return new WhereUsedUI(context);
+                protected RefactoringUI createRefactoringUI(String elementName, Object... lookupContent) {
+                    return new WhereUsedUI(lookupContent);
                 }
             };
         } else {
@@ -148,8 +156,8 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
             Node currentNode = nodes.iterator().next();
             task = new NodeToFileTask(currentNode) {
                 @Override
-                protected RefactoringUI createRefactoringUI(CssElementContext context) {
-                    return new WhereUsedUI(context);
+                protected RefactoringUI createRefactoringUI(String elementName, Object... lookupContent) {
+                    return new WhereUsedUI(lookupContent);
                 }
             };
         }
@@ -172,26 +180,18 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
      */
     private static boolean isRefactorableEditorElement(final Node node) {
         final AtomicBoolean result = new AtomicBoolean(false);
-        Mutex.EVENT.readAccess(new Runnable() {
-
-            @Override
-            public void run() {
-                EditorCookie ec = getEditorCookie(node);
-                if (isFromEditor(ec)) {
-                    //check if there's css code at the offset
-                    final StyledDocument document = ec.getDocument();
-                    JEditorPane pane = ec.getOpenedPanes()[0];
-                    final int caret = pane.getCaretPosition();
-                    document.render(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            result.set(null != LexerUtils.getTokenSequence(document, caret, CssTokenId.language(), true));
-                        }
-                    });
-                }
+        Mutex.EVENT.readAccess(() -> {
+            EditorCookie ec = getEditorCookie(node);
+            if (isFromEditor(ec)) {
+                //check if there's css code at the offset
+                final StyledDocument document = ec.getDocument();
+                JEditorPane pane = ec.getOpenedPanes()[0];
+                final int caret = pane.getCaretPosition();
+                document.render(() -> {
+                    TokenSequence<?> ts = LexerUtils.getTokenSequence(document, caret, CssTokenId.language(), false);
+                    result.set(ts != null);
+                });
             }
-            
         });
 
         return result.get();
@@ -216,31 +216,13 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
         return node.getLookup().lookup(EditorCookie.class);
     }
 
-    private abstract static class NodeToFileTask extends UserTask implements Runnable {
+    private abstract static class NodeToFileTask implements Runnable {
 
         private final Node node;
-        private CssElementContext context;
         private FileObject fileObject;
 
         public NodeToFileTask(Node node) {
             this.node = node;
-        }
-
-        @Override
-        public void run(ResultIterator resultIterator) throws Exception {
-            Collection<CssParserResult> results = new ArrayList<>();
-            Snapshot snapshot = resultIterator.getSnapshot();
-            try {
-                if ("text/css".equals(snapshot.getMimeType())) { //NOI18N
-                    results.add((CssParserResult) resultIterator.getParserResult());
-                    return;
-                }
-                for (Embedding e : resultIterator.getEmbeddings()) {
-                    run(resultIterator.getResultIterator(e));
-                }
-            } finally {
-                context = new CssElementContext.File(fileObject, results);
-            }
         }
 
         //runs in RequestProcessor
@@ -248,62 +230,33 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
         public void run() {
             DataObject dobj = node.getLookup().lookup(DataObject.class);
             if (dobj != null) {
-                Runnable task;
                 fileObject = dobj.getPrimaryFile();
 
-                if (fileObject.isFolder()) {
-                    //folder
-                    task = new Runnable() {
-                        @Override
-                        public void run() {
-                            UI.openRefactoringUI(createRefactoringUI(new CssElementContext.Folder(fileObject)));
-                        }
-                    };
-                } else {
-                    //css file
-                    Source source = Source.create(fileObject);
-                    try {
-                        ParserManager.parse(Collections.singletonList(source), this);
-                        task = new Runnable() {
-                            @Override
-                            public void run() {
-                                UI.openRefactoringUI(createRefactoringUI(context));
-                            }
-                        };
-                    } catch (ParseException ex) {
-                        Exceptions.printStackTrace(ex);
-                        return ;
-                    }
-                }
-                
                 //switch to EDT
-                EventQueue.invokeLater(task);
+                EventQueue.invokeLater(() -> {
+                    UI.openRefactoringUI(createRefactoringUI(fileObject.getName(), fileObject));
+                });
             }
 
         }
 
-        protected abstract RefactoringUI createRefactoringUI(CssElementContext context);
+        protected abstract RefactoringUI createRefactoringUI(String elementName, Object... lookupContent);
     }
 
     private abstract static class TextComponentTask extends UserTask implements Runnable {
 
         private final Document document;
         private final int caretOffset;
-        private final int selectionStart;
-        private final int selectionEnd;
         private RefactoringUI ui;
 
         public TextComponentTask(EditorCookie ec) {
             JTextComponent textC = ec.getOpenedPanes()[0];
             this.document = textC.getDocument();
             this.caretOffset = textC.getCaretPosition();
-            this.selectionStart = textC.getSelectionStart();
-            this.selectionEnd = textC.getSelectionEnd();
         }
 
         @Override
         public void run(ResultIterator ri) throws ParseException {
-            Snapshot topLevelSnapshot = ri.getSnapshot();
             ResultIterator cssri = WebUtils.getResultIterator(ri, CssLanguage.CSS_MIME_TYPE);
 
             if (cssri != null) {
@@ -311,8 +264,8 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
                 if (result.getParseTree() != null) {
                     //the parser result seems to be quite ok,
                     //in case of serious parse issue the parse root is null
-                    CssElementContext context = new CssElementContext.Editor(result, topLevelSnapshot, caretOffset, selectionStart, selectionEnd);
-                    ui = context.isRefactoringAllowed() ? createRefactoringUI(context) : null;
+                    CssRefactoringInfo context = createRefactoringInfo(result, caretOffset);
+                    ui = context != null ? createRefactoringUI(context.getElementName(), context) : null;
                 }
             }
         }
@@ -329,20 +282,101 @@ public class CssActionsImplementationProvider extends ActionsImplementationProvi
             }
 
             //switch to EDT
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    TopComponent activetc = TopComponent.getRegistry().getActivated();
+            EventQueue.invokeLater(() -> {
+                TopComponent activetc = TopComponent.getRegistry().getActivated();
 
-                    if (ui != null) {
-                        UI.openRefactoringUI(ui, activetc);
-                    } else {
-                        JOptionPane.showMessageDialog(null, NbBundle.getMessage(CssActionsImplementationProvider.class, "ERR_CannotRefactorLoc"));//NOI18N
-                    }
+                if (ui != null) {
+                    UI.openRefactoringUI(ui, activetc);
+                } else {
+                    JOptionPane.showMessageDialog(null, NbBundle.getMessage(CssActionsImplementationProvider.class, "ERR_CannotRefactorLoc"));//NOI18N
                 }
             });
         }
 
-        protected abstract RefactoringUI createRefactoringUI(CssElementContext context);
+        protected abstract RefactoringUI createRefactoringUI(String elementName, Object... lookupContent);
+    }
+
+    private static CssRefactoringInfo createRefactoringInfo(CssParserResult result, int caretOffset) {
+        org.netbeans.modules.css.lib.api.Node root = result.getParseTree();
+        int astOffset = result.getSnapshot().getEmbeddedOffset(caretOffset);
+        org.netbeans.modules.css.lib.api.Node leaf = NodeUtil.findNodeAtOffset(root, astOffset);
+        if (leaf != null) {
+            //we found token node, use its encolosing node - parent
+            leaf = leaf.parent();
+        } else {
+            return null;
+        }
+
+        CssRefactoringInfo.Type type = null;
+        switch (leaf.type()) {
+            case elementName:
+                type = CssRefactoringInfo.Type.ELEMENT;
+                break;
+            case cssClass:
+                type = CssRefactoringInfo.Type.CLASS;
+                break;
+            case cssId:
+                type = CssRefactoringInfo.Type.ID;
+                break;
+            case hexColor:
+                type = CssRefactoringInfo.Type.HEX_COLOR;
+                break;
+            case resourceIdentifier:
+                type = CssRefactoringInfo.Type.RESOURCE_IDENTIFIER;
+                break;
+            case term:
+                if (NodeUtil.getChildTokenNode(leaf, CssTokenId.URI) != null) {
+                    type = CssRefactoringInfo.Type.URI;
+                }
+        }
+
+        if (type == null) {
+            return null;
+        }
+
+        String name = null;
+        switch (leaf.type()) {
+            case resourceIdentifier:
+                org.netbeans.modules.css.lib.api.Node string = NodeUtil.getChildTokenNode(leaf, CssTokenId.STRING);
+                if (string != null) {
+                    name = WebUtils.unquotedValue(string.unescapedImage());
+                    //w/o extension!
+                    int dotIndex = name.lastIndexOf('.');
+                    if (dotIndex != -1) {
+                        name = name.substring(0, dotIndex);
+                    }
+                }
+                break;
+            case term:
+                org.netbeans.modules.css.lib.api.Node uri = NodeUtil.getChildTokenNode(leaf, CssTokenId.URI);
+                if (uri != null) {
+                    Matcher m = Css3Utils.URI_PATTERN.matcher(uri.unescapedImage());
+                    if (m.matches()) {
+                        int groupIndex = 1;
+                        String content = m.group(groupIndex);
+                        name = WebUtils.unquotedValue(content);
+                        //w/o extension!
+                        int dotIndex = name.lastIndexOf('.');
+                        if (dotIndex != -1) {
+                            name = name.substring(0, dotIndex);
+                        }
+                    }
+                }
+                break;
+            case cssClass:
+            case cssId:
+                name = leaf.unescapedImage().trim().substring(1);
+                break;
+            default:
+                name = leaf.unescapedImage().trim();
+        }
+
+        if (name == null) {
+            return null;
+        }
+
+        FileObject fileObject = result.getSnapshot().getSource().getFileObject();
+
+        return new CssRefactoringInfo(fileObject, name, type);
     }
 }

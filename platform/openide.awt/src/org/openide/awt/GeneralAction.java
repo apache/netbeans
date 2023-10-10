@@ -473,8 +473,8 @@ final class GeneralAction {
                 if (other.attrs == null) {
                     other.attrs = new HashMap<>(attrs);
                 } else {
-                    for (String k : attrs.keySet()) {
-                        other.attrs.putIfAbsent(k, attrs.get(k));
+                    for (Map.Entry<String, Object> entry : attrs.entrySet()) {
+                        other.attrs.putIfAbsent(entry.getKey(), entry.getValue());
                     }
                 }
             }

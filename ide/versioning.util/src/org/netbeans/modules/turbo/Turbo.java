@@ -66,7 +66,7 @@ import org.netbeans.modules.versioning.util.Utils;
 public final class Turbo {
 
     /** Default providers registry. */
-    private static Lookup.Result providers;
+    private static Lookup.Result<TurboProvider> providers;
 
     /** Custom providers 'registry'. */
     private final CustomProviders customProviders;
@@ -182,7 +182,7 @@ public final class Turbo {
     private Iterator providers() {
         if (customProviders == null) {
             Collection plugins = providers.allInstances();
-            List all = new ArrayList(plugins.size() +1);
+            List<TurboProvider> all = new ArrayList<>(plugins.size() + 1);
             all.addAll(plugins);
             all.add(DefaultTurboProvider.getDefault());
             return all.iterator();

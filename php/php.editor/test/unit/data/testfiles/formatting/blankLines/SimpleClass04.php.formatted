@@ -20,7 +20,6 @@ class Item {
         return "You ordered ($this->qty) '$this->name'" . ($this->qty == 1 ? "" : "s") .
                 " at \$$this->price, for a total of: \$$this->total.";
     }
-
 }
 
 echo (new Item("Widget 22", 4.90, 2));

@@ -231,8 +231,9 @@ class TCGroupParser {
             tcGroupConfig = null;
             internalConfig = null;
         }
-        
-        public void startElement (String nameSpace, String name, String qname, Attributes attrs) 
+
+        @Override
+        public void startElement (String nameSpace, String name, String qname, Attributes attrs)
         throws SAXException {
             if ("tc-group".equals(qname)) { // NOI18N
                 handleTCGroup(attrs);
@@ -253,6 +254,7 @@ class TCGroupParser {
             }
         }
 
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }

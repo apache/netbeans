@@ -106,7 +106,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             });
         } catch (IOException ioex) {
             if (NESTED_CONFLICT.equals(ioex.getMessage())) {
-                JOptionPane.showMessageDialog(null, NbBundle.getMessage(ResolveConflictsExecutor.class, "MSG_NestedConflicts"),
+                JOptionPane.showMessageDialog(Utilities.findDialogParent(), NbBundle.getMessage(ResolveConflictsExecutor.class, "MSG_NestedConflicts"),
                                               NbBundle.getMessage(ResolveConflictsExecutor.class, "MSG_NestedConflicts_Title"),
                                               JOptionPane.WARNING_MESSAGE);
                 Utils.openFile(file);

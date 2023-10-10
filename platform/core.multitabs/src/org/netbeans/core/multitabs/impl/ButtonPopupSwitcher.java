@@ -205,8 +205,7 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
     
     @Override
     public void mousePressed(MouseEvent e) {
-        int tabCount = controller.getTabModel().size();
-        if( pTable.onMouseEvent(e) && tabCount == 1 ) {
+        if( pTable.onMouseEvent(e) ) {
             hideCurrentPopup();
         }
         e.consume();
@@ -230,8 +229,8 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
         p = SwingUtilities.convertPoint((Component) e.getSource(), p, pTable);
         if (pTable.contains(p)) {
             if( !pTable.onMouseEvent(e) ) {
-                final SwitcherTableItem item = pTable.getSelectedItem();
-                if (item != null) {
+                final DocumentSwitcherTable.Item item = pTable.getSelectedItem();
+                if (item != null && !item.isSeparator()) {
                     hideCurrentPopup();
                     item.activate();
                 }
@@ -343,7 +342,7 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                 break;
             case KeyEvent.VK_DELETE: {
                 final Item item = ( Item ) pTable.getSelectedItem();
-                if (item != null && TabDataRenderer.isClosable( item.getTabData() )) {
+                if (item != null) {
                     TabData tab = item.getTabData();
                     int tabIndex = controller.getTabModel().indexOf( tab );
                     if( tabIndex >= 0 ) {
@@ -355,6 +354,10 @@ final class ButtonPopupSwitcher implements MouseInputListener, AWTEventListener,
                         selRow = Math.min( pTable.getModel().getRowCount()-1, selRow );
                         selCol = Math.min( pTable.getModel().getColumnCount()-1, selCol );
                         switched = true;
+                    } else if ( item.isSeparator() ){
+                        if( pTable.closeSelectedDocumentList() ) {
+                            SwingUtilities.invokeLater(this::hideCurrentPopup);
+                        }
                     }
                 }
                 break;

@@ -248,20 +248,17 @@ public class RelatedCMPWizard implements TemplateWizard.Iterator {
         progressPanel = new ProgressPanel();
         final JComponent progressComponent = AggregateProgressFactory.createProgressComponent(handle);
 
-        final Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    handle.start();
-                    createBeans(wiz, progressContributor);
-                } catch (IOException ioe) {
-                    Logger.getLogger("global").log(Level.INFO, null, ioe);
-                    NotifyDescriptor nd = new NotifyDescriptor.Message(ioe.getLocalizedMessage(), NotifyDescriptor.ERROR_MESSAGE);
-                    DialogDisplayer.getDefault().notify(nd);
-                } finally {
-                    generator.uninit();
-                    handle.finish();
-                }
+        final Runnable r = () -> {
+            try {
+                handle.start();
+                createBeans(wiz, progressContributor);
+            } catch (IOException ioe) {
+                Logger.getLogger("global").log(Level.INFO, null, ioe);
+                NotifyDescriptor nd = new NotifyDescriptor.Message(ioe.getLocalizedMessage(), NotifyDescriptor.ERROR_MESSAGE);
+                DialogDisplayer.getDefault().notify(nd);
+            } finally {
+                generator.uninit();
+                handle.finish();
             }
         };
 
@@ -277,7 +274,6 @@ public class RelatedCMPWizard implements TemplateWizard.Iterator {
         // -  the first invocation event of our runnable
         // -  the invocation event which closes the wizard
         // -  the second invocation event of our runnable
-
 
         SwingUtilities.invokeLater(new Runnable() {
             private boolean first = true;
@@ -400,12 +396,7 @@ public class RelatedCMPWizard implements TemplateWizard.Iterator {
 
         } finally {
             handle.finish();
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    progressPanel.close();
-                }
-            });
+            SwingUtilities.invokeLater( () -> progressPanel.close() );
         }
     }
 }

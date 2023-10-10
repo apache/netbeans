@@ -1,0 +1,18 @@
+<?php
+
+class Omg {
+
+    public static function stMeth() {
+        
+    }
+}
+$foo = new Omg();
+
+new MyClass();
+$foo->bar;
+$foo->method();
+Omg::CON;
+Omg::stMeth();
+Omg::$stFld;
+
+new class {};

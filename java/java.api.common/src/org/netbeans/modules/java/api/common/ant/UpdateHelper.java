@@ -32,7 +32,7 @@ import org.openide.util.Parameters;
 
 /**
  * Proxy for the {@link AntProjectHelper} which defers the update of the project metadata
- * to explicit user action. Caller has to provide implementation of {@link UpdateProject}
+ * to explicit user action. Caller has to provide implementation of {@link UpdateImplementation}
  * which takes care of updating project itself.
  * @author Tomas Zezula, Tomas Mysik
  * @see UpdateImplementation
@@ -106,8 +106,8 @@ public final class UpdateHelper {
      * In the case that the project is of current version or shared is <code>false</code> it delegates to
      * {@link AntProjectHelper#getPrimaryConfigurationData(boolean)}.
      * Otherwise it creates an in memory update of shared configuration data and returns it.
-     * @param shared if <code>true</code>, refers to <e>project.xml</e>, else refers to
-     *               <e>private.xml</e>.
+     * @param shared if <code>true</code>, refers to <code>project.xml</code>, else refers to
+     *               <code>private.xml</code>.
      * @return the configuration data that is available.
      */
     public Element getPrimaryConfigurationData(final boolean shared) {

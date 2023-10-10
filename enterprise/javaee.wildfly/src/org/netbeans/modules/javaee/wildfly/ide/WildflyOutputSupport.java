@@ -34,15 +34,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.base.input.InputProcessor;
 import org.netbeans.api.extexecution.base.input.InputProcessors;
+import org.netbeans.api.extexecution.base.input.InputReader;
 import org.netbeans.api.extexecution.base.input.InputReaderTask;
 import org.netbeans.api.extexecution.base.input.InputReaders;
 import org.netbeans.api.extexecution.base.input.LineProcessor;
-import org.netbeans.api.extexecution.base.input.InputReader;
 import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties;
 import org.netbeans.modules.j2ee.deployment.profiler.api.ProfilerSupport;
 import org.openide.windows.InputOutput;
@@ -64,18 +63,6 @@ public final class WildflyOutputSupport {
     private static final ExecutorService PROFILER_SERVICE = Executors.newCachedThreadPool();
 
     private static final ExecutorService LOG_FILE_SERVICE = Executors.newCachedThreadPool();
-
-    private static final Pattern JBOSS_7_STARTED_ML = Pattern.compile(".*JBoss AS 7(\\..*)* \\d+ms .*");
-    private static final Pattern WILDFLY_8_STARTED_ML = Pattern.compile(".*JBAS015874: WildFly 8(\\..*)* .* started in \\d+ms .*");
-    private static final Pattern WILDFLY_8_STARTING_ML = Pattern.compile(".*JBAS015899: WildFly 8(\\..*)* .* starting");
-    private static final Pattern WILDFLY_9_STARTED_ML = Pattern.compile(".*WFLYSRV0050: WildFly Full \\d+(\\..*)* .* started in \\d+ms .*");
-    private static final Pattern WILDFLY_STARTING_ML = Pattern.compile(".*WFLYSRV0049: WildFly .* \\d+(\\..*)* .* starting");
-    private static final Pattern WILDFLY_10_STARTED_ML = Pattern.compile(".*WFLYSRV0025: WildFly .* \\d+(\\..*)* .* started in \\d+ms .*");
-
-    private static final Pattern EAP6_STARTED_ML = Pattern.compile(".*JBAS015874: JBoss EAP 6\\.[0-9]?.[0-9]?\\.GA .* \\d+ms .*");
-    private static final Pattern EAP6_STARTING_ML = Pattern.compile(".*JBAS015899: JBoss EAP 6\\.[0-9]?.[0-9]?\\.GA .*");
-    private static final Pattern EAP7_STARTED_ML = Pattern.compile(".*WFLYSRV0025: JBoss EAP 7\\.[0-9]?.[0-9]?\\.GA .* \\d+ms .*");
-    private static final Pattern EAP7_STARTING_ML = Pattern.compile(".*WFLYSRV0049: JBoss EAP 7\\.[0-9]?.[0-9]?\\.GA .*");
 
     private final InstanceProperties props;
 
@@ -368,29 +355,11 @@ public final class WildflyOutputSupport {
         }
 
         private boolean isStarting(String line) {
-            return line.contains("Starting JBoss (MX MicroKernel)") // JBoss 4.x message // NOI18N
-                    || line.contains("Starting JBoss (Microcontainer)") // JBoss 5.0 message // NOI18N
-                    || line.contains("Starting JBossAS") // JBoss 6.0 message // NOI18N
-                    || WILDFLY_8_STARTING_ML.matcher(line).matches()
-                    || WILDFLY_STARTING_ML.matcher(line).matches()
-                    || EAP6_STARTING_ML.matcher(line).matches()
-                    || EAP7_STARTING_ML.matcher(line).matches();
+            return WildflyStartLineParser.isStarting(line);
         }
 
         private boolean isStarted(String line) {
-            return ((line.contains("JBoss (MX MicroKernel)") // JBoss 4.x message // NOI18N
-                    || line.contains("JBoss (Microcontainer)") // JBoss 5.0 message // NOI18N
-                    || line.contains("JBossAS") // JBoss 6.0 message // NOI18N
-                    || line.contains("JBoss AS"))// JBoss 7.0 message // NOI18N
-                    && (line.contains("Started in")) // NOI18N
-                    || line.contains("started in") // NOI18N
-                    || line.contains("started (with errors) in")) // JBoss 7 with some errors (include wrong deployments) // NOI18N
-                    || JBOSS_7_STARTED_ML.matcher(line).matches()
-                    || WILDFLY_8_STARTED_ML.matcher(line).matches()
-                    || WILDFLY_9_STARTED_ML.matcher(line).matches()
-                    || WILDFLY_10_STARTED_ML.matcher(line).matches()
-                    || EAP6_STARTED_ML.matcher(line).matches()
-                    || EAP7_STARTED_ML.matcher(line).matches();
+            return WildflyStartLineParser.isStarted(line);
         }
 
         @Override

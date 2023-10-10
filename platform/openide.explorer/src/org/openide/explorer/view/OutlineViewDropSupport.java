@@ -34,7 +34,6 @@ import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Line2D;
-import java.awt.geom.Line2D.Double;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -290,14 +289,14 @@ final class OutlineViewDropSupport implements DropTargetListener, Runnable {
         } else {
             // line and selection of parent if any
             if (pointAt == DragDropUtilities.NODE_UP) {
-                Line2D line = new Double( 0, nodeArea.y, table.getWidth(), nodeArea.y );
+                Line2D line = new Line2D.Double( 0, nodeArea.y, table.getWidth(), nodeArea.y );
                 convertBoundsAndSetDropLine(line);
 
                 // enlagre node area with area for line
                 Rectangle lineArea = new Rectangle( 0, nodeArea.y - 5, table.getWidth(), 10 );
                 nodeArea = (Rectangle) nodeArea.createUnion(lineArea);
             } else {
-                Line2D line = new Double( 0, nodeArea.y + nodeArea.height, table.getWidth(), nodeArea.y + nodeArea.height );
+                Line2D line = new Line2D.Double( 0, nodeArea.y + nodeArea.height, table.getWidth(), nodeArea.y + nodeArea.height );
                 convertBoundsAndSetDropLine(line);
 
                 // enlagre node area with area for line
@@ -340,16 +339,16 @@ final class OutlineViewDropSupport implements DropTargetListener, Runnable {
         view.repaint(r.x - 5, r.y - 5, r.width + 10, r.height + 10);
     }
 
-    /** Converts line's bounds by the bounds of the root pane. Drop glass pane
-     * is over this root pane. After covert a given line is set to drop glass pane.
+    /** Converts line's bounds by the bounds of the drop glass pane.
+     * After covert a given line is set to drop glass pane.
      * @param line line for show in drop glass pane */
     private void convertBoundsAndSetDropLine(final Line2D line) {
         int x1 = (int) line.getX1();
         int x2 = (int) line.getX2();
         int y1 = (int) line.getY1();
         int y2 = (int) line.getY2();
-        Point p1 = SwingUtilities.convertPoint(table, x1, y1, table.getRootPane());
-        Point p2 = SwingUtilities.convertPoint(table, x2, y2, table.getRootPane());
+        Point p1 = SwingUtilities.convertPoint(table, x1, y1, dropPane);
+        Point p2 = SwingUtilities.convertPoint(table, x2, y2, dropPane);
         line.setLine(p1, p2);
         dropPane.setDropLine(line);
     }

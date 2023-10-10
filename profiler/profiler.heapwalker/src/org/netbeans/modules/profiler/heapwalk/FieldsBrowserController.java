@@ -252,7 +252,7 @@ public class FieldsBrowserController extends AbstractController {
         return ((FieldsBrowserControllerUI) getPanel()).getPresenter();
     }
 
-    public List getExpandedPaths() {
+    public List<TreePath> getExpandedPaths() {
         return ((FieldsBrowserControllerUI)getPanel()).getExpandedPaths();
     }
 

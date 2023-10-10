@@ -549,7 +549,7 @@ private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         int[] colsselected = insertRecordTableUI.getSelectedColumns();
         if (!((numrows - 1 == rowsselected[rowsselected.length - 1] - rowsselected[0] && numrows == rowsselected.length) &&
                 (numcols - 1 == colsselected[colsselected.length - 1] - colsselected[0] && numcols == colsselected.length))) {
-            JOptionPane.showMessageDialog(null, "Invalid Copy Selection", "Invalid Copy Selection", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Utilities.findDialogParent(), "Invalid Copy Selection", "Invalid Copy Selection", JOptionPane.ERROR_MESSAGE);
             return;
         }
         for (int i = 0; i < numrows; i++) {

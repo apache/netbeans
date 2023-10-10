@@ -100,7 +100,7 @@ public class NetworkAccess {
                         listener.notifyException (ix);
                     } catch (ExecutionException ex) {
                         Throwable t = ex.getCause();
-                        if(t!=null && t instanceof Exception) {
+                        if(t instanceof Exception) {
                             listener.notifyException ((Exception) t);
                         } else {
                             listener.notifyException (ex);
@@ -156,11 +156,12 @@ public class NetworkAccess {
                     InputStream is = conn.getInputStream ();
                     contentLength = conn.getContentLength();
                     if (err.isLoggable(Level.FINE)) {
-                        Map <String, List <String>> map = conn.getHeaderFields();
+                        Map<String, List<String>> map = conn.getHeaderFields();
                         StringBuilder sb = new StringBuilder("Connection opened for:\n");
                         sb.append("    Url: ").append(conn.getURL()).append("\n");
-                        for(String field : map.keySet()) {
-                           sb.append("    ").append(field==null ? "Status" : field).append(": ").append(map.get(field)).append("\n");
+                        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+                            String field = entry.getKey();
+                            sb.append("    ").append(field == null ? "Status" : field).append(": ").append(entry.getValue()).append("\n");
                         }
                         sb.append("\n");
                         err.log(Level.FINE, sb.toString());

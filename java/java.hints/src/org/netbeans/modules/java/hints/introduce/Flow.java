@@ -1187,9 +1187,7 @@ public class Flow {
 
             if (pendingFinally.isEmpty()) {
                 //performance: limit amount of held variables and their mapping:
-                for ( Element ve : currentMethodVariables) {
-                    variable2State.remove(ve);
-                }
+                variable2State.keySet().removeAll(currentMethodVariables);
             }
             
             resumeAfter(nearestMethod, variable2State);

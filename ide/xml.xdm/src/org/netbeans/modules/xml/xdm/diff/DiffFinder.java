@@ -41,7 +41,7 @@ import org.w3c.dom.NodeList;
 
 /**
  * This class is used by XDMTreeDiff (Both Sync and Undo/Redo) to find difference
- * between 2 XML and returns List<DiffEvent>
+ * between 2 XML and returns {@code List<DiffEvent>}
  *
  * @author Ayub Khan
  */

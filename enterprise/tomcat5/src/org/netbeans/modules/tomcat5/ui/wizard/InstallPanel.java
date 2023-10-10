@@ -40,25 +40,30 @@ class InstallPanel implements WizardDescriptor.Panel, ChangeListener {
         super();
     }
 
+    @Override
     public void addChangeListener(javax.swing.event.ChangeListener l) {
         synchronized (listeners) {
             listeners.add(l);
         }
     }
 
+    @Override
     public void removeChangeListener(javax.swing.event.ChangeListener l) {
         synchronized (listeners) {
             listeners.remove(l);
         }
     }
 
+    @Override
     public void storeSettings(Object settings) {
     }
 
+    @Override
     public void readSettings(Object settings) {
         wizard = (WizardDescriptor)settings;
     }
 
+    @Override
     public boolean isValid() {
         boolean result = getVisual().hasValidData();
         wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, null);
@@ -69,6 +74,7 @@ class InstallPanel implements WizardDescriptor.Panel, ChangeListener {
         return result;
     }
 
+    @Override
     public java.awt.Component getComponent() {
         if (component == null) {
             component = new InstallPanelVisual();
@@ -78,10 +84,12 @@ class InstallPanel implements WizardDescriptor.Panel, ChangeListener {
         return component;
     }
 
+    @Override
     public org.openide.util.HelpCtx getHelp() {
         return new HelpCtx("tomcat_addinstall"); // NOI18N
     }
 
+    @Override
     public void stateChanged(javax.swing.event.ChangeEvent event) {
         fireChange(event);
     }
@@ -98,7 +106,8 @@ class InstallPanel implements WizardDescriptor.Panel, ChangeListener {
         }
 
         Iterator iter = tempList.iterator();
-        while (iter.hasNext())
+        while (iter.hasNext()) {
             ((ChangeListener)iter.next()).stateChanged(event);
+        }
     }
 }

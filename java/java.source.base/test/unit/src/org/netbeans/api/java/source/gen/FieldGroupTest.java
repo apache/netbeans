@@ -1497,7 +1497,7 @@ public class FieldGroupTest extends GeneratorTestMDRCompat {
                 List<? extends StatementTree> stmts = mt.getBody().getStatements();
                 
                 TreeMaker mk = wc.getTreeMaker();
-                List<StatementTree> newStats = new ArrayList(4);
+                List<StatementTree> newStats = new ArrayList<>(4);
                 VariableTree aDecl = (VariableTree)stmts.get(0);
                 newStats.add(stmts.get(0)); // int a,
                 newStats.add(stmts.get(1)); // int b,

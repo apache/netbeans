@@ -27,6 +27,7 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -43,6 +44,8 @@ import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.db.explorer.ConnectionManager;
@@ -244,7 +247,10 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                 js.runWhenScanFinished(cc -> {
                     TypeElement typeElement = cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Entity" : "io.micronaut.data.annotation.MappedEntity"); //NOI18N
                     if (typeElement != null) {
-                        TypeElement idTypeElement = cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Id" : "io.micronaut.data.annotation.Id"); //NOI18N
+                        TypeElement[] idTypeElements = new TypeElement[] {
+                            cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Id" : "io.micronaut.data.annotation.Id"), //NOI18N
+                            cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.EmbeddedId" : "io.micronaut.data.annotation.EmbeddedId") //NOI18N
+                        };
                         Set<ElementHandle<TypeElement>> elementHandles = cc.getClasspathInfo().getClassIndex().getElements(ElementHandle.create(typeElement), EnumSet.of(ClassIndex.SearchKind.TYPE_REFERENCES), EnumSet.of(ClassIndex.SearchScope.SOURCE));
                         for (ElementHandle<TypeElement> elementHandle : elementHandles) {
                             TypeElement type = elementHandle.resolve(cc);
@@ -257,12 +263,14 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                                     }
                                 }
                                 if (fqn != null) {
-                                    if (idTypeElement != null) {
-                                        for (VariableElement field : ElementFilter.fieldsIn(type.getEnclosedElements())) {
-                                            if (idType == null) {
-                                                for (AnnotationMirror annotationMirror : field.getAnnotationMirrors()) {
-                                                    if (idType == null && idTypeElement == annotationMirror.getAnnotationType().asElement()) {
-                                                        idType = cc.getTypeUtilities().getTypeName(field.asType(), TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
+                                    for (TypeElement idTypeElement : idTypeElements) {
+                                        if (idTypeElement != null) {
+                                            for (VariableElement field : ElementFilter.fieldsIn(type.getEnclosedElements())) {
+                                                if (idType == null) {
+                                                    for (AnnotationMirror annotationMirror : field.getAnnotationMirrors()) {
+                                                        if (idType == null && idTypeElement == annotationMirror.getAnnotationType().asElement()) {
+                                                            idType = cc.getTypeUtilities().getTypeName(field.asType(), TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
+                                                        }
                                                     }
                                                 }
                                             }
@@ -328,7 +336,8 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                         if (origTree.getKind() == Tree.Kind.INTERFACE) {
                             GenerationUtils gu = GenerationUtils.newInstance(copy);
                             TreeMaker tm = copy.getTreeMaker();
-                            List<ExpressionTree> args = Arrays.asList(tm.QualIdent(entityFQN), tm.QualIdent(entityIdType));
+                            TypeMirror entityIdTM = copy.getTreeUtilities().parseType(entityIdType, (TypeElement) copy.getTrees().getElement(new TreePath(new TreePath(copy.getCompilationUnit()), origTree)));
+                            List<ExpressionTree> args = Arrays.asList(tm.QualIdent(entityFQN), entityIdTM != null && entityIdTM.getKind().isPrimitive() ? tm.QualIdent(copy.getTypes().boxedClass((PrimitiveType) entityIdTM)) : tm.QualIdent(entityIdType));
                             ParameterizedTypeTree type = tm.ParameterizedType(tm.QualIdent("io.micronaut.data.repository.CrudRepository"), args); //NOI18N
                             ClassTree cls = tm.addClassImplementsClause((ClassTree) origTree, type);
                             if (dialect == null) {

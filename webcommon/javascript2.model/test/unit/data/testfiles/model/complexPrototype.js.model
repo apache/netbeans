@@ -1,0 +1,49 @@
+FUNCTION complexPrototype [ANONYMOUS: false, DECLARED: true - complexPrototype, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+Symbol              : OBJECT Symbol [ANONYMOUS: false, DECLARED: false - Symbol, MODIFIERS: PUBLIC, OBJECT]
+                    # PROPERTIES
+                    toPrimitive : OBJECT toPrimitive [ANONYMOUS: false, DECLARED: false - toPrimitive, MODIFIERS: PUBLIC, PROPERTY]
+Ugga                : FUNCTION Ugga [ANONYMOUS: false, DECLARED: true - Ugga, MODIFIERS: PUBLIC, CONSTRUCTOR]
+                    # RETURN TYPES
+                    Ugga, RESOLVED: true
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                    prototype : OBJECT prototype [ANONYMOUS: false, DECLARED: false - prototype, MODIFIERS: PUBLIC, OBJECT]
+                              # PROPERTIES
+                              hallo : FUNCTION hallo [ANONYMOUS: false, DECLARED: true - hallo, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    undefined, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                              test  : FUNCTION test [ANONYMOUS: true, DECLARED: true - test, MODIFIERS: PUBLIC, METHOD]
+                                    # RETURN TYPES
+                                    undefined, RESOLVED: true
+                                    # PROPERTIES
+                                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+complexPrototypeL#4 : FUNCTION complexPrototypeL#4 [ANONYMOUS: true, DECLARED: true - complexPrototypeL#4, MODIFIERS: PUBLIC, FUNCTION]
+                    # RETURN TYPES
+                    undefined, RESOLVED: true
+                    # PARAMETERS
+                    OBJECT hint [ANONYMOUS: false, DECLARED: true - hint, MODIFIERS: PUBLIC, PARAMETER]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+complexPrototypeL#5 : FUNCTION complexPrototypeL#5 [ANONYMOUS: true, DECLARED: true - complexPrototypeL#5, MODIFIERS: PUBLIC, FUNCTION]
+                    # RETURN TYPES
+                    undefined, RESOLVED: true
+                    # PARAMETERS
+                    OBJECT hint [ANONYMOUS: false, DECLARED: true - hint, MODIFIERS: PUBLIC, PARAMETER]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+complexPrototypeL#6 : FUNCTION complexPrototypeL#6 [ANONYMOUS: true, DECLARED: true - complexPrototypeL#6, MODIFIERS: PUBLIC, FUNCTION]
+                    # RETURN TYPES
+                    undefined, RESOLVED: true
+                    # PARAMETERS
+                    OBJECT hint [ANONYMOUS: false, DECLARED: true - hint, MODIFIERS: PUBLIC, PARAMETER]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+dummy               : FUNCTION dummy [ANONYMOUS: false, DECLARED: false - dummy, MODIFIERS: PUBLIC, FUNCTION]
+                    # PROPERTIES
+                    arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+toPrimitive         : OBJECT toPrimitive [ANONYMOUS: false, DECLARED: false - toPrimitive, MODIFIERS: PUBLIC, VARIABLE]

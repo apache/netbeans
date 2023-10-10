@@ -39,7 +39,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,6 +67,7 @@ import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateFilter;
 import org.netbeans.lib.editor.codetemplates.spi.CodeTemplateParameter;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -97,7 +97,7 @@ public final class SurroundWithHint extends CodeActionsProvider {
         "DN_SurroundWithAll=Surround with ...",
     })
     public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null) {
             return Collections.emptyList();
         }

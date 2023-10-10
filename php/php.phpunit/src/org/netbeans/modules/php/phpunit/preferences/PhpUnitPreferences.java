@@ -21,9 +21,11 @@ package org.netbeans.modules.php.phpunit.preferences;
 import java.io.File;
 import java.util.List;
 import java.util.prefs.Preferences;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.php.api.phpmodule.PhpModule;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.phpunit.PhpUnitTestingProvider;
+import org.netbeans.modules.php.phpunit.PhpUnitVersion;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.openide.filesystems.FileUtil;
 
@@ -41,6 +43,7 @@ public final class PhpUnitPreferences {
     private static final String CUSTOM_SUITE_PATH = "customSuite.path"; // NOI18N
     private static final String PHP_UNIT_ENABLED = "phpUnit.enabled"; // NOI18N
     private static final String PHP_UNIT_PATH = "phpUnit.path"; // NOI18N
+    private static final String PHP_UNIT_VERSION = "phpUnit.version"; // NOI18N
     private static final String RUN_PHPUNIT_ONLY = "test.run.phpunit.only"; // NOI18N
     private static final String RUN_ALL_TEST_FILES = "test.run.all"; // NOI18N
     private static final String ASK_FOR_TEST_GROUPS = "test.groups.ask"; // NOI18N
@@ -153,6 +156,25 @@ public final class PhpUnitPreferences {
 
     public static void setTestGroups(PhpModule phpModule, List<String> testGroups) {
         getPreferences(phpModule).put(TEST_GROUPS, StringUtils.implode(testGroups, TEST_GROUPS_DELIMITER));
+    }
+
+    public static PhpUnitVersion getPhpUnitVersion(PhpModule phpModule) {
+        return getPhpUnitVersion(getPreferences(phpModule).get(PHP_UNIT_VERSION, null));
+    }
+
+    public static void setPhpUnitVersion(PhpModule phpModule, PhpUnitVersion version) {
+        getPreferences(phpModule).put(PHP_UNIT_VERSION, version.name());
+    }
+
+    private static PhpUnitVersion getPhpUnitVersion(@NullAllowed String version) {
+        if (version != null) {
+            try {
+                return PhpUnitVersion.valueOf(version);
+            } catch (Exception ex) {
+                // no-op
+            }
+        }
+        return PhpUnitVersion.getDefault();
     }
 
     private static Preferences getPreferences(PhpModule module) {

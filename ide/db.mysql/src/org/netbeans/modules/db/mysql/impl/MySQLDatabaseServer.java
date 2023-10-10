@@ -89,7 +89,7 @@ public final class MySQLDatabaseServer implements DatabaseServer, PropertyChange
     private static InputOutput OUTPUT = null;
 
     // guarded by static variable "lock"
-    private static volatile DatabaseServer DEFAULT;;
+    private static volatile DatabaseServer DEFAULT;
 
     private static final MySQLOptions OPTIONS = MySQLOptions.getDefault();
 

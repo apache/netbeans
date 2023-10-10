@@ -59,6 +59,7 @@ public class NbModuleSuiteTest extends NbTestCase {
 
         assertEquals("Doesn't exist", System.getProperty("t.userdir"));
         assertProperty("netbeans.full.hack", "true");
+        assertProperty("bootstrap.disableJDKCheck", "true");
     }
     
     public void testPreparePatches() throws URISyntaxException {

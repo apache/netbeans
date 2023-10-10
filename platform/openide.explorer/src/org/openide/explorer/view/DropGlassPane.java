@@ -21,8 +21,10 @@ package org.openide.explorer.view;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 
 import java.util.HashMap;
 
@@ -31,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.Parameters;
 
 
@@ -43,7 +46,7 @@ import org.openide.util.Parameters;
  * @see org.openide.explorer.view.TreeViewDropSupport
  */
 final class DropGlassPane extends JPanel {
-    private static HashMap<Integer, DropGlassPane> map = new HashMap<Integer, DropGlassPane>();
+    private static final HashMap<Integer, DropGlassPane> map = new HashMap<>();
     private static final int MIN_X = 5;
     private static final int MIN_Y = 3;
     private static final int MIN_WIDTH = 10;
@@ -51,7 +54,7 @@ final class DropGlassPane extends JPanel {
     private static transient Component oldPane;
     private static transient JComponent originalSource;
     private static transient boolean wasVisible;
-    Line2D line = null;
+    private Line2D line = null;
 
     private DropGlassPane() {
     }
@@ -61,7 +64,7 @@ final class DropGlassPane extends JPanel {
      * @param comp
      * @return  */
     public static synchronized DropGlassPane getDefault(JComponent comp) {
-        Integer id = new Integer(System.identityHashCode(comp));
+        Integer id = System.identityHashCode(comp);
 
         if ((map.get(id)) == null) {
             DropGlassPane dgp = new DropGlassPane();
@@ -178,18 +181,38 @@ final class DropGlassPane extends JPanel {
 
             g.setColor( UIManager.getColor( "Tree.selectionBackground" ) );
 
-            // int y2 = (int)line.getY2 (); actually not used
-            // LINE
-            g.drawLine(x1 + 2, y1, x2 - 2, y1);
-            g.drawLine(x1 + 2, y1 + 1, x2 - 2, y1 + 1);
+            if (g instanceof Graphics2D) {
+                // create drop line shape
+                Path2D shape = new Path2D.Float();
+                shape.moveTo(x1, y1 - 3); // left-top edge
+                shape.lineTo(x1 + 3, y1); // horizontal line left
+                shape.lineTo(x2 - 3, y1); // horizontal line right
+                shape.lineTo(x2, y1 - 3); // right-top edge
+                shape.lineTo(x2, y1 + 5); // right-bottom edge
+                shape.lineTo(x2 - 3, y1 + 2); // horizontal line right
+                shape.lineTo(x1 + 3, y1 + 2); // horizontal line left
+                shape.lineTo(x1, y1 + 5); // left-bottom edge
+                shape.closePath();
 
-            // RIGHT
-            g.drawLine(x1, y1 - 2, x1, y1 + 3);
-            g.drawLine(x1 + 1, y1 - 1, x1 + 1, y1 + 2);
+                // paint drop line shape
+                GraphicsUtils.configureDefaultRenderingHints(g);
+                ((Graphics2D)g).fill(shape);
+            } else {
+                // probably no longer used, but keep it for compatibility for the case
+                // that graphics context is not a Graphics2D
 
-            // LEFT
-            g.drawLine(x2, y1 - 2, x2, y1 + 3);
-            g.drawLine(x2 - 1, y1 - 1, x2 - 1, y1 + 2);
+                // horizontal line
+                g.drawLine(x1 + 2, y1, x2 - 2, y1);
+                g.drawLine(x1 + 2, y1 + 1, x2 - 2, y1 + 1);
+
+                // left
+                g.drawLine(x1, y1 - 2, x1, y1 + 3);
+                g.drawLine(x1 + 1, y1 - 1, x1 + 1, y1 + 2);
+
+                // right
+                g.drawLine(x2, y1 - 2, x2, y1 + 3);
+                g.drawLine(x2 - 1, y1 - 1, x2 - 1, y1 + 2);
+            }
         }
 
         // help indication of glass pane for debugging

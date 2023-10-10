@@ -20,7 +20,7 @@ package org.netbeans.api.actions;
 
 /** A context interface representing ability of an object to be opened.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 public interface Openable {
     /** Invokes the open action. */

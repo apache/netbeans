@@ -41,7 +41,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
 import org.openide.util.ContextAwareAction;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -97,18 +96,17 @@ public class NodeActionsProvider extends CodeActionsProvider {
     
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!command.startsWith(NBLS_ACTION_PREFIX)) {
-            return CompletableFuture.completedFuture(false);
+        JsonElement el = null;
+        if (arguments.size() > 0) {
+            JsonObject item = gson.fromJson(gson.toJson(arguments.get(0)), JsonObject.class);
+            el = item.get("data"); // NOI18N
         }
-        JsonObject item = gson.fromJson(gson.toJson(arguments.get(0)), JsonObject.class);
-        JsonElement el = item.get("data"); // NOI18N
         int id = -1;
         
         if (el != null) {
-            JsonElement nodeId = el.getAsJsonObject().get("id");
+            JsonElement nodeId = el.getAsJsonObject().get("id"); // NOI18N
             if (nodeId != null && nodeId.isJsonPrimitive()) {
                 id = nodeId.getAsJsonPrimitive().getAsInt();
-                
             }
         }
         
@@ -171,6 +169,11 @@ public class NodeActionsProvider extends CodeActionsProvider {
         FileObject config = FileUtil.getConfigFile(path);
         String contextType = (String) config.getAttribute("type"); //NOI18N
         try {
+            if (contextType == null) {
+                Action a = Actions.forID(category, aid);
+                a.actionPerformed(new ActionEvent(client, 0, aid));
+                return CompletableFuture.completedFuture(false);
+            }
             Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(contextType);
             Object context = gson.fromJson(gson.toJson(arguments.get(0)), clazz);
             if (context != null) {

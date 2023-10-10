@@ -85,12 +85,13 @@ public final class ConfigPersistenceUtils {
             }
             Map<String, String> projectProps = cfg.getProjectProperties();
             if (!(projectProps == null || projectProps.isEmpty())) {
-                for (String s : projectProps.keySet()) {
+                for (Map.Entry<String, String> it : projectProps.entrySet()) {
+                    String s = it.getKey();
                     if (s == null || s.trim().isEmpty()) {
                         continue;
                     }
                     String k = s.trim();
-                    String v = projectProps.get(s);
+                    String v = it.getValue();
                     if (v == null) {
                         v = ""; // NOI18N
                     }

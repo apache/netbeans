@@ -96,6 +96,7 @@ public final class AttributeMap {
 
     /**
      * Returns the number of attributes in this map.
+     * @return the number of attributes in this map
      */
     public int size() {
 	return map.size();
@@ -103,6 +104,7 @@ public final class AttributeMap {
 
     /**
      * Returns true if no attributes exist in this map.
+     * @return true if no attributes exist in this map
      */
     public boolean isEmpty() {
 	return map.isEmpty();
@@ -110,6 +112,8 @@ public final class AttributeMap {
 
     /**
      * Returns true if an attribute of the specified name exists in this map.
+     * @param key attribute name
+     * @return true if attribute exists
      */
     public boolean containsAttribute(String key) {
 	return map.containsKey(key);
@@ -117,6 +121,7 @@ public final class AttributeMap {
 
     /**
      * Returns a set of names of all of the attributes in this map.
+     * @return a set of names of all of the attributes in this map
      */
     public Set<String> keySet() {
 	return map.keySet();

@@ -334,6 +334,7 @@ public class PopupManager {
      *  <LI> <CODE>BelowPreferred</CODE> if the original placement
      *  was <CODE>BelowPreferred</CODE>
      *  and there is less space below the cursor than above it.
+     *  </UL>
      *  <P>Once the placement client property is set
      *  the <CODE>popup.setSize()</CODE> is called with the size of the area
      *  above/below the cursor (indicated by the placement).

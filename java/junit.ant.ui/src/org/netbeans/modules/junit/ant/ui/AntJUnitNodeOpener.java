@@ -59,7 +59,7 @@ public final class AntJUnitNodeOpener extends NodeOpener {
 
     public void openTestsuite(TestsuiteNode node) {
         TestSuite suite = node.getSuite();
-        if ((suite != null) && (suite instanceof JUnitTestSuite)){
+        if (suite instanceof JUnitTestSuite) {
             final FileObject fo = ((JUnitTestSuite)suite).getSuiteFO();
             if (fo != null){
                 final long[] line = new long[]{0};

@@ -536,7 +536,7 @@ public class OverviewController extends AbstractController {
 
 
     private Map<ThreadObjectGCRoot,Map<Integer,List<JavaFrameGCRoot>>> computeJavaFrameMap(Collection<GCRoot> roots) {
-        Map<ThreadObjectGCRoot,Map<Integer,List<JavaFrameGCRoot>>> javaFrameMap = new HashMap();
+        Map<ThreadObjectGCRoot,Map<Integer,List<JavaFrameGCRoot>>> javaFrameMap = new HashMap<>();
         
         for (GCRoot root : roots) {
             if (GCRoot.JAVA_FRAME.equals(root.getKind())) {
@@ -547,7 +547,7 @@ public class OverviewController extends AbstractController {
                 List<JavaFrameGCRoot> locals;
                 
                 if (stackMap == null) {
-                    stackMap = new HashMap();
+                    stackMap = new HashMap<>();
                     javaFrameMap.put(threadObj,stackMap);
                 }
                 locals = stackMap.get(frameNo);

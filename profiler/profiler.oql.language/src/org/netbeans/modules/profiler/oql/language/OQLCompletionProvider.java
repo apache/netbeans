@@ -149,7 +149,7 @@ public class OQLCompletionProvider implements CompletionProvider {
                         int backout = 0;
                         if (ts.movePrevious()) backout++;
                         if (ts.movePrevious()) backout++; // check for "heap.somet[...]"
-                        isHeap = ts.token().text().toString().trim().toLowerCase().equals("heap"); // NOI18N
+                        isHeap = ts.token().text().toString().trim().equalsIgnoreCase("heap"); // NOI18N
                         // get to the current token
                         for(int i=backout;i>0;i--) {
                             ts.moveNext();
@@ -199,7 +199,7 @@ public class OQLCompletionProvider implements CompletionProvider {
                     }
                     case DOT: {
                         ts.movePrevious();
-                        if (ts.token().text().toString().trim().toLowerCase().equals("heap")) { // NOI18N
+                        if (ts.token().text().toString().trim().equalsIgnoreCase("heap")) { // NOI18N
                             ts.moveNext();
 
                             for(String method : heapMethods) {

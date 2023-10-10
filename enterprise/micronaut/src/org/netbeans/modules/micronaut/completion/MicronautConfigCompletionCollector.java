@@ -38,12 +38,12 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
  */
 public class MicronautConfigCompletionCollector implements CompletionCollector {
 
-    @MimeRegistration(mimeType = "text/x-yaml", service = CompletionCollector.class)
+    @MimeRegistration(mimeType = MicronautConfigUtilities.YAML_MIME, service = CompletionCollector.class)
     public static MicronautConfigCompletionCollector createYamlCollector() {
         return new MicronautConfigCompletionCollector();
     }
 
-    @MimeRegistration(mimeType = "text/x-properties", service = CompletionCollector.class)
+    @MimeRegistration(mimeType = MicronautConfigUtilities.PROPERTIES_MIME, service = CompletionCollector.class)
     public static MicronautConfigCompletionCollector createPropertiesCollector() {
         return new MicronautConfigCompletionCollector();
     }

@@ -46,7 +46,7 @@ public interface TokenProcessor {
     * is also provided.
     * @param offset offset of the rest of the characters
     * @return 0 to stop token processing,
-    *         &gt 0 process additional characters in the document
+    *         &gt; 0 process additional characters in the document
     */
     public int eot(int offset);
 
@@ -72,7 +72,7 @@ public interface TokenProcessor {
     * @param preScan preScan needed for the scanning.
     * @param lastBuffer whether this is the last buffer to scan in the document
     *   so there are no more characters in the document after this buffer.
-    * @*/
+    */
     public void nextBuffer(char[] buffer, int offset, int len,
                            int startPos, int preScan, boolean lastBuffer);
 

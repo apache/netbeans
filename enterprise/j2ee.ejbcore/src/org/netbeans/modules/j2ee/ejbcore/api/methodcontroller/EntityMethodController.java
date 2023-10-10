@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.EnumSet;
 import javax.lang.model.element.Modifier;
 import org.netbeans.modules.j2ee.dd.api.ejb.CmpField;
 import org.netbeans.modules.j2ee.dd.api.ejb.CmrField;
@@ -59,7 +60,7 @@ public final class EntityMethodController extends AbstractMethodController {
     
     private final MetadataModel<EjbJarMetadata> metadataModel;
     private final String ejbClass;
-    private final Set<Modifier> modifiersPublicAbstract = new HashSet<Modifier>(2);
+    private final Set<Modifier> modifiersPublicAbstract = EnumSet.noneOf(Modifier.class);
     
     private final String abstractSchemaName;
     private final String persistenceType;
@@ -224,7 +225,7 @@ public final class EntityMethodController extends AbstractMethodController {
 //        }
 //        String prefix = methodName.substring(0, 3);
 //        if (prefix.equals("set") || prefix.equals("get")) {
-//            return lower(methodName.substring(3, methodName.length()));
+//            return lower(methodName.substring(3));
 //        }
 //        return null;
 //    }

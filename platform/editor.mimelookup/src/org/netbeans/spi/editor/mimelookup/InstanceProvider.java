@@ -32,10 +32,10 @@ import org.openide.filesystems.FileObject;
  * For example there can be an instance provider
  * of actions for the editor popup. The file object names
  * of the actions declared in the layer can be of two forms:<ul>
- *   <li><i>MyAction.instance</i> are actions instances declaration files</li>.
- *   <li><i>reformat-code</i> are editor actions names</li>.
+ *   <li><i>MyAction.instance</i> are actions instances declaration files.</li>
+ *   <li><i>reformat-code</i> are editor actions names.</li>
  * </ul>
- * <br/>
+ * <br>
  * The instance provider translates all the file objects to actions
  * which it returns as a collection in some sort of collection-like class
  * e.g.<pre>
@@ -45,7 +45,7 @@ import org.openide.filesystems.FileObject;
  *
  * }</pre>
  *
- * @param T type of instance which will be created
+ * @param <T> type of instance which will be created
  */
 public interface InstanceProvider<T> {
     

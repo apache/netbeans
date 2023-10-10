@@ -29,16 +29,16 @@
                 <subpackages>org</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>asm-9.2.jar</runtime-relative-path>
-                <binary-origin>external/asm-9.2.jar</binary-origin>
+                <runtime-relative-path>asm-9.5.jar</runtime-relative-path>
+                <binary-origin>external/asm-9.5.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>asm-tree-9.2.jar</runtime-relative-path>
-                <binary-origin>external/asm-tree-9.2.jar</binary-origin>
+                <runtime-relative-path>asm-tree-9.5.jar</runtime-relative-path>
+                <binary-origin>external/asm-tree-9.5.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>asm-commons-9.2.jar</runtime-relative-path>
-                <binary-origin>external/asm-commons-9.2.jar</binary-origin>
+                <runtime-relative-path>asm-commons-9.5.jar</runtime-relative-path>
+                <binary-origin>external/asm-commons-9.5.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

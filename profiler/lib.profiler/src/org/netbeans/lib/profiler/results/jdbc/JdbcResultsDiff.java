@@ -129,13 +129,13 @@ public class JdbcResultsDiff extends JdbcResultsSnapshot {
         int s2nSelects = snapshot2.getNProfiledSelects();
 
         // temporary cache for creating diff
-        HashMap<String, Integer> selectsNamesIdxMap = new HashMap(s1nSelects);
-        ArrayList<String> selectsArr = new ArrayList(s1nSelects);
-        ArrayList<Long> invocationsArr = new ArrayList(s1nSelects);
-        ArrayList<Long> timesArr = new ArrayList(s1nSelects);
-        ArrayList<Integer> commandsArr = new ArrayList(s1nSelects);
-        ArrayList<String[]> tablesArr = new ArrayList(s1nSelects);
-        ArrayList<Integer> typesArr = new ArrayList(s1nSelects);
+        HashMap<String, Integer> selectsNamesIdxMap = new HashMap<>(s1nSelects);
+        ArrayList<String> selectsArr = new ArrayList<>(s1nSelects);
+        ArrayList<Long> invocationsArr = new ArrayList<>(s1nSelects);
+        ArrayList<Long> timesArr = new ArrayList<>(s1nSelects);
+        ArrayList<Integer> commandsArr = new ArrayList<>(s1nSelects);
+        ArrayList<String[]> tablesArr = new ArrayList<>(s1nSelects);
+        ArrayList<Integer> typesArr = new ArrayList<>(s1nSelects);
 
         // fill the cache with negative values from snapshot1
         String[] s1SelectNames = snapshot1.getSelectNames();

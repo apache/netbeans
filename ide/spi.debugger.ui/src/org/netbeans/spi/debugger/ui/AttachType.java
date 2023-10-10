@@ -67,7 +67,7 @@ public abstract class AttachType {
     public abstract JComponent getCustomizer ();
 
     /**
-     * Return the implementation of {@link Controller} interface.<br/>
+     * Return the implementation of {@link Controller} interface.<br>
      * It's not desired to implement the {@link Controller} interface
      * by JComponent returned from {@link #getCustomizer()} method, because
      * of the clash of {@link Controller#isValid()} method with

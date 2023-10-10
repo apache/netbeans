@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.netbeans.modules.j2ee.persistence.editor.completion.*;
 import org.netbeans.test.stub.api.StubDelegate;
 
 /**
@@ -33,9 +32,9 @@ import org.netbeans.test.stub.api.StubDelegate;
  */
 public class ResultSetImpl extends StubDelegate {
     
-    private List/*<List<Object>>*/ columns;
-    private Map/*<String, List<Object>*/ names2iterators = new HashMap();
-    private Map/*<String, Object>*/ names2values; // current row values
+    private List<Object> columns;
+    private Map<String, Iterator> names2iterators = new HashMap<>();
+    private Map<String, Object> names2values; // current row values
 
     public ResultSetImpl(List columns) {
         this.columns = columns;
@@ -52,7 +51,7 @@ public class ResultSetImpl extends StubDelegate {
         if (names2values != null) {
             names2values.clear();
         } else {
-            names2values = new HashMap();
+            names2values = new HashMap<>();
         }
         
         Iterator it = names2iterators.entrySet().iterator();
@@ -89,7 +88,7 @@ public class ResultSetImpl extends StubDelegate {
     public short getShort(String columnName) throws SQLException {
         Object value = getObject(columnName);
         if (value instanceof Short) {
-            return ((Short)value).shortValue();
+            return ((Short)value);
         } else {
             throw new SQLException(value + "is not a short.");
         }
@@ -98,7 +97,7 @@ public class ResultSetImpl extends StubDelegate {
     public int getInt(String columnName) throws SQLException {
         Object value = getObject(columnName);
         if (value instanceof Integer){
-            return ((Integer)value).intValue();
+            return ((Integer)value);
         } else {
             throw new SQLException(value + " is not an int.");
         }
@@ -107,7 +106,7 @@ public class ResultSetImpl extends StubDelegate {
     public boolean getBoolean(String columnName) throws SQLException {
         Object value = getObject(columnName);
         if (value instanceof Boolean) {
-            return ((Boolean)value).booleanValue();
+            return ((Boolean)value);
         } else {
             throw new SQLException(value + " is not a boolean.");
         }

@@ -25,6 +25,8 @@ import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.spi.EmbeddingProvider;
 
+import static org.netbeans.modules.html.editor.embedding.CssHtmlTranslator.CSS_MIME_TYPE;
+
 /**
  *
  * @author marekfukala
@@ -64,7 +66,10 @@ public class CssEmbeddingProvider extends EmbeddingProvider {
             }
             List<Embedding> embeddings = translator.getEmbeddings(snapshot);
             if(embeddings.isEmpty()) {
-                return Collections.emptyList();
+                // Add a dummy CSS embedding without content. The intention is
+                // that the HtmlCssIndexContributor is always invoked and the
+                // CSS index can be used to find classes and ids
+                return Collections.singletonList(snapshot.create("", CSS_MIME_TYPE));
             } else {
                 return Collections.singletonList(Embedding.create(embeddings));
             }

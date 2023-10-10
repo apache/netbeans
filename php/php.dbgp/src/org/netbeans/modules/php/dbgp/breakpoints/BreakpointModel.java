@@ -50,6 +50,7 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
     public static final String DISABLED_LINE_CONDITIONAL_BREAKPOINT = "org/netbeans/modules/debugger/resources/breakpointsView/DisabledConditionalBreakpoint"; // NOI18N
     public static final String BROKEN_LINE_BREAKPOINT = "org/netbeans/modules/debugger/resources/breakpointsView/Breakpoint_broken"; // NOI18N
     private static final String METHOD = "TXT_Method"; // NOI18N
+    private static final String EXCEPTION = "TXT_Exception"; // NOI18N
     private static final String PARENS = "()"; // NOI18N
     private final Map<DebugSession, AbstractBreakpoint> myCurrentBreakpoints;
 
@@ -73,6 +74,12 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
             builder.append(" ");
             builder.append(breakpoint.getFunction());
             builder.append(PARENS);
+            return builder.toString();
+        } else if (node instanceof ExceptionBreakpoint) {
+            ExceptionBreakpoint breakpoint = (ExceptionBreakpoint) node;
+            StringBuilder builder = new StringBuilder(NbBundle.getMessage(BreakpointModel.class, EXCEPTION));
+            builder.append(" "); // NOI18N
+            builder.append(breakpoint.getException());
             return builder.toString();
         }
         throw new UnknownTypeException(node);
@@ -119,15 +126,25 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
 
     public void setCurrentStack(Stack stack, DebugSession session) {
         if (stack == null) {
-            synchronized (myCurrentBreakpoints) {
-                AbstractBreakpoint breakpoint = myCurrentBreakpoints.remove(session);
-                fireChangeEvent(new ModelEvent.NodeChanged(this, breakpoint));
-            }
+            removeCurrentBreakpoint(session);
             return;
         }
         String currentCommand = stack.getCurrentCommandName();
         if (!foundLineBreakpoint(stack.getFileName().replace("file:///", "file:/"), stack.getLine() - 1, session)) { //NOI18N
-            foundFunctionBreakpoint(currentCommand, session);
+            if (!foundFunctionBreakpoint(currentCommand, session)) {
+                /**
+                 * Clear myCurrentBreakpoints because if the current breakpoints is not found,
+                 * the previous breakpoint will still be shown as current
+                 */
+                removeCurrentBreakpoint(session);
+            }
+        }
+    }
+
+    private void removeCurrentBreakpoint(DebugSession session) {
+        synchronized (myCurrentBreakpoints) {
+            AbstractBreakpoint breakpoint = myCurrentBreakpoints.remove(session);
+            fireChangeEvent(new ModelEvent.NodeChanged(this, breakpoint));
         }
     }
 
@@ -216,5 +233,4 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
         }
 
     }
-
 }

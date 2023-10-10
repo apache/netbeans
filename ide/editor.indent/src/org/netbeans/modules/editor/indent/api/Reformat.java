@@ -25,7 +25,7 @@ import org.netbeans.modules.editor.indent.IndentImpl;
 
 /**
  * Reformatting of a block of code in a document.
- * <br/>
+ * <br>
  * The following pattern should be used:
  * <pre>
  * reformat.lock();
@@ -69,7 +69,7 @@ public final class Reformat {
     
     /**
      * Clients should call this method before acquiring of document's write lock.
-     * <br/>
+     * <br>
      * The following pattern should be used:
      * <pre>
      * reformat.lock();
@@ -91,7 +91,7 @@ public final class Reformat {
     
     /**
      * Clients should call this method after releasing of document's write lock.
-     * <br/>
+     * <br>
      * The following pattern should be used:
      * <pre>
      * reformat.lock();
@@ -113,7 +113,7 @@ public final class Reformat {
     
     /**
      * Reformat a given range of code in the given document.
-     * <br/>
+     * <br>
      * It includes possible fixing of indentation and possible code beautification
      * dependent on the implementation of the reformatter.
      * 

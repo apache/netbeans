@@ -46,7 +46,7 @@ public class FSCompletionItem implements CompletionProposal {
     private final String prefix;
     private final FSElementHandle element;
     private final boolean addExtension;
-    
+
     public FSCompletionItem(final FileObject file, final String prefix, final boolean addExtension, final int anchor) throws IOException {
         this.file = file;
         this.element = new FSElementHandle(file);
@@ -58,7 +58,7 @@ public class FSCompletionItem implements CompletionProposal {
         this.addExtension = addExtension;
         this.prefix = prefix;
     }
-    
+
     protected String getText() {
         return prefix + file.getNameExt() + (file.isFolder() ? "/" : "");
     }
@@ -147,9 +147,9 @@ public class FSCompletionItem implements CompletionProposal {
     public FileObject getFile() {
         return file;
     }
-    
+
     public static class FSElementHandle implements ElementHandle {
-        
+
         private final FileObject fo;
         private final Set<FileObject> representedFiles;
 
@@ -159,7 +159,7 @@ public class FSCompletionItem implements CompletionProposal {
             representedFiles.add(fo);
         }
 
-        
+
         @Override
         public FileObject getFileObject() {
             return fo;
@@ -199,7 +199,7 @@ public class FSCompletionItem implements CompletionProposal {
         public OffsetRange getOffsetRange(ParserResult result) {
             return OffsetRange.NONE;
         }
-        
+
         public void addRepresentedFile(FileObject fo) {
             if (!representedFiles.contains(fo)) {
                 representedFiles.add(fo);
@@ -209,9 +209,9 @@ public class FSCompletionItem implements CompletionProposal {
         public Set<FileObject> getRepresentedFiles() {
             return representedFiles;
         }
-        
-        
-        
+
+
+
     }
 
 }

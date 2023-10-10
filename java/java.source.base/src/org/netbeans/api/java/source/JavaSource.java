@@ -325,7 +325,7 @@ public final class JavaSource {
     }
 
     /**
-     * Returns a {@link JavaSource} instance associated to the given {@link javax.swing.Document},
+     * Returns a {@link JavaSource} instance associated to the given {@link Document},
      * it returns null if the {@link Document} is not
      * associated with data type providing the {@link JavaSource}.
      * @param doc {@link Document} for which the {@link JavaSource} should be found/created.
@@ -410,7 +410,7 @@ public final class JavaSource {
      * this task does not finish.<BR>
      * @see org.netbeans.api.java.source.CancellableTask for information about implementation requirements
      * @param task The task which.
-     * @param shared if true the java compiler may be reused by other {@link org.netbeans.api.java.source.CancellableTasks},
+     * @param shared if true the java compiler may be reused by other {@link org.netbeans.api.java.source.CancellableTask}s,
      * the value false may have negative impact on the IDE performance.
      * <div class="nonnormative">
      * <p>
@@ -595,11 +595,11 @@ public final class JavaSource {
      * the given task and returns, the task is performed when the background scan completes by
      * the thread doing the background scan.
      * @param task to be performed
-     * @param shared if true the java compiler may be reused by other {@link org.netbeans.api.java.source.CancellableTasks},
+     * @param shared if true the java compiler may be reused by other {@link org.netbeans.api.java.source.CancellableTask}s,
      * the value false may have negative impact on the IDE performance.
      * @return {@link Future} which can be used to find out the sate of the task {@link Future#isDone} or {@link Future#isCancelled}.
      * The caller may cancel the task using {@link Future#cancel} or wait until the task is performed {@link Future#get}.
-     * @throws IOException encapsulating the exception thrown by {@link CancellableTasks#run}
+     * @throws IOException encapsulating the exception thrown by {@link CancellableTask#run}
      * @since 0.12
      */
     public @NonNull Future<Void> runWhenScanFinished (final @NonNull Task<CompilationController> task, final boolean shared) throws IOException {

@@ -245,8 +245,8 @@ public class GetterSetterGenerator implements CodeGenerator {
     private void performEncapsulate(final List<ElementHandle<? extends Element>> variables) {
         try {
             JavaSource js = JavaSource.forDocument(component.getDocument());
-            final List<String> getters = new ArrayList();
-            final List<String> setters = new ArrayList();
+            final List<String> getters = new ArrayList<>();
+            final List<String> setters = new ArrayList<>();
             final List<TreePathHandle> handles = new ArrayList<>(variables.size());
             js.runUserActionTask(new Task<CompilationController>() {
 

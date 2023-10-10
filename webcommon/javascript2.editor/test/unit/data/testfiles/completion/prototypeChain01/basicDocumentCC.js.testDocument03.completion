@@ -2,4 +2,4 @@ Code completion result for source line:
 document.getElementById("dd").getElementsByTagName("*").item(2).getFeature("pero").toLocaleString().charCodeAt(10).toEx|ponential();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     toExponential(): Number         [PUBLIC]   JS Platform
+METHOD     toExponential()                 [PUBLIC]   <font color=#999999>basicDocumentCC.js</font>

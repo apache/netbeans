@@ -203,8 +203,7 @@ public final class ScannerUtils {
     
     /**
      * Traverse the graph of objects reachable from roots Collection, notifying
-     * the Visitor. It performs the scan from inside AWT queue and tries to
-     * suspend other threads during the scan.
+     * the Visitor. It performs the scan from inside AWT queue.
      * 
      * @param f a Filter for excluding objects. null means accept all objects.
      * @param v a Visitor to be notified on all found objects and references.
@@ -216,12 +215,9 @@ public final class ScannerUtils {
         Runnable performer = new Runnable() {
             public void run() {
                 try {
-//                    suspendAllThreads(new HashSet(Arrays.asList(new Object[] {me, Thread.currentThread()})));
                     scan(f, v, roots, true);
                 } catch (Exception e) {
                     ret[0] = e;
-                } finally {
-//                    resumeAllThreads();                    
                 }
             }
         };
@@ -243,31 +239,6 @@ public final class ScannerUtils {
         return ret;
     }
 
-    @SuppressWarnings("deprecation")
-    private static void suspendAllThreads(Set<Thread> except) {
-        Thread[] threads = getAllThreads();
-        
-        for (int i=0; i<threads.length; i++) {
-            if (!except.contains(threads[i])) {
-                if ((threads[i].getName().indexOf("VM") == -1) &&
-                (threads[i].getName().indexOf("CompilerTh") == -1) &&
-                (threads[i].getName().indexOf("Signal") == -1)) {
-                    System.out.println("suspending " + threads[i]);
-                    threads[i].suspend();
-                }
-            }
-        }
-    }
-    
-    @SuppressWarnings("deprecation")
-    private static void resumeAllThreads() {
-        Thread[] threads = getAllThreads();
-        
-        for (int i=0; i<threads.length; i++) {
-            threads[i].resume();
-        }
-    }
-    
     private static class ClassInfo {
         private static Map<Class, ClassInfo> classInfoRegistry = new WeakHashMap<Class, ClassInfo>();
         private int size;

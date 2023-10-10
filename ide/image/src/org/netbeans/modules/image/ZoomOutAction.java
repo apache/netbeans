@@ -43,29 +43,34 @@ public class ZoomOutAction extends CallableSystemAction {
 
 
     /** Peforms action. */
+    @Override
     public void performAction() {
         TopComponent curComponent = TopComponent.getRegistry().getActivated();
         if(curComponent instanceof ImageViewer)
             ((ImageViewer) curComponent).zoomOut();
-        
+
     }
 
     /** Gets name of action. Implements superclass abstract method. */
+    @Override
     public String getName() {
-        return NbBundle.getBundle(ZoomOutAction.class).getString("LBL_ZoomOut");
+        return NbBundle.getMessage(ZoomOutAction.class, "LBL_ZoomOut");
     }
-    
+
     /** Gets help context for action. Implements superclass abstract method. */
+    @Override
     public org.openide.util.HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
     /** Overrides superclass method. */
+    @Override
     public boolean isEnabled() {
         return true;
     }
-    
+
     /** Gets icon resource. Overrides superclass method. */
+    @Override
     protected String iconResource() {
         return "org/netbeans/modules/image/zoomOut.gif"; // NOI18N
     }

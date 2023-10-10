@@ -34,14 +34,14 @@ import org.netbeans.spi.editor.fold.ContentReader;
  * The class will read the contents of the document starting after the fold's guarded start.
  * It will produce text found on the first non-blank line fully contained within the fold. During
  * the search, the Readed ignores leading whitespaces on a line followed by 'lineStartMarker' string.
- * <p/>
+ * <p>
  * For example, if lineStartMarker is set to '*', it will ignore stars at the beginning of the Javadoc, 
  * so it will produce the overwiew sentence, although it typically starts at the 2nd javadoc line. If
  * the 'lineStartMarker' is set to "#", it will produce 1st line of a consecutive line comment block.
- * <p/>
+ * <p>
  * The Reader will stop reading the content on line starting with a 'stopPattern'. For javadoc, lines 
  * that start with @tag will stop the reading.
- * <p/>
+ * <p>
  * So, for Javadocs, the configuration will look like:
  * <code>
  * <pre>

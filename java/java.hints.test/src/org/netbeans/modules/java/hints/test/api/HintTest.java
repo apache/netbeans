@@ -823,17 +823,23 @@ public class HintTest {
         }
 
         /**Assert that the hint(s) produced warnings do not include the given warnings. The provided strings
-         * should match {@code toString()} results of {@link ErrorDescription}s produced
+         * should match {@code getDescription()} results of {@link ErrorDescription}s produced
          * by the hint(s).
          *
-         * @param warnings expected {@code toString()} results of {@link ErrorDescription}s produced
+         * @param warnings expected {@code getDescription()} results of {@link ErrorDescription}s produced
          *                 by the hint
          * @return itself
-         * @throws AssertionError if the given warnings do not match the actual warnings
+         * @throws AssertionError if the given warnings contain the actual warnings
          */
         public HintOutput assertNotContainsWarnings(String... warnings) {
             Set<String> goldenSet = new HashSet<String>(Arrays.asList(warnings));
             List<String> errorsNames = new LinkedList<String>();
+            
+            for (String warning : goldenSet) {
+                if (warning.split(":").length >= 5) {
+                    assertFalse("this method expects hint descriptions, not toString()! errors found: "+errors, true);
+                }
+            }
 
             boolean fail = false;
             for (ErrorDescription d : errors) {
@@ -987,7 +993,7 @@ public class HintTest {
         }
         /**Verifies that the current warning provides the given fixes.
          *
-         * @param fixes the {@link Fix#getText() } of the expected fixes
+         * @param expectedFixes the {@link Fix#getText() } of the expected fixes
          * @return itself
          * @throws AssertionError if the expected fixes do not match the provided fixes
          * @since 1.1
@@ -1009,7 +1015,7 @@ public class HintTest {
 
         /**Verifies that the current warning provides the given fixes.
          *
-         * @param fixes the {@link Fix#getText() } of the expected fixes
+         * @param bannedFixes the {@link Fix#getText() } of the expected fixes
          * @return itself
          * @throws AssertionError if the expected fixes do not match the provided fixes
          * @since 1.18
@@ -1187,7 +1193,6 @@ public class HintTest {
          * This method will compare the content of the file exactly with the provided
          * code.
          *
-         * @param fileName the name of the file that should be verified
          * @param code expected content of the resulting file.
          * @return the wrapper itself
          * @throws AssertionError if the result is not compilable

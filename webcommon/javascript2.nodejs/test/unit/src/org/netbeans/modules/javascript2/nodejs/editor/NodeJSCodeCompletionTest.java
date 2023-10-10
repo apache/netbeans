@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -33,7 +32,6 @@ import org.netbeans.modules.javascript2.nodejs.TestProjectSupport;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.modules.Places;
 import org.openide.util.test.MockLookup;
 
 /**
@@ -301,8 +299,7 @@ public class NodeJSCodeCompletionTest extends JsCodeCompletionBase {
     
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
-        List<FileObject> cpRoots = new LinkedList<FileObject>();
-
+        List<FileObject> cpRoots = new ArrayList<>(2);
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/TestNavigation/public_html/")));
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/NodeJsRuntime/")));
         return Collections.singletonMap(

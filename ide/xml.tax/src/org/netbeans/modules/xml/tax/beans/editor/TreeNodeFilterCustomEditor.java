@@ -616,7 +616,7 @@ public class TreeNodeFilterCustomEditor extends JPanel implements EnhancedCustom
 
         /** */
         private Item (NamedClass clazz) {
-            this (clazz, new TreeSet (new NamedClassComparator()), new String());
+            this (clazz, new TreeSet<Item>(new NamedClassComparator()), new String());
         }
 
         /** */

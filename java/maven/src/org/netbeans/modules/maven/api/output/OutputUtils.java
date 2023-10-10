@@ -28,6 +28,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
@@ -35,6 +37,7 @@ import org.netbeans.modules.maven.api.classpath.ProjectSourcesClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
+import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
@@ -50,7 +53,9 @@ import org.openide.windows.OutputListener;
  * @author mkleint
  */
 public final class OutputUtils {
-    public static final Pattern linePattern = Pattern.compile("(?:\\[catch\\])?\\sat (.*)\\((?:Native Method|(.*)\\.java\\:(\\d+))\\)"); //NOI18N
+
+    // example: '[WARN]  	at java.base/java.util.ImmutableCollections.uoe(ImmutableCollections.java:142)'
+    public static final Pattern linePattern = Pattern.compile("(?:\\[\\w+\\])?\\s*(?:\\[catch\\]\\s)?at\\s(.*)\\((?:Native Method|(.*)\\.java\\:(\\d+))\\)"); //NOI18N
  
     private static final Map<Project, StacktraceOutputListener> projectStacktraceListeners = new WeakHashMap<>();
     private static final Map<FileObject, StacktraceOutputListener> fileStacktraceListeners = new WeakHashMap<>();
@@ -115,13 +120,10 @@ public final class OutputUtils {
         return null;
     }
     
-    /**
-     * 
-     * @param line
-     * @param classPath
-     * @return 
-     */
     private static StacktraceAttributes matchStackTraceLine(String line) {
+        if (!line.endsWith(")")) {
+            return null; // fast path -> not a stack trace
+        }
         Matcher match = linePattern.matcher(line);
         if (match.matches() && match.groupCount() == 3) {
             String method = match.group(1);
@@ -175,17 +177,21 @@ public final class OutputUtils {
                 Logger.getLogger(OutputUtils.class.getName()).log(Level.WARNING, "No file found for output line {0}", ev.getLine()); // NOI18N
                 StatusDisplayer.getDefault().setStatusText(Bundle.NoSource(ev.getLine()));
                 return;
-            } 
-            
-            ClassPath classPath = getClassPath();
-            int index = sa.method.indexOf(sa.file);
-            String packageName = sa.method.substring(0, index).replace('.', '/'); //NOI18N
+            }
+
+            // example: at java.base/java.io.FileReader.<init>(FileReader.java:60)
+            int start = sa.method.indexOf('/') + 1;
+            int end = sa.method.indexOf(sa.file);
+            String packageName = sa.method.substring(start, end).replace('.', '/'); //NOI18N
             String resourceName = packageName + sa.file + ".class"; //NOI18N
+
             // issue #258546; have to check all resources. javafx unpacks all classes to target,
             // SourceForBinaryQuery then fails to find the according java file ...            
+            ClassPath classPath = getClassPath();
             List<FileObject> resources = classPath.findAllResources(resourceName);
             if (resources != null) {
-                for (FileObject resource : resources) {                    
+                // find and open source file
+                for (FileObject resource : resources) {
                     FileObject root = classPath.findOwnerRoot(resource);
                     if (root != null) {
                         URL url = URLMapper.findURL(root, URLMapper.INTERNAL);
@@ -215,8 +221,18 @@ public final class OutputUtils {
                             }
                         }
                     }
-                }                
-                StatusDisplayer.getDefault().setStatusText(Bundle.NoSource(sa.file));
+                }
+                // open class file as fallback
+                try {
+                    FileObject resource = classPath.findResource(resourceName);
+                    if (resource != null) {
+                        DataObject dao = DataObject.find(resource);
+                        OpenCookie cookie = dao.getLookup().lookup(OpenCookie.class);
+                        if (cookie != null) {
+                            cookie.open();
+                        }
+                    }
+                } catch (DataObjectNotFoundException ignore) {}
             } else {
                 StatusDisplayer.getDefault().setStatusText(Bundle.NotFound(sa.file));
             }
@@ -228,6 +244,11 @@ public final class OutputUtils {
         @Override
         public void outputLineCleared(OutputEvent ev) {
         }
+    }
+
+    private static ClassPath createProxyClassPath(Stream<ClassPath> paths) {
+        List<ClassPath> cp = paths.collect(Collectors.toList());
+        return ClassPathSupport.createProxyClassPath(cp.toArray(new ClassPath[0]));
     }
     
     private static class ProjectStacktraceOutputListener extends StacktraceOutputListener {
@@ -241,8 +262,11 @@ public final class OutputUtils {
         protected ClassPath getClassPath() {
             Project prj = ref.get();
             if(prj != null) {
-                ClassPath[] cp = prj.getLookup().lookup(ProjectSourcesClassPathProvider.class).getProjectClassPaths(ClassPath.EXECUTE);
-                return ClassPathSupport.createProxyClassPath(cp);
+                ProjectSourcesClassPathProvider prov = prj.getLookup().lookup(ProjectSourcesClassPathProvider.class);
+                return createProxyClassPath(
+                    Stream.concat(Stream.of(prov.getProjectClassPaths(ClassPath.EXECUTE)),
+                                  Stream.of(prov.getProjectClassPaths(ClassPath.BOOT)))
+                );
             }
             return null;
         }        
@@ -259,7 +283,9 @@ public final class OutputUtils {
         protected ClassPath getClassPath() {
             FileObject fileObject = ref.get();
             if(fileObject != null) {
-                return ClassPath.getClassPath(fileObject, ClassPath.EXECUTE);
+                return createProxyClassPath(
+                    Stream.of(ClassPath.getClassPath(fileObject, ClassPath.EXECUTE),
+                              ClassPath.getClassPath(fileObject, ClassPath.BOOT)));
             }
             return null;
         }        

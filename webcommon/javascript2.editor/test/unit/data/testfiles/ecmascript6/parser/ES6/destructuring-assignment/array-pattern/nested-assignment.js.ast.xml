@@ -1,0 +1,78 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='26'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='25'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='0' end='25'>
+      <BinaryNode type='ASSIGN' start='0' end='24'>
+        <isAssignment/>
+        <!-- BinaryNode lhs -->
+        <ArrayLiteralNode start='0' end='22'>
+          <IdentNode start='1' end='2'>
+            <name>a</name>
+          </IdentNode>
+          <BinaryNode type='ASSIGN' start='3' end='6'>
+            <isAssignment/>
+            <!-- BinaryNode lhs -->
+            <IdentNode start='3' end='4'>
+              <name>b</name>
+            </IdentNode>
+            <!-- BinaryNode rhs -->
+            <NumberLiteralNode value='0' start='5' end='6'/>
+          </BinaryNode>
+          <BinaryNode type='ASSIGN' start='7' end='21'>
+            <isAssignment/>
+            <!-- BinaryNode lhs -->
+            <ArrayLiteralNode start='7' end='18'>
+              <IdentNode start='8' end='9'>
+                <name>c</name>
+              </IdentNode>
+              <UnaryNode type='SPREAD_ARRAY' start='10' end='17'>
+                <!-- UnaryNode Expression -->
+                <IndexNode start='13' end='17'>
+                  <isIndex/>
+                  <!-- IndexNode Base -->
+                  <IdentNode start='13' end='14'>
+                    <name>a</name>
+                  </IdentNode>
+                  <!-- IndexNode Index -->
+                  <NumberLiteralNode value='0' start='15' end='16'/>
+                </IndexNode>
+              </UnaryNode>
+            </ArrayLiteralNode>
+            <!-- BinaryNode rhs -->
+            <ObjectNode start='19' end='21'>
+              <!-- ObjectNode Elements -->
+            </ObjectNode>
+          </BinaryNode>
+        </ArrayLiteralNode>
+        <!-- BinaryNode rhs -->
+        <NumberLiteralNode value='0' start='23' end='24'/>
+      </BinaryNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

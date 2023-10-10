@@ -73,8 +73,10 @@ class ManagedBeanImpl extends PersistentObject  implements FacesManagedBean,
         Map<String, ? extends AnnotationMirror> types = 
             getHelper().getAnnotationsByType(getHelper().getCompilationController()
                     .getElements().getAllAnnotationMirrors(type));
-        AnnotationMirror annotationMirror = types.get(
-                "javax.faces.bean.ManagedBean");                         // NOI18N
+        AnnotationMirror annotationMirror = types.get("jakarta.faces.bean.ManagedBean"); // NOI18N
+        if (annotationMirror == null) {
+            annotationMirror = types.get("javax.faces.bean.ManagedBean"); // NOI18N
+        }
         if (annotationMirror == null) {
             return false;
         }
@@ -134,11 +136,16 @@ class ManagedBeanImpl extends PersistentObject  implements FacesManagedBean,
     private void setScope( Map<String, ? extends AnnotationMirror> types, 
             TypeElement type ) 
     {
-        boolean isCustom = getHelper().hasAnnotation(type.getAnnotationMirrors(), 
-                "javax.faces.bean.CustomScoped");           // NOI18N
+        boolean isCustom
+                = getHelper().hasAnnotation(type.getAnnotationMirrors(), "jakarta.faces.bean.CustomScoped") // NOI18N
+                || getHelper().hasAnnotation(type.getAnnotationMirrors(), "javax.faces.bean.CustomScoped"); // NOI18N
         if ( isCustom ){
             AnnotationMirror annotationMirror = types
-                    .get("javax.faces.bean.CustomScoped"); // NOI18N
+                    .get("jakarta.faces.bean.CustomScoped"); // NOI18N
+            if (annotationMirror == null) {
+                annotationMirror = types
+                        .get("javax.faces.bean.CustomScoped"); // NOI18N
+            }
             AnnotationParser parser = AnnotationParser.create(getHelper());
             parser.expectString("value", AnnotationParser.defaultValue(""));
             ParseResult parseResult = parser.parse(annotationMirror);
@@ -198,6 +205,16 @@ class ManagedBeanImpl extends PersistentObject  implements FacesManagedBean,
         SCOPES.put("javax.faces.bean.SessionScoped",        // NOI18N
                 ManagedBean.Scope.SESSION);
         SCOPES.put("javax.faces.bean.ViewScoped",           // NOI18N
+                ManagedBean.Scope.VIEW);
+        SCOPES.put("jakarta.faces.bean.ApplicationScoped",    // NOI18N
+                ManagedBean.Scope.APPLICATION);
+        SCOPES.put("jakarta.faces.bean.NoneScoped",           // NOI18N
+                ManagedBean.Scope.NONE);
+        SCOPES.put("jakarta.faces.bean.RequestScoped",        // NOI18N
+                ManagedBean.Scope.REQUEST);
+        SCOPES.put("jakarta.faces.bean.SessionScoped",        // NOI18N
+                ManagedBean.Scope.SESSION);
+        SCOPES.put("jakarta.faces.bean.ViewScoped",           // NOI18N
                 ManagedBean.Scope.VIEW);
     }
     

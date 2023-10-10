@@ -24,7 +24,7 @@ import org.openide.modules.ModuleInstall;
  * Manages a module's lifecycle. Remember that an installer is optional and
  * often not needed at all.
  *
- * @auther Peter Williams
+ * @author Peter Williams
  */
 public class Installer extends ModuleInstall {
 

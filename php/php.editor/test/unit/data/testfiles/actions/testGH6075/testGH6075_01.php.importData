@@ -1,0 +1,12 @@
+Caret position: 836
+Should show uses panel: true
+Defaults:
+ \Vendor\User
+
+Names:
+ User
+
+Variants:
+ \Vendor\User
+ Don't import.
+

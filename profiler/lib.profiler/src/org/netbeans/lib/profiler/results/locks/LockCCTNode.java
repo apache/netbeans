@@ -95,13 +95,13 @@ public abstract class LockCCTNode extends CCTNode {
 
     void addChild(LockCCTNode child) {
         if (children == null) {
-            children = new ArrayList();
+            children = new ArrayList<>();
         }
         children.add(child);
     }
 
     void computeChildren() {
-        children = new ArrayList();
+        children = new ArrayList<>();
     }
     
     private void computeChildrenImpl() {

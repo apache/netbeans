@@ -26,7 +26,7 @@
  * This tutorial shows how to embed the various languages in a
  * NetBeans or even plain Java application via {@link org.netbeans.api.scripting.Scripting} helper methods. This
  * environment lets Java interoperate with standard as well as
- * <a href="http://graalvm.org">GraalVM</a> based
+ * <a href="https://graalvm.org">GraalVM</a> based
  * <em>guest languages</em> via <em>foreign objects</em> and <em>foreign functions</em>.
  * For example Java code
  * can directly access guest language methods, objects, classes,
@@ -46,10 +46,10 @@
  * <h2>Setup</h2>
  *
  * The most advanced features that this API provides work in cooperation with
- * <a href="http://graalvm.org">GraalVM</a>.
+ * <a href="https://graalvm.org">GraalVM</a>.
  * Downloading
- * <a href="http://graalvm.org">GraalVM</a> and running your (NetBeans) application on
- * <a href="http://graalvm.org">GraalVM</a> will give you access to the
+ * <a href="https://graalvm.org">GraalVM</a> and running your (NetBeans) application on
+ * <a href="https://graalvm.org">GraalVM</a> will give you access to the
  * polyglot features highlighted in this tutorial.
  * <p>
  * NetBeans modules are <a href="https://search.maven.org/search?q=org.netbeans.api">
@@ -78,16 +78,16 @@
  * The following example evaluates a Python source, let it print a message,
  * returns it, and then "casts" the result to a Java string.
  *
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#testHelloWorld}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="testHelloWorld"}
  *
  * <h3>It's a polyglot world</h3>
  *
  * How to list all available languages? To obtain all registered engine
  * factories in the system use:
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#listAll}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="listAll"}
  * <p>
- * When the above code snippet is executed on <a href="http://graalvm.org">GraalVM</a> it may print:
+ * When the above code snippet is executed on <a href="https://graalvm.org">GraalVM</a> it may print:
  * <pre>
 Found Oracle Nashorn
 Found Graal.js
@@ -96,18 +96,18 @@ Found GraalVM:llvm
 Found GraalVM:python
  * </pre>
  * e.g. a mixture of standard script engines in the JDK with additional ones
- * provided as <a href="http://graalvm.org">GraalVM</a> languages located
+ * provided as <a href="https://graalvm.org">GraalVM</a> languages located
  * via dedicated implementation of {@link org.netbeans.spi.scripting.EngineProvider}
  * interface
  *
  * <h3>Add a language</h3>
  *
- * <a href="http://graalvm.org">GraalVM</a>
+ * <a href="https://graalvm.org">GraalVM</a>
  * download comes with highly efficient implementations of <em>JavaScript</em>.
  * Additional languages like
- * <a href="https://github.com/graalvm/truffleruby/">Ruby</a>,
- * the <a href="https://github.com/graalvm/fastr/">R</a> and
- * <a href="https://github.com/graalvm/graalpython/">Python</a>
+ * <a href="https://github.com/graalvm/truffleruby">Ruby</a>,
+ * the <a href="https://github.com/graalvm/fastr">R</a> and
+ * <a href="https://github.com/graalvm/graalpython">Python</a>
  * can be installed via the <code>bin/gu</code> <em>Graal Updater</em> tool:
  * <p>
  * <pre>
@@ -133,9 +133,9 @@ Found GraalVM:python
  * as a hub where various language engines connect together. Following example
  * shows JavaScript and Python interacting with each other:
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#testHelloWorldInPythonAndJavaScript}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="testHelloWorldInPythonAndJavaScript"}
  * <p>
- * Languages provided by <a href="http://graalvm.org">GraalVM</a> use the
+ * Languages provided by <a href="https://graalvm.org">GraalVM</a> use the
  * {@link javax.script.ScriptEngineManager} created by
  * {@link org.netbeans.libs.graalsdk.Scripting#createManager()} factory
  * method as a connection point to talk to each other and mutually share
@@ -150,7 +150,7 @@ Found GraalVM:python
  * "{@linkplain javax.script.Invocable#getInterface(java.lang.Object, java.lang.Class) cast it}"
  * like in following example:
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#testCastJsArray}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="testCastJsArray"}
  *
  *
  * <h2>Call guest language functions from Java</h2>
@@ -165,7 +165,7 @@ Found GraalVM:python
  * A function exported from a dynamic language becomes a callable <em>foreign function</em>
  * by giving it a Java type, for example the Java interface {@code Multiplier} in the following code.
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#callJavaScriptFunctionFromJava}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="callJavaScriptFunctionFromJava"}
  *
  * Notes:
  * <ul>
@@ -182,7 +182,7 @@ Found GraalVM:python
  * The same example can be rewritten to Python:
  * <p>
  *
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#testPythonFunctionFromJava}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="testPythonFunctionFromJava"}
  *
  * Notes:
  * <ul>
@@ -197,9 +197,9 @@ Found GraalVM:python
  * In this sample we use a reference to existing R function {@code qbinom} from the built-in <em>stats</em> package.
  * <p>
  *
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#callRFunctionFromJava}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="callRFunctionFromJava"}
  *
- * Don't forget to install support for the R language into your <a href="http://graalvm.org">GraalVM</a>
+ * Don't forget to install support for the R language into your <a href="https://graalvm.org">GraalVM</a>
  * instance:
  * <p>
  * <pre>
@@ -213,7 +213,7 @@ Found GraalVM:python
  * an exported group of functions a Java type with more than a single method,
  * for example the Java interface {@code Counter} in the following code.
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#callJavaScriptFunctionsWithSharedStateFromJava}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="callJavaScriptFunctionsWithSharedStateFromJava"}
  *
  * Notes:
  * <ul>
@@ -239,7 +239,7 @@ Found GraalVM:python
  * for example the <em>foreign function</em> factory and class given the Java type
  * {@code Incrementor} in the following code.
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#callJavaScriptClassFactoryFromJava}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="callJavaScriptClassFactoryFromJava"}
  *
  * Notes:
  * <ul>
@@ -269,7 +269,7 @@ Found GraalVM:python
  * to members of a JavaScript array with members of a known type,
  * accessed as a Java {@link java.util.List} of objects with type given by interface {@code Point}.
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#accessJavaScriptArrayWithTypedElementsFromJava}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="accessJavaScriptArrayWithTypedElementsFromJava"}
  *
  * Notes:
  * <ul>
@@ -295,7 +295,7 @@ Found GraalVM:python
  * The following Java code is able to inspect a JavaScript JSON data structure
  * generated by "mock parser" in a type-safe way.
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#accessJavaScriptJSONObjectFromJava}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="accessJavaScriptJSONObjectFromJava"}
  *
  * Notes:
  * <ul>
@@ -315,11 +315,11 @@ Found GraalVM:python
  *
  * <h3>View any Object as Map</h3>
  *
- * Each dynamic object coming from a <a href="http://graalvm.org">GraalVM</a>
+ * Each dynamic object coming from a <a href="https://graalvm.org">GraalVM</a>
  * language can be "cast" to a {@link java.util.Map}. Here is an example:
  *
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#testCastPythonObj}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="testCastPythonObj"}
  *
  * While not type-safe, it is a generic approach able to inspect objects
  * of unknown structure.
@@ -336,7 +336,7 @@ Found GraalVM:python
  * as <em>foreign objects</em>, for example Java objects of type {@code Moment} in
  * the following example.
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#accessFieldsOfJavaObject}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="accessFieldsOfJavaObject"}
  *
  * Notes:
  * <ul>
@@ -360,7 +360,7 @@ Found GraalVM:python
  * the JS function to a Java foreign function (of type {@code MomentConverter}) that
  * returns the desired Java type directly, as shown in the following variation.
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#accessFieldsOfJavaObjectWithConverter}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="accessFieldsOfJavaObjectWithConverter"}
  *
  * <h3>Access Java constructors and static methods from JavaScript</h3>
  *
@@ -369,7 +369,7 @@ Found GraalVM:python
  * The following example shows JavaScript access to the public constructor of a Java
  * class.
  * <p>
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#createJavaScriptFactoryForJavaClass}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="createJavaScriptFactoryForJavaClass"}
  *
  * Notes:
  * <ul>
@@ -391,12 +391,12 @@ Found GraalVM:python
  * a java object called from the script. 
  * <ul>
  * <li>Exceptions from the script code are always
- * reported as {@link ScriptException} that provides the appropriate details.
+ * reported as {@link javax.script.ScriptException} that provides the appropriate details.
  * <li>Checked exceptions from host (java) code, unhandled by the script are raised as
- * some {@link RuntimeException} subclasses; the {@link Throwable#getCause} then indicates
+ * some {@link java.lang.RuntimeException} subclasses; the {@link java.lang.Throwable#getCause} then indicates
  * the original cause for the exception.
  * <li>Unchecked exceptions are directly propagated.
- * {@codesnippet org.netbeans.libs.graalsdk.ScriptingTutorial#handleScriptExceptions}
+ * {@snippet file="org/netbeans/libs/graalsdk/ScriptingTutorial.java" region="handleScriptExceptions"}
  * </ul>
  * 
  * </div>

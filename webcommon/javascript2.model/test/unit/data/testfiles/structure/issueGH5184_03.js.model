@@ -1,0 +1,12 @@
+FUNCTION issueGH5184_03 [ANONYMOUS: false, DECLARED: true - issueGH5184_03, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+test : OBJECT test [ANONYMOUS: false, DECLARED: true - test, MODIFIERS: PUBLIC, CLASS]
+     # PROPERTIES
+     field1  : OBJECT field1 [ANONYMOUS: false, DECLARED: true - field1, MODIFIERS: PUBLIC, PROPERTY]
+     method1 : FUNCTION method1 [ANONYMOUS: false, DECLARED: true - method1, MODIFIERS: PUBLIC, METHOD]
+             # RETURN TYPES
+             undefined, RESOLVED: true
+             # PROPERTIES
+             arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]

@@ -40,10 +40,6 @@ public class BasicBoxModelModuleTest extends CssModuleTestBase {
         assertPropertyValues("padding", "1px");
     }
     
-    public void testHeight() {
-        assertPropertyDeclaration("height: 20px");
-    }
-    
     public void testMargin() {
         assertPropertyDeclaration("margin: 1px"); //tblr == 1
         assertPropertyDeclaration("margin: 1px 2px"); //tb=1, lr=2

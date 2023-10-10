@@ -37,6 +37,7 @@ import java.util.HashMap;
  *     the states stored here are not persisted and therefore don't survive
  *     JVM restarts.
  */
+@Deprecated
 public class EditorState {
     private static HashMap state = new HashMap();
     

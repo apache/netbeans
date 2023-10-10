@@ -27,10 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
+import javax.management.JMException;
 import javax.management.MBeanServer;
-import javax.management.ReflectionException;
 import javax.swing.JButton;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -60,20 +58,10 @@ final class FeedbackSurvey {
             // w/o dependency on Sun's JDK
             // long mem = ((com.sun.management.OperatingSystemMXBean)osBean).getTotalPhysicalMemorySize();
             mem = (Long)mserver.getAttribute(osBean.getObjectName(), "TotalPhysicalMemorySize");   // NOI18N
-        } catch (IllegalArgumentException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (SecurityException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (NoSuchMethodError ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (MBeanException ex) {
-            Exceptions.printStackTrace(ex);
         } catch (AttributeNotFoundException ex) {
             // Can be thrown on non-Sun JDKs:
-            Logger.getLogger(FeedbackSurvey.class.getName()).log(Level.INFO, null, ex);
-        } catch (InstanceNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ReflectionException ex) {
+            Logger.getLogger(FeedbackSurvey.class.getName()).log(Level.INFO, ex.getMessage());
+        } catch (IllegalArgumentException | SecurityException | NoSuchMethodError | JMException ex) {
             Exceptions.printStackTrace(ex);
         }
         String url = NbBundle.getMessage(FeedbackSurvey.class, "MSG_FeedbackSurvey_URL", id, mem);

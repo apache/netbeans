@@ -35,7 +35,7 @@ import org.netbeans.jemmy.operators.*;
  * Contains Default, OK and Cancel buttons,
  * combobox enabling to change editor (DimensionEditor/Value from existing component).
  * <p>
- * Example:<p>
+ * Example:
  * <pre>
  *  ...
  *  property.openEditor();
@@ -50,7 +50,7 @@ import org.netbeans.jemmy.operators.*;
 public class FormCustomEditorOperator extends NbDialogOperator {
 
     /** Search for FormCustomEditor with defined title
-     * @throws TimeoutExpiredException when NbDialog not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when NbDialog not found
      * @param title title of FormCustomEditor (mostly property name) */
     public FormCustomEditorOperator(String title) {
         super(title);
@@ -60,7 +60,7 @@ public class FormCustomEditorOperator extends NbDialogOperator {
     private JComboBoxOperator _cboMode;
 
     /** Tries to find "Default" JButton in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JButtonOperator
      */
     public JButtonOperator btDefault() {
@@ -73,7 +73,7 @@ public class FormCustomEditorOperator extends NbDialogOperator {
     }
 
     /** Tries to find JComboBox in this dialog.
-     * @throws TimeoutExpiredException when component not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when component not found
      * @return JComboBoxOperator */
     public JComboBoxOperator cboMode() {
         if (_cboMode==null) {
@@ -83,7 +83,7 @@ public class FormCustomEditorOperator extends NbDialogOperator {
     }
 
     /** clicks on "Default" JButton
-     * @throws TimeoutExpiredException when JButton not found
+     * @throws org.netbeans.jemmy.TimeoutExpiredException when JButton not found
      */
     public void setDefault() {
         btDefault().push();

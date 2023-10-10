@@ -44,6 +44,7 @@ import org.openide.util.NbBundle;
  * @author ads
  *
  */
+// @todo: Support JakartaEE
 public class ManagedBeansAnalizer implements ClassAnalyzer {
     
     private static final String EXTENSION = "javax.enterprise.inject.spi.Extension";  //NOI18N

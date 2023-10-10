@@ -41,8 +41,8 @@ public class GlobalProfilingPointsProcessor implements DataManagerListener {
 
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    private List<TimedGlobalProfilingPoint> scheduledTimedPPs = new ArrayList();
-    private List<TriggeredGlobalProfilingPoint> scheduledTriggeredPPs = new ArrayList();
+    private List<TimedGlobalProfilingPoint> scheduledTimedPPs = new ArrayList<>();
+    private List<TriggeredGlobalProfilingPoint> scheduledTriggeredPPs = new ArrayList<>();
     private ProfilingSettings profilingSettings;
     private Lookup.Provider profiledProject;
     private GlobalProfilingPoint[] gpp;
@@ -171,7 +171,7 @@ public class GlobalProfilingPointsProcessor implements DataManagerListener {
             checkForStop();
 
             if (isRunning) {
-                List<TimedGlobalProfilingPoint> rescheduledTimedPPs = new ArrayList();
+                List<TimedGlobalProfilingPoint> rescheduledTimedPPs = new ArrayList<>();
 
                 for (TimedGlobalProfilingPoint tgpp : scheduledTimedPPs) {
                     if (timeConditionMet(tgpp.getCondition())) {
@@ -227,7 +227,7 @@ public class GlobalProfilingPointsProcessor implements DataManagerListener {
             checkForStop();
 
             if (isRunning) {
-                List<TriggeredGlobalProfilingPoint> rescheduledTriggeredPPs = new ArrayList();
+                List<TriggeredGlobalProfilingPoint> rescheduledTriggeredPPs = new ArrayList<>();
 
                 for (TriggeredGlobalProfilingPoint tgpp : scheduledTriggeredPPs) {
                     if (triggerConditionMet(tgpp.getCondition())) {

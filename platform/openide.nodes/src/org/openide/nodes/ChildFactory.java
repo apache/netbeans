@@ -30,10 +30,10 @@ import org.openide.util.NbBundle;
  * Node.  Usage is to write a class that extends ChildFactory and
  * pass that to Children.create().  When the Node is expanded or its
  * children are programmatically requested, the
- * <a href="#createKeys(java.util.List)">createKeys(List &lt;T&gt;)</a> method
+ * {@link #createKeys(java.util.List) } method
  * will be invoked to create the List of objects to be modelled as Nodes.
  * Later, on demand, each object from the List will be passed in turn to
- * <a href="#createNodesForKey(java.lang.Object)">createNodesForKey(T)</a>,
+ * {@link #createNodesForKey(java.lang.Object)},
  * which may return an array of zero or more Nodes for the object.
  * <p>
  * A ChildFactory can be used either to create typical Children object, or
@@ -49,11 +49,11 @@ import org.openide.util.NbBundle;
  * Children object for this ChildFactory.
  * <p>
  * To use, simply override
- * <a href="#createKeys(java.util.List)">createKeys(List &lt;T&gt;) and
- * <a href="#createNodesForKey(java.lang.Object)">createNodesForKey(T)</a> or
- * <a href="#createNodeForKey(java.lang.Object)">createNodeForKey(T)</a>.
+ * {@link #createKeys(java.util.List)} and
+ * {@link #createNodesForKey(java.lang.Object) } or
+ * {@link #createNodeForKey(java.lang.Object)}.
  *
- * @param T The type of objects in the keys collection
+ * @param <T> The type of objects in the keys collection
  * @author Tim Boudreau
  * @see Children#create(ChildFactory, boolean)
  * @since org.openide.nodes 7.1
@@ -80,7 +80,7 @@ public abstract class ChildFactory <T> {
     
     /**
      * Create Nodes for a given key object (one from the <code>List</code>
-     * passed to createKeys(List <T>)).  The default implementation simply
+     * passed to {@link #createKeys(java.util.List)}).  The default implementation simply
      * delegates to <code>createNodeForKey</code> and returns the result of
      * that call in an array of nodes.
      * <p>
@@ -155,7 +155,7 @@ public abstract class ChildFactory <T> {
      * synchronous children which does not compute its keys on a background
      * thread.  Whether an instance is synchronous or not is determined by a
      * parameter to
-     * <a href="Children.html#create(ChildFactory, boolean)">Children.create()</a>.
+     * {@link Children#create(ChildFactory, boolean)}.
      * <p>
      * To show no node at all when the Children object is initially expanded in
      * the UI, simply return null.

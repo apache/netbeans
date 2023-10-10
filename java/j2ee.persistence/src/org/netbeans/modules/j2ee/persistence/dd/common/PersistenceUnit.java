@@ -24,62 +24,65 @@ package org.netbeans.modules.j2ee.persistence.dd.common;
  * @author sp153251
  */
 public interface PersistenceUnit {
-	static public final String NAME = "Name";	// NOI18N
-	static public final String TRANSACTIONTYPE = "TransactionType";	// NOI18N
-	static public final String DESCRIPTION = "Description";	// NOI18N
-	static public final String PROVIDER = "Provider";	// NOI18N
-	static public final String JTA_DATA_SOURCE = "JtaDataSource";	// NOI18N
-	static public final String NON_JTA_DATA_SOURCE = "NonJtaDataSource";	// NOI18N
-	static public final String MAPPING_FILE = "MappingFile";	// NOI18N
-	static public final String JAR_FILE = "JarFile";	// NOI18N
-	static public final String CLASS2 = "Class2";	// NOI18N
-	static public final String EXCLUDE_UNLISTED_CLASSES = "ExcludeUnlistedClasses";	// NOI18N
-	static public final String PROPERTIES = "Properties";	// NOI18N
+    
+        String JAVAX_NAMESPACE = "javax.persistence.";
+        String JAKARTA_NAMESPACE = "jakarta.persistence.";
 
-        //
-        public static final String JTA_TRANSACTIONTYPE="JTA";//NOI18N
-        public static final String RESOURCE_LOCAL_TRANSACTIONTYPE="RESOURCE_LOCAL";//NOI18N
+	String NAME = "Name";	// NOI18N
+	String TRANSACTIONTYPE = "TransactionType";	// NOI18N
+	String DESCRIPTION = "Description";	// NOI18N
+	String PROVIDER = "Provider";	// NOI18N
+	String JTA_DATA_SOURCE = "JtaDataSource";	// NOI18N
+	String NON_JTA_DATA_SOURCE = "NonJtaDataSource";	// NOI18N
+	String MAPPING_FILE = "MappingFile";	// NOI18N
+	String JAR_FILE = "JarFile";	// NOI18N
+	String CLASS2 = "Class2";	// NOI18N
+	String EXCLUDE_UNLISTED_CLASSES = "ExcludeUnlistedClasses";	// NOI18N
+	String PROPERTIES = "Properties";	// NOI18N
 
-        public void setName(java.lang.String value);
-        public java.lang.String getName();
-        public void setTransactionType(java.lang.String value);
-        public java.lang.String getTransactionType();
-        public void setDescription(java.lang.String value);
-        public java.lang.String getDescription();
-        public void setProvider(java.lang.String value);
-        public java.lang.String getProvider();
-        public void setJtaDataSource(java.lang.String value);
-        public java.lang.String getJtaDataSource();
-        public void setNonJtaDataSource(java.lang.String value);
-        public java.lang.String getNonJtaDataSource();
-        public void setMappingFile(int index, java.lang.String value);
-        public java.lang.String getMappingFile(int index);
-        public int sizeMappingFile();
-        public void setMappingFile(java.lang.String[] value);
-        public java.lang.String[] getMappingFile();
-        public int addMappingFile(java.lang.String value);
-        public int removeMappingFile(java.lang.String value);
-        public void setJarFile(int index, java.lang.String value);
-        public java.lang.String getJarFile(int index);
-        public int sizeJarFile();
-        public void setJarFile(java.lang.String[] value);
-        public java.lang.String[] getJarFile();
-        public int addJarFile(java.lang.String value);
+        String JTA_TRANSACTIONTYPE="JTA";//NOI18N
+        String RESOURCE_LOCAL_TRANSACTIONTYPE="RESOURCE_LOCAL";//NOI18N
 
-        public int removeJarFile(java.lang.String value);
+        void setName(java.lang.String value);
+        java.lang.String getName();
+        void setTransactionType(java.lang.String value);
+        java.lang.String getTransactionType();
+        void setDescription(java.lang.String value);
+        java.lang.String getDescription();
+        void setProvider(java.lang.String value);
+        java.lang.String getProvider();
+        void setJtaDataSource(java.lang.String value);
+        java.lang.String getJtaDataSource();
+        void setNonJtaDataSource(java.lang.String value);
+        java.lang.String getNonJtaDataSource();
+        void setMappingFile(int index, java.lang.String value);
+        java.lang.String getMappingFile(int index);
+        int sizeMappingFile();
+        void setMappingFile(java.lang.String[] value);
+        java.lang.String[] getMappingFile();
+        int addMappingFile(java.lang.String value);
+        int removeMappingFile(java.lang.String value);
+        void setJarFile(int index, java.lang.String value);
+        java.lang.String getJarFile(int index);
+        int sizeJarFile();
+        void setJarFile(java.lang.String[] value);
+        java.lang.String[] getJarFile();
+        int addJarFile(java.lang.String value);
 
-        public void setClass2(int index, java.lang.String value);
-        public java.lang.String getClass2(int index);
-        public int sizeClass2();
-        public void setClass2(java.lang.String[] value);
-        public java.lang.String[] getClass2();
-        public int addClass2(java.lang.String value);
-        public int removeClass2(java.lang.String value);
+        int removeJarFile(java.lang.String value);
 
-        public void setExcludeUnlistedClasses(boolean value);
-        public boolean isExcludeUnlistedClasses();
+        void setClass2(int index, java.lang.String value);
+        java.lang.String getClass2(int index);
+        int sizeClass2();
+        void setClass2(java.lang.String[] value);
+        java.lang.String[] getClass2();
+        int addClass2(java.lang.String value);
+        int removeClass2(java.lang.String value);
 
-        public void setProperties(Properties valueInterface);
-        public Properties getProperties();
-        public Properties newProperties();
+        void setExcludeUnlistedClasses(boolean value);
+        boolean isExcludeUnlistedClasses();
+
+        void setProperties(Properties valueInterface);
+        Properties getProperties();
+        Properties newProperties();
 }

@@ -21,7 +21,6 @@ package org.netbeans.api.debugger;
 
 import org.openide.util.NbBundle;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -44,11 +43,11 @@ class GestureSubmitter {
         record.setResourceBundle(NbBundle.getBundle(GestureSubmitter.class));
         record.setResourceBundleName(GestureSubmitter.class.getPackage().getName() + ".Bundle"); // NOI18N
         record.setLoggerName(USG_LOGGER.getName());
-        List params = new ArrayList();
+        List<String> params = new ArrayList<>();
         params.add(s.getName());
         params.add(s.getLocationName());
         params.add(s.getCurrentLanguage());
-        record.setParameters(params.toArray(new Object[params.size()]));
+        record.setParameters(params.toArray());
         USG_LOGGER.log(record);
     }
 }

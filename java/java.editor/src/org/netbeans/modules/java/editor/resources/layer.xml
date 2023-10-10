@@ -447,6 +447,16 @@
                     </folder>
                 </folder>
             </folder>
+            <folder name="InlineHints">
+                <folder name="text">
+                    <folder name="x-java">
+                        <file name="JavaInlineHints.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.java.editor.options.InlineHintsOptionsPanelController"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
             <folder name="CodeCompletion">
                 <folder name="text">
                     <folder name="x-java">

@@ -63,7 +63,13 @@ public class ColorsModuleTest extends CssTestBase {
         PropertyDefinition p = Properties.getPropertyDefinition( "color");
         assertTrue(new ResolvedProperty(p, "#ffaa00").isResolved());
         assertTrue(new ResolvedProperty(p, "#fb0").isResolved());
+        assertTrue(new ResolvedProperty(p, "#ffaa0077").isResolved());
+        assertTrue(new ResolvedProperty(p, "#fa07").isResolved());
+        assertFalse(new ResolvedProperty(p, "#fx0").isResolved());
         assertFalse(new ResolvedProperty(p, "#fa001").isResolved());
+        assertFalse(new ResolvedProperty(p, "#dummy1").isResolved());
+        assertFalse(new ResolvedProperty(p, "#dummy123").isResolved());
+        assertFalse(new ResolvedProperty(p, "#dffaa007712").isResolved());
     }
 
     public void testRGBaValues() {
@@ -100,8 +106,8 @@ public class ColorsModuleTest extends CssTestBase {
     
     public void testInheritInColor() throws ParseException {
         PropertyDefinition p = Properties.getPropertyDefinition( "color");
-        PRINT_INFO_IN_ASSERT_RESOLVE = true;
-        GrammarResolver.setLogging(GrammarResolver.Log.DEFAULT, true);
+        PRINT_INFO_IN_ASSERT_RESOLVE = false;
+        GrammarResolver.setLogging(GrammarResolver.Log.DEFAULT, false);
         assertResolve(p.getGrammarElement(null), "inherit");
         
 //        assertCssCode("div { color: inherit }");

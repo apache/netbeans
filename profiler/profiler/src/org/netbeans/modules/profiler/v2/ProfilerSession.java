@@ -192,7 +192,7 @@ public abstract class ProfilerSession {
     
     // --- Profiler API bridge -------------------------------------------------
     
-    private final Set<ProfilingStateListener> profilingStateListeners = new HashSet();
+    private final Set<ProfilingStateListener> profilingStateListeners = new HashSet<>();
     
     
     public final int getState() {

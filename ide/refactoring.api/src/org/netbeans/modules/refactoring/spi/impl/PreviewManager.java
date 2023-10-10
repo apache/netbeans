@@ -65,7 +65,7 @@ public class PreviewManager {
     }
 
     private static PreviewManager manager;
-    private WeakHashMap<RefactoringPanel, HashMap<FileObject, Pair>> map = new WeakHashMap();
+    private WeakHashMap<RefactoringPanel, HashMap<FileObject, Pair>> map = new WeakHashMap<>();
     private PreviewManager() {
     }
     

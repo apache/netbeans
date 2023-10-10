@@ -27,23 +27,27 @@
             <module-dependencies>
                 <dependency>
                     <code-name-base>bcprov</code-name-base>
+                    <build-prerequisite/>
                     <run-dependency/>
                 </dependency>
                 <dependency>
                     <code-name-base>com.jcraft.jzlib</code-name-base>
+                    <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency/>
                 </dependency>
                 <dependency>
                     <code-name-base>libs.c.kohlschutter.junixsocket</code-name-base>
+                    <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>2.32</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>3.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
                     <code-name-base>org.netbeans.libs.jna</code-name-base>
+                    <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
@@ -52,6 +56,7 @@
                 </dependency>
                 <dependency>
                     <code-name-base>org.netbeans.libs.jna.platform</code-name-base>
+                    <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>

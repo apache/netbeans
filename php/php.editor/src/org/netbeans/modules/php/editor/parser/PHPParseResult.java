@@ -70,6 +70,7 @@ public class PHPParseResult extends ParserResult {
     /**
      * @deprecated Use {@link #getModel(org.netbeans.modules.php.editor.model.Model.Type)} instead.
      */
+    @Deprecated
     public synchronized Model getModel(boolean extended) {
         return extended ? getModel(Type.EXTENDED) : getModel(Type.COMMON);
     }

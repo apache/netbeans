@@ -130,7 +130,7 @@ public class EntityHelper extends EntityAndSessionHelper {
         
         public CmpFieldHelper getCmpFieldHelper(int row) {
             CmpField field = getCmpField(row);
-            CmpFieldHelper cmpFieldHelper = (CmpFieldHelper) cmpFieldHelperMap.get(field);
+            CmpFieldHelper cmpFieldHelper = cmpFieldHelperMap.get(field);
             if (cmpFieldHelper == null) {
                 cmpFieldHelper = createCmpFieldHelper(field);
             }
@@ -138,7 +138,7 @@ public class EntityHelper extends EntityAndSessionHelper {
         }
         
         private CmpFieldHelper getCmpFieldHelper(String fieldName) {
-            CmpFieldHelper cmpFieldHelper = (CmpFieldHelper) cmpFieldHelperMap.get(fieldName);
+            CmpFieldHelper cmpFieldHelper = cmpFieldHelperMap.get(fieldName);
             if (cmpFieldHelper == null) {
                 CmpField[] cmpFields = entity.getCmpField();
                 for (int i = 0; i < cmpFields.length; i++) {
@@ -197,7 +197,7 @@ public class EntityHelper extends EntityAndSessionHelper {
         
         protected void firePropertyChange(PropertyChangeEvent evt) {
             for (Iterator<PropertyChangeListener> iterator = listeners.iterator(); iterator.hasNext();) {
-                ((PropertyChangeListener) iterator.next()).propertyChange(evt);
+                iterator.next().propertyChange(evt);
             }
         }
         
@@ -258,13 +258,13 @@ public class EntityHelper extends EntityAndSessionHelper {
                 Query query = queries[i];
                 if (query.getQueryMethod().getMethodName().startsWith(s)) {
                     list.add(query);
-                    final QueryMethodHelper helper = (QueryMethodHelper) queryMethodHelperMap.get(query);
+                    final QueryMethodHelper helper = queryMethodHelperMap.get(query);
                     if (helper != null) {
                         helper.init();
                     }
                 }
             }
-            return (Query[]) list.toArray(new Query[0]);
+            return list.toArray(new Query[0]);
         }
         
         public int getFinderMethodCount() {
@@ -303,7 +303,7 @@ public class EntityHelper extends EntityAndSessionHelper {
         
         protected void firePropertyChange(PropertyChangeEvent evt) {
             for (Iterator<PropertyChangeListener> iterator = listeners.iterator(); iterator.hasNext();) {
-                ((PropertyChangeListener) iterator.next()).propertyChange(evt);
+                iterator.next().propertyChange(evt);
             }
         }
         

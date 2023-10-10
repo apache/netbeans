@@ -72,7 +72,7 @@ public class EvaluatorTest extends NbTestCase {
         assertNotNull(prjRoot);
         Project prj = FileOwnerQuery.getOwner(prjRoot);
         assertNotNull(prj);
-        Project annotationsPrj = FileOwnerQuery.getOwner(prj.getProjectDirectory().getParent().getFileObject("api.annotations.common"));
+        Project annotationsPrj = FileOwnerQuery.getOwner(prj.getProjectDirectory().getParent().getParent().getFileObject("platform/api.annotations.common"));
         assertNotNull(annotationsPrj);
         OpenProjects.getDefault().open(new Project[] {annotationsPrj}, false);
         JavaSource.create(ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY)).runWhenScanFinished(p -> {}, true).get();
@@ -84,7 +84,10 @@ public class EvaluatorTest extends NbTestCase {
         source = new URL(lb.getURL());
         DebuggerManager.getDebuggerManager ().addBreakpoint (lb);
         support = JPDASupport.attach (
-            "org.netbeans.api.debugger.jpda.testapps.EvaluatorApp"
+            new String[] {"--add-opens=java.desktop/java.beans=ALL-UNNAMED"},
+            "org.netbeans.api.debugger.jpda.testapps.EvaluatorApp",
+            new String[0],
+            new File[0]
         );
         support.waitState (JPDADebugger.STATE_STOPPED);
     }
@@ -115,7 +118,7 @@ public class EvaluatorTest extends NbTestCase {
             support.doFinish ();
         }
     }
-    
+
     public void testInstanceEvaluation() throws Exception {
         runInstanceEvaluation(1);
     }
@@ -255,6 +258,11 @@ public class EvaluatorTest extends NbTestCase {
         int end = str.indexOf('\n');
         if (end > 0) {
             str = str.substring(0, end);
+        }
+        int npe = str.indexOf("java.lang.NullPointerException");
+        if (npe >= 0) {
+            //NullPointerExceptions may have enhanced message, not produced by the interpreted debugger evaluator, strip such a message, if any:
+            str = str.substring(0, npe + "java.lang.NullPointerException".length());
         }
         return str;
     }

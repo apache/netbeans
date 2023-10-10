@@ -50,8 +50,8 @@ public final class UpdateItem {
         item.setUpdateItem (this);
     }
     
-    /** Creates <code>UpdateItem/code> which represents NetBeans Module in Autoupdate infrastructure.
-     * UpdateItem is identify by <code>codeName</code> and <code>specificationVersion<code>.
+    /** Creates <code>UpdateItem</code> which represents NetBeans Module in Autoupdate infrastructure.
+     * UpdateItem is identify by <code>codeName</code> and <code>specificationVersion</code>.
      * 
      * @param codeName code name of module
      * @param specificationVersion specification version of module
@@ -93,8 +93,8 @@ public final class UpdateItem {
         return new UpdateItem (item);
     }
     
-    /** Creates <code>UpdateItem/code> which represents NetBeans Module in Autoupdate infrastructure.
-     * UpdateItem is identify by <code>codeName</code> and <code>specificationVersion<code>.
+    /** Creates <code>UpdateItem</code> which represents NetBeans Module in Autoupdate infrastructure.
+     * UpdateItem is identify by <code>codeName</code> and <code>specificationVersion</code>.
      * 
      * @param codeName code name of module
      * @param specificationVersion specification version of module
@@ -141,8 +141,8 @@ public final class UpdateItem {
     
     /** Creates <code>UpdateItem</code> which represents <code>Feature</code>, it's means group
      * of NetBeans Modules. This <code>Feature</code> is handled in UI as atomic item.
-     * UpdateItem is identify by <code>codeName</code> and <code>specificationVersion<code>.
-     * <p/>
+     * UpdateItem is identify by <code>codeName</code> and <code>specificationVersion</code>.
+     * <p>
      * If some of the tokens in {@code dependencies} is not known, it will be reported
      * as a missing dependency.
      * 

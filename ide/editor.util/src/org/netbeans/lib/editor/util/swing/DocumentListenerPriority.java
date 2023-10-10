@@ -30,7 +30,7 @@ public final class DocumentListenerPriority {
 
     /**
      * Level that gets notified first (before all other levels).
-     * <br/>
+     * <br>
      * It may be used in cooperation with other levels to pre-mark that there was
      * a document modification performed that may change some of the data
      * that will be updated later on another level. For example the view hierarchy

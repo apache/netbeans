@@ -1,8 +1,8 @@
 [[896,897]-Syntax error
  unexpected:	|
- expected:	implements, =>, {, ;] 896-897:Syntax error
+ expected:	implements, =>, {, ;, )] 896-897:Syntax error
  unexpected:	|
- expected:	implements, =>, {, ;
+ expected:	implements, =>, {, ;, )
 [[909,915]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	return] 909-915:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	return

@@ -255,7 +255,17 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
     private static final Collection<? extends String> SLOW_MIME_TYPES = Arrays.asList(new String [] {
         "text/sh", //NOI18N
         "text/x-persistence1.0", //NOI18N
+        "text/x-persistence2.0", //NOI18N
+        "text/x-persistence2.1", //NOI18N
+        "text/x-persistence2.2", //NOI18N
+        "text/x-persistence3.0", //NOI18N
+        "text/x-persistence3.1", //NOI18N
         "text/x-orm1.0", //NOI18N
+        "text/x-orm2.0", //NOI18N
+        "text/x-orm2.1", //NOI18N
+        "text/x-orm2.2", //NOI18N
+        "text/x-orm3.0", //NOI18N
+        "text/x-orm3.1", //NOI18N
         "application/xhtml+xml", //NOI18N
         "text/x-maven-pom+xml", //NOI18N
         "text/x-maven-profile+xml", //NOI18N
@@ -271,25 +281,34 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
         "text/x-dd-servlet3.0", //NOI18N
         "text/x-dd-servlet3.1", //NOI18N
         "text/x-dd-servlet4.0", //NOI18N
+        "text/x-dd-servlet5.0", //NOI18N
+        "text/x-dd-servlet6.0", //NOI18N
         "text/x-dd-servlet-fragment3.0", //NOI18N
         "text/x-dd-servlet-fragment3.1", //NOI18N
         "text/x-dd-servlet-fragment4.0", //NOI18N
+        "text/x-dd-servlet-fragment5.0", //NOI18N
+        "text/x-dd-servlet-fragment6.0", //NOI18N
         "text/x-dd-ejbjar2.0", //NOI18N
         "text/x-dd-ejbjar2.1", //NOI18N
         "text/x-dd-ejbjar3.0", //NOI18N
         "text/x-dd-ejbjar3.1", //NOI18N
         "text/x-dd-ejbjar3.2", //NOI18N
+        "text/x-dd-ejbjar4.0", //NOI18N
         "text/x-dd-client1.3", //NOI18N
         "text/x-dd-client1.4", //NOI18N
         "text/x-dd-client5.0", //NOI18N
         "text/x-dd-client6.0", //NOI18N
         "text/x-dd-client7.0", //NOI18N
         "text/x-dd-client8.0", //NOI18N
+        "text/x-dd-client9.0", //NOI18N
+        "text/x-dd-client10.0", //NOI18N
         "text/x-dd-application1.4", //NOI18N
         "text/x-dd-application5.0", //NOI18N
         "text/x-dd-application6.0", //NOI18N
         "text/x-dd-application7.0", //NOI18N
         "text/x-dd-application8.0", //NOI18N
+        "text/x-dd-application9.0", //NOI18N
+        "text/x-dd-application10.0", //NOI18N
         "text/x-dd-sun-web+xml", //NOI18N
         "text/x-dd-sun-ejb-jar+xml", //NOI18N
         "text/x-dd-sun-application+xml", //NOI18N
@@ -425,18 +444,18 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
                     fastTrackOnly = true;
                 }
 
-                Map<T, Set<String>> factories = new LinkedHashMap<T, Set<String>>();
+                Map<T, Set<String>> factories = new LinkedHashMap<>();
                 collectIndexerFactoriesRegisteredForAllLanguages(factories);
                 collectIndexerFactoriesRegisteredForEachParticularLanguage(factories, mimeTypesToCheck);
 
-                Map<String, Set<IndexerInfo<T>>> _infosByName = new HashMap<String, Set<IndexerInfo<T>>>();
-                Map<String, Collection<IndexerInfo<T>>> _infosByMimeType = new HashMap<String, Collection<IndexerInfo<T>>>();
-                List<IndexerInfo<T>> _orderedInfos = new ArrayList<IndexerInfo<T>>();
+                Map<String, Set<IndexerInfo<T>>> _infosByName = new HashMap<>();
+                Map<String, Collection<IndexerInfo<T>>> _infosByMimeType = new HashMap<>();
+                List<IndexerInfo<T>> _orderedInfos = new ArrayList<>();
                 for (Map.Entry<T, Set<String>> entry : factories.entrySet()) {
                     T factory = entry.getKey();
                     Set<String> mimeTypes = entry.getValue();
                     String factoryName = getIndexerName(factory);
-                    IndexerInfo<T> info = new IndexerInfo<T>(factory, factoryName, getIndexerVersion(factory), mimeTypes);
+                    IndexerInfo<T> info = new IndexerInfo<>(factory, factoryName, getIndexerVersion(factory), mimeTypes);
 
                     // infos by name
                     {
@@ -480,7 +499,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
 
                 writeLastKnownIndexers(infosByName);
                 
-                Map<String, Set<IndexerInfo<T>>> addedOrChangedInfosMap = new HashMap<String, Set<IndexerInfo<T>>>();
+                Map<String, Set<IndexerInfo<T>>> addedOrChangedInfosMap = new HashMap<>();
                 diff(lastKnownInfos, infosByName, addedOrChangedInfosMap);
                 
                 for(Set<IndexerInfo<T>> addedOrChangedInfos : addedOrChangedInfosMap.values()) {
@@ -564,19 +583,14 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
     }
 
     private Map<String, IndexerInfo<T>> readLastKnownIndexers() {
-        Map<String, IndexerInfo<T>> lki = new HashMap<String, IndexerInfo<T>>();
+        Map<String, IndexerInfo<T>> lki = new HashMap<>();
 
         FileObject cacheFolder = CacheFolder.getCacheFolder();
         FileObject infoFile = cacheFolder.getFileObject(infoFileName);
         if (infoFile != null) {
             Properties props = new Properties();
-            try {
-                InputStream is = infoFile.getInputStream();
-                try {
-                    props.load(is);
-                } finally {
-                    is.close();
-                }
+            try (InputStream is = infoFile.getInputStream()) {
+                props.load(is);
             } catch (IOException ioe) {
                 LOG.log(Level.FINE, "Can't read " + infoFile.getPath() + " file", ioe); //NOI18N
                 props = null;
@@ -586,7 +600,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
                 for (Map.Entry<Object, Object> entry : props.entrySet()) {
                     String indexerName = ((String) entry.getKey()).trim();
                     int indexerVersion = -1;
-                    Set<String> indexerMimeTypes = new HashSet<String>();
+                    Set<String> indexerMimeTypes = new HashSet<>();
                     String[] indexerData = ((String) entry.getValue()).trim().split(","); //NOI18N
                     if (indexerData.length > 0) {
                         try {
@@ -609,13 +623,15 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
 
                     if (indexerName.length() > 0 && indexerVersion != -1 && indexerMimeTypes.size() > 0) {
                         if (!lki.containsKey(indexerName)) {
-                            IndexerInfo<T> iinfo = new IndexerInfo<T>(null, indexerName, indexerVersion, indexerMimeTypes);
+                            IndexerInfo<T> iinfo = new IndexerInfo<>(null, indexerName, indexerVersion, indexerMimeTypes);
                             lki.put(indexerName, iinfo);
                         } else {
-                            LOG.log(Level.FINE, "Ignoring duplicate indexers data: name={0}, version={1}, mimeTypes={2}", new Object[]{indexerName, indexerVersion, indexerMimeTypes}); //NOI18N
+                            LOG.log(Level.FINE, "Ignoring duplicate indexers data: name={0}, version={1}, mimeTypes={2}", 
+                                    new Object[]{indexerName, indexerVersion, indexerMimeTypes}); //NOI18N
                         }
                     } else {
-                        LOG.log(Level.FINE, "Ignoring incomplete indexer data: name={0}, version={1}, mimeTypes={2}", new Object[]{indexerName, indexerVersion, indexerMimeTypes}); //NOI18N
+                        LOG.log(Level.FINE, "Ignoring incomplete indexer data: name={0}, version={1}, mimeTypes={2}", 
+                                new Object[]{indexerName, indexerVersion, indexerMimeTypes}); //NOI18N
                     }
                 }
             }
@@ -630,12 +646,13 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
             String indexerName = entry.getKey();
             Set<IndexerInfo<T>> iinfos = entry.getValue();
             int indexerVersion = -1;
-            Set<String> mimeTypes = new HashSet<String>();
+            Set<String> mimeTypes = new HashSet<>();
             for(IndexerInfo<T> iinfo : iinfos) {
                 if (indexerVersion == -1) {
                     indexerVersion = iinfo.getIndexerVersion();
                 } else if (indexerVersion != iinfo.getIndexerVersion()) {
-                    LOG.warning(iinfo.getIndexerFactory() + " has different version then other instances of the same factory: version=" + iinfo.getIndexerVersion() + ", others=" + indexerVersion);
+                    LOG.log(Level.WARNING, "{0} has different version then other instances of the same factory: version={1}, others={2}", 
+                            new Object[]{iinfo.getIndexerFactory(), iinfo.getIndexerVersion(), indexerVersion});
                     continue;
                 }
                 mimeTypes.addAll(iinfo.getMimeTypes());
@@ -747,7 +764,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
         // Private implementation
         // --------------------------------------------------------------------
 
-        private final Map<String, Lookup.Result<T>> results = new HashMap<String, Lookup.Result<T>>();
+        private final Map<String, Lookup.Result<T>> results = new HashMap<>();
         private final RequestProcessor.Task task = RP.create(this);
 
     } // End of Tracker class
@@ -828,7 +845,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
             } else if (order2 == null) {
                 return -1;
             } else {
-                return order1.intValue() - order2.intValue();
+                return order1 - order2;
             }
         }
 
@@ -870,7 +887,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
                 if (order == null) {
                     highest = null;
                     break;
-                } else if (highest == null || highest.intValue() < order.intValue()) {
+                } else if (highest == null || highest < order) {
                     highest = order;
                 }
             }

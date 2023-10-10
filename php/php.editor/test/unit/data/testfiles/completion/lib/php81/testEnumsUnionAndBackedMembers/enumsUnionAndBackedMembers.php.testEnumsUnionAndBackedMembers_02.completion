@@ -1,0 +1,11 @@
+Code completion result for source line:
+self::APPLE => "apple" === self::APPLE->|value,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     test()                          [PUBLIC]   Fruit
+------------------------------------
+METHOD     cases()                         [STATIC,   BackedEnum
+METHOD     cases()                         [STATIC,   UnitEnum
+METHOD     from(int|string $value)         [STATIC,   BackedEnum
+METHOD     tryFrom(int|string $value)      [STATIC,   BackedEnum
+VARIABLE   string name                                \Fruit
+VARIABLE   string value                               \Fruit

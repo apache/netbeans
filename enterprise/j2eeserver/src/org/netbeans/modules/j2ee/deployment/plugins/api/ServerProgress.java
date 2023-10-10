@@ -49,7 +49,7 @@ import javax.enterprise.deploy.spi.exceptions.OperationUnsupportedException;
 
 public class ServerProgress implements ProgressObject {
     private Object server;
-    private List<ProgressListener> listeners = new CopyOnWriteArrayList();
+    private List<ProgressListener> listeners = new CopyOnWriteArrayList<>();
     private DeploymentStatus status;
     
     /** Creates a new instance of StartServerProgress */

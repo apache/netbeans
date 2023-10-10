@@ -53,8 +53,8 @@ import org.openide.filesystems.FileUtil;
 public class HeapWalkerManager {
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
-    private Set dumpsBeingDeleted = new HashSet();
-    private List<HeapWalker> heapWalkers = new ArrayList();
+    private Set dumpsBeingDeleted = new HashSet<>();
+    private List<HeapWalker> heapWalkers = new ArrayList<>();
 
     private final RequestProcessor heapwalkerRp = new RequestProcessor(HeapWalkerManager.class);
 

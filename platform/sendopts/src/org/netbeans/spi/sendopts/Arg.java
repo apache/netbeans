@@ -59,7 +59,7 @@ import java.lang.annotation.Target;
  *   }
  * }
  * </pre>
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 2.20
  */
 @Retention(RetentionPolicy.RUNTIME)

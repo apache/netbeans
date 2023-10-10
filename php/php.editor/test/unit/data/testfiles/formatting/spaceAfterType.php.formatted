@@ -36,5 +36,4 @@ class Foo {
     public function isValid(float $length): bool {
         
     }
-
 }

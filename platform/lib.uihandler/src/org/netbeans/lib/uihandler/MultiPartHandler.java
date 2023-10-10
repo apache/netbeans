@@ -780,6 +780,7 @@ class MultiPartHandler {
        *
        * throws IOException  if an I/O error occurs.
        */
+      @Override
       public int read() throws IOException {
           if (count - pos <= 2) {
               fill();
@@ -798,6 +799,7 @@ class MultiPartHandler {
        *
        * throws IOException  if an I/O error occurs.
        */
+      @Override
       public int read(byte b[]) throws IOException {
           return read(b, 0, b.length);
       }
@@ -809,6 +811,7 @@ class MultiPartHandler {
        *
        * throws IOException  if an I/O error occurs.
        */
+      @Override
       public int read(byte b[], int off, int len) throws IOException
 {
           int total = 0;
@@ -851,6 +854,7 @@ class MultiPartHandler {
        *
        * throws IOException  if an I/O error occurs.
        */
+      @Override
       public int available() throws IOException {
           int avail = (count - pos - 2) + in.available();
           // Never return a negative value
@@ -865,6 +869,7 @@ class MultiPartHandler {
        *
        * throws IOException  if an I/O error occurs.
        */
+      @Override
       public void close() throws IOException {
           if (!eof) {
               while (read(buf, 0, buf.length) != -1)

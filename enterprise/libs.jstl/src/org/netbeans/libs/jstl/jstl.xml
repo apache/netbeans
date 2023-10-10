@@ -38,8 +38,8 @@
         <property>
             <name>maven-dependencies</name>
             <value>
-                javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.1:jar
-                org.glassfish.web:javax.servlet.jsp.jstl:1.2.2:jar
+                jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:1.2.7:jar
+                org.glassfish.web:jakarta.servlet.jsp.jstl:1.2.6:jar
             </value>
         </property>
     </properties>    

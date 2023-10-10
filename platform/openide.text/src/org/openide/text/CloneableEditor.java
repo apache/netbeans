@@ -598,8 +598,8 @@ public class CloneableEditor extends CloneableTopComponent implements CloneableE
      * Resolves deserialized object. Overrides superclass method. Adds checking
      * for object validity. In case this object is invalid
      * throws {@link java.io.InvalidObjectException InvalidObjectException}.
-     * @throws ObjecStreamException When problem during serialization occures.
-     * @throws InvalidObjectException When deserialized <code>CloneableEditor</code>
+     * @throws ObjectStreamException When problem during serialization occures.
+     * @throws java.io.InvalidObjectException When deserialized <code>CloneableEditor</code>
      *              is invalid and shouldn't be used. */
     protected Object readResolve() throws ObjectStreamException {
         if (discard()) {

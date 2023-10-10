@@ -35,7 +35,6 @@ class FinalPrivateConstant {
     public final const PUBLIC_CONST5 = "foo", PUBLIC_CONST6 = "foo";
     private final const PRIVATE_CONST5 = "foo", PRIVATE_CONST6 = "foo";
     protected final const PROTECTED_CONST5 = "foo", PROTECTED_CONST6 = "foo";
-
 }
 
 interface I {
@@ -43,5 +42,4 @@ interface I {
     final const IMPLICIT_CONST = "i";
     final public const PUBLIC_CONST1 = "i";
     public final const PUBLIC_CONST2 = "i";
-
 }

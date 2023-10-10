@@ -353,7 +353,7 @@ public class RefactoringTestBase extends NbTestCase {
         org.netbeans.api.project.ui.OpenProjects.getDefault().close(new Project[] {prj});
         CountDownLatch cdl = new CountDownLatch(1);
         RepositoryUpdater.getDefault().stop(() -> {
-            cdl.countDown();;
+            cdl.countDown();
         });
         cdl.await();
         prj = null;

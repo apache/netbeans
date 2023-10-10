@@ -49,7 +49,7 @@ public class DefaultInputReader implements InputReader {
     public DefaultInputReader(Reader reader, boolean greedy) {
         assert reader != null;
 
-        this.reader = new BufferedReader(reader);
+        this.reader = reader;
         this.greedy = greedy;
         this.buffer = new char[greedy ? BUFFER_SIZE * 2 : BUFFER_SIZE];
     }

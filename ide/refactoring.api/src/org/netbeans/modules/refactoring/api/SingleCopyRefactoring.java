@@ -41,7 +41,8 @@ public final class SingleCopyRefactoring extends AbstractRefactoring {
     /**
      * Creates a new instance of SingleCopyRefactoring.
      * Single Copy Refactoring implementations currently understand following types:
-     * <table border="1">
+     * <table>
+     *   <caption>SingleCopyRefactoring types supported</caption>
      *   <tr><th>Module</th><th>Types the Module Understands</th><th>Implementation</th></tr>
      *   <tr><td>Refactoring API (Default impl.)</td><td>{@link org.openide.filesystems.FileObject}</td><td>Does file copy</td></tr>
      *   <tr><td>Java Refactoring</td><td><ul>
@@ -58,7 +59,8 @@ public final class SingleCopyRefactoring extends AbstractRefactoring {
     /**
      * Target for copying.
      * Single Copy Refactoring implementations currently understand following types:
-     * <table border="1">
+     * <table>
+     *   <caption>SingleCopyRefactoring types supported</caption>
      *   <tr><th>Module</th><th>Types the Module Understands</th><th>Implementation</th></tr>
      *   <tr><td>Refactoring API (Default impl.)</td><td>{@link java.net.URL}</td>
      *        <td>Creates directory corresponding to specified URL (if does not 

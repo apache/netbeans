@@ -42,6 +42,7 @@ import org.openide.util.UserQuestionException;
  * @deprecated use {@link org.netbeans.spi.extexecution.base.ProcessBuilderImplementation}
  *             and {@link org.netbeans.spi.extexecution.base.ProcessBuilderFactory}
  */
+@Deprecated
 public interface ProcessBuilderImplementation {
 
     /**

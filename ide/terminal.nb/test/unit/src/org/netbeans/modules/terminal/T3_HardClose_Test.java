@@ -109,16 +109,16 @@ public class T3_HardClose_Test extends TestSupport {
 	    termRef = new WeakReference(IOTerm.term(io));
 	}
 
-	Reference<InputOutput> ioRef = new WeakReference(io);
+	Reference<InputOutput> ioRef = new WeakReference<>(io);
 	io = null;
 
-	Reference<Action> actionRef = new WeakReference(dummyAction);
+	Reference<Action> actionRef = new WeakReference<>(dummyAction);
 	dummyAction = null;
 
-	Reference<PropertyChangeListener> pclRef = new WeakReference(pcl);
+	Reference<PropertyChangeListener> pclRef = new WeakReference<>(pcl);
 	pcl = null;
 
-	Reference<VetoableChangeListener> vclRef = new WeakReference(vcl);
+	Reference<VetoableChangeListener> vclRef = new WeakReference<>(vcl);
 	vcl = null;
 
 

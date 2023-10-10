@@ -21,9 +21,9 @@ package org.netbeans.spi.lexer;
 
 /**
  * Defines whether a default embedding can be present for the given token id or not.
- * <br/>
+ * <br>
  * It allows to speed up <code>TokenSequence.embedded()</code> calls considerably in most cases.
- * <br/>
+ * <br>
  * This only affects the default embedding creation. Custom embedding creation
  * can always be performed by <code>TokenSequene.createEmbedding()</code>.
  *
@@ -37,10 +37,10 @@ public enum EmbeddingPresence {
      * will be attempted for the first time but if there will be no embedding 
      * created then there will be no other attempts for embedding creation
      * for any tokens with the same token id.
-     * <br/>
+     * <br>
      * This corresponds to the most usual case that the embedding presence
      * only depends on a token id.
-     * <br/>
+     * <br>
      * This is the default for {@link LanguageHierarchy#embeddingPresence(org.netbeans.api.lexer.TokenId)}.
      */
     CACHED_FIRST_QUERY,
@@ -48,11 +48,11 @@ public enum EmbeddingPresence {
     /**
      * Default embedding creation will always be attempted for each token since
      * the embedding presence varies (it may depend on token's text or other token properties).
-     * <br/>
+     * <br>
      * For example if a string literal token would only qualify for an embedding
      * if it would contain a '\' character but not otherwise then this method
      * should return true for string literal token id.
-     * <br/>
+     * <br>
      * This option presents no performance improvement.
      */
     ALWAYS_QUERY,
@@ -60,7 +60,7 @@ public enum EmbeddingPresence {
     /**
      * There is no default embedding for the given {@link org.netbeans.api.lexer.TokenId}
      * and its creation will not be attempted.
-     * <br/>
+     * <br>
      * This is useful e.g. for keywords and operators.
      */
     NONE,

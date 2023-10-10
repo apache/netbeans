@@ -125,8 +125,7 @@ public abstract class FileNameMatcher {
             if (fileName == null || fileName.length() <= extWithDotLen) {
                 return false;
             }
-            return fileName.substring(fileName.length() - extWithDotLen,
-                    fileName.length()).equalsIgnoreCase(extWithDot);
+            return fileName.substring(fileName.length() - extWithDotLen).equalsIgnoreCase(extWithDot);
         }
 
         @Override
@@ -216,7 +215,7 @@ public abstract class FileNameMatcher {
             if (lastSeparator == -1) {
                 return false;
             } else {
-                String name = path.substring(lastSeparator + 1, path.length());
+                String name = path.substring(lastSeparator + 1);
                 return pattern.matcher(name).matches();
             }
         }

@@ -19,13 +19,10 @@
 
 package org.netbeans.modules.j2ee.persistence.editor;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
-import java.util.Stack;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
@@ -55,8 +52,7 @@ public class DocumentContext {
     private boolean valid = false;
     private SyntaxElement docRoot;
     private String defaultNamespace;
-    private HashMap<String, String> declaredNamespaces =
-            new HashMap<String, String>();
+    private HashMap<String, String> declaredNamespaces = new HashMap<>();
     private String schemaLocation;
     private String noNamespaceSchemaLocation;
     private final String VERSION = "version";//NOI18N
@@ -214,10 +210,8 @@ public class DocumentContext {
             return false;
         }
         final DocumentContext other = (DocumentContext) obj;
-        if (this.document != other.document && (this.document == null || !this.document.equals(other.document))) {
-            return false;
-        }
-        return true;
+        
+        return !(Objects.equals(this.document, other.document));
     }
 
     @Override

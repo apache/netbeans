@@ -27,11 +27,8 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.DefaultListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
 import org.netbeans.modules.j2ee.persistence.api.EntityClassScope;
-import org.netbeans.modules.j2ee.persistence.api.metadata.orm.Entity;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.Entity;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.EntityMappingsMetadata;
 import org.netbeans.modules.j2ee.persistence.util.MetadataModelReadHelper;
@@ -56,35 +53,29 @@ public class AddEntityPanel extends javax.swing.JPanel {
     private AddEntityPanel(EntityClassScope entityClassScope, final Set<String> ignoreClassNames) {
         initComponents();
         MetadataModel<EntityMappingsMetadata> model = entityClassScope.getEntityMappingsModel(true);
-        readHelper = MetadataModelReadHelper.create(model, new MetadataModelAction<EntityMappingsMetadata, List<String>>() {
-            public List<String> run(EntityMappingsMetadata metadata) {
-                List<String> result = new ArrayList<String>();
-                for (Entity entity : metadata.getRoot().getEntity()) {
-                    String className = entity.getClass2();
-                    if (!ignoreClassNames.contains(className)) {
-                        result.add(className);
-                    }
+        readHelper = MetadataModelReadHelper.create(model, (EntityMappingsMetadata metadata) -> {
+            List<String> result = new ArrayList<>();
+            for (Entity entity : metadata.getRoot().getEntity()) {
+                String className = entity.getClass2();
+                if (!ignoreClassNames.contains(className)) {
+                    result.add(className);
                 }
-                Collections.sort(result);
-                return result;
             }
+            Collections.sort(result);
+            return result;
         });
     }
     
     private void initialize() {
-        readHelper.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                if (readHelper.getState() == State.FINISHED) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            try {
-                                setEntityClassModel(readHelper.getResult());
-                            } catch (ExecutionException e) {
-                                Exceptions.printStackTrace(e);
-                            }
-                        }
-                    });
-                }
+        readHelper.addChangeListener( (ChangeEvent e) -> {
+            if (readHelper.getState() == State.FINISHED) {
+                SwingUtilities.invokeLater( () -> {
+                    try {
+                        setEntityClassModel(readHelper.getResult());
+                    } catch (ExecutionException e1) {
+                        Exceptions.printStackTrace(e1);
+                    }
+                });
             }
         });
         readHelper.start();
@@ -103,7 +94,7 @@ public class AddEntityPanel extends javax.swing.JPanel {
      * @return fully qualified names of the selected entities' classes.
      */
     public List<String> getSelectedEntityClasses(){
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         for (Object elem : entityList.getSelectedValues()) {
             result.add((String)elem);
         }

@@ -84,6 +84,20 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="ElementOpen_names">
+            <api name="general"/>
+            <summary>ElementOpen with suggested names</summary>
+            <version major="1" minor="67"/>
+            <date day="26" month="12" year="2022"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes"/>
+            <description>
+                Provide <code>ElementOpen.open</code> with suggested list
+                of file names to open. Allows extracting name from <code>.class</code>
+                file and opening that one.
+            </description>
+            <class package="org.netbeans.api.java.source.ui" name="ElementOpen"/>
+        </change>
         <change id="StructureElement_convert">
             <api name="general"/>
             <summary>A variant conversion that works for both source and binary elements.</summary>

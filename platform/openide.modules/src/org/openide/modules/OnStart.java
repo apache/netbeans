@@ -44,7 +44,7 @@ import org.openide.util.lookup.NamedServiceDefinition;
  * {@code @OnShowing}</a> annotation.
  * 
  * @since 7.29
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  */
 @NamedServiceDefinition(
     path="Modules/Start", // NOI18N

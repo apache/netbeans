@@ -97,6 +97,7 @@ public class GuardedDocument extends BaseDocument
      * @deprecated The use of editor kit's implementation classes is deprecated
      *   in favor of mime types.
      */
+    @Deprecated
     public GuardedDocument(Class kitClass) {
         this(kitClass, true, new StyleContext());
     }
@@ -123,6 +124,7 @@ public class GuardedDocument extends BaseDocument
      * @deprecated The use of editor kit's implementation classes is deprecated
      *   in favor of mime types.
     */
+    @Deprecated
     public GuardedDocument(Class kitClass, boolean addToRegistry, StyleContext styles) {
         super(kitClass, addToRegistry);
         init(styles);
@@ -181,8 +183,6 @@ public class GuardedDocument extends BaseDocument
     * is updated as result of removal. This function can throw
     * BadLocationException or its descendants to stop the ongoing
     * insert from being actually done.
-    * @param evt document event containing the change including array
-    *  of characters that will be inserted
     */
     protected @Override void preInsertCheck(int offset, String text, AttributeSet a)
     throws BadLocationException {

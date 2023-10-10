@@ -57,6 +57,7 @@ import org.eclipse.lsp4j.debug.ScopesResponse;
 import org.eclipse.lsp4j.debug.SetBreakpointsArguments;
 import org.eclipse.lsp4j.debug.SetBreakpointsResponse;
 import org.eclipse.lsp4j.debug.SetExceptionBreakpointsArguments;
+import org.eclipse.lsp4j.debug.SetExceptionBreakpointsResponse;
 import org.eclipse.lsp4j.debug.SetVariableArguments;
 import org.eclipse.lsp4j.debug.SetVariableResponse;
 import org.eclipse.lsp4j.debug.Source;
@@ -96,6 +97,7 @@ import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 import org.netbeans.spi.debugger.ui.DebuggingView;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVFrame;
 import org.netbeans.spi.debugger.ui.DebuggingView.DVThread;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -172,10 +174,10 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
         NbDebugSession debugSession = context.getDebugSession();
         if (debugSession != null) {
             // Breakpoints were submitted, we can resume the debugger
-            context.getConfigurationSemaphore().notifyCongigurationDone();;
+            context.getConfigurationSemaphore().notifyCongigurationDone();
             future.complete(null);
         } else {
-            ErrorUtilities.completeExceptionally(future, "Failed to launch debug session, the debugger will exit.", ResponseErrorCode.serverErrorStart);
+            ErrorUtilities.completeExceptionally(future, "Failed to launch debug session, the debugger will exit.", ResponseErrorCode.ServerNotInitialized);
         }
         return future;
     }
@@ -201,7 +203,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
     }
 
     @Override
-    public CompletableFuture<Void> setExceptionBreakpoints(SetExceptionBreakpointsArguments args) {
+    public CompletableFuture<SetExceptionBreakpointsResponse> setExceptionBreakpoints(SetExceptionBreakpointsArguments args) {
         return breakpointsRequestHandler.setExceptionBreakpoints(args, context);
     }
 

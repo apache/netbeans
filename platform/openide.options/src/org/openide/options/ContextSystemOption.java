@@ -190,7 +190,7 @@ public abstract class ContextSystemOption extends SystemOption implements BeanCo
 
     /** A hierarchy of SystemOptions.
     * Allows add/remove SystemOption beans only.
-    * @warning many methods throws UnsupportedOperationException like BeanContextSupport does.
+    * <strong>warning</strong> many methods throws UnsupportedOperationException like BeanContextSupport does.
     */
     private static class OptionBeanContext extends BeanContextSupport implements PropertyChangeListener {
         private static final long serialVersionUID = 3532434266136225440L;
@@ -203,6 +203,7 @@ public abstract class ContextSystemOption extends SystemOption implements BeanCo
         /** Overridden from base class.
         * @exception IllegalArgumentException if not targetChild instanceof SystemOption
         */
+        @Override
         public boolean add(Object targetChild) {
             if (!(targetChild instanceof SystemOption)) {
                 throw new IllegalArgumentException("Not a SystemOption: " + targetChild); // NOI18N
@@ -217,6 +218,7 @@ public abstract class ContextSystemOption extends SystemOption implements BeanCo
             return b;
         }
 
+        @Override
         public boolean remove(Object targetChild) {
             if (!(targetChild instanceof SystemOption)) {
                 throw new IllegalArgumentException("Not a SystemOption: " + targetChild); // NOI18N
@@ -231,6 +233,7 @@ public abstract class ContextSystemOption extends SystemOption implements BeanCo
             return b;
         }
 
+        @Override
         public void propertyChange(java.beans.PropertyChangeEvent evt) {
             if (parent != null) {
                 parent.firePropertyChange(evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());

@@ -175,7 +175,10 @@ public class AngularJsCodeCompletion implements CompletionProvider {
         if (jsIndex != null) {
             Collection<IndexedElement> globalVars = jsIndex.getGlobalVar(ccContext.getPrefix());
             for (IndexedElement variable : globalVars) {
-                if (!variable.isAnonymous() && (variable.getJSKind() == JsElement.Kind.FUNCTION || variable.getJSKind() == JsElement.Kind.CONSTRUCTOR) && variable instanceof IndexedElement.FunctionIndexedElement) {
+                if (!variable.isAnonymous() 
+                        && (variable.getJSKind() == JsElement.Kind.FUNCTION || variable.getJSKind() == JsElement.Kind.CONSTRUCTOR || variable.getJSKind() == JsElement.Kind.ARROW_FUNCTION)
+                        && variable instanceof IndexedElement.FunctionIndexedElement
+                    ) {
                     IndexedElement.FunctionIndexedElement function = (IndexedElement.FunctionIndexedElement)variable;
                     // pick up all functions that has at least one parameter and one of the paramets is $scope
                     if (!function.isAnonymous() && function.getParameters().size() > 0 && function.getParameters().containsKey("$scope")) {

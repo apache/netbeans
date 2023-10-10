@@ -35,6 +35,7 @@ public class OperationException extends IOException {
     private Exception ex;
 
     /** Default constructor.
+     * @param ex encapsuled exception
     */
     public OperationException(Exception ex) {
         this.ex = ex;
@@ -48,10 +49,12 @@ public class OperationException extends IOException {
 
     /** Description taken from previous message
     */
+    @Override
     public String getMessage() {
         return ex.getMessage();
     }
 
+    @Override
     public Throwable getCause() {
         return ex;
     }

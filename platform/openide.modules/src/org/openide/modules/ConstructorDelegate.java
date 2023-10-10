@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * as its first parameter. The rest of parameter types will be used to generate
  * a constructor in the original API class, with the same thrown exceptions and
  * access modifiers.
- * <p/>
+ * <p>
  * The generated constructor will first call
  * <b>the default constructor</b> of the API class, then delegate the
  * initialization work to the static method passing <code>this</code> typed as
@@ -40,12 +40,12 @@ import java.lang.annotation.Target;
  * instance typed as the API class would require type casting to the
  * <code>@PatchFor</code> supertype in order to access the data for the injected
  * code.
- * <p/>
+ * <p>
  * The annotation has only effect if the method's declaring class was annotated
  * using {@link PatchFor @PatchFor}.
- * <p/>
+ * <p>
  * Take, for example, the following code from <code>openide.filesystems</code> module:
- * <code><pre>
+ * <pre>{@code 
  *  &#064PatchFor(JarFileSystem.class)
  * public abstract class JarFileSystemCompat extends AbstractFileSystem {
  *    &#064ConstructorDelegate
@@ -53,23 +53,23 @@ import java.lang.annotation.Target;
  *     ...
  *   }
  * }
- * </pre></code>
+ * }</pre>
  * Will cause generate, at runtime (during class loading), a new constructor in the
  * <code>JarFileSystem</code> class: 
- * <code><pre>
+ * <pre>{@code
  *      JarFileSystem(FileSystemCapability c) throws IOException {
  *          this();
  *          JarFileSystemCompat.createJarFileSystemCompat(this, c);
  *      }
- * </pre></code>
- * <p/>
+ * }</pre>
+ * <p>
  * In the case it is necessary to invoke a <b>non-default</b> constructor, the
  * {@link #delegateParams()} attribute enumerates which parameters of the static 
  * annotated method are also passed to the non-default constructor. Parameter positions
  * are zero-based (0 = the object type itself) and must be listed in the same order 
  * and have the same types as in the invoked constructor declaration.
  *
- * <code><pre>
+ * <pre>{@code
  *  &#064PatchFor(JarFileSystem.class)
  * public abstract class JarFileSystemCompat extends AbstractFileSystem {
  *    &#064ConstructorDelegate(delegateParams = {1, 2} )
@@ -77,14 +77,14 @@ import java.lang.annotation.Target;
  *     ...
  *   }
  * }
- * </pre></code>
+ * }</pre>
  * will produce an equivalent of
- * <code><pre>
+ * <pre>{@code
  *      JarFileSystem(FileSystemCapability cap, File f) throws IOException {
  *          this(f);
  *          JarFileSystemCompat.createJarFileSystemCompat(this, cap, f);
  *      }
- * </pre></code>
+ * }</pre>
  * 
  * @see PatchFor
  * @since 7.44

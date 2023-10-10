@@ -55,6 +55,7 @@ public class FastScanner
         this.artifactContextProducer = artifactContextProducer;
     }
 
+    @Override
     public ScanningResult scan(ScanningRequest request) {
         request.getArtifactScanningListener().scanningStarted(request.getIndexingContext());
         ScanningResult result = new ScanningResult(request);

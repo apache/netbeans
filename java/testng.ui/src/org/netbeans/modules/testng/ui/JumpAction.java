@@ -39,7 +39,7 @@ final class JumpAction extends org.netbeans.modules.java.testrunner.ui.api.JumpA
         Node node = getNode();
         if (node instanceof TestNGSuiteNode) {
             TestSuite suite = ((TestNGSuiteNode) node).getSuite();
-            if ((suite != null) && (suite instanceof TestNGTestSuite)) {
+            if (suite instanceof TestNGTestSuite) {
                 return ((TestNGTestSuite) suite).getSuiteFO() != null;
             }
         }

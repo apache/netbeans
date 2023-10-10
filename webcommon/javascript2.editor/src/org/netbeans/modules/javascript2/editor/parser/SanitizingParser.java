@@ -48,12 +48,12 @@ import org.openide.util.ChangeSupport;
 public abstract class SanitizingParser<R extends BaseParserResult> extends Parser {
 
     private static final Logger LOGGER = Logger.getLogger(SanitizingParser.class.getName());
-    
+
     public static final boolean PARSE_BIG_FILES = Boolean.getBoolean("nb.js.parse.big.files"); //NOI18N
     public static final long MAX_FILE_SIZE_TO_PARSE = Integer.getInteger("nb.js.big.file.size", 1024 * 1024); //NOI18N
     private static final long MAX_MINIMIZE_FILE_SIZE_TO_PARSE = Integer.getInteger("nb.js.big.minimize.file.size", 0); //NOI18N
     /**
-     * This is count of closing curly brackets that follows at the end of a json file. 
+     * This is count of closing curly brackets that follows at the end of a json file.
      * If the file has sequence of MAX_RICHT_CURLY_BRACKETS, then it's not parse due stack overflow.
      */
     private static final int MAX_RIGHT_CURLY_BRACKETS = 30;
@@ -157,12 +157,11 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 boolean isMinified = false;
                 TokenSequence<? extends JsTokenId> ts = LexUtilities.getTokenSequence(snapshot, 0, language);
                 if (ts != null) {
-                    int offset = 0;
                     int countedLines = 0;
                     int countChars = 0;
                     while (!isMinified && ts.moveNext() && countedLines < 5) {
                         LexUtilities.findNext(ts, Arrays.asList(JsTokenId.DOC_COMMENT, JsTokenId.BLOCK_COMMENT, JsTokenId.LINE_COMMENT, JsTokenId.EOL, JsTokenId.WHITESPACE));
-                        offset = ts.offset();
+                        int offset = ts.offset();
                         LexUtilities.findNextToken(ts, Arrays.asList(JsTokenId.EOL));
                         countChars += (ts.offset() - offset);
                         countedLines++;
@@ -190,7 +189,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                     index--;
                     count++;
                     ch = text.charAt(index);
-                    
+
                 }
                 if (count >= MAX_RIGHT_CURLY_BRACKETS) {   // See issue 247274
                     return false;
@@ -199,15 +198,15 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
         }
         return true;
     }
-    
+
     R parseContext(Context context, Sanitize sanitizing,
             JsErrorManager errorManager) throws Exception {
         return parseContext(context, sanitizing, errorManager, true);
     }
-    
+
     private R parseContext(Context context, Sanitize sanitizing,
             JsErrorManager errorManager, boolean copyErrors) throws Exception {
-        
+
         boolean sanitized = false;
         if ((sanitizing != Sanitize.NONE) && (sanitizing != Sanitize.NEVER)) {
             boolean ok = sanitizeSource(context, sanitizing, errorManager);
@@ -220,14 +219,14 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 return parseContext(context, sanitizing.next(), errorManager, false);
             }
         }
-        
+
         JsErrorManager current = new JsErrorManager(context.getSnapshot(), language);
         R r = parseSource(context, current);
 
         if (copyErrors) {
             errorManager.fillErrors(current);
         }
-        
+
         if (sanitizing != Sanitize.NEVER) {
             if (!sanitized) {
                 if (current.getMissingCurlyError() != null) {
@@ -514,7 +513,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
         }
         return false;
     }
-    
+
     @Override
     public final Result getResult(Task task) throws ParseException {
         return lastResult;
@@ -542,32 +541,32 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
             builder.insert(i, ' ');
         }
     }
-    
+
     /**
      * Parsing context
      */
     protected static final class Context {
 
-        private static final List<JsTokenId> IMPORT_EXPORT = new ArrayList<JsTokenId>(2);
+        private static final List<JsTokenId> IMPORT_EXPORT = new ArrayList<>(2);
 
         static {
             Collections.addAll(IMPORT_EXPORT, JsTokenId.KEYWORD_IMPORT, JsTokenId.KEYWORD_EXPORT);
         }
-        
+
         private final String name;
-        
+
         private final Snapshot snapshot;
 
         private final int caretOffset;
-        
+
         private final Language<JsTokenId> language;
-        
+
         private String source;
 
         private String sanitizedSource;
 
         private Sanitize sanitization;
-        
+
         private Boolean isModule = null;
 
         Context(String name, Snapshot snapshot, int caretOffset, Language<JsTokenId> language) {
@@ -602,7 +601,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
             }
             return source;
         }
-        
+
         public String getSanitizedSource() {
             return sanitizedSource;
         }
@@ -680,7 +679,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 return MISSING_CURLY;
             }
         },
-        
+
         /** Attempt to fix missing } */
         MISSING_CURLY {
 
@@ -698,7 +697,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 return SYNTAX_ERROR_CURRENT;
             }
         },
-        
+
         /** Remove current error token */
         SYNTAX_ERROR_CURRENT {
 
@@ -707,7 +706,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 return SYNTAX_ERROR_PREVIOUS;
             }
         },
-        
+
         /** Remove token before error */
         SYNTAX_ERROR_PREVIOUS {
 
@@ -724,7 +723,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 return EDITED_DOT;
             }
         },
-        
+
         /** Try to remove the trailing . or :: at the caret line */
         EDITED_DOT {
 
@@ -733,8 +732,8 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 return ERROR_DOT;
             }
         },
-        
-        /** 
+
+        /**
          * Try to remove the trailing . at the error position, or the prior
          * line.
          */
@@ -745,7 +744,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 return ERROR_LINE;
             }
         },
-        
+
         /** Try to cut out the error line */
         ERROR_LINE {
 
@@ -754,7 +753,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
                 return EDITED_LINE;
             }
         },
-        
+
         /** Try to cut out the current edited line, if known */
         EDITED_LINE {
 
@@ -772,7 +771,7 @@ public abstract class SanitizingParser<R extends BaseParserResult> extends Parse
             }
         };
 
-        
+
         public abstract Sanitize next();
     }
 

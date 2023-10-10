@@ -55,12 +55,12 @@ import org.openide.util.Task;
  * Command Line Interface and User Directory Locker support class.
  * Subclasses may be registered into the system to handle special command-line options.
  * To be registered, use {@link org.openide.util.lookup.ServiceProvider}
- * in a JAR file in the startup or dynamic class path (e.g. <samp>lib/ext/</samp>
- * or <samp>lib/</samp>).
+ * in a JAR file in the startup or dynamic class path (e.g. <code>lib/ext/</code>
+ * or <code>lib/</code>).
  * @author Jaroslav Tulach
  * @since org.netbeans.core/1 1.18
  * @see "#32054"
- * @see <a href="http://openide.netbeans.org/proposals/arch/cli.html">Specification</a>
+ * @see <a href="https://netbeans.apache.org/projects/platform/openide/proposals/arch/cli.html">Specification</a>
  */
 public abstract class CLIHandler extends Object {
     /** lenght of the key used for connecting */

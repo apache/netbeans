@@ -16,10 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-
 package org.netbeans.modules.j2ee.deployment.impl;
-
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
@@ -53,18 +51,18 @@ import org.openide.util.Utilities;
 
 /**
  *
- * @author  nn136682
+ * @author nn136682
  */
 public class InitialServerFileDistributor extends ServerProgress {
 
     private static final Logger LOGGER = Logger.getLogger(InitialServerFileDistributor.class.getName());
+    private static final String SYSTEM_PROPERTY_PREFIX = "glassfish.javaee";
 
     private final ServerString serverString;
     private final DeploymentTarget dtarget;
     private final IncrementalDeployment incDeployment;
     private final Target target;
     boolean inPlace = false;
-
 
     public InitialServerFileDistributor(DeploymentTarget dtarget, Target target) {
         super(dtarget.getServer().getServerInstance());
@@ -96,22 +94,24 @@ public class InitialServerFileDistributor extends ServerProgress {
             }
 
             setStatusDistributeRunning(NbBundle.getMessage(
-                InitialServerFileDistributor.class, "MSG_RunningInitialDeploy", dtarget.getDeploymentName(), dir));
+                    InitialServerFileDistributor.class, "MSG_RunningInitialDeploy", dtarget.getDeploymentName(), dir));
 
-            _distribute(source.getArchiveContents(), dir, collectChildModuleNames(source));
+            final Set<String> childModuleNames = collectChildModuleNames(source);
+            _distribute(source.getArchiveContents(), dir, childModuleNames);
 
             if (source instanceof J2eeApplication) {
                 J2eeModule[] childModules = ((J2eeApplication) source).getModules();
                 for (int i = 0; i < childModules.length; i++) {
-                    String uri = childModules[i].getUrl();
-                    J2eeModule childModule = deployment.getJ2eeModule(uri);
-                    File subdir = incDeployment.getDirectoryForNewModule(dir, uri, childModule, deployment.getModuleConfiguration());
+                    final String moduleUrl = childModules[i].getUrl();
+                    String subDirectoryForChildModule = getBestMatchingChildModuleName(moduleUrl, childModuleNames);
+                    J2eeModule childModule = deployment.getJ2eeModule(moduleUrl);
+                    File subdir = incDeployment.getDirectoryForNewModule(dir, subDirectoryForChildModule, childModule, deployment.getModuleConfiguration());
                     _distribute(childModules[i].getArchiveContents(), subdir, null);
                 }
             }
 
             setStatusDistributeCompleted(NbBundle.getMessage(
-                InitialServerFileDistributor.class, "MSG_DoneInitialDistribute", dtarget.getDeploymentName()));
+                    InitialServerFileDistributor.class, "MSG_DoneInitialDistribute", dtarget.getDeploymentName()));
 
             return dir;
 
@@ -125,11 +125,90 @@ public class InitialServerFileDistributor extends ServerProgress {
         return null;
     }
 
+    private String getBestMatchingChildModuleName(String url, Set<String> childModuleNames) {
+        if (childModuleNames.contains(url)) {
+            return url;
+        } else {
+            if (!url.startsWith("/")) {
+                url = "/" + url;
+            }
+            // There's no module for the url, try to guess which has the closest name
+            for (String name : childModuleNames) {
+                String[] splitName = name.split("\\.");
+                String baseName = splitName[0];
+                String extension = splitName.length > 1 ? splitName[1] : null;
+                
+                // url is in form /baseNameXXX.extension, e.g. /webapp-1.0.0.war
+                if (url.startsWith("/" + baseName)) {
+                    if (extension == null || url.endsWith("." + extension)) {
+                        return name;
+                    }
+                }
+            }
+            return url;
+        }
+    }
+
     // We are collecting module names to be able to skip .jar and .war files under
     // the application root with the same name as one of the deployed modules. Those
     // are typically jars coresponding to already existing exploded directory and we
     // don't want to deploy them  -->  see also #199096 and #222924 for more details
-    private Set<String> collectChildModuleNames(J2eeModule source) {
+    private Set<String> collectChildModuleNames(J2eeModule source) throws IOException {
+        String childModulesSource = System.getProperty(SYSTEM_PROPERTY_PREFIX + ".childModuleSource");
+        if ("mavenProject".equals(childModulesSource)) {
+            return collectChildModuleNamesFromMavenProject(source);
+        }
+        if ("archive".equals(childModulesSource)) {
+            return collectChildModuleNamesFromArchiveContents(source);
+        }
+
+        final Set<String> childModuleNamesFromMavenProject = collectChildModuleNamesFromMavenProject(source);
+        final Set<String> childModuleNamesFromArchive = collectChildModuleNamesFromArchiveContents(source);
+        /* If both lists have the same size (are likely to contain the same modules)
+           return the list from the archive as it definitely contains the correct module names,
+           while the module names derived from the Maven project may not be accurate
+         */
+        if (childModuleNamesFromArchive.size() == childModuleNamesFromMavenProject.size()) {
+            return childModuleNamesFromArchive;
+        } else {
+            /* If the lists are not the same, fall back to the old behavior 
+             and return the module names from Maven project 
+             */
+            return childModuleNamesFromMavenProject;
+        }
+    }
+
+    private Set<String> collectChildModuleNamesFromArchiveContents(J2eeModule source) throws IOException {
+        final Set<String> childModuleNames = new HashSet<String>();
+        if (source instanceof J2eeApplication) {
+            J2eeApplication j2eeApp = (J2eeApplication) source;
+            final Iterator<J2eeModule.RootedEntry> entries = source.getArchiveContents();
+            while (entries.hasNext()) {
+                J2eeModule.RootedEntry entry = entries.next();
+                String relativePath = entry.getRelativePath();
+                FileObject sourceFO = entry.getFileObject();
+
+                if (isModuleFile(entry)) {
+                    childModuleNames.add(relativePath);
+                }
+            }
+
+        }
+        return childModuleNames;
+    }
+
+    private boolean isModuleFile(J2eeModule.RootedEntry fileEntry) {
+        String relativePath = fileEntry.getRelativePath();
+        FileObject file = fileEntry.getFileObject();
+        final FileObject parentFile = file.getParent();
+        final String pathUsingRelativePathFromParent = parentFile.getFileObject(relativePath, false).getPath();
+        final boolean isInRootFolder = pathUsingRelativePathFromParent.equals(file.getPath());
+
+        return isInRootFolder && file.isData()
+                && Arrays.asList("war", "jar").contains(file.getExt().toLowerCase());
+    }
+
+    private Set<String> collectChildModuleNamesFromMavenProject(J2eeModule source) {
         final Set<String> childModuleNames = new HashSet<String>();
         if (source instanceof J2eeApplication) {
             for (J2eeModule module : ((J2eeApplication) source).getModules()) {
@@ -147,7 +226,7 @@ public class InitialServerFileDistributor extends ServerProgress {
     }
 
     private boolean cleanup(File f) {
-        String [] chNames = f.list();
+        String[] chNames = f.list();
         boolean deleted = true;
         if (chNames != null) {
             for (int i = 0; i < chNames.length; i++) {
@@ -231,9 +310,11 @@ public class InitialServerFileDistributor extends ServerProgress {
     private void setStatusDistributeRunning(String message) {
         notify(createRunningProgressEvent(CommandType.DISTRIBUTE, message));
     }
+
     private void setStatusDistributeFailed(String message) {
         notify(createFailedProgressEvent(CommandType.DISTRIBUTE, message));
     }
+
     private void setStatusDistributeCompleted(String message) {
         notify(createCompletedProgressEvent(CommandType.DISTRIBUTE, message));
     }
@@ -326,4 +407,5 @@ public class InitialServerFileDistributor extends ServerProgress {
             fileToOverwrite.close();
         }
     }
+
 }

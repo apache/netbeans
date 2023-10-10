@@ -109,7 +109,7 @@ public abstract class StatusDisplayer {
      * @param importance Positive integer defining the 'Importance' of the message
      * to be displayed, the higher number the higher importance.
      * @return Handle associated with given status line text.
-     * @throws IllegalArgumentException If importance <= 0
+     * @throws IllegalArgumentException If importance &lt;= 0
      * @since 7.5
      */
     public Message setStatusText(final String text, int importance) {

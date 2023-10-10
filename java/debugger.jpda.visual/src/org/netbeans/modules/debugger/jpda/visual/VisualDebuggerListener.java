@@ -162,7 +162,7 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
                             RemoteServiceInit initRet =
                                     initDebuggerRemoteService(event.getThread(),
                                                               RemoteServices.ServiceType.AWT);
-                            if (initRet.equals(RemoteServiceInit.FAIL_RETRY)) {
+                            if (initRet == RemoteServiceInit.FAIL_RETRY) {
                                 DebuggerManager.getDebuggerManager().addBreakpoint(mb[0]);
                                 inited[0].set(false);
                             }
@@ -183,7 +183,7 @@ public class VisualDebuggerListener extends DebuggerManagerAdapter {
                             RemoteServiceInit initRet =
                                     initDebuggerRemoteService(event.getThread(),
                                                               RemoteServices.ServiceType.FX);
-                            if (initRet.equals(RemoteServiceInit.FAIL_RETRY)) {
+                            if (initRet == RemoteServiceInit.FAIL_RETRY) {
                                 DebuggerManager.getDebuggerManager().addBreakpoint(mb[1]);
                                 inited[1].set(false);
                             }

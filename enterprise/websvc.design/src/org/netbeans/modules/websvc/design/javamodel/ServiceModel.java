@@ -256,12 +256,8 @@ public class ServiceModel {
             }
             // op1 contains methods present in model1 that are not in model2
             // op2 contains methods present in model2 that are not in model1
-            for (String key:op1.keySet()) {
-                removeOperation(op1.get(key));
-            }
-            for (String key:op2.keySet()) {
-                addOperation(op2.get(key));
-            }
+            op1.values().forEach(this::removeOperation);
+            op2.values().forEach(this::addOperation);
         }
     }
 

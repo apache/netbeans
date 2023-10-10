@@ -21,10 +21,6 @@ package org.netbeans.modules.glassfish.common.nodes.actions;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -37,28 +33,11 @@ public class EnableModulesActionTest {
     public EnableModulesActionTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of noDups method, of class EnableModulesAction.
      */
     @Test
     public void testGetDup() {
-        System.out.println("getDup");
         List<String> targets = null;
         String expResult = null;
         String result = EnableModulesAction.getDup(targets);

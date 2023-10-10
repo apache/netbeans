@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.disco;
 
-import com.google.common.collect.Maps;
 import eu.hansolo.jdktools.Architecture;
 import io.foojay.api.discoclient.pkg.Pkg;
 import eu.hansolo.jdktools.PackageType;
@@ -35,20 +34,25 @@ import static org.netbeans.modules.java.disco.OS.getOperatingSystem;
 import static org.netbeans.modules.java.disco.SwingWorker2.submit;
 
 import java.awt.CardLayout;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import org.checkerframework.checker.guieffect.qual.UIEffect;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
+@NbBundle.Messages({
+    "SelectPackage.quick=Quick",
+    "SelectPackage.advanced=Advanced",
+    "SelectPackage.componentName=Connect to OpenJDK Discovery Service",
+    "SelectPackage.loadingError=Could not load list. Please check network access or try again later."
+})
 @SuppressWarnings("initialization")
 public class SelectPackagePanel extends FirstPanel {
     private static final Logger log = Logger.getLogger(SelectPackagePanel.class.getName());
@@ -71,21 +75,28 @@ public class SelectPackagePanel extends FirstPanel {
     private SelectPackagePanel() {
         // Setup disco client
         discoClient = Client.getInstance();
-        quickPanel = new QuickPanel();
+        quickPanel = new QuickPanel(this);
         advancedPanel = new FooAdvancedPanel();
 
         //please wait message
         ((CardLayout) getLayout()).first(this);
-        tabs.add("Quick", quickPanel);
-        tabs.add("Advanced", advancedPanel);
+        tabs.add(Bundle.SelectPackage_quick(), quickPanel);
+        tabs.add(Bundle.SelectPackage_advanced(), advancedPanel);
         tabs.addChangeListener((ChangeEvent e) -> {
-            SelectPackagePanel.this.firePropertyChange(PROP_VALIDITY_CHANGED, false, true);
+            SelectPackagePanel.this.fireValidityChange();
+            if (tabs.getSelectedComponent() == quickPanel) {
+                quickPanel.switchFocus(advancedPanel.getSelectedDistribution(),
+                        advancedPanel.getSelectedVersion());
+            } else {
+                advancedPanel.switchFocus(quickPanel.getSelectedDistribution(),
+                        quickPanel.getSelectedVersion());
+            }
         });
     }
 
     @UIEffect
     private void init() {
-        setName("Connect to OpenJDK Discovery Service");
+        setName(Bundle.SelectPackage_componentName());
     }
 
     private boolean initialLoad = false; //track the async load in addNotify
@@ -99,11 +110,13 @@ public class SelectPackagePanel extends FirstPanel {
             final List<Integer> versionNumbers;
             final Map<Integer, TermOfSupport> versionNumberSupport;
             final List<Distribution> distributions;
+            final int current;
 
-            public Result(List<Integer> versionNumbers, Map<Integer, TermOfSupport> versionNumberSupport, List<Distribution> distributions) {
+            public Result(List<Integer> versionNumbers, Map<Integer, TermOfSupport> versionNumberSupport, List<Distribution> distributions, int current) {
                 this.versionNumbers = versionNumbers;
                 this.versionNumberSupport = versionNumberSupport;
                 this.distributions = distributions;
+                this.current = current;
             }
 
         }
@@ -114,37 +127,39 @@ public class SelectPackagePanel extends FirstPanel {
 
         //loading stuff when ui shown
         submit(() -> {
-                    List<Distribution> distros = discoClient.getDistributions();
-                    // Get release infos
-                    Map<Integer, TermOfSupport> majorVersions = discoClient.getAllMajorVersions().stream()
-                            .collect(Collectors.toMap(MajorVersion::getAsInt, MajorVersion::getTermOfSupport));
+            int minVersion = 6;
+            int maxVersion = discoClient.getLatestSts(true).getAsInt();
+            int current    = discoClient.getLatestSts(false).getAsInt();
 
-                    MajorVersion nextRelease = discoClient.getLatestSts(true);
-                    Integer nextFeatureRelease = nextRelease.getAsInt();
+            // limit to LTS + current
+            Map<Integer, TermOfSupport> maintainedVersions = discoClient.getAllMaintainedMajorVersions().stream()
+                    .filter(v -> v.getAsInt() >= minVersion && v.getAsInt() <= current)   // defensive filter, the API returned an EA JDK as released
+                    .filter(v -> v.getAsInt() == current || v.getTermOfSupport() == TermOfSupport.LTS)
+                    .collect(Collectors.toMap(MajorVersion::getAsInt, MajorVersion::getTermOfSupport));
 
-                    List<Integer> versionNumbers = new ArrayList<>();
-                    for (Integer i = 6; i <= nextFeatureRelease; i++) {
-                        versionNumbers.add(i);
-                    }
-                    Map<Integer, TermOfSupport> versionNumberSupport = new HashMap<>(Maps.filterKeys(majorVersions, v -> versionNumbers.contains(v)));
-                    return new Result(versionNumbers, versionNumberSupport, distros);
+            List<Integer> versionNumbers = IntStream.range(minVersion, maxVersion+1).boxed().collect(Collectors.toList());
+            List<Distribution> distros = discoClient.getDistributions();
+
+            return new Result(versionNumbers, maintainedVersions, distros, current);
         }).then((c) -> {
             //hide 'please wait' message, show tabs
             ((CardLayout) getLayout()).next(SelectPackagePanel.this);
 
+            Distribution defaultDist = discoClient.getDistribution(DiscoPlatformInstall.defaultDistribution()).orElse(null);
             advancedPanel.updateDistributions(c.distributions);
-            advancedPanel.setVersions(c.versionNumbers, c.versionNumberSupport);
-            quickPanel.setVersions(c.versionNumbers, c.versionNumberSupport);
-
-            SelectPackagePanel.this.firePropertyChange(PROP_VALIDITY_CHANGED, false, true);
+            advancedPanel.setVersions(c.versionNumbers, c.versionNumberSupport, c.current);
+            quickPanel.updateDistributions(c.distributions, defaultDist);
+            quickPanel.setVersions(c.versionNumbers, c.versionNumberSupport, c.current);
+            quickPanel.initFocus();
+            fireValidityChange();
         }).handle(ex -> {
-            loadingLabel.setText("Could not load list due to an error. Please try again later.");
+            loadingLabel.setText(Bundle.SelectPackage_loadingError());
             initialLoad = false;
 
             long currentTimeMillisStart = System.currentTimeMillis();
             //check connectivity
             submit(() -> {
-                String body = Helper.get("http://www.example.com").body();
+                String body = Helper.get("https://www.example.com").body();
                 return body != null && !"".equals(body);
             }).then(isOnline -> {
                 long now = System.currentTimeMillis();
@@ -163,64 +178,68 @@ public class SelectPackagePanel extends FirstPanel {
         }).execute();
     }
 
+    void fireValidityChange() {
+        firePropertyChange(PROP_VALIDITY_CHANGED, null, null);
+    }
+
     class FooAdvancedPanel extends AdvancedPanel {
 
         FooAdvancedPanel() {
             ListSelectionModel selectionModel = table.getSelectionModel();
             selectionModel.addListSelectionListener(e -> {
-                SelectPackagePanel.this.firePropertyChange(PROP_VALIDITY_CHANGED, false, true);
+                SelectPackagePanel.this.fireValidityChange();
             });
         }
 
-    @UIEffect
-    @Override
-    protected void updateData(Distribution distribution, Integer featureVersion, Latest latest, PackageType bundleType) {
-        if (distribution == null)
-            return;
-        if (featureVersion == null)
-            return;
-        OperatingSystem operatingSystem = getOperatingSystem();
-        Architecture architecture = Architecture.NONE;
-        ArchiveType extension = ArchiveType.NONE;
-        Boolean fx = false;
-        this.setEnabled(false);
-        submit(() -> {
-                List<Pkg> bundles = discoClient.getPkgs(distribution, new VersionNumber(featureVersion), latest, operatingSystem, architecture, extension, bundleType, fx);
+        @UIEffect
+        @Override
+        protected void updateData(Distribution distribution, Integer featureVersion, Architecture architecture, Latest latest, PackageType bundleType, boolean ea) {
+            if (distribution == null || featureVersion == null) {
+                return;
+            }
+            OperatingSystem operatingSystem = getOperatingSystem();
+            ArchiveType extension = ArchiveType.NONE;
+            Boolean fx = false;
+            this.setEnabled(false);
+            submit(() -> {
+                List<Pkg> bundles = discoClient.getPkgs(distribution, new VersionNumber(featureVersion), latest, operatingSystem, architecture, extension, bundleType, ea, fx);
                 return bundles;
-        }).then(this::setPackages)
-                //TODO: Show something to user, offer reload, auto-reload in N seconds?
-                .handle(Exceptions::printStackTrace)
-                .execute();
-    }
+            }).then(this::setPackages)
+              //TODO: Show something to user, offer reload, auto-reload in N seconds?
+              .handle(Exceptions::printStackTrace)
+              .execute();
+        }
 
-    @Override
-    protected void updateDistributions(List<Distribution> distros) {
-        super.updateDistributions(distros);
-    }
+        @Override
+        protected void updateDistributions(List<Distribution> distros) {
+            super.updateDistributions(distros);
+        }
 
-    @UIEffect
-    private void setPackages(List<Pkg> bundles) {
-        SelectPackagePanel.this.setEnabled(true);
-        tableModel.setBundles(bundles);
-    }
+        @UIEffect
+        private void setPackages(List<Pkg> bundles) {
+            SelectPackagePanel.this.setEnabled(true);
+            tableModel.setBundles(bundles);
+        }
     }
 
     @UIEffect
     public @Nullable PkgSelection getSelectedPackage() {
-        if (!tabs.isVisible())
+        if (!tabs.isVisible()) {
             return null;
+        }
 
+        Pkg pkg = null;
         switch (tabs.getSelectedIndex()) {
             case 0:
-                return new QuickPkgSelection(quickPanel.getSelectedPackage());
+                pkg = quickPanel.getSelectedPackage();
+                break;
             case 1:
-                Pkg pkg = advancedPanel.getSelectedPackage();
-                if (pkg == null)
-                    return null;
-                return PkgSelection.of(pkg);
+                pkg = advancedPanel.getSelectedPackage();
+                break;
             default:
                 throw new IllegalStateException();
         }
+        return pkg == null ? null : PkgSelection.of(pkg);
     }
 
 }

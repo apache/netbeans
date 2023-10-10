@@ -32,17 +32,20 @@ import org.openide.text.Line;
  */
 public class BreakpointsReader implements Properties.Reader {
 
-    private static final String ENABED = "enabled"; // NOI18N
+    private static final String ENABLED = "enabled"; // NOI18N
     private static final String FUNC_NAME = "functionName"; // NOI18N
+    private static final String EXCEPTION_NAME = "exceptionName"; // NOI18N
     private static final String TYPE = "type"; // NOI18N
     private static final String GROUP_NAME = "groupName"; // NOI18N
+    private static final String[] SUPPORTED_CLASS_NAMES =  new String[] {
+            LineBreakpoint.class.getName(),
+            FunctionBreakpoint.class.getName(),
+            ExceptionBreakpoint.class.getName()
+        };
 
     @Override
     public String[] getSupportedClassNames() {
-        return new String[]{
-            LineBreakpoint.class.getName(),
-            FunctionBreakpoint.class.getName()
-        };
+        return SUPPORTED_CLASS_NAMES;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class BreakpointsReader implements Properties.Reader {
                 return null;
             }
             LineBreakpoint breakpoint = new LineBreakpoint(line);
-            if (!properties.getBoolean(ENABED, true)) {
+            if (!properties.getBoolean(ENABLED, true)) {
                 breakpoint.disable();
             }
             breakpoint.setGroupName(properties.getString(GROUP_NAME, ""));
@@ -66,10 +69,18 @@ public class BreakpointsReader implements Properties.Reader {
                 return null;
             }
             FunctionBreakpoint breakpoint = new FunctionBreakpoint(type, func);
-            if (!properties.getBoolean(ENABED, true)) {
+            if (!properties.getBoolean(ENABLED, true)) {
                 breakpoint.disable();
             }
             breakpoint.setGroupName(properties.getString(GROUP_NAME, ""));
+            return breakpoint;
+        } else if (typeID.equals(ExceptionBreakpoint.class.getName())) {
+            String exception = properties.getString(EXCEPTION_NAME, null);
+            ExceptionBreakpoint breakpoint = new ExceptionBreakpoint(exception);
+            if (!properties.getBoolean(ENABLED, true)) {
+                breakpoint.disable();
+            }
+            breakpoint.setGroupName(properties.getString(GROUP_NAME, "")); // NOI18N
             return breakpoint;
         } else {
             return null;
@@ -83,7 +94,7 @@ public class BreakpointsReader implements Properties.Reader {
             FileObject fileObject = breakpoint.getLine().getLookup().lookup(FileObject.class);
             properties.setString(LineBreakpoint.PROP_URL, fileObject.toURL().toString());
             properties.setInt(LineBreakpoint.PROP_LINE_NUMBER, breakpoint.getLine().getLineNumber());
-            properties.setBoolean(ENABED, breakpoint.isEnabled());
+            properties.setBoolean(ENABLED, breakpoint.isEnabled());
             properties.setString(GROUP_NAME, breakpoint.getGroupName());
             properties.setString(LineBreakpoint.PROP_CONDITION, breakpoint.getCondition());
         } else if (object instanceof FunctionBreakpoint) {
@@ -91,7 +102,13 @@ public class BreakpointsReader implements Properties.Reader {
             String func = breakpoint.getFunction();
             properties.setString(FUNC_NAME, func);
             properties.setString(TYPE, breakpoint.getType().toString());
-            properties.setBoolean(ENABED, breakpoint.isEnabled());
+            properties.setBoolean(ENABLED, breakpoint.isEnabled());
+            properties.setString(GROUP_NAME, breakpoint.getGroupName());
+        } else if (object instanceof ExceptionBreakpoint) {
+            ExceptionBreakpoint breakpoint = (ExceptionBreakpoint) object;
+            String exception = breakpoint.getException();
+            properties.setString(EXCEPTION_NAME, exception);
+            properties.setBoolean(ENABLED, breakpoint.isEnabled());
             properties.setString(GROUP_NAME, breakpoint.getGroupName());
         }
     }

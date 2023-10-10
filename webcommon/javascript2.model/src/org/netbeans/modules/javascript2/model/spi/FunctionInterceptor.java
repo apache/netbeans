@@ -38,7 +38,7 @@ public interface FunctionInterceptor {
     Pattern getNamePattern();
 
     /**
-     * 
+     *
      * @param snapshot
      * @param name
      * @param globalObject

@@ -45,7 +45,7 @@ import org.netbeans.spi.lsp.StructureProvider;
  *
  * @author Petr Pisl
  */
-@MimeRegistration(mimeType = "text/x-java", service = StructureProvider.class)
+@MimeRegistration(mimeType = "text/x-java", service = StructureProvider.class, position = 100)
 public class JavaStructureProvider implements StructureProvider {
 
     private static final Logger LOGGER = Logger.getLogger(JavaStructureProvider.class.getName());

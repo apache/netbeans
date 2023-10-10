@@ -653,10 +653,12 @@ final class SceneComponent extends JComponent implements Accessible, MouseListen
 
     private class AccessibleSceneComponent extends AccessibleJComponent {
 
+        @Override
         public int getAccessibleChildrenCount () {
             return 1;
         }
 
+        @Override
         public Accessible getAccessibleChild (int i) {
             return i == 0 ? scene : null;
         }

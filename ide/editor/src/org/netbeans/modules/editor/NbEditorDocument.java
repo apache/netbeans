@@ -81,6 +81,7 @@ NbDocument.Printable, NbDocument.CustomEditor, NbDocument.CustomToolbar, NbDocum
      * @deprecated Use of editor kit's implementation classes is deprecated
      *   in favor of mime types.
      */
+    @Deprecated
     public NbEditorDocument(Class kitClass) {
         super(kitClass);
         init();
@@ -130,7 +131,6 @@ NbDocument.Printable, NbDocument.CustomEditor, NbDocument.CustomToolbar, NbDocum
                 return null;
             }
         });
-        putProperty("Issue-222763-debug", new Exception()); // Issue #222763 debugging - to be removed soon
     }
 
     public @Override int getShiftWidth() {
@@ -145,7 +145,7 @@ NbDocument.Printable, NbDocument.CustomEditor, NbDocument.CustomToolbar, NbDocum
                                        boolean replace) {
         if (s != null) {
             Object val = s.getAttribute(NbDocument.GUARDED);
-            if (val != null && val instanceof Boolean) {
+            if (val instanceof Boolean) {
                 if (((Boolean)val).booleanValue() == true) { // want make guarded
                     super.setCharacterAttributes(offset, length, guardedSet, replace);
                 } else { // want make unguarded

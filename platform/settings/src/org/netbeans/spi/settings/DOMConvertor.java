@@ -224,7 +224,7 @@ public abstract class DOMConvertor extends Convertor {
         return obj;
     }
     
-    /** delegate the write operation to a convertor able to write <code>obj<code>.
+    /** delegate the write operation to a convertor able to write <code>obj</code>.
      * @param doc a DOM document allowing to create elements describing passed object
      * @param obj an object to convert
      * @return a DOM element representation

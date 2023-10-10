@@ -36,7 +36,7 @@ import org.netbeans.modules.editor.lib2.view.ViewHierarchyListener;
  * Support for Sticky Windows in the editor. JComponents can be added to a layer
  * on top of the editor. Components will update their vertical position on editor
  * changes.
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  * @since 2.9
  */
 public final class StickyWindowSupport {

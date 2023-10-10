@@ -126,6 +126,7 @@ public class NbEditorUtilities {
     * @return the line object
     * @deprecated Replaced by more generic method having {@link javax.swing.text.Document} parameter.
     */
+    @Deprecated
     public static Line getLine(BaseDocument doc, int offset, boolean original) {
         DataObject dob = getDataObject(doc);
         if (dob != null) {

@@ -631,8 +631,7 @@ public class ProjectProblemsProviders {
                 return false;
             }
             final BaseResolver otherResolver = (BaseResolver) other;
-            return type.equals(otherResolver.type) &&
-                   id.equals(otherResolver.id);
+            return type == otherResolver.type && id.equals(otherResolver.id);
         }
 
         @Override
@@ -886,7 +885,7 @@ public class ProjectProblemsProviders {
             if (lastSelectedFile != null) {
                 chooser.setSelectedFile(lastSelectedFile);
             }
-            int option = chooser.showOpenDialog(null);
+            int option = chooser.showOpenDialog(Utilities.findDialogParent());
             if (option == JFileChooser.APPROVE_OPTION) {
                 updateReference(chooser.getSelectedFile());
                 lastSelectedFile = chooser.getSelectedFile();
@@ -928,7 +927,7 @@ public class ProjectProblemsProviders {
             if (lastSelectedFile != null) {
                 chooser.setSelectedFile(lastSelectedFile);
             }
-            int option = chooser.showOpenDialog(null);
+            int option = chooser.showOpenDialog(Utilities.findDialogParent());
             if (option == JFileChooser.APPROVE_OPTION) {
                 updateReference(chooser.getSelectedFile());
                 lastSelectedFile = chooser.getSelectedFile();

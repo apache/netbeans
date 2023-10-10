@@ -36,6 +36,8 @@ import org.netbeans.spi.project.AuxiliaryProperties;
 import org.netbeans.spi.project.CacheDirectoryProvider;
 import org.netbeans.spi.project.DependencyProjectProvider;
 import org.netbeans.spi.project.ParentProjectProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.ProjectContainerProvider;
 import org.netbeans.spi.project.ProjectInformationProvider;
 import org.netbeans.spi.project.RootProjectProvider;
@@ -45,6 +47,8 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
+import org.openide.util.Mutex.ExceptionAction;
+import org.openide.util.MutexException;
 import org.openide.util.Parameters;
 
 /**
@@ -56,6 +60,65 @@ public class ProjectUtils {
     private ProjectUtils() {}
 
     private static final Logger LOG = Logger.getLogger(ProjectUtils.class.getName());
+    
+    /**
+     * Returns the active configuration for the given project. Returns {@code null},
+     * if the project does not support configurations at all.
+     * 
+     * @param p the project
+     * @return the active configuration, or {@code null} if configurations are not supported.
+     * @since 1.89
+     */
+    public ProjectConfiguration getActiveConfiguration(@NonNull Project p) {
+        ProjectConfigurationProvider pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        if (pcp == null) {
+            return null;
+        }
+        return ProjectManager.mutex().readAccess(() -> pcp.getActiveConfiguration());
+    }
+    
+    /**
+     * Sets the active configuration to a project. The configuration should have been previously obtained by 
+     * {@link #getActiveConfiguration(org.netbeans.api.project.Project)} from the same project. The method
+     * returns {@code false}, if the configuration could not be set: if the project does not support configurations
+     * at all, or the project failed to switch the configurations. Since the active configuration setting is persisted,
+     * the method throws {@link IOException} if the setting save fails.
+     * 
+     * @param <C> configuration type
+     * @param p the project
+     * @param cfg configuration or {@code null} for default configuration.
+     * @return true, if the configuration was successfully set.
+     * @throws IOException when the selected configuration cannot be persisted.
+     * @since 1.89
+     */
+    public <C extends ProjectConfiguration> boolean setActiveConfiguration(@NonNull Project p, @NonNull C cfg) throws IOException {
+        ProjectConfigurationProvider<C> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        if (pcp == null) {
+            return false;
+        }
+        try {
+            try {
+                return (Boolean)ProjectManager.mutex().writeAccess(new ExceptionAction() {
+                    @Override
+                    public Object run() throws Exception {
+                        if (!pcp.getConfigurations().contains(cfg)) {
+                            return false;
+                        }
+                        pcp.setActiveConfiguration(cfg);
+                        return cfg == null || cfg.equals(pcp.getActiveConfiguration());
+                    }
+                });
+            } catch (MutexException ex) {
+                throw ex.getException();
+            }
+        } catch (IOException ex) {
+            throw ex;
+        } catch (RuntimeException | Error ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new IOException(ex);
+        }
+    }
     
     /**
      * Get basic information about a project.
@@ -127,7 +190,7 @@ public class ProjectUtils {
      *         subproject graph, regardless of the candidate parameter, or if the
      *         candidate is not null and the master project does not currently have
      *         a cycle but would have one if the candidate were added as a subproject
-     * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=43845">Issue #43845</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=43845">Issue #43845</a>
      */
     public static boolean hasSubprojectCycles(final Project master, final Project candidate) {
         return ProjectManager.mutex().readAccess(new Mutex.Action<Boolean>() {

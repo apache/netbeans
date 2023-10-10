@@ -82,7 +82,7 @@ public class WebInjectionTargetQueryImplementationTest extends JavaSourceTestCas
         final List<String> source = new ArrayList<String>(1);
         final boolean[] result = {false};  
         
-        CancellableTask task = new CancellableTask<CompilationController>() {
+        CancellableTask<CompilationController> task = new CancellableTask<CompilationController>() {
             public void run(CompilationController controller) throws IOException {
                 controller.toPhase(Phase.ELEMENTS_RESOLVED);
                 TypeElement thisTypeEl = controller.getElements().getTypeElement(source.get(0));
@@ -91,7 +91,7 @@ public class WebInjectionTargetQueryImplementationTest extends JavaSourceTestCas
             public void cancel() {}
         };
         
-        IndexingManager.getDefault().refreshIndexAndWait(srcFO.getURL(), null);
+        IndexingManager.getDefault().refreshIndexAndWait(srcFO.toURL(), null);
         ClasspathInfo cpi = ClasspathInfo.create(srcFO);
         
         JavaSource javaSrc;

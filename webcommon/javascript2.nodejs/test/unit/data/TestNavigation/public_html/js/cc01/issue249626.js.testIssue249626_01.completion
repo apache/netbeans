@@ -16,11 +16,8 @@ METHOD     getAttempt(): funcAnonym$0      [PUBLIC]   func.js
 METHOD     justCall(): Date                [PUBLIC]   complexModule.js
 METHOD     justCallLit(): complexModuleAn  [PUBLIC]   complexModule.js
 METHOD     justCallObj(): SampleClass      [PUBLIC]   complexModule.js
-METHOD     resolve()                       [PUBLIC]   <font color=#999999>NodeJS</font>
 FIELD      ale: Number                     [PUBLIC]   func.js
 FIELD      attempt: Number                 [PUBLIC]   func.js
-FIELD      cache                           [PUBLIC]   <font color=#999999>NodeJS</font>
-FIELD      extensions                      [PUBLIC]   <font color=#999999>NodeJS</font>
 FIELD      inn: InnerCl                    [PUBLIC,   func.js
 FIELD      inst: WizardInst                [PUBLIC]   complexModule.js
 FIELD      instRef                         [PUBLIC]   complexModule.js

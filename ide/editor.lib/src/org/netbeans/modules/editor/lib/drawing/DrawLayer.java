@@ -38,7 +38,7 @@ package org.netbeans.modules.editor.lib.drawing;
 * @version 1.00
 */
 
-
+@Deprecated
 /* package */ interface DrawLayer {
 
     /**

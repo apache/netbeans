@@ -1,0 +1,9 @@
+Display text: interface <b>InterfaceB</b> {
+File name: index.php
+Name: InterfaceB
+Position: BEGIN: 1269 END: 1279
+
+Display text: enum EnumB: string implements <b>InterfaceB</b> {
+File name: index.php
+Name: InterfaceB
+Position: BEGIN: 1315 END: 1325

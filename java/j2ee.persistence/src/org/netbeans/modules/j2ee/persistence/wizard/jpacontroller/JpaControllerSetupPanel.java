@@ -46,10 +46,12 @@ final class JpaControllerSetupPanel implements WizardDescriptor.Panel, WizardDes
         this.wizardDescriptor = wizardDescriptor;
     }
     
+    @Override
     public boolean isFinishPanel() {
         return true;
     }
 
+    @Override
     public Component getComponent() {
         if (component == null) {
             component = new JpaControllerSetupPanelVisual(wizardDescriptor);
@@ -58,22 +60,26 @@ final class JpaControllerSetupPanel implements WizardDescriptor.Panel, WizardDes
         return component;
     }
     
+    @Override
     public HelpCtx getHelp() {
         return new HelpCtx("org.netbeans.modules.j2ee.persistence.wizard.jpacontroller."+JpaControllerSetupPanel.class.getSimpleName()); // NOI18N
     }
     
+    @Override
     public boolean isValid() {
         getComponent();
         return component.valid(wizardDescriptor);
     }
     
-    private final Set<ChangeListener> listeners = new HashSet(1);
+    private final Set<ChangeListener> listeners = new HashSet<>(1);
     
+    @Override
     public final void addChangeListener(ChangeListener l) {
         synchronized (listeners) {
             listeners.add(l);
         }
     }
+    @Override
     public final void removeChangeListener(ChangeListener l) {
         synchronized (listeners) {
             listeners.remove(l);
@@ -90,6 +96,7 @@ final class JpaControllerSetupPanel implements WizardDescriptor.Panel, WizardDes
         }
     }
     
+    @Override
     public void readSettings(Object settings) {
         wizardDescriptor = (WizardDescriptor) settings;
         component.read(wizardDescriptor);
@@ -97,10 +104,12 @@ final class JpaControllerSetupPanel implements WizardDescriptor.Panel, WizardDes
         // XXX hack, TemplateWizard in final setTemplateImpl() forces new wizard's title
         // this name is used in NewProjectWizard to modify the title
         Object substitute = ((JComponent) component).getClientProperty("NewProjectWizard_Title"); // NOI18N
-        if (substitute != null)
+        if (substitute != null) {
             wizardDescriptor.putProperty("NewProjectWizard_Title", substitute); // NOI18N
+        }
     }
     
+    @Override
     public void storeSettings(Object settings) {
         WizardDescriptor d = (WizardDescriptor) settings;
         component.store(d);
@@ -118,6 +127,7 @@ final class JpaControllerSetupPanel implements WizardDescriptor.Panel, WizardDes
         }
     }
     
+    @Override
     public void stateChanged(ChangeEvent e) {
         fireChangeEvent(e);
     }

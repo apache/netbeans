@@ -135,7 +135,7 @@ public final class NbProcessDescriptor extends Object implements Serializable {
     * be appended to (replaced when there is overlap) instead of specifying
     * all of the environment variables from scratch. This requires the NetBeans core
     * to translate environment variables to system properties prefixed
-    * by <samp>Env-</samp> in order to work correctly.
+    * by <code>Env-</code> in order to work correctly.
     *
     * @param format format to be applied to arguments, process and envp supplied by user. It can be <code>null</code> if no formatting should be done.
     * @param envp list of properties to be applied to the process, or <code>null</code> to leave unspecified

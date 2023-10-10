@@ -72,7 +72,7 @@ public class BinaryForSourceQuery2Test extends NbTestCase {
     }
 
     @SuppressWarnings("PackageVisibleField")
-    // BEGIN: org.netbeans.api.java.queries.BinaryForSourceQuery2Test.SampleQuery
+    // @start region="SampleQuery"
     @ServiceProvider(service = BinaryForSourceQueryImplementation.class)
     public static final class SampleQuery
     implements BinaryForSourceQueryImplementation2<SampleQuery.PrivateData> {
@@ -140,5 +140,5 @@ public class BinaryForSourceQuery2Test extends NbTestCase {
             }
         }
     }
-    // END: org.netbeans.api.java.queries.BinaryForSourceQuery2Test.SampleQuery
+    // @end region="SampleQuery"
 }

@@ -176,7 +176,7 @@ public final class PatchedHtmlRenderer {
                 }
 
                 double chWidth = wid / chars.length;
-                int estCharsToPaint = new Double(w / chWidth).intValue();
+                int estCharsToPaint = (int)(w / chWidth);
                 if( estCharsToPaint > chars.length )
                     estCharsToPaint = chars.length;
                 //let's correct the estimate now
@@ -841,7 +841,7 @@ public final class PatchedHtmlRenderer {
                             //Word wrap mode
                             goToNextRow = true;
 
-                            int lastChar = new Double(nextTag - estCharsOver).intValue();
+                            int lastChar = (int)(nextTag - estCharsOver);
 
                             //Unlike Swing's word wrap, which does not wrap on tag boundaries correctly, if we're out of space,
                             //we're out of space
@@ -892,7 +892,7 @@ public final class PatchedHtmlRenderer {
                                 }
                             } else if (brutalWrap) {
                                 //wrap without checking word boundaries
-                                length = (new Double((w - widthPainted) / chWidth)).intValue();
+                                length = (int)((w - widthPainted) / chWidth);
 
                                 if ((pos + length) > nextTag) {
                                     length = (nextTag - pos);
@@ -911,7 +911,7 @@ public final class PatchedHtmlRenderer {
 
                     if (strikethrough || underline) {
                         LineMetrics lm = fm.getLineMetrics(chars, pos, length - 1, g);
-                        int lineWidth = new Double(x + r.getWidth()).intValue();
+                        int lineWidth = (int)(x + r.getWidth());
 
                         if (paint) {
                             if (strikethrough) {
@@ -930,7 +930,7 @@ public final class PatchedHtmlRenderer {
 
                                 //PENDING - worth supporting with g.setStroke()? A one pixel line is most likely
                                 //good enough
-                                //int stThick = new Float (lm.getUnderlineThickness()).intValue();
+                                //int stThick = Float.valueOf(lm.getUnderlineThickness()).intValue();
                                 g.drawLine(x, y + stPos, lineWidth, y + stPos);
                             }
                         }

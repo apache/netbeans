@@ -1,0 +1,5 @@
+Code completion result for source line:
+case VALUE = E::Case->valu|e;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+VARIABLE   string value                               \E

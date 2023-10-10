@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.db.dataview.meta.DBColumn;

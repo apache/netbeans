@@ -1,0 +1,344 @@
+<testresult testFile='enumerations_03.php'>
+    <scanner>
+        <token id='T_ENUM' start='815' end='819'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='820' end='825'>
+            <text>Fruit</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='825' end='826'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='827' end='833'>
+            <text>string</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='834' end='835'>
+            <text>{</text>
+        </token>
+        <token id='T_CASE' start='840' end='844'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='845' end='850'>
+            <text>APPLE</text>
+        </token>
+        <token id='T_EQUAL' start='851' end='852'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='853' end='860'>
+            <text>"apple"</text>
+        </token>
+        <token id='T_SEMICOLON' start='860' end='861'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='866' end='870'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='871' end='877'>
+            <text>BANANA</text>
+        </token>
+        <token id='T_EQUAL' start='878' end='879'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='880' end='888'>
+            <text>"banana"</text>
+        </token>
+        <token id='T_SEMICOLON' start='888' end='889'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='894' end='898'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='899' end='905'>
+            <text>ORANGE</text>
+        </token>
+        <token id='T_EQUAL' start='906' end='907'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='908' end='916'>
+            <text>"orange"</text>
+        </token>
+        <token id='T_SEMICOLON' start='916' end='917'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='923' end='929'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='930' end='938'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='939' end='943'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='943' end='944'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='944' end='945'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='945' end='946'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='947' end='954'>
+            <text>boolean</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='955' end='956'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='965' end='971'>
+            <text>return</text>
+        </token>
+        <token id='T_MATCH' start='972' end='977'>
+            <text>match</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='978' end='979'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='979' end='984'>
+            <text>$this</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='984' end='985'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='986' end='987'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1000' end='1004'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1004' end='1006'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1006' end='1011'>
+            <text>APPLE</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1012' end='1014'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1015' end='1022'>
+            <text>"apple"</text>
+        </token>
+        <token id='T_IS_IDENTICAL' start='1023' end='1026'>
+            <text>===</text>
+        </token>
+        <token id='T_STRING' start='1027' end='1031'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1031' end='1033'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1033' end='1038'>
+            <text>APPLE</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1038' end='1040'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1040' end='1045'>
+            <text>value</text>
+        </token>
+        <token id='T_COMMA' start='1045' end='1046'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1059' end='1063'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1063' end='1065'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1065' end='1071'>
+            <text>BANANA</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1072' end='1074'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1075' end='1083'>
+            <text>"banana"</text>
+        </token>
+        <token id='T_IS_IDENTICAL' start='1084' end='1087'>
+            <text>===</text>
+        </token>
+        <token id='T_STRING' start='1088' end='1092'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1092' end='1094'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1094' end='1100'>
+            <text>BANANA</text>
+        </token>
+        <token id='T_NULLSAFE_OBJECT_OPERATOR' start='1100' end='1103'>
+            <text>?-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1103' end='1108'>
+            <text>value</text>
+        </token>
+        <token id='T_COMMA' start='1108' end='1109'>
+            <text>,</text>
+        </token>
+        <token id='T_DEFAULT' start='1122' end='1129'>
+            <text>default</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1130' end='1132'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_STRING' start='1133' end='1138'>
+            <text>false</text>
+        </token>
+        <token id='T_COMMA' start='1138' end='1139'>
+            <text>,</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1148' end='1149'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='1149' end='1150'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1155' end='1156'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1157' end='1158'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='1159' end='1159'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1159'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <EnumDeclaration start='815' end='1158'>
+                <EnumName>
+                    <Identifier start='820' end='825' name='Fruit'/>
+                </EnumName>
+                <BackingType>
+                    <NamespaceName start='827' end='833' isCurrent='false' isGlobal='false'>
+                        <Identifier start='827' end='833' name='string'/>
+                    </NamespaceName>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='834' end='1158' isCurly='true'>
+                    <CaseDeclaration start='840' end='861'>
+                        <CaseName>
+                            <Identifier start='845' end='850' name='APPLE'/>
+                        </CaseName>
+                        <Scalar start='853' end='860' type='STRING' value='"apple"'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='866' end='889'>
+                        <CaseName>
+                            <Identifier start='871' end='877' name='BANANA'/>
+                        </CaseName>
+                        <Scalar start='880' end='888' type='STRING' value='"banana"'/>
+                    </CaseDeclaration>
+                    <CaseDeclaration start='894' end='917'>
+                        <CaseName>
+                            <Identifier start='899' end='905' name='ORANGE'/>
+                        </CaseName>
+                        <Scalar start='908' end='916' type='STRING' value='"orange"'/>
+                    </CaseDeclaration>
+                    <MethodDeclaration start='923' end='1156' modifiers='public'>
+                        <FunctionDeclaration start='930' end='1156' isReference='false'>
+                            <Identifier start='939' end='943' name='test'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='947' end='954' isCurrent='false' isGlobal='false'>
+                                <Identifier start='947' end='954' name='boolean'/>
+                            </NamespaceName>
+                            <Block start='955' end='1156' isCurly='true'>
+                                <ReturnStatement start='965' end='1150'>
+                                    <MatchExpression start='972' end='1149'>
+                                        <Variable start='979' end='984' isDollared='true'>
+                                            <Identifier start='980' end='984' name='this'/>
+                                        </Variable>
+                                        <MatchArms>
+                                            <MatchArm start='1000' end='1045' isDefault='false'>
+                                                <Conditions>
+                                                    <StaticConstantAccess start='1000' end='1011'>
+                                                        <NamespaceName start='1000' end='1004' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1000' end='1004' name='self'/>
+                                                        </NamespaceName>
+                                                        <Constant>
+                                                            <Identifier start='1006' end='1011' name='APPLE'/>
+                                                        </Constant>
+                                                        <Member>
+                                                            <Identifier start='1006' end='1011' name='APPLE'/>
+                                                        </Member>
+                                                    </StaticConstantAccess>
+                                                </Conditions>
+                                                <InfixExpression start='1015' end='1045' operator='IS_IDENTICAL'>
+                                                    <Scalar start='1015' end='1022' type='STRING' value='"apple"'/>
+                                                    <FieldAccess start='1027' end='1045' isNullsafe='false'>
+                                                        <StaticConstantAccess start='1027' end='1038'>
+                                                            <NamespaceName start='1027' end='1031' isCurrent='false' isGlobal='false'>
+                                                                <Identifier start='1027' end='1031' name='self'/>
+                                                            </NamespaceName>
+                                                            <Constant>
+                                                                <Identifier start='1033' end='1038' name='APPLE'/>
+                                                            </Constant>
+                                                            <Member>
+                                                                <Identifier start='1033' end='1038' name='APPLE'/>
+                                                            </Member>
+                                                        </StaticConstantAccess>
+                                                        <Field>
+                                                            <Variable start='1040' end='1045' isDollared='false'>
+                                                                <Identifier start='1040' end='1045' name='value'/>
+                                                            </Variable>
+                                                        </Field>
+                                                    </FieldAccess>
+                                                </InfixExpression>
+                                            </MatchArm>
+                                            <MatchArm start='1059' end='1108' isDefault='false'>
+                                                <Conditions>
+                                                    <StaticConstantAccess start='1059' end='1071'>
+                                                        <NamespaceName start='1059' end='1063' isCurrent='false' isGlobal='false'>
+                                                            <Identifier start='1059' end='1063' name='self'/>
+                                                        </NamespaceName>
+                                                        <Constant>
+                                                            <Identifier start='1065' end='1071' name='BANANA'/>
+                                                        </Constant>
+                                                        <Member>
+                                                            <Identifier start='1065' end='1071' name='BANANA'/>
+                                                        </Member>
+                                                    </StaticConstantAccess>
+                                                </Conditions>
+                                                <InfixExpression start='1075' end='1108' operator='IS_IDENTICAL'>
+                                                    <Scalar start='1075' end='1083' type='STRING' value='"banana"'/>
+                                                    <FieldAccess start='1088' end='1108' isNullsafe='true'>
+                                                        <StaticConstantAccess start='1088' end='1100'>
+                                                            <NamespaceName start='1088' end='1092' isCurrent='false' isGlobal='false'>
+                                                                <Identifier start='1088' end='1092' name='self'/>
+                                                            </NamespaceName>
+                                                            <Constant>
+                                                                <Identifier start='1094' end='1100' name='BANANA'/>
+                                                            </Constant>
+                                                            <Member>
+                                                                <Identifier start='1094' end='1100' name='BANANA'/>
+                                                            </Member>
+                                                        </StaticConstantAccess>
+                                                        <Field>
+                                                            <Variable start='1103' end='1108' isDollared='false'>
+                                                                <Identifier start='1103' end='1108' name='value'/>
+                                                            </Variable>
+                                                        </Field>
+                                                    </FieldAccess>
+                                                </InfixExpression>
+                                            </MatchArm>
+                                            <MatchArm start='1122' end='1138' isDefault='true'>
+                                                <Conditions>
+                                                    <Identifier start='1122' end='1129' name='default'/>
+                                                </Conditions>
+                                                <Scalar start='1133' end='1138' type='STRING' value='false'/>
+                                            </MatchArm>
+                                        </MatchArms>
+                                    </MatchExpression>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </EnumDeclaration>
+        </Statements>
+    </Program>
+</testresult>

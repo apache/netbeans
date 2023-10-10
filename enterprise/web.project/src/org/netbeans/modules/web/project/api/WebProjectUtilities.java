@@ -291,7 +291,7 @@ public class WebProjectUtilities {
                   false);
 
         WebProject p = (WebProject)ProjectManager.getDefault().findProject(h.getProjectDirectory());
-        UpdateHelper updateHelper = ((WebProject) p).getUpdateHelper();
+        UpdateHelper updateHelper = p.getUpdateHelper();
         
         // #119052
         if (sourceLevel == null) {
@@ -315,7 +315,7 @@ public class WebProjectUtilities {
             Exceptions.printStackTrace(ex.getException());
         }
         
-        ProjectWebModule pwm = (ProjectWebModule) p.getLookup().lookup(ProjectWebModule.class);
+        ProjectWebModule pwm = p.getLookup().lookup(ProjectWebModule.class);
         if (pwm != null) { //should not be null
             pwm.setContextPath(contextPath);
         }
@@ -836,7 +836,10 @@ public class WebProjectUtilities {
 
     public static void upgradeJ2EEProfile(WebProject project){
         if (Profile.JAVA_EE_6_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
-                Profile.JAVA_EE_7_WEB.equals(project.getAPIEjbJar().getJ2eeProfile())){
+                Profile.JAVA_EE_7_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
+                Profile.JAVA_EE_8_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
+                Profile.JAKARTA_EE_8_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
+                Profile.JAKARTA_EE_9_WEB.equals(project.getAPIEjbJar().getJ2eeProfile())){
             //check the J2EE 6/7 Full profile specific functionality
             Boolean isFullRequired = Boolean.FALSE;
             try{

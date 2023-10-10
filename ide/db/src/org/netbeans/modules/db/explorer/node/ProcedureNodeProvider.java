@@ -157,16 +157,16 @@ public class ProcedureNodeProvider extends NodeProvider {
                             public void run(Metadata metaData) {
                                 object2type = new HashMap<>();
                                 validObjects = new HashSet<>();
-                                String query = "SELECT NAME, TYPE" // NOI18N
-                                            + " FROM mysql.proc" // NOI18N
-                                            + " WHERE TYPE = 'PROCEDURE' OR TYPE = 'FUNCTION'"; // NOI18N
+                                String query = "SELECT routine_name,routine_type" // NOI18N
+                                            + " FROM information_schema.routines" // NOI18N
+                                            + " WHERE routine_type IN ('PROCEDURE','FUNCTION')"; // NOI18N
                                 try(Statement stmt = connection.getJDBCConnection().createStatement();
                                     ResultSet rs = stmt.executeQuery(query)) {
                                     while(rs.next()) {
                                         // name of procedure
-                                        String objectName = rs.getString("NAME"); // NOI18N
+                                        String objectName = rs.getString("routine_name"); // NOI18N
                                         // type of procedure
-                                        String objectType = rs.getString("TYPE"); // NOI18N
+                                        String objectType = rs.getString("routine_type"); // NOI18N
                                         if ("PROCEDURE".equals(objectType)) { // NOI18N
                                             object2type.put(objectName, ProcedureNode.Type.Procedure);
                                         } else if ("FUNCTION".equals(objectType)) { // NOI18N
@@ -174,7 +174,7 @@ public class ProcedureNodeProvider extends NodeProvider {
                                         } else {
                                             assert false : "Unknown type " + objectType;
                                         }
-                                        // XXX: all procedurec are valid in MySQL
+                                        // XXX: all procedures are valid in MySQL
                                         validObjects.add(objectName);
                                     }
                                 } catch (SQLException ex) {

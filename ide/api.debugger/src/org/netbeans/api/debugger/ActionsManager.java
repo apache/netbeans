@@ -22,14 +22,13 @@ package org.netbeans.api.debugger;
 import java.beans.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +37,7 @@ import org.netbeans.spi.debugger.ActionsProvider;
 import org.netbeans.spi.debugger.ActionsProviderListener;
 import org.openide.util.Cancellable;
 import org.openide.util.Mutex;
+import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
 
@@ -110,13 +110,13 @@ public final class ActionsManager {
 
     // variables ...............................................................
     
-    private final Vector<ActionsManagerListener>    listener = new Vector<ActionsManagerListener>();
-    private final HashMap<String, List<ActionsManagerListener>> listeners = new HashMap<String, List<ActionsManagerListener>>();
+    private final List<ActionsManagerListener>    listener = new ArrayList<>();
+    private final HashMap<String, List<ActionsManagerListener>> listeners = new HashMap<>();
     private HashMap<Object, List<ActionsProvider>>  actionProviders;
     private final Object            actionProvidersLock = new Object();
     private final AtomicBoolean     actionProvidersInitialized = new AtomicBoolean(false);
-    private MyActionListener        actionListener = new MyActionListener ();
-    private Lookup                  lookup;
+    private final ActionsProviderListener actionListener = (Object action, boolean enabled) -> fireActionStateChanged (action);
+    private final Lookup            lookup;
     private boolean                 doiingDo = false;
     private boolean                 destroy = false;
     private volatile List<? extends ActionsProvider> aps;
@@ -140,21 +140,16 @@ public final class ActionsManager {
      *
      * @param action action constant (default set of constants are defined
      *    in this class with ACTION_ prefix)
-     * @return true if action has been performed
      */
     public final void doAction (final Object action) {
         doiingDo = true;
         List<ActionsProvider> l = getActionProvidersForActionWithInit(action);
         boolean done = false;
-        if (l != null) {
-            int i, k = l.size ();
-            for (i = 0; i < k; i++) {
-                ActionsProvider ap = l.get(i);
-                if (ap.isEnabled (action)) {
-                    fireActionToBeRun(action);
-                    done = true;
-                    ap.doAction (action);
-                }
+        for (ActionsProvider ap : l) {
+            if (ap.isEnabled (action)) {
+                fireActionToBeRun(action);
+                done = true;
+                ap.doAction (action);
             }
         }
         if (done) {
@@ -169,7 +164,7 @@ public final class ActionsManager {
     /**
      * Post action on this DebuggerEngine.
      * This method does not block till the action is done,
-     * if {@link #canPostAsynchronously} returns true.
+     * if <code>#canPostAsynchronously}</code> returns true.
      * Otherwise it behaves like {@link #doAction}.
      * The returned task, or
      * {@link ActionsManagerListener} can be used to
@@ -195,54 +190,39 @@ public final class ActionsManager {
         
         List<ActionsProvider> l = getActionProvidersForActionWithInit(action);
         boolean posted = false;
-        int k;
-        if (l != null) {
-            k = l.size ();
-        } else {
-            k = 0;
-        }
         
-        List<ActionsProvider> postedActions = new ArrayList<>(k);
+        List<ActionsProvider> postedActions = new ArrayList<>(l.size());
         final AsynchActionTask task = new AsynchActionTask(postedActions);
-        if (l != null) {
-            int i;
-            for (i = 0; i < k; i++) {
-                ActionsProvider ap = l.get (i);
-                if (ap.isEnabled (action)) {
-                    postedActions.add(ap);
-                    posted = true;
-                }
-            }
-            if (posted) {
-                final int[] count = new int[] { 0 };
-                Runnable notifier = new Runnable() {
-                    @Override
-                    public void run() {
-                        synchronized (count) {
-                            if (--count[0] == 0) {
-                                task.actionDone();
-                                fireActionDone (action);
-                                doiingDo = false;
-                                if (destroy) {
-                                    destroyIn ();
-                                }
-                            }
-                        }
-                    }
-                };
-                if (postedActions.size() > 1) {
-                    // We have more than one action provider for a single action.
-                    // Check their paths and choose the most specific one:
-                    postedActions = selectTheMostSpecific(postedActions);
-                }
-                count[0] = k = postedActions.size();
-                fireActionToBeRun(action);
-                for (i = 0; i < k; i++) {
-                    postedActions.get(i).postAction (action, notifier);
-                }
+        for (ActionsProvider ap : l) {
+            if (ap.isEnabled (action)) {
+                postedActions.add(ap);
+                posted = true;
             }
         }
-        if (!posted) {
+        if (posted) {
+            if (postedActions.size() > 1) {
+                // We have more than one action provider for a single action.
+                // Check their paths and choose the most specific one:
+                postedActions = selectTheMostSpecific(postedActions);
+            }
+            //final int[] count = new int[] { postedActions.size() };
+            final AtomicInteger count = new AtomicInteger(postedActions.size());
+            Runnable notifier = () -> {
+                if (count.decrementAndGet() == 0) {
+                    task.actionDone();
+                    fireActionDone (action);
+                    doiingDo = false;
+                    if (destroy) {
+                        destroyIn ();
+                    }
+                }
+            };
+            fireActionToBeRun(action);
+            for (ActionsProvider pa : postedActions) {
+                pa.postAction (action, notifier);
+
+            }
+        } else {
             doiingDo = false;
             if (destroy) {
                 destroyIn ();
@@ -254,90 +234,53 @@ public final class ActionsManager {
 
     private Task postActionWithLazyInit(final Object action) {
         final AsynchActionTask task = new AsynchActionTask(Collections.emptyList());
-        new RequestProcessor(ActionsManager.class).post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    doAction(action);
-                } finally {
-                    task.actionDone();
-                }
+        new RequestProcessor(ActionsManager.class).post(() -> {
+            try {
+                doAction(action);
+            } finally {
+                task.actionDone();
             }
         });
         return task;
     }
     
     private static List<ActionsProvider> selectTheMostSpecific(List<ActionsProvider> aps) {
-        Iterator<ActionsProvider> it = aps.iterator();
-        ActionsProvider ap = it.next();
-        String path = getPath(ap);
-        if (path == null) {
-            return aps;
-        }
-        /*
-        Map<String, ActionsProvider> providersByPath = new LinkedHashMap<String, ActionsProvider>();
-        providersByPath.put(path, ap);
-        while(it.hasNext()) {
-            ap = it.next();
-            path = getPath(ap);
+        // This method is called in the rare case of two debugger plugin are registered for the same language
+        // It tries to detect which implementation is more specific.
+        ArrayList<Pair<String, ActionsProvider>> providersByPath = new ArrayList<>();
+
+        for (ActionsProvider ap : aps) {
+            String path = getPath(ap);
             if (path == null) {
                 return aps;
-            } else {
-                providersByPath.put(path, ap);
             }
+            providersByPath.add(Pair.of(path, ap));
         }
-        for (String p1 : providersByPath.keySet()) {
-            
-        }*/
-        int n = aps.size();
-        String[] paths = new String[n];
-        ActionsProvider[] apArr = new ActionsProvider[n];
-        int i = 0;
-        paths[i] = path;
-        apArr[i] = ap;
-        while(it.hasNext()) {
-            ap = it.next();
-            path = getPath(ap);
-            if (path == null) {
-                return aps;
-            } else {
-                i++;
-                paths[i] = path;
-                apArr[i] = ap;
-            }
-        }
-        
-        for (i = 0; i < n; i++) {
-            String p1 = paths[i];
+
+        int n = providersByPath.size();
+        for (int i = 0; i < n; i++) {
+            String p1 = providersByPath.get(i).first();
             for (int j = 0; j < n; j++) {
                 if (i == j) {
                     continue;
                 }
-                String p2 = paths[j];
-                if (p1.startsWith(p2)) {
-                    // p1 is more specific than p2, abandon p2
-                    String[] newPaths = new String[n-1];
-                    ActionsProvider[] newApArr = new ActionsProvider[n-1];
-                    if (j > 0) {
-                        System.arraycopy(paths, 0, newPaths, 0, j);
-                        System.arraycopy(apArr, 0, newApArr, 0, j);
-                    }
-                    if (j < (n-1)) {
-                        System.arraycopy(paths, j+1, newPaths, j, n-1-j);
-                        System.arraycopy(apArr, j+1, newApArr, j, n-1-j);
-                    }
-                    paths = newPaths;
-                    apArr = newApArr;
+                String p2 = providersByPath.get(j).first();
+                if (!p1.equals(p2) && p1.startsWith(p2)) {
+                    providersByPath.remove(j);
                     i--;
                     n--;
                     break;
                 }
             }
         }
-        if (n < aps.size()) {
-            aps = Arrays.asList(apArr);
+        List<ActionsProvider> ret = aps;
+        if (providersByPath.size() < aps.size()) {
+            ret = new LinkedList<>();
+            for (Pair<String, ActionsProvider> pair : providersByPath) {
+                ret.add(pair.second());
+            }
         }
-        return aps;
+        return ret;
     }
     
     private static String getPath(ActionsProvider ap) {
@@ -373,25 +316,16 @@ public final class ActionsManager {
             if (Mutex.EVENT.isReadAccess()) { // SwingUtilities.isEventDispatchThread()
                 // Need to initialize lazily when called in AWT
                 // A state change will be fired after actions providers are initialized.
-                new RequestProcessor(ActionsManager.class).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        initActionImpls();
-                    }
-                });
+                new RequestProcessor(ActionsManager.class).post(() -> initActionImpls());
             } else {
                 initActionImpls();
             }
         }
 
         List<ActionsProvider> l = getActionProvidersForAction(action);
-        if (l != null) {
-            int i, k = l.size ();
-            for (i = 0; i < k; i++) {
-                ActionsProvider ap = l.get (i);
-                if (ap.isEnabled (action)) {
-                    return true;
-                }
+        for (ActionsProvider ap : l) {
+            if (ap.isEnabled (action)) {
+                return true;
             }
         }
         return false;
@@ -416,7 +350,9 @@ public final class ActionsManager {
      * @param l listener instance
      */
     public void addActionsManagerListener (ActionsManagerListener l) {
-        listener.addElement (l);
+        synchronized (listener) {
+            listener.add(l);
+        }
     }
 
     /**
@@ -425,7 +361,9 @@ public final class ActionsManager {
      * @param l listener instance
      */
     public void removeActionsManagerListener (ActionsManagerListener l) {
-        listener.removeElement (l);
+        synchronized (listener) {
+            listener.remove(l);
+        }
     }
 
     /** 
@@ -478,19 +416,14 @@ public final class ActionsManager {
         List<ActionsManagerListener> l1;
         synchronized (listeners) {
             l1 = listeners.get("actionToBeRun");
-            if (l1 != null) {
-                l1 = new ArrayList<ActionsManagerListener>(l1);
-            }
+            l1 = l1 != null ? new ArrayList<>(l1) : Collections.emptyList();
         }
-        if (l1 != null) {
-            int k = l1.size ();
-            PropertyChangeEvent e = new PropertyChangeEvent(this, "actionToBeRun", null, action);
-            for (int i = 0; i < k; i++) {
-                ActionsManagerListener aml = l1.get(i);
-                if (aml instanceof PropertyChangeListener) {
-                    ((PropertyChangeListener) aml).propertyChange(e);
-                }
+        PropertyChangeEvent e = new PropertyChangeEvent(this, "actionToBeRun", null, action);
+        for (ActionsManagerListener aml : l1) {
+            if (aml instanceof PropertyChangeListener) {
+                ((PropertyChangeListener) aml).propertyChange(e);
             }
+
         }
     }
 
@@ -512,19 +445,13 @@ public final class ActionsManager {
         List<ActionsManagerListener> l1;
         synchronized (listeners) {
             l1 = listeners.get(ActionsManagerListener.PROP_ACTION_PERFORMED);
-            if (l1 != null) {
-                l1 = new ArrayList<>(l1);
-            }
+            l1 = l1 != null ? new ArrayList<>(l1) : Collections.emptyList();
         }
-        int i, k = l.size ();
-        for (i = 0; i < k; i++) {
-            l.get(i).actionPerformed(action);
+        for (ActionsManagerListener aml : l) {
+            aml.actionPerformed(action);
         }
-        if (l1 != null) {
-            k = l1.size ();
-            for (i = 0; i < k; i++) {
-                l1.get(i).actionPerformed(action);
-            }
+        for (ActionsManagerListener aml : l1) {
+            aml.actionPerformed(action);
         }
     }
 
@@ -547,19 +474,13 @@ public final class ActionsManager {
         List<ActionsManagerListener> l1;
         synchronized (listeners) {
             l1 = listeners.get(ActionsManagerListener.PROP_ACTION_STATE_CHANGED);
-            if (l1 != null) {
-                l1 = new ArrayList<>(l1);
-            }
+            l1 = l1 != null ? new ArrayList<>(l1) : Collections.emptyList();
         }
-        int i, k = l.size ();
-        for (i = 0; i < k; i++) {
-            l.get(i).actionStateChanged(action, enabled);
+        for (ActionsManagerListener aml : l) {
+            aml.actionStateChanged(action, enabled);
         }
-        if (l1 != null) {
-            k = l1.size ();
-            for (i = 0; i < k; i++) {
-                l1.get(i).actionStateChanged(action, enabled);
-            }
+        for (ActionsManagerListener aml : l1) {
+            aml.actionStateChanged(action, enabled);
         }
     }
     
@@ -567,14 +488,10 @@ public final class ActionsManager {
     // private support .........................................................
     
     private List<ActionsProvider> getActionProvidersForAction(Object action) {
-        List<ActionsProvider> l;
         synchronized (actionProvidersLock) {
-            l = actionProviders.get(action);
-            if (l != null) {
-                l = new ArrayList<>(l);
-            }
+            List<ActionsProvider> l = actionProviders.get(action);
+            return l != null ? new ArrayList<>(l) : Collections.emptyList();
         }
-        return l;
     }
     
     private List<ActionsProvider> getActionProvidersForActionWithInit(Object action) {
@@ -625,7 +542,7 @@ public final class ActionsManager {
                     if (ap != null) {
                         sb.append(ap.toString());
                     } else {
-                        sb.append("NULL element in list " + Integer.toHexString(aps.hashCode())); // NOI18N
+                        sb.append("NULL element in list ").append(Integer.toHexString(aps.hashCode())); // NOI18N
                         isNull = true;
                     }
                 }
@@ -671,7 +588,7 @@ public final class ActionsManager {
     }
 
     private boolean listerersLoaded = false;
-    private List lazyListeners;
+    private List<? extends LazyActionsManagerListener> lazyListeners;
     
     private synchronized void initListeners () {
         if (listerersLoaded) {
@@ -679,22 +596,19 @@ public final class ActionsManager {
         }
         listerersLoaded = true;
         lazyListeners = lookup.lookup (null, LazyActionsManagerListener.class);
-        int i, k = lazyListeners.size ();
-        for (i = 0; i < k; i++) {
-            LazyActionsManagerListener l = (LazyActionsManagerListener)
-                lazyListeners.get (i);
+        for (LazyActionsManagerListener l : lazyListeners) {
             if (l == null) {
                 // instance could not be created.
                 continue;
             }
             String[] props = l.getProperties ();
+
             if (props == null) {
                 addActionsManagerListener (l);
-                continue;
-            }
-            int j, jj = props.length;
-            for (j = 0; j < jj; j++) {
-                addActionsManagerListener (props [j], l);
+            } else {
+                for (String prop : props) {
+                    addActionsManagerListener (prop, l);
+                }
             }
         }
     }
@@ -708,10 +622,7 @@ public final class ActionsManager {
         }
         synchronized (this) {
             if (lazyListeners != null) {
-                int i, k = lazyListeners.size ();
-                for (i = 0; i < k; i++) {
-                    LazyActionsManagerListener l = (LazyActionsManagerListener)
-                        lazyListeners.get (i);
+                for (LazyActionsManagerListener l : lazyListeners) {
                     if (l == null) {
                         // instance could not be created.
                         continue;
@@ -720,20 +631,20 @@ public final class ActionsManager {
                     if (props == null) {
                         removeActionsManagerListener (l);
                         continue;
-                    }
-                    int j, jj = props.length;
-                    for (j = 0; j < jj; j++) {
-                        removeActionsManagerListener (props [j], l);
+                    } else {
+                        for (String prop : props) {
+                            removeActionsManagerListener (prop, l);
+                        }
                     }
                     l.destroy ();
                 }
-                lazyListeners = new ArrayList ();
+                lazyListeners = new ArrayList<>();
             }
         }
         synchronized (actionProvidersLock) {
             Collection<List<ActionsProvider>> apsc = actionProviders.values();
-            for (List<ActionsProvider> aps : apsc) {
-                for (ActionsProvider ap : aps) {
+            for (List<ActionsProvider> ps : apsc) {
+                for (ActionsProvider ap : ps) {
                     ap.removeActionsProviderListener(actionListener);
                 }
             }
@@ -745,9 +656,9 @@ public final class ActionsManager {
     
     private static class AsynchActionTask extends Task implements Cancellable {
         
-        private Collection postedActions;
+        private final Collection<? extends ActionsProvider> postedActions;
         
-        public AsynchActionTask(Collection postedActions) {
+        public AsynchActionTask(Collection<? extends ActionsProvider> postedActions) {
             this.postedActions = postedActions;
         }
         
@@ -757,9 +668,8 @@ public final class ActionsManager {
 
         @Override
         public boolean cancel() {
-            for (Iterator it = postedActions.iterator(); it.hasNext(); ) {
-                Object action = it.next();
-                Cancellable c = getCancellable(action);
+            for (ActionsProvider ap : postedActions) {
+                Cancellable c = getCancellable(ap);
                 if (c != null) {
                     if (!c.cancel()) {
                         return false;
@@ -779,20 +689,14 @@ public final class ActionsManager {
                 // Hack because of ActionsProvider$ContextAware:
                 Field delegateField = action.getClass().getDeclaredField("delegate");   // NOI18N
                 delegateField.setAccessible(true);
-                action = delegateField.get(action);
-                if (action instanceof Cancellable) {
+                Object delegate = delegateField.get(action);
+                if (delegate instanceof Cancellable) {
                     return (Cancellable) action;
                 }
-            } catch (Exception ex) {}
+            } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException ex) {}
             return null;
         }
     }
     
-    class MyActionListener implements ActionsProviderListener {
-        @Override
-        public void actionStateChange (Object action, boolean enabled) {
-            fireActionStateChanged (action);
-        }
-    }
 }
 

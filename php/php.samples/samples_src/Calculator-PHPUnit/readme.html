@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -18,12 +19,11 @@
     under the License.
 
 -->
-<!DOCTYPE html>
 <html>
 <head>
     <title>Calculator (PHPUnit) - sample application for NetBeans IDE</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <style type="text/css">
+    <style>
         /** general **/
         * {
             margin: 0;
@@ -234,11 +234,21 @@
                             <li>Play futher with the sample :)</li>
                         </ol>
 
+                        <h3 id="coverage">Coverage</h3>
+                        <p class="p">
+                            To get the result of code coverage, please set the following to the ini file. e.g. <i>php.ini, xdebug.ini</i>
+                        </p>
+                        <pre>
+<code>xdebug.mode=coverage
+xdebug.client_host=localhost
+xdebug.client_port=9003
+xdebug.idekey="netbeans-xdebug"</code>
+                        </pre>
+
                         <h3 id="debugging">Debugging</h3>
                         <p class="p">
                             These steps should enable you the debugging option at the sample project,
-                            <a href="http://wiki.netbeans.org/HowToConfigureXDebug" target="_blank">if you already have PHP debugger (Xdebug)
-                            installed and configured</a>.<br>
+                            if you already have PHP debugger (Xdebug) installed and configured.<br>
                             For demonstrating the PHP debugger in NetBeans, try the following:
                         </p>
                         <ol class="p">
@@ -254,7 +264,7 @@
         <!-- footer -->
         <div id="footer">
             <div class="indent">
-                <div class="fleft">2019 &copy; Copyright The Apache Software Foundation, All rights reserved</div>
+                <div class="fleft">2023 &copy; Copyright The Apache Software Foundation, All rights reserved</div>
             </div>
         </div>
     </div>

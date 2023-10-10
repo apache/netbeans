@@ -29,16 +29,15 @@ public final class Buttons {
     }
 
     @JavaScriptBody(args = {}, body = "\n"
-        + "const vscode = acquireVsCodeApi();\n" // this method can be called only once per WebView existance
         + "window.close = function() {\n"
         + "  vscode.postMessage({\n"
-        + "    command: 'dispose',\n"
+        + "    command: 'dispose'\n"
         + "  });\n"
         + "};\n"
     )
     public static native void registerCloseWindow();
 
-    @JavaScriptBody(args = { "id", "callback" }, javacall = true, body = "\n"
+    @JavaScriptBody(args = { "id", "callback" }, javacall = true, wait4java=false, body = "\n"
             + "var first = false;\n"
             + "var footer = document.getElementById('dialog-buttons');\n"
             + "if (!footer) {\n"

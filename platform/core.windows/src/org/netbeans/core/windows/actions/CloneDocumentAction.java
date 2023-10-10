@@ -55,7 +55,7 @@ public class CloneDocumentAction extends AbstractAction implements PropertyChang
     @Override
     public void actionPerformed(java.awt.event.ActionEvent ev) {
         TopComponent tc = TopComponent.getRegistry().getActivated();
-        if(tc == null || !(tc instanceof TopComponent.Cloneable)) {
+        if(!(tc instanceof TopComponent.Cloneable)) {
             return;
         }
         

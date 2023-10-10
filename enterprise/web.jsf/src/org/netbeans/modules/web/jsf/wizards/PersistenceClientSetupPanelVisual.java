@@ -439,8 +439,12 @@ public class PersistenceClientSetupPanelVisual extends javax.swing.JPanel implem
                     Class.forName("javax.transaction.UserTransaction", false, cl);
                 }
                 catch (ClassNotFoundException cnfe) {
-                    wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_UserTransactionUnavailable"));
-                    return false;
+                    try {
+                        Class.forName("jakarta.transaction.UserTransaction", false, cl);
+                    } catch (ClassNotFoundException cnfe2) {
+                        wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, NbBundle.getMessage(PersistenceClientSetupPanelVisual.class, "ERR_UserTransactionUnavailable"));
+                        return false;
+                    }
                 }
                 catch (UnsupportedClassVersionError ucve) {
                     Logger.getLogger(PersistenceClientSetupPanelVisual.class.getName()).log(Level.WARNING, ucve.toString());

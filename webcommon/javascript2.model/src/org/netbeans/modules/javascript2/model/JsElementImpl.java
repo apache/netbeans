@@ -39,6 +39,7 @@ import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.CONSTRUC
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.FIELD;
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.FUNCTION;
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.METHOD;
+import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.ARROW_FUNCTION;
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.OBJECT;
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.OBJECT_LITERAL;
 import static org.netbeans.modules.javascript2.model.api.JsElement.Kind.PROPERTY;
@@ -57,7 +58,7 @@ import org.openide.util.Lookup;
 public abstract class JsElementImpl implements JsElement {
 
     private static final Logger LOG = Logger.getLogger(JsElementImpl.class.getSimpleName());
-    
+
     private FileObject fileObject;
 
     private final String name;
@@ -83,33 +84,33 @@ public abstract class JsElementImpl implements JsElement {
         this.offsetRange = offsetRange;
         this.modifiers = modifiers == null ? Collections.emptySet(): modifiers;
         this.isDeclared = isDeclared;
-        assert mimeType == null || 
+        assert mimeType == null ||
                isCorrectMimeType(mimeType) : mimeType;
         this.mimeType = mimeType;
         this.sourceLabel = sourceLabel;
     }
-    
+
     private static boolean isCorrectMimeType(String mt) {
-        if (JsTokenId.JAVASCRIPT_MIME_TYPE.equals(mt) || 
+        if (JsTokenId.JAVASCRIPT_MIME_TYPE.equals(mt) ||
                JsTokenId.JSON_MIME_TYPE.equals(mt)) {
             return true;
         }
         MimePath mp = MimePath.get(mt);
         String inhType = mp.getInheritedType();
-        return JsTokenId.JAVASCRIPT_MIME_TYPE.equals(inhType) 
+        return JsTokenId.JAVASCRIPT_MIME_TYPE.equals(inhType)
                 || JsTokenId.JSON_MIME_TYPE.equals(inhType);
     }
-           
+
     @Override
     public ElementKind getKind() {
         return convertJsKindToElementKind(getJSKind());
     }
-    
+
     @Override
     public FileObject getFileObject() {
         return fileObject;
     }
-    
+
     protected void setFileObject(FileObject fileObject) {
         this.fileObject = fileObject;
     }
@@ -140,7 +141,7 @@ public abstract class JsElementImpl implements JsElement {
     public void setDeclared(boolean isDeclared) {
         this.isDeclared = isDeclared;
     }
-   
+
     @Override
     public final OffsetRange getOffsetRange(ParserResult result) {
         int start = result.getSnapshot().getOriginalOffset(offsetRange.getStart());
@@ -160,7 +161,7 @@ public abstract class JsElementImpl implements JsElement {
     public int getOffset() {
         return offsetRange.getStart();
     }
-    
+
     @Override
     public Set<Modifier> getModifiers() {
          return modifiers;
@@ -170,7 +171,7 @@ public abstract class JsElementImpl implements JsElement {
     public boolean signatureEquals(ElementHandle handle) {
         return false;
     }
-    
+
     public void addModifier(Modifier modifier) {
         modifiers.add(modifier);
     }
@@ -202,11 +203,11 @@ public abstract class JsElementImpl implements JsElement {
         }
         return false;
     }
-    
+
     public static ElementKind convertJsKindToElementKind(Kind jsKind) {
         ElementKind result = ElementKind.OTHER;
         switch (jsKind) {
-            case CONSTRUCTOR: 
+            case CONSTRUCTOR:
                 result = ElementKind.CONSTRUCTOR;
                 break;
             case METHOD:
@@ -214,6 +215,7 @@ public abstract class JsElementImpl implements JsElement {
             case PROPERTY_GETTER:
             case PROPERTY_SETTER:
             case GENERATOR:
+            case ARROW_FUNCTION:
                 result = ElementKind.METHOD;
                 break;
             case OBJECT:

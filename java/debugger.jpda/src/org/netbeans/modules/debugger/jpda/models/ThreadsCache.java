@@ -347,7 +347,7 @@ public class ThreadsCache implements Executor {
 
     public boolean exec(Event event) {
         if (event instanceof ThreadStartEvent) {
-            ThreadReference thread;;
+            ThreadReference thread;
             boolean handleGroups = debugger.isInterestedInThreadGroups();
             ThreadGroupReference group = null;
             try {

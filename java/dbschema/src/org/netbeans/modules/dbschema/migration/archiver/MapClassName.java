@@ -29,7 +29,7 @@ public class MapClassName {
 
     public static String getClassNameToken(String realClassName){
         if (realClassName.startsWith(CURRENTPREFIX)){
-            realClassName = LEGACYPREFIX + realClassName.substring(CURRENTPREFIX.length(),realClassName.length());
+            realClassName = LEGACYPREFIX + realClassName.substring(CURRENTPREFIX.length());
         }
 
         return realClassName;
@@ -37,7 +37,7 @@ public class MapClassName {
 
     public static String getRealClassName(String token){
         if (token.startsWith(LEGACYPREFIX)){
-            token = CURRENTPREFIX + token.substring(LEGACYPREFIX.length(),token.length());
+            token = CURRENTPREFIX + token.substring(LEGACYPREFIX.length());
         }
         return token;
     }

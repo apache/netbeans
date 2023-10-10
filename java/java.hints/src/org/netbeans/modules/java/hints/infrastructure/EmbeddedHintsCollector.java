@@ -46,7 +46,7 @@ import org.netbeans.spi.editor.hints.HintsController;
  */
 
 public class EmbeddedHintsCollector extends JavaParserResultTask<Parser.Result> {
-    private static final Map<Snapshot, List<ErrorDescription>> hints = new WeakHashMap();
+    private static final Map<Snapshot, List<ErrorDescription>> hints = new WeakHashMap<>();
     
     public static void setAnnotations(Snapshot snap, List<ErrorDescription> descs) {
         if (snap.getMimePath().size() == 1) {

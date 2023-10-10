@@ -2029,4 +2029,26 @@ public class Css3ParserScssTest extends CssTestBase {
         assertParses("@forward 'test2' hide dummy1;");
         assertParses("@forward 'test2' show dummy1, dummy2;");
     }
+
+    public void testParseLayer() {
+        assertParses("@layer layer1;");
+        assertParses("@layer layer1, layer2;");
+        assertParses("@layer layer1 {}");
+        assertParses("@layer layer1 {h1 {font-weight: bold}}");
+        assertParses("@layer layer1 {h1 {font-weight: bold}} @layer layer2 {}");
+        assertParses("@layer layer1.sublayer1 {h1 {font-weight: bold}}");
+        assertParses("@layer layer1 { @layer sublayer1 {}}");
+        assertParses("@layer layer1 { @layer sublayer1 {h1 {font-weight: bold}}}");
+        assertParses("@layer layer1 { @layer sublayer1, sublayer2; @layer sublayer1 {} @layer sublayer2{}}");
+        assertParses("@layer {}");
+        assertParses("@layer {h1 {font-weight: bold}}");
+        assertParses("@layer {h1 {font-weight: bold}} @layer layer2 {}");
+        assertParses("@import \"test.css\" layer;");
+        assertParses("@import \"test.css\" layer(test);");
+        assertParses("@import \"test.css\" layer(test.test2);");
+        assertParses("@layer default;\n"
+                + "@import url(theme.css) layer(theme);\n"
+                + "@layer components;\n"
+                + "@layer default {}");
+    }
 }

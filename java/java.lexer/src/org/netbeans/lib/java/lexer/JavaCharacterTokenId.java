@@ -51,7 +51,11 @@ public enum JavaCharacterTokenId implements TokenId {
     OCTAL_ESCAPE_INVALID("character-escape-invalid"), //NOI18N
     UNICODE_ESCAPE("character-escape"), //NOI18N
     UNICODE_ESCAPE_INVALID("character-escape-invalid"), //NOI18N
-    ESCAPE_SEQUENCE_INVALID("character-escape-invalid"); //NOI18N
+    ESCAPE_SEQUENCE_INVALID("character-escape-invalid"), //NOI18N
+    /**
+     * @since 1.58
+     */
+    TEMPLATE_START("character"); //NOI18N
 
     private final String primaryCategory;
 

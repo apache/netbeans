@@ -2,9 +2,6 @@ Code completion result for source line:
 r| // this works
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     removeEventListener(type: Stri  [PUBLIC,   JS Platform
-METHOD     resizeBy(xDelta: Number, yDelt  [PUBLIC,   JS Platform
-METHOD     resizeTo(iWidth: Number, iHeig  [PUBLIC,   JS Platform
 METHOD     run(): undefined                [PROTECTE  issue234375.js
 FIELD      rypadlo: Boolean                [PUBLIC]   issue234375.js
 VARIABLE   roman: Man                      [PUBLIC]   test01.js

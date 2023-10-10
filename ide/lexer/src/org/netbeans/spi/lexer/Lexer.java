@@ -25,7 +25,7 @@ import org.netbeans.api.lexer.Token;
 /**
  * Lexer reads input characters from {@link LexerInput} and groups
  * them into tokens.
- * <br/>
+ * <br>
  * The lexer delegates token creation
  * to {@link TokenFactory#createToken(TokenId)}.
  * Token factory instance should be given to the lexer in its constructor.
@@ -43,22 +43,22 @@ import org.netbeans.api.lexer.Token;
  *
  * <p>
  * <b>Testing of the lexers</b>:
- * <br/>
+ * <br>
  * Testing of newly written lexers can be performed in several ways.
  * The most simple way is to test batch lexing first
  * (see e.g.
- * <a href="http://www.netbeans.org/source/browse/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/Attic/SimpleLexerBatchTest.java">
+ * <a href="https://github.com/apache/netbeans/tree/master/ide/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/SimpleLexerBatchTest.java">
  * org.netbeans.lib.lexer.test.simple.SimpleLexerBatchTest</a> in lexer module tests).
- * <br/>
+ * <br>
  * Then an "incremental" behavior of the new lexer can be tested
- * (see e.g. <a href="http://www.netbeans.org/source/browse/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/Attic/SimpleLexerIncTest.java">
+ * (see e.g. <a href="https://github.com/apache/netbeans/tree/master/ide/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/SimpleLexerIncTest.java">
  * org.netbeans.lib.lexer.test.simple.SimpleLexerIncTest</a>).
- * <br/>
+ * <br>
  * Finally the lexer can be tested by random tests that randomly insert and remove
  * characters from the document
- * (see e.g. <a href="http://www.netbeans.org/source/browse/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/Attic/SimpleLexerRandomTest.java">
+ * (see e.g. <a href="https://github.com/apache/netbeans/tree/master/ide/lexer/test/unit/src/org/netbeans/lib/lexer/test/simple/SimpleLexerRandomTest.java">
  * org.netbeans.lib.lexer.test.simple.SimpleLexerRandomTest</a>).
- * <br/>
+ * <br>
  * Once these tests pass the lexer can be considered stable.
  * </p>
  *
@@ -93,7 +93,7 @@ public interface Lexer<T extends TokenId> {
      *
      * @return token recognized by the lexer
      *  or null if there are no more characters (available in the input) to be tokenized.
-     *  <br/>
+     *  <br>
      *  Return {@link TokenFactory#SKIP_TOKEN}
      *  if the token should be skipped because of a token filter.
      *
@@ -109,7 +109,7 @@ public interface Lexer<T extends TokenId> {
      * This method is called by lexer's infrastructure
      * to return present lexer's state
      * once the lexer has recognized and returned a token.
-     * <br/>
+     * <br>
      * In mutable environment this method is called after each recognized token
      * and its result is paired (together with token's lookahead) with the token
      * for later use - when lexer needs to be restarted at the token boundary.
@@ -118,10 +118,10 @@ public interface Lexer<T extends TokenId> {
      * If the lexer is in no extra state (it is in a default state)
      * it should return <code>null</code>. Most lexers are in the default state
      * only at all the time.
-     * <br/>
+     * <br>
      * If possible the non-default lexer states should be expressed
      * as small non-negative integers.
-     * <br/>
+     * <br>
      * There is an optimization that shrinks the storage costs for small
      * <code>java.lang.Integer</code>s to single bytes.
      * </p>
@@ -138,7 +138,7 @@ public interface Lexer<T extends TokenId> {
     /**
      * Infrastructure calls this method when it no longer needs this lexer for lexing
      * so it becomes unused.
-     * <br/>
+     * <br>
      * If lexer instances are cached and reused later
      * then this method should first release all the references that might cause
      * memory leaks and then add this unused lexer to the cache.

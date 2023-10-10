@@ -59,7 +59,7 @@ public final class TreeName {
         
         this.prefix  = prefix;
         this.name    = name;
-        this.rawName = getQualifiedName (prefix, name);;
+        this.rawName = getQualifiedName (prefix, name);
     }
     
     /** Creates new TreeName.

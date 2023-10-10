@@ -31,14 +31,14 @@ import org.netbeans.modules.parsing.api.Snapshot;
  * @author Petr Hejl
  */
 public class JsParser extends SanitizingParser<JsParserResult> {
-    
-    private static String SINGLETON_FUNCTION_START = "(function(){"; // NOI18N
-    private static String SINGLETON_FUNCTION_END = "})();"; // NOI18N
-    private static String SHEBANG_START = "#!"; //NOI18N
-    private static String NODE = "node"; //NOI18N
-    private static String IMPORT = "import "; //NOI18N
-    private static String EXPORT = "export "; //NOI18N
-    
+
+    private final static String SINGLETON_FUNCTION_START = "(function(){"; // NOI18N
+    private final static String SINGLETON_FUNCTION_END = "})();"; // NOI18N
+    private final static String SHEBANG_START = "#!"; //NOI18N
+    private final static String NODE = "node"; //NOI18N
+    private final static String IMPORT = "import "; //NOI18N
+    private final static String EXPORT = "export "; //NOI18N
+
     public JsParser() {
         super(JsTokenId.javascriptLanguage());
     }
@@ -74,14 +74,14 @@ public class JsParser extends SanitizingParser<JsParserResult> {
                 // we are expecting a node file like #!/usr/bin/env node
                 // such files are in runtime wrapped with a function, so the files
                 // can contain a return statements in global context.
-                // -> we need wrap the source to a function as well. 
+                // -> we need wrap the source to a function as well.
                 sb.delete(0, SINGLETON_FUNCTION_START.length());
                 sb.insert(0, SINGLETON_FUNCTION_START);
                 sb.append(SINGLETON_FUNCTION_END);
             }
             parsableText = sb.toString();
         }
-        if (caretOffset > 0 && parsableText.charAt(caretOffset - 1) == '.' 
+        if (caretOffset > 0 && parsableText.charAt(caretOffset - 1) == '.'
                 && (parsableText.length() > caretOffset)
                 && Character.isWhitespace(parsableText.charAt(caretOffset))) {
             // we are expecting that the dot was just written. See issue #246006
@@ -90,7 +90,7 @@ public class JsParser extends SanitizingParser<JsParserResult> {
             sb.insert(caretOffset - 1, ' ');
             parsableText = sb.toString();
         }
-        
+
         Source source = Source.sourceFor(name, parsableText);
         errorManager.setLimit(0);
 
@@ -99,7 +99,7 @@ public class JsParser extends SanitizingParser<JsParserResult> {
                 builder.emptyStatements(true).ecmacriptEdition(Integer.MAX_VALUE).jsx(true).build(),
                 source,
                 errorManager);
-        FunctionNode node = null;
+        FunctionNode node;
         if (isModule) {
             node = parser.parseModule(name);
         } else {
@@ -117,9 +117,9 @@ public class JsParser extends SanitizingParser<JsParserResult> {
     protected String getMimeType() {
         return JsTokenId.JAVASCRIPT_MIME_TYPE;
     }
-    
+
     private boolean isNodeSource(String firstLine, String text) {
-        boolean hasCorretSheBang = firstLine.startsWith(SHEBANG_START) && firstLine.indexOf(NODE) > -1 && SINGLETON_FUNCTION_START.length() < firstLine.length();
+        boolean hasCorretSheBang = firstLine.startsWith(SHEBANG_START) && firstLine.contains(NODE) && SINGLETON_FUNCTION_START.length() < firstLine.length();
         if (hasCorretSheBang) {
             int lineOffsetBegin = firstLine.length() + 1;
             int lineOffsetEnd = text.indexOf('\n', lineOffsetBegin);
@@ -139,9 +139,9 @@ public class JsParser extends SanitizingParser<JsParserResult> {
                     break;
                 }
             }
-            
+
         }
-        
+
         return hasCorretSheBang;
     }
 }

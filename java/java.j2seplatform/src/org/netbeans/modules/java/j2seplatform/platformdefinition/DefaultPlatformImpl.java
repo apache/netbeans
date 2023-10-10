@@ -23,13 +23,13 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.openide.util.Exceptions;
-
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.filesystems.FileUtil;
 import org.netbeans.api.java.platform.*;
-import org.netbeans.api.java.classpath.*;
 
 /**
  * Implementation of the "Default" platform. The information here is extracted
@@ -42,8 +42,6 @@ public class DefaultPlatformImpl extends J2SEPlatformImpl {
 
     public static final String DEFAULT_PLATFORM_ANT_NAME = "default_platform";           //NOI18N
 
-    private ClassPath standardLibs;
-
     @SuppressWarnings("unchecked")  //Properties cast to Map<String,String>
     static JavaPlatform create(Map<String,String> properties, List<URL> sources, List<URL> javadoc) {
         if (properties == null) {
@@ -53,9 +51,9 @@ public class DefaultPlatformImpl extends J2SEPlatformImpl {
         synchronized (p) {
             p = new HashMap<>(p);
         }
-        String  jdkHome = System.getProperty("jdk.home"); // NOI18N
+        String jdkHome = System.getProperty("jdk.home"); // NOI18N
         File javaHome;
-        if (jdkHome == null) {
+        if (jdkHome == null || Files.isSymbolicLink(Paths.get(jdkHome, "bin", "java"))) {
             if (Util.getSpecificationVersion((String) p.get("java.specification.version")).compareTo(Util.JDK9) < 0) {
                 javaHome = FileUtil.normalizeFile(new File(System.getProperty("java.home")).getParentFile()); // NOI18N
             } else {
@@ -64,6 +62,7 @@ public class DefaultPlatformImpl extends J2SEPlatformImpl {
         } else {
             javaHome = FileUtil.normalizeFile(new File(jdkHome));
         }
+
         List<URL> installFolders = new ArrayList<> ();
         try {
             installFolders.add (Utilities.toURI(javaHome).toURL());

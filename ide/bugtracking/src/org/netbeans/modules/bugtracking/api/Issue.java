@@ -189,7 +189,7 @@ public final class Issue {
     /**
      * Determines whether this issue is finished/closed.
      * 
-     * @return <code>true<code> in case this Issue is finished, otherwise <code>false</code>
+     * @return <code>true</code> in case this Issue is finished, otherwise <code>false</code>
      * @since 1.85
      */
     public boolean isFinished() {
@@ -230,7 +230,7 @@ public final class Issue {
     /**
      * Determines whether it is possible to attach files to this Issue.
      * 
-     * @return <code>true<code> in case it is possible to attach files to 
+     * @return <code>true</code> in case it is possible to attach files to 
      * this Issue, otherwise <code>false</code>
      * @since 1.85
      */
@@ -267,7 +267,7 @@ public final class Issue {
      * <p>
      * 
      * @param comment the comment
-     * @param close <code>true<code> in case this issue should be closed.
+     * @param close <code>true</code> in case this issue should be closed.
      * @see org.netbeans.modules.bugtracking.spi.IssueProvider#addComment(java.lang.Object, java.lang.String, boolean) 
      * @since 1.85
      */

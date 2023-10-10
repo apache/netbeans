@@ -442,7 +442,7 @@ public class EjbJarWebServicesSupport implements WebServicesSupportImpl{
         //        "donotunwrap", // WSDL - portable
     };
     
-    private static final List allSeiServiceFeatures = Arrays.asList(WSCOMPILE_SEI_SERVICE_FEATURES);
+    private static final List<String> allSeiServiceFeatures = Arrays.asList(WSCOMPILE_SEI_SERVICE_FEATURES);
     
     private static final String [] WSCOMPILE_KEY_SEI_SERVICE_FEATURES = {
         "documentliteral",
@@ -452,7 +452,7 @@ public class EjbJarWebServicesSupport implements WebServicesSupportImpl{
         "donotoverride"
     };
     
-    private static final List importantSeiServiceFeatures = Arrays.asList(WSCOMPILE_KEY_SEI_SERVICE_FEATURES);
+    private static final List<String> importantSeiServiceFeatures = Arrays.asList(WSCOMPILE_KEY_SEI_SERVICE_FEATURES);
     
     private static final String [] WSCOMPILE_WSDL_SERVICE_FEATURES = {
         "datahandleronly", // WSDL - portable
@@ -477,7 +477,7 @@ public class EjbJarWebServicesSupport implements WebServicesSupportImpl{
         "donotunwrap", // WSDL - portable
     };
     
-    private static final List allWsdlServiceFeatures = Arrays.asList(WSCOMPILE_WSDL_SERVICE_FEATURES);
+    private static final List<String> allWsdlServiceFeatures = Arrays.asList(WSCOMPILE_WSDL_SERVICE_FEATURES);
     
     private static final String [] WSCOMPILE_KEY_WSDL_SERVICE_FEATURES = {
         "datahandleronly",
@@ -492,9 +492,9 @@ public class EjbJarWebServicesSupport implements WebServicesSupportImpl{
         "donotunwrap"
     };
     
-    private static final List importantWsdlServiceFeatures = Arrays.asList(WSCOMPILE_KEY_WSDL_SERVICE_FEATURES);
+    private static final List<String> importantWsdlServiceFeatures = Arrays.asList(WSCOMPILE_KEY_WSDL_SERVICE_FEATURES);
     
-    public List/*WsCompileEditorSupport.ServiceSettings*/ getServices() {
+    public List<WsCompileEditorSupport.ServiceSettings> getServices() {
         List<WsCompileEditorSupport.ServiceSettings> serviceList = new ArrayList<WsCompileEditorSupport.ServiceSettings>();
         
         // Implementation from getServiceClients() -- FIXME

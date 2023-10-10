@@ -35,8 +35,8 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
+import org.junit.Assert;
 import org.netbeans.junit.Log;
 import org.netbeans.junit.NbTestCase;
 

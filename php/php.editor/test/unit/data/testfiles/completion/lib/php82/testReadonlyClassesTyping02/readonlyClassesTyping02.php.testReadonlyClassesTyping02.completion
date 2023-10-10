@@ -1,0 +1,5 @@
+Code completion result for source line:
+final readon|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    readonly                                   null

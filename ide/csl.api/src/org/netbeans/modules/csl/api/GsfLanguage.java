@@ -102,6 +102,7 @@ public interface GsfLanguage {
      * @return The set of source classpath IDs, can be empty or even <code>null</code>.
      * @deprecated Use {@link PathRecognizerRegistration} instead.
      */
+    @Deprecated
     Set<String> getSourcePathIds();
 
     /**
@@ -113,6 +114,7 @@ public interface GsfLanguage {
      *   Please see {@link #getSourcePathIds()} for the exact meaning of those values.
      * @deprecated Use {@link PathRecognizerRegistration} instead.
      */
+    @Deprecated
     Set<String> getLibraryPathIds();
 
     /**
@@ -128,5 +130,6 @@ public interface GsfLanguage {
      *   Please see {@link #getLibraryPathIds()} for the exact meaning of those values.
      * @deprecated Use {@link PathRecognizerRegistration} instead.
      */
+    @Deprecated
     Set<String> getBinaryLibraryPathIds();
 }

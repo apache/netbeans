@@ -30,6 +30,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.gradle.tooling.BuildAction;
 import org.gradle.tooling.BuildActionExecuter;
 import org.gradle.tooling.BuildController;
@@ -83,8 +85,8 @@ public final class GradleDaemon {
         synchronized (initScriptReady) {
             if (!initScriptReady.get()) {
                 File initTemplate = InstalledFileLocator.getDefault().locate(INIT_SCRIPT_NAME, NbGradleProject.CODENAME_BASE, false);
-                try {
-                    List<String> script = Files.lines(initTemplate.toPath()).map(line -> line.replace(PROP_TOOLING_JAR, TOOLING_JAR)).collect(Collectors.toList());
+                try (Stream<String> lines = Files.lines(initTemplate.toPath())) {
+                    List<String> script = lines.map(line -> line.replace(PROP_TOOLING_JAR, TOOLING_JAR)).collect(Collectors.toList());
                     Files.write(initScript.toPath(), script);
                     initScriptReady.set(true);
                 } catch(IOException ex) {

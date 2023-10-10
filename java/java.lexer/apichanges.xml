@@ -83,6 +83,18 @@ is the proper place.
 
     <!-- ACTUAL CHANGES BEGIN HERE: -->
     <changes>
+        <change id="StringTemplates">
+             <api name="general"/>
+             <summary>Added TEMPLATE_START to JavaStringTokenId and JavaCharacterTokenId</summary>
+             <version major="1" minor="58"/>
+             <date day="9" month="9" year="2023"/>
+             <author login="jlahoda"/>
+            <compatibility addition="yes" binary="compatible" deletion="no" deprecation="no" modification="no" semantic="compatible" source="compatible"/>
+             <description>
+                 Added JavaStringTokenId.TEMPLATE_START and JavaCharacterTokenId.TEMPLATE_START.
+             </description>
+             <class package="org.netbeans.api.java.lexer" name="JavaTokenId"/>
+        </change>
         <change id="RawStringLiteral">
              <api name="general"/>
              <summary>Added MULTILINE_STRING_LITERAL JavaTokenKind</summary>

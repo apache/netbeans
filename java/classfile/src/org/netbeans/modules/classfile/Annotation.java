@@ -78,6 +78,7 @@ public class Annotation {
 
     /**
      * Returns the annotation type.
+     * @return annotation type
      */
     public final ClassName getType() {
 	return type;
@@ -86,6 +87,7 @@ public class Annotation {
     /**
      * Returns the named components for this annotation, as an
      * array of AnnotationComponents.
+     * @return named component for this annotation
      */
     public final AnnotationComponent[] getComponents() {
 	return components.clone();
@@ -94,6 +96,8 @@ public class Annotation {
     /**
      * Returns the named component for this annotation, or null if 
      * no component with that name exists.
+     * @param name of component
+     * @return named component for this annotation 
      */
     public final AnnotationComponent getComponent(String name) {
 	for (int i = 0; i < components.length; i++) {
@@ -107,6 +111,7 @@ public class Annotation {
     /**
      * Returns true if this annotation is loaded by the Java Virtual
      * Machine to be available via the Java reflection facility.
+     * @return true if this annoation is loaded
      */
     public boolean isRuntimeVisible() {
 	return runtimeVisible;

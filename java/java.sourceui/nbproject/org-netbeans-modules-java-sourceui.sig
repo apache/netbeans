@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.61.0
+#Version 1.69.0
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -66,6 +66,11 @@ fld public final static java.lang.String TYPEPARAMETERS = "%typeparameters%"
 meth public static int getDistance(java.lang.String,java.lang.String)
 meth public static java.lang.String getHeader(com.sun.source.util.TreePath,org.netbeans.api.java.source.CompilationInfo,java.lang.String)
 meth public static java.lang.String getHeader(javax.lang.model.element.Element,org.netbeans.api.java.source.CompilationInfo,java.lang.String)
+meth public static java.util.concurrent.CompletableFuture<org.netbeans.api.lsp.StructureElement> resolveStructureElement(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.Element,boolean)
+meth public static org.netbeans.api.lsp.StructureElement convertElement(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.Element,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor,boolean)
+meth public static org.netbeans.api.lsp.StructureElement toStructureElement(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.Element,org.netbeans.api.java.source.ElementUtilities$ElementAcceptor)
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public static org.netbeans.api.lsp.StructureElement$Kind javaKind2Structure(javax.lang.model.element.Element)
 supr java.lang.Object
 
 CLSS public org.netbeans.api.java.source.ui.ElementIcons
@@ -85,10 +90,13 @@ meth public java.util.concurrent.Future<java.lang.String> getTextAsync()
 meth public javax.swing.Action getGotoSourceAction()
 meth public org.netbeans.api.java.source.ui.ElementJavadoc resolveLink(java.lang.String)
 supr java.lang.Object
-hfds API,APINOTE_TAG,ASSOCIATE_JDOC,IMPLNOTE_TAG,IMPLSPEC_TAG,LANGS,RP,cancel,content,cpInfo,docRoot,docURL,fileObject,goToSource,handle,linkCounter,links
+hfds API,APINOTE_TAG,ASSOCIATE_JDOC,HTML_TAGS,IMPLNOTE_TAG,IMPLSPEC_TAG,LANGS,MARKUPTAG_MANDATORY_ATTRIBUTE,RP,cancel,className,content,cpInfo,docRoot,docURL,fileObject,goToSource,handle,imports,linkCounter,links,packageName
+hcls JavaDocSnippetLinkTagFileObject,SourceLineCharterMapperToHtmlTag
 
 CLSS public final org.netbeans.api.java.source.ui.ElementOpen
 innr public final static Location
+meth public !varargs static boolean open(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,java.lang.String[])
+meth public !varargs static java.util.concurrent.CompletableFuture<org.netbeans.api.java.source.ui.ElementOpen$Location> getLocation(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>,java.lang.String,java.lang.String[])
 meth public static boolean open(org.netbeans.api.java.source.ClasspathInfo,javax.lang.model.element.Element)
 meth public static boolean open(org.netbeans.api.java.source.ClasspathInfo,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>)
 meth public static boolean open(org.openide.filesystems.FileObject,org.netbeans.api.java.source.ElementHandle<? extends javax.lang.model.element.Element>)

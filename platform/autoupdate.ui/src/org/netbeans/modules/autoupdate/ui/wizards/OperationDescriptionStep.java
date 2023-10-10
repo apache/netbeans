@@ -27,6 +27,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -221,14 +222,15 @@ public class OperationDescriptionStep implements WizardDescriptor.Panel<WizardDe
         String s = new String ();
         boolean moreBroken = false;
         SortedMap<String, Set<UpdateElement>> dep2plugins = model.getBrokenDependency2Plugins ();
-        for (String brokenDep : dep2plugins.keySet ()) {
-            if (OperationWizardModel.MORE_BROKEN_PLUGINS.equals (brokenDep)) {
+
+        for (Map.Entry<String, Set<UpdateElement>> entry : dep2plugins.entrySet()) {
+            if (OperationWizardModel.MORE_BROKEN_PLUGINS.equals(entry.getKey())) {
                 moreBroken = true;
                 continue;
             }
-            s += getPresentationName (brokenDep);
-            if (dep2plugins.get (brokenDep) != null) {
-                Set<UpdateElement> sset = new HashSet<UpdateElement> (dep2plugins.get (brokenDep));
+            s += getPresentationName(entry.getKey());
+            if (entry.getValue() != null) {
+                Set<UpdateElement> sset = new HashSet<>(entry.getValue());
                 Set<UpdateElement> uniqueElements = new HashSet<UpdateElement> ();
                 for (UpdateElement plugin : sset) {
                     uniqueElements.addAll (model.findPrimaryPlugins (plugin));
@@ -441,14 +443,16 @@ public class OperationDescriptionStep implements WizardDescriptor.Panel<WizardDe
 
             // prepare for show
             UpdateElement element4showing = null;
-            for (UpdateUnit unit : visible2internals.keySet()) {
+            for (Map.Entry<UpdateUnit, TreeSet<UpdateElement>> entry : visible2internals.entrySet()) {
+                UpdateUnit unit = entry.getKey();
+
                 String updatename = "<b>";
                 if (unit.getInstalled() != null) {
                     updatename += unit.getInstalled().getDisplayName() + "</b> "; // NOI18N
                 } else {
                     updatename += unit.getAvailableUpdates().get(0).getDisplayName() + "</b> "; // NOI18N
                 }
-                if (visible2internals.get(unit).isEmpty()) {
+                if (entry.getValue().isEmpty()) {
                     element4showing = unit.getAvailableUpdates().get(0);
                     if (unit.getInstalled() != null) {
                         String oldVersion = unit.getInstalled().getSpecificationVersion();
@@ -459,7 +463,7 @@ public class OperationDescriptionStep implements WizardDescriptor.Panel<WizardDe
                         updatename += getBundle("OperationDescriptionStep_PluginVersionFormat", newVersion);
                     }
                 } else {
-                    for (UpdateElement el : visible2internals.get(unit)) {
+                    for (UpdateElement el : entry.getValue()) {
                         element4showing = el;
                         if (el.getUpdateUnit().getInstalled() != null) {
                             updatename += "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + el.getDisplayName()

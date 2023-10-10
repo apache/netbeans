@@ -26,9 +26,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import static java.util.function.Predicate.not;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
@@ -114,8 +117,13 @@ public class LibraryDeclarationChecker extends HintsProvider {
         final Map<String, Attribute> namespace2Attribute = new HashMap<>();
         Node root = result.root();
         if (root.children().isEmpty()) {
-            Node faceletsRoot = result.root(DefaultLibraryInfo.FACELETS.getLegacyNamespace());
-            root = !faceletsRoot.children().isEmpty() ? faceletsRoot : result.root(DefaultLibraryInfo.FACELETS.getNamespace());
+            root = DefaultLibraryInfo.FACELETS.getValidNamespaces().stream()
+                    .filter(not(DefaultLibraryInfo.FACELETS.getNamespace()::equals))
+                    .map(result::root)
+                    .filter(Objects::nonNull)
+                    .filter(node -> node.children().isEmpty())
+                    .findFirst()
+                    .orElse(result.root(DefaultLibraryInfo.FACELETS.getNamespace()));
         }
         final CharSequence docText = getSourceText(snapshot.getSource());
         final String jsfNsPrefix = NamespaceUtils.getForNs(result.getNamespaces(), DefaultLibraryInfo.JSF.getNamespace());
@@ -129,21 +137,17 @@ public class LibraryDeclarationChecker extends HintsProvider {
             public void visit(Element node) {
                 OpenTag openTag = (OpenTag)node;
                 //put all NS attributes to the namespace2Attribute map for #1 and check usage of jsf: prefixes.
-                Collection<Attribute> nsAttrs = openTag.attributes(new AttributeFilter() {
-
-                    @Override
-                    public boolean accepts(Attribute attribute) {
-                        if(attribute.unquotedValue() == null) {
-                            return false;
-                        }
-                        CharSequence nsPrefix = attribute.namespacePrefix();
-                        if(nsPrefix == null) {
-                            return false;
-                        }
-                        
-                        return LexerUtils.equals("xmlns", nsPrefix, true, true) //NOI18N
-                                || jsfNsPrefix != null && LexerUtils.equals(jsfNsPrefix, nsPrefix, true, true);
+                Collection<Attribute> nsAttrs = openTag.attributes(attribute ->  {
+                    if(attribute.unquotedValue() == null) {
+                        return false;
                     }
+                    CharSequence nsPrefix = attribute.namespacePrefix();
+                    if(nsPrefix == null) {
+                        return false;
+                    }
+
+                    return LexerUtils.equals("xmlns", nsPrefix, true, true) //NOI18N
+                            || jsfNsPrefix != null && LexerUtils.equals(jsfNsPrefix, nsPrefix, true, true);
                 });
                 
                 for (Attribute attr : nsAttrs) {
@@ -175,7 +179,7 @@ public class LibraryDeclarationChecker extends HintsProvider {
                     List<HintFix> fixes = new ArrayList<>();
                     Set<Library> libs = getLibsByPrefixes(context, getUndeclaredNamespaces(undeclaredNodes));
                     for (Library lib : libs) {
-                        FixLibDeclaration fix = new FixLibDeclaration(context.doc, lib.getDefaultPrefix(), lib, jsfSupport.isJsf22Plus());
+                        FixLibDeclaration fix = new FixLibDeclaration(context.doc, lib.getDefaultPrefix(), lib);
                         fixes.add(fix);
                     }
 
@@ -213,7 +217,7 @@ public class LibraryDeclarationChecker extends HintsProvider {
             if (lib != null) {
                 // http://java.sun.com/jsf/passthrough usage needs to be resolved on base of all declared libraries
                 if (!(DefaultLibraryInfo.PASSTHROUGH.getNamespace().equals(lib.getNamespace())
-                        || DefaultLibraryInfo.PASSTHROUGH.getLegacyNamespace().equals(lib.getNamespace()))) {
+                        || DefaultLibraryInfo.PASSTHROUGH.getValidNamespaces().contains(lib.getNamespace()))) {
                     declaredLibraries.add(lib);
                 }
             } else {
@@ -238,43 +242,45 @@ public class LibraryDeclarationChecker extends HintsProvider {
             final boolean[] passthroughUsage = new boolean[1];
             final Collection<OffsetRange> ranges = new ArrayList<>();
             for (Library lib : declaredLibraries) {
-                Node rootNode = result.root(lib.getNamespace());
-                if (lib.getLegacyNamespace() != null && (rootNode == null || rootNode.children().isEmpty())) {
-                    rootNode = result.root(lib.getLegacyNamespace());
-                }
-                if (rootNode == null) {
+                List<Node> nodes = lib.getValidNamespaces().stream()
+                        .map(result::root)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+                if (nodes.isEmpty()) {
                     continue; //no parse result for this namespace, the namespace is not declared
                 }
                 final int[] usages = new int[1];
-                ElementUtils.visitChildren(rootNode, new ElementVisitor() {
-                    @Override
-                    public void visit(Element node) {
-                        usages[0]++;
-                        if (declaredPassthroughOrJsf) {
-                            OpenTag ot = (OpenTag) node;
-                            for (Attribute attribute : ot.attributes(new AttributeFilter() {
-                                @Override
-                                public boolean accepts(Attribute attribute) {
-                                    return attribute.namespacePrefix() != null;
-                                }
-                            })) {
-                                if (passthroughNsPrefix != null && LexerUtils.equals(passthroughNsPrefix, attribute.namespacePrefix(), true, true)) {
-                                    // http://java.sun.com/jsf/passthrough or http://xmlns.jcp.org/jsf/passthrough used
-                                    passthroughUsage[0] = true;
-                                } else if (jsfNsPrefix != null && ot.namespacePrefix() != null
-                                        && LexerUtils.equals(jsfNsPrefix, attribute.namespacePrefix(), true, true)) {
-                                    // http://java.sun.com/jsf used at JSF-aware tag
-                                    wrongJsfNsUsages.add(attribute);
+                for (Node rootNode : nodes) {
+                    ElementUtils.visitChildren(rootNode, new ElementVisitor() {
+                        @Override
+                        public void visit(Element node) {
+                            usages[0]++;
+                            if (declaredPassthroughOrJsf) {
+                                OpenTag ot = (OpenTag) node;
+                                for (Attribute attribute : ot.attributes(new AttributeFilter() {
+                                    @Override
+                                    public boolean accepts(Attribute attribute) {
+                                        return attribute.namespacePrefix() != null;
+                                    }
+                                })) {
+                                    if (passthroughNsPrefix != null && LexerUtils.equals(passthroughNsPrefix, attribute.namespacePrefix(), true, true)) {
+                                        // http://java.sun.com/jsf/passthrough or http://xmlns.jcp.org/jsf/passthrough used
+                                        passthroughUsage[0] = true;
+                                    } else if (jsfNsPrefix != null && ot.namespacePrefix() != null
+                                            && LexerUtils.equals(jsfNsPrefix, attribute.namespacePrefix(), true, true)) {
+                                        // http://java.sun.com/jsf used at JSF-aware tag
+                                        wrongJsfNsUsages.add(attribute);
+                                    }
                                 }
                             }
                         }
-                    }
-                }, ElementType.OPEN_TAG);
+                    }, ElementType.OPEN_TAG);
+                }
 
                 usages[0] += isFunctionLibraryPrefixUsedInEL(context, lib, docText) ? 1 : 0;
 
                 // http://java.sun.com/jsf namespace handling
-                usages[0] += (DefaultLibraryInfo.JSF.getNamespace().equals(lib.getNamespace()) || DefaultLibraryInfo.JSF.getLegacyNamespace().equals(lib.getNamespace())) && jsfUsage[0] ? 1 : 0;
+                usages[0] += DefaultLibraryInfo.JSF.getValidNamespaces().contains(lib.getNamespace()) && jsfUsage[0] ? 1 : 0;
 
                 if (usages[0] == 0) {
                     //unused declaration
@@ -362,7 +368,7 @@ public class LibraryDeclarationChecker extends HintsProvider {
 
         // undeclared tag prefix
         if (openTag.namespacePrefix() != null
-                && !result.getNamespaces().values().contains(openTag.namespacePrefix().toString())) {
+                && !result.getNamespaces().containsValue(openTag.namespacePrefix().toString())) {
             undeclaredEntries.add(openTag);
         }
 
@@ -373,7 +379,7 @@ public class LibraryDeclarationChecker extends HintsProvider {
             }
         })) {
             // undeclared attribute prefix
-            if (!result.getNamespaces().values().contains(attribute.namespacePrefix().toString())) {
+            if (!result.getNamespaces().containsValue(attribute.namespacePrefix().toString())) {
                 undeclaredEntries.add(attribute);
             }
         }

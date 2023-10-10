@@ -201,7 +201,7 @@ public class NewFileIterator implements WizardDescriptor.AsynchronousInstantiati
         // Make sure list of steps is accurate.
         String[] beforeSteps = null;
         Object prop = wiz.getProperty (WizardDescriptor.PROP_CONTENT_DATA);
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
         String[] steps = createSteps (beforeSteps);

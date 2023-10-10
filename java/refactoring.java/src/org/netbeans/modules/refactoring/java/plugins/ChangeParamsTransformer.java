@@ -200,7 +200,7 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
             List<? extends Tree> members = node.getMembers();
             for (int i = 0; i < members.size(); i++) {
                 Tree tree = members.get(i);
-                if (tree.getKind().equals(Kind.METHOD)) {
+                if (tree.getKind() == Kind.METHOD) {
                     ExecutableElement element = (ExecutableElement) workingCopy.getTrees().getElement(new TreePath(getCurrentPath(), tree));
                     if (p.equals(element)) {
                         List<ExpressionTree> paramList = getNewCompatibleArguments(((MethodTree)tree).getParameters());
@@ -374,7 +374,7 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
     }
     
     private List<ExpressionTree> getNewCompatibleArguments(List<? extends VariableTree> parameters) {
-        List<ExpressionTree> arguments = new ArrayList();
+        List<ExpressionTree> arguments = new ArrayList<>();
         ParameterInfo[] pi = paramInfos;
         for (int i = 0; i < pi.length; i++) {
             int originalIndex = pi[i].getOriginalIndex();
@@ -432,7 +432,7 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
     }
     
     private List<ExpressionTree> getNewArguments(List<? extends ExpressionTree> currentArguments, boolean passThrough, ExecutableElement method) {
-        List<ExpressionTree> arguments = new ArrayList();
+        List<ExpressionTree> arguments = new ArrayList<>();
         ParameterInfo[] pi = paramInfos;
         for (int i = 0; i < pi.length; i++) {
             int originalIndex = pi[i].getOriginalIndex();
@@ -627,7 +627,8 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
             }
 
             // apply new access modifiers if necessary
-            Set<Modifier> modifiers = new HashSet<Modifier>(current.getModifiers().getFlags());
+            Set<Modifier> modifiers = EnumSet.noneOf(Modifier.class);
+            modifiers.addAll(current.getModifiers().getFlags());
             if (newModifiers!=null && !el.getEnclosingElement().getKind().isInterface()) {
                 modifiers.removeAll(ALL_ACCESS_MODIFIERS);
                 modifiers.addAll(newModifiers);
@@ -720,8 +721,8 @@ public class ChangeParamsTransformer extends RefactoringVisitor {
                 Tree returnType = nju.getReturnType();
                 if (this.returnType == null) {
                     boolean hasReturn = false;
-                    if (returnType != null && returnType.getKind().equals(Tree.Kind.PRIMITIVE_TYPE)) {
-                        if (!((PrimitiveTypeTree) returnType).getPrimitiveTypeKind().equals(TypeKind.VOID)) {
+                    if (returnType != null && returnType.getKind() == Tree.Kind.PRIMITIVE_TYPE) {
+                        if (((PrimitiveTypeTree) returnType).getPrimitiveTypeKind() != TypeKind.VOID) {
                             hasReturn = true;
                         }
                     }

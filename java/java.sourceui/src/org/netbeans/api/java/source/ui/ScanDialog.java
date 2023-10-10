@@ -54,7 +54,7 @@ public class ScanDialog {
      * If classpath scanning is not in progress, runnable's run() is called. <br>
      * If classpath scanning is in progress, modal cancellable notification dialog with specified
      * tile is opened.
-     * </ul>
+     * <p>
      * As soon as classpath scanning finishes, this dialog is closed and runnable's run() is called.
      * This method must be called in AWT EventQueue. Runnable is performed in AWT thread.
      *

@@ -295,15 +295,18 @@ public class PropertyMarkingTest extends GraphicsTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public String getAsText() {
             return getValue() == null ? "null" : getValue().toString();
         }
@@ -315,7 +318,8 @@ public class PropertyMarkingTest extends GraphicsTestCase {
         
         public TagsEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[] {"a","b","c","d","Value"};
         }
@@ -324,11 +328,13 @@ public class PropertyMarkingTest extends GraphicsTestCase {
             this.env = env;
             env.setState(env.STATE_INVALID);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
@@ -457,7 +463,8 @@ public class PropertyMarkingTest extends GraphicsTestCase {
         
         public BadEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             //return new String[] {"a","b","c","d","Value"};
             return null;
@@ -467,11 +474,13 @@ public class PropertyMarkingTest extends GraphicsTestCase {
             this.env = env;
             env.setState(env.STATE_INVALID);
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return true;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }

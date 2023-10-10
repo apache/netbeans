@@ -35,6 +35,7 @@ import java.awt.*;
 class EditorToolbarBorder extends AbstractBorder {
     private static final Insets insets = new Insets(1, 0, 2, 0);
 
+    @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
         g.setColor(UIManager.getColor("InternalFrame.borderShadow")); //NOI18N
         g.drawLine(x, y + h - 2, x + w - 1, y + h - 2);
@@ -42,6 +43,7 @@ class EditorToolbarBorder extends AbstractBorder {
         g.drawLine(x, y + h - 1, x + w - 1, y + h - 1);
     }
 
+    @Override
     public Insets getBorderInsets(Component c) {
         return insets;
     }

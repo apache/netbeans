@@ -1,0 +1,34 @@
+Code completion result for source line:
+private |Enum1 $field;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    EnumTestNamespace1              [PUBLIC]   null
+PACKAGE    EnumTestNamespace2              [PUBLIC]   null
+CLASS      Class1                          [PUBLIC]   EnumTestNamespace2
+CLASS      Enum1                           [PUBLIC]   EnumTestNamespace2
+CLASS      Enum2                           [PUBLIC]   EnumTestNamespace2
+CLASS      FieldTypeTest                   [PUBLIC]   EnumTestNamespace1
+CLASS      Interface1                      [PUBLIC]   EnumTestNamespace2
+------------------------------------
+KEYWORD    abstract                                   null
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    const                                      null
+KEYWORD    false                                      null
+KEYWORD    final                                      null
+KEYWORD    float                                      null
+KEYWORD    function                                   null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    private                                    null
+KEYWORD    protected                                  null
+KEYWORD    public                                     null
+KEYWORD    readonly                                   null
+KEYWORD    self                                       null
+KEYWORD    static                                     null
+KEYWORD    string                                     null
+KEYWORD    true                                       null
+KEYWORD    var                                        null

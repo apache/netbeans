@@ -38,9 +38,14 @@ public class ModelUtils {
             result = jsObject;
             for (JsObject property : jsObject.getProperties().values()) {
                 JsElement.Kind kind = property.getJSKind();
-                if (kind == JsElement.Kind.OBJECT || kind == JsElement.Kind.ANONYMOUS_OBJECT || kind == JsElement.Kind.OBJECT_LITERAL
-                        || kind == JsElement.Kind.FUNCTION || kind == JsElement.Kind.METHOD || kind == JsElement.Kind.CONSTRUCTOR
-                        || kind == JsElement.Kind.WITH_OBJECT) {
+                if (kind == JsElement.Kind.OBJECT
+                        || kind == JsElement.Kind.ANONYMOUS_OBJECT
+                        || kind == JsElement.Kind.OBJECT_LITERAL
+                        || kind == JsElement.Kind.FUNCTION
+                        || kind == JsElement.Kind.METHOD
+                        || kind == JsElement.Kind.CONSTRUCTOR
+                        || kind == JsElement.Kind.WITH_OBJECT
+                        || kind == JsElement.Kind.ARROW_FUNCTION) {
                     tmpObject = findJsObject(property, offset);
                 }
                 if (tmpObject != null) {

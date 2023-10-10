@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.46
+#Version 1.52
 
 CLSS public final com.sun.codemodel.ClassType
 fld public final static com.sun.codemodel.ClassType ANNOTATION_TYPE_DECL
@@ -18,7 +18,7 @@ meth public java.io.Writer openSource(com.sun.codemodel.JPackage,java.lang.Strin
 supr java.lang.Object
 
 CLSS public abstract interface com.sun.codemodel.JAnnotatable
-meth public abstract <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public abstract <%0 extends com.sun.codemodel.JAnnotationWriter<? extends java.lang.annotation.Annotation>> {%%0} annotate2(java.lang.Class<{%%0}>)
 meth public abstract boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public abstract com.sun.codemodel.JAnnotationUse annotate(com.sun.codemodel.JClass)
 meth public abstract com.sun.codemodel.JAnnotationUse annotate(java.lang.Class<? extends java.lang.annotation.Annotation>)
@@ -26,7 +26,7 @@ meth public abstract java.util.Collection<com.sun.codemodel.JAnnotationUse> anno
 
 CLSS public final com.sun.codemodel.JAnnotationArrayMember
 intf com.sun.codemodel.JAnnotatable
-meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public <%0 extends com.sun.codemodel.JAnnotationWriter<? extends java.lang.annotation.Annotation>> {%%0} annotate2(java.lang.Class<{%%0}>)
 meth public boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public com.sun.codemodel.JAnnotationArrayMember param(boolean)
 meth public com.sun.codemodel.JAnnotationArrayMember param(byte)
@@ -77,7 +77,7 @@ supr com.sun.codemodel.JAnnotationValue
 hfds clazz,memberValues
 
 CLSS public abstract com.sun.codemodel.JAnnotationValue
-cons public init()
+cons protected init()
 intf com.sun.codemodel.JGenerable
 supr java.lang.Object
 
@@ -287,7 +287,7 @@ hfds module,packages,refClasses,wildcard
 hcls JReferencedClass,TypeNameParser
 
 CLSS public com.sun.codemodel.JCommentPart
-cons public init()
+cons protected init()
 meth protected void format(com.sun.codemodel.JFormatter,java.lang.String)
 meth public boolean add(java.lang.Object)
 meth public com.sun.codemodel.JCommentPart append(java.lang.Object)
@@ -315,7 +315,7 @@ intf com.sun.codemodel.JDocCommentable
 intf com.sun.codemodel.JGenerifiable
 meth protected com.sun.codemodel.JClass substituteParams(com.sun.codemodel.JTypeVar[],java.util.List<com.sun.codemodel.JClass>)
 meth protected void declareBody(com.sun.codemodel.JFormatter)
-meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public <%0 extends com.sun.codemodel.JAnnotationWriter<? extends java.lang.annotation.Annotation>> {%%0} annotate2(java.lang.Class<{%%0}>)
 meth public boolean isAbstract()
 meth public boolean isAnnotationTypeDeclaration()
 meth public boolean isClass()
@@ -412,7 +412,7 @@ CLSS public final com.sun.codemodel.JEnumConstant
 intf com.sun.codemodel.JAnnotatable
 intf com.sun.codemodel.JDeclaration
 intf com.sun.codemodel.JDocCommentable
-meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public <%0 extends com.sun.codemodel.JAnnotationWriter<? extends java.lang.annotation.Annotation>> {%%0} annotate2(java.lang.Class<{%%0}>)
 meth public boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public com.sun.codemodel.JAnnotationUse annotate(com.sun.codemodel.JClass)
 meth public com.sun.codemodel.JAnnotationUse annotate(java.lang.Class<? extends java.lang.annotation.Annotation>)
@@ -500,7 +500,7 @@ meth public abstract com.sun.codemodel.JInvocation invoke(com.sun.codemodel.JMet
 meth public abstract com.sun.codemodel.JInvocation invoke(java.lang.String)
 
 CLSS public abstract com.sun.codemodel.JExpressionImpl
-cons public init()
+cons protected init()
 intf com.sun.codemodel.JExpression
 meth public final com.sun.codemodel.JArrayCompRef component(com.sun.codemodel.JExpression)
 meth public final com.sun.codemodel.JExpression _instanceof(com.sun.codemodel.JType)
@@ -560,7 +560,7 @@ supr java.lang.Object
 hfds body,collection,loopVar,type,var
 
 CLSS public com.sun.codemodel.JForLoop
-cons public init()
+cons protected init()
 intf com.sun.codemodel.JStatement
 meth public com.sun.codemodel.JBlock body()
 meth public com.sun.codemodel.JVar init(com.sun.codemodel.JType,java.lang.String,com.sun.codemodel.JExpression)
@@ -615,7 +615,6 @@ supr com.sun.codemodel.JExpressionImpl
 hfds args,isConstructor,method,name,object,type
 
 CLSS public com.sun.codemodel.JJavaName
-cons public init()
 meth public static boolean isFullyQualifiedClassName(java.lang.String)
 meth public static boolean isJavaIdentifier(java.lang.String)
 meth public static boolean isJavaPackageName(java.lang.String)
@@ -636,7 +635,7 @@ intf com.sun.codemodel.JDeclaration
 intf com.sun.codemodel.JDocCommentable
 intf com.sun.codemodel.JGenerifiable
 meth protected com.sun.codemodel.JCodeModel owner()
-meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public <%0 extends com.sun.codemodel.JAnnotationWriter<? extends java.lang.annotation.Annotation>> {%%0} annotate2(java.lang.Class<{%%0}>)
 meth public boolean hasSignature(com.sun.codemodel.JType[])
 meth public boolean hasVarArgs()
 meth public boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
@@ -675,7 +674,6 @@ supr java.lang.Object
 hfds _throws,annotations,body,defaultValue,jdoc,mods,name,outer,params,type,varParam
 
 CLSS public final com.sun.codemodel.JMod
-cons public init()
 fld public final static int ABSTRACT = 32
 fld public final static int FINAL = 8
 fld public final static int NATIVE = 64
@@ -783,7 +781,7 @@ intf com.sun.codemodel.JDeclaration
 intf com.sun.codemodel.JDocCommentable
 intf com.sun.codemodel.JGenerable
 intf java.lang.Comparable<com.sun.codemodel.JPackage>
-meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public <%0 extends com.sun.codemodel.JAnnotationWriter<? extends java.lang.annotation.Annotation>> {%%0} annotate2(java.lang.Class<{%%0}>)
 meth public boolean hasClasses()
 meth public boolean hasResourceFile(java.lang.String)
 meth public boolean isClass()
@@ -882,7 +880,7 @@ supr java.lang.Object
 hfds _finally,body,catches
 
 CLSS public abstract com.sun.codemodel.JType
-cons public init()
+cons protected init()
 intf com.sun.codemodel.JGenerable
 intf java.lang.Comparable<com.sun.codemodel.JType>
 meth public abstract com.sun.codemodel.JClass array()
@@ -923,7 +921,7 @@ intf com.sun.codemodel.JAnnotatable
 intf com.sun.codemodel.JAssignmentTarget
 intf com.sun.codemodel.JDeclaration
 meth protected boolean isAnnotated()
-meth public <%0 extends com.sun.codemodel.JAnnotationWriter> {%%0} annotate2(java.lang.Class<{%%0}>)
+meth public <%0 extends com.sun.codemodel.JAnnotationWriter<? extends java.lang.annotation.Annotation>> {%%0} annotate2(java.lang.Class<{%%0}>)
 meth public boolean removeAnnotation(com.sun.codemodel.JAnnotationUse)
 meth public com.sun.codemodel.JAnnotationUse annotate(com.sun.codemodel.JClass)
 meth public com.sun.codemodel.JAnnotationUse annotate(java.lang.Class<? extends java.lang.annotation.Annotation>)
@@ -1404,7 +1402,7 @@ cons public init()
 meth public static java.lang.String parseVersion(java.lang.String)
 meth public static void main(java.lang.String[]) throws java.lang.Throwable
 supr java.lang.Object
-hfds JDK6_REQUIRED
+hfds JDK_REQUIRED
 
 CLSS public abstract com.sun.tools.xjc.XJCListener
 cons public init()
@@ -1422,10 +1420,11 @@ hfds source
 CLSS public com.sun.tools.xjc.addon.at_generated.PluginImpl
 cons public init()
 meth public boolean run(com.sun.tools.xjc.outline.Outline,com.sun.tools.xjc.Options,org.xml.sax.ErrorHandler)
+meth public int parseArgument(com.sun.tools.xjc.Options,java.lang.String[],int) throws com.sun.tools.xjc.BadCommandLineException,java.io.IOException
 meth public java.lang.String getOptionName()
 meth public java.lang.String getUsage()
 supr com.sun.tools.xjc.Plugin
-hfds annotation,date
+hfds annotation,date,genAnnotation,noDate
 
 CLSS public com.sun.tools.xjc.addon.code_injector.Const
 cons public init()
@@ -5004,14 +5003,6 @@ fld public final static java.lang.String XML_SCHEMA_INSTANCE = "http://www.w3.or
 fld public final static java.lang.String XOP = "http://www.w3.org/2004/08/xop/include"
 supr java.lang.Object
 
-CLSS public final com.sun.xml.bind.v2.bytecode.ClassTailor
-meth public !varargs static byte[] tailor(java.io.InputStream,java.lang.String,java.lang.String,java.lang.String[])
-meth public !varargs static byte[] tailor(java.lang.Class,java.lang.String,java.lang.String[])
-meth public static java.lang.String toVMClassName(java.lang.Class)
-meth public static java.lang.String toVMTypeName(java.lang.Class)
-supr java.lang.Object
-hfds logger
-
 CLSS public abstract com.sun.xml.bind.v2.model.annotation.AbstractInlineAnnotationReaderImpl<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object, %3 extends java.lang.Object>
 cons public init()
 intf com.sun.xml.bind.v2.model.annotation.AnnotationReader<{com.sun.xml.bind.v2.model.annotation.AbstractInlineAnnotationReaderImpl%0},{com.sun.xml.bind.v2.model.annotation.AbstractInlineAnnotationReaderImpl%1},{com.sun.xml.bind.v2.model.annotation.AbstractInlineAnnotationReaderImpl%2},{com.sun.xml.bind.v2.model.annotation.AbstractInlineAnnotationReaderImpl%3}>
@@ -5478,7 +5469,6 @@ fld public final static java.util.Map<java.lang.reflect.Type,com.sun.xml.bind.v2
 intf com.sun.xml.bind.v2.model.runtime.RuntimeBuiltinLeafInfo
 intf com.sun.xml.bind.v2.runtime.Transducer<{com.sun.xml.bind.v2.model.impl.RuntimeBuiltinLeafInfoImpl%0}>
 meth public boolean useNamespace()
-meth public final boolean isDefault()
 meth public final com.sun.xml.bind.v2.runtime.Transducer getTransducer()
 meth public final java.lang.Class getClazz()
 meth public javax.xml.namespace.QName getTypeName({com.sun.xml.bind.v2.model.impl.RuntimeBuiltinLeafInfoImpl%0})
@@ -5491,9 +5481,9 @@ CLSS public com.sun.xml.bind.v2.model.impl.RuntimeModelBuilder
 cons public init(com.sun.xml.bind.v2.runtime.JAXBContextImpl,com.sun.xml.bind.v2.model.annotation.RuntimeAnnotationReader,java.util.Map<java.lang.Class,java.lang.Class>,java.lang.String)
 fld public final com.sun.xml.bind.v2.runtime.JAXBContextImpl context
  anno 0 com.sun.istack.Nullable()
+meth protected com.sun.xml.bind.v2.model.core.TypeInfoSet createTypeInfoSet()
 meth protected com.sun.xml.bind.v2.model.impl.RuntimeClassInfoImpl createClassInfo(java.lang.Class,com.sun.xml.bind.v2.model.annotation.Locatable)
 meth protected com.sun.xml.bind.v2.model.impl.RuntimeEnumLeafInfoImpl createEnumLeafInfo(java.lang.Class,com.sun.xml.bind.v2.model.annotation.Locatable)
-meth protected com.sun.xml.bind.v2.model.runtime.RuntimeTypeInfoSet createTypeInfoSet()
 meth public com.sun.xml.bind.v2.model.impl.RuntimeArrayInfoImpl createArrayInfo(com.sun.xml.bind.v2.model.annotation.Locatable,java.lang.reflect.Type)
 meth public com.sun.xml.bind.v2.model.runtime.RuntimeElementInfo createElementInfo(com.sun.xml.bind.v2.model.impl.RegistryInfoImpl<java.lang.reflect.Type,java.lang.Class,java.lang.reflect.Field,java.lang.reflect.Method>,java.lang.reflect.Method) throws com.sun.xml.bind.v2.runtime.IllegalAnnotationException
 meth public com.sun.xml.bind.v2.model.runtime.RuntimeNonElement getClassInfo(java.lang.Class,boolean,com.sun.xml.bind.v2.model.annotation.Locatable)
@@ -5792,7 +5782,6 @@ cons protected init(com.sun.xml.bind.v2.runtime.Transducer<{com.sun.xml.bind.v2.
 fld protected final com.sun.xml.bind.v2.runtime.Transducer<{com.sun.xml.bind.v2.runtime.FilterTransducer%0}> core
 intf com.sun.xml.bind.v2.runtime.Transducer<{com.sun.xml.bind.v2.runtime.FilterTransducer%0}>
 meth public boolean useNamespace()
-meth public final boolean isDefault()
 meth public java.lang.CharSequence print({com.sun.xml.bind.v2.runtime.FilterTransducer%0}) throws com.sun.xml.bind.api.AccessorException
  anno 0 com.sun.istack.NotNull()
  anno 1 com.sun.istack.NotNull()
@@ -6089,7 +6078,6 @@ meth public javax.activation.DataHandler unmarshal(java.lang.String) throws java
 supr javax.xml.bind.annotation.adapters.XmlAdapter<java.lang.String,javax.activation.DataHandler>
 
 CLSS public abstract interface com.sun.xml.bind.v2.runtime.Transducer<%0 extends java.lang.Object>
-meth public abstract boolean isDefault()
 meth public abstract boolean useNamespace()
 meth public abstract java.lang.CharSequence print({com.sun.xml.bind.v2.runtime.Transducer%0}) throws com.sun.xml.bind.api.AccessorException
  anno 0 com.sun.istack.NotNull()
@@ -6781,18 +6769,6 @@ cons public init()
 meth public java.lang.Object get(java.lang.Object)
 meth public void set(java.lang.Object,java.lang.Object)
 supr com.sun.xml.bind.v2.runtime.reflect.Accessor
-
-CLSS public abstract com.sun.xml.bind.v2.runtime.reflect.opt.OptimizedAccessorFactory
-fld public final static boolean noOptimization
-meth public final static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.sun.xml.bind.v2.runtime.reflect.Accessor<{%%0},{%%1}> get(java.lang.reflect.Field)
-meth public final static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.sun.xml.bind.v2.runtime.reflect.Accessor<{%%0},{%%1}> get(java.lang.reflect.Method,java.lang.reflect.Method)
-supr java.lang.Object
-hfds fieldTemplateName,logger,methodTemplateName
-
-CLSS public abstract com.sun.xml.bind.v2.runtime.reflect.opt.OptimizedTransducedAccessorFactory
-meth public final static com.sun.xml.bind.v2.runtime.reflect.TransducedAccessor get(com.sun.xml.bind.v2.model.runtime.RuntimePropertyInfo)
-supr java.lang.Object
-hfds fieldTemplateName,logger,methodTemplateName,suffixMap
 
 CLSS public final com.sun.xml.bind.v2.runtime.reflect.opt.TransducedAccessor_field_Boolean
 cons public init()

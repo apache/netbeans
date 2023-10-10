@@ -19,7 +19,6 @@
 package org.netbeans.modules.javascript2.jade.editor.lexer;
 
 import java.util.Collections;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.javascript2.jade.editor.JadeCompletionContext;
 import org.netbeans.modules.javascript2.jade.editor.JadeTestBase;

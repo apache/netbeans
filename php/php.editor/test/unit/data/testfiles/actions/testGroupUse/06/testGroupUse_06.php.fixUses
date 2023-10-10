@@ -51,7 +51,7 @@ class ClsABC2 {
 
 namespace Run;
 
-use \A\ {
+use \A\{
     B\C\ClsABC,
     B\C\ClsABC2 as MyCls,
     B\ClsAB,

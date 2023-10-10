@@ -390,7 +390,7 @@ public class ElementUtils {
             if (caseInsensitive) {
                 nodeName = nodeName.toLowerCase(Locale.ENGLISH);
             }
-            String sindex = indexDelim >= 0 ? token.substring(indexDelim + 1, token.length()) : "0";
+            String sindex = indexDelim >= 0 ? token.substring(indexDelim + 1) : "0";
             int index = Integer.parseInt(sindex);
 
             int count = 0;

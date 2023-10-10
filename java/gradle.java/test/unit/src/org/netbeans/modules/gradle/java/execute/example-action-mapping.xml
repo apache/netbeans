@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<!-- BEGIN: JavaExecTokenProviderTest.exampleActionMapping -->
+<!-- @start region="exampleActionMapping" -->
 <actions>
     <apply-for plugins="application">
         <action name="run">
@@ -31,4 +31,4 @@
         </action>
     </apply-for>
 </actions>
-<!-- END: JavaExecTokenProviderTest.exampleActionMapping -->
+<!-- @end region="exampleActionMapping" -->

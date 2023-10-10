@@ -41,7 +41,7 @@ public interface Import extends WSDLComponent {
      *
      * @return a WSDL model object if the import location or namespace resolves 
      * into a model source and the model source is well-formed; 
-     * @exception DepResolverException if location or namespace values cannot resolve;
+     * @throws CatalogModelException if location or namespace values cannot resolve;
      */    
     WSDLModel getImportedWSDLModel() throws CatalogModelException;
 }

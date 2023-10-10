@@ -4,8 +4,3 @@ element.ch|arAt(10);
 ------------------------------------
 METHOD     charAt(param)                   [PUBLIC]   issue217029.js
 FIELD      ch                              [PUBLIC]   issue217029.js
-FIELD      childElementCount: Number       [PUBLIC]   JS Platform
-FIELD      childNodes: NodeList            [PUBLIC]   JS Platform
-ATTRIBUTE  challenge                                  <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  charset                                    <font color=#999999>HTML Attribute</font>
-ATTRIBUTE  checked                                    <font color=#999999>HTML Attribute</font>

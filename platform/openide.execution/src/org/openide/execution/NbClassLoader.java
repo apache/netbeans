@@ -43,7 +43,7 @@ import org.openide.windows.InputOutput;
 /** A class loader which is capable of loading classes from the Repository.
  * XXX the only useful thing this class does is effectively make
  * ExecutionEngine.createPermissions public! Consider deprecating this class...
- * @see <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/ClassPath.html#getClassLoader(boolean)"><code>ClassPath.getClassLoader(...)</code></a>
+ * @see <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/ClassPath.html#getClassLoader-boolean-"><code>ClassPath.getClassLoader(...)</code></a>
 * @author Ales Novak, Petr Hamernik, Jaroslav Tulach, Ian Formanek
 */
 public class NbClassLoader extends URLClassLoader {
@@ -62,10 +62,9 @@ public class NbClassLoader extends URLClassLoader {
     }
     
     /** Create a new class loader retrieving classes from the core IDE as well as the Repository.
-     * @see FileSystemCapability#EXECUTE
-     * @see FileSystemCapability#fileSystems
      * @deprecated Misuses classpath.
     */
+    @Deprecated
     public NbClassLoader () {
         super(new URL[0], systemClassLoader());
         fast = false;
@@ -77,6 +76,7 @@ public class NbClassLoader extends URLClassLoader {
      * @see org.openide.filesystems.Repository#getFileSystems
      * @deprecated Misuses classpath.
      */
+    @Deprecated
     public NbClassLoader(InputOutput io) {
         super(new URL[0], systemClassLoader());
         fast = false;
@@ -101,6 +101,7 @@ public class NbClassLoader extends URLClassLoader {
      * @param fileSystems file systems to load classes from
      * @deprecated Misuses classpath.
     */
+    @Deprecated
     public NbClassLoader (FileSystem[] fileSystems) {
         super(new URL[0], systemClassLoader(), null);
         fast = false;
@@ -112,6 +113,7 @@ public class NbClassLoader extends URLClassLoader {
      * @param parent fallback class loader
      * @deprecated Misuses classpath.
     */
+    @Deprecated
     public NbClassLoader (FileSystem[] fileSystems, ClassLoader parent) {
         super(new URL[0], parent);
         fast = false;
@@ -123,6 +125,7 @@ public class NbClassLoader extends URLClassLoader {
     * @param name resource name
     * @return URL to that resource or <code>null</code>
     */
+    @Override
     public URL getResource (String name) {
         return super.getResource (name.startsWith ("/") ? name.substring (1) : name); // NOI18N
     }
@@ -133,6 +136,7 @@ public class NbClassLoader extends URLClassLoader {
        would simply define packages loaded from such a URL with no
        particular info. We want it to have specification version and
        all that good stuff. */
+    @Override
     protected Class findClass (final String name) throws ClassNotFoundException {
         if (!fast && name.indexOf ('.') != -1) {
             Logger.getLogger(NbClassLoader.class.getName()).log(Level.FINE, "NBFS used!");
@@ -197,6 +201,7 @@ public class NbClassLoader extends URLClassLoader {
     }
 
     /* @return a PermissionCollection for given CodeSource. */
+    @Override
     protected final synchronized PermissionCollection getPermissions(CodeSource cs) {
 
         if (permissionCollections != null) {

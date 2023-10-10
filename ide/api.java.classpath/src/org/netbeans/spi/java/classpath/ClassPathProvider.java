@@ -42,7 +42,7 @@ import org.openide.filesystems.FileObject;
  * <li>The {@link ClassPath#BOOT} type of classpath
  *     is required or the source file will not be parsable and 
  *     code completion will be disabled. See also
- *     {@link org.netbeans.spi.java.queries.SourceLevelQueryImplementation}.</li>
+ *     <a href="@org-netbeans-api-java@/org/netbeans/spi/java/queries/SourceLevelQueryImplementation.html">SourceLevelQueryImplementation</a>.</li>
  * <li>The {@link ClassPath#SOURCE} type of classpath
  *     is required or code completion will be disabled.
  *     Providing this classpath will enable code completion, but only elements
@@ -60,7 +60,7 @@ import org.openide.filesystems.FileObject;
  * {@link org.netbeans.api.java.classpath.GlobalPathRegistry}
  * when they are to be exposed in the GUI as available for use (e.g. for the editor's Fast Open dialog),
  * and unregister them when they are no longer to be exposed. Typically this is done as part of
- * <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/ProjectOpenedHook.html">ProjectOpenedHook</a>.
+ * <a href="@org-netbeans-modules-projectuiapi-base@/org/netbeans/spi/project/ui/ProjectOpenedHook.html">ProjectOpenedHook</a>.
  * <p>It is also desirable to produce classpath information for compiled class files
  * (bytecode), including their package roots (whether a disk folder or a JAR root).
  * This will enable parsing of the class files, which is sometimes needed (e.g. for

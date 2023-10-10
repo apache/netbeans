@@ -31,7 +31,7 @@ import java.util.prefs.Preferences;
  */
 public class ParentVersionErrorCustomizer extends javax.swing.JPanel {
     private Preferences preferences;
-    private final Map<String, Object> id2Saved = new HashMap<String, Object>();
+    private final Map<String, Object> id2Saved = new HashMap<>();
 
     /** Creates new form ParentVersionErrorCustomizer */
     public ParentVersionErrorCustomizer(Preferences prefs) {
@@ -43,20 +43,14 @@ public class ParentVersionErrorCustomizer extends javax.swing.JPanel {
         rbLatest.setSelected(!preferences.getBoolean(ParentVersionError.PROP_SOURCES, true));
         cbSnapshots.setSelected(preferences.getBoolean(ParentVersionError.PROP_SNAPSHOT, false));
         enableSnapshots();
-        ActionListener al = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                preferences.putBoolean(ParentVersionError.PROP_SOURCES, rbSources.isSelected());
-                enableSnapshots();
-            }
+        ActionListener al = (ActionEvent e) -> {
+            preferences.putBoolean(ParentVersionError.PROP_SOURCES, rbSources.isSelected());
+            enableSnapshots();
         };
         rbSources.addActionListener(al);
         rbLatest.addActionListener(al);
-        cbSnapshots.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                preferences.putBoolean(ParentVersionError.PROP_SNAPSHOT, cbSnapshots.isSelected());
-            }
+        cbSnapshots.addActionListener((ActionEvent e) -> {
+            preferences.putBoolean(ParentVersionError.PROP_SNAPSHOT, cbSnapshots.isSelected());
         });
     
         id2Saved.put(ParentVersionError.PROP_SOURCES, rbSources.isSelected());
@@ -108,7 +102,7 @@ public class ParentVersionErrorCustomizer extends javax.swing.JPanel {
                         .addComponent(cbSnapshots))
                     .addComponent(rbSources)
                     .addComponent(rbLatest))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,7 +113,7 @@ public class ParentVersionErrorCustomizer extends javax.swing.JPanel {
                 .addComponent(rbLatest)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbSnapshots)
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -10,5 +10,4 @@ class ClassConstantVisibility {
     public function publicFunction() {
         
     }
-
 }

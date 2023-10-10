@@ -108,11 +108,11 @@ follow the style of others when not.
 
 <p>The basic idea for the format of modules is taken from the
 
-<a href="http://java.sun.com/products/j2se/1.5.0/docs/guide/extensions/index.html">Java Extension Mechanism</a>.
+<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/extensions/index.html">Java Extension Mechanism</a>.
 
 The basic ideas behind the
 
-<a href="http://java.sun.com/products/j2se/1.5.0/docs/guide/versioning/index.html">Package Versioning Specification</a>
+<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/versioning/index.html">Package Versioning Specification</a>
 
 is used to <a href="#how-vers">handle dependencies</a> both between
 modules and of modules to the system.
@@ -123,11 +123,11 @@ features, and what special option settings should be used when
 installing these features. Some of this information is
 listed in the
 
-<a href="http://java.sun.com/products/j2se/1.5.0/docs/guide/jar/manifest.html">manifest file</a>
+<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#JAR%20Manifest">manifest file</a>
 
 using the customary format, and NetBeans-specific attributes. The
 
-<a href="http://java.sun.com/beans/glasgow/jaf.html">Java Activation Framework</a>,
+<a href="https://www.oracle.com/technetwork/java/jaf-1-150219.pdf">Java Activation Framework</a>,
 
 as well as JDK-internal features such as support for executable JAR
 files, was used as a model for how to specify the useful contents of a
@@ -705,7 +705,7 @@ is broken.
 
 At the heart of all these tags are the conventions used in the 
 
-<a href="http://java.sun.com/javase/6/docs/technotes/guides/versioning/">Package Versioning Specification</a>.
+<a href="https://docs.oracle.com/javase/6/docs/technotes/guides/versioning/">Package Versioning Specification</a>.
 
 While this documentation should be referred
 to for the full details and justification of this system, the basic
@@ -968,7 +968,7 @@ document which gives a fuller, more informal explanation.</p>
 
 <em>Since 4.44</em> a module can request to be enabled only on certain class
 of an operating system 
-(see issue <a href="http://www.netbeans.org/issues/show_bug.cgi?id=46833">46833</a>).
+(see issue <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=46833">46833</a>).
 This is done by requesting a special token to be present and the system makes sure that
 these tokens are enabled only when <em>NetBeans</em> run on requested class of OS.
 <p>
@@ -1085,7 +1085,7 @@ files, as of 3.21.</p>
 <p class="nonnormative">In the current implementation, modules may be
 bundled with other files using
 
-<a href="http://autoupdate.netbeans.org/nbm/nbm_package.html#structure">NBM files</a>
+<a href="https://netbeans.apache.org/projects/autoupdate/nbm/nbm_package.html#structure">NBM files</a>
 
 as provided by Auto Update, and the NetBeans build process premerges
 modules in the selected module config into one large installation

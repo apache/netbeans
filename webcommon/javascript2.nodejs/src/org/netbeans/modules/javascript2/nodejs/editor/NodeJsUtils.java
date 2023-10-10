@@ -202,7 +202,7 @@ public class NodeJsUtils {
             JSONObject root = (JSONObject) JSONValue.parse(content);
             if (root != null) {
                 Object main = root.get(MAIN_FIELD);
-                if (main != null && main instanceof String) {
+                if (main instanceof String) {
                     value = (String)main;
                 }
             }

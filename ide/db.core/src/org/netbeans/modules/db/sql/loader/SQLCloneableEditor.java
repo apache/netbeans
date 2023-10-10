@@ -106,16 +106,18 @@ public final class SQLCloneableEditor extends CloneableEditor implements MultiVi
     private MultiViewElementCallback callback;
 
     public SQLCloneableEditor() {
+        // Constructor used for deserialization/persistence
         super(null);
         putClientProperty("oldInitialize", Boolean.TRUE); // NOI18N
     }
 
     public SQLCloneableEditor(Lookup context) {
+        // Normally used constructor
         super(context.lookup(SQLEditorSupport.class));
-        SQLEditorSupport support = context.lookup(SQLEditorSupport.class);
-        setActivatedNodes(new Node[] {support.getDataObject().getNodeDelegate()});
         putClientProperty("oldInitialize", Boolean.TRUE); // NOI18N
-        initialize();
+        SQLEditorSupport support = context.lookup(SQLEditorSupport.class);
+        setActivatedNodes(new Node[]{support.getDataObject().getNodeDelegate()});
+        support.initializeCloneableEditor(this);
     }
 
     void setResults(List<Component> results) {

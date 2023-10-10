@@ -91,8 +91,8 @@ public class JavadocForBinaryQuery {
         /**
          * Get the Javadoc roots.
          * Each root should contain the main <code>index.html</code>, so that
-         * for a class <samp>pkg.Class</samp> the generated documentation would
-         * have a path <samp>pkg/Class.html</samp> relative to one of the roots.
+         * for a class <code>pkg.Class</code> the generated documentation would
+         * have a path <code>pkg/Class.html</code> relative to one of the roots.
          * @return array of roots of Javadoc documentation (may be empty but not null)
          */
         URL[] getRoots();

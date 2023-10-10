@@ -321,6 +321,7 @@ final class OrthogonalSearchRouterRegion extends Rectangle {
         return point.x >= x && point.x <= x + width && point.y >= y && point.y <= y + height;
     }
 
+    @Override
     public String toString () {
         return "pos: " + x + "," + y + " size: " + width + "," + height + " dir: " + direction + " depth: " + depth;
     }

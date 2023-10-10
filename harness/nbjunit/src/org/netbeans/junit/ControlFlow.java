@@ -32,7 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /** Basic skeleton for logging test case.
  *

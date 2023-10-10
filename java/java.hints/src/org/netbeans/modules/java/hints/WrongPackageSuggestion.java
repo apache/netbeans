@@ -125,7 +125,7 @@ public class WrongPackageSuggestion extends AbstractHint {
         
         String packageLocation = cp.getResourceName(info.getFileObject().getParent(), '.', false);
         
-        if ((isCaseSensitive() && packageName.equals(packageLocation)) || (!isCaseSensitive() && packageName.toLowerCase().equals(packageLocation.toLowerCase()))) {
+        if ((isCaseSensitive() && packageName.equals(packageLocation)) || (!isCaseSensitive() && packageName.equalsIgnoreCase(packageLocation))) {
             return null;
         }
         

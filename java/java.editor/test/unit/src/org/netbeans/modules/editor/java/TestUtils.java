@@ -36,7 +36,7 @@ import org.openide.filesystems.Repository;
  * Call setupData() in test's setUp() and cleanupData() in test's tearDown().
  * Then you can you rest of the utility methods.
  *
- * @autor David Konecny
+ * @author David Konecny
  */
 public final class TestUtils {
     

@@ -57,10 +57,7 @@
         <fail message="javac.source of lib.profiler classes should be as low as possible!">
             <condition>
                 <not>
-                    <or>
-                        <equals arg1="${javac.source}" arg2="1.5"/>
-                        <equals arg1="${javac.source}" arg2="1.7"/>
-                    </or>
+                    <equals arg1="${javac.source}" arg2="1.8"/>
                 </not>
             </condition>
         </fail>

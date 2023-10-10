@@ -19,10 +19,15 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
- * Represent instanceof expression
- * <pre>e.g.<pre> $a instanceof MyClass,
+ * Represent instanceof expression.
+ *
+ * e.g.
+ * <pre>
+ * $a instanceof MyClass,
  * foo() instanceof $myClass,
- * $a instanceof $b->$myClass
+ * $a instanceof $b->$myClass,
+ * $a instansof ((string) $myClass)
+ * </pre>
  */
 public class InstanceOfExpression extends Expression {
 

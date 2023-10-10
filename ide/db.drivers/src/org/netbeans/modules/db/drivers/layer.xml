@@ -23,9 +23,13 @@
 <filesystem>
     <folder name="Databases">
         <folder name="JDBCDrivers">
-            <file name="oracle_thin.xml" url="oracle_thin.xml"/>
-            <file name="oracle_oci.xml" url="oracle_oci.xml"/>
+            <file name="db2.xml" url="db2.xml"/>
+            <file name="informix.xml" url="informix.xml"/>
+            <file name="mariadb.xml" url="mariadb.xml"/>
+            <file name="mssql.xml" url="mssql.xml"/>
             <file name="mysql.xml" url="mysql.xml"/>
+            <file name="oracle_oci.xml" url="oracle_oci.xml"/>
+            <file name="oracle_thin.xml" url="oracle_thin.xml"/>
             <file name="postgresql.xml" url="postgresql.xml"/>
         </folder>
     </folder>

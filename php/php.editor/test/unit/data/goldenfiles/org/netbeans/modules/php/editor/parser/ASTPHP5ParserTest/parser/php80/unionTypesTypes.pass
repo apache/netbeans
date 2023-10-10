@@ -147,17 +147,8 @@
         <token id='T_NEKUDOTAIM' start='1082' end='1083'>
             <text>:</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='1084' end='1085'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1085' end='1089'>
-            <text>Test</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1089' end='1090'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1090' end='1093'>
-            <text>Foo</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1084' end='1093'>
+            <text>\Test\Foo</text>
         </token>
         <token id='T_OR' start='1093' end='1094'>
             <text>|</text>
@@ -336,17 +327,8 @@
         <token id='T_NEKUDOTAIM' start='1412' end='1413'>
             <text>:</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='1414' end='1415'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1415' end='1419'>
-            <text>Test</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1419' end='1420'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1420' end='1423'>
-            <text>Foo</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1414' end='1423'>
+            <text>\Test\Foo</text>
         </token>
         <token id='T_OR' start='1423' end='1424'>
             <text>|</text>
@@ -450,17 +432,8 @@
         <token id='T_NEKUDOTAIM' start='1590' end='1591'>
             <text>:</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='1592' end='1593'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1593' end='1597'>
-            <text>Test</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1597' end='1598'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1598' end='1601'>
-            <text>Foo</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1592' end='1601'>
+            <text>\Test\Foo</text>
         </token>
         <token id='T_OR' start='1601' end='1602'>
             <text>|</text>
@@ -621,17 +594,8 @@
         <token id='T_NEKUDOTAIM' start='1877' end='1878'>
             <text>:</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='1879' end='1880'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1880' end='1884'>
-            <text>Test</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1884' end='1885'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1885' end='1888'>
-            <text>Foo</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='1879' end='1888'>
+            <text>\Test\Foo</text>
         </token>
         <token id='T_OR' start='1888' end='1889'>
             <text>|</text>
@@ -763,9 +727,7 @@
                             </UnionType>
                             <Block start='988' end='1016' isCurly='true'>
                                 <ReturnStatement start='998' end='1010'>
-                                    <NamespaceName start='1005' end='1009' isCurrent='false' isGlobal='false'>
-                                        <Identifier start='1005' end='1009' name='null'/>
-                                    </NamespaceName>
+                                    <Scalar start='1005' end='1009' type='STRING' value='null'/>
                                 </ReturnStatement>
                             </Block>
                         </FunctionDeclaration>
@@ -1110,9 +1072,7 @@
                             </UnionType>
                             <Block start='1783' end='1811' isCurly='true'>
                                 <ReturnStatement start='1793' end='1805'>
-                                    <NamespaceName start='1800' end='1804' isCurrent='false' isGlobal='false'>
-                                        <Identifier start='1800' end='1804' name='null'/>
-                                    </NamespaceName>
+                                    <Scalar start='1800' end='1804' type='STRING' value='null'/>
                                 </ReturnStatement>
                             </Block>
                         </FunctionDeclaration>

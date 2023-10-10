@@ -124,6 +124,8 @@ public class LanguageServerImpl implements LanguageServerProvider {
                         ProcessBuilder builder = new ProcessBuilder(command);
                         if (LOG.isLoggable(Level.FINEST)) {
                             builder.redirectError(Redirect.INHERIT);
+                        } else {
+                            builder.redirectError(Redirect.DISCARD);
                         }
                         Process process = builder.start();
                         InputStream in = process.getInputStream();

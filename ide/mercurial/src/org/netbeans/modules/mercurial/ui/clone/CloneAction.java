@@ -371,7 +371,7 @@ public class CloneAction extends ContextAction {
                 
                 OutputLogger logger = support.getLogger();
                 logger.outputInRed(NbBundle.getMessage(CloneAction.class, "MSG_CLONE_CANCEL_ATTEMPT")); // NOI18N
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                     NbBundle.getMessage(CloneAction.class, "MSG_CLONE_CANCEL_NOT_SUPPORTED"),// NOI18N
                     NbBundle.getMessage(CloneAction.class, "MSG_CLONE_CANCEL_NOT_SUPPORTED_TITLE"),// NOI18N
                     JOptionPane.INFORMATION_MESSAGE);

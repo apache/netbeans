@@ -51,6 +51,7 @@ import org.openide.util.Lookup;
  * @author Martin Entlicher
  * @deprecated it is here only for compatibility with vcsgeneric modules, otherwise unused
  */
+@Deprecated
 public class EncodedReaderFactory {
     
     /** The FileObject attribute that defines the encoding of the FileObject content. */

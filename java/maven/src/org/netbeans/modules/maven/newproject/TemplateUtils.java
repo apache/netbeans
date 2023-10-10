@@ -255,27 +255,29 @@ public final class TemplateUtils {
             POMModel model = POMModelFactory.getDefault().getModel(modelSource);
             org.netbeans.modules.maven.model.pom.Project root = model.getProject();
             if (root != null) {
-                if (model.startTransaction()) {
-                    try {
-                        org.netbeans.modules.maven.model.pom.Properties props = root.getProperties();
-                        if (props == null) {
-                            props = model.getFactory().createProperties();
-                            root.setProperties(props);
-                        }
-                        String packageName = (String) properties.get(TemplateUtils.PARAM_PACKAGE);
-                        String mainClass = (String) properties.get(TemplateUtils.PARAM_MAIN_CLASS_NAME);
-                        if (mainClass == null || mainClass.isEmpty()) {
-                            mainClass = "App";  // NOI18N
-                        }
-                        if (packageName != null && !packageName.isEmpty()) {
-                            mainClass = packageName + '.' + mainClass;
-                        }
-                        props.setProperty("exec.mainClass", mainClass); // NOI18N
-                    } finally {
-                        model.endTransaction();
+                if (model.getProject().getPackaging() == null || "jar".equals(model.getProject().getPackaging())) {
+                    if (model.startTransaction()) {
                         try {
-                            Utilities.saveChanges(model);
-                        } catch (IOException ex) {}
+                            org.netbeans.modules.maven.model.pom.Properties props = root.getProperties();
+                            if (props == null) {
+                                props = model.getFactory().createProperties();
+                                root.setProperties(props);
+                            }
+                            String packageName = (String) properties.get(TemplateUtils.PARAM_PACKAGE);
+                            String mainClass = (String) properties.get(TemplateUtils.PARAM_MAIN_CLASS_NAME);
+                            if (mainClass == null || mainClass.isEmpty()) {
+                                mainClass = "App";  // NOI18N
+                            }
+                            if (packageName != null && !packageName.isEmpty()) {
+                                mainClass = packageName + '.' + mainClass;
+                            }
+                            props.setProperty("exec.mainClass", mainClass); // NOI18N
+                        } finally {
+                            model.endTransaction();
+                            try {
+                                Utilities.saveChanges(model);
+                            } catch (IOException ex) {}
+                        }
                     }
                 }
             }

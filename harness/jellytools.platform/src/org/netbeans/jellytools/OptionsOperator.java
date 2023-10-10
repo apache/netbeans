@@ -163,7 +163,7 @@ public class OptionsOperator extends NbDialogOperator {
     //definition levels
 
     /**
-     * Shows definition levels column by clicking on the "<<" table
+     * Shows definition levels column by clicking on the "&lt;&lt;" table
      * column title.
      */
     public void showLevels() {
@@ -302,7 +302,7 @@ public class OptionsOperator extends NbDialogOperator {
     }
 
     /**
-     * Clicks on "<<" column header.
+     * Clicks on "&lt;&lt;" column header.
      */
     protected void clickOnSecondHeader() {
         JTableHeader header = treeTable().getTableHeader();
@@ -365,7 +365,7 @@ public class OptionsOperator extends NbDialogOperator {
                                                "OpenIDE-Module-Display-Category"));
     }
 
-    /** Selects Fonts & Colors category. */
+    /** Selects Fonts &amp; Colors category. */
     public void selectFontAndColors() {
         selectCategory(Bundle.getStringTrimmed("org.netbeans.modules.options.colors.Bundle",
                                                "CTL_Font_And_Color_Options"));

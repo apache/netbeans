@@ -555,7 +555,7 @@ public abstract class PatternSandbox extends JPanel
          * text, but are not in the JTextPane.
          */
         private int countCRs(String text, int from, int to) {
-            if (!LineEnding.CRLF.equals(lineEnding)) { //NOI18N
+            if (LineEnding.CRLF != lineEnding) { //NOI18N
                 return 0;
             }
             int count = 0;

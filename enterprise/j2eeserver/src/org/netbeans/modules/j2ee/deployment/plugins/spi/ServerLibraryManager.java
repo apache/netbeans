@@ -37,7 +37,7 @@ public interface ServerLibraryManager {
 
     /**
      * Returns the set of libraries the server has access to and can be deployed
-     * on request (by call to {@link #deployRequiredLibraries(java.util.Set)}.
+     * on request (by call to {@link org.netbeans.modules.j2ee.deployment.devmodules.api.ServerInstance.LibraryManager#deployLibraries(java.util.Set)}.
      *
      * @return the set of libraries which can be deployed on server
      */

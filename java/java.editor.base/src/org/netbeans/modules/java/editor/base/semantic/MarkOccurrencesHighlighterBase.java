@@ -403,6 +403,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
             case CLASS:
             case ENUM:
             case INTERFACE:
+            case RECORD:
             case TYPE_PARAMETER: //???
                 return node.getBoolean(MarkOccurencesSettingsNames.TYPES, true);
             case CONSTRUCTOR:

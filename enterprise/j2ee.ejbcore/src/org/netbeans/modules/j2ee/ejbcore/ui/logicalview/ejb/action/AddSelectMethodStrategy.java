@@ -22,6 +22,7 @@ package org.netbeans.modules.j2ee.ejbcore.ui.logicalview.ejb.action;
 import org.netbeans.modules.j2ee.ejbcore.util._RetoucheUtil;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -65,9 +66,7 @@ public class AddSelectMethodStrategy extends AbstractAddMethodStrategy {
 
     @Override
     public MethodModel getPrototypeMethod() {
-        Set<Modifier> modifiers = new HashSet<Modifier>();
-        modifiers.add(Modifier.PUBLIC);
-        modifiers.add(Modifier.ABSTRACT);
+        Set<Modifier> modifiers = EnumSet.of(Modifier.PUBLIC, Modifier.ABSTRACT);
         return MethodModel.create(
                 "ejbSelectBy",
                 "int",

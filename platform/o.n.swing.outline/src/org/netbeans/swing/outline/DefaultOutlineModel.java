@@ -133,7 +133,7 @@ public class DefaultOutlineModel implements OutlineModel {
         this( treeModel, new ProxyTableModel(rowModel), largeModel, nodesColumnLabel );
     }
     
-    /** Creates a new instance of DefaultOutlineModel.  <strong><b>Note</b> 
+    /** Creates a new instance of DefaultOutlineModel.  <strong><b>Note</b></strong> 
      * Do not fire table structure changes from the wrapped TableModel (value
      * changes are okay).  Changes that affect the number of rows must come
      * from the TreeModel.

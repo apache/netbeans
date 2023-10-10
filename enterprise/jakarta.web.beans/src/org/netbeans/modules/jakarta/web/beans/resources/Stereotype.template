@@ -1,0 +1,26 @@
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
+
+<#if package?? && package != "">
+package ${package};
+
+</#if>
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import jakarta.enterprise.inject.Stereotype;
+
+/**
+ *
+ * @author ${user}
+ */
+@Stereotype
+@Retention(RUNTIME)
+@Target({METHOD, FIELD, TYPE})
+public @interface ${name} {
+}

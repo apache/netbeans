@@ -20,7 +20,6 @@
 package org.netbeans.modules.j2ee.ejbjarproject;
 
 import java.io.File;
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;

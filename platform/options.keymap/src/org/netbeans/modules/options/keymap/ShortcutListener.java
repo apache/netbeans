@@ -40,7 +40,6 @@ public class ShortcutListener implements KeyListener {
 
     /**
      * Creates new instance
-     * @param textField target textField
      * @param enterConfirms whether ENTER keystroke should be taken as
      * confirmation or displayed in the same way as other shortcuts
      */

@@ -27,5 +27,4 @@ class Child implements MixedType {
     public function testMixed(mixed $mixed): mixed {
         
     }
-
 }

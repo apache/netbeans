@@ -47,6 +47,7 @@ public class GeneralCompletionOptionsPanel extends JPanel {
         cbAutoPopup.setSelected(preferences.getBoolean(SimpleValueNames.COMPLETION_AUTO_POPUP, true));
         cbDocsAutoPopup.setSelected(preferences.getBoolean(SimpleValueNames.JAVADOC_AUTO_POPUP, true));
         cbJavadocNextToCC.setSelected(preferences.getBoolean(SimpleValueNames.JAVADOC_POPUP_NEXT_TO_CC, false));
+        cbDisplayParameterTooltip.setSelected(preferences.getBoolean(SimpleValueNames.COMPLETION_PARAMETER_TOOLTIP, true));
         cbShowDeprecated.setSelected(preferences.getBoolean(SimpleValueNames.SHOW_DEPRECATED_MEMBERS, true));
         cbInsertSingleProposalsAutomatically.setSelected(preferences.getBoolean(SimpleValueNames.COMPLETION_INSTANT_SUBSTITUTION, true));
         cbCaseSensitive.setSelected(preferences.getBoolean(SimpleValueNames.COMPLETION_CASE_SENSITIVE, true));
@@ -54,6 +55,7 @@ public class GeneralCompletionOptionsPanel extends JPanel {
         id2Saved.put(SimpleValueNames.COMPLETION_AUTO_POPUP, cbAutoPopup.isSelected());
         id2Saved.put(SimpleValueNames.JAVADOC_AUTO_POPUP, cbDocsAutoPopup.isSelected());
         id2Saved.put(SimpleValueNames.JAVADOC_POPUP_NEXT_TO_CC, cbJavadocNextToCC.isSelected());
+        id2Saved.put(SimpleValueNames.COMPLETION_PARAMETER_TOOLTIP, cbDisplayParameterTooltip.isSelected());
         id2Saved.put(SimpleValueNames.SHOW_DEPRECATED_MEMBERS, cbShowDeprecated.isSelected());
         id2Saved.put(SimpleValueNames.COMPLETION_INSTANT_SUBSTITUTION, cbInsertSingleProposalsAutomatically.isSelected());
         id2Saved.put(SimpleValueNames.COMPLETION_CASE_SENSITIVE, cbCaseSensitive.isSelected());
@@ -78,6 +80,7 @@ public class GeneralCompletionOptionsPanel extends JPanel {
         cbCaseSensitive = new javax.swing.JCheckBox();
         cbShowDeprecated = new javax.swing.JCheckBox();
         cbInsertClosingBracketsAutomatically = new javax.swing.JCheckBox();
+        cbDisplayParameterTooltip = new javax.swing.JCheckBox();
 
         setForeground(new java.awt.Color(99, 130, 191));
 
@@ -130,6 +133,13 @@ public class GeneralCompletionOptionsPanel extends JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbDisplayParameterTooltip, org.openide.util.NbBundle.getMessage(GeneralCompletionOptionsPanel.class, "GeneralCompletionOptionsPanel.cbDisplayParameterTooltip.text")); // NOI18N
+        cbDisplayParameterTooltip.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbDisplayParamterTooltipActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -143,7 +153,8 @@ public class GeneralCompletionOptionsPanel extends JPanel {
                     .addComponent(cbDocsAutoPopup)
                     .addComponent(cbAutoPopup)
                     .addComponent(cbInsertSingleProposalsAutomatically)
-                    .addComponent(cbJavadocNextToCC))
+                    .addComponent(cbJavadocNextToCC)
+                    .addComponent(cbDisplayParameterTooltip))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -156,6 +167,8 @@ public class GeneralCompletionOptionsPanel extends JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbJavadocNextToCC)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbDisplayParameterTooltip)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbInsertSingleProposalsAutomatically)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbCaseSensitive)
@@ -163,7 +176,7 @@ public class GeneralCompletionOptionsPanel extends JPanel {
                 .addComponent(cbShowDeprecated)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbInsertClosingBracketsAutomatically)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         cbAutoPopup.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(GeneralCompletionOptionsPanel.class, "AN_Auto_Popup_Completion_Window")); // NOI18N
@@ -213,9 +226,14 @@ public class GeneralCompletionOptionsPanel extends JPanel {
         preferences.putBoolean(SimpleValueNames.JAVADOC_POPUP_NEXT_TO_CC, cbJavadocNextToCC.isSelected());
     }//GEN-LAST:event_cbJavadocNextToCCActionPerformed
 
+    private void cbDisplayParamterTooltipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDisplayParamterTooltipActionPerformed
+        preferences.putBoolean(SimpleValueNames.COMPLETION_PARAMETER_TOOLTIP, cbDisplayParameterTooltip.isSelected());
+    }//GEN-LAST:event_cbDisplayParamterTooltipActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbAutoPopup;
     private javax.swing.JCheckBox cbCaseSensitive;
+    private javax.swing.JCheckBox cbDisplayParameterTooltip;
     private javax.swing.JCheckBox cbDocsAutoPopup;
     private javax.swing.JCheckBox cbInsertClosingBracketsAutomatically;
     private javax.swing.JCheckBox cbInsertSingleProposalsAutomatically;

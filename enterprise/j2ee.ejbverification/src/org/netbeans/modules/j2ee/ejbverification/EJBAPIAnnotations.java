@@ -25,6 +25,7 @@ package org.netbeans.modules.j2ee.ejbverification;
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
+// @todo: Support JakartaEE
 public interface EJBAPIAnnotations {
     String ASYNCHRONOUS = "javax.ejb.Asynchronous"; //NOI18N
 

@@ -1,0 +1,72 @@
+    private int|callable $callable;
+                --------
+HINT:"callable" cannot be used as a property type.
+    private false $false;
+            -----
+HINT:"false" cannot be used as a standalone type.
+    private null $null;
+            ----
+HINT:"null" cannot be used as a standalone type.
+    private true $true;
+            ----
+HINT:"true" cannot be used as a standalone type.
+    private bool|false $boolFalse;
+                 -----
+HINT:Type "false" is duplicated.
+    private true|bool $trueBool;
+                 ----
+HINT:Type "bool" is duplicated.
+    private bool|bool $duplicatedBool;
+                 ----
+HINT:Type "bool" is duplicated.
+    private true|false $bothTrueAndFalse;
+                 -----
+HINT:Contains both "true" and "false", "bool" should be used.
+HINT:Contains both "true" and "false", "bool" should be used.
+    private int|false|true $bothTrueAndFalse2;
+                      ----
+HINT:Contains both "true" and "false", "bool" should be used.
+HINT:Contains both "true" and "false", "bool" should be used.
+    private int|INT $duplicatedInt;
+                ---
+HINT:Type "INT" is duplicated.
+    private iterable|array $iterable1;
+            --------------
+HINT:Redundant combination: "iterable|array" contains both "iterable" and "array".
+    private iterable|Traversable $iterable2;
+            --------------------
+HINT:Redundant combination: "iterable|Traversable" contains both "iterable" and "Traversable".
+    private iterable|array|Traversable $iterable3;
+            --------------------------
+HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "Traversable".
+HINT:Redundant combination: "iterable|array|Traversable" contains both "iterable" and "array".
+    private null|false $nullFalse; // PHP 8.2: OK
+                 -----
+HINT:"false" cannot be used as a standalone type.
+    public function returnFalse(): true {
+                                   ----
+HINT:"true" cannot be used as a standalone type.
+    public function returnFalse(): false {
+                                   -----
+HINT:"false" cannot be used as a standalone type.
+    public function returnNull(): null {
+                                  ----
+HINT:"null" cannot be used as a standalone type.
+    public function returnDuplicatedType(): UnionType2|UnionType2 {
+                                                       ----------
+HINT:Type "UnionType2" is duplicated.
+    public function parameterTrue(true $true) {
+                                  ----
+HINT:"true" cannot be used as a standalone type.
+    public function parameterFalse(false $false) {
+                                   -----
+HINT:"false" cannot be used as a standalone type.
+    public function parameterNull(null $null) {
+                                  ----
+HINT:"null" cannot be used as a standalone type.
+    public function parameterDuplicatedType(UnionType2|UnionType2 $duplicatedType) {
+                                                       ----------
+HINT:Type "UnionType2" is duplicated.
+    public function voidInUnionType(): void|int {
+                                       ----
+HINT:"void" cannot be used as a union type.

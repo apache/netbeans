@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.common.dd.DDHelper;
+import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
@@ -35,13 +37,16 @@ import org.openide.loaders.TemplateWizard;
  */
 public class ValidationConfigurationIterator extends AbstractIterator {
 
-    private static final String defaultName = "validation";   //NOI18N
+    private static final String DEFAULT_NAME = "validation";   //NOI18N
 
+    @Override
     public Set<DataObject> instantiate(TemplateWizard wizard) throws IOException {
         String targetName = Templates.getTargetName(wizard);
         FileObject targetDir = Templates.getTargetFolder(wizard);
+        Project project = Templates.getProject(wizard);
+        Profile profile = JavaEEProjectSettings.getProfile(project);
 
-        FileObject fo = DDHelper.createValidationXml(Profile.JAVA_EE_6_FULL, targetDir, targetName);
+        FileObject fo = DDHelper.createValidationXml(profile, targetDir, targetName);
         if (fo != null) {
             return Collections.singleton(DataObject.find(fo));
         } else {
@@ -51,7 +56,7 @@ public class ValidationConfigurationIterator extends AbstractIterator {
 
     @Override
     public String getDefaultName() {
-        return defaultName;
+        return DEFAULT_NAME;
     }
 
 }

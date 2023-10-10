@@ -193,9 +193,8 @@ public class RepositoryNode extends AsynchronousNode<Collection<QueryImpl>> impl
                     filteredQueryNodes.add(queryNode);
                 }
             }
-            for (String key : keys) {
-                queryNodesMap.remove(key);
-            }
+
+            queryNodesMap.keySet().removeAll(keys);
         }
     }
 

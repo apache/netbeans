@@ -161,6 +161,13 @@ final class CoreSuite {
             }
 
             @Override
+            public List<String> generatedDependencies() {
+                return Collections.emptyList();
+            }
+
+
+
+            @Override
             public List<String> annotationProcessors() {
                 return annotationProcessors;
             }

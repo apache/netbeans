@@ -67,10 +67,12 @@ final class DecorationUtils {
     /** Simple border with line and the space */
     private static class SeparateBorder extends AbstractBorder {
 
+        @Override
         public Insets getBorderInsets (Component c) {
             return new Insets(3, 3, 3, 3);
         }
 
+        @Override
         public void paintBorder (Component c, Graphics g, int x, int y, int width, int height) {
             g.setColor(Color.DARK_GRAY);
             g.drawRect(x, y, width - 1, height - 1);
@@ -110,6 +112,7 @@ final class DecorationUtils {
             this.insets = insets;
         }
 
+        @Override
         public void mouseDragged(MouseEvent e) {
             check(e);
             Window w = SwingUtilities.getWindowAncestor((Component)e.getSource());
@@ -125,6 +128,7 @@ final class DecorationUtils {
             }
         }
 
+        @Override
         public void mouseMoved(MouseEvent e) {
             check(e);
             Component comp = (Component)e.getSource();
@@ -134,6 +138,7 @@ final class DecorationUtils {
             comp.setCursor(Cursor.getPredefinedCursor(cursorType));
         }
 
+        @Override
         public void mousePressed(MouseEvent e) {
             isPressed = true;
             startDragLoc = getScreenLoc(e);
@@ -144,6 +149,7 @@ final class DecorationUtils {
             minSize = w.getMinimumSize();
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             isPressed = false;
             startDragLoc = null;
@@ -151,6 +157,7 @@ final class DecorationUtils {
             minSize = null;
         }
 
+        @Override
         public void mouseExited(MouseEvent e) {
             Component comp = (Component)e.getSource();
             comp.setCursor(Cursor.getDefaultCursor());

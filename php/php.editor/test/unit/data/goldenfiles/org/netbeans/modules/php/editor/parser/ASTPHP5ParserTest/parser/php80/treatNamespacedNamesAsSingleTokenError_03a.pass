@@ -1,0 +1,32 @@
+<testresult testFile='treatNamespacedNamesAsSingleTokenError_03a.php'>
+    <scanner>
+        <token id='T_NAMESPACE' start='815' end='824'>
+            <text>namespace</text>
+        </token>
+        <token id='T_NAME_FULLY_QUALIFIED' start='825' end='846'>
+            <text>\Fully\Qualified\Name</text>
+        </token>
+        <token id='T_SEMICOLON' start='846' end='847'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='848' end='848'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='848'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='824'/>
+            <ExpressionStatement start='825' end='847'>
+                <NamespaceName start='825' end='846' isCurrent='false' isGlobal='true'>
+                    <Identifier start='826' end='831' name='Fully'/>
+                    <Identifier start='832' end='841' name='Qualified'/>
+                    <Identifier start='842' end='846' name='Name'/>
+                </NamespaceName>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -64,7 +64,7 @@ public class JDKPanel extends DestinationPanel {
         // add jdk.getInstallationLocation() to the all java list so that 
         // in silent installation this location is initialized and used by default        
         final Object objectContext = getWizard().getContext().get(Product.class);
-        if (objectContext != null && objectContext instanceof Product) {
+        if (objectContext instanceof Product) {
             Product jdk = (Product) objectContext;
             SearchForJavaAction.addJavaLocation(
                     jdk.getInstallationLocation(),
@@ -146,7 +146,7 @@ public class JDKPanel extends DestinationPanel {
         
         private static Product getBundledJDK(JDKPanel panel) {
             final Object objectContext = panel.getWizard().getContext().get(Product.class);
-            if(objectContext != null && objectContext instanceof Product) {
+            if(objectContext instanceof Product) {
                 return  (Product) objectContext;                
             }
             return null;

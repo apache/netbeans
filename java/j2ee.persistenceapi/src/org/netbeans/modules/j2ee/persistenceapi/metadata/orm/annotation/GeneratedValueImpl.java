@@ -20,6 +20,7 @@
 package org.netbeans.modules.j2ee.persistenceapi.metadata.orm.annotation;
 
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.TypeElement;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.AnnotationParser;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.ParseResult;
@@ -30,10 +31,17 @@ public class GeneratedValueImpl implements GeneratedValue {
     private final ParseResult parseResult;
 
     public GeneratedValueImpl(AnnotationModelHelper helper, AnnotationMirror generatedValueAnnotation) {
-        AnnotationParser parser = AnnotationParser.create(helper);
-        parser.expectEnumConstant("strategy", helper.resolveType("javax.persistence.GenerationType"), parser.defaultValue("AUTO")); // NOI18N
-        parser.expectString("generator", parser.defaultValue("")); // NOI18N
-        parseResult = parser.parse(generatedValueAnnotation);
+        if (((TypeElement) generatedValueAnnotation.getAnnotationType().asElement()).getQualifiedName().toString().startsWith("jakarta.")) {
+            AnnotationParser parser = AnnotationParser.create(helper);
+            parser.expectEnumConstant("strategy", helper.resolveType("jakarta.persistence.GenerationType"), parser.defaultValue("AUTO")); // NOI18N
+            parser.expectString("generator", parser.defaultValue("")); // NOI18N
+            parseResult = parser.parse(generatedValueAnnotation);
+        } else {
+            AnnotationParser parser = AnnotationParser.create(helper);
+            parser.expectEnumConstant("strategy", helper.resolveType("javax.persistence.GenerationType"), parser.defaultValue("AUTO")); // NOI18N
+            parser.expectString("generator", parser.defaultValue("")); // NOI18N
+            parseResult = parser.parse(generatedValueAnnotation);
+        }
     }
 
     public void setStrategy(String value) {

@@ -65,16 +65,16 @@ public class WeirdAssignment extends JsAstRule {
     public String getDisplayName() {
         return Bundle.JsWeirdAssignmentDN();
     }
-    
+
     private static class WeirdVisitor extends PathNodeVisitor {
         private List<Hint> hints;
         private JsRuleContext context;
         private final Rule rule;
-        
+
         public WeirdVisitor(Rule rule) {
             this.rule = rule;
         }
-        
+
         public void process(JsRuleContext context, List<Hint> hints) {
             this.hints = hints;
             this.context = context;

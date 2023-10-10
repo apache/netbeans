@@ -73,12 +73,12 @@ public final class ProfileElementNavigatorAction extends NodeAction {
         ElementHandle eh = getHandle(activatedNodes);
         ElementKind kind = eh == null ? null : eh.getKind();
         
-        if (ElementKind.METHOD.equals(kind) || ElementKind.CONSTRUCTOR.equals(kind)) {
+        if (ElementKind.METHOD == kind || ElementKind.CONSTRUCTOR == kind) {
             name = Bundle.ProfileMethodEditorAction_Name();
             return true;
         }
         
-        if (ElementKind.CLASS.equals(kind)) {
+        if (ElementKind.CLASS == kind) {
             name = Bundle.ProfileClassEditorAction_Name();
             return true;
         }
@@ -106,9 +106,9 @@ public final class ProfileElementNavigatorAction extends NodeAction {
 
                     Object sourceInfo = null;
                     ElementKind kind = eh.getKind();
-                    if (ElementKind.METHOD.equals(kind) || ElementKind.CONSTRUCTOR.equals(kind)) {
+                    if (ElementKind.METHOD == kind || ElementKind.CONSTRUCTOR == kind) {
                         sourceInfo = getMethod(eh, src.getClasspathInfo());
-                    } else if (ElementKind.CLASS.equals(kind)) {
+                    } else if (ElementKind.CLASS == kind) {
                         sourceInfo = new JavacClassInfo(eh, src.getClasspathInfo());
                     }
 

@@ -22,6 +22,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,7 +49,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class J2SEPlatformDefaultJavadocImpl implements J2SEPlatformDefaultJavadoc {
 
     private static final Logger LOG = Logger.getLogger(J2SEPlatformDefaultJavadocImpl.class.getName());
-    private static final Map<String,String> OFFICIAL_JAVADOC = new HashMap<String,String>();
+    private static final Map<String,String> OFFICIAL_JAVADOC = new HashMap<>();
     static {
         OFFICIAL_JAVADOC.put("1.0", null); // NOI18N
         OFFICIAL_JAVADOC.put("1.1", null); // NOI18N
@@ -57,17 +60,32 @@ public final class J2SEPlatformDefaultJavadocImpl implements J2SEPlatformDefault
         OFFICIAL_JAVADOC.put("1.6", "https://docs.oracle.com/javase/6/docs/api/"); // NOI18N
         OFFICIAL_JAVADOC.put("1.7", "https://docs.oracle.com/javase/7/docs/api/"); // NOI18N
         OFFICIAL_JAVADOC.put("1.8", "https://docs.oracle.com/javase/8/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("9", "https://docs.oracle.com/javase/9/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("10", "https://docs.oracle.com/javase/10/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("11", "https://docs.oracle.com/en/java/javase/11/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("12", "https://docs.oracle.com/en/java/javase/12/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("13", "https://docs.oracle.com/en/java/javase/13/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("14", "https://docs.oracle.com/en/java/javase/14/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("15", "https://docs.oracle.com/en/java/javase/15/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("16", "https://docs.oracle.com/en/java/javase/16/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("17", "https://docs.oracle.com/en/java/javase/17/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("18", "https://docs.oracle.com/en/java/javase/18/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("19", "https://download.java.net/java/early_access/jdk19/docs/api/"); // NOI18N Early access
+
+        // timezone shouldn't matter since the accuracy is worse than a day
+        LocalDate jdk9 = LocalDate.of(2017, Month.SEPTEMBER, 21); // start of 6 month schedule
+        LocalDate now = LocalDate.now();
+
+        if (now.isAfter(jdk9)) { // time traveler -> only java 8 doc for you
+            int jdk = 9;
+            LocalDate jdkEarly = jdk9;
+            for (LocalDate t = jdk9 ; t.isBefore(now); t = t.plusMonths(6)) {
+                OFFICIAL_JAVADOC.put(String.valueOf(jdk), "https://docs.oracle.com/en/java/javase/" + jdk + "/docs/api/"); // NOI18N
+                jdkEarly = t;
+                jdk++;
+            }
+            
+            jdkEarly = jdkEarly.minusDays(12);
+            
+            if (now.isAfter(jdkEarly)) {
+                OFFICIAL_JAVADOC.put(String.valueOf(jdk), "https://download.java.net/java/early_access/jdk" + jdk + "/docs/api/"); // NOI18N Early access
+                jdkEarly = jdkEarly.plusMonths(3);
+                jdk++;
+            }
+            // there is a 2nd jdk early release after 3 months
+            if (now.isAfter(jdkEarly)) {
+                OFFICIAL_JAVADOC.put(String.valueOf(jdk), "https://download.java.net/java/early_access/jdk" + jdk + "/docs/api/"); // NOI18N Early access
+            }
+        }
     }
 
     @Override

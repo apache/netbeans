@@ -176,7 +176,7 @@ public class DictionaryInstallerPanel extends javax.swing.JPanel {
 
     private void bBrowseActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBrowseActionPerformed
         JFileChooser filechooser = new JFileChooser (tDictionary.getText ());
-        int ret = filechooser.showOpenDialog (null);
+        int ret = filechooser.showOpenDialog (org.openide.util.Utilities.findDialogParent());
         if (ret == JFileChooser.APPROVE_OPTION)
             tDictionary.setText (filechooser.getSelectedFile ().getAbsolutePath ());
     }//GEN-LAST:event_bBrowseActionPerformed

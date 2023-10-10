@@ -128,7 +128,7 @@ public class WildflyManagerNode extends AbstractNode implements Node.Cookie {
 
         properties.put(property);
 
-        // servewr name
+        // server name
         property = new PropertySupport.ReadOnly(
                 NbBundle.getMessage(WildflyManagerNode.class, "LBL_SERVER_NAME"), //NOI18N
                 String.class,
@@ -171,7 +171,19 @@ public class WildflyManagerNode extends AbstractNode implements Node.Cookie {
                 NbBundle.getMessage(WildflyManagerNode.class, "LBL_PORT"), NbBundle.getMessage(WildflyManagerNode.class, "HINT_PORT")) {
             @Override
                     public Object getValue() {
-                        return new Integer(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT));
+                        return Integer.parseInt(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT));
+                    }
+                };
+        properties.put(property);
+
+        //port-offset
+        property = new PropertySupport.ReadOnly(
+                NbBundle.getMessage(WildflyManagerNode.class, "LBL_PORT_OFFSET"), //NOI18N
+                Integer.TYPE,
+                NbBundle.getMessage(WildflyManagerNode.class, "LBL_PORT_OFFSET"), NbBundle.getMessage(WildflyManagerNode.class, "HINT_PORT_OFFSET")) {
+            @Override
+                    public Object getValue() {
+                        return Integer.parseInt(ip.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET));
                     }
                 };
         properties.put(property);
@@ -198,11 +210,20 @@ public class WildflyManagerNode extends AbstractNode implements Node.Cookie {
     @Override
     public String getShortDescription() {
         InstanceProperties ip = InstanceProperties.getInstanceProperties(getDeploymentManager().getUrl());
-        String host = ip.getProperty(WildflyPluginProperties.PROPERTY_HOST);
-        String port = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
+        String host = ip.getProperty(WildflyPluginProperties.PROPERTY_HOST);        
+        int port = getHttpPort(ip);
         return HTTP_HEADER + host + ":" + port + "/"; // NOI18N
     }
 
+    private int getHttpPort(InstanceProperties ip) {
+        String httpPort = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT);
+        String offSet = ip.getProperty(WildflyPluginProperties.PROPERTY_PORT_OFFSET);
+        int port = Integer.parseInt(httpPort);
+        if (offSet != null) {
+            port = port + Integer.parseInt(offSet);
+        }
+        return port;
+    }
     public final WildflyDeploymentManager getDeploymentManager() {
         return ((WildflyDeploymentManager) lookup.lookup(WildflyDeploymentManager.class));
     }

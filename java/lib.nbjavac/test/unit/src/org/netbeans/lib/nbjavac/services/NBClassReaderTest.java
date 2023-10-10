@@ -139,6 +139,7 @@ public class NBClassReaderTest extends NbTestCase {
         JavacTaskImpl ct = (JavacTaskImpl)((JavacTool)tool).getTask(null, std, diags, Arrays.asList("-source", "1.8", "-target", "1.8", "-Xlint:-options", "-XDrawDiagnostics"), null, Arrays.asList(new MyFileObject(code)), context);
 
         NBClassReader.preRegister(ct.getContext());
+        NBNames.preRegister(ct.getContext());
 
         ct.analyze();
 

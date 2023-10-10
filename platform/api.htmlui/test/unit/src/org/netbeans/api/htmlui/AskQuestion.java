@@ -23,7 +23,7 @@ import java.awt.event.ActionListener;
 import net.java.html.json.Model;
 import net.java.html.json.Property;
 
-// BEGIN: org.netbeans.api.htmlui.AskQuestion
+// @start region="ask"
 @Model(className = "AskCtrl", targetId = "", properties = {
     @Property(name = "ok", type = boolean.class)
 })
@@ -46,4 +46,4 @@ public final class AskQuestion implements ActionListener {
         AskPages.showHelloWorld(true);
     }
 }
-// END: org.netbeans.api.htmlui.AskQuestion
+// @end region="ask"

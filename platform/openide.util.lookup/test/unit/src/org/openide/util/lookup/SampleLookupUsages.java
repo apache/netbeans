@@ -26,11 +26,11 @@ public class SampleLookupUsages {
     @Test
     public void iterate() {
         counter = 0;
-        // BEGIN: org.openide.util.lookup.SampleLookupUsages#iterate
+        // @start region="iterate"
         for (MyService svc : Lookup.getDefault().lookupAll(MyService.class)) {
             svc.useMe();
         }
-        // END: org.openide.util.lookup.SampleLookupUsages#iterate
+        // @end region="iterate"
         assertEquals("MyServiceImpl has been called", 1, counter);
     }
 

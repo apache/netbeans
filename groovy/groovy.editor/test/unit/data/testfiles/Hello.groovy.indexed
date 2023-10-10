@@ -5,10 +5,11 @@ Searchable Keys:
   class : FourthClass
   class-ig : fourthclass
   fqn : foo.FourthClass
-  method : getMetaClass;groovy.lang.MetaClass;01
-  method : setMetaClass(groovy.lang.MetaClass);void;01
+  method : getMetaClass;groovy.lang.MetaClass;01;[0,0]
+  method : setMetaClass(groovy.lang.MetaClass);void;01;[0,0]
 
 Not Searchable Keys:
+  class-range : [666:677]
 
 
 Document 1
@@ -16,59 +17,63 @@ Searchable Keys:
   class : Hello
   class-ig : hello
   fqn : foo.Hello
-  method : main(java.lang.String[]);void;09
-  method : run;java.lang.Object;01
+  method : main(java.lang.String[]);void;09;[0,0]
+  method : run;java.lang.Object;01;[0,0]
 
 Not Searchable Keys:
+  class-range : [0:0]
 
 
 Document 2
 Searchable Keys:
   class : Hello1
   class-ig : hello1
-  ctor : Hello1;int;01
-  field : field1;int;00;true
-  field : greeting;java.lang.Object;00;true
-  field : name;java.lang.Object;00;true
-  field : privateField;java.lang.Object;02
-  field : protectedField;java.lang.Object;04
-  field : publicField;java.lang.Object;01
+  ctor : Hello1;int;01;[167,173]
+  field : field1;int;00;true;[38,44]
+  field : greeting;java.lang.Object;00;true;[394,402]
+  field : name;java.lang.Object;00;true;[147,151]
+  field : privateField;java.lang.Object;02;;[122,134]
+  field : protectedField;java.lang.Object;04;;[91,105]
+  field : publicField;java.lang.Object;01;;[61,72]
   fqn : foo.Hello1
-  method : dynamicmethod;void;01
-  method : getField1;int;01
-  method : getGreeting;java.lang.Object;01
-  method : getMetaClass;groovy.lang.MetaClass;01
-  method : getName;java.lang.Object;01
-  method : main(java.lang.String[]);void;09
-  method : setField1(int);void;01
-  method : setGreeting(java.lang.Object);void;01
-  method : setMetaClass(groovy.lang.MetaClass);void;01
-  method : setName(java.lang.Object);void;01
+  method : dynamicmethod;void;01;[317,330]
+  method : getField1;int;01;[0,0]
+  method : getGreeting;java.lang.Object;01;[0,0]
+  method : getMetaClass;groovy.lang.MetaClass;01;[0,0]
+  method : getName;java.lang.Object;01;[0,0]
+  method : main(java.lang.String[]);void;09;[232,236]
+  method : setField1(int);void;01;[0,0]
+  method : setGreeting(java.lang.Object);void;01;[0,0]
+  method : setMetaClass(groovy.lang.MetaClass);void;01;[0,0]
+  method : setName(java.lang.Object);void;01;[0,0]
 
 Not Searchable Keys:
+  class-range : [20:26]
 
 
 Document 3
 Searchable Keys:
   class : SecondTestClass
   class-ig : secondtestclass
-  ctor : SecondTestClass;int;01
-  ctor : SecondTestClass;java.lang.String;01
+  ctor : SecondTestClass;int;01;[480,495]
+  ctor : SecondTestClass;java.lang.String;01;[517,532]
   fqn : foo.SecondTestClass
-  method : getMetaClass;groovy.lang.MetaClass;01
-  method : setMetaClass(groovy.lang.MetaClass);void;01
+  method : getMetaClass;groovy.lang.MetaClass;01;[0,0]
+  method : setMetaClass(groovy.lang.MetaClass);void;01;[0,0]
 
 Not Searchable Keys:
+  class-range : [457:472]
 
 
 Document 4
 Searchable Keys:
   class : ThirdTestClass
   class-ig : thirdtestclass
-  ctor : ThirdTestClass;int;01
-  ctor : ThirdTestClass;java.lang.String;01
+  ctor : ThirdTestClass;int;01;[585,599]
+  ctor : ThirdTestClass;java.lang.String;01;[621,635]
   fqn : foo.ThirdTestClass
-  method : getMetaClass;groovy.lang.MetaClass;01
-  method : setMetaClass(groovy.lang.MetaClass);void;01
+  method : getMetaClass;groovy.lang.MetaClass;01;[0,0]
+  method : setMetaClass(groovy.lang.MetaClass);void;01;[0,0]
 
 Not Searchable Keys:
+  class-range : [563:577]

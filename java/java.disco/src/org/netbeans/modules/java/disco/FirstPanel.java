@@ -39,11 +39,11 @@ public class FirstPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.CardLayout());
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
+        jPanel1.setLayout(new java.awt.BorderLayout());
 
         loadingLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(loadingLabel, org.openide.util.NbBundle.getMessage(FirstPanel.class, "FirstPanel.loadingLabel.text")); // NOI18N
-        jPanel1.add(loadingLabel);
+        jPanel1.add(loadingLabel, java.awt.BorderLayout.CENTER);
 
         add(jPanel1, "card3");
         add(tabs, "card2");

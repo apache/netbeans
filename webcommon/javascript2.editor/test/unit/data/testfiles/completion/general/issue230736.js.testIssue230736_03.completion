@@ -2,9 +2,10 @@ Code completion result for source line:
 var myObject3 = new myObject().method2().toUpperCase().f|ontsize().toPrecision(3);
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     fixed(): String                 [PUBLIC,   JS Platform
-METHOD     fontcolor(color: String): Stri  [PUBLIC,   JS Platform
-METHOD     fontsize(size: Number): Number  [PUBLIC,   JS Platform
-METHOD     freeze(obj: Object): Object     [PUBLIC,   JS Platform
-METHOD     fromCharCode(num1): String      [PUBLIC,   JS Platform
-METHOD     fromCodePoint(num1): String     [PUBLIC,   JS Platform
+METHOD     fixed(): String                 [PUBLIC]   JS Platform
+METHOD     fontcolor(color: String): Stri  [PUBLIC]   JS Platform
+METHOD     fontsize(size: String): String  [PUBLIC]   JS Platform
+METHOD     freeze(o: Object): Object       [PUBLIC,   JS Platform
+METHOD     fromCharCode(codes: Number): S  [PUBLIC,   JS Platform
+METHOD     fromCodePoint(codePoints: Numb  [PUBLIC,   JS Platform
+METHOD     fromEntries(entries: Iterable)  [PUBLIC,   JS Platform

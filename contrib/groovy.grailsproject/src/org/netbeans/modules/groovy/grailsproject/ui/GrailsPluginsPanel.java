@@ -35,6 +35,7 @@ import org.netbeans.modules.groovy.grailsproject.GrailsProject;
 import org.netbeans.modules.groovy.grailsproject.plugins.GrailsPlugin;
 import org.netbeans.modules.groovy.grailsproject.plugins.GrailsPluginSupport;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 /**
  * @author David Calavera
@@ -462,7 +463,7 @@ private void pluginBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {
     chooser.setDialogTitle(NbBundle.getMessage(GrailsPluginsPanel.class, "TITLE_BrowsePluginLocation"));
     chooser.setApproveButtonText(NbBundle.getMessage(GrailsPluginsPanel.class, "LBL_BrowsePluginLocation_OK_Button"));
 
-    if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+    if (chooser.showOpenDialog(Utilities.findDialogParent()) == JFileChooser.APPROVE_OPTION) {
         pluginZipPath.setText(chooser.getSelectedFile().getAbsolutePath());                                                  
         installButton.setEnabled(true);
     }

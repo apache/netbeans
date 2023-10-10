@@ -143,7 +143,7 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
     // Number of instrumented methods - may be smaller than the size of the above arrays
     protected int nInstrMethods;
     
-    private final Map<CCTNode, FilterSortSupport.Configuration> sortInfos = new WeakHashMap();
+    private final Map<CCTNode, FilterSortSupport.Configuration> sortInfos = new WeakHashMap<>();
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -249,7 +249,7 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
     }
     
     public Map<Integer, ClientUtils.SourceCodeSelection> getMethodIDMap(int view) {
-        Map<Integer, ClientUtils.SourceCodeSelection> map = new HashMap();
+        Map<Integer, ClientUtils.SourceCodeSelection> map = new HashMap<>();
         for (int i = 0; i < instrMethodClassesViews[view].length; i++)
             map.put(i, getSourceCodeSelection(i, view));
         return map;
@@ -317,7 +317,7 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
     }
     
     private PrestimeCPUCCTNode[] mergedChildren(PrestimeCPUCCTNode[] nodes) {
-        List<PrestimeCPUCCTNode> merged = new ArrayList();
+        List<PrestimeCPUCCTNode> merged = new ArrayList<>();
         
         for (PrestimeCPUCCTNode node : nodes) {
             CCTNode[] children = node.getChildren();
@@ -333,7 +333,7 @@ public class CPUResultsSnapshot extends ResultsSnapshot {
     
     public PrestimeCPUCCTNode getReverseRootNode(final int view, Collection<Integer> threads, boolean merge) {
         int[] threadIds = getThreadIds();
-        List<PrestimeCPUCCTNode> nodes = new ArrayList();
+        List<PrestimeCPUCCTNode> nodes = new ArrayList<>();
         for (int i = 0; i < threadIds.length; i++) {
             final int threadIdF = threadIds[i];
             if (threads == null || threads.contains(threadIdF)) {

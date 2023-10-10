@@ -82,7 +82,7 @@ public class ArchetypeWizards {
      * @return a wizard iterators
      * @since 1.0
      * @see TemplateRegistration
-     * @see #TEMPLATE_FOLDER
+     * @see <a href="@org-netbeans-modules-maven@/org/netbeans/modules/maven/api/archetype/ArchetypeWizards.html#TEMPLATE_FOLDER">#TEMPLATE_FOLDER</a>
      */
     public static WizardDescriptor.InstantiatingIterator<?> definedArchetype(String groupId, String artifactId, String version, @NullAllowed String repository, String title) {
         return org.netbeans.modules.maven.api.archetype.ArchetypeWizards.definedArchetype(groupId, artifactId, version, repository, title);

@@ -135,7 +135,7 @@ public final class JSFPaletteUtilities {
 
     public static void insert(String s, final JTextComponent target) throws BadLocationException {
         Document doc = target.getDocument();
-        if (doc != null && doc instanceof BaseDocument) {
+        if (doc instanceof BaseDocument) {
             final String str = (s == null) ? "" : s;
 
             final BaseDocument baseDoc = (BaseDocument) doc;

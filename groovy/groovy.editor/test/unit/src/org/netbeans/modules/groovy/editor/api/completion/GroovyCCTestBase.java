@@ -80,7 +80,7 @@ public abstract class GroovyCCTestBase extends GroovyTestBase {
     }
 
     private String firstLetterToLowerCase(String className) {
-        return Character.toLowerCase(className.charAt(0)) + className.substring(1, className.length());
+        return Character.toLowerCase(className.charAt(0)) + className.substring(1);
     }
 
     protected String getBasicSourcePath() {

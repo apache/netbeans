@@ -136,7 +136,7 @@ public class NetBeansUtils {
         }
         
         final List<String> ids =
-                new LinkedList(Arrays.asList(id.split(PACK_ID_SEPARATOR)));
+                new LinkedList<>(Arrays.asList(id.split(PACK_ID_SEPARATOR)));
         
         boolean packAdded = false;
         for (int i = 1; i < ids.size(); i++) {

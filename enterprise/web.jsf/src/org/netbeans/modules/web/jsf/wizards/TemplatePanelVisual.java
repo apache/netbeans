@@ -37,7 +37,7 @@ public class TemplatePanelVisual extends javax.swing.JPanel implements HelpCtx.P
     private static final long serialVersionUID = 1L;
     private static final String RESOURCES_FOLDER="org/netbeans/modules/web/jsf/facelets/resources/templates/";  //NOI18N
 
-    private final Map<Integer, JRadioButton> templateButtonMapping = new HashMap();
+    private final Map<Integer, JRadioButton> templateButtonMapping = new HashMap<>();
 
     /** Creates new form TemplatePanelVisual */
     public TemplatePanelVisual() {

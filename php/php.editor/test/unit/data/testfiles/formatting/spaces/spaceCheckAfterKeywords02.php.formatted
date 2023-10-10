@@ -27,7 +27,6 @@ class /* fjlajdfla */ ClassName {
     private function test2() {
         return;
     }
-
 }
 
 $greet = function ($name) {

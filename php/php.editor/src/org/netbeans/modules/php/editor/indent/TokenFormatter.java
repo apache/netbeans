@@ -118,6 +118,7 @@ public class TokenFormatter {
         public boolean spaceAroundUnaryOps;
         public boolean spaceAroundBinaryOps;
         public boolean spaceAroundTernaryOps;
+        public boolean spaceAroundCoalescingOps;
         public boolean spaceAroundAssignOps;
         public boolean spaceAroundKeyValueOps;
         public boolean spaceWithinArrayDeclParens;
@@ -151,13 +152,16 @@ public class TokenFormatter {
         public int blankLinesAfterNamespace;
         public int blankLinesBeforeUse;
         public int blankLinesBeforeUseTrait;
+        public int blankLinesAfterUseTrait;
         public int blankLinesAfterUse;
+        public int blankLinesBetweenUseTypes;
         public int blankLinesBeforeClass;
         public int blankLinesBeforeClassEnd;
         public int blankLinesAfterClass;
         public int blankLinesAfterClassHeader;
         public int blankLinesBeforeFields;
         public int blankLinesBetweenFields;
+        public boolean blankLinesEOF;
         public boolean blankLinesGroupFields;
         public int blankLinesAfterFields;
         public int blankLinesBeforeFunction;
@@ -181,6 +185,7 @@ public class TokenFormatter {
         public CodeStyle.WrapStyle wrapDoWhileStatement;
         public CodeStyle.WrapStyle wrapBinaryOps;
         public CodeStyle.WrapStyle wrapTernaryOps;
+        public CodeStyle.WrapStyle wrapCoalescingOps;
         public CodeStyle.WrapStyle wrapAssignOps;
         public boolean wrapBlockBrace;
         public boolean wrapGroupUseBraces;
@@ -278,6 +283,7 @@ public class TokenFormatter {
             spaceAroundUnaryOps = codeStyle.spaceAroundUnaryOps();
             spaceAroundBinaryOps = codeStyle.spaceAroundBinaryOps();
             spaceAroundTernaryOps = codeStyle.spaceAroundTernaryOps();
+            spaceAroundCoalescingOps = codeStyle.spaceAroundCoalescingOps();
             spaceAroundAssignOps = codeStyle.spaceAroundAssignOps();
             spaceAroundKeyValueOps = codeStyle.spaceAroundKeyValueOps();
 
@@ -315,13 +321,16 @@ public class TokenFormatter {
             blankLinesAfterNamespace = codeStyle.getBlankLinesAfterNamespace();
             blankLinesBeforeUse = codeStyle.getBlankLinesBeforeUse();
             blankLinesBeforeUseTrait = codeStyle.getBlankLinesBeforeUseTrait();
+            blankLinesAfterUseTrait = codeStyle.getBlankLinesAfterUseTrait();
             blankLinesAfterUse = codeStyle.getBlankLinesAfterUse();
+            blankLinesBetweenUseTypes = codeStyle.getBlankLinesBetweenUseTypes();
             blankLinesBeforeClass = codeStyle.getBlankLinesBeforeClass();
             blankLinesBeforeClassEnd = codeStyle.getBlankLinesBeforeClassEnd();
             blankLinesAfterClass = codeStyle.getBlankLinesAfterClass();
             blankLinesAfterClassHeader = codeStyle.getBlankLinesAfterClassHeader();
             blankLinesBeforeFields = codeStyle.getBlankLinesBeforeFields();
             blankLinesBetweenFields = codeStyle.getBlankLinesBetweenFields();
+            blankLinesEOF = codeStyle.getBlankLinesEOF();
             blankLinesGroupFields = codeStyle.getBlankLinesGroupFieldsWithoutDoc();
             blankLinesAfterFields = codeStyle.getBlankLinesAfterFields();
             blankLinesBeforeFunction = codeStyle.getBlankLinesBeforeFunction();
@@ -353,6 +362,7 @@ public class TokenFormatter {
             wrapDoWhileStatement = codeStyle.wrapDoWhileStatement();
             wrapBinaryOps = codeStyle.wrapBinaryOps();
             wrapTernaryOps = codeStyle.wrapTernaryOps();
+            wrapCoalescingOps = codeStyle.wrapCoalescingOps();
             wrapAssignOps = codeStyle.wrapAssignOps();
             wrapBlockBrace = codeStyle.wrapBlockBrace();
             wrapGroupUseBraces = codeStyle.wrapGroupUseBraces();
@@ -738,7 +748,7 @@ public class TokenFormatter {
                                         indentRule = true;
                                         ws = countWhiteSpaceBeforeRightBrace(
                                                 docOptions.classDeclBracePlacement,
-                                                newLines,
+                                                docOptions.blankLinesBeforeClassEnd + 1, // GH-46111 ignore existing newLines to prioritize this option
                                                 docOptions.blankLinesBeforeClassEnd,
                                                 indent,
                                                 formatTokens,
@@ -843,6 +853,10 @@ public class TokenFormatter {
                                         newLines = 1;
                                         countSpaces = indent;
                                         break;
+                                    case WHITESPACE_BETWEEN_USE_TYPES:
+                                        indentRule = true;
+                                        newLines = docOptions.blankLinesBetweenUseTypes + 1 > newLines ? docOptions.blankLinesBetweenUseTypes + 1 : newLines;
+                                        break;
                                     case WHITESPACE_AFTER_USE:
                                         indentRule = true;
                                         newLines = docOptions.blankLinesAfterUse + 1 > newLines ? docOptions.blankLinesAfterUse + 1 : newLines;
@@ -860,6 +874,10 @@ public class TokenFormatter {
                                     case WHITESPACE_BEFORE_USE_TRAIT:
                                         indentRule = true;
                                         newLines = docOptions.blankLinesBeforeUseTrait + 1;
+                                        break;
+                                    case WHITESPACE_AFTER_USE_TRAIT:
+                                        indentRule = true;
+                                        newLines = docOptions.blankLinesAfterUseTrait + 1;
                                         break;
                                     case WHITESPACE_BEFORE_USE_TRAIT_PART:
                                         indentRule = true;
@@ -1083,6 +1101,9 @@ public class TokenFormatter {
                                     case WHITESPACE_AROUND_UNARY_OP:
                                         countSpaces = docOptions.spaceAroundUnaryOps ? 1 : countSpaces;
                                         break;
+                                    case WHITESPACE_AROUND_TEXTUAL_OP:
+                                        countSpaces = 1;
+                                        break;
                                     case WHITESPACE_BEFORE_BINARY_OP:
                                         if (docOptions.wrapAfterBinOps) {
                                             countSpaces = docOptions.spaceAroundBinaryOps ? 1 : 0;
@@ -1160,6 +1181,9 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_AROUND_TERNARY_OP:
                                         countSpaces = docOptions.spaceAroundTernaryOps ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_AROUND_COALESCING_OP:
+                                        countSpaces = docOptions.spaceAroundCoalescingOps ? 1 : 0;
                                         break;
                                     case WHITESPACE_WITHIN_SHORT_TERNARY_OP:
                                         countSpaces = 0;
@@ -1613,6 +1637,18 @@ public class TokenFormatter {
                                         ws = countWSBeforeAStatement(
                                                 docOptions.wrapTernaryOps,
                                                 docOptions.spaceAroundTernaryOps,
+                                                column,
+                                                countLengthOfNextSequence(formatTokens, index + 1),
+                                                indent,
+                                                isAfterLineComment(formatTokens, index));
+                                        newLines = ws.lines;
+                                        countSpaces = ws.spaces;
+                                        break;
+                                    case WHITESPACE_IN_COALESCING_OP:
+                                        indentRule = true;
+                                        ws = countWSBeforeAStatement(
+                                                docOptions.wrapCoalescingOps,
+                                                docOptions.spaceAroundCoalescingOps,
                                                 column,
                                                 countLengthOfNextSequence(formatTokens, index + 1),
                                                 indent,
@@ -2194,6 +2230,9 @@ public class TokenFormatter {
                         index++;
                     }
                 } finally {
+                    if (docOptions.blankLinesEOF) {
+                        resolveNoNewLineAtEOF(doc);
+                    }
                     mti.tokenHierarchyControl().setActive(true);
                 }
                 if (LOGGER.isLoggable(Level.FINE)) {
@@ -3083,6 +3122,36 @@ public class TokenFormatter {
         }
 
         return sb.toString();
+    }
+
+    private void resolveNoNewLineAtEOF(BaseDocument document) {
+        try {
+            String lastChar = getLastChar(document);
+            String lineEndings = getLineEndings(document);
+            if (!lastChar.equals("\n") && !lastChar.equals("\r")) { // NOI18N
+                document.insertString(document.getLength(), lineEndings, null);
+            }
+        } catch (BadLocationException ex) {
+            LOGGER.log(Level.WARNING, "Cannot insert the newline to the EOF. document length: {0}, invalid offset: {1}",
+                    new Object[]{document.getLength(), ex.offsetRequested()});
+        }
+    }
+
+    private String getLastChar(BaseDocument document) throws BadLocationException {
+        String lastChar = ""; // NOI18N
+        if (document.getLength() > 0) {
+            lastChar = document.getText(document.getLength() - 1, 1);
+        }
+        return lastChar;
+    }
+
+    private String getLineEndings(BaseDocument document) {
+        String lineEndings = BaseDocument.LS_LF;
+        Object lineSeparator = document.getProperty(BaseDocument.READ_LINE_SEPARATOR_PROP);
+        if (lineSeparator instanceof String) {
+            lineEndings = (String) lineSeparator;
+        }
+        return lineEndings;
     }
 
     private static final class SpacesCounter {

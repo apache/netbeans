@@ -132,16 +132,19 @@
             <export>
                 <type>folder</type>
                 <location>${nb.build.dir}/antclasses</location>
+                <script>nbproject/nbjdk.xml</script>
                 <build-target>bootstrap</build-target>
             </export>
             <export>
                 <type>jar</type>
                 <location>${nbantext.jar}</location>
+                <script>nbproject/nbjdk.xml</script>
                 <build-target>bootstrap</build-target>
             </export>
             <export>
                 <type>folder</type>
                 <location>${nb.build.dir}/test/unit/classes</location>
+                <script>nbproject/nbjdk.xml</script>
                 <build-target>bootstrap</build-target>
             </export>
             <view>
@@ -205,7 +208,7 @@
         <java-data xmlns="http://www.netbeans.org/ns/freeform-project-java/4">
             <compilation-unit>
                 <package-root>antsrc</package-root>
-                <classpath mode="compile">${ant.core.lib}:${nb_all}/platform/javahelp/external/jhall-2.0_05.jar:${nb_all}/nbbuild/external/json-simple-1.1.1.jar</classpath>
+                <classpath mode="compile">${ant.core.lib}:${nb_all}/platform/javahelp/external/jhall-2.0_05.jar:${nb_all}/nbbuild/external/json-simple-1.1.1.jar:${nb_all}/nbbuild/external/external/jsoup-1.15.3.jar</classpath>
                 <built-to>${nb.build.dir}/antclasses</built-to>
                 <built-to>${nbantext.jar}</built-to>
                 <source-level>1.8</source-level>

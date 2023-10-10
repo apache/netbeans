@@ -44,6 +44,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.progress.ProgressUtils;
@@ -180,6 +181,7 @@ public class OptionsDisplayerImpl {
             
             // by-passing EqualFlowLayout manager in NbPresenter
             JPanel additionalOptionspanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+            additionalOptionspanel.setBorder(new EmptyBorder(0, 0, 0, 0));
             additionalOptionspanel.add(bClassic);
             additionalOptionspanel.add(btnExport);
             additionalOptionspanel.add(btnImport);
@@ -471,6 +473,7 @@ public class OptionsDisplayerImpl {
         }
         
         @SuppressWarnings("unchecked")
+        @Override
         public void actionPerformed (ActionEvent e) {
 //                // listener is called twice ...
             if (e.getSource () == bOK) {
@@ -529,6 +532,7 @@ public class OptionsDisplayerImpl {
             this.originalDialog = tmpDialog;
         }
         
+        @Override
         public void windowClosing (WindowEvent e) {
             if (dialog == null) {
                 return;
@@ -542,6 +546,7 @@ public class OptionsDisplayerImpl {
             }
         }
 
+        @Override
         public void windowClosed(WindowEvent e) {
             optionsPanel.storeUserSize();
             // store location of dialog
@@ -562,11 +567,11 @@ public class OptionsDisplayerImpl {
             }
             log.fine("Options Dialog - windowClosed"); //NOI18N
         }
-        public void windowDeactivated (WindowEvent e) {}
-        public void windowOpened (WindowEvent e) {}
-        public void windowIconified (WindowEvent e) {}
-        public void windowDeiconified (WindowEvent e) {}
-        public void windowActivated (WindowEvent e) {}
+        @Override public void windowDeactivated (WindowEvent e) {}
+        @Override public void windowOpened (WindowEvent e) {}
+        @Override public void windowIconified (WindowEvent e) {}
+        @Override public void windowDeiconified (WindowEvent e) {}
+        @Override public void windowActivated (WindowEvent e) {}
     }
     
     class OpenOptionsListener implements ActionListener {
@@ -610,26 +615,32 @@ public class OptionsDisplayerImpl {
     /** 91106 - used to listen to default FS changes to update Advanced Options, Export and Import buttons. */
     private class DefaultFSListener implements FileChangeListener {
 
+        @Override
         public void fileRenamed(FileRenameEvent fe) {
             updateButtons();
         }
 
+        @Override
         public void fileChanged(FileEvent fe) {
             updateButtons();
         }
 
+        @Override
         public void fileFolderCreated(FileEvent fe) {
             updateButtons();
         }
 
+        @Override
         public void fileDataCreated(FileEvent fe) {
             updateButtons();
         }
 
+        @Override
         public void fileDeleted(FileEvent fe) {
             updateButtons();
         }
 
+        @Override
         public void fileAttributeChanged(FileAttributeEvent fe) {
             updateButtons();
         }

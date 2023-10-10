@@ -186,9 +186,7 @@
                 </NamespaceName>
                 <Block start='901' end='921' isCurly='true'>
                     <ReturnStatement start='907' end='919'>
-                        <NamespaceName start='914' end='918' isCurrent='false' isGlobal='false'>
-                            <Identifier start='914' end='918' name='null'/>
-                        </NamespaceName>
+                        <Scalar start='914' end='918' type='STRING' value='null'/>
                     </ReturnStatement>
                 </Block>
             </FunctionDeclaration>
@@ -239,9 +237,7 @@
                             </NamespaceName>
                             <Block start='1015' end='1043' isCurly='true'>
                                 <ReturnStatement start='1025' end='1037'>
-                                    <NamespaceName start='1032' end='1036' isCurrent='false' isGlobal='false'>
-                                        <Identifier start='1032' end='1036' name='null'/>
-                                    </NamespaceName>
+                                    <Scalar start='1032' end='1036' type='STRING' value='null'/>
                                 </ReturnStatement>
                             </Block>
                         </FunctionDeclaration>

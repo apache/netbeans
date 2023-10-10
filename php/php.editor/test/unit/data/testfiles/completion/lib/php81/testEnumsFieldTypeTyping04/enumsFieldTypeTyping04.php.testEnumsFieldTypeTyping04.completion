@@ -1,0 +1,7 @@
+Code completion result for source line:
+private static Enum|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    EnumTestNamespace1              [PUBLIC]   null
+PACKAGE    EnumTestNamespace2              [PUBLIC]   null
+CLASS      Enum1                           [PUBLIC]   EnumTestNamespace2
+CLASS      Enum2                           [PUBLIC]   EnumTestNamespace2

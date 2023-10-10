@@ -4,23 +4,17 @@ ba.r|esolve();
 (QueryType=COMPLETION, prefixSearch=false, caseSensitive=true)
 ------------------------------------
 METHOD     relative(from, to)              [PUBLIC]   path.js
-</pre><h2>Documentation:</h2><p>Solve the relative path from <code>from</code> to <code>to</code>.
-
-</p>
-<p>At times we have two absolute paths, and we need to derive the relative
-path from one to the other.  This is actually the reverse transform of
-<code>path.resolve</code>, which means we see that:
-
-</p>
-<pre><code>path.resolve(from, path.relative(from, to)) == path.resolve(to)</code></pre>
-<p>Examples:
-
-</p>
-<pre><code>path.relative(&#39;C:\\orandea\\test\\aaa&#39;, &#39;C:\\orandea\\impl\\bbb&#39;)
-// returns
-&#39;..\\..\\impl\\bbb&#39;
-
-path.relative(&#39;/data/orandea/test/aaa&#39;, &#39;/data/orandea/impl/bbb&#39;)
-// returns
-&#39;../../impl/bbb&#39;</code></pre>
-</body></html>
+</pre><h2>Documentation:</h2><p>The <code>path.relative()</code> method returns the relative path from <code>from</code> to <code>to</code> based
+on the current working directory. If <code>from</code> and <code>to</code> each resolve to the same
+path (after calling <code>path.resolve()</code> on each), a zero-length string is returned.</p>
+<p>If a zero-length string is passed as <code>from</code> or <code>to</code>, the current working
+directory will be used instead of the zero-length strings.</p>
+<p>For example, on POSIX:</p>
+<pre><code class="language-js">path.relative('/data/orandea/test/aaa', '/data/orandea/impl/bbb');
+// Returns: '../../impl/bbb'
+</code></pre>
+<p>On Windows:</p>
+<pre><code class="language-js">path.relative('C:\\orandea\\test\\aaa', 'C:\\orandea\\impl\\bbb');
+// Returns: '..\\..\\impl\\bbb'
+</code></pre>
+<p>A <a href="errors.html#class-typeerror"><code>TypeError</code></a> is thrown if either <code>from</code> or <code>to</code> is not a string.</p></body></html>

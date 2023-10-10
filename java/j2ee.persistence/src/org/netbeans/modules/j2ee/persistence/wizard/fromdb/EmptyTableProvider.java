@@ -28,6 +28,7 @@ import java.util.Set;
  */
 public class EmptyTableProvider implements TableProvider {
     
+    @Override
     public Set<Table> getTables() {
         return Collections.emptySet();
     }

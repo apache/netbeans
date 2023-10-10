@@ -335,9 +335,8 @@ public class XDMUtil {
                 }
             }
         }
-        for(Difference dif:removeDiffs) {
-            diffs.remove(dif);
-        }
+
+        diffs.removeAll(removeDiffs);
     }
     
     /*
@@ -369,9 +368,8 @@ public class XDMUtil {
                 }
             }
         }
-        for(Difference dif:removeDiffs) {
-            diffs.remove(dif);
-        }
+
+        diffs.removeAll(removeDiffs);
     }
         
     /*
@@ -389,9 +387,8 @@ public class XDMUtil {
                 }
             }
         }
-        for(Difference dif:removeDiffs) {
-            diffs.remove(dif);
-        }
+
+        diffs.removeAll(removeDiffs);
     }
     
     /*

@@ -71,7 +71,7 @@ public final class JavaRefactoringUtils {
      * @param method 
      * @param info 
      * @return collection of ExecutableElements which overrides 'method'
-     * @deprecated use {@link #getOverridingMethods(javax.lang.model.element.ExecutableElement, org.netbeans.api.java.source.CompilationInfo, java.util.concurrent.atomic.AtomicBoolean) 
+     * @deprecated use {@link #getOverridingMethods(javax.lang.model.element.ExecutableElement, org.netbeans.api.java.source.CompilationInfo, java.util.concurrent.atomic.AtomicBoolean)}
      */
     @Deprecated
     @SuppressWarnings("deprecation")

@@ -47,6 +47,16 @@ import org.openide.util.NbBundle;
 public class ManageTagsAction extends SingleRepositoryAction {
 
     private static final Logger LOG = Logger.getLogger(ManageTagsAction.class.getName());
+    private static final String ICON_RESOURCE = "org/netbeans/modules/git/resources/icons/tags.png"; //NOI18N
+
+    public ManageTagsAction() {
+        super(ICON_RESOURCE);
+    }
+
+    @Override
+    protected String iconResource() {
+        return ICON_RESOURCE;
+    }
 
     @Override
     protected void performAction (File repository, File[] roots, VCSContext context) {

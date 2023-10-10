@@ -39,7 +39,7 @@ else
          BITNESS=64
       fi
    else
-      uname -a | egrep "x86_64|WOW64|sparc64" >/dev/null
+      uname -a | egrep "x86_64|WOW64|sparc64|aarch64" >/dev/null
       if [ $? -eq 0 ]; then
          BITNESS=64
       fi
@@ -75,6 +75,10 @@ fi
 CPUFAMILY=`(echo ${CPUTYPE} | egrep "^i|x86_64|athlon|Intel" >/dev/null && echo x86) || echo ${CPUTYPE}`
 if [ "${CPUFAMILY}" = "sparc64" ]; then
    CPUFAMILY="sparc"
+fi
+# New check if ARM64 then return ARM so Java code will stop returning “UNKNOWN”
+if [ "${CPUFAMILY}" = "arm64" ]; then
+   CPUFAMILY="arm"
 fi
 
 USERDIRBASE=${HOME}

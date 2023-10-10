@@ -7,6 +7,12 @@ use My\Full\Classname as Another;
 use My\Full\NSname;
 // importing a global class
 use \ArrayObject;
+use function My\Functions\my_function;
+use function My\Functions\Grouped\{
+    A\function_a,
+    B\function_b,
+};
+use const My\Constants\MY_CONSTANT;
 const CONNECT_OK = 1;
 class Connection {
 private $field1;

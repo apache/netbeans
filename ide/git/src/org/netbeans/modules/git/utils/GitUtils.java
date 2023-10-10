@@ -1084,6 +1084,11 @@ public final class GitUtils {
     public static boolean isValidBranchName (String branchName) {
         return isValidRefName(PREFIX_R_HEADS + branchName);
     }
+    
+    public static String normalizeBranchName (String refName) {
+        return JGitUtils.normalizeBranchName(refName);
+    }
+    
 
     public static VCSContext getContextForFile (final File root) {
         return getContextForFiles(new File[] { root });

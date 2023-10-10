@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->testXandY->|testX();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     testX()                         [PUBLIC]   X
+METHOD     testY()                         [PUBLIC]   Y

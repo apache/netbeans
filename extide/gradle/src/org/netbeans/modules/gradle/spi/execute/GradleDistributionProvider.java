@@ -36,7 +36,7 @@ public interface GradleDistributionProvider {
      * GradleDistribution requirements. Gradle defaults of the actual project
      * and tooling API would be used in that case (not recommended).
      *
-     * @return The {@link GradeDistribution} to use for the project.
+     * @return The {@link GradleDistribution} to use for the project.
      */
     GradleDistribution getGradleDistribution();
 
@@ -44,13 +44,13 @@ public interface GradleDistributionProvider {
      * Add a {@link ChangeListener} to be notified when the required
      * {@link GradleDistribution} changes for the project;
      *
-     * @param l the {@link ChanegListener}
+     * @param l the {@link ChangeListener}
      */
     void addChangeListener(ChangeListener l);
 
     /**
      * Remove a registered {@link ChangeListener}.
-     * @param l the {@link ChanegListener}
+     * @param l the {@link ChangeListener}
      */
     void removeChangeListener(ChangeListener l);
 

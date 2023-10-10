@@ -223,7 +223,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         return Collections.unmodifiableSet(traits);
     }
 
-    private Set<EnumElement> getEnumImpl(final NameKind query) {
+    private Set<EnumElement> getEnumsImpl(final NameKind query) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<EnumElement> enums = new HashSet<>();
         final Collection<? extends IndexResult> result = results(EnumElementImpl.IDX_FIELD, query);
@@ -271,7 +271,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         types.addAll(getClassesImpl(query));
         types.addAll(getInterfacesImpl(query));
         types.addAll(getTraitsImpl(query));
-        types.addAll(getEnumImpl(query));
+        types.addAll(getEnumsImpl(query));
         return types;
     }
 
@@ -544,12 +544,14 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                         new String[]{
                             TraitElementImpl.IDX_FIELD,
                             FieldElementImpl.IDX_FIELD,
+                            TypeConstantElementImpl.IDX_FIELD,
                             MethodElementImpl.IDX_FIELD
                         });
                 for (final IndexResult indexResult : traitResults) {
                     for (final TypeElement traitElement : TraitElementImpl.fromSignature(typeQuery, this, indexResult)) {
                         members.addAll(MethodElementImpl.fromSignature(traitElement, memberQuery, this, indexResult));
                         members.addAll(FieldElementImpl.fromSignature(traitElement, memberQuery, this, indexResult));
+                        members.addAll(TypeConstantElementImpl.fromSignature(traitElement, memberQuery, this, indexResult));
                     }
                 }
                 break;
@@ -564,7 +566,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                 for (final IndexResult indexResult : enumResults) {
                     for (final TypeElement enumElement : EnumElementImpl.fromSignature(typeQuery, this, indexResult)) {
                         members.addAll(MethodElementImpl.fromSignature(enumElement, memberQuery, this, indexResult));
-                        members.addAll(MethodElementImpl.fromSignature(enumElement, memberQuery, this, indexResult));
+                        members.addAll(CaseElementImpl.fromSignature(enumElement, memberQuery, this, indexResult));
                         members.addAll(TypeConstantElementImpl.fromSignature(enumElement, memberQuery, this, indexResult));
                     }
                 }
@@ -683,12 +685,14 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                 new String[] {
                     TraitElementImpl.IDX_FIELD,
                     MethodElementImpl.IDX_FIELD,
-                    FieldElementImpl.IDX_FIELD
+                    FieldElementImpl.IDX_FIELD,
+                    TypeConstantElementImpl.IDX_FIELD
                 });
         for (IndexResult indexResult : traitResults) {
             for (final TypeElement typeElement : TraitElementImpl.fromSignature(typeQuery, this, indexResult)) {
                 members.addAll(MethodElementImpl.fromSignature(typeElement, memberQuery, this, indexResult));
                 members.addAll(FieldElementImpl.fromSignature(typeElement, memberQuery, this, indexResult));
+                members.addAll(TypeConstantElementImpl.fromSignature(typeElement, memberQuery, this, indexResult));
             }
         }
         final Collection<? extends IndexResult> enumResults = results(EnumElementImpl.IDX_FIELD, typeQuery,
@@ -870,6 +874,16 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                     }
                 }
                 break;
+            case TRAIT:
+                // [GH-4725] PHP 8.2 Support: Constants in Traits
+                final Collection<? extends IndexResult> traitResults = results(TraitElementImpl.IDX_FIELD, typeQuery,
+                        new String[]{TraitElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
+                for (final IndexResult indexResult : traitResults) {
+                    for (final TypeElement traitElement : TraitElementImpl.fromSignature(typeQuery, this, indexResult)) {
+                        constants.addAll(TypeConstantElementImpl.fromSignature(traitElement, constantQuery, this, indexResult));
+                    }
+                }
+                break;
             case ENUM:
                 final Collection<? extends IndexResult> enumResults = results(EnumElementImpl.IDX_FIELD, typeQuery,
                         new String[]{EnumElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
@@ -893,7 +907,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<TypeConstantElement> constants = new HashSet<>();
         final Collection<? extends IndexResult> constantResults = results(TypeConstantElementImpl.IDX_FIELD, constantQuery,
-                new String[]{ClassElementImpl.IDX_FIELD, InterfaceElementImpl.IDX_FIELD, EnumElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
+                new String[]{ClassElementImpl.IDX_FIELD, TraitElementImpl.IDX_FIELD, InterfaceElementImpl.IDX_FIELD, EnumElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
         for (final IndexResult indexResult : constantResults) {
             final Set<TypeElement> types = new HashSet<>();
             types.addAll(ClassElementImpl.fromSignature(this, indexResult));
@@ -910,7 +924,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
 
     @Override
     public Set<TypeConstantElement> getTypeConstants(NameKind.Exact typeQuery, NameKind constantQuery) {
-        return getTypeConstantsImpl(typeQuery, constantQuery, EnumSet.of(PhpElementKind.CLASS, PhpElementKind.IFACE, PhpElementKind.ENUM));
+        return getTypeConstantsImpl(typeQuery, constantQuery, EnumSet.of(PhpElementKind.CLASS, PhpElementKind.TRAIT, PhpElementKind.IFACE, PhpElementKind.ENUM));
     }
 
     private Set<TypeConstantElement> getTypeConstantsImpl(NameKind.Exact typeQuery, NameKind constantQuery, EnumSet<PhpElementKind> typeKinds) {
@@ -931,6 +945,16 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                     new String[]{InterfaceElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
             for (final IndexResult indexResult : ifaceResults) {
                 for (final TypeElement typeElement : InterfaceElementImpl.fromSignature(typeQuery, this, indexResult)) {
+                    constants.addAll(TypeConstantElementImpl.fromSignature(typeElement, constantQuery, this, indexResult));
+                }
+            }
+        }
+        // [GH-4725] PHP 8.2 Support: Constatns in Traits
+        if (typeKinds.contains(PhpElementKind.TRAIT)) {
+            final Collection<? extends IndexResult> traitResults = results(TraitElementImpl.IDX_FIELD, typeQuery,
+                    new String[]{TraitElementImpl.IDX_FIELD, TypeConstantElementImpl.IDX_FIELD});
+            for (final IndexResult indexResult : traitResults) {
+                for (final TypeElement typeElement : TraitElementImpl.fromSignature(typeQuery, this, indexResult)) {
                     constants.addAll(TypeConstantElementImpl.fromSignature(typeElement, constantQuery, this, indexResult));
                 }
             }
@@ -1242,6 +1266,10 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                         case FIELD:
                             traitTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getFields(NameKind.exact(trait), NameKind.empty())));
                             break;
+                        case TYPE_CONSTANT:
+                            // [GH-4725] PHP 8.2 Support: Constatns in Traits
+                            traitTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getTypeConstantsImpl(NameKind.exact(trait), NameKind.empty(), EnumSet.of(PhpElementKind.TRAIT))));
+                            break;
                         default:
                             //no-op
                     }
@@ -1311,8 +1339,8 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     public Set<MethodElement> getInheritedMethods(final TypeElement typeElement) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<TypeMemberElement> typeMembers =
-                getInheritedTypeMembers(typeElement, new LinkedHashSet<TypeElement>(),
-                new LinkedHashSet<TypeMemberElement>(),
+                getInheritedTypeMembers(typeElement, new LinkedHashSet<>(),
+                new LinkedHashSet<>(),
                 EnumSet.of(PhpElementKind.CLASS, PhpElementKind.IFACE, PhpElementKind.TRAIT),
                 EnumSet.of(PhpElementKind.METHOD));
         final Set<MethodElement> retval = new HashSet<>();
@@ -1351,8 +1379,8 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     public Set<FieldElement> getAlllFields(TypeElement typeElement) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<TypeMemberElement> typeMembers =
-                getInheritedTypeMembers(typeElement, new LinkedHashSet<TypeElement>(),
-                new LinkedHashSet<TypeMemberElement>(getDeclaredFields(typeElement)),
+                getInheritedTypeMembers(typeElement, new LinkedHashSet<>(),
+                new LinkedHashSet<>(getDeclaredFields(typeElement)),
                 EnumSet.of(PhpElementKind.CLASS, PhpElementKind.TRAIT),
                 EnumSet.of(PhpElementKind.FIELD));
         final Set<FieldElement> retval = new HashSet<>();
@@ -1374,7 +1402,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                 typeElement,
                 new LinkedHashSet<>(),
                 new LinkedHashSet<>(getDeclaredTypeConstants(typeElement)),
-                EnumSet.of(PhpElementKind.CLASS, PhpElementKind.IFACE, PhpElementKind.ENUM),
+                EnumSet.of(PhpElementKind.CLASS, PhpElementKind.TRAIT, PhpElementKind.IFACE, PhpElementKind.ENUM),
                 EnumSet.of(PhpElementKind.TYPE_CONSTANT)
         );
         final Set<TypeConstantElement> retval = new HashSet<>();
@@ -1514,7 +1542,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         types.addAll(getClassesImpl(typeQuery));
         types.addAll(getInterfacesImpl(typeQuery));
         types.addAll(getTraitsImpl(typeQuery));
-        types.addAll(getEnumImpl(typeQuery));
+        types.addAll(getEnumsImpl(typeQuery));
         for (TypeElement typeElement : types) {
             retval.addAll(ElementFilter.forName(methodQuery).filter(getAllMethods(typeElement)));
         }
@@ -1537,7 +1565,8 @@ public final class IndexQueryImpl implements ElementQuery.Index {
         Set<TypeElement> types = new HashSet<>();
         types.addAll(getClassesImpl(typeQuery));
         types.addAll(getInterfacesImpl(typeQuery));
-        types.addAll(getEnumImpl(typeQuery));
+        types.addAll(getTraitsImpl(typeQuery)); // GH-4725 PHP 8.2 Constants In Traits
+        types.addAll(getEnumsImpl(typeQuery));
         for (TypeElement typeElement : types) {
             retval.addAll(ElementFilter.forName(constantQuery).filter(getAllTypeConstants(typeElement)));
         }
@@ -1548,7 +1577,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     public Set<EnumCaseElement> getAllEnumCases(Exact typeQuery, NameKind enumCaseQuery) {
         Set<EnumCaseElement> retval = new HashSet<>();
         Set<TypeElement> types = new HashSet<>();
-        types.addAll(getEnumImpl(typeQuery));
+        types.addAll(getEnumsImpl(typeQuery));
         for (TypeElement typeElement : types) {
             retval.addAll(ElementFilter.forName(enumCaseQuery).filter(getAllEnumCases(typeElement)));
         }
@@ -2025,6 +2054,24 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     }
 
     @Override
+    public Set<EnumElement> getEnums(final NameKind query, final Set<AliasedName> aliasedNames, final Trait trait) {
+        final Set<EnumElement> retval = new HashSet<>();
+        for (final AliasedName aliasedName : aliasedNames) {
+            for (final NameKind nextQuery : queriesForAlias(query, aliasedName, PhpElementKind.ENUM)) {
+                for (final EnumElement nextClass : getEnumsImpl(nextQuery)) {
+                    final AliasedEnum aliasedClass = new AliasedEnum(aliasedName, nextClass);
+                    if (trait != null) {
+                        aliasedClass.setTrait(trait);
+                    }
+                    retval.add(aliasedClass);
+                }
+            }
+        }
+        retval.addAll(getEnumsImpl(query));
+        return retval;
+    }
+
+    @Override
     public Set<NamespaceElement> getNamespaces(final NameKind query, final Set<AliasedName> aliasedNames, final Trait trait) {
         final Set<NamespaceElement> retval = new HashSet<>();
         for (final AliasedName aliasedName : aliasedNames) {
@@ -2166,7 +2213,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     @Override
     public Set<EnumElement> getEnums(NameKind query) {
         final Set<EnumElement> retval = new HashSet<>();
-        retval.addAll(getEnumImpl(query));
+        retval.addAll(getEnumsImpl(query));
         return retval;
     }
 

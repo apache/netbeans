@@ -124,12 +124,18 @@ public class TestOutputListenerProvider implements OutputProcessor {
         match = runningPattern2.matcher(line);
         if (match.matches()) {
             try {
-                Object defaultValue = PluginPropertyUtils.createEvaluator(visitor.getContext().getCurrentProject())
-                        .evaluate("${project.build.directory}/surefire-reports");
-                if (defaultValue instanceof String) {
-                    outputDir = (String) defaultValue;
-                    // don't want to create link on the surefire line
-//                    visitor.setOutputListener(new TestOutputListener(runningTestClass, outputDir), true);
+                OutputVisitor.Context context = visitor.getContext();
+                if (context != null) {
+                    Project currentProject = context.getCurrentProject();
+                    if (currentProject != null) {
+                        Object defaultValue = PluginPropertyUtils.createEvaluator(currentProject)
+                                                                 .evaluate("${project.build.directory}/surefire-reports");
+                        if (defaultValue instanceof String) {
+                            outputDir = (String) defaultValue;
+                            // don't want to create link on the surefire line
+        //                    visitor.setOutputListener(new TestOutputListener(runningTestClass, outputDir), true);
+                        }
+                    }
                 }
                 return;
             } catch (ExpressionEvaluationException ex) {

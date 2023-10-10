@@ -131,26 +131,21 @@ public class JpaControllerUtil {
         // read the config from resource first
         StringBuilder sbuffer = new StringBuilder();
         String lineSep = System.getProperty("line.separator");//NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding));
-        String line = br.readLine();
-        while (line != null) {
-            sbuffer.append(line);
-            sbuffer.append(lineSep);
-            line = br.readLine();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding))) {
+            String line = br.readLine();
+            while (line != null) {
+                sbuffer.append(line);
+                sbuffer.append(lineSep);
+                line = br.readLine();
+            }
         }
-        br.close();
         return sbuffer.toString();
     }
     
     public static void createFile(FileObject target, String content, String encoding) throws IOException{
-        FileLock lock = target.lock();
-        try {
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(lock), encoding));
+        try (FileLock lock = target.lock();
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(target.getOutputStream(lock), encoding))) {
             bw.write(content);
-            bw.close();
-            
-        } finally {
-            lock.releaseLock();
         }
     }
     
@@ -161,9 +156,17 @@ public class JpaControllerUtil {
         Name qualifiedName = typeElement.getQualifiedName();
         whileloop:
         while (typeElement != null) {
-            if (isAnnotatedWith(typeElement, "javax.persistence.Entity") || isAnnotatedWith(typeElement, "javax.persistence.MappedSuperclass")) { // NOI18N
+            if (isAnnotatedWith(typeElement, "jakarta.persistence.Entity")  // NOI18N
+                    || isAnnotatedWith(typeElement, "jakarta.persistence.MappedSuperclass")  // NOI18N
+                    || isAnnotatedWith(typeElement, "javax.persistence.Entity")  // NOI18N
+                    || isAnnotatedWith(typeElement, "javax.persistence.MappedSuperclass")  // NOI18N
+            ) {
                 for (Element element : typeElement.getEnclosedElements()) {
-                    if (isAnnotatedWith(element, "javax.persistence.Id") || isAnnotatedWith(element, "javax.persistence.EmbeddedId")) {
+                    if (isAnnotatedWith(element, "jakarta.persistence.Id")
+                            || isAnnotatedWith(element, "jakarta.persistence.EmbeddedId")
+                            || isAnnotatedWith(element, "javax.persistence.Id")
+                            || isAnnotatedWith(element, "javax.persistence.EmbeddedId")
+                    ) {
                         if (ElementKind.FIELD == element.getKind()) {
                             fieldAccess = true;
                         }
@@ -228,7 +231,7 @@ public class JpaControllerUtil {
     }
     
     public static List<AnnotationMirror> findNestedAnnotations(AnnotationMirror annotationMirror, String annotationFqn) {
-        List<AnnotationMirror> result = new ArrayList<AnnotationMirror>();
+        List<AnnotationMirror> result = new ArrayList<>();
         findNestedAnnotationsInternal(annotationMirror, annotationFqn, result);
         return result;
     }
@@ -282,19 +285,25 @@ public class JpaControllerUtil {
     }
     
     public static boolean isEmbeddableClass(TypeElement typeElement) {
-        if (JpaControllerUtil.isAnnotatedWith(typeElement, "javax.persistence.Embeddable")) {
-            return true;
-        }
-        return false;
+        return JpaControllerUtil.isAnnotatedWith(typeElement, "jakarta.persistence.Embeddable")
+                || JpaControllerUtil.isAnnotatedWith(typeElement, "javax.persistence.Embeddable");
     }
     
     public static int isRelationship(ExecutableElement method, boolean isFieldAccess) {
         Element element = isFieldAccess ? JpaControllerUtil.guessField(method) : method;
         if (element != null) {
-            if (JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.OneToOne") || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.ManyToOne")) {
+            if (JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.OneToOne")
+                    || JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.ManyToOne")
+                    || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.OneToOne")
+                    || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.ManyToOne")
+            ) {
                 return REL_TO_ONE;
             }
-            if (JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.OneToMany") || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.ManyToMany")) {
+            if (JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.OneToMany")
+                    || JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.ManyToMany")
+                    || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.OneToMany")
+                    || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.ManyToMany")
+            ) {
                 return REL_TO_MANY;
             }
         }
@@ -316,7 +325,19 @@ public class JpaControllerUtil {
         //try to find a mappedBy annotation element on the possiblyAnnotatedElement
         Element possiblyAnnotatedElement = isFieldAccess ? JpaControllerUtil.guessField(executableElement) : executableElement;
         String mappedBy = null;
-        AnnotationMirror persistenceAnnotation = JpaControllerUtil.findAnnotation(possiblyAnnotatedElement, "javax.persistence.OneToOne");  //NOI18N"
+        AnnotationMirror persistenceAnnotation = JpaControllerUtil.findAnnotation(possiblyAnnotatedElement, "jakarta.persistence.OneToOne");  //NOI18N"
+        if (persistenceAnnotation == null) {
+            persistenceAnnotation = JpaControllerUtil.findAnnotation(possiblyAnnotatedElement, "jakarta.persistence.OneToMany");  //NOI18N"
+        }
+        if (persistenceAnnotation == null) {
+            persistenceAnnotation = JpaControllerUtil.findAnnotation(possiblyAnnotatedElement, "jakarta.persistence.ManyToOne");  //NOI18N"
+        }
+        if (persistenceAnnotation == null) {
+            persistenceAnnotation = JpaControllerUtil.findAnnotation(possiblyAnnotatedElement, "jakarta.persistence.ManyToMany");  //NOI18N"
+        }
+        if(persistenceAnnotation == null) {
+            persistenceAnnotation = JpaControllerUtil.findAnnotation(possiblyAnnotatedElement, "javax.persistence.OneToOne");  //NOI18N"
+        }
         if (persistenceAnnotation == null) {
             persistenceAnnotation = JpaControllerUtil.findAnnotation(possiblyAnnotatedElement, "javax.persistence.OneToMany");  //NOI18N"
         }
@@ -382,26 +403,37 @@ public class JpaControllerUtil {
         if (fieldElement == null) {
             fieldElement = method;
         }
-        String[] fieldAnnotationFqns = {"javax.persistence.ManyToOne", "javax.persistence.OneToOne", "javax.persistence.Basic"};
+        String[] fieldAnnotationFqns = {
+            "jakarta.persistence.ManyToOne", "jakarta.persistence.OneToOne", "jakarta.persistence.Basic",
+            "javax.persistence.ManyToOne", "javax.persistence.OneToOne", "javax.persistence.Basic"
+        };
         Boolean isFieldOptionalBoolean = findAnnotationValueAsBoolean(fieldElement, fieldAnnotationFqns, "optional");
         if (isFieldOptionalBoolean != null) {
-            isFieldOptional = isFieldOptionalBoolean.booleanValue();
+            isFieldOptional = isFieldOptionalBoolean;
         }
         if (!isFieldOptional) {
             return false;
         }
         //field is optional
-        fieldAnnotationFqns = new String[]{"javax.persistence.Column", "javax.persistence.JoinColumn"};
+        fieldAnnotationFqns = new String[]{
+            "jakarta.persistence.Column", "jakarta.persistence.JoinColumn",
+            "javax.persistence.Column", "javax.persistence.JoinColumn"
+        };
         isFieldNullable = findAnnotationValueAsBoolean(fieldElement, fieldAnnotationFqns, "nullable");
         if (isFieldNullable != null) {
-            return isFieldNullable.booleanValue();
+            return isFieldNullable;
         }
         //new ballgame
         boolean result = true;
-        AnnotationMirror fieldAnnotation = JpaControllerUtil.findAnnotation(fieldElement, "javax.persistence.JoinColumns"); //NOI18N
+        AnnotationMirror fieldAnnotation = JpaControllerUtil.findAnnotation(fieldElement, "jakarta.persistence.JoinColumns"); //NOI18N
+        if(fieldAnnotation == null) {
+            fieldAnnotation = JpaControllerUtil.findAnnotation(fieldElement, "javax.persistence.JoinColumns"); //NOI18N
+        }
         if (fieldAnnotation != null) {
             //all joinColumn annotations must indicate nullable = false to return a false result
-            List<AnnotationMirror> joinColumnAnnotations = JpaControllerUtil.findNestedAnnotations(fieldAnnotation, "javax.persistence.JoinColumn");
+            List<AnnotationMirror> joinColumnAnnotations = new ArrayList<>();
+            joinColumnAnnotations.addAll(JpaControllerUtil.findNestedAnnotations(fieldAnnotation, "jakarta.persistence.JoinColumn"));
+            joinColumnAnnotations.addAll(JpaControllerUtil.findNestedAnnotations(fieldAnnotation, "javax.persistence.JoinColumn"));
             for (AnnotationMirror joinColumnAnnotation : joinColumnAnnotations) {
                 String columnNullableValue = JpaControllerUtil.findAnnotationValueAsString(joinColumnAnnotation, "nullable"); //NOI18N
                 if (columnNullableValue != null) {
@@ -447,20 +479,24 @@ public class JpaControllerUtil {
         boolean idDetected = false;
         TypeElement typeElement = clazz;
         while (typeElement != null && !idDetected) {
-            if (isAnnotatedWith(typeElement, "javax.persistence.Entity") || isAnnotatedWith(typeElement, "javax.persistence.MappedSuperclass")) { // NOI18N
+            if (isAnnotatedWith(typeElement, "jakarta.persistence.Entity")  // NOI18N
+                    || isAnnotatedWith(typeElement, "jakarta.persistence.MappedSuperclass") // NOI18N
+                    || isAnnotatedWith(typeElement, "javax.persistence.Entity") // NOI18N
+                    || isAnnotatedWith(typeElement, "javax.persistence.MappedSuperclass") // NOI18N
+            ) {
                 for (Element element : typeElement.getEnclosedElements()) {
-                    if (isAnnotatedWith(element, "javax.persistence.Id") || isAnnotatedWith(element, "javax.persistence.EmbeddedId")) {
+                    if (isAnnotatedWith(element, "jakarta.persistence.Id") // NOI18N
+                            || isAnnotatedWith(element, "jakarta.persistence.EmbeddedId") // NOI18N
+                            || isAnnotatedWith(element, "javax.persistence.Id") // NOI18N
+                            || isAnnotatedWith(element, "javax.persistence.EmbeddedId") // NOI18N
+                    ) {
                         idDetected = true;
                     }
                 }
             }
             typeElement = getSuperclassTypeElement(typeElement);
         }
-        if (!idDetected) {
-            return false;//
-        } else {
-            return true;
-        }
+        return idDetected;
     }
 
     public static ExecutableElement getIdGetter(final boolean isFieldAccess, final TypeElement typeElement) {
@@ -470,7 +506,11 @@ public class JpaControllerUtil {
             if (methodName.startsWith("get")) {
                 Element element = isFieldAccess ? JpaControllerUtil.guessField(method) : method;
                 if (element != null) {
-                    if (JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.Id") || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.EmbeddedId")) {
+                    if (JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.Id") // NOI18N
+                            || JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.EmbeddedId") // NOI18N
+                            || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.Id") // NOI18N
+                            || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.EmbeddedId") // NOI18N
+                    ) {
                         return method;
                     }
                 }
@@ -483,7 +523,9 @@ public class JpaControllerUtil {
     public static boolean isGenerated(ExecutableElement method, boolean isFieldAccess) {
         Element element = isFieldAccess ? JpaControllerUtil.guessField(method) : method;
         if (element != null) {
-            if (JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.GeneratedValue")) { // NOI18N
+            if (JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.GeneratedValue") // NOI18N
+                    || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.GeneratedValue") // NOI18N
+            ) {
                 return true;
             }
         }
@@ -524,7 +566,7 @@ public class JpaControllerUtil {
         if (desiredMethodElement == null) {
             throw new IllegalArgumentException("Could not find " + methodName + " in " + fqClass);
         }
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         List<? extends TypeMirror> thrownTypes = desiredMethodElement.getThrownTypes();
         for (TypeMirror thrownType : thrownTypes) {
             if (thrownType.getKind() == TypeKind.DECLARED) {
@@ -544,15 +586,19 @@ public class JpaControllerUtil {
      * classes or mapped superclasses.
      */
     public static ExecutableElement[] getEntityMethods(TypeElement entityTypeElement) {
-        List<ExecutableElement> result = new LinkedList<ExecutableElement>();
+        List<ExecutableElement> result = new LinkedList<>();
         TypeElement typeElement = entityTypeElement;
         while (typeElement != null) {
-            if (isAnnotatedWith(typeElement, "javax.persistence.Entity") || isAnnotatedWith(typeElement, "javax.persistence.MappedSuperclass")) { // NOI18N
+            if (isAnnotatedWith(typeElement, "jakarta.persistence.Entity") // NOI18N
+                    || isAnnotatedWith(typeElement, "jakarta.persistence.MappedSuperclass") // NOI18N
+                    || isAnnotatedWith(typeElement, "javax.persistence.Entity") // NOI18N
+                    || isAnnotatedWith(typeElement, "javax.persistence.MappedSuperclass") // NOI18N
+            ) {
                 result.addAll(ElementFilter.methodsIn(typeElement.getEnclosedElements()));
             }
             typeElement = getSuperclassTypeElement(typeElement);
         }
-        return result.toArray(new ExecutableElement[result.size()]);
+        return result.toArray(new ExecutableElement[0]);
     }
     
     public static VariableElement guessField(ExecutableElement getter) {
@@ -589,7 +635,7 @@ public class JpaControllerUtil {
     // ----------------------------------------------------------------------------------------- Nested Classes
     
     public static class EmbeddedPkSupport {
-        private Map<TypeElement,EmbeddedPkSupportInfo> typeToInfo = new HashMap<TypeElement,EmbeddedPkSupportInfo>();
+        private Map<TypeElement,EmbeddedPkSupportInfo> typeToInfo = new HashMap<>();
         
         public Set<ExecutableElement> getPkAccessorMethods(TypeElement type) {
             EmbeddedPkSupportInfo info = getInfo(type);
@@ -657,14 +703,14 @@ public class JpaControllerUtil {
     }
     
     private static class EmbeddedPkSupportInfo {
-        private Map<String,ExecutableElement> joinColumnNameToRelationshipMethod = new HashMap<String,ExecutableElement>();
-        private Map<ExecutableElement,List<String>> relationshipMethodToJoinColumnNames = new HashMap<ExecutableElement,List<String>>(); //used only in isRedundantWithPkFields
-        private Map<String,String> joinColumnNameToReferencedColumnName = new HashMap<String,String>();
-        private Map<String,String> columnNameToAccessorString = new HashMap<String,String>();
-        private Map<String,String> columnNameToSetterString = new HashMap<String,String>();
-        private Map<ExecutableElement,String> pkAccessorMethodToColumnName = new HashMap<ExecutableElement,String>();
-        private Map<ExecutableElement,String> pkSetterMethodToColumnName = new HashMap<ExecutableElement,String>();
-        private Map<ExecutableElement,String> pkAccessorMethodToPopulationCode = new HashMap<ExecutableElement,String>(); //derived
+        private Map<String,ExecutableElement> joinColumnNameToRelationshipMethod = new HashMap<>();
+        private Map<ExecutableElement,List<String>> relationshipMethodToJoinColumnNames = new HashMap<>(); //used only in isRedundantWithPkFields
+        private Map<String,String> joinColumnNameToReferencedColumnName = new HashMap<>();
+        private Map<String,String> columnNameToAccessorString = new HashMap<>();
+        private Map<String,String> columnNameToSetterString = new HashMap<>();
+        private Map<ExecutableElement,String> pkAccessorMethodToColumnName = new HashMap<>();
+        private Map<ExecutableElement,String> pkSetterMethodToColumnName = new HashMap<>();
+        private Map<ExecutableElement,String> pkAccessorMethodToPopulationCode = new HashMap<>(); //derived
         private boolean isFieldAccess;
         
         public Set<ExecutableElement> getPkAccessorMethods() {
@@ -726,7 +772,10 @@ public class JpaControllerUtil {
                     if (f != null) {
                         int a = -1;
                         AnnotationMirror columnAnnotation = null;
-                        String[] columnAnnotationFqns = {"javax.persistence.EmbeddedId", "javax.persistence.JoinColumns", "javax.persistence.JoinColumn", "javax.persistence.Column"}; //NOI18N
+                        String[] columnAnnotationFqns = {
+                            "jakarta.persistence.EmbeddedId", "jakarta.persistence.JoinColumns", "jakarta.persistence.JoinColumn", "jakarta.persistence.Column", //NOI18N
+                            "javax.persistence.EmbeddedId", "javax.persistence.JoinColumns", "javax.persistence.JoinColumn", "javax.persistence.Column" //NOI18N
+                        };
                         for (int i = 0; i < columnAnnotationFqns.length; i++) {
                             String columnAnnotationFqn = columnAnnotationFqns[i];
                             AnnotationMirror columnAnnotationMirror = findAnnotation(f, columnAnnotationFqn);
@@ -736,16 +785,21 @@ public class JpaControllerUtil {
                                 break;
                             }
                         }
-                        if (a == 0) {
+                        if (a == 0 || a == 4) {
                             //populate pkAccessorMethodToColumnName and columnNameToAccessorString
                             populateMapsForEmbedded(method);
                         } else if ( (a == 1 || a == 2) && 
+                                (isAnnotatedWith(f, "jakarta.persistence.OneToOne") ||
+                                isAnnotatedWith(f, "jakarta.persistence.ManyToOne")) )  {
+                            //populate joinColumnNameToRelationshipMethod, relationshipMethodToJoinColumnNames, and joinColumnNameToReferencedColumnName
+                            populateJoinColumnNameMaps(method, columnAnnotationFqns[a], columnAnnotation);
+                        } else if ( (a == 5 || a == 6) &&
                                 (isAnnotatedWith(f, "javax.persistence.OneToOne") ||
                                 isAnnotatedWith(f, "javax.persistence.ManyToOne")) )  {
                             //populate joinColumnNameToRelationshipMethod, relationshipMethodToJoinColumnNames, and joinColumnNameToReferencedColumnName
                             populateJoinColumnNameMaps(method, columnAnnotationFqns[a], columnAnnotation);
                         }
-                        else if (a == 3) {
+                        else if (a == 3 || a == 7) {
                             //populate columnNameToAccessorString
                             String columnName = findAnnotationValueAsString(columnAnnotation, "name"); //NOI18N
                             if (columnName != null) {
@@ -800,7 +854,10 @@ public class JpaControllerUtil {
             }//something is missed, may be getter name do not match variable name, see #190854
             String pkMethodName = pkMethod.getSimpleName().toString();
             String columnName = null;
-            AnnotationMirror columnAnnotation = findAnnotation(pkFieldElement, "javax.persistence.Column"); //NOI18N
+            AnnotationMirror columnAnnotation = findAnnotation(pkFieldElement, "jakarta.persistence.Column"); //NOI18N
+            if(columnAnnotation == null) {
+                columnAnnotation = findAnnotation(pkFieldElement, "javax.persistence.Column"); //NOI18N
+            }
             if (columnAnnotation != null) {
                 columnName = findAnnotationValueAsString(columnAnnotation, "name"); //NOI18N
             }
@@ -819,13 +876,21 @@ public class JpaControllerUtil {
         }
         
         private void populateJoinColumnNameMaps(ExecutableElement m, String columnAnnotationFqn, AnnotationMirror columnAnnotation) {
-            List<AnnotationMirror> joinColumnAnnotations;
-            if ("javax.persistence.JoinColumn".equals(columnAnnotationFqn)) {
-                joinColumnAnnotations = new ArrayList<AnnotationMirror>();
+            List<AnnotationMirror> joinColumnAnnotations = new ArrayList<>();
+            if ("jakarta.persistence.JoinColumn".equals(columnAnnotationFqn)) { //NOI18N
                 joinColumnAnnotations.add(columnAnnotation);
             }
-            else {  //columnAnnotation is a javax.persistence.JoinColumns
-                joinColumnAnnotations = findNestedAnnotations(columnAnnotation, "javax.persistence.JoinColumn"); //NOI18N
+            else if ("javax.persistence.JoinColumn".equals(columnAnnotationFqn)) { //NOI18N
+                joinColumnAnnotations.add(columnAnnotation);
+            }
+            else if ("jakarta.persistence.JoinColumns".equals(columnAnnotationFqn)) { //NOI18N
+                joinColumnAnnotations.addAll(findNestedAnnotations(columnAnnotation, "jakarta.persistence.JoinColumn")); //NOI18N
+            }
+            else if ("javax.persistence.JoinColumns".equals(columnAnnotationFqn)) {
+                joinColumnAnnotations.addAll(findNestedAnnotations(columnAnnotation, "javax.persistence.JoinColumn")); //NOI18N
+            }
+            else {
+                throw new IllegalStateException("Unsupported annotation: " + columnAnnotationFqn); //NOI18N
             }
             for (AnnotationMirror joinColumnAnnotation : joinColumnAnnotations) {
                 String columnName = findAnnotationValueAsString(joinColumnAnnotation, "name"); //NOI18N
@@ -913,14 +978,14 @@ public class JpaControllerUtil {
             TreeMaker make = wc.getTreeMaker();
             TypeInfo[] pTypes = mInfo.getParameterTypes();
             String[] pNames = mInfo.getParameterNames();
-            List<VariableTree> params = new ArrayList<VariableTree>();
+            List<VariableTree> params = new ArrayList<>();
             for (int i = 0 ; pTypes != null && i < pTypes.length; i++) {
                 VariableTree vtree = createVariable(wc, pNames[i], pTypes[i]);
                 params.add(vtree);
             }
             
             TypeInfo[] excepTypes = mInfo.getExceptionTypes();
-            List<ExpressionTree> throwsList = new ArrayList<ExpressionTree>();
+            List<ExpressionTree> throwsList = new ArrayList<>();
             for (int i = 0 ; excepTypes != null && i < excepTypes.length; i++) {
                 throwsList.add((ExpressionTree)createType(wc, excepTypes[i]));
             }
@@ -967,24 +1032,36 @@ public class JpaControllerUtil {
             }
             
             TypeKind primitiveTypeKind = null;
-            if ("boolean".equals(rawType)) {           // NOI18N
-                primitiveTypeKind = TypeKind.BOOLEAN;
-            } else if ("byte".equals(rawType)) {       // NOI18N
-                primitiveTypeKind = TypeKind.BYTE;
-            } else if ("short".equals(rawType)) {      // NOI18N
-                primitiveTypeKind = TypeKind.SHORT;
-            } else if ("int".equals(rawType)) {        // NOI18N
-                primitiveTypeKind = TypeKind.INT;
-            } else if ("long".equals(rawType)) {       // NOI18N
-                primitiveTypeKind = TypeKind.LONG;
-            } else if ("char".equals(rawType)) {       // NOI18N
-                primitiveTypeKind = TypeKind.CHAR;
-            } else if ("float".equals(rawType)) {      // NOI18N
-                primitiveTypeKind = TypeKind.FLOAT;
-            } else if ("double".equals(rawType)) {     // NOI18N
-                primitiveTypeKind = TypeKind.DOUBLE;
-            } else if ("void".equals(rawType)) {
-                primitiveTypeKind = TypeKind.VOID;
+            switch (rawType) {
+                case "boolean": // NOI18N
+                    primitiveTypeKind = TypeKind.BOOLEAN;
+                    break;
+                case "byte": // NOI18N
+                    primitiveTypeKind = TypeKind.BYTE;
+                    break;
+                case "short": // NOI18N
+                    primitiveTypeKind = TypeKind.SHORT;
+                    break;
+                case "int": // NOI18N
+                    primitiveTypeKind = TypeKind.INT;
+                    break;
+                case "long": // NOI18N
+                    primitiveTypeKind = TypeKind.LONG;
+                    break;
+                case "char": // NOI18N
+                    primitiveTypeKind = TypeKind.CHAR;
+                    break;
+                case "float": // NOI18N
+                    primitiveTypeKind = TypeKind.FLOAT;
+                    break;
+                case "double": // NOI18N
+                    primitiveTypeKind = TypeKind.DOUBLE;
+                    break;
+                case "void": // NOI18N
+                    primitiveTypeKind = TypeKind.VOID;
+                    break;
+                default:
+                    break;
             }
             if (primitiveTypeKind != null) {
                 return make.PrimitiveType(primitiveTypeKind);
@@ -1035,14 +1112,14 @@ public class JpaControllerUtil {
                 return wc.getTreeMaker().Modifiers(flags, Collections.<AnnotationTree>emptyList());
             }
             GenerationUtils generationUtils = GenerationUtils.newInstance(wc);
-            List<AnnotationTree> annotationTrees = new ArrayList<AnnotationTree>();
+            List<AnnotationTree> annotationTrees = new ArrayList<>();
             for (AnnotationInfo annotation : annotations) {
                 //append an AnnotationTree
                 String[] argNames = annotation.getArgNames();
                 if (argNames != null && argNames.length > 0) {
                     //one or more args in this annotation
                     Object[] argValues = annotation.getArgValues();
-                    List<ExpressionTree> argTrees = new ArrayList<ExpressionTree>();
+                    List<ExpressionTree> argTrees = new ArrayList<>();
                     for (int i = 0; i < argNames.length; i++) {
                         ExpressionTree argTree = generationUtils.createAnnotationArgument(argNames[i], argValues[i]);
                         argTrees.add(argTree);

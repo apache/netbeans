@@ -117,7 +117,7 @@ public final class RepositoryMaintenance {
             }
         }
         if (changedPath.startsWith("/")) 
-            changedPath = changedPath.substring(1, changedPath.length());
+            changedPath = changedPath.substring(1);
         return changedPath;
     }
 }

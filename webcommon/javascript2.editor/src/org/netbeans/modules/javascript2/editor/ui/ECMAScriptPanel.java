@@ -33,7 +33,7 @@ import org.openide.util.NbBundle;
 public class ECMAScriptPanel extends javax.swing.JPanel implements HelpCtx.Provider {
 
     public static final String IDENTIFIER = "ecma"; // NOI18N
-    
+
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     private final Project project;
     private final ProjectCustomizer.Category category;
@@ -135,7 +135,7 @@ public class ECMAScriptPanel extends javax.swing.JPanel implements HelpCtx.Provi
     public void addChangeListener(ChangeListener listener) {
         changeSupport.addChangeListener(listener);
     }
-    
+
     public void removeChangeListener(ChangeListener listener) {
         changeSupport.removeChangeListener(listener);
     }

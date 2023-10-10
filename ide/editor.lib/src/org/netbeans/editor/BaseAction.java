@@ -39,9 +39,9 @@ import org.openide.util.RequestProcessor;
  * the necessary resetting depending of what is required
  * by constructor of target action.
  * The other thing implemented here is macro recording.
- * <br/>
+ * <br>
  * Property "noIconInMenu" can be set to inform menu items not to use action's icon.
- * <br/>
+ * <br>
  *
  * @author Miloslav Metelka
  * @version 1.00
@@ -71,6 +71,7 @@ public abstract class BaseAction extends TextAction {
      * Reset abbreviation accounting to empty string.
      * @deprecated Not used anymore.
      */
+    @Deprecated
     public static final int ABBREV_RESET = 4;
 
     /** Prevents adding the new undoable edit to the old one when the next
@@ -134,6 +135,7 @@ public abstract class BaseAction extends TextAction {
      * @deprecated this method is deprecated like the LocaleSupport which it uses by default.
      *   It should be replaced by implementing {@link #getShortDescriptionBundleClass()}
      */
+    @Deprecated
     protected Object findValue(String key){
         return LocaleSupport.getString(key);
     }
@@ -160,7 +162,7 @@ public abstract class BaseAction extends TextAction {
     }
 
     /**
-     * Called by {@link #putValue(String,String)} when {@link Action#NAME} property
+     * Called by {@link #putValue(String,Object)} when {@link Action#NAME} property
      * is set to a non-null String value. This allows a "polymorphic" action (with
      * Action.NAME-specific behavior) to update certain properties (e.g. an icon)
      * according to the name that was set.
@@ -173,7 +175,7 @@ public abstract class BaseAction extends TextAction {
 
     /**
      * This method is called when there is no value for the particular key.
-     * <br/>
+     * <br>
      * If the returned value is non-null it is remembered
      * by {@link #putValue(String, Object)} so in that case this method
      * is only called once.
@@ -219,7 +221,7 @@ public abstract class BaseAction extends TextAction {
     /**
      * Get the class in a package where resource bundle for localization
      * of the short description of this action resides.
-     * <br/>
+     * <br>
      * By default this method returns null.
      */
     protected Class getShortDescriptionBundleClass() {

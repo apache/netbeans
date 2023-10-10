@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.43
+#Version 1.49
 
 CLSS public abstract interface java.awt.datatransfer.Transferable
 meth public abstract boolean isDataFlavorSupported(java.awt.datatransfer.DataFlavor)

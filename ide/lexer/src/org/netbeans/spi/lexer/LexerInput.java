@@ -42,7 +42,7 @@ import org.netbeans.lib.lexer.LexerUtilsConstants;
  *
  * <p>The following picture shows an example of java identifier recognition:
  *
- * <p><IMG src="doc-files/lexer-input.gif">.
+ * <p><IMG alt="example of java identifier recognition" src="doc-files/lexer-input.gif">.
  *
  * @author Miloslav Metelka
  * @version 1.00
@@ -53,10 +53,10 @@ public final class LexerInput {
     /**
      * Integer constant -1 returned by {@link #read()} to signal
      * that there are no more characters available on input.
-     * <br/>
+     * <br>
      * It cannot be a part of any token's text but it is counted
      * as a single character in {@link #backup(int)} operations.
-     * <br/>
+     * <br>
      * Translates to <code>0xFFFF</code> when casted to <code>char</code>.
      */
     public static final int EOF = -1;
@@ -127,13 +127,13 @@ public final class LexerInput {
      * The operation moves back read-offset (from which {@link #read()}
      * reads characters) so that subsequent read operations
      * will re-read the characters that were backed up.
-     * <br/>
+     * <br>
      * If {@link LexerInput#EOF} was returned by {@link #read()} then
      * it will count as a single character in the backup operation
      * (even if returned multiple times)
      * i.e backup(1) will undo reading of (previously read) EOF.
      *
-     * <p/>
+     * <p>
      * <i>Example:</i><pre>
      *   // backup last character that was read - either regular char or EOF
      *   lexerInput.backup(1);
@@ -305,10 +305,10 @@ public final class LexerInput {
     
 //    /**
 //     * Lexer may call this method to get cached <code>java.lang.Integer</code> instance.
-//     * <br/>
+//     * <br>
 //     * The caching is only guaranteed if the given int value is below or equal to certain value
 //     * - the present implementation uses 127.
-//     * <br/>
+//     * <br>
 //     * If the value is above this constant a new value will be constructed
 //     * during each call. In such case the clients could possibly
 //     * implement their own caching.

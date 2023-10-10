@@ -24,7 +24,7 @@ import org.netbeans.modules.refactoring.spi.ui.FiltersDescription;
 /**
  * Handles creation and manipulation with boolean state filters.
  *
- * @author Ralph Benjamin Ruijs <ralphbenjamin@netbeans.org>
+ * @author Ralph Benjamin Ruijs &lt;ralphbenjamin@netbeans.org&gt;
  * @see FiltersDescription
  * @since 1.29
  */

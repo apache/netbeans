@@ -4,7 +4,7 @@
 [[46,47]-Syntax error
  unexpected:	)
  after:	(
- expected:	exit, integer, double, identifier, STRING_VARNAME, variable, String, String, clone, match, fn, function, throw, isset, empty, list, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", namespace, __NAMESPACE__, __DIR__, \, define, include, include_once, eval, require, require_once, print, +, -, !, ~, ++, --, (int), (double), (string), (array), (object), (bool), (unset), @, [, new, static, (, $, '"', '`', <<<'...'] 46-47:Syntax error
+ expected:	exit, integer, double, identifier, STRING_VARNAME, variable, String, String, clone, match, fn, function, throw, isset, empty, list, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", __NAMESPACE__, __DIR__, define, include, include_once, eval, require, require_once, print, +, -, !, ~, ++, --, (int), (double), (string), (array), (object), (bool), (unset), @, [, new, static, (, $, '"', '`', <<<'...'] 46-47:Syntax error
  unexpected:	)
  after:	(
- expected:	exit, integer, double, identifier, STRING_VARNAME, variable, String, String, clone, match, fn, function, throw, isset, empty, list, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", namespace, __NAMESPACE__, __DIR__, \, define, include, include_once, eval, require, require_once, print, +, -, !, ~, ++, --, (int), (double), (string), (array), (object), (bool), (unset), @, [, new, static, (, $, '"', '`', <<<'...'
+ expected:	exit, integer, double, identifier, STRING_VARNAME, variable, String, String, clone, match, fn, function, throw, isset, empty, list, array, __CLASS__, __TRAIT__, __METHOD__, __FUNCTION__, __LINE__, __FILE__, <<<"...", __NAMESPACE__, __DIR__, define, include, include_once, eval, require, require_once, print, +, -, !, ~, ++, --, (int), (double), (string), (array), (object), (bool), (unset), @, [, new, static, (, $, '"', '`', <<<'...'

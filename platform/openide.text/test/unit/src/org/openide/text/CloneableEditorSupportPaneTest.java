@@ -202,6 +202,7 @@ public class CloneableEditorSupportPaneTest extends NbTestCase implements Clonea
     }
     public java.io.OutputStream outputStream() throws java.io.IOException {
         class ContentStream extends java.io.ByteArrayOutputStream {
+            @Override
             public void close () throws java.io.IOException {
                 super.close ();
                 content = new String (toByteArray ());
@@ -322,7 +323,8 @@ public class CloneableEditorSupportPaneTest extends NbTestCase implements Clonea
         public CES2 (Env env, Lookup l) {
             super (env, l);
         }
-        
+
+        @Override
         protected org.openide.text.CloneableEditorSupport.Pane createPane() {
             instance2 = new MyPaneNonNonTC();
             return instance2;

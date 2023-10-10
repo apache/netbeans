@@ -34,6 +34,7 @@ import org.netbeans.modules.editor.impl.NbEditorImplementationProvider;
  * @since 10/2001
  * @deprecated Without any replacement.
  */
+@Deprecated
 public class NbImplementationProvider extends ImplementationProvider {
 
     public static final String GLYPH_GUTTER_ACTIONS_FOLDER_NAME = 

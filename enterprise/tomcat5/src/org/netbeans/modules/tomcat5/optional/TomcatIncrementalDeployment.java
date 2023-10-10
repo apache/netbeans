@@ -54,11 +54,13 @@ public class TomcatIncrementalDeployment extends IncrementalDeployment {
         this.tm = (TomcatManager) dm;
     }
     
+    @Override
     public boolean canFileDeploy (Target target, J2eeModule j2eeModule) {
         return j2eeModule.getModuleType().equals (javax.enterprise.deploy.shared.ModuleType.WAR);
         
     }
     
+    @Override
     public File getDirectoryForModule (TargetModuleID module) {
         return null;
         /*TomcatModule tModule = (TomcatModule) module;
@@ -69,6 +71,7 @@ public class TomcatIncrementalDeployment extends IncrementalDeployment {
         return f;*/
     }
     
+    @Override
     public File getDirectoryForNewApplication (Target target, J2eeModule module, ModuleConfiguration configuration) {
         if (module.getModuleType().equals (ModuleType.WAR)) {
             return null;
@@ -83,10 +86,12 @@ public class TomcatIncrementalDeployment extends IncrementalDeployment {
         throw new IllegalArgumentException ("ModuleType:" + module == null ? null : module.getModuleType() + " Configuration:"+configuration); //NOI18N
     }
     
+    @Override
     public java.io.File getDirectoryForNewModule (java.io.File appDir, String uri, J2eeModule module, ModuleConfiguration configuration) {
         throw new UnsupportedOperationException ();
     }
     
+    @Override
     public ProgressObject incrementalDeploy (final TargetModuleID module, AppChangeDescriptor changes) {
         if (changes.descriptorChanged () || changes.serverDescriptorChanged () || changes.classesChanged ()) {
             TomcatManagerImpl tmi = new TomcatManagerImpl (tm);
@@ -103,20 +108,18 @@ public class TomcatIncrementalDeployment extends IncrementalDeployment {
         } else {
             final P p = new P (module);
             p.supp.fireHandleProgressEvent (module, new Status (ActionType.EXECUTE, CommandType.DISTRIBUTE, "", StateType.COMPLETED));
-            RequestProcessor.getDefault().post(new Runnable() {
-                public void run() {
-                    try {
-                        p.supp.fireHandleProgressEvent (module, new Status (ActionType.EXECUTE, CommandType.DISTRIBUTE, "", StateType.COMPLETED));
-                        
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
+            RequestProcessor.getDefault().post( () -> {
+                try {
+                    p.supp.fireHandleProgressEvent(module, new Status (ActionType.EXECUTE, CommandType.DISTRIBUTE, "", StateType.COMPLETED));
+                } catch (Throwable e) {
+                    e.printStackTrace();
                 }
             });
             return p;
         }
     }
     
+    @Override
     public ProgressObject initialDeploy (Target target, J2eeModule app, ModuleConfiguration configuration, File dir) {
         TomcatManagerImpl tmi = new TomcatManagerImpl (tm);
         File contextXml = new File (dir.getAbsolutePath () + "/META-INF/context.xml"); //NOI18N
@@ -124,6 +127,7 @@ public class TomcatIncrementalDeployment extends IncrementalDeployment {
         return tmi;
     }
     
+    @Override
     public void notifyDeployment(TargetModuleID module) {
         if (tm.isTomcat50() && tm.getTomcatProperties().getOpenContextLogOnRun()) {
             tm.openLog(module);
@@ -149,38 +153,47 @@ public class TomcatIncrementalDeployment extends IncrementalDeployment {
             this.tmid = tmid;
         }
         
+        @Override
         public void addProgressListener (javax.enterprise.deploy.spi.status.ProgressListener progressListener) {
             supp.addProgressListener (progressListener);
         }
         
+        @Override
         public void removeProgressListener (javax.enterprise.deploy.spi.status.ProgressListener progressListener) {
             supp.removeProgressListener (progressListener);
         }
         
+        @Override
         public javax.enterprise.deploy.spi.status.ClientConfiguration getClientConfiguration (javax.enterprise.deploy.spi.TargetModuleID targetModuleID) {
             return null;
         }
         
+        @Override
         public javax.enterprise.deploy.spi.status.DeploymentStatus getDeploymentStatus () {
             return supp.getDeploymentStatus ();
         }
         
+        @Override
         public javax.enterprise.deploy.spi.TargetModuleID[] getResultTargetModuleIDs () {
             return new TargetModuleID [] {tmid};
         }
         
+        @Override
         public boolean isCancelSupported () {
             return false;
         }
         
+        @Override
         public boolean isStopSupported () {
             return false;
         }
         
+        @Override
         public void cancel () throws javax.enterprise.deploy.spi.exceptions.OperationUnsupportedException {
             throw new OperationUnsupportedException ("");
         }
         
+        @Override
         public void stop () throws javax.enterprise.deploy.spi.exceptions.OperationUnsupportedException {
             throw new OperationUnsupportedException ("");
         }

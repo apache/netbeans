@@ -138,8 +138,7 @@ public abstract class FilterSelector {
             
             JPanel filters = new JPanel(new GridLayout(3, 1));
             
-            noFilterChoice = new JRadioButton(Bundle.FilterSelector_noFilter(),
-                                FilterName.NO_FILTER.equals(filterName));
+            noFilterChoice = new JRadioButton(Bundle.FilterSelector_noFilter(), FilterName.NO_FILTER == filterName);
             bg.add(noFilterChoice);
             JPanel noFilter = new JPanel(null);
             noFilter.setLayout(new BoxLayout(noFilter, BoxLayout.LINE_AXIS));
@@ -147,7 +146,7 @@ public abstract class FilterSelector {
             filters.add(noFilter);
             
             javaClassesChoice = new JRadioButton(Bundle.FilterSelector_excludeCoreJava(),
-                                FilterName.EXCLUDE_JAVA_FILTER.equals(filterName));
+                    FilterName.EXCLUDE_JAVA_FILTER == filterName);
             bg.add(javaClassesChoice);
             
             JLabel javaClassesHint = new JLabel("(java.*, javax.*, sun.*, com.sun.*, etc.)", JLabel.LEADING);
@@ -162,11 +161,11 @@ public abstract class FilterSelector {
             filters.add(javaFilters);
             
             excludeCustomChoice = new JRadioButton(Bundle.FilterSelector_excludeCustomEx(),
-                                  FilterName.EXCLUDE_CUSTOM_FILTER.equals(filterName));
+                                  FilterName.EXCLUDE_CUSTOM_FILTER == filterName);
             bg.add(excludeCustomChoice);
             
             includeCustomChoice = new JRadioButton(Bundle.FilterSelector_includeCustomEx(),
-                                  FilterName.INCLUDE_CUSTOM_FILTER.equals(filterName));
+                                  FilterName.INCLUDE_CUSTOM_FILTER == filterName);
             bg.add(includeCustomChoice);
             
             JPanel customFilters = new JPanel(null);

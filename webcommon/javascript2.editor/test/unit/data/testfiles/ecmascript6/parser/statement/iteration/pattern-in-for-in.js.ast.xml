@@ -1,0 +1,142 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='56'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='55'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <BlockStatement start='0' end='55'>
+      <Block start='0' end='55'>
+        <isSynthetic/>
+        <!-- Block Statements -->
+        <ForNode start='0' end='55'>
+          <isForIn/>
+          <ArrayLiteralNode start='4' end='48'>
+            <IdentNode start='5' end='6'>
+              <name>a</name>
+            </IdentNode>
+            <IndexNode start='7' end='11'>
+              <isIndex/>
+              <!-- IndexNode Base -->
+              <IdentNode start='7' end='8'>
+                <name>b</name>
+              </IdentNode>
+              <!-- IndexNode Index -->
+              <IdentNode start='9' end='10'>
+                <name>a</name>
+              </IdentNode>
+            </IndexNode>
+            <ObjectNode start='12' end='47'>
+              <!-- ObjectNode Elements -->
+              <PropertyNode name='c' start='13' end='14'>
+                <!-- PropertyNode Key -->
+                <IdentNode start='13' end='14'>
+                  <name>c</name>
+                  <isPropertyName/>
+                </IdentNode>
+                <!-- PropertyNode Value -->
+                <IdentNode start='13' end='14'>
+                  <name>c</name>
+                </IdentNode>
+                <!-- PropertyNode Decorators -->
+              </PropertyNode>
+              <PropertyNode name='d' start='15' end='18'>
+                <!-- PropertyNode Key -->
+                <IdentNode start='15' end='16'>
+                  <name>d</name>
+                  <isPropertyName/>
+                </IdentNode>
+                <!-- PropertyNode Value -->
+                <BinaryNode type='ASSIGN' start='15' end='18'>
+                  <isAssignment/>
+                  <!-- BinaryNode lhs -->
+                  <IdentNode start='15' end='16'>
+                    <name>d</name>
+                  </IdentNode>
+                  <!-- BinaryNode rhs -->
+                  <IdentNode start='17' end='18'>
+                    <name>e</name>
+                  </IdentNode>
+                </BinaryNode>
+                <!-- PropertyNode Decorators -->
+              </PropertyNode>
+              <PropertyNode name='f' start='19' end='46'>
+                <isComputed/>
+                <!-- PropertyNode Key -->
+                <IdentNode start='20' end='21'>
+                  <name>f</name>
+                </IdentNode>
+                <!-- PropertyNode Value -->
+                <ArrayLiteralNode start='23' end='46'>
+                  <IdentNode start='24' end='25'>
+                    <name>g</name>
+                  </IdentNode>
+                  <AccessNode property='a' start='26' end='31'>
+                    <!-- AccessNode Base -->
+                    <CallNode start='26' end='29'>
+                      <!-- CallNode Arguments -->
+                      <!-- CallNode Function -->
+                      <IdentNode start='26' end='27'>
+                        <name>h</name>
+                      </IdentNode>
+                    </CallNode>
+                  </AccessNode>
+                  <AccessNode property='k' start='33' end='37'>
+                    <!-- AccessNode Base -->
+                    <NumberLiteralNode value='0' start='33' end='34'/>
+                  </AccessNode>
+                  <UnaryNode type='SPREAD_ARRAY' start='38' end='45'>
+                    <!-- UnaryNode Expression -->
+                    <IndexNode start='41' end='45'>
+                      <isIndex/>
+                      <!-- IndexNode Base -->
+                      <IdentNode start='41' end='42'>
+                        <name>i</name>
+                      </IdentNode>
+                      <!-- IndexNode Index -->
+                      <NumberLiteralNode value='0' start='43' end='44'/>
+                    </IndexNode>
+                  </UnaryNode>
+                </ArrayLiteralNode>
+                <!-- PropertyNode Decorators -->
+              </PropertyNode>
+            </ObjectNode>
+          </ArrayLiteralNode>
+          <JoinPredecessorExpression start='0' end='0'>
+          </JoinPredecessorExpression>
+          <JoinPredecessorExpression start='52' end='53'>
+            <NumberLiteralNode value='0' start='52' end='53'/>
+          </JoinPredecessorExpression>
+          <Block start='54' end='55'>
+            <isSynthetic/>
+            <!-- Block Statements -->
+            <EmptyNode start='54' end='55'>
+            </EmptyNode>
+          </Block>
+        </ForNode>
+      </Block>
+    </BlockStatement>
+  </Block>
+</FunctionNode>

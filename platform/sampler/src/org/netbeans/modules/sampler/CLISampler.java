@@ -98,7 +98,7 @@ class CLISampler extends Sampler {
         System.exit(0);
     }
 
-    private CLISampler(ThreadMXBean threadBean, File out) {
+    CLISampler(ThreadMXBean threadBean, File out) {
         super("CLISampler");
         threadMXBean = threadBean;
         output = out;
@@ -111,9 +111,9 @@ class CLISampler extends Sampler {
 
     @Override
     protected void saveSnapshot(byte[] arr) throws IOException {
-        FileOutputStream os = new FileOutputStream(output);
-        os.write(arr);
-        os.close();
+        try (FileOutputStream os = new FileOutputStream(output)) {
+            os.write(arr);
+        }
     }
 
     @Override

@@ -237,7 +237,7 @@ public abstract class VCSInterceptor {
      * Each series of beforeChange/afterChange events is preceded by at least one beforeEdit event.
      * 
      * @param file file that was just locked and is expected to change
-     * @throws IOEexceptin in case it wasn't possible to unlock the file.
+     * @throws IOException in case it wasn't possible to unlock the file.
      */
     public void beforeEdit(VCSFileProxy file) throws IOException {
     }

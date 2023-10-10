@@ -192,7 +192,7 @@ public class WeakEventListenerList extends EventListenerList {
         for (int i = 0; i < listenerSize; i += 2) {
             Class t = (Class)listenerList[i];
             EventListener l = (EventListener)((WeakReference)listenerList[i + 1]).get();
-            if ((l != null) && (l instanceof Serializable)) {
+            if (l instanceof Serializable) {
                 os.writeObject(t.getName());
                 os.writeObject(l);
             }

@@ -21,12 +21,12 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>external/javafx-base-17-linux.jar.external</file>
-        <file>external/javafx-controls-17-linux.jar.external</file>
-        <file>external/javafx-graphics-17-linux.jar.external</file>
-        <file>external/javafx-media-17-linux.jar.external</file>
-        <file>external/javafx-swing-17-linux.jar.external</file>
-        <file>external/javafx-web-17-linux.jar.external</file>
+        <file>external/javafx-base-17.0.7-linux.jar.external</file>
+        <file>external/javafx-controls-17.0.7-linux.jar.external</file>
+        <file>external/javafx-graphics-17.0.7-linux.jar.external</file>
+        <file>external/javafx-media-17.0.7-linux.jar.external</file>
+        <file>external/javafx-swing-17.0.7-linux.jar.external</file>
+        <file>external/javafx-web-17.0.7-linux.jar.external</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

@@ -73,7 +73,7 @@ public class HomeMethodGenerator extends AbstractMethodGenerator {
 
         // remote interface
         if (generateRemote && remoteHome != null) {
-            List<String> exceptions = exceptions = new ArrayList<String>(methodModel.getExceptions());
+            List<String> exceptions = new ArrayList<>(methodModel.getExceptions());
             if (!methodModel.getExceptions().contains("java.rmi.RemoteException")) {
                 exceptions.add("java.rmi.RemoteException");
             }

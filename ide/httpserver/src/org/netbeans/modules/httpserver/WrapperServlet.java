@@ -21,11 +21,11 @@ package org.netbeans.modules.httpserver;
 
 import java.io.InputStream;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
@@ -39,61 +39,64 @@ import javax.servlet.ServletOutputStream;
  *
  * @author Radim Kubacki
  */
-public class WrapperServlet extends NbBaseServlet {
+public class WrapperServlet extends HttpServlet {
 
+    private static final Logger LOG = Logger.getLogger(WrapperServlet.class.getName());
     private static final long serialVersionUID = 8009602136746998361L;
-    
-    /** Creates new WrapperServlet */
-    public WrapperServlet () {
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        processRequest(req, resp);
     }
-    
-    /** Processes the request for both HTTP GET and POST methods
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        processRequest(req, resp);
+    }
+
+    /**
+     * Processes the request for both HTTP GET and POST methods
+     *
      * @param request servlet request
      * @param response servlet response
      */
-    protected void processRequest (HttpServletRequest request, HttpServletResponse response) 
+    @SuppressWarnings("NestedAssignment")
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, java.io.IOException {
-        if (!checkAccess(request)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN,
-                               NbBundle.getMessage(WrapperServlet.class, "MSG_HTTP_FORBIDDEN"));
-            return;
-        }
-        // output your page here
-        //String path = request.getPathInfo ();
         ServletOutputStream out = response.getOutputStream ();
         try {
-            String requestURL = getRequestURL(request);
-            //String requestURL = request.getRequestURL().toString(); this method is only in Servlet API 2.3
-            URLMapper serverMapper = new HttpServerURLMapper();
-            FileObject files[] = serverMapper.getFileObjects(new URL(requestURL));
-            if ((files == null) || (files.length != 1)) {
-                throw new IOException();
+            FileObject file = URLMapper.findFileObject(new URL(request.getRequestURL().toString()));
+            if (file == null) {
+                LOG.log(Level.FINE, "File not found: " + request.getRequestURL().toString());
+                response.sendError (HttpServletResponse.SC_NOT_FOUND);
+                return;
             }
-            URL internal = URLMapper.findURL(files[0], URLMapper.INTERNAL);
+            URL internal = URLMapper.findURL(file, URLMapper.INTERNAL);
             URLConnection conn = internal.openConnection();
 
             String type = conn.getContentType();
             if (type == null || "content/unknown".equals(type)) { // NOI18N
-                type = files[0].getMIMEType();
+                type = file.getMIMEType();
             }
-            if ((type == null || "content/unknown".equals(type)) && files[0].getExt().equals("css")) { // NOI18N
+            if ((type == null || "content/unknown".equals(type)) && file.getExt().equals("css")) { // NOI18N
                 type = "text/css";
             }
             response.setContentType(type);
             // PENDING: copy all info - headers, length, encoding, ...
-            
-            InputStream in = conn.getInputStream ();
-            byte [] buff = new byte [256];
-            int len;
 
-            while ((len = in.read (buff)) != -1) {
-                out.write (buff, 0, len);
-                out.flush();
+            try (InputStream in = conn.getInputStream ()) {
+                byte [] buff = new byte [256];
+                int len;
+
+                while ((len = in.read (buff)) != -1) {
+                    out.write (buff, 0, len);
+                    out.flush();
+                }
             }
-            in.close ();
 
         }
-        catch (MalformedURLException ex) {
+        catch (MalformedURLException | IllegalArgumentException ex) {
+            LOG.log(Level.FINE, "Failed to parse target URL from request: " + request.getRequestURL().toString(), ex);
             try {
                 response.sendError (HttpServletResponse.SC_NOT_FOUND,
                                    NbBundle.getMessage(WrapperServlet.class, "MSG_HTTP_NOT_FOUND"));
@@ -101,35 +104,12 @@ public class WrapperServlet extends NbBaseServlet {
             catch (IOException ex2) {}
         }
         catch (IOException ex) {
+            LOG.log(Level.FINE, "Failed read data for request: " + request.getRequestURL().toString(), ex);
             try {
                 response.sendError (HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
             catch (IOException ex2) {}
         }
-        finally {
-            try { out.close(); } catch (Exception ex) {}
-        }
-    }
-
-    private String getRequestURL(HttpServletRequest request) throws UnknownHostException, MalformedURLException {
-        HttpServerSettings settings = HttpServerSettings.getDefault();
-
-        String pi = request.getPathInfo();
-        if (pi.startsWith("/")) { // NOI18N
-            pi = pi.substring(1);
-        }
-        URL reconstructedURL = new URL ("http",   // NOI18N
-                              InetAddress.getLocalHost ().getHostName (), 
-                              settings.getPort (),
-                              settings.getWrapperBaseURL () + pi.toString());
-        return reconstructedURL.toExternalForm();
-    }
-
-    /**
-    * Returns a short description of the servlet.
-    */
-    public String getServletInfo() {
-        return NbBundle.getMessage(WrapperServlet.class, "MSG_WrapperServletDescr");
     }
 
 }

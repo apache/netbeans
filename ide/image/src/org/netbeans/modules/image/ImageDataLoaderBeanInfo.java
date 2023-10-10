@@ -25,7 +25,6 @@ import java.awt.Image;
 import org.openide.ErrorManager;
 import org.openide.loaders.UniFileLoader;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 
 /** Image data loader bean info.
 *
@@ -33,6 +32,7 @@ import org.openide.util.Utilities;
 */
 public class ImageDataLoaderBeanInfo extends SimpleBeanInfo {
 
+    @Override
     public BeanInfo[] getAdditionalBeanInfo () {
         try {
             return new BeanInfo[] { Introspector.getBeanInfo (UniFileLoader.class) };
@@ -42,6 +42,7 @@ public class ImageDataLoaderBeanInfo extends SimpleBeanInfo {
         }
     }
 
+    @Override
     public Image getIcon(final int type) {
         if ((type == java.beans.BeanInfo.ICON_COLOR_16x16) ||
                 (type == java.beans.BeanInfo.ICON_MONO_16x16)) {

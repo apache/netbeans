@@ -3,7 +3,7 @@ Code completion result for source line:
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 CLASS      prototype                       [PUBLIC]   JS Platform
-METHOD     preventExtensions(obj: Object)  [PUBLIC,   JS Platform
-METHOD     propertyIsEnumerable(prop: Str  [PUBLIC]   JS Platform
+METHOD     preventExtensions(o: Object):   [PUBLIC,   JS Platform
+METHOD     propertyIsEnumerable(v: Number  [PUBLIC]   JS Platform
 FIELD      prop1: String                   [PUBLIC]   definition.js
 FIELD      prop2: String                   [PUBLIC]   definition.js

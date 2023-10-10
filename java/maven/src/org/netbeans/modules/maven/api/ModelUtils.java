@@ -247,7 +247,6 @@ public final class ModelUtils {
      *
      * @param mdl
      * @param url of the repository
-     * @param add true == add to model, will not add if the repo is in project but not in model (eg. central repo)
      * @return null if repository with given url exists, otherwise a returned newly created item.
      */
     public static Repository addModelRepository(MavenProject project, POMModel mdl, String url) {
@@ -306,13 +305,13 @@ public final class ModelUtils {
     }
     
     /**
-     * Sets the Java source level of a project.
-     * Use {@link PluginPropertyUtils#getPluginProperty(Project,String,String,String,String)} first
+     * Sets the Java source and target level of a project (will set release if previously set).
+     * Use {@link PluginPropertyUtils#getPluginProperty(org.netbeans.api.project.Project,String,String,String,String,String)} first
      * ({@link Constants#GROUP_APACHE_PLUGINS}, {@link Constants#PLUGIN_COMPILER}, {@link Constants#SOURCE_PARAM}, {@code "compile"})
      * to make sure that the current level is actually not what you want.
      * 
-     * Please Note: THis method will not take existing configuration into account, especially the use of property (maven.compiler.source, maven.compiler.target)
-     * instead of plugin configuration is ignored.
+     * Please Note: This method will not take existing properties into account (maven.compiler.source, maven.compiler.target or maven.compiler.release),
+     * it is only updating the plugin configuration itself.
      * @param mdl a POM model
      * @param sourceLevel the desired source level
      * @since 2.19
@@ -340,8 +339,15 @@ public final class ModelUtils {
             conf = mdl.getFactory().createConfiguration();
             plugin.setConfiguration(conf);
         }
-        conf.setSimpleParameter(Constants.SOURCE_PARAM, sourceLevel);
-        conf.setSimpleParameter(Constants.TARGET_PARAM, sourceLevel);
+        if (conf.getSimpleParameter(Constants.RELEASE_PARAM) != null) {
+            conf.setSimpleParameter(Constants.RELEASE_PARAM, sourceLevel);
+            conf.setSimpleParameter(Constants.SOURCE_PARAM, null);
+            conf.setSimpleParameter(Constants.TARGET_PARAM, null);
+        } else {
+            conf.setSimpleParameter(Constants.SOURCE_PARAM, sourceLevel);
+            conf.setSimpleParameter(Constants.TARGET_PARAM, sourceLevel);
+        }
+        
     }
 
     /**

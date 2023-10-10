@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -77,14 +76,14 @@ public class JsFindLogicalRangesTest extends JsTestBase {
 
                 JsKeyStrokeHandler handler = new JsKeyStrokeHandler();
                 List<OffsetRange> ranges = handler.findLogicalRanges(info, caretOffset);
-                List<OffsetRange> reverse = new ArrayList(ranges);
+                List<OffsetRange> reverse = new ArrayList<>(ranges);
                 Collections.reverse(reverse);
                 int offset = 0;
                 int rangesIndex = 0;
                 OffsetRange currentRange = ranges.get(ranges.size() - rangesIndex - 1);
                 StringBuilder annotatedSource = new StringBuilder();
                 String text = info.getSnapshot().getText().toString();
-                HashMap<Integer, String> annotations = new HashMap();
+                HashMap<Integer, String> annotations = new HashMap<>();
                 for (OffsetRange range : reverse) {
                     rangesIndex++;
                     String annotation = annotations.get(range.getStart());

@@ -5,7 +5,6 @@ class Test {
     public function getName() {
         
     }
-
 }
 
 ?>

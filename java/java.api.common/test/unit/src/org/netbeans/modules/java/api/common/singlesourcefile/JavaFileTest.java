@@ -24,6 +24,7 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.logging.Logger;
 import static junit.framework.TestCase.assertEquals;
+import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -55,7 +56,7 @@ public class JavaFileTest extends NbTestCase {
         FileObject javaFO = FileUtil.toFileObject(f1);
         assertNotNull("FileObject found: " + f1, javaFO);
         SingleJavaSourceRunActionProvider runActionProvider = new SingleJavaSourceRunActionProvider();
-        LaunchProcess process = runActionProvider.invokeActionHelper(null, "run.single", javaFO);
+        LaunchProcess process = runActionProvider.invokeActionHelper(null, "run.single", javaFO, ExplicitProcessParameters.empty());
         BufferedReader reader
                 = new BufferedReader(new InputStreamReader(process.call().getInputStream()));
         StringBuilder builder = new StringBuilder();

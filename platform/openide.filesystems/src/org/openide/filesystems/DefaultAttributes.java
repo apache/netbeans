@@ -67,7 +67,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * (it can then serve to filter a plain list implementation).
  *
  *Description of format of special file ilustrates best DTD file that is showed in next lines:
- *<!ELEMENT attributes (fileobject)*>
+ * <pre>{@code 
+ * <!ELEMENT attributes (fileobject)*>
  * <!ATTLIST attributes version CDATA #REQUIRED>
  * <!ELEMENT fileobject (attr)*>
  * <!ATTLIST fileobject name CDATA #REQUIRED>
@@ -85,7 +86,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * <!ATTLIST attr methodvalue CDATA #IMPLIED>
  * <!ATTLIST attr serialvalue CDATA #IMPLIED>
  * <!ATTLIST attr urlvalue CDATA #IMPLIED>
- *
+ * }
+ * </pre>
  * @author Jaroslav Tulach
  */
 @SuppressWarnings("unchecked")
@@ -1036,7 +1038,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          */
         public void writeToXML(PrintWriter pw) /*throws IOException */ {
             // list of names
-            Iterator<String> it = new TreeSet(keySet()).iterator();
+            Iterator<String> it = new TreeSet<>(keySet()).iterator();
             XMLMapAttr.writeHeading(pw);
 
             while (it.hasNext()) {

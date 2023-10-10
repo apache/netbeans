@@ -363,7 +363,7 @@ public abstract class TeamRepositories implements PropertyChangeListener {
             for (TeamProject[] projectArray : projectArrays) {
                 for (TeamProject p : projectArray) {
                     String name = p.getName();
-                    if (!union.keySet().contains(name)) {
+                    if (!union.containsKey(name)) {
                         union.put(name, p);
                     }
                 }

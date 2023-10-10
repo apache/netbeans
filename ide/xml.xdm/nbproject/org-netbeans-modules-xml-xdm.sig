@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.49.0
+#Version 1.55.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -689,7 +689,7 @@ meth public void setName(java.lang.String)
 meth public void setPrefix(java.lang.String)
 meth public void setValue(java.lang.String)
 supr org.netbeans.modules.xml.xdm.nodes.NodeImpl
-hfds AMPERSAND_PATTERN,APOSTROPHE_PATTERN,LESS_THAN_PATTERN,QUOTE_PATTERN,name,value
+hfds name,value
 
 CLSS public org.netbeans.modules.xml.xdm.nodes.CData
 intf org.w3c.dom.CDATASection
@@ -930,7 +930,6 @@ meth public void replaceData(int,int,java.lang.String)
 meth public void setData(java.lang.String)
 meth public void setText(java.lang.String)
 supr org.netbeans.modules.xml.xdm.nodes.NodeImpl
-hfds AMPERSAND_PATTERN,GREATER_THAN_PATTERN,LESS_THAN_PATTERN
 
 CLSS public org.netbeans.modules.xml.xdm.nodes.Token
 fld public final static org.netbeans.modules.xml.xdm.nodes.Token CDATA_END
@@ -1065,6 +1064,7 @@ hfds oldtree,pathVisitor,target,xmlModel
 
 CLSS public org.netbeans.modules.xml.xdm.visitor.NamespaceRefactorVisitor
 cons public init()
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.modules.xml.xdm.XDMModel)
 innr public static NamespaceCheck
 meth public static boolean isDefaultPrefix(java.lang.String)
@@ -1242,6 +1242,7 @@ CLSS public org.netbeans.modules.xml.xdm.xam.XDMListener
 cons public init(org.netbeans.modules.xml.xam.dom.AbstractDocumentModel)
 intf java.beans.PropertyChangeListener
 meth protected org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<? extends org.netbeans.modules.xml.xdm.nodes.Node>,java.util.List<? extends org.netbeans.modules.xml.xdm.nodes.Node>)
+ anno 0 java.lang.Deprecated()
 meth protected void processChange(org.netbeans.modules.xml.xam.dom.ChangeInfo)
 meth protected void processEvent(org.netbeans.modules.xml.xdm.nodes.Node,org.netbeans.modules.xml.xdm.diff.NodeInfo,boolean)
 meth protected void processRootRelatedEvent(org.netbeans.modules.xml.xdm.nodes.Node,java.util.List<org.netbeans.modules.xml.xdm.nodes.Node>,boolean)

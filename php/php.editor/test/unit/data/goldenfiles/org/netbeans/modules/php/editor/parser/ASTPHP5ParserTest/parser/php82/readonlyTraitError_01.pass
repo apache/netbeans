@@ -1,0 +1,38 @@
+<testresult testFile='readonlyTraitError_01.php'>
+    <scanner>
+        <token id='T_READONLY' start='815' end='823'>
+            <text>readonly</text>
+        </token>
+        <token id='T_TRAIT' start='824' end='829'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='830' end='843'>
+            <text>ReadonlyTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='844' end='845'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='845' end='846'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='847' end='847'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='847'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='823'/>
+            <TraitDeclaration start='824' end='846'>
+                <TraitName>
+                    <Identifier start='830' end='843' name='ReadonlyTrait'/>
+                </TraitName>
+                <Block start='844' end='846' isCurly='true'>
+                </Block>
+            </TraitDeclaration>
+        </Statements>
+    </Program>
+</testresult>

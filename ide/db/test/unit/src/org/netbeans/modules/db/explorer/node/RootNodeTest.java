@@ -99,7 +99,7 @@ public class RootNodeTest extends TestCase {
         
         RootNode rootNode = RootNode.instance();
 
-        List<? extends Node> children = new ArrayList(rootNode.getChildNodesSync());
+        List<? extends Node> children = new ArrayList<>(rootNode.getChildNodesSync());
 
         assertEquals("A1", children.get(1).getDisplayName());
         assertEquals("B2",

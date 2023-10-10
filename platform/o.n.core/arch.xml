@@ -506,7 +506,7 @@
  <answer id="exec-privateaccess">
   <p>
     <api type="export" name="NbKeymap.context" category="friend" group="java"
-     url="http://www.netbeans.org/source/browse/editor/src/org/netbeans/core/NbKeymap.html">
+     url="https://github.com/apache/netbeans/tree/master/platform/o.n.core/src/org/netbeans/core/NbKeymap.java">
         The <code>context</code> field is accessed from editor module by reflection
         from <a href="@org-netbeans-modules-editor-lib@/org/netbeans/editor/MultiKeymap.html">MultiKeymap</a>.
     </api>
@@ -599,7 +599,7 @@
             Then each exception shows the exception dialog.</li>    
        </ul>
    </api>
-   <api name="netbeans.hack.50423" category="private" group="systemproperty" type="export" url="http://www.netbeans.org/issues/show_bug.cgi?id=50423">
+   <api name="netbeans.hack.50423" category="private" group="systemproperty" type="export" url="https://bz.apache.org/netbeans/show_bug.cgi?id=50423">
         Set this property to <q>true</q> to workaround the bug #50423 which
         appears on some linuxes on JDK 1.5.
    </api>

@@ -39,7 +39,7 @@ public class TableSource {
 
     public enum Type { DATA_SOURCE, CONNECTION, SCHEMA_FILE };
 
-    private static final Map<Project, TableSource> PROJECT_TO_SOURCE = new WeakHashMap<Project, TableSource>();
+    private static final Map<Project, TableSource> PROJECT_TO_SOURCE = new WeakHashMap<>();
 
     private final Type type;
     private final String name;

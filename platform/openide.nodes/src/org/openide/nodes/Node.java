@@ -188,7 +188,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
     <span class="comment">     * @param ch children we wish to use</span>
     <span class="comment">     * @param file sample object we wish to have in lookup</span>
     <span class="comment">     * @param content the content created by the first constructor</span>
-    <span class="comment">     *<b></b>/</span>
+    <span class="comment">     *<b>/</b></span>
     <span class="keyword">private</span> <span class="function-name">MyNode</span><span class="constant">(</span><span class="variable-name">Children</span> <span class="variable-name">ch</span><span class="constant">,</span> <span class="variable-name">FileObject</span> <span class="variable-name">file</span><span class="constant">,</span> <span class="variable-name">InstanceContent</span> <span class="variable-name">content</span><span class="constant">)</span> <span class="constant">{</span>
         <span class="keyword">super</span><span class="constant">(</span><span class="variable-name">ch</span><span class="constant">,</span> <span class="keyword">new</span> <span class="function-name">AbstractLookup</span><span class="constant">(</span><span class="variable-name">content</span><span class="constant">)</span><span class="constant">)</span><span class="constant">;</span>
         <span class="comment">// adds the node to our own lookup</span>
@@ -776,7 +776,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
 
     /** Obtains a Lookup representing additional content of this Node.
      * If the lookup was provided in a constructor, it is returned here,
-     * if not, a lookup based on the content of <link>getCookie</link>
+     * if not, a lookup based on the content of {@link #getCookie(java.lang.Class)}
      * method is provided.
      *
      * @return lookup for this node
@@ -809,10 +809,10 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
      * the lightweight HTML renderer <code>org.openide.awt.HtmlRenderer</code>
      * (font color, bold, italic and strike-through supported; font
      * colors can be UIManager color keys if they are prefixed with
-     * a ! character, i.e. <samp>&lt;font color='!controlShadow'&gt;</samp>).
-     * Enclosing <samp>&lt;html&gt;</samp> tags are not needed. If returning non-null, HTML
+     * a ! character, i.e. <code>&lt;font color='!controlShadow'&gt;</code>).
+     * Enclosing <code>&lt;html&gt;</code> tags are not needed. If returning non-null, HTML
      * markup characters that should be literally rendered must be
-     * escaped (<samp>&gt;</samp> becomes <samp>&amp;gt;</samp> and so forth).
+     * escaped (<code>&gt;</code> becomes <code>&amp;gt;</code> and so forth).
      * <p><strong>This method should return either an HTML display name
      * or null; it should not return the non-HTML display name.</strong>
      * <p>
@@ -1133,7 +1133,8 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
     
     /** Fires that some indexes has been removed.
      *
-     * @param indices removed indicies, 
+     * @param added
+     * @param idxs removed indicies
      */
     final void fireSubNodesChangeIdx(boolean added, int[] idxs, Children.Entry sourceEntry, List<Node> current, List<Node> previous) {
         Set<NodeListener> dormant = Collections.emptySet();
@@ -1387,8 +1388,8 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
     * <p><b>Related documentation</b>
     * 
     * <ul>
-    * <li><a href="http://blogs.sun.com/geertjan/entry/serializing_nodes">Serializing Nodes</a> 
-    * <li><a href="http://blogs.sun.com/geertjan/entry/multiple_nodes_serialization">Serializing Multiple Nodes</a> 
+    * <li><a href="https://netbeans.apache.org/blogs/geertjan/serializing_nodes.html">Serializing Nodes</a> 
+    * <li><a href="https://netbeans.apache.org/blogs/geertjan/multiple_nodes_serialization.html">Serializing Multiple Nodes</a> 
     * </ul>
     * 
     */
@@ -1489,7 +1490,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
      * <p><strong>Important:</strong> the {@link FeatureDescriptor#getName code name} you use for the
      * property is relevant not only for making properties of a node unique, but also for
      * {@link Node#firePropertyChange firing property changes}.
-     * @param T the type of bean
+     * @param <T> the type of bean
     */
     public abstract static class Property<T> extends FeatureDescriptor {
         /**
@@ -1517,7 +1518,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
         }
 
         /** Get the value type. This is the representation class of the property.
-        * Remember that e.g. {@link Boolean <code>Boolean.class</code>} means that values are <code>Boolean</code>
+        * Remember that e.g. {@link Boolean Boolean.class} means that values are <code>Boolean</code>
         * objects; to specify the primitive type, use e.g. {@link Boolean#TYPE}.
         * In the latter case, {@link #getValue} and {@link #setValue} will still operate on the wrapper object.
         * @return the type
@@ -1673,8 +1674,9 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
          * colors can be UIManager color keys if they are prefixed with
          * a ! character, i.e. &lt;font color=&amp;'controlShadow'&gt;).
          * Enclosing HTML tags are not needed.
-         * <p><strong>This method should return either an HTML display name
-         * or null; it should not return the non-HTML display name.
+         * <p>
+         * <strong>This method should return either an HTML display name
+         * or null; it should not return the non-HTML display name.</strong>
          *
          * @see org.openide.awt.HtmlRenderer
          * @since 4.30
@@ -1687,8 +1689,8 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
     }
 
     /** Description of an indexed property and operations on it.
-     * @param T type of the whole property
-     * @param E type of one element
+     * @param <T> type of the whole property
+     * @param <E> type of one element
     */
     public abstract static class IndexedProperty<T,E> extends Node.Property<T> {
         /** type of element that this property works with */
@@ -1850,3 +1852,4 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
         }
     }
 }
+

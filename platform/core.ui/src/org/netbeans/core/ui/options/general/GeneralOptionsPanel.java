@@ -212,9 +212,11 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
         org.openide.awt.Mnemonics.setLocalizedText(lProxyHost, org.openide.util.NbBundle.getMessage(GeneralOptionsPanel.class, "CTL_Proxy_Host", new Object[] {})); // NOI18N
 
         tfProxyHost.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tfProxyHostFocusGained(evt);
             }
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfProxyHostFocusLost(evt);
             }
@@ -225,9 +227,11 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
 
         tfProxyPort.setColumns(4);
         tfProxyPort.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tfProxyPortFocusGained(evt);
             }
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tfProxyPortFocusLost(evt);
             }
@@ -253,9 +257,11 @@ public class GeneralOptionsPanel extends JPanel implements ActionListener {
 
         org.openide.awt.Mnemonics.setLocalizedText(lblLearnMore, org.openide.util.NbBundle.getMessage(GeneralOptionsPanel.class, "CTL_Learn_More")); // NOI18N
         lblLearnMore.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 lblLearnMoreMouseEntered(evt);
             }
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 lblLearnMoreMousePressed(evt);
             }

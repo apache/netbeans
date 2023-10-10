@@ -160,16 +160,12 @@
                 <binary-origin>external/jing-0unknown.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/log4j-1.2.15.jar</runtime-relative-path>
-                <binary-origin>external/log4j-1.2.15.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
                 <runtime-relative-path>ext/iri.jar</runtime-relative-path>
                 <binary-origin>external/iri-0.8.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/validator.jar</runtime-relative-path>
-                <binary-origin>external/validator-20200626-patched.jar</binary-origin>
+                <binary-origin>external/validator-20200626-patched2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/isorelax.jar</runtime-relative-path>

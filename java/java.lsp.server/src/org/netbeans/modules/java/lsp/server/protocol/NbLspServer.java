@@ -43,7 +43,7 @@ public final class NbLspServer implements LspSession.ScheduledServer {
 
     @Override
     public Lookup getServerLookup() {
-        return impl.getSessionLookup();
+        return impl.getSessionOnlyLookup();
     }
 
     public TextDocumentService getTextDocumentService() {

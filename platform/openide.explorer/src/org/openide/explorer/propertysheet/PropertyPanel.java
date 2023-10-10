@@ -287,6 +287,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         PropertyPanelBridge.register(this, new BridgeAccessor(this));
     }
 
+    @Override
     public void setBackground(Color c) {
         if (inner != null) {
             inner.setBackground(c);
@@ -295,6 +296,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         super.setBackground(c);
     }
 
+    @Override
     public void setForeground(Color c) {
         if (inner != null) {
             inner.setForeground(c);
@@ -525,21 +527,25 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         }
     }
 
+    @Override
     public void doLayout() {
         layout();
     }
 
     @SuppressWarnings("deprecation")
+    @Override
     public void layout() {
         if (inner != null) {
             inner.setBounds(0, 0, getWidth(), getHeight());
         }
     }
 
+    @Override
     public Dimension getMinimumSize() {
         return getPreferredSize();
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Dimension result;
 
@@ -609,10 +615,11 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
 
     /** Overridden to catch changes in those client properties that are
      * relevant to PropertyPanel */
+    @Override
     protected void firePropertyChange(String nm, Object old, Object nue) {
         if (
             ("flat".equals(nm) || "radioButtonMax".equals(nm) || "suppressCustomEditor".equals(nm) ||
-                "useLabels".equals(nm)) && (displayer != null) && displayer instanceof PropertyDisplayer_Inline
+                "useLabels".equals(nm)) && displayer instanceof PropertyDisplayer_Inline
         ) { //NOI18N
             updateDisplayerFromClientProp(nm, nue);
         }
@@ -650,6 +657,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
 
     /** Overridden to return false in cases that the preferences specify a
      * read-only state */
+    @Override
     public boolean isFocusable() {
         return super.isFocusable() && isEnabled() && ((preferences & PREF_READ_ONLY) == 0);
     }
@@ -658,6 +666,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * nothing in a read only state, since some custom property editors (File
      * chooser) are capable of receiving focus even if they are disabled,
      * effectively making focus disappear */
+    @Override
     public void requestFocus() {
         //Do this because even if everything is disabled, JFileChooser's UI
         //*does* supply some focusable components
@@ -683,6 +692,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         }
     }
 
+    @Override
     protected void processFocusEvent(FocusEvent fe) {
         super.processFocusEvent(fe);
 
@@ -704,6 +714,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     }
 
     /** Overridden to install the inner component that will display the property*/
+    @Override
     public void addNotify() {
         attachToModel();
 
@@ -720,6 +731,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
 
     /** Overridden to dispose the component that actually displays the property
      * and any state information associated with it */
+    @Override
     public void removeNotify() {
         super.removeNotify();
         detachFromModel();
@@ -794,8 +806,8 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * In such a case, the PropertyModel instance thus obtained <u>will not
      * fire changes</u> due to changes made by calling <code>setValue</code>
      * on the <code>Node.Property</code>.  For details on why this is the case,
-     * see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=37779">issue
-     * 37779</code>.</strong>
+     * see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=37779">issue
+     * 37779</a>.</strong>
      *
      * @return Either the PropertyModel set in the constructor or via <code>setModel</code>,
      * or a generated instance of PropertyModel which wraps the <code>Node.Property</code>
@@ -936,8 +948,8 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     }
 
     /** Getter for the state of the property editor. The editor can be in
-     * not valid states just if it implements the <link>ExPropertyEditor</link>
-     * and changes state by the <code>setState</code> method of the <link>PropertyEnv</link>
+     * not valid states just if it implements the {@link ExPropertyEditor}
+     * and changes state by the <code>setState</code> method of the {@link PropertyEnv}
      * environment.
      * <P>
      * @return <code>PropertyEnv.STATE_VALID</code> if the editor is not the <code>ExPropertyEditor</code>
@@ -945,7 +957,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * @since 2.20
      */
     public final Object getState() {
-        if ((displayer != null) && displayer instanceof PropertyDisplayer_Editable) {
+        if (displayer instanceof PropertyDisplayer_Editable) {
             return ((PropertyDisplayer_Editable) displayer).getPropertyEnv().getState();
         } else {
             PropertyEditor ed = propertyEditor();
@@ -963,7 +975,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         return PropertyEnv.STATE_VALID;
     }
 
-    /** If the editor is <link>ExPropertyEditor</link> it tries to change the
+    /** If the editor is {@link ExPropertyEditor} it tries to change the
      * <code>getState</code> property to <code>PropertyEnv.STATE_VALID</code>
      * state. This may be vetoed, in such case a warning is presented to the user
      * and the <code>getState</code> will still return the original value
@@ -974,7 +986,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * is used.
      */
     public void updateValue() {
-        if ((displayer != null) && displayer instanceof PropertyDisplayer_Editable) {
+        if (displayer instanceof PropertyDisplayer_Editable) {
             PropertyEnv env = ((PropertyDisplayer_Editable) displayer).getPropertyEnv();
 
             if (PropertyEnv.STATE_NEEDS_VALIDATION.equals(env.getState())) {
@@ -1040,6 +1052,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * all panel components gets disabled when enabled parameter is set false
      * @param enabled flag defining the action.
      */
+    @Override
     public void setEnabled(boolean enabled) {
         // bugfix# 10171, explicitly disable components inside the custom editor
         super.setEnabled(enabled);
@@ -1103,6 +1116,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
 
     /** Overridden to provide information from the embedded property renderer
      * if not in custom editor mode */
+    @Override
     public String toString() {
         if ((preferences & PREF_CUSTOM_EDITOR) != 0) {
             //custom editor mode, not much useful to say here
@@ -1139,8 +1153,9 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     /*
      * Overridden to fill in the background color, since Synth/GTKLookAndFeel ignores
      * setOpaque(true).
-     * @see http://www.netbeans.org/issues/show_bug.cgi?id=43024
+     * @see https://bz.apache.org/netbeans/show_bug.cgi?id=43024
      */
+    @Override
     public void paint(Graphics g) {
         if (isGtk) {
             //Presumably we can get this fixed for JDK 1.5.1
@@ -1164,6 +1179,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     }
 
     ////////////////// Accessibility support ///////////////////////////////////
+    @Override
     public javax.accessibility.AccessibleContext getAccessibleContext() {
         if (accessibleContext == null) {
             accessibleContext = new AccessiblePropertyPanel();
@@ -1194,6 +1210,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
             return pd.getCustomEditorAction();
         }
 
+        @Override
         public boolean isEnabled() {
             Action wrapped = getWrapped();
 
@@ -1219,10 +1236,12 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         AccessiblePropertyPanel() {
         }
 
+        @Override
         public javax.accessibility.AccessibleRole getAccessibleRole() {
             return javax.accessibility.AccessibleRole.PANEL;
         }
 
+        @Override
         public String getAccessibleName() {
             String name = super.getAccessibleName();
 
@@ -1234,6 +1253,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
             return name;
         }
 
+        @Override
         public String getAccessibleDescription() {
             String description = super.getAccessibleDescription();
 
@@ -1277,7 +1297,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         public void actionPerformed(ActionEvent e) {
             if( inner == e.getSource() && "enterPressed".equals(e.getActionCommand()) ) { //NOI18N
                 Object beanBridge = getClientProperty("beanBridgeIdentifier"); //NOI18N
-                if( null != beanBridge && beanBridge instanceof CellEditor ) {
+                if( beanBridge instanceof CellEditor ) {
                     boolean wasCommitted = false;
                     if (e instanceof CellEditorActionEvent) {
                         // Prevent from a second commit on stop of cell editing:

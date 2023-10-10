@@ -83,6 +83,19 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="sourceset-lang-output">
+            <api name="gradle.java.api"/>
+            <summary>Support for per-language output directories</summary>
+            <version major="1" minor="19"/>
+            <date day="28" month="6" year="2022"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible" addition="yes" deprecation="no"/>
+            <description>
+                Each language plugin typically generates output to a specific directory. The mapping
+                allows more precise output-to-source mapping.
+            </description>
+            <class package="org.netbeans.modules.gradle.java.api" name="GradleJavaSourceSet"/>
+        </change>
         <change id="nested-class-locations">
             <api name="gradle.java.api"/>
             <summary>Location can represent nested classes</summary>

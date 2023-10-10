@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+<#if proxyHost?? && proxyHost != "">
+    <proxies>
+        <!-- Proxy defined by NetBeans IDE -->
+        <proxy>
+            <id>netbeans-default-proxy</id>
+            <active>true</active>
+            <protocol>http</protocol>
+            <host>${proxyHost}</host>
+            <port>${proxyPort}</port>
+            <!-- Proxy exclusion list: separate by pipe-symbol, e.g. 127.0.0.8|localhost -->
+            <nonProxyHosts>localhost|127.0.0.0/8|localhost.localdomain|127.0.0.1|[::1]</nonProxyHosts> 
+        </proxy>
+    </proxies>
+</#if>
+</settings>

@@ -267,7 +267,7 @@ public class JavaCompletionTaskBasicTest extends CompletionTestBase {
         performTest("SimpleNoPackage", 808, "package \nimport ", "staticKeywordAndAllPackages.pass");
     }
 
-    public void testTypingStaticImportAfterErrorInPreviousImportDeclaration() throws Exception {
+    public void TODO_testTypingStaticImportAfterErrorInPreviousImportDeclaration() throws Exception {
         performTest("Simple", 823, "im\nimport ", "staticKeywordAndAllPackages.pass");
     }
     

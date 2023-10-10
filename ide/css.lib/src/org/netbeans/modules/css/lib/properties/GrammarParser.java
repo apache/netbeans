@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.css.lib.properties;
 
-import java.util.StringTokenizer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.modules.css.lib.api.properties.FixedTextGrammarElement;
 import org.netbeans.modules.css.lib.api.properties.GrammarElement;
@@ -59,12 +61,15 @@ public class GrammarParser {
     }
     
     private GroupGrammarElement parse() {
-        AtomicInteger group_index = new AtomicInteger(0);
+        // Tracks index of all groups inside this parse invocation
+        AtomicInteger groupIndex = new AtomicInteger(0);
+        // Tracks index of property sub definitions inside their parent
+        AtomicInteger inPropertyIndex = new AtomicInteger(0);
         int openedParenthesis = 0;
-        GroupGrammarElement root = new GroupGrammarElement(null, group_index.getAndIncrement(), propertyName);
+        GroupGrammarElement root = new GroupGrammarElement(null, groupIndex.getAndIncrement(), propertyName);
         ParserInput input = new ParserInput(expression);
 
-        parseElements(input, root, false, group_index, openedParenthesis);
+        parseElements(input, root, false, groupIndex, inPropertyIndex, openedParenthesis, new HashMap<>());
 
         if (openedParenthesis != 0) {
             throw new IllegalStateException(String.format("Property '%s' parsing error - bracket pairs doesn't match: ", propertyName, openedParenthesis));
@@ -73,8 +78,12 @@ public class GrammarParser {
     }
 
     @SuppressWarnings("fallthrough")
-    private void parseElements(ParserInput input, GroupGrammarElement parent, boolean ignoreInherits,
-            AtomicInteger group_index, int openedParenthesis) {
+    private void parseElements(
+            ParserInput input, GroupGrammarElement parent, boolean ignoreInherits,
+            AtomicInteger groupIndex, AtomicInteger inPropertyIndex,
+            int openedParenthesis, Map<PropertyGrammarElementRef,
+            GroupGrammarElement> knownChilds
+    ) {
         GrammarElement last = null;
         for (;;) {
             char c = input.read();
@@ -99,8 +108,8 @@ public class GrammarParser {
                 case '[':
                     openedParenthesis++;
                     //group start
-                    last = new GroupGrammarElement(parent, group_index.getAndIncrement());
-                    parseElements(input, (GroupGrammarElement) last, false, group_index, openedParenthesis);
+                    last = new GroupGrammarElement(parent, groupIndex.getAndIncrement());
+                    parseElements(input, (GroupGrammarElement) last, false, groupIndex, inPropertyIndex, openedParenthesis, knownChilds);
                     parent.addElement(last);
                     break;
 
@@ -133,24 +142,33 @@ public class GrammarParser {
                         }
                     }
 
-                    //resolve reference
                     String referredElementName = buf.toString();
-                    PropertyDefinition property = Properties.getPropertyDefinition(referredElementName, true);
-                    if (property == null) {
-                        throw new IllegalStateException(
-                                String.format("Property '%s' parsing error: No referred element '%s' found. "
-                                + "Read input: %s", propertyName, referredElementName, input.readText())); //NOI18N
+                    PropertyGrammarElementRef currRef = new PropertyGrammarElementRef(parent, inPropertyIndex.incrementAndGet(), referredElementName);
+                    if(knownChilds.containsKey(currRef)) {
+                        last = knownChilds.get(currRef);
+                        parent.addElement(last);
+                    } else {
+                        PropertyDefinition property = Properties.getPropertyDefinition(referredElementName, true);
+                        if (property == null) {
+                            throw new IllegalStateException(
+                                    String.format("Property '%s' parsing error: No referred element '%s' found. "
+                                    + "Read input: %s", propertyName, referredElementName, input.readText())); //NOI18N
+                        }
+
+                        ParserInput pinput = new ParserInput(property.getGrammar());
+                        String propName = property.getName();
+                        last = new GroupGrammarElement(parent, groupIndex.getAndIncrement(), propName);
+
+                        knownChilds.put(currRef, (GroupGrammarElement) last);
+
+                        //ignore inherit tokens in the subtree
+                        // Parsing a property sub definition uses its own inPropertyIndex
+                        AtomicInteger inPropertyIndexChild = new AtomicInteger(0);
+                        parseElements(pinput, (GroupGrammarElement) last, true, groupIndex, inPropertyIndexChild, openedParenthesis, knownChilds);
+
+                        parent.addElement(last);
                     }
 
-                    ParserInput pinput = new ParserInput(property.getGrammar());
-                    String propName = property.getName();
-                    last = new GroupGrammarElement(parent, group_index.getAndIncrement(), propName);
-
-
-                    //ignore inherit tokens in the subtree
-                    parseElements(pinput, (GroupGrammarElement) last, true, group_index, openedParenthesis);
-
-                    parent.addElement(last);
                     break;
 
                 case '!':
@@ -370,6 +388,58 @@ public class GrammarParser {
 
         public CharSequence readText() {
             return text.subSequence(0, pos);
+        }
+    }
+
+    private static class PropertyGrammarElementRef {
+        private final GrammarElement parent;
+        private final int indexInsideParent;
+        private final String propertyName;
+
+        public PropertyGrammarElementRef(GrammarElement parent, int indexInsideParent, String propertyName) {
+            this.parent = parent;
+            this.indexInsideParent = indexInsideParent;
+            this.propertyName = propertyName;
+        }
+
+        // Find the first named parent item (property definition) and return
+        // its name. If no names parent is found, null is returned
+        private String getParentName() {
+            for(GrammarElement p = this.parent; p != null; p = p.parent()) {
+               if(p.getName() != null) {
+                   return p.getName();
+               }
+            }
+            return null;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 29 * hash + this.indexInsideParent;
+            hash = 29 * hash + Objects.hashCode(this.propertyName);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final PropertyGrammarElementRef other = (PropertyGrammarElementRef) obj;
+            if (this.indexInsideParent != other.indexInsideParent) {
+                return false;
+            }
+            if (!Objects.equals(this.propertyName, other.propertyName)) {
+                return false;
+            }
+            return Objects.equals(getParentName(), other.getParentName());
         }
     }
 }

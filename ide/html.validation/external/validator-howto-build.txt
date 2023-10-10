@@ -5,11 +5,14 @@
 git clone https://github.com/validator/validator.git
 cd validator
 git checkout 787a7a7e972719edf7a79009d768f5111e1d93bc
-git apply ../validator-20200626.patch
-python3 checker.py all
-# ignore the error messages
+git apply $NETBEANS_SOURCE/ide/html.validation/external/validator-20200626-0001-nb-patch1.patch
+git apply $NETBEANS_SOURCE/ide/html.validation/external/validator-20200626-0002-Remove-log4j-usage.patch
+export JAVA_HOME=<PATH_TO_JDK_8>
+git submodule init
+git submodule update --depth 1
+python3 checker.py dldeps build
 cd jars
-mv validator.jar validator-20200626-patched.jar
-sha1sum validator-20200626-patched.jar | awk '{print "mv "$2" "toupper($1)"-"$2}' | sh
+mv validator.jar validator-20200626-patched2.jar
+sha1sum validator-20200626-patched2.jar | awk '{print "mv "$2" "toupper($1)"-"$2}' | sh
 # At this point the directory cotains a build of the validator in the format
 # needed for the upload to the netbeans.osuosl.org

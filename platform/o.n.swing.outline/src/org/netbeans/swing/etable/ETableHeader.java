@@ -40,7 +40,7 @@ import javax.swing.table.TableColumnModel;
 
 /**
  * The ETable header renderer.
- * Delegating to the original default renderer should assure L&F compliance.
+ * Delegating to the original default renderer should assure L&amp;F compliance.
  * The rendering logic moved from {@link ETableColumn}.ETableHeaderRenderer.
  * 
  * @author Martin Entlicher

@@ -3,11 +3,8 @@
         <token id='T_USE' start='6' end='9'>
             <text>use</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='10' end='11'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='11' end='12'>
-            <text>A</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='10' end='12'>
+            <text>\A</text>
         </token>
         <token id='T_SEMICOLON' start='12' end='13'>
             <text>;</text>

@@ -28,7 +28,9 @@ final class AccessorImpl extends SPIUIAccessor {
 
     @Override
     public void reset(FiltersDescription desc) {
-        desc.reset();
+        if (desc != null) {
+            desc.reset();
+        }
     }
     
 }

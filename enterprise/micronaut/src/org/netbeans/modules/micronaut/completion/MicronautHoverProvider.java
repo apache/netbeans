@@ -31,12 +31,12 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataPrope
  */
 public class MicronautHoverProvider implements HoverProvider {
 
-    @MimeRegistration(mimeType = "text/x-yaml", service = HoverProvider.class)
+    @MimeRegistration(mimeType = MicronautConfigUtilities.YAML_MIME, service = HoverProvider.class)
     public static MicronautHoverProvider createYamlProvider() {
         return new MicronautHoverProvider();
     }
 
-    @MimeRegistration(mimeType = "text/x-properties", service = HoverProvider.class)
+    @MimeRegistration(mimeType = MicronautConfigUtilities.PROPERTIES_MIME, service = HoverProvider.class)
     public static MicronautHoverProvider createPropertiesProvider() {
         return new MicronautHoverProvider();
     }

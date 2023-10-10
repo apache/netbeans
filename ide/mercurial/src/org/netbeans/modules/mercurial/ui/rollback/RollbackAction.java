@@ -39,6 +39,7 @@ import org.openide.util.RequestProcessor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.nodes.Node;
+import org.openide.util.Utilities;
 
 /**
  * Pull action for mercurial: 
@@ -122,7 +123,7 @@ public class RollbackAction extends ContextAction {
                                 Mercurial.getInstance().historyChanged(root);
                                 Mercurial.getInstance().changesetChanged(root);
                             } else {
-                                JOptionPane.showMessageDialog(null,
+                                JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                                         NbBundle.getMessage(RollbackAction.class,"MSG_ROLLBACK_MESSAGE_NOHISTORY") ,  // NOI18N
                                         NbBundle.getMessage(RollbackAction.class,"MSG_ROLLBACK_MESSAGE"), // NOI18N
                                         JOptionPane.INFORMATION_MESSAGE,null);

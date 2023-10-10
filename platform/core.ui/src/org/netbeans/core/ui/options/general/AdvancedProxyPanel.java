@@ -341,6 +341,7 @@ public class AdvancedProxyPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(lblBasicAuthNote, org.openide.util.NbBundle.getMessage(AdvancedProxyPanel.class, "AdvancedProxyPanel.lblBasicAuthNote.text")); // NOI18N
         lblBasicAuthNote.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblBasicAuthNote.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblBasicAuthNoteMouseClicked(evt);
             }

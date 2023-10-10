@@ -87,7 +87,7 @@ public class FixTestDependencies extends Task {
             if (xsdIndex != -1 || testFix) {
                 // increase schema version
                 String part1 = xml.substring(0,xsdIndex + oldXsd.length() - 1);
-                String part2 = xml.substring(xsdIndex + oldXsd.length(), xml.length());
+                String part2 = xml.substring(xsdIndex + oldXsd.length());
                 xml = part1 + "3" + part2;
                 
                 ModuleType projectType = ModuleType.NB_ORG;
@@ -200,7 +200,7 @@ public class FixTestDependencies extends Task {
                 if (xml.charAt(moduleDepEnd) == '\r') {
                     moduleDepEnd++;
                 }
-                resultXml.append(xml.substring(moduleDepEnd + 1, xml.length()));
+                resultXml.append(xml.substring(moduleDepEnd + 1));
                 if (!testFix) {
                     try (PrintStream ps = new PrintStream(projectXmlFile)) {
                         ps.print(fixOpenideUtil(
@@ -273,7 +273,7 @@ public class FixTestDependencies extends Task {
                             compileCNB.add(codeBaseName);
                             found = true;
                         } else  {
-                            String name = token.substring(lastSlash + 1, token.length());
+                            String name = token.substring(lastSlash + 1);
                             // check if the file is wrapped library
                             String wrapCNB = null;
                             for (ModuleListParser.Entry entry : entries) {

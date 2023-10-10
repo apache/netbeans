@@ -64,15 +64,21 @@ public class EntityImpl extends PersistentObject implements Entity, JavaContextL
         class2 = typeElement.getQualifiedName().toString();
         AnnotationModelHelper helper = getHelper();
         Map<String, ? extends AnnotationMirror> annByType = helper.getAnnotationsByType(typeElement.getAnnotationMirrors());
-        AnnotationMirror entityAnn = annByType.get("javax.persistence.Entity"); // NOI18N
+        AnnotationMirror entityAnn = annByType.get("jakarta.persistence.Entity"); // NOI18N
         if (entityAnn == null) {
-            return false;
+            entityAnn = annByType.get("javax.persistence.Entity"); // NOI18N
+            if(entityAnn == null) {
+                return false;
+            }
         }
         AnnotationParser parser = AnnotationParser.create(helper);
         parser.expectString("name", AnnotationParser.defaultValue(typeElement.getSimpleName().toString())); // NOI18N
         ParseResult parseResult = parser.parse(entityAnn); // NOI18N
         name = parseResult.get("name", String.class); // NOI18N
-        AnnotationMirror entityAcc = annByType.get("javax.persistence.Access"); // NOI18N
+        AnnotationMirror entityAcc = annByType.get("jakarta.persistence.Access"); // NOI18N
+        if(entityAcc == null) {
+            entityAcc = annByType.get("javax.persistence.Access"); // NOI18N
+        }
         if (entityAcc != null) {
             parser = AnnotationParser.create(helper);
             parser.expect("value", new ValueProvider() {
@@ -93,14 +99,19 @@ public class EntityImpl extends PersistentObject implements Entity, JavaContextL
         // when a client looking the entity mapped to a specific table iterates
         // over all entities calling getTable().
         // XXX locale?
-        AnnotationMirror tableAnn = annByType.get("javax.persistence.Table");//NOI18N
+        AnnotationMirror tableAnn = annByType.get("jakarta.persistence.Table"); //NOI18N
+        if(tableAnn == null) {
+            tableAnn = annByType.get("javax.persistence.Table"); //NOI18N
+        }
         if(tableAnn == null) {
             TypeMirror superclass = typeElement.getSuperclass();
             while(superclass!=null && superclass.getKind() == TypeKind.DECLARED && tableAnn == null) {
                 Element el = ((DeclaredType)superclass).asElement();
                 Map<String, ? extends AnnotationMirror> annotationsByType = helper.getAnnotationsByType( el.getAnnotationMirrors());
-                if(annotationsByType.containsKey("javax.persistence.Entity") || annotationsByType.containsKey("javax.persistence.MappedSuperclass")) {//NOI18N
-                    tableAnn = annotationsByType.get("javax.persistence.Table");//NOI18N
+                if(annotationsByType.containsKey("jakarta.persistence.Entity") || annotationsByType.containsKey("jakarta.persistence.MappedSuperclass")) {//NOI18N
+                    tableAnn = annotationsByType.get("jakarta.persistence.Table"); //NOI18N
+                } else if(annotationsByType.containsKey("javax.persistence.Entity") || annotationsByType.containsKey("javax.persistence.MappedSuperclass")) {//NOI18N
+                    tableAnn = annotationsByType.get("javax.persistence.Table"); //NOI18N
                 } else {
                     break;
                 }
@@ -113,10 +124,16 @@ public class EntityImpl extends PersistentObject implements Entity, JavaContextL
         }
         table = new TableImpl(helper, tableAnn, name.toUpperCase()); // NOI18N
         //fill named queries
-        AnnotationMirror nqsAnn = annByType.get("javax.persistence.NamedQueries");// NOI18N
+        AnnotationMirror nqsAnn = annByType.get("jakarta.persistence.NamedQueries"); // NOI18N
+        if(nqsAnn == null) {
+            nqsAnn = annByType.get("javax.persistence.NamedQueries"); // NOI18N
+        }
         ArrayList<AnnotationMirror> nqAnn = null;
         if (nqsAnn == null) {
-            nqsAnn = annByType.get("javax.persistence.NamedQuery");// NOI18N
+            nqsAnn = annByType.get("jakarta.persistence.NamedQuery"); // NOI18N
+            if(nqsAnn == null) {
+                nqsAnn = annByType.get("javax.persistence.NamedQuery"); // NOI18N
+            }
             if (nqsAnn != null) {
                 nqAnn = new ArrayList<AnnotationMirror>();
                 nqAnn.add(nqsAnn);
@@ -129,7 +146,9 @@ public class EntityImpl extends PersistentObject implements Entity, JavaContextL
                 for (Object val : lst) {
                     if (val instanceof AnnotationMirror) {
                         AnnotationMirror am = (AnnotationMirror) val;
-                        if ("javax.persistence.NamedQuery".equals(am.getAnnotationType().toString())) {//NOI18N
+                        if ("jakarta.persistence.NamedQuery".equals(am.getAnnotationType().toString())) {//NOI18N
+                            nqAnn.add(am);
+                        } else if ("javax.persistence.NamedQuery".equals(am.getAnnotationType().toString())) {//NOI18N
                             nqAnn.add(am);
                         }
                     }
@@ -184,9 +203,14 @@ public class EntityImpl extends PersistentObject implements Entity, JavaContextL
     }
 
     public String getAccess() {
-        if (accessType != null && accessType.length()>0) {
+        if (accessType != null && accessType.length() > 0) {
             //use access type specified by annotation by default, regardless of later fields/properties annitatons
-            return accessType.equals("javax.persistence.AccessType.PROPERTY") ? PROPERTY_ACCESS : FIELD_ACCESS;
+            if (accessType.equals("jakarta.persistence.AccessType.PROPERTY")
+                    || accessType.equals("javax.persistence.AccessType.PROPERTY")) {
+                return PROPERTY_ACCESS;
+            } else {
+                return FIELD_ACCESS;
+            }
         } else {
             return getAttributes().hasFieldAccess() ? FIELD_ACCESS : PROPERTY_ACCESS;
         }

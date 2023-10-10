@@ -2,5 +2,7 @@ Code completion result for source line:
 p223602_2.b|ig();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     big(): String                   [PUBLIC,   JS Platform
-METHOD     bold(): String                  [PUBLIC,   JS Platform
+METHOD     big(): String                   [PUBLIC]   JS Platform
+METHOD     bind(thisArg: Object, argArray  [PUBLIC]   JS Platform
+METHOD     blink(): String                 [PUBLIC]   JS Platform
+METHOD     bold(): String                  [PUBLIC]   JS Platform

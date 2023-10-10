@@ -27,7 +27,7 @@ import java.util.Set;
  * <p>
  * The mapping can cause the action to be <b>disabled</b>: if {@link #getReloadRule()} == {@link ReloadRule#NEVER} and
  * {@link #getArgs()} == {@code null}. Such mapping had no effect in previous versions. This can be checked by a
- * convenience method {@link RunUtils#isActionDisabled}.
+ * convenience method {@link ActionMapping#isDisabled}.
  * @since 1.0
  * @since 2.14 concept of empty/disabled action
  * @author Laszlo Kishalmi

@@ -5,5 +5,4 @@ class MyClass {
     function foo(): MyClass {
         
     }
-
 }

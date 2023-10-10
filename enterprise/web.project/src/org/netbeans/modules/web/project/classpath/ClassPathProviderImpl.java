@@ -101,7 +101,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, PropertyC
         return ProjectManager.mutex().readAccess(new Mutex.Action<FileObject>() {
             public FileObject run() {
                 synchronized (ClassPathProviderImpl.this) {
-                    FileObject fo = (FileObject) ClassPathProviderImpl.this.dirCache.get (propname);
+                    FileObject fo = ClassPathProviderImpl.this.dirCache.get(propname);
                     if (fo == null ||  !fo.isValid()) {
                         String prop = evaluator.getProperty(propname);
                         if (prop != null) {

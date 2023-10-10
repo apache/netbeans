@@ -60,17 +60,8 @@
         <token id='T_QUESTION_MARK' start='117' end='118'>
             <text>?</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='118' end='119'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='119' end='122'>
-            <text>Foo</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='122' end='123'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='123' end='126'>
-            <text>Bar</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='118' end='126'>
+            <text>\Foo\Bar</text>
         </token>
         <token id='T_CURLY_OPEN' start='127' end='128'>
             <text>{</text>
@@ -162,11 +153,8 @@
         <token id='T_QUESTION_MARK' start='285' end='286'>
             <text>?</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='286' end='287'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='287' end='290'>
-            <text>Foo</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='286' end='290'>
+            <text>\Foo</text>
         </token>
         <token id='T_VARIABLE' start='291' end='295'>
             <text>$foo</text>

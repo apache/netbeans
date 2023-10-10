@@ -137,19 +137,19 @@ public class LatteVariableCompletionProvider implements CompletionProvider {
         }
 
         private static boolean isProperActionMethod(MethodDeclaration node, String actionName) {
-            return CodeUtils.extractMethodName(node).toLowerCase().equalsIgnoreCase(ACTION_METHOD_PREFIX + actionName);
+            return CodeUtils.extractMethodName(node).equalsIgnoreCase(ACTION_METHOD_PREFIX + actionName);
         }
 
         private static boolean isProperRenderMethod(MethodDeclaration node, String actionName) {
-            return CodeUtils.extractMethodName(node).toLowerCase().equalsIgnoreCase(RENDER_METHOD_PREFIX + actionName);
+            return CodeUtils.extractMethodName(node).equalsIgnoreCase(RENDER_METHOD_PREFIX + actionName);
         }
 
         private static boolean isStartupMethod(MethodDeclaration node) {
-            return CodeUtils.extractMethodName(node).toLowerCase().equalsIgnoreCase(STARTUP_METHOD);
+            return CodeUtils.extractMethodName(node).equalsIgnoreCase(STARTUP_METHOD);
         }
 
         private static boolean isBeforeRenderMethod(MethodDeclaration node) {
-            return CodeUtils.extractMethodName(node).toLowerCase().equalsIgnoreCase(BEFORE_RENDER_METHOD);
+            return CodeUtils.extractMethodName(node).equalsIgnoreCase(BEFORE_RENDER_METHOD);
         }
 
         public Set<MethodDeclaration> getMethodsToScan() {

@@ -5347,7 +5347,7 @@ public class SchemaRep implements PrefixGuesser {
         String prefix;
         int pos = namespaceURI.lastIndexOf('/');
         if (pos >= 0)
-            prefix = namespaceURI.substring(pos+1, namespaceURI.length());
+            prefix = namespaceURI.substring(pos+1);
         else
             prefix = namespaceURI;
         prefix = prefix.replace('#', '_').replace('\'', '_').replace('"', '_').

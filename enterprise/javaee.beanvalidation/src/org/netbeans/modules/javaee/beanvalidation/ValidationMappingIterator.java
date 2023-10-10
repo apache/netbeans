@@ -26,6 +26,7 @@ import java.util.Set;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.common.dd.DDHelper;
+import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
 import org.netbeans.modules.javaee.beanvalidation.api.BeanValidationConfig;
 import org.netbeans.modules.javaee.beanvalidation.spi.BeanValidationConfigProvider;
 import org.netbeans.spi.project.ui.templates.support.Templates;
@@ -38,15 +39,17 @@ import org.openide.loaders.TemplateWizard;
  * @author alexeybutenko
  */
 public class ValidationMappingIterator extends AbstractIterator{
-    private static final String defaultName = "constraint";   //NOI18N
+    private static final String DEFAULT_NAME = "constraint";   //NOI18N
 
+    @Override
     public Set<DataObject> instantiate(TemplateWizard wizard) throws IOException {
         String targetName = Templates.getTargetName(wizard);
         FileObject targetDir = Templates.getTargetFolder(wizard);
+        Project project = Templates.getProject(wizard);
+        Profile profile = JavaEEProjectSettings.getProfile(project);
 
-        FileObject fo = DDHelper.createConstraintXml(Profile.JAVA_EE_6_FULL, targetDir, targetName);
+        FileObject fo = DDHelper.createConstraintXml(profile, targetDir, targetName);
         if (fo != null) {
-            Project project = Templates.getProject(wizard);
             registerConstraint(project, fo);
             return Collections.singleton(DataObject.find(fo));
         } else {
@@ -56,7 +59,7 @@ public class ValidationMappingIterator extends AbstractIterator{
 
     @Override
     public String getDefaultName() {
-        return defaultName;
+        return DEFAULT_NAME;
     }
 
     /**

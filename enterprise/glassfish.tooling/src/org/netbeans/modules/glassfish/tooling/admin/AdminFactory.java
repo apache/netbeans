@@ -72,7 +72,33 @@ public abstract class AdminFactory {
             case GF_3_1:
             case GF_3_1_1:
             case GF_3_1_2:
+            case GF_3_1_2_2:
+            case GF_3_1_2_3:
+            case GF_3_1_2_4:
+            case GF_3_1_2_5:
             case GF_4:
+            case GF_4_0_1:
+            case GF_4_1:
+            case GF_4_1_1:
+            case GF_4_1_2:
+            case GF_5:
+            case GF_5_0_1:
+            case GF_5_1_0:
+            case GF_6:
+            case GF_6_1_0:
+            case GF_6_2_0:
+            case GF_6_2_1:
+            case GF_6_2_2:
+            case GF_6_2_3:
+            case GF_6_2_4:
+            case GF_6_2_5:
+            case GF_7_0_0:
+            case GF_7_0_1:
+            case GF_7_0_2:
+            case GF_7_0_3:
+            case GF_7_0_4:
+            case GF_7_0_5:
+            case GF_7_0_6:
                 return AdminFactoryRest.getInstance();
             // Anything else is not unknown.
             default:

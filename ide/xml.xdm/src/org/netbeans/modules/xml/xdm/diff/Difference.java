@@ -51,7 +51,7 @@ public abstract class Difference {
     }
     
     /**
-     * @returns info on removed node.
+     * @return info on removed node.
      */
     public NodeInfo getOldNodeInfo() {
         return oldNodeInfo;

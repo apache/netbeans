@@ -168,10 +168,10 @@ public class AndroidBrowser extends HtmlBrowser.Impl implements EnhancedBrowser{
 
                 Browser b;
                 boolean emulator;
-                if (kind.equals(AndroidBrowser.Kind.ANDROID_DEVICE_DEFAULT)) {
+                if (kind == AndroidBrowser.Kind.ANDROID_DEVICE_DEFAULT) {
                     b = Browser.DEFAULT;
                     emulator = false;
-                } else if (kind.equals(AndroidBrowser.Kind.ANDROID_DEVICE_CHROME)) {
+                } else if (kind == AndroidBrowser.Kind.ANDROID_DEVICE_CHROME) {
                     b = Browser.CHROME;
                     emulator = false;
                 } else {
@@ -231,7 +231,7 @@ public class AndroidBrowser extends HtmlBrowser.Impl implements EnhancedBrowser{
             return Bundle.ERR_AdbNotFound();
         }
         try {
-            if (kind.equals(AndroidBrowser.Kind.ANDROID_EMULATOR_DEFAULT)) { //NOI18N
+            if (kind == AndroidBrowser.Kind.ANDROID_EMULATOR_DEFAULT) { //NOI18N
                 for (Device dev : AndroidPlatform.getDefault().getConnectedDevices()) {
                     if (dev.isEmulator()) {
                         return null;

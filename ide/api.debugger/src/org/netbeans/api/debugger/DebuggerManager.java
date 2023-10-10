@@ -48,13 +48,14 @@ import org.openide.util.Exceptions;
  * {@link org.netbeans.api.debugger.Watch}es.
  *  
  *
- * <p><br><table border="1" cellpadding="3" cellspacing="0" width="100%">
- * <tbody><tr bgcolor="#ccccff">
- * <td colspan="2"><font size="+2"><b>Description </b></font></td>
+ * <table>
+ * <caption>Description of DebuggerManager</caption>
+ * <tbody><tr>
+ * <td colspan="2" style="background-color:#4D7A97"><font size="+2"><b>Description </b></font></td>
  * </tr><tr><td align="left" valign="top" width="1%"><font size="+1">
  * <b>Functionality</b></font></td><td> 
  *
- * <b>Start & finish debugging:</b>
+ * <b>Start &amp; finish debugging:</b>
  *    DebuggerManager manages a process of starting a new debugging (
  *    {@link #startDebugging}). It cooperates with all installed
  *    {@link org.netbeans.spi.debugger.DebuggerEngineProvider}s to create a new 
@@ -89,7 +90,7 @@ import org.openide.util.Exceptions;
  * <br><br>
  * <b>Watches management:</b>
  *    DebuggerManager keeps list of all shared watches ({@link #getWatches}).
- *    Watch can be created & added ({@link #createWatch}).
+ *    Watch can be created &amp; added ({@link #createWatch}).
  *
  * <br><br>
  * <b>Support for listening:</b>
@@ -158,7 +159,7 @@ public final class DebuggerManager implements ContextProvider {
     private static DebuggerManager            debuggerManager;
     private Session                           currentSession;
     private DebuggerEngine                    currentEngine;
-    private final List                        sessions = new ArrayList();
+    private final List<Session>               sessions = new ArrayList<>();
     private final Set                         engines = new HashSet ();
     private final Vector<Breakpoint>          breakpoints = new Vector<>();
     private boolean                           breakpointsInitializing = false;
@@ -227,7 +228,7 @@ public final class DebuggerManager implements ContextProvider {
     /**
      * Join two lookups together.
      * The result will merge the lookups.
-     * The result of its {@link #lookup} method will additionally implement {@link Customizer}.
+     * The result of its {@link #lookup(String,Class)} method will additionally implement {@link Customizer}.
      * @param cp1 first lookup
      * @param cp2 second lookup
      * @return a merger of the two
@@ -265,8 +266,8 @@ public final class DebuggerManager implements ContextProvider {
         //S ystem.out.println("@StartDebugging info: " + info);
         
         // init sessions
-        List sessionProviders = new ArrayList();
-        List<DebuggerEngine> engines = new ArrayList<DebuggerEngine>();
+        List sessionProviders = new ArrayList<>();
+        List<DebuggerEngine> engines = new ArrayList<>();
         Lookup l = info.getLookup ();
         Lookup l2 = info.getLookup ();
         synchronized (l) {
@@ -315,7 +316,7 @@ public final class DebuggerManager implements ContextProvider {
             }
             
             // init DebuggerEngines
-            ArrayList engineProviders = new ArrayList ();
+            List<Object> engineProviders = new ArrayList<>();
             synchronized (l2) {
                 engineProviders.addAll (
                     l2.lookup (null, DebuggerEngineProvider.class)
@@ -624,7 +625,7 @@ public final class DebuggerManager implements ContextProvider {
      *    a variable name).
      * @return the new watch
      * @throws ArrayIndexOutOfBoundsException if the index is out of range
-     *         <code>(index < 0 || index > getWatches().length)</code>
+     *         <code>(index &lt; 0 || index &gt; getWatches().length)</code>
      * @since 1.22
      */
     public Watch createWatch (int index, String expr) {
@@ -704,7 +705,7 @@ public final class DebuggerManager implements ContextProvider {
                 throw new IllegalArgumentException("Permutation of length "+permutation.length+", but have "+watches.size()+" watches.");
             }
             checkPermutation(permutation);
-            Vector<Watch> v = (Vector<Watch>)watches.clone();
+            Vector<Watch> v = new Vector<>(watches);
             for (int i = 0; i < v.size(); i++) {
                 watches.set(permutation[i], v.get(i));
             }
@@ -1699,52 +1700,5 @@ public final class DebuggerManager implements ContextProvider {
             }
         }
     }
-    
-    /*
-    private class ModuleUnloadListeners {
-        
-        private Map<ClassLoader, ModuleChangeListener> moduleChangeListeners
-                = new HashMap<ClassLoader, ModuleChangeListener>();
-        
-        public void listenOn(ClassLoader cl) {
-            /*
-            org.openide.util.Lookup.Result<ModuleInfo> moduleLookupResult =
-                    org.openide.util.Lookup.getDefault ().lookup(
-                        new org.openide.util.Lookup.Template<ModuleInfo>(ModuleInfo.class));
-            synchronized(moduleChangeListeners) {
-                if (!moduleChangeListeners.containsKey(cl)) {
-                    for (ModuleInfo mi : moduleLookupResult.allInstances()) {
-                        if (mi.isEnabled() && mi.getClassLoader() == cl) {
-                            ModuleChangeListener l = new ModuleChangeListener(cl);
-                            mi.addPropertyChangeListener(WeakListeners.propertyChange(l, mi));
-                            moduleChangeListeners.put(cl, l);
-                        }
-                    }
-                }
-            }
-             *//*
-        }
-        
-        private final class ModuleChangeListener implements PropertyChangeListener {
-            
-            private ClassLoader cl;
-
-            public ModuleChangeListener(ClassLoader cl) {
-                this.cl = cl;
-            }
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                ModuleInfo mi = (ModuleInfo) evt.getSource();
-                if (!mi.isEnabled()) {
-                    synchronized (moduleChangeListeners) {
-                        moduleChangeListeners.remove(cl);
-                    }
-                    moduleUnloaded(cl);
-                }
-            }
-
-        }
-    }
-                */
 }
 

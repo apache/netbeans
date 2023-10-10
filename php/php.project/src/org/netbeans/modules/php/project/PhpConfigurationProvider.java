@@ -235,7 +235,7 @@ public final class PhpConfigurationProvider implements ProjectConfigurationProvi
 
     @Override
     public void setActiveConfiguration(Config c) throws IOException {
-        if (c != DEFAULT && !configs.values().contains(c)) {
+        if (c != DEFAULT && !configs.containsValue(c)) {
             throw new IllegalArgumentException();
         }
         final String n = c.name;

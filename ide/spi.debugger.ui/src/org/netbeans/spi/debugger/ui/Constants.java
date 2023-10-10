@@ -55,7 +55,8 @@ public interface Constants {
      * @see org.netbeans.spi.viewmodel.ColumnModel#getPreviuosColumnID
      * @see org.netbeans.spi.viewmodel.ColumnModel#getNextColumnID
      */
-    public static final String BREAKPOINT_ENABLED_COLUMN_ID = 
+    @Deprecated
+    public static final String BREAKPOINT_ENABLED_COLUMN_ID =
         "BreakpointEnabled";
 
     /**

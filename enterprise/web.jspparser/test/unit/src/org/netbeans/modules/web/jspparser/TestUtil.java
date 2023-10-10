@@ -33,7 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
@@ -218,7 +218,7 @@ public final class TestUtil extends ProxyLookup {
     public static List<URL> getJARs(String propertyName) throws MalformedURLException {
         String path = System.getProperty(propertyName);
         String[] paths = PropertyUtils.tokenizePath(path);
-        List<URL> list = new ArrayList();
+        List<URL> list = new ArrayList<>();
         for (int i = 0; i< paths.length; i++) {
             String token = paths[i];
             File f = new File(token);

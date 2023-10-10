@@ -1249,9 +1249,7 @@
             <ExpressionStatement start='1231' end='1261'>
                 <ConditionalExpression start='1231' end='1260'>
                     <Condition>
-                        <NamespaceName start='1231' end='1235' isCurrent='false' isGlobal='false'>
-                            <Identifier start='1231' end='1235' name='null'/>
-                        </NamespaceName>
+                        <Scalar start='1231' end='1235' type='STRING' value='null'/>
                     </Condition>
                     <Then>
                     </Then>
@@ -1277,9 +1275,7 @@
                     </Variable>
                     <ConditionalExpression start='1277' end='1306'>
                         <Condition>
-                            <NamespaceName start='1277' end='1281' isCurrent='false' isGlobal='false'>
-                                <Identifier start='1277' end='1281' name='null'/>
-                            </NamespaceName>
+                            <Scalar start='1277' end='1281' type='STRING' value='null'/>
                         </Condition>
                         <Then>
                         </Then>
@@ -1511,9 +1507,7 @@
                 <ThrowExpression start='1684' end='1713'>
                     <ConditionalExpression start='1690' end='1713'>
                         <Condition>
-                            <NamespaceName start='1690' end='1694' isCurrent='false' isGlobal='false'>
-                                <Identifier start='1690' end='1694' name='null'/>
-                            </NamespaceName>
+                            <Scalar start='1690' end='1694' type='STRING' value='null'/>
                         </Condition>
                         <Then>
                         </Then>
@@ -1536,9 +1530,7 @@
                     <ParenthesisExpression start='1721' end='1746'>
                         <ConditionalExpression start='1722' end='1745'>
                             <Condition>
-                                <NamespaceName start='1722' end='1726' isCurrent='false' isGlobal='false'>
-                                    <Identifier start='1722' end='1726' name='null'/>
-                                </NamespaceName>
+                                <Scalar start='1722' end='1726' type='STRING' value='null'/>
                             </Condition>
                             <Then>
                             </Then>

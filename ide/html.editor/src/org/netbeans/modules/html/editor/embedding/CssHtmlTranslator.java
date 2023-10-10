@@ -23,8 +23,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.html.lexer.HTMLTokenId;
@@ -44,12 +42,9 @@ import org.netbeans.modules.web.common.api.WebUtils;
  */
 public class CssHtmlTranslator implements CssEmbeddingProvider.Translator {
 
-    private static final Logger LOGGER = Logger.getLogger(CssHtmlTranslator.class.getName());
-    private static final boolean LOG = LOGGER.isLoggable(Level.FINE);
     public static final String CSS_MIME_TYPE = "text/css"; //NOI18N
     public static final String HTML_MIME_TYPE = "text/html"; //NOI18N
 
-    private static final Pattern CLASSES_LIST_PATTERN = Pattern.compile("[^\\s,]*"); //splits by whitespaces and comma //NOI18N
     static final Pattern CDATA_FILTER_PATTERN = Pattern.compile(".*<!\\[CDATA\\[\\s*(\\*/)?\\s*(<!--)?(.*?)(-->)?\\s*(/\\*)?\\s*]]>.*", Pattern.DOTALL | Pattern.MULTILINE);
     static final int CDATA_BODY_GROUP_INDEX = 3; //                                                  ^^^^
 
@@ -66,11 +61,11 @@ public class CssHtmlTranslator implements CssEmbeddingProvider.Translator {
             return Collections.emptyList();
         }
         TokenSequence<HTMLTokenId> ts = th.tokenSequence(HTMLTokenId.language());
-        HashMap<String, Object> state = new HashMap<>(6);
         List<Embedding> embeddings = new ArrayList<>();
-        extractCssFromHTML(snapshot, ts, state, embeddings);
+        extractCssFromHTML(snapshot, ts, embeddings);
         return embeddings;
     }
+
     //internal state names for the html code analyzer
     protected static final String END_OF_LAST_SEQUENCE = "end_of_last_sequence"; //NOI18N
     protected static final String IN_STYLE = "in_style"; //NOI18N
@@ -82,13 +77,12 @@ public class CssHtmlTranslator implements CssEmbeddingProvider.Translator {
     //we do not have to parse what's already parsed - like the <link ... /> tag
     private static final String LINK_TAG_NAME = "link"; //NOI18N
     private static final String HREF_ATTR_NAME = "href"; //NOI18N
-    private static final String HREF_ATTR_REL = "rel"; //NOI18N
-    private static final String HREF_ATTR_TYPE = "type"; //NOI18N
 
     /**
      * @param ts An HTML token sequence always positioned at the beginning.
      */
-    protected void extractCssFromHTML(Snapshot snapshot, TokenSequence<HTMLTokenId> ts, HashMap<String, Object> state, List<Embedding> embeddings) {
+    protected void extractCssFromHTML(Snapshot snapshot, TokenSequence<HTMLTokenId> ts, List<Embedding> embeddings) {
+        HashMap<String, Object> state = new HashMap<>(6);
         while (ts.moveNext()) {
             Token<HTMLTokenId> htmlToken = ts.token();
             HTMLTokenId htmlId = htmlToken.id();
@@ -196,77 +190,7 @@ public class CssHtmlTranslator implements CssEmbeddingProvider.Translator {
 
                     //determine the inlined css type
                     String valueCssType = (String) htmlToken.getProperty(HTMLTokenId.VALUE_CSS_TOKEN_TYPE_PROPERTY);
-                    if (valueCssType != null) {
-                        //in ID or CLASS html attributes
-
-                        //XXX we do not support templating code in the value!
-                        //class or id attribute value - generate fake selector with # or . prefix
-                        //#180576 - filter out "illegal" characters from the selector name
-                        if (!ILLEGAL_CHARS_IN_SELECTOR.matcher(text).find()) {
-                            embeddings.add(snapshot.create("\n ", CSS_MIME_TYPE)); //NOI18N
-
-                            boolean isClassElement = HTMLTokenId.VALUE_CSS_TOKEN_TYPE_CLASS.equals(valueCssType);
-                            String prefix = isClassElement ? " ." : " #";
-                            Matcher matcher = CLASSES_LIST_PATTERN.matcher(text);
-                            boolean elementExists = false;
-                            int last_class_name_end_offset = -1;
-                            while (matcher.find()) {
-                                int start = matcher.start();
-                                int end = matcher.end();
-                                if (start != end) {
-                                    embeddings.add(snapshot.create(prefix, CSS_MIME_TYPE)); //NOI18N
-
-//                                    //escape slash char if present - Bug 216489 - Attribute 'id' shows an error with forward slash in it
-//                                    int mark = start;
-//                                    for(int i = start; i < end; i++) {
-//                                        char c = text.charAt(i);
-//                                        if(c == '/' || c == '$') {
-//                                            //create document embedding for the prefix part
-//                                            embeddings.add(snapshot.create(sourceStart + i, i - sourceStart, CSS_MIME_TYPE));
-//
-//                                            embeddings.add(snapshot.create("/", CSS_MIME_TYPE));
-//
-//                                        }
-//                                    }
-//
-                                    //compute the token's document offset
-                                    int start_in_document = sourceStart + start;
-                                    int length = end - start;
-
-                                    //create the real text embedding
-                                    embeddings.add(snapshot.create(start_in_document, length, CSS_MIME_TYPE));
-
-                                    elementExists = true;
-                                    last_class_name_end_offset = start_in_document + length;
-                                }
-                            }
-
-                            if (elementExists) {
-                                if (isClassElement) {
-                                    //check if there's a whitespace after the last class and if so, add it to the virtual
-                                    //source so completion can work at <div class="foo |"/>
-                                    //HOWEVER this fix will only work of the caret is exactly one char after the last
-                                    //class name end, if further, completion for html element selectors will appear
-                                    //To fix this I'd likely need to completely redone the class/id completion so it doesn't
-                                    //use the normal css completion but some special html based completion taking the items
-                                    //from css index.
-                                    if (last_class_name_end_offset < sourceEnd) {
-                                        embeddings.add(snapshot.create(prefix, CSS_MIME_TYPE)); //NOI18N
-                                        embeddings.add(snapshot.create(last_class_name_end_offset + 1, 0, CSS_MIME_TYPE));
-                                    }
-                                }
-                            } else {
-                                //empty class attribute, we need to generate . {} so the completion can complete
-                                //classes after the dot
-                                embeddings.add(snapshot.create(prefix, CSS_MIME_TYPE)); //NOI18N
-                                //+ empty real embedding for the empty value "" content
-                                embeddings.add(snapshot.create(sourceStart, 0, CSS_MIME_TYPE));
-                            }
-
-                            embeddings.add(snapshot.create("{}", CSS_MIME_TYPE));
-                        }
-
-                    } else {
+                    if (valueCssType == null) {
                         //style attribute value (inilined css code) - wrap with a fake selector
                         embeddings.add(snapshot.create("\n SELECTOR {\n\t", CSS_MIME_TYPE));
                         embeddings.add(snapshot.create(sourceStart, sourceEnd - sourceStart, CSS_MIME_TYPE));

@@ -43,7 +43,7 @@ public class JExtendedComboBox extends JComboBox {
 
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                       boolean cellHasFocus) {
-            if ((value != null) && value instanceof JSeparator) {
+            if (value instanceof JSeparator) {
                 return (JSeparator) value;
             } else {
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);

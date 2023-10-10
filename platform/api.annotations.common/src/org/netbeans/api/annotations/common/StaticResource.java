@@ -42,6 +42,7 @@ public @interface StaticResource {
     /**
      * If true, permit the resource to be in the classpath.
      * By default, it may only be in the sourcepath.
+     * @return true to search in classpath
      */
     boolean searchClasspath() default false;
 
@@ -49,6 +50,7 @@ public @interface StaticResource {
      * If true, consider the resource path to be relative to the current package.
      * ({@code ../} sequences are permitted.)
      * By default, it must be an absolute path (not starting with {@code /}).
+     * @return true to consider resource path to be relative to current package
      */
     boolean relative() default false;
 

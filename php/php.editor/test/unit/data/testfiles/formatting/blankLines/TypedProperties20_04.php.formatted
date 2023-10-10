@@ -26,5 +26,4 @@ class Simple {
      * @var int
      */
     public int $field1 = 22;
-
 }

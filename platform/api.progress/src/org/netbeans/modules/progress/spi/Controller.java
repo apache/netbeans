@@ -188,12 +188,12 @@ public class Controller {
      * Schedules a callback after `delay' milliseconds. If there's some initial
      * delay, and `shorten' is true, the delay is shortened to be minimum of the current
      * delay and the `delay'.
-     * <p/>
+     * <p>
      * The scheduler ticks can be disabled if the specified `delay' is 0.
-     * <p/>
+     * <p>
      * This method is to be implemented by environment-specific subclass, to use the target
      * platform scheduling support to invoke the 'runNow' method after the specified period.
-     * <p/>
+     * <p>
      * The default implementation uses a private RequestProcessor thread.
      * @param delay the delay after which the callback should be fired. -1 means no chage to the configured delay. 0 means to stop
      * @param shorten if the current delay is shorter than the `delay', keep the current one. If false, always configure the delay
@@ -243,12 +243,12 @@ public class Controller {
      * The method is responsible to start or stop a timing service in the environment.
      * If "delay" is 0 or less, the method should stop the timer, or at least not call
      * the {@link #runEvents} if the timer ticks. 
-     * <p/>
+     * <p>
      * If "delay" is positive, the method should configure the timer to fire after
      * "delay" milliseconds. Depending on "restart" parameter, the timer should
      * be just configured (false), or activated (true) - potentially canceling the previous
      * schedule.
-     * <p/>
+     * <p>
      * The default implementation uses {@link RequestProcessor} for scheduling.
      * 
      * @param delay delay in milliseconds before the timer should fire 
@@ -271,7 +271,7 @@ public class Controller {
      * therefore interfere with Controller's own events. If called from the thread
      * dispatching events, the executed Runnables will be delayed after the
      * and may be interleaved by dispatched events.
-     * <p/>
+     * <p>
      * The method <b>must</b> be overriden by a controller implementation which
      * changes the threading model from the default one.
      * 

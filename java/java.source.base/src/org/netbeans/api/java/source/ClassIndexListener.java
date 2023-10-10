@@ -24,7 +24,7 @@ import java.util.EventListener;
 /**
  * Listener for changes in {@link ClassIndex}.
 * <P>
-* When attached to a {ClassIndex} it listens for addition,
+* When attached to a {@link ClassIndex} it listens for addition,
 * removal and modification of declared types.
 * <P>
 *
@@ -55,7 +55,7 @@ public interface ClassIndexListener extends EventListener {
     
     /**
      * Called when new roots are added
-     * into the {@link ClassPath} for which the {@link ClassIndex}
+     * into the {@link org.netbeans.api.java.classpath.ClassPath} for which the {@link ClassIndex}
      * was created.
      * @param event specifying the added roots
      */
@@ -63,7 +63,7 @@ public interface ClassIndexListener extends EventListener {
     
     /**
      * Called when root are removed
-     * from the {@link ClassPath} for which the {@link ClassIndex}
+     * from the {@link org.netbeans.api.java.classpath.ClassPath} for which the {@link ClassIndex}
      * was created.
      * @param event specifying the removed roots
      */

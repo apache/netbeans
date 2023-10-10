@@ -836,7 +836,7 @@ class TreeTable extends JTable implements Runnable {
             return true;
         }
 
-        if ((editorComp != null) && (editorComp instanceof Container) && ((Container) editorComp).isAncestorOf(c)) {
+        if ((editorComp instanceof Container) && ((Container) editorComp).isAncestorOf(c)) {
             return true;
         }
 

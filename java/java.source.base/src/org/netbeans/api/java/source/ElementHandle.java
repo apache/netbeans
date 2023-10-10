@@ -53,7 +53,7 @@ import org.openide.util.WeakSet;
 /**
  * Represents a handle for {@link Element} which can be kept and later resolved
  * by another javac. The javac {@link Element}s are valid only in a single
- * {@link javax.tools.CompilationTask} or a single run of a
+ * {@link javax.tools.JavaCompiler.CompilationTask} or a single run of a
  * {@link CancellableTask}. A client needing to
  * keep a reference to an {@link Element} and use it in another {@link CancellableTask}
  * must serialize it into an {@link ElementHandle}.
@@ -106,10 +106,10 @@ public final class ElementHandle<T extends Element> {
     
     /**
      * Resolves an {@link Element} from the {@link ElementHandle}.
-     * @param compilationInfo representing the {@link javax.tools.CompilationTask}
+     * @param compilationInfo representing the {@link javax.tools.JavaCompiler.CompilationTask}
      * in which the {@link Element} should be resolved.
      * @return resolved subclass of {@link Element} or null if the elment does not exist on
-     * the classpath/sourcepath of {@link javax.tools.CompilationTask}.
+     * the classpath/sourcepath of {@link javax.tools.JavaCompiler.CompilationTask}.
      */
     @SuppressWarnings ("unchecked")     // NOI18N
     public @CheckForNull T resolve (@NonNull final CompilationInfo compilationInfo) {
@@ -331,7 +331,7 @@ public final class ElementHandle<T extends Element> {
      * {@link ElementHandle}. When the {@link ElementHandle} doesn't represent
      * a {@link TypeElement} it throws a {@link IllegalStateException}
      * @return the qualified name
-     * @throws an {@link IllegalStateException} when this {@link ElementHandle} 
+     * @throws IllegalStateException when this {@link ElementHandle} 
      * isn't created for the {@link TypeElement}.
      */
     public @NonNull String getBinaryName () throws IllegalStateException {
@@ -352,7 +352,7 @@ public final class ElementHandle<T extends Element> {
      * {@link ElementHandle}. When the {@link ElementHandle} doesn't represent
      * a {@link TypeElement} it throws a {@link IllegalStateException}
      * @return the qualified name
-     * @throws an {@link IllegalStateException} when this {@link ElementHandle} 
+     * @throws IllegalStateException when this {@link ElementHandle} 
      * isn't creatred for the {@link TypeElement}.
      */
     public @NonNull String getQualifiedName () throws IllegalStateException {
@@ -557,7 +557,7 @@ public final class ElementHandle<T extends Element> {
     }
     
     
-    /**@inheritDoc*/
+    /**{@inheritDoc}*/
     @Override
     public int hashCode () {
         int hashCode = 0;
@@ -569,7 +569,7 @@ public final class ElementHandle<T extends Element> {
         return hashCode;
     }
     
-    /**@inheritDoc*/
+    /**{@inheritDoc}*/
     @Override
     public boolean equals (Object other) {
         if (other instanceof ElementHandle) {

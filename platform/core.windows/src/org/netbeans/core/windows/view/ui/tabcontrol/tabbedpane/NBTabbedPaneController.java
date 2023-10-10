@@ -308,7 +308,7 @@ public class NBTabbedPaneController {
 
                     sel.setSelectedIndex( tabIndex );
                     Component tc = container.getDataModel().getTab( tabIndex ).getComponent();
-                    if( null != tc && tc instanceof TopComponent && !(( TopComponent ) tc).isAncestorOf( KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner() ) ) {
+                    if(tc instanceof TopComponent && !((TopComponent) tc).isAncestorOf(KeyboardFocusManager.getCurrentKeyboardFocusManager().getPermanentFocusOwner())) {
                         (( TopComponent ) tc).requestActive();
                     }
                 }

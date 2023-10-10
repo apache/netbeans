@@ -25,8 +25,8 @@ import org.netbeans.api.java.queries.BinaryForSourceQuery;
  * Information about where binaries (classfiles) corresponding to 
  * Java sources can be found, this is intended to be the inverse of 
  * the SourceForBinaryQueryImplementation.
- * @see BinaryForSourceQuery
- * @see SourceForBinaryQuery
+ * @see org.netbeans.api.java.queries.BinaryForSourceQuery
+ * @see org.netbeans.api.java.queries.SourceForBinaryQuery
  * @see SourceForBinaryQueryImplementation
  * @since org.netbeans.api.java/1 1.12
  * @author Tomas Zezula
@@ -46,12 +46,11 @@ public interface BinaryForSourceQueryImplementation {
      * <li>Create a new BinaryForSourceQuery.Result for the sourceRoot, put it into the cache
      * and return it.</li>
      * </ol>
-     * </p>
      * <p>
      * Any absolute URL may be used but typically it will use the <code>file</code>
      * protocol for directory entries and <code>jar</code> protocol for JAR entries
-     * (e.g. <samp>jar:file:/tmp/foo.jar!/</samp>).
-     * </p>
+     * (e.g. <code>jar:file:/tmp/foo.jar!/</code>).
+     * 
      * @param sourceRoot the source path root
      * @return a result object encapsulating the answer or null if the sourceRoot is not recognized
      */

@@ -182,5 +182,4 @@ public class JsLanguage extends DefaultLanguageConfig {
         return new JsKeyStrokeHandler();
     }
 
-    
 }

@@ -448,7 +448,7 @@ final class DefaultPrintable extends Object implements Printable {
 
     /**
     * @param wrappingWidth width of the layout
-    * @param frCtx for possible new instance of LineBreakMeasurer
+    * @param frc for possible new instance of LineBreakMeasurer
     * @return next TextLayout that is to be rendered
     */
     private TextLayout nextLayout(float wrappingWidth, FontRenderContext frc) {
@@ -480,7 +480,7 @@ final class DefaultPrintable extends Object implements Printable {
     /** Sets @see #currentLayout variable then calls nextLayout.
     * @param pageNo searched page
     * @param wrappingWidth width of the layout
-    * @param frCtx for possible new instance of LineBreakMeasurer
+    * @param frc for possible new instance of LineBreakMeasurer
     * @return next TextLayout that is to be rendered
     */
     private TextLayout layoutForPage(int pageNo, float wrappingWidth, FontRenderContext frc) {

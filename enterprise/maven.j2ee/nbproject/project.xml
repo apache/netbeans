@@ -273,7 +273,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.54</specification-version>
+                        <specification-version>2.77</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -376,8 +376,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>0-1</release-version>
-                        <specification-version>1.13</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -540,6 +540,7 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.payara.micro</friend>
+                <friend>org.netbeans.modules.jakarta.transformer</friend>
                 <package>org.netbeans.modules.maven.j2ee</package>
                 <package>org.netbeans.modules.maven.j2ee.execution</package>
                 <package>org.netbeans.modules.maven.j2ee.utils</package>

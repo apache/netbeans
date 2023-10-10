@@ -211,5 +211,13 @@ public class JsConventionHintTest extends HintTestBase {
     
     public void testIssue269659_04() throws Exception {
         checkHints(this, createDuplicatePropertyHint(), "testfiles/hints/issue269659_04.js", null);
-    } 
+    }
+
+    public void testSemicolonWarningGeneratedConstructor() throws Exception {
+        checkHints(this, createSemicolonHint(), "testfiles/hints/semicolonWarningGeneratedConstructor.js", null);
+    }
+
+    public void testSemicolonWarningRealConstructor() throws Exception {
+        checkHints(this, createSemicolonHint(), "testfiles/hints/semicolonWarningRealConstructor.js", null);
+    }
 }

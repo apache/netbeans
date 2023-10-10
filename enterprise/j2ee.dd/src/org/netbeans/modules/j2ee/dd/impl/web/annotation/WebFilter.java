@@ -48,7 +48,10 @@ public class WebFilter extends PersistentObject implements Refreshable {
 
     public boolean refresh(TypeElement typeElement) {
         Map<String, ? extends AnnotationMirror> annByType = getHelper().getAnnotationsByType(typeElement.getAnnotationMirrors());
-        AnnotationMirror annotationMirror = annByType.get("javax.servlet.annotation.WebFilter"); // NOI18N
+        AnnotationMirror annotationMirror = annByType.get("jakarta.servlet.annotation.WebFilter"); // NOI18N
+        if(annotationMirror == null) {
+            annotationMirror = annByType.get("javax.servlet.annotation.WebFilter"); // NOI18N
+        }
         if (annotationMirror == null) {
             return false;
         }

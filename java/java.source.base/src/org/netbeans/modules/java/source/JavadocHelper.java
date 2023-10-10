@@ -20,13 +20,13 @@ package org.netbeans.modules.java.source;
 
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.awt.EventQueue;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -57,6 +57,8 @@ import java.util.logging.Logger;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.ModuleElement;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -68,7 +70,6 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
-import org.netbeans.api.*;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -259,10 +260,21 @@ public class JavadocHelper {
                     try {
                         String charset = null;
                         for (;;) {
-                            try (Reader reader = charset == null?
+                            try (BufferedReader reader = new BufferedReader(charset == null ?
                                     new InputStreamReader(this.openStream()) :
-                                    new InputStreamReader(this.openStream(), charset)){
+                                    new InputStreamReader(this.openStream(), charset))) {
                                 if (urls.size() > 1) {
+                                    reader.mark(256);
+                                    String line = reader.readLine();
+                                    if (line.contains("<!DOCTYPE") && line.contains("HTML>")) {
+                                        index = 2;
+                                        if (jdocRoot != null) {
+                                            jdocCache.put(jdocRoot,index);
+                                        }
+                                        break;
+                                    } else {
+                                        reader.reset();
+                                    }
                                     final HTMLEditorKit.Parser parser = new ParserDelegator();
                                     final int[] state = {-1};
                                     try {
@@ -578,6 +590,7 @@ public class JavadocHelper {
             throw new IllegalArgumentException("Cannot pass null as an argument of the SourceUtils.getJavadoc"); // NOI18N
         }
         ClassSymbol clsSym = null;
+        String moduleName = null;
         String pkgName;
         String pageName;
         boolean buildFragment = false;
@@ -592,6 +605,7 @@ public class JavadocHelper {
             if (clsSym == null) {
                 return Collections.emptyList();
             }
+            moduleName = moduleNameFor(element);
             pkgName = FileObjects.convertPackage2Folder(((PackageElement) element).getQualifiedName().toString());
             pageName = PACKAGE_SUMMARY;
         } else if (element.getKind() == ElementKind.MODULE) {
@@ -615,6 +629,7 @@ public class JavadocHelper {
             if (clsSym == null) {
                 return Collections.emptyList();
             }
+            moduleName = moduleNameFor(e);
             pkgName = FileObjects.convertPackage2Folder(((PackageElement) e).getQualifiedName().toString());
             pageName = sb.toString();
             buildFragment = element != clsSym;
@@ -626,6 +641,7 @@ public class JavadocHelper {
         if (clsSym.classfile != null) {
             try {
                 final URL classFile = clsSym.classfile.toUri().toURL();
+                final String moduleNameF = moduleName;
                 final String pkgNameF = pkgName;
                 final String pageNameF = pageName;
                 final Collection<? extends CharSequence> fragment = buildFragment ? getFragment(element) : Collections.<CharSequence>emptySet();
@@ -633,7 +649,7 @@ public class JavadocHelper {
                     @Override
                     @NonNull
                     public List<TextStream> call() throws Exception {
-                        return findJavadoc(classFile, pkgNameF, pageNameF, fragment, remoteJavadocPolicy);
+                        return findJavadoc(classFile, moduleNameF, pkgNameF, pageNameF, fragment, remoteJavadocPolicy);
                     }
                 };
                 final boolean sync = cancel == null || remoteJavadocPolicy != RemoteJavadocPolicy.USE;
@@ -676,9 +692,26 @@ public class JavadocHelper {
 
     private static final String PACKAGE_SUMMARY = "package-summary"; // NOI18N
 
+    private static String moduleNameFor(Element element) {
+        Element e = element;
+        while (e != null && e.getKind() != ElementKind.MODULE) {
+            e = element.getEnclosingElement();
+        }
+        if (e == null) {
+            return null;
+        }
+        String name = ((ModuleElement) e).getQualifiedName().toString();
+        if (!name.isEmpty()) {
+            return name;
+        } else {
+            return null;
+        }
+    }
+
     @NonNull
     private static List<TextStream> findJavadoc(
             @NonNull final URL classFile,
+            final String moduleName,
             @NonNull final String pkgName,
             @NonNull final String pageName,
             @NonNull final Collection<? extends CharSequence> fragment,
@@ -762,7 +795,12 @@ binRoots:   for (URL binary : binaries) {
                                 throw new IllegalArgumentException(remoteJavadocPolicy.name());
                         }
                     }
-                    URL url = new URL(root, pkgName + "/" + pageName + ".html");
+                    URL url;
+                    if (moduleName != null) {
+                        url = new URL(root, moduleName + "/" + pkgName + "/" + pageName + ".html");
+                    } else {
+                        url = new URL(root, pkgName + "/" + pageName + ".html");
+                    }
                     InputStream is = null;
                     String rootS = root.toString();
                     boolean useKnownGoodRoots = result.length == 1 && isRemote;
@@ -775,25 +813,30 @@ binRoots:   for (URL binary : binaries) {
                             } catch (InterruptedIOException iioe)  {
                                 throw iioe;
                             } catch (IOException x) {
-                                // Some libraries like OpenJFX prefix their
-                                // javadoc by module, similar to the JDK.
-                                // Only search there when the default fails
-                                // to avoid additional I/O.
-                                // NOTE: No multi-release jar support for now.
-                                URL moduleInfo = new URL(binary, "module-info.class");
-                                try (InputStream classData = moduleInfo.openStream()) {
-                                    ClassFile clazz = new ClassFile(classData, false);
-                                    Module module = clazz.getModule();
-                                    if (module == null) {
-                                        throw x;
+                                if (moduleName == null) {
+                                    // Some libraries like OpenJFX prefix their
+                                    // javadoc by module, similar to the JDK.
+                                    // Only search there when the default fails
+                                    // to avoid additional I/O.
+                                    // NOTE: No multi-release jar support for now.
+                                    URL moduleInfo = new URL(binary, "module-info.class");
+                                    try (InputStream classData = moduleInfo.openStream()) {
+                                        ClassFile clazz = new ClassFile(classData, false);
+                                        Module module = clazz.getModule();
+                                        if (module == null) {
+                                            throw x;
+                                        }
+                                        String modName = module.getName();
+                                        if (modName == null) {
+                                            throw x;
+                                        }
+                                        url = new URL(root, modName + "/" + pkgName + "/" + pageName + ".html");
                                     }
-                                    String moduleName = module.getName();
-                                    if (moduleName == null) {
-                                        throw x;
-                                    }
-                                    url = new URL(root, moduleName + "/" + pkgName + "/" + pageName + ".html");
-                                    is = openStream(url, Bundle.LBL_HTTPJavadocDownload());
+                                } else {
+                                    // fallback to without module name
+                                    url = new URL(root, pkgName + "/" + pageName + ".html");
                                 }
+                                is = openStream(url, Bundle.LBL_HTTPJavadocDownload());
                             }
                             if (useKnownGoodRoots) {
                                 knownGoodRoots.add(rootS);
@@ -903,10 +946,6 @@ binRoots:   for (URL binary : binaries) {
 
         FragmentBuilder(@NonNull ElementKind kind) {
             int size = FILTERS.size();
-            // JDK-8046068 changed the constructor format from "Name" to "<init>"
-            if (kind == ElementKind.CONSTRUCTOR) {
-                size *= 2;
-            }
             this.sbs = new StringBuilder[size];
             for (int i = 0; i < sbs.length; i++) {
                 sbs[i] = new StringBuilder();
@@ -915,24 +954,18 @@ binRoots:   for (URL binary : binaries) {
         
         @NonNull
         FragmentBuilder constructor(@NonNull final CharSequence text) {
-            CharSequence constructor = text;
-            for (int i = 0; i < sbs.length;) {
-                for (int j = 0; j < FILTERS.size(); j++) {
-                    sbs[i].append(FILTERS.get(j).convert(constructor));
-                    i++;
-                }
-                constructor = "<init>";
+            for (int i = 0; i < sbs.length; i++) {
+                // JDK-8046068 changed the constructor format from "Name" to "<init>"
+                CharSequence constructor = i >= 2 ? "<init>" : text;
+                sbs[i].append(FILTERS.get(i).convert(constructor));
             }
             return this;
         }
 
         @NonNull
         FragmentBuilder append(@NonNull final CharSequence text) {
-            for (int i = 0; i < sbs.length;) {
-                for (int j = 0; j < FILTERS.size(); j++) {
-                    sbs[i].append(FILTERS.get(j).convert(text));
-                    i++;
-                }
+            for (int i = 0; i < sbs.length; i++) {
+                sbs[i].append(FILTERS.get(i).convert(text));
             }
             return this;
         }

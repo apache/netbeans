@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.47.0
+#Version 2.53.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1969,8 +1969,8 @@ hcls TableColumnPopupListener
 
 CLSS public org.netbeans.modules.db.sql.visualeditor.querybuilder.QueryBuilderMetaData
 meth public java.lang.String getIdentifierQuoteString()
-meth public java.util.List getColumnNames(java.lang.String) throws java.sql.SQLException
-meth public void getColumnNames(java.lang.String,java.util.List)
+meth public java.util.List<java.lang.String> getColumnNames(java.lang.String) throws java.sql.SQLException
+meth public void getColumnNames(java.lang.String,java.util.List<java.lang.String>)
 supr java.lang.Object
 hfds DEBUG,allColumnNames,importKcTable,metadata,queryBuilder
 

@@ -52,23 +52,27 @@ public class EditorAreaFrame extends JFrame {
     public void setWindowActivationListener(Controller control) {
         controller = control;
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowActivated(WindowEvent evt) {
                 if (frametimestamp != 0 && System.currentTimeMillis() > frametimestamp + 500) {
                     controller.userActivatedEditorWindow();
                 }
             }
+            @Override
             public void windowOpened(WindowEvent event) {
                 frametimestamp = System.currentTimeMillis();
             }
         });
     }
-    
+
+    @Override
     public void toFront() {
         // ignore the window activation event, is not done by user.
         frametimestamp = System.currentTimeMillis();
         super.toFront();
     }
-    
+
+    @Override
     public void setVisible(boolean visible) {
         frametimestamp = System.currentTimeMillis();
         super.setVisible(visible);

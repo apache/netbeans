@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -87,13 +88,21 @@ public class ModelUtils {
 
     private static final Logger LOG = Logger.getLogger(ModelUtils.class.getName());
 
+    @SuppressWarnings("AssignmentToMethodParameter")
     public static JsObjectImpl getJsObject (ModelBuilder builder, List<Identifier> fqName, boolean isLHS) {
         if (fqName == null || fqName.isEmpty()) {
             return null;
         }
         JsObject result = builder.getCurrentObject();
-        JsObject tmpObject = null;
         String firstName = fqName.get(0).getName();
+        JsObject tmpObject;
+
+        if (THIS.equals(firstName)) {
+            tmpObject = resolveThis(result);
+            fqName = fqName.subList(1, fqName.size());
+        } else {
+            tmpObject = null;
+        }
 
         while (tmpObject == null && result != null && result.getParent() != null) {
             if (result instanceof JsFunctionImpl) {
@@ -188,7 +197,7 @@ public class ModelUtils {
                 JsElement.Kind kind = property.getJSKind();
                 if (kind == JsElement.Kind.OBJECT || kind == JsElement.Kind.ANONYMOUS_OBJECT || kind == JsElement.Kind.OBJECT_LITERAL
                         || kind == JsElement.Kind.FUNCTION || kind == JsElement.Kind.METHOD || kind == JsElement.Kind.CONSTRUCTOR
-                        || kind == JsElement.Kind.WITH_OBJECT) {
+                        || kind == JsElement.Kind.WITH_OBJECT || kind == JsElement.Kind.ARROW_FUNCTION) {
                     if (!visited.contains(property.getFullyQualifiedName())) {
                         tmpObject = findJsObject(property, offset, visited);
                     }
@@ -272,7 +281,7 @@ public class ModelUtils {
         while (result.getParent() != null && !(result.getParent() instanceof DeclarationScope)) {
             result = result.getParent();
         }
-        if (result.getParent() != null && result.getParent() instanceof DeclarationScope) {
+        if (result.getParent() instanceof DeclarationScope) {
             result = result.getParent();
         }
         if (!(result instanceof DeclarationScope)) {
@@ -400,9 +409,6 @@ public class ModelUtils {
         }
         return null;
     }
-    private static final Collection<JsTokenId> CTX_DELIMITERS = Arrays.asList(
-            JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.BRACKET_RIGHT_CURLY,
-            JsTokenId.OPERATOR_SEMICOLON);
 
     private static Collection<TypeUsage> tryResolveWindowProperty(Model model, Index jsIndex, String name) {
         // since issue #215863
@@ -446,7 +452,7 @@ public class ModelUtils {
             result = visitor.getSemiTypes(expression, builder);
         }
         if (builder.getCurrentWith()!= null) {
-            Collection<TypeUsage> withResult = new HashSet<TypeUsage>();
+            Collection<TypeUsage> withResult = new HashSet<>();
             String withSemi = SemiTypeResolverVisitor.ST_WITH + builder.getCurrentWith().getFullyQualifiedName();
 
             for(TypeUsage type : result) {
@@ -546,14 +552,14 @@ public class ModelUtils {
         } else if(type.getType().startsWith(SemiTypeResolverVisitor.ST_VAR)){
             String name = type.getType().substring(5);
             DeclarationScope declarationScope = object instanceof DeclarationScope ? (DeclarationScope)object : getDeclarationScope(object);
-            List<JsObject> variables = new ArrayList(ModelUtils.getVariables(declarationScope));
+            List<JsObject> variables = new ArrayList<>(ModelUtils.getVariables(declarationScope));
             if (!(object instanceof DeclarationScope) && object.getParent() != null && !(object.getParent() instanceof DeclarationScope)) {
                 variables.addAll(object.getParent().getProperties().values());
             }
             if (declarationScope != null) {
                 boolean resolved = false;
                 for (JsObject variable : variables) {
-                    if (variable.getName().equals(name)) {
+                    if (Objects.equals(variable.getName(), name)) {
                         String newVarType;
                         if (!variable.getAssignments().isEmpty()) {
                              newVarType= SemiTypeResolverVisitor.ST_EXP + variable.getFullyQualifiedName().replace(".", SemiTypeResolverVisitor.ST_PRO);
@@ -631,6 +637,7 @@ public class ModelUtils {
                 parent = object;
             }
         }
+        // @todo: Handle Arrow Function
         if (parent != null && (parent.getJSKind() == JsElement.Kind.FUNCTION || parent.getJSKind() == JsElement.Kind.METHOD)) {
             if (parent.getParent().getJSKind() != JsElement.Kind.FILE) {
                 JsObject grandParent = parent.getParent();
@@ -1103,7 +1110,7 @@ public class ModelUtils {
                 }
             }
 
-            HashMap<String, TypeUsage> resultTypes  = new HashMap<String, TypeUsage> ();
+            HashMap<String, TypeUsage> resultTypes  = new HashMap<> ();
             for (TypeUsage typeUsage : lastResolvedTypes) {
                 if(!resultTypes.containsKey(typeUsage.getType())) {
                     resultTypes.put(typeUsage.getType(), typeUsage);
@@ -1757,7 +1764,7 @@ public class ModelUtils {
             int partType = 0;
             boolean wasLastDot = lookBefore;
             int offsetFirstRightParen = -1;
-            List<String> exp = new ArrayList();
+            List<String> exp = new ArrayList<>();
 
             while (token.id() != JsTokenId.OPERATOR_SEMICOLON
                     && token.id() != JsTokenId.BRACKET_RIGHT_CURLY && token.id() != JsTokenId.BRACKET_LEFT_CURLY
@@ -1908,7 +1915,7 @@ public class ModelUtils {
             for (Occurrence occurrence : property.getOccurrences()) {
                 newProperty.addOccurrence(occurrence.getOffsetRange());
             }
-            List<JsObject>propertiesToMove = new ArrayList(property.getProperties().values());
+            List<JsObject>propertiesToMove = new ArrayList<>(property.getProperties().values());
             for (JsObject propOfProperty: propertiesToMove) {
                 moveProperty(newProperty, propOfProperty);
             }

@@ -172,7 +172,7 @@ Module uses following API's:
         url="@org-openide-util@/org/openide/util/doc-files/api.html"
     />
 </li>
-<li>
+<!-- no more generated <li>
     <api 
         name="SettingsAPI"
         group="java"
@@ -180,7 +180,7 @@ Module uses following API's:
         category="official"
         url="@org-openide-options@/org/openide/options/doc-files/api.html"
     />
-</li>
+</li>-->
 <li>
     <api 
         name="WindowSystemAPI"
@@ -356,7 +356,7 @@ This property can be used by the modules and is part of the Editor API.
 </api>
 
 <api type="export" group="property" name="javax.swing.text.Document.modificationListener" category="friend" >
-In order to fix <a href="http://www.netbeans.org/issues/show_bug.cgi?id=51872">issue 51872</a> the 
+In order to fix <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=51872">issue 51872</a> the 
 openide needs a way how to be notified about change of a document outside of its Document lock. 
 <code>DocumentListener</code>s are always notified under the lock, so a special contract has
 been established (since version 5.3) by registering an instance of <code>VetoableListener</code>
@@ -364,7 +364,7 @@ by calling <code>putProperty ("modificationListener", listener)</code>. The
 NetBeans aware documents are adviced to honor this property and call the listener
 outside of the document lock when a modification is made. The actual contract
 of the call can be seen in 
-<a href="http://www.netbeans.org/source/browse/openide/test/unit/src/org/openide/text/NbLikeEditorKit.java">NbLikeEditorKit.java</a> 
+<a href="https://github.com/apache/netbeans/tree/master/platform/openide.text/test/unit/src/org/openide/text/NbLikeEditorKit.java">NbLikeEditorKit.java</a> 
 in methods 
 <code>insertString</code> and <code>remove</code>.
 
@@ -459,7 +459,7 @@ The class which calls this is deprecated, but it is still in use by clients.
 Another reflection is used in QuietEditorPane, where DelegatingTransferHandler delegates
 also on two protected methods of TransferHandler: <code>createTransferable</code> and 
 <code>exportDone</code>. This delegation is needed because of drag and drop feature described
-in  <a href="http://www.netbeans.org/issues/show_bug.cgi?id=53439">issue #53439</a>
+in  <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=53439">issue #53439</a>
 </answer>
 
 
@@ -771,7 +771,7 @@ No.
         </question>
 -->
 <answer id="exec-introspection">
-The Editor module operate with plain Swing <a href="http://java.sun.com/j2se/1.4/docs/api/javax/swing/text/Document.html">Document</a> in 
+The Editor module operate with plain Swing <a href="@JDK@/javax/swing/text/Document.html">Document</a> in 
 its APIs and checks whether the document does not implement some of the Netbeans extensions defined in
 <a href="@org-openide-text@/org/openide/text/NbDocument.html">NbDocument</a>.
 It also tries to retype <a href="@org-openide-windows@/org/openide/windows/CloneableTopComponent.Ref.html#getComponents--">CloneableTopComponent.Ref.getComponents()</a>

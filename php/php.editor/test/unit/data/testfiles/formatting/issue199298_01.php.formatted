@@ -16,7 +16,6 @@ class Application_Model_Categoria extends Zend_Db_Table_Abstract {
     private function moveNode($params = array()) {
         return true;
     }
-
 }
 
 //end class

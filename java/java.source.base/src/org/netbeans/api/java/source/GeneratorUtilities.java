@@ -133,6 +133,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
+
 /**
  *
  * @author Jan Lahoda, Dusan Balek
@@ -185,7 +186,7 @@ public final class GeneratorUtilities {
 
     /**
      * Inserts a member to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for the member and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for the member and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the member to
      * @param member the member to add
@@ -315,7 +316,7 @@ public final class GeneratorUtilities {
 
     /**
      * Inserts members to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for each of the members and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for each of the members and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the members to
      * @param members the members to insert
@@ -376,7 +377,7 @@ public final class GeneratorUtilities {
     
     /**
      * Inserts a member to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for the member and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for the member and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the member to
      * @param member the member to add
@@ -494,7 +495,7 @@ public final class GeneratorUtilities {
      * if 'collectNames' is set, it collects field names from the class definition. If
      * 'insertedName' is not null, it also collects references to that name in 
      * 'revDependencies'.
-     * <p/>
+     * <p>
      * For the secondPass, set 'collectNames' to false: the visitor will collect
      * dependencies of the scanned node into 'dependencies'. After 2 passes,
      * the revDependencies and dependencies can be used to determine partial order
@@ -663,7 +664,7 @@ public final class GeneratorUtilities {
     
     /**
      * Inserts members to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for each of the members and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for each of the members and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the members to
      * @param members the members to insert
@@ -750,7 +751,7 @@ public final class GeneratorUtilities {
         return createMethod(method, clazz, false);
     }
 
-    /**Create a new method tree for the given method element. The method will be created as if it were member of {@link asMemberOf} type
+    /**Create a new method tree for the given method element. The method will be created as if it were member of {@code asMemberOf} type
      * (see also {@link Types#asMemberOf(javax.lang.model.type.DeclaredType,javax.lang.model.element.Element)}).
      * The new method will have an empty body.
      *
@@ -1048,6 +1049,22 @@ public final class GeneratorUtilities {
         } catch (Exception e) {}
         return copy.getTreeMaker().Block(Collections.emptyList(), false);
     }
+
+    /**
+     * Creates a default lambda expression.
+     *
+     * @param lambda a lambda to generate the expression for
+     * @param method a method of a functional interface to be implemented by the lambda expression
+     * @return the lambda expression
+     * @since 2.57
+     */
+    public ExpressionTree createDefaultLambdaExpression(LambdaExpressionTree lambda, ExecutableElement method) {
+        try {
+            String bodyTemplate = readFromTemplate(LAMBDA_EXPRESSION, createBindings(null, method)); //NOI18N
+            return copy.getTreeMaker().createLambdaExpression(lambda, bodyTemplate);
+        } catch (Exception e) {}
+        return null;
+    }
     
     private boolean isStarImport(ImportTree imp) {
         Tree qualIdent = imp.getQualifiedIdentifier();        
@@ -1260,9 +1277,8 @@ public final class GeneratorUtilities {
                     if (sym.getKind().isClass() || sym.getKind().isInterface()) {
                         if (sym != element) {
                             explicitNamedImports.add(element);
+                            break;// break if explicitNameImport was added
                         }
-                        // break if explicitNameImport was added, or when the symbol is correctly resolved.
-                        break;
                     }
                 }
             }
@@ -1329,6 +1345,7 @@ public final class GeneratorUtilities {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     if (currentToImportElement.getEnclosingElement().getKind() == ElementKind.PACKAGE)
                         el = currentToImportElement.getEnclosingElement();
                     break;
@@ -1432,7 +1449,7 @@ public final class GeneratorUtilities {
                         break;
                     }
                    switch (p2.getLeaf().getKind()) {
-                       case CLASS: case INTERFACE: case ENUM:
+                       case CLASS: case INTERFACE: case ENUM: case RECORD:
                        case METHOD:
                        case BLOCK:
                        case VARIABLE:
@@ -1500,7 +1517,8 @@ public final class GeneratorUtilities {
      * converted from a single value into an array.
      *
      * The typical trees passed as {@code attributeValuesToAdd} are:
-     * <table border="1">
+     * <table>
+     * <caption>Typical tree</caption>
      *     <tr>
      *         <th>attribute type</th>
      *         <th>expected tree type</th>
@@ -1553,7 +1571,8 @@ public final class GeneratorUtilities {
      * {@link CompilationUnitTree} from {@code package-info.java}.
      *
      * The typical trees passed as {@code attributeValuesToAdd} are:
-     * <table border="1">
+     * <table>
+     * <caption>Typical tree</caption>
      *     <tr>
      *         <th>attribute type</th>
      *         <th>expected tree type</th>
@@ -2175,6 +2194,7 @@ public final class GeneratorUtilities {
     private static final String GENERATED_METHOD_BODY = "Templates/Classes/Code/GeneratedMethodBody"; //NOI18N
     private static final String OVERRIDDEN_METHOD_BODY = "Templates/Classes/Code/OverriddenMethodBody"; //NOI18N
     private static final String LAMBDA_BODY = "Templates/Classes/Code/LambdaBody"; //NOI18N
+    private static final String LAMBDA_EXPRESSION = "Templates/Classes/Code/LambdaExpression"; //NOI18N
     private static final String METHOD_RETURN_TYPE = "method_return_type"; //NOI18N
     private static final String DEFAULT_RETURN_TYPE_VALUE = "default_return_value"; //NOI18N
     private static final String SUPER_METHOD_CALL = "super_method_call"; //NOI18N

@@ -113,7 +113,7 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
         CodeCompletionHandler cc = getCodeCompleter();
         assertNotNull("getCodeCompleter must be implemented", cc);
 
-        Document doc = GsfUtilities.getDocument(parserResult.getSnapshot().getSource().getFileObject(), true);
+        Document doc = GsfUtilities.getADocument(parserResult.getSnapshot().getSource().getFileObject(), true);
         boolean upToOffset = type == CodeCompletionHandler.QueryType.COMPLETION;
         String prefix = cc.getPrefix(parserResult, caretOffset, upToOffset);
         if (prefix == null) {
@@ -198,9 +198,7 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
     //~ Inner class
     public interface CompletionProposalFilter {
 
-        CompletionProposalFilter ACCEPT_ALL = proposal -> {
-            return true;
-        };
+        CompletionProposalFilter ACCEPT_ALL = proposal -> true;
 
         boolean accept(CompletionProposal proposal);
     }

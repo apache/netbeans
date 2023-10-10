@@ -51,7 +51,11 @@ public enum JavaStringTokenId implements TokenId {
     OCTAL_ESCAPE_INVALID("string-escape-invalid"), //NOI18N
     UNICODE_ESCAPE("string-escape"), //NOI18N
     UNICODE_ESCAPE_INVALID("string-escape-invalid"), //NOI18N
-    ESCAPE_SEQUENCE_INVALID("string-escape-invalid"); //NOI18N
+    ESCAPE_SEQUENCE_INVALID("string-escape-invalid"), //NOI18N
+    /**
+     * @since 1.58
+     */
+    TEMPLATE_START("string"); //NOI18N
 
     private final String primaryCategory;
 

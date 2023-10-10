@@ -123,9 +123,8 @@ public final class ReplaceTask implements Runnable {
     }
 
     /**
-     * 
-     * @return  list of strings describing problems that happened during
-     *          the replace, or {@code null} if no problem happened
+     * Fill internal list of strings describing problems that happened during
+     * the replace and set resultStatus variable
      */
     private void doReplace() {
         assert !EventQueue.isDispatchThread();

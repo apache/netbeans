@@ -306,14 +306,8 @@
         <token id='T_ATTRIBUTE' start='1220' end='1222'>
             <text>#[</text>
         </token>
-        <token id='T_STRING' start='1222' end='1228'>
-            <text>Class1</text>
-        </token>
-        <token id='T_NS_SEPARATOR' start='1228' end='1229'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='1229' end='1233'>
-            <text>Test</text>
+        <token id='T_NAME_QUALIFIED' start='1222' end='1233'>
+            <text>Class1\Test</text>
         </token>
         <token id='T_OPEN_PARENTHESE' start='1233' end='1234'>
             <text>(</text>

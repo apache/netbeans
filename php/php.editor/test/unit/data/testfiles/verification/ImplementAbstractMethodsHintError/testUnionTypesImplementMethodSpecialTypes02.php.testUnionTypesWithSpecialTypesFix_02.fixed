@@ -44,7 +44,6 @@ class Grandchild extends Child {
     public function testUniontypes(\TestParent1\ParentClass|Child|null $parent): \TestParent1\ParentClass|Child|null {
         
     }
-
 }
 
 $instance = new Grandchild();

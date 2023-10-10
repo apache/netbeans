@@ -130,9 +130,8 @@ public final class RepositoryImpl<R, Q, I> {
                                 toRemove.add(e.getKey());
                             }
                         }
-                        for (Q q : toRemove) {
-                            queryMap.remove(q);
-                        }
+
+                        queryMap.keySet().removeAll(toRemove);
                     }
                     fireQueryListChanged();
                 } else if (RepositoryProvider.EVENT_UNSUBMITTED_ISSUES_CHANGED.equals(evt.getPropertyName())) {
@@ -426,7 +425,7 @@ public final class RepositoryImpl<R, Q, I> {
     public Collection<IssueImpl> getUnsubmittedIssues () {
         Collection<I> issues = issueStatusProvider != null ? issueStatusProvider.getUnsubmittedIssues(r) : null;
         if (issues == null || issues.isEmpty()) {
-            return Collections.<IssueImpl>emptyList();
+            return Collections.emptyList();
         }
         List<IssueImpl> ret = new ArrayList<>(issues.size());
         for (I i : issues) {

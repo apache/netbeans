@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -79,23 +78,15 @@ import org.openide.util.NbBundle;
 public final class Model {
 
     private static final AtomicBoolean assertFired = new AtomicBoolean(false);
-    
+
     private static final Logger LOGGER = Logger.getLogger(Model.class.getName());
 
-    private static final Comparator<Map.Entry<String, ? extends JsObject>> PROPERTIES_COMPARATOR = new Comparator<Map.Entry<String, ? extends JsObject>>() {
-
-        @Override
-        public int compare(Entry<String, ? extends JsObject> o1, Entry<String, ? extends JsObject> o2) {
-            return o1.getKey().compareTo(o2.getKey());
-        }
+    private static final Comparator<Map.Entry<String, ? extends JsObject>> PROPERTIES_COMPARATOR = (o1, o2) -> {
+        return o1.getKey().compareTo(o2.getKey());
     };
 
-    private static final Comparator<TypeUsage> RETURN_TYPES_COMPARATOR = new Comparator<TypeUsage>() {
-
-        @Override
-        public int compare(TypeUsage o1, TypeUsage o2) {
-            return o1.getType().compareTo(o2.getType());
-        }
+    private static final Comparator<TypeUsage> RETURN_TYPES_COMPARATOR = (TypeUsage o1, TypeUsage o2) -> {
+        return o1.getType().compareTo(o2.getType());
     };
 
     private static final Pattern OBJECT_PATTERN = Pattern.compile(
@@ -109,7 +100,7 @@ public final class Model {
     private static enum ParsingState {
         DOCUMETATION_URL, RETURN, PARAMETER, PROPERTY
     }
-    
+
     static {
         ModelAccessor.setDefault(new ModelAccessor() {
             @Override
@@ -122,11 +113,12 @@ public final class Model {
     private final ParserResult parserResult;
 
     private final OccurrenceBuilder occurrenceBuilder;
-    
+
+    private final Map<String, Map<Integer, List<TypeUsage>>> returnTypesFromFrameworks;
+
     private ModelResolver visitor;
-    
-    private Map<String, Map<Integer, List<TypeUsage>>> returnTypesFromFrameworks;
-    
+
+
     /**
      * contains with expression?
      */
@@ -136,11 +128,11 @@ public final class Model {
         this.parserResult = parserResult;
         this.occurrenceBuilder = new OccurrenceBuilder(parserResult);
         this.resolveWithObjects = false;
-        this.returnTypesFromFrameworks = new HashMap<String, Map<Integer, List<TypeUsage>>>();
+        this.returnTypesFromFrameworks = new HashMap<>();
     }
 
     /**
-     * 
+     *
      * @param parserResult
      * @return the model, if the parser result is created on top of a js source
      */
@@ -156,7 +148,7 @@ public final class Model {
         }
         return null;
     }
-    
+
     private synchronized ModelResolver getModelVisitor() {
         boolean resolveWindowProperties = false;
         if (visitor == null) {
@@ -169,7 +161,7 @@ public final class Model {
             long startResolve = System.currentTimeMillis();
             // create all occurrences
             occurrenceBuilder.processOccurrences(visitor.getGlobalObject());
-            
+
             resolveLocalTypes(visitor.getGlobalObject(), JsDocumentationSupport.getDocumentationHolder(parserResult));
 
             ModelElementFactory elementFactory = ModelElementFactoryAccessor.getDefault().createModelElementFactory();
@@ -178,7 +170,7 @@ public final class Model {
             for (ObjectInterceptor objectInterceptor : ModelExtender.getDefault().getObjectInterceptors()) {
                 objectInterceptor.interceptGlobal(visitor.getGlobalObject(), elementFactory);
             }
-            
+
             resolveWindowProperties = !resolveWithObjects;
             long end = System.currentTimeMillis();
             if(LOGGER.isLoggable(Level.FINE)) {
@@ -212,15 +204,14 @@ public final class Model {
             }
         }
     }
-    
+
     private void processWithObject(JsWith with, Index jsIndex, List<String> outerExpression) {
         Collection<TypeUsage> withTypes = with.getTypes();
         withTypes.clear();
-        Collection<TypeUsage> resolveTypeFromExpression = new ArrayList<TypeUsage>();
+        Collection<TypeUsage> resolveTypeFromExpression = new ArrayList<>();
         int offset = ((JsWithObjectImpl)with).getExpressionRange().getEnd();
         List<String> ech = ModelUtils.resolveExpressionChain(parserResult.getSnapshot(), offset, false);
-        List<String> originalExp = new ArrayList<String>(ech);
-        JsObject fromType = null;
+        List<String> originalExp = new ArrayList<>(ech);
         if (outerExpression == null) {
             outerExpression = ech;
             resolveTypeFromExpression.addAll(ModelUtils.resolveTypeFromExpression(this, jsIndex, ech, offset, true));
@@ -232,7 +223,7 @@ public final class Model {
             resolveTypeFromExpression.addAll(ModelUtils.resolveTypeFromExpression(this, jsIndex, ech, offset, true));
             resolveTypeFromExpression = ModelUtils.resolveTypes(resolveTypeFromExpression, this, jsIndex, true);
             for(TypeUsage type : resolveTypeFromExpression) {
-                fromType = ModelUtils.findJsObjectByName(visitor.getGlobalObject(), type.getType());
+                JsObject fromType = ModelUtils.findJsObjectByName(visitor.getGlobalObject(), type.getType());
                 if (fromType != null) {
                     resolved = true;
                     outerExpression = ech;
@@ -245,7 +236,7 @@ public final class Model {
                 resolveTypeFromExpression.addAll(ModelUtils.resolveTypeFromExpression(this, jsIndex, originalExp, offset, true));
                 resolveTypeFromExpression = ModelUtils.resolveTypes(resolveTypeFromExpression, this, jsIndex, true);
                 for (TypeUsage type : resolveTypeFromExpression) {
-                    fromType = ModelUtils.findJsObjectByName(visitor.getGlobalObject(), type.getType());
+                    JsObject fromType = ModelUtils.findJsObjectByName(visitor.getGlobalObject(), type.getType());
                     if (fromType != null) {
                         resolved = true;
                         outerExpression = originalExp;
@@ -255,14 +246,14 @@ public final class Model {
                 }
             }
         }
-        
-        
+
+
         for (JsWith innerWith : with.getInnerWiths()) {
             processWithObject(innerWith, jsIndex, outerExpression);
         }
 
         for (TypeUsage type : resolveTypeFromExpression) {
-            fromType = ModelUtils.findJsObjectByName(visitor.getGlobalObject(), type.getType());
+            JsObject fromType = ModelUtils.findJsObjectByName(visitor.getGlobalObject(), type.getType());
             if (fromType != null) {
                 processWithExpressionOccurrences(fromType, ((JsWithObjectImpl)with).getExpressionRange(), originalExp);
                 Collection<TypeUsage> assignments = ModelUtils.resolveTypes(fromType.getAssignments(), this, jsIndex, true);
@@ -278,7 +269,7 @@ public final class Model {
                         }
                     }
                 }
-                
+
                 for (JsObject fromTypeProperty : fromType.getProperties().values()) {
                     JsObject jsWithProperty = with.getProperty(fromTypeProperty.getName());
                     if (jsWithProperty != null) {
@@ -301,7 +292,7 @@ public final class Model {
                     if (fqn.length() > 0) {
                         DeclarationScope ds = ModelUtils.getDeclarationScope(with);
                         JsObject fromExpression = ModelUtils.findJsObjectByName((JsObject)ds, fqn.toString());
-                        if (fromExpression == null) { 
+                        if (fromExpression == null) {
                             int position = ((JsWithObjectImpl)with).getExpressionRange().getStart();
                             JsObject parent = visitor.getGlobalObject();
                             for (StringTokenizer stringTokenizer = new StringTokenizer( type.getType(), "."); stringTokenizer.hasMoreTokens();) {
@@ -311,7 +302,7 @@ public final class Model {
                                     newObject = new JsObjectImpl(parent, new Identifier(name, position), new OffsetRange(position, position + name.length()), false, null, null);
                                     parent.addProperty(name, newObject);
                                 }
-                                position = position + name.length() + 1; // 1 is the dot                                
+                                position = position + name.length() + 1; // 1 is the dot
                                 parent = newObject;
                             }
                             fromExpression = parent;
@@ -324,13 +315,13 @@ public final class Model {
                                     }
                             }
                             processWithExpressionOccurrences(fromExpression, ((JsWithObjectImpl)with).getExpressionRange(), originalExp);
-                        } 
+                        }
                     }
-                        
+
                 }
             }
         }
-            
+
         boolean hasOuter = with.getOuterWith() != null;
         List<JsObject> withProperties = new ArrayList<>(with.getProperties().values());
         DeclarationScope withDS = ModelUtils.getDeclarationScope(with);
@@ -356,11 +347,11 @@ public final class Model {
             }
         }
     }
-    
+
     private void processWithExpressionOccurrences(JsObject jsObject, OffsetRange expRange, List<String> expression) {
         JsObject parent = jsObject.getParent();
         boolean isThis = false;
-        
+
         if ((expression.size() > 1) && expression.get(expression.size() - 2).equals(ModelUtils.THIS)) { //NOI18N
             parent = ModelUtils.findJsObject(this, expRange.getStart());
             if (parent instanceof JsWith) {
@@ -369,7 +360,7 @@ public final class Model {
             parent = visitor.resolveThis(parent);
             isThis = true;
         }
-        
+
         TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(parserResult.getSnapshot(), expRange.getEnd());
         if (ts == null) {
             return;
@@ -416,7 +407,7 @@ public final class Model {
             }
         }
     }
-    
+
     private void moveProperty (JsObject newParent, JsObject property) {
         JsObject newProperty = newParent.getProperty(property.getName());
         if (property.getParent() != null) {
@@ -445,7 +436,7 @@ public final class Model {
             resolveLocalTypes(newProperty, JsDocumentationSupport.getDocumentationHolder(parserResult));
         }
     }
-    
+
     private void processWindowsProperties(JsObject globalObject) {
         JsObject window = globalObject.getProperty("window");
         if (window != null) {
@@ -467,20 +458,20 @@ public final class Model {
     public JsObject getGlobalObject() {
         return getModelVisitor().getGlobalObject();
     }
-    
+
     /**
-     * This returns types of a function call that starts on the offsetCall. 
+     * This returns types of a function call that starts on the offsetCall.
      * These return types can be influenced by the call arguments and are obtained
-     * from the function interceptors defined in the frameworks. 
+     * from the function interceptors defined in the frameworks.
      * @param name the name of the function
      * @param offsetCall offset where the call starts (the first letter of the method name)
-     * @return 
+     * @return
      */
     public Collection<TypeUsage> getReturnTypesFromFrameworks(String name, int offsetCall) {
         Map<Integer, List<TypeUsage>> returnTypes = returnTypesFromFrameworks.get(name);
         return  (returnTypes != null) ? returnTypes.get(offsetCall) : null;
     }
-    
+
     public synchronized void resolve() {
         if (visitor == null) {
             getModelVisitor();
@@ -491,7 +482,7 @@ public final class Model {
     }
 
     public Collection<? extends JsObject> getVariables(int offset) {
-        List<JsObject> result = new ArrayList<JsObject>();
+        List<JsObject> result = new ArrayList<>();
         DeclarationScope scope = ModelUtils.getDeclarationScope(this, offset);
         while (scope != null) {
             for (JsObject object : ((JsObject)scope).getProperties().values()) {
@@ -508,12 +499,12 @@ public final class Model {
         }
         return result;
     }
-    
+
     /**
-     * 
+     *
      * @param name can not be null. Single name of the variable
      * @param offset the variable is defined in the context (or higher) of this offset
-     * @return 
+     * @return
      */
     public JsObject findVariable(final String name, final int offset) {
         if (name == null || name.isEmpty()) {
@@ -527,7 +518,7 @@ public final class Model {
         }
         return null;
     }
-    
+
     /**
      * Get the declaration object of the given offset position.
      * @param offset the offset position
@@ -537,12 +528,12 @@ public final class Model {
         DeclarationScope scope = ModelUtils.getDeclarationScope(this, offset);
         return (JsObject) scope;
     }
-   
+
     private void resolveLocalTypes(JsObject object, JsDocumentationHolder docHolder) {
-        Set<String> alreadyResolved = new HashSet<String>();
+        Set<String> alreadyResolved = new HashSet<>();
         resolveLocalTypes(object, docHolder, alreadyResolved);
     }
-    
+
     private void resolveLocalTypes(JsObject object, JsDocumentationHolder docHolder, Set<String> alreadyResolvedObjects) {
         if (object instanceof JsFunctionReference && !object.isAnonymous()) {
             return;
@@ -617,7 +608,7 @@ public final class Model {
 
     public static void writeObject(Printer printer, JsObject object, @NullAllowed ParserResult parseResult) {
         StringBuilder sb = new StringBuilder();
-        writeObject(printer, object, parseResult, sb, "", new HashSet<JsObject>()); // NOI18N
+        writeObject(printer, object, parseResult, sb, "", new HashSet<>()); // NOI18N
         String rest = sb.toString();
         if (!rest.isEmpty()) {
             printer.println(rest);
@@ -628,7 +619,7 @@ public final class Model {
             @NullAllowed String sourceLabel, URL defaultDocUrl) throws IOException {
         String line = null;
         StringBuilder pushback = new StringBuilder();
-        List<JsObject> ret = new ArrayList<JsObject>();
+        List<JsObject> ret = new ArrayList<>();
         while (pushback.length() > 0 || (line = reader.readLine()) != null) {
             if (pushback.length() > 0) {
                 line = pushback.toString();
@@ -823,7 +814,7 @@ public final class Model {
                     ret = ModelUtils.resolveTypes(ret, Model.getModel(parseResult, false),
                             Index.get(parseResult.getSnapshot().getSource().getFileObject()), true);
                 }
-                List<TypeUsage> returnTypes = new ArrayList<TypeUsage>(ret);
+                List<TypeUsage> returnTypes = new ArrayList<>(ret);
                 Collections.sort(returnTypes, RETURN_TYPES_COMPARATOR);
                 for (TypeUsage type : returnTypes) {
                     newLine(printer, sb, ident);
@@ -864,7 +855,7 @@ public final class Model {
         }
 
         List<Map.Entry<String, ? extends JsObject>> entries =
-                new ArrayList<Entry<String, ? extends JsObject>>(jsObject.getProperties().entrySet());
+                new ArrayList<>(jsObject.getProperties().entrySet());
         if (!entries.isEmpty()) {
             newLine(printer, sb, ident);
             sb.append("# PROPERTIES"); // NOI18N

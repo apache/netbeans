@@ -327,7 +327,7 @@ public class WhereUsedElement extends SimpleRefactoringElementImplementation imp
     private static String trimStart(String s) {
         for (int x = 0; x < s.length(); x++) {
             if (!Character.isWhitespace(s.charAt(x))) {
-                return s.substring(x, s.length());
+                return s.substring(x);
             }
         }
         return "";

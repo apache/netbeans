@@ -41,7 +41,7 @@ import org.openide.util.lookup.ProxyLookup;
 
 /** Utility class for operations on nodes.
  * <p>
- * Since version 7.9 this class supports creation of a <q>lazy node</q> -
+ * Since version 7.9 this class supports creation of a <em>lazy node</em> -
  * a node that displays basic information
  * about the original node behind it, without touching the original. As soon as
  * the node is expanded, or a pop up menu is invoked on it, it switches

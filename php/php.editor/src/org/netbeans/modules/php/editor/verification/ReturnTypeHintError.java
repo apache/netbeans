@@ -39,17 +39,19 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 
 /**
  * Check "void" and "never" return type.
- *
+ * Checks if the return statement has a value if a return type is specified for the function.
  */
 public class ReturnTypeHintError extends HintErrorRule {
 
@@ -116,6 +118,7 @@ public class ReturnTypeHintError extends HintErrorRule {
                 NamespaceName namespaceName = (NamespaceName) returnType;
                 String name = CodeUtils.extractUnqualifiedName(namespaceName);
                 checkVoidAndNeverReturnStatements(statements, name, hints);
+                checkReturnStatementsWithoutValue(statements, name, hints);
             } else if (returnType instanceof NullableType) {
                 Expression type = ((NullableType) returnType).getType();
                 if (type instanceof NamespaceName) {
@@ -123,6 +126,10 @@ public class ReturnTypeHintError extends HintErrorRule {
                     String name = CodeUtils.extractUnqualifiedName(namespaceName);
                     checkInvalidVoidAndNeverReturnType(type, name, hints);
                 }
+                checkReturnStatementsWithoutValue(statements, "", hints); // NOI18N
+            } else if (returnType instanceof UnionType
+                    || returnType instanceof IntersectionType) {
+                checkReturnStatementsWithoutValue(statements, "", hints); // NOI18N
             }
 
         }
@@ -133,9 +140,9 @@ public class ReturnTypeHintError extends HintErrorRule {
         "ReturnTypeHintErrorVoidDesc=\"{0}\" cannot return anything"
     })
     private void checkVoidAndNeverReturnStatements(Set<ReturnStatement> statements, String name, List<Hint> hints) {
-        if (Type.VOID.equals(name) || isNeverType(name)) {
+        if (isVoidType(name) || isNeverType(name)) {
             // check empty return statement
-            statements.forEach((statement) -> {
+            for (ReturnStatement statement: statements) {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }
@@ -143,7 +150,7 @@ public class ReturnTypeHintError extends HintErrorRule {
                 if (expression != null || isNeverType(name)) {
                     addHint(statement, Bundle.ReturnTypeHintErrorVoidDesc(name), hints);
                 }
-            });
+            }
         }
     }
 
@@ -152,16 +159,38 @@ public class ReturnTypeHintError extends HintErrorRule {
         "ReturnTypeHintErrorInvalidVoidDesc=\"{0}\" cannot be used with \"?\""
     })
     private void checkInvalidVoidAndNeverReturnType(Expression returnType, String name, List<Hint> hints) {
-        if (Type.VOID.equals(name)
-                || isNeverType(name)) {
+        if (isVoidType(name) || isNeverType(name)) {
             addHint(returnType, Bundle.ReturnTypeHintErrorInvalidVoidDesc(name), hints);
         }
     }
 
-    private boolean isNeverType(String name) {
-        return getPhpVersion(fileObject).hasNeverType()
-                && Type.NEVER.equals(name);
+    @NbBundle.Messages({
+        "ReturnStatementWithoutValueHintErrorDesc=Return statement must be filled with the value"
+    })
+    private void checkReturnStatementsWithoutValue(Set<ReturnStatement> statements, String name, List<Hint> hints) {
+        if (!isVoidType(name) && !isNeverType(name)) {
+            // check empty return statement
+            for (ReturnStatement statement: statements) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                Expression expression = statement.getExpression();
+                if (expression == null) {
+                    addHint(statement, Bundle.ReturnStatementWithoutValueHintErrorDesc(), hints);
+                }
+            }
+        }
     }
+
+    private boolean isNeverType(String name) {
+        return Type.NEVER.equals(name)
+                && getPhpVersion(fileObject).hasNeverType();
+    }
+
+   private boolean isVoidType(String name) {
+        return Type.VOID.equals(name)
+                && getPhpVersion(fileObject).hasVoidReturnType();
+    }    
 
     private void addHint(ASTNode node, String description, List<Hint> hints) {
         hints.add(new Hint(this,

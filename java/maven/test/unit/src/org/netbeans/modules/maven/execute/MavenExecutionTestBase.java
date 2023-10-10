@@ -183,7 +183,7 @@ public class MavenExecutionTestBase extends NbTestCase {
                 + "            <plugin>\n"
                 + "                <groupId>org.codehaus.mojo</groupId>\n"
                 + "                <artifactId>exec-maven-plugin</artifactId>\n"
-                + "                <version>3.0.0</version>\n"
+                + "                <version>3.1.0</version>\n"
                 + "                <configuration>\n"
                 +                      argsString 
                 + "                </configuration>\n"
@@ -377,7 +377,7 @@ public class MavenExecutionTestBase extends NbTestCase {
     //====================== samples =====================
     public static void samplePassAdditionalVMargs() {
         Project prj = null;
-        // BEGIN: MavenExecutionTestBase#samplePassAdditionalVMargs
+        // @start region="samplePassAdditionalVMargs"
         // get action provider:
         ActionProvider projectActionProvider = prj.getLookup().lookup(ActionProvider.class);
         
@@ -388,6 +388,6 @@ public class MavenExecutionTestBase extends NbTestCase {
                 build();
         // pass explicit parameters to the Run action:
         projectActionProvider.invokeAction(ActionProvider.COMMAND_RUN, Lookups.fixed(params));
-        // END: MavenExecutionTestBase#samplePassAdditionalVMargs
+        // @end region="samplePassAdditionalVMargs"
     }
 }

@@ -28,7 +28,7 @@ package org.netbeans.modules.editor.fold;
  * least one of the threads inserts/removes items, the whole access <i>must</i> be
  * synchronized externally.
  * 
- * <p/>
+ * <p>
  * Note - the copy is just temporary. When Fold API enhancements are merged, the CustomFoldManager will be
  * rewritten so that it does not need any Gap support.
  *

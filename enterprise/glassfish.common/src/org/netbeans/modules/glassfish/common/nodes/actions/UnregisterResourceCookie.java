@@ -26,7 +26,7 @@ import org.openide.nodes.Node;
 
 /**
  *
- * @auther Peter Williams
+ * @author Peter Williams
  */
 public interface UnregisterResourceCookie extends Node.Cookie {
     

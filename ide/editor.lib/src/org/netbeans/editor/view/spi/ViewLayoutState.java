@@ -32,7 +32,7 @@ import javax.swing.text.View;
  * After a change occurs in the wrapped view it calls
  * <code>getParent().preferenceChanged(this, width, height)</code>
  * the parent view will notify the layout state by calling
- * {@link #viewPreferenceChanged(width, height)} to mark
+ * {@link #viewPreferenceChanged(boolean, boolean)} to mark
  * that the cached values need to be updated.
  * <br>
  * At some point later the parent view calls
@@ -163,7 +163,7 @@ public interface ViewLayoutState {
      *
      * <p>
      * Although the value is returned as double
-     * (see {@link #getLayoutMajorAxisOffset()})
+     * (see {@link #getLayoutMajorAxisRawOffset()})
      * it can be maintained as float if the resolution of the float
      * is sufficient to create proper deltas
      * in <code>Parent#majorAxisPreferenceChanged()</code>.
@@ -289,7 +289,7 @@ public interface ViewLayoutState {
      * that variable gets updated by {@link #updateLayout()}
      * which usually happens once the view
      * has called <code>View.preferenceChanged()</code>
-     * in its parent view which in turn calls {@link #viewPreferenceChanged()}.
+     * in its parent view which in turn calls {@link #viewPreferenceChanged(boolean,boolean)}.
      * <br>
      * After the value gets updated the layout state must call
      * <code>Parent.minorAxisPreferenceChanged()</code>

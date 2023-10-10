@@ -41,6 +41,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
     }
     
     
+    @Override
     public File getServletTempDirectory(String moduleContextPath) {
         File baseDir = tm.getTomcatProperties().getCatalinaDir();
         if ((baseDir == null) || !baseDir.exists()) {
@@ -65,6 +66,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
         }
     }
     
+    @Override
     public String getServletResourcePath(String moduleContextPath, String jspResourcePath) {
         //String path = module.getWebURL();
         
@@ -92,7 +94,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
     // JspUtil and JspCompilationContext
     public String getServletPackageName(String jspUri) {
         String jspBasePackageName = "org/apache/jsp";//NOI18N
-        int iSep = jspUri.lastIndexOf('/');
+        int iSep = jspUri.lastIndexOf("/");
         String packageName = (iSep > 0) ? jspUri.substring(0, iSep) : "";//NOI18N
         if (packageName.length() == 0) {
             return jspBasePackageName;
@@ -104,7 +106,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
     // After Apache code donation, should use org.apache.jasper utilities in
     // JspUtil and JspCompilationContext
     public String getServletClassName(String jspUri) {
-        int iSep = jspUri.lastIndexOf('/') + 1;
+        int iSep = jspUri.lastIndexOf("/") + 1;
         String className = jspUri.substring(iSep);
         StringBuilder modClassName = new StringBuilder("");//NOI18N
         for (int i = 0; i < className.length(); i++) {
@@ -118,6 +120,7 @@ public class FindJSPServletImpl implements FindJSPServlet {
         return modClassName.toString();
     }
  
+    @Override
     public String getServletEncoding(String moduleContextPath, String jspResourcePath) {
         return "UTF8"; // NOI18N
     }

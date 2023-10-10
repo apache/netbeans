@@ -20,6 +20,7 @@ package org.netbeans.modules.java.hints.suggestions;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AnyPatternTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssertTree;
@@ -34,7 +35,9 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.DefaultCaseLabelTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
@@ -44,7 +47,6 @@ import com.sun.source.tree.ExportsTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
-import com.sun.source.tree.GuardedPatternTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ImportTree;
@@ -64,13 +66,14 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
-import com.sun.source.tree.ParenthesizedPatternTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Scope;
+import com.sun.source.tree.StringTemplateTree;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
@@ -110,7 +113,6 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
 import javax.lang.model.type.UnionType;
 import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
@@ -1034,7 +1036,7 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
         } else if (el.getKind() == ElementKind.FIELD) {
             // access to a field
             Element parent = el.getEnclosingElement();
-            if (parent.getKind() == ElementKind.CLASS || parent.getKind() == ElementKind.INTERFACE || parent.getKind() == ElementKind.ENUM) {
+            if (parent.getKind() == ElementKind.CLASS || parent.getKind() == ElementKind.INTERFACE || parent.getKind() == ElementKind.ENUM || parent.getKind() == ElementKind.RECORD) {
                 return Collections.singletonList(parent.asType());
             }
         }
@@ -1416,12 +1418,29 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
     }
 
     @Override
-    public List<? extends TypeMirror> visitGuardedPattern(GuardedPatternTree node, Object p) {
+    public List<? extends TypeMirror> visitConstantCaseLabel(ConstantCaseLabelTree node, Object p) {
         return null;
     }
 
     @Override
-    public List<? extends TypeMirror> visitParenthesizedPattern(ParenthesizedPatternTree node, Object p) {
+    public List<? extends TypeMirror> visitPatternCaseLabel(PatternCaseLabelTree node, Object p) {
         return null;
     }
+
+    @Override
+    public List<? extends TypeMirror> visitDeconstructionPattern(DeconstructionPatternTree node, Object p) {
+        return null;
+    }
+
+    @Override
+    public List<? extends TypeMirror> visitStringTemplate(StringTemplateTree stt, Object p) {
+        //TODO:
+        return null;
+    }
+
+    @Override
+    public List<? extends TypeMirror> visitAnyPattern(AnyPatternTree apt, Object p) {
+        return null;
+    }
+
 }

@@ -118,7 +118,7 @@ public class Utils {
                         J2eeModuleProvider affectedPrjProvider1 = p1.getLookup().lookup(J2eeModuleProvider.class);
                         J2eeModuleProvider affectedPrjProvider2 = p2.getLookup().lookup(J2eeModuleProvider.class);
                         if (affectedPrjProvider1 != null && affectedPrjProvider2 != null) {
-                            List childModules = Arrays.asList(j2eeModules);
+                            List<J2eeModuleProvider> childModules = Arrays.asList(j2eeModules);
                             if (childModules.contains(affectedPrjProvider1) &&
                                 childModules.contains(affectedPrjProvider2)) {
                                 return true;

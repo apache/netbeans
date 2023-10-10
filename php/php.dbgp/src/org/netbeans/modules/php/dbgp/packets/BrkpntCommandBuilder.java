@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.dbgp.packets;
 
 import org.netbeans.modules.php.dbgp.SessionId;
+import org.netbeans.modules.php.dbgp.breakpoints.ExceptionBreakpoint;
 import org.netbeans.modules.php.dbgp.breakpoints.FunctionBreakpoint;
 import org.netbeans.modules.php.dbgp.breakpoints.LineBreakpoint;
 import org.netbeans.modules.php.dbgp.packets.BrkpntSetCommand.Types;
@@ -97,6 +98,13 @@ public final class BrkpntCommandBuilder {
         BrkpntSetCommand command = new BrkpntSetCommand(transactionId);
         command.setType(Types.EXCEPTION);
         command.setException(excName);
+        return command;
+    }
+
+    public static BrkpntSetCommand buildExceptionBreakpoint(String transactionId, ExceptionBreakpoint exceptionBreakpoint) {
+        String exceptionName = exceptionBreakpoint.getException();
+        BrkpntSetCommand command = buildExceptionBreakpoint(transactionId, exceptionName);
+        command.setBreakpoint(exceptionBreakpoint);
         return command;
     }
 

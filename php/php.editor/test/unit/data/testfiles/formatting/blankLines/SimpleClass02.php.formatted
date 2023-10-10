@@ -12,7 +12,6 @@ class SimpleClass {
     public function displayVar() {
         echo $this->var;
     }
-
 }
 
 ?>

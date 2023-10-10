@@ -32,8 +32,8 @@ import org.openide.util.Parameters;
  * This class is used in two modes: 
  * </p>
  * <ol>
- * <li>When moving a caret ({@link EditorCaret#setDot(int, org.netbeans.api.editor.caret.MoveCaretsOrigin) setDot(pos, origin)},
- * {@link EditorCaret#moveDot(int, org.netbeans.api.editor.caret.MoveCaretsOrigin) moveDot(pos, origin)}, 
+ * <li>When moving a caret ({@link EditorCaret#setDot(int, javax.swing.text.Position.Bias, org.netbeans.api.editor.caret.MoveCaretsOrigin) setDot(pos, origin)},
+ * {@link EditorCaret#moveDot(int, javax.swing.text.Position.Bias, org.netbeans.api.editor.caret.MoveCaretsOrigin) moveDot(pos, origin)}, 
  * {@link EditorCaret#moveCarets(org.netbeans.spi.editor.caret.CaretMoveHandler, org.netbeans.api.editor.caret.MoveCaretsOrigin) moveCarets(handler, origin)}),
  * as a information on the originating operation ({@link #getActionType getActionType()}) and possibly additional
  * hints that describes the intended caret move ({@link #getDirection() getDirection()}).

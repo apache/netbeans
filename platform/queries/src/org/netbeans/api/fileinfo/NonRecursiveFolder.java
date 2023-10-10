@@ -26,9 +26,9 @@ import org.openide.filesystems.FileObject;
  * When an implementation of this interface is contained in the
  * lookup of a node, actions on that node should not process the subfolders
  * of this folder.
- * It is permitted for a Node to have both the {@link org.openide.loaders.DataFolder}
+ * It is permitted for a Node to have both the <a href="@org-openide-loaders@/org/openide/loaders/DataFolder.html">DataFolder</a>
  * and NonRecursiveFolder in its lookup. In this case the {@link NonRecursiveFolder#getFolder} has to
- * return the same {@link FileObject} as the {@link org.openide.loaders.DataFolder#getPrimaryFile} method.
+ * return the same {@link FileObject} as the <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile--">DataFolder#getPrimaryFile</a> method.
  * Any action which checks for the NonRecursiveFolder at all must prefer it to
  * the DataFolder since it is considered to be more specific information.
  *

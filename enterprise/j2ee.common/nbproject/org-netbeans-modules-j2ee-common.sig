@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.118
+#Version 1.124
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -638,11 +638,15 @@ meth public boolean hasDefaultPersistenceProvider()
 meth public boolean isCdi10Supported()
 meth public boolean isCdi11Supported()
 meth public boolean isCdi20Supported()
+meth public boolean isCdi30Supported()
+meth public boolean isCdi40Supported()
 meth public boolean isEjb30Supported()
 meth public boolean isEjb31LiteSupported()
 meth public boolean isEjb31Supported()
 meth public boolean isEjb32LiteSupported()
 meth public boolean isEjb32Supported()
+meth public boolean isEjb40LiteSupported()
+meth public boolean isEjb40Supported()
 meth public boolean isEjbLiteIncluded()
  anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.j2ee.common.J2eeProjectCapabilities forProject(org.netbeans.api.project.Project)

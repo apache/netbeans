@@ -94,7 +94,7 @@ suite('Extension Test Suite', () => {
 
         try {
             console.log("Test: invoking compile");
-            let res = await vscode.commands.executeCommand("java.workspace.compile");
+            let res = await vscode.commands.executeCommand("nbls.workspace.compile");
             console.log(`Test: compile finished with ${res}`);
         } catch (error) {
             dumpJava();
@@ -164,7 +164,7 @@ suite('Extension Test Suite', () => {
                 }
                 console.log("Test: invoking debug debug.run");
                 const workspaceFolder = (vscode.workspace.workspaceFolders!)[0];
-                vscode.debug.startDebugging(workspaceFolder, {type: "java8+", name: "Launch Java 8+ App", request: "launch"}, {}).
+                vscode.debug.startDebugging(workspaceFolder, {type: "java+", name: "Launch Java App", request: "launch"}, {}).
                     then(() => waitUserApplication(5, true, onProcessStarted));
             });
             return r;

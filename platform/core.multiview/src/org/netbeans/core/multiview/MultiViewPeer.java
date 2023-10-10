@@ -622,7 +622,7 @@ public final class MultiViewPeer implements PropertyChangeListener {
             if (descs[i].getPersistenceType() != TopComponent.PERSISTENCE_NEVER) {
                 // only those requeTopsted and previously created elements are serialized.
                 MultiViewElement elem = model.getElementForDescription(descs[i], false);
-                if (elem != null && elem instanceof Serializable) {
+                if (elem instanceof Serializable) {
                     out.writeObject(elem);
                 }
             }

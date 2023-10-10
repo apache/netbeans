@@ -24,7 +24,6 @@ import com.sun.source.util.TreePath;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.modules.j2ee.persistence.action.*;
-import org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator.EntityManagerGenerationStrategySupport;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
@@ -37,7 +36,6 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.j2ee.metadata.model.support.TestUtilities;
-import org.netbeans.modules.j2ee.persistence.spi.entitymanagergenerator.EntityManagerGenerationStrategy;
 import org.openide.filesystems.FileUtil;
 
 /**

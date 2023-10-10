@@ -133,7 +133,6 @@ public class CustomizerTesting extends JPanel {
         GroupLayout providersPanelLayout = new GroupLayout(providersPanel);
         GroupLayout.ParallelGroup horizontalGroup = providersPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
         GroupLayout.SequentialGroup verticalGroup = providersPanelLayout.createSequentialGroup();
-        boolean first = true;
         final Collator collator = Collator.getInstance();
         Collections.sort(allTestingProviders, new Comparator<PhpTestingProvider>() {
             @Override
@@ -150,11 +149,7 @@ public class CustomizerTesting extends JPanel {
             }
             horizontalGroup.addComponent(checkBox);
             verticalGroup.addComponent(checkBox);
-            if (first) {
-                first = false;
-            } else {
-                verticalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
-            }
+            verticalGroup.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED);
         }
         providersPanel.setLayout(providersPanelLayout);
         providersPanelLayout.setHorizontalGroup(

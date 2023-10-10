@@ -618,7 +618,7 @@ public abstract class BaseActionProvider implements ActionProvider {
      */
     public static interface Callback3 extends Callback2 {
         /**
-         * Creates additional properties passed to the <i>ant</t>.
+         * Creates additional properties passed to the <i>ant</i>.
          * Called before an <i>ant</i> target is invoked. Note that call to
          * {@link #invokeAction(java.lang.String, org.openide.util.Lookup)} does
          * not necessarily means call to ant.

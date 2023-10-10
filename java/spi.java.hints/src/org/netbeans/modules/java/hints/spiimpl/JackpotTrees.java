@@ -92,8 +92,8 @@ public class JackpotTrees {
         private final Name ident;
         private final JCIdent jcIdent;
 
-        public CaseWildcard(Name ident, JCIdent jcIdent, CaseKind caseKind, List<JCCaseLabel> labels, List<JCStatement> stats, JCTree body) {
-            super(caseKind, labels, stats, body);  // JDK 8-17+
+        public CaseWildcard(Name ident, JCIdent jcIdent, CaseKind caseKind, List<JCCaseLabel> labels, JCExpression guard, List<JCStatement> stats, JCTree body) {
+            super(caseKind, labels, guard, stats, body);
             this.ident = ident;
             this.jcIdent = jcIdent;
         }

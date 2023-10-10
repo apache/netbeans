@@ -578,7 +578,7 @@ public final class SQLExecuteHelper {
                 return false;
             }
             
-            if ( substr.toUpperCase().equals(token.toUpperCase())) { // NOI18N
+            if ( substr.equalsIgnoreCase(token)) { // NOI18N
                 return true;
             }
             

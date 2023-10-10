@@ -23,7 +23,7 @@ import javax.swing.text.BadLocationException;
 
 /**
 * Attempt to insert or remove from the guarded block has been done.
-* <br/>
+* <br>
 * Also it's thrown when modification is prohibited (CloneableEditorSupport
 * sets a "modificationListener" and possibly responds by VetoException to signal
 * that document is unmodifiable) since this is in fact a case when document

@@ -1,0 +1,49 @@
+<testresult testFile='treatNamespacedNamesAsSingleToken_04.php'>
+    <scanner>
+        <token id='T_DEFINE' start='815' end='821'>
+            <text>define</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='821' end='822'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='822' end='828'>
+            <text>"test"</text>
+        </token>
+        <token id='T_COMMA' start='828' end='829'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='830' end='841'>
+            <text>"something"</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='841' end='842'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='842' end='843'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='844' end='844'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='844'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='815' end='843'>
+                <FunctionInvocation start='815' end='842'>
+                    <FucntionName start='815' end='821'>
+                        <NamespaceName start='815' end='821' isCurrent='false' isGlobal='false'>
+                            <Identifier start='815' end='821' name='define'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='822' end='828' type='STRING' value='"test"'/>
+                        <Scalar start='830' end='841' type='STRING' value='"something"'/>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

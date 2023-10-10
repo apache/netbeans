@@ -26,7 +26,7 @@
   </head>
   <body>
     <h1 align="left">Preferences API in NetBeans</h1>
-    NetBeans adopts <a href="http://java.sun.com/j2se/1.5.0/docs/guide/preferences/">Java Preferences API</a>
+    NetBeans adopts <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/preferences/index.html">Java Preferences API</a>
     standard to be used in NetBeans to
     store preference and configuration data to be able to adapt to the needs
     of different users. NetBeans keeps this standard and enhances it slightly
@@ -169,7 +169,7 @@
     registering the option into your layer.
     <H4 ALIGN=LEFT>How to document usage of Preferences API?</H4>
     Answer properly arch questions like any other <A
-      HREF="http://openide.netbeans.org/tutorial/api-design.html">APIs</A>. There was added new arch question related to
+      HREF="https://netbeans.apache.org/wiki/API_Design">APIs</A>. There was added new arch question related to
     preferences (resources-preferences). See example:
     <PRE>
 &lt;answer id="resources-preferences"&gt;
@@ -244,9 +244,8 @@ public class DerbyOptionsTest extends BasicTestForImport {
 If the tests  didn't pass then probably there is more complicated object graph
 serialized then you must subclass <CODE>PropertyProcessor</CODE> and put your
 own code in.
-(See as an example: <A HREF="http://www.netbeans.org/source/browse/ide/launcher/upgrade/src/org/netbeans/upgrade/systemoptions/TaskTagsProcessor.java?view=markup">TaskTagsProcessor</A>
- and here is a <A
-   HREF="http://www.netbeans.org/source/browse/ide/launcher/upgrade/test/unit/src/org/netbeans/upgrade/systemoptions/ExampleSettingsTest.java?view=markup">test</A>).
+(See as an example: <A HREF="https://github.com/apache/netbeans/tree/master/nb/o.n.upgrader/src/org/netbeans/upgrade/systemoptions/TaskTagsProcessor.java">TaskTagsProcessor</A>
+ ).
  <H4 ALIGN=LEFT>How to write tests that needs Preferences API?</H4>
  Not persistent implementation of <code>java.util.prefs.Preferences</code> 
  is installed in place of the platform-specific default implementation for

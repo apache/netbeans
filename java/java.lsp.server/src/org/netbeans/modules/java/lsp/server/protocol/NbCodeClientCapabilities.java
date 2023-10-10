@@ -22,7 +22,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.InitializeParams;
-import org.netbeans.modules.java.lsp.server.ui.UIContext;
 
 /**
  * Encapsulates all nbcode-specific client capabilities. Need to be passed in
@@ -67,6 +66,11 @@ public final class NbCodeClientCapabilities {
     private Boolean showHtmlPageSupport;
 
     /**
+     * Asks for java support.
+     */
+    private Boolean wantsJavaSupport = Boolean.TRUE;
+
+    /**
      * Asks for groovy support. Temporary option, will be removed.
      */
     private Boolean wantsGroovySupport = Boolean.TRUE;
@@ -109,6 +113,18 @@ public final class NbCodeClientCapabilities {
 
     public void setShowHtmlPageSupport(Boolean showHtmlPageSupport) {
         this.showHtmlPageSupport = showHtmlPageSupport;
+    }
+
+    public Boolean getWantsJavaSupport() {
+        return wantsJavaSupport;
+    }
+
+    public void setWantsJavaSupport(Boolean enableJava) {
+        this.wantsJavaSupport = enableJava == null ? Boolean.TRUE : enableJava;
+    }
+
+    public boolean wantsJavaSupport() {
+        return wantsJavaSupport.booleanValue();
     }
 
     public Boolean getWantsGroovySupport() {

@@ -1,3 +1,24 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
 <FunctionNode name=':program' kind='SCRIPT' start='0' end='122'>
   <isProgram/>
   <!-- FunctionNode Parameters -->
@@ -19,12 +40,12 @@
       <!-- VarNode Init -->
       <ClassNode ident='Test' start='0' end='121'>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='Test' start='0' end='121'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='Test' start='0' end='121'>
+          <!-- ClassElement Key -->
           <IdentNode start='6' end='10'>
             <name>Test</name>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='Test' kind='NORMAL' start='0' end='121'>
             <isClassConstructor/>
             <isMethod/>
@@ -36,43 +57,43 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
-        <PropertyNode name='a' start='18' end='38'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='a' start='18' end='38'>
+          <!-- ClassElement Key -->
           <IdentNode start='18' end='19'>
             <name>a</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <NumberLiteralNode value='25' start='22' end='24'/>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
-        <PropertyNode name='b' start='47' end='49'>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <ClassElement name='b' start='47' end='49'>
           <isStatic/>
-          <!-- PropertyNode Key -->
+          <!-- ClassElement Key -->
           <IdentNode start='47' end='48'>
             <name>b</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
-        <PropertyNode name='get' start='59' end='63'>
-          <!-- PropertyNode Key -->
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <ClassElement name='get' start='59' end='63'>
+          <!-- ClassElement Key -->
           <IdentNode start='59' end='62'>
             <name>get</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
-        <PropertyNode name='x' start='73' end='97'>
-          <!-- PropertyNode Key -->
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <ClassElement name='x' start='73' end='97'>
+          <!-- ClassElement Key -->
           <IdentNode start='77' end='78'>
             <name>x</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Getter -->
+          <!-- ClassElement Getter -->
           <FunctionNode name='get x' kind='GETTER' start='73' end='97'>
             <isMethod/>
             <isNamedFunctionExpression/>
@@ -83,19 +104,19 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
-        <PropertyNode name='u' start='113' end='119'>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <ClassElement name='u' start='113' end='119'>
           <isStatic/>
-          <!-- PropertyNode Key -->
+          <!-- ClassElement Key -->
           <IdentNode start='113' end='114'>
             <name>u</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <NumberLiteralNode value='17' start='117' end='119'/>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Decorators -->
       </ClassNode>
     </VarNode>

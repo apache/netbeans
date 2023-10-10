@@ -18,11 +18,14 @@
  */
 package org.netbeans.modules.java.hints.errors;
 
-import com.sun.source.tree.Tree;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
@@ -34,21 +37,25 @@ import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.Fix;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
-import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
 import static org.netbeans.modules.java.hints.errors.Bundle.*;
+import org.netbeans.modules.refactoring.api.impl.APIAccessor;
+import org.netbeans.modules.refactoring.api.impl.SPIAccessor;
+import org.netbeans.modules.refactoring.java.spi.hooks.JavaModificationResult;
+import org.netbeans.modules.refactoring.spi.RefactoringCommit;
+import org.netbeans.modules.refactoring.spi.Transaction;
 
 /**
  *
  * @author Ralph Ruijs
  */
-@NbBundle.Messages({"LBL_FIX_ChangeMethodParameters=Change Method Signature from {0} to {1}",
+@NbBundle.Messages({"LBL_FIX_ChangeMethodParameters=Change method from {0} to {1}",
                     "LBL_FIX_ChangeConstructorParameters=Change constructor from {0} to {1}"})
-public final class ChangeParametersFix implements Fix {
+public final class ChangeParametersFix extends ModificationResultBasedFix implements Fix {
     private final boolean doFullRefactoring;
     private final TreePathHandle tph;
     private final String declaration;
@@ -78,6 +85,45 @@ public final class ChangeParametersFix implements Fix {
             doFullChangeMethodParameters(tph, newParameterInfo);
             return null;
         }
+        RefactoringSession session = getRefactoringSession(true);
+        if (session != null) {
+            if (session.doRefactoring(false) != null) {
+                doFullChangeMethodParameters(tph, newParameterInfo);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<ModificationResult> getModificationResults() throws IOException {
+        List<ModificationResult> results = new ArrayList<>();
+        RefactoringSession session = getRefactoringSession(false);
+        if (session != null) {
+            List<Transaction> transactions = APIAccessor.DEFAULT.getCommits(session);
+            for (Transaction t : transactions) {
+                if (t instanceof RefactoringCommit) {
+                    RefactoringCommit c = (RefactoringCommit) t;
+                    for (org.netbeans.modules.refactoring.spi.ModificationResult refResult : SPIAccessor.DEFAULT.getTransactions(c)) {
+                        if (refResult instanceof JavaModificationResult) {
+                            results.add(((JavaModificationResult) refResult).delegate);
+                        } else {
+                            throw new IllegalStateException(refResult.getClass().toString());
+                        }
+                    }
+                } else {
+                    throw new IllegalStateException(t.getClass().toString());
+                }
+            }
+        }
+        return results;
+    }
+
+    @Override
+    public ModificationResult getModificationResult() throws IOException {
+        return null;
+    }
+
+    private RefactoringSession getRefactoringSession(boolean allowFullRefactoring) {
         ChangeParametersRefactoring refactoring = new ChangeParametersRefactoring(tph);
         refactoring.setParameterInfo(new ChangeParametersRefactoring.ParameterInfo[]{});
         refactoring.setModifiers(modifiers);
@@ -86,22 +132,21 @@ public final class ChangeParametersFix implements Fix {
         Problem problem = null;
         problem = refactoring.preCheck();
         if (problem != null) {
-            doFullChangeMethodParameters(tph, newParameterInfo);
+            if (allowFullRefactoring) {
+                doFullChangeMethodParameters(tph, newParameterInfo);
+            }
             return null;
         }
         problem = refactoring.prepare(session);
         if (problem != null) {
-            doFullChangeMethodParameters(tph, newParameterInfo);
+            if (allowFullRefactoring) {
+                doFullChangeMethodParameters(tph, newParameterInfo);
+            }
             return null;
         }
-        problem = session.doRefactoring(false);
-        if (problem != null) {
-            doFullChangeMethodParameters(tph, newParameterInfo);
-            return null;
-        }
-        return null;
+        return session;
     }
-    
+
     private static void doFullChangeMethodParameters(TreePathHandle tph, ParameterInfo[] newParameterInfo) {
         InstanceContent ic = new InstanceContent();
         ic.add(tph);

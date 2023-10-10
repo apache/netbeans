@@ -165,7 +165,7 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
                     // there is hardcoded behavior for jQuery
                     if (request.prefix.startsWith(".")) {
                         request.prefix = request.prefix.substring(1);
-                        request.anchor = request.anchor + 1;
+                        request.anchor++;
                     }
                     List<String> expression = resolveExpressionChainFromString(request);
                     Map<String, List<JsElement>> toAdd = getCompletionFromExpressionChain(request, expression);

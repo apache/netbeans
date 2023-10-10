@@ -205,7 +205,7 @@ implements java.beans.PropertyChangeListener, FileSystem.AtomicAction {
     Convertor getConvertor() throws IOException {
         if (convertor == null) {
             Object attrb = providerFO.getAttribute(Env.EA_CONVERTOR);
-            if (attrb == null || !(attrb instanceof Convertor)) {
+            if (!(attrb instanceof Convertor)) {
                 throw new IOException("cannot create convertor: " + attrb + ", provider:" +providerFO); //NOI18N
             }
             convertor = (Convertor) attrb;
@@ -217,7 +217,7 @@ implements java.beans.PropertyChangeListener, FileSystem.AtomicAction {
     private synchronized String getInstanceClassName() {
         if (instanceClassName == null) {
             Object name = providerFO.getAttribute(Env.EA_INSTANCE_CLASS_NAME);
-            if (name != null && name instanceof String) {
+            if (name instanceof String) {
                 instanceClassName = org.openide.util.Utilities.translate((String) name);
             } else {
                 instanceClassName = null;

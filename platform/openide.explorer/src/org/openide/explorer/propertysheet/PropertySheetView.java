@@ -33,7 +33,7 @@ import javax.swing.*;
  * properties for currently selected {@link Node}
  *
  * <p>
- * This class is a <q>view</q>
+ * This class is a <em>view</em>
  * to use it properly you need to add it into a component which implements
  * {@link Provider}. Good examples of that can be found
  * in {@link ExplorerUtils}. Then just use 
@@ -41,7 +41,7 @@ import javax.swing.*;
  * and control its state.
  * </p>
  * <p>
- * There can be multiple <q>views</q> under one container implementing {@link Provider}. Select from
+ * There can be multiple <em>views</em> under one container implementing {@link Provider}. Select from
  * range of predefined ones or write your own:
  * </p>
  * <ul>

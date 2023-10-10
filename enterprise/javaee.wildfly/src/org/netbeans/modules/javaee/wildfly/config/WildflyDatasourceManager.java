@@ -107,7 +107,7 @@ public final class WildflyDatasourceManager implements DatasourceManager {
             }
             WildflyDatasource ds = (WildflyDatasource) o;
             String jndiName = WildflyDatasource.getRawName(ds.getJndiName());
-            if (ddsMap.keySet().contains(jndiName)) { // conflicting ds found
+            if (ddsMap.containsKey(jndiName)) { // conflicting ds found
                 if (!ddsMap.get(jndiName).equals(ds)) { // found ds is not equal
                     conflictDS.add(ddsMap.get(jndiName)); // NOI18N
                 }
@@ -137,7 +137,7 @@ public final class WildflyDatasourceManager implements DatasourceManager {
         DatasourceType ltxds[] = deployedDSGraph.getDatasource();
         for (int i = 0; i < ltxds.length; i++) {
             String jndiName = ltxds[i].getJndiName();
-            if (newDS.keySet().contains(jndiName)) //conflict, we must remove it from graph
+            if (newDS.containsKey(jndiName)) //conflict, we must remove it from graph
             {
                 deployedDSGraph.removeDatasource(ltxds[i]);
             }

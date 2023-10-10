@@ -265,7 +265,7 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
         noDomLabel.setHorizontalAlignment(SwingConstants.CENTER);
         noDomLabel.setVerticalAlignment(SwingConstants.CENTER);
         noDomLabel.setEnabled(false);
-        noDomLabel.setBackground(treeView.getViewport().getView().getBackground());
+        noDomLabel.setBackground(UIManager.getColor("Tree.background"));
         noDomLabel.setOpaque(true);
     }
 
@@ -429,11 +429,11 @@ public class DomPanel extends JPanel implements ExplorerManager.Provider {
         treeView.expandNode(root);
         for (Node node : root.getChildren().getNodes()) {
             String nodeName = node.getName();
-            if (nodeName != null && nodeName.trim().toLowerCase().equals("html")) { // NOI18N
+            if (nodeName != null && nodeName.trim().equalsIgnoreCase("html")) { // NOI18N
                 treeView.expandNode(node);
                 for (Node subNode : node.getChildren().getNodes()) {
                     nodeName = subNode.getName();
-                    if (nodeName != null && nodeName.trim().toLowerCase().equals("body")) { // NOI18N
+                    if (nodeName != null && nodeName.trim().equalsIgnoreCase("body")) { // NOI18N
                         treeView.expandNode(subNode);
                     }
                 }

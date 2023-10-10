@@ -482,5 +482,42 @@ public enum NodeType {
     , sass_forward_with_declaration
     , sass_forward_hide
     , sass_forward_show
+    // definitions to handle variable syntax
+    , preservedToken
+    , preservedTokenTopLevel
+    , braceBlock
+    , bracketBlock
+    , parenBlock
+    , componentValue
+    , componentValueOuter
+    // @layer rule
+    , layerAtRule
+    , importLayer
+    , layerName
+    , layerBody
+    , layerStatement
+    , layerBlock
+    // @container
+    , containerAtRule
+    , containerCondition
+    , containerQueryWithOperator
+    , containerQueryConjunction
+    , containerQueryDisjunction
+    , containerQueryInParens
+    , containerName
+    , styleQuery
+    , styleCondition
+    , styleConditionWithOperator
+    , styleQueryConjunction
+    , styleQueryDisjunction
+    , styleInParens
+    , sizeFeature
+    , sizeFeatureName
+    , sizeFeatureValue
+    , styleFeature
+    , sizeFeatureFixedValue
+    , sizeFeatureRangeSingle
+    , sizeFeatureRangeBetweenLt
+    , sizeFeatureRangeBetweenGt
     ;
 }

@@ -189,6 +189,7 @@ final class JBossEjbRefModifier {
      * 
      * @deprecated
      */
+    @Deprecated
     static void modifyMsgDrv(Jboss modifiedJboss, String ejbRefName, Map beans) {
 
         assert(beans.size() > 0);
@@ -209,6 +210,7 @@ final class JBossEjbRefModifier {
      * 
      * @deprecated
      */
+    @Deprecated
     private static void addMsgDrvEjbReference(Jboss modifiedJboss, String ejbRefName, Map beans) {
 
         List/*<Entity>*/ msgdrvsWithoutReference = new LinkedList();

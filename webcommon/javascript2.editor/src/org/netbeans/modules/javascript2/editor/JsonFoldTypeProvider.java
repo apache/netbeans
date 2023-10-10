@@ -20,7 +20,6 @@ package org.netbeans.modules.javascript2.editor;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import org.netbeans.api.editor.fold.FoldTemplate;
 import org.netbeans.api.editor.fold.FoldType;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -33,29 +32,29 @@ import org.openide.util.NbBundle;
  */
 @MimeRegistration(mimeType = "text/x-json", service = FoldTypeProvider.class, position = 1102)
 public class JsonFoldTypeProvider implements FoldTypeProvider {
-    
-    private final Collection<FoldType>   types = new ArrayList<FoldType>(4);
+
+    private final Collection<FoldType>   types = new ArrayList<>(4);
 
     @NbBundle.Messages({
         "FT_Label_Object-block=Objects",
         "FT_display_Object-block={...}",
         "FT_display_default=..."
     })
-    public static final FoldType OBJECT = FoldType.create("code-object", Bundle.FT_Label_Object_block(), 
+    public static final FoldType OBJECT = FoldType.create("code-object", Bundle.FT_Label_Object_block(),
             new FoldTemplate(1, 1, Bundle.FT_display_Object_block()));
-    
+
     @NbBundle.Messages({
         "FT_Label_Array-block=Arrays",
         "FT_display_Array-block=[...]"
     })
-    public static final FoldType ARRAY = FoldType.create("code-array", Bundle.FT_Label_Array_block(), 
+    public static final FoldType ARRAY = FoldType.create("code-array", Bundle.FT_Label_Array_block(),
             new FoldTemplate(1, 1, Bundle.FT_display_Array_block()));
-    
+
     public JsonFoldTypeProvider() {
         types.add(OBJECT);
         types.add(ARRAY);
     }
-    
+
     @Override
     public Collection getValues(Class type) {
         return types;
@@ -65,5 +64,5 @@ public class JsonFoldTypeProvider implements FoldTypeProvider {
     public boolean inheritable() {
         return true;
     }
-    
+
 }

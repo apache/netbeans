@@ -52,11 +52,15 @@ public class ComposerOptionsValidatorTest extends NbTestCase {
         result = new ComposerOptionsValidator()
                 .validateVendor("my.company")
                 .getResult();
-        assertTrue(result.hasWarnings());
+        assertFalse(result.hasWarnings());
         result = new ComposerOptionsValidator()
                 .validateVendor("my_company")
                 .getResult();
-        assertTrue(result.hasWarnings());
+        assertFalse(result.hasWarnings());
+        result = new ComposerOptionsValidator()
+                .validateVendor("my-company")
+                .getResult();
+        assertFalse(result.hasWarnings());
     }
 
     public void testValidAuthorEmail() {

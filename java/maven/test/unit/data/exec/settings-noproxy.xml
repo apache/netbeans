@@ -1,0 +1,10 @@
+<settings>
+    <profiles>  
+        <profile>
+            <id>graalvm</id>
+            <properties>
+                <graalvm>/space/java/graalvm-0.22</graalvm>
+            </properties>
+        </profile>
+    </profiles>
+</settings>

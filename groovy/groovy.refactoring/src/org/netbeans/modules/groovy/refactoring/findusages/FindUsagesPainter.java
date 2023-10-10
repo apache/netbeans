@@ -112,7 +112,7 @@ public class FindUsagesPainter {
             if (Character.isWhitespace(s.charAt(x))) {
                 continue;
             } else {
-                return s.substring(x, s.length());
+                return s.substring(x);
             }
         }
         return "";

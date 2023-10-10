@@ -32,8 +32,8 @@ import org.netbeans.api.lsp.CallHierarchyEntry;
  * <p>
  * First {@link #findCallOrigin} should be called, producing a {@link CallHierarchyEntry} 
  * that describes the element at the given position. In subsequent calls, inbound or
- * outbound calls may be inspected for the passed Entry using {@link #findIncomingCalls}
- * or {@link #findOugoingCalls}. 
+ * outbound calls may be inspected for the passed Entry using {@link #findIncomingCalls(CallHierarchyEntry)}
+ * or {@link #findOutgoingCalls(CallHierarchyEntry)}. 
  * <p>
  * Note that the returned CompletableFutures may become completed cancelled if the implementation (for example)
  * displays user-facing UI like progress, which allows the user to interrupt the operation. If the reported
@@ -60,7 +60,7 @@ public interface CallHierarchyProvider {
     /**
      * Returns a list of locations that call into the passed call target. The method may return {@code null}, if the
      * call target location is not supported or is invalid. The {@link CallHierarchyEntry.Call#getRanges() Call.getRanges()} 
-     * describes ranges int he caller {@link StructureElement} where the target is invoked.
+     * describes ranges int he caller {@link org.netbeans.api.lsp.StructureElement} where the target is invoked.
      * @param callTarget the call target location
      * @return list of callers, or {@code null}
      */
@@ -70,7 +70,7 @@ public interface CallHierarchyProvider {
     /**
      * Returns a list of locations that are called from the passed source. The method may return {@code null}, if the
      * call target location is not supported or is invalid. The {@link CallHierarchyEntry.Call#getRanges() Call.getRanges()} 
-     * describe ranges in the call source, where the specific {@link StructureElement} target is called from.
+     * describe ranges in the call source, where the specific {@link org.netbeans.api.lsp.StructureElement} target is called from.
      * @param callSource the location to inspect
      * @return list of callees, or {@code null}
      */

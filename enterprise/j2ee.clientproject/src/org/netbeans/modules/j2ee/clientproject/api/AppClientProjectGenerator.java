@@ -162,6 +162,12 @@ public class AppClientProjectGenerator {
         String resource;
         if(j2eeProfile == null) {
             resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+        } else if (Profile.JAKARTA_EE_10_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_10_WEB.equals(j2eeProfile)) {
+                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-10.xml"; // NOI18N
+        } else if (Profile.JAKARTA_EE_9_1_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_1_WEB.equals(j2eeProfile)) {
+                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
+        } else if (Profile.JAKARTA_EE_9_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_WEB.equals(j2eeProfile)) {
+                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
         } else if (Profile.JAKARTA_EE_8_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_8_WEB.equals(j2eeProfile)) {
                  resource = "org-netbeans-modules-j2ee-clientproject/application-client-8.xml"; // NOI18N
         } else if (Profile.JAVA_EE_8_FULL.equals(j2eeProfile) || Profile.JAVA_EE_8_WEB.equals(j2eeProfile)) {
@@ -385,6 +391,12 @@ public class AppClientProjectGenerator {
             String resource;
             if (j2eeProfile == null) {
                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+            } else if (Profile.JAKARTA_EE_10_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_10_WEB.equals(j2eeProfile)) {
+                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-10.xml"; // NOI18N
+            } else if (Profile.JAKARTA_EE_9_1_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_1_WEB.equals(j2eeProfile)) {
+                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
+            } else if (Profile.JAKARTA_EE_9_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_WEB.equals(j2eeProfile)) {
+                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
             } else if (Profile.JAKARTA_EE_8_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_8_WEB.equals(j2eeProfile)) {
                  resource = "org-netbeans-modules-j2ee-clientproject/application-client-8.xml"; // NOI18N
             } else if (Profile.JAVA_EE_8_FULL.equals(j2eeProfile) || Profile.JAVA_EE_8_WEB.equals(j2eeProfile)) {
@@ -796,15 +808,11 @@ public class AppClientProjectGenerator {
     private static void createManifest(FileObject dir, String path) throws IOException {
         if (dir.getFileObject(path) == null) {
             FileObject manifest = FileUtil.createData(dir, path);
-            FileLock lock = manifest.lock();
-            try {
-                try (OutputStream os = manifest.getOutputStream(lock); PrintWriter pw = new PrintWriter(os, true)) {
-                    pw.println("Manifest-Version: 1.0"); // NOI18N
-                    pw.println("X-COMMENT: Main-Class will be added automatically by build"); // NOI18N
-                    pw.println(); // safest to end in \n\n due to JRE parsing bug
-                }
-            } finally {
-                lock.releaseLock();
+            try (FileLock lock = manifest.lock();
+                    OutputStream os = manifest.getOutputStream(lock); PrintWriter pw = new PrintWriter(os, true)) {
+                pw.println("Manifest-Version: 1.0"); // NOI18N
+                pw.println("X-COMMENT: Main-Class will be added automatically by build"); // NOI18N
+                pw.println(); // safest to end in \n\n due to JRE parsing bug
             }
         }
     }

@@ -47,7 +47,7 @@ public class ToggleBreakpointsInLanguagesActionProvider extends ActionsProviderS
     
     private static final Set<String> IGNORED_MIME_TYPES = new HashSet<>(
             // We have JSLineBreakpoint in JavaScript
-            Arrays.asList("text/javascript", "text/x-java"));                     // NOI18N
+            Arrays.asList("text/javascript", "text/x-java", "text/x-groovy"));  // NOI18N
     
     private volatile Line postedLine;
     

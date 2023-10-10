@@ -72,7 +72,7 @@ import org.openide.util.WeakListeners;
 /**
  * ClassPath objects should be used to access contents of the ClassPath, searching
  * for resources, objects reachable using the ClassPath at runtime. It is intended
- * to replace some of the functionality of <link>org.openide.filesystems.Repository</link>.
+ * to replace some of the functionality of {@link org.openide.filesystems.Repository}.
  * <BR>
  * ClassPath instances should be used to map from Java-style resource names
  * to FileObject (NetBeans-style resource) and vice versa. It should be also used
@@ -601,7 +601,7 @@ public final class ClassPath {
     }
 
     /**
-     * Removes the listener registered by {@link addPropertyChangeListener}.
+     * Removes the listener registered by {@link #addPropertyChangeListener(java.beans.PropertyChangeListener) }.
      * @param l a listener to remove
      */
     public final void removePropertyChangeListener(PropertyChangeListener l) {        
@@ -747,7 +747,7 @@ public final class ClassPath {
     public enum Flag {
         /**
          * The incomplete {@link ClassPath} is ignored by language features
-         * unless it's resolved and the {@link INCOMPLETE} flag is removed.
+         * unless it's resolved and the {@link #INCOMPLETE} flag is removed.
          */
         INCOMPLETE
     }
@@ -1009,7 +1009,7 @@ public final class ClassPath {
 
         /**
          * Check whether a file is included in this entry.
-         * @param resource a path relative to @{link #getURL} (must be terminated with <samp>/</samp> if a non-root folder)
+         * @param resource a path relative to @{link #getURL} (must be terminated with <em>/</em> if a non-root folder)
          * @return true if it is {@link FilteringPathResourceImplementation#includes included}
          * @since org.netbeans.api.java/1 1.13
          */

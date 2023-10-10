@@ -74,8 +74,10 @@ class ClientBehaviorRendererImpl extends AnnotationBehaviorRenderer
         Map<String, ? extends AnnotationMirror> types = 
             getHelper().getAnnotationsByType(getHelper().getCompilationController().
                     getElements().getAllAnnotationMirrors( type ));
-        AnnotationMirror annotationMirror = types.get(
-                "javax.faces.render.FacesBehaviorRenderer");            // NOI18N
+        AnnotationMirror annotationMirror = types.get("jakarta.faces.render.FacesBehaviorRenderer"); //NOI18N
+        if (annotationMirror == null) {
+            annotationMirror = types.get("javax.faces.render.FacesBehaviorRenderer"); // NOI18N
+        }
         if (annotationMirror == null) {
             return false;
         }

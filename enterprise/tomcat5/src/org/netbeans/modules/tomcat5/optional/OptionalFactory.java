@@ -48,34 +48,42 @@ public class OptionalFactory extends OptionalDeploymentManagerFactory {
         return new OptionalFactory();
     }
 
+    @Override
     public FindJSPServlet getFindJSPServlet (javax.enterprise.deploy.spi.DeploymentManager dm) {
         return new FindJSPServletImpl (dm);
     }
     
+    @Override
     public IncrementalDeployment getIncrementalDeployment (javax.enterprise.deploy.spi.DeploymentManager dm) {
         return new TomcatIncrementalDeployment (dm);
     }
     
+    @Override
     public StartServer getStartServer (javax.enterprise.deploy.spi.DeploymentManager dm) {
         return new StartTomcat (dm);
     }
     
+    @Override
     public TargetModuleIDResolver getTargetModuleIDResolver(javax.enterprise.deploy.spi.DeploymentManager dm) {
         return new TMIDResolver (dm);
     }
 
+    @Override
     public WizardDescriptor.InstantiatingIterator getAddInstanceIterator() {
         return new AddInstanceIterator();
     }
     
+    @Override
     public DatasourceManager getDatasourceManager(DeploymentManager dm) {
         return new TomcatDatasourceManager(dm);
     }
     
+    @Override
     public AntDeploymentProvider getAntDeploymentProvider(DeploymentManager dm) {
         return new AntDeploymentProviderImpl(dm);
     }
     
+    @Override
     public JDBCDriverDeployer getJDBCDriverDeployer(DeploymentManager dm) {
         return new TomcatJDBCDriverDeployer((TomcatManager) dm);
     }

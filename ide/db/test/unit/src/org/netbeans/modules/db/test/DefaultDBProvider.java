@@ -80,7 +80,7 @@ public class DefaultDBProvider implements DBProvider {
         ResultSet rs  = md.getSchemas();
         
         while ( rs.next() ) {
-            if ( schemaName.toLowerCase().equals(rs.getString(1).toLowerCase())) {
+            if ( schemaName.equalsIgnoreCase(rs.getString(1))) {
                 return true;
             }
         }

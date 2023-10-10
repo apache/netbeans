@@ -25,7 +25,6 @@ import org.openide.filesystems.FileObject;
  * a bugtracking repository.
  * <p>
  * Note that this interface is not meant to be implemented by bugtracking plugins.
- * <p/>
  * 
  * @author Tomas Stupka
  * @since 1.85

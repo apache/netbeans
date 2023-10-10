@@ -30,6 +30,7 @@ import org.openide.util.HelpCtx;
  * @deprecated
  * @see XMLLexerFormatter
  */
+@Deprecated
 public class XMLIndentEngine extends FormatterIndentEngine {
 
     /** serialVersionUID */

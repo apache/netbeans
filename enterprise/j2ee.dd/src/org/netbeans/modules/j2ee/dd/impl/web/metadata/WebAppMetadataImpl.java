@@ -73,8 +73,7 @@ public class WebAppMetadataImpl implements WebAppMetadata {
     private MetadataUnit metadataUnit;
     private WebApp webXml;
     private long webXmlLastModification = -1L;
-    private Map<FileObject, FragmentRec> myRootToFragment = new HashMap<FileObject, 
-        FragmentRec>();
+    private Map<FileObject, FragmentRec> myRootToFragment = new HashMap<>();
 
     public WebAppMetadataImpl(MetadataUnit metadataUnit, WebAppMetadataModelImpl modelImpl) {
         this.metadataUnit = metadataUnit;
@@ -222,17 +221,17 @@ public class WebAppMetadataImpl implements WebAppMetadata {
 
                                         FileObject[] roots = metadataUnit
                                                 .getCompilePath().getRoots();
-                                        Set<FileObject> rootsSet = new HashSet<FileObject>(
+                                        Set<FileObject> rootsSet = new HashSet<>(
                                                 Arrays.asList(roots));
-                                        Set<FileObject> oldRoots = new HashSet<FileObject>(
+                                        Set<FileObject> oldRoots = new HashSet<>(
                                                 myRootToFragment.keySet());
-                                        Set<FileObject> intersection = new HashSet<FileObject>(
+                                        Set<FileObject> intersection = new HashSet<>(
                                                 rootsSet);
                                         intersection.retainAll(oldRoots);
                                         oldRoots.removeAll(rootsSet);
-                                        for (FileObject fileObject : oldRoots) {
-                                            myRootToFragment.remove( fileObject );
-                                        }
+
+                                        myRootToFragment.keySet().removeAll(oldRoots);
+
                                         rootsSet.removeAll(intersection);
                                         for (FileObject fileObject : rootsSet)
                                         {
@@ -315,7 +314,7 @@ public class WebAppMetadataImpl implements WebAppMetadata {
         List<Constraint> constraints = extractConstraints(frags);
         List<Integer> others = extractOthers(frags, constraints);
         List<Integer> sorted = sort(constraints);
-        List<WebFragment> res = new ArrayList<WebFragment>();
+        List<WebFragment> res = new ArrayList<>();
         for (int f : sorted) {
             if (f == OTHERS) {
                 for (int o : others) {
@@ -333,7 +332,7 @@ public class WebAppMetadataImpl implements WebAppMetadata {
     private static final int NOT_FOUND = -2;
 
     private static List<Constraint> extractConstraints(List<WebFragment> list) {
-        List<Constraint> res = new ArrayList<Constraint>();
+        List<Constraint> res = new ArrayList<>();
         int no = -1;
         for (WebFragment f : list) {
             no++;
@@ -367,7 +366,7 @@ public class WebAppMetadataImpl implements WebAppMetadata {
     }
 
     private static List<Integer> extractOthers(List<WebFragment> list, List<Constraint> constraints) {
-        List<Integer> res = new ArrayList<Integer>();
+        List<Integer> res = new ArrayList<>();
         for (int i=0,maxi=list.size(); i<maxi; i++) {
             boolean referenced = false;
             for (Constraint c : constraints) {
@@ -383,7 +382,7 @@ public class WebAppMetadataImpl implements WebAppMetadata {
     }
 
     private static List<Integer> sort(List<Constraint> constraints) {
-        List<Integer> res = new ArrayList<Integer>();
+        List<Integer> res = new ArrayList<>();
         while (!constraints.isEmpty()) {
             int item = -1;
             Constraint c = null;
@@ -460,7 +459,7 @@ public class WebAppMetadataImpl implements WebAppMetadata {
         }
         assert order != null;
 
-        List<Integer> res = new ArrayList<Integer>();
+        List<Integer> res = new ArrayList<>();
 
         // TODO <others/> tag not supported right now due to problem with schema2beans
         // Hack is used <name>OTHERS</name> which is temporary and should be fixed!!
@@ -470,7 +469,7 @@ public class WebAppMetadataImpl implements WebAppMetadata {
         }
         res = insertOthers(res, list);
 
-        List<WebFragment> finalResult = new ArrayList<WebFragment>();
+        List<WebFragment> finalResult = new ArrayList<>();
         for (int i : res) {
             finalResult.add(list.get(i));
         }
@@ -494,12 +493,12 @@ public class WebAppMetadataImpl implements WebAppMetadata {
     }
 
     private static List<Integer> insertOthers(List<Integer> res, List<WebFragment> list) {
-        List<Integer> others = new ArrayList<Integer>();
+        List<Integer> others = new ArrayList<>();
         for (int i=0,maxi=list.size(); i<maxi; i++) {
             if (!res.contains(i))
                 others.add(i);
         }
-        List<Integer> finalResult = new ArrayList<Integer>();
+        List<Integer> finalResult = new ArrayList<>();
         for (int i : res) {
             if (i == OTHERS) {
                 finalResult.addAll(others);

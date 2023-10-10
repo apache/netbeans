@@ -84,6 +84,8 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
     protected static final String JAVA_EE_VERSION_18="java-ee-version-18";
     protected static final String JAKARTA_EE_VERSION_8="jakarta-ee-version-8"; //NOI18N
     protected static final String JAKARTA_EE_VERSION_9="jakarta-ee-version-9"; //NOI18N
+    protected static final String JAKARTA_EE_VERSION_91="jakarta-ee-version-91"; //NOI18N
+    protected static final String JAKARTA_EE_VERSION_10="jakarta-ee-version-10"; //NOI18N
 
     Project project;
     private AntProjectHelper helper;
@@ -346,8 +348,8 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
         }
     }
 
-    public List getServiceClients() {
-        List<Client> jaxWsClients = new ArrayList<Client>();
+    public List<Client> getServiceClients() {
+        List<Client> jaxWsClients = new ArrayList<>();
         JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
         if (jaxWsModel!=null) {
             Client[] clients = jaxWsModel.getClients();

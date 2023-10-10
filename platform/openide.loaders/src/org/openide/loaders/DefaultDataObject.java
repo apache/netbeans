@@ -115,8 +115,7 @@ final class DefaultDataObject extends MultiDataObject implements OpenCookie {
                 getPrimaryFile ().rename (lock, name, null);
             } else {
                 if (!name.equals(getPrimaryFile ().getNameExt())){
-                    getPrimaryFile ().rename (lock, name.substring(0, pos), 
-                        name.substring(pos+1, name.length()));
+                    getPrimaryFile ().rename (lock, name.substring(0, pos), name.substring(pos+1));
                     DataObjectPool.getPOOL().revalidate(
                         new HashSet<FileObject> (java.util.Collections.singleton(getPrimaryFile ()))
                     );

@@ -22,7 +22,6 @@ package org.netbeans.modules.maven.indexer.spi;
 import java.util.List;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
-import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 
 /**
  * Query to find archetypes.

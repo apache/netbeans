@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.84.0
+#Version 1.90.0
 
 CLSS public java.beans.FeatureDescriptor
 cons public init()
@@ -288,7 +288,7 @@ hfds childNodeFactory,dataLookup,firePropChangeAfterRefresh,layerEntry,nodeProvi
 
 CLSS public org.netbeans.api.db.explorer.node.ChildNodeFactory
 cons public init(org.openide.util.Lookup)
-meth protected boolean createKeys(java.util.List)
+meth protected boolean createKeys(java.util.List<org.openide.util.Lookup>)
 meth public org.openide.nodes.Node[] createNodesForKey(org.openide.util.Lookup)
 meth public void refresh()
 meth public void refreshSync()

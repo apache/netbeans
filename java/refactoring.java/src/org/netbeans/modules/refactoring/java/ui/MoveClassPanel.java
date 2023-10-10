@@ -515,6 +515,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
 
                                 @Override
                                 public void run(CompilationController parameter) throws Exception {
+                                    parameter.toPhase(JavaSource.Phase.RESOLVED);
                                     for (ElementHandle<TypeElement> elementHandle : result) {
                                         TypeElement element = elementHandle.resolve(parameter);
                                         if (element != null) {
@@ -627,7 +628,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
 
     public TreePathHandle getTargetClass() {
         final Object selectedItem = typeCombobox.getSelectedItem();
-        if(typeCheckBox.isSelected() && selectedItem != null && selectedItem instanceof ClassItem) {
+        if(typeCheckBox.isSelected() && selectedItem instanceof ClassItem) {
             return ((ClassItem)selectedItem).getHandle();
         }
         return null;

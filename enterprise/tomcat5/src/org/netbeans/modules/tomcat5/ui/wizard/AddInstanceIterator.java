@@ -67,31 +67,39 @@ public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterat
         super();
     }
 
+    @Override
     public void removeChangeListener(javax.swing.event.ChangeListener l) {
     }
 
+    @Override
     public void addChangeListener(javax.swing.event.ChangeListener l) {
     }
 
+    @Override
     public void uninitialize(WizardDescriptor wizard) {
     }
 
+    @Override
     public void initialize(WizardDescriptor wizard) {
         this.wizard = wizard;
     }
 
+    @Override
     public void previousPanel() {
         throw new NoSuchElementException();
     }
 
+    @Override
     public void nextPanel() {
         throw new NoSuchElementException();
     }
 
+    @Override
     public String name() {
         return null;
     }
 
+    @Override
     public Set instantiate() throws java.io.IOException {
         Set result = new HashSet();
         String displayName = getDisplayName();
@@ -134,14 +142,17 @@ public class AddInstanceIterator implements WizardDescriptor.InstantiatingIterat
         return result;
     }
 
+    @Override
     public boolean hasPrevious() {
         return false;
     }
 
+    @Override
     public boolean hasNext() {
         return false;
     }
 
+    @Override
     public WizardDescriptor.Panel current() {
         if (panel == null) {
             panel = new InstallPanel();

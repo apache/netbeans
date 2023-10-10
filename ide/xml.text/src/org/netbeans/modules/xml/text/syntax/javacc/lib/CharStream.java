@@ -47,6 +47,7 @@ public interface CharStream {
      * @deprecated 
      * @see #getEndColumn
      */
+    @Deprecated
     public abstract int getColumn();
 
     /**
@@ -54,6 +55,7 @@ public interface CharStream {
      * @deprecated 
      * @see #getEndLine
      */
+    @Deprecated
     public abstract int getLine();
 
     /**
@@ -111,7 +113,7 @@ public interface CharStream {
      *
      *   {
      *      String t = GetImage();
-     *      return t.substring(t.length() - len, t.length()).toCharArray();
+     *      return t.substring(t.length() - len).toCharArray();
      *   }
      */
     public abstract char[] GetSuffix(int len);

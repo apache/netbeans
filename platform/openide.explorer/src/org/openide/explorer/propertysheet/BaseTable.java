@@ -267,6 +267,7 @@ abstract class BaseTable extends JTable implements FocusListener {
     }
 
     /** Overridden to set the flag for recalculating the fixed row height */
+    @Override
     public void setFont(Font f) {
         needCalcRowHeight = true;
         super.setFont(f);
@@ -356,6 +357,7 @@ abstract class BaseTable extends JTable implements FocusListener {
     }
 
     /** Overridden to not allow edits on the names column (0) */
+    @Override
     public boolean isCellEditable(int row, int col) {
         return col != 0;
     }
@@ -364,6 +366,7 @@ abstract class BaseTable extends JTable implements FocusListener {
      * becomes visible.  This will cause the combo box to close its popup because
      * it has lost focus, unless we intervene here and make sure focus must be
      * passed directly to the editor if present */
+    @Override
     public final void requestFocus() {
         if (isEditing()) {
             if (PropUtils.isLoggable(BaseTable.class)) {
@@ -386,6 +389,7 @@ abstract class BaseTable extends JTable implements FocusListener {
      * becomes visible.  This will cause the combo box to close its popup because
      * it has lost focus, unless we intervene here and make sure focus must be
      * passed directly to the editor if present */
+    @Override
     public final boolean requestFocusInWindow() {
         if (isEditing()) {
             if (PropUtils.isLoggable(BaseTable.class)) {
@@ -416,6 +420,7 @@ abstract class BaseTable extends JTable implements FocusListener {
      * can be started in a single click, to set the selection before editing,
      * so that the editor will be painted with the selection color, and
      * to request focus on the editor component */
+    @Override
     public boolean editCellAt(int row, int col, EventObject e) {
         enterEditRequest();
 
@@ -577,6 +582,7 @@ abstract class BaseTable extends JTable implements FocusListener {
 
     /** Overridden to set the colors apropriately - we always want the editor
      * to appear selected */
+    @Override
     public Component prepareEditor(TableCellEditor editor, int row, int col) {
         Component result = editor.getTableCellEditorComponent(this, getValueAt(row, col), false, row, col);
 
@@ -591,6 +597,7 @@ abstract class BaseTable extends JTable implements FocusListener {
 
     /** Overridden to hide the selection when not focused, and paint across the
      * selected row if focused. */
+    @Override
     public Component prepareRenderer(TableCellRenderer renderer, int row, int col) {
         Object value = getValueAt(row, col);
 
@@ -620,6 +627,7 @@ abstract class BaseTable extends JTable implements FocusListener {
         (hasFocus() || isKnownComponent(focusOwner) || inEditRequest());
     }
 
+    @Override
     public void setUI(TableUI ui) {
         needCalcRowHeight = true;
         inSetUI = true;
@@ -632,12 +640,14 @@ abstract class BaseTable extends JTable implements FocusListener {
      * only repaint the selected *cell*.  Since we don't differentiate selecting
      * only a cell, we need to repaint the entire row that is selected, which
      * we will do from processFocusEvent() */
+    @Override
     public void addFocusListener(FocusListener fl) {
         if (!inSetUI) {
             super.addFocusListener(fl);
         }
     }
 
+    @Override
     public void updateUI() {
         super.updateUI();
 
@@ -650,6 +660,7 @@ abstract class BaseTable extends JTable implements FocusListener {
      *  in the left edge with the appropriate color, and then calls paintExpandableSets()
      *  to paint the property sets, which are not painted by the default painting
      *  methods because they need to be painted across two rows.    */
+    @Override
     public void paint(Graphics g) {
         if (needCalcRowHeight) {
             calcRowHeight(g);
@@ -681,6 +692,7 @@ abstract class BaseTable extends JTable implements FocusListener {
 
     /** Overridden to add the entire row that was being edited to RepaintManager
      * as a dirty region */
+    @Override
     public void removeEditor() {
         enterEditorRemoveRequest();
 
@@ -709,6 +721,7 @@ abstract class BaseTable extends JTable implements FocusListener {
     /** Overridden - JTable's implementation of the method will
      *  actually attach (and leave behind) a gratuitous border
      *  on the enclosing scroll pane. */
+    @Override
     protected final void configureEnclosingScrollPane() {
         Container p = getParent();
 
@@ -746,6 +759,7 @@ abstract class BaseTable extends JTable implements FocusListener {
 
     /** Overridden to not change the selection if the user is currently
      * dragging the center line */
+    @Override
     public void changeSelection(int row, int column, boolean toggle, boolean extend) {
         //DragListener can be null, because changeSelection is called in
         //superclass constructor
@@ -769,6 +783,7 @@ abstract class BaseTable extends JTable implements FocusListener {
     }
 
     /** Overridden to remove the editor on focus lost */
+    @Override
     public void processFocusEvent(FocusEvent fe) {
         super.processFocusEvent(fe);
 
@@ -832,6 +847,7 @@ abstract class BaseTable extends JTable implements FocusListener {
 
     /** Overridden to allow standard keybinding processing of VK_TAB and
      * abort any pending drag operation on the vertical grid. */
+    @Override
     public void processKeyEvent(KeyEvent e) {
         if (dragListener.isArmed()) {
             dragListener.setArmed(false);
@@ -994,6 +1010,7 @@ abstract class BaseTable extends JTable implements FocusListener {
         }
     }
 
+    @Override
     public boolean isOptimizedDrawingEnabled() {
         if ((searchField != null) && searchField.isShowing()) {
             return false;
@@ -1002,6 +1019,7 @@ abstract class BaseTable extends JTable implements FocusListener {
         }
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -1013,6 +1031,7 @@ abstract class BaseTable extends JTable implements FocusListener {
 
     /** Overridden to fire a change event on a change in the table, so the
      * property sheet can refresh the displayed description if necessary */
+    @Override
     public void tableChanged(TableModelEvent e) {
         super.tableChanged(e);
         fireChange();
@@ -1137,6 +1156,7 @@ abstract class BaseTable extends JTable implements FocusListener {
     }
 
     WL parentListener;
+    @Override
     public void addNotify() {
         super.addNotify();
 
@@ -1149,11 +1169,13 @@ abstract class BaseTable extends JTable implements FocusListener {
     }
     
     private class WL extends WindowAdapter {
+        @Override
         public void windowDeactivated(java.awt.event.WindowEvent we) {
             doFocusLost(we.getOppositeWindow());
         }
     }
-    
+
+    @Override
     public void removeNotify() {
         // #57560: properties should always save changes
         Container top = getTopLevelAncestor();
@@ -1175,11 +1197,13 @@ abstract class BaseTable extends JTable implements FocusListener {
             setFont(BaseTable.this.getFont());
         }
 
+        @Override
         public void addNotify() {
             super.addNotify();
             selectionBeforeLastShow = BaseTable.this.getSelectedRow();
         }
 
+        @Override
         public void processKeyEvent(KeyEvent ke) {
             if (!isShowing()) {
                 super.processKeyEvent(ke);
@@ -1386,6 +1410,7 @@ abstract class BaseTable extends JTable implements FocusListener {
             }
         }
 
+        @Override
         public boolean isEnabled() {
             return isEditing();
         }
@@ -1577,16 +1602,19 @@ abstract class BaseTable extends JTable implements FocusListener {
         boolean dragging;
         int pos = -1;
 
+        @Override
         public void mouseExited(MouseEvent e) {
             setArmed(false);
         }
 
+        @Override
         public void mousePressed(MouseEvent e) {
             if (isArmed() && onCenterLine(e)) {
                 beginDrag();
             }
         }
 
+        @Override
         public void mouseReleased(MouseEvent e) {
             if (isDragging()) {
                 finishDrag();
@@ -1594,10 +1622,12 @@ abstract class BaseTable extends JTable implements FocusListener {
             }
         }
 
+        @Override
         public void mouseMoved(MouseEvent e) {
             setArmed(!isEditing() && onCenterLine(e));
         }
 
+        @Override
         public void mouseDragged(MouseEvent e) {
             if (!armed && !dragging) {
                 return;

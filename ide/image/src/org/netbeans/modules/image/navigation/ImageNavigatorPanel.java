@@ -22,7 +22,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -58,11 +57,11 @@ public class ImageNavigatorPanel implements NavigatorPanel {
      * template for finding data in given context. Object used as example,
      * replace with your own data source, for example JavaDataObject etc
      */
-    private static final Lookup.Template MY_DATA = new Lookup.Template(ImageDataObject.class);
+    private static final Lookup.Template<ImageDataObject> MY_DATA = new Lookup.Template<>(ImageDataObject.class);
     /**
      * current context to work on
      */
-    private Lookup.Result currentContext;
+    private Lookup.Result<ImageDataObject> currentContext;
     /**
      * listener to context changes
      */
@@ -102,7 +101,7 @@ public class ImageNavigatorPanel implements NavigatorPanel {
         currentContext = context.lookup(MY_DATA);
         currentContext.addLookupListener(getContextListener());
         // get actual data and recompute content
-        Collection data = currentContext.allInstances();
+        Collection<? extends ImageDataObject> data = currentContext.allInstances();
         currentDataObject = getDataObject(data);
         if (currentDataObject == null) {
             return;
@@ -135,18 +134,13 @@ public class ImageNavigatorPanel implements NavigatorPanel {
             return;
         }
 
-        WORKER.post(new Runnable() {
-
-            @Override
-            public void run() {
-                InputStream inputStream = null;
-                BufferedImage image = null;
-                try {
-                    FileObject fileObject = dataObject.getPrimaryFile();
-                    if (fileObject == null) {
-                        return;
-                    }
-                    inputStream = fileObject.getInputStream();
+        WORKER.post(() -> {
+            try {
+                FileObject fileObject = dataObject.getPrimaryFile();
+                if (fileObject == null) {
+                    return;
+                }
+                try (InputStream inputStream = fileObject.getInputStream()) {
                     if (inputStream == null) {
                         return;
                     }
@@ -154,39 +148,25 @@ public class ImageNavigatorPanel implements NavigatorPanel {
                         getComponent();
                     }
                     try {
-                        image = ImageIO.read(inputStream);
+                        BufferedImage image = ImageIO.read(inputStream);
+                        SwingUtilities.invokeLater(() -> panelUI.setImage(image));
                     } catch (IllegalArgumentException iaex) {
                         Logger.getLogger(ImageNavigatorPanel.class.getName()).info(NbBundle.getMessage(ImageNavigatorPanel.class, "ERR_IOFile"));
-                        inputStream.close();
                     }
-                    inputStream.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(ImageNavigatorPanel.class.getName()).info(NbBundle.getMessage(ImageNavigatorPanel.class, "ERR_IOFile"));
-                } finally {
-                    final BufferedImage fImage = image;
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            panelUI.setImage(fImage);
-                        }
-                    });
                 }
+            } catch (IOException ex) {
+                Logger.getLogger(ImageNavigatorPanel.class.getName()).info(NbBundle.getMessage(ImageNavigatorPanel.class, "ERR_IOFile"));
             }
         });
 
     }
 
-    private DataObject getDataObject(Collection data) {
-        DataObject dataObject = null;
-        Iterator<?> it = data.iterator();
-        while (it.hasNext()) {
-            Object o = it.next();
-            if (o instanceof DataObject) {
-                dataObject = (DataObject) o;
-                break;
-            }
+    private DataObject getDataObject(Collection<? extends ImageDataObject> data) {
+        if(data.isEmpty()) {
+            return null;
+        } else {
+            return data.iterator().next();
         }
-        return dataObject;
     }
 
     /**
@@ -203,11 +183,9 @@ public class ImageNavigatorPanel implements NavigatorPanel {
      * Listens to changes of context and triggers proper action
      */
     private class ContextListener implements LookupListener {
-
         @Override
         public void resultChanged(LookupEvent ev) {
-            Collection data = ((Lookup.Result) ev.getSource()).allInstances();
-            currentDataObject = getDataObject(data);
+            currentDataObject = getDataObject(currentContext.allInstances());
             setNewContent(currentDataObject);
         }
     }
@@ -220,15 +198,12 @@ public class ImageNavigatorPanel implements NavigatorPanel {
                 lastSaveTime = System.currentTimeMillis();
 
                 // Refresh image viewer
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    public void run() {
-                        try {
-                            currentDataObject = DataObject.find(fe.getFile());
-                            setNewContent(currentDataObject);
-                        } catch (DataObjectNotFoundException ex) {
-                            Logger.getLogger(ImageNavigatorPanel.class.getName()).info(NbBundle.getMessage(ImageNavigatorPanel.class, "ERR_DataObject"));
-                        }
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        currentDataObject = DataObject.find(fe.getFile());
+                        setNewContent(currentDataObject);
+                    } catch (DataObjectNotFoundException ex) {
+                        Logger.getLogger(ImageNavigatorPanel.class.getName()).info(NbBundle.getMessage(ImageNavigatorPanel.class, "ERR_DataObject"));
                     }
                 });
             }

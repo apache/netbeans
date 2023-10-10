@@ -295,7 +295,7 @@
 -->
  <answer id="arch-what">
   <p>
-      See <a href="http://wiki.netbeans.org/ParsingAPI">Parsing API homepage</a> for project requirements, motivation.
+      See <a href="https://netbeans.apache.org/wiki/ParsingAPI">Parsing API homepage</a> for project requirements, motivation.
   </p>
  </answer>
 

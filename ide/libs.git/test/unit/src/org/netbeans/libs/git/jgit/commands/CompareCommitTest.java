@@ -22,7 +22,6 @@ package org.netbeans.libs.git.jgit.commands;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import static junit.framework.Assert.assertEquals;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.netbeans.libs.git.GitClient;

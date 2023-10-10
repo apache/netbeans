@@ -91,7 +91,7 @@ public class Constructor implements IConstructor{
         if(aType.getKind() == TypeKind.DECLARED){
             DeclaredType dType = (DeclaredType) aType;
             List<? extends TypeMirror> parameters = dType.getTypeArguments();
-            if( parameters!=null && parameters.size()>0){
+            if( parameters!=null && !parameters.isEmpty()){
                 generics = new ITypeDeclaration[parameters.size()];
                 int i=0;
                 for(TypeMirror gType: parameters){

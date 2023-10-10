@@ -2,8 +2,9 @@ Code completion result for source line:
 var myObject6 = (new myObject()).method2().toUpperCase().fontsize().to|Precision(3);
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     toExponential(): Number         [PUBLIC]   JS Platform
-METHOD     toFixed(): Number               [PUBLIC]   JS Platform
+METHOD     toLocaleLowerCase(): String     [PUBLIC]   JS Platform
 METHOD     toLocaleString(): String        [PUBLIC]   JS Platform
-METHOD     toPrecision(): Number           [PUBLIC]   JS Platform
+METHOD     toLocaleUpperCase(): String     [PUBLIC]   JS Platform
+METHOD     toLowerCase(): String           [PUBLIC]   JS Platform
 METHOD     toString(): String              [PUBLIC]   JS Platform
+METHOD     toUpperCase(): String           [PUBLIC]   JS Platform

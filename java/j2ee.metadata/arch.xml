@@ -217,9 +217,9 @@
 -->
  <answer id="arch-where">
   <p>
-   The sources for the module are in the NetBeans CVS in the 
-   <a href="http://www.netbeans.org/source/browse/j2ee/metadata/?only_with_tag=merged_model">j2ee/metadata</a>
-   directory on the <code>merged_model</code> branch.
+   The sources for the module are in the Apache NetBeans Git in the 
+   <a href="https://github.com/apache/netbeans/tree/master/java/j2ee.metadata">java/j2ee.metadata</a>
+   directory.
   </p>
  </answer>
 

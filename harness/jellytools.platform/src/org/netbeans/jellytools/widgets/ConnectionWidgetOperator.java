@@ -165,7 +165,7 @@ public class ConnectionWidgetOperator extends WidgetOperator {
     }
 
     /** Returns list of control points.
-     * @return List<Point> of control points
+     * @return {@code List<Point>} of control points
      */
     @SuppressWarnings("unchecked")
     public List<Point> getControlPoints() {

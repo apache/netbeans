@@ -205,7 +205,7 @@ public final class WhereUsedSupport {
                             @Override
                             public void run(ResultIterator resultIterator) throws Exception {
                                 Result parserResult = resultIterator.getParserResult();
-                                if (parserResult != null && parserResult instanceof PHPParseResult) {
+                                if (parserResult instanceof PHPParseResult) {
                                     Model modelForDeclaration = ModelFactory.getModel((PHPParseResult) parserResult);
                                     declarations.add(modelForDeclaration.findDeclaration(declarationElement));
                                 }

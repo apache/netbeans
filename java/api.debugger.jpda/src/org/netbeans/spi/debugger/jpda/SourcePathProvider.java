@@ -35,7 +35,7 @@ import org.netbeans.spi.debugger.ContextProvider;
  * ("file:///C:/Sources/java/lang/Thread.java"). It allows to define
  * and modify source path.
  * All instances of this class should be registerred in
- * "Meta-inf/debugger/<DebuggerEngine ID>/org.netbeans.spi.debugger.jpda.EngineContextProvider"
+ * "Meta-inf/debugger/&lt;DebuggerEngine ID&gt;/org.netbeans.spi.debugger.jpda.EngineContextProvider"
  * files. There should be at least one instance installed.
  *
  * @author Maros Sandor, Jan Jancura

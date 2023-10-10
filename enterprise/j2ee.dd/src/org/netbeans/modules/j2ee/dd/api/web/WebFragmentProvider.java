@@ -79,13 +79,19 @@ public final class WebFragmentProvider {
 
     private WebFragment createWebFragment(FileObject fo, String version) throws IOException, SAXException {
         try {
-//            TODO
-//            if (WebFragment.VERSION_4_0.equals(version)) {
-//                try (InputStream inputStream = fo.getInputStream()) {
-//                    return org.netbeans.modules.j2ee.dd.impl.web.model_4_0_frag.WebFragment.createGraph(inputStream);
-//                }
-//            }
-            if (WebFragment.VERSION_3_1.equals(version)) {
+            if (WebFragment.VERSION_6_0.equals(version)) {
+                try (InputStream inputStream = fo.getInputStream()) {
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_6_0_frag.WebFragment.createGraph(inputStream);
+                }
+            } else if (WebFragment.VERSION_5_0.equals(version)) {
+                try (InputStream inputStream = fo.getInputStream()) {
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_5_0_frag.WebFragment.createGraph(inputStream);
+                }
+            } else if (WebFragment.VERSION_4_0.equals(version)) {
+                try (InputStream inputStream = fo.getInputStream()) {
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_4_0_frag.WebFragment.createGraph(inputStream);
+                }
+            } else if (WebFragment.VERSION_3_1.equals(version)) {
                 try (InputStream inputStream = fo.getInputStream()) {
                     return org.netbeans.modules.j2ee.dd.impl.web.model_3_1_frag.WebFragment.createGraph(inputStream);
                 }

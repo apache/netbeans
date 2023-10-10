@@ -4525,7 +4525,6 @@ public final class Models {
          *
          * @throws  UnknownTypeException if this NodeActionsProvider implementation 
          *          is not able to resolve actions for given node type
-         * @return  display name for given node
          */
         @Override
         public void performDefaultAction (Object node) throws UnknownTypeException {

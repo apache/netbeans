@@ -32,5 +32,53 @@
     </target>
     <target name="gen-markuplexer" >
         <jflex file="tools/LatteMarkupColoringLexer.flex" destdir="src" skel="tools/skeleton.netbeans" />
+        <replace file="src/org/netbeans/modules/php/latte/lexer/LatteMarkupColoringLexer.java">
+            <replacetoken><![CDATA[
+          if (zzCurrentPosL < zzEndReadL)
+            zzInput = zzBufferL[zzCurrentPosL++];
+          else if (zzAtEOF) {
+            zzInput = YYEOF;
+            break zzForAction;
+          }
+          else {
+            // store back cached positions
+            zzCurrentPos  = zzCurrentPosL;
+            zzMarkedPos   = zzMarkedPosL;
+            boolean eof = zzRefill();
+            // get translated positions and possibly new buffer
+            zzCurrentPosL  = zzCurrentPos;
+            zzMarkedPosL   = zzMarkedPos;
+            zzBufferL      = zzBuffer;
+            zzEndReadL     = zzEndRead;
+            if (eof) {
+              zzInput = YYEOF;
+              break zzForAction;
+            }
+            else {
+              zzInput = zzBufferL[zzCurrentPosL++];
+            }
+          }]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replace file="src/org/netbeans/modules/php/latte/lexer/LatteMarkupColoringLexer.java">
+            <replacetoken><![CDATA[
+      yychar+= zzMarkedPosL-zzStartRead;
+]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replace file="src/org/netbeans/modules/php/latte/lexer/LatteMarkupColoringLexer.java">
+            <replacetoken><![CDATA[
+  public LatteMarkupTokenId findNextToken() throws java.io.IOException {
+]]></replacetoken>
+            <replacevalue><![CDATA[
+  @SuppressWarnings("fallthrough")
+  public LatteMarkupTokenId findNextToken() throws java.io.IOException {
+]]></replacevalue>
+        </replace>
+        <replaceregexp match="[ \t]+$" replace="" byline="true" >
+            <fileset dir="src/org/netbeans/modules/php/latte/lexer">
+                <include name="LatteMarkupColoringLexer.java"/>
+            </fileset>
+        </replaceregexp>
     </target>
 </project>

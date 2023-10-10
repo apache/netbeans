@@ -32,16 +32,30 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public class VersionListCellRenderer extends DefaultListCellRenderer {
 
     private Map<Integer, TermOfSupport> lts = Collections.EMPTY_MAP;
+    private int current = -1;
 
     @Override
     public Component getListCellRendererComponent(JList list, @Nullable Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        if (lts.containsKey((Integer) value))
-            value = LTSes.text((Integer) value, lts.get((Integer) value));
+        Integer feature = (Integer) value;
+        if (lts.containsKey(feature) && lts.get(feature) == TermOfSupport.LTS) {
+            value = LTSes.text(feature, lts.get(feature));
+        }
+        if (isEA(feature)) {
+            value += " (EA)";
+        }
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         return this;
     }
 
+    public boolean isEA(int feature) {
+        return current != -1 && feature > current;
+    }
+
     public void setLTS(@NonNull Map<Integer, TermOfSupport> lts) {
         this.lts = lts;
+    }
+
+    public void setCurrentJDK(int current) {
+        this.current = current;
     }
 }

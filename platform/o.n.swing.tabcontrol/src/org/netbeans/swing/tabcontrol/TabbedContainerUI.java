@@ -36,12 +36,6 @@ import java.awt.event.MouseEvent;
  * Basic UI for tabbed containers.  Note this is distinct from the UI for the
  * embedded tab displayer component - that where all the interesting painting
  * logic is.
- * <p>
- * To provide an implementation of TabbedContainerUI, it is a far better idea to
- * subclass 
- * <a href="plaf/AbstractTabbedContainerUI.html">AbstractTabbedContainerUI</a>, 
- * <a href="plaf/BasicTabbedContainerUI.html">BasicTabbedContainerUI</a>, or 
- * <a href="plaf/BasicScrollingTabbedContainerUI.html">BasicScrollingTabbedContainerUI</a>.
  *
  * @author Tim Boudreau
  */
@@ -58,6 +52,7 @@ public abstract class TabbedContainerUI extends ComponentUI {
         this.container = container;
     }
 
+    @Override
     public void installUI(JComponent c) {
         assert c == container;
     }

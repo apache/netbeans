@@ -78,7 +78,7 @@ public class AddOrRemoveFinalModifier implements ErrorRule<Void> {
         "# {0} - variable name",
         "FIX_RemoveFinalModifierFromVariable=Remove \"final\" modifier from variable \"{0}\""})
     public static AddOrRemoveFinalModifier createRemoveFinalFromVariable() {
-        return new AddOrRemoveFinalModifier(AddOrRemoveFinalModifier.class.getName() + ".var", "compiler.err.cant.assign.val.to.final.var", Bundle.DN_RemoveFinalModifierFromVariable(), Bundle.DESC_RemoveFinalModifierFromVariable(), "FIX_RemoveFinalModifierFromVariable", Type.REMOVE);
+        return new AddOrRemoveFinalModifier(AddOrRemoveFinalModifier.class.getName() + ".var", "compiler.err.cant.assign.val.to.var", Bundle.DN_RemoveFinalModifierFromVariable(), Bundle.DESC_RemoveFinalModifierFromVariable(), "FIX_RemoveFinalModifierFromVariable", Type.REMOVE);
     }
     
     @NbBundle.Messages({

@@ -530,7 +530,7 @@ public class AppClientProjectWebServicesClientSupport implements WebServicesClie
         "donotunwrap", // - portable // NOI18N
     };
     
-    private static final List allClientFeatures = Arrays.asList(WSCOMPILE_CLIENT_FEATURES);
+    private static final List<String> allClientFeatures = Arrays.asList(WSCOMPILE_CLIENT_FEATURES);
     
     private static final String [] WSCOMPILE_KEY_CLIENT_FEATURES = {
         "wsi", // NOI18N
@@ -545,7 +545,7 @@ public class AppClientProjectWebServicesClientSupport implements WebServicesClie
         "searchschema", // NOI18N
     };
     
-    private static final List importantClientFeatures = Arrays.asList(WSCOMPILE_KEY_CLIENT_FEATURES);
+    private static final List<String> importantClientFeatures = Arrays.asList(WSCOMPILE_KEY_CLIENT_FEATURES);
     
     public List<WsCompileClientEditorSupport.ServiceSettings> getServiceClients() {
         List<WsCompileClientEditorSupport.ServiceSettings> serviceNames = new ArrayList<WsCompileClientEditorSupport.ServiceSettings>();

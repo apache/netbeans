@@ -46,8 +46,11 @@ public class WebInjectionTargetQueryImplementation implements InjectionTargetQue
         if (webModule != null &&
                 !Profile.J2EE_13.equals(webModule.getJ2eeProfile()) && // NOI18N
                 !Profile.J2EE_14.equals(webModule.getJ2eeProfile())) { // NOI18N
-            
-            ret = SourceUtils.isSubtype(controller, typeElement, "javax.servlet.Servlet"); // NOI18N
+            if(webModule.getJ2eeProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+                ret = SourceUtils.isSubtype(controller, typeElement, "jakarta.servlet.Servlet"); // NOI18N
+            } else {
+                ret = SourceUtils.isSubtype(controller, typeElement, "javax.servlet.Servlet"); // NOI18N
+            }
         }
         return ret;
     }

@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
-import static junit.framework.Assert.assertTrue;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.html.lexer.HTMLTokenId;

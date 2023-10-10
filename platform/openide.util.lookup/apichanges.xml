@@ -73,7 +73,7 @@
                 <a href="@JDK@/javax/lang/model/SourceVersion.html#latest--"><code>@SourceVersion.latest()</code></a>.
             </p>
         </description>
-        <class name="LayerGeneratingProcessor" package="org.openide.filesystems.annotations"/>
+        <class name="LayerGeneratingProcessor" package="org.openide.filesystems.annotations" link="no" /> <!-- external -->
         <issue number="NETBEANS-3250"/>
     </change>
     <change id="lookups.execute">
@@ -440,7 +440,7 @@ for (<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFacto
         <description>
           The content of <code>Lookup.getDefault()</code> can be specified
           by a standard JDK registration mechanism, using JARs'
-          <a href="http://java.sun.com/j2se/1.4/docs/guide/jar/jar.html#Service%20Provider" shape="rect">
+          <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider" shape="rect">
             META-INF/services
           </a>
           directory. This is suitable for services that do not change,

@@ -31,12 +31,13 @@ package org.netbeans.spi.sendopts;
  * arguments to each method. The <em>Min</em> and <em>Max</em> shown the
  * number that is needed for the group option to be "consistent":
  * 
- * <table border=1>
- *   <theader>
- *     <td>Method</td>
- *     <td>Min</td>
- *     <td>Max</td>
- *   </theader>
+ * <table>
+ * <caption>Behaviour overview</caption>
+ *   <tr>
+ *     <th>Method</th>
+ *     <th>Min</th>
+ *     <th>Max</th>
+ *   </tr>
  * 
  *   <tr>
  *     <td>{@link OptionGroups#allOf}</td>
@@ -90,7 +91,7 @@ public final class OptionGroups {
      * can then be processed one by one.
      * 
      * @param options the sub options to check on the command line
-     * @return compound option that <q>is activated</q> if at least one of the
+     * @return compound option that <em>is activated</em> if at least one of the
      *    options appears on the command line
      */
     public static Option someOf(Option... options) {
@@ -105,7 +106,7 @@ public final class OptionGroups {
      * with associated value of <code>new String[0]</code>.
      * 
      * @param options the sub options to check on the command line
-     * @return compound option that <q>is activated</q> if at least one of the
+     * @return compound option that <em>is activated</em> if at least one of the
      *    options appears on the command line
      */
     public static Option anyOf(Option... options) {

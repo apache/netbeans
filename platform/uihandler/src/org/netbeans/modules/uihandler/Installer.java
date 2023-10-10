@@ -1764,7 +1764,7 @@ public class Installer extends ModuleInstall implements Runnable {
 
             synchronized (this) {
                 RP_UI.post(this);
-                while (dialogState.equals(DialogState.NON_CREATED)) {
+                while (dialogState == DialogState.NON_CREATED) {
                     try {
                         wait();
                     } catch (InterruptedException ex) {
@@ -1773,7 +1773,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 }
                 notifyAll();
             }
-            if (dialogState.equals(DialogState.FAILED)){
+            if (dialogState == DialogState.FAILED) {
                 return;
             }
 
@@ -1883,7 +1883,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 assignInternalURL(url);
                 refresh = false;
                 synchronized (this) {
-                    while (dialogState.equals(DialogState.CREATED) && !refresh) {
+                    while (dialogState == DialogState.CREATED && !refresh) {
                         try {
                             wait();
                         } catch (InterruptedException ex) {
@@ -2679,7 +2679,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 String rptr = null;
                 if (obj instanceof AbstractButton ) {
                     abut = (AbstractButton) obj;
-                    if(abut.getText().toLowerCase().equals("send")){
+                    if(abut.getText().equalsIgnoreCase("send")){
                         // disable sen button initialy, report panel can later enable it
                         abut.setEnabled(false);
                         abut.setToolTipText(NbBundle.getMessage(Installer.class, "ReportPanel.sendButton.tooltip"));//NOI18N

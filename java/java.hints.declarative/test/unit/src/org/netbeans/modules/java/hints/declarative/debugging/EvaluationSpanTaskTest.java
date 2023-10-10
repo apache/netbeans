@@ -133,7 +133,7 @@ public class EvaluationSpanTaskTest extends NbTestCase {
             lastStart = m.end();
         }
 
-        sb.append(hintSpec.substring(lastStart, hintSpec.length()));
+        sb.append(hintSpec.substring(lastStart));
 
         String[] codeSplit = code.split("\\|");
         

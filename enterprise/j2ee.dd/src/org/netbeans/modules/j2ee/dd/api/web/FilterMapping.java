@@ -69,7 +69,6 @@ public interface FilterMapping extends org.netbeans.modules.j2ee.dd.api.common.C
          */
 	public java.lang.String getDispatcher(int index) throws VersionNotSupportedException;
         /** Setter for dispatcher property.
-         * @param index position in the array of dispatchers
          * @param value array of dispatcher properties
          */
 	public void setDispatcher(java.lang.String[] value) throws VersionNotSupportedException;

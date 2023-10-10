@@ -28,6 +28,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
@@ -57,10 +59,14 @@ public class ExclusionsFromLicenseInfo extends Task {
                 OutputStreamWriter osw = new OutputStreamWriter(fos);
                 BufferedWriter bw = new BufferedWriter(osw)) {
             Path nballPath = nball.toPath();
-            List<File> licenseinfofiles = Files.walk(nballPath)
-                    .filter(p -> p.endsWith("licenseinfo.xml"))
-                    .map(p -> p.toFile())
-                    .collect(Collectors.toList());
+
+            List<File> licenseinfofiles;
+            try (Stream<Path> walk = Files.walk(nballPath)) {
+                licenseinfofiles = walk
+                        .filter(p -> p.endsWith("licenseinfo.xml"))
+                        .map(p -> p.toFile())
+                        .collect(Collectors.toList());
+            }
 
             FileSet licenseinfoFileset = new FileSet();
             licenseinfoFileset.setProject(getProject());

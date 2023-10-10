@@ -95,6 +95,7 @@ public class NbEditorUI extends EditorUI {
      *
      * @deprecated - use {@link #attachSystemActionPerformer(String)} instead
      */
+    @Deprecated
     protected SystemActionUpdater createSystemActionUpdater(
         String editorActionName, boolean updatePerformer, boolean syncEnabling) {
         return new SystemActionUpdater(editorActionName, updatePerformer, syncEnabling);
@@ -628,6 +629,7 @@ public class NbEditorUI extends EditorUI {
      *
      * @deprecated use SystemActionPerformer instead
      */
+    @Deprecated
     public final class SystemActionUpdater
         implements PropertyChangeListener, ActionPerformer {
 

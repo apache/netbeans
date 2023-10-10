@@ -1,0 +1,9 @@
+Display text: public function <b>publicMethod</b>(): void { // EnumB
+File name: index.php
+Name: publicMethod
+Position: BEGIN: 1463 END: 1475
+
+Display text: EnumB::A-><b>publicMethod</b>();
+File name: index.php
+Name: publicMethod
+Position: BEGIN: 1627 END: 1639

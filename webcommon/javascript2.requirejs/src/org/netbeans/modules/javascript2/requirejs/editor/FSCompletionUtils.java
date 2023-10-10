@@ -353,7 +353,7 @@ public class FSCompletionUtils {
             if (!packages.isEmpty()) {
                 String requiredPath = path;
                 if (path.startsWith("./")) { //NOI18N
-                    requiredPath = path.substring(2, path.length());
+                    requiredPath = path.substring(2);
                 }
                 if (requiredPath.contains("/")) { //NOI18N
                     final int slashIndex = requiredPath.indexOf("/"); // NOI18N
@@ -361,7 +361,7 @@ public class FSCompletionUtils {
                     if (packages.get(pkgName) != null) {
                         requiredPath = packages.get(pkgName)
                                 + File.separator
-                                + requiredPath.substring(slashIndex + 1, requiredPath.length());
+                                + requiredPath.substring(slashIndex + 1);
                     }
                 }
                 if (!basePaths.isEmpty() && !requiredPath.startsWith("/")) { //NOI18N

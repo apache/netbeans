@@ -406,7 +406,7 @@ public final class EditorCaret implements Caret {
     
     /**
      * Get a bias of the dot position which is either
-     * {@link Position.Bias.Forward} or {@link Position.Bias.Backward} depending
+     * {@link javax.swing.text.Position.Bias#Forward} or {@link javax.swing.text.Position.Bias#Backward} depending
      * on whether the caret biases towards the next character or previous one.
      * The bias is always forward for non bidirectional text document.
      *
@@ -431,7 +431,7 @@ public final class EditorCaret implements Caret {
     
     /**
      * Get a bias of the mark position which is either
-     * {@link Position.Bias.Forward} or {@link Position.Bias.Backward} depending
+     * {@link javax.swing.text.Position.Bias#Forward} or {@link javax.swing.text.Position.Bias#Backward} depending
      * on whether the caret biases towards the next character or previous one.
      * The bias is always forward for non bidirectional text document.
      *
@@ -560,8 +560,8 @@ public final class EditorCaret implements Caret {
      * actions (pg up, pg down, left, right, ...).
      * </p>
      * @param offset new offset for the caret
-     * @param bias new bias for the caret. Use either {@link Position.Bias.Forward}
-     *  or {@link Position.Bias.Backward} depending on whether the caret should bias
+     * @param bias new bias for the caret. Use either {@link javax.swing.text.Position.Bias#Forward}
+     *  or {@link javax.swing.text.Position.Bias#Backward} depending on whether the caret should bias
      *  towards the next character or previous one. Use forward bias for non-bidirectional text document.
      * @param origin specifies the operation which caused the caret to move.
      * @see #setDot(int) 
@@ -619,8 +619,8 @@ public final class EditorCaret implements Caret {
      * </p>
      * 
      * @param offset new offset for the caret
-     * @param bias new bias for the caret. Use either {@link Position.Bias.Forward}
-     *  or {@link Position.Bias.Backward} depending on whether the caret should bias
+     * @param bias new bias for the caret. Use either {@link javax.swing.text.Position.Bias#Forward}
+     *  or {@link javax.swing.text.Position.Bias#Backward} depending on whether the caret should bias
      *  towards the next character or previous one. Use forward bias for non-bidirectional text document.
      * @param origin specifies the operation which caused the caret to move.
      * @see #moveDot(int) 
@@ -738,13 +738,13 @@ public final class EditorCaret implements Caret {
      * </pre>
      * 
      * @param dotPos position of the newly created caret.
-     * @param dotBias bias of the new caret. Use either {@link Position.Bias.Forward}
-     *  or {@link Position.Bias.Backward} depending on whether the caret should bias
+     * @param dotBias bias of the new caret. Use either {@link javax.swing.text.Position.Bias#Forward}
+     *  or {@link javax.swing.text.Position.Bias#Backward} depending on whether the caret should bias
      *  towards the next character or previous one. Use forward bias for non-bidirectional text document.
      * @param markPos beginning of the selection (the other end is dotPos) or the same position like dotPos for no selection.
      *  The markPos may have higher offset than dotPos to select in a backward direction.
-     * @param markBias bias of the begining of the selection. Use either {@link Position.Bias.Forward}
-     *  or {@link Position.Bias.Backward} depending on whether the caret should bias
+     * @param markBias bias of the begining of the selection. Use either {@link javax.swing.text.Position.Bias#Forward}
+     *  or {@link javax.swing.text.Position.Bias#Backward} depending on whether the caret should bias
      *  towards the next character or previous one. Use forward bias for non-bidirectional text document.
      * @return difference between current count of carets and the number of carets when the operation started.
      *  Returns Integer.MIN_VALUE if the operation was canceled due to the caret not being installed in any text component
@@ -763,7 +763,7 @@ public final class EditorCaret implements Caret {
     /**
      * Add multiple carets at once.
      * <br>
-     * It is similar to calling {@link #addCaret(javax.swing.text.Position, javax.swing.text.Position) }
+     * It is similar to calling {@link #addCaret(javax.swing.text.Position, javax.swing.text.Position.Bias, javax.swing.text.Position, javax.swing.text.Position.Bias) }
      * multiple times but this method is more efficient (it only fires caret change once).
      * <br>
      * This method requires the caller to have either read lock or write lock acquired
@@ -2394,7 +2394,7 @@ public final class EditorCaret implements Caret {
         }
         JTextComponent c = component;
         int offset = c.viewToModel(new Point(x, y));
-        Rectangle r = null;;
+        Rectangle r = null;
         if (offset >= 0) {
             try {
                 r = c.modelToView(offset);

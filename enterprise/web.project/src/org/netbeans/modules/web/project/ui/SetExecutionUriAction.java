@@ -71,7 +71,7 @@ public final class SetExecutionUriAction extends NodeAction {
     protected void performAction(Node[] activatedNodes) {
         if ((activatedNodes != null) && (activatedNodes.length == 1)) {
             if (activatedNodes[0] != null) {
-                DataObject data = (DataObject)activatedNodes[0].getLookup().lookup(DataObject.class);
+                DataObject data = activatedNodes[0].getLookup().lookup(DataObject.class);
                 if (data != null) {
                     FileObject servletFo = data.getPrimaryFile();
                     WebModule webModule = WebModule.getWebModule(servletFo);
@@ -104,7 +104,7 @@ public final class SetExecutionUriAction extends NodeAction {
     protected boolean enable (Node[] activatedNodes) {
         if ((activatedNodes != null) && (activatedNodes.length == 1)) {
             if (activatedNodes[0] != null) {
-                DataObject data = (DataObject)activatedNodes[0].getLookup().lookup(DataObject.class);
+                DataObject data = activatedNodes[0].getLookup().lookup(DataObject.class);
                 if (data != null) {
                     FileObject javaClass = data.getPrimaryFile();
                     WebModule webModule = WebModule.getWebModule(javaClass);

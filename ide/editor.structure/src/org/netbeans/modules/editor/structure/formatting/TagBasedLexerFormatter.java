@@ -163,9 +163,9 @@ public abstract class TagBasedLexerFormatter {
 
         public void run() {
             try {
-                TokenHierarchy tokenHierarchy = TokenHierarchy.get(doc);
+                TokenHierarchy<BaseDocument> tokenHierarchy = TokenHierarchy.get(doc);
 
-                TokenSequence[] tokenSequences = (TokenSequence[]) tokenHierarchy.tokenSequenceList(supportedLanguagePath(), 0, Integer.MAX_VALUE).toArray(new TokenSequence[0]);
+                TokenSequence[] tokenSequences = tokenHierarchy.tokenSequenceList(supportedLanguagePath(), 0, Integer.MAX_VALUE).toArray(new TokenSequence[0]);
                 TextBounds[] tokenSequenceBounds = new TextBounds[tokenSequences.length];
 
                 for (int i = 0; i < tokenSequenceBounds.length; i++) {
@@ -511,8 +511,8 @@ public abstract class TagBasedLexerFormatter {
                         newIndent = getExistingIndent(doc, lineNumber - 1);
                     }
                     
-                    TokenHierarchy tokenHierarchy = TokenHierarchy.get(doc);
-                    TokenSequence[] tokenSequences = (TokenSequence[]) tokenHierarchy.tokenSequenceList(supportedLanguagePath(), 0, Integer.MAX_VALUE).toArray(new TokenSequence[0]);
+                    TokenHierarchy<BaseDocument> tokenHierarchy = TokenHierarchy.get(doc);
+                    TokenSequence[] tokenSequences = tokenHierarchy.tokenSequenceList(supportedLanguagePath(), 0, Integer.MAX_VALUE).toArray(new TokenSequence[0]);
                     TextBounds[] tokenSequenceBounds = new TextBounds[tokenSequences.length];
                     
                     for (int i = 0; i < tokenSequenceBounds.length; i++) {
@@ -544,8 +544,8 @@ public abstract class TagBasedLexerFormatter {
     }
     
     private boolean indexWithinCurrentLanguage(BaseDocument doc, int index) throws BadLocationException{
-        TokenHierarchy tokenHierarchy = TokenHierarchy.get(doc);
-        TokenSequence[] tokenSequences = (TokenSequence[]) tokenHierarchy.tokenSequenceList(supportedLanguagePath(), 0, Integer.MAX_VALUE).toArray(new TokenSequence[0]);
+        TokenHierarchy<BaseDocument> tokenHierarchy = TokenHierarchy.get(doc);
+        TokenSequence[] tokenSequences = tokenHierarchy.tokenSequenceList(supportedLanguagePath(), 0, Integer.MAX_VALUE).toArray(new TokenSequence[0]);
         
         for (TokenSequence tokenSequence: tokenSequences){
             TextBounds languageBounds = findTokenSequenceBounds(doc, tokenSequence);
@@ -591,8 +591,8 @@ public abstract class TagBasedLexerFormatter {
     
     public boolean isSmartEnter(BaseDocument doc, int dotPos) {
         
-        TokenHierarchy tokenHierarchy = TokenHierarchy.get(doc);
-        TokenSequence[] tokenSequences = (TokenSequence[]) tokenHierarchy.tokenSequenceList(supportedLanguagePath(), 0, Integer.MAX_VALUE).toArray(new TokenSequence[0]);
+        TokenHierarchy<BaseDocument> tokenHierarchy = TokenHierarchy.get(doc);
+        TokenSequence[] tokenSequences = tokenHierarchy.tokenSequenceList(supportedLanguagePath(), 0, Integer.MAX_VALUE).toArray(new TokenSequence[0]);
         TextBounds[] tokenSequenceBounds = new TextBounds[tokenSequences.length];
         try {
 
@@ -659,7 +659,7 @@ public abstract class TagBasedLexerFormatter {
             BaseDocument doc = (BaseDocument) context.document();
             LinkedList<TagIndentationData> unprocessedOpeningTags = new LinkedList<TagIndentationData>();
             List<TagIndentationData> matchedOpeningTags = new ArrayList<TagIndentationData>();
-            TokenHierarchy tokenHierarchy = TokenHierarchy.get(doc);
+            TokenHierarchy<BaseDocument> tokenHierarchy = TokenHierarchy.get(doc);
 
             if (tokenHierarchy == null) {
                 logger.severe("Could not retrieve TokenHierarchy for document " + doc);
@@ -689,7 +689,7 @@ public abstract class TagBasedLexerFormatter {
             Arrays.fill(embeddingType, EmbeddingType.OUTER);
             int[] indentsWithinTags = new int[transferData.getNumberOfLines()];
 
-            TokenSequence[] tokenSequences = (TokenSequence[]) tokenHierarchy.tokenSequenceList(
+            TokenSequence[] tokenSequences = tokenHierarchy.tokenSequenceList(
                     supportedLanguagePath(), 0, Integer.MAX_VALUE).toArray(new TokenSequence[0]);
             
             TextBounds[] tokenSequenceBounds = new TextBounds[tokenSequences.length];

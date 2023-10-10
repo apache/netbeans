@@ -32,7 +32,6 @@ enum TestEnum implements TestEnumInterface {
     public function testEnum(): void {
         
     }
-
 }
 
 enum TestEnumWithTrait {

@@ -32,6 +32,22 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="arch.token">
+          <summary>
+              Provide tokens for the CPU architecture as <code>org.openide.modules.arch.${os_arch}</code>
+          </summary>
+          <version major="1" minor="84"/>
+          <date day="2" month="6" year="2023"/>
+          <author login="matthiasblaesing"/>
+          <compatibility addition="yes" binary="compatible" source="compatible"/>
+          <description>
+              <p>
+                  There are libraries, that are only compatible with a single
+                  architecture. Modules wrapping these must be able to signal
+                  this and prevent loading. One such example is OpenJFX.
+              </p>
+          </description>
+      </change>
       <change id="splash.screen.version.option">
           <summary>
               An optional version string can be added to the splash screen.

@@ -409,7 +409,6 @@ public final class FolderList extends javax.swing.JPanel {
      * Returns a {@link FileFilter} accepting all files for which any
      * of its path elements starting from selectedFolder (exclusive) to the end is maching
      * ".*test.* case insensitive regular expression
-     * @param selectedFolder
      * @return the {@link FileFilter}
      */
     public static FileFilter testRootsFilter () {

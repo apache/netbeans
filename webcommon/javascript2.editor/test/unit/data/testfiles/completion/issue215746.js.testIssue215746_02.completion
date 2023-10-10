@@ -2,5 +2,6 @@ Code completion result for source line:
 window.h|istory.state;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     hasOwnProperty(prop: String):   [PUBLIC]   JS Platform
-FIELD      history: History                [PUBLIC]   JS Platform
+CLASS      history                         [PUBLIC]   issue215746.js
+METHOD     hasOwn(o: Object, v: Number|Sy  [PUBLIC,   JS Platform
+METHOD     hasOwnProperty(v: Number|Symbo  [PUBLIC]   JS Platform

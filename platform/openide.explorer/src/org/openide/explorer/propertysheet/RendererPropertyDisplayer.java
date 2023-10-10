@@ -72,12 +72,14 @@ final class RendererPropertyDisplayer extends JComponent implements PropertyDisp
         repaint();
     }
 
+    @Override
     public void validate() {
         if (!tableUI) {
             super.validate();
         }
     }
 
+    @Override
     public boolean isValid() {
         if (tableUI) {
             return true;
@@ -86,6 +88,7 @@ final class RendererPropertyDisplayer extends JComponent implements PropertyDisp
         }
     }
 
+    @Override
     public boolean isShowing() {
         if (tableUI) {
             return true;
@@ -218,6 +221,7 @@ final class RendererPropertyDisplayer extends JComponent implements PropertyDisp
         }
     }
 
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("Inline editor for property "); //NOI18N
         sb.append(getProperty().getDisplayName());
@@ -236,6 +240,7 @@ final class RendererPropertyDisplayer extends JComponent implements PropertyDisp
         return sb.toString();
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         //Hack for issue 38132 - Beans are set via TTVBridge as a package
         //private property on the parent PropertyPanel (if there is one).
@@ -326,6 +331,7 @@ final class RendererPropertyDisplayer extends JComponent implements PropertyDisp
         }
     }
 
+    @Override
     public Dimension getPreferredSize() {
         //Optimize it shows 16% of painting time is in this call.  In some
         //cases it will be called more than once, so cache the return value
@@ -379,6 +385,7 @@ final class RendererPropertyDisplayer extends JComponent implements PropertyDisp
         return reusableEnv;
     }
 
+    @Override
     public void firePropertyChange(String name, Object old, Object nue) {
         //do nothing
     }

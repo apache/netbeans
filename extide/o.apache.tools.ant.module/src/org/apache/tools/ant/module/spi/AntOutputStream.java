@@ -102,7 +102,7 @@ public abstract class AntOutputStream extends OutputStream {
             break MAIN;
         }
         if (flushEverything) {
-            flushLine(buffer.substring (0, buffer.length()));
+            flushLine(buffer.substring(0));
             buffer.delete(0, buffer.length());
         }
     }

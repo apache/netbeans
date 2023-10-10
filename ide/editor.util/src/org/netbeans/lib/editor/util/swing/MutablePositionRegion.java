@@ -27,7 +27,7 @@ import javax.swing.text.Position;
 
 /**
  * A pair of positions delimiting a text region in a swing document.
- * <br/>
+ * <br>
  * At all times it should be satisfied that
  * {@link #getStartOffset()} &lt;= {@link #getEndOffset()}.
  *
@@ -57,7 +57,7 @@ public class MutablePositionRegion extends PositionRegion {
 
     /**
      * Set a new start and end positions of this region.
-     * <br/>
+     * <br>
      * They should satisfy
      * {@link #getStartOffset()} &lt;= {@link #getEndOffset()}.
      *
@@ -70,7 +70,7 @@ public class MutablePositionRegion extends PositionRegion {
     
     /**
      * Set a new start position of this region.
-     * <br/>
+     * <br>
      * It should satisfy
      * {@link #getStartOffset()} &lt;= {@link #getEndOffset()}.
      *
@@ -82,7 +82,7 @@ public class MutablePositionRegion extends PositionRegion {
 
     /**
      * Set a new end position of this region.
-     * <br/>
+     * <br>
      * It should satisfy
      * {@link #getStartOffset()} &lt;= {@link #getEndOffset()}.
      *

@@ -46,7 +46,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
-import static org.netbeans.modules.gradle.spi.newproject.Bundle.*;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -134,7 +133,7 @@ public final class TemplateOperation implements Runnable {
         "MSG_CREATE_FOLDER=Creating foder: {0}"
     })
     public void createFolder(File target) {
-        steps.add(new CreateDirStep(target, MSG_CREATE_FOLDER(target.getName())));
+        steps.add(new CreateDirStep(target, Bundle.MSG_CREATE_FOLDER(target.getName())));
     }
 
     @Messages({
@@ -143,15 +142,36 @@ public final class TemplateOperation implements Runnable {
     })
     public void createPackage(File base, String pkg) {
         String relativePath = pkg.replace('.', '/');
-        steps.add(new CreateDirStep(new File(base, relativePath),MSG_CREATE_PACKAGE(pkg)));
+        steps.add(new CreateDirStep(new File(base, relativePath),Bundle.MSG_CREATE_PACKAGE(pkg)));
     }
 
     public void addConfigureProject(File projectDir, ProjectConfigurator configurator) {
         steps.add(new ConfigureProjectStep(projectDir, configurator));
     }
 
+    /**
+     * Initialize the Gradle wrapper in the target project. Equivalent to
+     * executing <code>gradle wrapper</code>.
+     *
+     * @param target project directory
+     */
     public void addWrapperInit(File target) {
-        steps.add(new InitGradleWrapper(target));
+        steps.add(new InitGradleWrapper(target, null));
+    }
+
+    /**
+     * Initialize the Gradle wrapper in the target project with the requested
+     * version of Gradle. Equivalent to executing
+     * <code>gradle wrapper --gradle-version $version</code>. The version may be
+     * the specific Gradle version required, or one of the labels supported by
+     * the wrapper task, eg. <code>latest</code>.
+     *
+     * @param target project directory
+     * @param version Gradle version or version label
+     * @since 2.34
+     */
+    public void addWrapperInit(File target, String version) {
+        steps.add(new InitGradleWrapper(target, version));
     }
 
     /** *  Begin creation of new project using Gradle's 
@@ -172,7 +192,7 @@ public final class TemplateOperation implements Runnable {
 
     /** Builder to specify additional parameters for the {@link #createGradleInit(java.io.File, java.lang.String)}
      * operation. At the end call {@link #add()} to finish the operation and 
-     * add it to the list of {@link OperationStep}s to perform.
+     * add it to the list of {@link TemplateOperation.OperationStep}s to perform.
      * 
      * @since 2.20
      */
@@ -180,7 +200,7 @@ public final class TemplateOperation implements Runnable {
         InitOperation() {
         }
 
-        /** Add the operation to the list of {@link OperationStep}s to perform.
+        /** Add the operation to the list of {@link TemplateOperation.OperationStep}s to perform.
          * @since 2.20
          */
         public final void add() {
@@ -368,7 +388,7 @@ public final class TemplateOperation implements Runnable {
         @Override
         @Messages("MSG_CONFIGURING_PROJECT=Configuring Project...")
         public String getMessage() {
-            return MSG_CONFIGURING_PROJECT();
+            return Bundle.MSG_CONFIGURING_PROJECT();
         }
 
         @Override
@@ -407,7 +427,7 @@ public final class TemplateOperation implements Runnable {
             "MSG_PRELOAD_PROJECT=Load: {0}"
         })
         public String getMessage() {
-            return GradleProjects.testForProject(dir) ? MSG_PRELOAD_PROJECT(dir.getName()) : MSM_CHECKING_FOLDER(dir.getName());
+            return GradleProjects.testForProject(dir) ? Bundle.MSG_PRELOAD_PROJECT(dir.getName()) : Bundle.MSM_CHECKING_FOLDER(dir.getName());
         }
 
         @Override
@@ -444,22 +464,30 @@ public final class TemplateOperation implements Runnable {
     private static final class InitGradleWrapper extends BaseOperationStep {
 
         final File projectDir;
+        final String version;
 
-        public InitGradleWrapper(File projectDir) {
+        public InitGradleWrapper(File projectDir, String version) {
             this.projectDir = projectDir;
+            this.version = version;
         }
 
         @Override
         @Messages("MSG_INIT_WRAPPER=Initializing Gradle Wrapper")
         public String getMessage() {
-            return MSG_INIT_WRAPPER();
+            return Bundle.MSG_INIT_WRAPPER();
         }
 
         @Override
         public Set<FileObject> execute() {
             GradleConnector gconn = GradleConnector.newConnector();
             try (ProjectConnection pconn = gconn.forProjectDirectory(projectDir).connect()) {
-                pconn.newBuild().withArguments("--offline").forTasks("wrapper").run(); //NOI18N
+                List<String> args = new ArrayList<>();
+                args.add("wrapper"); //NOI18N
+                if (version != null) {
+                    args.add("--gradle-version"); //NOI18N
+                    args.add(version);
+                }
+                pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
             } catch (GradleConnectionException | IllegalStateException ex) {
                 // Well for some reason we were  not able to load Gradle.
                 // Ignoring that for now
@@ -488,7 +516,7 @@ public final class TemplateOperation implements Runnable {
             "MSG_COPY_TEMPLATE=Generating {0}..."
         })
         public String getMessage() {
-            return MSG_COPY_TEMPLATE(target.getName());
+            return Bundle.MSG_COPY_TEMPLATE(target.getName());
         }
 
         @Override
@@ -548,7 +576,7 @@ public final class TemplateOperation implements Runnable {
 
         @Override
         public String getMessage() {
-            return MSG_COPY_TEMPLATE(target.getName());
+            return Bundle.MSG_COPY_TEMPLATE(target.getName());
         }
 
         @Override

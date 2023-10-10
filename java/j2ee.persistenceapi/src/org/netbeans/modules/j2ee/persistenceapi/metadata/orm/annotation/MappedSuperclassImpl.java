@@ -55,8 +55,14 @@ public class MappedSuperclassImpl extends PersistentObject implements MappedSupe
         class2 = typeElement.getQualifiedName().toString();
         AnnotationModelHelper helper = getHelper();
         Map<String, ? extends AnnotationMirror> annByType = helper.getAnnotationsByType(typeElement.getAnnotationMirrors());
-        AnnotationMirror embeddableAnn = annByType.get("javax.persistence.MappedSuperclass"); // NOI18N
-        AnnotationMirror entityAcc = annByType.get("javax.persistence.Access"); // NOI18N
+        AnnotationMirror embeddableAnn = annByType.get("jakarta.persistence.MappedSuperclass"); // NOI18N
+        if (embeddableAnn == null) {
+            embeddableAnn = annByType.get("javax.persistence.MappedSuperclass"); // NOI18N
+        }
+        AnnotationMirror entityAcc = annByType.get("jakarta.persistence.Access"); // NOI18N
+        if (entityAcc == null) {
+            entityAcc = annByType.get("javax.persistence.Access"); // NOI18N
+        }
         if (entityAcc != null) {
             entityAcc.getElementValues();
             AnnotationParser parser = AnnotationParser.create(helper);
@@ -101,7 +107,12 @@ public class MappedSuperclassImpl extends PersistentObject implements MappedSupe
     public String getAccess() {
         if (accessType != null && accessType.length()>0) {
             //use access type specified by annotation by default, regardless of later fields/properties annitatons
-            return accessType.equals("javax.persistence.AccessType.PROPERTY") ? PROPERTY_ACCESS : FIELD_ACCESS;
+            if (accessType.equals("jakarta.persistence.AccessType.PROPERTY")
+                    || accessType.equals("javax.persistence.AccessType.PROPERTY")) {
+                return PROPERTY_ACCESS;
+            } else {
+                return FIELD_ACCESS;
+            }
         } else {
             return getAttributes().hasFieldAccess() ? FIELD_ACCESS : PROPERTY_ACCESS;
         }

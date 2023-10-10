@@ -49,7 +49,7 @@ public class JsonLexer implements Lexer<JsTokenId> {
         FileObject fo = (FileObject) info.getAttributeValue(FileObject.class);
         boolean allowComments = fo != null ? JsonOptionsQuery.getOptions(fo).isCommentSupported() : false;
         scanner = new org.netbeans.modules.javascript2.json.parser.JsonLexer(charStream, allowComments, true);
-        if (info.state() != null && info.state() instanceof LexerState) {
+        if (info.state() instanceof LexerState) {
             scanner.setLexerState((LexerState) info.state());
         }
     }

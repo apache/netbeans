@@ -44,7 +44,7 @@ public class SpockUtils {
             return false;
         }
         ParserResult pr = context.getParserResult();
-        if (pr != null && pr instanceof GroovyParserResult) {
+        if (pr instanceof GroovyParserResult) {
             GroovyParserResult gpr = (GroovyParserResult) pr;
             ClassNode specCN = gpr.resolveClassName("spock.lang.Specification");   //NOI18N
             if (specCN != null) {

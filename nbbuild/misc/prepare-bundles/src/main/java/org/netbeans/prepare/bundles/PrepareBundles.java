@@ -19,6 +19,7 @@
 package org.netbeans.prepare.bundles;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -104,107 +105,20 @@ public class PrepareBundles {
                 if (".bin".equals(module.getFileName().toString())) continue;
                 if (".package-lock.json".equals(module.getFileName().toString())) continue;
                 if ("@types".equals(module.getFileName().toString())) continue;
+                if ("@esbuild".equals(module.getFileName().toString())) continue;
+                if ("@microsoft".equals(module.getFileName().toString())) continue;
+                if ("@vscode".equals(module.getFileName().toString())) {
+                    try (DirectoryStream<Path> sds = Files.newDirectoryStream(module)) {
+                        for (Path sModule : sds) {
+                            checkModule(sModule, sb, tokens2Projects, project2License, bundlesDir, targetDir, externalDir, binariesList);
+                        }
+                    }
+                    continue;
+                }
                 if ("@ungap".equals(module.getFileName().toString())) {
                     module = module.resolve("promise-all-settled");
                 }
-                Path packageJson = module.resolve("package.json");
-
-                if (!Files.isReadable(packageJson)) {
-                    throw new IllegalStateException("Cannot find package.json for: " + module.getFileName());
-                }
-
-                String packageJsonText = readString(packageJson);
-                Map<String, Object> packageJsonData = new Gson().fromJson(packageJsonText, HashMap.class);
-                String name = (String) packageJsonData.get("name");
-                String version = (String) packageJsonData.get("version");
-                String description = (String) packageJsonData.get("description");
-                String homepage = (String) packageJsonData.get("homepage");
-                String licenseKey = packageJsonData.get("license").toString();
-
-                String licenseText = null;
-
-                try (DirectoryStream<Path> insideModule = Files.newDirectoryStream(module)) {
-                    for (Path licenseCandidate : insideModule) {
-                        String fileName = licenseCandidate.getFileName().toString();
-
-                        if (LICENSE_FILE_NAMES.stream().anyMatch(p -> p.matcher(fileName).matches())) {
-                            licenseText = readString(module.resolve(licenseCandidate));
-                            break;
-                        }
-                    }
-                }
-
-                String hardcodedLicenseName = name + "-" + version + "-license";
-                URL hardcodedLicense = PrepareBundles.class.getResource(hardcodedLicenseName);
-                if (hardcodedLicense != null ){
-                    StringBuilder licenseTextBuffer = new StringBuilder();
-                    try (InputStream in = hardcodedLicense.openStream();
-                         Reader r = new InputStreamReader(in, StandardCharsets.UTF_8)) {
-                        int read;
-                        while ((read = r.read()) != (-1)) {
-                            licenseTextBuffer.append((char) read);
-                        }
-                    }
-                    licenseText = licenseTextBuffer.toString();
-                } else if (licenseText == null) {
-                    sb.append("Cannot find license for: ").
-                        append(module.getFileName()).
-                        append(" in ").
-                        append(hardcodedLicenseName).
-                        append("\n");
-                    continue;
-                }
-
-                Path thirdpartynoticestxt = module.resolve("thirdpartynotices.txt");
-
-                if (Files.isReadable(thirdpartynoticestxt)) {
-                    licenseText = "Parts of this work are licensed:\n" +
-                                  licenseText +
-                                  "\n\n" +
-                                  "Parts of this work are licensed:\n" +
-                                  readString(thirdpartynoticestxt);
-                }
-
-                //fill project2Notice here if needed
-
-                List<String> tokens = licenseTextToTokens(licenseText);
-                String licenseTextFin = licenseText;
-
-                tokens2Projects.computeIfAbsent(tokens, t -> new LicenseUses(licenseKey, licenseTextFin)).projects.add(module.getFileName().toString());
-                project2License.put(module.getFileName().toString(), new LicenseDescription(name, version, description, homepage, licenseKey, licenseText));
-
-                Path bundle = bundlesDir.resolve(module.getFileName() + "-" + version + ".zip");
-                try (JarOutputStream out = new JarOutputStream(Files.newOutputStream(bundle));
-                    Stream<Path> files = Files.walk(module, FileVisitOption.FOLLOW_LINKS)) {
-                    Path moduleFinal = module;
-                    files.forEach(p -> {
-                        if (p == moduleFinal) return ;
-                        try {
-                            String relative = moduleFinal.getParent().relativize(p).toString();
-                            boolean isDir = Files.isDirectory(p);
-                            ZipEntry ze = new ZipEntry(relative + (isDir ? "/" : ""));
-                            out.putNextEntry(ze);
-                            if (!isDir) {
-                                if (relative.equals("package.json")) {
-                                    out.write(packageJsonText.replace(targetDir.toString(), "").getBytes("UTF-8"));
-                                } else {
-                                    Files.copy(p, out);
-                                }
-                            }
-                        } catch (IOException ex) {
-                            throw new UncheckedIOException(ex);
-                        }
-                    });
-                }
-                MessageDigest md = MessageDigest.getInstance("SHA1");
-                md.update(Files.readAllBytes(bundle));
-                StringBuilder hash = new StringBuilder();
-                for (byte b : md.digest()) {
-                    hash.append(String.format("%02X", b));
-                }
-                Path external = externalDir.resolve(hash + "-" + bundle.getFileName());
-                Files.copy(bundle, external);
-                binariesList.write(hash + " " + bundle.getFileName().toString() + nl);
+                checkModule(module, sb, tokens2Projects, project2License, bundlesDir, targetDir, externalDir, binariesList);
             }
         }
         if (sb.length() > 0) {
@@ -257,6 +171,97 @@ public class PrepareBundles {
         }
 
 
+    }
+
+    private static void checkModule(Path module, StringBuilder sb, Map<List<String>, LicenseUses> tokens2Projects, Map<String, LicenseDescription> project2License, Path bundlesDir, Path targetDir, Path externalDir, final Writer binariesList) throws NoSuchAlgorithmException, IOException, IllegalStateException, JsonSyntaxException {
+        Path packageJson = module.resolve("package.json");
+        if (!Files.isReadable(packageJson)) {
+            throw new IllegalStateException("Cannot find package.json for: " + module.getFileName());
+        }
+        String packageJsonText = readString(packageJson);
+        Map<String, Object> packageJsonData = new Gson().fromJson(packageJsonText, HashMap.class);
+        String name = (String) packageJsonData.get("name");
+        String version = (String) packageJsonData.get("version");
+        String description = (String) packageJsonData.get("description");
+        String homepage = (String) packageJsonData.get("homepage");
+        String licenseKey = packageJsonData.get("license").toString();
+        String licenseText = null;
+        try (DirectoryStream<Path> insideModule = Files.newDirectoryStream(module)) {
+            for (Path licenseCandidate : insideModule) {
+                String fileName = licenseCandidate.getFileName().toString();
+                
+                if (LICENSE_FILE_NAMES.stream().anyMatch(p -> p.matcher(fileName).matches())) {
+                    licenseText = readString(module.resolve(licenseCandidate));
+                    break;
+                }
+            }
+        }
+        String hardcodedLicenseName = name + "-" + version + "-license";
+        URL hardcodedLicense = PrepareBundles.class.getResource(hardcodedLicenseName);
+        if (hardcodedLicense != null) {
+            StringBuilder licenseTextBuffer = new StringBuilder();
+            try (InputStream in = hardcodedLicense.openStream();
+                    Reader r = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+                int read;
+                while ((read = r.read()) != (-1)) {
+                    licenseTextBuffer.append((char) read);
+                }
+            }
+            licenseText = licenseTextBuffer.toString();
+        } else if (licenseText == null) {
+            sb.append("Cannot find license for: ").
+                    append(module.getFileName()).
+                    append(" in ").
+                    append(hardcodedLicenseName).
+                    append("\n");
+            return;
+        }
+        Path thirdpartynoticestxt = module.resolve("thirdpartynotices.txt");
+        if (Files.isReadable(thirdpartynoticestxt)) {
+            licenseText = "Parts of this work are licensed:\n" +
+                    licenseText +
+                    "\n\n" +
+                    "Parts of this work are licensed:\n" +
+                    readString(thirdpartynoticestxt);
+        }
+        //fill project2Notice here if needed
+        
+        List<String> tokens = licenseTextToTokens(licenseText);
+        String licenseTextFin = licenseText;
+        tokens2Projects.computeIfAbsent(tokens, t -> new LicenseUses(licenseKey, licenseTextFin)).projects.add(module.getFileName().toString());
+        project2License.put(module.getFileName().toString(), new LicenseDescription(name, version, description, homepage, licenseKey, licenseText));
+        Path bundle = bundlesDir.resolve(module.getFileName() + "-" + version + ".zip");
+        try (JarOutputStream out = new JarOutputStream(Files.newOutputStream(bundle));
+                Stream<Path> files = Files.walk(module, FileVisitOption.FOLLOW_LINKS)) {
+            Path moduleFinal = module;
+            files.forEach(p -> {
+                if (p == moduleFinal) return ;
+                try {
+                    String relative = moduleFinal.getParent().relativize(p).toString();
+                    boolean isDir = Files.isDirectory(p);
+                    ZipEntry ze = new ZipEntry(relative + (isDir ? "/" : ""));
+                    out.putNextEntry(ze);
+                    if (!isDir) {
+                        if (relative.equals("package.json")) {
+                            out.write(packageJsonText.replace(targetDir.toString(), "").getBytes("UTF-8"));
+                        } else {
+                            Files.copy(p, out);
+                        }
+                    }
+                } catch (IOException ex) {
+                    throw new UncheckedIOException(ex);
+                }
+            });
+        }
+        MessageDigest md = MessageDigest.getInstance("SHA1");
+        md.update(Files.readAllBytes(bundle));
+        StringBuilder hash = new StringBuilder();
+        for (byte b : md.digest()) {
+            hash.append(String.format("%02X", b));
+        }
+        Path external = externalDir.resolve(hash + "-" + bundle.getFileName());
+        Files.copy(bundle, external);
+        binariesList.write(hash + " " + bundle.getFileName().toString() + nl);
     }
 
     private static String readString(Path p) throws IOException {

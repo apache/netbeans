@@ -3,6 +3,6 @@ $scope.v|iewMode = function(view) {
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     valueOf(): Number               [PUBLIC]   JS Platform
-METHOD     values(obj: Object): Array      [PUBLIC,   JS Platform
+METHOD     values(o: Object): Object       [PUBLIC,   JS Platform
 METHOD     viewMode(view): undefined       [PUBLIC]   issue224453.js
 FIELD      v                               [PUBLIC]   issue224453.js

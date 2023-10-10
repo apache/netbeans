@@ -1480,7 +1480,7 @@ public abstract class Properties {
                 } else if (classNames[6].equals(className)) {
                     return properties.getFloat(propertyName, 0f);
                 } else if (classNames[7].equals(className)) {
-                    return new Double(properties.getDouble(propertyName, 0d));
+                    return properties.getDouble(propertyName, 0D);
                 }
                 throw new IllegalArgumentException("Class = '"+className+"'.");
             }

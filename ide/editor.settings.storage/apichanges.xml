@@ -228,7 +228,7 @@ is the proper place.
             <description>
             <p>
                 The phase 1 of the editor settings enhancements, please see
-                <a href="http://www.netbeans.org/issues/show_bug.cgi?id=90403">issue 90403</a>
+                <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=90403">issue 90403</a>
                 for details. Briefly, the changes involve introducing a special
                 folder for each setting type, profiles are always stored in their
                 own folder, modules are allowed to register multiple settings files,

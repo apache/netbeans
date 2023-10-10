@@ -42,7 +42,7 @@ public interface ServerLibraryConfiguration {
      * to work properly.
      * <p>
      * Once library is configured it should be present in the result
-     * of the {@link #getRequiredLibraries()} call.
+     * of the {@link #getLibraries()} call.
      *
      * @param library the library the enterprise module needs in order to work
      *             properly

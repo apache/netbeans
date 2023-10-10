@@ -28,6 +28,7 @@ public interface HostInfo {
         SPARC,
         X86,
         ARM,
+        AARCH64,
         UNKNOWN;
     }
 

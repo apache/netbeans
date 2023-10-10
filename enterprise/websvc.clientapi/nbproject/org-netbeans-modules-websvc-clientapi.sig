@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.47
+#Version 1.53
 
 CLSS public java.lang.Object
 cons public init()
@@ -119,8 +119,8 @@ meth public java.lang.String getCurrentFeatures()
 meth public java.lang.String getNewFeatures()
 meth public java.lang.String getServiceName()
 meth public java.lang.String toString()
-meth public java.util.List getAvailableFeatures()
-meth public java.util.List getImportantFeatures()
+meth public java.util.List<java.lang.String> getAvailableFeatures()
+meth public java.util.List<java.lang.String> getImportantFeatures()
 meth public org.netbeans.modules.websvc.api.client.ClientStubDescriptor getClientStubDescriptor()
 meth public void setNewFeatures(java.lang.String)
 meth public void setOptions(boolean[])
@@ -192,7 +192,7 @@ fld public final static java.lang.String XML_RESOURCES_FOLDER = "xml-resources"
 meth public abstract java.lang.String addServiceClient(java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public abstract java.lang.String getServiceRefName(org.openide.nodes.Node)
 meth public abstract java.net.URL getCatalog()
-meth public abstract java.util.List getServiceClients()
+meth public abstract java.util.List<org.netbeans.modules.websvc.api.jaxws.project.config.Client> getServiceClients()
 meth public abstract org.netbeans.spi.project.support.ant.AntProjectHelper getAntProjectHelper()
 meth public abstract org.openide.filesystems.FileObject getBindingsFolderForClient(java.lang.String,boolean)
 meth public abstract org.openide.filesystems.FileObject getLocalWsdlFolderForClient(java.lang.String,boolean)
@@ -211,8 +211,10 @@ meth public abstract org.netbeans.modules.websvc.api.jaxws.client.JAXWSClientVie
 
 CLSS public abstract org.netbeans.modules.websvc.spi.jaxws.client.ProjectJAXWSClientSupport
 cons public init(org.netbeans.api.project.Project,org.netbeans.spi.project.support.ant.AntProjectHelper)
+fld protected final static java.lang.String JAKARTA_EE_VERSION_10 = "jakarta-ee-version-10"
 fld protected final static java.lang.String JAKARTA_EE_VERSION_8 = "jakarta-ee-version-8"
 fld protected final static java.lang.String JAKARTA_EE_VERSION_9 = "jakarta-ee-version-9"
+fld protected final static java.lang.String JAKARTA_EE_VERSION_91 = "jakarta-ee-version-91"
 fld protected final static java.lang.String JAVA_EE_VERSION_15 = "java-ee-version-15"
 fld protected final static java.lang.String JAVA_EE_VERSION_16 = "java-ee-version-16"
 fld protected final static java.lang.String JAVA_EE_VERSION_17 = "java-ee-version-17"
@@ -228,7 +230,7 @@ meth public java.lang.String addServiceClient(java.lang.String,java.lang.String,
 meth public java.lang.String getServiceRefName(org.openide.nodes.Node)
 meth public java.lang.String getWsdlUrl(java.lang.String)
 meth public java.net.URL getCatalog()
-meth public java.util.List getServiceClients()
+meth public java.util.List<org.netbeans.modules.websvc.api.jaxws.project.config.Client> getServiceClients()
 meth public org.netbeans.spi.project.support.ant.AntProjectHelper getAntProjectHelper()
 meth public org.openide.filesystems.FileObject getBindingsFolderForClient(java.lang.String,boolean)
 meth public org.openide.filesystems.FileObject getLocalWsdlFolderForClient(java.lang.String,boolean)

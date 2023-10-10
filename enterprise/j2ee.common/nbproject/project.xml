@@ -522,6 +522,7 @@
                 <friend>org.netbeans.modules.visualweb.dataconnectivity</friend>
                 <friend>org.netbeans.modules.visualweb.project.jsf</friend>
                 <friend>org.netbeans.modules.web.beans</friend>
+                <friend>org.netbeans.modules.jakarta.web.beans</friend>
                 <friend>org.netbeans.modules.web.core</friend>
                 <friend>org.netbeans.modules.web.freeform</friend>
                 <friend>org.netbeans.modules.web.jsf</friend>

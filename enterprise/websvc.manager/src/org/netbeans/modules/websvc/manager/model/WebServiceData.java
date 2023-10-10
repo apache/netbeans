@@ -343,8 +343,7 @@ public class WebServiceData implements WsdlData {
     }
 
     public void setState(State state) {
-        boolean fireEvent = (!wsdlState.equals(State.WSDL_SERVICE_COMPILED) &&
-                state.equals(State.WSDL_SERVICE_COMPILED));
+        boolean fireEvent = wsdlState != State.WSDL_SERVICE_COMPILED && state == State.WSDL_SERVICE_COMPILED;
 
         State old = wsdlState;
         Status oldStatus = getStatus();

@@ -13,5 +13,4 @@ class Simple {
     public function method01() {
         
     }
-
 }

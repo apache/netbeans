@@ -37,6 +37,7 @@ import javax.lang.model.type.DeclaredType;
  * @author ads
  *
  */
+// @todo: Support JakartaEE
 class MemberBindingFilter<T extends Element> extends Filter<T> {
     
     private static final String NON_BINDING_MEMBER_ANNOTATION =

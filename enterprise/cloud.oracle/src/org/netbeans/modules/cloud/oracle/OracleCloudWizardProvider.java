@@ -18,6 +18,10 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
+import javax.swing.event.ChangeListener;
 import org.netbeans.spi.server.ServerWizardProvider;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
@@ -38,7 +42,62 @@ public class OracleCloudWizardProvider implements ServerWizardProvider {
 
     @Override
     public WizardDescriptor.InstantiatingIterator getInstantiatingIterator() {
-        return new OracleCloudWizardIterator();
+        return OCIManager.loadDefaultConfigProfiles() ? 
+                new SimpleIterator() :
+                new OracleCloudWizardIterator();
     }
     
+    private static class SimpleIterator implements WizardDescriptor.InstantiatingIterator {
+
+        @Override
+        public Set instantiate() throws IOException {
+            // force profiles collection
+            OCIManager.getDefault().getConnectedProfiles();
+            return Collections.emptySet();
+        }
+
+        @Override
+        public void initialize(WizardDescriptor wizard) {
+        }
+
+        @Override
+        public void uninitialize(WizardDescriptor wizard) {
+        }
+
+        @Override
+        public WizardDescriptor.Panel current() {
+            return null;
+        }
+
+        @Override
+        public String name() {
+            return Bundle.LBL_OC();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return false;
+        }
+
+        @Override
+        public void nextPanel() {
+        }
+
+        @Override
+        public void previousPanel() {
+        }
+
+        @Override
+        public void addChangeListener(ChangeListener l) {
+        }
+
+        @Override
+        public void removeChangeListener(ChangeListener l) {
+        }
+    }
 }

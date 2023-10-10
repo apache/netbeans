@@ -24,6 +24,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,11 +47,13 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
+import static org.netbeans.modules.java.source.parsing.FileObjects.getZipPathURI;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
@@ -197,6 +201,18 @@ public class CachingArchive implements Archive, FileChangeListener {
             }
             return null;
         }
+    }
+
+    @Override
+    public URI getDirectory(String dirName) throws IOException {
+        Map<String, Folder> folders = doInit();
+
+        if (folders.containsKey(dirName)) {
+            URI zipURI = BaseUtilities.toURI(this.archiveFile);
+            return getZipPathURI(zipURI, dirName);
+        }
+
+        return null;
     }
 
     @Override

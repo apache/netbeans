@@ -213,9 +213,14 @@ public class CompletionProviderImpl implements CompletionProvider {
                                                 toAdd = i.getLabel();
                                             }
                                             int[] identSpan = Utilities.getIdentifierBlock((BaseDocument) doc, caretOffset);
-                                            String printSuffix = toAdd.substring(identSpan != null ? caretOffset - identSpan[0] : 0);
-                                            doc.insertString(caretOffset, printSuffix, null);
-                                            endPos = caretOffset + printSuffix.length();
+                                            if (identSpan != null) {
+                                                doc.remove(identSpan[0], identSpan[1] - identSpan[0]);
+                                                doc.insertString(identSpan[0], toAdd, null);
+                                                endPos = identSpan[0] + toAdd.length();
+                                            } else {
+                                                doc.insertString(caretOffset, toAdd, null);
+                                                endPos = caretOffset + toAdd.length();
+                                            }
                                         }
                                         doc.insertString(endPos, appendText, null);
                                     } catch (BadLocationException ex) {

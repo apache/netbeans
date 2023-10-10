@@ -375,7 +375,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                     try {
                         //check if the cursor is behind an open tag
                         SyntaxElement se = getElementChain(tracking.getOffset());
-                        if(se != null && (se instanceof SyntaxElement.Tag)) {
+                        if(se instanceof SyntaxElement.Tag) {
                             return COMPLETION_POPUP;
                         }
                     }catch(BadLocationException e) {
@@ -1752,7 +1752,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
     public CompletionItem getAutocompletedEndTag(int offset) {
         try {
             SyntaxElement elem = getElementChain( offset - 1);
-            if(elem != null && elem instanceof SyntaxElement.Tag) {
+            if(elem instanceof SyntaxElement.Tag) {
                 String tagName = ((SyntaxElement.Tag)elem).getName();
                 return HtmlCompletionItem.createAutocompleteEndTag(tagName, offset);
             }

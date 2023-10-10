@@ -14,11 +14,11 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-4FCF93A34BAA5176E968498FAFB8B4E2C11D93F1 org.eclipse.persistence:org.eclipse.persistence.core:2.7.10
-40807FC4D91A3F827FB038369BD2C83009BEA3B8 org.eclipse.persistence:org.eclipse.persistence.asm:9.2.0
-78712ED5187194106A5563F3DE0539BED69ED8E5 org.eclipse.persistence:org.eclipse.persistence.antlr:2.7.10
-4E903136AB19889208E23C3C87B77DBBFD986DE5 org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.10
-EC685587096E9649AF3544010313992F188E3602 org.eclipse.persistence:org.eclipse.persistence.jpa.jpql:2.7.10
-2652F3E9F0FA97B1AED3A2E512E6FA59CC243E18 org.eclipse.persistence:org.eclipse.persistence.moxy:2.7.10
+684CD163E2C2B3623B30A7C392783C12998B296E org.eclipse.persistence:org.eclipse.persistence.core:2.7.12
+BEECC6436A613956DBC9CAEED144C8CD50A9EB9C org.eclipse.persistence:org.eclipse.persistence.asm:9.4.0
+78712ED5187194106A5563F3DE0539BED69ED8E5 org.eclipse.persistence:org.eclipse.persistence.antlr:2.7.12
+E22A1DBFD01A4FD2FEECB4FC7B44496AF3DFEA17 org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.12
+1DBB819CF485816F70CA459A54FBC1BEBC92D8F2 org.eclipse.persistence:org.eclipse.persistence.jpa.jpql:2.7.12
+CFA1D606E50143162E151E0D43C7B7BC36129016 org.eclipse.persistence:org.eclipse.persistence.moxy:2.7.12
 CCB72277523E79F81BBF74535BF6488443403BAE org.eclipse.persistence:jakarta.persistence:2.2.3
 0BE5F7D291047D13FDD4AA219AD755E431DAFECA org.eclipse.persistence:jakarta.persistence:2.2.3:sources

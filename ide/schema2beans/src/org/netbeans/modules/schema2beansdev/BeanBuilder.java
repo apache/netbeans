@@ -1093,9 +1093,9 @@ public class BeanBuilder {
             throw new IllegalArgumentException(Common.getMessage("MSG_MissingOnExpression", finderExpr));
 
         if (onExpr.startsWith("/"+rootName)) {
-            onExpr = onExpr.substring(rootName.length()+1, onExpr.length());
+            onExpr = onExpr.substring(rootName.length()+1);
             if (onExpr.startsWith("/"))
-                onExpr = onExpr.substring(1, onExpr.length());
+                onExpr = onExpr.substring(1);
         }
         //System.out.println("onExpr="+onExpr);
         GraphNode onNode = null;
@@ -1403,7 +1403,7 @@ public class BeanBuilder {
             impl = impl.trim();
             if (impl.equals(interfce))
                 return;
-            implList = implList.substring(pos+1, implList.length());
+            implList = implList.substring(pos+1);
             implList = implList.trim();
             pos = implList.indexOf(',');
         }
@@ -1432,7 +1432,7 @@ public class BeanBuilder {
             impl = impl.trim();
             if (impl.equals(interfce))
                 return;
-            implList = implList.substring(pos+1, implList.length());
+            implList = implList.substring(pos+1);
             implList = implList.trim();
             pos = implList.indexOf(',');
         }

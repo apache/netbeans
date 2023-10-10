@@ -561,9 +561,9 @@ public final class TaskHandler {
         }
 
         private Lookup getLookup() {
-            if (indentTask != null && indentTask instanceof Lookup.Provider) {
+            if (indentTask instanceof Lookup.Provider) {
                 return ((Lookup.Provider)indentTask).getLookup();
-            } else if (reformatTask != null && reformatTask instanceof Lookup.Provider) {
+            } else if (reformatTask instanceof Lookup.Provider) {
                 return ((Lookup.Provider)reformatTask).getLookup();
             } else {
                 return null;
@@ -581,8 +581,31 @@ public final class TaskHandler {
             this.reverse = reverse;
         }
         
+        @Override
         public int compare(LanguagePath lp1, LanguagePath lp2) {
-            return reverse ? lp2.size() - lp1.size() : lp1.size() - lp2.size();
+            int result = lp1.size() - lp2.size();
+            if(result == 0) {
+                for(int i = 0; i < lp1.size(); i++) {
+                    String mime1 = lp1.language(i).mimeType();
+                    String mime2 = lp2.language(i).mimeType();
+                    // Ensure the formatter/indenter for javascript is invoked
+                    // after the CSS identer. When the two mimetypes are
+                    // encountered at the same level,
+                    if(mime1.equals("text/css") && mime2.equals("text/javascript")) {
+                        result = 1;
+                        break;
+                    } else if (mime1.equals("text/javascript") && mime2.equals("text/css")) {
+                        result = -1;
+                        break;
+                    } else {
+                        result = mime1.compareTo(mime2);
+                        if(result != 0) {
+                            break;
+                        }
+                    }
+                }
+            }
+            return reverse ? (-1 * result) : result;
         }
     } // End of MimePathSizeComparator class
     

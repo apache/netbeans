@@ -257,7 +257,7 @@ public class BrokenReferencesCustomizer extends javax.swing.JPanel {
                 description.setText(s);       
                 // avoid possible scroll down/left if the text does not fit in the default window
                 description.getCaret().setDot(0);
-                fix.setEnabled(reference.problem.isResolvable());
+                fix.setEnabled(reference.problem.isResolvable() && !reference.resolved);
                 javax.swing.SwingUtilities.invokeLater(new Runnable() {
                    public void run() {
                        jScrollPane2.getVerticalScrollBar().setValue(0);
@@ -268,7 +268,7 @@ public class BrokenReferencesCustomizer extends javax.swing.JPanel {
                 // Leave the button always enabled so that user can alter 
                 // resolved reference. Especially needed for automatically
                 // resolved JAR references.
-                fix.setEnabled(reference.problem.isResolvable());
+                fix.setEnabled(reference.problem.isResolvable() && !reference.resolved);
             }
         } else {
             description.setText("");

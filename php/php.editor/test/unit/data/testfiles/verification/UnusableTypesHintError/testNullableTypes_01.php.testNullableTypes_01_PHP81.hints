@@ -1,0 +1,39 @@
+    private ?mixed $mixed;
+             -----
+HINT:"mixed" cannot be used as a nullable type.
+    private ?null $null;
+             ----
+HINT:"null" cannot be used as a nullable type.
+HINT:"null" cannot be used as a standalone type.
+    private ?false $false;
+             -----
+HINT:"false" cannot be used as a standalone type.
+    private ?true $true;
+             ----
+HINT:"true" cannot be used as a standalone type.
+    public function returnMixed(): ?mixed {
+                                    -----
+HINT:"mixed" cannot be used as a nullable type.
+    public function returnNull(): ?null {
+                                   ----
+HINT:"null" cannot be used as a nullable type.
+HINT:"null" cannot be used as a standalone type.
+    public function returnFalse(): ?false {
+                                    -----
+HINT:"false" cannot be used as a standalone type.
+    public function returnTrue(): ?true {
+                                   ----
+HINT:"true" cannot be used as a standalone type.
+    public function parameterMixed(?mixed $mixed) {
+                                    -----
+HINT:"mixed" cannot be used as a nullable type.
+    public function parameterNull(?null $null) {
+                                   ----
+HINT:"null" cannot be used as a nullable type.
+HINT:"null" cannot be used as a standalone type.
+    public function parameterFalse(?false $false) {
+                                    -----
+HINT:"false" cannot be used as a standalone type.
+    public function parameterTrue(?true $true) {
+                                   ----
+HINT:"true" cannot be used as a standalone type.

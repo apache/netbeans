@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.css.refactoring;
 
+import java.util.Arrays;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.css.refactoring.api.CssRefactoringExtraInfo;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;
@@ -34,15 +36,15 @@ import org.openide.util.lookup.Lookups;
  */
 public class WhereUsedUI implements RefactoringUI {
 
-    private WhereUsedPanel panel;
     private final WhereUsedQuery query;
-    private CssElementContext context;
-    private CssRefactoringExtraInfo info;
+    private final CssRefactoringExtraInfo info;
+    private WhereUsedPanel panel;
 
-    public WhereUsedUI(CssElementContext context) {
-	this.context = context;
+    public WhereUsedUI(Object... lookupContentIn) {
         this.info = new CssRefactoringExtraInfo();
-	this.query = new WhereUsedQuery(Lookups.fixed(context, info));
+        Object[] lookupContent = Arrays.copyOf(lookupContentIn, lookupContentIn.length + 1);
+        lookupContent[lookupContentIn.length] = info;
+	this.query = new WhereUsedQuery(Lookups.fixed(lookupContent));
     }
 
     @Override
@@ -52,7 +54,7 @@ public class WhereUsedUI implements RefactoringUI {
 
     @Override
     public String getDescription() {
-	return NbBundle.getMessage(WhereUsedUI.class, "LBL_FindUsages"); //NOI18N
+	return NbBundle.getMessage(WhereUsedUI.class, "LBL_FindUsages_Description"); //NOI18N
     }
 
     @Override

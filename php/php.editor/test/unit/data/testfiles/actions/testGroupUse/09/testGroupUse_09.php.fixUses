@@ -29,7 +29,7 @@ function fcc() {
 
 namespace Run;
 
-use A\ {
+use A\{
     fa,
     faa
 };

@@ -50,15 +50,19 @@ public abstract class PersistenceEditorTestBase extends PUDataObjectTestBase {
         super(name);
     }
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         initDataObject();
         
     }
     
+    @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        if(dataObject != null)dataObject.save();
+        if(dataObject != null) {
+            dataObject.save();
+        }
         ddFile.refresh();
         ddFile.delete();
     }
@@ -102,10 +106,7 @@ public abstract class PersistenceEditorTestBase extends PUDataObjectTestBase {
         assertNotNull("Could not get updateTask", updateTask); //NOI18N
         
         updateTask.waitFinished(20000);
-        if (dataObject.getDataCache().getStringData().indexOf(str) > -1){
-            return true;
-        }
-        return false;
+        return dataObject.getDataCache().getStringData().contains(str);
     }
     
     /**
@@ -127,40 +128,23 @@ public abstract class PersistenceEditorTestBase extends PUDataObjectTestBase {
             Field updateTaskField = puSynchronizer.getClass().getSuperclass().getDeclaredField("updateTask");
             updateTaskField.setAccessible(true);
             updateTask = (RequestProcessor.Task) updateTaskField.get(puSynchronizer);
-        } catch (IllegalArgumentException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        } catch (SecurityException ex) {
-            throw new RuntimeException(ex);
-        } catch (NoSuchFieldException ex) {
+        } catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException ex) {
             throw new RuntimeException(ex);
         }
         return updateTask;
     }
     
     protected String readFileObject(FileObject fo){
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int i;
-        InputStream stream = null;
-        try {
-            stream = fo.getInputStream();
+        try (InputStream stream = fo.getInputStream()) {
             while ((i = stream.read()) != -1) {
                 sb.append((char) i);
             }
         } catch (IOException ex) {
             fail(ex.getMessage());
-        } finally {
-            if (stream != null){
-                try {
-                    stream.close();
-                } catch (IOException ex) {
-                    fail(ex.getMessage());
-                }
-            }
         }
         return sb.toString();
-        
     }
     
     

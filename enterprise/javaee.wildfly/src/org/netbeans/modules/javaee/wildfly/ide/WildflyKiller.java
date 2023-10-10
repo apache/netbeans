@@ -72,14 +72,14 @@ public class WildflyKiller {
 
     private boolean killLinux(Runtime rt) {
         try {
-            String getPidCommand = getJps() + " | egrep -i \"jboss-modules\" | awk '{ print $1; }'";
+            String getPidCommand = getJps() + " | grep -i \"jboss-modules\" | awk '{ print $1; }'";
             //get a jstack of all the processes
             Process process = rt.exec(new String[]{"/bin/sh", "-c", getPidCommand});
             InputStream in = process.getInputStream();
             String processTable = readString(in);
             readString(process.getErrorStream());
             if (!processTable.isEmpty()) {
-                readString(rt.exec(new String[]{"/bin/sh", "-c", getJps() + " | egrep -i \"jboss-modules\" | awk '{ print $1; }' | xargs --no-run-if-empty kill -9"}).getInputStream());
+                readString(rt.exec(new String[]{"/bin/sh", "-c", getJps() + " | grep -i \"jboss-modules\" | awk '{ print $1; }' | xargs --no-run-if-empty kill -9"}).getInputStream());
                 errorProcessTable = processTable;
             }
             long end = System.currentTimeMillis() + 5000;

@@ -34,7 +34,7 @@ import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
 public abstract class CustomIndexerFactory extends SourceIndexerFactory {
     
     /**
-     * Creates  new {@link Indexer}.
+     * Creates  new {@link CustomIndexer}.
      * @return an indexer
      */
     public abstract CustomIndexer createIndexer ();

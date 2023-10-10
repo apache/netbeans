@@ -75,9 +75,9 @@ public class JsFormatter implements Formatter {
 
     private int lastOffsetDiff = 0;
 
-    private final Set<FormatToken> processed = new HashSet<FormatToken>();
+    private final Set<FormatToken> processed = new HashSet<>();
 
-    private final Stack<FormatToken> openedBraces = new Stack<FormatToken>();
+    private final Stack<FormatToken> openedBraces = new Stack<>();
 
     public JsFormatter(Language<JsTokenId> language) {
         this.language = language;
@@ -106,7 +106,8 @@ public class JsFormatter implements Formatter {
         final Document doc = context.document();
         final boolean templateEdit = doc.getProperty(CT_HANDLER_DOC_PROPERTY) != null;
         AtomicLockDocument ald = LineDocumentUtils.as(doc, AtomicLockDocument.class);
-        
+
+        @SuppressWarnings("Convert2Lambda") // Converting this to lambda causes class loading issues
         Runnable r = new Runnable() {
             @Override
             public void run() {
@@ -128,12 +129,11 @@ public class JsFormatter implements Formatter {
                 JsFormatVisitor visitor = new JsFormatVisitor(tokenStream,
                         ts, context.endOffset());
 
-
                 if (!(compilationInfo instanceof org.netbeans.modules.javascript2.types.spi.ParserResult)) {
                     throw new IllegalArgumentException(String.valueOf(compilationInfo));
                 }
-                org.netbeans.modules.javascript2.types.spi.ParserResult result =
-                            (org.netbeans.modules.javascript2.types.spi.ParserResult) compilationInfo;
+                org.netbeans.modules.javascript2.types.spi.ParserResult result
+                        = (org.netbeans.modules.javascript2.types.spi.ParserResult) compilationInfo;
                 final FormatContext formatContext;
                 final JsonParser.JsonContext json = result.getLookup().lookup(JsonParser.JsonContext.class);
                 if (json != null) {
@@ -174,7 +174,7 @@ public class JsFormatter implements Formatter {
                 // got after the start so we may change document now
                 boolean started = false;
                 boolean firstTokenFound = false;
-                Stack<FormatContext.ContinuationBlock> continuations = new Stack<FormatContext.ContinuationBlock>();
+                Stack<FormatContext.ContinuationBlock> continuations = new Stack<>();
 
                 // clear the stack of currently opened braces
                 openedBraces.clear();
@@ -1972,59 +1972,57 @@ public class JsFormatter implements Formatter {
                     indentEmptyLines, includeEnd, indentOnly);
 
             AtomicLockDocument ald = LineDocumentUtils.asRequired(doc, AtomicLockDocument.class);
-            ald.runAtomic(new Runnable() {
-                public void run() {
-                    try {
-                        List<IndentContext.Indentation> indents = indentContext.getIndentations();
-                        // Iterate in reverse order such that offsets are not affected by our edits
-                        for (int i = indents.size() - 1; i >= 0; i--) {
-                            IndentContext.Indentation indentation = indents.get(i);
-                            int indent = indentation.getSize();
-                            int lineBegin = indentation.getOffset();
+            ald.runAtomic(() -> {
+                try {
+                    List<IndentContext.Indentation> indents = indentContext.getIndentations();
+                    // Iterate in reverse order such that offsets are not affected by our edits
+                    for (int i = indents.size() - 1; i >= 0; i--) {
+                        IndentContext.Indentation indentation = indents.get(i);
+                        int indent = indentation.getSize();
+                        int lineBegin = indentation.getOffset();
 
-                            if (lineBegin < lineStart) {
-                                // We're now outside the region that the user wanted reformatting;
-                                // these offsets were computed to get the correct continuation context etc.
-                                // for the formatter
-                                break;
-                            }
+                        if (lineBegin < lineStart) {
+                            // We're now outside the region that the user wanted reformatting;
+                            // these offsets were computed to get the correct continuation context etc.
+                            // for the formatter
+                            break;
+                        }
 
-                            if (lineBegin == lineStart && i > 0) {
-                                // Look at the previous line, and see how it's indented
-                                // in the buffer.  If it differs from the computed position,
-                                // offset my computed position (thus, I'm only going to adjust
-                                // the new line position relative to the existing editing.
-                                // This avoids the situation where you're inserting a newline
-                                // in the middle of "incorrectly" indented code (e.g. different
-                                // size than the IDE is using) and the newline position ending
-                                // up "out of sync"
-                                IndentContext.Indentation prevIndentation = indents.get(i - 1);
-                                int prevOffset = prevIndentation.getOffset();
-                                int prevIndent = prevIndentation.getSize();
-                                int actualPrevIndent = GsfUtilities.getLineIndent(doc, prevOffset);
-                                // NOTE: in embedding this is usually true as we have some nonzero initial indent,
-                                // I am just not sure if it is better to add indentOnly check (as I did) or
-                                // remove blank lines condition completely?
-                                if (actualPrevIndent != prevIndent) {
-                                    // For blank lines, indentation may be 0, so don't adjust in that case
-                                    if (indentOnly || !(LineDocumentUtils.isLineEmpty(ld, prevOffset) || LineDocumentUtils.isLineWhitespace(ld, prevOffset))) {
-                                        indent = actualPrevIndent + (indent-prevIndent);
-                                    }
+                        if (lineBegin == lineStart && i > 0) {
+                            // Look at the previous line, and see how it's indented
+                            // in the buffer.  If it differs from the computed position,
+                            // offset my computed position (thus, I'm only going to adjust
+                            // the new line position relative to the existing editing.
+                            // This avoids the situation where you're inserting a newline
+                            // in the middle of "incorrectly" indented code (e.g. different
+                            // size than the IDE is using) and the newline position ending
+                            // up "out of sync"
+                            IndentContext.Indentation prevIndentation = indents.get(i - 1);
+                            int prevOffset = prevIndentation.getOffset();
+                            int prevIndent = prevIndentation.getSize();
+                            int actualPrevIndent = GsfUtilities.getLineIndent(doc, prevOffset);
+                            // NOTE: in embedding this is usually true as we have some nonzero initial indent,
+                            // I am just not sure if it is better to add indentOnly check (as I did) or
+                            // remove blank lines condition completely?
+                            if (actualPrevIndent != prevIndent) {
+                                // For blank lines, indentation may be 0, so don't adjust in that case
+                                if (indentOnly || !(LineDocumentUtils.isLineEmpty(ld, prevOffset) || LineDocumentUtils.isLineWhitespace(ld, prevOffset))) {
+                                    indent = actualPrevIndent + (indent-prevIndent);
                                 }
                             }
-
-                            // Adjust the indent at the given line (specified by offset) to the given indent
-                            int currentIndent = GsfUtilities.getLineIndent(doc, lineBegin);
-
-                            if (currentIndent != indent && indent >= 0) {
-                                //org.netbeans.editor.Formatter editorFormatter = doc.getFormatter();
-                                //editorFormatter.changeRowIndent(doc, lineBegin, indent);
-                                context.modifyIndent(lineBegin, indent);
-                            }
                         }
-                    } catch (BadLocationException ble) {
-                        Exceptions.printStackTrace(ble);
+
+                        // Adjust the indent at the given line (specified by offset) to the given indent
+                        int currentIndent = GsfUtilities.getLineIndent(doc, lineBegin);
+
+                        if (currentIndent != indent && indent >= 0) {
+                            //org.netbeans.editor.Formatter editorFormatter = doc.getFormatter();
+                            //editorFormatter.changeRowIndent(doc, lineBegin, indent);
+                            context.modifyIndent(lineBegin, indent);
+                        }
                     }
+                } catch (BadLocationException ble) {
+                    Exceptions.printStackTrace(ble);
                 }
             });
         } catch (BadLocationException ble) {
@@ -2229,7 +2227,6 @@ public class JsFormatter implements Formatter {
         Document doc = context.getDocument();
 
         if (ts == null) {
-            LineDocument ld = LineDocumentUtils.as(doc, LineDocument.class);
             // remember indent of previous html tag
             context.setEmbeddedIndent(GsfUtilities.getLineIndent(doc, begin));
             return 0;
@@ -2282,7 +2279,7 @@ public class JsFormatter implements Formatter {
         try {
             Document doc = context.getDocument();
             LineDocument ld = LineDocumentUtils.asRequired(doc, LineDocument.class);
-            OffsetRange range = OffsetRange.NONE;
+            OffsetRange range;
             if (id == JsTokenId.BRACKET_LEFT_BRACKET) {
                 // block with braces, just record it to stack and return 1
                 context.getBlocks().push(new IndentContext.BlockDescription(
@@ -2522,7 +2519,7 @@ public class JsFormatter implements Formatter {
                 int lineEnd = LineDocumentUtils.getLineEnd(ld, offset);
                 int newOffset = offset;
                 while (newOffset < lineEnd && token != null) {
-                    newOffset = newOffset + token.length();
+                    newOffset += token.length();
                     if (newOffset < doc.getLength()) {
                         token = LexUtilities.getToken(doc, newOffset, language);
                         if (token != null) {

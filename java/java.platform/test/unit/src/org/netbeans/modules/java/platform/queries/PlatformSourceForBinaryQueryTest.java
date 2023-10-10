@@ -20,15 +20,13 @@
 package org.netbeans.modules.java.platform.queries;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.net.URLStreamHandlerFactory;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.platform.JavaPlatform;
-import org.netbeans.api.java.platform.Specification;
 import org.netbeans.api.java.platform.TestJavaPlatformProvider;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.junit.MockServices;
@@ -37,7 +35,6 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
-import org.openide.modules.SpecificationVersion;
 import org.openide.util.Utilities;
 
 /**
@@ -53,6 +50,7 @@ public class PlatformSourceForBinaryQueryTest extends NbTestCase {
         super.setUp();
         clearWorkDir();
         MockServices.setServices(
+            NBJRTStreamHandlerFactory.class,
             PlatformSourceForBinaryQuery.class,
             TestJavaPlatformProvider.class);
     }
@@ -80,6 +78,23 @@ public class PlatformSourceForBinaryQueryTest extends NbTestCase {
 
         result = q.findSourceRoots(FileUtil.getArchiveRoot(rt2.getURL()));
         assertNull(result);
+    }
+
+    public void testUnregisteredJDK11Platform() throws Exception {
+        File wd = getWorkDir();
+        FileObject wdo = FileUtil.toFileObject(wd);
+        assertNotNull(wdo);
+        FileObject p1 = wdo.createFolder("platform1");
+        FileObject fo = p1.createFolder("lib");
+        FileObject src1 = FileUtil.getArchiveRoot(createSrcZip (fo, "java.base/java/util.Map.java:class Map {}"));
+        URL url = new URL("nbjrt:" + p1.toURL() + "!/modules/java.base/");
+
+        PlatformSourceForBinaryQuery q = new PlatformSourceForBinaryQuery ();
+
+        SourceForBinaryQuery.Result result = q.findSourceRoots(url);
+        assertNotNull("Result is found", result);
+        assertEquals(1, result.getRoots().length);
+        assertEquals(src1.getFileObject("java.base"), result.getRoots()[0]);
     }
 
     public void testTwoPlatformsoverSameSDKSourcesChange() throws Exception {
@@ -148,10 +163,33 @@ public class PlatformSourceForBinaryQueryTest extends NbTestCase {
         assertEquals(Arrays.asList(src1.getRoots()), Arrays.asList(result1.getRoots()));
         assertEquals(Arrays.asList(src1.getRoots()), Arrays.asList(result2.getRoots()));
     }
-    
 
-    private static FileObject createSrcZip (FileObject pf) throws Exception {
-        return TestFileUtils.writeZipFile(pf, "src.zip", "Test.java:class Test {}");
+
+    private static FileObject createSrcZip (FileObject pf, String... entries) throws Exception {
+        if (entries == null || entries.length == 0) {
+          entries = new String[] { "Test.java:class Test {}" };
+        }
+        return TestFileUtils.writeZipFile(pf, "src.zip", entries);
+    }
+
+    public static final class NBJRTStreamHandlerFactory implements URLStreamHandlerFactory {
+
+        @Override
+        public URLStreamHandler createURLStreamHandler(String protocol) {
+            if ("nbjrt".equals(protocol)) { //NOI18N
+                return new NBJRTURLStreamHandler();
+            }
+            return null;
+        }
+
+        private static class NBJRTURLStreamHandler extends URLStreamHandler {
+
+            @Override
+            protected URLConnection openConnection(URL u) throws IOException {
+                //Not needed
+                return null;
+            }
+        }
     }
 
 }

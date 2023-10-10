@@ -22,6 +22,7 @@ package org.netbeans.modules.java.source.parsing;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -116,6 +117,15 @@ public class FileObjectArchive implements Archive {
     public JavaFileObject getFile(String name) throws IOException {
         final FileObject file = root.getFileObject(name);
         return file == null ? null : FileObjects.sourceFileObject(file, root, null, false);
+    }
+
+    @Override
+    public URI getDirectory(String dirName) throws IOException {
+        FileObject dir = root.getFileObject(dirName);
+        if (dir != null && dir.isFolder()) {
+            return dir.toURI();
+        }
+        return null;
     }
 
     @Override

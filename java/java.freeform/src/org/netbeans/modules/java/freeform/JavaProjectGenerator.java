@@ -229,7 +229,7 @@ public class JavaProjectGenerator {
      *    all styles will be read. Useful for reading one style of source folders.
      * @return list of SourceFolder instances; type value will be always null
      */
-    public static List getSourceViews(AntProjectHelper helper, String style) {
+    public static List<SourceFolder> getSourceViews(AntProjectHelper helper, String style) {
         //assert ProjectManager.mutex().isReadAccess() || ProjectManager.mutex().isWriteAccess();
         List<SourceFolder> list = new ArrayList<SourceFolder>();
         Element data = Util.getPrimaryConfigurationData(helper);

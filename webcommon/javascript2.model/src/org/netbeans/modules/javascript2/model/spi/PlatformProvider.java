@@ -26,7 +26,7 @@ import org.openide.filesystems.FileObject;
  * @author Petr Hejl
  */
 public interface PlatformProvider {
-    
+
     List<FileObject> getPlatformStubs();
 
 }

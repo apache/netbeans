@@ -21,16 +21,13 @@
 -->
 <project basedir="." default="build" name="java/maven.embedder">
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <target name="-release.files" depends="projectized.-release.files">
+    <target name="-release.files" depends="projectized.-release.files,check-binariesembedded-list">
         <mkdir dir="${cluster}/maven"/>
         <unzip src="external/${bundled.maven}-bin.zip" dest="${cluster}/maven">
             <mapper type="glob" from="${bundled.maven}/*" to="*"/>
         </unzip>                
     </target>
-    <!-- To check sha1 binaries that are in maven zip (better maven artefacts generation 
-         Call manually on maven upgrade
-    -->
-    <target name="checkhash" depends="init">
+    <target name="check-binariesembedded-list">
         <taskdef name="checkjarssha1" classname="org.netbeans.nbbuild.extlibs.CheckEmbeddedBinaries" classpath="${nbantext.jar}"/>
         <mkdir dir="tmptesting"/>
         <unzip src="external/${bundled.maven}-bin.zip" dest="tmptesting">

@@ -49,7 +49,7 @@ public final class ConnectionProcessor implements Runnable {
     // synchronized on this
     private Quoter quoter;
 
-    private final AtomicReference<Thread> taskThreadRef = new AtomicReference<Thread>();;
+    private final AtomicReference<Thread> taskThreadRef = new AtomicReference<Thread>();
 
     synchronized void setConnection(Connection conn) throws DatabaseException {
         this.conn = conn;

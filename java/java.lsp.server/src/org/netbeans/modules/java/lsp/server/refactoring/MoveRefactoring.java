@@ -102,7 +102,6 @@ public final class MoveRefactoring extends CodeRefactoring {
     private static final String MOVE_REFACTORING_COMMAND =  "java.refactor.move";
     private static final ClassPath EMPTY_PATH = ClassPathSupport.createClassPath(new URL[0]);
 
-    private final Set<String> commands = Collections.singleton(MOVE_REFACTORING_COMMAND);
     private final Gson gson = new Gson();
 
     @Override
@@ -114,7 +113,7 @@ public final class MoveRefactoring extends CodeRefactoring {
         if (only == null || !only.contains(CodeActionKind.Refactor)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null || !JavaRefactoringUtils.isRefactorable(info.getFileObject())) {
             return Collections.emptyList();
         }
@@ -136,7 +135,7 @@ public final class MoveRefactoring extends CodeRefactoring {
 
     @Override
     public Set<String> getCommands() {
-        return commands;
+        return Collections.singleton(MOVE_REFACTORING_COMMAND);
     }
 
     @Override
@@ -183,7 +182,7 @@ public final class MoveRefactoring extends CodeRefactoring {
         return CompletableFuture.completedFuture(true);
     }
 
-    @HTMLDialog(url = "ui/MoveClass.html")
+    @HTMLDialog(url = "ui/MoveClass.html", resources = {"refactoring.css"})
     static HTMLDialog.OnSubmit showMoveClassUI(
         CompilationController ci,
         NbCodeLanguageClient client,
@@ -203,7 +202,7 @@ public final class MoveRefactoring extends CodeRefactoring {
         };
     }
 
-    @HTMLDialog(url = "ui/MoveMembers.html")
+    @HTMLDialog(url = "ui/MoveMembers.html", resources = {"refactoring.css"})
     static HTMLDialog.OnSubmit showMoveMembersUI(
         CompilationController ci,
         NbCodeLanguageClient client,

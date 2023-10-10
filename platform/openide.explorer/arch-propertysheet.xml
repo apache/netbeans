@@ -600,7 +600,7 @@ DefaultPropertyModel to attempt to locate getter and setter methods on a random
 bean. Reflection is used during decision-making whether "Restore Default Value"
 Action should be disabled or enabled. This is due to the backward compatibility
 with properties in old modules (or new incorrectly implemented properties). See
-<a href="http://www.netbeans.org/issues/show_bug.cgi?id=51907">#51907</a> for
+<a href="https://bz.apache.org/netbeans/show_bug.cgi?id=51907">#51907</a> for
 detailed description why we do so.
 </answer>
 

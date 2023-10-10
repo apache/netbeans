@@ -21,8 +21,8 @@ package org.netbeans.modules.analysis;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.netbeans.api.autoupdate.PluginInstaller;
 import org.netbeans.modules.analysis.spi.Analyzer.MissingPlugin;
-import org.netbeans.modules.autoupdate.ui.api.PluginManager;
 
 /**
  *
@@ -33,8 +33,9 @@ public class Utils {
     public static void installMissingPlugins(Collection<? extends MissingPlugin> inPlugins) {
         Set<MissingPlugin> plugins = new HashSet<MissingPlugin>(inPlugins);
 
+        // TODO: Shouldn't be this loop reduced to a single call to install multiple modules at once ?
         for (MissingPlugin missing : plugins) {
-            PluginManager.installSingle(SPIAccessor.ACCESSOR.getCNB(missing), SPIAccessor.ACCESSOR.getDisplayName(missing));
+            PluginInstaller.getDefault().install(SPIAccessor.ACCESSOR.getCNB(missing), SPIAccessor.ACCESSOR.getDisplayName(missing), null);
         }
     }
 }

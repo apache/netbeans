@@ -1,0 +1,9 @@
+Code completion result for source line:
+public const PUBLIC_CONST = |;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    EnumTestNamespace               [PUBLIC]   null
+CLASS      Enum1                           [PUBLIC]   EnumTestNamespace
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+------------------------------------
+KEYWORD    array                                      null

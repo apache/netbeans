@@ -85,6 +85,7 @@ public class PhpUnitOptionsPanel extends JPanel {
     })
     private void init() {
         errorLabel.setText(" "); // NOI18N
+        phpUnitVersionLabel.setText(" "); // NOI18N
         phpUnitHintLabel.setText(Bundle.PhpUnitOptionsPanel_phpUnit_hint(
                 PhpUnit.SCRIPT_NAME, PhpUnit.SCRIPT_NAME_LONG, PhpUnit.SCRIPT_NAME_PHAR));
         skelGenHintLabel.setText(Bundle.PhpUnitOptionsPanel_skelGen_hint(
@@ -121,6 +122,10 @@ public class PhpUnitOptionsPanel extends JPanel {
         errorLabel.setText(" "); // NOI18N
         errorLabel.setForeground(UIManager.getColor("nb.warningForeground")); // NOI18N
         errorLabel.setText(message);
+    }
+
+    public void setVersion(String version) {
+        phpUnitVersionLabel.setText(version);
     }
 
     public void addChangeListener(ChangeListener listener) {
@@ -163,6 +168,7 @@ public class PhpUnitOptionsPanel extends JPanel {
         phpUnitLearnMoreLabel = new JLabel();
         skelGenLearnMoreLabel = new JLabel();
         errorLabel = new JLabel();
+        phpUnitVersionLabel = new JLabel();
 
         phpUnitLabel.setLabelFor(phpUnitBrowseButton);
         Mnemonics.setLocalizedText(phpUnitLabel, NbBundle.getMessage(PhpUnitOptionsPanel.class, "PhpUnitOptionsPanel.phpUnitLabel.text")); // NOI18N
@@ -236,9 +242,29 @@ public class PhpUnitOptionsPanel extends JPanel {
 
         Mnemonics.setLocalizedText(errorLabel, "ERROR"); // NOI18N
 
+        Mnemonics.setLocalizedText(phpUnitVersionLabel, "VERSION"); // NOI18N
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                    .addComponent(errorLabel)
+                    .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                            .addComponent(phpUnitInfoLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(phpUnitPhp53InfoLabel)
+                            .addComponent(installationInfoLabel)
+                            .addComponent(phpUnitLearnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(skelGenLearnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(phpUnit370InfoLabel))))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(skelGenAbandonedLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addComponent(phpUnitLabel)
@@ -261,27 +287,10 @@ public class PhpUnitOptionsPanel extends JPanel {
                                 .addComponent(skelGenSearchButton))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                            .addComponent(phpUnitVersionLabel)
                             .addComponent(skelGenHintLabel)
                             .addComponent(phpUnitHintLabel))
                         .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                    .addComponent(errorLabel)
-                    .addComponent(noteLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(phpUnitInfoLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(phpUnitPhp53InfoLabel)
-                            .addComponent(installationInfoLabel)
-                            .addComponent(phpUnitLearnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(skelGenLearnMoreLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(phpUnit370InfoLabel))))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(skelGenAbandonedLabel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         layout.linkSize(SwingConstants.HORIZONTAL, new Component[] {phpUnitBrowseButton, phpUnitSearchButton, skelGenBrowseButton, skelGenSearchButton});
@@ -294,8 +303,10 @@ public class PhpUnitOptionsPanel extends JPanel {
                     .addComponent(phpUnitSearchButton)
                     .addComponent(phpUnitBrowseButton))
                 .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(phpUnitHintLabel)
+                .addComponent(phpUnitVersionLabel)
                 .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(phpUnitHintLabel)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(skelGenTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(skelGenLabel)
@@ -488,6 +499,7 @@ public class PhpUnitOptionsPanel extends JPanel {
     private JLabel phpUnitPhp53InfoLabel;
     private JButton phpUnitSearchButton;
     private JTextField phpUnitTextField;
+    private JLabel phpUnitVersionLabel;
     private JLabel skelGenAbandonedLabel;
     private JButton skelGenBrowseButton;
     private JLabel skelGenHintLabel;

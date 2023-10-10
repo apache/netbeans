@@ -29,7 +29,7 @@ import org.netbeans.jemmy.operators.JTreeOperator;
  * Functionality related to Projects tree is delegated to JTreeOperator (method
  * tree()) and nodes (method getProjectNode()).<p>
  *
- * Example:<p>
+ * Example:
  * <pre>
  *      FilesTabOperator fto = new FilesTabOperator();
  *      // or when Files pane is not already opened

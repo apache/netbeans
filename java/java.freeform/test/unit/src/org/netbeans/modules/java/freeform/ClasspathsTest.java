@@ -323,7 +323,7 @@ public class ClasspathsTest extends TestBase {
         closed.setAccessible(true);
         closed.invoke(hook);
         compile = gpr.getPaths(ClassPath.COMPILE);
-        expected = new HashSet();
+        expected = new HashSet<>();
         assertEquals("correct set of COMPILE classpaths", expected, compile);
     }
 

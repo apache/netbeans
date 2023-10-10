@@ -24,6 +24,7 @@ import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.ReferenceContext;
@@ -70,7 +71,11 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
                     AbstractDocument abstractDoc = (doc instanceof AbstractDocument) ? ((AbstractDocument) doc) : null;
                     FileObject file = NbEditorUtilities.getFileObject(doc);
                     LSPBindings bindings = LSPBindings.getBindings(file);
-                    int caretPos = c.getCaretPosition();
+                    Caret caret = c.getCaret();
+                    if(caret == null) {
+                        return;
+                    }
+                    int caretPos = caret.getDot();
                     Position pos = Utils.createPosition(doc, caretPos);
                     ReferenceParams params = new ReferenceParams();
                     params.setTextDocument(new TextDocumentIdentifier(Utils.toURI(file)));
@@ -118,7 +123,11 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
                     AbstractDocument abstractDoc = (doc instanceof AbstractDocument) ? ((AbstractDocument) doc) : null;
                     FileObject file = NbEditorUtilities.getFileObject(doc);
                     LSPBindings bindings = LSPBindings.getBindings(file);
-                    int caretPos = c.getCaretPosition();
+                    Caret caret = c.getCaret();
+                    if(caret == null) {
+                        return;
+                    }
+                    int caretPos = caret.getDot();
                     Position pos = Utils.createPosition(doc, caretPos);
                     String name;
                     if(abstractDoc != null) {

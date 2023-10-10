@@ -120,6 +120,11 @@ public class J2SEWizardIterator implements WizardDescriptor.InstantiatingIterato
             if (platform.isValid()) {
                 try {
                     result.add(PlatformConvertor.create(platform));
+                    if (result.size() == 1) {
+                        getInstallFolder().setAttribute(
+                                NewJ2SEPlatform.DISPLAY_NAME_FILE_ATTR,
+                                platform.getDisplayName());
+                    }
                 } catch (IllegalArgumentException iae) {
                     throw new IllegalStateException(NbBundle.getMessage(J2SEWizardIterator.class,"ERROR_InvalidName"));
                 }

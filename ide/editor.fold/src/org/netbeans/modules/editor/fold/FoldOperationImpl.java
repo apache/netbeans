@@ -395,7 +395,7 @@ public final class FoldOperationImpl {
      * The blocker + blockers folds are ordered using the fold order. Results
      * are filtered to contain just Folds produced by this Operation. Folds 
      * owned by other operations/executions are skipped.
-     * <p/>
+     * <p>
      * Note that blocked folds do not form a hierarchy; they were removed from
      * the fold hierarchy when it was decided to block those folds. So prior to
      * iterating further in FoldHierarchy, all (recursively) blocked folds must

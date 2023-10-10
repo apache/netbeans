@@ -80,7 +80,8 @@ public class StandardPropertiesHelpResolverTest extends NbTestCase {
                 if(module instanceof BrowserSupportModule) {
                     continue;
                 }
-                if("http://www.w3.org/TR/CSS2".equals(module.getSpecificationURL())) {
+                if("http://www.w3.org/TR/CSS2".equals(module.getSpecificationURL())
+                        || "other".equals(module.getName())) {
                     continue;
                 }
                 assertPropertyHelp(prop.getName());

@@ -128,6 +128,9 @@ public final class Utils {
             } else {
                 assert false;
             }
+        } else if (breakpoint instanceof ExceptionBreakpoint) {
+            ExceptionBreakpoint exceptionBreakpoint = (ExceptionBreakpoint) breakpoint;
+            command = BrkpntCommandBuilder.buildExceptionBreakpoint(session.getTransactionId(), exceptionBreakpoint);
         }
         if (command == null) {
             breakpoint.setInvalid();    // No command, can not be valid

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.161
+#Version 1.167
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -3993,7 +3993,7 @@ meth public int getSortingColumn()
 meth public int getTreeCellOffsetX()
 meth public java.awt.Point getCellTipLocation()
 meth public java.lang.String getFindString()
-meth public java.util.List getExpandedPaths()
+meth public java.util.List<javax.swing.tree.TreePath> getExpandedPaths()
 meth public javax.swing.JToolTip getCellTip()
 meth public javax.swing.JTree getTree()
 meth public org.netbeans.lib.profiler.results.CCTNode[] getPathToRoot(org.netbeans.lib.profiler.results.CCTNode)
@@ -4021,7 +4021,7 @@ meth public void setSortingColumn(int)
 meth public void setSortingOrder(boolean)
 meth public void setTreeCellOffsetX(int)
 meth public void setTreeCellRenderer(org.netbeans.lib.profiler.ui.components.tree.EnhancedTreeCellRenderer)
-meth public void setup(java.util.List,javax.swing.tree.TreePath)
+meth public void setup(java.util.List<javax.swing.tree.TreePath>,javax.swing.tree.TreePath)
 meth public void updateTreeTable()
 meth public void updateTreeTableHeader()
 meth public void updateUI()
@@ -4586,13 +4586,13 @@ meth public int getRowCount()
 meth public java.lang.Class getColumnClass(int)
 meth public java.lang.Object getValueAt(int,int)
 meth public java.lang.String getColumnName(int)
-meth public java.util.List getExpandedPaths()
+meth public java.util.List<javax.swing.tree.TreePath> getExpandedPaths()
 meth public javax.swing.tree.TreePath getRootPath()
 meth public void changeRoot(org.netbeans.lib.profiler.results.CCTNode)
 meth public void expandRoot()
-meth public void restoreExpandedPaths(java.util.List)
+meth public void restoreExpandedPaths(java.util.List<javax.swing.tree.TreePath>)
 meth public void setValueAt(java.lang.Object,int,int)
-meth public void setup(java.util.List,javax.swing.tree.TreePath)
+meth public void setup(java.util.List<javax.swing.tree.TreePath>,javax.swing.tree.TreePath)
 meth public void updateTreeTable()
 supr javax.swing.table.AbstractTableModel
 hfds firingChange

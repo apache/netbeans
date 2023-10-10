@@ -48,12 +48,14 @@ public @interface URLStreamHandlerRegistration {
     /**
      * URL protocol(s) which are handled.
      * {@link URLStreamHandler#openConnection} will be called with a matching {@link URL#getProtocol}.
+     * @return list of protocol which are handled
      */
     String[] protocol();
 
     /**
      * An optional position in which to register this handler relative to others.
      * The lowest-numbered handler is used in favor of any others, including unnumbered handlers.
+     * @return position to register this handler
      */
     int position() default Integer.MAX_VALUE;
 

@@ -966,7 +966,7 @@ public class CreateRulePanel extends javax.swing.JPanel {
     private static void saveDocumentIfNotOpened(Document document) throws IOException {
 
         Object o = document.getProperty(Document.StreamDescriptionProperty);
-        if (o == null || !(o instanceof DataObject)) {
+        if (!(o instanceof DataObject)) {
             return;
         }
         DataObject dobj = (DataObject) o;

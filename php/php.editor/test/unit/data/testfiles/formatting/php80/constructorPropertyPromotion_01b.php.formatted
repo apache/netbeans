@@ -24,7 +24,6 @@ class ConstructorPropertyPromotion1a {
     public function __construct(private int $field1, private ?string $field2, public int|string $field3, protected $field4) {
         
     }
-
 }
 
 class ConstructorPropertyPromotion1b {
@@ -37,7 +36,6 @@ class ConstructorPropertyPromotion1b {
     ) {
         
     }
-
 }
 
 class ConstructorPropertyPromotion2a {
@@ -45,7 +43,6 @@ class ConstructorPropertyPromotion2a {
     public function __construct(private int $field1 = 1, private ?string $field2 = null, public int|string $field3 = 2, protected $field4 = "default value",) {
         
     }
-
 }
 
 class ConstructorPropertyPromotion2b {
@@ -58,7 +55,6 @@ class ConstructorPropertyPromotion2b {
     ) {
         
     }
-
 }
 
 class ConstructorPropertyPromotion3a {
@@ -66,7 +62,6 @@ class ConstructorPropertyPromotion3a {
     public function __construct($param1, private int $field1, private ?string $field2 = "default value", string|int $param2 = "default value") {
         
     }
-
 }
 
 class ConstructorPropertyPromotion3b {
@@ -79,7 +74,6 @@ class ConstructorPropertyPromotion3b {
     ) {
         
     }
-
 }
 
 class ConstructorPropertyPromotion4a {
@@ -87,7 +81,6 @@ class ConstructorPropertyPromotion4a {
     public function __construct(private int $field1, mixed $param1 = "default value", private ?string $field2 = "default value",) {
         
     }
-
 }
 
 class ConstructorPropertyPromotion4b {
@@ -99,5 +92,4 @@ class ConstructorPropertyPromotion4b {
     ) {
         
     }
-
 }

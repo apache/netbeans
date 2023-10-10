@@ -82,7 +82,7 @@ public class EditorSupportImpl implements EditorSupport {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         Parser.Result pr = resultIterator.getParserResult();
-                        if (pr != null && pr instanceof PHPParseResult) {
+                        if (pr instanceof PHPParseResult) {
                             Model model = ModelFactory.getModel((PHPParseResult) pr);
                             FileScope fileScope = model.getFileScope();
                             Collection<? extends TypeScope> allTypes = ModelUtils.getDeclaredTypes(fileScope);
@@ -109,7 +109,7 @@ public class EditorSupportImpl implements EditorSupport {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         Parser.Result pr = resultIterator.getParserResult();
-                        if (pr != null && pr instanceof PHPParseResult) {
+                        if (pr instanceof PHPParseResult) {
                             Model model = ModelFactory.getModel((PHPParseResult) pr);
                             FileScope fileScope = model.getFileScope();
                             Collection<? extends ClassScope> allClasses = ModelUtils.getDeclaredClasses(fileScope);
@@ -156,7 +156,7 @@ public class EditorSupportImpl implements EditorSupport {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         Parser.Result pr = resultIterator.getParserResult();
-                        if (pr != null && pr instanceof PHPParseResult) {
+                        if (pr instanceof PHPParseResult) {
                             Model model = ModelFactory.getModel((PHPParseResult) pr);
                             retval.add(getPhpBaseElement(model.getVariableScopeForNamedElement(offset)));
                         }

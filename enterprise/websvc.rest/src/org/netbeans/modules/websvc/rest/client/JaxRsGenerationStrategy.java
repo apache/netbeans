@@ -103,10 +103,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
         fieldTree = maker.Variable(fieldModif, "client", typeTree, null); //NOI18N
         modifiedClass = maker.addClassMember(modifiedClass, fieldTree);
 
-        Set<Modifier> modifiersSet = new HashSet<Modifier>();
-        modifiersSet.add(Modifier.PRIVATE);
-        modifiersSet.add(Modifier.STATIC);
-        modifiersSet.add(Modifier.FINAL);
+        Set<Modifier> modifiersSet = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
         fieldModif =  maker.Modifiers(modifiersSet);
         typeTree = maker.Identifier("String"); //NOI18N
 

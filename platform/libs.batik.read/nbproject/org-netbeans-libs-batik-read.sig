@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.8.0
+#Version 1.16.0
 
 CLSS public java.awt.Color
 cons public init(float,float,float)
@@ -2036,6 +2036,11 @@ meth public javax.swing.text.Element getParagraphElement(int)
 meth public void insertString(int,java.lang.String,javax.swing.text.AttributeSet) throws javax.swing.text.BadLocationException
 supr javax.swing.text.AbstractDocument
 
+CLSS public abstract interface javax.xml.namespace.NamespaceContext
+meth public abstract java.lang.String getNamespaceURI(java.lang.String)
+meth public abstract java.lang.String getPrefix(java.lang.String)
+meth public abstract java.util.Iterator getPrefixes(java.lang.String)
+
 CLSS public abstract interface javax.xml.transform.Source
 meth public abstract java.lang.String getSystemId()
 meth public abstract void setSystemId(java.lang.String)
@@ -2508,6 +2513,37 @@ meth public void startDocument() throws org.xml.sax.SAXException
 supr org.apache.batik.dom.util.SAXDocumentFactory
 
 CLSS public org.apache.batik.anim.dom.SVG12DOMImplementation
+cons public init()
+fld protected final static org.w3c.dom.DOMImplementation DOM_IMPLEMENTATION
+fld protected static java.util.HashMap<java.lang.String,org.apache.batik.dom.ExtensibleDOMImplementation$ElementFactory> svg12Factories
+fld protected static java.util.HashMap<java.lang.String,org.apache.batik.dom.ExtensibleDOMImplementation$ElementFactory> xblFactories
+innr protected static FlowDivElementFactory
+innr protected static FlowLineElementFactory
+innr protected static FlowParaElementFactory
+innr protected static FlowRegionBreakElementFactory
+innr protected static FlowRegionElementFactory
+innr protected static FlowRegionExcludeElementFactory
+innr protected static FlowRootElementFactory
+innr protected static FlowSpanElementFactory
+innr protected static HandlerElementFactory
+innr protected static MultiImageElementFactory
+innr protected static SolidColorElementFactory
+innr protected static SubImageElementFactory
+innr protected static SubImageRefElementFactory
+innr protected static XBLContentElementFactory
+innr protected static XBLDefinitionElementFactory
+innr protected static XBLHandlerGroupElementFactory
+innr protected static XBLImportElementFactory
+innr protected static XBLShadowTreeElementFactory
+innr protected static XBLTemplateElementFactory
+innr protected static XBLXBLElementFactory
+meth public org.apache.batik.css.engine.CSSEngine createCSSEngine(org.apache.batik.dom.AbstractStylableDocument,org.apache.batik.css.engine.CSSContext,org.apache.batik.css.parser.ExtendedParser,org.apache.batik.css.engine.value.ValueManager[],org.apache.batik.css.engine.value.ShorthandManager[])
+meth public org.apache.batik.dom.events.DocumentEventSupport createDocumentEventSupport()
+meth public org.apache.batik.dom.events.EventSupport createEventSupport(org.apache.batik.dom.AbstractNode)
+meth public org.w3c.dom.Document createDocument(java.lang.String,java.lang.String,org.w3c.dom.DocumentType)
+meth public org.w3c.dom.Element createElementNS(org.apache.batik.dom.AbstractDocument,java.lang.String,java.lang.String)
+meth public static org.w3c.dom.DOMImplementation getDOMImplementation()
+supr org.apache.batik.anim.dom.SVGDOMImplementation
 
 CLSS protected static org.apache.batik.anim.dom.SVG12DOMImplementation$FlowDivElementFactory
  outer org.apache.batik.anim.dom.SVG12DOMImplementation
@@ -2650,6 +2686,12 @@ meth public org.w3c.dom.Element create(java.lang.String,org.w3c.dom.Document)
 supr java.lang.Object
 
 CLSS public org.apache.batik.anim.dom.SVG12OMDocument
+cons protected init()
+cons public init(org.w3c.dom.DocumentType,org.w3c.dom.DOMImplementation)
+meth protected org.w3c.dom.Node newNode()
+meth public void addCSSNavigableDocumentListener(org.apache.batik.css.engine.CSSNavigableDocumentListener)
+meth public void removeCSSNavigableDocumentListener(org.apache.batik.css.engine.CSSNavigableDocumentListener)
+supr org.apache.batik.anim.dom.SVGOMDocument
 
 CLSS public abstract interface org.apache.batik.anim.dom.SVGAnimationTargetContext
 intf org.apache.batik.dom.svg.SVGContext
@@ -2657,6 +2699,106 @@ meth public abstract void addTargetListener(java.lang.String,org.apache.batik.an
 meth public abstract void removeTargetListener(java.lang.String,org.apache.batik.anim.dom.AnimationTargetListener)
 
 CLSS public org.apache.batik.anim.dom.SVGDOMImplementation
+cons public init()
+fld protected final static java.lang.String RESOURCES = "org.apache.batik.dom.svg.resources.Messages"
+fld protected final static org.w3c.dom.DOMImplementation DOM_IMPLEMENTATION
+fld protected java.util.HashMap<java.lang.String,org.apache.batik.dom.ExtensibleDOMImplementation$ElementFactory> factories
+fld protected static java.util.HashMap<java.lang.String,org.apache.batik.dom.ExtensibleDOMImplementation$ElementFactory> svg11Factories
+fld public final static java.lang.String SVG_NAMESPACE_URI = "http://www.w3.org/2000/svg"
+innr protected static AElementFactory
+innr protected static AltGlyphDefElementFactory
+innr protected static AltGlyphElementFactory
+innr protected static AltGlyphItemElementFactory
+innr protected static AnimateColorElementFactory
+innr protected static AnimateElementFactory
+innr protected static AnimateMotionElementFactory
+innr protected static AnimateTransformElementFactory
+innr protected static CircleElementFactory
+innr protected static ClipPathElementFactory
+innr protected static ColorProfileElementFactory
+innr protected static CursorElementFactory
+innr protected static DefinitionSrcElementFactory
+innr protected static DefsElementFactory
+innr protected static DescElementFactory
+innr protected static EllipseElementFactory
+innr protected static FeBlendElementFactory
+innr protected static FeColorMatrixElementFactory
+innr protected static FeComponentTransferElementFactory
+innr protected static FeCompositeElementFactory
+innr protected static FeConvolveMatrixElementFactory
+innr protected static FeDiffuseLightingElementFactory
+innr protected static FeDisplacementMapElementFactory
+innr protected static FeDistantLightElementFactory
+innr protected static FeFloodElementFactory
+innr protected static FeFuncAElementFactory
+innr protected static FeFuncBElementFactory
+innr protected static FeFuncGElementFactory
+innr protected static FeFuncRElementFactory
+innr protected static FeGaussianBlurElementFactory
+innr protected static FeImageElementFactory
+innr protected static FeMergeElementFactory
+innr protected static FeMergeNodeElementFactory
+innr protected static FeMorphologyElementFactory
+innr protected static FeOffsetElementFactory
+innr protected static FePointLightElementFactory
+innr protected static FeSpecularLightingElementFactory
+innr protected static FeSpotLightElementFactory
+innr protected static FeTileElementFactory
+innr protected static FeTurbulenceElementFactory
+innr protected static FilterElementFactory
+innr protected static FontElementFactory
+innr protected static FontFaceElementFactory
+innr protected static FontFaceFormatElementFactory
+innr protected static FontFaceNameElementFactory
+innr protected static FontFaceSrcElementFactory
+innr protected static FontFaceUriElementFactory
+innr protected static ForeignObjectElementFactory
+innr protected static GElementFactory
+innr protected static GlyphElementFactory
+innr protected static GlyphRefElementFactory
+innr protected static HkernElementFactory
+innr protected static ImageElementFactory
+innr protected static LineElementFactory
+innr protected static LinearGradientElementFactory
+innr protected static MarkerElementFactory
+innr protected static MaskElementFactory
+innr protected static MetadataElementFactory
+innr protected static MissingGlyphElementFactory
+innr protected static MpathElementFactory
+innr protected static PathElementFactory
+innr protected static PatternElementFactory
+innr protected static PolygonElementFactory
+innr protected static PolylineElementFactory
+innr protected static RadialGradientElementFactory
+innr protected static RectElementFactory
+innr protected static ScriptElementFactory
+innr protected static SetElementFactory
+innr protected static StopElementFactory
+innr protected static StyleElementFactory
+innr protected static SvgElementFactory
+innr protected static SwitchElementFactory
+innr protected static SymbolElementFactory
+innr protected static TextElementFactory
+innr protected static TextPathElementFactory
+innr protected static TitleElementFactory
+innr protected static TrefElementFactory
+innr protected static TspanElementFactory
+innr protected static UseElementFactory
+innr protected static ViewElementFactory
+innr protected static VkernElementFactory
+intf org.apache.batik.dom.util.CSSStyleDeclarationFactory
+meth protected void initLocalizable()
+meth public org.apache.batik.css.engine.CSSEngine createCSSEngine(org.apache.batik.dom.AbstractStylableDocument,org.apache.batik.css.engine.CSSContext,org.apache.batik.css.parser.ExtendedParser,org.apache.batik.css.engine.value.ValueManager[],org.apache.batik.css.engine.value.ShorthandManager[])
+meth public org.apache.batik.dom.events.DocumentEventSupport createDocumentEventSupport()
+meth public org.w3c.dom.Document createDocument(java.lang.String,java.lang.String,org.w3c.dom.DocumentType)
+meth public org.w3c.dom.Element createElementNS(org.apache.batik.dom.AbstractDocument,java.lang.String,java.lang.String)
+meth public org.w3c.dom.css.CSSStyleDeclaration createCSSStyleDeclaration()
+meth public org.w3c.dom.css.CSSStyleSheet createCSSStyleSheet(java.lang.String,java.lang.String)
+meth public org.w3c.dom.css.CSSStyleSheet getUserAgentStyleSheet()
+meth public org.w3c.dom.css.ViewCSS createViewCSS(org.apache.batik.dom.AbstractStylableDocument)
+meth public org.w3c.dom.stylesheets.StyleSheet createStyleSheet(org.w3c.dom.Node,java.util.HashMap<java.lang.String,java.lang.String>)
+meth public static org.w3c.dom.DOMImplementation getDOMImplementation()
+supr org.apache.batik.dom.ExtensibleDOMImplementation
 
 CLSS protected static org.apache.batik.anim.dom.SVGDOMImplementation$AElementFactory
  outer org.apache.batik.anim.dom.SVGDOMImplementation
@@ -4053,6 +4195,71 @@ meth public java.lang.String getLocalName()
 supr org.apache.batik.anim.dom.SVGDescriptiveElement
 
 CLSS public org.apache.batik.anim.dom.SVGOMDocument
+cons protected init()
+cons public init(org.w3c.dom.DocumentType,org.w3c.dom.DOMImplementation)
+fld protected boolean isSVG12
+fld protected boolean readonly
+fld protected final static java.lang.String RESOURCES = "org.apache.batik.dom.svg.resources.Messages"
+fld protected java.lang.String referrer
+fld protected java.util.HashMap cssNavigableDocumentListeners
+fld protected java.util.LinkedList animatedAttributeListeners
+fld protected org.apache.batik.anim.dom.AnimatedAttributeListener mainAnimatedAttributeListener
+fld protected org.apache.batik.dom.svg.SVGContext svgContext
+fld protected org.apache.batik.i18n.LocalizableSupport localizableSupport
+fld protected org.apache.batik.util.ParsedURL url
+innr protected AnimAttrListener
+innr protected static DOMAttrModifiedListenerWrapper
+innr protected static DOMCharacterDataModifiedListenerWrapper
+innr protected static DOMNodeInsertedListenerWrapper
+innr protected static DOMNodeRemovedListenerWrapper
+innr protected static DOMSubtreeModifiedListenerWrapper
+intf org.apache.batik.css.engine.CSSNavigableDocument
+intf org.apache.batik.dom.svg.IdContainer
+intf org.apache.batik.util.SVGConstants
+intf org.w3c.dom.svg.SVGDocument
+meth protected org.apache.batik.anim.dom.AnimatedAttributeListener getAnimatedAttributeListener()
+meth protected org.w3c.dom.Node copyInto(org.w3c.dom.Node)
+meth protected org.w3c.dom.Node deepCopyInto(org.w3c.dom.Node)
+meth protected org.w3c.dom.Node newNode()
+meth protected void overrideStylePropertyChanged(org.apache.batik.css.engine.CSSStylableElement,java.lang.String,java.lang.String,java.lang.String)
+meth protected void overrideStylePropertyRemoved(org.apache.batik.css.engine.CSSStylableElement,java.lang.String)
+meth protected void overrideStyleTextChanged(org.apache.batik.css.engine.CSSStylableElement,java.lang.String)
+meth public boolean isId(org.w3c.dom.Attr)
+meth public boolean isReadonly()
+meth public boolean isSVG12()
+meth public java.lang.String formatMessage(java.lang.String,java.lang.Object[])
+meth public java.lang.String getDomain()
+meth public java.lang.String getReferrer()
+meth public java.lang.String getTitle()
+meth public java.lang.String getURL()
+meth public java.net.URL getURLObject()
+meth public org.apache.batik.dom.svg.SVGContext getSVGContext()
+meth public org.apache.batik.util.ParsedURL getParsedURL()
+meth public org.w3c.dom.Attr createAttribute(java.lang.String)
+meth public org.w3c.dom.Attr createAttributeNS(java.lang.String,java.lang.String)
+meth public org.w3c.dom.CDATASection createCDATASection(java.lang.String)
+meth public org.w3c.dom.Comment createComment(java.lang.String)
+meth public org.w3c.dom.DocumentFragment createDocumentFragment()
+meth public org.w3c.dom.Element createElement(java.lang.String)
+meth public org.w3c.dom.Element createElementNS(java.lang.String,java.lang.String)
+meth public org.w3c.dom.EntityReference createEntityReference(java.lang.String)
+meth public org.w3c.dom.ProcessingInstruction createProcessingInstruction(java.lang.String,java.lang.String)
+meth public org.w3c.dom.Text createTextNode(java.lang.String)
+meth public org.w3c.dom.css.CSSStyleDeclaration getOverrideStyle(org.w3c.dom.Element,java.lang.String)
+meth public org.w3c.dom.svg.SVGSVGElement getRootElement()
+meth public void addAnimatedAttributeListener(org.apache.batik.anim.dom.AnimatedAttributeListener)
+meth public void addCSSNavigableDocumentListener(org.apache.batik.css.engine.CSSNavigableDocumentListener)
+meth public void removeAnimatedAttributeListener(org.apache.batik.anim.dom.AnimatedAttributeListener)
+meth public void removeCSSNavigableDocumentListener(org.apache.batik.css.engine.CSSNavigableDocumentListener)
+meth public void setDocumentURI(java.lang.String)
+meth public void setIsSVG12(boolean)
+meth public void setLocale(java.util.Locale)
+meth public void setParsedURL(org.apache.batik.util.ParsedURL)
+meth public void setReadonly(boolean)
+meth public void setReferrer(java.lang.String)
+meth public void setSVGContext(org.apache.batik.dom.svg.SVGContext)
+meth public void setURLObject(java.net.URL)
+supr org.apache.batik.dom.AbstractStylableDocument
 
 CLSS protected org.apache.batik.anim.dom.SVGOMDocument$AnimAttrListener
  outer org.apache.batik.anim.dom.SVGOMDocument
@@ -5184,6 +5391,91 @@ meth public void updateAttributeValue(java.lang.String,java.lang.String,org.apac
 supr org.apache.batik.anim.dom.SVGGraphicsElement
 
 CLSS public org.apache.batik.anim.dom.SVGOMSVGElement
+cons protected init()
+cons public init(java.lang.String,org.apache.batik.dom.AbstractDocument)
+fld protected final static org.apache.batik.anim.dom.AttributeInitializer attributeInitializer
+fld protected org.apache.batik.anim.dom.SVGOMAnimatedBoolean externalResourcesRequired
+fld protected org.apache.batik.anim.dom.SVGOMAnimatedLength height
+fld protected org.apache.batik.anim.dom.SVGOMAnimatedLength width
+fld protected org.apache.batik.anim.dom.SVGOMAnimatedLength x
+fld protected org.apache.batik.anim.dom.SVGOMAnimatedLength y
+fld protected org.apache.batik.anim.dom.SVGOMAnimatedPreserveAspectRatio preserveAspectRatio
+fld protected org.apache.batik.anim.dom.SVGOMAnimatedRect viewBox
+fld protected static org.apache.batik.util.DoublyIndexedTable xmlTraitInformation
+intf org.w3c.dom.svg.SVGSVGElement
+meth protected org.apache.batik.anim.dom.AttributeInitializer getAttributeInitializer()
+meth protected org.apache.batik.util.DoublyIndexedTable getTraitInformationTable()
+meth protected org.w3c.dom.Node newNode()
+meth protected void initializeAllLiveAttributes()
+meth public boolean animationsPaused()
+meth public boolean canDispatch(java.lang.String,java.lang.String)
+meth public boolean checkEnclosure(org.w3c.dom.svg.SVGElement,org.w3c.dom.svg.SVGRect)
+meth public boolean checkIntersection(org.w3c.dom.svg.SVGElement,org.w3c.dom.svg.SVGRect)
+meth public boolean getUseCurrentView()
+meth public boolean hasExtension(java.lang.String)
+meth public float getCurrentScale()
+meth public float getCurrentTime()
+meth public float getPixelUnitToMillimeterX()
+meth public float getPixelUnitToMillimeterY()
+meth public float getScreenPixelToMillimeterX()
+meth public float getScreenPixelToMillimeterY()
+meth public int suspendRedraw(int)
+meth public java.lang.String getContentScriptType()
+meth public java.lang.String getContentStyleType()
+meth public java.lang.String getLocalName()
+meth public java.lang.String getXMLlang()
+meth public java.lang.String getXMLspace()
+meth public org.w3c.dom.Element getElementById(java.lang.String)
+meth public org.w3c.dom.NodeList getEnclosureList(org.w3c.dom.svg.SVGRect,org.w3c.dom.svg.SVGElement)
+meth public org.w3c.dom.NodeList getIntersectionList(org.w3c.dom.svg.SVGRect,org.w3c.dom.svg.SVGElement)
+meth public org.w3c.dom.css.CSSStyleDeclaration getComputedStyle(org.w3c.dom.Element,java.lang.String)
+meth public org.w3c.dom.css.CSSStyleDeclaration getOverrideStyle(org.w3c.dom.Element,java.lang.String)
+meth public org.w3c.dom.events.Event createEvent(java.lang.String)
+meth public org.w3c.dom.stylesheets.StyleSheetList getStyleSheets()
+meth public org.w3c.dom.svg.SVGAngle createSVGAngle()
+meth public org.w3c.dom.svg.SVGAnimatedBoolean getExternalResourcesRequired()
+meth public org.w3c.dom.svg.SVGAnimatedLength getHeight()
+meth public org.w3c.dom.svg.SVGAnimatedLength getWidth()
+meth public org.w3c.dom.svg.SVGAnimatedLength getX()
+meth public org.w3c.dom.svg.SVGAnimatedLength getY()
+meth public org.w3c.dom.svg.SVGAnimatedPreserveAspectRatio getPreserveAspectRatio()
+meth public org.w3c.dom.svg.SVGAnimatedRect getViewBox()
+meth public org.w3c.dom.svg.SVGElement getFarthestViewportElement()
+meth public org.w3c.dom.svg.SVGElement getNearestViewportElement()
+meth public org.w3c.dom.svg.SVGLength createSVGLength()
+meth public org.w3c.dom.svg.SVGMatrix createSVGMatrix()
+meth public org.w3c.dom.svg.SVGMatrix getCTM()
+meth public org.w3c.dom.svg.SVGMatrix getScreenCTM()
+meth public org.w3c.dom.svg.SVGMatrix getTransformToElement(org.w3c.dom.svg.SVGElement)
+meth public org.w3c.dom.svg.SVGNumber createSVGNumber()
+meth public org.w3c.dom.svg.SVGPoint createSVGPoint()
+meth public org.w3c.dom.svg.SVGPoint getCurrentTranslate()
+meth public org.w3c.dom.svg.SVGRect createSVGRect()
+meth public org.w3c.dom.svg.SVGRect getBBox()
+meth public org.w3c.dom.svg.SVGRect getViewport()
+meth public org.w3c.dom.svg.SVGStringList getRequiredExtensions()
+meth public org.w3c.dom.svg.SVGStringList getRequiredFeatures()
+meth public org.w3c.dom.svg.SVGStringList getSystemLanguage()
+meth public org.w3c.dom.svg.SVGTransform createSVGTransform()
+meth public org.w3c.dom.svg.SVGTransform createSVGTransformFromMatrix(org.w3c.dom.svg.SVGMatrix)
+meth public org.w3c.dom.svg.SVGViewSpec getCurrentView()
+meth public org.w3c.dom.views.DocumentView getDocument()
+meth public short getZoomAndPan()
+meth public void deselectAll()
+meth public void forceRedraw()
+meth public void pauseAnimations()
+meth public void setContentScriptType(java.lang.String)
+meth public void setContentStyleType(java.lang.String)
+meth public void setCurrentScale(float)
+meth public void setCurrentTime(float)
+meth public void setUseCurrentView(boolean)
+meth public void setXMLlang(java.lang.String)
+meth public void setXMLspace(java.lang.String)
+meth public void setZoomAndPan(short)
+meth public void unpauseAnimations()
+meth public void unsuspendRedraw(int)
+meth public void unsuspendRedrawAll()
+supr org.apache.batik.anim.dom.SVGStylableElement
 
 CLSS public org.apache.batik.anim.dom.SVGOMScriptElement
 cons protected init()
@@ -5231,6 +5523,30 @@ meth public org.w3c.dom.svg.SVGAnimatedNumber getOffset()
 supr org.apache.batik.anim.dom.SVGStylableElement
 
 CLSS public org.apache.batik.anim.dom.SVGOMStyleElement
+cons protected init()
+cons public init(java.lang.String,org.apache.batik.dom.AbstractDocument)
+fld protected final static org.apache.batik.anim.dom.AttributeInitializer attributeInitializer
+fld protected org.apache.batik.css.engine.StyleSheet styleSheet
+fld protected org.w3c.dom.events.EventListener domCharacterDataModifiedListener
+fld protected org.w3c.dom.stylesheets.StyleSheet sheet
+innr protected DOMCharacterDataModifiedListener
+intf org.apache.batik.css.engine.CSSStyleSheetNode
+intf org.w3c.dom.stylesheets.LinkStyle
+intf org.w3c.dom.svg.SVGStyleElement
+meth protected org.apache.batik.anim.dom.AttributeInitializer getAttributeInitializer()
+meth protected org.w3c.dom.Node newNode()
+meth public java.lang.String getLocalName()
+meth public java.lang.String getMedia()
+meth public java.lang.String getTitle()
+meth public java.lang.String getType()
+meth public java.lang.String getXMLspace()
+meth public org.apache.batik.css.engine.StyleSheet getCSSStyleSheet()
+meth public org.w3c.dom.stylesheets.StyleSheet getSheet()
+meth public void setMedia(java.lang.String)
+meth public void setTitle(java.lang.String)
+meth public void setType(java.lang.String)
+meth public void setXMLspace(java.lang.String)
+supr org.apache.batik.anim.dom.SVGOMElement
 
 CLSS protected org.apache.batik.anim.dom.SVGOMStyleElement$DOMCharacterDataModifiedListener
  outer org.apache.batik.anim.dom.SVGOMStyleElement
@@ -5547,20 +5863,82 @@ supr org.apache.batik.anim.dom.SVGOMElement
 
 CLSS protected org.apache.batik.anim.dom.SVGStylableElement$OverrideStyleDeclaration
  outer org.apache.batik.anim.dom.SVGStylableElement
+cons protected init(org.apache.batik.anim.dom.SVGStylableElement,org.apache.batik.css.engine.CSSEngine)
+meth public void propertyChanged(java.lang.String,java.lang.String,java.lang.String)
+meth public void propertyRemoved(java.lang.String)
+meth public void textChanged(java.lang.String)
+supr org.apache.batik.css.dom.CSSOMStoredStyleDeclaration
 
 CLSS public org.apache.batik.anim.dom.SVGStylableElement$PresentationAttributeColorValue
  outer org.apache.batik.anim.dom.SVGStylableElement
+cons public init(org.apache.batik.anim.dom.SVGStylableElement,org.apache.batik.css.engine.CSSEngine,java.lang.String)
+fld protected boolean mutate
+fld protected java.lang.String property
+fld protected org.apache.batik.css.engine.CSSEngine cssEngine
+fld protected org.apache.batik.css.engine.value.Value value
+intf org.apache.batik.css.dom.CSSOMSVGColor$ValueProvider
+intf org.apache.batik.dom.svg.LiveAttributeValue
+meth public org.apache.batik.css.engine.value.Value getValue()
+meth public void attrAdded(org.w3c.dom.Attr,java.lang.String)
+meth public void attrModified(org.w3c.dom.Attr,java.lang.String,java.lang.String)
+meth public void attrRemoved(org.w3c.dom.Attr,java.lang.String)
+supr org.apache.batik.css.dom.CSSOMSVGColor
 
 CLSS public org.apache.batik.anim.dom.SVGStylableElement$PresentationAttributePaintValue
  outer org.apache.batik.anim.dom.SVGStylableElement
+cons public init(org.apache.batik.anim.dom.SVGStylableElement,org.apache.batik.css.engine.CSSEngine,java.lang.String)
+fld protected boolean mutate
+fld protected java.lang.String property
+fld protected org.apache.batik.css.engine.CSSEngine cssEngine
+fld protected org.apache.batik.css.engine.value.Value value
+intf org.apache.batik.css.dom.CSSOMSVGColor$ValueProvider
+intf org.apache.batik.dom.svg.LiveAttributeValue
+meth public org.apache.batik.css.engine.value.Value getValue()
+meth public void attrAdded(org.w3c.dom.Attr,java.lang.String)
+meth public void attrModified(org.w3c.dom.Attr,java.lang.String,java.lang.String)
+meth public void attrRemoved(org.w3c.dom.Attr,java.lang.String)
+supr org.apache.batik.css.dom.CSSOMSVGPaint
 
 CLSS public org.apache.batik.anim.dom.SVGStylableElement$PresentationAttributeValue
  outer org.apache.batik.anim.dom.SVGStylableElement
+cons public init(org.apache.batik.anim.dom.SVGStylableElement,org.apache.batik.css.engine.CSSEngine,java.lang.String)
+fld protected boolean mutate
+fld protected java.lang.String property
+fld protected org.apache.batik.css.engine.CSSEngine cssEngine
+fld protected org.apache.batik.css.engine.value.Value value
+intf org.apache.batik.css.dom.CSSOMValue$ValueProvider
+intf org.apache.batik.dom.svg.LiveAttributeValue
+meth public org.apache.batik.css.engine.value.Value getValue()
+meth public void attrAdded(org.w3c.dom.Attr,java.lang.String)
+meth public void attrModified(org.w3c.dom.Attr,java.lang.String,java.lang.String)
+meth public void attrRemoved(org.w3c.dom.Attr,java.lang.String)
+supr org.apache.batik.css.dom.CSSOMValue
 
 CLSS public org.apache.batik.anim.dom.SVGStylableElement$StyleDeclaration
  outer org.apache.batik.anim.dom.SVGStylableElement
+cons public init(org.apache.batik.anim.dom.SVGStylableElement,org.apache.batik.css.engine.CSSEngine)
+fld protected boolean mutate
+intf org.apache.batik.css.engine.CSSEngine$MainPropertyReceiver
+intf org.apache.batik.dom.svg.LiveAttributeValue
+meth public void attrAdded(org.w3c.dom.Attr,java.lang.String)
+meth public void attrModified(org.w3c.dom.Attr,java.lang.String,java.lang.String)
+meth public void attrRemoved(org.w3c.dom.Attr,java.lang.String)
+meth public void propertyChanged(java.lang.String,java.lang.String,java.lang.String)
+meth public void propertyRemoved(java.lang.String)
+meth public void setMainProperty(java.lang.String,org.apache.batik.css.engine.value.Value,boolean)
+meth public void textChanged(java.lang.String)
+supr org.apache.batik.css.dom.CSSOMStoredStyleDeclaration
 
 CLSS public org.apache.batik.anim.dom.SVGStyleSheetProcessingInstruction
+cons protected init()
+cons public init(java.lang.String,org.apache.batik.dom.AbstractDocument,org.apache.batik.dom.StyleSheetFactory)
+fld protected org.apache.batik.css.engine.StyleSheet styleSheet
+intf org.apache.batik.css.engine.CSSStyleSheetNode
+meth protected org.w3c.dom.Node newNode()
+meth public java.lang.String getStyleSheetURI()
+meth public org.apache.batik.css.engine.StyleSheet getCSSStyleSheet()
+meth public void setData(java.lang.String)
+supr org.apache.batik.dom.StyleSheetProcessingInstruction
 
 CLSS public org.apache.batik.anim.dom.SVGTextContentSupport
 cons public init()
@@ -10621,10 +10999,9 @@ supr org.apache.batik.bridge.AbstractGraphicsNodeBridge
 CLSS public org.apache.batik.bridge.svg12.XPathPatternContentSelector
 cons public init(org.apache.batik.bridge.svg12.ContentManager,org.apache.batik.anim.dom.XBLOMContentElement,org.w3c.dom.Element,java.lang.String)
 fld protected java.lang.String expression
+fld protected javax.xml.xpath.XPathExpression xpath
 fld protected org.apache.batik.bridge.svg12.XPathPatternContentSelector$NSPrefixResolver prefixResolver
 fld protected org.apache.batik.bridge.svg12.XPathPatternContentSelector$SelectedNodes selectedContent
-fld protected org.apache.xpath.XPath xpath
-fld protected org.apache.xpath.XPathContext context
 innr protected NSPrefixResolver
 innr protected SelectedNodes
 meth protected void parse()
@@ -10633,6 +11010,12 @@ supr org.apache.batik.bridge.svg12.AbstractContentSelector
 
 CLSS protected org.apache.batik.bridge.svg12.XPathPatternContentSelector$NSPrefixResolver
  outer org.apache.batik.bridge.svg12.XPathPatternContentSelector
+cons protected init(org.apache.batik.bridge.svg12.XPathPatternContentSelector)
+intf javax.xml.namespace.NamespaceContext
+meth public java.lang.String getNamespaceURI(java.lang.String)
+meth public java.lang.String getPrefix(java.lang.String)
+meth public java.util.Iterator getPrefixes(java.lang.String)
+supr java.lang.Object
 
 CLSS protected org.apache.batik.bridge.svg12.XPathPatternContentSelector$SelectedNodes
  outer org.apache.batik.bridge.svg12.XPathPatternContentSelector
@@ -10744,14 +11127,99 @@ fld public final static java.lang.String XML_VERSION_10 = "1.0"
 fld public final static java.lang.String XML_VERSION_11 = "1.1"
 
 CLSS public org.apache.batik.css.dom.CSSOMComputedStyle
+cons public init(org.apache.batik.css.engine.CSSEngine,org.apache.batik.css.engine.CSSStylableElement,java.lang.String)
+fld protected java.lang.String pseudoElement
+fld protected java.util.Map values
+fld protected org.apache.batik.css.engine.CSSEngine cssEngine
+fld protected org.apache.batik.css.engine.CSSStylableElement element
+innr public ComputedCSSValue
+intf org.w3c.dom.css.CSSStyleDeclaration
+meth protected org.w3c.dom.css.CSSValue createCSSValue(int)
+meth public int getLength()
+meth public java.lang.String getCssText()
+meth public java.lang.String getPropertyPriority(java.lang.String)
+meth public java.lang.String getPropertyValue(java.lang.String)
+meth public java.lang.String item(int)
+meth public java.lang.String removeProperty(java.lang.String)
+meth public org.w3c.dom.css.CSSRule getParentRule()
+meth public org.w3c.dom.css.CSSValue getPropertyCSSValue(java.lang.String)
+meth public void setCssText(java.lang.String)
+meth public void setProperty(java.lang.String,java.lang.String,java.lang.String)
+supr java.lang.Object
 
 CLSS public org.apache.batik.css.dom.CSSOMComputedStyle$ComputedCSSValue
  outer org.apache.batik.css.dom.CSSOMComputedStyle
+cons public init(org.apache.batik.css.dom.CSSOMComputedStyle,int)
+fld protected int index
+intf org.apache.batik.css.dom.CSSOMValue$ValueProvider
+meth public org.apache.batik.css.engine.value.Value getValue()
+supr org.apache.batik.css.dom.CSSOMValue
 
 CLSS public org.apache.batik.css.dom.CSSOMSVGColor
+cons public init(org.apache.batik.css.dom.CSSOMSVGColor$ValueProvider)
+fld protected java.util.ArrayList iccColors
+fld protected org.apache.batik.css.dom.CSSOMSVGColor$BlueComponent blueComponent
+fld protected org.apache.batik.css.dom.CSSOMSVGColor$GreenComponent greenComponent
+fld protected org.apache.batik.css.dom.CSSOMSVGColor$ModificationHandler handler
+fld protected org.apache.batik.css.dom.CSSOMSVGColor$RedComponent redComponent
+fld protected org.apache.batik.css.dom.CSSOMSVGColor$ValueProvider valueProvider
+innr protected BlueComponent
+innr protected ColorNumber
+innr protected GreenComponent
+innr protected RedComponent
+innr protected abstract AbstractComponent
+innr protected abstract FloatComponent
+innr public abstract AbstractModificationHandler
+innr public abstract interface static ModificationHandler
+innr public abstract interface static ValueProvider
+intf org.w3c.dom.css.RGBColor
+intf org.w3c.dom.svg.SVGColor
+intf org.w3c.dom.svg.SVGICCColor
+intf org.w3c.dom.svg.SVGNumberList
+meth public int getNumberOfItems()
+meth public java.lang.String getColorProfile()
+meth public java.lang.String getCssText()
+meth public org.w3c.dom.css.CSSPrimitiveValue getBlue()
+meth public org.w3c.dom.css.CSSPrimitiveValue getGreen()
+meth public org.w3c.dom.css.CSSPrimitiveValue getRed()
+meth public org.w3c.dom.css.RGBColor getRGBColor()
+meth public org.w3c.dom.css.RGBColor getRgbColor()
+meth public org.w3c.dom.svg.SVGICCColor getICCColor()
+meth public org.w3c.dom.svg.SVGICCColor getIccColor()
+meth public org.w3c.dom.svg.SVGNumber appendItem(org.w3c.dom.svg.SVGNumber)
+meth public org.w3c.dom.svg.SVGNumber getItem(int)
+meth public org.w3c.dom.svg.SVGNumber initialize(org.w3c.dom.svg.SVGNumber)
+meth public org.w3c.dom.svg.SVGNumber insertItemBefore(org.w3c.dom.svg.SVGNumber,int)
+meth public org.w3c.dom.svg.SVGNumber removeItem(int)
+meth public org.w3c.dom.svg.SVGNumber replaceItem(org.w3c.dom.svg.SVGNumber,int)
+meth public org.w3c.dom.svg.SVGNumberList getColors()
+meth public short getColorType()
+meth public short getCssValueType()
+meth public void clear()
+meth public void setColor(short,java.lang.String,java.lang.String)
+meth public void setColorProfile(java.lang.String)
+meth public void setCssText(java.lang.String)
+meth public void setModificationHandler(org.apache.batik.css.dom.CSSOMSVGColor$ModificationHandler)
+meth public void setRGBColor(java.lang.String)
+meth public void setRGBColorICCColor(java.lang.String,java.lang.String)
+supr java.lang.Object
 
 CLSS protected abstract org.apache.batik.css.dom.CSSOMSVGColor$AbstractComponent
  outer org.apache.batik.css.dom.CSSOMSVGColor
+cons protected init(org.apache.batik.css.dom.CSSOMSVGColor)
+intf org.w3c.dom.css.CSSPrimitiveValue
+meth protected abstract org.apache.batik.css.engine.value.Value getValue()
+meth public float getFloatValue(short)
+meth public int getLength()
+meth public java.lang.String getCssText()
+meth public java.lang.String getStringValue()
+meth public org.w3c.dom.css.CSSValue item(int)
+meth public org.w3c.dom.css.Counter getCounterValue()
+meth public org.w3c.dom.css.RGBColor getRGBColorValue()
+meth public org.w3c.dom.css.Rect getRectValue()
+meth public short getCssValueType()
+meth public short getPrimitiveType()
+supr java.lang.Object
 
 CLSS public abstract org.apache.batik.css.dom.CSSOMSVGColor$AbstractModificationHandler
  outer org.apache.batik.css.dom.CSSOMSVGColor
@@ -10778,6 +11246,11 @@ supr java.lang.Object
 
 CLSS protected org.apache.batik.css.dom.CSSOMSVGColor$BlueComponent
  outer org.apache.batik.css.dom.CSSOMSVGColor
+cons protected init(org.apache.batik.css.dom.CSSOMSVGColor)
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+supr org.apache.batik.css.dom.CSSOMSVGColor$FloatComponent
 
 CLSS protected org.apache.batik.css.dom.CSSOMSVGColor$ColorNumber
  outer org.apache.batik.css.dom.CSSOMSVGColor
@@ -10790,9 +11263,17 @@ supr java.lang.Object
 
 CLSS protected abstract org.apache.batik.css.dom.CSSOMSVGColor$FloatComponent
  outer org.apache.batik.css.dom.CSSOMSVGColor
+cons protected init(org.apache.batik.css.dom.CSSOMSVGColor)
+meth public void setStringValue(short,java.lang.String)
+supr org.apache.batik.css.dom.CSSOMSVGColor$AbstractComponent
 
 CLSS protected org.apache.batik.css.dom.CSSOMSVGColor$GreenComponent
  outer org.apache.batik.css.dom.CSSOMSVGColor
+cons protected init(org.apache.batik.css.dom.CSSOMSVGColor)
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+supr org.apache.batik.css.dom.CSSOMSVGColor$FloatComponent
 
 CLSS public abstract interface static org.apache.batik.css.dom.CSSOMSVGColor$ModificationHandler
  outer org.apache.batik.css.dom.CSSOMSVGColor
@@ -10816,20 +11297,51 @@ meth public abstract void textChanged(java.lang.String)
 
 CLSS protected org.apache.batik.css.dom.CSSOMSVGColor$RedComponent
  outer org.apache.batik.css.dom.CSSOMSVGColor
+cons protected init(org.apache.batik.css.dom.CSSOMSVGColor)
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+supr org.apache.batik.css.dom.CSSOMSVGColor$FloatComponent
 
 CLSS public abstract interface static org.apache.batik.css.dom.CSSOMSVGColor$ValueProvider
  outer org.apache.batik.css.dom.CSSOMSVGColor
 meth public abstract org.apache.batik.css.engine.value.Value getValue()
 
 CLSS public org.apache.batik.css.dom.CSSOMSVGComputedStyle
+cons public init(org.apache.batik.css.engine.CSSEngine,org.apache.batik.css.engine.CSSStylableElement,java.lang.String)
+innr protected ComputedCSSColorValue
+innr public ComputedCSSPaintValue
+meth protected org.w3c.dom.css.CSSValue createCSSValue(int)
+supr org.apache.batik.css.dom.CSSOMComputedStyle
 
 CLSS protected org.apache.batik.css.dom.CSSOMSVGComputedStyle$ComputedCSSColorValue
  outer org.apache.batik.css.dom.CSSOMSVGComputedStyle
+cons public init(org.apache.batik.css.dom.CSSOMSVGComputedStyle,int)
+fld protected int index
+intf org.apache.batik.css.dom.CSSOMSVGColor$ValueProvider
+meth public org.apache.batik.css.engine.value.Value getValue()
+supr org.apache.batik.css.dom.CSSOMSVGColor
 
 CLSS public org.apache.batik.css.dom.CSSOMSVGComputedStyle$ComputedCSSPaintValue
  outer org.apache.batik.css.dom.CSSOMSVGComputedStyle
+cons public init(org.apache.batik.css.dom.CSSOMSVGComputedStyle,int)
+fld protected int index
+intf org.apache.batik.css.dom.CSSOMSVGColor$ValueProvider
+meth public org.apache.batik.css.engine.value.Value getValue()
+supr org.apache.batik.css.dom.CSSOMSVGPaint
 
 CLSS public org.apache.batik.css.dom.CSSOMSVGPaint
+cons public init(org.apache.batik.css.dom.CSSOMSVGColor$ValueProvider)
+innr public abstract AbstractModificationHandler
+innr public abstract interface static PaintModificationHandler
+intf org.w3c.dom.svg.SVGPaint
+meth public java.lang.String getUri()
+meth public short getColorType()
+meth public short getPaintType()
+meth public void setModificationHandler(org.apache.batik.css.dom.CSSOMSVGColor$ModificationHandler)
+meth public void setPaint(short,java.lang.String,java.lang.String,java.lang.String)
+meth public void setUri(java.lang.String)
+supr org.apache.batik.css.dom.CSSOMSVGColor
 
 CLSS public abstract org.apache.batik.css.dom.CSSOMSVGPaint$AbstractModificationHandler
  outer org.apache.batik.css.dom.CSSOMSVGPaint
@@ -10863,18 +11375,73 @@ meth public abstract void paintChanged(short,java.lang.String,java.lang.String,j
 meth public abstract void uriChanged(java.lang.String)
 
 CLSS public org.apache.batik.css.dom.CSSOMSVGStyleDeclaration
+cons public init(org.apache.batik.css.dom.CSSOMStyleDeclaration$ValueProvider,org.w3c.dom.css.CSSRule,org.apache.batik.css.engine.CSSEngine)
+fld protected org.apache.batik.css.engine.CSSEngine cssEngine
+innr public StyleDeclarationColorValue
+innr public StyleDeclarationPaintValue
+meth protected org.w3c.dom.css.CSSValue createCSSValue(java.lang.String)
+supr org.apache.batik.css.dom.CSSOMStyleDeclaration
 
 CLSS public org.apache.batik.css.dom.CSSOMSVGStyleDeclaration$StyleDeclarationColorValue
  outer org.apache.batik.css.dom.CSSOMSVGStyleDeclaration
+cons public init(org.apache.batik.css.dom.CSSOMSVGStyleDeclaration,java.lang.String)
+fld protected java.lang.String property
+intf org.apache.batik.css.dom.CSSOMSVGColor$ValueProvider
+meth public org.apache.batik.css.engine.value.Value getValue()
+supr org.apache.batik.css.dom.CSSOMSVGColor
 
 CLSS public org.apache.batik.css.dom.CSSOMSVGStyleDeclaration$StyleDeclarationPaintValue
  outer org.apache.batik.css.dom.CSSOMSVGStyleDeclaration
+cons public init(org.apache.batik.css.dom.CSSOMSVGStyleDeclaration,java.lang.String)
+fld protected java.lang.String property
+intf org.apache.batik.css.dom.CSSOMSVGColor$ValueProvider
+meth public org.apache.batik.css.engine.value.Value getValue()
+supr org.apache.batik.css.dom.CSSOMSVGPaint
 
 CLSS public org.apache.batik.css.dom.CSSOMSVGViewCSS
+cons public init(org.apache.batik.css.engine.CSSEngine)
+meth public org.w3c.dom.css.CSSStyleDeclaration getComputedStyle(org.w3c.dom.Element,java.lang.String)
+supr org.apache.batik.css.dom.CSSOMViewCSS
 
 CLSS public abstract org.apache.batik.css.dom.CSSOMStoredStyleDeclaration
+cons public init(org.apache.batik.css.engine.CSSEngine)
+fld protected org.apache.batik.css.engine.StyleDeclaration declaration
+intf org.apache.batik.css.dom.CSSOMStyleDeclaration$ModificationHandler
+intf org.apache.batik.css.dom.CSSOMStyleDeclaration$ValueProvider
+intf org.apache.batik.css.engine.StyleDeclarationProvider
+meth public boolean isImportant(java.lang.String)
+meth public int getLength()
+meth public java.lang.String getText()
+meth public java.lang.String item(int)
+meth public org.apache.batik.css.engine.StyleDeclaration getStyleDeclaration()
+meth public org.apache.batik.css.engine.value.Value getValue(java.lang.String)
+meth public void setStyleDeclaration(org.apache.batik.css.engine.StyleDeclaration)
+supr org.apache.batik.css.dom.CSSOMSVGStyleDeclaration
 
 CLSS public org.apache.batik.css.dom.CSSOMStyleDeclaration
+cons public init(org.apache.batik.css.dom.CSSOMStyleDeclaration$ValueProvider,org.w3c.dom.css.CSSRule)
+fld protected java.util.Map values
+fld protected org.apache.batik.css.dom.CSSOMStyleDeclaration$ModificationHandler handler
+fld protected org.apache.batik.css.dom.CSSOMStyleDeclaration$ValueProvider valueProvider
+fld protected org.w3c.dom.css.CSSRule parentRule
+innr public StyleDeclarationValue
+innr public abstract interface static ModificationHandler
+innr public abstract interface static ValueProvider
+intf org.w3c.dom.css.CSSStyleDeclaration
+meth protected org.w3c.dom.css.CSSValue createCSSValue(java.lang.String)
+meth protected org.w3c.dom.css.CSSValue getCSSValue(java.lang.String)
+meth public int getLength()
+meth public java.lang.String getCssText()
+meth public java.lang.String getPropertyPriority(java.lang.String)
+meth public java.lang.String getPropertyValue(java.lang.String)
+meth public java.lang.String item(int)
+meth public java.lang.String removeProperty(java.lang.String)
+meth public org.w3c.dom.css.CSSRule getParentRule()
+meth public org.w3c.dom.css.CSSValue getPropertyCSSValue(java.lang.String)
+meth public void setCssText(java.lang.String)
+meth public void setModificationHandler(org.apache.batik.css.dom.CSSOMStyleDeclaration$ModificationHandler)
+meth public void setProperty(java.lang.String,java.lang.String,java.lang.String)
+supr java.lang.Object
 
 CLSS public abstract interface static org.apache.batik.css.dom.CSSOMStyleDeclaration$ModificationHandler
  outer org.apache.batik.css.dom.CSSOMStyleDeclaration
@@ -10884,6 +11451,11 @@ meth public abstract void textChanged(java.lang.String)
 
 CLSS public org.apache.batik.css.dom.CSSOMStyleDeclaration$StyleDeclarationValue
  outer org.apache.batik.css.dom.CSSOMStyleDeclaration
+cons public init(org.apache.batik.css.dom.CSSOMStyleDeclaration,java.lang.String)
+fld protected java.lang.String property
+intf org.apache.batik.css.dom.CSSOMValue$ValueProvider
+meth public org.apache.batik.css.engine.value.Value getValue()
+supr org.apache.batik.css.dom.CSSOMValue
 
 CLSS public abstract interface static org.apache.batik.css.dom.CSSOMStyleDeclaration$ValueProvider
  outer org.apache.batik.css.dom.CSSOMStyleDeclaration
@@ -10894,9 +11466,90 @@ meth public abstract java.lang.String item(int)
 meth public abstract org.apache.batik.css.engine.value.Value getValue(java.lang.String)
 
 CLSS public org.apache.batik.css.dom.CSSOMValue
+cons public init(org.apache.batik.css.dom.CSSOMValue$ValueProvider)
+fld protected org.apache.batik.css.dom.CSSOMValue$BlueComponent blueComponent
+fld protected org.apache.batik.css.dom.CSSOMValue$BottomComponent bottomComponent
+fld protected org.apache.batik.css.dom.CSSOMValue$GreenComponent greenComponent
+fld protected org.apache.batik.css.dom.CSSOMValue$LeftComponent leftComponent
+fld protected org.apache.batik.css.dom.CSSOMValue$ModificationHandler handler
+fld protected org.apache.batik.css.dom.CSSOMValue$RedComponent redComponent
+fld protected org.apache.batik.css.dom.CSSOMValue$RightComponent rightComponent
+fld protected org.apache.batik.css.dom.CSSOMValue$TopComponent topComponent
+fld protected org.apache.batik.css.dom.CSSOMValue$ValueProvider valueProvider
+fld protected org.w3c.dom.css.CSSValue[] items
+innr protected BlueComponent
+innr protected BottomComponent
+innr protected GreenComponent
+innr protected LeftComponent
+innr protected ListComponent
+innr protected RedComponent
+innr protected RightComponent
+innr protected TopComponent
+innr protected abstract AbstractComponent
+innr protected abstract FloatComponent
+innr public abstract interface static ModificationHandler
+innr public abstract interface static ValueProvider
+innr public abstract static AbstractModificationHandler
+intf org.w3c.dom.css.CSSPrimitiveValue
+intf org.w3c.dom.css.CSSValueList
+intf org.w3c.dom.css.Counter
+intf org.w3c.dom.css.RGBColor
+intf org.w3c.dom.css.Rect
+meth protected static float toCentimeters(org.apache.batik.css.engine.value.Value)
+meth protected static float toDegrees(org.apache.batik.css.engine.value.Value)
+meth protected static float toGradians(org.apache.batik.css.engine.value.Value)
+meth protected static float toHertz(org.apache.batik.css.engine.value.Value)
+meth protected static float toInches(org.apache.batik.css.engine.value.Value)
+meth protected static float toMillimeters(org.apache.batik.css.engine.value.Value)
+meth protected static float toMilliseconds(org.apache.batik.css.engine.value.Value)
+meth protected static float toPicas(org.apache.batik.css.engine.value.Value)
+meth protected static float toPoints(org.apache.batik.css.engine.value.Value)
+meth protected static float toRadians(org.apache.batik.css.engine.value.Value)
+meth protected static float toSeconds(org.apache.batik.css.engine.value.Value)
+meth protected static float tokHertz(org.apache.batik.css.engine.value.Value)
+meth public float getFloatValue(short)
+meth public int getLength()
+meth public java.lang.String getCssText()
+meth public java.lang.String getIdentifier()
+meth public java.lang.String getListStyle()
+meth public java.lang.String getSeparator()
+meth public java.lang.String getStringValue()
+meth public org.w3c.dom.css.CSSPrimitiveValue getBlue()
+meth public org.w3c.dom.css.CSSPrimitiveValue getBottom()
+meth public org.w3c.dom.css.CSSPrimitiveValue getGreen()
+meth public org.w3c.dom.css.CSSPrimitiveValue getLeft()
+meth public org.w3c.dom.css.CSSPrimitiveValue getRed()
+meth public org.w3c.dom.css.CSSPrimitiveValue getRight()
+meth public org.w3c.dom.css.CSSPrimitiveValue getTop()
+meth public org.w3c.dom.css.CSSValue item(int)
+meth public org.w3c.dom.css.Counter getCounterValue()
+meth public org.w3c.dom.css.RGBColor getRGBColorValue()
+meth public org.w3c.dom.css.Rect getRectValue()
+meth public short getCssValueType()
+meth public short getPrimitiveType()
+meth public static float convertFloatValue(short,org.apache.batik.css.engine.value.Value)
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+meth public void setModificationHandler(org.apache.batik.css.dom.CSSOMValue$ModificationHandler)
+meth public void setStringValue(short,java.lang.String)
+supr java.lang.Object
 
 CLSS protected abstract org.apache.batik.css.dom.CSSOMValue$AbstractComponent
  outer org.apache.batik.css.dom.CSSOMValue
+cons protected init(org.apache.batik.css.dom.CSSOMValue)
+intf org.w3c.dom.css.CSSPrimitiveValue
+meth protected abstract org.apache.batik.css.engine.value.Value getValue()
+meth public float getFloatValue(short)
+meth public int getLength()
+meth public java.lang.String getCssText()
+meth public java.lang.String getStringValue()
+meth public org.w3c.dom.css.CSSValue item(int)
+meth public org.w3c.dom.css.Counter getCounterValue()
+meth public org.w3c.dom.css.RGBColor getRGBColorValue()
+meth public org.w3c.dom.css.Rect getRectValue()
+meth public short getCssValueType()
+meth public short getPrimitiveType()
+supr java.lang.Object
 
 CLSS public abstract static org.apache.batik.css.dom.CSSOMValue$AbstractModificationHandler
  outer org.apache.batik.css.dom.CSSOMValue
@@ -10926,21 +11579,51 @@ supr java.lang.Object
 
 CLSS protected org.apache.batik.css.dom.CSSOMValue$BlueComponent
  outer org.apache.batik.css.dom.CSSOMValue
+cons protected init(org.apache.batik.css.dom.CSSOMValue)
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+supr org.apache.batik.css.dom.CSSOMValue$FloatComponent
 
 CLSS protected org.apache.batik.css.dom.CSSOMValue$BottomComponent
  outer org.apache.batik.css.dom.CSSOMValue
+cons protected init(org.apache.batik.css.dom.CSSOMValue)
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+supr org.apache.batik.css.dom.CSSOMValue$FloatComponent
 
 CLSS protected abstract org.apache.batik.css.dom.CSSOMValue$FloatComponent
  outer org.apache.batik.css.dom.CSSOMValue
+cons protected init(org.apache.batik.css.dom.CSSOMValue)
+meth public void setStringValue(short,java.lang.String)
+supr org.apache.batik.css.dom.CSSOMValue$AbstractComponent
 
 CLSS protected org.apache.batik.css.dom.CSSOMValue$GreenComponent
  outer org.apache.batik.css.dom.CSSOMValue
+cons protected init(org.apache.batik.css.dom.CSSOMValue)
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+supr org.apache.batik.css.dom.CSSOMValue$FloatComponent
 
 CLSS protected org.apache.batik.css.dom.CSSOMValue$LeftComponent
  outer org.apache.batik.css.dom.CSSOMValue
+cons protected init(org.apache.batik.css.dom.CSSOMValue)
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+supr org.apache.batik.css.dom.CSSOMValue$FloatComponent
 
 CLSS protected org.apache.batik.css.dom.CSSOMValue$ListComponent
  outer org.apache.batik.css.dom.CSSOMValue
+cons public init(org.apache.batik.css.dom.CSSOMValue,int)
+fld protected int index
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+meth public void setStringValue(short,java.lang.String)
+supr org.apache.batik.css.dom.CSSOMValue$AbstractComponent
 
 CLSS public abstract interface static org.apache.batik.css.dom.CSSOMValue$ModificationHandler
  outer org.apache.batik.css.dom.CSSOMValue
@@ -10967,18 +11650,39 @@ meth public abstract void topTextChanged(java.lang.String)
 
 CLSS protected org.apache.batik.css.dom.CSSOMValue$RedComponent
  outer org.apache.batik.css.dom.CSSOMValue
+cons protected init(org.apache.batik.css.dom.CSSOMValue)
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+supr org.apache.batik.css.dom.CSSOMValue$FloatComponent
 
 CLSS protected org.apache.batik.css.dom.CSSOMValue$RightComponent
  outer org.apache.batik.css.dom.CSSOMValue
+cons protected init(org.apache.batik.css.dom.CSSOMValue)
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+supr org.apache.batik.css.dom.CSSOMValue$FloatComponent
 
 CLSS protected org.apache.batik.css.dom.CSSOMValue$TopComponent
  outer org.apache.batik.css.dom.CSSOMValue
+cons protected init(org.apache.batik.css.dom.CSSOMValue)
+meth protected org.apache.batik.css.engine.value.Value getValue()
+meth public void setCssText(java.lang.String)
+meth public void setFloatValue(short,float)
+supr org.apache.batik.css.dom.CSSOMValue$FloatComponent
 
 CLSS public abstract interface static org.apache.batik.css.dom.CSSOMValue$ValueProvider
  outer org.apache.batik.css.dom.CSSOMValue
 meth public abstract org.apache.batik.css.engine.value.Value getValue()
 
 CLSS public org.apache.batik.css.dom.CSSOMViewCSS
+cons public init(org.apache.batik.css.engine.CSSEngine)
+fld protected org.apache.batik.css.engine.CSSEngine cssEngine
+intf org.w3c.dom.css.ViewCSS
+meth public org.w3c.dom.css.CSSStyleDeclaration getComputedStyle(org.w3c.dom.Element,java.lang.String)
+meth public org.w3c.dom.views.DocumentView getDocument()
+supr java.lang.Object
 
 CLSS public abstract interface org.apache.batik.css.engine.CSSContext
 meth public abstract boolean isDynamic()
@@ -14163,6 +14867,116 @@ meth public void setLocale(java.util.Locale)
 supr java.lang.Object
 
 CLSS public abstract org.apache.batik.dom.AbstractDocument
+cons protected init()
+cons public init(org.w3c.dom.DocumentType,org.w3c.dom.DOMImplementation)
+fld protected boolean eventsEnabled
+fld protected boolean strictErrorChecking
+fld protected boolean xmlStandalone
+fld protected final static java.lang.String RESOURCES = "org.apache.batik.dom.resources.Messages"
+fld protected java.lang.String documentURI
+fld protected java.lang.String inputEncoding
+fld protected java.lang.String xmlEncoding
+fld protected java.lang.String xmlVersion
+fld protected java.util.Map elementsById
+fld protected java.util.WeakHashMap elementsByTagNames
+fld protected java.util.WeakHashMap elementsByTagNamesNS
+fld protected org.apache.batik.dom.AbstractDocument$DocumentConfiguration domConfig
+fld protected org.apache.batik.dom.events.DocumentEventSupport documentEventSupport
+fld protected org.apache.batik.dom.traversal.TraversalSupport traversalSupport
+fld protected org.apache.batik.dom.xbl.XBLManager xblManager
+fld protected org.apache.batik.i18n.LocalizableSupport localizableSupport
+fld protected org.w3c.dom.DOMImplementation implementation
+innr protected DocumentConfiguration
+innr protected IdSoftRef
+innr protected XPathExpr
+innr protected static DocumentError
+innr protected static XPathNodeNSResolver
+intf org.apache.batik.i18n.Localizable
+intf org.w3c.dom.Document
+intf org.w3c.dom.events.DocumentEvent
+intf org.w3c.dom.traversal.DocumentTraversal
+intf org.w3c.dom.xpath.XPathEvaluator
+meth protected boolean checkChars(java.lang.String)
+meth protected boolean checkName(java.lang.String)
+meth protected boolean normalizeDocument(org.w3c.dom.Element,boolean,boolean,boolean,boolean,boolean,boolean,org.w3c.dom.DOMErrorHandler)
+meth protected boolean splitCdata(org.w3c.dom.Element,org.w3c.dom.Node,org.w3c.dom.DOMErrorHandler)
+meth protected org.apache.batik.dom.AbstractDocument getCurrentDocument()
+meth protected org.w3c.dom.DOMError createDOMError(java.lang.String,short,java.lang.String,java.lang.Object[],org.w3c.dom.Node,java.lang.Exception)
+meth protected org.w3c.dom.Node copyInto(org.w3c.dom.Node)
+meth protected org.w3c.dom.Node deepCopyInto(org.w3c.dom.Node)
+meth protected org.w3c.dom.Node deepExport(org.w3c.dom.Node,org.w3c.dom.Document)
+meth protected org.w3c.dom.Node export(org.w3c.dom.Node,org.w3c.dom.Document)
+meth protected org.w3c.dom.Node getRoot(org.w3c.dom.Node)
+meth protected void adoptNode1(org.apache.batik.dom.AbstractNode)
+meth protected void checkChildType(org.w3c.dom.Node,boolean)
+meth public abstract boolean isId(org.w3c.dom.Attr)
+meth public boolean canDispatch(java.lang.String,java.lang.String)
+meth public boolean getEventsEnabled()
+meth public boolean getStrictErrorChecking()
+meth public boolean getXmlStandalone()
+meth public java.lang.Object evaluate(java.lang.String,org.w3c.dom.Node,org.w3c.dom.xpath.XPathNSResolver,short,java.lang.Object)
+meth public java.lang.String formatMessage(java.lang.String,java.lang.Object[])
+meth public java.lang.String getDocumentURI()
+meth public java.lang.String getInputEncoding()
+meth public java.lang.String getNodeName()
+meth public java.lang.String getXmlEncoding()
+meth public java.lang.String getXmlVersion()
+meth public java.util.Locale getLocale()
+meth public org.apache.batik.dom.AbstractParentNode$ElementsByTagName getElementsByTagName(org.w3c.dom.Node,java.lang.String)
+meth public org.apache.batik.dom.AbstractParentNode$ElementsByTagNameNS getElementsByTagNameNS(org.w3c.dom.Node,java.lang.String,java.lang.String)
+meth public org.apache.batik.dom.xbl.XBLManager getXBLManager()
+meth public org.w3c.dom.DOMConfiguration getDomConfig()
+meth public org.w3c.dom.DOMImplementation getImplementation()
+meth public org.w3c.dom.DocumentType getDoctype()
+meth public org.w3c.dom.Element getChildElementById(org.w3c.dom.Node,java.lang.String)
+meth public org.w3c.dom.Element getDocumentElement()
+meth public org.w3c.dom.Element getElementById(java.lang.String)
+meth public org.w3c.dom.Element getXblBoundElement()
+meth public org.w3c.dom.Element getXblFirstElementChild()
+meth public org.w3c.dom.Element getXblLastElementChild()
+meth public org.w3c.dom.Element getXblNextElementSibling()
+meth public org.w3c.dom.Element getXblPreviousElementSibling()
+meth public org.w3c.dom.Element getXblShadowTree()
+meth public org.w3c.dom.Node adoptNode(org.w3c.dom.Node)
+meth public org.w3c.dom.Node cloneNode(boolean)
+meth public org.w3c.dom.Node getXblFirstChild()
+meth public org.w3c.dom.Node getXblLastChild()
+meth public org.w3c.dom.Node getXblNextSibling()
+meth public org.w3c.dom.Node getXblParentNode()
+meth public org.w3c.dom.Node getXblPreviousSibling()
+meth public org.w3c.dom.Node importNode(org.w3c.dom.Node,boolean)
+meth public org.w3c.dom.Node importNode(org.w3c.dom.Node,boolean,boolean)
+meth public org.w3c.dom.Node renameNode(org.w3c.dom.Node,java.lang.String,java.lang.String)
+meth public org.w3c.dom.NodeList getXblChildNodes()
+meth public org.w3c.dom.NodeList getXblDefinitions()
+meth public org.w3c.dom.NodeList getXblScopedChildNodes()
+meth public org.w3c.dom.events.Event createEvent(java.lang.String)
+meth public org.w3c.dom.traversal.NodeIterator createNodeIterator(org.w3c.dom.Node,int,org.w3c.dom.traversal.NodeFilter,boolean)
+meth public org.w3c.dom.traversal.TreeWalker createTreeWalker(org.w3c.dom.Node,int,org.w3c.dom.traversal.NodeFilter,boolean)
+meth public org.w3c.dom.xpath.XPathException createXPathException(short,java.lang.String,java.lang.Object[])
+meth public org.w3c.dom.xpath.XPathExpression createExpression(java.lang.String,org.w3c.dom.xpath.XPathNSResolver)
+meth public org.w3c.dom.xpath.XPathNSResolver createNSResolver(org.w3c.dom.Node)
+meth public short getNodeType()
+meth public void addIdEntry(org.w3c.dom.Element,java.lang.String)
+meth public void detachNodeIterator(org.w3c.dom.traversal.NodeIterator)
+meth public void nodeToBeRemoved(org.w3c.dom.Node)
+meth public void normalizeDocument()
+meth public void putElementsByTagName(org.w3c.dom.Node,java.lang.String,org.apache.batik.dom.AbstractParentNode$ElementsByTagName)
+meth public void putElementsByTagNameNS(org.w3c.dom.Node,java.lang.String,java.lang.String,org.apache.batik.dom.AbstractParentNode$ElementsByTagNameNS)
+meth public void removeIdEntry(org.w3c.dom.Element,java.lang.String)
+meth public void setDoctype(org.w3c.dom.DocumentType)
+meth public void setDocumentInputEncoding(java.lang.String)
+meth public void setDocumentURI(java.lang.String)
+meth public void setDocumentXmlEncoding(java.lang.String)
+meth public void setEventsEnabled(boolean)
+meth public void setLocale(java.util.Locale)
+meth public void setStrictErrorChecking(boolean)
+meth public void setTextContent(java.lang.String)
+meth public void setXBLManager(org.apache.batik.dom.xbl.XBLManager)
+meth public void setXmlStandalone(boolean)
+meth public void setXmlVersion(java.lang.String)
+meth public void updateIdEntry(org.w3c.dom.Element,java.lang.String,java.lang.String)
+supr org.apache.batik.dom.AbstractParentNode
 
 CLSS protected org.apache.batik.dom.AbstractDocument$DocumentConfiguration
  outer org.apache.batik.dom.AbstractDocument
@@ -14232,15 +15046,58 @@ hfds id,list
 
 CLSS protected org.apache.batik.dom.AbstractDocument$XPathExpr
  outer org.apache.batik.dom.AbstractDocument
+cons public init(org.apache.batik.dom.AbstractDocument,java.lang.String,org.w3c.dom.xpath.XPathNSResolver)
+fld protected javax.xml.xpath.XPathExpression xpath
+fld protected org.apache.batik.dom.AbstractDocument$XPathExpr$NSPrefixResolver prefixResolver
+fld protected org.w3c.dom.xpath.XPathNSResolver resolver
+innr protected NSPrefixResolver
+innr public Result
+intf org.w3c.dom.xpath.XPathExpression
+meth public java.lang.Object evaluate(org.w3c.dom.Node,short,java.lang.Object)
+supr java.lang.Object
 
 CLSS protected org.apache.batik.dom.AbstractDocument$XPathExpr$NSPrefixResolver
  outer org.apache.batik.dom.AbstractDocument$XPathExpr
+cons protected init(org.apache.batik.dom.AbstractDocument$XPathExpr)
+intf javax.xml.namespace.NamespaceContext
+meth public java.lang.String getNamespaceURI(java.lang.String)
+meth public java.lang.String getPrefix(java.lang.String)
+meth public java.util.Iterator getPrefixes(java.lang.String)
+supr java.lang.Object
 
 CLSS public org.apache.batik.dom.AbstractDocument$XPathExpr$Result
  outer org.apache.batik.dom.AbstractDocument$XPathExpr
+cons public init(org.apache.batik.dom.AbstractDocument$XPathExpr,boolean) throws javax.xml.transform.TransformerException
+cons public init(org.apache.batik.dom.AbstractDocument$XPathExpr,double) throws javax.xml.transform.TransformerException
+cons public init(org.apache.batik.dom.AbstractDocument$XPathExpr,java.lang.String)
+cons public init(org.apache.batik.dom.AbstractDocument$XPathExpr,org.w3c.dom.Node,short)
+cons public init(org.apache.batik.dom.AbstractDocument$XPathExpr,org.w3c.dom.NodeList,short)
+fld protected boolean booleanValue
+fld protected double numberValue
+fld protected int iteratorPosition
+fld protected java.lang.String stringValue
+fld protected org.w3c.dom.Node singleNodeValue
+fld protected org.w3c.dom.NodeList iterator
+fld protected short resultType
+intf org.w3c.dom.xpath.XPathResult
+meth public boolean getBooleanValue()
+meth public boolean getInvalidIteratorState()
+meth public double getNumberValue()
+meth public int getSnapshotLength()
+meth public java.lang.String getStringValue()
+meth public org.w3c.dom.Node getSingleNodeValue()
+meth public org.w3c.dom.Node iterateNext()
+meth public org.w3c.dom.Node snapshotItem(int)
+meth public short getResultType()
+supr java.lang.Object
 
 CLSS protected static org.apache.batik.dom.AbstractDocument$XPathNodeNSResolver
  outer org.apache.batik.dom.AbstractDocument
+cons public init(org.w3c.dom.Node)
+fld protected org.w3c.dom.Node contextNode
+intf org.w3c.dom.xpath.XPathNSResolver
+meth public java.lang.String lookupNamespaceURI(java.lang.String)
+supr java.lang.Object
 
 CLSS public abstract org.apache.batik.dom.AbstractDocumentFragment
 cons public init()
@@ -14631,6 +15488,19 @@ meth public void setNodeValue(java.lang.String)
 supr org.apache.batik.dom.AbstractChildNode
 
 CLSS public abstract org.apache.batik.dom.AbstractStylableDocument
+cons protected init()
+cons protected init(org.w3c.dom.DocumentType,org.w3c.dom.DOMImplementation)
+fld protected org.apache.batik.css.engine.CSSEngine cssEngine
+fld protected org.w3c.dom.views.AbstractView defaultView
+intf org.w3c.dom.css.DocumentCSS
+intf org.w3c.dom.views.DocumentView
+meth public org.apache.batik.css.engine.CSSEngine getCSSEngine()
+meth public org.w3c.dom.css.CSSStyleDeclaration getOverrideStyle(org.w3c.dom.Element,java.lang.String)
+meth public org.w3c.dom.stylesheets.StyleSheetList getStyleSheets()
+meth public org.w3c.dom.views.AbstractView getDefaultView()
+meth public void clearViewCSS()
+meth public void setCSSEngine(org.apache.batik.css.engine.CSSEngine)
+supr org.apache.batik.dom.AbstractDocument
 
 CLSS public abstract org.apache.batik.dom.AbstractText
 cons public init()
@@ -14666,6 +15536,24 @@ meth public abstract void setReadonly(boolean)
 meth public abstract void setSpecified(boolean)
 
 CLSS public abstract org.apache.batik.dom.ExtensibleDOMImplementation
+cons public init()
+fld protected java.util.List customShorthandManagers
+fld protected java.util.List customValueManagers
+fld protected org.apache.batik.util.DoublyIndexedTable customFactories
+fld protected static java.util.List extensions
+innr public abstract interface static ElementFactory
+intf org.apache.batik.dom.StyleSheetFactory
+intf org.w3c.dom.css.DOMImplementationCSS
+meth protected static java.util.List getDomExtensions()
+meth public abstract org.apache.batik.css.engine.CSSEngine createCSSEngine(org.apache.batik.dom.AbstractStylableDocument,org.apache.batik.css.engine.CSSContext,org.apache.batik.css.parser.ExtendedParser,org.apache.batik.css.engine.value.ValueManager[],org.apache.batik.css.engine.value.ShorthandManager[])
+meth public abstract org.w3c.dom.css.ViewCSS createViewCSS(org.apache.batik.dom.AbstractStylableDocument)
+meth public org.apache.batik.css.engine.CSSEngine createCSSEngine(org.apache.batik.dom.AbstractStylableDocument,org.apache.batik.css.engine.CSSContext)
+meth public org.w3c.dom.DocumentType createDocumentType(java.lang.String,java.lang.String,java.lang.String)
+meth public org.w3c.dom.Element createElementNS(org.apache.batik.dom.AbstractDocument,java.lang.String,java.lang.String)
+meth public void registerCustomCSSShorthandManager(org.apache.batik.css.engine.value.ShorthandManager)
+meth public void registerCustomCSSValueManager(org.apache.batik.css.engine.value.ValueManager)
+meth public void registerCustomElementFactory(java.lang.String,java.lang.String,org.apache.batik.dom.ExtensibleDOMImplementation$ElementFactory)
+supr org.apache.batik.dom.AbstractDOMImplementation
 
 CLSS public abstract interface static org.apache.batik.dom.ExtensibleDOMImplementation$ElementFactory
  outer org.apache.batik.dom.ExtensibleDOMImplementation
@@ -14720,6 +15608,25 @@ meth public static org.w3c.dom.DOMImplementation getDOMImplementation()
 supr org.apache.batik.dom.AbstractDOMImplementation
 
 CLSS public org.apache.batik.dom.GenericDocument
+cons protected init()
+cons public init(org.w3c.dom.DocumentType,org.w3c.dom.DOMImplementation)
+fld protected boolean readonly
+fld protected final static java.lang.String ATTR_ID = "id"
+meth protected org.w3c.dom.Node newNode()
+meth public boolean isId(org.w3c.dom.Attr)
+meth public boolean isReadonly()
+meth public org.w3c.dom.Attr createAttribute(java.lang.String)
+meth public org.w3c.dom.Attr createAttributeNS(java.lang.String,java.lang.String)
+meth public org.w3c.dom.CDATASection createCDATASection(java.lang.String)
+meth public org.w3c.dom.Comment createComment(java.lang.String)
+meth public org.w3c.dom.DocumentFragment createDocumentFragment()
+meth public org.w3c.dom.Element createElement(java.lang.String)
+meth public org.w3c.dom.Element createElementNS(java.lang.String,java.lang.String)
+meth public org.w3c.dom.EntityReference createEntityReference(java.lang.String)
+meth public org.w3c.dom.ProcessingInstruction createProcessingInstruction(java.lang.String,java.lang.String)
+meth public org.w3c.dom.Text createTextNode(java.lang.String)
+meth public void setReadonly(boolean)
+supr org.apache.batik.dom.AbstractDocument
 
 CLSS public org.apache.batik.dom.GenericDocumentFragment
 cons protected init()
@@ -14841,6 +15748,22 @@ CLSS public abstract interface org.apache.batik.dom.StyleSheetFactory
 meth public abstract org.w3c.dom.stylesheets.StyleSheet createStyleSheet(org.w3c.dom.Node,java.util.HashMap<java.lang.String,java.lang.String>)
 
 CLSS public org.apache.batik.dom.StyleSheetProcessingInstruction
+cons protected init()
+cons public init(java.lang.String,org.apache.batik.dom.AbstractDocument,org.apache.batik.dom.StyleSheetFactory)
+fld protected boolean readonly
+fld protected java.util.HashMap<java.lang.String,java.lang.String> pseudoAttributes
+fld protected org.apache.batik.dom.StyleSheetFactory factory
+fld protected org.w3c.dom.stylesheets.StyleSheet sheet
+intf org.w3c.dom.stylesheets.LinkStyle
+meth protected org.w3c.dom.Node newNode()
+meth public boolean isReadonly()
+meth public java.lang.String getTarget()
+meth public java.util.HashMap<java.lang.String,java.lang.String> getPseudoAttributes()
+meth public org.w3c.dom.stylesheets.StyleSheet getSheet()
+meth public void setData(java.lang.String)
+meth public void setNodeName(java.lang.String)
+meth public void setReadonly(boolean)
+supr org.apache.batik.dom.AbstractProcessingInstruction
 
 CLSS public abstract org.apache.batik.dom.events.AbstractEvent
 cons public init()
@@ -21952,6 +22875,7 @@ supr java.lang.Object
 CLSS public org.apache.batik.script.rhino.RhinoClassLoader
 
 CLSS public org.apache.batik.script.rhino.RhinoClassShutter
+hfds WHITELIST
 
 CLSS public abstract org.apache.batik.util.AbstractParsedURLProtocolHandler
 cons public init(java.lang.String)
@@ -24945,6 +25869,7 @@ fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_EMF
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_EPS
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_JPEG
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_LZW
+fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_PDF
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_PNG
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RAW_TIFF
 fld public final static org.apache.xmlgraphics.image.loader.ImageFlavor RENDERED_IMAGE
@@ -28611,6 +29536,111 @@ meth public abstract boolean isDerivedFrom(java.lang.String,java.lang.String,int
 meth public abstract java.lang.String getTypeName()
 meth public abstract java.lang.String getTypeNamespace()
 
+CLSS public abstract interface org.w3c.dom.css.CSSPrimitiveValue
+fld public final static short CSS_ATTR = 22
+fld public final static short CSS_CM = 6
+fld public final static short CSS_COUNTER = 23
+fld public final static short CSS_DEG = 11
+fld public final static short CSS_DIMENSION = 18
+fld public final static short CSS_EMS = 3
+fld public final static short CSS_EXS = 4
+fld public final static short CSS_GRAD = 13
+fld public final static short CSS_HZ = 16
+fld public final static short CSS_IDENT = 21
+fld public final static short CSS_IN = 8
+fld public final static short CSS_KHZ = 17
+fld public final static short CSS_MM = 7
+fld public final static short CSS_MS = 14
+fld public final static short CSS_NUMBER = 1
+fld public final static short CSS_PC = 10
+fld public final static short CSS_PERCENTAGE = 2
+fld public final static short CSS_PT = 9
+fld public final static short CSS_PX = 5
+fld public final static short CSS_RAD = 12
+fld public final static short CSS_RECT = 24
+fld public final static short CSS_RGBCOLOR = 25
+fld public final static short CSS_S = 15
+fld public final static short CSS_STRING = 19
+fld public final static short CSS_UNKNOWN = 0
+fld public final static short CSS_URI = 20
+intf org.w3c.dom.css.CSSValue
+meth public abstract float getFloatValue(short)
+meth public abstract java.lang.String getStringValue()
+meth public abstract org.w3c.dom.css.Counter getCounterValue()
+meth public abstract org.w3c.dom.css.RGBColor getRGBColorValue()
+meth public abstract org.w3c.dom.css.Rect getRectValue()
+meth public abstract short getPrimitiveType()
+meth public abstract void setFloatValue(short,float)
+meth public abstract void setStringValue(short,java.lang.String)
+
+CLSS public abstract interface org.w3c.dom.css.CSSRule
+fld public final static short CHARSET_RULE = 2
+fld public final static short FONT_FACE_RULE = 5
+fld public final static short IMPORT_RULE = 3
+fld public final static short MEDIA_RULE = 4
+fld public final static short PAGE_RULE = 6
+fld public final static short STYLE_RULE = 1
+fld public final static short UNKNOWN_RULE = 0
+meth public abstract java.lang.String getCssText()
+meth public abstract org.w3c.dom.css.CSSRule getParentRule()
+meth public abstract org.w3c.dom.css.CSSStyleSheet getParentStyleSheet()
+meth public abstract short getType()
+meth public abstract void setCssText(java.lang.String)
+
+CLSS public abstract interface org.w3c.dom.css.CSSStyleDeclaration
+meth public abstract int getLength()
+meth public abstract java.lang.String getCssText()
+meth public abstract java.lang.String getPropertyPriority(java.lang.String)
+meth public abstract java.lang.String getPropertyValue(java.lang.String)
+meth public abstract java.lang.String item(int)
+meth public abstract java.lang.String removeProperty(java.lang.String)
+meth public abstract org.w3c.dom.css.CSSRule getParentRule()
+meth public abstract org.w3c.dom.css.CSSValue getPropertyCSSValue(java.lang.String)
+meth public abstract void setCssText(java.lang.String)
+meth public abstract void setProperty(java.lang.String,java.lang.String,java.lang.String)
+
+CLSS public abstract interface org.w3c.dom.css.CSSValue
+fld public final static short CSS_CUSTOM = 3
+fld public final static short CSS_INHERIT = 0
+fld public final static short CSS_PRIMITIVE_VALUE = 1
+fld public final static short CSS_VALUE_LIST = 2
+meth public abstract java.lang.String getCssText()
+meth public abstract short getCssValueType()
+meth public abstract void setCssText(java.lang.String)
+
+CLSS public abstract interface org.w3c.dom.css.CSSValueList
+intf org.w3c.dom.css.CSSValue
+meth public abstract int getLength()
+meth public abstract org.w3c.dom.css.CSSValue item(int)
+
+CLSS public abstract interface org.w3c.dom.css.Counter
+meth public abstract java.lang.String getIdentifier()
+meth public abstract java.lang.String getListStyle()
+meth public abstract java.lang.String getSeparator()
+
+CLSS public abstract interface org.w3c.dom.css.DOMImplementationCSS
+intf org.w3c.dom.DOMImplementation
+meth public abstract org.w3c.dom.css.CSSStyleSheet createCSSStyleSheet(java.lang.String,java.lang.String)
+
+CLSS public abstract interface org.w3c.dom.css.DocumentCSS
+intf org.w3c.dom.stylesheets.DocumentStyle
+meth public abstract org.w3c.dom.css.CSSStyleDeclaration getOverrideStyle(org.w3c.dom.Element,java.lang.String)
+
+CLSS public abstract interface org.w3c.dom.css.RGBColor
+meth public abstract org.w3c.dom.css.CSSPrimitiveValue getBlue()
+meth public abstract org.w3c.dom.css.CSSPrimitiveValue getGreen()
+meth public abstract org.w3c.dom.css.CSSPrimitiveValue getRed()
+
+CLSS public abstract interface org.w3c.dom.css.Rect
+meth public abstract org.w3c.dom.css.CSSPrimitiveValue getBottom()
+meth public abstract org.w3c.dom.css.CSSPrimitiveValue getLeft()
+meth public abstract org.w3c.dom.css.CSSPrimitiveValue getRight()
+meth public abstract org.w3c.dom.css.CSSPrimitiveValue getTop()
+
+CLSS public abstract interface org.w3c.dom.css.ViewCSS
+intf org.w3c.dom.views.AbstractView
+meth public abstract org.w3c.dom.css.CSSStyleDeclaration getComputedStyle(org.w3c.dom.Element,java.lang.String)
+
 CLSS public abstract interface org.w3c.dom.events.DocumentEvent
 meth public abstract org.w3c.dom.events.Event createEvent(java.lang.String)
 
@@ -28680,6 +29710,12 @@ intf org.w3c.dom.events.Event
 meth public abstract int getDetail()
 meth public abstract org.w3c.dom.views.AbstractView getView()
 meth public abstract void initTimeEvent(java.lang.String,org.w3c.dom.views.AbstractView,int)
+
+CLSS public abstract interface org.w3c.dom.stylesheets.DocumentStyle
+meth public abstract org.w3c.dom.stylesheets.StyleSheetList getStyleSheets()
+
+CLSS public abstract interface org.w3c.dom.stylesheets.LinkStyle
+meth public abstract org.w3c.dom.stylesheets.StyleSheet getSheet()
 
 CLSS public abstract interface org.w3c.dom.svg.EventListenerInitializer
 meth public abstract void initializeEventListeners(org.w3c.dom.svg.SVGDocument)
@@ -28815,6 +29851,8 @@ meth public abstract float getStartTime()
 meth public abstract org.w3c.dom.svg.SVGElement getTargetElement()
 
 CLSS public abstract interface org.w3c.dom.svg.SVGCSSRule
+fld public final static short COLOR_PROFILE_RULE = 7
+intf org.w3c.dom.css.CSSRule
 
 CLSS public abstract interface org.w3c.dom.svg.SVGCircleElement
 intf org.w3c.dom.events.EventTarget
@@ -28839,6 +29877,17 @@ intf org.w3c.dom.svg.SVGUnitTypes
 meth public abstract org.w3c.dom.svg.SVGAnimatedEnumeration getClipPathUnits()
 
 CLSS public abstract interface org.w3c.dom.svg.SVGColor
+fld public final static short SVG_COLORTYPE_CURRENTCOLOR = 3
+fld public final static short SVG_COLORTYPE_RGBCOLOR = 1
+fld public final static short SVG_COLORTYPE_RGBCOLOR_ICCCOLOR = 2
+fld public final static short SVG_COLORTYPE_UNKNOWN = 0
+intf org.w3c.dom.css.CSSValue
+meth public abstract org.w3c.dom.css.RGBColor getRGBColor()
+meth public abstract org.w3c.dom.svg.SVGICCColor getICCColor()
+meth public abstract short getColorType()
+meth public abstract void setColor(short,java.lang.String,java.lang.String)
+meth public abstract void setRGBColor(java.lang.String)
+meth public abstract void setRGBColorICCColor(java.lang.String,java.lang.String)
 
 CLSS public abstract interface org.w3c.dom.svg.SVGColorProfileElement
 intf org.w3c.dom.svg.SVGElement
@@ -28852,6 +29901,14 @@ meth public abstract void setName(java.lang.String)
 meth public abstract void setRenderingIntent(short)
 
 CLSS public abstract interface org.w3c.dom.svg.SVGColorProfileRule
+intf org.w3c.dom.svg.SVGCSSRule
+intf org.w3c.dom.svg.SVGRenderingIntent
+meth public abstract java.lang.String getName()
+meth public abstract java.lang.String getSrc()
+meth public abstract short getRenderingIntent()
+meth public abstract void setName(java.lang.String)
+meth public abstract void setRenderingIntent(short)
+meth public abstract void setSrc(java.lang.String)
 
 CLSS public abstract interface org.w3c.dom.svg.SVGComponentTransferFunctionElement
 fld public final static short SVG_FECOMPONENTTRANSFER_TYPE_DISCRETE = 3
@@ -29437,6 +30494,21 @@ meth public abstract org.w3c.dom.svg.SVGNumber replaceItem(org.w3c.dom.svg.SVGNu
 meth public abstract void clear()
 
 CLSS public abstract interface org.w3c.dom.svg.SVGPaint
+fld public final static short SVG_PAINTTYPE_CURRENTCOLOR = 102
+fld public final static short SVG_PAINTTYPE_NONE = 101
+fld public final static short SVG_PAINTTYPE_RGBCOLOR = 1
+fld public final static short SVG_PAINTTYPE_RGBCOLOR_ICCCOLOR = 2
+fld public final static short SVG_PAINTTYPE_UNKNOWN = 0
+fld public final static short SVG_PAINTTYPE_URI = 107
+fld public final static short SVG_PAINTTYPE_URI_CURRENTCOLOR = 104
+fld public final static short SVG_PAINTTYPE_URI_NONE = 103
+fld public final static short SVG_PAINTTYPE_URI_RGBCOLOR = 105
+fld public final static short SVG_PAINTTYPE_URI_RGBCOLOR_ICCCOLOR = 106
+intf org.w3c.dom.svg.SVGColor
+meth public abstract java.lang.String getUri()
+meth public abstract short getPaintType()
+meth public abstract void setPaint(short,java.lang.String,java.lang.String,java.lang.String)
+meth public abstract void setUri(java.lang.String)
 
 CLSS public abstract interface org.w3c.dom.svg.SVGPathElement
 intf org.w3c.dom.events.EventTarget
@@ -29794,6 +30866,60 @@ fld public final static short RENDERING_INTENT_SATURATION = 4
 fld public final static short RENDERING_INTENT_UNKNOWN = 0
 
 CLSS public abstract interface org.w3c.dom.svg.SVGSVGElement
+intf org.w3c.dom.css.DocumentCSS
+intf org.w3c.dom.css.ViewCSS
+intf org.w3c.dom.events.DocumentEvent
+intf org.w3c.dom.events.EventTarget
+intf org.w3c.dom.svg.SVGElement
+intf org.w3c.dom.svg.SVGExternalResourcesRequired
+intf org.w3c.dom.svg.SVGFitToViewBox
+intf org.w3c.dom.svg.SVGLangSpace
+intf org.w3c.dom.svg.SVGLocatable
+intf org.w3c.dom.svg.SVGStylable
+intf org.w3c.dom.svg.SVGTests
+intf org.w3c.dom.svg.SVGZoomAndPan
+meth public abstract boolean animationsPaused()
+meth public abstract boolean checkEnclosure(org.w3c.dom.svg.SVGElement,org.w3c.dom.svg.SVGRect)
+meth public abstract boolean checkIntersection(org.w3c.dom.svg.SVGElement,org.w3c.dom.svg.SVGRect)
+meth public abstract boolean getUseCurrentView()
+meth public abstract float getCurrentScale()
+meth public abstract float getCurrentTime()
+meth public abstract float getPixelUnitToMillimeterX()
+meth public abstract float getPixelUnitToMillimeterY()
+meth public abstract float getScreenPixelToMillimeterX()
+meth public abstract float getScreenPixelToMillimeterY()
+meth public abstract int suspendRedraw(int)
+meth public abstract java.lang.String getContentScriptType()
+meth public abstract java.lang.String getContentStyleType()
+meth public abstract org.w3c.dom.Element getElementById(java.lang.String)
+meth public abstract org.w3c.dom.NodeList getEnclosureList(org.w3c.dom.svg.SVGRect,org.w3c.dom.svg.SVGElement)
+meth public abstract org.w3c.dom.NodeList getIntersectionList(org.w3c.dom.svg.SVGRect,org.w3c.dom.svg.SVGElement)
+meth public abstract org.w3c.dom.svg.SVGAngle createSVGAngle()
+meth public abstract org.w3c.dom.svg.SVGAnimatedLength getHeight()
+meth public abstract org.w3c.dom.svg.SVGAnimatedLength getWidth()
+meth public abstract org.w3c.dom.svg.SVGAnimatedLength getX()
+meth public abstract org.w3c.dom.svg.SVGAnimatedLength getY()
+meth public abstract org.w3c.dom.svg.SVGLength createSVGLength()
+meth public abstract org.w3c.dom.svg.SVGMatrix createSVGMatrix()
+meth public abstract org.w3c.dom.svg.SVGNumber createSVGNumber()
+meth public abstract org.w3c.dom.svg.SVGPoint createSVGPoint()
+meth public abstract org.w3c.dom.svg.SVGPoint getCurrentTranslate()
+meth public abstract org.w3c.dom.svg.SVGRect createSVGRect()
+meth public abstract org.w3c.dom.svg.SVGRect getViewport()
+meth public abstract org.w3c.dom.svg.SVGTransform createSVGTransform()
+meth public abstract org.w3c.dom.svg.SVGTransform createSVGTransformFromMatrix(org.w3c.dom.svg.SVGMatrix)
+meth public abstract org.w3c.dom.svg.SVGViewSpec getCurrentView()
+meth public abstract void deselectAll()
+meth public abstract void forceRedraw()
+meth public abstract void pauseAnimations()
+meth public abstract void setContentScriptType(java.lang.String)
+meth public abstract void setContentStyleType(java.lang.String)
+meth public abstract void setCurrentScale(float)
+meth public abstract void setCurrentTime(float)
+meth public abstract void setUseCurrentView(boolean)
+meth public abstract void unpauseAnimations()
+meth public abstract void unsuspendRedraw(int)
+meth public abstract void unsuspendRedrawAll()
 
 CLSS public abstract interface org.w3c.dom.svg.SVGScriptElement
 intf org.w3c.dom.svg.SVGElement
@@ -30039,8 +31165,43 @@ meth public abstract org.w3c.dom.Node previousSibling()
 meth public abstract org.w3c.dom.traversal.NodeFilter getFilter()
 meth public abstract void setCurrentNode(org.w3c.dom.Node)
 
+CLSS public abstract interface org.w3c.dom.views.AbstractView
+meth public abstract org.w3c.dom.views.DocumentView getDocument()
+
 CLSS public abstract interface org.w3c.dom.views.DocumentView
 meth public abstract org.w3c.dom.views.AbstractView getDefaultView()
+
+CLSS public abstract interface org.w3c.dom.xpath.XPathEvaluator
+meth public abstract java.lang.Object evaluate(java.lang.String,org.w3c.dom.Node,org.w3c.dom.xpath.XPathNSResolver,short,java.lang.Object)
+meth public abstract org.w3c.dom.xpath.XPathExpression createExpression(java.lang.String,org.w3c.dom.xpath.XPathNSResolver)
+meth public abstract org.w3c.dom.xpath.XPathNSResolver createNSResolver(org.w3c.dom.Node)
+
+CLSS public abstract interface org.w3c.dom.xpath.XPathExpression
+meth public abstract java.lang.Object evaluate(org.w3c.dom.Node,short,java.lang.Object)
+
+CLSS public abstract interface org.w3c.dom.xpath.XPathNSResolver
+meth public abstract java.lang.String lookupNamespaceURI(java.lang.String)
+
+CLSS public abstract interface org.w3c.dom.xpath.XPathResult
+fld public final static short ANY_TYPE = 0
+fld public final static short ANY_UNORDERED_NODE_TYPE = 8
+fld public final static short BOOLEAN_TYPE = 3
+fld public final static short FIRST_ORDERED_NODE_TYPE = 9
+fld public final static short NUMBER_TYPE = 1
+fld public final static short ORDERED_NODE_ITERATOR_TYPE = 5
+fld public final static short ORDERED_NODE_SNAPSHOT_TYPE = 7
+fld public final static short STRING_TYPE = 2
+fld public final static short UNORDERED_NODE_ITERATOR_TYPE = 4
+fld public final static short UNORDERED_NODE_SNAPSHOT_TYPE = 6
+meth public abstract boolean getBooleanValue()
+meth public abstract boolean getInvalidIteratorState()
+meth public abstract double getNumberValue()
+meth public abstract int getSnapshotLength()
+meth public abstract java.lang.String getStringValue()
+meth public abstract org.w3c.dom.Node getSingleNodeValue()
+meth public abstract org.w3c.dom.Node iterateNext()
+meth public abstract org.w3c.dom.Node snapshotItem(int)
+meth public abstract short getResultType()
 
 CLSS public abstract interface org.xml.sax.ContentHandler
 meth public abstract void characters(char[],int,int) throws org.xml.sax.SAXException

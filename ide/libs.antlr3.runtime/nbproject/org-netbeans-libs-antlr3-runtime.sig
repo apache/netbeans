@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.36.0
+#Version 1.42.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -137,7 +137,7 @@ fld protected int line
 fld protected int markDepth
 fld protected int n
 fld protected int p
-fld protected java.util.List markers
+fld protected java.util.List<org.antlr.runtime.CharStreamState> markers
 fld public java.lang.String name
 intf org.antlr.runtime.CharStream
 meth public int LA(int)
@@ -193,9 +193,9 @@ meth public java.lang.String getErrorMessage(org.antlr.runtime.RecognitionExcept
 meth public java.lang.String getGrammarFileName()
 meth public java.lang.String getTokenErrorDisplay(org.antlr.runtime.Token)
 meth public java.lang.String[] getTokenNames()
-meth public java.util.List getRuleInvocationStack()
-meth public java.util.List toStrings(java.util.List)
-meth public static java.util.List getRuleInvocationStack(java.lang.Throwable,java.lang.String)
+meth public java.util.List<java.lang.String> getRuleInvocationStack()
+meth public java.util.List<java.lang.String> toStrings(java.util.List<? extends org.antlr.runtime.Token>)
+meth public static java.util.List<java.lang.String> getRuleInvocationStack(java.lang.Throwable,java.lang.String)
 meth public void beginResync()
 meth public void consumeUntil(org.antlr.runtime.IntStream,int)
 meth public void consumeUntil(org.antlr.runtime.IntStream,org.antlr.runtime.BitSet)
@@ -215,7 +215,7 @@ supr java.lang.Object
 CLSS public org.antlr.runtime.BitSet
 cons public init()
 cons public init(int)
-cons public init(java.util.List)
+cons public init(java.util.List<java.lang.Integer>)
 cons public init(long[])
 fld protected final static int BITS = 64
 fld protected final static int LOG_BITS = 6
@@ -250,7 +250,7 @@ cons public init(org.antlr.runtime.TokenSource)
 fld protected int lastMarker
 fld protected int p
 fld protected int range
-fld protected java.util.List tokens
+fld protected java.util.List<org.antlr.runtime.Token> tokens
 fld protected org.antlr.runtime.TokenSource tokenSource
 intf org.antlr.runtime.TokenStream
 meth protected org.antlr.runtime.Token LB(int)
@@ -266,12 +266,12 @@ meth public java.lang.String getSourceName()
 meth public java.lang.String toString()
 meth public java.lang.String toString(int,int)
 meth public java.lang.String toString(org.antlr.runtime.Token,org.antlr.runtime.Token)
-meth public java.util.List get(int,int)
-meth public java.util.List getTokens()
-meth public java.util.List getTokens(int,int)
-meth public java.util.List getTokens(int,int,int)
-meth public java.util.List getTokens(int,int,java.util.List)
-meth public java.util.List getTokens(int,int,org.antlr.runtime.BitSet)
+meth public java.util.List<? extends org.antlr.runtime.Token> get(int,int)
+meth public java.util.List<? extends org.antlr.runtime.Token> getTokens()
+meth public java.util.List<? extends org.antlr.runtime.Token> getTokens(int,int)
+meth public java.util.List<? extends org.antlr.runtime.Token> getTokens(int,int,int)
+meth public java.util.List<? extends org.antlr.runtime.Token> getTokens(int,int,java.util.List<java.lang.Integer>)
+meth public java.util.List<? extends org.antlr.runtime.Token> getTokens(int,int,org.antlr.runtime.BitSet)
 meth public org.antlr.runtime.Token LT(int)
 meth public org.antlr.runtime.Token get(int)
 meth public org.antlr.runtime.TokenSource getTokenSource()
@@ -438,9 +438,9 @@ fld protected int channel
 fld protected int lastMarker
 fld protected int p
 fld protected int range
-fld protected java.util.List tokens
-fld protected java.util.Map channelOverrideMap
-fld protected java.util.Set discardSet
+fld protected java.util.List<org.antlr.runtime.Token> tokens
+fld protected java.util.Map<java.lang.Integer,java.lang.Integer> channelOverrideMap
+fld protected java.util.Set<java.lang.Integer> discardSet
 fld protected org.antlr.runtime.TokenSource tokenSource
 intf org.antlr.runtime.TokenStream
 meth protected int skipOffTokenChannels(int)
@@ -456,12 +456,12 @@ meth public java.lang.String getSourceName()
 meth public java.lang.String toString()
 meth public java.lang.String toString(int,int)
 meth public java.lang.String toString(org.antlr.runtime.Token,org.antlr.runtime.Token)
-meth public java.util.List get(int,int)
-meth public java.util.List getTokens()
-meth public java.util.List getTokens(int,int)
-meth public java.util.List getTokens(int,int,int)
-meth public java.util.List getTokens(int,int,java.util.List)
-meth public java.util.List getTokens(int,int,org.antlr.runtime.BitSet)
+meth public java.util.List<? extends org.antlr.runtime.Token> get(int,int)
+meth public java.util.List<? extends org.antlr.runtime.Token> getTokens()
+meth public java.util.List<? extends org.antlr.runtime.Token> getTokens(int,int)
+meth public java.util.List<? extends org.antlr.runtime.Token> getTokens(int,int,int)
+meth public java.util.List<? extends org.antlr.runtime.Token> getTokens(int,int,java.util.List<java.lang.Integer>)
+meth public java.util.List<? extends org.antlr.runtime.Token> getTokens(int,int,org.antlr.runtime.BitSet)
 meth public org.antlr.runtime.Token LT(int)
 meth public org.antlr.runtime.Token get(int)
 meth public org.antlr.runtime.TokenSource getTokenSource()
@@ -493,6 +493,7 @@ meth public java.lang.String getSourceName()
 meth public java.lang.String getText()
 meth public org.antlr.runtime.CharStream getCharStream()
 meth public org.antlr.runtime.Token emit()
+meth public org.antlr.runtime.Token getEOFToken()
 meth public org.antlr.runtime.Token nextToken()
 meth public void emit(org.antlr.runtime.Token)
 meth public void match(int) throws org.antlr.runtime.MismatchedTokenException
@@ -577,7 +578,6 @@ supr org.antlr.runtime.BaseRecognizer
 
 CLSS public org.antlr.runtime.ParserRuleReturnScope
 cons public init()
-fld public java.lang.Object tree
 fld public org.antlr.runtime.Token start
 fld public org.antlr.runtime.Token stop
 meth public java.lang.Object getStart()
@@ -615,7 +615,7 @@ fld public int tokenStartCharPositionInLine
 fld public int tokenStartLine
 fld public int type
 fld public java.lang.String text
-fld public java.util.Map[] ruleMemo
+fld public java.util.Map<java.lang.Integer,java.lang.Integer>[] ruleMemo
 fld public org.antlr.runtime.BitSet[] following
 fld public org.antlr.runtime.Token token
 supr java.lang.Object
@@ -634,16 +634,54 @@ fld public char type
 fld public final static int FORMAT_VERSION = 1
 fld public final static java.lang.String COOKIE = "$ANTLR"
 fld public java.lang.String name
-fld public java.util.List rules
-meth protected java.lang.Object readBlock(java.io.DataInputStream) throws java.io.IOException
-meth protected java.lang.Object readRule(java.io.DataInputStream) throws java.io.IOException
+fld public java.util.List<? extends org.antlr.runtime.SerializedGrammar$Rule> rules
+innr protected Block
+innr protected Rule
+innr protected RuleRef
+innr protected TokenRef
+innr protected abstract Node
 meth protected java.lang.String readString(java.io.DataInputStream) throws java.io.IOException
-meth protected java.util.List readAlt(java.io.DataInputStream) throws java.io.IOException
-meth protected java.util.List readRules(java.io.DataInputStream,int) throws java.io.IOException
+meth protected java.util.List<? extends org.antlr.runtime.SerializedGrammar$Rule> readRules(java.io.DataInputStream,int) throws java.io.IOException
+meth protected java.util.List<org.antlr.runtime.SerializedGrammar$Node> readAlt(java.io.DataInputStream) throws java.io.IOException
+meth protected org.antlr.runtime.SerializedGrammar$Block readBlock(java.io.DataInputStream) throws java.io.IOException
+meth protected org.antlr.runtime.SerializedGrammar$Rule readRule(java.io.DataInputStream) throws java.io.IOException
 meth protected void readFile(java.io.DataInputStream) throws java.io.IOException
 meth public java.lang.String toString()
 supr java.lang.Object
-hcls Block,Rule,RuleRef,TokenRef
+
+CLSS protected org.antlr.runtime.SerializedGrammar$Block
+ outer org.antlr.runtime.SerializedGrammar
+cons public init(org.antlr.runtime.SerializedGrammar,java.util.List[])
+meth public java.lang.String toString()
+supr org.antlr.runtime.SerializedGrammar$Node
+hfds alts
+
+CLSS protected abstract org.antlr.runtime.SerializedGrammar$Node
+ outer org.antlr.runtime.SerializedGrammar
+cons protected init(org.antlr.runtime.SerializedGrammar)
+meth public abstract java.lang.String toString()
+supr java.lang.Object
+
+CLSS protected org.antlr.runtime.SerializedGrammar$Rule
+ outer org.antlr.runtime.SerializedGrammar
+cons public init(org.antlr.runtime.SerializedGrammar,java.lang.String,org.antlr.runtime.SerializedGrammar$Block)
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds block,name
+
+CLSS protected org.antlr.runtime.SerializedGrammar$RuleRef
+ outer org.antlr.runtime.SerializedGrammar
+cons public init(org.antlr.runtime.SerializedGrammar,int)
+meth public java.lang.String toString()
+supr org.antlr.runtime.SerializedGrammar$Node
+hfds ruleIndex
+
+CLSS protected org.antlr.runtime.SerializedGrammar$TokenRef
+ outer org.antlr.runtime.SerializedGrammar
+cons public init(org.antlr.runtime.SerializedGrammar,int)
+meth public java.lang.String toString()
+supr org.antlr.runtime.SerializedGrammar$Node
+hfds ttype
 
 CLSS public abstract interface org.antlr.runtime.Token
 fld public final static int DEFAULT_CHANNEL = 0
@@ -654,7 +692,6 @@ fld public final static int HIDDEN_CHANNEL = 99
 fld public final static int INVALID_TOKEN_TYPE = 0
 fld public final static int MIN_TOKEN_TYPE = 4
 fld public final static int UP = 3
-fld public final static org.antlr.runtime.Token EOF_TOKEN
 fld public final static org.antlr.runtime.Token INVALID_TOKEN
 fld public final static org.antlr.runtime.Token SKIP_TOKEN
 meth public abstract int getChannel()
@@ -676,17 +713,18 @@ CLSS public org.antlr.runtime.TokenRewriteStream
 cons public init()
 cons public init(org.antlr.runtime.TokenSource)
 cons public init(org.antlr.runtime.TokenSource,int)
-fld protected java.util.Map lastRewriteTokenIndexes
-fld protected java.util.Map programs
+fld protected java.util.Map<java.lang.String,java.lang.Integer> lastRewriteTokenIndexes
+fld protected java.util.Map<java.lang.String,java.util.List<org.antlr.runtime.TokenRewriteStream$RewriteOperation>> programs
 fld public final static int MIN_TOKEN_INDEX = 0
 fld public final static int PROGRAM_INIT_SIZE = 100
 fld public final static java.lang.String DEFAULT_PROGRAM_NAME = "default"
+innr public RewriteOperation
+meth protected <%0 extends org.antlr.runtime.TokenRewriteStream$RewriteOperation> java.util.List<? extends {%%0}> getKindOfOps(java.util.List<? extends org.antlr.runtime.TokenRewriteStream$RewriteOperation>,java.lang.Class<{%%0}>)
+meth protected <%0 extends org.antlr.runtime.TokenRewriteStream$RewriteOperation> java.util.List<? extends {%%0}> getKindOfOps(java.util.List<? extends org.antlr.runtime.TokenRewriteStream$RewriteOperation>,java.lang.Class<{%%0}>,int)
 meth protected int getLastRewriteTokenIndex(java.lang.String)
 meth protected java.lang.String catOpText(java.lang.Object,java.lang.Object)
-meth protected java.util.List getKindOfOps(java.util.List,java.lang.Class)
-meth protected java.util.List getKindOfOps(java.util.List,java.lang.Class,int)
-meth protected java.util.List getProgram(java.lang.String)
-meth protected java.util.Map reduceToSingleOperationPerIndex(java.util.List)
+meth protected java.util.List<org.antlr.runtime.TokenRewriteStream$RewriteOperation> getProgram(java.lang.String)
+meth protected java.util.Map<java.lang.Integer,? extends org.antlr.runtime.TokenRewriteStream$RewriteOperation> reduceToSingleOperationPerIndex(java.util.List<? extends org.antlr.runtime.TokenRewriteStream$RewriteOperation>)
 meth protected void init()
 meth protected void setLastRewriteTokenIndex(java.lang.String,int)
 meth public int getLastRewriteTokenIndex()
@@ -723,8 +761,18 @@ meth public void replace(org.antlr.runtime.Token,org.antlr.runtime.Token,java.la
 meth public void rollback(int)
 meth public void rollback(java.lang.String,int)
 supr org.antlr.runtime.CommonTokenStream
-hfds class$org$antlr$runtime$TokenRewriteStream$InsertBeforeOp,class$org$antlr$runtime$TokenRewriteStream$ReplaceOp
-hcls InsertBeforeOp,ReplaceOp,RewriteOperation
+hcls InsertBeforeOp,ReplaceOp
+
+CLSS public org.antlr.runtime.TokenRewriteStream$RewriteOperation
+ outer org.antlr.runtime.TokenRewriteStream
+cons protected init(org.antlr.runtime.TokenRewriteStream,int)
+cons protected init(org.antlr.runtime.TokenRewriteStream,int,java.lang.Object)
+fld protected int index
+fld protected int instructionIndex
+fld protected java.lang.Object text
+meth public int execute(java.lang.StringBuffer)
+meth public java.lang.String toString()
+supr java.lang.Object
 
 CLSS public abstract interface org.antlr.runtime.TokenSource
 meth public abstract java.lang.String getSourceName()
@@ -745,17 +793,15 @@ fld protected int channel
 fld protected int tokenIndex
 fld protected org.antlr.runtime.TokenSource tokenSource
 intf org.antlr.runtime.TokenStream
-meth public boolean isEOF(java.lang.Object)
 meth public boolean isEOF(org.antlr.runtime.Token)
 meth public int LA(int)
 meth public java.lang.String getSourceName()
 meth public java.lang.String toString(int,int)
 meth public java.lang.String toString(org.antlr.runtime.Token,org.antlr.runtime.Token)
-meth public org.antlr.runtime.Token LT(int)
 meth public org.antlr.runtime.Token get(int)
 meth public org.antlr.runtime.Token nextElement()
 meth public org.antlr.runtime.TokenSource getTokenSource()
-supr org.antlr.runtime.misc.LookaheadStream
+supr org.antlr.runtime.misc.LookaheadStream<org.antlr.runtime.Token>
 
 CLSS public org.antlr.runtime.UnwantedTokenException
 cons public init()
@@ -803,7 +849,7 @@ supr java.lang.Object
 CLSS public org.antlr.runtime.debug.DebugEventHub
 cons public init(org.antlr.runtime.debug.DebugEventListener)
 cons public init(org.antlr.runtime.debug.DebugEventListener,org.antlr.runtime.debug.DebugEventListener)
-fld protected java.util.List listeners
+fld protected java.util.List<org.antlr.runtime.debug.DebugEventListener> listeners
 intf org.antlr.runtime.debug.DebugEventListener
 meth public void LT(int,java.lang.Object)
 meth public void LT(int,org.antlr.runtime.Token)
@@ -1121,15 +1167,15 @@ cons public init()
 cons public init(org.antlr.runtime.debug.DebugParser)
 fld protected int backtrackDepth
 fld protected int ruleLevel
-fld protected java.util.List decisionEvents
-fld protected java.util.Set uniqueRules
-fld protected java.util.Stack currentGrammarFileName
-fld protected java.util.Stack currentLine
-fld protected java.util.Stack currentPos
-fld protected java.util.Stack currentRuleName
-fld protected java.util.Stack decisionStack
+fld protected java.util.List<org.antlr.runtime.debug.Profiler$DecisionEvent> decisionEvents
+fld protected java.util.Set<java.lang.String> uniqueRules
+fld protected java.util.Stack<java.lang.Integer> currentLine
+fld protected java.util.Stack<java.lang.Integer> currentPos
+fld protected java.util.Stack<java.lang.String> currentGrammarFileName
+fld protected java.util.Stack<java.lang.String> currentRuleName
+fld protected java.util.Stack<org.antlr.runtime.debug.Profiler$DecisionEvent> decisionStack
 fld protected org.antlr.runtime.Token lastRealTokenTouchedInDecision
-fld protected org.antlr.runtime.misc.DoubleKeyMap decisions
+fld protected org.antlr.runtime.misc.DoubleKeyMap<java.lang.String,java.lang.Integer,org.antlr.runtime.debug.Profiler$DecisionDescriptor> decisions
 fld public final static java.lang.String DATA_SEP = "\u0009"
 fld public final static java.lang.String RUNTIME_STATS_FILENAME = "runtime.stats"
 fld public final static java.lang.String Version = "3"
@@ -1138,7 +1184,7 @@ fld public org.antlr.runtime.debug.DebugParser parser
 innr public static DecisionDescriptor
 innr public static DecisionEvent
 innr public static ProfileStats
-meth protected int[] toArray(java.util.List)
+meth protected int[] toArray(java.util.List<java.lang.Integer>)
 meth protected int[] trim(int[],int)
 meth protected java.lang.String locationDescription()
 meth protected java.lang.String locationDescription(java.lang.String,java.lang.String,int,int)
@@ -1148,9 +1194,9 @@ meth public int getNumberOfHiddenTokens(int,int)
 meth public java.lang.String getDecisionStatsDump()
 meth public java.lang.String toNotifyString()
 meth public java.lang.String toString()
-meth public java.util.List getDecisionEvents()
+meth public java.util.List<org.antlr.runtime.debug.Profiler$DecisionEvent> getDecisionEvents()
 meth public org.antlr.runtime.debug.Profiler$ProfileStats getReport()
-meth public org.antlr.runtime.misc.DoubleKeyMap getDecisionStats()
+meth public org.antlr.runtime.misc.DoubleKeyMap<java.lang.String,java.lang.Integer,org.antlr.runtime.debug.Profiler$DecisionDescriptor> getDecisionStats()
 meth public static java.lang.String toString(org.antlr.runtime.debug.Profiler$ProfileStats)
 meth public void LT(int,org.antlr.runtime.Token)
 meth public void beginBacktrack(int)
@@ -1335,32 +1381,32 @@ meth public void enterRule(java.lang.String)
 meth public void exitRule(java.lang.String)
 supr org.antlr.runtime.debug.BlankDebugEventListener
 
-CLSS public org.antlr.runtime.misc.DoubleKeyMap
+CLSS public org.antlr.runtime.misc.DoubleKeyMap<%0 extends java.lang.Object, %1 extends java.lang.Object, %2 extends java.lang.Object>
 cons public init()
-meth public java.lang.Object get(java.lang.Object,java.lang.Object)
-meth public java.lang.Object put(java.lang.Object,java.lang.Object,java.lang.Object)
-meth public java.util.Collection values()
-meth public java.util.Collection values(java.lang.Object)
-meth public java.util.Map get(java.lang.Object)
-meth public java.util.Set keySet()
-meth public java.util.Set keySet(java.lang.Object)
+meth public java.util.Collection<{org.antlr.runtime.misc.DoubleKeyMap%2}> values()
+meth public java.util.Collection<{org.antlr.runtime.misc.DoubleKeyMap%2}> values({org.antlr.runtime.misc.DoubleKeyMap%0})
+meth public java.util.Map<{org.antlr.runtime.misc.DoubleKeyMap%1},{org.antlr.runtime.misc.DoubleKeyMap%2}> get({org.antlr.runtime.misc.DoubleKeyMap%0})
+meth public java.util.Set<{org.antlr.runtime.misc.DoubleKeyMap%0}> keySet()
+meth public java.util.Set<{org.antlr.runtime.misc.DoubleKeyMap%1}> keySet({org.antlr.runtime.misc.DoubleKeyMap%0})
+meth public {org.antlr.runtime.misc.DoubleKeyMap%2} get({org.antlr.runtime.misc.DoubleKeyMap%0},{org.antlr.runtime.misc.DoubleKeyMap%1})
+meth public {org.antlr.runtime.misc.DoubleKeyMap%2} put({org.antlr.runtime.misc.DoubleKeyMap%0},{org.antlr.runtime.misc.DoubleKeyMap%1},{org.antlr.runtime.misc.DoubleKeyMap%2})
 supr java.lang.Object
 hfds data
 
-CLSS public org.antlr.runtime.misc.FastQueue
+CLSS public org.antlr.runtime.misc.FastQueue<%0 extends java.lang.Object>
 cons public init()
 fld protected int p
 fld protected int range
-fld protected java.util.List data
+fld protected java.util.List<{org.antlr.runtime.misc.FastQueue%0}> data
 meth public int range()
 meth public int size()
-meth public java.lang.Object elementAt(int)
-meth public java.lang.Object head()
-meth public java.lang.Object remove()
 meth public java.lang.String toString()
-meth public void add(java.lang.Object)
+meth public void add({org.antlr.runtime.misc.FastQueue%0})
 meth public void clear()
 meth public void reset()
+meth public {org.antlr.runtime.misc.FastQueue%0} elementAt(int)
+meth public {org.antlr.runtime.misc.FastQueue%0} head()
+meth public {org.antlr.runtime.misc.FastQueue%0} remove()
 supr java.lang.Object
 
 CLSS public org.antlr.runtime.misc.IntArray
@@ -1376,23 +1422,21 @@ meth public void ensureCapacity(int)
 meth public void push(int)
 supr java.lang.Object
 
-CLSS public abstract org.antlr.runtime.misc.LookaheadStream
+CLSS public abstract org.antlr.runtime.misc.LookaheadStream<%0 extends java.lang.Object>
 cons public init()
 fld protected int currentElementIndex
 fld protected int lastMarker
 fld protected int markDepth
-fld protected java.lang.Object prevElement
+fld protected {org.antlr.runtime.misc.LookaheadStream%0} prevElement
 fld public final static int UNINITIALIZED_EOF_ELEMENT_INDEX = 2147483647
-fld public java.lang.Object eof
-meth protected java.lang.Object LB(int)
+fld public {org.antlr.runtime.misc.LookaheadStream%0} eof
 meth protected void syncAhead(int)
-meth public abstract boolean isEOF(java.lang.Object)
-meth public abstract java.lang.Object nextElement()
+meth protected {org.antlr.runtime.misc.LookaheadStream%0} LB(int)
+meth public abstract boolean isEOF({org.antlr.runtime.misc.LookaheadStream%0})
+meth public abstract {org.antlr.runtime.misc.LookaheadStream%0} nextElement()
 meth public int index()
 meth public int mark()
 meth public int size()
-meth public java.lang.Object LT(int)
-meth public java.lang.Object remove()
 meth public void consume()
 meth public void fill(int)
 meth public void release(int)
@@ -1400,18 +1444,20 @@ meth public void reset()
 meth public void rewind()
 meth public void rewind(int)
 meth public void seek(int)
-supr org.antlr.runtime.misc.FastQueue
+meth public {org.antlr.runtime.misc.LookaheadStream%0} LT(int)
+meth public {org.antlr.runtime.misc.LookaheadStream%0} remove()
+supr org.antlr.runtime.misc.FastQueue<{org.antlr.runtime.misc.LookaheadStream%0}>
 
 CLSS public org.antlr.runtime.misc.Stats
 cons public init()
 fld public final static java.lang.String ANTLRWORKS_DIR = "antlrworks"
 meth public static double avg(int[])
-meth public static double avg(java.util.List)
+meth public static double avg(java.util.List<java.lang.Integer>)
 meth public static double stddev(int[])
 meth public static int max(int[])
-meth public static int max(java.util.List)
+meth public static int max(java.util.List<java.lang.Integer>)
 meth public static int min(int[])
-meth public static int min(java.util.List)
+meth public static int min(java.util.List<java.lang.Integer>)
 meth public static int sum(int[])
 meth public static java.lang.String getAbsoluteFileName(java.lang.String)
 meth public static void writeReport(java.lang.String,java.lang.String) throws java.io.IOException
@@ -1420,9 +1466,9 @@ supr java.lang.Object
 CLSS public abstract org.antlr.runtime.tree.BaseTree
 cons public init()
 cons public init(org.antlr.runtime.tree.Tree)
-fld protected java.util.List children
+fld protected java.util.List<java.lang.Object> children
 intf org.antlr.runtime.tree.Tree
-meth protected java.util.List createChildrenList()
+meth protected java.util.List<java.lang.Object> createChildrenList()
 meth public abstract java.lang.String toString()
 meth public boolean hasAncestor(int)
 meth public boolean isNil()
@@ -1432,14 +1478,14 @@ meth public int getChildIndex()
 meth public int getLine()
 meth public java.lang.Object deleteChild(int)
 meth public java.lang.String toStringTree()
-meth public java.util.List getAncestors()
-meth public java.util.List getChildren()
+meth public java.util.List<? extends org.antlr.runtime.tree.Tree> getAncestors()
+meth public java.util.List<?> getChildren()
 meth public org.antlr.runtime.tree.Tree getAncestor(int)
 meth public org.antlr.runtime.tree.Tree getChild(int)
 meth public org.antlr.runtime.tree.Tree getFirstChildWithType(int)
 meth public org.antlr.runtime.tree.Tree getParent()
 meth public void addChild(org.antlr.runtime.tree.Tree)
-meth public void addChildren(java.util.List)
+meth public void addChildren(java.util.List<? extends org.antlr.runtime.tree.Tree>)
 meth public void freshenParentAndChildIndexes()
 meth public void freshenParentAndChildIndexes(int)
 meth public void freshenParentAndChildIndexesDeeply()
@@ -1456,7 +1502,7 @@ supr java.lang.Object
 CLSS public abstract org.antlr.runtime.tree.BaseTreeAdaptor
 cons public init()
 fld protected int uniqueNodeID
-fld protected java.util.Map treeToUniqueIDMap
+fld protected java.util.Map<java.lang.Object,java.lang.Integer> treeToUniqueIDMap
 intf org.antlr.runtime.tree.TreeAdaptor
 meth public abstract org.antlr.runtime.Token createToken(int,java.lang.String)
 meth public abstract org.antlr.runtime.Token createToken(org.antlr.runtime.Token)
@@ -1494,7 +1540,7 @@ fld protected java.lang.Object down
 fld protected java.lang.Object eof
 fld protected java.lang.Object root
 fld protected java.lang.Object up
-fld protected java.util.List nodes
+fld protected java.util.List<java.lang.Object> nodes
 fld protected org.antlr.runtime.TokenStream tokens
 fld protected org.antlr.runtime.misc.IntArray calls
 fld public final static int DEFAULT_INITIAL_BUFFER_SIZE = 100
@@ -1519,7 +1565,7 @@ meth public java.lang.String getSourceName()
 meth public java.lang.String toString(java.lang.Object,java.lang.Object)
 meth public java.lang.String toTokenString(int,int)
 meth public java.lang.String toTokenTypeString()
-meth public java.util.Iterator iterator()
+meth public java.util.Iterator<java.lang.Object> iterator()
 meth public org.antlr.runtime.TokenStream getTokenStream()
 meth public org.antlr.runtime.tree.TreeAdaptor getTreeAdaptor()
 meth public void consume()
@@ -1540,12 +1586,12 @@ hfds adaptor
 CLSS protected org.antlr.runtime.tree.BufferedTreeNodeStream$StreamIterator
  outer org.antlr.runtime.tree.BufferedTreeNodeStream
 cons protected init(org.antlr.runtime.tree.BufferedTreeNodeStream)
-intf java.util.Iterator
+intf java.util.Iterator<java.lang.Object>
 meth public boolean hasNext()
 meth public java.lang.Object next()
 meth public void remove()
 supr java.lang.Object
-hfds i,this$0
+hfds i
 
 CLSS public org.antlr.runtime.tree.CommonErrorNode
 cons public init(org.antlr.runtime.TokenStream,org.antlr.runtime.Token,org.antlr.runtime.Token,org.antlr.runtime.RecognitionException)
@@ -1613,19 +1659,24 @@ cons public init(java.lang.Object)
 cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.Object)
 fld protected boolean hasNilRoot
 fld protected int level
+fld protected java.lang.Object previousLocationElement
 fld protected java.lang.Object root
 fld protected org.antlr.runtime.TokenStream tokens
 fld protected org.antlr.runtime.misc.IntArray calls
 fld protected org.antlr.runtime.tree.TreeIterator it
 fld public final static int DEFAULT_INITIAL_BUFFER_SIZE = 100
 fld public final static int INITIAL_CALL_STACK_SIZE = 10
+intf org.antlr.runtime.tree.PositionTrackingStream<java.lang.Object>
 intf org.antlr.runtime.tree.TreeNodeStream
+meth public boolean hasPositionInformation(java.lang.Object)
 meth public boolean isEOF(java.lang.Object)
 meth public int LA(int)
 meth public int pop()
 meth public java.lang.Object get(int)
+meth public java.lang.Object getKnownPositionElement(boolean)
 meth public java.lang.Object getTreeSource()
 meth public java.lang.Object nextElement()
+meth public java.lang.Object remove()
 meth public java.lang.String getSourceName()
 meth public java.lang.String toString(java.lang.Object,java.lang.Object)
 meth public java.lang.String toTokenTypeString()
@@ -1637,7 +1688,7 @@ meth public void reset()
 meth public void setTokenStream(org.antlr.runtime.TokenStream)
 meth public void setTreeAdaptor(org.antlr.runtime.tree.TreeAdaptor)
 meth public void setUniqueNavigationNodes(boolean)
-supr org.antlr.runtime.misc.LookaheadStream
+supr org.antlr.runtime.misc.LookaheadStream<java.lang.Object>
 hfds adaptor
 
 CLSS public org.antlr.runtime.tree.DOTTreeGenerator
@@ -1659,7 +1710,7 @@ hfds nodeNumber,nodeToNumberMap
 CLSS public org.antlr.runtime.tree.ParseTree
 cons public init(java.lang.Object)
 fld public java.lang.Object payload
-fld public java.util.List hiddenTokens
+fld public java.util.List<org.antlr.runtime.Token> hiddenTokens
 meth public int getTokenStartIndex()
 meth public int getTokenStopIndex()
 meth public int getType()
@@ -1672,6 +1723,10 @@ meth public void _toStringLeaves(java.lang.StringBuffer)
 meth public void setTokenStartIndex(int)
 meth public void setTokenStopIndex(int)
 supr org.antlr.runtime.tree.BaseTree
+
+CLSS public abstract interface org.antlr.runtime.tree.PositionTrackingStream<%0 extends java.lang.Object>
+meth public abstract boolean hasPositionInformation({org.antlr.runtime.tree.PositionTrackingStream%0})
+meth public abstract {org.antlr.runtime.tree.PositionTrackingStream%0} getKnownPositionElement(boolean)
 
 CLSS public org.antlr.runtime.tree.RewriteCardinalityException
 cons public init(java.lang.String)
@@ -1691,12 +1746,12 @@ supr org.antlr.runtime.tree.RewriteCardinalityException
 CLSS public abstract org.antlr.runtime.tree.RewriteRuleElementStream
 cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String)
 cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.lang.Object)
-cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.util.List)
+cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.util.List<java.lang.Object>)
 fld protected boolean dirty
 fld protected int cursor
 fld protected java.lang.Object singleElement
 fld protected java.lang.String elementDescription
-fld protected java.util.List elements
+fld protected java.util.List<java.lang.Object> elements
 fld protected org.antlr.runtime.tree.TreeAdaptor adaptor
 meth protected abstract java.lang.Object dup(java.lang.Object)
 meth protected java.lang.Object _next()
@@ -1712,7 +1767,7 @@ supr java.lang.Object
 CLSS public org.antlr.runtime.tree.RewriteRuleNodeStream
 cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String)
 cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.lang.Object)
-cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.util.List)
+cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.util.List<java.lang.Object>)
 meth protected java.lang.Object dup(java.lang.Object)
 meth protected java.lang.Object toTree(java.lang.Object)
 meth public java.lang.Object nextNode()
@@ -1721,7 +1776,7 @@ supr org.antlr.runtime.tree.RewriteRuleElementStream
 CLSS public org.antlr.runtime.tree.RewriteRuleSubtreeStream
 cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String)
 cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.lang.Object)
-cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.util.List)
+cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.util.List<java.lang.Object>)
 meth protected java.lang.Object dup(java.lang.Object)
 meth public java.lang.Object nextNode()
 supr org.antlr.runtime.tree.RewriteRuleElementStream
@@ -1729,7 +1784,7 @@ supr org.antlr.runtime.tree.RewriteRuleElementStream
 CLSS public org.antlr.runtime.tree.RewriteRuleTokenStream
 cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String)
 cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.lang.Object)
-cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.util.List)
+cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String,java.util.List<java.lang.Object>)
 meth protected java.lang.Object dup(java.lang.Object)
 meth protected java.lang.Object toTree(java.lang.Object)
 meth public java.lang.Object nextNode()
@@ -1751,7 +1806,7 @@ meth public abstract java.lang.Object deleteChild(int)
 meth public abstract java.lang.String getText()
 meth public abstract java.lang.String toString()
 meth public abstract java.lang.String toStringTree()
-meth public abstract java.util.List getAncestors()
+meth public abstract java.util.List<?> getAncestors()
 meth public abstract org.antlr.runtime.tree.Tree dupNode()
 meth public abstract org.antlr.runtime.tree.Tree getAncestor(int)
 meth public abstract org.antlr.runtime.tree.Tree getChild(int)
@@ -1821,12 +1876,12 @@ cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.Object)
 fld protected boolean firstTime
 fld protected java.lang.Object root
 fld protected java.lang.Object tree
-fld protected org.antlr.runtime.misc.FastQueue nodes
+fld protected org.antlr.runtime.misc.FastQueue<java.lang.Object> nodes
 fld protected org.antlr.runtime.tree.TreeAdaptor adaptor
 fld public java.lang.Object down
 fld public java.lang.Object eof
 fld public java.lang.Object up
-intf java.util.Iterator
+intf java.util.Iterator<java.lang.Object>
 meth public boolean hasNext()
 meth public java.lang.Object next()
 meth public void remove()
@@ -1899,7 +1954,6 @@ meth public java.lang.Object parseNode()
 meth public java.lang.Object parseTree()
 meth public java.lang.Object pattern()
 supr java.lang.Object
-hfds class$org$antlr$runtime$tree$TreeWizard$TreePattern
 
 CLSS public org.antlr.runtime.tree.TreeRewriter
 cons public init(org.antlr.runtime.tree.TreeNodeStream)
@@ -1943,38 +1997,37 @@ CLSS public org.antlr.runtime.tree.TreeWizard
 cons public init(java.lang.String[])
 cons public init(org.antlr.runtime.tree.TreeAdaptor)
 cons public init(org.antlr.runtime.tree.TreeAdaptor,java.lang.String[])
-cons public init(org.antlr.runtime.tree.TreeAdaptor,java.util.Map)
-fld protected java.util.Map tokenNameToTypeMap
+cons public init(org.antlr.runtime.tree.TreeAdaptor,java.util.Map<java.lang.String,java.lang.Integer>)
+fld protected java.util.Map<java.lang.String,java.lang.Integer> tokenNameToTypeMap
 fld protected org.antlr.runtime.tree.TreeAdaptor adaptor
 innr public abstract interface static ContextVisitor
 innr public abstract static Visitor
 innr public static TreePattern
 innr public static TreePatternTreeAdaptor
 innr public static WildcardTreePattern
-meth protected boolean _parse(java.lang.Object,org.antlr.runtime.tree.TreeWizard$TreePattern,java.util.Map)
+meth protected boolean _parse(java.lang.Object,org.antlr.runtime.tree.TreeWizard$TreePattern,java.util.Map<java.lang.String,java.lang.Object>)
 meth protected static boolean _equals(java.lang.Object,java.lang.Object,org.antlr.runtime.tree.TreeAdaptor)
-meth protected void _index(java.lang.Object,java.util.Map)
+meth protected void _index(java.lang.Object,java.util.Map<java.lang.Integer,java.util.List<java.lang.Object>>)
 meth protected void _visit(java.lang.Object,java.lang.Object,int,int,org.antlr.runtime.tree.TreeWizard$ContextVisitor)
 meth public boolean equals(java.lang.Object,java.lang.Object)
 meth public boolean parse(java.lang.Object,java.lang.String)
-meth public boolean parse(java.lang.Object,java.lang.String,java.util.Map)
+meth public boolean parse(java.lang.Object,java.lang.String,java.util.Map<java.lang.String,java.lang.Object>)
 meth public int getTokenType(java.lang.String)
 meth public java.lang.Object create(java.lang.String)
 meth public java.lang.Object findFirst(java.lang.Object,int)
 meth public java.lang.Object findFirst(java.lang.Object,java.lang.String)
-meth public java.util.List find(java.lang.Object,int)
-meth public java.util.List find(java.lang.Object,java.lang.String)
-meth public java.util.Map computeTokenTypes(java.lang.String[])
-meth public java.util.Map index(java.lang.Object)
+meth public java.util.List<?> find(java.lang.Object,int)
+meth public java.util.List<?> find(java.lang.Object,java.lang.String)
+meth public java.util.Map<java.lang.Integer,java.util.List<java.lang.Object>> index(java.lang.Object)
+meth public java.util.Map<java.lang.String,java.lang.Integer> computeTokenTypes(java.lang.String[])
 meth public static boolean equals(java.lang.Object,java.lang.Object,org.antlr.runtime.tree.TreeAdaptor)
 meth public void visit(java.lang.Object,int,org.antlr.runtime.tree.TreeWizard$ContextVisitor)
 meth public void visit(java.lang.Object,java.lang.String,org.antlr.runtime.tree.TreeWizard$ContextVisitor)
 supr java.lang.Object
-hfds class$org$antlr$runtime$tree$TreeWizard$WildcardTreePattern
 
 CLSS public abstract interface static org.antlr.runtime.tree.TreeWizard$ContextVisitor
  outer org.antlr.runtime.tree.TreeWizard
-meth public abstract void visit(java.lang.Object,java.lang.Object,int,java.util.Map)
+meth public abstract void visit(java.lang.Object,java.lang.Object,int,java.util.Map<java.lang.String,java.lang.Object>)
 
 CLSS public static org.antlr.runtime.tree.TreeWizard$TreePattern
  outer org.antlr.runtime.tree.TreeWizard
@@ -1995,7 +2048,7 @@ CLSS public abstract static org.antlr.runtime.tree.TreeWizard$Visitor
 cons public init()
 intf org.antlr.runtime.tree.TreeWizard$ContextVisitor
 meth public abstract void visit(java.lang.Object)
-meth public void visit(java.lang.Object,java.lang.Object,int,java.util.Map)
+meth public void visit(java.lang.Object,java.lang.Object,int,java.util.Map<java.lang.String,java.lang.Object>)
 supr java.lang.Object
 
 CLSS public static org.antlr.runtime.tree.TreeWizard$WildcardTreePattern

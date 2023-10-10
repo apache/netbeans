@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle.items;
 
+import java.util.Objects;
 import javax.swing.event.ChangeListener;
 import org.openide.util.ChangeSupport;
 
@@ -26,8 +27,8 @@ import org.openide.util.ChangeSupport;
  * 
  * @author Jan Horvath
  */
-public class OCIItem {
-    final String id;
+public abstract class OCIItem {
+    final OCID id;
     final String name;
     String description;
     ChangeSupport changeSupport;
@@ -38,7 +39,7 @@ public class OCIItem {
     * @param id OCID of the item
     * @param name Name of the item
     */
-    public OCIItem(String id, String name) {
+    public OCIItem(OCID id, String name) {
         this.id = id;
         this.name = name;
         changeSupport = new ChangeSupport(this);
@@ -53,7 +54,7 @@ public class OCIItem {
      * 
      * @return OCID of the item
      */
-    public String getId() {
+    public OCID getKey() {
         return id;
     }
 
@@ -83,7 +84,7 @@ public class OCIItem {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     /**
      * Triggers node refresh.
      */
@@ -108,4 +109,40 @@ public class OCIItem {
     public void removeChangeListener(ChangeListener listener) {
         changeSupport.removeChangeListener(listener);
     }
+
+    public int maxInProject() {
+        return 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.id);
+        hash = 59 * hash + Objects.hashCode(this.name);
+        hash = 59 * hash + Objects.hashCode(this.description);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final OCIItem other = (OCIItem) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.description, other.description)) {
+            return false;
+        }
+        return Objects.equals(this.id, other.id);
+    }
+    
+    
 }

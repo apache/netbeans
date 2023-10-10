@@ -29,7 +29,6 @@ import org.netbeans.core.windows.*;
 import org.netbeans.core.windows.view.ui.slides.SlideController;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.awt.Actions;
 import org.openide.awt.Mnemonics;
 import org.openide.cookies.SaveCookie;
 import org.openide.util.*;
@@ -467,30 +466,15 @@ public abstract class ActionUtils {
      * otherwise closes all documents in the system
      */
     public static void closeAllDocuments (boolean isContext) {
-        if (isContext) {
-            TopComponent activeTC = TopComponent.getRegistry().getActivated();
-            List<TopComponent> tcs = getOpened(activeTC);
-
-            closeAll( tcs.toArray(new TopComponent[tcs.size()]) );
-        } else {
-            TopComponent[] tcs = WindowManagerImpl.getInstance().getEditorTopComponents();
-            closeAll( tcs );
-        }
-    }
-
-    private static void closeAll( TopComponent[] tcs ) {
-        for( TopComponent tc: tcs ) {
-            if( !Switches.isClosingEnabled(tc) )
-                continue;
-            final TopComponent toBeClosed = tc;
-            SwingUtilities.invokeLater( new Runnable() {
-                @Override
-                public void run() {
-                    toBeClosed.putClientProperty("inCloseAll", Boolean.TRUE);
-                    toBeClosed.close();
-                }
-            });
-        }
+        /* Historically, the closeAll method wrapped calls to TopComponent.close() in an
+        invokeLater, so keep doing that. This is probably a good idea e.g. for cases where the
+        caller is a button press handler and where TopComponent.close() ends up showing a modal
+        dialog (which could perhaps delay the update of the button's visual state). */
+        SwingUtilities.invokeLater(() -> {
+            closeAll(isContext
+                ? getOpened(TopComponent.getRegistry().getActivated())
+                : Arrays.asList(WindowManagerImpl.getInstance().getEditorTopComponents()));
+        });
     }
 
     /** Closes all documents except given param, according to isContext flag
@@ -500,27 +484,24 @@ public abstract class ActionUtils {
      * given
      */
     public static void closeAllExcept (TopComponent tc, boolean isContext) {
-        if (isContext) {
-            List<TopComponent> tcs = getOpened(tc);
+        // See closeAllDocuments.
+        SwingUtilities.invokeLater(() -> {
+            List<TopComponent> tcs = new ArrayList<>(isContext
+                ? getOpened(tc)
+                : Arrays.asList(WindowManagerImpl.getInstance().getEditorTopComponents()));
+            tcs.remove(tc);
+            closeAll(tcs);
+        });
+    }
 
-            for(TopComponent curTC: tcs) {
-                if( !Switches.isClosingEnabled(curTC) )
-                    continue;
-                if (curTC != tc) {
-                    curTC.putClientProperty("inCloseAll", Boolean.TRUE);
-                    curTC.close();
-                }
+    private static void closeAll( Iterable<TopComponent> tcs ) {
+        for (TopComponent curTC : tcs) {
+            if( !Switches.isClosingEnabled(curTC) ) {
+                continue;
             }
-        } else {
-            TopComponent[] tcs = WindowManagerImpl.getInstance().getEditorTopComponents();
-
-            for(TopComponent curTC: tcs) {
-                if( !Switches.isClosingEnabled(curTC) )
-                    continue;
-                if (curTC != tc) {
-                    curTC.putClientProperty("inCloseAll", Boolean.TRUE);
-                    curTC.close();
-                }
+            curTC.putClientProperty("inCloseAll", Boolean.TRUE);
+            if (!curTC.close()) {
+                break;
             }
         }
     }

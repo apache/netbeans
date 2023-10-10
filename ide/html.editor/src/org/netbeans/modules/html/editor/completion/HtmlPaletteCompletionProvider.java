@@ -135,7 +135,7 @@ public class HtmlPaletteCompletionProvider implements CompletionProvider {
                             }
                         }
                         if (i > 0) {
-                            prefix = prefix.substring(i, prefix.length());
+                            prefix = prefix.substring(i);
                         }
 
                         completionExpressionStartOffset = offset - prefix.length();

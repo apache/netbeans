@@ -77,7 +77,6 @@ import org.netbeans.modules.j2ee.persistence.wizard.unit.PersistenceUnitWizardPa
 import org.netbeans.modules.web.api.webmodule.ExtenderController;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
-import org.netbeans.modules.web.beans.CdiUtil;
 import org.netbeans.modules.web.jsf.JSFFrameworkProvider;
 import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.JsfPreferences;
@@ -85,12 +84,13 @@ import org.netbeans.modules.web.jsf.JsfTemplateUtils;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.Application;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModel;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.ResourceBundle;
 import org.netbeans.modules.web.jsf.impl.facesmodel.JSFConfigModelUtilities;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.jsf.palette.items.FromEntityBase;
 import org.netbeans.modules.web.jsf.wizards.JSFConfigurationPanel.PreferredLanguage;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.spi.webmodule.WebModuleExtender;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -134,6 +134,7 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         final FileObject resourcePackageRoot = (sgs.length > 0) ? sgs[0].getRootFolder() : javaPackageRoot;
         Boolean ajaxifyBoolean = (Boolean) wizard.getProperty(WizardProperties.AJAXIFY_JSF_CRUD);
         final boolean ajaxify = ajaxifyBoolean == null ? false : ajaxifyBoolean;
+        final boolean jakartaPersistencePackages = isJakartaPersistencePackages(javaPackageRoot);
 
         // add framework to project first:
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
@@ -204,12 +205,12 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                                 Sources srcs = ProjectUtils.getSources(project);
                                 SourceGroup sgWeb[] = srcs.getSourceGroups(WebProjectConstants.TYPE_DOC_ROOT);
                                 FileObject webRoot = sgWeb[0].getRootFolder();
-                                generateJsfControllers2(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jpaControllerPkg, entities, ajaxify, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, templateStyle);
+                                generateJsfControllers2(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jpaControllerPkg, entities, ajaxify, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, webRoot, bundleName, javaPackageRoot, resourcePackageRoot, templateStyle, jakartaPersistencePackages);
                                 PersistenceUtils.logUsage(PersistenceClientIterator.class,
                                         "USG_PERSISTENCE_JSF",
                                         new Object[]{entities.size(), preferredLanguage != null ? preferredLanguage.getName() : null});
                             } else {
-                                generateJsfControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jpaControllerPkg, entities, ajaxify, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount);
+                                generateJsfControllers(progressContributor, progressPanel, jsfControllerPackageFileObject, controllerPkg, jpaControllerPkg, entities, ajaxify, project, jsfFolder, jpaControllerPackageFileObject, embeddedPkSupport, genSessionBean, jpaProgressStepCount, jakartaPersistencePackages);
                                 PersistenceUtils.logUsage(PersistenceClientIterator.class,
                                         "USG_PERSISTENCE_JSF",
                                         new Object[]{entities.size(), preferredLanguage != null ? preferredLanguage.getName() : null});
@@ -262,6 +263,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         return Collections.singleton(DataFolder.findFolder(javaPackageRoot));
     }
 
+    private static boolean isJakartaPersistencePackages(final FileObject javaPackageRoot) {
+        for (ClassPath.Entry entry : ClassPath.getClassPath(javaPackageRoot, ClassPath.COMPILE).entries()) {
+            if(entry.includes("jakarta/persistence/Entity.class")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static int getProgressStepCount(boolean ajaxify, boolean jsf2Generator) {
         int count = jsf2Generator ? UTIL_CLASS_NAMES2.length+1+1 : UTIL_CLASS_NAMES.length+2;    //2 "pre" messages (see generateJsfControllers) before generating util classes and controller/converter classes
         if (ajaxify) {
@@ -270,7 +280,14 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         return count;
     }
 
-    private static void generateJsfControllers(ProgressContributor progressContributor, final ProgressPanel progressPanel, FileObject targetFolder, String controllerPkg, String jpaControllerPkg, List<String> entities, boolean ajaxify, Project project, String jsfFolder, FileObject jpaControllerPackageFileObject, JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport, boolean genSessionBean, int progressIndex) throws IOException {
+    private static void generateJsfControllers(
+            ProgressContributor progressContributor, final ProgressPanel progressPanel,
+            FileObject targetFolder, String controllerPkg, String jpaControllerPkg,
+            List<String> entities, boolean ajaxify, Project project, String jsfFolder,
+            FileObject jpaControllerPackageFileObject,
+            JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport,
+            boolean genSessionBean, int progressIndex, boolean jakartaPersistencePackages
+    ) throws IOException {
         String progressMsg = NbBundle.getMessage(PersistenceClientIterator.class, "MSG_Progress_Jsf_Util_Pre"); //NOI18N
         progressContributor.progress(progressMsg, progressIndex++);
         progressPanel.setText(progressMsg);
@@ -286,7 +303,13 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 progressMsg = NbBundle.getMessage(PersistenceClientIterator.class, "MSG_Progress_Jsf_Now_Generating", UTIL_CLASS_NAMES[i] + "."+JAVA_EXT); //NOI18N
                 progressContributor.progress(progressMsg, progressIndex++);
                 progressPanel.setText(progressMsg);
-                String content = JpaControllerUtil.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(JSFClientGenerator.RESOURCE_FOLDER + UTIL_CLASS_NAMES[i] + ".java.txt"), "UTF-8"); //NOI18N
+                String suffix;
+                if(jakartaPersistencePackages) {
+                    suffix = ".jakarta.java.txt";
+                } else {
+                    suffix = ".java.txt";
+                }
+                String content = JpaControllerUtil.readResource(PersistenceClientIterator.class.getClassLoader().getResourceAsStream(JSFClientGenerator.RESOURCE_FOLDER + UTIL_CLASS_NAMES[i] + suffix), "UTF-8"); //NOI18N
                 content = content.replace("__PACKAGE__", utilPackage);
                 FileObject target = FileUtil.createData(utilFolder, UTIL_CLASS_NAMES[i] + "."+JAVA_EXT);//NOI18N
                 String projectEncoding = JpaControllerUtil.getProjectEncodingAsString(project, target);
@@ -420,7 +443,9 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             String bundleName,
             FileObject javaPackageRoot,
             FileObject resourcePackageRoot,
-            String templateStyle) throws IOException {
+            String templateStyle,
+            boolean jakartaPersistencePackages
+    ) throws IOException {
         String progressMsg;
         String bundleVar = generateBundleVarName(bundleName);
 
@@ -443,6 +468,17 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
                 HashMap<String, Object> params = new HashMap<String, Object>();
                 params.put("packageName", utilPackage);
                 params.put("comment", Boolean.FALSE); // NOI18N
+                WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
+                if (webModule != null) {
+                    JsfVersion version = JsfVersionUtils.forWebModule(webModule);
+                    if (version != null && version.isAtLeast(JsfVersion.JSF_3_0)) {
+                        params.put("jakartaJsfPackages", true); //NOI18N
+                    } else {
+                        params.put("jakartaJsfPackages", false); //NOI18N
+                    }
+                } else {
+                    params.put("jakartaJsfPackages", true); //NOI18N
+                }
                 JSFPaletteUtilities.expandJSFTemplate(tableTemplate, params, target);
             } else {
                 progressContributor.progress(progressIndex++);
@@ -515,6 +551,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
             params.put("entityClassName", simpleClassName);
             params.put("comment", Boolean.FALSE); // NOI18N
             params.put("bundle", bundleName); // NOI18N
+            params.put("jakartaPersistencePackages", jakartaPersistencePackages); // NOI18N
+            WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
+            JsfVersion jsfVersion = JsfVersionUtils.forWebModule(wm);
+            if(jsfVersion.isAtLeast(JsfVersion.JSF_3_0)) {
+                params.put("jakartaJsfPackages", true); // NOI18N
+            } else {
+                params.put("jakartaJsfPackages", false); // NOI18N
+            }
+
             boolean isInjected = Util.isContainerManaged(project);
             if (!genSessionBean && isInjected) {
                 params.put("isInjected", true); //NOI18N
@@ -632,8 +677,15 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
     }
 
     private static boolean isCdiEnabled(Project project) {
-        CdiUtil cdiUtil = project.getLookup().lookup(CdiUtil.class);
-        return (cdiUtil == null) ? false : cdiUtil.isCdiEnabled();
+        org.netbeans.modules.jakarta.web.beans.CdiUtil jakartaCdiUtil = project.getLookup().lookup(org.netbeans.modules.jakarta.web.beans.CdiUtil.class);
+        if(jakartaCdiUtil != null && jakartaCdiUtil.isCdiEnabled()) {
+            return true;
+        }
+        org.netbeans.modules.web.beans.CdiUtil javaxCdiUtil = project.getLookup().lookup(org.netbeans.modules.web.beans.CdiUtil.class);
+        if(javaxCdiUtil != null && javaxCdiUtil.isCdiEnabled()) {
+            return true;
+        }
+        return false;
     }
 
     private static ResourceBundle findBundle(JSFConfigModel model, ResourceBundle rb) {
@@ -764,10 +816,10 @@ public class PersistenceClientIterator implements TemplateWizard.Iterator {
         HelpCtx helpCtx;
 
         WebModule wm = WebModule.getWebModule(project.getProjectDirectory());
-        JSFVersion jsfVersion = JSFVersion.forWebModule(wm);
+        JsfVersion jsfVersion = JsfVersionUtils.forWebModule(wm);
 
         if (wm.getJ2eeProfile() != null && wm.getJ2eeProfile().isAtLeast(Profile.JAVA_EE_6_WEB)
-                || (jsfVersion != null && jsfVersion.isAtLeast(JSFVersion.JSF_2_0))) {
+                || (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_2_0))) {
             wizard.putProperty(JSF2_GENERATOR_PROPERTY, "true");
             helpCtx = new HelpCtx("persistence_entity_selection_javaee6");  //NOI18N
         } else {

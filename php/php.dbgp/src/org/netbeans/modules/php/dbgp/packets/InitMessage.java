@@ -122,7 +122,11 @@ public class InitMessage extends DbgpMessage {
         SessionId id = session.getSessionId();
         Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
         for (Breakpoint breakpoint : breakpoints) {
-            if (!(breakpoint instanceof AbstractBreakpoint)) {
+            if (!(breakpoint instanceof AbstractBreakpoint) ) {
+                continue;
+            }
+            //do not set a breakpoint at debug start if it is not enabled
+            if (!breakpoint.isEnabled()) {
                 continue;
             }
             AbstractBreakpoint brkpnt = (AbstractBreakpoint) breakpoint;

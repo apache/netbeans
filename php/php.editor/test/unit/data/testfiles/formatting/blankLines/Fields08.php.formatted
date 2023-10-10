@@ -28,5 +28,4 @@ class Test {
         $this->field2 = $field2;
         $this->field3 = $field3;
     }
-
 }

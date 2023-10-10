@@ -24,10 +24,66 @@ enum IncorrectProperties {
     case CASE_NAME;
 }
 
+enum IncorrectPropertiesWithTrait {
+    use TestTrait1;
+    case CASE_NAME;
+}
+
 enum IncorrectBackingType: Foo {
     public int $property = 1;
     public static string $staticProperty = "error";
     case CASE_NAME;
+}
+
+enum IncorrectConstructor {
+    public function __construct() {
+    }
+}
+
+enum IncorrectMethods {
+    public function cases():array {}
+    public function __get($name) {}
+    public function __set($name,$value) {}
+    public function __isset($name) {}
+    public function __unset($name) {}
+    public function __sleep() {}
+    public function __wakeup() {}
+    public function __serialize() {}
+    public function __unserialize($array) {}
+    public function __toString() {}
+    public static function __set_state($state) {}
+    public function __clone() {}
+    public function __debugInfo() {}
+}
+
+enum IncorrectMethodsBacked: string {
+    public function cases():array {}
+    public function from(string|int $value):self {}
+    public function tryFrom(string|int $value):self {}
+}
+
+enum IncorrectMethodsCorrectCaseInMessage {
+    public function Cases():array {}
+    public function __GET($name) {}
+    public function __seT($name,$value) {}
+    public function __ISset($name) {}
+    public function __unSET($name) {}
+    public function __sleeP() {}
+    public function __wAkeup() {}
+    public function __Serialize() {}
+    public function __Unserialize($array) {}
+    public function __ToString() {}
+    public static function __Set_State($state) {}
+    public function __clONe() {}
+    public function __DebugInfo() {}
+}
+
+enum CorrectMethods {
+    public function from(string|int $value):self {}
+    public function tryFrom(string|int $value):self {}
+    public function __call($name,$args) {}
+    public static function __callStatic($name,$args) {}
+    public function __invoke() {}
 }
 
 enum CorrectBackingTypeString: string {
@@ -45,9 +101,22 @@ class IncorrectEnumCase {
     public static string $property = "correct";
 }
 
-trait TestTrait {
+trait IncorrectTraitEnumCase {
+    case X;
+    case Y = 1;
+    public int $property = 0;
+    public static string $property = "correct";
+}
+
+trait TestTrait1 {
+    use TestTrait2;
     public int $property = 1;
     public static string $property = "correct";
+}
+
+trait TestTrait2 {
+    public int $property2 = 1;
+    public static string $property2 = "correct";
 }
 
 interface TestInterface {

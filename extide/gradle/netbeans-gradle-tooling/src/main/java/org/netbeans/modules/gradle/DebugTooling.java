@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.gradle;
 
-import org.netbeans.modules.gradle.api.NbProjectInfo;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -43,6 +43,22 @@ public class ReturnTypeHintErrorTest extends PHPHintsTestBase {
         checkHints(new ReturnTypeHintErrorStub(PhpVersion.PHP_81), "testNeverReturnTypeHint.php");
     }
 
+    public void testReturnStatementWithoutValueHint_01() throws Exception {
+        checkHints(new ReturnTypeHintErrorStub(PhpVersion.PHP_56), "testReturnStatementWithoutValueHintError.php");
+    }
+
+    public void testReturnStatementWithoutValueHint_02() throws Exception {
+        checkHints(new ReturnTypeHintErrorStub(PhpVersion.PHP_70), "testReturnStatementWithoutValueHintError.php");
+    }
+
+    public void testReturnStatementWithoutValueHint_03() throws Exception {
+        checkHints(new ReturnTypeHintErrorStub(PhpVersion.PHP_71), "testReturnStatementWithoutValueHintError.php");
+    } 
+
+    public void testReturnStatementWithoutValueHint_04() throws Exception {
+        checkHints(new ReturnTypeHintErrorStub(PhpVersion.PHP_81), "testReturnStatementWithoutValueHintError.php");
+    }
+
     @Override
     protected String getTestDirectory() {
         return TEST_DIRECTORY + "ReturnTypeHintError/";

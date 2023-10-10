@@ -25,21 +25,42 @@
 <apidef name="text">Text API</apidef>
 </apidefs>
 <changes>
-      <change id="ask.on.document.reload">
-          <api name="text"/>
-          <summary>Rebrand defaults for Reload Editor Dialog</summary>
-          <version major="6" minor="80"/>
-          <date day="22" month="1" year="2021"/>
-          <author login="dbalek"/>
-          <compatibility addition="yes" binary="compatible" source="compatible"
-                         semantic="incompatible" deletion="no"
-                         modification="no"/>
-          <description>
-              A branding API to disable showing reload externally modified document dialog
-              - <a href="architecture-summary.html#group-branding">ASK_OnReload</a>.
-          </description>
-          <class package="org.openide.text" name="CloneableEditorSupport"/>
-      </change>
+    <change id="EditorCookie.Observable.PROP_RELOADING">
+        <api name="text"/>
+        <summary>Added EditorCookie.Observable.PROP_RELOADING and associated begin/end events</summary>
+        <version major="6" minor="86"/>
+        <date day="22" month="6" year="2022"/>
+        <author login="errael"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"
+                       semantic="compatible" deletion="no"
+                       modification="no"/>
+        <description>
+            Added EditorCookie.Observable.PROP_RELOADING and associated
+            begin/end events so that editor modules can handle external file change.
+            These events are fired on the EDT by the document's CloneableEditorSupport;
+            evt.getNewValue() is a Boolean, true signals the start of reload
+            and false the end.
+            An editor kit might adjust multiple carets to keep the same
+            line/column before and after reload of an externally modified file.
+        </description>
+        <class package="org.openide.text" name="CloneableEditorSupport"/>
+        <class package="org.openide.cookies" name="EditorCookie"/>
+    </change>
+    <change id="ask.on.document.reload">
+        <api name="text"/>
+        <summary>Rebrand defaults for Reload Editor Dialog</summary>
+        <version major="6" minor="80"/>
+        <date day="22" month="1" year="2021"/>
+        <author login="dbalek"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"
+                       semantic="incompatible" deletion="no"
+                       modification="no"/>
+        <description>
+            A branding API to disable showing reload externally modified document dialog
+            - <a href="architecture-summary.html#group-branding">ASK_OnReload</a>.
+        </description>
+        <class package="org.openide.text" name="CloneableEditorSupport"/>
+    </change>
     <change id="PositionRef.Position">
         <api name="text"/>
         <summary>Implement Position interface for compatibility</summary>
@@ -511,7 +532,7 @@
         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
         <description>
             <p>An <code>ActiveEditorDrop</code> interface has been added due to 
-                drag and drop callback support described at <a href="http://www.netbeans.org/issues/show_bug.cgi?id=61367">issue #61367</a>
+                drag and drop callback support described at <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=61367">issue #61367</a>
             </p>
         </description>
         <class package="org.openide.text" name="ActiveEditorDrop"/>

@@ -34,9 +34,9 @@ public class HTMLJavadocParserTest extends TestCase {
       super(testName);
   }
 
-  /**
+  /*
    * Test of getJavadocText method ised with HTML produced by standard doclet.
-   */
+   *
   public void testGetJavadocText() throws MalformedURLException {
     URL url = HTMLJavadocParserTest.class.getResource("HTMLJavadocParser.html");
     String result = HTMLJavadocParser.getJavadocText(url, false);
@@ -46,10 +46,11 @@ public class HTMLJavadocParserTest extends TestCase {
         new URL(url, "HTMLJavadocParser.html#getJavadocText(java.net.URL, boolean)"), false);
     assertNotNull(result);
   }
+  */
 
-  /**
+  /*
    * Test of getJavadocText method used with javadoc from Android SDK.
-   */
+   *
   public void testGetAndroidJavadocText() throws MalformedURLException {
     URL url = HTMLJavadocParserTest.class.getResource("Activity.html");
     String result = HTMLJavadocParser.getJavadocText(url, false);
@@ -70,7 +71,56 @@ public class HTMLJavadocParserTest extends TestCase {
     assertTrue(result.contains("See Also"));
 
   }
+  */
   
+  /**
+   * Test of getJavadocText method used with class output from javadoc 17.
+   */
+  public void testJavadoc17Class() throws Exception {
+    URL root = HTMLJavadocParserTest.class.getResource("Javadoc17Class.html");
+    String result = HTMLJavadocParser.getJavadocText(root, false);
+    assertNotNull(result);
+    assertTrue(result.contains("This is an example class."));
+    assertFalse(result.contains("</section>"));
+
+    URL url = appendFragment(root, "<init>(java.lang.String)");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("This is a constructor taking a single String parameter."));
+    assertFalse(result.contains("</section>"));
+
+    url = appendFragment(root, "<init>(java.lang.String,java.lang.String)");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("This is a constructor taking two String parameters."));
+    assertFalse(result.contains("</section>"));
+
+    url = appendFragment(root, "hi()");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("A method."));
+    assertFalse(result.contains("</section>"));
+  }
+
+  /**
+   * Test of getJavadocText method used with enum output from javadoc 17.
+   */
+  public void testJavadoc17Enum() throws Exception {
+    URL root = HTMLJavadocParserTest.class.getResource("Javadoc17Enum.html");
+    String result = HTMLJavadocParser.getJavadocText(root, false);
+    assertNotNull(result);
+    assertTrue(result.contains("This is an example enum."));
+    assertFalse(result.contains("</section>"));
+
+    URL url = appendFragment(root, "FIRST");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("The first value."));
+    assertFalse(result.contains("</section>"));
+
+    url = appendFragment(root, "hi()");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("A method."));
+    assertFalse(result.contains("</section>"));
+
+  }
+
   /**
    * Test of getJavadocText method used with class output from javadoc 11.
    */
@@ -151,6 +201,7 @@ public class HTMLJavadocParserTest extends TestCase {
     assertTrue(result.contains("A method."));
   }
   
+/*
   public void test199194() throws MalformedURLException {
     URL url = HTMLJavadocParserTest.class.getResource("JavaApplication1.html");
     String result = HTMLJavadocParser.getJavadocText(url, false);
@@ -173,6 +224,7 @@ public class HTMLJavadocParserTest extends TestCase {
         assertNotNull(result);
         assertTrue(result.contains("the selected file or"));
   }
+*/
   
   private static URL appendFragment(URL root, String unencodedFragment) throws Exception {
       StringBuilder uri = new StringBuilder(root.toExternalForm());

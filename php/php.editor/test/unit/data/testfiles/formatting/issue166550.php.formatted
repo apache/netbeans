@@ -7,7 +7,6 @@ class JobeetJobTable extends Doctrine_Table {
         'part-time' => 'Part time',
         'freelance' => 'Freelance',
     );
-
 }
 
 ?>

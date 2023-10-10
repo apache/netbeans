@@ -1798,6 +1798,38 @@ public class NPECheckTest extends NbTestCase {
                                 "9:7-9:15:verifier:Possibly Dereferencing null");
     }
 
+    public void testObjectsRequireNonNull() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                     + "import java.util.Objects;\n"
+                     + "public class Test {\n"
+                     + "  public String test(Object obj) {\n"
+                     + "    Objects.requireNonNull(obj);\n"
+                     + "    if (obj instanceof Number)\n"
+                     + "        return \"\";\n"
+                     + "    return obj.toString();\n"
+                     + "  }\n"
+                     + "}")
+                .run(NPECheck.class)
+                .assertNotContainsWarnings("Possibly Dereferencing null");
+    }
+
+    public void testObjectsRequireNonNullElse() throws Exception {
+        HintTest.create()
+                .input("package test;\n"
+                     + "import java.util.Objects;\n"
+                     + "public class Test {\n"
+                     + "  public String test(Object obj) {\n"
+                     + "    Objects.requireNonNullElse(obj, \"\");\n"
+                     + "    if (obj instanceof Number)\n"
+                     + "        return \"\";\n"
+                     + "    return obj.toString();\n"
+                     + "  }\n"
+                     + "}")
+                .run(NPECheck.class)
+                .assertNotContainsWarnings("Possibly Dereferencing null");
+    }
+
     private void performAnalysisTest(String fileName, String code, String... golden) throws Exception {
         HintTest.create()
                 .input(fileName, code)

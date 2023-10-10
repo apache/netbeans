@@ -45,6 +45,7 @@ import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
  * @author  milan.kuchtiak@sun.com
  * Created on March, 2004
  */
+// @todo: Support JakartaEE
 public class ListenerGenerator {
 
     boolean isContext;

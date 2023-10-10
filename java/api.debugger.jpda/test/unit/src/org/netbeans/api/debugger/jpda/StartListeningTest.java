@@ -34,7 +34,7 @@ public class StartListeningTest extends NbTestCase {
         startListening();
     }
 
-    // BEGIN: org.netbeans.api.debugger.jpda.StartListeningTest
+    // @start region="listening"
     private static final Executor LISTENING = new RequestProcessor("Listening");
 
     int startListening() throws Exception {
@@ -47,5 +47,5 @@ public class StartListeningTest extends NbTestCase {
         assertNotSame("Listening on a real port", -1, port);
         return port;
     }
-    // END: org.netbeans.api.debugger.jpda.StartListeningTest
+    // @end region="listening"
 }

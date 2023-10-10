@@ -23,5 +23,4 @@ class Simple {
 
     public ?int $field1 = 22;
     public string $field2 = "ahoj";
-
 }

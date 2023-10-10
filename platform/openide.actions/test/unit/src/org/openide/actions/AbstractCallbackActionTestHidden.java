@@ -128,12 +128,14 @@ public abstract class AbstractCallbackActionTestHidden extends NbTestCase {
                 fail (msg + " listeners expected: " + count + " but are " + this.listeners);
             }
         }
-        
+
+        @Override
         public void addPropertyChangeListener(PropertyChangeListener listener) {
             super.addPropertyChangeListener (listener);
             listeners.add (listener);
-        }        
-        
+        }
+
+        @Override
         public synchronized void removePropertyChangeListener(PropertyChangeListener listener) {
             super.removePropertyChangeListener (listener);
             listeners.remove (listener);

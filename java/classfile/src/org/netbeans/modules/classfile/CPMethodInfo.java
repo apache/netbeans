@@ -39,6 +39,7 @@ public class CPMethodInfo extends CPFieldMethodInfo {
 
     /**
      * Get method name and signature, such as "void setBar(Bar)".
+     * @return method name and signature
      */
     public final String getFullMethodName() {
         return getFullMethodName(getMethodName(), getDescriptor());

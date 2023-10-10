@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.10
+#Version 2.16
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1279,6 +1279,7 @@ intf org.netbeans.spi.server.ServerInstanceImplementation
 intf org.openide.util.Lookup$Provider
 intf org.openide.util.LookupListener
 meth public boolean equals(java.lang.Object)
+meth public boolean isDocker()
 meth public boolean isHotDeployEnabled()
 meth public boolean isHotDeployFeatureAvailable()
 meth public boolean isProcessRunning()
@@ -1294,12 +1295,14 @@ meth public int hashCode()
 meth public java.lang.Process getProcess()
 meth public java.lang.String getAdminPassword()
 meth public java.lang.String getAdminUser()
+meth public java.lang.String getContainerPath()
 meth public java.lang.String getDeployerUri()
 meth public java.lang.String getDisplayName()
 meth public java.lang.String getDomainName()
 meth public java.lang.String getDomainsFolder()
 meth public java.lang.String getDomainsRoot()
 meth public java.lang.String getHost()
+meth public java.lang.String getHostPath()
 meth public java.lang.String getHttpAdminPort()
 meth public java.lang.String getHttpPort()
 meth public java.lang.String getInstallRoot()
@@ -1335,7 +1338,9 @@ meth public org.openide.nodes.Node getFullNode()
 meth public org.openide.util.Lookup getLookup()
 meth public static java.lang.String getPasswordFromKeyring(java.lang.String,java.lang.String)
 meth public static java.lang.String passwordKey(java.lang.String,java.lang.String)
+meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,boolean,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.payara.common.PayaraInstanceProvider)
 meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,int,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.payara.common.PayaraInstanceProvider)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.util.Map<java.lang.String,java.lang.String>,org.netbeans.modules.payara.common.PayaraInstanceProvider)
 meth public static org.netbeans.modules.payara.common.PayaraInstance create(java.util.Map<java.lang.String,java.lang.String>,org.netbeans.modules.payara.common.PayaraInstanceProvider,boolean)
 meth public static org.netbeans.modules.payara.common.PayaraInstance readInstanceFromFile(org.openide.filesystems.FileObject,boolean) throws java.io.IOException
@@ -1347,7 +1352,9 @@ meth public void setAdminPassword(java.lang.String)
 meth public void setAdminPort(int)
 meth public void setAdminPort(java.lang.String)
 meth public void setAdminUser(java.lang.String)
+meth public void setContainerPath(java.lang.String)
 meth public void setHost(java.lang.String)
+meth public void setHostPath(java.lang.String)
 meth public void setHttpPort(int)
 meth public void setHttpPort(java.lang.String)
 meth public void setJavaHome(java.lang.String)
@@ -1516,8 +1523,10 @@ intf org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
 meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean isDownloadable()
+meth public boolean isEE10Supported()
 meth public boolean isEE7Supported()
 meth public boolean isEE8Supported()
+meth public boolean isEE9Supported()
 meth public boolean isInstalledInDirectory(java.io.File)
 meth public boolean isMinimumSupportedVersion()
 meth public int getVersionInt()
@@ -1755,10 +1764,12 @@ fld protected javax.swing.JCheckBox jdbcDriverDeployment
 fld protected javax.swing.JCheckBox localIpCB
 fld protected javax.swing.JCheckBox preserveSessions
 fld protected javax.swing.JComboBox hostLocalField
+fld protected javax.swing.JLabel containerPathLabel
 fld protected javax.swing.JLabel dasPortLabel
 fld protected javax.swing.JLabel domainLabel
 fld protected javax.swing.JLabel domainsFolderLabel
 fld protected javax.swing.JLabel hostLocalLabel
+fld protected javax.swing.JLabel hostPathLabel
 fld protected javax.swing.JLabel hostRemoteLabel
 fld protected javax.swing.JLabel httpPortLabel
 fld protected javax.swing.JLabel installationLocationLabel
@@ -1766,9 +1777,11 @@ fld protected javax.swing.JLabel passwordLabel
 fld protected javax.swing.JLabel targetLabel
 fld protected javax.swing.JLabel userNameLabel
 fld protected javax.swing.JPasswordField passwordField
+fld protected javax.swing.JTextField containerPathField
 fld protected javax.swing.JTextField dasPortField
 fld protected javax.swing.JTextField domainField
 fld protected javax.swing.JTextField domainsFolderField
+fld protected javax.swing.JTextField hostPathField
 fld protected javax.swing.JTextField hostRemoteField
 fld protected javax.swing.JTextField httpPortField
 fld protected javax.swing.JTextField installationLocationField
@@ -1784,11 +1797,13 @@ meth protected void enableFields()
 meth protected void initCheckBoxes()
 meth protected void initCredentials()
 meth protected void initDirectoriesFields()
+meth protected void initDockerVolume()
 meth protected void initDomainAndTarget()
 meth protected void initFlagsFromProperties(org.netbeans.modules.payara.common.ui.InstancePanel$CheckBoxProperties)
 meth protected void initFormFields()
 meth protected void storeCheckBoxes()
 meth protected void storeCredentials()
+meth protected void storeDockerVolume()
 meth protected void storeFormFields()
 meth protected void storeHost()
 meth protected void storePorts()
@@ -2090,10 +2105,12 @@ fld public final static java.lang.String CONNECTORS = "CONNECTORS"
 fld public final static java.lang.String CONNECTOR_CONTAINER = "connector"
 fld public final static java.lang.String CONN_CONNECTION_POOL = "connector-connection-pool"
 fld public final static java.lang.String CONN_RESOURCE = "connector-resource"
+fld public final static java.lang.String CONTAINER_PATH_ATTR = "containerPath"
 fld public final static java.lang.String DEBUG_MEM = "debugMem"
 fld public final static java.lang.String DEBUG_MODE
 fld public final static java.lang.String DEBUG_PORT = "debugPort"
 fld public final static java.lang.String DISPLAY_NAME_ATTR = "displayName"
+fld public final static java.lang.String DOCKER_ATTR = "docker"
 fld public final static java.lang.String DOMAINS_FOLDER_ATTR = "domainsfolder"
 fld public final static java.lang.String DOMAIN_NAME_ATTR = "domainname"
 fld public final static java.lang.String DRIVER_DEPLOY_FLAG = "driverDeployOn"
@@ -2102,6 +2119,7 @@ fld public final static java.lang.String EJB_CONTAINER = "ejb"
 fld public final static java.lang.String GEM_HOME = "GEM_HOME"
 fld public final static java.lang.String GEM_PATH = "GEM_PATH"
 fld public final static java.lang.String HOSTNAME_ATTR = "host"
+fld public final static java.lang.String HOST_PATH_ATTR = "hostPath"
 fld public final static java.lang.String HOT_DEPLOY = "hotDeploy"
 fld public final static java.lang.String HTTPHOST_ATTR = "httphostname"
 fld public final static java.lang.String HTTPPORT_ATTR = "httpportnumber"
@@ -2290,8 +2308,10 @@ fld public final static char SEPARATOR = '.'
 fld public final static java.lang.String SEPARATOR_PATTERN = "\u005c."
 meth public abstract boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public abstract boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
+meth public abstract boolean isEE10Supported()
 meth public abstract boolean isEE7Supported()
 meth public abstract boolean isEE8Supported()
+meth public abstract boolean isEE9Supported()
 meth public abstract boolean isMinimumSupportedVersion()
 meth public abstract java.lang.String getDirectUrl()
 meth public abstract java.lang.String getIndirectUrl()
@@ -2304,14 +2324,17 @@ meth public abstract short getMinor()
 meth public abstract short getUpdate()
 
 CLSS public abstract interface org.netbeans.modules.payara.tooling.data.PayaraServer
+meth public abstract boolean isDocker()
 meth public abstract boolean isRemote()
 meth public abstract int getAdminPort()
 meth public abstract int getPort()
 meth public abstract java.lang.String getAdminPassword()
 meth public abstract java.lang.String getAdminUser()
+meth public abstract java.lang.String getContainerPath()
 meth public abstract java.lang.String getDomainName()
 meth public abstract java.lang.String getDomainsFolder()
 meth public abstract java.lang.String getHost()
+meth public abstract java.lang.String getHostPath()
 meth public abstract java.lang.String getName()
 meth public abstract java.lang.String getServerHome()
 meth public abstract java.lang.String getServerRoot()

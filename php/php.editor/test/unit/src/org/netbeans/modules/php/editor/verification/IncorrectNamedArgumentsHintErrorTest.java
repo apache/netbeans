@@ -46,8 +46,8 @@ public class IncorrectNamedArgumentsHintErrorTest extends PHPHintsTestBase {
         checkHints(new IncorrectNamedArgumentsHintError(), "testPositionalAfterNamedInAttributeArgList.php");
     }
 
-    public void testNamedAndUnpack() throws Exception {
-        checkHints(new IncorrectNamedArgumentsHintError(), "testNamedAndUnpack.php");
+    public void testUnpackingAfterNamed() throws Exception {
+        checkHints(new IncorrectNamedArgumentsHintError(), "testUnpackingAfterNamed.php");
     }
 
 }

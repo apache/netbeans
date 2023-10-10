@@ -28,7 +28,7 @@ import org.openide.filesystems.FileObject;
  * <p>Task Scanner that can push new Tasks into Task List window.</p>
  * 
  * <p>You should use this scanner type if it takes too long to compute your tasks
- * or if your tasks are calculated asynchronously. <br/>
+ * or if your tasks are calculated asynchronously. <br>
  * In most cases it is easier to use {@link FileTaskScanner} instead.</p>
  * 
  * @author S. Aubrecht
@@ -145,7 +145,7 @@ public abstract class PushTaskScanner {
         }
 
         /**
-         * @returns true, if the framework is observed.
+         * @return true, if the framework is observed.
          * @since spi.tasklist/1.24
          */
         public boolean isObserved() {
@@ -153,7 +153,7 @@ public abstract class PushTaskScanner {
         }
 
         /**
-         * @returns true, if the current editor scope is set in the framework.
+         * @return true, if the current editor scope is set in the framework.
          * Performance helper method.
          * @since spi.tasklist/1.24
          */

@@ -125,7 +125,7 @@ public class PageSetupActionTest extends NbTestCase {
      * Test getHelpCtx method. 
      */ 
     public void testGetHelpCtx() { 
-        HelpCtx expected = new HelpCtx(PageSetupAction.class);; 
+        HelpCtx expected = new HelpCtx(PageSetupAction.class);
         HelpCtx result   = instance.getHelpCtx(); 
          
         assertEquals(expected, result); 

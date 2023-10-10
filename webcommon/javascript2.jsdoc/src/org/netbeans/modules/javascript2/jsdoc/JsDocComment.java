@@ -18,7 +18,13 @@
  */
 package org.netbeans.modules.javascript2.jsdoc;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.javascript2.doc.spi.DocParameter;
 import org.netbeans.modules.javascript2.doc.spi.JsComment;
@@ -39,7 +45,7 @@ import org.netbeans.modules.javascript2.types.api.Type;
  */
 public class JsDocComment extends JsComment {
 
-    private final Map<JsDocElementType, List<JsDocElement>> tags = new EnumMap<JsDocElementType, List<JsDocElement>>(JsDocElementType.class);
+    private final Map<JsDocElementType, List<JsDocElement>> tags = new EnumMap<>(JsDocElementType.class);
     private final JsDocCommentType type;
 
     /**
@@ -65,23 +71,25 @@ public class JsDocComment extends JsComment {
 
     @Override
     public List<String> getSummary() {
-        List<String> summaries = new LinkedList<String>();
-        for (JsDocElement jsDocElement : getTagsForTypes(
-                new JsDocElementType[]{JsDocElementType.DESCRIPTION, JsDocElementType.CONTEXT_SENSITIVE})) {
+        List<? extends JsDocElement> descriptionElements = getTagsForTypes(new JsDocElementType[]{
+            JsDocElementType.DESCRIPTION,
+            JsDocElementType.CONTEXT_SENSITIVE,
+            JsDocElementType.CLASS
+        });
+
+        List<String> summaries = new ArrayList<>(descriptionElements.size());
+        for (JsDocElement jsDocElement : descriptionElements) {
             summaries.add(((DescriptionElement) jsDocElement).getDescription());
         }
 
-        // issue #224759 - class description should appear in the documentation window
-        for (JsDocElement jsDocElement : getTagsForType(JsDocElementType.CLASS)) {
-            summaries.add(((DescriptionElement) jsDocElement).getDescription());
-        }
         return summaries;
     }
 
     @Override
     public List<String> getSyntax() {
-        List<String> syntaxes = new LinkedList<String>();
-        for (JsDocElement jsDocElement : getTagsForType(JsDocElementType.SYNTAX)) {
+        List<? extends JsDocElement> syntaxElements = getTagsForType(JsDocElementType.SYNTAX);
+        List<String> syntaxes = new ArrayList<>(syntaxElements.size());
+        for (JsDocElement jsDocElement : syntaxElements) {
             syntaxes.add(((DescriptionElement) jsDocElement).getDescription());
         }
         return syntaxes;
@@ -104,9 +112,12 @@ public class JsDocComment extends JsComment {
 
     @Override
     public List<DocParameter> getParameters() {
-        List<DocParameter> params = new LinkedList<DocParameter>();
-        for (JsDocElement jsDocElement : getTagsForTypes(
-                new JsDocElementType[]{JsDocElementType.PARAM, JsDocElementType.ARGUMENT})) {
+        List<? extends JsDocElement> parameterElements = getTagsForTypes(new JsDocElementType[]{
+            JsDocElementType.PARAM,
+            JsDocElementType.ARGUMENT
+        });
+        List<DocParameter> params = new ArrayList<>(parameterElements.size());
+        for (JsDocElement jsDocElement : parameterElements) {
             params.add((NamedParameterElement) jsDocElement);
         }
         return params;
@@ -134,8 +145,9 @@ public class JsDocComment extends JsComment {
 
     @Override
     public List<DocParameter> getThrows() {
-        List<DocParameter> throwsEntries = new LinkedList<DocParameter>();
-        for (JsDocElement exceptionTag : getTagsForType(JsDocElementType.THROWS)) {
+        List<? extends JsDocElement> throwsElements = getTagsForType(JsDocElementType.THROWS);
+        List<DocParameter> throwsEntries = new ArrayList<>(throwsElements.size());
+        for (JsDocElement exceptionTag : throwsElements) {
             throwsEntries.add((UnnamedParameterElement) exceptionTag);
         }
         return throwsEntries;
@@ -143,9 +155,12 @@ public class JsDocComment extends JsComment {
 
     @Override
     public List<Type> getExtends() {
-        List<Type> extendsEntries = new LinkedList<Type>();
-        for (JsDocElement extend : getTagsForTypes(
-                new JsDocElementType[]{JsDocElementType.EXTENDS, JsDocElementType.AUGMENTS})) {
+        List<? extends JsDocElement> extendsElements = getTagsForTypes(new JsDocElementType[]{
+            JsDocElementType.EXTENDS,
+            JsDocElementType.AUGMENTS
+        });
+        List<Type> extendsEntries = new ArrayList<>(extendsElements.size());
+        for (JsDocElement extend : extendsElements) {
             DeclarationElement ident = (DeclarationElement) extend;
             extendsEntries.add(ident.getDeclaredType());
         }
@@ -154,8 +169,9 @@ public class JsDocComment extends JsComment {
 
     @Override
     public List<String> getSee() {
-        List<String> sees = new LinkedList<String>();
-        for (JsDocElement extend : getTagsForType(JsDocElementType.SEE)) {
+        List<? extends JsDocElement> seeElements = getTagsForType(JsDocElementType.SEE);
+        List<String> sees = new ArrayList<>(seeElements.size());
+        for (JsDocElement extend : seeElements) {
             DescriptionElement element = (DescriptionElement) extend;
             sees.add(element.getDescription());
         }
@@ -177,35 +193,16 @@ public class JsDocComment extends JsComment {
         return !getTagsForTypes(new JsDocElementType[]{JsDocElementType.CLASS, JsDocElementType.CONSTRUCTOR,
             JsDocElementType.CONSTRUCTS}).isEmpty();
     }
-    
+
     @Override
     public boolean isConstant() {
         return !getTagsForTypes(new JsDocElementType[]{JsDocElementType.CONSTANT}).isEmpty();
     }
 
-//    @Override
-//    public List<String> getAuthor() {
-//        List<String> authors = new LinkedList<String>();
-//        for (JsDocElement extend : getTagsForType(JsDocElementType.AUTHOR)) {
-//            DescriptionElement element = (DescriptionElement) extend;
-//            authors.add(element.getDescription());
-//        }
-//        return authors;
-//    }
-//
-//    @Override
-//    public String getVersion() {
-//        List<? extends JsDocElement> version = getTagsForType(JsDocElementType.VERSION);
-//        if (version.isEmpty()) {
-//            return null;
-//        } else {
-//            return ((DescriptionElement) version.get(0)).getDescription();
-//        }
-//    }
-
     @Override
     public List<String> getExamples() {
-        List<String> examples = new LinkedList<String>();
+        List<? extends JsDocElement> exampleElements = getTagsForType(JsDocElementType.EXAMPLE);
+        List<String> examples = new ArrayList<>(exampleElements.size());
         for (JsDocElement extend : getTagsForType(JsDocElementType.EXAMPLE)) {
             DescriptionElement element = (DescriptionElement) extend;
             examples.add(element.getDescription());
@@ -217,7 +214,7 @@ public class JsDocComment extends JsComment {
         for (JsDocElement jsDocElement : elements) {
             List<JsDocElement> list = tags.get(jsDocElement.getType());
             if (list == null) {
-                list = new LinkedList<JsDocElement>();
+                list = new ArrayList<>();
                 tags.put(jsDocElement.getType(), list);
             }
             tags.get(jsDocElement.getType()).add(jsDocElement);
@@ -231,7 +228,7 @@ public class JsDocComment extends JsComment {
      * @return list of {@code JsDocTag}s
      */
     protected List<? extends JsDocElement> getTags() {
-        List<JsDocElement> allTags = new LinkedList<JsDocElement>();
+        List<JsDocElement> allTags = new ArrayList<>();
         for (List<JsDocElement> list : tags.values()) {
             allTags.addAll(list);
         }
@@ -252,38 +249,34 @@ public class JsDocComment extends JsComment {
      * @return list of {@code JsDocTag}s
      */
     public List<? extends JsDocElement> getTagsForTypes(JsDocElementType[] types) {
-        List<JsDocElement> list = new LinkedList<JsDocElement>();
-        for (JsDocElementType type : types) {
-            list.addAll(getTagsForType(type));
+        List<JsDocElement> list = new ArrayList<>();
+        for (JsDocElementType elementType : types) {
+            list.addAll(getTagsForType(elementType));
         }
         return list;
     }
 
     @Override
     public List<DocParameter> getProperties() {
-        List<DocParameter> properties = new LinkedList<DocParameter>();
-        for (JsDocElement jsDocElement : getTagsForType(JsDocElementType.PROPERTY)) {
-            properties.add((NamedParameterElement) jsDocElement);
+        List<? extends JsDocElement> propertyElements = getTagsForType(JsDocElementType.PROPERTY);
+        List<DocParameter> properties = new ArrayList<>(propertyElements.size());
+        for (JsDocElement jsDocElement : propertyElements) {
+            properties.add(((NamedParameterElement) jsDocElement));
         }
         return properties;
     }
 
     @Override
     public DocParameter getDefinedType() {
-        List<DocParameter> definedTypes = new LinkedList<DocParameter>();
-        for (JsDocElement jsDocElement : getTagsForType(JsDocElementType.TYPEDEF)) {
-            definedTypes.add((NamedParameterElement) jsDocElement);
-        }
-        if (definedTypes.isEmpty()) {
-            return null;
-        }
-        return definedTypes.get(0);
+        List<? extends JsDocElement> typedefs = getTagsForType(JsDocElementType.TYPEDEF);
+        return typedefs.isEmpty() ? null : ((NamedParameterElement) typedefs.get(0));
     }
 
     @Override
     public List<Type> getTypes() {
-        List<Type> properties = new LinkedList<Type>();
-        for (JsDocElement jsDocElement : getTagsForType(JsDocElementType.TYPE)) {
+        List<? extends JsDocElement> propertyElements = getTagsForType(JsDocElementType.CALLBACK);
+        List<Type> properties = new ArrayList<>(propertyElements.size());
+        for (JsDocElement jsDocElement : propertyElements) {
             properties.add(((DeclarationElement) jsDocElement).getDeclaredType());
         }
         return properties;
@@ -291,12 +284,9 @@ public class JsDocComment extends JsComment {
 
     @Override
     public Type getCallBack() {
-        List<Type> callbacks = new LinkedList<Type>();
-        for (JsDocElement jsDocElement : getTagsForType(JsDocElementType.CALLBACK)) {
-            callbacks.add(((DeclarationElement) jsDocElement).getDeclaredType());
-        }
-        return callbacks.isEmpty() ? null : callbacks.get(0);
+        List<? extends JsDocElement> callbacks = getTagsForType(JsDocElementType.CALLBACK);
+        return callbacks.isEmpty() ? null : ((DeclarationElement) callbacks.get(0)).getDeclaredType();
     }
-    
-    
+
+
 }

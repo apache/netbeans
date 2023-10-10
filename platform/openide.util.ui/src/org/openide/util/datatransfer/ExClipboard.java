@@ -221,7 +221,7 @@ public abstract class ExClipboard extends Clipboard {
         * generally one which adds new flavors based on the existing flavors.
         * The recommended usage is as follows:
         *
-        * <br><code><pre>
+        * <br><pre>{@code
         * public Transferable convert (final Transferable t) {
         *   if (! t.isDataFlavorSupported (fromFlavor)) return t;
         *   if (t.isDataFlavorSupported (toFlavor)) return t;
@@ -235,7 +235,7 @@ public abstract class ExClipboard extends Clipboard {
         *   });
         *   return et;
         * }
-        * </pre></code>
+        * }</pre>
         *
         * <br>Note that this does not perform the conversion until <code>toFlavor</code> is
         * actually requested, nor does it advertise <code>toFlavor</code> as being available
@@ -243,7 +243,7 @@ public abstract class ExClipboard extends Clipboard {
         *
         * <p>You may also want to convert some flavor to a node selection, in which case you should do:
         *
-        * <br><code><pre>
+        * <br><pre>{@code
         * public Transferable convert (final Transferable t) {
         *   if (! t.isDataFlavorSupported (DataFlavor.stringFlavor)) return t;
         *   if (NodeTransfer.findPaste (t) != null) return t;
@@ -269,7 +269,7 @@ public abstract class ExClipboard extends Clipboard {
         *   }));
         *   return et;
         * }
-        * </pre></code>
+        * }</pre>
         *
         * <p>Convertors should generally avoid removing flavors from the transferable,
         * or changing the data for an existing flavor.

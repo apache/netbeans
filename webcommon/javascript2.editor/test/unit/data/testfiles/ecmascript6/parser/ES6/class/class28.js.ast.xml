@@ -1,0 +1,306 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<FunctionNode name=':program' kind='SCRIPT' start='0' end='325'>
+  <isProgram/>
+  <!-- FunctionNode Parameters -->
+  <!-- FunctionNode Body -->
+  <Block start='0' end='325'>
+    <isFunctionBody/>
+    <isSynthetic/>
+    <!-- Block Statements -->
+    <ExpressionStatement start='1' end='13'>
+      <StringLiteralNode value='use strict' start='1' end='11'/>
+    </ExpressionStatement>
+    <VarNode name='Animal' start='15' end='27'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='21' end='27'>
+        <name>Animal</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='Animal' start='15' end='147'>
+        <!-- ClassNode Constructor -->
+        <ClassElement name='constructor' start='33' end='78'>
+          <!-- ClassElement Key -->
+          <IdentNode start='33' end='44'>
+            <name>constructor</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- ClassElement Value -->
+          <FunctionNode name='constructor' kind='NORMAL' start='33' end='78'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='45' end='49'>
+              <name>name</name>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='51' end='74'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='57' end='74'>
+                <BinaryNode type='ASSIGN' start='57' end='73'>
+                  <isAssignment/>
+                  <!-- BinaryNode lhs -->
+                  <AccessNode property='name' start='57' end='66'>
+                    <!-- AccessNode Base -->
+                    <IdentNode start='57' end='61'>
+                      <name>this</name>
+                    </IdentNode>
+                  </AccessNode>
+                  <!-- BinaryNode rhs -->
+                  <IdentNode start='69' end='73'>
+                    <name>name</name>
+                  </IdentNode>
+                </BinaryNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <!-- ClassNode Elements -->
+        <ClassElement name='speak' start='84' end='145'>
+          <!-- ClassElement Key -->
+          <IdentNode start='84' end='89'>
+            <name>speak</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- ClassElement Value -->
+          <FunctionNode name='speak' kind='NORMAL' start='84' end='145'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='92' end='141'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='98' end='141'>
+                <CallNode start='98' end='140'>
+                  <!-- CallNode Arguments -->
+                  <BinaryNode type='ADD' start='110' end='138'>
+                    <!-- BinaryNode lhs -->
+                    <AccessNode property='name' start='110' end='119'>
+                      <!-- AccessNode Base -->
+                      <IdentNode start='110' end='114'>
+                        <name>this</name>
+                      </IdentNode>
+                    </AccessNode>
+                    <!-- BinaryNode rhs -->
+                    <StringLiteralNode value='makes a noise.' start='123' end='138'/>
+                  </BinaryNode>
+                  <!-- CallNode Function -->
+                  <AccessNode property='log' start='98' end='109'>
+                    <!-- AccessNode Base -->
+                    <IdentNode start='98' end='105'>
+                      <name>console</name>
+                    </IdentNode>
+                  </AccessNode>
+                </CallNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+    <VarNode name='Dog' start='149' end='158'>
+      <hasInit/>
+      <isAssignment/>
+      <isBlockScoped/>
+      <isConst/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='155' end='158'>
+        <name>Dog</name>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <ClassNode ident='Dog' start='149' end='233'>
+        <!-- ClassNode Heritage -->
+        <IdentNode start='167' end='173'>
+          <name>Animal</name>
+        </IdentNode>
+        <!-- ClassNode Constructor -->
+        <ClassElement name='Dog' start='149' end='233'>
+          <!-- ClassElement Key -->
+          <IdentNode start='155' end='158'>
+            <name>Dog</name>
+          </IdentNode>
+          <!-- ClassElement Value -->
+          <FunctionNode name='Dog' kind='NORMAL' start='149' end='233'>
+            <isClassConstructor/>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <isSubclassConstructor/>
+            <!-- FunctionNode Parameters -->
+            <IdentNode start='149' end='233'>
+              <name>args</name>
+              <isRestParameter/>
+            </IdentNode>
+            <!-- FunctionNode Body -->
+            <Block start='149' end='233'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='149' end='233'>
+                <CallNode start='149' end='233'>
+                  <!-- CallNode Arguments -->
+                  <UnaryNode type='SPREAD_ARGUMENT' start='149' end='233'>
+                    <!-- UnaryNode Expression -->
+                    <IdentNode start='149' end='233'>
+                      <name>args</name>
+                      <isRestParameter/>
+                    </IdentNode>
+                  </UnaryNode>
+                  <!-- CallNode Function -->
+                  <IdentNode start='149' end='233'>
+                    <name>super</name>
+                    <isDirectSuppert/>
+                  </IdentNode>
+                </CallNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <!-- ClassNode Elements -->
+        <ClassElement name='speak' start='178' end='231'>
+          <!-- ClassElement Key -->
+          <IdentNode start='178' end='183'>
+            <name>speak</name>
+            <isPropertyName/>
+          </IdentNode>
+          <!-- ClassElement Value -->
+          <FunctionNode name='speak-1' kind='NORMAL' start='178' end='231'>
+            <isMethod/>
+            <isNamedFunctionExpression/>
+            <!-- FunctionNode Parameters -->
+            <!-- FunctionNode Body -->
+            <Block start='186' end='227'>
+              <isFunctionBody/>
+              <!-- Block Statements -->
+              <ExpressionStatement start='192' end='227'>
+                <CallNode start='192' end='226'>
+                  <!-- CallNode Arguments -->
+                  <BinaryNode type='ADD' start='204' end='224'>
+                    <!-- BinaryNode lhs -->
+                    <AccessNode property='name' start='204' end='213'>
+                      <!-- AccessNode Base -->
+                      <IdentNode start='204' end='208'>
+                        <name>this</name>
+                      </IdentNode>
+                    </AccessNode>
+                    <!-- BinaryNode rhs -->
+                    <StringLiteralNode value='barks.' start='217' end='224'/>
+                  </BinaryNode>
+                  <!-- CallNode Function -->
+                  <AccessNode property='log' start='192' end='203'>
+                    <!-- AccessNode Base -->
+                    <IdentNode start='192' end='199'>
+                      <name>console</name>
+                    </IdentNode>
+                  </AccessNode>
+                </CallNode>
+              </ExpressionStatement>
+            </Block>
+          </FunctionNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
+        <!-- ClassNode Decorators -->
+      </ClassNode>
+    </VarNode>
+    <VarNode name='animal' start='240' end='268'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='240' end='246'>
+        <name>animal</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <UnaryNode type='NEW' start='249' end='268'>
+        <!-- UnaryNode Expression -->
+        <CallNode start='253' end='268'>
+          <isNew/>
+          <!-- CallNode Arguments -->
+          <StringLiteralNode value='Jitka' start='261' end='266'/>
+          <!-- CallNode Function -->
+          <IdentNode start='253' end='259'>
+            <name>Animal</name>
+          </IdentNode>
+        </CallNode>
+      </UnaryNode>
+    </VarNode>
+    <VarNode name='dog' start='274' end='295'>
+      <hasInit/>
+      <isAssignment/>
+      <!-- VarNode Assignment Dest -->
+      <IdentNode start='274' end='277'>
+        <name>dog</name>
+        <isDeclaredHere/>
+        <isInitializedHere/>
+      </IdentNode>
+      <!-- VarNode Init -->
+      <UnaryNode type='NEW' start='280' end='295'>
+        <!-- UnaryNode Expression -->
+        <CallNode start='284' end='295'>
+          <isNew/>
+          <!-- CallNode Arguments -->
+          <StringLiteralNode value='Pepa' start='289' end='293'/>
+          <!-- CallNode Function -->
+          <IdentNode start='284' end='287'>
+            <name>Dog</name>
+          </IdentNode>
+        </CallNode>
+      </UnaryNode>
+    </VarNode>
+    <ExpressionStatement start='297' end='312'>
+      <CallNode start='297' end='311'>
+        <!-- CallNode Arguments -->
+        <!-- CallNode Function -->
+        <AccessNode property='speak' start='297' end='309'>
+          <!-- AccessNode Base -->
+          <IdentNode start='297' end='303'>
+            <name>animal</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+    <ExpressionStatement start='313' end='325'>
+      <CallNode start='313' end='324'>
+        <!-- CallNode Arguments -->
+        <!-- CallNode Function -->
+        <AccessNode property='speak' start='313' end='322'>
+          <!-- AccessNode Base -->
+          <IdentNode start='313' end='316'>
+            <name>dog</name>
+          </IdentNode>
+        </AccessNode>
+      </CallNode>
+    </ExpressionStatement>
+  </Block>
+</FunctionNode>

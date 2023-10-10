@@ -26,10 +26,12 @@ package org.netbeans.modules.j2ee.persistence.wizard.fromdb;
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.j2ee.persistence.wizard.fromdb.PersistenceGeneratorProvider.class)
 public class JavaPersistenceGeneratorProvider implements PersistenceGeneratorProvider {
 
+    @Override
     public String getGeneratorType() {
         return "jpa"; // NOI18N
     }
 
+    @Override
     public PersistenceGenerator createGenerator() {
         return new JavaPersistenceGenerator();
     }

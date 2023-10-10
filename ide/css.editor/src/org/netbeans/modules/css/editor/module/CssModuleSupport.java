@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.Document;
 import org.netbeans.modules.csl.api.ColoringAttributes;
@@ -94,11 +95,13 @@ public class CssModuleSupport {
     }
 
     public static Map<OffsetRange, Set<ColoringAttributes>> getSemanticHighlights(FeatureContext context, FeatureCancel cancel) {
-        Map<OffsetRange, Set<ColoringAttributes>> all = new HashMap<>();
+        long start = System.nanoTime();
+
+        Map<OffsetRange, Set<ColoringAttributes>> allPrecursor = new HashMap<>();
         final Collection<NodeVisitor<Map<OffsetRange, Set<ColoringAttributes>>>> visitors = new ArrayList<>();
 
         for (CssEditorModule module : getModules()) {
-            NodeVisitor<Map<OffsetRange, Set<ColoringAttributes>>> visitor = module.getSemanticHighlightingNodeVisitor(context, all);
+            NodeVisitor<Map<OffsetRange, Set<ColoringAttributes>>> visitor = module.getSemanticHighlightingNodeVisitor(context, allPrecursor);
             //modules may return null visitor instead of a dummy empty visitor 
             //to speed up the parse tree visiting when there're no result
             if (visitor != null) {
@@ -121,6 +124,59 @@ public class CssModuleSupport {
         });
 
         NodeVisitor.visitChildren(context.getParseTreeRoot(), visitors);
+
+        long preparation = System.nanoTime();
+
+        Map<OffsetRange, Set<ColoringAttributes>> all = new HashMap<>();
+
+        List<OffsetRange> sortedRanges = new ArrayList<>(allPrecursor.keySet());
+        sortedRanges.sort(null);
+
+
+        List<OffsetRange> stack = new ArrayList<>();
+        OffsetRange lastAdded;
+
+        for(int i = 0; i < sortedRanges.size(); i++) {
+            OffsetRange currentItem = sortedRanges.get(i);
+            Set<ColoringAttributes> attributes = allPrecursor.get(currentItem);
+            OffsetRange nextItem = (i < (sortedRanges.size() - 1)) ? sortedRanges.get(i + 1) : null;
+            if(nextItem != null && currentItem.getEnd() > nextItem.getStart()) {
+                stack.add(currentItem);
+                currentItem = currentItem.boundTo(0, nextItem.getStart());
+            }
+            if(! currentItem.isEmpty()) {
+                all.put(currentItem, attributes);
+            }
+            lastAdded = currentItem;
+            while(true) {
+                if(stack.isEmpty()) {
+                    break;
+                }
+                OffsetRange stackElement = stack.remove(stack.size() - 1);
+                boolean endStackProcessing = false;
+                if(nextItem != null && stackElement.getEnd() > nextItem.getStart()) {
+                    stack.add(stackElement);
+                    endStackProcessing = true;
+                }
+                Set<ColoringAttributes> stackAttributes = allPrecursor.get(stackElement);
+                stackElement = stackElement.boundTo(lastAdded.getEnd(), nextItem != null ? nextItem.getStart() : Integer.MAX_VALUE);
+                if(! stackElement.isEmpty()) {
+                    all.put(stackElement, stackAttributes);
+                    lastAdded = stackElement;
+                }
+                if(endStackProcessing) {
+                    break;
+                }
+            }
+        }
+
+        long consolidation = System.nanoTime();
+
+        if(LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.log(Level.FINE, "Preparation: {0} ms, Consolidation: {1} ms", new Object[]{preparation - start, consolidation - preparation});
+            LOGGER.log(Level.FINER, "Precursor: {0}", allPrecursor);
+            LOGGER.log(Level.FINER, "Final: {0}", all);
+        }
 
         return all;
     }

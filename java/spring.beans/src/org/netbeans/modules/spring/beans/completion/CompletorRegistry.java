@@ -175,7 +175,7 @@ public final class CompletorRegistry {
 
     private static String extractVanilaTagName(String tagNameWithNs) {
         int offset = tagNameWithNs.indexOf(":"); //NOI18N
-        return offset == -1 ? tagNameWithNs : tagNameWithNs.substring(offset + 1, tagNameWithNs.length());
+        return offset == -1 ? tagNameWithNs : tagNameWithNs.substring(offset + 1);
     }
 
     private Completor getElementCompletor(CompletionContext context) {

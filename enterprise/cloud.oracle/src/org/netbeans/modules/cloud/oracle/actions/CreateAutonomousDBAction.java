@@ -19,18 +19,19 @@
 package org.netbeans.modules.cloud.oracle.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collection;
 import java.util.Optional;
-import org.netbeans.modules.cloud.oracle.CompartmentNode;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import org.netbeans.modules.cloud.oracle.OCIManager;
-import org.netbeans.modules.cloud.oracle.items.CompartmentItem;
+import org.netbeans.modules.cloud.oracle.OCIProfile;
+import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -46,7 +47,8 @@ import org.openide.util.RequestProcessor;
 )
 @ActionRegistration(
         displayName = "#CTL_CreateAutonomousDBAction",
-        asynchronous = true
+        asynchronous = true,
+        lazy = true
 )
 
 @ActionReferences(value = {
@@ -58,12 +60,25 @@ import org.openide.util.RequestProcessor;
     "MSG_DBNotCreated=Autonomous Database {0} failed to create: {1}"
 
 })
-public class CreateAutonomousDBAction implements ActionListener {
+public class CreateAutonomousDBAction extends AbstractAction implements ContextAwareAction {
 
     private final CompartmentItem context;
+    private OCIProfile session;
 
     public CreateAutonomousDBAction(CompartmentItem context) {
         this.context = context;
+        this.session = OCIManager.getDefault().getActiveProfile();
+    }
+
+    CreateAutonomousDBAction(OCIProfile session, CompartmentItem context) {
+        this.context = context;
+        this.session = session;
+    }
+
+    @Override
+    public Action createContextAwareInstance(Lookup actionContext) {
+        OCIProfile session = actionContext.lookup(OCIProfile.class);
+        return new CreateAutonomousDBAction(session, context);
     }
 
     @Override
@@ -71,7 +86,7 @@ public class CreateAutonomousDBAction implements ActionListener {
         Optional<Pair<String, char[]>> result = CreateAutonomousDBDialog.showDialog(context);
         result.ifPresent((p) -> {
             RequestProcessor.getDefault().execute(() -> {
-                Optional<String> message = OCIManager.getDefault().createAutonomousDatabase(context.getId(), p.first(), p.second());
+                Optional<String> message = session.createAutonomousDatabase(context.getKey().getValue(), p.first(), p.second());
                 if (!message.isPresent()) {
                     context.refresh();
                     DialogDisplayer.getDefault().notifyLater(

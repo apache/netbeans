@@ -1,0 +1,5 @@
+Code completion result for source line:
+$fn = $test::staticMeth|od(...);
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     staticMethod()                  [STATIC]   Test
+METHOD     staticMethod(...)               [STATIC]   Test

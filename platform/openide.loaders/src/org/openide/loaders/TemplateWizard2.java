@@ -165,7 +165,8 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
      * Reference to the current wizard
      */
     private TemplateWizard theWizard;
-    
+
+    @Override
     public void addNotify () {
         super.addNotify();
         //Fix for issue 31086, initial focus on Back button 
@@ -356,6 +357,7 @@ final class TemplateWizard2 extends javax.swing.JPanel implements DocumentListen
 
     /** Request focus.
     */
+    @Override
     public void requestFocus () {
         newObjectName.requestFocus();
         newObjectName.selectAll ();

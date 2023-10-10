@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
@@ -266,10 +268,11 @@ public final class JsfELVariableResolver implements ELVariableResolver {
                             if (parserResult == null) {
                                 continue;
                             }
-                            Node root = parserResult.root(DefaultLibraryInfo.FACELETS.getNamespace());
-                            if (root == null || root.children().isEmpty()) {
-                                root = parserResult.root(DefaultLibraryInfo.FACELETS.getLegacyNamespace());
-                            }
+                            Node root = DefaultLibraryInfo.FACELETS.getValidNamespaces().stream()
+                                    .map(parserResult::root)
+                                    .filter(Objects::nonNull)
+                                    .findFirst()
+                                    .orElse(null);
                             ElementUtils.visitChildren(root, new ElementVisitor() {
                                 @Override
                                 public void visit(Element node) {
@@ -313,8 +316,11 @@ public final class JsfELVariableResolver implements ELVariableResolver {
                     Result parseResult = JsfUtils.getEmbeddedParserResult(resultIterator, "text/html"); //NOI18N
                     if (parseResult instanceof HtmlParserResult) {
                         HtmlParserResult result = (HtmlParserResult) parseResult;
-                        Node root = result.root(DefaultLibraryInfo.COMPOSITE.getNamespace());
-                        if (root.children().isEmpty()) root = result.root(DefaultLibraryInfo.COMPOSITE.getLegacyNamespace());
+                        Node root = DefaultLibraryInfo.COMPOSITE.getValidNamespaces().stream()
+                                    .map(result::root)
+                                    .filter(Objects::nonNull)
+                                    .findFirst()
+                                    .orElse(null);
                         Collection<Element> children = root.children(ElementType.OPEN_TAG);
                         for (Element child : children) {
                             OpenTag ot = (OpenTag) child;

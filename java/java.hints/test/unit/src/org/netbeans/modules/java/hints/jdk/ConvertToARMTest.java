@@ -537,7 +537,7 @@ public class ConvertToARMTest extends NbTestCase {
                 .run(ConvertToARM.class)
                 .findWarning("0:173-0:175:verifier:TXT_ConvertToARM")
                 .applyFix("FIX_MergeTryResources")
-                .assertOutput("package test;import java.io.InputStream;import java.io.FileInputStream;import java.io.File;public class Test { public void test() throws Exception { try (InputStream in = new FileInputStream(new File(\"a\"));InputStream in2 = new FileInputStream(new File(\"a\"))){ in.read(); } }}");
+                .assertOutput("package test;import java.io.InputStream;import java.io.FileInputStream;import java.io.File;public class Test { public void test() throws Exception { try (InputStream in = new FileInputStream(new File(\"a\")); InputStream in2 = new FileInputStream(new File(\"a\"))){ in.read(); } }}");
     }
 
     public void testEFNestedInStms() throws Exception {
@@ -559,7 +559,7 @@ public class ConvertToARMTest extends NbTestCase {
                 .run(ConvertToARM.class)
                 .findWarning("0:247-0:249:verifier:TXT_ConvertToARM")
                 .applyFix("FIX_MergeTryResources")
-                .assertOutput("package test;import java.io.InputStream;import java.io.FileInputStream;import java.io.File;public class Test { public void test(InputStream in) throws Exception { try (in;InputStream in2 = new FileInputStream(new File(\"a\"))){ in.read(); } }}");
+                .assertOutput("package test;import java.io.InputStream;import java.io.FileInputStream;import java.io.File;public class Test { public void test(InputStream in) throws Exception { try (in; InputStream in2 = new FileInputStream(new File(\"a\"))){ in.read(); } }}");
     }
 
     public void testEnclosedFinally() throws Exception {

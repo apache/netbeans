@@ -28,7 +28,7 @@ import org.netbeans.jemmy.operators.JTreeOperator;
  * Functionality related to files tree is delegated to JTreeOperator (method
  * tree()) and nodes.<p>
  *
- * Example:<p>
+ * Example:
  * <pre>
  *      FavoritesOperator fo = FavoritesOperator.invoke();
  *      // or when Favorites pane is already opened

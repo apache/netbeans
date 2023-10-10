@@ -293,6 +293,7 @@ public class MultiSplitDivider implements Accessible {
                 return Integer.valueOf( rect.y );
         }
 
+        @Override
         public AccessibleValue getAccessibleValue() {
             return this;
         }

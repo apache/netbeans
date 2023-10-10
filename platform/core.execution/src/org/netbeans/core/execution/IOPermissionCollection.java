@@ -73,6 +73,7 @@ final class IOPermissionCollection extends PermissionCollection implements java.
         this.io = io;
     }
 
+    @Override
     public String toString() {
         return delegated.toString();
     }

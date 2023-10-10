@@ -20,7 +20,6 @@
 package org.netbeans.modules.maven.indexer;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import org.apache.maven.index.ArtifactInfo;
 import org.netbeans.junit.MockServices;
@@ -43,7 +42,7 @@ public class NexusRepositoryIndexerImplTest extends NexusTestBase {
         install(File.createTempFile("whatever", ".txt", getWorkDir()), "test", "spin", "1.1", "txt");
         nrii.indexRepo(info);
         // RepositoryQueries should handle the query via our NexusRepositoryIndexerImpl
-        RepositoryQueries.Result<String> res = RepositoryQueries.getArtifactsResult("test", Collections.singletonList(info));        
+        RepositoryQueries.Result<String> res = RepositoryQueries.getArtifactsResult("test", List.of(info));
         assertEquals("[spin]", res.getResults().toString());
     }
 
@@ -56,7 +55,7 @@ public class NexusRepositoryIndexerImplTest extends NexusTestBase {
         qf.setValue("stuff");
         qf.setOccur(QueryField.OCCUR_MUST);
         qf.setMatch(QueryField.MATCH_EXACT);
-        assertEquals("[test:plugin:0:test]", nrii.find(Collections.singletonList(qf), Collections.singletonList(info)).getResults().toString());
+        assertEquals("[test:plugin:0:test]", nrii.find(List.of(qf), List.of(info)).getResults().toString());
     }
 
     public void testLastUpdated() throws Exception { // #197670
@@ -66,7 +65,7 @@ public class NexusRepositoryIndexerImplTest extends NexusTestBase {
         install(empty, "test", "art", "0", "pom.lastUpdated");
         install(empty, "test", "art", "0", "jar.lastUpdated");
         nrii.indexRepo(info);
-        List<NBVersionInfo> versions = nrii.getVersions("test", "art", Collections.singletonList(info)).getResults();
+        List<NBVersionInfo> versions = nrii.getVersions("test", "art", List.of(info)).getResults();
         assertEquals(1, versions.size());
         NBVersionInfo v = versions.get(0);
         assertEquals("test:art:0:test", v.toString());

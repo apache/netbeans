@@ -35,7 +35,7 @@ and how other parts of the system can <b>look</b> them <b>up</B>.
 <P>
 There already are libraries trying to solve this problem, usually by querying for
 an interface and finding its appropriate implementaion. The most famous is
-<A href="http://www.jini.org/">Jini</A>, the platform for development of
+<A href="https://river.apache.org">Jini</A>, the platform for development of
 distributed network services. Our library does something similar, but tries
 to stay small and easy
 to use. The NetBeans <em>Lookup
@@ -87,7 +87,7 @@ It would be much nicer if the registation could be done just by putting a JAR fi
 into the application classpath.
 <P>
 Actually this has been realized also by the JDK development team and addressed in
-JDK 1.3 as part of the <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#Provider%20Configuration%20File">provider extension mechanism</A>. 
+JDK 1.3 as part of the <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Provider%20Configuration%20File">provider extension mechanism</A>. 
 The <code>MyToolkit</code> could be registered by adding a file 
 <code>/META-INF/services/java.awt.Toolkit</code> with one line
 <code>org.myorg.MyToolkit</code> into the JAR file that contains the
@@ -176,13 +176,13 @@ Specifying the query, getting the result and listenning on changes.</LI>
   <LI><A HREF="lookup-spi.html">Lookup Library SPIs</A> for those writing the
 implementaion code and registering it with lookup. Includes also writing own
 lookup implementation.</LI>
-  <LI>Download <A HREF="http://www.netbeans.org/">NetBeans platform</A> which
+  <LI>Download <A HREF="https://netbeans.apache.org/download/index.html">NetBeans platform</A> which
 contains <code>org-openide-util.jar</code></LI>
-    <A HREF="http://hg.netbeans.org/main-golden/file/tip/openide.util/src/org/openide/util/lookup/">
+    <A HREF="https://github.com/apache/netbeans/tree/master/platform/openide.util.lookup/src/org/openide/util/lookup">
     implementation package (org.openide.util.lookup) </A>
     + classes Lookup, LookupEvent, LookupListener in
-    <A href="http://hg.netbeans.org/main-golden/file/tip/openide.util/src/org/openide/util/">util package</A></LI>
-  <li><a href="http://www.martinfowler.com/articles/injection.html">Inversion of Control Containers and the Dependency Injection pattern</a> (Martin Fowler)</li>
+    <A href="https://github.com/apache/netbeans/tree/master/platform/openide.util.lookup/src/org/openide/util">util package</A></LI>
+  <li><a href="https://www.martinfowler.com/articles/injection.html">Inversion of Control Containers and the Dependency Injection pattern</a> (Martin Fowler)</li>
 </UL>
 </BODY>
 </HTML>

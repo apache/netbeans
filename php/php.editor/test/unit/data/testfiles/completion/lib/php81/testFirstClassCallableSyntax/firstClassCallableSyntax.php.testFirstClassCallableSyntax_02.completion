@@ -1,0 +1,4 @@
+Code completion result for source line:
+$test = new Te|st();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Test()                          [PUBLIC]   Test

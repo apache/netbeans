@@ -77,6 +77,9 @@ public class EjbJarImpl extends BaseEEModuleImpl implements EjbJarImplementation
         }
         String ver = getModuleVersion();
 
+        if (EjbJar.VERSION_4_0.equals(ver)) {
+            return Profile.JAKARTA_EE_9_FULL;
+        }
         if (EjbJar.VERSION_3_2.equals(ver)) {
             return Profile.JAVA_EE_7_FULL;
         }

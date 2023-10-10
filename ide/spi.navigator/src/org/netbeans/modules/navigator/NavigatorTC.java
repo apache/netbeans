@@ -78,8 +78,6 @@ public final class NavigatorTC extends TopComponent implements NavigatorDisplaye
         
         setName(NbBundle.getMessage(NavigatorTC.class, "LBL_Navigator")); //NOI18N
         setIcon(ImageUtilities.loadImage("org/netbeans/modules/navigator/resources/navigator.png")); //NOI18N
-        // accept focus when empty to work correctly in nb winsys
-        setFocusable(true);
         // special title for sliding mode
         // XXX - please rewrite to regular API when available - see issue #55955
         putClientProperty("SlidingName", getName());
@@ -316,7 +314,7 @@ public final class NavigatorTC extends TopComponent implements NavigatorDisplaye
 
     @Override
     public UndoRedo getUndoRedo() {
-        if (selectedPanel == null || !(selectedPanel instanceof NavigatorPanelWithUndo)) {
+        if (!(selectedPanel instanceof NavigatorPanelWithUndo)) {
             return UndoRedo.NONE;
         }
         return ((NavigatorPanelWithUndo)selectedPanel).getUndoRedo();
@@ -349,6 +347,8 @@ public final class NavigatorTC extends TopComponent implements NavigatorDisplaye
         holderPanel.setVisible(false);
         remove(contentArea);
         add(notAvailLbl, BorderLayout.CENTER);
+        // accept focus when empty to work correctly in nb winsys
+        setFocusable(true);
         revalidate();
         repaint();
     }
@@ -361,6 +361,9 @@ public final class NavigatorTC extends TopComponent implements NavigatorDisplaye
         remove(notAvailLbl);
         add(holderPanel, BorderLayout.NORTH);
         add(contentArea, BorderLayout.CENTER);
+        /* Avoid having the NavigatorTC itself capture the focus if the user presses Tab while
+        focused on a component in the contentArea. */
+        setFocusable(false);
         revalidate();
         repaint();
     }

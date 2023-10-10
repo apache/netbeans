@@ -126,7 +126,7 @@ public class EnableStep implements WizardDescriptor.FinishablePanel<WizardDescri
             o + " is instanceof Collection<UpdateElement> or null.";
         forEnable = ((Collection<UpdateElement>) o);
         Object templateO = settings.getProperty (FeatureOnDemandWizardIterator.CHOSEN_TEMPLATE);
-        assert templateO != null && templateO instanceof FileObject : templateO + " is not null and instanceof FileObject.";
+        assert templateO instanceof FileObject : templateO + " is not null and instanceof FileObject.";
         FileObject templateFO = (FileObject) templateO;
         FeatureInfo info = FoDLayersProvider.getInstance().whichProvides(templateFO);
         RequestProcessor.Task t = FeatureManager.getInstance().create(doEnable(info));
@@ -222,7 +222,7 @@ public class EnableStep implements WizardDescriptor.FinishablePanel<WizardDescri
     
     private void waitForDelegateWizard () {
         Object o = wd.getProperty (FeatureOnDemandWizardIterator.CHOSEN_TEMPLATE);
-        assert o != null && o instanceof FileObject :
+        assert o instanceof FileObject :
             o + " is not null and instanceof FileObject";
         final String templateResource = ((FileObject) o).getPath ();
         fo = null;

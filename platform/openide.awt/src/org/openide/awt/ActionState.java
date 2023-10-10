@@ -35,63 +35,64 @@ import org.openide.util.actions.Presenter;
  * and {@link ActionRegistration#checkedOn} to control action's enabled or checked state. The annotation
  * can be only applied on <b>context actions</b>, which have a single parameter constructor,
  * which accept the model object - see {@link Actions#context(java.lang.Class, boolean, boolean, org.openide.util.ContextAwareAction, java.lang.String, java.lang.String, java.lang.String, boolean)}.
- * <p/>
+ * <p>
  * When used as {@link ActionRegistration#checkedOn} value, the annotated action will change
  * to <b>toggle on/off action</b>, represented by a checkbox (menu) or a toggle button (toolbar).
  * The action state will track the model property specified by this
  * annotation. Toggle actions become <b>enabled</b> when the model object is
  * found in the Lookup, and <b>checked</b> (or toggled on) when the model property
  * is set to a defined value (usually {@code true})
- * <p/>
- * The {@link #type} specifies type which is searched for in the {@link Lookup} and
+ * <p>
+ * The {@link #type} specifies type which is searched for in the {@link org.openide.util.Lookup} and
  * if an instance is found, it is used as the model object. If the {@link #type} is not set, 
  * the <b>the type inferred from Action's
  * constructor</b> (see {@link ActionRegistration}) will be used to find the model.
- * <p/>
+ * <p>
  * The {@link #property} specifies bean property whose value should be used to
  * determine checked state. The obtained value is compared using {@link #checkedValue}
  * as follows:
  * <ul>
  * <li>a boolean or Boolean value is compared to {@link Boolean#TRUE} or the {@link #checkedValue},
  * if present.
- * <li>if {@link #checkValue} is {@link #NULL_VALUE}, the action is checked if and only if
+ * <li>if {@link #checkedValue} is {@link #NULL_VALUE}, the action is checked if and only if
  * the value is {@code null}. 
- * <li>if {@link #checkValue} is {@link #NON_NULL_VALUE}, the action is checked if and only if
+ * <li>if {@link #checkedValue} is {@link #NON_NULL_VALUE}, the action is checked if and only if
  * the value is not {@code null}. 
- * <li>if the value type is an enum, its {@link Enum#name} is compared to {@link #checkValue}
- * <li>if the value is a {@link Collection} or {@link Map}, state evaluates to the {@link Collection#isEmpty} or
- * {@link Map#isEmpty}, respectively.
+ * <li>if the value type is an enum, its {@link Enum#name} is compared to {@link #checkedValue}
+ * <li>if the value is a {@link java.util.Collection} or {@link java.util.Map}, state evaluates to the {@link java.util.Collection#isEmpty} or
+ * {@link java.util.Map#isEmpty}, respectively.
  * <li>if the value is a {@link Number}, state will be true if value evaluates to <b>a positive integer</b>.
  * <li>the state will be {@code false} (unchecked) otherwise.
- * <p/>
+ * </ul>
+ * <p>
  * If {@link #type} is set to {@link Action}.class, the annotated element <b>must
  * be an {@link Action}</b> subclass. {@link Action#getValue} will be used to determine
  * the state. The Action delegate <b>will not be instantiated eagerly</b>, but only
  * after the necessary context type becomes available in Lookup. 
  * This support minimizes from premature code loading for custom action implementations. 
- * <b>Important note:</b> if your Action implements {@link ContextAwareAction},
+ * <b>Important note:</b> if your Action implements {@link org.openide.util.ContextAwareAction},
  * or one of the {@link Presenter} interfaces, it is eager and will be loaded immediately !
- * <p/>
+ * <p>
  * Changes to the model object will be tracked using event listener pattern. The annotation-supplied
  * delegate attempts to {@link PropertyChangeListener} and {@link ChangeListener} automatically; \
  * other listener interfaces must be specified using {@link #listenOn}
  * value. Finally, {@link #listenOnMethod} specifies which listener method will trigger
  * state update; by default, all listener method calls will update the action state.
- * <p/>
+ * <p>
  * The {@link ActionState} annotation may be also used as a value of {@link ActionRegistration#enabledOn()} 
  * and causes the annotated Action to be <b>enabled</b> not only on presence of object of the context type,
  * but also based on the model property. The property, enable value and listener is specified the
  * same way as for "checked" state. See the above text.
- * <p/>
+ * <p>
  * If a completely custom behaviour is desired, the system can finally delegate {@link Action#isEnabled} and
  * {@link Action#getValue getValue}({@link Action#SELECTED_KEY}) to the action implementation itself: use {@link #useActionInstance()}
  * value.
- * <p/>
+ * <p>
  * Here are several examples of {@code @ActionState} usage:
- * <p/>
+ * <p>
  * To define action, which <b>enables on modified DataObjects</b> do the following
  * registration:
- * <code><pre>
+ * <pre><code>
  * &#64;ActionID(category = "Example", id = "example.SaveAction")
  * &#64;ActionRegistration(displayName = "Save modified",
  *     enabledOn = @ActionState(property = "modified")
@@ -105,7 +106,7 @@ import org.openide.util.actions.Presenter;
  *         // ...
  *     }
  * }
- * </pre></code>
+ * </code></pre>
  * The action will be instantiated and run only after:
  * <ul>
  * <li>DataObject becomes available, and
@@ -114,7 +115,7 @@ import org.openide.util.actions.Presenter;
  * 
  * To create "toggle" action in toolbar or a menu, which changes state based on some property,
  * you can code:
- * <code><pre>
+ * <pre><code>
  * enum SelectionMode {
  *     Rectangular,
  *     normal
@@ -131,16 +132,16 @@ import org.openide.util.actions.Presenter;
  *     public void actionPerformed(ActionEvent e) {
  *     }
  * }
- * </pre></code>
+ * </code></pre>
  * The action enables when {@code EditorInterface} appears in the action Lookup. Then,
  * its state will be derived from {@code EditorInterface.selectionMode} property. Since
  * there's a custom listener interface for this value, it must be specified using {@link #listenOn}.
- * <p/>
+ * <p>
  * Finally, if the action needs to perform its own special magic to check enable state, we 
  * hand over final control to the action, but the annotation-introduced wrappers will still
  * create action instance for a new model object, attach and detach listeners on it and ensure
  * that UI will not be strongly referenced from the model for proper garbage collection:
- * <code><pre>
+ * <pre><code>
  * &#64;ActionID(category = "Example", id = "example.SelectPrevious")
  * &#64;ActionRegistration(displayName = "Selects previous item", checkedOn = &#64;ActionState(
  *     listenOn = ListSelectionListener.class, useActionInstance = true)
@@ -159,7 +160,7 @@ import org.openide.util.actions.Presenter;
  *     public void actionPerformed(ActionEvent e) {
  *     }
  * }
- * </pre></code>
+ * </code></pre>
  * The system will do the necessary bookkeeping, but the action decides using its
  * {@link Action#isEnabled} implementation. 
  * 
@@ -194,7 +195,7 @@ public @interface ActionState {
      * {@link PropertyChangeListener} or {@link ChangeListener}, the action will
      * attach a listener ({@link PropertyChangeListener} takes precedence) and will fire
      * appropriate state events when the property property changes.
-     * <p/>
+     * <p>
      * In the case that checked state is delegated to {@link Action}, the property
      * default is different depending on the context the annotation is used:
      * <ul>
@@ -228,7 +229,7 @@ public @interface ActionState {
      * Custom listener interface to monitor for changes. If undefined, then
      * either {@link PropertyChangeListener} or {@link ChangeListener} will be 
      * auto-detected from {@link #type} class.
-     * <p/>
+     * <p>
      * All listener methods will cause the system to re-evaluate enable and on/off 
      * (if applicable) state for the action, unless {@link #listenOnMethod} is 
      * also used.
@@ -242,7 +243,7 @@ public @interface ActionState {
      * The update will re-check both enable and on/off state (if applicable). 
      * The action will however fire change events only if the state actually changes
      * from the previous one.
-     * <p/>
+     * <p>
      * The default (empty) value means that all listener methods will cause
      * state update. The value can be only specified together with {@link #listenOn} value.
      * 
@@ -254,10 +255,10 @@ public @interface ActionState {
      * If true, the target system will delegate to the action instance itself.
      * The action instance will not be created until the context object (or {@link #type()}
      * becomes available and the guard {@link #property()} has the {@link #checkedValue() appropriate value}.
-     * <p/>
+     * <p>
      * After that, the system will delegate to {@link Action#isEnabled()} for enablement, or
      * to {@link Action#getValue getValue}({@link Action#SELECTED_KEY}) for on/off state of the action.
-     * <p/>
+     * <p>
      * The annotated element <b>must</b> implement {@link Action} interface in order to use
      * this value.
      * @return whether the action instance itself should be ultimately for enable/check status

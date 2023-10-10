@@ -33,7 +33,7 @@ final class Cancellation extends Error {
         super("canceled");
     }
 
-    private static final Set<Cancellable> cancellables = new WeakSet<Cancellable>();
+    private static final Set<Cancellable> cancellables = new WeakSet<>();
 
     public static synchronized void register(Cancellable c) {
         cancellables.add(c);

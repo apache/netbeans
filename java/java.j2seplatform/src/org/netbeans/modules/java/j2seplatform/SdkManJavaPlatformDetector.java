@@ -18,14 +18,14 @@
  */
 package org.netbeans.modules.java.j2seplatform;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import org.netbeans.modules.java.j2seplatform.platformdefinition.J2SEPlatformImpl;
-import org.netbeans.spi.java.platform.JavaPlatformFactory;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.util.Lookup;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -33,34 +33,27 @@ import org.openide.util.Lookup;
  */
 public class SdkManJavaPlatformDetector implements Runnable {
 
-    static final File SDKMAN_JAVA_DIR = new File(System.getProperty("user.home"), ".sdkman/candidates/java"); //NOI18N
+    static final Path SDKMAN_JAVA_DIR = Paths.get(System.getProperty("user.home"), ".sdkman", "candidates", "java"); //NOI18N
 
     @Override
     public void run() {
-        if (SDKMAN_JAVA_DIR.isDirectory()) {
-            File[] platformDirs = SDKMAN_JAVA_DIR.listFiles((File f) -> f.isDirectory() && !"current".equals(f.getName())); //NOI18N
-            Collection<? extends JavaPlatformFactory.Provider> providers = Lookup.getDefault().lookupAll(JavaPlatformFactory.Provider.class);
-            for (JavaPlatformFactory.Provider provider : providers) {
-                JavaPlatformFactory platformFactory = provider.forType(J2SEPlatformImpl.PLATFORM_J2SE);
-                if (platformFactory != null) {
-                    for (File platformDir : platformDirs) {
-                        try {
-                            FileObject installFolder = FileUtil.toFileObject(platformDir);
-                            platformFactory.create(installFolder, getDisplayName(installFolder), true);
-                        } catch (IOException ex) {
-                            //It seems we was not suceeding to add this
-                        } catch(IllegalArgumentException ex) {
-                            //Thrown if the platform is already persisted and added to the system.
-                        }
 
-                    }
-                    break;
-                }
+        if (Files.isDirectory(SDKMAN_JAVA_DIR)) {
+            try (Stream<Path> files = Files.list(SDKMAN_JAVA_DIR)) {
+
+                List<Path> jdks = files.filter(p -> Files.isDirectory(p, LinkOption.NOFOLLOW_LINKS))
+                                       .filter(p -> !p.getFileName().toString().equals("current"))
+                                       .collect(Collectors.toList());
+
+                JDKDetectorUtils.registerJDKs(jdks, jdk -> getDisplayName(jdk));
+            } catch (IOException ignore) {
+                // can't list files
             }
         }
+
     }
 
-    private static String getDisplayName(FileObject installDir) {
-        return "JDK " + installDir.getNameExt(); //NOI18
+    private static String getDisplayName(Path path) {
+        return "JDK " + path.getFileName().toString() + " (SDKMAN)"; //NOI18
     }
 }

@@ -26,6 +26,7 @@ import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -132,6 +133,15 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                 group.add(task);
             }
         }
+        Map<String, Object> taskInfos = (Map<String, Object>)info.getOrDefault("taskDetails", Collections.emptyMap()); // NOI18N
+        for (String tn : prj.getTaskNames()) {
+            Map<String, String> tinfo = (Map<String, String>)taskInfos.get(tn);
+            if (tinfo != null) {
+                prj.taskDependencies.put(tn, Arrays.asList(tinfo.getOrDefault("taskDependencies", "").split(","))); // NOI18N
+                Set<String> inherited = new LinkedHashSet<>(Arrays.asList(tinfo.getOrDefault("inherits", "").split(","))); // NOI18N
+                prj.taskTypes.put(tn, inherited);
+            }
+        }
     }
 
     void processDependencies() {
@@ -144,7 +154,7 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
         if (sourceSetNames != null) {
             for (String name : sourceSetNames) {
                 Set<File> dirs = (Set<File>) info.get("sourceset_" + name + "_output_classes");
-                sourceSetOutputs.addAll(dirs);
+                sourceSetOutputs.addAll(dirs != null ? dirs : Collections.emptySet());
                 sourceSetOutputs.add((File) info.get("sourceset_" + name + "_output_resources"));
             }
         }
@@ -231,6 +241,10 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                 LOG.log(Level.FINER, "Adding UNRESOLVED dependency: {0} -> {1}", new Object[] { entry.getKey(), dep });
             }
         }
+        
+        GradleDependency.ProjectDependency rootDep = new GradleDependency.ProjectDependency(prj.getPath(), prj.getProjectDir());
+        prj.projectDependencyNode = rootDep;
+        
         if (configurationNames != null) {
             for (String name : configurationNames) {
                 GradleConfiguration conf = prj.createConfiguration(name);
@@ -264,13 +278,15 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                         conf.projects.add(projects.get(p));
                     }
                 }
+                Map<String, UnresolvedDependency> unresolved2 = new HashMap<>(unresolved);
                 conf.unresolved = new HashSet<>();
                 Set<String> unresolvedComp = (Set<String>) info.get("configuration_" + name + "_unresolved");
                 if (unresolvedComp != null) {
                     for (String u : unresolvedComp) {
-                        UnresolvedDependency dep = unresolved.get(u);
+                        UnresolvedDependency dep = unresolved2.get(u);
                         if (dep == null) {
                             dep = new UnresolvedDependency(u);
+                            unresolved2.put(u, dep);
                         }
                         conf.unresolved.add(dep);
                     }
@@ -284,7 +300,87 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
                 Boolean transitive = (Boolean) info.get("configuration_" + name + "_transitive");
                 conf.transitive = transitive == null ? true : transitive;
 
+                Boolean canBeConsumed = (Boolean) info.get("configuration_" + name + "_canBeConsumed");
+                conf.canBeConsumed = canBeConsumed == null ? false : canBeConsumed;
+
+                conf.attributes = (Map<String, String>) info.get("configuration_" + name + "_attributes");
+
                 conf.description = (String) info.get("configuration_" + name + "_description");
+                
+                Map<String, Collection<String>> directDependencies = (Map<String, Collection<String>>)info.get("configuration_" + name + "_dependencies");
+                Set<String> childSpecs = (Set<String>)info.get("configuration_" + name + "_directChildren");
+                if (childSpecs == null) {
+                    childSpecs = Collections.emptySet();
+                }
+                if (directDependencies == null) {
+                    directDependencies = Collections.emptyMap();
+                }
+                Map<GradleDependency, Collection<GradleDependency>> deps = new HashMap<>();
+                Set<GradleDependency> children = new LinkedHashSet<>();
+
+                for (Map.Entry<String, Collection<String>> it : directDependencies.entrySet()) {
+                    String parentId = it.getKey();
+
+                    GradleDependency parentD;
+                    boolean special = false;
+                    if (parentId.equals("")) {
+                        parentD = GradleConfiguration.SELF_DEPENDENCY;
+                        special = true;
+                    } else if (parentId.startsWith(DEPENDENCY_PROJECT_PREFIX)) {
+                        int sep1 = parentId.indexOf(':', DEPENDENCY_PROJECT_PREFIX.length());
+                        parentD = projects.get(parentId.substring(DEPENDENCY_PROJECT_PREFIX.length(), sep1));
+                        special = true;
+                    } else {
+                        parentD = components.get(parentId);
+                        if (parentD == null) {
+                            parentD = unresolved.get(parentId);
+                        }
+                    }
+                    if (parentD == null) {
+                        continue;
+                    }
+                    
+                    if (childSpecs.remove(parentId)) {
+                        children.add(parentD);
+                    } else if (!special) {
+                        // special case - version may not be specified, but is implied somehow.
+                        try {
+                            String[] gav = GradleModuleFileCache21.gavSplit(parentId);
+                            String versionLess = gav[0] + ':' + gav[1] + ':';
+                            if (childSpecs.remove(versionLess)) {
+                                children.add(parentD);
+                            }
+                        } catch (IllegalArgumentException ex) {
+                            LOG.log(Level.FINE, "Unknown dependency GAV: parentId");
+                        }
+                    }
+                    
+                    for (String cid : it.getValue()) {
+                        GradleDependency childD;
+                        if (cid.startsWith(DEPENDENCY_PROJECT_PREFIX)) {
+                            int sep1 = cid.indexOf(':', DEPENDENCY_PROJECT_PREFIX.length());
+                            childD = projects.get(cid.substring(DEPENDENCY_PROJECT_PREFIX.length(), sep1));
+                        } else {
+                            childD = components.get(cid);
+                            if (childD == null) {
+                                childD = unresolved.get(cid);
+                            }
+                        }
+                        if (childD == null) {
+                            continue;
+                        }
+                        deps.computeIfAbsent(parentD, x -> new ArrayList<>()).
+                            add(childD);
+                    }
+                }
+                for (String s : childSpecs) {
+                    GradleDependency ud = unresolved2.get(s);
+                    if (ud != null) {
+                        children.add(ud);
+                    }
+                }
+                conf.directChildren = children;
+                conf.dependencyMap = deps;
             }
             for (String name : configurationNames) {
                 GradleConfiguration conf = prj.configurations.get(name);
@@ -299,7 +395,9 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
             }
 
         }
-
+        
+        prj.projectIds = (Map<String, String>)info.getOrDefault("project_ids", Collections.emptyMap());
+        
         // Create file -> component map
         for (ModuleDependency dep : components.values()) {
             for (File f : dep.getArtifacts()) {
@@ -316,6 +414,8 @@ class GradleBaseProjectBuilder implements ProjectInfoExtractor.Result {
         // Add detailed problems on unresolved dependencies
         problems.addAll(unresolvedProblems.values());
     }
+    
+    private static final String DEPENDENCY_PROJECT_PREFIX = "*project;";
 
     private ModuleDependency resolveModuleDependency(File gradleUserHome, String c) {
         GradleModuleFileCache21 moduleCache = GradleModuleFileCache21.getGradleFileCache(gradleUserHome.toPath());

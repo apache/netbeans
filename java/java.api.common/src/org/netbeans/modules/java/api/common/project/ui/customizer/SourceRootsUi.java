@@ -410,7 +410,7 @@ out:        for( int i = 0; i < files.length; i++ ) {
 
             // Remove the items
             for( int i = si.length - 1 ; i >= 0 ; i-- ) {
-                this.ownedFolders.remove(((Vector)rootsModel.getDataVector().elementAt(si[i])).elementAt(0));
+                this.ownedFolders.remove(rootsModel.getDataVector().elementAt(si[i]).elementAt(0));
                 rootsModel.removeRow( si[i] );
             }
 
@@ -440,7 +440,7 @@ out:        for( int i = 0; i < files.length; i++ ) {
             ListSelectionModel selectionModel = this.rootsList.getSelectionModel();
             selectionModel.clearSelection();
             for( int i = 0; i < si.length; i++ ) {
-                Vector item = (Vector)rootsModel.getDataVector().elementAt(si[i]);
+                Vector item = rootsModel.getDataVector().elementAt(si[i]);
                 int newIndex = si[i]-1;
                 rootsModel.removeRow( si[i] );
                 rootsModel.insertRow( newIndex, item );

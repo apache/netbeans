@@ -45,6 +45,29 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="errorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="noteLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="phpUnitInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="phpUnitPhp53InfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="installationInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="phpUnitLearnMoreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="skelGenLearnMoreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="phpUnit370InfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="skelGenAbandonedLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="phpUnitLabel" min="-2" max="-2" attributes="0"/>
@@ -73,35 +96,13 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="phpUnitVersionLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="skelGenHintLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="phpUnitHintLabel" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
-          </Group>
-          <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="errorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="noteLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="phpUnitInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="phpUnitPhp53InfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="installationInfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="phpUnitLearnMoreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="skelGenLearnMoreLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="phpUnit370InfoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-              </Group>
-              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="skelGenAbandonedLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -115,8 +116,10 @@
                   <Component id="phpUnitBrowseButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="phpUnitVersionLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="phpUnitHintLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="skelGenTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="skelGenLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -379,6 +382,11 @@
           <ResourceString bundle="org/netbeans/modules/php/phpunit/ui/options/Bundle.properties" key="PhpUnitOptionsPanel.errorLabel.AccessibleContext.accessibleDescription" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </AccessibilityProperties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="phpUnitVersionLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="VERSION" noResource="true"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

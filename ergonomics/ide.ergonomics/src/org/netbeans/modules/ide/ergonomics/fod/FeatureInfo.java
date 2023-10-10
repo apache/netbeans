@@ -64,6 +64,9 @@ public final class FeatureInfo {
         this.clusterName = clusterName;
     }
     
+    public String getClusterName() {
+        return clusterName;
+    }
 
     public static FeatureInfo create(String clusterName, URL delegateLayer, URL bundle) throws IOException {
         Properties p = new Properties();

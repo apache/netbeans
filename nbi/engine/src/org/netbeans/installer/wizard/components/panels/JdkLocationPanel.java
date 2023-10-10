@@ -317,7 +317,7 @@ public class JdkLocationPanel extends ApplicationLocationPanel {
         final Object obj = getWizard().
                 getContext().
                 get(Product.class);
-        if (obj != null && obj instanceof Product) {
+        if (obj instanceof Product) {
             final Product product = (Product) obj;
             final String jdkSysPropName = product.getUid() + StringUtils.DOT +
                     JdkLocationPanel.JDK_LOCATION_PROPERTY;
@@ -563,7 +563,7 @@ public class JdkLocationPanel extends ApplicationLocationPanel {
         
         final Object objectContext = getWizard().getContext().get(Product.class);
         boolean sort = false;
-        if(objectContext != null && objectContext instanceof Product) {
+        if(objectContext instanceof Product) {
             final Product product = (Product) objectContext;
             for (Dependency dependency : product.getDependencies(InstallAfter.class)) {
                 

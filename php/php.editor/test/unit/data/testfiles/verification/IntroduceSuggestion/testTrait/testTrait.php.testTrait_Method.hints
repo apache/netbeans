@@ -1,0 +1,4 @@
+        $this->method();^
+        ---------------
+HINT:Introduce Hint
+FIX:Create Method " method()" in Trait "TraitA" (testTrait.php)

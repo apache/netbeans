@@ -32,7 +32,6 @@ import javax.swing.SwingUtilities;
 import static junit.framework.TestCase.assertEquals;
 import org.eclipse.lsp4j.LogTraceParams;
 import org.eclipse.lsp4j.RegistrationParams;
-import org.eclipse.lsp4j.SetTraceParams;
 import org.eclipse.lsp4j.ShowDocumentParams;
 import org.eclipse.lsp4j.ShowDocumentResult;
 import org.eclipse.lsp4j.UnregistrationParams;
@@ -94,11 +93,6 @@ public class NodeActionsProviderTest {
                     @Override
                     public void logTrace(LogTraceParams params) {
                         super.logTrace(params);
-                    }
-
-                    @Override
-                    public void setTrace(SetTraceParams params) {
-                        super.setTrace(params);
                     }
 
                     @Override

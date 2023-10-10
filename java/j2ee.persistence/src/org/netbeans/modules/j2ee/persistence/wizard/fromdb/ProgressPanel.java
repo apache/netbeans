@@ -118,6 +118,7 @@ public class ProgressPanel extends javax.swing.JPanel {
     private javax.swing.JLabel info;
     // End of variables declaration//GEN-END:variables
     
+    @Override
     public Dimension getPreferredSize() {
         Dimension orig = super.getPreferredSize();
         return new Dimension(500, orig.height);

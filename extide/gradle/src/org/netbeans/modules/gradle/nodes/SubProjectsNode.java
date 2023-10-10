@@ -53,6 +53,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeListener;
+import java.util.prefs.Preferences;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.spi.GradleSettings;
@@ -124,14 +125,15 @@ public class SubProjectsNode extends AbstractNode {
                     refresh(false);
                 }
             };
-            NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(propListener, proj));
+            NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(propListener, NbGradleProject.get(project)));
 
             prefListener = (evt) -> {
                 if (GradleSettings.PROP_DISPLAY_DESCRIPTION.equals(evt.getKey())) {
                     refresh(false);
                 }
             };
-            GradleSettings.getDefault().getPreferences().addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, prefListener, null));
+            Preferences prefs = GradleSettings.getDefault().getPreferences();
+            prefs.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, prefListener, prefs));
         }
 
         @Override

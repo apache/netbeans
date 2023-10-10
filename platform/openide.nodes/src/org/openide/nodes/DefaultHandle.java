@@ -53,7 +53,7 @@ public final class DefaultHandle extends Object implements Node.Handle {
 
     /** Find the node.
     * @return the found node
-    * @exception IOException if the parent cannot be recreated
+    * @exception java.io.IOException if the parent cannot be recreated
     * @exception NodeNotFoundException if the path is not valid (exception may be examined for details)
     */
     public Node getNode() throws java.io.IOException {

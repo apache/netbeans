@@ -600,7 +600,7 @@ public class ClassIndexTest extends NbTestCase {
     }
 
     private void assertElementHandles(final String[] expected, final Set<ElementHandle<TypeElement>> result) {
-        final Set<String> expSet = new HashSet(Arrays.asList(expected));
+        final Set<String> expSet = new HashSet<>(Arrays.asList(expected));
         for (ElementHandle<TypeElement> handle : result) {
             if (!expSet.remove(handle.getQualifiedName())) {
                 throw new AssertionError("Expected: " + Arrays.toString(expected) +" Result: " + result);

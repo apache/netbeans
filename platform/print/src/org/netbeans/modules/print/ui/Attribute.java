@@ -435,7 +435,7 @@ final class Attribute extends Dialog implements Macro.Listener, Percent.Listener
 //out("   select: " + myLastField.getSelectionStart() + " " + myLastField.getSelectionEnd());
         String text = myLastField.getText();
         String head = text.substring(0, myLastField.getSelectionStart());
-        String tail = text.substring(myLastField.getSelectionEnd(), text.length());
+        String tail = text.substring(myLastField.getSelectionEnd());
 
         myLastField.setText(head + macro.getName() + tail);
     }

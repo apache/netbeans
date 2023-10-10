@@ -120,7 +120,7 @@ public class MavenSourceJavadocAttacher implements SourceJavadocAttacherImplemen
             hndl.start();
             // XXX should this be limited to _defined.getRepoId()?
             List<ArtifactRepository> repos = RepositoryPreferences.getInstance().remoteRepositories(online);
-            online.resolve(art, repos, online.getLocalRepository());
+            online.resolveArtifact(art, repos, online.getLocalRepository());
             File result = art.getFile();
             if (result.isFile()) {
                 URL rootUrl = findRoot(result, javadoc);
@@ -145,7 +145,7 @@ public class MavenSourceJavadocAttacher implements SourceJavadocAttacherImplemen
                                     coordinate.version,
                                     "jar",
                                     javadoc ? "javadoc" : "sources"); //NOI18N
-                            online.resolve(sources, repos, online.getLocalRepository());
+                            online.resolveArtifact(sources, repos, online.getLocalRepository());
                             URL rootUrl = findRoot(sources.getFile(), javadoc);
                             if (rootUrl != null) {
                                 res.add(rootUrl);

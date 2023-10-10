@@ -62,7 +62,7 @@ class GrammarManager extends FileChangeAdapter implements DocumentListener {
 
     private static final String FILE_PROTOCOL_URI_PREFIX = "file:/"; //NOI18N
     
-    private ArrayList<FileObject> externalDTDs = new ArrayList();
+    private List<FileObject> externalDTDs = new ArrayList<>();
     
     // current cache state
     private int state = INVALID;
@@ -291,7 +291,7 @@ class GrammarManager extends FileChangeAdapter implements DocumentListener {
                 
                 if(loaded instanceof ExtendedGrammarQuery) {
                     //attach listeners to external files and if any of them changes then reload this grammar
-                    for(String resolvedEntity : (List<String>)((ExtendedGrammarQuery)loaded).getResolvedEntities()) {
+                    for (String resolvedEntity : ((ExtendedGrammarQuery)loaded).getResolvedEntities()) {
                         //filter non-files resolved entities
                         if(!resolvedEntity.startsWith(FILE_PROTOCOL_URI_PREFIX)) continue;
                         

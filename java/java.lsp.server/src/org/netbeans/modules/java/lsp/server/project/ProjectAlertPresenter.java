@@ -39,6 +39,7 @@ import javax.swing.event.ListDataListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -489,7 +490,7 @@ class ProjectAlertPresenter {
             // hack: the LSP protocol does not support title. Until fixed, or implemented through a custom message,
             // embed the title into description:
             String title = Bundle.ProjectProblem_Title(projectName, p.getDisplayName());
-            NotifyDescriptor msg = new NotifyDescriptor(title + ": " + p.getDescription(), title, NotifyDescriptor.DEFAULT_OPTION, type, new Object[]{NotifyDescriptor.OK_OPTION}, null);
+            NotifyDescriptor msg = new NotifyDescriptor(title + ": " + Utils.html2plain(p.getDescription()), title, NotifyDescriptor.DEFAULT_OPTION, type, new Object[]{NotifyDescriptor.OK_OPTION}, null);
 
             // Note: the number of 'fatal' dialogs displayed at the same time is limited by the RP throughput. Dialog API does not support CompletableFuture<> interface
             // so threads may dangle.
@@ -647,7 +648,7 @@ class ProjectAlertPresenter {
             }
             
             String title = Bundle.ProjectProblems_Fixable_Title(projectName, ref.problem.getDisplayName());
-            String msg = ref.problem.getDescription();
+            String msg = Utils.html2plain(ref.problem.getDescription());
             if (probs.size() > 1) {
                 msg = Bundle.ProjectProblems_Additional(probs.size() - 1, msg);
             }
@@ -739,7 +740,7 @@ class ProjectAlertPresenter {
         }, RESOLVE_RP).thenApply(r -> {
             if (r.isResolved()) {
                 if (r.getMessage() != null) {
-                    StatusDisplayer.getDefault().setStatusText(r.getMessage());
+                    StatusDisplayer.getDefault().setStatusText(Utils.html2plain(r.getMessage()));
                 }
                 return ctx.autoResolve ? r : null;
             }
@@ -764,18 +765,19 @@ class ProjectAlertPresenter {
         });
         return f;
     }
-
+    
     private NotifyDescriptor createNotifyDescriptor(ProjectProblemsProvider.ProjectProblem pp, ProjectProblemsProvider.Result r, int probs) {
         String title;
         String msg;
         int type;
+        String plainMessage = Utils.html2plain(r.getMessage());
         if (r.getStatus() == ProjectProblemsProvider.Status.UNRESOLVED) {
             title = Bundle.ProjectProblems_Resolved_Error(projectName);
-            msg = Bundle.ProjectProblems_Resolved_ErrorMessage1(pp.getDisplayName(), r.getMessage());
+            msg = Bundle.ProjectProblems_Resolved_ErrorMessage1(pp.getDisplayName(), plainMessage);
             type = NotifyDescriptor.ERROR_MESSAGE;
         } else {
             title = Bundle.ProjectProblems_Resolved_Warning(projectName);
-            msg = Bundle.ProjectProblems_Resolved_WarningMessage1(pp.getDisplayName(), r.getMessage());
+            msg = Bundle.ProjectProblems_Resolved_WarningMessage1(pp.getDisplayName(), plainMessage);
             type = NotifyDescriptor.WARNING_MESSAGE;
         }
         if (probs > 0) {

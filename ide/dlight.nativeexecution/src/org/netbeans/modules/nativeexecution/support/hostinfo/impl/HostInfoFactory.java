@@ -89,7 +89,7 @@ public final class HostInfoFactory {
         try {
             return CpuFamily.valueOf(cpuFamilyStr.toUpperCase()); // NOI18N
         } catch (IllegalArgumentException ex) {
-            if (cpuFamilyStr.startsWith("armv")) { //NOI18N
+            if (cpuFamilyStr.startsWith("arm")) { //NOI18N
                 return CpuFamily.ARM;
             }
             return CpuFamily.UNKNOWN;

@@ -43,9 +43,9 @@ import org.openide.util.RequestProcessor;
  *
  * This factory should be registered in the global lookup using {@link org.openide.util.lookup.ServiceProvider}.
  * 
- * @see EditorAwareJavaSourceTaskFactory
- * @see CaretAwareJavaSourceTaskFactory
- * @see LookupBasedJavaSourceTaskFactory
+ * @see <a href="@org-netbeans-modules-java-source@/org/netbeans/api/java/source/support/EditorAwareJavaSourceTaskFactory.html">EditorAwareJavaSourceTaskFactory</a>
+ * @see <a href="@org-netbeans-modules-java-source@/org/netbeans/api/java/source/support/CaretAwareJavaSourceTaskFactory.html">CaretAwareJavaSourceTaskFactory</a>
+ * @see <a href="@org-netbeans-modules-java-source@/org/netbeans/api/java/source/support/LookupBasedJavaSourceTaskFactory.html">LookupBasedJavaSourceTaskFactory</a>
  *
  * @author Jan Lahoda
  */
@@ -97,7 +97,7 @@ public abstract class JavaSourceTaskFactory {
     }
 
     /**Create task for a given file. This task will be registered into the {@link JavaSource}
-     * parsing harness with a given {@link #getPriority priority} and {@link #getPhase phase}.
+     * parsing harness with a given {@link Priority priority} and {@link Phase phase}.
      *
      * Please note that this method should run as quickly as possible.
      *
@@ -112,14 +112,14 @@ public abstract class JavaSourceTaskFactory {
      * of this factory.
      *
      * If this list changes, a change event should be fired to all registered
-     * {@link ChangeListener}s.
+     * {@link javax.swing.event.ChangeListener}s.
      *
      * @return list of {@link FileObject} on which tasks from this factory should be
      * registered.
      * @see #createTask
-     * @see #addChangeListener
-     * @see EditorAwareJavaSourceTaskFactory
-     * @see CaretAwareJavaSourceTaskFactory
+     * {@code addChangeListener}
+     * @see <a href="@org-netbeans-modules-java-source@/org/netbeans/api/java/source/support/EditorAwareJavaSourceTaskFactory.html">EditorAwareJavaSourceTaskFactory</a>
+     * @see <a href="@org-netbeans-modules-java-source@/org/netbeans/api/java/source/support/CaretAwareJavaSourceTaskFactory.html">CaretAwareJavaSourceTaskFactory</a>
      */
     protected abstract @NonNull Collection<FileObject> getFileObjects();
 

@@ -137,7 +137,7 @@ public class Text extends NodeImpl implements Node, org.w3c.dom.Text {
      * "ent" contains an <code>Element</code> node which cannot be removed.
      * @param content The content of the replacing <code>Text</code> node.
      * @return The <code>Text</code> node created with the specified content.
-     * @exception DOMException
+     * @exception org.w3c.dom.DOMException
      *   NO_MODIFICATION_ALLOWED_ERR: Raised if one of the <code>Text</code> 
      *   nodes being replaced is readonly.
      * @since DOM Level 3
@@ -159,7 +159,7 @@ public class Text extends NodeImpl implements Node, org.w3c.dom.Text {
      * @param offset The 16-bit unit offset at which to split, starting from 
      *   <code>0</code>.
      * @return The new node, of the same type as this node.
-     * @exception DOMException
+     * @exception org.w3c.dom.DOMException
      *   INDEX_SIZE_ERR: Raised if the specified offset is negative or greater 
      *   than the number of 16-bit units in <code>data</code>.
      *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
@@ -190,7 +190,7 @@ public class Text extends NodeImpl implements Node, org.w3c.dom.Text {
      * not fit into a single <code>DOMString</code>. In such cases, the user 
      * may call <code>substringData</code> to retrieve the data in 
      * appropriately sized pieces.
-     * @exception DOMException
+     * @exception org.w3c.dom.DOMException
      *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
      */
     public void setData(String text) {
@@ -207,7 +207,7 @@ public class Text extends NodeImpl implements Node, org.w3c.dom.Text {
      * success, <code>data</code> provides access to the concatenation of 
      * <code>data</code> and the <code>DOMString</code> specified.
      * @param arg The <code>DOMString</code> to append.
-     * @exception DOMException
+     * @exception org.w3c.dom.DOMException
      *   NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
      */
     public void appendData(String arg) {
@@ -226,7 +226,7 @@ public class Text extends NodeImpl implements Node, org.w3c.dom.Text {
      *    method invocation).
      * @param arg The <code>DOMString</code> with which the range must be 
      *   replaced.
-     * @exception DOMException
+     * @exception org.w3c.dom.DOMException
      *   INDEX_SIZE_ERR: Raised if the specified <code>offset</code> is 
      *   negative or greater than the number of 16-bit units in 
      *   <code>data</code>, or if the specified <code>count</code> is 
@@ -241,7 +241,7 @@ public class Text extends NodeImpl implements Node, org.w3c.dom.Text {
      * Insert a string at the specified 16-bit unit offset.
      * @param offset The character offset at which to insert.
      * @param arg The <code>DOMString</code> to insert.
-     * @exception DOMException
+     * @exception org.w3c.dom.DOMException
      *   INDEX_SIZE_ERR: Raised if the specified <code>offset</code> is 
      *   negative or greater than the number of 16-bit units in 
      *   <code>data</code>.
@@ -258,7 +258,7 @@ public class Text extends NodeImpl implements Node, org.w3c.dom.Text {
      * @return The specified substring. If the sum of <code>offset</code> and 
      *   <code>count</code> exceeds the <code>length</code>, then all 16-bit 
      *   units to the end of the data are returned.
-     * @exception DOMException
+     * @exception org.w3c.dom.DOMException
      *   INDEX_SIZE_ERR: Raised if the specified <code>offset</code> is 
      *   negative or greater than the number of 16-bit units in 
      *   <code>data</code>, or if the specified <code>count</code> is 
@@ -279,7 +279,7 @@ public class Text extends NodeImpl implements Node, org.w3c.dom.Text {
      * not fit into a single <code>DOMString</code>. In such cases, the user 
      * may call <code>substringData</code> to retrieve the data in 
      * appropriately sized pieces.
-     * @exception DOMException
+     * @exception org.w3c.dom.DOMException
      *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than 
      *   fit in a <code>DOMString</code> variable on the implementation 
      *   platform.
@@ -301,7 +301,7 @@ public class Text extends NodeImpl implements Node, org.w3c.dom.Text {
      *   <code>offset</code> and <code>count</code> exceeds 
      *   <code>length</code> then all 16-bit units from <code>offset</code> 
      *   to the end of the data are deleted.
-     * @exception DOMException
+     * @exception org.w3c.dom.DOMException
      *   INDEX_SIZE_ERR: Raised if the specified <code>offset</code> is 
      *   negative or greater than the number of 16-bit units in 
      *   <code>data</code>, or if the specified <code>count</code> is 

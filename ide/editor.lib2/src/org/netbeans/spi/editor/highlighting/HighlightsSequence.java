@@ -66,7 +66,7 @@ public interface HighlightsSequence {
      *
      * @return <code>true</code> If there is a highlight available and it is safe
      *         to call the getters.
-     * @throws ConcurrentModificationException If the highlights this sequence is
+     * @throws java.util.ConcurrentModificationException If the highlights this sequence is
      *         iterating through have been changed since the creation of the sequence.
      */
     boolean moveNext();
@@ -75,7 +75,7 @@ public interface HighlightsSequence {
      * Gets the start offset of a current highlight.
      *
      * @return The offset in a document where the current highlight starts.
-     * @throws ConcurrentModificationException If the highlights this sequence is
+     * @throws java.util.ConcurrentModificationException If the highlights this sequence is
      * iterating through have been changed since the creation of the sequence.
      */
     int getStartOffset();
@@ -84,7 +84,7 @@ public interface HighlightsSequence {
      * Gets the end offset of a current highlight.
      *
      * @return The offset in a document where the current highlight ends.
-     * @throws ConcurrentModificationException If the highlights this sequence is
+     * @throws java.util.ConcurrentModificationException If the highlights this sequence is
      * iterating through have been changed since the creation of the sequence.
      */
     int getEndOffset();
@@ -98,7 +98,7 @@ public interface HighlightsSequence {
      * when createing <code>HighlightsLayer</code>s.
      *
      * @return The set of text rendering attributes. Must not return <code>null</code>.
-     * @throws ConcurrentModificationException If the highlights this sequence is
+     * @throws java.util.ConcurrentModificationException If the highlights this sequence is
      * iterating through have been changed since the creation of the sequence.
      * 
      * @see org.netbeans.spi.editor.highlighting.HighlightsLayer

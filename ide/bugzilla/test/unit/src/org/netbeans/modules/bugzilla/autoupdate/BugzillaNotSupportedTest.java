@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.bugzilla.autoupdate;
 
-import static junit.framework.Assert.assertFalse;
 import org.eclipse.mylyn.internal.bugzilla.core.BugzillaVersion;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.bugzilla.TestConstants;

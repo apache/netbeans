@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.html.editor.completion;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.html.lexer.HTMLTokenId;
@@ -28,8 +30,11 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.modules.csl.api.DataLoadersBridge;
+import org.netbeans.modules.css.indexing.api.CssIndex;
 import org.netbeans.modules.html.editor.HtmlExtensions;
 import org.netbeans.modules.html.editor.HtmlPreferences;
 import org.netbeans.modules.html.editor.api.Utils;
@@ -49,6 +54,7 @@ import org.netbeans.modules.html.editor.lib.api.model.NamedCharRef;
 import org.netbeans.modules.parsing.api.*;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.web.common.api.DependenciesGraph;
 import org.netbeans.modules.web.common.api.LexerUtils;
 import org.netbeans.modules.web.common.api.ValueCompletion;
 import org.netbeans.modules.web.common.api.WebPageMetadata;
@@ -356,7 +362,7 @@ public class HtmlCompletionQuery extends UserTask {
         if ((id == HTMLTokenId.TEXT || id == HTMLTokenId.VALUE) && ampIndex > -1) {
             //complete character references
             anchor = offset;
-            result = translateCharRefs(offset - len, model.getNamedCharacterReferences(), preText.substring(ampIndex + 1));
+            result = translateCharRefs(offset - preText.length(), model.getNamedCharacterReferences(), preText.substring(ampIndex + 1));
 
         } else if (id == HTMLTokenId.CHARACTER) {
             //complete character references
@@ -543,7 +549,7 @@ public class HtmlCompletionQuery extends UserTask {
                     if (attribute != null) {
                         result.addAll(translateValues(anchor, attribute.getPossibleValues()));
                         ValueCompletion<HtmlCompletionItem> valuesCompletion = AttrValuesCompletion.getSupport(tnode.name().toString(), argName);
-                        if (valuesCompletion != null && file != null) {
+                        if (valuesCompletion != null) {
                             result.addAll(valuesCompletion.getItems(file, anchor, ""));
                         }
                     }
@@ -571,7 +577,7 @@ public class HtmlCompletionQuery extends UserTask {
                     if (attribute != null) {
                         result.addAll(translateValues(documentItemOffset, filter(attribute.getPossibleValues(), prefix), quotationChar));
                         ValueCompletion<HtmlCompletionItem> valuesCompletion = AttrValuesCompletion.getSupport(tnode.name().toString(), argName);
-                        if (valuesCompletion != null && file != null) {
+                        if (valuesCompletion != null) {
                             result.addAll(valuesCompletion.getItems(file, anchor, prefix));
                         }
                     }
@@ -614,6 +620,66 @@ public class HtmlCompletionQuery extends UserTask {
                     }
                 }
             }
+        } else if (id == HTMLTokenId.VALUE_CSS && item.getProperty(HTMLTokenId.VALUE_CSS_TOKEN_TYPE_PROPERTY) != null) {
+            FileObject fo = parserResult.getSnapshot().getSource().getFileObject();
+            if (fo == null) {
+                return null;
+            }
+            Project project = FileOwnerQuery.getOwner(fo);
+            if (project == null) {
+                return null;
+            }
+            CssIndex idx;
+            try {
+                idx = CssIndex.get(project);
+            } catch (IOException ex) {
+                return null;
+            }
+            int lastWhitespace = preText.length();
+            while (lastWhitespace > 0
+                    && (!(Character.isWhitespace(preText.charAt(lastWhitespace - 1))
+                    || preText.charAt(lastWhitespace - 1) == '"'
+                    || preText.charAt(lastWhitespace - 1) == '\''))) {
+                lastWhitespace--;
+            }
+            String prefixCheck = preText.substring(lastWhitespace);
+
+            Map<FileObject,Collection<String>> baseData;
+            Collection<String> thisFileData;
+
+            if(HTMLTokenId.VALUE_CSS_TOKEN_TYPE_CLASS.equals(item.getProperty(HTMLTokenId.VALUE_CSS_TOKEN_TYPE_PROPERTY))) {
+                baseData = idx.findClassesByPrefix(prefixCheck);
+            } else {
+                baseData = idx.findIdsByPrefix(prefixCheck);
+            }
+
+            List<String> allEntries = new ArrayList<>();
+            Set<String> refEntries = new HashSet<>();
+
+            if (file != null) {
+                DependenciesGraph deps = idx.getDependencies(file);
+                Collection<FileObject> refered = deps.getAllReferedFiles();
+
+                for (Entry<FileObject, Collection<String>> e : baseData.entrySet()) {
+                    allEntries.addAll(e.getValue());
+                    //is the file refered by the current file?
+                    if (refered.contains(e.getKey())) {
+                        //yes - add its entries
+                        refEntries.addAll(e.getValue());
+                    }
+                }
+            }
+
+            anchor = offset - prefixCheck.length();
+
+            result = allEntries
+                    .stream()
+                    .sorted()
+                    .distinct()
+                    .map(s -> {
+                        return HtmlCompletionItem.createCssValue(s, offset - prefixCheck.length(), refEntries.contains(s));
+                    })
+                    .collect(Collectors.toList());
         }
 
         return result == null ? null : new CompletionResult(result, anchor);

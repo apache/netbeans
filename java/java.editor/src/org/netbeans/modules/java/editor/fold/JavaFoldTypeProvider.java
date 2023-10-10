@@ -37,6 +37,7 @@ public class JavaFoldTypeProvider implements FoldTypeProvider {
     public JavaFoldTypeProvider() {
         types.add(JavaElementFoldManager.CODE_BLOCK_FOLD_TYPE);
         types.add(JavaElementFoldManager.INNERCLASS_TYPE);
+        types.add(JavaElementFoldManager.METHOD_BLOCK_FOLD_TYPE);
         types.add(JavaElementFoldManager.IMPORTS_FOLD_TYPE);
         types.add(JavaElementFoldManager.JAVADOC_FOLD_TYPE);
         types.add(JavaElementFoldManager.INITIAL_COMMENT_FOLD_TYPE);

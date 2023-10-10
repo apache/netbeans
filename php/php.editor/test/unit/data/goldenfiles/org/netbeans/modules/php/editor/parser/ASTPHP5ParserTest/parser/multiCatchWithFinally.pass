@@ -54,11 +54,8 @@
         <token id='T_OPEN_PARENTHESE' start='77' end='78'>
             <text>(</text>
         </token>
-        <token id='T_NS_SEPARATOR' start='78' end='79'>
-            <text>\</text>
-        </token>
-        <token id='T_STRING' start='79' end='88'>
-            <text>Exception</text>
+        <token id='T_NAME_FULLY_QUALIFIED' start='78' end='88'>
+            <text>\Exception</text>
         </token>
         <token id='T_OR' start='89' end='90'>
             <text>|</text>

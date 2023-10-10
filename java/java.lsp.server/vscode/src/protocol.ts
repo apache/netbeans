@@ -33,11 +33,20 @@ import {
 } from 'vscode-languageserver-protocol';
 
 export interface HtmlPageParams {
-    uri: string;
+    id: string;
+    text: string;
+    pause: boolean;
+    resources?: {
+        [name: string]: string;
+    };
 }
 
 export namespace HtmlPageRequest {
-    export const type = new ProtocolRequestType<HtmlPageParams, string, never, void, void>('window/showHtmlPage');
+    export const type = new ProtocolRequestType<HtmlPageParams, void, never, void, void>('window/showHtmlPage');
+};
+
+export namespace ExecInHtmlPageRequest {
+    export const type = new ProtocolRequestType<HtmlPageParams, boolean, never, void, void>('window/execInHtmlPage');
 };
 
 export interface ShowStatusMessageParams extends ShowMessageParams {
@@ -66,6 +75,10 @@ export namespace StatusMessageRequest {
 
 export interface ShowQuickPickParams {
     /**
+     * An optional title of the quick pick.
+     */
+    title?: string;
+    /**
      * A string to show as placeholder in the input box to guide the user what to pick on.
      */
     placeHolder: string;
@@ -85,6 +98,10 @@ export namespace QuickPickRequest {
 
 export interface ShowInputBoxParams {
     /**
+     * An optional title of the input box.
+     */
+    title?: string;
+     /**
      * The text to display underneath the input box.
      */
     prompt: string;
@@ -100,6 +117,38 @@ export interface ShowInputBoxParams {
 
 export namespace InputBoxRequest {
     export const type = new ProtocolRequestType<ShowInputBoxParams, string | undefined, never, void, void>('window/showInputBox');
+}
+
+export interface ShowMutliStepInputParams {
+    /**
+     * ID of the input.
+     */
+    id: string;
+    /**
+     * An optional title.
+     */
+    title?: string;
+}
+
+export interface InputCallbackParams {
+    inputId : string;
+    step: number;
+    data: { [name: string]: readonly vscode.QuickPickItem[] | string };
+}
+
+export interface StepInfo {
+	totalSteps: number;
+    stepId: string;
+}
+
+export type QuickPickStep = StepInfo & ShowQuickPickParams;
+
+export type InputBoxStep = StepInfo & ShowInputBoxParams;
+
+export namespace MutliStepInputRequest {
+    export const type = new ProtocolRequestType<ShowMutliStepInputParams, { [name: string]: readonly vscode.QuickPickItem[] | string }, never, void, void>('window/showMultiStepInput');
+    export const step = new ProtocolRequestType<InputCallbackParams, QuickPickStep | InputBoxStep | undefined, never, void, void>('input/step');
+    export const validate = new ProtocolRequestType<InputCallbackParams, string | undefined, never, void, void>('input/validate');
 }
 
 export interface TestProgressParams {
@@ -158,6 +207,8 @@ export namespace TextEditorDecorationDisposeNotification {
 export interface NodeChangedParams {
     rootId : number;
     nodeId : number | null;
+    types? : NodeChangeType[];
+    properties? : String[];
 }
 
 export interface CreateExplorerParams {
@@ -193,6 +244,20 @@ export interface FindPathParams {
     selectData? : any;
 }
 
+export enum NodeChangeType {
+    SELF = 0,
+    PROPERTY,
+    CHILDEN,
+    DESTROY
+};
+
+export interface NodeChangesParams {
+    rootId: number;
+    nodeId?: number;
+    deactivateListeners?: number[];
+    types?: NodeChangeType[];
+}
+
 export namespace NodeInfoNotification {
     export const type = new ProtocolNotificationType<NodeChangedParams, void>('nodes/nodeChanged');
 }
@@ -205,6 +270,7 @@ export namespace NodeInfoRequest {
     export const collapsed = new ProtocolNotificationType<NodeOperationParams, void>('nodes/collapsed');
     export const getresource = new ProtocolRequestType<GetResourceParams, ResourceData, never, void, void>('nodes/getresource');
     export const findparams = new ProtocolRequestType<FindPathParams, number[], never, void, void>('nodes/findpath');
+    export const changes = new ProtocolRequestType<NodeChangesParams, number, never, void, void>('nodes/changes');
     
     export interface IconDescriptor {
         baseUri : vscode.Uri;

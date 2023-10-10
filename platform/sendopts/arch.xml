@@ -300,7 +300,7 @@ public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">R
            identified by some additional option, so when the shared option appears
            the infrastructure knows which processor to delegate to. 
            This is demonstrated in the 
-           <a href="http://www.netbeans.org/source/browse/contrib/sendopts/test/unit/src/org/netbeans/api/sendopts/Attic/SharedOptionTest.java?rev=1.1.2">
+           <a href="https://github.com/apache/netbeans/tree/master/platform/sendopts/test/unit/src/org/netbeans/api/sendopts/SharedOptionTest.java">
            SharedOptionTest</a> which
            basically does the following:
        </p>       

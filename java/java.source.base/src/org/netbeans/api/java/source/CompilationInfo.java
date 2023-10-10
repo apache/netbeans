@@ -98,7 +98,7 @@ public class CompilationInfo {
 
     /**
      * Returns an instance of the {@link CompilationInfo} for
-     * given {@link Parser.Result} if it is a result
+     * given {@link org.netbeans.modules.parsing.spi.Parser.Result} if it is a result
      * of a java parser.
      * @param result for which the {@link CompilationInfo} should be
      * returned.
@@ -206,9 +206,9 @@ public class CompilationInfo {
     
     /**
      * Returns all top level elements defined in file for which the {@link CompilationInfo}
-     * was created. The {@link CompilationInfo} has to be in phase {@link JavaSource#Phase#ELEMENTS_RESOLVED}.
+     * was created. The {@link CompilationInfo} has to be in phase {@link JavaSource.Phase#ELEMENTS_RESOLVED}.
      * @return list of top level elements, it may return null when this {@link CompilationInfo} is not
-     * in phase {@link JavaSource#Phase#ELEMENTS_RESOLVED} or higher.
+     * in phase {@link JavaSource.Phase#ELEMENTS_RESOLVED} or higher.
      * @throws IllegalStateException is thrown when the {@link JavaSource} was created with no files
      * @since 0.14
      */
@@ -315,6 +315,7 @@ public class CompilationInfo {
      * the compatibility bridge, when the CompilationInfo was created by the parsing api
      * it returns null. Use {@link CompilationInfo#getSnapshot()} instead.
      */
+    @Deprecated
     public @NullUnknown JavaSource getJavaSource() {
         checkConfinement();
         return javaSource;
@@ -362,8 +363,8 @@ public class CompilationInfo {
             
     /**
      * Returns {@link Document} of this {@link CompilationInfoImpl}
-     * @return Document or null when the {@link DataObject} doesn't
-     * exist or has no {@link EditorCookie}.
+     * @return Document or null when the <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html">DataObject</a> doesn't
+     * exist or has no <a href="@org-openide-text@/org/openide/cookies/EditorCookie.html">EditorCookie</a>.
      * @throws java.io.IOException
      */
     public @CheckForNull Document getDocument() throws IOException { //XXX cleanup: IOException is no longer required? Used by PositionEstimator, DiffFacility
@@ -430,7 +431,7 @@ public class CompilationInfo {
         return impl.getCachedValue(key);
     }
 
-    /**Put a value into a cache under the given key. The {@link #clearPolicy} parameter specifies the latest time the
+    /**Put a value into a cache under the given key. The {@code clearPolicy} parameter specifies the latest time the
      * references to the key and value should be cleared. The infrastructure is free to clear the references at any earlier time.
      * The clients should not depend on this cache for correctness, only to improve performance.
      *

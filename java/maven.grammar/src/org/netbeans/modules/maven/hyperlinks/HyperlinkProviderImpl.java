@@ -167,7 +167,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
 
         if (ff > -1 && ff < textToken.length()) {
             String before = textToken.substring(0, ff);
-            String after = textToken.substring(ff, textToken.length());
+            String after = textToken.substring(ff);
             int bo = before.lastIndexOf("${");
             int bc = before.lastIndexOf("}");
             int ao = after.indexOf("${");
@@ -291,7 +291,7 @@ public class HyperlinkProviderImpl implements HyperlinkProviderExt {
                 int ff = documentOffset - ftokenOff;
                 if (ff > -1 && ff < ftext.length()) {
                     String before = ftext.substring(0, ff);
-                    String after = ftext.substring(ff, ftext.length());
+                    String after = ftext.substring(ff);
                     int bo = before.lastIndexOf("${");//NOI18N
                     int bc = before.lastIndexOf("}");//NOI18N
                     int ao = after.indexOf("${");//NOI18N

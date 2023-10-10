@@ -39,7 +39,7 @@ public final class BadgeIcon {
      * Creates a new badge icon. Image has to have 8x8 dimensions.
      * @param image image of icon
      * @param url URL of icon
-     * @thows IllegalArgumentException if the width or height is not 8 pixels (under assertions only)
+     * @throws IllegalArgumentException if the width or height is not 8 pixels (under assertions only)
      */
     public BadgeIcon(Image image, URL url) {
         Parameters.notNull("image", image); // NOI18N

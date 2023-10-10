@@ -164,8 +164,7 @@ public class ClassesListController extends AbstractController {
                     else data[i][4] = (retainedSizeByClass > 0 ? "+" : "") + numberFormat.format(retainedSizeByClass); // NOI18N 
                 }
             } else {
-                data[i][1] = new Double((double) instancesCount /
-                                     (double) totalLiveInstances * 100);
+                data[i][1] = (double)instancesCount / totalLiveInstances * 100;
                 data[i][2] = numberFormat.format(instancesCount) + " (" // NOI18N
                                      + percentFormat.format((double) instancesCount /
                                      (double) totalLiveInstances) + ")"; // NOI18N
@@ -468,7 +467,7 @@ public class ClassesListController extends AbstractController {
         if (compareRetained) classesController.getHeapFragmentWalker().
                              computeRetainedSizes(false, false);
         
-        Map<String, DiffJavaClass> classes = new HashMap();
+        Map<String, DiffJavaClass> classes = new HashMap<>();
         
         List<JavaClass> classes1 = h1.getAllClasses();
         for (JavaClass jc1 : classes1) {

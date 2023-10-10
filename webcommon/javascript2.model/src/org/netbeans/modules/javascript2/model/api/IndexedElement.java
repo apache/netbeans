@@ -35,7 +35,7 @@ import org.openide.filesystems.FileObject;
  * @author Petr Pisl
  */
 public class IndexedElement implements JsElement {
-    
+
     private final JsElement.Kind jsKind;
     private final String fqn;
     private final boolean isAnonymous;
@@ -49,7 +49,7 @@ public class IndexedElement implements JsElement {
     private final boolean isDeclared;
     private final Set<Modifier> modifiers;
     private final OffsetRange offsetRange;
-    
+
     public IndexedElement(FileObject fileObject, String name, String fqn, boolean isDeclared, boolean isAnonymous, JsElement.Kind kind, OffsetRange offsetRange, Set<Modifier> modifiers, Collection<TypeUsage> assignments, boolean isPlatform) {
 //        super(fileObject, name, isDeclared, offsetRange, modifiers, null);
         this.jsKind = kind;
@@ -64,16 +64,16 @@ public class IndexedElement implements JsElement {
         this.offsetRange = offsetRange;
     }
 
-    
+
     @Override
     public Kind getJSKind() {
         return this.jsKind;
     }
-    
+
     public String getFQN() {
         return this.fqn;
     }
-    
+
     public boolean isAnonymous() {
         return isAnonymous;
     }
@@ -86,7 +86,7 @@ public class IndexedElement implements JsElement {
     public boolean isPlatform() {
         return isPlatform;
     }
-    
+
     public static IndexedElement create(IndexResult indexResult) {
         FileObject fo = indexResult.getFile();
         String name = indexResult.getValue(Index.FIELD_BASE_NAME);
@@ -104,7 +104,7 @@ public class IndexedElement implements JsElement {
             result = new IndexedElement(fo, name, fqn, isDeclared, isAnonymous, kind, offset > -1 ? new OffsetRange(offset, offset + name.length()) : OffsetRange.NONE, modifiers, assignments, isPlatform);
         } else {
             Collection<TypeUsage> returnTypes = getReturnTypes(indexResult);
-            Collection<String>rTypes = new ArrayList<String>();
+            Collection<String>rTypes = new ArrayList<>();
             for (TypeUsage type : returnTypes) {
                 rTypes.add(type.getType());
             }
@@ -114,7 +114,7 @@ public class IndexedElement implements JsElement {
         }
         return result;
     }
-    
+
 //    public static Collection<IndexedElement> createProperties(IndexResult indexResult, String fqn) {
 //        Collection<IndexedElement> result = new ArrayList<IndexedElement>();
 //        FileObject fo = indexResult.getFile();
@@ -125,11 +125,11 @@ public class IndexedElement implements JsElement {
 //                    result.add(decodeProperty(split[i], fo, fqn));
 //                }
 //            }
-//            
+//
 //        }
 //        return result;
 //    }
-    
+
     public static Collection<TypeUsage> getAssignments(IndexResult indexResult) {
         return getAssignments(indexResult.getValue(Index.FIELD_ASSIGNMENTS));
     }
@@ -139,9 +139,9 @@ public class IndexedElement implements JsElement {
         fqn = fqn.substring(0, fqn.length() - 1);
         return fqn;
     }
-    
+
     private static Collection<TypeUsage> getAssignments(String sAssignments) {
-        Collection<TypeUsage> result = new ArrayList<TypeUsage>();
+        Collection<TypeUsage> result = new ArrayList<>();
         if (sAssignments != null) {
             for (StringTokenizer st = new StringTokenizer(sAssignments, "|"); st.hasMoreTokens();) {
                 String token = st.nextToken();
@@ -162,7 +162,7 @@ public class IndexedElement implements JsElement {
         }
         return result;
     }
-    
+
     public static Collection<TypeUsage> getReturnTypes(IndexResult indexResult) {
         return getTypes(indexResult, Index.FIELD_RETURN_TYPES);
     }
@@ -172,7 +172,7 @@ public class IndexedElement implements JsElement {
     }
 
     public static Collection<TypeUsage> getTypes(IndexResult indexResult, String field) {
-        Collection<TypeUsage> result = new ArrayList<TypeUsage>();
+        Collection<TypeUsage> result = new ArrayList<>();
         String text = indexResult.getValue(field);
         if (text != null) {
             for (StringTokenizer st = new StringTokenizer(text, "|"); st.hasMoreTokens();) {
@@ -192,13 +192,13 @@ public class IndexedElement implements JsElement {
         }
         return result;
     }
-    
+
     private static LinkedHashMap<String, Collection<String>> decodeParameters(String paramsText) {
-        LinkedHashMap<String, Collection<String>> parameters = new LinkedHashMap<String, Collection<String>>();
+        LinkedHashMap<String, Collection<String>> parameters = new LinkedHashMap<>();
         for (StringTokenizer stringTokenizer = new StringTokenizer(paramsText, ","); stringTokenizer.hasMoreTokens();) {
             String param = stringTokenizer.nextToken();
             int index = param.indexOf(':');
-            Collection<String> types = new ArrayList<String>();
+            Collection<String> types = new ArrayList<>();
             String paramName;
             if (index > 0) {
                 paramName = param.substring(0, index);
@@ -273,63 +273,39 @@ public class IndexedElement implements JsElement {
     public OffsetRange getOffsetRange(ParserResult result) {
         return getOffsetRange();
     }
-    
-//    private static IndexedElement decodeProperty(String text, FileObject fo, String fqn) {
-//        String[] parts = text.split(";");
-//        String name = parts[0];
-//        JsElement.Kind jsKind = JsElement.Kind.fromId(Integer.parseInt(parts[1]));
-//        int flag = Integer.parseInt(parts[2]);
-//        String fqnOfProperty = fqn + "." + name;
-//        Collection<TypeUsage> assignments = (parts.length > 3) ? getAssignments(parts[3]) : Collections.EMPTY_LIST;
-//        if (parts.length > 4) {
-//            if (jsKind.isFunction()) {
-//                String paramsText = parts[4];
-//                LinkedHashMap<String, Collection<String>> parameters = decodeParameters(paramsText);
-//                Collection<String> returnTypes = new ArrayList();
-//                if (parts.length > 5) {
-//                    String returnTypesText = parts[5];
-//                    for (StringTokenizer stringTokenizer = new StringTokenizer(returnTypesText, ","); stringTokenizer.hasMoreTokens();) {
-//                        returnTypes.add(stringTokenizer.nextToken());
-//                    }
-//                }
-//                return new FunctionIndexedElement(fo, name, fqnOfProperty, OffsetRange.NONE, flag, parameters, returnTypes, assignments);
-//            }
-//        }
-//        return new IndexedElement(fo, name, fqnOfProperty, Flag.isDeclared(flag), Flag.isAnonymous(flag), jsKind,OffsetRange.NONE, Flag.getModifiers(flag), assignments, Flag.isPlatform(flag));
-//    }
-    
+
     public static class FunctionIndexedElement extends IndexedElement {
         private final LinkedHashMap<String, Collection<String>> parameters;
         private final Collection<String> returnTypes;
-        
+
         public FunctionIndexedElement(FileObject fileObject, String name, String fqn,OffsetRange offsetRange, int flag,  LinkedHashMap<String, Collection<String>> parameters, Collection<String> returnTypes, Collection<TypeUsage> assignments) {
             super(fileObject, name, fqn, Flag.isDeclared(flag), Flag.isAnonymous(flag), Flag.getJsKind(flag), offsetRange, Flag.getModifiers(flag), assignments, Flag.isPlatform(flag));
             this.parameters = parameters;
             this.returnTypes = returnTypes;
         }
-        
+
         public LinkedHashMap<String, Collection<String>> getParameters() {
             return this.parameters;
         }
-        
+
         public Collection<String> getReturnTypes() {
             return this.returnTypes;
-        }        
+        }
     }
-    
+
     public static class Flag {
         // modifiers
         private static final int PRIVATE = 1 << 0;
         private static final int PUBLIC = 1 << 1;
         private static final int STATIC = 1 << 2;
         private static final int PRIVILAGE = 1 << 3;
-        
+
         private static final int DEPRICATED = 1 << 4;
-        
+
         private static final int GLOBAL = 1 << 5;
         private static final int DECLARED = 1 << 6;
         private static final int ANONYMOUS = 1 << 7;
-        
+
         // Js Kind
         private static final int FILE = 1 << 8;
         private static final int PROPERTY = 1 << 9;
@@ -346,6 +322,7 @@ public class IndexedElement implements JsElement {
         private static final int CALLBACK = 1 << 22;
         private static final int GENERATOR = 1 << 23;
         private static final int CONSTANT = 1 << 24;
+        private static final int ARROW_FUNCTION = 1 << 25;
 
         private static final int PLATFORM = 1 << 20;
 
@@ -354,41 +331,42 @@ public class IndexedElement implements JsElement {
 
         public static int getFlag(JsObject object) {
             int value = 0;
-            
-            Set<Modifier> modifiers = object.getModifiers();
-            if(modifiers.contains(Modifier.PRIVATE)) value = value | PRIVATE;
-            if(modifiers.contains(Modifier.PUBLIC)) value = value | PUBLIC;
-            if(modifiers.contains(Modifier.STATIC)) value = value | STATIC;
-            if(modifiers.contains(Modifier.PROTECTED)) value = value | PRIVILAGE;
-            if(modifiers.contains(Modifier.DEPRECATED)) value = value | DEPRICATED;
-            
-            if(ModelUtils.isGlobal(object)) value = value | GLOBAL;
-            if(object.isDeclared()) value = value | DECLARED;
-            if(object.isAnonymous()) value = value | ANONYMOUS;
-            
-            JsElement.Kind kind = object.getJSKind();
-            if (kind == JsElement.Kind.ANONYMOUS_OBJECT) value = value | ANONYMOUS_OBJECT;
-            if (kind == JsElement.Kind.CONSTRUCTOR) value = value | CONSTRUCTOR;
-            if (kind == JsElement.Kind.FIELD) value = value | FIELD;
-            if (kind == JsElement.Kind.FILE) value = value | FILE;
-            if (kind == JsElement.Kind.FUNCTION) value = value | FUNCTION;
-            if (kind == JsElement.Kind.METHOD) value = value | METHOD;
-            if (kind == JsElement.Kind.OBJECT) value = value | OBJECT;
-            if (kind == JsElement.Kind.PARAMETER) value = value | PARAMETER;
-            if (kind == JsElement.Kind.PROPERTY) value = value | PROPERTY;
-            if (kind == JsElement.Kind.PROPERTY_GETTER) value = value | PROPERTY_GETTER;
-            if (kind == JsElement.Kind.PROPERTY_SETTER) value = value | PROPERTY_SETTER;
-            if (kind == JsElement.Kind.VARIABLE) value = value | VARIABLE;
-            if (kind == JsElement.Kind.OBJECT_LITERAL) value = value | OBJECT_LITERAL;
-            if (kind == JsElement.Kind.CALLBACK) value = value | CALLBACK;
-            if (kind == JsElement.Kind.GENERATOR) value = value | GENERATOR;
-            if (kind == JsElement.Kind.CONSTANT) value = value | CONSTANT;
 
-            if (object.isPlatform()) value = value | PLATFORM;
+            Set<Modifier> modifiers = object.getModifiers();
+            if(modifiers.contains(Modifier.PRIVATE)) value |= PRIVATE;
+            if(modifiers.contains(Modifier.PUBLIC)) value |= PUBLIC;
+            if(modifiers.contains(Modifier.STATIC)) value |= STATIC;
+            if(modifiers.contains(Modifier.PROTECTED)) value |= PRIVILAGE;
+            if(modifiers.contains(Modifier.DEPRECATED)) value |= DEPRICATED;
+
+            if(ModelUtils.isGlobal(object)) value |= GLOBAL;
+            if(object.isDeclared()) value |= DECLARED;
+            if(object.isAnonymous()) value |= ANONYMOUS;
+
+            JsElement.Kind kind = object.getJSKind();
+            if (kind == JsElement.Kind.ANONYMOUS_OBJECT) value |= ANONYMOUS_OBJECT;
+            if (kind == JsElement.Kind.CONSTRUCTOR) value |= CONSTRUCTOR;
+            if (kind == JsElement.Kind.FIELD) value |= FIELD;
+            if (kind == JsElement.Kind.FILE) value |= FILE;
+            if (kind == JsElement.Kind.FUNCTION) value |= FUNCTION;
+            if (kind == JsElement.Kind.METHOD) value |= METHOD;
+            if (kind == JsElement.Kind.OBJECT) value |= OBJECT;
+            if (kind == JsElement.Kind.PARAMETER) value |= PARAMETER;
+            if (kind == JsElement.Kind.PROPERTY) value |= PROPERTY;
+            if (kind == JsElement.Kind.PROPERTY_GETTER) value |= PROPERTY_GETTER;
+            if (kind == JsElement.Kind.PROPERTY_SETTER) value |= PROPERTY_SETTER;
+            if (kind == JsElement.Kind.VARIABLE) value |= VARIABLE;
+            if (kind == JsElement.Kind.OBJECT_LITERAL) value |= OBJECT_LITERAL;
+            if (kind == JsElement.Kind.CALLBACK) value |= CALLBACK;
+            if (kind == JsElement.Kind.GENERATOR) value |= GENERATOR;
+            if (kind == JsElement.Kind.CONSTANT) value |= CONSTANT;
+            if (kind == JsElement.Kind.ARROW_FUNCTION) value |= ARROW_FUNCTION;
+
+            if (object.isPlatform()) value |= PLATFORM;
 
             return value;
         }
-        
+
         public static Set<Modifier> getModifiers(int flag) {
             EnumSet<Modifier> result = EnumSet.noneOf(Modifier.class);
             if ((flag & PRIVATE) != 0) result.add(Modifier.PRIVATE);
@@ -398,15 +376,15 @@ public class IndexedElement implements JsElement {
             if ((flag & DEPRICATED) != 0) result.add(Modifier.DEPRECATED);
             return result;
         }
-        
+
         public static boolean isGlobal(int flag) {
             return (flag & GLOBAL) != 0;
         }
-        
+
         public static boolean isDeclared(int flag) {
             return (flag & DECLARED) != 0;
         }
-        
+
         public static boolean isAnonymous(int flag) {
             return (flag & ANONYMOUS) != 0;
         }
@@ -433,6 +411,7 @@ public class IndexedElement implements JsElement {
             else if ((flag & CALLBACK) != 0) result = JsElement.Kind.CALLBACK;
             else if ((flag & GENERATOR) != 0) result = JsElement.Kind.GENERATOR;
             else if ((flag & CONSTANT) != 0) result = JsElement.Kind.CONSTANT;
+            else if ((flag & ARROW_FUNCTION) != 0) result = JsElement.Kind.ARROW_FUNCTION;
             return result;
         }
     }

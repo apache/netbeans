@@ -50,40 +50,42 @@ public interface JsElement extends ElementHandle {
         CALLBACK(16),
         CLASS(17),
         GENERATOR(18),
-        CONSTANT(19), 
-        BLOCK(20);
-        
+        CONSTANT(19),
+        BLOCK(20),
+        ARROW_FUNCTION(21);
+
         private final int id;
-        private static final Map<Integer, Kind> LOOKUP = new HashMap<Integer, Kind>();
-        
+        private static final Map<Integer, Kind> LOOKUP = new HashMap<>();
+
         static {
             for (Kind kind : EnumSet.allOf(Kind.class)) {
                 LOOKUP.put(kind.getId(), kind);
             }
         }
-        
+
         private Kind(int id) {
             this.id = id;
         }
-        
+
         public int getId() {
             return this.id;
         }
-        
+
         public static  Kind fromId(int id) {
             return LOOKUP.get(id);
         }
-        
+
         public boolean isFunction() {
             return this == FUNCTION || this == METHOD || this == CONSTRUCTOR
-                    || this == PROPERTY_GETTER || this == PROPERTY_SETTER 
-                    || this == CALLBACK || this == GENERATOR;
+                    || this == PROPERTY_GETTER || this == PROPERTY_SETTER
+                    || this == CALLBACK || this == GENERATOR
+                    || this == ARROW_FUNCTION;
         }
-        
+
         public boolean isPropertyGetterSetter() {
             return this == PROPERTY_GETTER || this == PROPERTY_SETTER;
         }
-        
+
     }
 
     int getOffset();
@@ -91,7 +93,7 @@ public interface JsElement extends ElementHandle {
     OffsetRange getOffsetRange();
 
     Kind getJSKind();
-    
+
     boolean isDeclared();
 
     boolean isPlatform();

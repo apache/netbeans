@@ -1,0 +1,3 @@
+public function myFoo(?string $string, int $int): bool{
+return parent::myFoo($string, $int);
+}

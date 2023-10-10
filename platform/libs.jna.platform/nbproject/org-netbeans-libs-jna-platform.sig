@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.10
+#Version 2.16
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -936,6 +936,7 @@ innr public static CFStringRef
 innr public static CFTypeID
 innr public static CFTypeRef
 intf com.sun.jna.Library
+meth public abstract boolean CFEqual(com.sun.jna.platform.mac.CoreFoundation$CFTypeRef,com.sun.jna.platform.mac.CoreFoundation$CFTypeRef)
 meth public abstract byte CFBooleanGetValue(com.sun.jna.platform.mac.CoreFoundation$CFBooleanRef)
 meth public abstract byte CFDictionaryGetValueIfPresent(com.sun.jna.platform.mac.CoreFoundation$CFDictionaryRef,com.sun.jna.PointerType,com.sun.jna.ptr.PointerByReference)
 meth public abstract byte CFNumberGetValue(com.sun.jna.platform.mac.CoreFoundation$CFNumberRef,com.sun.jna.platform.mac.CoreFoundation$CFIndex,com.sun.jna.ptr.ByReference)
@@ -948,6 +949,7 @@ meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFArrayRef CFArrayC
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFDataRef CFDataCreate(com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef,com.sun.jna.Pointer,com.sun.jna.platform.mac.CoreFoundation$CFIndex)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFArrayGetCount(com.sun.jna.platform.mac.CoreFoundation$CFArrayRef)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFDataGetLength(com.sun.jna.platform.mac.CoreFoundation$CFDataRef)
+meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFDictionaryGetCount(com.sun.jna.platform.mac.CoreFoundation$CFDictionaryRef)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFGetRetainCount(com.sun.jna.platform.mac.CoreFoundation$CFTypeRef)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFNumberGetType(com.sun.jna.platform.mac.CoreFoundation$CFNumberRef)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFStringGetLength(com.sun.jna.platform.mac.CoreFoundation$CFStringRef)
@@ -961,6 +963,7 @@ meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFTypeID CFBooleanG
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFTypeID CFDataGetTypeID()
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFTypeID CFDateGetTypeID()
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFTypeID CFDictionaryGetTypeID()
+meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFTypeID CFGetTypeID(com.sun.jna.Pointer)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFTypeID CFGetTypeID(com.sun.jna.platform.mac.CoreFoundation$CFTypeRef)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFTypeID CFNumberGetTypeID()
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFTypeID CFStringGetTypeID()
@@ -1000,9 +1003,19 @@ CLSS public static com.sun.jna.platform.mac.CoreFoundation$CFDictionaryRef
  outer com.sun.jna.platform.mac.CoreFoundation
 cons public init()
 cons public init(com.sun.jna.Pointer)
+innr public static ByReference
 meth public boolean getValueIfPresent(com.sun.jna.PointerType,com.sun.jna.ptr.PointerByReference)
 meth public com.sun.jna.Pointer getValue(com.sun.jna.PointerType)
+meth public long getCount()
 supr com.sun.jna.platform.mac.CoreFoundation$CFTypeRef
+
+CLSS public static com.sun.jna.platform.mac.CoreFoundation$CFDictionaryRef$ByReference
+ outer com.sun.jna.platform.mac.CoreFoundation$CFDictionaryRef
+cons public init()
+cons public init(com.sun.jna.platform.mac.CoreFoundation$CFDictionaryRef)
+meth public com.sun.jna.platform.mac.CoreFoundation$CFDictionaryRef getDictionaryRefValue()
+meth public void setValue(com.sun.jna.Pointer)
+supr com.sun.jna.ptr.PointerByReference
 
 CLSS public static com.sun.jna.platform.mac.CoreFoundation$CFIndex
  outer com.sun.jna.platform.mac.CoreFoundation
@@ -1059,9 +1072,18 @@ CLSS public static com.sun.jna.platform.mac.CoreFoundation$CFStringRef
  outer com.sun.jna.platform.mac.CoreFoundation
 cons public init()
 cons public init(com.sun.jna.Pointer)
+innr public static ByReference
 meth public java.lang.String stringValue()
 meth public static com.sun.jna.platform.mac.CoreFoundation$CFStringRef createCFString(java.lang.String)
 supr com.sun.jna.platform.mac.CoreFoundation$CFTypeRef
+
+CLSS public static com.sun.jna.platform.mac.CoreFoundation$CFStringRef$ByReference
+ outer com.sun.jna.platform.mac.CoreFoundation$CFStringRef
+cons public init()
+cons public init(com.sun.jna.platform.mac.CoreFoundation$CFStringRef)
+meth public com.sun.jna.platform.mac.CoreFoundation$CFStringRef getStringRefValue()
+meth public void setValue(com.sun.jna.Pointer)
+supr com.sun.jna.ptr.PointerByReference
 
 CLSS public static com.sun.jna.platform.mac.CoreFoundation$CFTypeID
  outer com.sun.jna.platform.mac.CoreFoundation
@@ -2251,7 +2273,7 @@ fld public final static int XK_Meta_L = 65511
 fld public final static int XK_Meta_R = 65512
 fld public final static int XK_ShiftLock = 65510
 fld public final static int XK_Shift_L = 65505
-fld public final static int XK_Shift_R = 65505
+fld public final static int XK_Shift_R = 65506
 fld public final static int XK_Z = 90
 fld public final static int XK_a = 97
 fld public final static int XK_z = 122
@@ -3477,6 +3499,122 @@ fld public int depth
 fld public int type
 supr com.sun.jna.Structure
 
+CLSS public abstract interface com.sun.jna.platform.unix.solaris.Kstat2
+fld public final static byte KSTAT2_NVK_ALL = 7
+fld public final static byte KSTAT2_NVK_MAP = 4
+fld public final static byte KSTAT2_NVK_SYS = 1
+fld public final static byte KSTAT2_NVK_USR = 2
+fld public final static byte KSTAT2_NVVT_INT = 1
+fld public final static byte KSTAT2_NVVT_INTS = 2
+fld public final static byte KSTAT2_NVVT_MAP = 0
+fld public final static byte KSTAT2_NVVT_STR = 3
+fld public final static byte KSTAT2_NVVT_STRS = 4
+fld public final static com.sun.jna.platform.unix.solaris.Kstat2 INSTANCE
+fld public final static int KSTAT2_M_GLOB = 1
+fld public final static int KSTAT2_M_RE = 2
+fld public final static int KSTAT2_M_STRING = 0
+fld public final static int KSTAT2_S_CONC_MOD = 8
+fld public final static int KSTAT2_S_DEL_MAP = 9
+fld public final static int KSTAT2_S_INVAL_ARG = 4
+fld public final static int KSTAT2_S_INVAL_STATE = 5
+fld public final static int KSTAT2_S_INVAL_TYPE = 6
+fld public final static int KSTAT2_S_NOT_FOUND = 7
+fld public final static int KSTAT2_S_NO_MEM = 2
+fld public final static int KSTAT2_S_NO_PERM = 1
+fld public final static int KSTAT2_S_NO_SPACE = 3
+fld public final static int KSTAT2_S_OK = 0
+fld public final static int KSTAT2_S_SYS_FAIL = 10
+fld public final static short KSTAT2_NVF_INVAL = 1
+fld public final static short KSTAT2_NVF_NONE = 0
+innr public static Kstat2Handle
+innr public static Kstat2Map
+innr public static Kstat2MatcherList
+innr public static Kstat2NV
+intf com.sun.jna.Library
+meth public abstract int kstat2_add_matcher(int,java.lang.String,com.sun.jna.platform.unix.solaris.Kstat2$Kstat2MatcherList)
+meth public abstract int kstat2_alloc_matcher_list(com.sun.jna.ptr.PointerByReference)
+meth public abstract int kstat2_close(com.sun.jna.ptr.PointerByReference)
+meth public abstract int kstat2_free_matcher_list(com.sun.jna.ptr.PointerByReference)
+meth public abstract int kstat2_lookup_map(com.sun.jna.platform.unix.solaris.Kstat2$Kstat2Handle,java.lang.String,com.sun.jna.ptr.PointerByReference)
+meth public abstract int kstat2_map_get(com.sun.jna.platform.unix.solaris.Kstat2$Kstat2Map,java.lang.String,com.sun.jna.ptr.PointerByReference)
+meth public abstract int kstat2_open(com.sun.jna.ptr.PointerByReference,com.sun.jna.platform.unix.solaris.Kstat2$Kstat2MatcherList)
+meth public abstract int kstat2_update(com.sun.jna.platform.unix.solaris.Kstat2$Kstat2Handle)
+meth public abstract java.lang.String kstat2_status_string(int)
+
+CLSS public static com.sun.jna.platform.unix.solaris.Kstat2$Kstat2Handle
+ outer com.sun.jna.platform.unix.solaris.Kstat2
+cons public init()
+cons public init(com.sun.jna.platform.unix.solaris.Kstat2$Kstat2MatcherList)
+meth public com.sun.jna.platform.unix.solaris.Kstat2$Kstat2Map lookupMap(java.lang.String)
+meth public int close()
+meth public int update()
+supr com.sun.jna.PointerType
+hfds ref
+
+CLSS public static com.sun.jna.platform.unix.solaris.Kstat2$Kstat2Map
+ outer com.sun.jna.platform.unix.solaris.Kstat2
+cons public init()
+cons public init(com.sun.jna.Pointer)
+meth public com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV mapGet(java.lang.String)
+meth public java.lang.Object getValue(java.lang.String)
+supr com.sun.jna.PointerType
+
+CLSS public static com.sun.jna.platform.unix.solaris.Kstat2$Kstat2MatcherList
+ outer com.sun.jna.platform.unix.solaris.Kstat2
+cons public init()
+meth public int addMatcher(int,java.lang.String)
+meth public int free()
+supr com.sun.jna.PointerType
+hfds ref
+
+CLSS public static com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV
+ outer com.sun.jna.platform.unix.solaris.Kstat2
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["name", "type", "kind", "flags", "data"])
+cons public init()
+cons public init(com.sun.jna.Pointer)
+fld public byte kind
+fld public byte type
+fld public com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV$UNION data
+fld public java.lang.String name
+fld public short flags
+innr public static UNION
+meth public void read()
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV$UNION
+ outer com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV
+cons public init()
+fld public com.sun.jna.platform.unix.solaris.Kstat2$Kstat2Map map
+fld public com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV$UNION$IntegersArr integers
+fld public com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV$UNION$StringsArr strings
+fld public long integerVal
+innr public static IntegersArr
+innr public static StringsArr
+supr com.sun.jna.Union
+
+CLSS public static com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV$UNION$IntegersArr
+ outer com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV$UNION
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["addr", "len"])
+cons public init()
+fld public com.sun.jna.Pointer addr
+fld public int len
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV$UNION$StringsArr
+ outer com.sun.jna.platform.unix.solaris.Kstat2$Kstat2NV$UNION
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["addr", "len"])
+cons public init()
+fld public com.sun.jna.Pointer addr
+fld public int len
+supr com.sun.jna.Structure
+
+CLSS public com.sun.jna.platform.unix.solaris.Kstat2StatusException
+cons protected init(int,java.lang.String)
+cons public init(int)
+meth public int getKstat2Status()
+supr java.lang.RuntimeException
+hfds kstat2Status,serialVersionUID
+
 CLSS public abstract interface com.sun.jna.platform.unix.solaris.LibKstat
 fld public final static byte KSTAT_DATA_CHAR = 0
 fld public final static byte KSTAT_DATA_INT32 = 1
@@ -3649,6 +3787,7 @@ fld public final static int LOGON_NETCREDENTIALS_ONLY = 2
 fld public final static int LOGON_WITH_PROFILE = 1
 fld public final static int MAX_KEY_LENGTH = 255
 fld public final static int MAX_VALUE_NAME = 16383
+fld public final static int REG_PROCESS_APPKEY = 1
 fld public final static int RRF_RT_ANY = 65535
 fld public final static int RRF_RT_DWORD = 24
 fld public final static int RRF_RT_QWORD = 72
@@ -3753,6 +3892,7 @@ meth public abstract int RegEnumValue(com.sun.jna.platform.win32.WinReg$HKEY,int
 meth public abstract int RegEnumValue(com.sun.jna.platform.win32.WinReg$HKEY,int,char[],com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.Pointer,com.sun.jna.ptr.IntByReference)
 meth public abstract int RegGetValue(com.sun.jna.platform.win32.WinReg$HKEY,java.lang.String,java.lang.String,int,com.sun.jna.ptr.IntByReference,byte[],com.sun.jna.ptr.IntByReference)
 meth public abstract int RegGetValue(com.sun.jna.platform.win32.WinReg$HKEY,java.lang.String,java.lang.String,int,com.sun.jna.ptr.IntByReference,com.sun.jna.Pointer,com.sun.jna.ptr.IntByReference)
+meth public abstract int RegLoadAppKey(java.lang.String,com.sun.jna.platform.win32.WinReg$HKEYByReference,int,int,int)
 meth public abstract int RegNotifyChangeKeyValue(com.sun.jna.platform.win32.WinReg$HKEY,boolean,int,com.sun.jna.platform.win32.WinNT$HANDLE,boolean)
 meth public abstract int RegOpenKeyEx(com.sun.jna.platform.win32.WinReg$HKEY,java.lang.String,int,int,com.sun.jna.platform.win32.WinReg$HKEYByReference)
 meth public abstract int RegQueryInfoKey(com.sun.jna.platform.win32.WinReg$HKEY,char[],com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.IntByReference,com.sun.jna.platform.win32.WinBase$FILETIME)
@@ -3811,6 +3951,7 @@ meth public static com.sun.jna.platform.win32.Advapi32Util$InfoKey registryQuery
 meth public static com.sun.jna.platform.win32.WinNT$ACE_HEADER[] getFileSecurity(java.lang.String,boolean)
 meth public static com.sun.jna.platform.win32.WinNT$SECURITY_DESCRIPTOR_RELATIVE getFileSecurityDescriptor(java.io.File,boolean)
 meth public static com.sun.jna.platform.win32.WinReg$HKEYByReference registryGetKey(com.sun.jna.platform.win32.WinReg$HKEY,java.lang.String,int)
+meth public static com.sun.jna.platform.win32.WinReg$HKEYByReference registryLoadAppKey(java.lang.String,int,int)
 meth public static int alignOnDWORD(int)
 meth public static int fileEncryptionStatus(java.io.File)
 meth public static int getAceSize(int)
@@ -5337,6 +5478,8 @@ meth public abstract com.sun.jna.platform.win32.WinCrypt$CERT_CONTEXT$ByReferenc
 meth public abstract com.sun.jna.platform.win32.WinCrypt$CERT_CONTEXT$ByReference CertFindCertificateInStore(com.sun.jna.platform.win32.WinCrypt$HCERTSTORE,int,int,int,com.sun.jna.Pointer,com.sun.jna.platform.win32.WinCrypt$CERT_CONTEXT)
 meth public abstract com.sun.jna.platform.win32.WinCrypt$CRL_CONTEXT$ByReference CertEnumCRLsInStore(com.sun.jna.platform.win32.WinCrypt$HCERTSTORE,com.sun.jna.Pointer)
 meth public abstract com.sun.jna.platform.win32.WinCrypt$CTL_CONTEXT$ByReference CertEnumCTLsInStore(com.sun.jna.platform.win32.WinCrypt$HCERTSTORE,com.sun.jna.Pointer)
+meth public abstract com.sun.jna.platform.win32.WinCrypt$HCERTSTORE CertOpenStore(com.sun.jna.platform.win32.WinCrypt$CertStoreProviderName,int,com.sun.jna.platform.win32.WinCrypt$HCRYPTPROV_LEGACY,int,com.sun.jna.Pointer)
+meth public abstract com.sun.jna.platform.win32.WinCrypt$HCERTSTORE CertOpenStore(com.sun.jna.platform.win32.WinCrypt$CertStoreProviderName,int,com.sun.jna.platform.win32.WinCrypt$HCRYPTPROV_LEGACY,int,com.sun.jna.platform.win32.WTypes$LPWSTR)
 meth public abstract com.sun.jna.platform.win32.WinCrypt$HCERTSTORE CertOpenSystemStore(com.sun.jna.Pointer,java.lang.String)
 meth public abstract com.sun.jna.platform.win32.WinCrypt$HCERTSTORE PFXImportCertStore(com.sun.jna.platform.win32.WinCrypt$DATA_BLOB,com.sun.jna.platform.win32.WTypes$LPWSTR,int)
 meth public abstract int CertNameToStr(int,com.sun.jna.platform.win32.WinCrypt$DATA_BLOB,int,com.sun.jna.Pointer,int)
@@ -7077,6 +7220,7 @@ meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE GetCurrentProcess()
 meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE GetCurrentThread()
 meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE LoadResource(com.sun.jna.platform.win32.WinDef$HMODULE,com.sun.jna.platform.win32.WinDef$HRSRC)
 meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE OpenEvent(int,boolean,java.lang.String)
+meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE OpenFileMapping(int,boolean,java.lang.String)
 meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE OpenMutex(int,boolean,java.lang.String)
 meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE OpenProcess(int,boolean,int)
 meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE OpenThread(int,boolean,int)
@@ -7159,6 +7303,7 @@ meth public static void deleteFile(java.lang.String)
 meth public static void freeGlobalMemory(com.sun.jna.Pointer)
 meth public static void freeLocalMemory(com.sun.jna.Pointer)
 supr java.lang.Object
+hfds EMPTY_STRING_ARRAY
 
 CLSS public com.sun.jna.platform.win32.KnownFolders
 cons public init()
@@ -9918,7 +10063,7 @@ fld public final static int ISC_REQ_MUTUAL_AUTH = 2
 fld public final static int ISC_REQ_REPLAY_DETECT = 4
 fld public final static int ISC_REQ_SEQUENCE_DETECT = 8
 fld public final static int ISC_REQ_STREAM = 32768
-fld public final static int MAX_TOKEN_SIZE = 12288
+fld public final static int MAX_TOKEN_SIZE
 fld public final static int SECBUFFER_DATA = 1
 fld public final static int SECBUFFER_EMPTY = 0
 fld public final static int SECBUFFER_TOKEN = 2
@@ -11419,6 +11564,11 @@ fld public final static int EXTENDED_STARTUPINFO_PRESENT = 524288
 fld public final static int FILE_DIR_DISALOWED = 9
 fld public final static int FILE_ENCRYPTABLE = 0
 fld public final static int FILE_IS_ENCRYPTED = 1
+fld public final static int FILE_MAP_ALL_ACCESS = 983071
+fld public final static int FILE_MAP_COPY = 1
+fld public final static int FILE_MAP_EXECUTE = 32
+fld public final static int FILE_MAP_READ = 4
+fld public final static int FILE_MAP_WRITE = 2
 fld public final static int FILE_READ_ONLY = 8
 fld public final static int FILE_ROOT_DIR = 3
 fld public final static int FILE_SYSTEM_ATTR = 2
@@ -12081,6 +12231,53 @@ fld public final static int CERT_QUERY_FORMAT_FLAG_BINARY = 2
 fld public final static int CERT_QUERY_OBJECT_BLOB = 2
 fld public final static int CERT_QUERY_OBJECT_FILE = 1
 fld public final static int CERT_SIMPLE_NAME_STR = 1
+fld public final static int CERT_STORE_BACKUP_RESTORE_FLAG = 2048
+fld public final static int CERT_STORE_CREATE_NEW_FLAG = 8192
+fld public final static int CERT_STORE_DEFER_CLOSE_UNTIL_LAST_FREE_FLAG = 4
+fld public final static int CERT_STORE_DELETE_FLAG = 16
+fld public final static int CERT_STORE_ENUM_ARCHIVED_FLAG = 512
+fld public final static int CERT_STORE_MANIFOLD_FLAG = 256
+fld public final static int CERT_STORE_MAXIMUM_ALLOWED_FLAG = 4096
+fld public final static int CERT_STORE_NO_CRYPT_RELEASE_FLAG = 1
+fld public final static int CERT_STORE_OPEN_EXISTING_FLAG = 16384
+fld public final static int CERT_STORE_PROV_COLLECTION = 11
+fld public final static int CERT_STORE_PROV_FILE = 3
+fld public final static int CERT_STORE_PROV_FILENAME = 8
+fld public final static int CERT_STORE_PROV_FILENAME_A = 7
+fld public final static int CERT_STORE_PROV_FILENAME_W = 8
+fld public final static int CERT_STORE_PROV_LDAP = 16
+fld public final static int CERT_STORE_PROV_LDAP_W = 16
+fld public final static int CERT_STORE_PROV_MEMORY = 2
+fld public final static int CERT_STORE_PROV_MSG = 1
+fld public final static int CERT_STORE_PROV_PHYSICAL = 14
+fld public final static int CERT_STORE_PROV_PHYSICAL_W = 14
+fld public final static int CERT_STORE_PROV_PKCS7 = 5
+fld public final static int CERT_STORE_PROV_REG = 4
+fld public final static int CERT_STORE_PROV_SERIALIZED = 6
+fld public final static int CERT_STORE_PROV_SMART_CARD = 15
+fld public final static int CERT_STORE_PROV_SMART_CARD_W = 15
+fld public final static int CERT_STORE_PROV_SYSTEM = 10
+fld public final static int CERT_STORE_PROV_SYSTEM_A = 9
+fld public final static int CERT_STORE_PROV_SYSTEM_REGISTRY = 13
+fld public final static int CERT_STORE_PROV_SYSTEM_REGISTRY_A = 12
+fld public final static int CERT_STORE_PROV_SYSTEM_REGISTRY_W = 13
+fld public final static int CERT_STORE_PROV_SYSTEM_W = 10
+fld public final static int CERT_STORE_READONLY_FLAG = 32768
+fld public final static int CERT_STORE_SET_LOCALIZED_NAME_FLAG = 2
+fld public final static int CERT_STORE_SHARE_CONTEXT_FLAG = 128
+fld public final static int CERT_STORE_SHARE_STORE_FLAG = 64
+fld public final static int CERT_STORE_UNSAFE_PHYSICAL_FLAG = 32
+fld public final static int CERT_STORE_UPDATE_KEYID_FLAG = 1024
+fld public final static int CERT_SYSTEM_STORE_CURRENT_SERVICE = 262144
+fld public final static int CERT_SYSTEM_STORE_CURRENT_USER = 65536
+fld public final static int CERT_SYSTEM_STORE_CURRENT_USER_GROUP_POLICY = 458752
+fld public final static int CERT_SYSTEM_STORE_LOCAL_MACHINE = 131072
+fld public final static int CERT_SYSTEM_STORE_LOCAL_MACHINE_ENTERPRISE = 589824
+fld public final static int CERT_SYSTEM_STORE_LOCAL_MACHINE_GROUP_POLICY = 524288
+fld public final static int CERT_SYSTEM_STORE_RELOCATE_FLAG = -2147483648
+fld public final static int CERT_SYSTEM_STORE_SERVICES = 327680
+fld public final static int CERT_SYSTEM_STORE_UNPROTECTED_FLAG = 1073741824
+fld public final static int CERT_SYSTEM_STORE_USERS = 393216
 fld public final static int CERT_X500_NAME_STR = 3
 fld public final static int CERT_XML_NAME_STR = 4
 fld public final static int CRYPTPROTECT_AUDIT = 16
@@ -12167,6 +12364,7 @@ innr public static CTL_CONTEXT
 innr public static CTL_ENTRY
 innr public static CTL_INFO
 innr public static CTL_USAGE
+innr public static CertStoreProviderName
 innr public static DATA_BLOB
 innr public static HCERTCHAINENGINE
 innr public static HCERTSTORE
@@ -12801,6 +12999,18 @@ CLSS public static com.sun.jna.platform.win32.WinCrypt$CTL_USAGE$ByReference
 cons public init()
 intf com.sun.jna.Structure$ByReference
 supr com.sun.jna.platform.win32.WinCrypt$CTL_USAGE
+
+CLSS public static com.sun.jna.platform.win32.WinCrypt$CertStoreProviderName
+ outer com.sun.jna.platform.win32.WinCrypt
+cons public init()
+cons public init(int)
+cons public init(java.lang.String)
+intf com.sun.jna.NativeMapped
+meth public java.lang.Class<?> nativeType()
+meth public java.lang.Object fromNative(java.lang.Object,com.sun.jna.FromNativeContext)
+meth public java.lang.Object toNative()
+supr java.lang.Object
+hfds pointer
 
 CLSS public abstract interface static com.sun.jna.platform.win32.WinCrypt$CryptGetSignerCertificateCallback
  outer com.sun.jna.platform.win32.WinCrypt
@@ -18253,8 +18463,10 @@ fld public final static int REG_START_JOURNAL = 64
 fld public final static int REG_SZ = 1
 fld public final static int REG_WHOLE_HIVE_VOLATILE = 1
 fld public final static int SACL_SECURITY_INFORMATION = 8
+fld public final static int SECTION_ALL_ACCESS = 983071
 fld public final static int SECTION_EXTEND_SIZE = 16
 fld public final static int SECTION_MAP_EXECUTE = 8
+fld public final static int SECTION_MAP_EXECUTE_EXPLICIT = 32
 fld public final static int SECTION_MAP_READ = 4
 fld public final static int SECTION_MAP_WRITE = 2
 fld public final static int SECTION_QUERY = 1
@@ -22311,6 +22523,13 @@ CLSS public abstract com.sun.jna.ptr.ByReference
 cons protected init(int)
 meth public java.lang.String toString()
 supr com.sun.jna.PointerType
+
+CLSS public com.sun.jna.ptr.PointerByReference
+cons public init()
+cons public init(com.sun.jna.Pointer)
+meth public com.sun.jna.Pointer getValue()
+meth public void setValue(com.sun.jna.Pointer)
+supr com.sun.jna.ptr.ByReference
 
 CLSS public abstract interface com.sun.jna.win32.StdCall
 intf com.sun.jna.AltCallingConvention

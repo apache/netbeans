@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.62.0
+#Version 1.68.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -180,6 +180,7 @@ CLSS public final org.netbeans.modules.versioning.spi.VersioningSupport
 fld public final static java.lang.String PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE = "textAnnotationsVisible"
 meth public static boolean isExcluded(java.io.File)
 meth public static boolean isFlat(java.io.File)
+meth public static boolean isTextAnnotationVisible()
 meth public static java.io.File getFlat(java.lang.String)
 meth public static java.util.prefs.Preferences getPreferences()
 meth public static org.netbeans.modules.versioning.spi.VersioningSystem getOwner(java.io.File)

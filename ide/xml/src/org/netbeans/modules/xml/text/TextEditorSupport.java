@@ -561,7 +561,7 @@ public class TextEditorSupport extends DataEditorSupport implements EditorCookie
 
             Enumeration<CloneableTopComponent> en = allEditors.getComponents();
             while ( en.hasMoreElements() ) {
-                CloneableTopComponent editor = (CloneableTopComponent)en.nextElement();
+                CloneableTopComponent editor = en.nextElement();
                 if ( editor instanceof CloneableEditor ) {
                     editor.open();
                     ret = (CloneableEditor) editor;
@@ -762,7 +762,7 @@ public class TextEditorSupport extends DataEditorSupport implements EditorCookie
 
             synchronized (this) {
                 if ( editorRef != null ) {
-                    editorSupport = (TextEditorSupport) editorRef.get();
+                    editorSupport = editorRef.get();
                 }
                 if ( editorSupport != null ) {
                     return editorSupport;

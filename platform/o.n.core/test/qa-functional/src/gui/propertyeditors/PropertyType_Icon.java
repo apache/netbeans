@@ -118,7 +118,7 @@ public class PropertyType_Icon extends PropertyEditorsTest {
     }
  */
     public void testByInPlace(){
-        propertyValue_L = CLASSPATH +"/trash/PropertyEditorsTest.java";;
+        propertyValue_L = CLASSPATH +"/trash/PropertyEditorsTest.java";
         propertyValueExpectation_L = "Invalid value " + propertyValue_L;
         waitDialog = false;
         setByInPlace(propertyName_L, propertyValue_L, true);

@@ -33,6 +33,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
@@ -56,8 +58,10 @@ import org.netbeans.modules.web.el.spi.ImplicitObjectType;
 import org.netbeans.modules.web.el.spi.ResourceBundle;
 import static org.netbeans.modules.web.el.spi.ImplicitObjectType.*;
 import org.netbeans.modules.web.el.spi.ResolverContext;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
 import org.netbeans.modules.web.jsfapi.api.JsfSupport;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.LibraryComponent;
 import org.netbeans.modules.web.jsfapi.api.Tag;
@@ -78,6 +82,7 @@ public class JspJsfELPlugin extends ELPlugin {
     private static final String VOID_RETURN_TYPE = "void";
     private Collection<String> MIMETYPES = Arrays.asList(new String[]{"text/x-jsp", "text/x-tag"});
     private Collection<ImplicitObject> implicitObjects;
+    private Collection<ImplicitObject> implicitObjectsJakarta;
 
     @Override
     public String getName() {
@@ -91,9 +96,15 @@ public class JspJsfELPlugin extends ELPlugin {
 
     @Override
     public Collection<ImplicitObject> getImplicitObjects(FileObject file) {
-        return MIMETYPES.contains(file.getMIMEType())
-                ? getImplicitObjects()
-                : Collections.<ImplicitObject>emptyList();
+        if (!MIMETYPES.contains(file.getMIMEType())) {
+            return Collections.<ImplicitObject>emptyList();
+        }
+        final Project project = FileOwnerQuery.getOwner(file);
+        if (project == null || JsfVersionUtils.forProject(project).isAtLeast(JsfVersion.JSF_3_0)) {
+            return getImplicitObjectsJakarta();
+        } else {
+            return getImplicitObjects();
+        }
     }
 
     @Override
@@ -133,7 +144,7 @@ public class JspJsfELPlugin extends ELPlugin {
             
             // method has not parameters and return types are assignable.
             if ( executableElement.getParameters().isEmpty() && 
-                    ( (TypeKind.VOID.equals(elementReturnType.getKind()) && VOID_RETURN_TYPE.equals(attributeReturnType)) || 
+                    ( (TypeKind.VOID == elementReturnType.getKind() && VOID_RETURN_TYPE.equals(attributeReturnType)) ||
                     (types.isAssignable(elementReturnType, attributeReturnTypeElement.asType())) ) ) {
                 return true;
             }
@@ -197,7 +208,7 @@ public class JspJsfELPlugin extends ELPlugin {
         }
 
         // Return types of the element and attribute are void
-        if (TypeKind.VOID.equals(elementReturnType.getKind()) && VOID_RETURN_TYPE.equals(attributeReturnType)) {
+        if (TypeKind.VOID == elementReturnType.getKind() && VOID_RETURN_TYPE.equals(attributeReturnType)) {
             return true;
         }
 
@@ -216,7 +227,7 @@ public class JspJsfELPlugin extends ELPlugin {
         }
         
         final ParserResult parserResult = completionContext.getParserResult();
-        if (parserResult == null || !(parserResult instanceof ELParserResult)) {
+        if (!(parserResult instanceof ELParserResult)) {
             return null;
         }
         
@@ -238,7 +249,7 @@ public class JspJsfELPlugin extends ELPlugin {
         }
         
         Parser.Result result = results[0];
-        if (result == null || !(result instanceof HtmlParserResult)) {
+        if (!(result instanceof HtmlParserResult)) {
             // unexpected instance of Result
             return null;
         }
@@ -258,7 +269,7 @@ public class JspJsfELPlugin extends ELPlugin {
         CharSequence htmlParserResultText = htmlParserSnapshot.getText();
 
         Element element = htmlParserResult.findByPhysicalRange(elementAtCaretEmbeddedOffset, true);
-        if (element == null || !(element instanceof OpenTag)) {
+        if (!(element instanceof OpenTag)) {
             return null;
         }
         
@@ -318,15 +329,15 @@ public class JspJsfELPlugin extends ELPlugin {
     
     static class FacesContextObject extends JsfImplicitObject {
 
-        public FacesContextObject() {
-            super("facesContext", "javax.faces.context.FacesContext", OBJECT_TYPE); //NOI18N
+        public FacesContextObject(String name) {
+            super("facesContext", name, OBJECT_TYPE); //NOI18N
         }
     }
 
     static class ViewObject extends JsfImplicitObject {
 
-        public ViewObject() {
-            super("view", "javax.faces.component.UIViewRoot", OBJECT_TYPE); //NOI18N
+        public ViewObject(String name) {
+            super("view", name, OBJECT_TYPE); //NOI18N
         }
     }
 
@@ -340,8 +351,22 @@ public class JspJsfELPlugin extends ELPlugin {
     private synchronized void initImplicitObjects() {
         implicitObjects = new ArrayList<ImplicitObject>(2);
 //        implicitObjects.addAll(getScopeObjects());
-        implicitObjects.add(new ViewObject());
-        implicitObjects.add(new FacesContextObject());
+        implicitObjects.add(new ViewObject("javax.faces.component.UIViewRoot"));
+        implicitObjects.add(new FacesContextObject("javax.faces.context.FacesContext"));
+    }
+
+    private synchronized Collection<ImplicitObject> getImplicitObjectsJakarta() {
+        if (implicitObjectsJakarta == null) {
+            initImplicitObjectsJakarta();
+        }
+        return implicitObjectsJakarta;
+    }
+
+    private synchronized void initImplicitObjectsJakarta() {
+        implicitObjectsJakarta = new ArrayList<ImplicitObject>(2);
+//        implicitObjects.addAll(getScopeObjects());
+        implicitObjectsJakarta.add(new ViewObject("jakarta.faces.component.UIViewRoot"));
+        implicitObjectsJakarta.add(new FacesContextObject("jakarta.faces.context.FacesContext"));
     }
 
     @Override

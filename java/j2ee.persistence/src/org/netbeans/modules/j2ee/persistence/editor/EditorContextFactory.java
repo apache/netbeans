@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.j2ee.persistence.editor;
 
-import java.util.Map;
-import java.util.WeakHashMap;
 import javax.swing.text.Document;
 
 /**

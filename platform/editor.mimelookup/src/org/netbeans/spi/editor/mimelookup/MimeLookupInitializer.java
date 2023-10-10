@@ -43,10 +43,6 @@ import org.openide.util.Lookup;
  *  <br>
  *  This process can be arbitrarily nested for embedded mime-types.
  *  
- * <p> 
- *  An example implementation of MimeLookupInitializer
- *  that works over xml layer file system can be found at mime lookup module
- *  implementation <a href="http://editor.netbeans.org/source/browse/editor/mimelookup/src/org/netbeans/modules/editor/mimelookup/Attic/LayerMimeLookupImplementation.java">LayerMimeLookupInitializer</a>
  *
  *  @author Miloslav Metelka, Martin Roskanin
  *  @deprecated Use {@link MimeDataProvider} instead.
@@ -67,10 +63,10 @@ public interface MimeLookupInitializer {
      *
      * @param mimeType mime-type string representation e.g. "text/x-java"
      * @return non-null lookup result of MimeLookupInitializer(s).
-     *  <br/>
+     *  <br>
      *  Typically there should be just one child initializer although if there
      *  will be more than one all of them will be taken into consideration.
-     *  <br/>
+     *  <br>
      *  If there will be no specific initializers for the particular mime-type
      *  then an empty result should be returned.
      */

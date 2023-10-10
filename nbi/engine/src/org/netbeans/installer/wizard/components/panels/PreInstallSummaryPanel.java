@@ -302,12 +302,13 @@ public class PreInstallSummaryPanel extends ErrorMessagePanel {
                         }
                     }
                 
-                    for (File root: spaceMap.keySet()) {
+                    for (Map.Entry<File, Long> entry: spaceMap.entrySet()) {
+                        File root = entry.getKey();
+
                         try {
                             final long availableSpace =
                                     SystemUtils.getFreeSpace(root);
-                            final long requiredSpace =
-                                    spaceMap.get(root) + REQUIRED_SPACE_ADDITION;
+                            final long requiredSpace = entry.getValue() + REQUIRED_SPACE_ADDITION;
                             
                             if (availableSpace < requiredSpace) {
                                 return StringUtils.format(

@@ -48,7 +48,7 @@ import static org.netbeans.lib.v8debug.connection.DebuggerConnection.*;
  * Create an instance of this class to connect to a local or remote debugger.
  * <p>
  * The typical usage is:
- * <pre><tt>
+ * <pre>{@code
  *   final ClientConnection connection = new ClientConnection(hostName, portNumber);
  *   new Thread() {
  *       void run() {
@@ -68,7 +68,7 @@ import static org.netbeans.lib.v8debug.connection.DebuggerConnection.*;
  *   ...
  *   V8Request request = Continue.createRequest(...);
  *   connection.send(request);
- * </tt></pre>
+ * }</pre>
  * 
  * @author Martin Entlicher
  */

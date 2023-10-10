@@ -61,27 +61,27 @@ import org.openide.util.NbCollections;
  * <p>Most of the meat of the implementation is provided by setting appropriate values for four protected
  * variables, which should be initialized in the constructor; each represents an implementation of a separate
  * interface handling one aspect of the filesystem.
- *
- * <h4>List member</h4>
- *
+ * <p>
+ * <strong>List member</strong>
+ * </p>
  * The variable {@link #list} should contain an implementation of {@link AbstractFileSystem.List}. This only
  * specifies a way of accessing the list of children in a folder.
- *
- * <h4>Info member</h4>
- *
+ * <p>
+ * <strong>Info member</strong>
+ * <p>
  * {@link #info} contains an {@link AbstractFileSystem.Info} which provides basic file statistics.
  *
  * <p>It also specifies the raw implementation of two basic types of actions: getting input and output streams
  * for the file; and locking and unlocking it physically (optional and not to be confused with locking within
  * NetBeans).
- *
- * <h4>Change member</h4>
- *
+ * <p>
+ * <strong>Change member</strong>
+ * <p>
  * {@link #change} is an {@link AbstractFileSystem.Change} which provides the interface to create new folders
  * and files; delete them; and rename them (within the same directory).
- *
- * <h4>Attribute member</h4>
- *
+ * <p>
+ * <strong>Attribute member</strong>
+ * <p>
  * {@link #attr} is an {@link AbstractFileSystem.Attr} allowing NetBeans to read and write serializable
  * attributes (meta-information) to be associated with the file. Such attributes are not much used any more, but
  * they are occasionally.
@@ -206,7 +206,7 @@ public abstract class AbstractFileSystem extends FileSystem {
     /** Set the number of milliseconds between automatic
     * refreshes of the directory structure.
     *
-    * @param ms number of milliseconds between two refreshes; if <code><= 0</code> then refreshing is disabled
+    * @param ms number of milliseconds between two refreshes; if <code>&lt;= 0</code> then refreshing is disabled
     */
     protected final synchronized void setRefreshTime(int ms) {
         if (refresher != null) {

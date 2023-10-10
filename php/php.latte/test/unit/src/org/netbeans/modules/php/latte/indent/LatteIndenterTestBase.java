@@ -21,8 +21,6 @@ package org.netbeans.modules.php.latte.indent;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import javax.swing.text.Document;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.fail;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
 import org.netbeans.api.html.lexer.HTMLTokenId;

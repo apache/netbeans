@@ -337,25 +337,63 @@ public final class JavadocCompletionUtils {
     }
     
     private static final Set<DocTree.Kind> BLOCK_TAGS =
-            EnumSet.of(DocTree.Kind.AUTHOR, DocTree.Kind.DEPRECATED, DocTree.Kind.PARAM,
+            EnumSet.of(DocTree.Kind.AUTHOR, DocTree.Kind.DEPRECATED, DocTree.Kind.EXCEPTION,
+                       DocTree.Kind.HIDDEN,DocTree.Kind.PARAM, DocTree.Kind.PROVIDES,
                        DocTree.Kind.RETURN, DocTree.Kind.SEE, DocTree.Kind.SERIAL,
-                       DocTree.Kind.SERIAL_DATA, DocTree.Kind.SERIAL_FIELD, DocTree.Kind.SINCE,
-                       DocTree.Kind.THROWS, DocTree.Kind.UNKNOWN_BLOCK_TAG, DocTree.Kind.VERSION);
+                       DocTree.Kind.SERIAL_DATA, DocTree.Kind.SERIAL_FIELD,
+                       DocTree.Kind.SINCE, DocTree.Kind.THROWS, DocTree.Kind.USES, DocTree.Kind.VERSION,
+                       DocTree.Kind.UNKNOWN_BLOCK_TAG);
     public static boolean isBlockTag(DocTreePath tag) {
         return BLOCK_TAGS.contains(normalizedKind(tag.getLeaf()));
+    }
+
+    private static final Set<DocTree.Kind> INLINE_TAGS =
+            EnumSet.of(DocTree.Kind.CODE, DocTree.Kind.DOC_ROOT, DocTree.Kind.INDEX,
+                       DocTree.Kind.INHERIT_DOC, DocTree.Kind.LINK, DocTree.Kind.LINK_PLAIN,
+                       DocTree.Kind.LITERAL, DocTree.Kind.SNIPPET, DocTree.Kind.SUMMARY,
+                       DocTree.Kind.SYSTEM_PROPERTY, DocTree.Kind.VALUE, DocTree.Kind.UNKNOWN_INLINE_TAG);
+    public static boolean isInlineTag(DocTreePath tag) {
+        return INLINE_TAGS.contains(normalizedKind(tag.getLeaf()));
     }
 
     public static DocTree.Kind normalizedKind(DocTree tag) {
         DocTree.Kind normalizedKind = tag.getKind();
         if (normalizedKind == com.sun.source.doctree.DocTree.Kind.ERRONEOUS) {
-            String errorBody = ((ErroneousTree) tag).getBody();
-            switch (errorBody.split("\\s")[0]) {
-                case "@throws": normalizedKind = DocTree.Kind.THROWS; break;
-                case "@see": normalizedKind = DocTree.Kind.SEE; break;
+            String txt = ((ErroneousTree) tag).getBody().split("\\s")[0];
+            switch (txt) {
+                case "@author": normalizedKind = DocTree.Kind.AUTHOR; break;
+                case "@deprecated": normalizedKind = DocTree.Kind.DEPRECATED; break;
+                case "@exception": normalizedKind = DocTree.Kind.EXCEPTION; break;
+                case "@hidden": normalizedKind = DocTree.Kind.HIDDEN; break;
                 case "@param": normalizedKind = DocTree.Kind.PARAM; break;
-                case "{@value": normalizedKind = DocTree.Kind.VALUE; break;
+                case "@provides": normalizedKind = DocTree.Kind.PROVIDES; break;
+                case "@return": normalizedKind = DocTree.Kind.RETURN; break;
+                case "@see": normalizedKind = DocTree.Kind.SEE; break;
+                case "@serial": normalizedKind = DocTree.Kind.SERIAL; break;
+                case "@serialData": normalizedKind = DocTree.Kind.SERIAL_DATA; break;
+                case "@serialField": normalizedKind = DocTree.Kind.SERIAL_FIELD; break;
+                case "@since": normalizedKind = DocTree.Kind.SINCE; break;
+                case "@throws": normalizedKind = DocTree.Kind.THROWS; break;
+                case "@uses": normalizedKind = DocTree.Kind.USES; break;
+                case "@version": normalizedKind = DocTree.Kind.VERSION; break;
+                case "{@code": normalizedKind = DocTree.Kind.CODE; break;
+                case "{@docRoot": normalizedKind = DocTree.Kind.DOC_ROOT; break;
+                case "{@index": normalizedKind = DocTree.Kind.INDEX; break;
+                case "{@inheritDoc": normalizedKind = DocTree.Kind.INHERIT_DOC; break;
                 case "{@link": normalizedKind = DocTree.Kind.LINK; break;
                 case "{@linkplain": normalizedKind = DocTree.Kind.LINK; break;
+                case "{@literal": normalizedKind = DocTree.Kind.LITERAL; break;
+                case "{@snippet": normalizedKind = DocTree.Kind.SNIPPET; break;
+                case "{@summary": normalizedKind = DocTree.Kind.SUMMARY; break;
+                case "{@systemProperty": normalizedKind = DocTree.Kind.SYSTEM_PROPERTY; break;
+                case "{@value": normalizedKind = DocTree.Kind.VALUE; break;
+                default:
+                    if (txt.startsWith("@")) {
+                        normalizedKind = DocTree.Kind.UNKNOWN_BLOCK_TAG;
+                    } else if (txt.startsWith("{@")) {
+                        normalizedKind = DocTree.Kind.UNKNOWN_INLINE_TAG;
+                    }
+                    break;
             }
         }
         return normalizedKind;

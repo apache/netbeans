@@ -30,6 +30,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.eclipse.lsp4j.DocumentHighlight;
@@ -63,28 +64,33 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
     private Document doc;
     private int caretPos;
 
+    @SuppressWarnings("LeakingThisInConstructor")
     public MarkOccurrences(JTextComponent component) {
         this.component = component;
+        doc = component.getDocument();
+        Caret caret = component.getCaret();
+        caretPos = caret != null ? caret.getDot() : -1;
         component.addCaretListener(this);
         component.addPropertyChangeListener(this);
-        doc = component.getDocument();
-        caretPos = component.getCaretPosition();
     }
 
     @Override
     public void run(LSPBindings bindings, FileObject file) {
-        Document doc;
-        int caretPos;
+        Document localDoc;
+        int localCaretPos;
         synchronized (this) {
-            doc = this.doc;
-            caretPos = this.caretPos;
+            localDoc = this.doc;
+            localCaretPos = this.caretPos;
         }
-        getHighlightsBag(doc).setHighlights(computeHighlights(doc, caretPos));
+        getHighlightsBag(localDoc).setHighlights(computeHighlights(localDoc, localCaretPos));
     }
 
     private OffsetsBag computeHighlights(Document doc, int caretPos) {
         AttributeSet attr = getColoring(doc);
         OffsetsBag result = new OffsetsBag(doc);
+        if(caretPos < 0) {
+            return result;
+        }
         FileObject file = NbEditorUtilities.getFileObject(doc);
         if (file == null) {
             return result;
@@ -128,7 +134,11 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
 
     @Override
     public synchronized void caretUpdate(CaretEvent e) {
-        caretPos = e.getDot();
+        if(e != null) {
+            caretPos = e.getDot();
+        } else {
+            caretPos = -1;
+        }
         WORKER.post(() -> {
             FileObject file = NbEditorUtilities.getFileObject(doc);
 
@@ -149,19 +159,23 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
         OffsetsBag bag = (OffsetsBag) doc.getProperty(MarkOccurrences.class);
 
         if (bag == null) {
-            doc.putProperty(MarkOccurrences.class, bag = new OffsetsBag(doc, false));
+            bag = new OffsetsBag(doc, false);
+            doc.putProperty(MarkOccurrences.class, bag);
 
             Object stream = doc.getProperty(Document.StreamDescriptionProperty);
             final OffsetsBag bagFin = bag;
             DocumentListener l = new DocumentListener() {
+                @Override
                 public void insertUpdate(DocumentEvent e) {
                     bagFin.removeHighlights(e.getOffset(), e.getOffset(), false);
                 }
 
+                @Override
                 public void removeUpdate(DocumentEvent e) {
                     bagFin.removeHighlights(e.getOffset(), e.getOffset(), false);
                 }
 
+                @Override
                 public void changedUpdate(DocumentEvent e) {
                 }
             };
@@ -180,6 +194,7 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
     @MimeRegistration(mimeType = "", service = HighlightsLayerFactory.class)
     public static class HighlightsLayerFactoryImpl implements HighlightsLayerFactory {
 
+        @Override
         public HighlightsLayer[] createLayers(HighlightsLayerFactory.Context context) {
             return new HighlightsLayer[]{
                 //the mark occurrences layer should be "above" current row and "below" the search layers:

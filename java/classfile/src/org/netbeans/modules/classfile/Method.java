@@ -102,6 +102,7 @@ public final class Method extends Field {
     /**
      * Returns true if this method is a generics bridge method defined
      * by the compiler.
+     * @return true if this method is a generic bridge method
      */
     public final boolean isBridge() {
 	return (access & Access.BRIDGE) == Access.BRIDGE;
@@ -110,6 +111,8 @@ public final class Method extends Field {
     /**
      * Returns true if this method is declared with a variable number
      * of arguments.
+     * @return true if this method is declared with a variable number 
+     * of argument
      */
     public final boolean isVarArgs() {
 	return (access & Access.VARARGS) == Access.VARARGS;
@@ -117,6 +120,7 @@ public final class Method extends Field {
 
     /**
      * Returns true if this method is declared synchronized.
+     * @return true if this method is declared synchronized
      */
     public final boolean isSynchronized() {
 	return (access & Access.SYNCHRONIZED) == Access.SYNCHRONIZED;
@@ -124,6 +128,7 @@ public final class Method extends Field {
 
     /**
      * Returns true if this method is declared native.
+     * @return true if this method is declated native
      */
     public final boolean isNative() {
 	return (access & Access.NATIVE) == Access.NATIVE;
@@ -131,6 +136,7 @@ public final class Method extends Field {
 
     /**
      * Returns true if this method is declared abstract.
+     * @return true if this method is declared abstract
      */
     public final boolean isAbstract() {
 	return (access & Access.ABSTRACT) == Access.ABSTRACT;
@@ -138,6 +144,7 @@ public final class Method extends Field {
 
     /**
      * Returns the parameters for this method as a declaration-ordered list.
+     * @return list parameter per declaration order
      */
     public final List<Parameter> getParameters() {
 	if (parameters == null)
@@ -148,6 +155,7 @@ public final class Method extends Field {
     /**
      * Returns the method's return type in the type format defined by
      * the JVM Specification for Field Descriptors (section 4.3.2).
+     * @return the return type
      */
     public final String getReturnType() {
 	String desc = getDescriptor();
@@ -158,6 +166,7 @@ public final class Method extends Field {
     /**
      * Returns the method's return type as it would be defined in Java
      * source code format.
+     * @return methode return type as string
      */
     public final String getReturnSignature() {
 	String type = getReturnType();
@@ -169,6 +178,8 @@ public final class Method extends Field {
      * defined by this method.  Null is returned if no default 
      * is specified for this element, or if the class that contains 
      * this method does not define an annotation type.
+     * @return the default annotatin value for the element 
+     * defined by this method
      */
     public ElementValue getAnnotationDefault() {
 	if (annotationDefault == notloadedAnnotationDefault) {

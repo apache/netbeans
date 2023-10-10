@@ -1322,7 +1322,7 @@ import org.openide.util.BaseUtilities;
         /**
          * For each possible event, one ring-buffer of LogContexts.
          */
-        private Map<EventType, RingTimeBuffer>  history = new HashMap<EventType, RingTimeBuffer>(7);
+        private Map<EventType, RingTimeBuffer>  history = new EnumMap<>(EventType.class);
         
         /**
          * For each root, one ring-buffer per event type. Items are removed using least recently accessed strategy. Once an

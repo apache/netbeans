@@ -21,7 +21,9 @@
 -->
 <licenseinfo>
     <fileset>
+        <file>src/org/netbeans/modules/php/dbgp/resources/class.png</file>
         <file>src/org/netbeans/modules/php/dbgp/resources/notice-glyph.gif</file>
+        <file>src/org/netbeans/modules/php/dbgp/resources/php16Key.png</file>
         <file>src/org/netbeans/modules/php/dbgp/resources/undefined.gif</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />

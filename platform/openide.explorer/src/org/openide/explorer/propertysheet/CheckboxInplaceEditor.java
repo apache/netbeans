@@ -69,6 +69,7 @@ class CheckboxInplaceEditor extends JCheckBox implements InplaceEditor {
         }
     }
 
+    @Override
     public void setSelected(boolean val) {
         boolean fire = val == isSelected();
         String s = getText();
@@ -140,6 +141,7 @@ class CheckboxInplaceEditor extends JCheckBox implements InplaceEditor {
         }
     }
 
+    @Override
     public String getText() {
         //OptimizeIt shows 1% of drawing time can be spent in re-fetching
         //text, so cache it as a microoptimization
@@ -236,6 +238,7 @@ class CheckboxInplaceEditor extends JCheckBox implements InplaceEditor {
 
     /** Overridden to be able to calculate the preferred size without having
      * to be added to the AWT hierarchy */
+    @Override
     public Dimension getPreferredSize() {
         if (isShowing()) {
             return super.getPreferredSize();

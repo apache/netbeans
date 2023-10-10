@@ -274,7 +274,15 @@ public class StreamTerm extends Term {
         updateTtySize();
 
         if (pin != null) {
-            outputStreamWriter = new OutputStreamWriter(pin);
+            if(charSet == null) {
+                outputStreamWriter = new OutputStreamWriter(pin);
+            } else {
+                try {
+                    outputStreamWriter = new OutputStreamWriter(pin, charSet);
+                } catch (UnsupportedEncodingException ex) {
+                    outputStreamWriter = new OutputStreamWriter(pin);
+                }
+            }
 	    stdinMonitor = new InputMonitor(outputStreamWriter);
 	    addInputListener(stdinMonitor);
         }

@@ -25,6 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
@@ -46,6 +48,7 @@ import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory;
 import org.netbeans.spi.editor.highlighting.ZOrder;
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
 /**
@@ -53,6 +56,8 @@ import org.openide.util.Exceptions;
  * @author lahvac
  */
 public class SemanticHighlight implements BackgroundTask {
+
+    private static final Logger LOG = Logger.getLogger(SemanticHighlight.class.getName());
 
     private final Document doc;
 
@@ -71,6 +76,13 @@ public class SemanticHighlight implements BackgroundTask {
             SemanticTokensParams params = new SemanticTokensParams(new TextDocumentIdentifier(Utils.toURI(file)));
             SemanticTokens tokens = bindings.getTextDocumentService().semanticTokensFull(params).get();
             List<Integer> data = tokens.getData();
+            String mimeType = FileUtil.getMIMEType(file);
+            // Find mime-type specific FontColorSettings ...
+            FontColorSettings fcs = MimeLookup.getLookup(mimeType).lookup(FontColorSettings.class);
+            if (fcs == null) {
+                // ... or fall-back to "text/textmate" FontColorSettings...
+                fcs = MimeLookup.getLookup("text/textmate").lookup(FontColorSettings.class);
+            }
             int lastLine = 0;
             int lastColumn = 0;
             int offset = 0;
@@ -88,7 +100,7 @@ public class SemanticHighlight implements BackgroundTask {
                 if (data.get(i + 2).intValue() <= 0) {
                     continue; //XXX!
                 }
-                AttributeSet tokenHighlight = tokenHighlight(bindings, data.get(i + 3).intValue(), data.get(i + 4).intValue());
+                AttributeSet tokenHighlight = fcs == null ? EMPTY : tokenHighlight(bindings, fcs, data.get(i + 3).intValue(), data.get(i + 4).intValue());
                 target.addHighlight(offset, offset + data.get(i + 2).intValue(), tokenHighlight);
             }
             getBag(doc).setHighlights(target);
@@ -99,7 +111,8 @@ public class SemanticHighlight implements BackgroundTask {
 
     private final Map<Integer, Map<Integer, AttributeSet>> tokenId2Highlight = new HashMap<>();
 
-    private AttributeSet tokenHighlight(LSPBindings bindings, int tokenId, int modifiers) {
+    private AttributeSet tokenHighlight(final LSPBindings bindings, final FontColorSettings fcs, int tokenId, int modifiers) {
+        assert fcs != null;
         return tokenId2Highlight.computeIfAbsent(tokenId, s -> new HashMap<>())
                                 .computeIfAbsent(modifiers, mods -> {
             SemanticTokensLegend legend = bindings.getInitResult().getCapabilities().getSemanticTokensProvider().getLegend();
@@ -120,15 +133,12 @@ public class SemanticHighlight implements BackgroundTask {
                 }
                 mods &= ~mod;
             }
-            FontColorSettings fcs = MimeLookup.getLookup("text/textmate").lookup(FontColorSettings.class);
 
-            if (fcs == null) {
-                return EMPTY;
+            String colorSet = "mod-" + tokenName + (isDeclaration ? "-declaration" : "");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "LSP Semantic coloring. token kind: {0}", colorSet);
             }
-
-            assert fcs != null;
-
-            AttributeSet colors = fcs.getTokenFontColors("mod-" + tokenName + (isDeclaration ? "-declaration" : ""));
+            AttributeSet colors = fcs.getTokenFontColors(colorSet);
             AttributeSet statik = isStatic ? fcs.getTokenFontColors("mod-static") : null;
 
             if (colors != null && statik != null) {

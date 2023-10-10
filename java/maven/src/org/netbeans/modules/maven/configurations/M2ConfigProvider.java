@@ -42,6 +42,8 @@ import org.netbeans.modules.maven.api.ProjectProfileHandler;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import static org.netbeans.modules.maven.configurations.ConfigurationPersistenceUtils.*;
 import org.netbeans.modules.maven.customizer.CustomizerProviderImpl;
+import org.netbeans.modules.maven.execute.ActionNameProvider;
+import org.netbeans.modules.maven.execute.DefaultActionGoalProvider;
 import org.netbeans.modules.maven.execute.model.ActionToGoalMapping;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.netbeans.modules.maven.execute.model.NetbeansActionProfile;
@@ -422,6 +424,11 @@ public class M2ConfigProvider implements ProjectConfigurationProvider<M2Configur
                     for (NetbeansActionProfile prof : profiles) {
                         if (!knownIds.contains(prof.getId())) {
                             M2Configuration cfg = new M2Configuration(prof.getId(), project.getProjectDirectory()) {
+                                {
+                                    if (p instanceof ActionNameProvider) {
+                                        reader = DefaultActionGoalProvider.createI18nReader(((ActionNameProvider)p).getTranslations());
+                                    }
+                                }
                                 @Override
                                 public ActionToGoalMapping getRawMappings() {
                                     try (InputStream istm = getActionDefinitionStream()) {
@@ -439,19 +446,14 @@ public class M2ConfigProvider implements ProjectConfigurationProvider<M2Configur
                                     } finally {
                                         setLocalConfiguration(save);
                                     }
-                                    List<NetbeansActionProfile> profiles = ((AbstractMavenActionsProvider) p).getRawMappings().getProfiles();
+                                    List<NetbeansActionProfile> profiles = allMappings.getProfiles();
                                     for (NetbeansActionProfile p : profiles) {
                                         if (prof.getId().equals(p.getId())) {
-                                            Set<String> overridenIds = new HashSet<>();
                                             for (NetbeansActionMapping am : p.getActions()) {
-                                                overridenIds.add(am.getActionName());
                                                 m.addAction(am);
                                             }
-                                            for (NetbeansActionMapping am : allMappings.getActions()) {
-                                                if (!overridenIds.contains(am.getActionName())) {
-                                                    m.addAction(am);
-                                                }
-                                            }
+                                            // default actions are handled in the UI, should not be added
+                                            // as they are not customized by this profile (?)
                                         }
                                     }
                                     return m;

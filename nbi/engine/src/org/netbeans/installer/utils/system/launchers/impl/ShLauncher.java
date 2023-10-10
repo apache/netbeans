@@ -297,7 +297,7 @@ public class ShLauncher extends CommonLauncher {
                 replace("\t","\\\\t").
                 replace("\r","\\\\r").
                 replace("`","\\`").
-                replaceAll("\"","\\\\\"");
+                replace("\"","\\\\\"");
         
     }
     private String escapeSlashesAndChars(String str) {

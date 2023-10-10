@@ -25,6 +25,6 @@ import org.netbeans.api.annotations.common.NonNull;
  * @author Petr Hejl
  */
 public interface PostScanProvider {
-    
+
     void addPostScanTask(@NonNull final Runnable task);
 }

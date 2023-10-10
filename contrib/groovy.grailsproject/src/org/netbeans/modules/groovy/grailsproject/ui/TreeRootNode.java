@@ -102,7 +102,7 @@ public final class TreeRootNode extends FilterNode implements PropertyChangeList
         if (icon == null) {
             Image image = opened ? super.getOpenedIcon(type) : super.getIcon(type);
 
-            if (Type.LIBRARY.equals(visualType)) {
+            if (Type.LIBRARY == visualType) {
                 return ImageUtilities.mergeImages(image, LIBRARIES_BADGE, 7, 7);
             } else {
                 return image;

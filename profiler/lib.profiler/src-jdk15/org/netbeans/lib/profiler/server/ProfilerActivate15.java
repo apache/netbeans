@@ -86,7 +86,7 @@ public class ProfilerActivate15 {
 
         if (commaPos != -1) { // optional timeout is specified
 
-            String timeOutStr = agentArgs.substring(commaPos + 1, agentArgs.length());
+            String timeOutStr = agentArgs.substring(commaPos + 1);
 
             try {
                 timeOut = Integer.parseInt(timeOutStr);

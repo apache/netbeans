@@ -42,6 +42,7 @@ import org.netbeans.modules.mercurial.HgProgressSupport;
 import org.netbeans.modules.mercurial.ui.log.HgLogMessage;
 import org.openide.DialogDescriptor;
 import org.openide.nodes.Node;
+import org.openide.util.Utilities;
 
 /**
  * Merge action for mercurial:
@@ -84,7 +85,7 @@ public class MergeAction extends ContextAction {
                     NbBundle.getMessage(MergeAction.class, "MSG_MERGE_NOT_SUPPORTED_INVIEW_INFO")); // NOI18N
             logger.output(""); // NOI18N
             logger.closeLog();
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                     NbBundle.getMessage(MergeAction.class, "MSG_MERGE_NOT_SUPPORTED_INVIEW"),// NOI18N
                     NbBundle.getMessage(MergeAction.class, "MSG_MERGE_NOT_SUPPORTED_INVIEW_TITLE"),// NOI18N
                     JOptionPane.INFORMATION_MESSAGE);
@@ -103,7 +104,7 @@ public class MergeAction extends ContextAction {
                         logger.output( NbBundle.getMessage(MergeAction.class,"MSG_NOTHING_TO_MERGE")); // NOI18N
                         logger.outputInRed( NbBundle.getMessage(MergeAction.class, "MSG_MERGE_DONE")); // NOI18N
                         logger.output(""); // NOI18N
-                        JOptionPane.showMessageDialog(null,
+                        JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                             NbBundle.getMessage(MergeAction.class,"MSG_NOTHING_TO_MERGE"),// NOI18N
                             NbBundle.getMessage(MergeAction.class,"MSG_MERGE_TITLE"),// NOI18N
                             JOptionPane.INFORMATION_MESSAGE);
@@ -163,7 +164,7 @@ public class MergeAction extends ContextAction {
                 if (interactive) {
                     logger.outputInRed(NbBundle.getMessage(MergeAction.class,
                             "MSG_MERGE_FAILED")); // NOI18N
-                    JOptionPane.showMessageDialog(null,
+                    JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                             NbBundle.getMessage(MergeAction.class, "MSG_MERGE_UNCOMMITTED"), // NOI18N
                             NbBundle.getMessage(MergeAction.class, "MSG_MERGE_TITLE"), // NOI18N
                             JOptionPane.WARNING_MESSAGE);
@@ -202,7 +203,7 @@ public class MergeAction extends ContextAction {
             if (HgCommand.isMergeUnavailableMsg(line)) {
                 bMergeFailed = true;
                 if (interactive) {
-                    JOptionPane.showMessageDialog(null,
+                    JOptionPane.showMessageDialog(Utilities.findDialogParent(),
                             NbBundle.getMessage(MergeAction.class, "MSG_MERGE_UNAVAILABLE"), // NOI18N
                             NbBundle.getMessage(MergeAction.class, "MSG_MERGE_TITLE"), // NOI18N
                             JOptionPane.WARNING_MESSAGE);
@@ -252,7 +253,7 @@ public class MergeAction extends ContextAction {
             return;
         }
         Action a = logger.getOpenOutputAction();
-        if (warnInDialog && a != null && JOptionPane.showConfirmDialog(null, NbBundle.getMessage(MergeAction.class, "MSG_MERGE_NEEDED_BRANCHES"), //NOI18N
+        if (warnInDialog && a != null && JOptionPane.showConfirmDialog(Utilities.findDialogParent(), NbBundle.getMessage(MergeAction.class, "MSG_MERGE_NEEDED_BRANCHES"), //NOI18N
                 NbBundle.getMessage(MergeAction.class, "TITLE_MERGE_NEEDED_BRANCHES"), //NOI18N
                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
             a.actionPerformed(new ActionEvent(MergeAction.class, ActionEvent.ACTION_PERFORMED, null));

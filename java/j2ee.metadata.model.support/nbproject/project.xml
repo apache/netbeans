@@ -156,6 +156,7 @@
                 <friend>org.netbeans.modules.javaee.resources</friend>
                 <friend>org.netbeans.modules.spring.beans</friend>
                 <friend>org.netbeans.modules.web.beans</friend>
+                <friend>org.netbeans.modules.jakarta.web.beans</friend>
                 <friend>org.netbeans.modules.web.jsf</friend>
                 <friend>org.netbeans.modules.websvc.restapi</friend>
                 <package>org.netbeans.modules.j2ee.metadata.model.api.support.annotation</package>

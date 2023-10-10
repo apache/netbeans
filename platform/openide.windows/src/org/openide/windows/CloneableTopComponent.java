@@ -333,10 +333,11 @@ public abstract class CloneableTopComponent extends TopComponent implements Exte
 
         /** Retrieve an arbitrary component from the set.
         * @return some component from the list of registered ones
-        * @exception NoSuchElementException if the set is empty
+        * @exception java.util.NoSuchElementException if the set is empty
          * @deprecated Use {@link #getArbitraryComponent} instead.
          *             It doesn't throw a runtime exception.
         */
+        @Deprecated
         public CloneableTopComponent getAnyComponent() {
             synchronized (LOCK) {
                 return componentSet.iterator().next();

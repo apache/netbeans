@@ -1,0 +1,38 @@
+<testresult testFile='readonlyInterfaceError_01.php'>
+    <scanner>
+        <token id='T_READONLY' start='815' end='823'>
+            <text>readonly</text>
+        </token>
+        <token id='T_INTERFACE' start='824' end='833'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='834' end='851'>
+            <text>ReadonlyInterface</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='852' end='853'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='853' end='854'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='855' end='855'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='855'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ASTError start='815' end='823'/>
+            <InterfaceDeclaration start='824' end='854'>
+                <Name>
+                    <Identifier start='834' end='851' name='ReadonlyInterface'/>
+                </Name>
+                <Block start='852' end='854' isCurly='true'>
+                </Block>
+            </InterfaceDeclaration>
+        </Statements>
+    </Program>
+</testresult>

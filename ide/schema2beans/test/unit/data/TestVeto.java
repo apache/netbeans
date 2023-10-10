@@ -62,7 +62,7 @@ public class TestVeto extends BaseTest
 		//	Used to check that the event is triggered once the changed are done
 		Chapter			tracePara;
 		
-		boolean			raise = false;;
+		boolean			raise = false;
 		boolean			raised = false;
 		boolean			printStringArray = false;
 

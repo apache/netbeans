@@ -1317,8 +1317,8 @@ class LayoutOperations implements LayoutConstants {
         int commonGapLeadingSize = Integer.MIN_VALUE;
         int commonGapTrailingSize = Integer.MIN_VALUE;
         boolean mayNeedSecondPass = false;
-        List<LayoutInterval> reduceToZeroGapsLeading = new LinkedList();
-        List<LayoutInterval> reduceToZeroGapsTrailing = new LinkedList();
+        List<LayoutInterval> reduceToZeroGapsLeading = new LinkedList<>();
+        List<LayoutInterval> reduceToZeroGapsTrailing = new LinkedList<>();
 
         for (int i=0; i < group.getSubIntervalCount(); i++) {
             LayoutInterval li = group.getSubInterval(i);

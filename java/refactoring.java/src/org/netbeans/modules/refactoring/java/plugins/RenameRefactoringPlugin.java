@@ -603,6 +603,7 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
                     break;
                 case CLASS:
                 case INTERFACE:
+                case RECORD:
                 case ANNOTATION_TYPE:
                 case ENUM:
                     //TODO: any prechecks for JavaClass?

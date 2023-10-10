@@ -37,7 +37,7 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.NbBundle.Messages;
 
-@Hint(displayName = "#DN_MissingRefOutputHint", description = "#DESC_MissingRefOutputHint", category = "general", options=Options.NO_BATCH)
+@Hint(displayName = "#DN_MissingRefOutputHint", description = "#DESC_MissingRefOutputHint", category = "general", options=Options.QUERY)
 @Messages({
     "DN_MissingRefOutputHint=Missing Reference Output",
     "DESC_MissingRefOutputHint=Checks for missing reference output in jtreg @compile tags."

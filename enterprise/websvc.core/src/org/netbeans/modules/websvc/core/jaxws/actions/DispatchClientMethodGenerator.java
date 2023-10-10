@@ -19,6 +19,7 @@
 package org.netbeans.modules.websvc.core.jaxws.actions;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,9 +70,8 @@ class DispatchClientMethodGenerator implements Task<WorkingCopy> {
             }
 
             TreeMaker maker = copy.getTreeMaker();
-            Set<Modifier> methodModifs = new HashSet<Modifier>();
-            methodModifs.add(Modifier.PRIVATE);
-            Tree returnTypeTree = maker.PrimitiveType(TypeKind.VOID);  
+            Set<Modifier> methodModifs = EnumSet.of(Modifier.PRIVATE);
+            Tree returnTypeTree = maker.PrimitiveType(TypeKind.VOID);
             MethodTree methodTree = maker.Method (
                     maker.Modifiers(methodModifs),
                     suggestMethodName(javaClass),

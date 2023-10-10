@@ -130,7 +130,7 @@ public class ParseUtils {
             throws org.xml.sax.SAXException, java.io.IOException {
         // additional logging for #127276
         if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.log(Level.FINE, "Parsing with ddResolver: " + ddResolver);
+            LOGGER.log(Level.FINE, "Parsing with ddResolver: {0}", ddResolver);
         }
         ErrorHandler errorHandler = new ErrorHandler();
         try {

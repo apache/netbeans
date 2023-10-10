@@ -472,7 +472,7 @@ public final class IssueTopComponent extends TopComponent implements PropertyCha
 
     private RepositoryImpl getRepository() {
         Object item = repositoryComboBox.getSelectedItem();
-        if (item == null || !(item instanceof Repository)) {
+        if (!(item instanceof Repository)) {
             return null;
         }
         return APIAccessor.IMPL.getImpl((Repository) item);

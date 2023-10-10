@@ -61,11 +61,11 @@ public class LspProgressUIWorker implements ProgressUIWorkerWithModel{
                 lsHandle.sendStartMessage(event);
                 break;
                 
+            case ProgressEvent.TYPE_SWITCH:
             case ProgressEvent.TYPE_PROGRESS:
                 lsHandle.sendProgress(event);
                 break;
                 
-            case ProgressEvent.TYPE_SWITCH:
             case ProgressEvent.TYPE_SILENT:
             case ProgressEvent.TYPE_REQUEST_STOP:
                 // ignore

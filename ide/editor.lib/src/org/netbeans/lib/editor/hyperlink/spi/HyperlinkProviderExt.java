@@ -39,7 +39,7 @@ import org.netbeans.spi.editor.mimelookup.MimeLocation;
  * </p>
  * 
  * <p>
- * Please see {@link org.netbeans.lib.editor.hyperlink.HyperlinkProviderManager}
+ * Please see {@code org.netbeans.lib.editor.hyperlink.HyperlinkProviderManager}
  * for more details.
  * </p>
  *

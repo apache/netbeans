@@ -194,7 +194,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
         this.repository = repository;
     }
 
-    private static final String[] TEST_LIBRARIES = new String[] {"testng", "junit_4"};
+    private static final String[] TEST_LIBRARIES = new String[] {"testng", "junit_4", "junit_5"};
 
     private static URL projectDir2FakeTarget(FileObject projectDir) throws MalformedURLException {
         return FileUtil.getArchiveRoot(projectDir.toURI().resolve("fake-target.jar").toURL());

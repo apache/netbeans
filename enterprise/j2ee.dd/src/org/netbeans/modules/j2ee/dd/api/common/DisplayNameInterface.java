@@ -69,7 +69,7 @@ public interface DisplayNameInterface {
     public String getDefaultDisplayName();
     
     /**
-     * Returns all display-name elements in the form of <@link java.util.Map>. 
+     * Returns all display-name elements in the form of {@link java.util.Map}. 
      *
      * @return map of all display-names in the form of [locale:display-name]
      */

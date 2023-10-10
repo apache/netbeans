@@ -62,7 +62,6 @@ class FinalPrivateConstant {
 
     #[A("attribute")]
     protected final const PROTECTED_CONST5 = "foo", PROTECTED_CONST6 = "foo";
-
 }
 
 interface I {
@@ -75,5 +74,4 @@ interface I {
 
     #[A("attribute")]
     public final const PUBLIC_CONST2 = "i";
-
 }

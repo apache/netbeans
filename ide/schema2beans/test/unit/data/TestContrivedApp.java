@@ -66,7 +66,7 @@ public class TestContrivedApp extends BaseTest {
         out("bean graph created");
 	
         out(app);
-        Module module = app.getModule();
+        application.Module module = app.getModule();
         out("module.myaltDd = "+module.getMyAltDd());
         out("Make sure XML metacharacters get escapped");
         module.setMyAltDd("Foo & Co");

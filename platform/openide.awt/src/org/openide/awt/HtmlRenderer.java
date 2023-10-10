@@ -79,7 +79,8 @@ import org.openide.util.Utilities;
  * <p>
  * The following tags are supported, in upper or lower (but not mixed) case:
  * </p>
- * <table border="1">
+ * <table>
+ * <caption>table of supported tags</caption>
  * <tr>
  *  <td><code>&lt;b&gt;</code></td>
  *  <td>Boldface text</td>
@@ -175,12 +176,11 @@ import org.openide.util.Utilities;
  * <!-- XXX what does the following mean? <code>getGraphics</code>
  * will always return non-null and non-clipped, and is suitable to pass in such a
  * situation. -->
- * <P>
  *
  * <P>
  * <B>Example usages:</B><BR>
- * <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHtmlDisplayName()">org.openide.nodes.Node.getHtmlDisplayName</a><BR>
- * <a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.HtmlStatus.html">org.openide.filesystems.FileSystem.HtmlStatus</a>
+ * <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHtmlDisplayName--">org.openide.nodes.Node.getHtmlDisplayName</a><BR>
+ * <!-- in v8compat <a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.HtmlStatus.html"> org.openide.filesystems.FileSystem.HtmlStatus</a> -->
  * </P>
  *
  * @since 4.30
@@ -352,7 +352,7 @@ public final class HtmlRenderer {
                 }
 
                 double chWidth = wid / chars.length;
-                int estCharsToPaint = new Double(w / chWidth).intValue();
+                int estCharsToPaint = (int)(w / chWidth);
                 if( estCharsToPaint > chars.length )
                     estCharsToPaint = chars.length;
                 //let's correct the estimate now
@@ -1057,7 +1057,7 @@ public final class HtmlRenderer {
                             //Word wrap mode
                             goToNextRow = true;
 
-                            int lastChar = new Double(nextTag - estCharsOver).intValue();
+                            int lastChar = (int)(nextTag - estCharsOver);
 
                             //Unlike Swing's word wrap, which does not wrap on tag boundaries correctly, if we're out of space,
                             //we're out of space
@@ -1108,7 +1108,7 @@ public final class HtmlRenderer {
                                 }
                             } else if (brutalWrap) {
                                 //wrap without checking word boundaries
-                                length = (new Double((w - widthPainted) / chWidth)).intValue();
+                                length = (int)((w - widthPainted) / chWidth);
 
                                 if ((pos + length) > nextTag) {
                                     length = (nextTag - pos);
@@ -1127,7 +1127,7 @@ public final class HtmlRenderer {
 
                     if (strikethrough || underline || link) {
                         LineMetrics lm = fm.getLineMetrics(chars, pos, length - 1, g);
-                        int lineWidth = new Double(x + r.getWidth()).intValue();
+                        int lineWidth = (int)(x + r.getWidth());
 
                         if (paint) {
                             if (strikethrough) {

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.javascript2.editor.formatter.ui.json;
 
-import org.netbeans.modules.javascript2.editor.formatter.ui.*;
 import java.io.IOException;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 import org.netbeans.modules.javascript2.editor.formatter.FmtOptions;
@@ -33,11 +32,11 @@ import org.netbeans.modules.javascript2.editor.formatter.Utils;
  * @author  phrebejk
  */
 public class FmtTabsIndents extends javax.swing.JPanel {
-   
+
     /** Creates new form FmtTabsIndents */
     public FmtTabsIndents() {
         initComponents();
-        
+
 //        expandTabCheckBox.putClientProperty(OPTION_ID, expandTabToSpaces);
 //        tabSizeField.putClientProperty(OPTION_ID, tabSize);
 //        indentSizeField.putClientProperty(OPTION_ID, new String [] { indentSize, spacesPerTab });
@@ -46,7 +45,7 @@ public class FmtTabsIndents extends javax.swing.JPanel {
         initialIndentSizeField.putClientProperty(OPTION_ID, FmtOptions.initialIndent);
         //arrayItemsIndentationField.putClientProperty(OPTION_ID, FmtOptions.itemsInArrayDeclarationIndentSize);
     }
-    
+
     public static PreferencesCustomizer.Factory getController() {
         String preview = "";
         try {
@@ -55,12 +54,12 @@ public class FmtTabsIndents extends javax.swing.JPanel {
             // TODO log it
         }
         return new CategorySupport.Factory(JsTokenId.JSON_MIME_TYPE, PreferencesCustomizer.TABS_AND_INDENTS_ID, FmtTabsIndents.class,
-                preview, 
+                preview,
                 new String[] { FmtOptions.rightMargin, "30" }, //NOI18N
                 new String[] { FmtOptions.initialIndent, "0" } //NOI18N
                 );
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -88,18 +87,21 @@ public class FmtTabsIndents extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(continuationIndentSizeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(continuationIndentSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(initialIndentLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(initialIndentSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(continuationIndentSizeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(continuationIndentSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(initialIndentLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(initialIndentSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(initialIndentLabel)
                     .addComponent(initialIndentSizeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -122,13 +124,13 @@ public class FmtTabsIndents extends javax.swing.JPanel {
         getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(FmtTabsIndents.class, "FmtTabsIndents.AccessibleContext.accessibleName")); // NOI18N
         getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(FmtTabsIndents.class, "FmtTabsIndents.AccessibleContext.accessibleDescription")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField continuationIndentSizeField;
     private javax.swing.JLabel continuationIndentSizeLabel;
     private javax.swing.JLabel initialIndentLabel;
     private javax.swing.JTextField initialIndentSizeField;
     // End of variables declaration//GEN-END:variables
-    
+
 }

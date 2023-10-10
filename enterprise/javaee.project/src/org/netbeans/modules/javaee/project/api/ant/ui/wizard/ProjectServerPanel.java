@@ -62,7 +62,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
 final class ProjectServerPanel extends javax.swing.JPanel implements DocumentListener {
-
+    
     private ProjectServerWizardPanel wizard;
     private boolean contextModified = false;
     private final DefaultComboBoxModel<ServerInstanceWrapper> serversModel = new DefaultComboBoxModel<>();
@@ -421,30 +421,40 @@ final class ProjectServerPanel extends javax.swing.JPanel implements DocumentLis
         ServerInstanceWrapper serverInstanceWrapper = (ServerInstanceWrapper) serversModel.getSelectedItem();
         j2eeSpecComboBox.removeAllItems();
         if (serverInstanceWrapper != null) {
-            J2eePlatform j2eePlatform = Deployment.getDefault().getJ2eePlatform(serverInstanceWrapper.getServerInstanceID());
-            Set<Profile> profiles = new TreeSet<Profile>(Profile.UI_COMPARATOR);
-            profiles.addAll(j2eePlatform.getSupportedProfiles(j2eeModuleType));
-            for (Profile profile : profiles) {
-                // j2ee 1.3 and 1.4 is not supported anymore
-                if (Profile.J2EE_13.equals(profile) || Profile.J2EE_14.equals(profile)) {
-                    continue;
-                }
-                if (j2eeModuleType ==J2eeModule.Type.WAR) {
-                    if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_9_FULL.equals(profile)) {
-                        // for web apps always offer only JAVA_EE_6_WEB profile and skip full one
+            try {
+                J2eePlatform j2eePlatform = Deployment.getDefault().getServerInstance(serverInstanceWrapper.getServerInstanceID()).getJ2eePlatform();
+                Set<Profile> profiles = new TreeSet<>(Profile.UI_COMPARATOR);
+                profiles.addAll(j2eePlatform.getSupportedProfiles(j2eeModuleType));
+                for (Profile profile : profiles) {
+                    // j2ee 1.3 and 1.4 is not supported anymore
+                    if (Profile.J2EE_13.equals(profile) || Profile.J2EE_14.equals(profile)) {
                         continue;
                     }
-                } else {
-                    if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_9_WEB.equals(profile)) {
-                        // for EE apps always skip web profile
-                        continue;
+                    if (j2eeModuleType == J2eeModule.Type.WAR) {
+                        if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_7_FULL.equals(profile)
+                                || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_FULL.equals(profile)
+                                || Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_9_1_FULL.equals(profile)
+                                || Profile.JAKARTA_EE_10_FULL.equals(profile)) {
+                            // for web apps always offer only JAVA_EE_6_WEB profile and skip full one
+                            continue;
+                        }
+                    } else {
+                        if (Profile.JAVA_EE_6_WEB.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile)
+                                || Profile.JAVA_EE_8_WEB.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile)
+                                || Profile.JAKARTA_EE_9_WEB.equals(profile) || Profile.JAKARTA_EE_9_1_WEB.equals(profile)
+                                || Profile.JAKARTA_EE_10_WEB.equals(profile)) {
+                            // for EE apps always skip web profile
+                            continue;
+                        }
                     }
+                    
+                    j2eeSpecComboBox.addItem(new ProfileItem(profile));
                 }
-
-                j2eeSpecComboBox.addItem(new ProfileItem(profile));
-            }
-            if (prevSelectedItem != null) {
-                j2eeSpecComboBox.setSelectedItem(prevSelectedItem);
+                if (prevSelectedItem != null) {
+                    j2eeSpecComboBox.setSelectedItem(prevSelectedItem);
+                }
+            } catch (InstanceRemovedException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
         // revalidate the form
@@ -627,21 +637,30 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
             if (j2ee != null) {
                 String warningType = warningPanel.getWarningType();
                 if (warningType != null) {
-                    if (warningType.equals(J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_8)) {
-                        sourceLevel = "1.8"; //NOI18N
-                    } else if (warningType.equals(J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_7)) {
-                        sourceLevel = "1.7"; //NOI18N
-                    } else if (warningType.equals(J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_6)) {
-                        sourceLevel = "1.6"; //NOI18N
-                    } else if (warningType.equals(J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_15)) {
-                        sourceLevel = "1.5"; //NOI18N
+                    switch (warningType) {
+                        case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_11:
+                            sourceLevel = "11"; //NOI18N
+                            break;
+                        case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_8:
+                            sourceLevel = "1.8"; //NOI18N
+                            break;
+                        case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_7:
+                            sourceLevel = "1.7"; //NOI18N
+                            break;
+                        case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_6:
+                            sourceLevel = "1.6"; //NOI18N
+                            break;
+                        case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_15:
+                            sourceLevel = "1.5"; //NOI18N
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
         } else {
             d.putProperty(ProjectServerWizardPanel.JAVA_PLATFORM, JavaPlatform.getDefault().getDisplayName());
         }
-
         return sourceLevel;
     }
 
@@ -692,7 +711,6 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
     }
 
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addServerButton;
     private javax.swing.JCheckBox cdiCheckbox;
@@ -727,12 +745,7 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
         serversModel.removeAllElements();
         Set<ServerInstanceWrapper> servers = new TreeSet<ServerInstanceWrapper>();
         ServerInstanceWrapper selectedItem = null;
-        boolean sjasFound = false;
-        boolean gfv3Found = false;
-        boolean gfv3ee6Found = false;
-        boolean gfv5Found = false;
-        boolean gfv5ee8Found = false;
-        boolean gfv510ee8Found = false;
+
         for (String serverInstanceID : Deployment.getDefault().getServerInstanceIDs()) {
             try {
                 ServerInstance si = Deployment.getDefault().getServerInstance(serverInstanceID);
@@ -741,47 +754,22 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 if (displayName != null && j2eePlatform != null && j2eePlatform.getSupportedTypes().contains(j2eeModuleType)) {
                     ServerInstanceWrapper serverWrapper = new ServerInstanceWrapper(serverInstanceID, displayName);
                     // decide whether this server should be preselected
-                    if (selectedItem == null || !gfv3ee6Found) {
+                    if (selectedItem == null) {
                         if (selectedServerInstanceID != null) {
                             if (selectedServerInstanceID.equals(serverInstanceID)) {
                                 selectedItem = serverWrapper;
                             }
-                        } else {
-                            // preselect the best server ;)
-                            // FIXME replace with PriorityQueue mechanism
-                            String shortName = si.getServerID();
-                            if ("gfv510ee8".equals(shortName)) {
-                                selectedItem = serverWrapper;
-                                gfv510ee8Found = true;
-                            } else if ("gfv5ee8".equals(shortName)) { // NOI18N
-                                selectedItem = serverWrapper;
-                                gfv5ee8Found = true;
-                            } else if ("gfv3ee6".equals(shortName)) { // NOI18N
-                                selectedItem = serverWrapper;
-                                gfv3ee6Found = true;
-                            } else if ("gfv510".equals(shortName) && !gfv510ee8Found){
-                                selectedItem = serverWrapper;
-                                gfv510ee8Found = true;
-                            } else if ("gfv5".equals(shortName) && !gfv5ee8Found) { // NOI18N
-                                selectedItem = serverWrapper;
-                                gfv5Found = true;
-                            } else if ("gfv3".equals(shortName) && !gfv3ee6Found) { // NOI18N
-                                selectedItem = serverWrapper;
-                                gfv3Found = true;
-                            } else if ("J2EE".equals(shortName) && !(gfv3ee6Found || gfv3Found)) { // NOI18N
-                                selectedItem = serverWrapper;
-                                sjasFound = true;
-                            } else if ("JBoss4".equals(shortName) && !(gfv3ee6Found || gfv3Found || sjasFound)) { // NOI18N
-                                selectedItem = serverWrapper;
-                            }
                         }
+                        // else {}
+                        // FIXME replace with PriorityQueue mechanism to 
+                        // preselect the best server
                     }
                     servers.add(serverWrapper);
                 }
             } catch (InstanceRemovedException ex) {
                 Exceptions.printStackTrace(ex);
             }
-        }
+        }        
         for (ServerInstanceWrapper item : servers) {
             serversModel.addElement(item);
         }
@@ -928,7 +916,7 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 }
             } else {
                 // suppose highest
-                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_5));
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_8_FULL));
             }
         }
     }
@@ -954,6 +942,14 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
 
             if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_2_1).equals(version)) {
                 j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.J2EE_14));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_0).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_5));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_1).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_6_FULL));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_3_2).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_7_FULL));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_4_0).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_9_FULL));
             }
         } catch (IOException e) {
             String message = NbBundle.getMessage(ProjectServerPanel.class, "MSG_EjbJarXmlCorrupted"); // NOI18N
@@ -983,6 +979,14 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_5));
             } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_6_0).equals(version)) {
                 j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_6_FULL));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_7_0).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_7_FULL));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_8_0).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_8_FULL));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_9_0).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_9_FULL));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_10_0).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_10_FULL));
             }
         } catch (IOException e) {
             String message = NbBundle.getMessage(ProjectServerPanel.class, "MSG_AppClientXmlCorrupted"); // NOI18N

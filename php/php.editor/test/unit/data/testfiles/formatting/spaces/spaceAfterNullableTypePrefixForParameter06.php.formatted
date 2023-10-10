@@ -5,5 +5,4 @@ class NullableType {
     function nullableTypes(?string $string, ?\Foo\Bar $bar) {
         return null;
     }
-
 }

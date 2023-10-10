@@ -63,10 +63,10 @@ import org.netbeans.modules.web.taglib.model.TldAttributeType;
  */
 public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiatingIterator {
     private static final Logger LOG = Logger.getLogger(TagHandlerIterator.class.getName());
-    private WizardDescriptor.Panel packageChooserPanel,tagHandlerSelectionPanel,tagInfoPanel;
+    private WizardDescriptor.Panel<WizardDescriptor> packageChooserPanel,tagHandlerSelectionPanel,tagInfoPanel;
     
     // You should define what panels you want to use here:
-    protected WizardDescriptor.Panel[] createPanels (Project project,TemplateWizard wiz) {
+    protected WizardDescriptor.Panel<WizardDescriptor>[] createPanels (Project project,TemplateWizard wiz) {
         Sources sources = (Sources) project.getLookup().lookup(org.netbeans.api.project.Sources.class);
         SourceGroup[] sourceGroups = Util.getJavaSourceGroups(project);
         tagHandlerSelectionPanel = new TagHandlerSelection(wiz);
@@ -229,7 +229,7 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
         // Creating steps.
         Object prop = wiz.getProperty (WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop != null && prop instanceof String[]) {
+        if (prop instanceof String[]) {
             beforeSteps = (String[])prop;
         }
         String[] steps = Utilities.createSteps (beforeSteps, panels);

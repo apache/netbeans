@@ -307,7 +307,7 @@ public class GlassFishUtils {
                         final String port = element.getAttribute("port");
                         
                         if (id.contains("admin")) {
-                            return new Integer(port);
+                            return Integer.parseInt(port);
                         }
                     }
                 }

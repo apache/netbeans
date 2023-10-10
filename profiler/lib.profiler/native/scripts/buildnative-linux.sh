@@ -30,6 +30,9 @@ SOURCES="../src-jdk15/class_file_cache.c \
 	../src-jdk15/Stacks.c \
 	../src-jdk15/common_functions.c"
 DEST="../../release/lib/deployed/jdk16/linux/"
+
+mkdir -p $DEST
+
 cc $CPPFLAGS -m32 -o ../build/config ../src-jdk15/config.c && ../build/config > ../build/config.h
 
 echo "Content of config.h :"

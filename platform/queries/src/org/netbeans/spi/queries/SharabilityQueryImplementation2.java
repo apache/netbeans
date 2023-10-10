@@ -27,8 +27,8 @@ import org.netbeans.api.queries.SharabilityQuery.Sharability;
  * <div class="nonnormative">
  * <p>
  * Could be implemented e.g. by project types which know that certain files or folders in
- * a project (e.g. <samp>src/</samp>) are intended for VCS sharing while others
- * (e.g. <samp>build/</samp>) are not.
+ * a project (e.g. <code>src/</code>) are intended for VCS sharing while others
+ * (e.g. <code>build/</code>) are not.
  * </p>
  * <p>
  * Note that the Project API module registers a default implementation of this query
@@ -43,7 +43,7 @@ import org.netbeans.api.queries.SharabilityQuery.Sharability;
  * {@link org.openide.filesystems} with respect to threading semantics.
  * </p>
  * @see org.netbeans.api.queries.SharabilityQuery
- * @see <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/AntProjectHelper.html#createSharabilityQuery(java.lang.String[],%20java.lang.String[])"><code>AntProjectHelper.createSharabilityQuery(...)</code></a>
+ * @see <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/AntProjectHelper.html#createSharabilityQuery2-org.netbeans.spi.project.support.ant.PropertyEvaluator-java.lang.String:A-java.lang.String:A-"><code>AntProjectHelper.createSharabilityQuery(...)</code></a>
  * @author Jesse Glick
  * @author Alexander Simon
  * @since 1.27

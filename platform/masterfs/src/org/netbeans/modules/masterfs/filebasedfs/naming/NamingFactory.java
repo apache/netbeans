@@ -351,7 +351,7 @@ public final class NamingFactory {
     ) {
         FileName retVal = null;
         //TODO: check all tests for isFile & isDirectory
-        if (type.equals(FileType.unknown)) {
+        if (type == FileType.unknown) {
             if (f.isDirectory()) {
                 type = FileType.directory;
             } else {

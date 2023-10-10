@@ -463,7 +463,8 @@ public class Document extends NodeImpl implements Node, org.w3c.dom.Document {
      *   instantiate.
      * @return A new <code>Element</code> object with the following 
      *   attributes:
-     * <table border='1' cellpadding='3'>
+     * <table>
+     * <caption>Element object attributes</caption>
      * <tr>
      * <th>Attribute</th>
      * <th>Value</th>
@@ -549,7 +550,8 @@ public class Document extends NodeImpl implements Node, org.w3c.dom.Document {
      * @param qualifiedName The qualified name of the attribute to 
      *   instantiate.
      * @return A new <code>Attr</code> object with the following attributes:
-     * <table border='1' cellpadding='3'>
+     * <table>
+     * <caption>Attr object attributes</caption>
      * <tr>
      * <th>
      *   Attribute</th>

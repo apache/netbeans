@@ -474,7 +474,7 @@ public final class CustomizableSideBar {
                 position = fo.getAttribute("position"); // NOI18N
             }
             
-            if (position != null && position instanceof String) {
+            if (position instanceof String) {
                 String positionName = (String) position;
                 
                 if (WEST_NAME.equals(positionName)) {
@@ -503,7 +503,7 @@ public final class CustomizableSideBar {
             
             Object scrollable = fo.getAttribute("scrollable"); // NOI18N
             
-            if (scrollable != null && scrollable instanceof Boolean) {
+            if (scrollable instanceof Boolean) {
                 this.scrollable = ((Boolean) scrollable).booleanValue();
             } else {
                 this.scrollable = true;

@@ -58,51 +58,59 @@ public class J2eeModule {
      * The module is an EAR archive.
      * @deprecated use {@link Type#EAR}
      */
+    @Deprecated
     public static final Object EAR = ModuleType.EAR;
     
     /**
      * The module is an Web Application archive.
      * @deprecated use {@link Type#WAR}
      */
+    @Deprecated
     public static final Object WAR = ModuleType.WAR;
 
     /**
      * The module is an Enterprise Java Bean archive.
      * @deprecated use {@link Type#EJB}
      */
+    @Deprecated
     public static final Object EJB = ModuleType.EJB;
 
     /**
      * The module is an Connector archive.
      * @deprecated use {@link Type#RAR}
      */
+    @Deprecated
     public static final Object CONN = ModuleType.RAR;
 
     /**
      * The module is an Client Application archive.
      * @deprecated use {@link Type#CAR}
      */
+    @Deprecated
     public static final Object CLIENT = ModuleType.CAR;
     
     /**
      * J2EE specification version 1.3
      * @since 1.5
-     * @deprecated use {@link Profile#J2EE_13}
+     * @deprecated use {@link org.netbeans.api.j2ee.core.Profile#J2EE_13}
      */
+    @Deprecated
     public static final String J2EE_13 = "1.3"; //NOI18N
     /**
      * J2EE specification version 1.4
      * @since 1.5
-     * @deprecated use {@link Profile#J2EE_14}
+     * @deprecated use {@link org.netbeans.api.j2ee.core.Profile#J2EE_14}
      */
+    @Deprecated
     public static final String J2EE_14 = "1.4"; //NOI18N
     /**
      *
      * JAVA EE 5 specification version
      *
      * @since 1.6
-     * @deprecated use {@link Profile#JAVA_EE_5}
+     * @deprecated use {@link org.netbeans.api.j2ee.core.Profile#JAVA_EE_5}
      */
+    @Deprecated
     public static final String JAVA_EE_5 = "1.5"; // NOI18N
     
     public static final String APP_XML = "META-INF/application.xml";
@@ -181,6 +189,7 @@ public class J2eeModule {
      * @deprecated use {@link #getType()}
      */
     @NonNull
+    @Deprecated
     public Object getModuleType() {
         if (impl instanceof J2eeModuleImplementation2) {
             return ((J2eeModuleImplementation2) impl).getModuleType().getJsrType();

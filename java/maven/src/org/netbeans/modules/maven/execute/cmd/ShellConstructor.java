@@ -20,7 +20,6 @@
 package org.netbeans.modules.maven.execute.cmd;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -44,8 +43,7 @@ public class ShellConstructor implements Constructor {
     public List<String> construct() {
 
         // use mvnd if its the home of a daemon
-        String mavenDaemonSuffixDetection = Utilities.isWindows() ? ".exe" : "";
-        String ex = Files.exists(Paths.get(mavenHome.getPath(), "bin", "mvnd" + mavenDaemonSuffixDetection)) ? "mvnd" : "mvn"; //NOI18N
+        String ex = MavenSettings.isMavenDaemon(Paths.get(mavenHome.getPath())) ? "mvnd" : "mvn"; //NOI18N
 
         List<String> command = new ArrayList<>();
 

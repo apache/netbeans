@@ -361,7 +361,7 @@ public class AnnotationProcessors {
                     )
                 ), false);
             MethodTree overrideMethod = make.Method(
-                    make.Modifiers(Collections.singleton(Modifier.PUBLIC), 
+                    make.Modifiers(Collections.singleton(Modifier.PUBLIC),
                             // @Override is since 1.5 as well as AnnotationProcessors.
                             // we always implement in subclass; so @Override is desired.
                             Collections.singletonList(

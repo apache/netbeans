@@ -46,11 +46,11 @@ public class ViewUtilitiesImpl {
      * or when the given view does not have any children.
      *
      * @param view view having children to be inspected.
-     * @param offset the position >= 0.
+     * @param offset the position &gt;= 0.
      * @return index of the child view representing the given position
      *  or -1 if <code>
-     *        offset < view.getStartOffset()
-     *     || offset >= view.getEndOffset()</code>
+     *        offset &lt; view.getStartOffset()
+     *     || offset &gt;= view.getEndOffset()
      *     || getViewCount() == 0
      *  </code>.
      */
@@ -71,16 +71,16 @@ public class ViewUtilitiesImpl {
      * Algorithm uses binary search.
      * <br>
      * The semantics is similar
-     * to {@link javax.swing.text.Element.getElementIndex(int)} semantics.
+     * to {@link javax.swing.text.Element#getElementIndex(int)} semantics.
      *
      * @param view view having children to be inspected.
      * @param offset the position &gt;= 0
      * @return index of the child view representing the given position.
      *   <br>
-     *   0 if <code>offset < getView(0).getStartOffset()</code>.
+     *   0 if <code>offset &lt; getView(0).getStartOffset()</code>.
      *   <br>
      *   <code>getViewCount() - 1</code>
-     *     if <code>offset >= getView(viewCount - 1).getEndOffset() </code>.
+     *     if <code>offset &gt;= getView(viewCount - 1).getEndOffset() </code>.
      *   <br>
      *   -1 if <code>getViewCount() == 0</code>.
      */

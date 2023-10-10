@@ -21,7 +21,6 @@ package org.netbeans.modules.debugger.jpda.truffle;
 import java.io.File;
 import java.net.URL;
 import junit.framework.Test;
-import static junit.framework.TestCase.assertEquals;
 
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
@@ -50,7 +49,7 @@ public class DebugPythonTest extends JPDATestCase {
         String methodName = "typesTest";
         JSLineBreakpoint lb1 = new TruffleLineBreakpoint(url, debugLine);
         dm.addBreakpoint(lb1);
-        runScriptUnderJPDA("graalpython", source.getAbsolutePath(), support -> {
+        runScriptUnderJPDA("python", source.getAbsolutePath(), support -> {
             JPDADebugger debugger = support.getDebugger();
             TruffleStackFrame frame = checkStoppedAtScript(debugger.getCurrentThread(), sourcePath, debugLine);
             assertEquals("Bad method name", methodName, frame.getMethodName());

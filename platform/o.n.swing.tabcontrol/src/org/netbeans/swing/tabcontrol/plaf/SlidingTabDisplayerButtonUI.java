@@ -191,6 +191,7 @@ public class SlidingTabDisplayerButtonUI extends BasicToggleButtonUI {
      * 
      * @deprecated No brushed metal look and feel doesn't need this class anymore.
      */
+    @Deprecated
     public static final class Aqua extends SlidingTabDisplayerButtonUI {
         public static ComponentUI createUI(JComponent c) {
             if (AQUA_INSTANCE == null) {

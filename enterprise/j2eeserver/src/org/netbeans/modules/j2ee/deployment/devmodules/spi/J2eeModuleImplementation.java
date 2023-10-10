@@ -30,6 +30,7 @@ package org.netbeans.modules.j2ee.deployment.devmodules.spi;
  * @since 1.23
  * @deprecated implement {@link J2eeModuleImplementation2}
  */
+@Deprecated
 public interface J2eeModuleImplementation extends J2eeModuleBase {
     
     /** 

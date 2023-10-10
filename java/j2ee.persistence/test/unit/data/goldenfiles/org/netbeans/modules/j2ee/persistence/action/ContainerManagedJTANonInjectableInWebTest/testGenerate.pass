@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
 public class Test {
 
@@ -22,7 +23,7 @@ public class Test {
          * </resource-ref> */
         try {
             Context ctx = new InitialContext();
-            javax.transaction.UserTransaction utx = (javax.transaction.UserTransaction) ctx.lookup("java:comp/env/UserTransaction");
+            UserTransaction utx = (UserTransaction) ctx.lookup("java:comp/env/UserTransaction");
             utx.begin();
             EntityManager em = (EntityManager) ctx.lookup("java:comp/env/persistence/LogicalName");
             em.persist(object);

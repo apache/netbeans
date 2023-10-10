@@ -68,7 +68,7 @@ public class OpenUriHandlerProcessor extends LayerGeneratingProcessor {
         TypeElement objectTypeElement = getTypeElement(Object.class);
         TypeElement resultTypeElement = getTypeElement(Result.class);
 
-        if (!ElementKind.METHOD.equals(e.getKind())) {
+        if (ElementKind.METHOD != e.getKind()) {
             throw error(e, "The annotation can be applied only to"      //NOI18N
                     + " a method.");//NOI18N
         }

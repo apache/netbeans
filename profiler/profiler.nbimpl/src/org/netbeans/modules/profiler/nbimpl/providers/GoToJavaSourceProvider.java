@@ -102,7 +102,7 @@ public final class GoToJavaSourceProvider extends GoToSourceProvider {
                         
                         if (ElementOpen.open(controller.getClasspathInfo(), parentClass)) {
                             Document doc = controller.getDocument();
-                            if (doc != null && doc instanceof StyledDocument) {
+                            if (doc instanceof StyledDocument) {
                                 if (openAtLine(controller, doc, methodName, line)) {
                                     result.set(true);
                                     return;

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.51.0
+#Version 1.57.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1924,8 +1924,10 @@ CLSS public org.netbeans.modules.j2ee.sun.share.configbean.SunONEDeploymentConfi
 cons public init(javax.enterprise.deploy.model.DeployableObject)
  anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,java.lang.String) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,java.lang.String,org.netbeans.modules.glassfish.tooling.data.GlassFishVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 cons public init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.j2ee.sun.api.SunDeploymentManagerInterface) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule,org.netbeans.modules.j2ee.sun.api.SunDeploymentManagerInterface,org.netbeans.modules.glassfish.tooling.data.GlassFishVersion) throws org.netbeans.modules.j2ee.deployment.common.api.ConfigurationException
 intf javax.enterprise.deploy.spi.DeploymentConfiguration
 meth public boolean supportsCreateDatasource()

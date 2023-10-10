@@ -25,16 +25,21 @@ import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static org.netbeans.modules.java.nativeimage.debugger.displayer.Utils.findChild;
+import static org.netbeans.modules.java.nativeimage.debugger.displayer.Utils.getVarsByName;
+import static org.netbeans.modules.java.nativeimage.debugger.displayer.Utils.quoteJavaTypes;
 
 import org.netbeans.modules.nativeimage.api.debug.EvaluateException;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.netbeans.modules.nativeimage.api.debug.NIFrame;
 import org.netbeans.modules.nativeimage.api.debug.NIVariable;
 import org.netbeans.modules.nativeimage.spi.debug.filters.VariableDisplayer;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -42,21 +47,28 @@ import org.netbeans.modules.nativeimage.spi.debug.filters.VariableDisplayer;
  */
 public final class JavaVariablesDisplayer implements VariableDisplayer {
 
-    private static final String HUB = "__hub__";
-    private static final String ARRAY = "__array__";
-    private static final String ARRAY_LENGTH = "__length__";
-    private static final String COMPRESSED_REF_REFIX = "_z_.";
-    private static final String PUBLIC = "public";
-    private static final String STRING_VALUE = "value";
-    private static final String STRING_CODER = "coder";
-    private static final String HASH = "hash";
-    private static final String NAME = "name";
-    private static final String UNSET = "<optimized out>";
+    private static final String HUB = "__hub__";                // NOI18N
+    private static final String ARRAY = "__array__";            // NOI18N
+    private static final String ARRAY_LENGTH = "__length__";    // NOI18N
+    private static final String ARRAY_LENGTH_CE = "len";        // NOI18N
+    private static final String ARRAY_DATA_CE = "data";         // NOI18N
+    private static final String OBJ_HEADER_CE = "_objhdr";      // NOI18N
+    private static final String COMPRESSED_REF_REFIX = "_z_.";  // NOI18N
+    static final String PUBLIC = "public";              // NOI18N
+    static final String PRIVATE = "private";            // NOI18N
+    private static final String PROTECTED = "protected";        // NOI18N
+    private static final String STRING_VALUE = "value";         // NOI18N
+    private static final String STRING_CODER = "coder";         // NOI18N
+    private static final String HASH = "hash";                  // NOI18N
+    private static final String NAME = "name";                  // NOI18N
+    private static final String UNSET = "<optimized out>";      // NOI18N
 
     private static final String[] STRING_TYPES = new String[] { String.class.getName(), StringBuilder.class.getName(), StringBuffer.class.getName() };
 
     // Variable names with this prefix contain space-separated variable name and expression path
     private static final String PREFIX_VAR_PATH = "{ ";
+
+    private static final Logger LOG = Logger.getLogger(JavaVariablesDisplayer.class.getName());
 
     private NIDebugger debugger;
     private final Map<NIVariable, String> variablePaths = Collections.synchronizedMap(new WeakHashMap<>());
@@ -122,14 +134,41 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
                     if (likeString) {
                         displayedVar = new StringVar(var, name, path, type, isString ? null : subChildren);
                     } else {
+                        DynamicHub hub;
                         if (children.length == 1 && PUBLIC.equals(children[0].getName())) {
                             // Object children
-                            displayedVar = new ObjectVar(var, name, path, subChildren);
+                            displayedVar = new ObjectVarEE(var, name, path, subChildren);
+                        } else if ((hub = DynamicHub.find(var)) != null) {
+                            NIVariable objectVar = null;
+                            DynamicHub.HubType hubType = hub.getType();
+                            if (hubType != null) {
+                                switch (hubType) {
+                                    case OBJECT:
+                                        objectVar = new ObjectVarCE(var, name, path, children, hub);
+                                        break;
+                                    case ARRAY:
+                                        NIVariable lengthVar = findChild(children, PUBLIC, ARRAY_LENGTH_CE);
+                                        NIVariable dataVar = findChild(children, PUBLIC, ARRAY_DATA_CE);
+                                        if (lengthVar != null || dataVar != null) {
+                                            objectVar = new ArrayVarCE(var, name, lengthVar, dataVar, hub);
+                                            break;
+                                        }
+                                }
+                            }
+                            if (objectVar != null) {
+                                displayedVar = objectVar;
+                            } else {
+                                // ordinary var:
+                                displayedVar = new Var(var, name, path);
+                            }
                         } else {
                             displayedVar = new Var(var, name, path);
                         }
                     }
                 }
+            }
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine(var.getName() + " => " + displayedVar + ((displayedVar != null) ?  "[" + displayedVar.getName() + "]" : ""));
             }
             if (displayedVar != var) {
                 synchronized (variablePaths) {
@@ -155,7 +194,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         type = displayType(type);
         for (int i = 0; i < type.length(); i++) {
             char c = type.charAt(i);
-            if (c != '.' && !Character.isJavaIdentifierPart(c)) {
+            if (c != '.' && c != '[' && c != ']' && !Character.isJavaIdentifierPart(c)) {
                 return type.substring(0, i);
             }
         }
@@ -184,21 +223,6 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
                 return 8;
             default:
                 return 8;
-        }
-    }
-
-    private static Map<String, NIVariable> getVarsByName(NIVariable[] vars) {
-        switch (vars.length) {
-            case 0:
-                return Collections.emptyMap();
-            case 1:
-                return Collections.singletonMap(vars[0].getName(), vars[0]);
-            default:
-                Map<String, NIVariable> varsByName = new HashMap<>(vars.length);
-                for (NIVariable var : vars) {
-                    varsByName.put(var.getName(), var);
-                }
-                return varsByName;
         }
     }
 
@@ -249,7 +273,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         return name;
     }
 
-    private String readArray(NIVariable lengthVariable, int itemSize) {
+    private String readArrayEE(NIVariable lengthVariable, int itemSize) {
         int length = Integer.parseInt(lengthVariable.getValue());
         String expressionPath = getExpressionPath(lengthVariable);
         if (expressionPath != null && !expressionPath.isEmpty()) {
@@ -259,14 +283,13 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         return null;
     }
 
-    private String readArray(NIVariable lengthVariable, int offset, int itemSize) {
-        int length = Integer.parseInt(lengthVariable.getValue());
-        String expressionPath = getExpressionPath(lengthVariable);
-        if (expressionPath != null && !expressionPath.isEmpty()) {
-            String addressExpr = "&" + expressionPath;
-            return debugger.readMemory(addressExpr, 4 + offset, length * itemSize); // length has 4 bytes
+    private String readArrayCE(String arrayPath, int length, int itemSize) {
+        if (arrayPath != null && !arrayPath.isEmpty()) {
+            String addressExpr = "&" + arrayPath;
+            return debugger.readMemory(addressExpr, 0, length * itemSize);
+        } else {
+            return null;
         }
-        return null;
     }
 
     private static NIVariable[] getObjectChildren(NIVariable[] children, int from, int to) {
@@ -287,15 +310,6 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             }
         }
         return restrictChildren(children, from, to);
-    }
-
-    private static NIVariable findChild(String name, NIVariable[] children) {
-        for (NIVariable var : children) {
-            if (name.equals(var.getName())) {
-                return var;
-            }
-        }
-        return null;
     }
 
     private static boolean isPrimitiveArray(String type) {
@@ -322,6 +336,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
     private String getExpressionPath(NIVariable var) {
         String path = var.getExpressionPath();
         if (!path.isEmpty()) {
+            path = quoteJavaTypes(path);
             return path;
         } else {
             return createExpressionPath(var);
@@ -340,7 +355,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             return path;
         } else {
             String parentPath = createExpressionPath(parent);
-            if (PUBLIC.equals(path)) {
+            if (PUBLIC.equals(path) || PRIVATE.equals(path) || path.contains(" ")) {
                 return parentPath;
             } else {
                 return parentPath + '.' + path;
@@ -372,6 +387,14 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         @Override
         public String getValue() {
             NIVariable pub = getVarsByName(var.getChildren()).get(PUBLIC);
+            if (pub != null && getVarsByName(pub.getChildren()).get(HUB) != null) {
+                return getValueEE(pub);
+            } else {
+                return getValueCE();
+            }
+        }
+
+        private String getValueEE(NIVariable pub) {
             Map<String, NIVariable> varChildren = getVarsByName(pub.getChildren());
             Map<String, NIVariable> arrayInfo = getVarsByName(varChildren.get(STRING_VALUE).getChildren());
             arrayInfo = getVarsByName(arrayInfo.get(PUBLIC).getChildren());
@@ -379,13 +402,72 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             NIVariable lengthVariable = arrayInfo.get(ARRAY_LENGTH);
             String lengthStr = lengthVariable.getValue();
             if (lengthStr.isEmpty()) {
-                return "";
+                return "?";
             }
             int length = Integer.parseInt(lengthStr);
             if (length <= 0) {
-                return "";
+                return "?";
             }
             NIVariable coderVar = varChildren.get(STRING_CODER);
+            int coder = parseCoder(coderVar);
+            String hexArray = readArrayEE(lengthVariable, 2);
+            if (hexArray != null) {
+                return parseStringFromHEX(hexArray, length, coder);
+            } else { // legacy code for older gdb version (less than 10.x)
+                String arrayExpression = JavaVariablesDisplayer.this.getExpressionPath(arrayVariable);
+                return parseStringFromArray(arrayExpression, length, coder);
+            }
+        }
+
+        private String getValueCE() {
+            Map<String, NIVariable> varPrivChildren = getVarsByName(var.getChildren());
+            NIVariable priv = varPrivChildren.get(PRIVATE);
+            if (priv == null) {
+                NIVariable strVar = varPrivChildren.get(String.class.getName());
+                if (strVar != null) {
+                    priv = getVarsByName(strVar.getChildren()).get(PRIVATE);
+                }
+                if (priv == null) {
+                    return "?";
+                }
+            }
+            Map<String, NIVariable> varChildren = getVarsByName(priv.getChildren());
+            NIVariable value = varChildren.get(STRING_VALUE);
+            NIVariable coderVar = varChildren.get(STRING_CODER);
+            int coder = parseCoder(coderVar);
+            if (value == null || value.getNumChildren() == 0) {
+                return "?";
+            }
+            NIVariable valueTypeChild = value.getChildren()[0];
+            NIVariable valuePublic = getVarsByName(valueTypeChild.getChildren()).get(PUBLIC);
+            if (valuePublic == null) {
+                return "";
+            }
+            Map<String, NIVariable> arrayChildren = getVarsByName(valuePublic.getChildren());
+            NIVariable lengthVar = arrayChildren.get(ARRAY_LENGTH_CE);
+            NIVariable dataVar = arrayChildren.get(ARRAY_DATA_CE);
+            if (lengthVar == null || dataVar == null) {
+                return "?";
+            }
+            String lengthStr = lengthVar.getValue();
+            if (lengthStr.isEmpty()) {
+                return "";
+            }
+            int length = Integer.parseInt(lengthStr);
+            String arrayPath = JavaVariablesDisplayer.this.getExpressionPath(value);
+            String hexArray = null;
+            if (arrayPath != null && !arrayPath.isEmpty()) {
+                arrayPath += "." + ARRAY_DATA_CE;
+                hexArray = readArrayCE(arrayPath, length, 2);
+            }
+            if (hexArray != null) {
+                return parseStringFromHEX(hexArray, length, coder);
+            } else { // legacy code for older gdb version (less than 10.x)
+                return parseStringFromArray(arrayPath, length, coder);
+            }
+        }
+
+        private int parseCoder(NIVariable coderVar) {
             int coder = -1;
             if (coderVar != null) {
                 String coderStr = coderVar.getValue();
@@ -398,47 +480,7 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
                 } catch (NumberFormatException ex) {
                 }
             }
-            String hexArray = readArray(lengthVariable, 0, 2);
-            if (hexArray != null) {
-                switch (coder) {
-                    case 0: // Compressed String on JDK 9+
-                        return parseLatin1(hexArray, length);
-                    case 1: // UTF-16 String on JDK 9+
-                        return parseUTF16(hexArray, length/2);
-                    default: // UTF-16 String on JDK 8
-                        return parseUTF16(hexArray, length);
-                }
-            } else { // legacy code for older gdb version (less than 10.x)
-                String arrayExpression = JavaVariablesDisplayer.this.getExpressionPath(arrayVariable); //getArrayExpression(arrayVariable);
-                NIFrame frame = var.getFrame();
-                try {
-                    NIVariable charVar = debugger.evaluate(arrayExpression + "[0]", null, frame);
-                    if ("byte".equals(charVar.getType())) {
-                        // bytes to be parsed to String
-                        switch (coder) {
-                            case 0: // Compressed String on JDK 9+
-                                return parseLatin1(arrayExpression, frame, length);
-                            case 1: // UTF-16 String on JDK 9+
-                                return parseUTF16(arrayExpression, frame, length/2);
-                            default: // UTF-16 String on JDK 8
-                                return parseUTF16(arrayExpression, frame, length);
-                        }
-                    } else {
-                        char[] characters = new char[length];
-                        for(int i = 0; ; ) {
-                            String charStr = charVar.getValue();
-                            characters[i] = parseCharacter(charStr);
-                            if (++i >= length) {
-                                break;
-                            }
-                            charVar = debugger.evaluate(arrayExpression + "[" + i + "]", null, frame);
-                        }
-                        return new String(characters);
-                    }
-                } catch (EvaluateException ex) {
-                    return ex.getLocalizedMessage();
-                }
-            }
+            return coder;
         }
 
         private char parseCharacter(String charValue) {
@@ -510,6 +552,17 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             }
         }
 
+        private String parseStringFromHEX(String hexArray, int length, int coder) {
+            switch (coder) {
+                case 0: // Compressed String on JDK 9+
+                    return parseLatin1(hexArray, length);
+                case 1: // UTF-16 String on JDK 9+
+                    return parseUTF16(hexArray, length/2);
+                default: // UTF-16 String on JDK 8
+                    return parseUTF16(hexArray, length);
+            }
+        }
+
         private String parseUTF16(String hexArray, int length) {
             CharsetDecoder cd = Charset.forName("utf-16").newDecoder(); // NOI18N
             ByteBuffer buffer = ByteBuffer.allocate(2);
@@ -556,6 +609,37 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         private byte parseByte(String hexArray, int offset) {
             String hex = new String(new char[] {hexArray.charAt(offset), hexArray.charAt(offset + 1)});
             return (byte) (Integer.parseInt(hex, 16) & 0xFF);
+        }
+
+        private String parseStringFromArray(String arrayExpression, int length, int coder) {
+            NIFrame frame = var.getFrame();
+            try {
+                NIVariable charVar = debugger.evaluate(arrayExpression + "[0]", null, frame);
+                if ("byte".equals(charVar.getType())) {
+                    // bytes to be parsed to String
+                    switch (coder) {
+                        case 0: // Compressed String on JDK 9+
+                            return parseLatin1(arrayExpression, frame, length);
+                        case 1: // UTF-16 String on JDK 9+
+                            return parseUTF16(arrayExpression, frame, length/2);
+                        default: // UTF-16 String on JDK 8
+                            return parseUTF16(arrayExpression, frame, length);
+                    }
+                } else {
+                    char[] characters = new char[length];
+                    for(int i = 0; ; ) {
+                        String charStr = charVar.getValue();
+                        characters[i] = parseCharacter(charStr);
+                        if (++i >= length) {
+                            break;
+                        }
+                        charVar = debugger.evaluate(arrayExpression + "[" + i + "]", null, frame);
+                    }
+                    return new String(characters);
+                }
+            } catch (EvaluateException ex) {
+                return ex.getLocalizedMessage();
+            }
         }
 
         private String parseUTF16(String arrayExpression, NIFrame frame, int length) throws EvaluateException {
@@ -727,12 +811,126 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
 
     }
 
-    private class ObjectVar extends AbstractVar {
+    private class ArrayVarCE extends AbstractVar {
 
-        private final NIVariable[] children;
+        private final NIVariable lengthVariable;
+        private final int length;
+        private final NIVariable array;
 
-        ObjectVar(NIVariable var, String name, String path, NIVariable[] children) {
+        ArrayVarCE(NIVariable var, String name, NIVariable lengthVariable, NIVariable dataVar, DynamicHub hub) {
+            super(var, name, "");
+            this.lengthVariable = lengthVariable;
+            int arrayLength;
+            try {
+                arrayLength = Integer.parseInt(lengthVariable.getValue());
+            } catch (NumberFormatException ex) {
+                arrayLength = 0;
+            }
+            this.length = arrayLength;
+            this.array = dataVar;
+        }
+
+        @Override
+        public NIFrame getFrame() {
+            return var.getFrame();
+        }
+
+        @Override
+        public NIVariable getParent() {
+            return var.getParent();
+        }
+
+        @Override
+        public String getType() {
+            return displayType(var.getType());
+        }
+
+        @Override
+        public String getValue() {
+            String value = var.getValue();
+            if (value.startsWith("@")) {
+                value = getType() + value;
+            }
+            return value + "(length="+length+")";
+        }
+
+        @Override
+        public int getNumChildren() {
+            return length;
+        }
+
+        @Override
+        public NIVariable[] getChildren(int from, int to) {
+            if (from >= 0) {
+                to = Math.min(to, length);
+            } else {
+                from = 0;
+                to = length;
+            }
+            if (from >= to) {
+                return new NIVariable[]{};
+            }
+
+            String arrayAddress = null;
+            if (isPrimitiveArray(array.getType())) {
+                String expressionPath = JavaVariablesDisplayer.this.getExpressionPath(lengthVariable);
+                if (expressionPath != null && !expressionPath.isEmpty()) {
+                    String addressExpr = "&" + expressionPath;
+                    NIVariable addressVariable;
+                    try {
+                        addressVariable = debugger.evaluate(addressExpr, null, lengthVariable.getFrame());
+                    } catch (EvaluateException ex) {
+                        addressVariable = null;
+                    }
+                    if (addressVariable != null) {
+                        String address = addressVariable.getValue();
+                        address = address.toLowerCase();
+                        if (address.startsWith("0x")) {
+                            arrayAddress = address;
+                        }
+                    }
+                }
+            }
+            NIVariable[] elements = new NIVariable[to - from];
+            try {
+                if (arrayAddress != null) {
+                    int offset = (getTypeSize(getType()) == 8) ? 8 : 4;
+                    String itemExpression = "*(((" + getSimpleType(getType()) + "*)(" + arrayAddress + "+"+offset+"))+";
+                    int size = getTypeSize(getType());
+                    for (int i = from; i < to; i++) {
+                        String expr = itemExpression + i + ")";
+                        NIVariable element = debugger.evaluate(expr, Integer.toString(i), var.getFrame());
+                        // When gdb could retrieve variable address, it did resolve the expression path.
+                        // Thus there is no need to remember it in variablePaths.
+                        elements[i - from] = element;
+                    }
+                } else {
+                    String arrayExpression = JavaVariablesDisplayer.this.getExpressionPath(array);
+                    for (int i = from; i < to; i++) {
+                        String expr = arrayExpression + "[" + i + "]";
+                        String namePath = PREFIX_VAR_PATH + Integer.toString(i) + ' ' + expr;
+                        NIVariable element = debugger.evaluate(expr, namePath, var.getFrame());
+                        variablePaths.put(element, expr);
+                        elements[i - from] = element;
+                    }
+                }
+            } catch (EvaluateException ex) {
+                return new NIVariable[]{};
+            }
+            return elements;
+        }
+
+    }
+
+    private class ObjectVarEE extends AbstractVar {
+
+        protected final NIVariable[] children;
+
+        ObjectVarEE(NIVariable var, String name, String path, NIVariable[] children) {
             super(var, name, path);
+            if (children == null) {
+                throw new NullPointerException("Null children.");
+            }
             this.children = children;
         }
 
@@ -778,11 +976,9 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
             return getObjectChildren(children, from, to);
         }
 
-        private String findRuntimeType() {
-            NIVariable hub = findChild(HUB, children);
-            if (hub != null) {
-                NIVariable pub = findChild(PUBLIC, hub.getChildren());
-                NIVariable nameVar = findChild(NAME, pub.getChildren());
+        protected String findRuntimeType() {
+            if (children.length > 0) {
+                NIVariable nameVar = findChild(children, HUB, PUBLIC, NAME);
                 if (nameVar != null) {
                     String name = new StringVar(nameVar, varName, varPath, null, null).getValue();
                     if (!name.isEmpty()) {
@@ -791,6 +987,135 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
                 }
             }
             return var.getType();
+        }
+    }
+
+    private class ObjectVarCE extends ObjectVarEE {
+
+        private final DynamicHub hub;
+        private NIVariable[] members;
+
+        ObjectVarCE(NIVariable var, String name, String path, NIVariable[] children, DynamicHub hub) {
+            super(var, name, path, children);
+            this.hub = hub;
+        }
+
+        @Override
+        public int getNumChildren() {
+            return getMemberChildren().length;
+        }
+
+        @Override
+        public NIVariable[] getChildren(int from, int to) {
+            return getMemberChildren();
+        }
+
+        @Override
+        protected String findRuntimeType() {
+            NIVariable nameVar = hub.findClassNameVar();
+            if (nameVar != null) {
+                String name = new StringVar(nameVar, varName, varPath, null, null).getValue();
+                if (!name.isEmpty()) {
+                    return name;
+                }
+            }
+            return var.getType();
+        }
+
+        private synchronized NIVariable[] getMemberChildren() {
+            if (members == null) {
+                members = computeMembers(children);
+            }
+            return members;
+        }
+
+    }
+
+    private NIVariable[] computeMembers(NIVariable[] children) {
+        Map<String, NIVariable> varsByName = getVarsByName(children);
+        NIVariable[] vars = new NIVariable[] { varsByName.get(PRIVATE), varsByName.get(PROTECTED), varsByName.get(PUBLIC) };
+        List<NIVariable> collected = new ArrayList<>();
+        for (NIVariable folder : vars) {
+            if (folder != null) {
+                for (NIVariable v : folder.getChildren()) {
+                    collected.add(v);
+                }
+            }
+        }
+        NIVariable inherited = createInherited(children);
+        if (collected.isEmpty()) {
+            if (inherited == null) {
+                return new NIVariable[]{};
+            } else {
+                return inherited.getChildren();
+            }
+        }
+        if (inherited != null) {
+            collected.add(inherited);
+        }
+        return collected.toArray(new NIVariable[collected.size()]);
+    }
+
+    private NIVariable createInherited(NIVariable[] children) {
+        if (children.length == 0) {
+            return null;
+        }
+        NIVariable superClass = children[0];
+        if (superClass.getName().equals(OBJ_HEADER_CE)) {
+            return null;
+        }
+        NIVariable[] superChildren = superClass.getChildren();
+        if (superChildren.length == 1) {
+            // There are no fields here
+            return createInherited(superChildren);
+        }
+        return new Inherited(superClass);
+    }
+
+    private class Inherited extends AbstractVar {
+
+        private NIVariable[] members;
+
+        @NbBundle.Messages({"# {0} - Name of class from which are the members inherited.", "LBL_Inherited=<Inherited from {0}>"})
+        Inherited(NIVariable typeVar) {
+            super(typeVar, Bundle.LBL_Inherited(typeVar.getName()), "");
+        }
+
+        @Override
+        public String getType() {
+            return "";
+        }
+
+        @Override
+        public String getValue() {
+            return "";
+        }
+
+        @Override
+        public NIVariable getParent() {
+            return var.getParent();
+        }
+
+        @Override
+        public int getNumChildren() {
+            return getMemberChildren().length;
+        }
+
+        @Override
+        public NIVariable[] getChildren(int from, int to) {
+            return getMemberChildren();
+        }
+
+        private synchronized NIVariable[] getMemberChildren() {
+            if (members == null) {
+                members = computeMembers(var.getChildren());
+            }
+            return members;
+        }
+
+        @Override
+        public NIFrame getFrame() {
+            return var.getFrame();
         }
     }
 
@@ -844,6 +1169,9 @@ public final class JavaVariablesDisplayer implements VariableDisplayer {
         protected final String varPath;
 
         AbstractVar(NIVariable var, String varName, String varPath) {
+            if (var == null) {
+                throw new NullPointerException("Null variable.");
+            }
             this.var = var;
             this.varName = varName;
             this.varPath = varPath;

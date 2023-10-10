@@ -1,10 +1,10 @@
 [[865,871]-Syntax error
  unexpected:	static
  after:	(
- expected:	identifier, variable, array, callable, namespace, \, define, ?, &, private, protected, public, ), readonly] 865-871:Syntax error
+ expected:	identifier, variable, array, callable, define, ?, &, private, protected, public, (, ), readonly] 865-871:Syntax error
  unexpected:	static
  after:	(
- expected:	identifier, variable, array, callable, namespace, \, define, ?, &, private, protected, public, ), readonly
+ expected:	identifier, variable, array, callable, define, ?, &, private, protected, public, (, ), readonly
 [[878,879]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	)] 878-879:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	)

@@ -98,11 +98,13 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>integration-test</goal>
+            <goal>pre-integration-test</goal>
+            <goal>failsafe:integration-test</goal>
         </goals>
         <properties>
             <test>DummyToSkipUnitTests</test>
             <failIfNoTests>false</failIfNoTests>
+            <surefire.failIfNoSpecifiedTests>false</surefire.failIfNoSpecifiedTests>
             <it.test>${packageClassName}</it.test>
         </properties>
     </action>
@@ -114,7 +116,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs></exec.vmArgs>
@@ -131,7 +133,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
@@ -149,7 +151,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs></exec.vmArgs>
@@ -167,7 +169,7 @@
         </packagings>
         <goals>
             <goal>process-test-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
@@ -202,11 +204,13 @@
             <packaging>*</packaging>
         </packagings>
         <goals>
-            <goal>integration-test</goal>
+            <goal>pre-integration-test</goal>
+            <goal>failsafe:integration-test</goal>
         </goals>
         <properties>
             <test>DummyToSkipUnitTests</test>
             <failIfNoTests>false</failIfNoTests>
+            <surefire.failIfNoSpecifiedTests>false</surefire.failIfNoSpecifiedTests>
             <it.test>${packageClassName}</it.test>
             <forkMode>once</forkMode>
             <maven.failsafe.debug>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</maven.failsafe.debug>
@@ -234,7 +238,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs></exec.vmArgs>
@@ -251,7 +255,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.0.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs></exec.vmArgs>

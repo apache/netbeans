@@ -51,7 +51,15 @@ public final class VersioningSupport {
     public static Preferences getPreferences() {
         return org.netbeans.modules.versioning.core.api.VersioningSupport.getPreferences();
     }
-        
+
+    /**
+     * Returns the value of {@link #PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE}.
+     * @see #getPreferences()
+     */
+    public static boolean isTextAnnotationVisible() {
+        return getPreferences().getBoolean(PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, true);
+    }
+
     /**
      * Queries the Versioning infrastructure for file ownership.
      * 
@@ -113,8 +121,8 @@ public final class VersioningSupport {
      * <p>Versioning systems <strong>must NOT</strong> scan a folder if this method returns true and should consider it as unversioned.</p>
      *
      * @param folder a folder to query
-     * @link http://www.netbeans.org/bugzilla/show_bug.cgi?id=105161
-     * @link http://www.netbeans.org/bugzilla/show_bug.cgi?id=195284
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=105161">#105161</a>
+     * @see <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=195284">#195284</a>
      * @since 1.25
      * @return true if the given folder is excluded from version control, false otherwise
      */

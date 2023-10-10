@@ -210,6 +210,7 @@ class TableSheet extends JScrollPane {
         }
 
         /** Validate root is outer scroll pane. */
+        @Override
         public boolean isValidateRoot() {
             return false;
         }
@@ -252,6 +253,7 @@ class TableSheet extends JScrollPane {
          * @param tm table model
          * @return table
          */
+        @Override
         JTable createTable() {
             return new ATable();
         }
@@ -263,6 +265,7 @@ class TableSheet extends JScrollPane {
         /** Overriden because I can't set border to null by calling setBorder(null).
          * @param border
          */
+        @Override
         public void setBorder(Border border) {
             super.setBorder(null);
         }
@@ -326,6 +329,7 @@ class TableSheet extends JScrollPane {
                 getActionMap().put("cancel", new OurCancelEditingAction()); // NOI18N
             }
 
+            @Override
             public Dimension getPreferredScrollableViewportSize() {
                 Dimension pref = super.getPreferredScrollableViewportSize();
 
@@ -341,6 +345,7 @@ class TableSheet extends JScrollPane {
             /** Try to revalidate once again because we want table to have
              * width that it asked for.
              */
+            @Override
             public void setBounds(int x, int y, int width, int height) {
                 super.setBounds(x, y, width, height);
 
@@ -364,6 +369,7 @@ class TableSheet extends JScrollPane {
                     table.removeEditor();
                 }
 
+                @Override
                 public boolean isEnabled() {
                     return ATable.this.isEditing();
                 }
@@ -377,6 +383,7 @@ class TableSheet extends JScrollPane {
             MouseDragHandler() {
             }
 
+            @Override
             public void mousePressed(MouseEvent e) {
                 Point p = e.getPoint();
                 dragging = canResize(p);
@@ -393,6 +400,7 @@ class TableSheet extends JScrollPane {
                 return mousePoint.x >= (header.getSize().width - 3);
             }
 
+            @Override
             public void mouseMoved(MouseEvent e) {
                 if (canResize(e.getPoint()) || dragging) {
                     setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
@@ -401,6 +409,7 @@ class TableSheet extends JScrollPane {
                 }
             }
 
+            @Override
             public void mouseDragged(MouseEvent e) {
                 int mouseX = e.getX();
                 int deltaX = lastMouseX - mouseX;
@@ -434,6 +443,7 @@ class TableSheet extends JScrollPane {
                 }
             }
 
+            @Override
             public void mouseReleased(MouseEvent e) {
                 dragging = false;
             }
@@ -478,6 +488,7 @@ class TableSheet extends JScrollPane {
             dependentScrollPane = scrollPane;
         }
 
+        @Override
         public void layoutContainer(Container parent) {
             super.layoutContainer(parent);
 

@@ -247,16 +247,28 @@ class HTMLJavadocParser {
 
             int div_counter = 0;
             int li_counter = 0;
+            int section_counter = 0;
             int nextHRPos = -1;
             int lastHRPos = -1;
 
             @Override
             public void handleSimpleTag(HTML.Tag t, MutableAttributeSet a, int pos) {
-                if (t == HTML.Tag.HR){
-                    if (state[0] == TEXT_START){
+                if (t == HTML.Tag.HR) {
+                    if (state[0] == TEXT_START) {
                         nextHRPos = pos;
                     }
                     lastHRPos = pos;
+                } else if (state[0] == AFTER_DIV
+                        && t instanceof HTML.UnknownTag
+                        && "section".equalsIgnoreCase(t.toString())) {
+                    if (a.containsAttribute(HTML.Attribute.ENDTAG, "true")) {
+                        if (--section_counter < 0) {
+                            offset[3] = pos;
+                            state[0] = INIT;
+                        }
+                    } else {
+                        section_counter++;
+                    }
                 }
             }
 
@@ -367,13 +379,34 @@ class HTMLJavadocParser {
             int div_counter = 0;
             int dl_counter = 0;
             int li_counter = 0;
+            int section_counter = 0;
             int hrPos = -1;
             boolean startWithNextText;
 
             @Override
             public void handleSimpleTag(HTML.Tag t, MutableAttributeSet a, int pos) {
-                if (t == HTML.Tag.HR && state[0] == PRE_CLOSE){
+                if (t == HTML.Tag.HR && state[0] == PRE_CLOSE) {
                     hrPos = pos;
+                } else if (t instanceof HTML.UnknownTag
+                        && "section".equalsIgnoreCase(t.toString())) {
+                    if (a.containsAttribute(HTML.Attribute.ENDTAG, "true")) {
+                        if (state[0] != INIT) {
+                            if (--section_counter < 0) {
+                                state[0] = INIT;
+                                offset[1] = hrPos;
+                            }
+                        }
+                    } else {
+                        if (state[0] == INIT) {
+                            String attrId = (String) a.getAttribute(HTML.Attribute.ID);
+                            if (names.contains(attrId)) {
+                                // we have found desired javadoc member info anchor
+                                state[0] = A_OPEN;
+                            }
+                        } else {
+                            section_counter++;
+                        }
+                    }
                 }
             }
 

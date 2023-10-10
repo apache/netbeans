@@ -24,18 +24,18 @@ import org.netbeans.api.project.SourceGroup;
  * Intermediate level for more structured projects, where the simple
  * type-based information are not sufficient to create an appropriate folder
  * structure. 
- * <p/>
+ * <p>
  * Prototypically used in J2SE Modular projects, where tests or sources belong
  * to different modules, and it is critical to create the folder in the "correct"
  * one.
- * <p/>
+ * <p>
  * The project can be partitioned to several (hiearchical) parts. SourceGroups for
  * certain types/hints can be created in some of those parts (see {@link SourceGroupModifierImplementation#canCreateSourceGroup}.
  * For example, java modular projects contains modules, a module may contain several places where sources are expected - these
  * form the part hierarchy. When the original SourceGroup is specific enough, the hierarchy argument may be
  * missing or can be even ignored by the modifier implementation - provided that the newly created folders have the correct
  * relationship to the original source group.
- * <p/>
+ * <p>
  * Similar structure may be used in other types of projects. {@code projectParts} are abstract uninterpreted identifiers, so 
  * the implementation / project may choose any semantics suitable for the project type.
  * @author sdedic

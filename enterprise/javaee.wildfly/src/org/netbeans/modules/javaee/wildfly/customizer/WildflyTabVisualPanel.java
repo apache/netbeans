@@ -85,7 +85,7 @@ public final class WildflyTabVisualPanel extends JPanel {
 
     // Event handling
     //
-    private final Set/*<ChangeListener>*/ listeners = new HashSet/*<ChangeListener>*/(1);
+    private final Set<ChangeListener> listeners = new HashSet<>(1);
     public final void addChangeListener(ChangeListener l) {
         synchronized (listeners) {
             listeners.add(l);
@@ -97,13 +97,13 @@ public final class WildflyTabVisualPanel extends JPanel {
         }
     }
     protected final void fireChangeEvent() {
-        Iterator/*<ChangeListener>*/ it;
+        Iterator<ChangeListener> it;
         synchronized (listeners) {
-            it = new HashSet/*<ChangeListener>*/(listeners).iterator();
+            it = new HashSet<>(listeners).iterator();
         }
         ChangeEvent ev = new ChangeEvent(this);
         while (it.hasNext()) {
-            ((ChangeListener)it.next()).stateChanged(ev);
+            it.next().stateChanged(ev);
         }
     }
 
@@ -177,7 +177,6 @@ public final class WildflyTabVisualPanel extends JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         description = new javax.swing.JLabel();
         parentDirectoryLabel = new javax.swing.JLabel();
@@ -185,39 +184,13 @@ public final class WildflyTabVisualPanel extends JPanel {
         openInstanceDirectorySelector = new javax.swing.JButton();
         spaceHack = new javax.swing.JLabel();
 
-        setLayout(new java.awt.GridBagLayout());
-
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("org/netbeans/modules/javaee/wildfly/customizer/Bundle"); // NOI18N
         description.setText(bundle.getString("TXT_instanceDirectoryDescription2")); // NOI18N
         description.setEnabled(false);
         description.setFocusable(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        add(description, gridBagConstraints);
 
         parentDirectoryLabel.setLabelFor(configFile);
         org.openide.awt.Mnemonics.setLocalizedText(parentDirectoryLabel, org.openide.util.NbBundle.getMessage(WildflyTabVisualPanel.class, "LBL_ParentFolder")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 6, 6);
-        add(parentDirectoryLabel, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 6, 6, 6);
-        add(configFile, gridBagConstraints);
-        configFile.getAccessibleContext().setAccessibleDescription(bundle.getString("DSC_instanceDirectory")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(openInstanceDirectorySelector, org.openide.util.NbBundle.getMessage(WildflyTabVisualPanel.class, "LBL_openInstanceDirectorySelector")); // NOI18N
         openInstanceDirectorySelector.addActionListener(new java.awt.event.ActionListener() {
@@ -225,21 +198,46 @@ public final class WildflyTabVisualPanel extends JPanel {
                 openInstanceDirectorySelectorActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(5, 6, 6, 0);
-        add(openInstanceDirectorySelector, gridBagConstraints);
-        openInstanceDirectorySelector.getAccessibleContext().setAccessibleDescription(bundle.getString("DSC_openInstanceDirectorySelector")); // NOI18N
 
         spaceHack.setEnabled(false);
         spaceHack.setFocusable(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.weighty = 1.0;
-        add(spaceHack, gridBagConstraints);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(spaceHack)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(parentDirectoryLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(configFile, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(openInstanceDirectorySelector)
+                                .addGap(12, 12, 12))
+                            .addComponent(description, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(spaceHack)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(description)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(parentDirectoryLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(configFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(openInstanceDirectorySelector))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        configFile.getAccessibleContext().setAccessibleDescription(bundle.getString("DSC_instanceDirectory")); // NOI18N
+        openInstanceDirectorySelector.getAccessibleContext().setAccessibleDescription(bundle.getString("DSC_openInstanceDirectorySelector")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
     private void openInstanceDirectorySelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openInstanceDirectorySelectorActionPerformed

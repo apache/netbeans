@@ -52,7 +52,7 @@ public final class ExternalPackages {
 
         @Override
         public Collection<SourceClassInfo> getClasses() {
-            Set<FileObject> clzs = new TreeSet(pathComparator);
+            Set<FileObject> clzs = new TreeSet<>(pathComparator);
             Enumeration<? extends FileObject> e = pkg.getData(false);
             while (e.hasMoreElements()) {
                 FileObject clz = e.nextElement();
@@ -93,7 +93,7 @@ public final class ExternalPackages {
 
         @Override
         public Collection<SourcePackageInfo> getSubpackages() {
-            Set<FileObject> pkgs = new TreeSet(pathComparator);
+            Set<FileObject> pkgs = new TreeSet<>(pathComparator);
             Enumeration<? extends FileObject> e = pkg.getFolders(false);
             while (e.hasMoreElements()) {
                 pkgs.add(e.nextElement());
@@ -323,7 +323,7 @@ public final class ExternalPackages {
             }
             
             if (rec) {
-                Queue<SourcePackageInfo> _packages = new ArrayDeque(pkgis);
+                Queue<SourcePackageInfo> _packages = new ArrayDeque<>(pkgis);
                 pkgis.clear();
                 while (!_packages.isEmpty()) {
                     FilePackageInfo pkg = (FilePackageInfo)_packages.poll();

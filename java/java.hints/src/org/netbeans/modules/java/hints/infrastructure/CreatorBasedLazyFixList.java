@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
@@ -49,15 +48,17 @@ public class CreatorBasedLazyFixList implements LazyFixList {
     
     private FileObject file;
     private String diagnosticKey;
+    private String diagnosticMessage;
     private int offset;
     private final Collection<ErrorRule> c;
     private final Map<Class, Data> class2Data;
     
     /** Creates a new instance of CreatorBasedLazyFixList */
-    public CreatorBasedLazyFixList(FileObject file, String diagnosticKey, int offset, Collection<ErrorRule> c, Map<Class, Data> class2Data) {
+    public CreatorBasedLazyFixList(FileObject file, String diagnosticKey, String diagnosticMessage, int offset, Collection<ErrorRule> c, Map<Class, Data> class2Data) {
         this.pcs = new PropertyChangeSupport(this);
         this.file = file;
         this.diagnosticKey = diagnosticKey;
+        this.diagnosticMessage = diagnosticMessage;
         this.offset = offset;
         this.c = c;
         this.class2Data = class2Data;
@@ -118,6 +119,10 @@ public class CreatorBasedLazyFixList implements LazyFixList {
                 
                 if (data == null) {
                     class2Data.put(rule.getClass(), data = new Data());
+                }
+
+                if ("compiler.err.proc.messager".equals(diagnosticKey)) { //NOI18N
+                    data.setData(diagnosticMessage);
                 }
                 
                 List<Fix> currentRuleFixes = rule.run(info, diagnosticKey, offset, path, data);

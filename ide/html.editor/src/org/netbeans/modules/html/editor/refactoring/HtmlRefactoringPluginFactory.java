@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.html.editor.refactoring;
 
+import org.netbeans.modules.css.refactoring.api.CssRefactoringInfo;
 import org.netbeans.modules.html.editor.refactoring.api.ExtractInlinedStyleRefactoring;
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
+import org.netbeans.modules.refactoring.api.WhereUsedQuery;
 import org.netbeans.modules.refactoring.spi.RefactoringPlugin;
 import org.netbeans.modules.refactoring.spi.RefactoringPluginFactory;
 import org.openide.filesystems.FileObject;
@@ -35,13 +37,17 @@ public class HtmlRefactoringPluginFactory implements RefactoringPluginFactory {
     @Override
     public RefactoringPlugin createInstance(AbstractRefactoring refactoring) {
 	if (refactoring instanceof RenameRefactoring) {
-	    if (null != refactoring.getRefactoringSource().lookup(FileObject.class)) {
+            if (refactoring.getRefactoringSource().lookup(CssRefactoringInfo.class) != null) {
+                return new CssRenameRefactoringPlugin((RenameRefactoring)refactoring);
+            } else if (null != refactoring.getRefactoringSource().lookup(FileObject.class)) {
 		return new HtmlRenameRefactoringPlugin((RenameRefactoring)refactoring);
 	    }
 	} else if(refactoring instanceof ExtractInlinedStyleRefactoring) {
             return new ExtractInlinedStyleRefactoringPlugin((ExtractInlinedStyleRefactoring)refactoring);
+        } else if (refactoring instanceof WhereUsedQuery && refactoring.getRefactoringSource().lookup(CssRefactoringInfo.class) != null) {
+            return new CssWhereUsedQueryPlugin((WhereUsedQuery)refactoring);
         }
-        
+
 	return null;
 
     }

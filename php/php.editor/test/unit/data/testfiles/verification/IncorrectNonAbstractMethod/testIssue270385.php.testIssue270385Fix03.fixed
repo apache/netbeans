@@ -16,7 +16,6 @@ class Test3 {
     private function testMethod3() {
         
     }
-
 }
 
 class Test4 {

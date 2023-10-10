@@ -95,6 +95,8 @@
         <include name="platform/javahelp/external/jhall*.jar"/>
         <!-- For json parsing -->
         <include name="nbbuild/external/json-simple*.jar"/>
+        <!-- For parsing some web : -->
+        <include name="nbbuild/external/jsoup*.jar"/>
       </fileset>
     </path>
     <javac srcdir="antsrc" destdir="${build.ant.classes.dir}" deprecation="true" debug="${build.compiler.debug}" source="1.8" target="1.8">
@@ -148,7 +150,7 @@
 
     <property name="metabuild.releasejson" value="${nb_all}/nbbuild/build/netbeansrelease.json"/>
     <!-- get all json info we have on apache gitbox  -->
-    <condition property="metabuild.jsonurl" value="https://gitbox.apache.org/repos/asf?p=netbeans-jenkins-lib.git;a=blob_plain;f=meta/netbeansrelease.json">
+    <condition property="metabuild.jsonurl" value="https://netbeans.apache.org/nbbuild/netbeansrelease.json">
         <not>
             <isset property="metabuild.jsonurl"/>
         </not>
@@ -264,6 +266,7 @@ metabuild.hash=${metabuild.hash}</echo>
           </filterchain>
       </concat>
   </target>
+  <!-- maven coordinate target end DO NOT REMOVE it helps making external consice -->
   <target name="download-selected-extbins" unless="ext.binaries.downloaded" depends="init-module-list">
     <echo>Downloading external binaries (*/external/ directories) for cluster.config=${cluster.config}...</echo>
     <pathconvert property="modules.binaries-list" pathsep=",">
@@ -323,6 +326,7 @@ metabuild.hash=${metabuild.hash}</echo>
           <buildpath path="${modules.sorted}"/>
           <property name="base.nbm.target.dir" value="${base.nbm.target.dir}"/>
           <property name="nbm.always.create" value="true" />
+          <property name="buildnumber" value="${buildnumber}" />
       </subant-junit>
   </target>
 
@@ -333,6 +337,7 @@ metabuild.hash=${metabuild.hash}</echo>
       <subant-junit target="nbm-nosignature" failonerror="${nbms.fail.on.error}" report="${nb.build.dir}/build-nbms.xml" inheritall="false">
           <buildpath path="${modules.sorted}"/>
           <property name="base.nbm.target.dir" value="${base.nbm.target.dir}"/>
+          <property name="buildnumber" value="${buildnumber}" />
       </subant-junit>
   </target>
 
@@ -1612,12 +1617,16 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         <taskdef name="verifylibsandlicenses" classname="org.netbeans.nbbuild.extlibs.VerifyLibsAndLicenses" classpath="${nbantext.jar}"/>
         <property name="verify-libs-and-licenses.haltonfailure" value="false" />
         <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".." haltonfailure="${verify-libs-and-licenses.haltonfailure}" />
+        <taskdef name="mavenskeletonbuild" classname="org.netbeans.nbbuild.extlibs.MavenSkeletonProject" classpath="${nbantext.jar}"/>
+        <mavenskeletonbuild mavenfolder="${nb.build.dir}/mavenpoms" nball=".." />        
     </target>
 
     <target name="verify-libs-and-licenses" depends="bootstrap,download-selected-extbins" description="Verify the contents of third-party libraries and licenses in the selected configuration.">
         <taskdef name="verifylibsandlicenses" classname="org.netbeans.nbbuild.extlibs.VerifyLibsAndLicenses" classpath="${nbantext.jar}"/>
         <property name="verify-libs-and-licenses.haltonfailure" value="false" />
         <verifylibsandlicenses report="${nb.build.dir}/verifylibsandlicenses.xml" nball=".." haltonfailure="${verify-libs-and-licenses.haltonfailure}" />
+        <taskdef name="mavenskeletonbuild" classname="org.netbeans.nbbuild.extlibs.MavenSkeletonProject" classpath="${nbantext.jar}"/>
+        <mavenskeletonbuild mavenfolder="${nb.build.dir}/mavenpoms" nball=".." />        
     </target>
 
     <target name="create-mandatory-files-for-binary" depends="bootstrap,download-selected-extbins" description="Create a summary of the licenses used by libraries in the build.">
@@ -2176,7 +2185,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         
         <taskdef uri="antlib:org.apache.rat.anttasks" resource="org/apache/rat/anttasks/antlib.xml">
             <classpath>
-                <pathelement location="external/apache-rat-0.12.jar"/>
+                <pathelement location="external/apache-rat-0.15.jar"/>
             </classpath>
         </taskdef>
         

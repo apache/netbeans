@@ -436,14 +436,10 @@ public class EjbJarProxy implements EjbJar {
             if (dataObject instanceof DDProviderDataObject) {
                 ((DDProviderDataObject) dataObject).writeModel(ejbJar);
             } else {
-                FileLock lock = fo.lock();
-                try {
-                    try (OutputStream os = fo.getOutputStream(lock)) {
-                        writing = true;
-                        write(os);
-                    }
-                } finally {
-                    lock.releaseLock();
+                try (FileLock lock = fo.lock();
+                        OutputStream os = fo.getOutputStream(lock)) {
+                    writing = true;
+                    write(os);
                 }
             }
         }
@@ -457,7 +453,11 @@ public class EjbJarProxy implements EjbJar {
         else {
             EjbJar clonedEjbJar=(EjbJar)ejbJar.clone();
             proxy = new EjbJarProxy(clonedEjbJar,version);
-            if (EjbJar.VERSION_3_2.equals(version)) {
+            if (EjbJar.VERSION_4_0.equals(version)) {
+                ((org.netbeans.modules.j2ee.dd.impl.ejb.model_4_0.EjbJar)clonedEjbJar)._setSchemaLocation
+                    ("https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd");
+                clonedEjbJar.setVersion(new java.math.BigDecimal(EjbJar.VERSION_3_2));
+            } else if (EjbJar.VERSION_3_2.equals(version)) {
                 ((org.netbeans.modules.j2ee.dd.impl.ejb.model_3_2.EjbJar)clonedEjbJar)._setSchemaLocation
                     ("http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd");
                 clonedEjbJar.setVersion(new java.math.BigDecimal(EjbJar.VERSION_3_2));

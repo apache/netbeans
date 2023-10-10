@@ -144,7 +144,7 @@ public class Annotator {
         name = htmlEncode(name);
         int status = info.getStatus();
         String textAnnotation;
-        boolean annotationsVisible = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        boolean annotationsVisible = VersioningSupport.isTextAnnotationVisible();
         if (annotationsVisible && file != null && (status & STATUS_TEXT_ANNOTABLE) != 0) {
             if (format != null) {
                 textAnnotation = formatAnnotation(info, file);
@@ -257,7 +257,7 @@ public class Annotator {
         name = htmlEncode(name);
         int status = info.getStatus();
         String textAnnotation;
-        boolean annotationsVisible = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        boolean annotationsVisible = VersioningSupport.isTextAnnotationVisible();
         if (annotationsVisible && file != null && (status & FileInformation.STATUS_MANAGED) != 0) {
 
             if (format != null) {

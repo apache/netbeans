@@ -304,7 +304,7 @@ public final class SourceJavadocAttacherUtil {
                 if (currentFolder[0] != null) {
                     chooser.setCurrentDirectory(currentFolder[0]);
                 }
-                if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                if (chooser.showOpenDialog(Utilities.findDialogParent()) == JFileChooser.APPROVE_OPTION) {
                     currentFolder[0] = chooser.getCurrentDirectory();
                     final File[] files = filter(chooser.getSelectedFiles(), filter);
                     final List<String> result = new ArrayList<String>(files.length);

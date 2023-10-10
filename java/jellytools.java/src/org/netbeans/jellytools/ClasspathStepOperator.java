@@ -33,8 +33,6 @@ import javax.swing.JTextField;
  * Handle "Classpath" panel of the New Project wizard
  * for J2SE Ant Project.<br>
  * Usage:
- * <pre>
- * </pre>
  * 
  * @author tb115823
  */

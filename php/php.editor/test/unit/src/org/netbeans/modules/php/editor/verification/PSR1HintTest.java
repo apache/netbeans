@@ -43,12 +43,24 @@ public class PSR1HintTest extends PHPHintsTestBase {
         checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "ClassName.php");
     }
 
+    public void testEnumNameOk_01() throws Exception {
+        checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "EnumName.php");
+    }
+
     public void testTypeNameNotOk53() throws Exception {
         checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "ClassName.php");
     }
 
     public void testTypeNameNotOk53_2() throws Exception {
         checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "ClassName.php");
+    }
+
+    public void testEnumNameNotOk_01() throws Exception {
+        checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "EnumName.php");
+    }
+
+    public void testEnumNameNotOk_02() throws Exception {
+        checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "EnumName.php");
     }
 
     public void testTypeNameOk52() throws Exception {
@@ -71,6 +83,14 @@ public class PSR1HintTest extends PHPHintsTestBase {
         checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "ClassName.php");
     }
 
+    public void testEnumNameNotOkNamespace_01() throws Exception {
+        checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "EnumName.php");
+    }
+
+    public void testEnumNameNotOkNamespace_02() throws Exception {
+        checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "EnumName.php");
+    }
+
     public void testTypeNameNotOneDeclaration52() throws Exception {
         checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_52), "ClassName.php");
     }
@@ -79,12 +99,24 @@ public class PSR1HintTest extends PHPHintsTestBase {
         checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "ClassName.php");
     }
 
+    public void testEnumNameNotOneDeclaration_01() throws Exception {
+        checkHints(new TypeDeclarationHintStub(PhpVersion.PHP_53), "EnumName.php");
+    }
+
     public void testConstantNameOk_1() throws Exception {
         checkHints(new PSR1Hint.ConstantDeclarationHint(), "ClassName.php");
     }
 
     public void testConstantNameOk_2() throws Exception {
         checkHints(new PSR1Hint.ConstantDeclarationHint(), "ClassName.php");
+    }
+
+    public void testConstantNameEnumOk_01() throws Exception {
+        checkHints(new PSR1Hint.ConstantDeclarationHint(), "EnumName.php");
+    }
+
+    public void testConstantNameEnumOk_02() throws Exception {
+        checkHints(new PSR1Hint.ConstantDeclarationHint(), "EnumName.php");
     }
 
     public void testConstantNameNotOk_1() throws Exception {
@@ -99,6 +131,18 @@ public class PSR1HintTest extends PHPHintsTestBase {
         checkHints(new PSR1Hint.ConstantDeclarationHint(), "ClassName.php");
     }
 
+    public void testConstantNameEnumNotOk_01() throws Exception {
+        checkHints(new PSR1Hint.ConstantDeclarationHint(), "EnumName.php");
+    }
+
+    public void testConstantNameEnumNotOk_02() throws Exception {
+        checkHints(new PSR1Hint.ConstantDeclarationHint(), "EnumName.php");
+    }
+
+    public void testConstantNameEnumNotOk_03() throws Exception {
+        checkHints(new PSR1Hint.ConstantDeclarationHint(), "EnumName.php");
+    }
+
     public void testMethodOk_1() throws Exception {
         checkHints(new PSR1Hint.MethodDeclarationHint(), "ClassName.php");
     }
@@ -111,12 +155,28 @@ public class PSR1HintTest extends PHPHintsTestBase {
         checkHints(new PSR1Hint.MethodDeclarationHint(), "ClassName.php");
     }
 
+    public void testMethodEnumOk_01() throws Exception {
+        checkHints(new PSR1Hint.MethodDeclarationHint(), "EnumName.php");
+    }
+
+    public void testMethodEnumOk_02() throws Exception {
+        checkHints(new PSR1Hint.MethodDeclarationHint(), "EnumName.php");
+    }
+
     public void testMethodNotOk_1() throws Exception {
         checkHints(new PSR1Hint.MethodDeclarationHint(), "ClassName.php");
     }
 
     public void testMethodNotOk_2() throws Exception {
         checkHints(new PSR1Hint.MethodDeclarationHint(), "ClassName.php");
+    }
+
+    public void testMethodEnumNotOk_01() throws Exception {
+        checkHints(new PSR1Hint.MethodDeclarationHint(), "EnumName.php");
+    }
+
+    public void testMethodEnumNotOk_02() throws Exception {
+        checkHints(new PSR1Hint.MethodDeclarationHint(), "EnumName.php");
     }
 
     public void testMethodMagicOk() throws Exception {
@@ -185,6 +245,10 @@ public class PSR1HintTest extends PHPHintsTestBase {
 
     public void testSideEffect_10() throws Exception {
         checkHints(new PSR1Hint.SideEffectHint(), "ClassName.php");
+    }
+
+    public void testSideEffect_11() throws Exception {
+        checkHints(new PSR1Hint.SideEffectHint(), "EnumName.php");
     }
 
     @Override

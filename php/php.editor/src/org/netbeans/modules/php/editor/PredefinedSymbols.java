@@ -101,6 +101,8 @@ public final class PredefinedSymbols {
                 "__sleep", // NOI18N
                 "__wakeup", // NOI18N
                 "__toString", // NOI18N
+                "__invoke", // NOI18N
+                "__debugInfo", // NOI18N
                 "__serialize", // NOI18N PHP 7.4
                 "__unserialize", // NOI18N PHP 7.4
             })));

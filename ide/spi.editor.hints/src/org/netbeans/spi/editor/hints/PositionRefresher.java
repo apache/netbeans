@@ -36,7 +36,7 @@ import javax.swing.text.Document;
 public interface PositionRefresher {
 
     /**
-     * @param position current caret position inside document
+     * @param context current caret position inside document
      * @param doc current document
      * @return map of layer name to {@link ErrorDescription}s for current line
      */

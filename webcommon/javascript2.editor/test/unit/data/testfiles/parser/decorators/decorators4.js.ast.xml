@@ -1,3 +1,24 @@
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
 <FunctionNode name='decorators4.js' kind='MODULE' start='0' end='121'>
   <isProgram/>
   <ImportNode start='0' end='41'>
@@ -17,12 +38,12 @@
   <ExportNode start='56' end='119'>
     <ClassNode ident='Decorators' start='63' end='119'>
       <!-- ClassNode Constructor -->
-      <PropertyNode name='Decorators' start='63' end='119'>
-        <!-- PropertyNode Key -->
+      <ClassElement name='Decorators' start='63' end='119'>
+        <!-- ClassElement Key -->
         <IdentNode start='77' end='87'>
           <name>Decorators</name>
         </IdentNode>
-        <!-- PropertyNode Value -->
+        <!-- ClassElement Value -->
         <FunctionNode name='Decorators' kind='NORMAL' start='63' end='119'>
           <isClassConstructor/>
           <isMethod/>
@@ -34,16 +55,16 @@
             <!-- Block Statements -->
           </Block>
         </FunctionNode>
-        <!-- PropertyNode Decorators -->
-      </PropertyNode>
+        <!-- ClassElement Decorators -->
+      </ClassElement>
       <!-- ClassNode Elements -->
-      <PropertyNode name='test' start='94' end='117'>
-        <!-- PropertyNode Key -->
+      <ClassElement name='test' start='94' end='117'>
+        <!-- ClassElement Key -->
         <IdentNode start='94' end='98'>
           <name>test</name>
           <isPropertyName/>
         </IdentNode>
-        <!-- PropertyNode Value -->
+        <!-- ClassElement Value -->
         <FunctionNode name='test' kind='NORMAL' start='94' end='117'>
           <isMethod/>
           <isNamedFunctionExpression/>
@@ -54,8 +75,8 @@
             <!-- Block Statements -->
           </Block>
         </FunctionNode>
-        <!-- PropertyNode Decorators -->
-      </PropertyNode>
+        <!-- ClassElement Decorators -->
+      </ClassElement>
       <!-- ClassNode Decorators -->
       <CallNode start='47' end='55'>
         <!-- CallNode Arguments -->
@@ -92,12 +113,12 @@
       <!-- VarNode Init -->
       <ClassNode ident='Decorators' start='63' end='119'>
         <!-- ClassNode Constructor -->
-        <PropertyNode name='Decorators' start='63' end='119'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='Decorators' start='63' end='119'>
+          <!-- ClassElement Key -->
           <IdentNode start='77' end='87'>
             <name>Decorators</name>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='Decorators' kind='NORMAL' start='63' end='119'>
             <isClassConstructor/>
             <isMethod/>
@@ -109,16 +130,16 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Elements -->
-        <PropertyNode name='test' start='94' end='117'>
-          <!-- PropertyNode Key -->
+        <ClassElement name='test' start='94' end='117'>
+          <!-- ClassElement Key -->
           <IdentNode start='94' end='98'>
             <name>test</name>
             <isPropertyName/>
           </IdentNode>
-          <!-- PropertyNode Value -->
+          <!-- ClassElement Value -->
           <FunctionNode name='test' kind='NORMAL' start='94' end='117'>
             <isMethod/>
             <isNamedFunctionExpression/>
@@ -129,8 +150,8 @@
               <!-- Block Statements -->
             </Block>
           </FunctionNode>
-          <!-- PropertyNode Decorators -->
-        </PropertyNode>
+          <!-- ClassElement Decorators -->
+        </ClassElement>
         <!-- ClassNode Decorators -->
         <CallNode start='47' end='55'>
           <!-- CallNode Arguments -->

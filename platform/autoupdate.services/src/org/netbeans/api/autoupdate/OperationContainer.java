@@ -59,7 +59,7 @@ import org.openide.modules.ModuleInfo;
  * OperationSupport support = container.getSupport();
  * support.doOperation(null);
  * </pre>
- * </p>
+ *
  * @param <Support> the type of support for performing chosen operation like 
  * {@link OperationSupport} or {@link InstallSupport}
  * @author Radek Matous, Jiri Rechtacek

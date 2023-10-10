@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.j2ee.persistence.unit;
 
+import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
 import org.netbeans.modules.j2ee.persistence.provider.Provider;
 import org.netbeans.modules.xml.multiview.ui.SectionInnerPanel;
@@ -45,13 +46,16 @@ public class PropertiesPanel extends SectionInnerPanel {
         add(panel, gridBagConstraints);
     }
 
+    @Override
     public javax.swing.JComponent getErrorComponent(String errorId) {
         return null;
     }
 
+    @Override
     public void setValue(javax.swing.JComponent source, Object value) {
     }
 
+    @Override
     public void linkButtonPressed(Object obj, String id) {
     }
 
@@ -81,11 +85,17 @@ public class PropertiesPanel extends SectionInnerPanel {
     // End of variables declaration
     
     public static class PropertiesParamHolder{
+        private final Persistence persistence;
         private final PersistenceUnit pu;
         private final Provider prov;
-        PropertiesParamHolder(PersistenceUnit pu, Provider prov){
+        PropertiesParamHolder(Persistence persistence, PersistenceUnit pu, Provider prov){
+            this.persistence = persistence;
             this.pu = pu;
             this.prov = prov;
+        }
+
+        public Persistence getPersistence() {
+            return persistence;
         }
         public PersistenceUnit getPU(){
             return pu;

@@ -808,7 +808,7 @@ public class ClientSideProject implements Project {
     private static class SiteRootFolderListener implements FileChangeListener {
 
         private final ClientSideProject p;
-        private final FileObject siteRootFolder;;
+        private final FileObject siteRootFolder;
 
         SiteRootFolderListener(ClientSideProject p) {
             this.p = p;

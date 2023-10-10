@@ -43,7 +43,7 @@ public class JndiResourcesObjectProviders {
     static final class JmsDestinationProvider extends AbstractProvider<JmsDestinationImpl> {
 
         JmsDestinationProvider(AnnotationModelHelper helper) {
-            super(helper, JndiResourcesDefinition.ANN_JMS_DESTINATION);
+            super(helper, JndiResourcesDefinition.ANN_JMS_DESTINATION, JndiResourcesDefinition.ANN_JMS_DESTINATION_JAKARTA);
         }
 
         @Override
@@ -55,7 +55,7 @@ public class JndiResourcesObjectProviders {
     static final class JmsDestinationsProvider extends AbstractProvider<JmsDestinationsImpl> {
 
         public JmsDestinationsProvider(AnnotationModelHelper helper) {
-            super(helper, JndiResourcesDefinition.ANN_JMS_DESTINATIONS);
+            super(helper, JndiResourcesDefinition.ANN_JMS_DESTINATIONS, JndiResourcesDefinition.ANN_JMS_DESTINATIONS_JAKARTA);
         }
 
         @Override
@@ -66,33 +66,37 @@ public class JndiResourcesObjectProviders {
 
     private abstract static class AbstractProvider<T extends Refreshable> implements ObjectProvider<T> {
 
-        private String annotationType;
+        private String[] annotationTypes;
         private AnnotationModelHelper helper;
 
-        AbstractProvider(AnnotationModelHelper helper, String annotationType) {
-            this.annotationType = annotationType;
+        AbstractProvider(AnnotationModelHelper helper, String... annotationTypes) {
+            this.annotationTypes = annotationTypes;
             this.helper = helper;
         }
 
         @Override
         public List<T> createInitialObjects() throws InterruptedException {
             final List<T> result = new LinkedList<T>();
-            helper.getAnnotationScanner().findAnnotations(annotationType, AnnotationScanner.TYPE_KINDS,
-                    new AnnotationHandler() {
-                        @Override
-                        public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
-                            result.add(createObject(helper, type));
-                        }
-                    });
+            for (String annotationType : annotationTypes) {
+                helper.getAnnotationScanner().findAnnotations(annotationType, AnnotationScanner.TYPE_KINDS,
+                        new AnnotationHandler() {
+                    @Override
+                    public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
+                        result.add(createObject(helper, type));
+                    }
+                });
+            }
             return result;
         }
 
         @Override
         public List<T> createObjects(TypeElement type) {
             final List<T> result = new ArrayList<T>();
-            if (type.getKind() == ElementKind.CLASS || type.getKind() == ElementKind.INTERFACE || type.getKind() == ElementKind.ENUM) {
-                if (helper.hasAnyAnnotation(type.getAnnotationMirrors(), Collections.singleton(annotationType))) {
-                    result.add(createObject(helper, type));
+            for (String annotationType : annotationTypes) {
+                if (type.getKind() == ElementKind.CLASS || type.getKind() == ElementKind.INTERFACE || type.getKind() == ElementKind.ENUM) {
+                    if (helper.hasAnyAnnotation(type.getAnnotationMirrors(), Collections.singleton(annotationType))) {
+                        result.add(createObject(helper, type));
+                    }
                 }
             }
             return result;

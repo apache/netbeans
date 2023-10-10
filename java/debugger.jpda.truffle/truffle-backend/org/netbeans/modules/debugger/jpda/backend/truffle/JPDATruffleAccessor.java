@@ -317,12 +317,12 @@ public class JPDATruffleAccessor extends Object {
         str.append(position.sourceSection);
         return str.toString();
     }
-
+/*
     static Object[] getTruffleAST(int depth) {
         TruffleAST ast = TruffleAST.get(depth);
         return new Object[] { ast.getNodes(), ast.getRawArguments(), ast.getRawSlots() };
     }
-
+*/
     // Unwind the current thread to given depth
     static boolean setUnwind(int depth) {
         SuspendedEvent evt = getCurrentSuspendedEvent();

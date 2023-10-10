@@ -96,7 +96,7 @@ public class QName {
             return new QName(asString);
         } else {
             String ns = asString.substring(1, pos-1);
-            String localPart = asString.substring(pos+1, asString.length());
+            String localPart = asString.substring(pos+1);
             return new QName(ns, localPart);
         }
     }

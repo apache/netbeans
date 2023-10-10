@@ -947,7 +947,7 @@ public class QueryController implements org.netbeans.modules.bugtracking.spi.Que
             int idx = p.indexOf("="); // NOI18N
             if(idx > -1) {
                 String parameter = p.substring(0, idx);
-                String value = p.substring(idx + 1, p.length());
+                String value = p.substring(idx + 1);
 
                 ParameterValue pv = new ParameterValue(value, value);
                 List<ParameterValue> values = normalizedParams.get(parameter);

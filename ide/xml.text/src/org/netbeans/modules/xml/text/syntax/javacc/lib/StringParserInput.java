@@ -77,6 +77,7 @@ public class StringParserInput extends SimpleCharStream implements CharStream {
      * @deprecated
      * @see #getEndColumn
      */
+    @Deprecated
     public int getColumn() {
         return 0;
     }
@@ -86,6 +87,7 @@ public class StringParserInput extends SimpleCharStream implements CharStream {
      * @deprecated
      * @see #getEndLine
      */
+    @Deprecated
     public int getLine() {
         return 0;
     }
@@ -167,7 +169,7 @@ public class StringParserInput extends SimpleCharStream implements CharStream {
      *
      *   {
      *      String t = GetImage();
-     *      return t.substring(t.length() - len, t.length()).toCharArray();
+     *      return t.substring(t.length() - len).toCharArray();
      *   }
      */
     public char[] GetSuffix(int l) {

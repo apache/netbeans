@@ -36,7 +36,6 @@ import org.openide.util.HelpCtx;
  *   <li>a button to create a new repository
  *   <li>a field to type some text into - to find Issues either by id or summary.
  * </ul>
- * </p>
  * 
  * @author Tomas Stupka
  * @since 1.85

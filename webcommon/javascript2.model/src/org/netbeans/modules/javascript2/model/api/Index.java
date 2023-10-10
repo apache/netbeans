@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +56,7 @@ public final class Index {
 
     public static final String FIELD_BASE_NAME = "bn"; //NOI18N
     /**
-     * The same as FIELD_BASE_NAME, but case insensitive. 
+     * The same as FIELD_BASE_NAME, but case insensitive.
      */
     public static final String FIELD_BASE_NAME_INSENSITIVE = "bni"; // NOI18N
     /**
@@ -74,8 +73,6 @@ public final class Index {
     public static final String FIELD_ARRAY_TYPES = "array"; //NOI18N
     public static final String FIELD_USAGE = "usage"; //NOI18N
 
-    private static final String PROPERTIES_PATTERN = "\\.[^\\.]*[^" + IndexedElement.PARAMETER_POSTFIX + "]";
-    
     @org.netbeans.api.annotations.common.SuppressWarnings("MS_MUTABLE_ARRAY")
     public static final String[] TERMS_BASIC_INFO = new String[] { FIELD_BASE_NAME, FIELD_FQ_NAME, FIELD_OFFSET,
         FIELD_RETURN_TYPES, FIELD_PARAMETERS, FIELD_FLAG, FIELD_ASSIGNMENTS, FIELD_ARRAY_TYPES};
@@ -88,7 +85,7 @@ public final class Index {
 
     private static final Lock WRITE_LOCK = LOCK.writeLock();
 
-    private static final WeakHashMap<FileObject, Index> INDEX_CACHE = new WeakHashMap<FileObject, Index>();
+    private static final WeakHashMap<FileObject, Index> INDEX_CACHE = new WeakHashMap<>();
 
     // empirical values (update if index is changed)
     private static final int MAX_ENTRIES_CACHE_INDEX_RESULT = 2000;
@@ -118,23 +115,20 @@ public final class Index {
         }
     };
 
-    private static final Map<StatsKey, StatsValue> QUERY_STATS = new HashMap<StatsKey, StatsValue>();
-    
-    private static final ChangeListener INVALIDATE_LISTENER = new ChangeListener() {
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            WRITE_LOCK.lock();
-            try {
-                CACHE_INDEX_RESULT_SMALL.clear();
-                CACHE_INDEX_RESULT_LARGE.clear();
-                INDEX_CACHE.clear();
-                LOG.log(Level.FINEST, "Cache cleared");
-            } finally {
-                WRITE_LOCK.unlock();
-            }
+    private static final Map<StatsKey, StatsValue> QUERY_STATS = new HashMap<>();
+
+    private static final ChangeListener INVALIDATE_LISTENER = (ChangeEvent e) -> {
+        WRITE_LOCK.lock();
+        try {
+            CACHE_INDEX_RESULT_SMALL.clear();
+            CACHE_INDEX_RESULT_LARGE.clear();
+            INDEX_CACHE.clear();
+            LOG.log(Level.FINEST, "Cache cleared");
+        } finally {
+            WRITE_LOCK.unlock();
         }
     };
-    
+
     static {
         // FIXME listen for lookup changes ?
         IndexChangeSupport changeSupport = Lookup.getDefault().lookup(IndexChangeSupport.class);
@@ -186,7 +180,7 @@ public final class Index {
         }
 
         try {
-            
+
             CacheKey key = new CacheKey(this, fieldName, fieldValue, kind);
             CacheValue value = getCachedValue(key, fieldsToLoad);
 
@@ -197,8 +191,8 @@ public final class Index {
 
             Collection<? extends IndexResult> result = querySupport.query(
                     fieldName, fieldValue, kind, fieldsToLoad);
-            
-            
+
+
             if (updateCache) {
                 WRITE_LOCK.lock();
                 try {
@@ -232,7 +226,7 @@ public final class Index {
 
     public Collection<IndexedElement> getGlobalVar(String prefix) {
         prefix = prefix == null ? "" : prefix; //NOI18N
-        ArrayList<IndexedElement> globals = new ArrayList<IndexedElement>();
+        ArrayList<IndexedElement> globals = new ArrayList<>();
         long start = System.currentTimeMillis();
         String indexPrefix = escapeRegExp(prefix) + "[^\\.]*[" + IndexedElement.OBJECT_POSFIX + "]";   //NOI18N
         Collection<? extends IndexResult> globalObjects = query(Index.FIELD_FQ_NAME, indexPrefix, QuerySupport.Kind.REGEXP, TERMS_BASIC_INFO); //NOI18N
@@ -302,17 +296,17 @@ public final class Index {
             }
 
             if ((cacheHit + cacheMiss) % 500 == 0) {
-                LOG.log(Level.FINEST, "Cache hit: " + cacheHit + ", Cache miss: "
-                        + cacheMiss + ", Ratio: " + (cacheHit  / cacheMiss));
+                LOG.log(Level.FINEST, "Cache hit: {0}, Cache miss: {1}, Ratio: {2}",
+                        new Object[]{cacheHit, cacheMiss, cacheHit  / cacheMiss});
                 for (Map.Entry<StatsKey, StatsValue> entry : QUERY_STATS.entrySet()) {
-                    LOG.log(Level.FINEST, entry.getKey() + ": " + entry.getValue());
+                    LOG.log(Level.FINEST, "{0}: {1}", new Object[]{entry.getKey(), entry.getValue()});
                 }
             }
         }
     }
 
     private static Collection<IndexedElement> getElementsByPrefix(String prefix, Collection<IndexedElement> items) {
-        Collection<IndexedElement> result = new ArrayList<IndexedElement>();
+        Collection<IndexedElement> result = new ArrayList<>();
         for (IndexedElement indexedElement : items) {
             if (indexedElement.getName().startsWith(prefix)) {
                 result.add(indexedElement);
@@ -325,19 +319,19 @@ public final class Index {
         return getElementsByPrefix(prexif, getProperties(fqn));
     }
 
-    
+
     public Collection <IndexedElement> getProperties(String fqn) {
-        return getProperties(fqn, 0, new ArrayList<String>());
+        return getProperties(fqn, 0, new ArrayList<>());
     }
-    
+
     public Collection <IndexedElement> getUsagesFromExpression(final List<String> expChain) {
         if (expChain == null || expChain.isEmpty()) {
             return Collections.emptyList();
         }
         String searchText = expChain.get(0) + ':';
         Collection<? extends IndexResult> results = query(Index.FIELD_USAGE, searchText, QuerySupport.Kind.PREFIX, Index.FIELD_USAGE); //NOI18N
-        ArrayList<IndexedElement> usages = new ArrayList<IndexedElement>();
-        Set<String> alreadyUsed = new HashSet<String>();
+        ArrayList<IndexedElement> usages = new ArrayList<>();
+        Set<String> alreadyUsed = new HashSet<>();
         for (IndexResult indexResult : results) {
             String[] fields = indexResult.getValues(Index.FIELD_USAGE);
             FileObject fo = indexResult.getFile();
@@ -348,26 +342,25 @@ public final class Index {
                         String[] split = property.split("#");
                         if(split.length == 2 && !alreadyUsed.contains(split[0])) {
                             alreadyUsed.add(split[0]);
-                            IndexedElement element = new IndexedElement(fo, split[0], split[0], false, false, split[1].equals("F") ? JsElement.Kind.FUNCTION : JsElement.Kind.OBJECT, 
+                            IndexedElement element = new IndexedElement(fo, split[0], split[0], false, false, split[1].equals("F") ? JsElement.Kind.FUNCTION : JsElement.Kind.OBJECT,
                                 OffsetRange.NONE, Collections.singleton(Modifier.PUBLIC), Collections.emptyList(), false);
                             usages.add(element);
                         }
                     }
-                    
+
                 }
             }
         }
         return usages;
     }
-            
 
     private final int MAX_FIND_PROPERTIES_RECURSION = 15;
-    
-    private Collection <IndexedElement> getProperties(String fqn, int deepLevel, Collection<String> resolvedTypes) { 
+
+    private Collection <IndexedElement> getProperties(String fqn, int deepLevel, Collection<String> resolvedTypes) {
         if (deepLevel > MAX_FIND_PROPERTIES_RECURSION) {
             return Collections.emptyList();
         }
-        Collection<IndexedElement> result = new ArrayList<IndexedElement>();
+        Collection<IndexedElement> result = new ArrayList<>();
         if (!resolvedTypes.contains(fqn)) {
             resolvedTypes.add(fqn);
             deepLevel = deepLevel + 1;
@@ -377,20 +370,20 @@ public final class Index {
                 Collection<TypeUsage> assignments = IndexedElement.getAssignments(indexResult);
                 if (!assignments.isEmpty()) {
                     TypeUsage type = assignments.iterator().next();
-                    if (!resolvedTypes.contains(type.getType())) {                    
+                    if (!resolvedTypes.contains(type.getType())) {
                         result.addAll(getProperties(type.getType(), deepLevel, resolvedTypes));
                     }
                 }
             }
+
             // find properties of the fqn
-//            String pattern = escapeRegExp(fqn) + PROPERTIES_PATTERN; //NOI18N
-            Hashtable<String, Collection<? extends IndexResult>> fqnToResults = new Hashtable<String, Collection<? extends IndexResult>>();
+            HashMap<String, Collection<? extends IndexResult>> fqnToResults = new HashMap<>();
             fqnToResults.put(fqn, query(Index.FIELD_FQ_NAME, fqn + ".", QuerySupport.Kind.PREFIX, TERMS_BASIC_INFO)); //NOI18N
             if (fqn.indexOf('.') == -1) {
                 Collection<? extends IndexResult> tmpResults = query(Index.FIELD_BASE_NAME, fqn, QuerySupport.Kind.EXACT, Index.FIELD_FQ_NAME);
                 for (IndexResult indexResult : tmpResults) {
                     String value = IndexedElement.getFQN(indexResult);
-                    fqnToResults.put(value, query(Index.FIELD_FQ_NAME, value + ".", QuerySupport.Kind.PREFIX, TERMS_BASIC_INFO)); //NOI18N 
+                    fqnToResults.put(value, query(Index.FIELD_FQ_NAME, value + ".", QuerySupport.Kind.PREFIX, TERMS_BASIC_INFO)); //NOI18N
                 }
             }
             for (Map.Entry<String, Collection<? extends IndexResult>> entry : fqnToResults.entrySet()) {
@@ -415,13 +408,13 @@ public final class Index {
     }
 
     public Collection<? extends IndexResult> findByFqn(String fqn, String... fields) {
-        Collection<IndexResult> results = new ArrayList<IndexResult>();
+        Collection<IndexResult> results = new ArrayList<>();
         results.addAll(query(Index.FIELD_FQ_NAME, fqn + IndexedElement.ANONYMOUS_POSFIX, QuerySupport.Kind.EXACT, fields)); //NOI18N
         results.addAll(query(Index.FIELD_FQ_NAME, fqn + IndexedElement.OBJECT_POSFIX, QuerySupport.Kind.EXACT, fields)); //NOI18N
         results.addAll(query(Index.FIELD_FQ_NAME, fqn + IndexedElement.PARAMETER_POSTFIX, QuerySupport.Kind.EXACT, fields)); //NOI18N
         return results;
     }
-    
+
     private String escapeRegExp(String text) {
         return Pattern.quote(text);
     }
@@ -490,7 +483,7 @@ public final class Index {
         private final Collection<? extends IndexResult> result;
 
         public CacheValue(String[] fields, Collection<? extends IndexResult> result) {
-            this.fields = new HashSet<String>(Arrays.asList(fields));
+            this.fields = new HashSet<>(Arrays.asList(fields));
             this.result = result;
         }
 

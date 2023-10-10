@@ -1,0 +1,8 @@
+terraform:TAG:[]:terraform:0,37:
+  required_providers:TAG:[]:required_providers:14,35:
+variable.name:TAG:[]:variable.name:39,55:
+data.aws_subnets.private:TAG:[]:data.aws_subnets.private:57,192:
+  filter:TAG:[]:filter:90,152:
+    name:ATTRIBUTE:[]:name:103,120:
+    values:ATTRIBUTE:[]:values:125,148:
+  tags:ATTRIBUTE:[]:tags:156,190:

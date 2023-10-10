@@ -72,6 +72,11 @@ $fn4 = function ($x) use ($y) {
     return fn($x) => $x + $y;
 };
 
+// GH-4209
+$gh4209a = 0;
+$gh4209b = fn() => $gh4209a > 0 ? $gh4209a + 1 : 2;
+$gh4209b = fn($gh4209c) => $gh4209a > 0 ? $gh4209a + 1 : $gh4209c + 2;
+
 function test(callable $f) {
     return fn(...$args) => !$f(...$args);
 }

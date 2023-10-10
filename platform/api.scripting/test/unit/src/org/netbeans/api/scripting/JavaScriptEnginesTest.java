@@ -255,12 +255,12 @@ public class JavaScriptEnginesTest {
     @Test
     public void allowLoadAClassInJS() throws Exception {
         Assume.assumeTrue("All access has to be allowed", allowAllAccess);
-        // BEGIN: org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS
+        // @start region="allowLoadAClassInJS"
         Object fn = engine.eval("(function(obj) {\n"
                 + "  var Long = Java.type('java.lang.Long');\n"
                 + "  return new Long(33);\n"
                 + "})\n");
-        // END: org.netbeans.api.scripting.JavaScriptEnginesTest#allowLoadAClassInJS
+        // @end region="allowLoadAClassInJS"
         assertNotNull(fn);
 
         Object value = ((Invocable) engine).invokeMethod(fn, "call", null, null);

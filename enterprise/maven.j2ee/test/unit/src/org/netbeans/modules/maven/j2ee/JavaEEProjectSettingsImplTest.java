@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.maven.j2ee;
 
-import static junit.framework.Assert.assertEquals;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
@@ -52,6 +51,14 @@ public class JavaEEProjectSettingsImplTest extends JavaEEMavenTestBase {
     }
 
     public void checkProjectForProfileChange(Project prj) {
+        JavaEEProjectSettings.setProfile(prj, Profile.JAKARTA_EE_10_FULL);
+        assertEquals(Profile.JAKARTA_EE_10_FULL, JavaEEProjectSettings.getProfile(prj));
+        JavaEEProjectSettings.setProfile(prj, Profile.JAKARTA_EE_9_1_FULL);
+        assertEquals(Profile.JAKARTA_EE_9_1_FULL, JavaEEProjectSettings.getProfile(prj));
+        JavaEEProjectSettings.setProfile(prj, Profile.JAKARTA_EE_9_FULL);
+        assertEquals(Profile.JAKARTA_EE_9_FULL, JavaEEProjectSettings.getProfile(prj));
+        JavaEEProjectSettings.setProfile(prj, Profile.JAKARTA_EE_8_FULL);
+        assertEquals(Profile.JAKARTA_EE_8_FULL, JavaEEProjectSettings.getProfile(prj));
         JavaEEProjectSettings.setProfile(prj, Profile.JAVA_EE_8_FULL);
         assertEquals(Profile.JAVA_EE_8_FULL, JavaEEProjectSettings.getProfile(prj));
         JavaEEProjectSettings.setProfile(prj, Profile.JAVA_EE_7_FULL);

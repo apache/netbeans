@@ -122,7 +122,7 @@ manually retrieve sets of instances as a client, which is not used
 very frequently in new code but helps to understand what lookup is
 doing behind the scenes. Then lookup itself is discussed, and how the
 standard instance lookup works and how it relates to JDK's 
-<a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider">
+<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider">
 standard for service provider registration</a>. 
 Lookup templates, which separate the
 provision of instances from the provision of categories, will be
@@ -418,7 +418,7 @@ impl.useIt();
 
 Such implementation has to be registered by some module to the system. 
 Either via layer as described above or as a JDK's
-<a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider">
+<a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider">
 service provider</a>. If some module wants to register for example 
 <span class="type">org.me.MyService</span> it shall provide file name
 <span class="function-name">META-INF/services/org.me.MyService</span> in its own JAR
@@ -432,7 +432,7 @@ to answer the query in the above example.
 
 <div class="nonnormative">
     The Lookup supports two small extensions to the 
-    <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jar.html#Service%20Provider">JDK's
+    <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider">JDK's
     standard</a>. It allows a module to remove class registered by
     another one. That is why it is possible to write a module that
     disables the <span class="type">org.you.MyServiceImpl</span> implementation

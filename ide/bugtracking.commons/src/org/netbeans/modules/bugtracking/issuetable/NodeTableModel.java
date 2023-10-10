@@ -33,6 +33,7 @@ import java.beans.PropertyChangeListener;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JCheckBox;
@@ -147,7 +148,7 @@ class NodeTableModel extends AbstractTableModel {
             Object o = props[i].getValue(ATTR_TREE_COLUMN);
             boolean x;
 
-            if ((o != null) && o instanceof Boolean) {
+            if (o instanceof Boolean) {
                 if (((Boolean) o).booleanValue()) {
                     treeColumnProperty = props[i];
                     size--;
@@ -161,7 +162,7 @@ class NodeTableModel extends AbstractTableModel {
         int visibleCount = 0;
         existsComparableColumn = false;
 
-        TreeMap<Double, Integer> sort = new TreeMap<Double, Integer>();
+        Map<Double, Integer> sort = new TreeMap<>();
         int i = 0;
         int ia = 0;
 
@@ -175,17 +176,17 @@ class NodeTableModel extends AbstractTableModel {
 
                     Object o = props[i].getValue(ATTR_ORDER_NUMBER);
 
-                    if ((o != null) && o instanceof Integer) {
-                        sort.put(new Double(((Integer) o).doubleValue()), Integer.valueOf(ia));
+                    if (o instanceof Integer) {
+                        sort.put(((Integer)o).doubleValue(), ia);
                     } else {
-                        sort.put(new Double(ia + 0.1), Integer.valueOf(ia));
+                        sort.put((ia + 0.1), ia);
                     }
                 } else {
                     allPropertyColumns[ia].setVisibleIndex(-1);
 
                     Object o = props[i].getValue(ATTR_SORTING_COLUMN);
 
-                    if ((o != null) && o instanceof Boolean) {
+                    if (o instanceof Boolean) {
                         props[i].setValue(ATTR_SORTING_COLUMN, Boolean.FALSE);
                     }
                 }
@@ -193,7 +194,7 @@ class NodeTableModel extends AbstractTableModel {
                 if (!existsComparableColumn) {
                     Object o = props[i].getValue(ATTR_COMPARABLE_COLUMN);
 
-                    if ((o != null) && o instanceof Boolean) {
+                    if (o instanceof Boolean) {
                         existsComparableColumn = ((Boolean) o).booleanValue();
                     }
                 }
@@ -231,9 +232,9 @@ class NodeTableModel extends AbstractTableModel {
             int vi = allPropertyColumns[i].getVisibleIndex();
 
             if (vi == -1) {
-                sort.put(new Double(i - 0.1), Integer.valueOf(i));
+                sort.put((i - 0.1), i);
             } else {
-                sort.put(new Double(vi), Integer.valueOf(i));
+                sort.put((double)vi, i);
             }
         }
 
@@ -261,7 +262,7 @@ class NodeTableModel extends AbstractTableModel {
 
                 Object o = p.getValue(ATTR_SORTING_COLUMN);
 
-                if ((o != null) && o instanceof Boolean) {
+                if (o instanceof Boolean) {
                     if (((Boolean) o).booleanValue()) {
                         p.setValue(ATTR_SORTING_COLUMN, Boolean.FALSE);
                         p.setValue(ATTR_DESCENDING_ORDER, Boolean.FALSE);
@@ -343,7 +344,7 @@ class NodeTableModel extends AbstractTableModel {
         Property p = allPropertyColumns[column].getProperty();
         Object o = p.getValue(ATTR_COMPARABLE_COLUMN);
 
-        if ((o != null) && o instanceof Boolean) {
+        if (o instanceof Boolean) {
             return ((Boolean) o).booleanValue();
         }
 
@@ -378,7 +379,7 @@ class NodeTableModel extends AbstractTableModel {
         Property p = allPropertyColumns[column].getProperty();
         Object o = p.getValue(ATTR_SORTING_COLUMN);
 
-        if ((o != null) && o instanceof Boolean) {
+        if (o instanceof Boolean) {
             return ((Boolean) o).booleanValue();
         }
 
@@ -464,7 +465,7 @@ class NodeTableModel extends AbstractTableModel {
         Property p = allPropertyColumns[sortColumn].getProperty();
         Object o = p.getValue(ATTR_DESCENDING_ORDER);
 
-        if ((o != null) && o instanceof Boolean) {
+        if (o instanceof Boolean) {
             return ((Boolean) o).booleanValue();
         }
 

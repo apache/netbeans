@@ -50,7 +50,7 @@ import org.openide.windows.CloneableTopComponent;
  * to continue to call super implementation) and register the
  * subclass.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 1.24
  */
 public class MultiViewEditorElement implements 

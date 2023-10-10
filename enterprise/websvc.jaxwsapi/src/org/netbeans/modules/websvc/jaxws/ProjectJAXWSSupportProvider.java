@@ -34,7 +34,7 @@ public class ProjectJAXWSSupportProvider implements JAXWSSupportProvider {
     public JAXWSSupport findJAXWSSupport(FileObject file) {
         Project project = FileOwnerQuery.getOwner(file);
         if (project != null) {
-            JAXWSSupportProvider provider = (JAXWSSupportProvider) project.getLookup().lookup(JAXWSSupportProvider.class);
+            JAXWSSupportProvider provider = project.getLookup().lookup(JAXWSSupportProvider.class);
             
             if (provider != null) {
                 return provider.findJAXWSSupport(file);

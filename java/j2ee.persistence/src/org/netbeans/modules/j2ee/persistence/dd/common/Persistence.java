@@ -29,6 +29,12 @@ public interface Persistence {
 	static public final String VERSION = "Version";	// NOI18N
 	static public final String PERSISTENCE_UNIT = "PersistenceUnit";	// NOI18N
         
+        // Jakarta EE 10 - JPA 3.1 (Schema v3.0)
+        public static final String VERSION_3_1="3.1"; //NOI18N
+        // Jakarta EE 9 - JPA 3.0 (Schema v3.0)
+        public static final String VERSION_3_0="3.0"; //NOI18N
+        // Jakarta EE 8
+        public static final String VERSION_2_2="2.2"; //NOI18N
         public static final String VERSION_2_1="2.1"; //NOI18N
         public static final String VERSION_2_0="2.0"; //NOI18N
         public static final String VERSION_1_0="1.0"; //NOI18N

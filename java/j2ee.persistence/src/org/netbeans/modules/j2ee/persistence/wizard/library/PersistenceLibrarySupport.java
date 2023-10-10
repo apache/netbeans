@@ -27,7 +27,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import org.netbeans.api.db.explorer.JDBCDriver;
@@ -43,13 +42,11 @@ import org.netbeans.api.project.libraries.LibraryManager;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
 import org.netbeans.modules.j2ee.persistence.provider.Provider;
 import org.netbeans.modules.j2ee.persistence.provider.ProviderUtil;
-import org.netbeans.modules.j2ee.persistence.wizard.Util;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.project.libraries.LibraryImplementation;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.URLMapper;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
@@ -105,30 +102,20 @@ public class PersistenceLibrarySupport {
     private synchronized void initStorage() {
         if (this.storage == null) {
             this.storage = createStorage();
-            if (storage == null) {
-                return;
-            }
         }
     }
 
     private void writeLibrary(final FileObject storage, final LibraryImplementation library) throws IOException {
-        storage.getFileSystem().runAtomicAction(
-                new FileSystem.AtomicAction() {
-
-            @Override
-                    public void run() throws IOException {
-                        FileObject fo = storage.createData(library.getName(), "xml");   //NOI18N
-                        writeLibraryDefinition(fo, library);
-                    }
-                });
+        storage.getFileSystem().runAtomicAction( () -> {
+            FileObject fo = storage.createData(library.getName(), "xml");   //NOI18N
+            writeLibraryDefinition(fo, library);
+        });
     }
 
     private static void writeLibraryDefinition(final FileObject definitionFile, final LibraryImplementation library) throws IOException {
-        FileLock lock = null;
-        PrintWriter out = null;
-        try {
-            lock = definitionFile.lock();
-            out = new PrintWriter(new OutputStreamWriter(definitionFile.getOutputStream(lock), StandardCharsets.UTF_8));
+        try (FileLock lock = definitionFile.lock();
+                PrintWriter out = new PrintWriter(new OutputStreamWriter(definitionFile.getOutputStream(lock), StandardCharsets.UTF_8))) {
+            
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");      //NOI18N
             out.println("<!DOCTYPE library PUBLIC \"-//NetBeans//DTD Library Declaration 1.0//EN\" \"http://www.netbeans.org/dtds/library-declaration-1_0.dtd\">"); //NOI18N
             out.println("<library version=\"1.0\">");       			//NOI18N
@@ -157,13 +144,6 @@ public class PersistenceLibrarySupport {
                 out.println("\t</volume>");     //NOI18N
             }
             out.println("</library>");  //NOI18N
-        } finally {
-            if (out != null) {
-                out.close();
-            }
-            if (lock != null) {
-                lock.releaseLock();
-            }
         }
     }
 
@@ -236,13 +216,13 @@ public class PersistenceLibrarySupport {
     }
 
     private static boolean containsPath(List<URL> roots, String relativePath) {
-        ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
         return cp.findResource(relativePath) != null;
     }
 
     private static ClassPath getLibraryClassPath(Library library) {
         List<URL> urls = library.getContent("classpath"); //NOI18N
-        URL[] result = urls.toArray(new URL[urls.size()]);
+        URL[] result = urls.toArray(new URL[0]);
         return ClassPathSupport.createClassPath(result);
     }
 
@@ -275,91 +255,81 @@ public class PersistenceLibrarySupport {
      * method is DISABLED and do nothing for now
      */
     public static void addDriver(final Project project, final JDBCDriver driver) {
-        if(true)return;
-        RequestProcessor.getDefault().post(
-                new Runnable() {
-
-                @Override
-                public void run() {
-
-                    Sources sources = ProjectUtils.getSources(project);
-                    if (sources == null) {
-                        return;
-                    }
-                    SourceGroup groups[] = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-                    if (groups == null || groups.length < 1) {
-                        return;
-                    }
-                    SourceGroup firstGroup = groups[0];
-                    FileObject fo = firstGroup.getRootFolder();
-                    if (fo == null) {
-                        return;
-                    }
-                    ClassPath classPath = ClassPath.getClassPath(fo, ClassPath.EXECUTE);
-                    if (classPath == null) {
-                        classPath = ClassPath.getClassPath(fo, ClassPath.COMPILE);
-                    }
-                    if (classPath == null) {
-                        return;
-                    }
-                    String resourceName = driver.getClassName().replace('.', '/') + ".class"; // NOI18N
-                    FileObject fob = classPath.findResource(resourceName); // NOI18N
-                    if (fob == null) {
-                        for (URL url : driver.getURLs()) {
-                            FileObject jarO = URLMapper.findFileObject(url);
-                            if (jarO != null) {
-                                File jar = FileUtil.toFile(jarO);
-                                URL u = null;
-                                try {
-                                    u = jar.toURI().toURL();
-                                } catch (MalformedURLException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                }
-                                FileObject jarFile = FileUtil.toFileObject(jar);
-                                if (jarFile == null) {
-                                    continue;
-                                }
-                                if (FileUtil.isArchiveFile(jarFile)) {
-                                    u = FileUtil.getArchiveRoot(u);
-                                }
-                                try {
-                                    ProjectClassPathModifier.addRoots(new URL[]{u}, fo, ClassPath.COMPILE);
-                                } catch (IOException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                } catch (UnsupportedOperationException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                }
-                            }
-                        }
-
-                    }
+        if(true) {
+            return;
+        }
+        RequestProcessor.getDefault().post( () -> {
+            Sources sources = ProjectUtils.getSources(project);
+            if (sources == null) {
+                return;
             }
-        }        );
+            SourceGroup groups[] = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+            if (groups == null || groups.length < 1) {
+                return;
+            }
+            SourceGroup firstGroup = groups[0];
+            FileObject fo = firstGroup.getRootFolder();
+            if (fo == null) {
+                return;
+            }
+            ClassPath classPath = ClassPath.getClassPath(fo, ClassPath.EXECUTE);
+            if (classPath == null) {
+                classPath = ClassPath.getClassPath(fo, ClassPath.COMPILE);
+            }
+            if (classPath == null) {
+                return;
+            }
+            String resourceName = driver.getClassName().replace('.', '/') + ".class"; // NOI18N
+            FileObject fob = classPath.findResource(resourceName); // NOI18N
+            if (fob == null) {
+                for (URL url : driver.getURLs()) {
+                    FileObject jarO = URLMapper.findFileObject(url);
+                    if (jarO != null) {
+                        File jar = FileUtil.toFile(jarO);
+                        URL u = null;
+                        try {
+                            u = jar.toURI().toURL();
+                        } catch (MalformedURLException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                        FileObject jarFile = FileUtil.toFileObject(jar);
+                        if (jarFile == null) {
+                            continue;
+                        }
+                        if (FileUtil.isArchiveFile(jarFile)) {
+                            u = FileUtil.getArchiveRoot(u);
+                        }
+                        try {
+                            ProjectClassPathModifier.addRoots(new URL[]{u}, fo, ClassPath.COMPILE);
+                        } catch (IOException | UnsupportedOperationException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                }
+                
+            }
+        });
     }
 
     private static List<ProviderLibrary> createLibraries() {
         return createLibraries(null);
     }
     private static List<ProviderLibrary> createLibraries(String providerClass) {
-        List<ProviderLibrary> providerLibs = new ArrayList<ProviderLibrary>();
+        List<ProviderLibrary> providerLibs = new ArrayList<>();
         for (Library each : LibraryManager.getDefault().getLibraries()) {
             if (!"j2se".equals(each.getType())) { // NOI18N
                 continue;
             }
             ClassPath cp = getLibraryClassPath(each);
             Provider provider = extractProvider(cp, providerClass);
-            if (provider != null && containsClass(cp, "javax.persistence.EntityManager")) { //NOI18N
+            if (provider != null && (containsClass(cp, "javax.persistence.EntityManager") || containsClass(cp, "jakarta.persistence.EntityManager"))) { //NOI18N
                 providerLibs.add(new ProviderLibrary(each, cp, provider));
             }
         }
-        Collections.sort(providerLibs, new Comparator<ProviderLibrary>() {
-
-            @Override
-            public int compare(ProviderLibrary l1, ProviderLibrary l2) {
-                String name1 = l1.getLibrary().getDisplayName();
-                String name2 = l2.getLibrary().getDisplayName();
-                return name1.compareToIgnoreCase(name2);
-            }
+        Collections.sort(providerLibs, (ProviderLibrary l1, ProviderLibrary l2) -> {
+            String name1 = l1.getLibrary().getDisplayName();
+            String name2 = l2.getLibrary().getDisplayName();
+            return name1.compareToIgnoreCase(name2);
         });
         return providerLibs;
     }
@@ -371,18 +341,14 @@ public class PersistenceLibrarySupport {
      * @return list of the providers that are defined in the IDE's libraries.
      */
     public static List<Provider> getProvidersFromLibraries() {
-        List<Provider> providerLibs = new ArrayList<Provider>();
+        List<Provider> providerLibs = new ArrayList<>();
         for (ProviderLibrary each : createLibraries()) {
             providerLibs.add(each.getProvider());
         }
-        Collections.sort(providerLibs, new Comparator<Provider>() {
-
-            @Override
-            public int compare(Provider p1, Provider p2) {
-                String name1 = p1.getDisplayName();
-                String name2 = p2.getDisplayName();
-                return name1.compareToIgnoreCase(name2);
-            }
+        Collections.sort(providerLibs, (Provider p1, Provider p2) -> {
+            String name1 = p1.getDisplayName();
+            String name2 = p2.getDisplayName();
+            return name1.compareToIgnoreCase(name2);
         });
         return providerLibs;
     }

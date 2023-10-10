@@ -42,7 +42,6 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.StyledDocument;
-import static junit.framework.Assert.assertNotNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.mimelookup.MimePath;

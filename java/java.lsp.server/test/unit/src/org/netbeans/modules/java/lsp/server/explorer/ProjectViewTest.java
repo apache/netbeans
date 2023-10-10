@@ -31,6 +31,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -54,6 +55,7 @@ import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkDoneProgressCreateParams;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -70,10 +72,11 @@ import org.netbeans.modules.java.lsp.server.protocol.HtmlPageParams;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.NbLanguageServer;
-import org.netbeans.modules.java.lsp.server.protocol.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
+import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowInputBoxParams;
-import org.netbeans.modules.java.lsp.server.protocol.ShowQuickPickParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 import org.netbeans.modules.java.lsp.server.protocol.UpdateConfigParams;
@@ -149,7 +152,6 @@ public class ProjectViewTest extends NbTestCase {
         
         @Override
         public void telemetryEvent(Object arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
@@ -185,12 +187,22 @@ public class ProjectViewTest extends NbTestCase {
         }
 
         @Override
+        public CompletableFuture<String> execInHtmlPage(HtmlPageParams params) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
         public CompletableFuture<List<QuickPickItem>> showQuickPick(ShowQuickPickParams params) {
             return CompletableFuture.completedFuture(null);
         }
 
         @Override
         public CompletableFuture<String> showInputBox(ShowInputBoxParams params) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
             return CompletableFuture.completedFuture(null);
         }
 
@@ -415,6 +427,8 @@ public class ProjectViewTest extends NbTestCase {
     }
     
     private TreeItem findChild(TreeItem parent, String childLabel) throws Exception {
+        TreeNodeRegistry reg = serverLookup.lookup(TreeNodeRegistry.class);
+        reg.findNode(parent.id).getChildren().getNodes(true);
         for (TreeItem candidate : getChildren(parent)) {
             if (childLabel.equals(candidate.label)) {
                 return candidate;
@@ -563,6 +577,8 @@ public class ProjectViewTest extends NbTestCase {
         
         TreeItem found = findChild(testRoot, "gradle");
         assertNotNull("Test package exists", found);
+        TreeNodeRegistry reg = serverLookup.lookup(TreeNodeRegistry.class);
+        reg.findNode(found.id).getChildren().getNodes(true);
         int[] childIds = server.getTreeViewService().getChildren(new NodeOperationParams(found.id)).get();
         assertEquals("Test package node is not empty", 1, childIds.length);
         

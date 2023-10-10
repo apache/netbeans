@@ -30,7 +30,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.WeakHashMap;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.netbeans.api.project.Project;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.project.ProjectFactory;

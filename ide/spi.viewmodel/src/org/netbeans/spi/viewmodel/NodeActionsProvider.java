@@ -36,7 +36,6 @@ public interface NodeActionsProvider extends Model {
      *
      * @throws  UnknownTypeException if this NodeActionsProvider implementation
      *          is not able to resolve actions for given node type
-     * @return  display name for given node
      */
     public abstract void performDefaultAction (Object node) 
     throws UnknownTypeException;

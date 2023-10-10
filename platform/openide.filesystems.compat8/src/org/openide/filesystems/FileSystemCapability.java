@@ -44,6 +44,7 @@ public class FileSystemCapability extends Object {
     /** Object that is capable of every thing.
     */
     public static final FileSystemCapability ALL = new FileSystemCapability() {
+            @Override
             public boolean capableOf(FileSystemCapability c) {
                 return true;
             }
@@ -262,6 +263,7 @@ public class FileSystemCapability extends Object {
         * @param c capability to test
         * @return true if yes
         */
+        @Override
         public boolean capableOf(FileSystemCapability c) {
             if (c == COMPILE) {
                 return compilation;
@@ -394,6 +396,7 @@ public class FileSystemCapability extends Object {
             }
         }
 
+        @Override
         public synchronized void addPropertyChangeListener(PropertyChangeListener l) {
             if (supp == null) {
                 supp = new PropertyChangeSupport(this);
@@ -402,6 +405,7 @@ public class FileSystemCapability extends Object {
             supp.addPropertyChangeListener(l);
         }
 
+        @Override
         public void removePropertyChangeListener(PropertyChangeListener l) {
             if (supp != null) {
                 supp.removePropertyChangeListener(l);

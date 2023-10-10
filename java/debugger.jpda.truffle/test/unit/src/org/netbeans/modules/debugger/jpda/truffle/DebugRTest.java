@@ -21,7 +21,6 @@ package org.netbeans.modules.debugger.jpda.truffle;
 import java.io.File;
 import java.net.URL;
 import junit.framework.Test;
-import static junit.framework.TestCase.assertEquals;
 
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.JPDADebugger;

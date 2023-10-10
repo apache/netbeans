@@ -491,7 +491,8 @@ class GroupParser {
             groupConfig = null;
             internalConfig = null;
         }
-        
+
+        @Override
         public void startElement (String nameSpace, String name, String qname, Attributes attrs) throws SAXException {
             if ("group".equals(qname)) { // NOI18N
                 handleGroup(attrs);
@@ -509,7 +510,8 @@ class GroupParser {
                 //Parse version < 2.0
             }
         }
-        
+
+        @Override
         public void error(SAXParseException ex) throws SAXException  {
             throw ex;
         }
@@ -694,6 +696,7 @@ class GroupParser {
         
         /** Implementation of entity resolver. Points to the local DTD
          * for our public ID */
+        @Override
         public InputSource resolveEntity (String publicId, String systemId)
         throws SAXException {
             if (INSTANCE_DTD_ID_2_0.equals(publicId)) {

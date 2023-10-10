@@ -30,7 +30,7 @@ import org.netbeans.modules.editor.settings.storage.MimeTypesTracker;
 
 /**
  * This singleton class contains access methods for editor settings like
- * font & colors profiles and keymaps.
+ * font &amp; colors profiles and keymaps.
  *
  * @author Jan Jancura
  */
@@ -84,6 +84,7 @@ public abstract class EditorSettings {
      * general contract clients should listen on mime type specific Lookup for
      * changes in editor settings.
      */
+    @Deprecated
     public static final String PROP_DEFAULT_FONT_COLORS = "defaultFontColors"; //NOI18N
     
     /** 
@@ -93,6 +94,7 @@ public abstract class EditorSettings {
      * general contract clients should listen on mime type specific Lookup for
      * changes in editor settings.
      */
+    @Deprecated
     public static final String PROP_EDITOR_FONT_COLORS = EditorSettingsImpl.PROP_EDITOR_FONT_COLORS;
 
     /**
@@ -101,9 +103,9 @@ public abstract class EditorSettings {
     public static final String PROP_MIME_TYPES = MimeTypesTracker.PROP_MIME_TYPES;
     
     /**
-     * Returns set of font & colors profiles.
+     * Returns set of font &amp; colors profiles.
      *
-     * @return set of font & colors profiles
+     * @return set of font &amp; colors profiles
      */
     public abstract Set<String> getFontColorProfiles ();
     
@@ -116,53 +118,56 @@ public abstract class EditorSettings {
     public abstract boolean isCustomFontColorProfile (String profile);
     
     /**
-     * Returns name of current font & colors profile.
+     * Returns name of current font &amp; colors profile.
      *
-     * @return name of current font & colors profile
+     * @return name of current font &amp; colors profile
      */
     public abstract String getCurrentFontColorProfile ();
     
     /**
-     * Sets current font & colors profile.
+     * Sets current font &amp; colors profile.
      *
      * @param profile a profile name
      */
     public abstract void setCurrentFontColorProfile (String profile);
     
     /**
-     * Returns font & color defaults for given profile or null, if the profile
+     * Returns font &amp; color defaults for given profile or null, if the profile
      * is unknown .
      *
      * @param profile a profile name
-     * @return font & color defaults for given profile or null
+     * @return font &amp; color defaults for given profile or null
      * 
      * @deprecated Use getFontColorSettings(new String[0]).getAllFontColors(profile) instead.
      */
+    @Deprecated
     public abstract Collection<AttributeSet> getDefaultFontColors (
 	String profile
     );
     
     /**
-     * Returns default values for font & color defaults for given profile 
+     * Returns default values for font &amp; color defaults for given profile 
      * or null, if the profile is unknown.
      *
      * @param profile a profile name
-     * @return font & color defaults for given profile or null
+     * @return font &amp; color defaults for given profile or null
      * 
      * @deprecated Use getFontColorSettings(new String[0]).getAllFontColorsDefaults(profile) instead.
      */
+    @Deprecated
     public abstract Collection<AttributeSet> getDefaultFontColorDefaults (
 	String profile
     );
     
     /**
-     * Sets font & color defaults for given profile.
+     * Sets font &amp; color defaults for given profile.
      *
      * @param profile a profile name
-     * @param fontColors font & color defaults to be used
+     * @param fontColors font &amp; color defaults to be used
      * 
      * @deprecated Use getFontColorSettings(new String[0]).setAllFontColors(profile, fontColors) instead.
      */
+    @Deprecated
     public abstract void setDefaultFontColors (
 	String profile,
 	Collection<AttributeSet> fontColors
@@ -262,7 +267,7 @@ public abstract class EditorSettings {
     /**
      * Returns set of keymap profiles.
      *
-     * @return set of font & colors profiles
+     * @return set of font &amp; colors profiles
      */
     public abstract Set<String> getKeyMapProfiles ();
     

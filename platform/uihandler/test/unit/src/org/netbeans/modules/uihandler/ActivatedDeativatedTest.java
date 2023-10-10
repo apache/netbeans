@@ -94,6 +94,7 @@ public class ActivatedDeativatedTest extends NbTestCase {
 
         public Dialog createDialog(DialogDescriptor descriptor) {
             return new JDialog() {
+                @Override
                 public void setVisible(boolean v) {
                 }
             };

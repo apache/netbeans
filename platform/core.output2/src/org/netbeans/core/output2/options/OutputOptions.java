@@ -563,7 +563,7 @@ public class OutputOptions {
 
     public void setLinkStyle(LinkStyle linkStyle) {
         Parameters.notNull("linkStyle", linkStyle);                     //NOI18N
-        if (!linkStyle.equals(this.linkStyle)) {
+        if (linkStyle != this.linkStyle) {
             LinkStyle oldLinkStyle = this.linkStyle;
             this.linkStyle = linkStyle;
             pcs.firePropertyChange(PROP_STYLE_LINK, oldLinkStyle, linkStyle);

@@ -97,7 +97,7 @@ final class SaveSupport {
                     return convertor;
                 }
                 Object attrb = newProviderFO.getAttribute(Env.EA_CONVERTOR);
-                if (attrb == null || !(attrb instanceof Convertor)) {
+                if (!(attrb instanceof Convertor)) {
                     throw new IOException("cannot create convertor: " + attrb + ", provider: " + newProviderFO); //NOI18N
                 } else {
                     convertor = (Convertor) attrb;
@@ -116,7 +116,7 @@ final class SaveSupport {
         FileObject foEntity = Env.findEntityRegistration(fo);
         if (foEntity == null) foEntity = fo;
         Object publicId = foEntity.getAttribute(Env.EA_PUBLICID);
-        if (publicId == null || !(publicId instanceof String)) {
+        if (!(publicId instanceof String)) {
             throw new IOException("missing or invalid attribute: " + //NOI18N
                 Env.EA_PUBLICID + ", provider: " + foEntity); //NOI18N
         }
@@ -166,7 +166,7 @@ final class SaveSupport {
     }
     
     /** Notifies all registered listeners about the event.
-     * @param event The event to be fired
+     * @param name the programmatic name of the property change event to be fired
      * @see #PROP_FILE_CHANGED
      * @see #PROP_SAVE
      */

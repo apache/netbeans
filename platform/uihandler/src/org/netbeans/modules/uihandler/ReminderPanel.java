@@ -77,9 +77,12 @@ public class ReminderPanel extends javax.swing.JPanel {
 
         lblLearnMore.setText("<html><font color=\"#0000FF\" <u>Learn more</u></font></html>"); // NOI18N
         lblLearnMore.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 lblLearnMoreMouseEntered(evt);
             }
+
+            @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 lblLearnMoreMousePressed(evt);
             }

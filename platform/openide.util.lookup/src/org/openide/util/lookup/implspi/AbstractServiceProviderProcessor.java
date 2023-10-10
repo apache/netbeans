@@ -117,7 +117,7 @@ public abstract class AbstractServiceProviderProcessor extends AbstractProcessor
     /**
      * Register a service.
      * If the class does not have an appropriate signature, an error will be printed and the registration skipped.
-     * @param clazz the service implementation type (an error will be reported if not a {@link TypeElement})
+     * @param el the service implementation type (an error will be reported if not a {@link TypeElement})
      * @param annotation the (top-level) annotation registering the service, for diagnostic purposes
      * @param type the type to which the implementation must be assignable
      * @param path a path under which to register, or "" if inapplicable

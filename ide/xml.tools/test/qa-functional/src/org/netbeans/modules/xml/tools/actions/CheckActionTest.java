@@ -78,7 +78,7 @@ public class CheckActionTest extends AbstractCheckTest {
         QaIOReporter reporter = new QaIOReporter();
         for (int i = 0; i<nodes.length; i++) {
             CheckXMLCookie cake = (CheckXMLCookie) nodes[i].getCookie(CheckXMLCookie.class);
-            if (cake == null) fail("Cannot get 'ValidateXMLCookie'.");;
+            if (cake == null) fail("Cannot get 'ValidateXMLCookie'.");
             cake.checkXML(reporter);
         }
         return reporter;

@@ -43,8 +43,8 @@ public class RepositoryIndexerListener implements ArtifactScanningListener, Canc
     private ProgressHandle handle;
     private final AtomicBoolean canceled = new AtomicBoolean();
     private final RepositoryInfo ri;
-    private final Set<File> expectedDirs = new HashSet<File>();
-    private final Set<File> encounteredDirs = new HashSet<File>();
+    private final Set<File> expectedDirs = new HashSet<>();
+    private final Set<File> encounteredDirs = new HashSet<>();
 
     @SuppressWarnings("LeakingThisInConstructor")
     public RepositoryIndexerListener(IndexingContext indexingContext) {

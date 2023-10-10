@@ -114,7 +114,7 @@ public abstract class RefactoringTask extends UserTask implements Runnable {
         @Override
         public void run(ResultIterator resultIterator) throws Exception {
             Result parserResult = resultIterator.getParserResult();
-            if (parserResult != null && parserResult instanceof PHPParseResult) {
+            if (parserResult instanceof PHPParseResult) {
                 Program root = RefactoringUtils.getRoot((PHPParseResult) parserResult);
                 if (root != null) {
                     uiHolder = createRefactoringUIHolder((PHPParseResult) parserResult);

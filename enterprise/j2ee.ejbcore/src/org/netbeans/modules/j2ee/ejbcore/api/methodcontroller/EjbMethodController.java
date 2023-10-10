@@ -72,7 +72,7 @@ public abstract class EjbMethodController {
                 Project project = FileOwnerQuery.getOwner(ejbClassFO);
                 if (project != null){
                     J2eeProjectCapabilities projectCap = J2eeProjectCapabilities.forProject(project);
-                    allowsNoInterface = projectCap != null ? projectCap.isEjb31LiteSupported() : false;
+                    allowsNoInterface = (projectCap != null && (projectCap.isEjb31LiteSupported() || projectCap.isEjb40LiteSupported()));
                 }
 
                 controller = new SessionMethodController(className, model, allowsNoInterface);

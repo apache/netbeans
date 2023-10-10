@@ -32,7 +32,7 @@ import org.netbeans.api.project.Project;
  * <b>Note:</b>Since 1.56, there are a more specifically defined variants <code>DependencyProjectProvider</code> and <code>ProjectContainerProvider</code> that if defined in project provide a list of
  * projects the current project depends on or contains. In some project types ( currently maven support) that is the preferred and supported way of getting project's dependency projects and maven modules. 
  * @see Project#getLookup
- * @see <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/ReferenceHelper.html#createSubprojectProvider()"><code>ReferenceHelper.createSubprojectProvider</code></a>
+ * @see <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/ReferenceHelper.html#createSubprojectProvider--"><code>ReferenceHelper.createSubprojectProvider</code></a>
  * @author Jesse Glick
  */
 public interface SubprojectProvider {

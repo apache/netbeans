@@ -107,8 +107,7 @@ public interface QueryProvider<Q, I> {
      * Refreshes the given query. 
      * 
      * <p>
-     * <b>Note</p> that this call is made periodically by the infrastructure. 
-     * <p>
+     * <b>Note</b> that this call is made periodically by the infrastructure.
      * 
      * @param q the particular query instance
      * @since 1.85

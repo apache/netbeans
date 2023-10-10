@@ -49,6 +49,7 @@ public class TomcatModuleConfigurationFactory implements ModuleConfigurationFact
         return new TomcatModuleConfigurationFactory(TomcatVersion.TOMCAT_50);
     }
     
+    @Override
     public ModuleConfiguration create(J2eeModule j2eeModule) throws ConfigurationException {
         // XXX is there a better value for unknown tomcat ?
         return new TomcatModuleConfiguration(j2eeModule,

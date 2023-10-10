@@ -1,0 +1,14 @@
+Display text: public function <b>__construct</b>() {
+File name: index.php
+Name: __construct
+Position: BEGIN: 883 END: 894
+
+Display text: $alias = new <b>ExampleAlias</b>();
+File name: index.php
+Name: Example
+Position: BEGIN: 931 END: 943
+
+Display text: $example = new <b>Example</b>();
+File name: index.php
+Name: Example
+Position: BEGIN: 1031 END: 1038

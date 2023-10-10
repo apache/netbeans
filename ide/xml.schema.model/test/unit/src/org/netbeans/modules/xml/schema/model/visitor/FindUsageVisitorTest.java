@@ -70,7 +70,7 @@ public class FindUsageVisitorTest extends TestCase {
 	SchemaModel model = Util.loadSchemaModel(TEST_XSD);
 	schema = model.getSchema();
         
-        Collection<GlobalType> types = new ArrayList(schema.getComplexTypes());
+        Collection<GlobalType> types = new ArrayList<>(schema.getComplexTypes());
         types.addAll(schema.getSimpleTypes());
         for(GlobalType type : types) {
             if(type.getName().equals(FIND_USAGE_FOR_TYPE)) {

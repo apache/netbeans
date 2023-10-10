@@ -670,7 +670,7 @@ public final class BIEditorSupport extends DataEditorSupport
                         if (multiviewTC == topComponent) {
                             if (en.hasMoreElements()) {
                                 // Remember next cloned top component
-                                multiviewTC = (CloneableTopComponent) en.nextElement();
+                                multiviewTC = en.nextElement();
                             } else {
                                 // All cloned top components are closed
                                 notifyClosed();

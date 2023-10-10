@@ -37,6 +37,16 @@ class Utils {
         return (color != null) ? color : UIManager.getColor(defaultKey);
     }
 
+    static int getUIInt(String key, int defaultValue) {
+        Object value = UIManager.get(key);
+        return (value instanceof Integer) ? ((Integer) value) : defaultValue;
+    }
+
+    static boolean getUIBoolean(String key, boolean defaultValue) {
+        Object value = UIManager.get(key);
+        return (value instanceof Boolean) ? ((Boolean) value) : defaultValue;
+    }
+
     /**
      * Sets rendering hints used for painting.
      */

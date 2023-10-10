@@ -956,7 +956,7 @@ public class CustomTableModelEditor extends JPanel implements PropertyChangeList
             String type = model.getColumnClass(i).getName();
             int lastDot = type.lastIndexOf('.');
             if (lastDot >= 0)
-                type = type.substring(lastDot+1, type.length());
+                type = type.substring(lastDot+1);
             titleModel.setValueAt(type, i,2);
             titleModel.setValueAt(model.isColumnEditable(i) ? Boolean.TRUE : Boolean.FALSE, i,3);
         }

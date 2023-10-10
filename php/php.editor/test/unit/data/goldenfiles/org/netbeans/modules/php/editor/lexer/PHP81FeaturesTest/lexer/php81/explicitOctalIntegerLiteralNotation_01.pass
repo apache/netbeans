@@ -1,0 +1,50 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n\n
+token #6 PHP_NUMBER 0o16
+token #7 PHP_SEMICOLON ;
+token #8 WHITESPACE \n
+token #9 PHP_NUMBER 0o1_6
+token #10 PHP_SEMICOLON ;
+token #11 WHITESPACE \n
+token #12 PHP_NUMBER 0o1_6_7
+token #13 PHP_SEMICOLON ;
+token #14 WHITESPACE \n\n
+token #15 PHP_IF if
+token #16 WHITESPACE  
+token #17 PHP_TOKEN (
+token #18 PHP_NUMBER 0O16
+token #19 WHITESPACE  
+token #20 PHP_OPERATOR ==
+token #21 WHITESPACE  
+token #22 PHP_NUMBER 14
+token #23 PHP_TOKEN )
+token #24 WHITESPACE  
+token #25 PHP_CURLY_OPEN {
+token #26 WHITESPACE \n
+token #27 PHP_CURLY_CLOSE }
+token #28 WHITESPACE \n\n
+token #29 PHP_VARIABLE $octal
+token #30 WHITESPACE  
+token #31 PHP_OPERATOR =
+token #32 WHITESPACE  
+token #33 PHP_NUMBER 0O0_016
+token #34 PHP_SEMICOLON ;
+token #35 WHITESPACE \n
+token #36 PHP_VARIABLE $octal
+token #37 WHITESPACE  
+token #38 PHP_OPERATOR =
+token #39 WHITESPACE  
+token #40 PHP_NUMBER 0O0_123_456_7
+token #41 PHP_SEMICOLON ;
+token #42 WHITESPACE \n\n
+token #43 PHP_NUMBER 0o1
+token #44 PHP_TOKEN .
+token #45 PHP_STRING _6
+token #46 PHP_SEMICOLON ;
+token #47 WHITESPACE  
+token #48 PHP_LINE_COMMENT //
+token #49 PHP_LINE_COMMENT  _6 is constant\n

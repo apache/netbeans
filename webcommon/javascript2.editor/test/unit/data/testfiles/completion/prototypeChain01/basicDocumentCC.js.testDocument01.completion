@@ -2,8 +2,4 @@ Code completion result for source line:
 document.getE|lementById("dd").getElementsByTagName("*").item(2).getFeature("pero").toLocaleString().charCodeAt(10).toExponential();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     getElementById(elementId: Stri  [PUBLIC]   JS Platform
-METHOD     getElementsByClassName(names:   [PUBLIC,   JS Platform
-METHOD     getElementsByName(elementName:  [PUBLIC]   JS Platform
-METHOD     getElementsByTagName(tagname:   [PUBLIC]   JS Platform
-METHOD     getElementsByTagNameNS(namespa  [PUBLIC]   JS Platform
+METHOD     getElementById(param)           [PUBLIC]   basicDocumentCC.js

@@ -81,7 +81,7 @@ public class WSITSchemaCatalog implements CatalogReader, CatalogDescriptor2, Ent
 
     private synchronized Map<String, String> getLocalSchemaDefs() {
         if (localSchemaDefs == null) {
-            localSchemaDefs = new HashMap();
+            localSchemaDefs = new HashMap<>();
             localSchemaDefs.putAll(Addressing10QName.ADDRESS.getSchemaLocations(true));
             localSchemaDefs.putAll(Addressing10WsdlQName.USINGADDRESSING.getSchemaLocations(true));
             localSchemaDefs.putAll(Addressing13WsdlQName.ADDRESSING.getSchemaLocations(true));

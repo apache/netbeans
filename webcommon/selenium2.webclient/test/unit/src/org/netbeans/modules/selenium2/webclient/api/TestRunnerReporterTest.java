@@ -20,8 +20,6 @@ package org.netbeans.modules.selenium2.webclient.api;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import junit.framework.TestCase;
 import org.junit.Test;
 

@@ -312,7 +312,7 @@ public class BinaryUsagesTest extends NbTestCase {
                 if (root == null) {
                     Object rootPath = fsRoot.getAttribute("FileSystem.rootPath"); //NOI18N
 
-                    if ((rootPath != null) && (rootPath instanceof String)) {
+                    if (rootPath instanceof String) {
                         rootName = (String) rootPath;
                     } else {
                         continue;

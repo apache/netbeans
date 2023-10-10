@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.98
+#Version 2.1
 
 CLSS public abstract interface java.io.Serializable
 
@@ -488,15 +488,20 @@ meth public abstract java.lang.String name()
 meth public abstract java.util.List<org.netbeans.modules.css.lib.api.Node> children()
 meth public abstract org.netbeans.modules.css.lib.api.Node parent()
 meth public abstract org.netbeans.modules.css.lib.api.NodeType type()
+meth public java.lang.String unescapedImage()
 
 CLSS public final !enum org.netbeans.modules.css.lib.api.NodeType
 fld public final static org.netbeans.modules.css.lib.api.NodeType atRuleId
 fld public final static org.netbeans.modules.css.lib.api.NodeType at_rule
 fld public final static org.netbeans.modules.css.lib.api.NodeType body
 fld public final static org.netbeans.modules.css.lib.api.NodeType bodyItem
+fld public final static org.netbeans.modules.css.lib.api.NodeType braceBlock
+fld public final static org.netbeans.modules.css.lib.api.NodeType bracketBlock
 fld public final static org.netbeans.modules.css.lib.api.NodeType charSet
 fld public final static org.netbeans.modules.css.lib.api.NodeType charSetValue
 fld public final static org.netbeans.modules.css.lib.api.NodeType combinator
+fld public final static org.netbeans.modules.css.lib.api.NodeType componentValue
+fld public final static org.netbeans.modules.css.lib.api.NodeType componentValueOuter
 fld public final static org.netbeans.modules.css.lib.api.NodeType counterStyle
 fld public final static org.netbeans.modules.css.lib.api.NodeType cp_arg
 fld public final static org.netbeans.modules.css.lib.api.NodeType cp_args_list
@@ -570,6 +575,9 @@ fld public final static org.netbeans.modules.css.lib.api.NodeType namespacePrefi
 fld public final static org.netbeans.modules.css.lib.api.NodeType namespaces
 fld public final static org.netbeans.modules.css.lib.api.NodeType operator
 fld public final static org.netbeans.modules.css.lib.api.NodeType page
+fld public final static org.netbeans.modules.css.lib.api.NodeType parenBlock
+fld public final static org.netbeans.modules.css.lib.api.NodeType preservedToken
+fld public final static org.netbeans.modules.css.lib.api.NodeType preservedTokenTopLevel
 fld public final static org.netbeans.modules.css.lib.api.NodeType prio
 fld public final static org.netbeans.modules.css.lib.api.NodeType property
 fld public final static org.netbeans.modules.css.lib.api.NodeType propertyDeclaration
@@ -658,6 +666,7 @@ meth public static int[] getRuleBodyRange(org.netbeans.modules.css.lib.api.Node)
 meth public static int[] getTrimmedNodeRange(org.netbeans.modules.css.lib.api.Node)
 meth public static java.lang.String encodeToString(org.netbeans.modules.css.lib.api.TreePath)
 meth public static java.lang.String getElementId(org.netbeans.modules.css.lib.api.Node)
+meth public static java.lang.String unescape(java.lang.CharSequence)
 meth public static org.netbeans.modules.css.lib.api.CssTokenId getTokenNodeTokenId(org.netbeans.modules.css.lib.api.Node)
 meth public static org.netbeans.modules.css.lib.api.Node findNodeAtOffset(org.netbeans.modules.css.lib.api.Node,int)
 meth public static org.netbeans.modules.css.lib.api.Node findNonTokenNodeAtOffset(org.netbeans.modules.css.lib.api.Node,int)
@@ -671,7 +680,7 @@ meth public static org.netbeans.modules.css.lib.api.Node[] getChildrenByType(org
 meth public static void dumpTree(org.netbeans.modules.css.lib.api.Node)
 meth public static void dumpTree(org.netbeans.modules.css.lib.api.Node,java.io.PrintWriter)
 supr java.lang.Object
-hfds ELEMENT_PATH_ELEMENTS_DELIMITER,ELEMENT_PATH_INDEX_DELIMITER,INDENT
+hfds ELEMENT_PATH_ELEMENTS_DELIMITER,ELEMENT_PATH_INDEX_DELIMITER,ESCAPE,INDENT
 
 CLSS public abstract org.netbeans.modules.css.lib.api.NodeVisitor<%0 extends java.lang.Object>
 cons public init()
@@ -744,7 +753,6 @@ hfds value
 CLSS public abstract org.netbeans.modules.css.lib.api.properties.GrammarElement
 cons public init(org.netbeans.modules.css.lib.api.properties.GroupGrammarElement,java.lang.String)
 fld public final static char INVISIBLE_PROPERTY_PREFIX = '@'
-meth protected java.lang.String indentString(int)
 meth public abstract void accept(org.netbeans.modules.css.lib.api.properties.GrammarElementVisitor)
 meth public boolean equals(java.lang.Object)
 meth public boolean isOptional()
@@ -756,7 +764,6 @@ meth public java.lang.String getVisibleOrigin()
 meth public java.lang.String origin()
 meth public java.lang.String path()
 meth public java.lang.String toString()
-meth public java.lang.String toString2(int)
 meth public java.util.List<org.netbeans.modules.css.lib.api.properties.GrammarElement> elementsPath()
 meth public org.netbeans.modules.css.lib.api.properties.GroupGrammarElement parent()
 meth public static boolean isArtificialElementName(java.lang.CharSequence)
@@ -768,10 +775,10 @@ hfds maximum_occurances,minimum_occurances,name,parent,path
 
 CLSS public abstract org.netbeans.modules.css.lib.api.properties.GrammarElementVisitor
 cons public init()
-meth public final void visit(org.netbeans.modules.css.lib.api.properties.GrammarElement)
-meth public void visit(org.netbeans.modules.css.lib.api.properties.FixedTextGrammarElement)
-meth public void visit(org.netbeans.modules.css.lib.api.properties.GroupGrammarElement)
-meth public void visit(org.netbeans.modules.css.lib.api.properties.UnitGrammarElement)
+meth public boolean visit(org.netbeans.modules.css.lib.api.properties.FixedTextGrammarElement)
+meth public boolean visit(org.netbeans.modules.css.lib.api.properties.GroupGrammarElement)
+meth public boolean visit(org.netbeans.modules.css.lib.api.properties.UnitGrammarElement)
+meth public final boolean visit(org.netbeans.modules.css.lib.api.properties.GrammarElement)
 supr java.lang.Object
 
 CLSS public org.netbeans.modules.css.lib.api.properties.GrammarParseTreeConvertor
@@ -839,7 +846,6 @@ cons public init(org.netbeans.modules.css.lib.api.properties.GroupGrammarElement
 innr public final static !enum Type
 meth public boolean isVisible()
 meth public java.lang.String toString()
-meth public java.lang.String toString2(int)
 meth public java.util.List<org.netbeans.modules.css.lib.api.properties.GrammarElement> elements()
 meth public java.util.List<org.netbeans.modules.css.lib.api.properties.GrammarElement> getAllPossibleValues()
 meth public org.netbeans.modules.css.lib.api.properties.GroupGrammarElement$Type getType()
@@ -970,8 +976,10 @@ fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCate
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory MULTI_COLUMN_LAYOUT
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory OPERA
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory PAGED_MEDIA
+fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory POSITIONING
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory RUBY
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory SAFARI
+fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory SIZING
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory SPEECH
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory TEXT
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory TRANSFORMATIONS_2D
@@ -1087,7 +1095,7 @@ meth public static <%0 extends org.netbeans.modules.css.lib.api.properties.Token
 meth public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor getAcceptor(java.lang.String)
 supr java.lang.Object
 hfds INSTANCES,id
-hcls GenericFunctionContent
+hcls NonBrace
 
 CLSS public static org.netbeans.modules.css.lib.api.properties.TokenAcceptor$Angle
  outer org.netbeans.modules.css.lib.api.properties.TokenAcceptor

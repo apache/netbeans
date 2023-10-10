@@ -22,4 +22,23 @@
 <project basedir="." default="build" name="webcommon/javascript2.json">
     <description>Builds, tests, and runs the project org.netbeans.modules.javascript2.json</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <target name="generate-antlr-parser" description="Regenerate the JSON parser" depends="init">
+        <property name="antlr.outdir" location="${src.dir}/org/netbeans/modules/javascript2/json/parser"/>
+        <path id="antlr4.tool">
+            <fileset dir="../../ide/libs.antlr4.runtime/external" includes="*.jar"/>
+            <fileset dir="../../ide/libs.antlr3.runtime/external" includes="antlr-runtime-*.jar"/>
+        </path>
+
+        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="tools">
+            <arg value="-o"/>
+            <arg value="${antlr.outdir}"/>
+            <arg value="-visitor"/>
+            <arg value="JsonLexer.g4"/>
+            <arg value="JsonParser.g4"/>
+        </java>
+
+        <delete dir="${antlr.outdir}" includes="*.tokens"/>
+        <delete dir="${antlr.outdir}" includes="*.interp"/>
+    </target>
 </project>

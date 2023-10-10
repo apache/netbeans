@@ -166,7 +166,7 @@ implements Comparator<ExecutableElement> {
                         if (url == null) {
                             continue;
                         }
-                        generateDialog(w, ee, url, reg.techIds());
+                        generateDialog(w, ee, url, reg.resources(), reg.techIds());
                     }
                     if (comp != null) {
                         String url = findURL(comp.url(), ee);
@@ -218,7 +218,7 @@ implements Comparator<ExecutableElement> {
         return url;
     }
 
-    private void generateDialog(Writer w, ExecutableElement ee, String url, String[] techIds) throws IOException {
+    private void generateDialog(Writer w, ExecutableElement ee, String url, String[] resources, String[] techIds) throws IOException {
         TypeElement onSubmit = processingEnv.getElementUtils().getTypeElement(HTMLDialog.OnSubmit.class.getCanonicalName());
         final TypeMirror retType = ee.getReturnType();
         boolean returnsOnSubmit = retType.getKind() != TypeKind.ERROR && processingEnv.getTypeUtils().isSubtype(retType, onSubmit.asType());
@@ -277,7 +277,8 @@ implements Comparator<ExecutableElement> {
             w.append("    return ");
         }
         w.append("Builder.newDialog(\"").append(url).append("\").\n");
-        generateTechIds(w, techIds);
+        generateResources(w, "      ", resources);
+        generateTechIds(w, "      ", techIds);
         w.append("      loadFinished(impl).\n");
         if (returnsOnSubmit) {
             w.append("      show(impl);\n");
@@ -301,7 +302,7 @@ implements Comparator<ExecutableElement> {
 
         w.append(") {\n");
         w.append("    return Builder.newDialog(\"").append(url).append("\").\n");
-        generateTechIds(w, techIds);
+        generateTechIds(w, "      ", techIds);
         w.append("      loadFinished(new Runnable() {\n");
         w.append("        public void run() {\n");
         w.append("          ").append(ee.getEnclosingElement().getSimpleName())
@@ -432,10 +433,28 @@ implements Comparator<ExecutableElement> {
         }
     }
 
-    private void generateTechIds(Writer w, String[] techIds) throws IOException {
+    private void generateResources(Writer w, String prefix, String[] resources) throws IOException {
+        if (resources.length == 0) {
+            return;
+        }
+        w.append(prefix);
+        w.append("addResources(");
+        String sep = "";
+        for (String res : resources) {
+            w.append(sep);
+            w.append('"');
+            w.append(res);
+            w.append('"');
+            sep = ", ";
+        }
+        w.append(").\n");
+    }
+
+    private void generateTechIds(Writer w, String prefix, String[] techIds) throws IOException {
         if (techIds.length == 0) {
             return;
         }
+        w.append(prefix);
         w.append("addTechIds(");
         String sep = "";
         for (String id : techIds) {

@@ -23,6 +23,7 @@
 // #include "stdafx.h"
 
 #include <windows.h>
+#include <sysinfo.h>
 #include <wchar.h>
 /*
 #include <stdio.h>
@@ -450,6 +451,18 @@ extern "C" {
 
         // find HKEY_CLASSES_ROOT ".html"
         sBrowser[0] = '\0';
+
+    	//determine the hkey location to search based on version of Windows
+        OSVERSIONINFOW osv;
+        HKEY searchHive;
+        if (osv.dwMajorVersion == 10)
+        {
+        	searchHive = HKEY_CURRENT_USER;
+        }
+        else
+        {
+        	searchHive = HKEY_CLASSES_ROOT;
+        }
 
         // open registry key
         if (RegOpenKeyExW(HKEY_CLASSES_ROOT, L".html", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {

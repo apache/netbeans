@@ -169,15 +169,17 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
     public Void visitIdentifier(IdentifierTree node, Void p) {
         Element e = info.getTrees().getElement(getCurrentPath());
         if (e != null) {
-
-            if (isLambda && treesSeensInSelection.contains(node) && e.getKind().equals(ElementKind.LOCAL_VARIABLE)){
-                usedLocalVariables.put((VariableElement) e, !localVariables.contains(e));
-            }
-            
-            if (IntroduceHint.LOCAL_VARIABLES.contains(e.getKind()) && (e.getKind()!=ElementKind.PARAMETER) || isLambda) {
+            if (IntroduceHint.LOCAL_VARIABLES.contains(e.getKind())) {
                 switch (phase) {
                     case PHASE_INSIDE_SELECTION:
-                        if (localVariables.contains(e) && usedLocalVariables.get(e) == null) {
+
+                        final boolean isUsedInLambda = isLambda
+                                && treesSeensInSelection.contains(node)
+                                && !selectionLocalVariables.contains((VariableElement) e);
+
+                        if (isUsedInLambda) {
+                            usedLocalVariables.put((VariableElement) e, !localVariables.contains(e));
+                        } else if (localVariables.contains(e) && usedLocalVariables.get(e) == null) {
                             Iterable<? extends TreePath> writes = assignmentsForUse.get(getCurrentPath().getLeaf());
                             Boolean definitellyAssignedInSelection = true;
                             if (writes != null) {

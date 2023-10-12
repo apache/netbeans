@@ -204,7 +204,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
         "SCHEMA:http://xmlns.oracle.com/weblogic/jdbc-data-source/1.0/jdbc-data-source.xsd", "jdbc-data-source",
     };
 
-    private static Map<ServerInstanceProvider, RunTimeDDCatalog> ddCatalogMap = new HashMap<>();
+    private static final Map<ServerInstanceProvider, RunTimeDDCatalog> ddCatalogMap = new HashMap<>();
 //    private static RunTimeDDCatalog preludeDDCatalog;
     private static RunTimeDDCatalog javaEE6DDCatalog;
 

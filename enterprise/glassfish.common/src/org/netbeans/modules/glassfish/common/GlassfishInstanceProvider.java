@@ -20,7 +20,14 @@
 package org.netbeans.modules.glassfish.common;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -71,17 +78,17 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     public static final String JAKARTAEE10_DEPLOYER_FRAGMENT = "deployer:gfv700ee10";
     public static final String EE6WC_DEPLOYER_FRAGMENT = "deployer:gfv3ee6wc"; // NOI18N
     public static final String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"; // NOI18N
-    private static String EE6_INSTANCES_PATH = "/GlassFishEE6/Instances"; // NOI18N
-    private static String EE7_INSTANCES_PATH = "/GlassFishEE7/Instances"; // NOI18N
-    private static String EE8_INSTANCES_PATH = "/GlassFishEE8/Instances"; // NOI18N
-    private static String JAKARTAEE8_INSTANCES_PATH = "/GlassFishJakartaEE8/Instances"; // NOI18N
-    private static String JAKARTAEE9_INSTANCES_PATH = "/GlassFishJakartaEE9/Instances"; // NOI18N
-    private static String JAKARTAEE91_INSTANCES_PATH = "/GlassFishJakartaEE91/Instances"; // NOI18N
-    private static String JAKARTAEE10_INSTANCES_PATH = "/GlassFishJakartaEE10/Instances"; // NOI18N
-    private static String EE6WC_INSTANCES_PATH = "/GlassFishEE6WC/Instances"; // NOI18N
+    private static final String EE6_INSTANCES_PATH = "/GlassFishEE6/Instances"; // NOI18N
+    private static final String EE7_INSTANCES_PATH = "/GlassFishEE7/Instances"; // NOI18N
+    private static final String EE8_INSTANCES_PATH = "/GlassFishEE8/Instances"; // NOI18N
+    private static final String JAKARTAEE8_INSTANCES_PATH = "/GlassFishJakartaEE8/Instances"; // NOI18N
+    private static final String JAKARTAEE9_INSTANCES_PATH = "/GlassFishJakartaEE9/Instances"; // NOI18N
+    private static final String JAKARTAEE91_INSTANCES_PATH = "/GlassFishJakartaEE91/Instances"; // NOI18N
+    private static final String JAKARTAEE10_INSTANCES_PATH = "/GlassFishJakartaEE10/Instances"; // NOI18N
+    private static final String EE6WC_INSTANCES_PATH = "/GlassFishEE6WC/Instances"; // NOI18N
 
-    public static String PRELUDE_DEFAULT_NAME = "GlassFish_v3_Prelude"; //NOI18N
-    public static String EE6WC_DEFAULT_NAME = "GlassFish_Server_3.1"; // NOI18N
+    public static final String PRELUDE_DEFAULT_NAME = "GlassFish_v3_Prelude"; //NOI18N
+    public static final String EE6WC_DEFAULT_NAME = "GlassFish_Server_3.1"; // NOI18N
 
     // GlassFish Tooling SDK configuration should be done before any server
     // instance is created and used.

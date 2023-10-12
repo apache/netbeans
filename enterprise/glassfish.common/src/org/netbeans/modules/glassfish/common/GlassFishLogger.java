@@ -33,12 +33,11 @@ public class GlassFishLogger {
 
     /**
      * Get logger for given class.
-     * <p/>
-     * @param  c Target class for logger.
+     * @param c Target class for logger.
      * @return Logger for given class.
      */
     public static Logger get(Class c) {
-        return Logger.getLogger("glassfish");
+        return Logger.getLogger(c.getName());
     }
     
 }

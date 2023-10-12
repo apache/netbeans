@@ -695,7 +695,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
     ////////////////////////////////////////////////////////////////////////////
 
     // Server properties
-    private boolean removable = true;
+    private final boolean removable = true;
     
     /** GlassFish server properties. */
     private transient Map<String, String> properties;
@@ -716,8 +716,8 @@ public class GlassfishInstance implements ServerInstanceImplementation,
     /** Configuration changes listener watching <code>domain.xml</code> file. */
     private final transient DomainXMLChangeListener domainXMLListener;
 
-    private transient InstanceContent ic;
-    private transient Lookup localLookup;
+    private final transient InstanceContent ic;
+    private final transient Lookup localLookup;
     private transient Lookup full;
     private final transient Lookup.Result<GlassfishModuleFactory>
             lookupResult = Lookups.forPath(Util.GF_LOOKUP_PATH).lookupResult(
@@ -729,7 +729,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
     private final transient CommonServerSupport commonSupport;
     // API instance
     private ServerInstance commonInstance;
-    private GlassfishInstanceProvider instanceProvider;
+    private final GlassfishInstanceProvider instanceProvider;
 
     // GuardedBy("lookupResult")
     private Node fullNode;
@@ -1185,7 +1185,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
      * Method {@see #writeInstanceToFile(GlassfishInstance)} must be called
      * to persist value.
      * <p/>
-     * @param usern GlassFish server administration user name.
+     * @param user GlassFish server administration user name.
      */
     public void setAdminUser(final String user) {
         properties.put(GlassfishModule.USERNAME_ATTR, user);
@@ -1317,7 +1317,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
     /**
      * Check if local running server started from IDE is still running.
      * <p/>
-     * @returns Value of <code>true</code> when process information is stored
+     * @return Value of <code>true</code> when process information is stored
      *          and process is still running or <code>false</code> otherwise.
      */
     public boolean isProcessRunning() {

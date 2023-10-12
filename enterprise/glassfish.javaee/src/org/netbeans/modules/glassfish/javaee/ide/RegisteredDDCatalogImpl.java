@@ -36,10 +36,7 @@ public class RegisteredDDCatalogImpl implements RegisteredDDCatalog {
             catalog.setInstanceProvider(gip);
         }
     }
-//    @Override
-//    public void registerPreludeRunTimeDDCatalog(ServerInstanceProvider gip) {
-//        registerRunTimeDDCatalog(RunTimeDDCatalog.getPreludeRunTimeDDCatalog(), gip);
-//    }
+    
     @Override
     public void registerEE6RunTimeDDCatalog(ServerInstanceProvider gip) {
         registerRunTimeDDCatalog(RunTimeDDCatalog.getEE6RunTimeDDCatalog(), gip);

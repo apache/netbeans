@@ -26,7 +26,6 @@ import org.netbeans.spi.server.ServerInstanceProvider;
  * @author raccah
  */
 public interface RegisteredDDCatalog {
-//    public void registerPreludeRunTimeDDCatalog(ServerInstanceProvider gip);
     public void registerEE6RunTimeDDCatalog(ServerInstanceProvider gip);
     public void refreshRunTimeDDCatalog(ServerInstanceProvider gip, String installRoot);
 }

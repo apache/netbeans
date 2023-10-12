@@ -1203,7 +1203,7 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     }
 }
 
-<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}("$"?){LABEL}("["({LABEL} | "\"" | "'")*"]")*{WHITESPACE}("?"?){QUALIFIED_LABEL}("[""]")*([|]{QUALIFIED_LABEL}("[""]")*)*{WHITESPACE}?"*/" {
+<ST_IN_SCRIPTING>"/*"{WHITESPACE}*"@var"{WHITESPACE}("$"?){LABEL}("["({LABEL} | "\"" | "'")*"]")*{WHITESPACE}("?"?)("("?){QUALIFIED_LABEL}("[""]")*([|&]("("?){QUALIFIED_LABEL}("[""]")*(")"?))*{WHITESPACE}?"*/" {
     comment = yytext();
     handleVarComment();
     // if we want to handle the var comment in  ast, then return the T_VAR_Comment symbol
@@ -1211,7 +1211,7 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     //return createFullSymbol(ASTPHP5Symbols.T_VAR_COMMENT);
 }
 
-<ST_IN_SCRIPTING>"/**"{WHITESPACE}*"@var"{WHITESPACE}("?"?){QUALIFIED_LABEL}("[""]")*([|]{QUALIFIED_LABEL}("[""]")*)*{WHITESPACE}("$"){LABEL}("["({LABEL} | "\"" | "'")*"]")*{WHITESPACE}?[^\n\r]*"*/" {
+<ST_IN_SCRIPTING>"/**"{WHITESPACE}*"@var"{WHITESPACE}("?"?)("("?){QUALIFIED_LABEL}("[""]")*([|&]("("?){QUALIFIED_LABEL}("[""]")*(")"?))*{WHITESPACE}("$"){LABEL}("["({LABEL} | "\"" | "'")*"]")*{WHITESPACE}?[^\n\r]*"*/" {
     comment = yytext();
     handleVarComment();
 }

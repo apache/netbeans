@@ -278,7 +278,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         // NETBEANS-5062
         Scope inScope = getInScope();
         Set<TypeScope> cTypes = new HashSet<>();
-        List<String> typeNames = StringUtils.explode(types, Type.getTypeSeparator(isReturnIntersectionType));
+        List<String> typeNames = Arrays.asList(Type.splitTypes(types));
         if (typeNames.contains(Type.STATIC)
                 && inScope instanceof TypeScope) {
             TypeScope typeScope = (TypeScope) inScope;
@@ -318,7 +318,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
     private ReturnTypesDescriptor getReturnTypesDescriptor(String types, boolean resolveSemiTypes, Collection<? extends TypeScope> callerTypes) {
         ReturnTypesDescriptor result = ReturnTypesDescriptor.NONE;
         if (StringUtils.hasText(types)) {
-            final String[] typeNames = types.split(isReturnIntersectionType ? TYPE_SEPARATOR_INTERSECTION_REGEXP : TYPE_SEPARATOR_REGEXP);
+            final String[] typeNames = Type.splitTypes(types);
             Collection<TypeScope> retval = new HashSet<>();
             for (int i = 0; i < typeNames.length; i++) {
                 String typeName = typeNames[i];

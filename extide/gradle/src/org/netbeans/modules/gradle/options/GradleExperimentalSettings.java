@@ -34,6 +34,23 @@ public final class GradleExperimentalSettings {
     private static final GradleExperimentalSettings INSTANCE = new GradleExperimentalSettings(NbPreferences.forModule(GradleExperimentalSettings.class));
     private final Preferences preferences;
 
+    /**
+     * Specifies how should be proxies handled by default, if no setting is given.
+     */
+    private static final String SYSPROP_DEFAULT_PROXY_BEHAVIOUR = "netbeans.networkProxy";
+    
+    private static final NetworkProxySettings DEFAULT_PROXY_BEHAVIOUR;
+    
+    static {
+        NetworkProxySettings def;
+        try {
+            def = NetworkProxySettings.valueOf(System.getProperty(SYSPROP_DEFAULT_PROXY_BEHAVIOUR, NetworkProxySettings.ASK.name()).toUpperCase());
+        } catch (IllegalArgumentException e) {
+            def = NetworkProxySettings.ASK;
+        }
+        DEFAULT_PROXY_BEHAVIOUR = def;
+    }
+
     public static GradleExperimentalSettings getDefault() {
         return INSTANCE;
     }
@@ -71,11 +88,11 @@ public final class GradleExperimentalSettings {
     }
     
     public NetworkProxySettings getNetworkProxy() {
-        String s = getPreferences().get(PROP_NETWORK_PROXY, NetworkProxySettings.ASK.name());
+        String s = getPreferences().get(PROP_NETWORK_PROXY, DEFAULT_PROXY_BEHAVIOUR.name());
         try {
             return NetworkProxySettings.valueOf(s);
         } catch (IllegalArgumentException ex) {
-            return NetworkProxySettings.ASK;
+            return DEFAULT_PROXY_BEHAVIOUR;
         }
     }
     

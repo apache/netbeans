@@ -91,7 +91,7 @@ public final class DocumentViewOp
     private static final Logger LOG = Logger.getLogger(DocumentViewOp.class.getName());
 
     // Whether use fractional metrics rendering hint
-    static final Map<Object, Object> extraRenderingHints = new HashMap<Object, Object>();
+    static final Map<Object, Object> extraRenderingHints = new HashMap<>();
     
     static final Boolean doubleBuffered;
     
@@ -151,7 +151,7 @@ public final class DocumentViewOp
         if (contrast != null) {
             try {
                 extraRenderingHints.put(RenderingHints.KEY_TEXT_LCD_CONTRAST,
-                        Integer.parseInt(contrast));
+                        Integer.valueOf(contrast));
             } catch (NumberFormatException ex) {
                 // Do not add the key
             }
@@ -919,14 +919,13 @@ public final class DocumentViewOp
     
     /* private */ void updatePreferencesSettings(boolean nonInitialUpdate) {
         boolean nonPrintableCharactersVisibleOrig = isAnyStatusBit(NON_PRINTABLE_CHARACTERS_VISIBLE);
-        boolean nonPrintableCharactersVisible = Boolean.TRUE.equals(prefs.getBoolean(
-                SimpleValueNames.NON_PRINTABLE_CHARACTERS_VISIBLE, false));
+        boolean nonPrintableCharactersVisible = prefs.getBoolean(SimpleValueNames.NON_PRINTABLE_CHARACTERS_VISIBLE, false);
         updateStatusBits(NON_PRINTABLE_CHARACTERS_VISIBLE, nonPrintableCharactersVisible);
         // Line height correction
         float lineHeightCorrectionOrig = rowHeightCorrection;
         rowHeightCorrection = prefs.getFloat(SimpleValueNames.LINE_HEIGHT_CORRECTION, 1.0f);
         boolean inlineHintsEnableOrig = inlineHintsEnable;
-        inlineHintsEnable = Boolean.TRUE.equals(prefs.getBoolean("enable.inline.hints", true)); // NOI18N
+        inlineHintsEnable = prefs.getBoolean("enable.inline.hints", false); // NOI18N
         boolean updateMetrics = (rowHeightCorrection != lineHeightCorrectionOrig);
         boolean releaseChildren = nonInitialUpdate && 
                 ((nonPrintableCharactersVisible != nonPrintableCharactersVisibleOrig) ||
@@ -940,7 +939,7 @@ public final class DocumentViewOp
         if (releaseChildren) {
             releaseChildren(false);
         }
-        boolean currentGuideLinesEnable = Boolean.TRUE.equals(prefs.getBoolean("enable.guide.lines", true)); // NOI18N
+        boolean currentGuideLinesEnable = prefs.getBoolean("enable.guide.lines", true); // NOI18N
         if (nonInitialUpdate && guideLinesEnable != currentGuideLinesEnable) {
             docView.op.notifyRepaint(visibleRect.getMinX(), visibleRect.getMinY(), visibleRect.getMaxX(), visibleRect.getMaxY());    
         }

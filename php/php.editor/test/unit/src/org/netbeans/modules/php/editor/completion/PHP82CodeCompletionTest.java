@@ -505,4 +505,128 @@ public class PHP82CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("dnfTypes", "$vardoc6::^$publicStaticXField;");
     }
 
+    public void testDNFTypes_ParameterType01() throws Exception {
+        checkCompletion("dnfTypes", "$publicPromotedFiled->^publicYMethod();");
+    }
+
+    public void testDNFTypes_ParameterType02() throws Exception {
+        checkCompletion("dnfTypes", "$publicPromotedFiled->publicYMethod()->^publicXMethod();");
+    }
+
+    public void testDNFTypes_ParameterType03() throws Exception {
+        checkCompletion("dnfTypes", "$publicPromotedFiled->publicYMethod()::^$publicStaticXField;");
+    }
+
+    public void testDNFTypes_ParameterType04() throws Exception {
+        checkCompletion("dnfTypes", "$publicPromotedFiled::^publicStaticYMethod();");
+    }
+
+    public void testDNFTypes_ParameterType05() throws Exception {
+        checkCompletion("dnfTypes", "$publicPromotedFiled::$publicStaticYField->^publicYField;");
+    }
+
+    public void testDNFTypes_ParameterType06() throws Exception {
+        checkCompletion("dnfTypes", "$publicPromotedFiled::$publicStaticYField::^PUBLIC_Z_CONSTANT;");
+    }
+
+    public void testDNFTypes_ParameterType07() throws Exception {
+        checkCompletion("dnfTypes", "$privatePromotedFiled->^publicXField;");
+    }
+
+    public void testDNFTypes_ParameterType08() throws Exception {
+        checkCompletion("dnfTypes", "$privatePromotedFiled->publicXField->^publicZMethod();");
+    }
+
+    public void testDNFTypes_ParameterType09() throws Exception {
+        checkCompletion("dnfTypes", "$protectedPromotedFiled->^publicXMethod();");
+    }
+
+    public void testDNFTypes_ParameterType10() throws Exception {
+        checkCompletion("dnfTypes", "$protectedPromotedFiled::^$publicStaticZField()");
+    }
+
+    public void testDNFTypes_ParameterType11() throws Exception {
+        checkCompletion("dnfTypes", "$param1->^publicXMethod();");
+    }
+
+    public void testDNFTypes_ParameterType12() throws Exception {
+        checkCompletion("dnfTypes", "$param1->publicYMethod()->^publicZMethod();");
+    }
+
+    public void testDNFTypes_ParameterType13() throws Exception {
+        checkCompletion("dnfTypes", "$param1->publicXMethod()::^PUBLIC_Y_CONSTANT;");
+    }
+
+    public void testDNFTypes_ParameterType14() throws Exception {
+        checkCompletion("dnfTypes", "$param1::^publicStaticYMethod();");
+    }
+
+    public void testDNFTypes_ParameterType15() throws Exception {
+        checkCompletion("dnfTypes", "$param1::publicStaticYMethod()::^$publicStaticYField;");
+    }
+
+    public void testDNFTypes_ParameterType16() throws Exception {
+        checkCompletion("dnfTypes", "$param2->^publicYField;");
+    }
+
+    public void testDNFTypes_ParameterType17() throws Exception {
+        checkCompletion("dnfTypes", "$param2::^IMPLICIT_Y_CONSTANT;");
+    }
+
+    public void testDNFTypes_ParameterType18() throws Exception {
+        checkCompletion("dnfTypes", "$param3?->^publicZField;");
+    }
+
+    public void testDNFTypes_ParameterType19() throws Exception {
+        checkCompletion("dnfTypes", "$param3::^$publicStaticZField;");
+    }
+
+    public void testDNFTypes_ParameterType20() throws Exception {
+        checkCompletion("dnfTypes", "$phpdoc1->^publicXMethod();");
+    }
+
+    public void testDNFTypes_ParameterType21() throws Exception {
+        checkCompletion("dnfTypes", "$phpdoc1::^publicStaticZMethod();");
+    }
+
+    public void testDNFTypes_ParameterType22() throws Exception {
+        checkCompletion("dnfTypes", "$phpdoc2->^publicYField;");
+    }
+
+    public void testDNFTypes_ParameterType23a() throws Exception {
+        checkCompletion("dnfTypes", "$phpdoc2::^PUBLIC_Y_CONSTANT;");
+    }
+
+    public void testDNFTypes_ParameterType23b() throws Exception {
+        checkCompletion("dnfTypes", "$phpdoc2::PUBLIC_Y_^CONSTANT;");
+    }
+
+    public void testDNFTypes_ParameterType24() throws Exception {
+        checkCompletion("dnfTypes", "$closure1->^publicXField;");
+    }
+
+    public void testDNFTypes_ParameterType25() throws Exception {
+        checkCompletion("dnfTypes", "$closure1::^PUBLIC_Y_CONSTANT;");
+    }
+
+    public void testDNFTypes_ParameterType26() throws Exception {
+        checkCompletion("dnfTypes", "$closure2->publicYMethod()->^publicXField;");
+    }
+
+    public void testDNFTypes_ParameterType27() throws Exception {
+        checkCompletion("dnfTypes", "$closure2::$publicStaticYField->^publicZField;");
+    }
+
+    public void testDNFTypes_ParameterType28() throws Exception {
+        checkCompletion("dnfTypes", "$arrow1 = fn((ClassX&ClassY)|ClassX $test) => $test->^publicXField;");
+    }
+
+    public void testDNFTypes_ParameterType29() throws Exception {
+        checkCompletion("dnfTypes", "$arrow2 = fn((ClassX&ClassY)|ClassX $test) => $test::publicStaticXMethod()->^publicZField;");
+    }
+
+    public void testDNFTypes_ParameterTypeInCCList01() throws Exception {
+        checkCompletion("dnfTypes", "$this->param^(null);");
+    }
+
 }

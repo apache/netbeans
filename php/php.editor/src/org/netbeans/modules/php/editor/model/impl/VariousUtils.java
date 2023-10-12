@@ -304,11 +304,8 @@ public final class VariousUtils {
 
     public static List<Pair<QualifiedName, Boolean/* isNullableType */>> getParamTypesFromUnionTypes(UnionType unionType) {
         List<Pair<QualifiedName, Boolean>> types = new ArrayList<>();
-        for (Expression type : unionType.getTypes()) {
-            QualifiedName name = QualifiedName.create(type);
-            if (name != null) {
-                types.add(Pair.of(name, false));
-            }
+        for (QualifiedName type : QualifiedName.create(unionType)) {
+            types.add(Pair.of(type, false));
         }
         return types;
     }

@@ -257,4 +257,21 @@ public final class Type {
         }
         return CodeUtils.SPLIT_TYPES_PATTERN.split(type.replace(" ", "")); // NOI18N
     }
+
+    /**
+     * Convert the type declaration to the type template. e.g.
+     * <pre>
+     * - Type1|Type2|Type3 -> %s|%s|%s
+     * - Type1&Type2&Type3 -> %s&%s&%s
+     * - (Type1&Type2)|Type3 -> (%s&%s)|%s
+     * - ?Type1 -> ?%s
+     * </pre>
+     *
+     * @param typeDeclaration the type declaration (e.g.
+     * {@code (X&Y)|Z, X|Y|Z, ?Nullable})
+     * @return the type template (e.g. {@code (%s&%s)|%s, %s|%s|%s, ?%s})
+     */
+    public static String toTypeTemplate(String typeDeclaration) {
+        return CodeUtils.TYPE_NAMES_IN_TYPE_DECLARATION_PATTERN.matcher(typeDeclaration.replace(" ", "")).replaceAll("%s"); // NOI18N
+    }
 }

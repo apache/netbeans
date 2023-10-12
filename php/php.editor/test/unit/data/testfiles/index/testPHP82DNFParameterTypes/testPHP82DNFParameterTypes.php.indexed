@@ -2,9 +2,9 @@
 
 Document 0
 Searchable Keys:
-  base : arrowfunctiondeclaration:1449;ArrowFunctionDeclaration:1449;1449;$test::1::1:0:0:1:0:0:(X&Y)|(Y&Z)|(X&Z):;(X&Y)|(Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(X&Y)|(Y&Z)|(X&Z);
-  base : lambdafunctiondeclaration:1390;LambdaFunctionDeclaration:1390;1390;$test::1::1:0:0:1:0:0:(X&Y&Z)|(X&Z):;(X&Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(X&Y&Z)|(X&Z);
-  base : parametertype;parameterType;871;$param::1::1:0:0:1:0:0:(X&Y&Test)|(X&Z):;void;;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;void;
+  base : arrowfunctiondeclaration:1449;ArrowFunctionDeclaration:1449;1449;$test:X|Y|Y|Z|X|Z:1::1:0:0:1:0:0:(X&Y)|(Y&Z)|(X&Z):;(X&Y)|(Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(X&Y)|(Y&Z)|(X&Z);
+  base : lambdafunctiondeclaration:1390;LambdaFunctionDeclaration:1390;1390;$test:X|Y|Z|X|Z:1::1:0:0:1:0:0:(X&Y&Z)|(X&Z):;(X&Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(X&Y&Z)|(X&Z);
+  base : parametertype;parameterType;871;$param:X|Y|Test|X|Z:1::1:0:0:1:0:0:(X&Y&Test)|(X&Z):;void;;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;void;
   top : $arrow
   top : $closure
   top : arrowfunctiondeclaration:1449
@@ -46,7 +46,7 @@ Not Searchable Keys:
 Document 3
 Searchable Keys:
   clz : testclass;TestClass;927;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;
-  method : parametertype;parameterType;959;$param1:Z|X:1::1:0:0:1:0:0:(Test&Y)|Z|X:,$param2:bool:1::1:0:0:0:0:0:bool:;(\Test&\Y)|\Z|\X;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(Test&Y)|Z|X;
+  method : parametertype;parameterType;959;$param1:Test|Y|Z|X:1::1:0:0:1:0:0:(Test&Y)|Z|X:,$param2:bool:1::1:0:0:0:0:0:bool:;(\Test&\Y)|\Z|\X;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(Test&Y)|Z|X;
   top : testclass
 
 Not Searchable Keys:
@@ -80,7 +80,7 @@ Document 7
 Searchable Keys:
   enum : testenum;TestEnum;1273;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;
   enum.case : case1;Case1;1293;?;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;
-  method : parametertype;parameterType;1320;$param1:X&Y:1::1:0:0:0:0:1:X&Y:,$param2:Z:1::1:0:0:1:0:0:(X&Y)|Z:;(\X&\Y)|\Z;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(X&Y)|Z;
+  method : parametertype;parameterType;1320;$param1:X&Y:1::1:0:0:0:0:1:X&Y:,$param2:X|Y|Z:1::1:0:0:1:0:0:(X&Y)|Z:;(\X&\Y)|\Z;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(X&Y)|Z;
   top : testenum
 
 Not Searchable Keys:
@@ -266,7 +266,7 @@ Not Searchable Keys:
 Document 9
 Searchable Keys:
   iface : testinterfase;TestInterfase;1194;;;0;<TESTURL>/testPHP82DNFParameterTypes.php;
-  method : parametertype;parameterType;1230;$param:X|Z:1::1:0:0:1:0:0:X|(X&Y&Z)|Z:;;1025;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : parametertype;parameterType;1230;$param:X|X|Y|Z|Z:1::1:0:0:1:0:0:X|(X&Y&Z)|Z:;;1025;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
   top : testinterfase
 
 Not Searchable Keys:
@@ -274,7 +274,7 @@ Not Searchable Keys:
 
 Document 10
 Searchable Keys:
-  method : parametertype;parameterType;1100;$param::1::1:0:0:1:0:0:(X&Y)|(Y&Z&Test):;\self;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;self;
+  method : parametertype;parameterType;1100;$param:X|Y|Y|Z|Test:1::1:0:0:1:0:0:(X&Y)|(Y&Z&Test):;\self;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;self;
   top : testtrait
   trait : testtrait;TestTrait;1068;;;0;<TESTURL>/testPHP82DNFParameterTypes.php;
 

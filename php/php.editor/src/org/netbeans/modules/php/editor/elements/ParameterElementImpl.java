@@ -26,7 +26,6 @@ import java.util.Set;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.api.util.StringUtils;
-import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
@@ -357,30 +356,17 @@ public final class ParameterElementImpl implements ParameterElement {
             }
         }
         if (forDeclaration && hasDeclaredType()) {
-            if (isUnionType || isIntersectionType) {
-                boolean firstType = true;
-                for (TypeResolver typeResolver : typesResolvers) {
-                    if (typeResolver.isResolved()) {
-                        if (firstType) {
-                            firstType = false;
-                        } else {
-                            sb.append(Type.getTypeSeparator(isIntersectionType));
-                        }
-                        sb.append(typeNameResolver.resolve(typeResolver.getTypeName(false)));
+            if (StringUtils.hasText(getDeclaredType())) {
+                String[] splitTypes = Type.splitTypes(getDeclaredType());
+                List<String> resolvedTypes = new ArrayList<>();
+                if (splitTypes.length == typesResolvers.size()) {
+                    String template = Type.toTypeTemplate(getDeclaredType());
+                    for (TypeResolver typeResolver : typesResolvers) {
+                        resolvedTypes.add(typeNameResolver.resolve(typeResolver.getTypeName(false)).toString());
                     }
-                }
-                sb.append(' ');
-            } else if (typesResolvers.size() > 1 && !isUnionType && !isIntersectionType) {
-                sb.append(Type.MIXED).append(' ');
-            } else {
-                for (TypeResolver typeResolver : typesResolvers) {
-                    if (typeResolver.isResolved()) {
-                        if (typeResolver.isNullableType()) {
-                            sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
-                        }
-                        sb.append(typeNameResolver.resolve(typeResolver.getTypeName(false))).append(' '); //NOI18N
-                        break;
-                    }
+                    sb.append(String.format(template, resolvedTypes.toArray(new String[0]))).append(' ');
+                } else {
+                    sb.append(getDeclaredType()).append(' ');
                 }
             }
         }

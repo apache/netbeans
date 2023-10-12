@@ -133,9 +133,44 @@ class TestClass implements TestInterface {
             private null|(ClassZ&ClassX) $privatePromotedFiled,
             protected ClassZ|(ClassZ&ClassY)|ClassX $protectedPromotedFiled,
     ) {
+        $publicPromotedFiled->publicYMethod(); // ClassZ|(ClassZ&ClassY)
+        $publicPromotedFiled->publicYMethod()->publicXMethod(); // ClassX|(ClassY&ClassX)
+        $publicPromotedFiled->publicYMethod()::$publicStaticXField; // ClassX|(ClassY&ClassX)
+        $publicPromotedFiled::publicStaticYMethod(); // ClassZ|(ClassZ&ClassY)
+        $publicPromotedFiled::$publicStaticYField->publicYField; // (ClassY&ClassZ)|ClassX
+        $publicPromotedFiled::$publicStaticYField::PUBLIC_Z_CONSTANT; // (ClassY&ClassZ)|ClassX
+        $privatePromotedFiled->publicXField; // null|(ClassZ&ClassX)
+        $privatePromotedFiled->publicXField->publicZMethod(); // (ClassY&ClassZ)|ClassX
+        $privatePromotedFiled->publicXField::$publicStaticYField; // (ClassY&ClassZ)|ClassX
+        $protectedPromotedFiled->publicXMethod(); // ClassZ|(ClassZ&ClassY)|ClassX
+        $protectedPromotedFiled::$publicStaticZField(); // ClassZ|(ClassZ&ClassY)|ClassX
     }
 
-    public function paramType(ClassX|(ClassY&ClassZ) $param1): void {
+    public function paramType(ClassX|(ClassY&ClassZ) $param1, (ClassY&ClassZ)|ClassZ $param2, (ClassX&ClassY)|null|(ClassX&ClassZ) $param3): void {
+        $param1->publicXMethod(); // ClassX|(ClassY&ClassZ)
+        $param1->publicYMethod()->publicZMethod(); // ClassX|(ClassY&ClassX)
+        $param1->publicXMethod()::PUBLIC_Y_CONSTANT; // ClassX|(ClassY&ClassZ)
+        $param1::publicStaticYMethod(); // ClassX|(ClassY&ClassZ)
+        $param1::publicStaticYMethod()::$publicStaticYField; // (ClassY&ClassZ)|ClassX
+        $param2->publicYField; // (ClassY&ClassZ)|ClassZ
+        $param2::IMPLICIT_Y_CONSTANT; // (ClassY&ClassZ)|ClassZ
+        $param3?->publicZField; // (ClassX&ClassY)|null|(ClassX&ClassZ)
+        $param3::$publicStaticZField; // (ClassX&ClassY)|null|(ClassX&ClassZ)
+    }
+
+    public function param(X|(X&Y)|(Y&Z) $param): void {}
+
+    /**
+     * PHPDoc test.
+     *
+     * @param null|ClassX|(ClassX&ClassZ) $phpdoc1
+     * @param (ClassX&ClassY&ClassZ)|null|(ClassX&ClassZ) $phpdoc2
+     */
+    public function phpdocParamType($phpdoc1, $phpdoc2) {
+        $phpdoc1->publicXMethod(); // null|ClassX|(ClassX&ClassZ)
+        $phpdoc1::publicStaticZMethod(); // null|ClassX|(ClassX&ClassZ)
+        $phpdoc2->publicYField; // (ClassX&ClassY&ClassZ)|null|(ClassX&ClassZ)
+        $phpdoc2::PUBLIC_Y_CONSTANT; // (ClassX&ClassY&ClassZ)|null|(ClassX&ClassZ)
     }
 
     /**
@@ -184,6 +219,8 @@ class TestClass implements TestInterface {
         self::$publicPhpdocStaticField::$publicStaticXField; // (ClassX&ClassY)|ClassZ
         self::$publicPhpdocStaticField->publicZField; // (ClassX&ClassY)|ClassZ
         self::$publicStaticTraitField->publicXMethod(); // ClassY|(ClassX&ClassY)|ClassX
+        // display in CC list
+        $this->param(null);
     }
 }
 
@@ -213,3 +250,13 @@ $vardoc5::$publicStaticXField; // ClassZ|(ClassX&ClassY)|null
 /* @var $vardoc6 ClassZ|(ClassX&ClassY)|(ClassX&ClassY&ClassZ) */
 $vardoc6->publicXField; // ClassZ|(ClassX&ClassY)|(ClassX&ClassY&ClassZ)
 $vardoc6::$publicStaticXField; // ClassZ|(ClassX&ClassY)|(ClassX&ClassY&ClassZ)
+
+$closure = function((ClassX&ClassY&ClassZ)|ClassY $closure1, ClassX|(ClassX&ClassZ)|(ClassY&ClassZ) $closure2): void {
+    $closure1->publicXField; // (ClassX&ClassY&ClassZ)|ClassY
+    $closure1::PUBLIC_Y_CONSTANT; // (ClassX&ClassY&ClassZ)|ClassY
+    $closure2->publicYMethod()->publicXField; // ClassX|(ClassY&ClassX)
+    $closure2::$publicStaticYField->publicZField; // (ClassY&ClassZ)|ClassX
+};
+
+$arrow1 = fn((ClassX&ClassY)|ClassX $test) => $test->publicXField; // (ClassX&ClassY)|ClassX
+$arrow2 = fn((ClassX&ClassY)|ClassX $test) => $test::publicStaticXMethod()->publicZField; // (ClassY&ClassZ)|ClassX

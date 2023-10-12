@@ -609,6 +609,10 @@
 				"title": "Open Service Console"
 			},
 			{
+				"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddDbConnectionToVault",
+				"title": "Add to OCI Vault"
+			},
+			{
 				"command": "java.select.editor.projects",
 				"title": "Reveal active editor in Projects",
 				"category": "Project"
@@ -723,6 +727,10 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
+					"when": "false"
+				},
+				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddDbConnectionToVault",
 					"when": "false"
 				},
 				{
@@ -844,6 +852,10 @@
 					"when": "viewItem =~ /class:oracle.database.DatabaseItem/"
 				},
 				{
+					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddDbConnectionToVault",
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+				},
+				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
 					"when": "viewItem =~ /class:oracle.compartment.CompartmentItem/"
 				},
@@ -948,6 +960,18 @@
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/database.svg",
 				"codeicon": "database"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/vault.svg",
+				"codeicon": "lock"
+			},
+                        {
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/key.svg",
+				"codeicon": "gist-secret"
+			},
+			{
+				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/secret.svg",
+				"codeicon": "key"
 			},
 			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/devops_project.svg",

@@ -28,8 +28,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.json.simple.JSONObject;
@@ -44,6 +46,9 @@ import org.w3c.dom.Element;
  * @author skygo
  */
 public class ReleaseJsonProperties extends Task {
+
+    // how many previous versions to suggest importing configuration from
+    private static final int PREVIOUS_VERSIONS_LIMIT = 3;
 
     /**
      * current branch we works with
@@ -136,13 +141,16 @@ public class ReleaseJsonProperties extends Task {
         if (requiredbranchinfo == null) {
             throw new BuildException("No Release Information found for branch '" + branch + "', update json file section with ant -Dneedjsondownload=true");
         }
-        List<String> updateValues = new ArrayList<>();
-        for (ReleaseInfo releaseInfo : ri) {
-            // take previous version of Apache NetBeans only if published, need for scan for old NetBeans version
-            if (releaseInfo.position < requiredbranchinfo.position && releaseInfo.publishapi ) {
-                updateValues.add(releaseInfo.version);
-            }
-        }
+
+        int reqBranchPosition = requiredbranchinfo.position;
+        List<String> updateValues = ri.stream()
+                .sorted(Comparator.reverseOrder())
+                .filter(r -> r.position < reqBranchPosition)
+                .filter(r -> r.publishapi) // not unpublished / VSCode-only releases
+                .limit(PREVIOUS_VERSIONS_LIMIT)
+                .map(r -> r.version)
+                .collect(Collectors.toList());
+
 // populate properties for api changes
         getProject().setProperty("previous.release.year", Integer.toString(requiredbranchinfo.previousReleaseDate.getYear()));
         getProject().setProperty("previous.release.month", String.format("%02d", requiredbranchinfo.previousReleaseDate.getMonthValue()));

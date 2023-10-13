@@ -14,7 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-is.autoload=true
-
-release.external/org.eclipse.jgit-6.7.0.202309050840-r.jar=modules/org-eclipse-jgit.jar
+F437425BEAAB4073554ADE72A7F0C633312D249A org.eclipse.jgit:org.eclipse.jgit.ssh.jsch:6.7.0.202309050840-r

@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="ide/o.eclipse.jgit" default="build" basedir=".">
+<project name="ide/o.eclipse.jgit.lfs" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar" />
 </project>

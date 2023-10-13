@@ -296,7 +296,7 @@ cause it to fail.
             </sourcepath>
             <doclet
                 name="org.apidesign.javadoc.codesnippet.Doclet"
-                path="${nb_all}/nbbuild/external/codesnippet-doclet-0.82.jar"
+                path="${nb_all}/nbbuild/external/codesnippet-doclet-1.0.jar"
             >
                 <param name="-snippetpath" value="${javadoc.base}/src"/>
                 <param name="-snippetpath" value="${javadoc.base}/test/unit/src"/>

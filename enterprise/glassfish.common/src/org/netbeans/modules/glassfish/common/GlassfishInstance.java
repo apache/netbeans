@@ -21,6 +21,8 @@ package org.netbeans.modules.glassfish.common;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -79,7 +81,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
      */
     public class Props implements Map<String, String> {
 
-        private final Map<String, String> delegate;
+        private final ConcurrentMap<String, String> delegate;
 
         /**
          * Constructs a new properties map with the same mappings as the
@@ -97,7 +99,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
             if (map == null) {
                 throw new NullPointerException("Source Map shall not be null.");
             }
-            this.delegate = map;
+            this.delegate = new ConcurrentHashMap<>(map);
         }
 
         @Override
@@ -130,7 +132,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
 
         @Override
         public String remove(Object key) {
-            synchronized(delegate) {return delegate.remove(key);}
+            return delegate.remove(key);
         }
 
         @Override
@@ -149,7 +151,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
                             "GlassFish administrator user password");
                 }
             }
-            synchronized(delegate) {return delegate.put(key, value);}
+            return delegate.put(key, value);
         }
 
 
@@ -180,7 +182,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
 
         @Override
         public boolean containsKey(Object key) {
-            synchronized(delegate) {return delegate.containsKey(key);}
+            return delegate.computeIfPresent((String) key, (k, v) -> v) != null;
         }
 
         @Override
@@ -201,20 +203,16 @@ public class GlassfishInstance implements ServerInstanceImplementation,
         public String get(Object key) {
             if (GlassfishModule.PASSWORD_ATTR.equals(key)) {
                 String value;
-                synchronized(delegate) {
-                    value = delegate.get(key);
-                }
+                value = delegate.computeIfPresent((String)key, (k, v) -> v);
                 if (value == null) {
                     value = getPasswordFromKeyring(
                             delegate.get(GlassfishModule.DISPLAY_NAME_ATTR),
                             delegate.get(GlassfishModule.USERNAME_ATTR));
-                    synchronized(delegate) {
-                        delegate.put((String)key, value);
-                    }
+                    delegate.put((String)key, value);
                 }
                 return value;
             } else {
-                synchronized(delegate) {return delegate.get(key);}
+                return delegate.computeIfPresent((String)key, (k, v) -> v);
             }
         }
 
@@ -1377,15 +1375,16 @@ public class GlassfishInstance implements ServerInstanceImplementation,
             return null;
         }
         File candidate = new File(retVal);
+        FileObject configRoot = FileUtil.getConfigRoot();
         if (candidate.exists() && !Utils.canWrite(candidate)) {
             // we need to do some surgury here...
             String domainsFolder = org.netbeans.modules.glassfish.common.utils
                     .ServerUtils.getDomainsFolder(this);
             String foldername = FileUtil.findFreeFolderName(
-                    FileUtil.getConfigRoot(), domainsFolder);
+                    configRoot, domainsFolder);
             FileObject destdir = null;
             try {
-                destdir = FileUtil.createFolder(FileUtil.getConfigRoot(),foldername);
+                destdir = FileUtil.createFolder(configRoot, foldername);
             } catch (IOException ex) {
                 LOGGER.log(Level.INFO,"could not create a writable domain dir",ex); // NOI18N
             }
@@ -1400,9 +1399,9 @@ public class GlassfishInstance implements ServerInstanceImplementation,
                 } catch (IOException ex) {
                     // need to try again... since the domain is probably unreadable.
                     foldername = FileUtil.findFreeFolderName(
-                            FileUtil.getConfigRoot(), domainsFolder); // NOI18N
+                            configRoot, domainsFolder); // NOI18N
                     try {
-                        destdir = FileUtil.createFolder(FileUtil.getConfigRoot(), foldername);
+                        destdir = FileUtil.createFolder(configRoot, foldername);
                     } catch (IOException ioe) {
                         LOGGER.log(Level.INFO,"could not create a writable second domain dir",ioe); // NOI18N
                         return retVal;
@@ -1729,7 +1728,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
 
         Collection<? extends RemoveCookie> lookupAll = localLookup.lookupAll(RemoveCookie.class);
         for(RemoveCookie cookie: lookupAll) {
-            cookie.removeInstance(getDeployerUri());
+            cookie.removeInstance(uri);
         }
 
         instanceProvider.removeServerInstance(this);

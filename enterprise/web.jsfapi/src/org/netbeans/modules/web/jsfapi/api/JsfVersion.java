@@ -43,6 +43,9 @@ public enum JsfVersion {
     }
 
     public String getShortName() {
+        if (isAtLeast(JSF_4_0)) {
+            return "Faces " + version;
+        }
         return "JSF " + version;
     }
 

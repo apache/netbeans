@@ -1,5 +1,5 @@
 Name: Codesnippet Javadoc Doclet
-Version: 0.82
+Version: 1.0
 License: GPL-3
 Source: https://github.com/jtulach/codesnippet4javadoc/
 Description: Javadoc doclet to include real code snippets in the documentation

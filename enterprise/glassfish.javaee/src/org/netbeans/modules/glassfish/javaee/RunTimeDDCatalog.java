@@ -961,6 +961,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                         case "text/x-dd-ejbjar2.1":  // NOI18N
                             inputSource = resolver.resolveEntity(EJBJAR_2_1_ID, "");
                             break;
+                        case "text/x-dd-application10.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APP_10_ID, "");
+                            break;
                         case "text/x-dd-application9.0":  // NOI18N
                             inputSource = resolver.resolveEntity(APP_9_ID, "");
                             break;
@@ -978,6 +981,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                             break;
                         case "text/x-dd-application1.4":  // NOI18N
                             inputSource = resolver.resolveEntity(APP_1_4_ID, "");
+                            break;
+                        case "text/x-dd-client10.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APPCLIENT_10_ID, "");
                             break;
                         case "text/x-dd-client9.0":  // NOI18N
                             inputSource = resolver.resolveEntity(APPCLIENT_9_ID, "");
@@ -1073,7 +1079,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                     if (inputSource != null) {
                         return DTDUtil.parseDTD(true, inputSource);
                     }
-                    
+                    // TODO: Validate all webservices versions not only 1.1
                     if (is.getSystemId().endsWith("webservices.xml") ) {  // NOI18N
                         // System.out.println("webservices tag");
                         inputSource = resolver.resolveEntity(WEBSERVICES_1_1_ID, "");
@@ -1099,6 +1105,7 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     @Override
     public String resolveURI(String name) {
         // System.out.println("resolveURI(String name)="+name);
+        // TODO: Validate all webservices versions
         if (platformRootDir == null) {
             return null;
         }

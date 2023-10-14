@@ -1,9 +1,9 @@
 Name: Profiler Binaries
-Description: Profiler Binaries for a large variety of platforms, superseds older CDDL binaries where applicable.
-Version: 5273a10f9471d5cf60ed894dc26ec0e59e71cc24
+Description: Profiler Binaries for variety of platforms, supersedes older CDDL binaries where applicable.
+Version: 1-24aefa9
 License: Apache-2.0-ASF
 Source: https://netbeans.apache.org
-Origin: Apache NetBeans (version is commit hash)
+Origin: Apache NetBeans (version includes commit hash)
 
 Licensed to the Apache Software Foundation (ASF) under one or more contributor
 license agreements.  See the NOTICE file distributed with this work for

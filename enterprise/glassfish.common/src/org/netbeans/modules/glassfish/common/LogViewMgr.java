@@ -26,7 +26,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,8 +90,8 @@ public class LogViewMgr {
     /**
      * Singleton model pattern
      */
-    private static final Map<String, WeakReference<LogViewMgr>> instances =
-            new HashMap<String, WeakReference<LogViewMgr>>();
+    private static final ConcurrentMap<String, WeakReference<LogViewMgr>> instances =
+            new ConcurrentHashMap<>();
 
     /**
      * Server URI for this log view
@@ -135,14 +147,11 @@ public class LogViewMgr {
      */
     public static LogViewMgr getInstance(String uri) {
         LogViewMgr logViewMgr;
-        synchronized (instances) {
-            WeakReference<LogViewMgr> viewRef = instances.get(uri);
-            logViewMgr = viewRef != null ? viewRef.get() : null;
-            if(logViewMgr == null) {
-                logViewMgr = new LogViewMgr(uri);
-                instances.put(uri, new WeakReference<LogViewMgr>(logViewMgr));
-            }
-        }
+        
+        logViewMgr = instances.computeIfAbsent(uri, key -> 
+                        new WeakReference<LogViewMgr>(new LogViewMgr(uri))
+                    ).get();
+        
         return logViewMgr;
     }
     
@@ -403,7 +412,6 @@ public class LogViewMgr {
         private final boolean ignoreEof;
         private volatile boolean shutdown;
         private GlassfishInstance instance;
-        //private final Map<String, String> properties;
         
         public LoggerRunnable(List<Recognizer> recognizers, FetchLog serverLog, 
                 boolean ignoreEof, GlassfishInstance instance) {
@@ -657,8 +665,7 @@ public class LogViewMgr {
         }
 
         void print() {
-            OutputWriter writer = getWriter(level >= 900);
-            try {
+            try (OutputWriter writer = getWriter(level >= 900)) {
                 if(color != null && listener == null && IOColorLines.isSupported(io)) {
                     message = stripNewline(message);
                     IOColorLines.println(io, message, color);
@@ -1114,11 +1121,9 @@ public class LogViewMgr {
             switch (event.getState()) {
                 case COMPLETED: case FAILED:
                     FetchLog oldLog = null;
-                    synchronized (serverInputStreams) {
-                        FetchLog storedLog = serverInputStreams.get(instance);
-                        if (this.log.equals(storedLog)) {
-                            oldLog = serverInputStreams.remove(instance);
-                        }
+                    FetchLog storedLog = serverInputStreams.computeIfPresent(instance, (key, value) -> value);
+                    if (this.log.equals(storedLog)) {
+                        oldLog = serverInputStreams.remove(instance);
                     }
                     if (oldLog != null) {
                         oldLog.close();
@@ -1129,8 +1134,8 @@ public class LogViewMgr {
     }
 
     /** Internal GlassFish server instance to log fetcher mapping.*/
-    private static final Map<GlassfishInstance, FetchLog> serverInputStreams
-            = new HashMap<GlassfishInstance, FetchLog>();
+    private static final ConcurrentMap<GlassfishInstance, FetchLog> serverInputStreams
+            = new ConcurrentHashMap<>();
 
     /**
      * Add log fetcher into local instance to fetcher mapping.
@@ -1148,9 +1153,7 @@ public class LogViewMgr {
     private static void addLog(final GlassfishInstance instance,
             final FetchLogPiped log) {
         FetchLog oldLog;
-        synchronized (serverInputStreams) {
-            oldLog = serverInputStreams.put(instance, log);
-        }
+        oldLog = serverInputStreams.put(instance, log);
         log.addListener(new LogStateListener(instance, log));
         if (oldLog != null) {
             oldLog.close();
@@ -1172,9 +1175,7 @@ public class LogViewMgr {
      */
     public static void removeLog(final GlassfishInstance instance) {
         FetchLog oldLog;
-        synchronized (serverInputStreams) {
-            oldLog = serverInputStreams.remove(instance);
-        }
+        oldLog = serverInputStreams.remove(instance);
         if (oldLog != null) {
             oldLog.close();
         }
@@ -1196,27 +1197,25 @@ public class LogViewMgr {
             final GlassfishInstance instance) {
         FetchLog log;
         FetchLog deadLog = null;
-        synchronized (serverInputStreams) {
-            log = serverInputStreams.get(instance);
-            if (log != null) {
-                if (log instanceof FetchLogPiped) {
-                    // Log reading task in running state
-                    if (((FetchLogPiped) log).isRunning()) {
-                        return log;
-                    // Log reading task is dead
-                    } else {
-                        // Postpone cleanup after synchronized block.
-                        deadLog = log;
-                        removeLog(instance);
-                    }
-                } else {
+        log = serverInputStreams.computeIfPresent(instance, (key, value) -> value);
+        if (log != null) {
+            if (log instanceof FetchLogPiped) {
+                // Log reading task in running state
+                if (((FetchLogPiped) log).isRunning()) {
                     return log;
+                // Log reading task is dead
+                } else {
+                    // Postpone cleanup after synchronized block.
+                    deadLog = log;
+                    removeLog(instance);
                 }
+            } else {
+                return log;
             }
-            log = FetchLogPiped.create(
-                    GlassFishExecutors.fetchLogExecutor(), instance);
-            addLog(instance, (FetchLogPiped)log);
         }
+        log = FetchLogPiped.create(
+                GlassFishExecutors.fetchLogExecutor(), instance);
+        addLog(instance, (FetchLogPiped)log);
         if (deadLog != null) {
             deadLog.close();
         }

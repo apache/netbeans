@@ -19,7 +19,11 @@
 package org.netbeans.modules.gradle.options;
 
 import java.util.prefs.Preferences;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager.JavaRuntime;
+import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -30,6 +34,7 @@ public final class GradleExperimentalSettings {
     public static final String PROP_LAZY_OPEN_GROUPS = "lazyOpen";
     public static final String PROP_BUNDLED_LOADING = "bundledLoading";
     public static final String PROP_NETWORK_PROXY = "networkProxy";
+    public static final String PROP_JAVA_RUNTIME_ID = "javaRuntimeId";
 
     private static final GradleExperimentalSettings INSTANCE = new GradleExperimentalSettings(NbPreferences.forModule(GradleExperimentalSettings.class));
     private final Preferences preferences;
@@ -81,5 +86,22 @@ public final class GradleExperimentalSettings {
     
     public void setNetworkProxy(NetworkProxySettings s) {
         getPreferences().put(PROP_NETWORK_PROXY, s.name());
+    }
+
+    public JavaRuntime getDefaultJavaRuntime() {
+        String id = getPreferences().get(PROP_JAVA_RUNTIME_ID, null);
+        JavaRuntimeManager mgr = Lookup.getDefault().lookup(JavaRuntimeManager.class);
+        JavaRuntime ret = mgr.getAvailableRuntimes().get(id);
+        ret = ret != null ? ret : mgr.getAvailableRuntimes().get(JavaRuntimeManager.DEFAULT_RUNTIME_ID);
+        return ret ;
+    }
+    
+    public void setDefaultJavaRuntime(JavaRuntime rt) {
+        if (rt != null) {
+            getPreferences().put(PROP_JAVA_RUNTIME_ID, rt.getId());
+        } else {
+            getPreferences().remove(PROP_JAVA_RUNTIME_ID);
+        }
+        
     }
 }

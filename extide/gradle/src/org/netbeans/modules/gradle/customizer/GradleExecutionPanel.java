@@ -399,7 +399,7 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         }
     }
 
-    private class RuntimeRenderer extends JLabel implements ListCellRenderer, UIResource {
+    private static class RuntimeRenderer extends JLabel implements ListCellRenderer, UIResource {
 
         @Override
         @NbBundle.Messages({

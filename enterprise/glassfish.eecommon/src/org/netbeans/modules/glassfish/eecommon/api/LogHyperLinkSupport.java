@@ -19,9 +19,8 @@
 package org.netbeans.modules.glassfish.eecommon.api;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import org.netbeans.modules.glassfish.tooling.utils.StringPrefixTree;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.GlobalPathRegistryEvent;
@@ -45,7 +44,7 @@ import org.openide.windows.OutputListener;
  */
 public class LogHyperLinkSupport {
 
-    private Map<Link, Link> links = Collections.synchronizedMap(new HashMap<Link, Link>());
+    private final ConcurrentMap<Link, Link> links = new ConcurrentHashMap<>();
     private Annotation errAnnot;
 
     /**
@@ -80,11 +79,11 @@ public class LogHyperLinkSupport {
      */
     public static class LineInfo {
 
-        private String path;
-        private int line;
-        private String message;
-        private boolean error;
-        private boolean accessible;
+        private final String path;
+        private final int line;
+        private final String message;
+        private final boolean error;
+        private final boolean accessible;
 
         /**
          * <code>LineInfo</code> is used to store info about the parsed line.
@@ -159,9 +158,9 @@ public class LogHyperLinkSupport {
      */
     public class Link implements OutputListener {
 
-        private String msg;
-        private String path;
-        private int line;
+        private final String msg;
+        private final String path;
+        private final int line;
         private int hashCode = 0;
 
         Link(String msg, String path, int line) {

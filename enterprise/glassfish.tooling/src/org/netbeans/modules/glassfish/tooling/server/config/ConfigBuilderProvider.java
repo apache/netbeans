@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
+import org.openide.util.Utilities;
 
 /**
  * Configuration builder provider.
@@ -209,8 +210,11 @@ public class ConfigBuilderProvider {
                     "GlassFish server entity shall not be null");
         }
         String serverHome = server.getServerHome();
+        String javadocsHome = Utilities.isWindows() 
+                ? serverHome + "\\docs" 
+                : serverHome + "/docs";
         return builders.computeIfAbsent(server, key -> 
-                new ConfigBuilder(config, serverHome, serverHome, serverHome));
+                new ConfigBuilder(config, serverHome, javadocsHome, serverHome));
     }
     
 

@@ -44,6 +44,7 @@ import org.netbeans.modules.parsing.spi.EmbeddingProvider;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.Parser.Result;
+import org.netbeans.modules.parsing.spi.ParserBasedEmbeddingProvider;
 import org.netbeans.modules.parsing.spi.ParserFactory;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.parsing.spi.SchedulerTask;
@@ -51,6 +52,7 @@ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.netbeans.modules.parsing.spi.TaskFactory;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.Pair;
 import org.openide.util.WeakListeners;
@@ -115,6 +117,7 @@ public final class SourceCache {
             assert embedding.getMimeType ().equals (mimeType);
             this.embedding = embedding;
             snapshot = null;
+            parsed = false; //XXX: is this correct? Without this, the new snapshot will not be parsed?
         }
     }
     //@GuardedBy(this)
@@ -265,14 +268,14 @@ public final class SourceCache {
                             embeddings;
 
     //@GuardedBy(this)
-    private List<EmbeddingProvider>
+    private List<SchedulerTask>
                             providerOrder;
 
     //@GuardedBy(this)
-    private final Map<EmbeddingProvider,List<Embedding>>
-                            embeddingProviderToEmbedings = new HashMap<EmbeddingProvider,List<Embedding>> ();
+    private final Map<SchedulerTask,List<Embedding>>
+                            embeddingProviderToEmbedings = new HashMap<> ();
     
-    public Iterable<Embedding> getAllEmbeddings () {
+    public Iterable<Embedding> getAllEmbeddings () { //XXX: TODO - should add position for the benefit of parser based embedding providers
         List<Embedding> result = this.embeddings;
         if (result != null) {
             return result;
@@ -281,14 +284,16 @@ public final class SourceCache {
 retry:  while (true) {
             final Snapshot snpsht = getSnapshot();
             final Collection<SchedulerTask> tsks = createTasks();
-            final Set<EmbeddingProvider> currentUpToDateProviders;
+            final Set<SchedulerTask> currentUpToDateProviders;
+            final Map<SchedulerTask,List<Embedding>> currentEmbeddingProviderToEmbedings;
 
             synchronized (TaskProcessor.INTERNAL_LOCK) {
                 //BEGIN
-                currentUpToDateProviders = new HashSet<EmbeddingProvider>(upToDateEmbeddingProviders);
+                currentEmbeddingProviderToEmbedings = new HashMap<> (embeddingProviderToEmbedings);
+                currentUpToDateProviders = new HashSet<>(upToDateEmbeddingProviders);
             }
 
-            final Map<EmbeddingProvider,List<Embedding>> newEmbeddings = new LinkedHashMap<EmbeddingProvider, List<Embedding>> ();
+            final Map<SchedulerTask,List<Embedding>> newEmbeddings = new LinkedHashMap<> ();
             for (SchedulerTask schedulerTask : tsks) {
                 if (schedulerTask instanceof EmbeddingProvider) {
                     final EmbeddingProvider embeddingProvider = (EmbeddingProvider) schedulerTask;
@@ -304,6 +309,21 @@ retry:  while (true) {
                         }
                         newEmbeddings.put(embeddingProvider, embForProv);
                     }
+                } else if (schedulerTask instanceof ParserBasedEmbeddingProvider) {
+                    final ParserBasedEmbeddingProvider embeddingProvider = (ParserBasedEmbeddingProvider) schedulerTask;
+                    if (currentUpToDateProviders.contains(embeddingProvider)) {
+                        newEmbeddings.put(embeddingProvider,null);
+                    } else {
+                        try {
+                            final List<Embedding> embForProv = TaskProcessor.callParserBaseEmbeddingProvider(embeddingProvider,getResult(embeddingProvider),/*XXX*/null);
+                            if (embForProv == null) {
+                                throw new NullPointerException(String.format("The %s returned null embeddings!", embeddingProvider));
+                            }
+                            newEmbeddings.put(embeddingProvider, embForProv);
+                        } catch (ParseException ex) {
+                            LOG.log(Level.FINE, null, ex);
+                        }
+                    }
                 }
             }
 
@@ -314,35 +334,49 @@ retry:  while (true) {
                         continue retry;
                     }
                     result = new LinkedList<Embedding> ();
-                    for (Map.Entry<EmbeddingProvider,List<Embedding>> entry : newEmbeddings.entrySet()) {
-                        final EmbeddingProvider embeddingProvider = entry.getKey();
+                    for (Map.Entry<SchedulerTask,List<Embedding>> entry : newEmbeddings.entrySet()) {
+                        final SchedulerTask embeddingProvider = entry.getKey();
                         final List<Embedding> embeddingsForProvider = entry.getValue();
                         if (embeddingsForProvider == null) {
-                            List<Embedding> _embeddings = embeddingProviderToEmbedings.get (embeddingProvider);
+                            List<Embedding> _embeddings = currentEmbeddingProviderToEmbedings.get (embeddingProvider);
                             result.addAll (_embeddings);
                         } else {
-                            List<Embedding> oldEmbeddings = embeddingProviderToEmbedings.get (embeddingProvider);
+                            List<Embedding> oldEmbeddings = currentEmbeddingProviderToEmbedings.get (embeddingProvider);
                             updateEmbeddings (embeddingsForProvider, oldEmbeddings, false, null);
-                            embeddingProviderToEmbedings.put (embeddingProvider, embeddingsForProvider);
+                            currentEmbeddingProviderToEmbedings.put (embeddingProvider, embeddingsForProvider);
                             upToDateEmbeddingProviders.add (embeddingProvider);
                             result.addAll (embeddingsForProvider);
                         }
                     }
                     //COMMIT
                     this.embeddings = result;
-                    this.providerOrder = new ArrayList<EmbeddingProvider>(newEmbeddings.keySet());
+                    this.providerOrder = new ArrayList<>(newEmbeddings.keySet());
                 }                
                 return this.embeddings;
             }
         }
     }
 
+    public Iterable<Embedding> getExistingEmbeddings () {
+        List<Embedding> result = this.embeddings;
+
+        if (result == null) {
+            result = Collections.emptyList();
+        }
+
+        return result;
+    }
+
     //@GuardedBy(this)
-    private final Set<EmbeddingProvider> upToDateEmbeddingProviders = new HashSet<EmbeddingProvider> ();
+    private final Set<SchedulerTask> upToDateEmbeddingProviders = new HashSet<> ();
 
     
     void refresh (EmbeddingProvider embeddingProvider, Class<? extends Scheduler> schedulerType) {
         List<Embedding> _embeddings = TaskProcessor.callEmbeddingProvider(embeddingProvider, getSnapshot ());
+        refresh(_embeddings, embeddingProvider, schedulerType);
+    }
+
+    void refresh (List<Embedding> _embeddings, SchedulerTask embeddingProvider, Class<? extends Scheduler> schedulerType) {
         List<Embedding> oldEmbeddings;
         synchronized (TaskProcessor.INTERNAL_LOCK) {
             oldEmbeddings = embeddingProviderToEmbedings.get (embeddingProvider);
@@ -351,7 +385,8 @@ retry:  while (true) {
             upToDateEmbeddingProviders.add (embeddingProvider);
             if (this.embeddings != null) {
                 final Embedding insertBefore = findNextEmbedding(providerOrder, embeddingProviderToEmbedings, embeddingProvider);
-                this.embeddings.removeAll(oldEmbeddings);
+                if (oldEmbeddings != null)
+                    this.embeddings.removeAll(oldEmbeddings);
                 int index = insertBefore == null ? -1 : this.embeddings.indexOf(insertBefore);
                 this.embeddings.addAll(index == -1 ? this.embeddings.size() : index, _embeddings);
             }
@@ -359,12 +394,12 @@ retry:  while (true) {
     }
 
     private Embedding findNextEmbedding (
-            final List<EmbeddingProvider> order,
-            final Map<EmbeddingProvider,List<Embedding>> providers2embs,
-            final EmbeddingProvider provider) {
+            final List<SchedulerTask> order,
+            final Map<SchedulerTask,List<Embedding>> providers2embs,
+            final SchedulerTask provider) {
         if (order != null) {
             boolean accept = false;
-            for (EmbeddingProvider p : order) {
+            for (SchedulerTask p : order) {
                 if (accept) {
                     final Collection<Embedding> c = providers2embs.get(p);
                     if (c != null && !c.isEmpty()) {
@@ -394,7 +429,7 @@ retry:  while (true) {
                 SourceCache cache = embeddingToCache.remove (oldEmbeddings.get (i));
                 if (cache != null) {
                     cache.setEmbedding (embeddings.get (i));
-                    assert embeddings.get (i).getMimeType ().equals (cache.getSnapshot ().getMimeType ());
+                    assert embeddings.get (i).getMimeType ().equals (cache.getSnapshot ().getMimeType ()); //TODO: the new embedding *may* have a different language!
                     embeddingToCache.put (embeddings.get (i), cache);
                 } else {
                     cache = getCache(embeddings.get(i));

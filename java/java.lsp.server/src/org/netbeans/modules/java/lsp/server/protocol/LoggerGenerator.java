@@ -75,7 +75,7 @@ public final class LoggerGenerator extends CodeActionsProvider {
     @NbBundle.Messages({
         "DN_GenerateLogger=Generate Logger...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Source)) {
             return Collections.emptyList();
@@ -106,7 +106,7 @@ public final class LoggerGenerator extends CodeActionsProvider {
         Map<String, Object> data = new HashMap<>();
         data.put(URI, uri);
         data.put(OFFSET, offset);
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateLogger(), CODE_GENERATOR_KIND, data, "workbench.action.focusActiveEditorGroup"));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateLogger(), CODE_GENERATOR_KIND, data, "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override

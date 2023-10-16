@@ -65,7 +65,7 @@ public class EnablePreviewSingleSourceFile implements PreviewEnabler {
 
         ConfigurationItem conf = new ConfigurationItem();
         conf.setScopeUri(Utils.toUri(file));
-        conf.setSection("java+.runConfig.vmOptions"); //XXX
+        conf.setSection(client.getNbCodeCapabilities().getAltConfigurationPrefix() + "runConfig.vmOptions");
         client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
             String compilerArgs = ((JsonPrimitive) ((List<Object>) c).get(0)).getAsString();
             if (compilerArgs == null) {
@@ -84,7 +84,7 @@ public class EnablePreviewSingleSourceFile implements PreviewEnabler {
             } else {
                 compilerArgs += (compilerArgs.isEmpty() ? "" : " ") + ENABLE_PREVIEW_FLAG + " " + SOURCE_FLAG + " " + realNewSourceLevel;
             }
-            client.configurationUpdate(new UpdateConfigParams("java+.runConfig", "vmOptions", compilerArgs));
+            client.configurationUpdate(new UpdateConfigParams(client.getNbCodeCapabilities().getAltConfigurationPrefix() + "runConfig", "vmOptions", compilerArgs));
             return null;
         });
     }

@@ -52,7 +52,8 @@ public class NbDdeBrowserImplTest extends NbTestCase {
     public void testGetDefaultOpenCommand () throws NbBrowserException {
         if (!org.openide.util.Utilities.isWindows ())
             return;
-        getDDEBrowserImpl().getDefaultOpenCommand ();
+//        getDDEBrowserImpl().getDefaultOpenCommand ();
+        getDDEBrowserImpl().getDefaultWindowsOpenCommand();
     }
     
     /** Test of backward method, of class org.netbeans.modules.extbrowser.NbDdeBrowserImpl. */

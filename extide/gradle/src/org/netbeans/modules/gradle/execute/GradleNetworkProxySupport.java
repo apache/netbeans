@@ -101,7 +101,7 @@ public class GradleNetworkProxySupport {
      * effective proxy is detected, the user is not asked again.
      */
     // @GuardedBy(this)
-    private Map<String, ProxyResult>    acknowledgedResults = new HashMap<>();
+    private static Map<String, ProxyResult>    acknowledgedResults = new HashMap<>();
     
     public GradleNetworkProxySupport(Project project) {
         this.project = project;

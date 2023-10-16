@@ -23,7 +23,6 @@ import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
 import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager.JavaRuntime;
 import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
-import org.openide.util.lookup.Lookups;
 
 /**
  *

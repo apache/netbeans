@@ -1465,13 +1465,16 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getAttributes());
         scan(node.getFunctionName());
 
+        // e.g. function paramHasDNFType((X&Y)|Z $test): void {}
+        boolean addedOpenParen = false;
         // #270903 add indent
         while (ts.moveNext() && (ts.token().id() == PHPTokenId.WHITESPACE
                 || isComment(ts.token())
-                || isOpenParen(ts.token()))) {
+                || (isOpenParen(ts.token()) && !addedOpenParen))) {
             addFormatToken(formatTokens);
             if (isOpenParen(ts.token())) {
                 formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
+                addedOpenParen = true;
             }
         }
         ts.movePrevious();

@@ -20,6 +20,7 @@
 package org.netbeans.modules.gradle.spi;
 
 import java.io.File;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.gradle.util.GradleVersion;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.LogLevel;
@@ -39,6 +40,8 @@ import org.openide.util.NbPreferences;
 })
 public final class GradleSettings {
 
+    private static final Logger LOG = Logger.getLogger(GradleSettings.class.getName());
+    
     public enum DownloadLibsRule {
         NEVER,
         AS_NEEDED,
@@ -100,6 +103,7 @@ public final class GradleSettings {
     public static final String PROP_START_DAEMON_ON_START = "startDaemonOnStart";
     public static final String PROP_REUSE_OUTPUT_TABS = "reuseOutputTabs";
     public static final String PROP_USE_CUSTOM_GRADLE = "useCustomGradle";
+    @Deprecated
     public static final String PROP_GRADLE_VERSION = "gradleVersion";
     @Deprecated
     public static final String PROP_SILENT_INSTALL = "silentInstall";
@@ -192,6 +196,7 @@ public final class GradleSettings {
      */
     @Deprecated
     public void setSilentInstall(boolean b) {
+        LOG.warning("silentInstall setting is deprecated. This setter has no effect.");
     }
 
     /**
@@ -245,6 +250,7 @@ public final class GradleSettings {
      */
     @Deprecated
     public void setStartDaemonOnStart(boolean b) {
+        LOG.warning("startDaemonOnStart setting is deprecated. This setter has no effect.");
     }
 
     /**
@@ -281,12 +287,18 @@ public final class GradleSettings {
         return getPreferences().getBoolean(PROP_SKIP_CHECK, true);
     }
 
+    @Deprecated
     public void setGradleVersion(String version) {
-        getPreferences().put(PROP_GRADLE_VERSION, version);
+        LOG.warning("gradleVersion setting is deprecated. This setter has no effect.");
     }
 
+    @Deprecated
+    /**
+     * Returns the Gradle Version of the Tooling API bundled with the IDE.
+     * @returns the Gradle Version of the Tooling API bundled with the IDE.
+     */
     public String getGradleVersion() {
-        return getPreferences().get(PROP_GRADLE_VERSION, GradleVersion.current().getVersion());
+        return GradleVersion.current().getVersion();
     }
 
     /**
@@ -299,6 +311,7 @@ public final class GradleSettings {
      */
     @Deprecated
     public void setNoRebuild(boolean b) {
+        LOG.warning("noRebuild setting is deprecated. This setter has no effect.");
     }
 
     /**

@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -36,7 +38,9 @@ import org.netbeans.modules.glassfish.tooling.server.config.ConfigBuilder;
 import org.netbeans.modules.glassfish.tooling.server.config.ConfigBuilderProvider;
 import org.netbeans.api.project.libraries.Library;
 import org.netbeans.api.project.libraries.LibraryManager;
+import org.netbeans.modules.glassfish.common.GlassFishLogger;
 import static org.netbeans.modules.glassfish.javaee.ide.Hk2PluginProperties.fileToUrl;
+import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
 import org.netbeans.modules.j2ee.deployment.common.api.J2eeLibraryTypeProvider;
 import org.netbeans.spi.project.libraries.LibraryImplementation;
 import org.openide.ErrorManager;
@@ -47,15 +51,19 @@ import org.openide.modules.InstalledFileLocator;
  * GlassFish bundled libraries provider.
  * <p/>
  * Builds <code>Library</code> instance containing Jersey library from GlassFish
- * modules. Actually only GlassFish v3 and v4 are supported.
- * <p/>
- * @author Tomas Kraus, Peter Benedikovic
+ * modules. Only GlassFish v3 up to v7 are supported.
+ * 
+ * @author Tomas Kraus
+ * @author Peter Benedikovic
  */
 public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
 
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
     ////////////////////////////////////////////////////////////////////////////
+    
+    /** Logger for this class. */
+    private static final Logger LOGGER = GlassFishLogger.get(Hk2LibraryProvider.class);
 
     /** Library provider type. */
     private static final String PROVIDER_TYPE = "j2se";
@@ -77,25 +85,33 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
 
     /** Java EE library name pattern to search for it in
      *  <code>GlassFishLibrary</code> list. */
-    private Pattern JAVAEE_PATTERN = Pattern.compile("[jJ]ava {0,1}[eE]{2}");
+    private final Pattern JAVAEE_PATTERN = Pattern.compile("[jJ]ava {0,1}[eE]{2}");
 
     /** Jersey library name pattern to search for it in
      *  <code>GlassFishLibrary</code> list. */
-    private Pattern JERSEY_PATTERN = Pattern.compile("[jJ]ersey.*");
+    private final Pattern JERSEY_PATTERN = Pattern.compile("[jJ]ersey.*");
 
     /** JAX-RS library name pattern to search for it in
      *  <code>GlassFishLibrary</code> list. */
-    private Pattern JAXRS_PATTERN
+    private final Pattern JAXRS_PATTERN
             = Pattern.compile("[jJ][aA][xX][ -]{0,1}[rR][sS]");
 
-    /** Code base for file locator. */
+    /** JEE 8 Code base for file locator. */
     static final String JAVAEE_DOC_CODE_BASE
             = "org.netbeans.modules.j2ee.platform";
+    
+    /** JAKARTA EE 9 Code base for file locator. */
+    static final String JAKARTAEE9_DOC_CODE_BASE
+            = "org.netbeans.modules.jakartaee9.platform";
+    
+    /** JAKARTA EE 10 Code base for file locator. */
+    static final String JAKARTAEE10_DOC_CODE_BASE
+            = "org.netbeans.modules.jakartaee10.platform";
 
     /** Internal {@see GlassFishServer} to {@see Hk2LibraryProvider}
      *  mapping. */
-    private static final Map <GlassFishServer, Hk2LibraryProvider> providers
-            = new HashMap<>();
+    private static final ConcurrentMap <GlassFishServer, Hk2LibraryProvider> providers
+            = new ConcurrentHashMap<>();
 
     ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
@@ -115,11 +131,8 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
      */
     public static Hk2LibraryProvider getProvider(GlassFishServer server) {
         Hk2LibraryProvider provider;
-        synchronized(providers) {
-            if ((provider = providers.get(server)) == null)
-                providers.put(
-                        server, provider = new Hk2LibraryProvider(server));
-        }
+        provider = providers.computeIfAbsent(server, k -> 
+                new Hk2LibraryProvider(server));
         return provider;
     }
 
@@ -137,6 +150,9 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
 
     /** GlassFish server name. */
     private final String serverName;
+    
+    /** GlassFish server version. */
+    private final GlassFishVersion serverVersion;
 
     /** GlassFish server instance. */
     private final GlassFishServer server;
@@ -172,6 +188,8 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
         }
         serverHome = server.getServerHome();
         serverName = server.getName();
+        serverVersion = server.getVersion();
+        builder = ConfigBuilderProvider.getBuilder(server);
         this.server = server;
     }
 
@@ -351,13 +369,11 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
         if (lib != null) {
             return lib;
         }
-        ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
-        List<GlassFishLibrary> gfLibs = cb.getLibraries(server.getVersion());
+        List<GlassFishLibrary> gfLibs = builder.getLibraries(serverVersion);
         for (GlassFishLibrary gfLib : gfLibs) {
             if (namePattern.matcher(gfLib.getLibraryID()).matches()) {
-                Map<String,List<URL>> contents
-                        = new HashMap<String, List<URL>>(1);
-                Map<String, String> properties = new HashMap<String, String>(2);
+                Map<String, List<URL>> contents = new HashMap<>(4);
+                Map<String, String> properties = new HashMap<>(4);
                 contents.put("classpath", translateArchiveUrls(gfLib.getClasspath()));
                 contents.put("javadoc", translateArchiveUrls(gfLib.getJavadocs()));
                 properties.put("maven-dependencies", gfLib.getMavenDeps());
@@ -371,9 +387,9 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
                             contents,
                             properties);
                 } catch (IOException ioe) {
-                    Logger.getLogger("glassfish-javaee").log(Level.WARNING,
-                            "Could not create Jersey library for "
-                            + serverName + ": ", ioe);
+                    LOGGER.log(Level.WARNING, 
+                            "Could not create Jersey library for {0}: {1}", 
+                            new Object[] {serverName, ioe});
                 }
             }
         }
@@ -390,14 +406,13 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
      */
     private void setLibraryImplementationContent(LibraryImplementation lib,
             Pattern namePattern, String libraryName) {
-        ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
-        List<GlassFishLibrary> gfLibs = cb.getLibraries(server.getVersion());
+        List<GlassFishLibrary> gfLibs = builder.getLibraries(serverVersion);
         for (GlassFishLibrary gfLib : gfLibs) {
             if (namePattern.matcher(gfLib.getLibraryID()).matches()) {
                 List<String> javadocLookups = gfLib.getJavadocLookups();
                 lib.setName(libraryName);
                 // Build class path
-                List<URL> cp = new ArrayList<URL>();
+                List<URL> cp = new ArrayList<>();
                 for (URL url : gfLib.getClasspath()) {
                     if (FileUtil.isArchiveFile(url)) {
                         cp.add(FileUtil.getArchiveRoot(url));
@@ -406,15 +421,26 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
                     }
                 }
                 // Build java docs
-                List<URL> javadoc = new ArrayList<URL>();
+                List<URL> javadoc = new ArrayList<>();
                 if (javadocLookups != null) {
                     for (String lookup : javadocLookups) {
                         try {
-                            File j2eeDoc = InstalledFileLocator
+                            File eeDoc;
+                            if (GlassFishVersion.ge(serverVersion, GlassFishVersion.GF_7_0_0)) {
+                                eeDoc = InstalledFileLocator
+                                    .getDefault().locate(lookup,
+                                    JAKARTAEE10_DOC_CODE_BASE, false);
+                            } else if (GlassFishVersion.ge(serverVersion, GlassFishVersion.GF_6)) {
+                                eeDoc = InstalledFileLocator
+                                    .getDefault().locate(lookup,
+                                    JAKARTAEE9_DOC_CODE_BASE, false);
+                            } else {
+                                eeDoc = InstalledFileLocator
                                     .getDefault().locate(lookup,
                                     JAVAEE_DOC_CODE_BASE, false);
-                            if (j2eeDoc != null) {
-                                javadoc.add(fileToUrl(j2eeDoc));
+                            }
+                            if (eeDoc != null) {
+                                javadoc.add(fileToUrl(eeDoc));
                             }
                         } catch (MalformedURLException e) {
                             ErrorManager.getDefault()
@@ -438,8 +464,7 @@ public class Hk2LibraryProvider /*implements JaxRsStackSupportImplementation*/ {
      * @param libraryName Library name in returned Library instance.
      */
     private List<URL> getLibraryClassPathURLs(Pattern namePattern) {
-        ConfigBuilder cb = ConfigBuilderProvider.getBuilder(server);
-        List<GlassFishLibrary> gfLibs = cb.getLibraries(server.getVersion());
+        List<GlassFishLibrary> gfLibs = builder.getLibraries(serverVersion);
         for (GlassFishLibrary gfLib : gfLibs) {
             if (namePattern.matcher(gfLib.getLibraryID()).matches()) {
                 return gfLib.getClasspath();

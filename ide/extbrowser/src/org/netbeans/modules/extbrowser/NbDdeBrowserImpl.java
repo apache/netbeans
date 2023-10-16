@@ -37,8 +37,10 @@ import org.openide.util.NbBundle;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.logging.Level;
+import static jdk.internal.org.jline.keymap.KeyMap.key;
 import org.openide.util.Exceptions;
 
 
@@ -80,7 +82,7 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
                 String sunDataModel = System.getProperty("sun.arch.data.model"); //NOI18N
                 if (sunDataModel != null) {
                     if ("64".equals(sunDataModel)) { //NOI18N
-                        System.loadLibrary(EXTBROWSER_DLL_64BIT);
+                        System.loadLibrary(EXTBROWSER_DLL_64BIT); 
                     } else {
                         System.loadLibrary(EXTBROWSER_DLL);
                     }
@@ -126,6 +128,29 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
      *  .html files
      */
     public static native String getDefaultOpenCommand() throws NbBrowserException;
+    
+    public static String getDefaultWindowsOpenCommand()
+    {
+        try
+        {
+            Process process = Runtime.getRuntime().exec("reg query \"HKEY_CURRENT_USER\\SOFTWARE\\Clients\\StartMenuInternet\\shell\\\" /v \"open\"");
+            
+            InputStream is = process.getInputStream();
+            StringBuilder sw = new StringBuilder();
+            
+            int c;
+            while ((c = is.read()) != -1)
+            {
+                sw.append((char)c);
+            }
+            return sw.toString();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+    }
     
     /** Sets current URL.
      *
@@ -212,7 +237,8 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
         }
         
         try {
-            String cmd = getDefaultOpenCommand ();
+//            String cmd = getDefaultOpenCommand ();
+            String cmd = NbDdeBrowserImpl.getDefaultWindowsOpenCommand();
             if (cmd != null) {
                 cmd = cmd.toUpperCase();
                 if (cmd.contains(ExtWebBrowser.IEXPLORE)) {

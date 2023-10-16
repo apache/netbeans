@@ -126,7 +126,8 @@ public class SystemDefaultBrowser extends ExtWebBrowser {
         try {
             // finds HKEY_CLASSES_ROOT\\".html" and respective HKEY_CLASSES_ROOT\\<value>\\shell\\open\\command
             // we will ignore all params here
-            b = NbDdeBrowserImpl.getDefaultOpenCommand();
+//            b = NbDdeBrowserImpl.getDefaultOpenCommand();
+            b = NbDdeBrowserImpl.getDefaultWindowsOpenCommand();
             String[] args = Utilities.parseParameters(b);
 
             if (args == null || args.length == 0) {

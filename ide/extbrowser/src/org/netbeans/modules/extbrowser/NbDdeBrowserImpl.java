@@ -129,6 +129,11 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
      */
     public static native String getDefaultOpenCommand() throws NbBrowserException;
     
+    /**
+     * solution source https://stackoverflow.com/questions/62289/read-write-to-windows-registry-using-java
+     * modified version of Oleg's solution
+     * @return 
+     */
     public static String getDefaultWindowsOpenCommand()
     {
         try
@@ -142,6 +147,48 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
             while ((c = is.read()) != -1)
             {
                 sw.append((char)c);
+            }
+            
+            String output = sw.toString();
+
+            // Output has the following format:
+            // \n<Version information>\n\n<key>    <registry type>    <value>\r\n\r\n
+            int i = output.indexOf("REG_SZ");
+            if (i == -1)
+            {
+                return null;
+            }
+
+            sw = new StringBuilder();
+            i += 6; // skip REG_SZ
+
+            // skip spaces or tabs
+            for (;;)
+            {
+               if (i > output.length())
+               {
+                   break;
+               }
+               char charExamine = output.charAt(i);
+               if (charExamine != ' ' && charExamine != '\t')
+               {
+                   break;
+               }
+               ++i;
+            }
+
+            // take everything until end of line
+            for (;;)
+            {
+               if (i > output.length())
+               {
+                   break;
+               }
+               char charExamine = output.charAt(i);
+               if (charExamine == '\r' || charExamine == '\n')
+                   break;
+               sw.append(charExamine);
+               ++i;
             }
             return sw.toString();
         }

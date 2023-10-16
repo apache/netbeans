@@ -20,6 +20,7 @@
 package org.netbeans.modules.gradle.spi;
 
 import java.io.File;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.gradle.util.GradleVersion;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine.LogLevel;
@@ -39,6 +40,8 @@ import org.openide.util.NbPreferences;
 })
 public final class GradleSettings {
 
+    private static final Logger LOG = Logger.getLogger(GradleSettings.class.getName());
+    
     public enum DownloadLibsRule {
         NEVER,
         AS_NEEDED,
@@ -96,13 +99,17 @@ public final class GradleSettings {
 
     public static final String PROP_PREFER_WRAPPER = "preferWrapper";
     public static final String PROP_GRADLE_USER_HOME = "gradleUserHome";
+    @Deprecated
     public static final String PROP_START_DAEMON_ON_START = "startDaemonOnStart";
     public static final String PROP_REUSE_OUTPUT_TABS = "reuseOutputTabs";
     public static final String PROP_USE_CUSTOM_GRADLE = "useCustomGradle";
+    @Deprecated
     public static final String PROP_GRADLE_VERSION = "gradleVersion";
+    @Deprecated
     public static final String PROP_SILENT_INSTALL = "silentInstall";
 
     public static final String PROP_OPT_OFFLINE = "offline";
+    @Deprecated
     public static final String PROP_OPT_NO_REBUILD = "noRebuild";
     public static final String PROP_OPT_USE_CONFIG_CACHE = "useConfigCache";
     public static final String PROP_OPT_CONFIGURE_ON_DEMAND = "configureOnDemand";
@@ -182,12 +189,25 @@ public final class GradleSettings {
         return dir != null ? new File(dir) : new File(System.getProperty("user.home"), ".gradle"); //NOI18N
     }
 
+    /**
+     * Not in use.
+     * @param b
+     * @deprecated
+     */
+    @Deprecated
     public void setSilentInstall(boolean b) {
-        getPreferences().putBoolean(PROP_SILENT_INSTALL, b);
+        LOG.warning("silentInstall setting is deprecated. This setter has no effect.");
     }
 
+    /**
+     * Not in use, returns {@code false}.
+     * 
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public boolean isSilentInstall() {
-        return getPreferences().getBoolean(PROP_SILENT_INSTALL, false);
+        return false;
     }
 
     public void setReuseOutputTabs(boolean b) {
@@ -223,12 +243,24 @@ public final class GradleSettings {
         return getPreferences().getBoolean(PROP_ALWAYS_SHOW_OUTPUT, true);
     }
 
+    /**
+     * Not in used.
+     * @param b
+     * @deprecated
+     */
+    @Deprecated
     public void setStartDaemonOnStart(boolean b) {
-        getPreferences().putBoolean(PROP_START_DAEMON_ON_START, b);
+        LOG.warning("startDaemonOnStart setting is deprecated. This setter has no effect.");
     }
 
+    /**
+     * Not used, returns {@code false}
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public boolean isStartDaemonOnStart() {
-        return getPreferences().getBoolean(PROP_START_DAEMON_ON_START, false);
+        return false;
     }
 
     public void setUseCustomGradle(boolean b) {
@@ -255,12 +287,18 @@ public final class GradleSettings {
         return getPreferences().getBoolean(PROP_SKIP_CHECK, true);
     }
 
+    @Deprecated
     public void setGradleVersion(String version) {
-        getPreferences().put(PROP_GRADLE_VERSION, version);
+        LOG.warning("gradleVersion setting is deprecated. This setter has no effect.");
     }
 
+    @Deprecated
+    /**
+     * Returns the Gradle Version of the Tooling API bundled with the IDE.
+     * @returns the Gradle Version of the Tooling API bundled with the IDE.
+     */
     public String getGradleVersion() {
-        return getPreferences().get(PROP_GRADLE_VERSION, GradleVersion.current().getVersion());
+        return GradleVersion.current().getVersion();
     }
 
     /**
@@ -269,11 +307,11 @@ public final class GradleSettings {
      * available to keep binary compatibility, but would be un-effective.
      * 
      * @param b
-     * @deprecated Do not use, could produce undesirable results.
+     * @deprecated Not in use, since version 2.36 (NB20)
      */
     @Deprecated
     public void setNoRebuild(boolean b) {
-        getPreferences().putBoolean(PROP_OPT_NO_REBUILD, b);
+        LOG.warning("noRebuild setting is deprecated. This setter has no effect.");
     }
 
     /**
@@ -282,11 +320,11 @@ public final class GradleSettings {
      * available to keep binary compatibility, but would return {@code false}.
      * 
      * @return whether the {@code --no-rebuild} command line option should be set by default.
-     * @deprecated Do not use, could produce undesirable results.
+     * @deprecated Always returns {@code false}, since version 2.36 (NB20)
      */
     @Deprecated
     public boolean getNoRebuild() {
-        return getPreferences().getBoolean(PROP_OPT_NO_REBUILD, false);
+        return false;
     }
 
     public void setUseConfigCache(boolean b) {

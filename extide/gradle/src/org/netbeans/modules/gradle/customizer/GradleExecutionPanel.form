@@ -97,7 +97,7 @@
               <Component id="cbAugmentedBuild" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="lbAugmentedBuild" min="-2" pref="36" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="cbIncludeOpenProjects" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="lbIncludeOpenProjects" min="-2" pref="56" max="-2" attributes="0"/>

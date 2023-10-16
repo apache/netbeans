@@ -21,7 +21,6 @@ package org.netbeans.modules.gradle.loaders;
 
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
-import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,9 +37,7 @@ import org.gradle.tooling.BuildController;
 import org.gradle.tooling.GradleConnectionException;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
-import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
 import org.openide.modules.InstalledFileLocator;
-import org.openide.modules.OnStart;
 import org.openide.modules.Places;
 import org.openide.util.RequestProcessor;
 
@@ -66,19 +63,6 @@ public final class GradleDaemon {
     private static final Logger LOG = Logger.getLogger(GradleDaemon.class.getName());
 
     private GradleDaemon() {}
-
-    @OnStart
-    public static class Loader implements Runnable {
-
-        @Override
-        public void run() {
-            GradleSettings settings = GradleSettings.getDefault();
-            GradleDistributionManager dmgr = GradleDistributionManager.get(settings.getGradleUserHome());
-            if ( settings.isStartDaemonOnStart() && dmgr.defaultDistribution().isAvailable()) {
-                GRADLE_LOADER_RP.submit(GradleDaemon::doLoadDaemon);
-            }
-        }
-    }
 
     public static String initScript() {
         File initScript = Places.getCacheSubfile("gradle/nb-tooling.gradle"); //NOI18N

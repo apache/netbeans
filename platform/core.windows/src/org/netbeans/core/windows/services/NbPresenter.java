@@ -80,8 +80,7 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.basic.BasicLookAndFeel;
-import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.basic.BasicOptionPaneUI;
 import org.netbeans.core.windows.Constants;
 import org.openide.DialogDescriptor;
 import org.openide.NotificationLineSupport;
@@ -103,8 +102,6 @@ import org.openide.util.Utilities;
  */
 class NbPresenter extends JDialog
 implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparator<Object> {
-
-    private static Boolean isJava17 = null;
 
     protected NotifyDescriptor descriptor;
 
@@ -503,20 +500,12 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             );
         }
 
-        if (UIManager.getLookAndFeel().getClass() == MetalLookAndFeel.class ||
-            UIManager.getLookAndFeel().getClass() == BasicLookAndFeel.class) {
-            optionPane.setUI(new javax.swing.plaf.basic.BasicOptionPaneUI() {
-                @Override
-                public Dimension getMinimumOptionPaneSize() {
-                    if (minimumSize == null) {
-                        //minimumSize = UIManager.getDimension("OptionPane.minimumSize");
-                        // this is called before defaults initialized?!!!
-                        return new Dimension(MinimumWidth, 50);
-                    }
-                    return new Dimension(minimumSize.width, 50);
-                }
-            });
-        }
+        // TODO move to a better place, only for testing
+        // javax.swing.plaf.basic.BasicOptionPaneUI uses hardcoded min height of 90,
+        // if no other default is set. Min height should be about the size of the
+        // used icon, so that dialogs with single-line messages can size themself properly.
+        UIManager.getDimension("OptionPane.minimumSize").setSize(BasicOptionPaneUI.MinimumWidth, 38);
+
         optionPane.setWantsInput(false);
         optionPane.getAccessibleContext().setAccessibleDescription(strMsg);
         if( null != strMsg ) {

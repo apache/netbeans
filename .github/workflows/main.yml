@@ -40,7 +40,7 @@ env:
     -Dtest-unit-sys-prop.ignore.random.failures=true
 
   # what to build and test, see nbbuild/cluster.properties
-  CLUSTER_CONFIG: 'full'
+  CLUSTER_CONFIG: 'release'
 
   # flags for conditional, long running steps or jobs configurable with labels. If this is not a PR, everything will run.
   # 'Java' label

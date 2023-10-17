@@ -68,7 +68,6 @@ derby.log
 /ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/Token.java
 /ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/TokenMgrError.java
 /profiler/lib.profiler/release/lib/
-/profiler/lib.profiler/release/BUILDINFO.txt
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/

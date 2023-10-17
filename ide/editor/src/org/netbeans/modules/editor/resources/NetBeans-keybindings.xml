@@ -177,6 +177,7 @@
     <bind actionName="toggle-highlight-search" key="OS-H"/>
     <bind actionName="toggle-rectangular-selection" key="DS-R"/>
     <bind actionName="toggle-typing-mode" key="INSERT"/>
+    <bind actionName="toggle-inline-hints" key="O-I"/>
     <bind actionName="tooltip-show" key="D-P"/>
     <bind actionName="transpose-letters" key="D-T"/>
     <bind actionName="undo" key="UNDO"/>

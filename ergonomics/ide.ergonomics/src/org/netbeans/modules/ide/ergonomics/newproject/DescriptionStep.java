@@ -21,8 +21,6 @@ package org.netbeans.modules.ide.ergonomics.newproject;
 import org.netbeans.modules.ide.ergonomics.fod.FindComponentModules;
 import org.netbeans.modules.ide.ergonomics.fod.ModulesInstaller;
 import java.awt.Component;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -31,10 +29,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -61,53 +57,52 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
-import org.openide.util.Task;
-import org.openide.util.TaskListener;
 import org.openide.util.lookup.Lookups;
 
+// TODO rename? enables modules and there is no description!
 public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>, Runnable {
 
     private ContentPanel panel;
-    private ProgressHandle handle = null;
     private Collection<UpdateElement> forEnable = null;
-    private final List<ChangeListener> listeners = new ArrayList<ChangeListener> ();
+    private final List<ChangeListener> listeners = new ArrayList<>();
     private FeatureInfo info;
     private WizardDescriptor wd;
     private ConfigurationPanel configPanel;
+    private final PresentModules findModules = new PresentModules();
 
     public DescriptionStep() {
     }
 
     @Override
-    public Component getComponent () {
+    public Component getComponent() {
         if (panel == null) {
-            configPanel = new ConfigurationPanel(new Callable<JComponent>() {
-                @Override
-                public JComponent call() throws Exception {
-                    FoDLayersProvider.getInstance().refreshForce();
-                    waitForDelegateWizard(true);
-                    return new JLabel(" ");
-                }
+            configPanel = new ConfigurationPanel(() -> {
+                FoDLayersProvider.getInstance().refreshForce();
+                waitForDelegateWizard(true);
+                return new JLabel(" ");
             });
             panel = new ContentPanel (getBundle ("DescriptionPanel_Name"));
-            panel.addPropertyChangeListener (findModules);
         }
         return panel;
     }
 
-    public HelpCtx getHelp () {
+    @Override
+    public HelpCtx getHelp() {
         return HelpCtx.DEFAULT_HELP;
     }
 
-    public boolean isValid () {
+    @Override
+    public boolean isValid() {
         return false;
     }
 
-    public synchronized void addChangeListener (ChangeListener l) {
+    @Override
+    public synchronized void addChangeListener(ChangeListener l) {
         listeners.add(l);
     }
 
-    public synchronized void removeChangeListener (ChangeListener l) {
+    @Override
+    public synchronized void removeChangeListener(ChangeListener l) {
         listeners.remove(l);
     }
 
@@ -119,7 +114,7 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
     public void run() {
         final List<ChangeListener> templist;
         synchronized (this) {
-            templist = new ArrayList<ChangeListener> (listeners);
+            templist = new ArrayList<> (listeners);
         }
         ChangeEvent e = new ChangeEvent (DescriptionStep.this);
         for (ChangeListener l : templist) {
@@ -127,70 +122,56 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
         }
     }
     
-    private final PresentModules findModules = new PresentModules();
-    private class PresentModules extends Object
-    implements PropertyChangeListener, TaskListener {
+    private final class PresentModules {
+        
         private FindComponentModules findComponents;
-        
-        @Override
-        public void propertyChange (PropertyChangeEvent evt) {
-            if (ContentPanel.FINDING_MODULES.equals (evt.getPropertyName ())) {
-                schedule();
-            }
+        private ProgressHandle progress;
+
+        private synchronized void reset() {
+            findComponents = null;
         }
-        void reset() {
-            synchronized (this) {
-                findComponents = null;
-            }
-        }
-        public synchronized void schedule() {
+
+        private synchronized void schedule() {
             if (findComponents == null) {
+                progress = ProgressHandle.createHandle(getBundle("DescriptionStep_Prepare", info.getClusterName()));
+                configPanel.onPrepare(progress);
+                progress.start();
+                panel.setComponent(configPanel);
                 findComponents = new FindComponentModules(info);
+                findComponents.onFinished(task -> presentModulesForActivation((FindComponentModules)task));
             }
-            findComponents.onFinished(this);
         }
-        @Override
-        public void taskFinished(Task task) {
-            presentModulesForActivation((FindComponentModules)task);
-        }
-        
-        final void presentModulesForActivation (FindComponentModules f) {
+
+        private void presentModulesForActivation(FindComponentModules f) {
+            progress.finish();
             forEnable = f.getModulesForEnable ();
-            if (handle != null) {
-                handle.finish ();
-                panel.replaceComponents ();
-                handle = null;
-            }
-            final  Collection<UpdateElement> toInstall = f.getModulesForInstall();
-            final  Collection<UpdateElement> elems = f.getModulesForEnable ();
-            if (!elems.isEmpty ()|| f.getIncompleteFeatures().contains(info) || !f.getUpdateErrors().isEmpty()) {
+            final Collection<UpdateElement> toInstall = f.getModulesForInstall();
+            final Collection<UpdateElement> elems = f.getModulesForEnable ();
+            if (!elems.isEmpty() || f.getIncompleteFeatures().contains(info) || !f.getUpdateErrors().isEmpty()) {
                 Collection<UpdateElement> visible = f.getVisibleUpdateElements (elems);
                 final String name = ModulesInstaller.presentUpdateElements (visible);
                 configPanel.setUpdateErrors(f.getUpdateErrors());
-                configPanel.setInfo(info, name, toInstall, f.getMissingModules(info), 
-                        f.getExtrasToDownload(), f.isDownloadRequired());
-                panel.replaceComponents(configPanel);
+                configPanel.setInfo(info, name, toInstall, f.getMissingModules(info), f.getExtrasToDownload(), f.isDownloadRequired());
                 forEnable = elems;
                 fireChange ();
             } else {
+                panel.setComponent(null);
                 FoDLayersProvider.getInstance().refreshForce();
                 waitForDelegateWizard (false);
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        waitForDelegateWizard (true);
-                        fireChange ();
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    waitForDelegateWizard(true);
+                    fireChange();
                 });
             }
         }
     };
     
-    private static String getBundle (String key, Object... params) {
-        return NbBundle.getMessage (DescriptionStep.class, key, params);
+    private static String getBundle(String key, Object... params) {
+        return NbBundle.getMessage(DescriptionStep.class, key, params);
     }
 
     @Override
-    public void readSettings (WizardDescriptor settings) {
+    public void readSettings(WizardDescriptor settings) {
         wd = settings;
         Object o = settings.getProperty (FeatureOnDemandWizardIterator.CHOSEN_TEMPLATE);
         assert o instanceof FileObject : o + " is not null and instanceof FileObject.";
@@ -205,14 +186,15 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
         findModules.schedule();
     }
 
-    public void storeSettings (WizardDescriptor settings) {
+    @Override
+    public void storeSettings(WizardDescriptor settings) {
         if (forEnable != null && ! forEnable.isEmpty ()) {
             settings.putProperty (FeatureOnDemandWizardIterator.CHOSEN_ELEMENTS_FOR_ENABLE, forEnable);
             fireChange ();
         }
     }
 
-    private void waitForDelegateWizard (final boolean fire) {
+    private void waitForDelegateWizard(final boolean fire) {
         Object o = wd.getProperty (FeatureOnDemandWizardIterator.CHOSEN_TEMPLATE);
         assert o instanceof FileObject :
             o + " is not null and instanceof FileObject";
@@ -249,7 +231,6 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
                 fo = FileUtil.getConfigFile(resource);
                 try {
                     if (fo != null) {
-                        ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
                         Object oo = DataObject.find(fo).getCookie(InstanceCookie.class).instanceCreate();
                         if (oo instanceof ServerWizardProvider && ServerWizardProviderProxy.isReal((ServerWizardProvider)oo)) {
                             iterator = ((ServerWizardProvider)oo).getInstantiatingIterator();
@@ -327,9 +308,11 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
             o = new WizardDescriptor.InstantiatingIterator<WizardDescriptor>() {
                 private TemplateWizard tw;
 
+                @Override
                 public Set instantiate() throws IOException {
                     return it.instantiate(tw);
                 }
+                @Override
                 public void initialize(WizardDescriptor wizard) {
                     tw = (TemplateWizard)wizard;
                     try {
@@ -344,39 +327,48 @@ public class DescriptionStep implements WizardDescriptor.Panel<WizardDescriptor>
                     }
                 }
 
+                @Override
                 public void uninitialize(WizardDescriptor wizard) {
                     it.uninitialize((TemplateWizard)wizard);
                     tw = null;
                 }
 
+                @Override
                 public Panel<WizardDescriptor> current() {
                     return it.current();
                 }
 
+                @Override
                 public String name() {
                     return it.name();
                 }
 
+                @Override
                 public boolean hasNext() {
                     return it.hasNext();
                 }
 
+                @Override
                 public boolean hasPrevious() {
                     return it.hasPrevious();
                 }
 
+                @Override
                 public void nextPanel() {
                     it.nextPanel();
                 }
 
+                @Override
                 public void previousPanel() {
                     it.previousPanel();
                 }
 
+                @Override
                 public void addChangeListener(ChangeListener l) {
                     it.addChangeListener(l);
                 }
 
+                @Override
                 public void removeChangeListener(ChangeListener l) {
                     it.removeChangeListener(l);
                 }

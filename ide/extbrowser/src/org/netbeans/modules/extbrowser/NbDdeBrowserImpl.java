@@ -138,7 +138,7 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
     {
         try
         {
-            Process process = Runtime.getRuntime().exec("reg query \"HKEY_CURRENT_USER\\SOFTWARE\\Clients\\StartMenuInternet\\shell\\\" /v \"open\"");
+            Process process = Runtime.getRuntime().exec("reg query reg query HKEY_CURRENT_USER\\SOFTWARE\\Clients\\StartMenuInternet\\");
             
             InputStream is = process.getInputStream();
             StringBuilder sw = new StringBuilder();

@@ -131,14 +131,15 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
     
     /**
      * solution source https://stackoverflow.com/questions/62289/read-write-to-windows-registry-using-java
-     * modified version of Oleg's solution
      * @return 
      */
     public static String getDefaultWindowsOpenCommand()
     {
         try
         {
-            Process process = Runtime.getRuntime().exec("reg query reg query HKEY_CURRENT_USER\\SOFTWARE\\Clients\\StartMenuInternet\\");
+            String queryString = "reg query HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\Shell\\Associations\\URLAssociations\\https\\UserChoice";
+//            String queeryString = "reg query HKEY_CURRENT_USER\\SOFTWARE\\Clients\\StartMenuInternet\\";
+            Process process = Runtime.getRuntime().exec(queryString);
             
             InputStream is = process.getInputStream();
             StringBuilder sw = new StringBuilder();
@@ -286,6 +287,13 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
         try {
 //            String cmd = getDefaultOpenCommand ();
             String cmd = NbDdeBrowserImpl.getDefaultWindowsOpenCommand();
+            
+            // fallback option if not found with getDefaultWindowsOpenCommand function
+            if (cmd.isEmpty())
+                {
+                    cmd = getDefaultOpenCommand();
+                }
+            
             if (cmd != null) {
                 cmd = cmd.toUpperCase();
                 if (cmd.contains(ExtWebBrowser.IEXPLORE)) {

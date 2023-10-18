@@ -52,10 +52,11 @@ public class NbDdeBrowserImplTest extends NbTestCase {
     public void testGetDefaultOpenCommand () throws NbBrowserException {
         if (!org.openide.util.Utilities.isWindows ())
             return;
-//        getDDEBrowserImpl().getDefaultOpenCommand ();
         getDDEBrowserImpl().getDefaultWindowsOpenCommand();
         
-        // fallback option if not found with getDefaultWindowsOpenCommand function
+        /** if not found with getDefaultWindowsOpenCommand function
+        *  fallback to previous method
+        */
          if (getDDEBrowserImpl().getDefaultWindowsOpenCommand().isEmpty())
         {
             getDDEBrowserImpl().getDefaultOpenCommand();

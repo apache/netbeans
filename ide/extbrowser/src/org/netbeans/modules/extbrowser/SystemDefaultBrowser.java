@@ -38,6 +38,9 @@ import org.openide.util.Utilities;
  * Browser factory for System default Win browser.
  *
  * @author Martin Grebac
+ * 
+ * @author James Pollard
+ * year: 2023
  */
 public class SystemDefaultBrowser extends ExtWebBrowser {
 

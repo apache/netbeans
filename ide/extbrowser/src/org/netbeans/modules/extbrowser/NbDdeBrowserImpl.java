@@ -62,6 +62,10 @@ import org.openide.util.Exceptions;
  * here</a>.
  *
  * @author  Radim Kubacki
+ * 
+ * 
+ * @author James Pollard
+ * year: 2023
  */
 public class NbDdeBrowserImpl extends ExtBrowserImpl {
 

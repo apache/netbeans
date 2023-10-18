@@ -30,6 +30,9 @@ import org.netbeans.junit.*;
 /**
  *
  * @author rk109395
+ * 
+ * @author James
+ * year: 2023
  */
 public class NbDdeBrowserImplTest extends NbTestCase {
 

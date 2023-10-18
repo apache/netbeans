@@ -29,6 +29,10 @@ import org.openide.awt.HtmlBrowser;
 import org.openide.util.Utilities;
 
 /** Factory and descriptions for external browser
+ * 
+ * 
+ * @author James Pollard
+ * year: 2023
  */
 
 public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable, PropertyChangeListener {

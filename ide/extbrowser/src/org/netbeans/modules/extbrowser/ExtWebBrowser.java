@@ -282,11 +282,6 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
                 // we will ignore all params here
                 browser = NbDdeBrowserImpl.getDefaultWindowsOpenCommand();
                
-                // fallback option if not found with getDefaultWindowsOpenCommand function
-                if (browser.isEmpty())
-                {
-                    browser = NbDdeBrowserImpl.getDefaultOpenCommand ();
-                }
                 String [] args = Utilities.parseParameters(browser);
 
                 if (args == null || args.length == 0) {

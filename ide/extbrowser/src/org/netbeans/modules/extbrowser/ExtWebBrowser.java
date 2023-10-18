@@ -271,7 +271,7 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
      * @return netscape without any argument.
      */
     protected NbProcessDescriptor defaultBrowserExecutable () {
-        String b = "mozilla";  // NOI18N
+        String browser = "mozilla";  // NOI18N
         if (err.isLoggable(Level.FINE)) {
             err.log(Level.FINE, "" + System.currentTimeMillis() + "> ExtBrowser: defaultBrowserExecutable: ");
         }
@@ -280,14 +280,19 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
             try {
                 // finds HKEY_CLASSES_ROOT\\".html" and respective HKEY_CLASSES_ROOT\\<value>\\shell\\open\\command
                 // we will ignore all params here
-//                b = NbDdeBrowserImpl.getDefaultOpenCommand ();
-                b = NbDdeBrowserImpl.getDefaultWindowsOpenCommand();
-                String [] args = Utilities.parseParameters(b);
+                browser = NbDdeBrowserImpl.getDefaultWindowsOpenCommand();
+               
+                // fallback option if not found with getDefaultWindowsOpenCommand function
+                if (browser.isEmpty())
+                {
+                    browser = NbDdeBrowserImpl.getDefaultOpenCommand ();
+                }
+                String [] args = Utilities.parseParameters(browser);
 
                 if (args == null || args.length == 0) {
                     throw new NbBrowserException ();
                 }
-                b = args[0];
+                browser = args[0];
                 if (args[0].toUpperCase().indexOf("IEXPLORE.EXE") > -1) {       // NOI18N
                     setDDEServer(IEXPLORE);
                     params = "-nohome ";                                         // NOI18N
@@ -299,73 +304,73 @@ public class ExtWebBrowser implements HtmlBrowser.Factory, java.io.Serializable,
                     setDDEServer(CHROME);
                 }
                 params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
-                return new NbProcessDescriptor(b, params);
+                return new NbProcessDescriptor(browser, params);
                 
             } catch (NbBrowserException e) {
                 try {
-                    b = NbDdeBrowserImpl.getBrowserPath("IEXPLORE"); // NOI18N
-                    if ((b != null) && (b.trim().length() > 0)) {
+                    browser = NbDdeBrowserImpl.getBrowserPath("IEXPLORE"); // NOI18N
+                    if ((browser != null) && (browser.trim().length() > 0)) {
                         setDDEServer(IEXPLORE);
                         params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
-                        return new NbProcessDescriptor(b, params);
+                        return new NbProcessDescriptor(browser, params);
                     }
 
-                    b = NbDdeBrowserImpl.getBrowserPath("MOZILLA"); // NOI18N
-                    if ((b != null) && (b.trim().length() > 0)) {
+                    browser = NbDdeBrowserImpl.getBrowserPath("MOZILLA"); // NOI18N
+                    if ((browser != null) && (browser.trim().length() > 0)) {
                         setDDEServer(MOZILLA);
                         params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
-                        return new NbProcessDescriptor(b, params);
+                        return new NbProcessDescriptor(browser, params);
                     }
 
-                    b = NbDdeBrowserImpl.getBrowserPath("FIREFOX"); // NOI18N
-                    if ((b != null) && (b.trim().length() > 0)) {
+                    browser = NbDdeBrowserImpl.getBrowserPath("FIREFOX"); // NOI18N
+                    if ((browser != null) && (browser.trim().length() > 0)) {
                         setDDEServer(FIREFOX);
                         params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
-                        return new NbProcessDescriptor(b, params);
+                        return new NbProcessDescriptor(browser, params);
                     }
 
-                    b = NbDdeBrowserImpl.getBrowserPath("chrome"); // NOI18N
-                    if ((b != null) && (b.trim().length() > 0)) {
+                    browser = NbDdeBrowserImpl.getBrowserPath("chrome"); // NOI18N
+                    if ((browser != null) && (browser.trim().length() > 0)) {
                         setDDEServer(CHROME);
                         params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
-                        return new NbProcessDescriptor(b, params);
+                        return new NbProcessDescriptor(browser, params);
                     }
                 } catch (NbBrowserException e2) {
                     setDDEServer(IEXPLORE);
-                    b = "C:\\Program Files\\Internet Explorer\\iexplore.exe";     // NOI18N            
+                    browser = "C:\\Program Files\\Internet Explorer\\iexplore.exe";     // NOI18N            
                 }
             } catch (UnsatisfiedLinkError e) {
                 // someone is customizing this on non-Win platform
-                b = "iexplore";     // NOI18N
+                browser = "iexplore";     // NOI18N
             }
             params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
-            return new NbProcessDescriptor (b, params);
+            return new NbProcessDescriptor (browser, params);
 
         // Unix but not MacOSX
         } else if (Utilities.isUnix() && !Utilities.isMac()) {
             
             // Linux -> Mozilla should be default
             if (Utilities.getOperatingSystem() == Utilities.OS_LINUX) {
-                b = "mozilla";                                                    // NOI18N
+                browser = "mozilla";                                                    // NOI18N
                 java.io.File f = new java.io.File ("/usr/local/mozilla/mozilla"); // NOI18N
                 if (f.exists()) {
-                    b = f.getAbsolutePath();
+                    browser = f.getAbsolutePath();
                 } else {
                     f = new java.io.File ("/usr/bin/firefox"); // NOI18N
                     if (f.exists()) {
-                        b = f.getAbsolutePath();
+                        browser = f.getAbsolutePath();
                     }
                 }
             // Solaris -> Netscape should be default
             } else if (Utilities.getOperatingSystem() == Utilities.OS_SOLARIS) {
-                b = "mozilla";                                                 // NOI18N
+                browser = "mozilla";                                                 // NOI18N
                 java.io.File f = new java.io.File ("/usr/sfw/lib/mozilla"); // NOI18N
                 if (f.exists()) {
-                    b = f.getAbsolutePath();
+                    browser = f.getAbsolutePath();
                 }
             }
 
-            return new NbProcessDescriptor( b,
+            return new NbProcessDescriptor( browser,
                 "-remote \"openURL({" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "})\"", // NOI18N
                 ExtWebBrowser.UnixBrowserFormat.getHint()
             );

@@ -54,6 +54,12 @@ public class NbDdeBrowserImplTest extends NbTestCase {
             return;
 //        getDDEBrowserImpl().getDefaultOpenCommand ();
         getDDEBrowserImpl().getDefaultWindowsOpenCommand();
+        
+        // fallback option if not found with getDefaultWindowsOpenCommand function
+         if (getDDEBrowserImpl().getDefaultWindowsOpenCommand().isEmpty())
+        {
+            getDDEBrowserImpl().getDefaultOpenCommand();
+        }
     }
     
     /** Test of backward method, of class org.netbeans.modules.extbrowser.NbDdeBrowserImpl. */

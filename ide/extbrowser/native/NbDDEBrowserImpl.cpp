@@ -453,7 +453,7 @@ extern "C" {
         sBrowser[0] = '\0';
 
         // open registry key
-        if (RegOpenKeyExW(HKEY_CURRENT_USER, L"StartMenuInternet", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
+        if (RegOpenKeyExW(HKEY_CLASSES_ROOT, L".html", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
             // query value
             if (RegQueryValueExW(hKey, NULL, NULL, &type, (LPBYTE) sReg, &len) == ERROR_SUCCESS) {
                 // process data

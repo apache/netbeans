@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.logging.Level;
-import static jdk.internal.org.jline.keymap.KeyMap.key;
 import org.openide.util.Exceptions;
 
 
@@ -130,16 +129,15 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
     public static native String getDefaultOpenCommand() throws NbBrowserException;
     
     /**
-     * solution source https://stackoverflow.com/questions/62289/read-write-to-windows-registry-using-java
+     * Get the default browser name using java
+     * part of the solution source https://stackoverflow.com/questions/62289/read-write-to-windows-registry-using-java
      * @return 
      */
-    public static String getDefaultWindowsOpenCommand()
+    private static String getDefaultWindowsBrowser()
     {
         try
         {
-            String queryString = "reg query HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\Shell\\Associations\\URLAssociations\\https\\UserChoice";
-//            String queeryString = "reg query HKEY_CURRENT_USER\\SOFTWARE\\Clients\\StartMenuInternet\\";
-            Process process = Runtime.getRuntime().exec(queryString);
+            Process process = Runtime.getRuntime().exec("reg query HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\Shell\\Associations\\URLAssociations\\https\\UserChoice /f ProgId /v");
             
             InputStream is = process.getInputStream();
             StringBuilder sw = new StringBuilder();
@@ -191,13 +189,106 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
                sw.append(charExamine);
                ++i;
             }
-            return sw.toString();
+            
+            
+            if (sw.toString().toLowerCase().contains(ExtWebBrowser.FIREFOX.toLowerCase()))
+            {
+                return ExtWebBrowser.FIREFOX;
+            }
+            else if (sw.toString().toLowerCase().contains(ExtWebBrowser.CHROME.toLowerCase()))
+            {
+                return ExtWebBrowser.CHROME;
+            }
+            else if (sw.toString().toLowerCase().contains(ExtWebBrowser.CHROMIUM.toLowerCase()))
+            {
+                return ExtWebBrowser.CHROMIUM;
+            }
+            else if (sw.toString().toLowerCase().contains(ExtWebBrowser.MOZILLA.toLowerCase()))
+            {
+                return ExtWebBrowser.MOZILLA;
+            }
+            else
+            {
+                return ExtWebBrowser.IEXPLORE;
+            }
+//            return sw.toString();
         }
-        catch (Exception ex)
+        catch (IOException ex)
         {
             ex.printStackTrace();
             return null;
         }
+    }
+    
+    private static String getDefaultWindowsOpenCommandPath(String browser)
+    {
+        try
+        {
+//            String queryString;
+            Process process = Runtime.getRuntime().exec("reg query HKEY_CLASSES_ROOT\\Applications\\" + browser.toLowerCase() + ".exe\\shell\\open\\command /t REG_SZ");
+            
+            InputStream is = process.getInputStream();
+            StringBuilder sw = new StringBuilder();
+            
+            int c;
+            while ((c = is.read()) != -1)
+            {
+                sw.append((char)c);
+            }
+            
+            String output = sw.toString();
+            
+            // Output has the following format:
+            // \n<Version information>\n\n<key>    <registry type>    <value>\r\n\r\n
+            int i = output.indexOf("REG_SZ");
+            if (i == -1)
+            {
+                return null;
+            }
+
+            sw = new StringBuilder();
+            i += 6; // skip REG_SZ
+
+            // skip spaces or tabs
+            for (;;)
+            {
+               if (i > output.length())
+               {
+                   break;
+               }
+               char charExamine = output.charAt(i);
+               if (charExamine != ' ' && charExamine != '\t')
+               {
+                   break;
+               }
+               ++i;
+            }
+
+            // take everything until end of line
+            for (;;)
+            {
+               if (i > output.length())
+               {
+                   break;
+               }
+               char charExamine = output.charAt(i);
+               if (charExamine == '\r' || charExamine == '\n')
+                   break;
+               sw.append(charExamine);
+               ++i;
+            }
+            return sw.toString();
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    
+    public static String getDefaultWindowsOpenCommand()
+    {
+        return getDefaultWindowsOpenCommandPath(getDefaultWindowsBrowser());
     }
     
     /** Sets current URL.
@@ -285,10 +376,11 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
         }
         
         try {
-//            String cmd = getDefaultOpenCommand ();
             String cmd = NbDdeBrowserImpl.getDefaultWindowsOpenCommand();
             
-            // fallback option if not found with getDefaultWindowsOpenCommand function
+            /** if not found with getDefaultWindowsOpenCommand function
+             *  fallback to previous method
+             */
             if (cmd.isEmpty())
                 {
                     cmd = getDefaultOpenCommand();

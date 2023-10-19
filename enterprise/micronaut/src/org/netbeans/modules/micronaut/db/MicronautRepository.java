@@ -71,6 +71,8 @@ import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.NotifyDescriptor.QuickPick;
+import org.openide.NotifyDescriptor.QuickPick.Item;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
@@ -90,7 +92,12 @@ public class MicronautRepository implements TemplateWizard.Iterator {
 
     @NbBundle.Messages({
         "MSG_SelectEntities=Select Entity Classes",
-        "MSG_NoEntities=No entity class found in {0}"
+        "MSG_NoEntities=No entity class found in {0}",
+        "MSG_Repository_Type=Select Repository Type",
+        "MSG_CrudRepository=CRUD Repository",
+        "DESC_CrudRepository=CrudRepository enables automatic generation of CRUD operations.",
+        "MSG_PageableRepository=Pageable Repository",
+        "DESC_PageableRepository=PageableRepository extends CrudRepository and adds methods for pagination."
     })
     public static CreateFromTemplateHandler handler() {
         return new CreateFromTemplateHandler() {
@@ -132,6 +139,14 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoEntities(sourceGroup.getRootFolder().getPath()), NotifyDescriptor.ERROR_MESSAGE));
                         return Collections.emptyList();
                     }
+                    List<Item> repoType = new ArrayList<>();
+                    Item pageableItem = new Item(Bundle.MSG_PageableRepository(), null /*Bundle.DESC_PageableRepository()*/);
+                    repoType.add(new Item(Bundle.MSG_CrudRepository(), null /*Bundle.DESC_CrudRepository()*/));
+                    repoType.add(pageableItem);
+                    QuickPick qpt = new QuickPick(Bundle.MSG_Repository_Type(), Bundle.MSG_Repository_Type(), repoType, false);
+                    if (DialogDescriptor.OK_OPTION != DialogDisplayer.getDefault().notify(qpt)) {
+                        return Collections.emptyList();
+                    }
                     NotifyDescriptor.QuickPick qp = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectEntities(), Bundle.MSG_SelectEntities(), entities, true);
                     if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qp)) {
                         String dialect = getDialect(jpaSupported);
@@ -140,7 +155,7 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                             if (item.isSelected()) {
                                 String fqn = item.getDescription() != null ? item.getDescription() + '.' + item.getLabel() : item.getLabel();
                                 String entityIdType = entity2idTypes.get(fqn);
-                                FileObject fo = generate(folder, item.getLabel(), fqn, entityIdType, dialect);
+                                FileObject fo = generate(folder, item.getLabel(), fqn, entityIdType, dialect, pageableItem.isSelected());
                                 if (fo != null) {
                                     generated.add(fo);
                                 }
@@ -172,7 +187,7 @@ public class MicronautRepository implements TemplateWizard.Iterator {
             String fqn = entry.getKey();
             int idx = fqn.lastIndexOf('.');
             String label = idx < 0 ? fqn : fqn.substring(idx + 1);
-            FileObject fo = generate(targetFolder, label, fqn, entry.getValue(), dialect);
+            FileObject fo = generate(targetFolder, label, fqn, entry.getValue(), dialect, false);
             if (fo != null) {
                 generated.add(DataObject.find(fo));
             }
@@ -324,10 +339,13 @@ public class MicronautRepository implements TemplateWizard.Iterator {
         return null;
     }
 
+    private static final String CRUD_REPOSITORY = "io.micronaut.data.repository.CrudRepository";            // NOI18N
+    private static final String PAGEABLE_REPOSITORY = "io.micronaut.data.repository.PageableRepository";    // NOI18N
+
     @NbBundle.Messages({
         "MSG_Repository_Interface=Repository interface {0}\n"
     })
-    private static FileObject generate(FileObject folder, String entityName, String entityFQN, String entityIdType, String dialect) {
+    private static FileObject generate(FileObject folder, String entityName, String entityFQN, String entityIdType, String dialect, boolean pageable) {
         try {
             String name = entityName + "Repository"; // NOI18N
             FileObject fo = GenerationUtils.createInterface(folder, name, Bundle.MSG_Repository_Interface(name));
@@ -342,7 +360,8 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                             TreeMaker tm = copy.getTreeMaker();
                             TypeMirror entityIdTM = copy.getTreeUtilities().parseType(entityIdType, (TypeElement) copy.getTrees().getElement(new TreePath(new TreePath(copy.getCompilationUnit()), origTree)));
                             List<ExpressionTree> args = Arrays.asList(tm.QualIdent(entityFQN), entityIdTM != null && entityIdTM.getKind().isPrimitive() ? tm.QualIdent(copy.getTypes().boxedClass((PrimitiveType) entityIdTM)) : tm.QualIdent(entityIdType));
-                            ParameterizedTypeTree type = tm.ParameterizedType(tm.QualIdent("io.micronaut.data.repository.CrudRepository"), args); //NOI18N
+                            String repoFaq = pageable ? PAGEABLE_REPOSITORY : CRUD_REPOSITORY;
+                            ParameterizedTypeTree type = tm.ParameterizedType(tm.QualIdent(repoFaq), args);
                             ClassTree cls = tm.addClassImplementsClause((ClassTree) origTree, type);
                             if (dialect == null) {
                                 cls = gu.addAnnotation(cls, gu.createAnnotation("io.micronaut.data.annotation.Repository")); //NOI18N
@@ -352,10 +371,6 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                                 List<ExpressionTree> annArgs = Collections.singletonList(gu.createAnnotationArgument("dialect", "io.micronaut.data.model.query.builder.sql.Dialect", dialect)); //NOI18N
                                 cls = gu.addAnnotation(cls, gu.createAnnotation("io.micronaut.data.jdbc.annotation.JdbcRepository", annArgs)); //NOI18N
                             }
-                            ModifiersTree mods = tm.Modifiers(Collections.emptySet(), Arrays.asList(gu.createAnnotation("java.lang.Override"), gu.createAnnotation("io.micronaut.core.annotation.NonNull"))); //NOI18N
-                            ParameterizedTypeTree retType = tm.ParameterizedType(tm.QualIdent("java.util.List"), Collections.singletonList(tm.QualIdent(entityFQN))); //NOI18N
-                            MethodTree findAllMethod = tm.Method(mods, "findAll", retType, Collections.<TypeParameterTree>emptyList(), Collections.<VariableTree>emptyList(), Collections.<ExpressionTree>emptyList(), (BlockTree)null, null); //NOI18N
-                            cls = tm.addClassMember(cls, findAllMethod);
                             copy.rewrite(origTree, cls);
                         }
                     }).commit();

@@ -143,25 +143,27 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
         try {
             Process process = Runtime.getRuntime().exec("reg query HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\Shell\\Associations\\URLAssociations\\https\\UserChoice /f ProgId /v");
             
-//            InputStream is = process.getInputStream();
-//            StringBuilder sw = new StringBuilder();
+            InputStream is = process.getInputStream();
+            StringBuilder sw = new StringBuilder();
             
-//            int c;
-//            while ((c = is.read()) != -1) {
-//                sw.append((char)c);
-//            }
+            int c;
+            while ((c = is.read()) != -1) {
+                sw.append((char)c);
+            }
+            
+            String output = sw.toString();
+//            String output = new String();
 //            
-//            String output = sw.toString();
-            String output = new String();
-            
-            try (InputStream is = process.getInputStream()) {
-                output = new String(is.readAllBytes(), StandardCharsets.UTF_8); // change to whatever charset reg uses
-            }
-            catch (Exception ex)
-            {
-                // using print stack trace for the time being until I become aware of a better option
-                ex.printStackTrace();
-            }
+//            try (InputStream is = process.getInputStream()) {
+                // keeps encountering  error: cannot find symbol readAllBytes(), module source level 
+               // has been set to 11 - don't know if related to openjdk
+//                output = new String(is.readAllBytes(), StandardCharsets.UTF_8); // change to whatever charset reg uses
+//            }
+//            catch (Exception ex)
+//            {
+//                // using print stack trace for the time being until I become aware of a better option
+//                ex.printStackTrace();
+//            }
 
             // Output has the following format:
             // \n<Version information>\n\n<key>    <registry type>    <value>\r\n\r\n
@@ -170,7 +172,7 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
                 return "";
             }
 
-            StringBuilder sw = new StringBuilder();
+            sw = new StringBuilder();
             i += 6; // skip REG_SZ
 
             // skip spaces or tabs
@@ -197,34 +199,22 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
                ++i;
             }
             
-            
-            switch (sw.toString().toUpperCase(Locale.ROOT)) {
-                case ExtWebBrowser.FIREFOX: return ExtWebBrowser.FIREFOX;
-                
-                case ExtWebBrowser.CHROME: return ExtWebBrowser.CHROME;
-               
-                case ExtWebBrowser.CHROMIUM: return ExtWebBrowser.CHROMIUM;
-                
-                case ExtWebBrowser.MOZILLA: return ExtWebBrowser.MOZILLA;
-                
-                default: return ExtWebBrowser.IEXPLORE;
+            // done this way so that values like FirefoxURL-308046B0AF4A39CB can be handled
+            if (sw.toString().toUpperCase().contains(ExtWebBrowser.FIREFOX)) {
+                return ExtWebBrowser.FIREFOX;
             }
-            
-//            if (sw.toString().toUpperCase().contains(ExtWebBrowser.FIREFOX)) {
-//                return ExtWebBrowser.FIREFOX;
-//            }
-//            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROME)) {
-//                return ExtWebBrowser.CHROME;
-//            }
-//            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROMIUM)) {
-//                return ExtWebBrowser.CHROMIUM;
-//            }
-//            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.MOZILLA)) {
-//                return ExtWebBrowser.MOZILLA;
-//            }
-//            else {
-//                return ExtWebBrowser.IEXPLORE;
-//            }
+            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROME)) {
+                return ExtWebBrowser.CHROME;
+            }
+            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROMIUM)) {
+                return ExtWebBrowser.CHROMIUM;
+            }
+            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.MOZILLA)) {
+                return ExtWebBrowser.MOZILLA;
+            }
+            else {
+                return ExtWebBrowser.IEXPLORE;
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
             return "";
@@ -235,26 +225,28 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
         try {
             Process process = Runtime.getRuntime().exec("reg query HKEY_CLASSES_ROOT\\Applications\\" + browser.toLowerCase() + ".exe\\shell\\open\\command /t REG_SZ");
             
-//            InputStream is = process.getInputStream();
-//            StringBuilder sw = new StringBuilder();
-//            
-//            int c;
-//            while ((c = is.read()) != -1) {
-//                sw.append((char)c);
+            InputStream is = process.getInputStream();
+            StringBuilder sw = new StringBuilder();
+            
+            int c;
+            while ((c = is.read()) != -1) {
+                sw.append((char)c);
+            }
+            
+            String output = sw.toString();
+            
+//            String output = new String();
+            
+//            try (InputStream is = process.getInputStream()) {
+                // keeps encountering  error: cannot find symbol readAllBytes(), module source level 
+               // has been set to 11 - don't know if related to openjdk
+//                output = new String(is.readAllBytes(), StandardCharsets.UTF_8); // change to whatever charset reg uses
 //            }
-//            
-//            String output = sw.toString();
-            
-            String output = new String();
-            
-            try (InputStream is = process.getInputStream()) {
-                output = new String(is.readAllBytes(), StandardCharsets.UTF_8); // change to whatever charset reg uses
-            }
-            catch (Exception ex)
-            {
-                // using print stack trace for the time being until I become aware of a better option
-                ex.printStackTrace();
-            }
+//            catch (Exception ex)
+//            {
+//                // using print stack trace for the time being until I become aware of a better option
+//                ex.printStackTrace();
+//            }
             
             // Output has the following format:
             // \n<Version information>\n\n<key>    <registry type>    <value>\r\n\r\n
@@ -263,7 +255,7 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
                 return "";
             }
 
-            StringBuilder sw = new StringBuilder();
+            sw = new StringBuilder();
             i += 6; // skip REG_SZ
 
             // skip spaces or tabs

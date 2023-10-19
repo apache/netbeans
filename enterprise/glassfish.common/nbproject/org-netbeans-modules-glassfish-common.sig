@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.96
+#Version 1.97
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1513,6 +1513,7 @@ supr java.lang.Object
 hfds delegate
 
 CLSS public final org.netbeans.modules.glassfish.common.GlassfishInstanceProvider
+fld public final static java.lang.String EE6WC_DEFAULT_NAME = "GlassFish_Server_3.1"
 fld public final static java.lang.String EE6WC_DEPLOYER_FRAGMENT = "deployer:gfv3ee6wc"
 fld public final static java.lang.String EE6_DEPLOYER_FRAGMENT = "deployer:gfv3ee6"
 fld public final static java.lang.String EE7_DEPLOYER_FRAGMENT = "deployer:gfv4ee7"
@@ -1522,10 +1523,9 @@ fld public final static java.lang.String JAKARTAEE10_DEPLOYER_FRAGMENT = "deploy
 fld public final static java.lang.String JAKARTAEE8_DEPLOYER_FRAGMENT = "deployer:gfv510ee8"
 fld public final static java.lang.String JAKARTAEE91_DEPLOYER_FRAGMENT = "deployer:gfv610ee9"
 fld public final static java.lang.String JAKARTAEE9_DEPLOYER_FRAGMENT = "deployer:gfv6ee9"
+fld public final static java.lang.String PRELUDE_DEFAULT_NAME = "GlassFish_v3_Prelude"
 fld public final static java.lang.String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"
 fld public final static java.util.Set<java.lang.String> activeRegistrationSet
-fld public static java.lang.String EE6WC_DEFAULT_NAME
-fld public static java.lang.String PRELUDE_DEFAULT_NAME
 intf org.netbeans.spi.server.ServerInstanceProvider
 intf org.openide.util.LookupListener
 meth public <%0 extends java.lang.Object> java.util.List<{%%0}> getInstancesByCapability(java.lang.Class<{%%0}>)
@@ -1657,7 +1657,7 @@ meth public static org.netbeans.modules.glassfish.common.ServerDetails valueOf(j
 meth public static org.netbeans.modules.glassfish.common.ServerDetails[] values()
 meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
 supr java.lang.Enum<org.netbeans.modules.glassfish.common.ServerDetails>
-hfds directUrl,displayName,indirectUrl,licenseUrl,serverDetails,uriFragment,versionInt
+hfds directUrl,displayName,glassFishVersion,indirectUrl,licenseUrl,serverDetails,uriFragment
 hcls DomainParser
 
 CLSS public org.netbeans.modules.glassfish.common.SimpleIO

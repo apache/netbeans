@@ -23,7 +23,6 @@
 // #include "stdafx.h"
 
 #include <windows.h>
-#include <sysinfo.h>
 #include <wchar.h>
 /*
 #include <stdio.h>

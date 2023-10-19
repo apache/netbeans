@@ -38,7 +38,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Locale;
 import java.util.logging.Level;
 import org.openide.util.Exceptions;
 
@@ -85,7 +87,7 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
                 String sunDataModel = System.getProperty("sun.arch.data.model"); //NOI18N
                 if (sunDataModel != null) {
                     if ("64".equals(sunDataModel)) { //NOI18N
-                        System.loadLibrary(EXTBROWSER_DLL_64BIT); 
+                        System.loadLibrary(EXTBROWSER_DLL_64BIT);
                     } else {
                         System.loadLibrary(EXTBROWSER_DLL);
                     }
@@ -137,54 +139,55 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
      * part of the solution source https://stackoverflow.com/questions/62289/read-write-to-windows-registry-using-java
      * @return 
      */
-    private static String getDefaultWindowsBrowser()
-    {
-        try
-        {
+    private static String getDefaultWindowsBrowser() {
+        try {
             Process process = Runtime.getRuntime().exec("reg query HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\Shell\\Associations\\URLAssociations\\https\\UserChoice /f ProgId /v");
             
-            InputStream is = process.getInputStream();
-            StringBuilder sw = new StringBuilder();
+//            InputStream is = process.getInputStream();
+//            StringBuilder sw = new StringBuilder();
             
-            int c;
-            while ((c = is.read()) != -1)
-            {
-                sw.append((char)c);
+//            int c;
+//            while ((c = is.read()) != -1) {
+//                sw.append((char)c);
+//            }
+//            
+//            String output = sw.toString();
+            String output = new String();
+            
+            try (InputStream is = process.getInputStream()) {
+                output = new String(is.readAllBytes(), StandardCharsets.UTF_8); // change to whatever charset reg uses
             }
-            
-            String output = sw.toString();
+            catch (Exception ex)
+            {
+                // using print stack trace for the time being until I become aware of a better option
+                ex.printStackTrace();
+            }
 
             // Output has the following format:
             // \n<Version information>\n\n<key>    <registry type>    <value>\r\n\r\n
             int i = output.indexOf("REG_SZ");
-            if (i == -1)
-            {
-                return null;
+            if (i == -1) {
+                return "";
             }
 
-            sw = new StringBuilder();
+            StringBuilder sw = new StringBuilder();
             i += 6; // skip REG_SZ
 
             // skip spaces or tabs
-            for (;;)
-            {
-               if (i > output.length())
-               {
+            for (;;) {
+               if (i > output.length()) {
                    break;
                }
                char charExamine = output.charAt(i);
-               if (charExamine != ' ' && charExamine != '\t')
-               {
+               if (charExamine != ' ' && charExamine != '\t') {
                    break;
                }
                ++i;
             }
 
             // take everything until end of line
-            for (;;)
-            {
-               if (i > output.length())
-               {
+            for (;;) {
+               if (i > output.length()) {
                    break;
                }
                char charExamine = output.charAt(i);
@@ -195,84 +198,89 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
             }
             
             
-            if (sw.toString().toLowerCase().contains(ExtWebBrowser.FIREFOX.toLowerCase()))
-            {
-                return ExtWebBrowser.FIREFOX;
+            switch (sw.toString().toUpperCase(Locale.ROOT)) {
+                case ExtWebBrowser.FIREFOX: return ExtWebBrowser.FIREFOX;
+                
+                case ExtWebBrowser.CHROME: return ExtWebBrowser.CHROME;
+               
+                case ExtWebBrowser.CHROMIUM: return ExtWebBrowser.CHROMIUM;
+                
+                case ExtWebBrowser.MOZILLA: return ExtWebBrowser.MOZILLA;
+                
+                default: return ExtWebBrowser.IEXPLORE;
             }
-            else if (sw.toString().toLowerCase().contains(ExtWebBrowser.CHROME.toLowerCase()))
-            {
-                return ExtWebBrowser.CHROME;
-            }
-            else if (sw.toString().toLowerCase().contains(ExtWebBrowser.CHROMIUM.toLowerCase()))
-            {
-                return ExtWebBrowser.CHROMIUM;
-            }
-            else if (sw.toString().toLowerCase().contains(ExtWebBrowser.MOZILLA.toLowerCase()))
-            {
-                return ExtWebBrowser.MOZILLA;
-            }
-            else
-            {
-                return ExtWebBrowser.IEXPLORE;
-            }
-//            return sw.toString();
-        }
-        catch (IOException ex)
-        {
+            
+//            if (sw.toString().toUpperCase().contains(ExtWebBrowser.FIREFOX)) {
+//                return ExtWebBrowser.FIREFOX;
+//            }
+//            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROME)) {
+//                return ExtWebBrowser.CHROME;
+//            }
+//            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROMIUM)) {
+//                return ExtWebBrowser.CHROMIUM;
+//            }
+//            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.MOZILLA)) {
+//                return ExtWebBrowser.MOZILLA;
+//            }
+//            else {
+//                return ExtWebBrowser.IEXPLORE;
+//            }
+        } catch (IOException ex) {
             ex.printStackTrace();
-            return null;
+            return "";
         }
     }
     
-    private static String getDefaultWindowsOpenCommandPath(String browser)
-    {
-        try
-        {
-//            String queryString;
+    private static String getDefaultWindowsOpenCommandPath(String browser) {
+        try {
             Process process = Runtime.getRuntime().exec("reg query HKEY_CLASSES_ROOT\\Applications\\" + browser.toLowerCase() + ".exe\\shell\\open\\command /t REG_SZ");
             
-            InputStream is = process.getInputStream();
-            StringBuilder sw = new StringBuilder();
+//            InputStream is = process.getInputStream();
+//            StringBuilder sw = new StringBuilder();
+//            
+//            int c;
+//            while ((c = is.read()) != -1) {
+//                sw.append((char)c);
+//            }
+//            
+//            String output = sw.toString();
             
-            int c;
-            while ((c = is.read()) != -1)
-            {
-                sw.append((char)c);
+            String output = new String();
+            
+            try (InputStream is = process.getInputStream()) {
+                output = new String(is.readAllBytes(), StandardCharsets.UTF_8); // change to whatever charset reg uses
             }
-            
-            String output = sw.toString();
+            catch (Exception ex)
+            {
+                // using print stack trace for the time being until I become aware of a better option
+                ex.printStackTrace();
+            }
             
             // Output has the following format:
             // \n<Version information>\n\n<key>    <registry type>    <value>\r\n\r\n
             int i = output.indexOf("REG_SZ");
-            if (i == -1)
-            {
-                return null;
+            if (i == -1) {
+                return "";
             }
 
-            sw = new StringBuilder();
+            StringBuilder sw = new StringBuilder();
             i += 6; // skip REG_SZ
 
             // skip spaces or tabs
-            for (;;)
-            {
-               if (i > output.length())
-               {
+            for (;;) {
+               if (i > output.length()) {
                    break;
                }
                char charExamine = output.charAt(i);
-               if (charExamine != ' ' && charExamine != '\t')
-               {
+               if (charExamine != ' ' && charExamine != '\t') {
                    break;
                }
                ++i;
             }
 
             // take everything until end of line
-            for (;;)
-            {
-               if (i > output.length())
-               {
+            for (;;) {
+               if (i > output.length()) {
                    break;
                }
                char charExamine = output.charAt(i);
@@ -282,16 +290,13 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
                ++i;
             }
             return sw.toString();
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
             ex.printStackTrace();
-            return null;
+            return "";
         }
     }
     
-    public static String getDefaultWindowsOpenCommand()
-    {
+    public static String getDefaultWindowsOpenCommand() {
         return getDefaultWindowsOpenCommandPath(getDefaultWindowsBrowser());
     }
     

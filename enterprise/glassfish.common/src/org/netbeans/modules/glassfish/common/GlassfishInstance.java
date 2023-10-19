@@ -203,13 +203,10 @@ public class GlassfishInstance implements ServerInstanceImplementation,
         public String get(Object key) {
             if (GlassfishModule.PASSWORD_ATTR.equals(key)) {
                 String value;
-                value = delegate.computeIfPresent((String)key, (k, v) -> v);
-                if (value == null) {
-                    value = getPasswordFromKeyring(
-                            delegate.get(GlassfishModule.DISPLAY_NAME_ATTR),
-                            delegate.get(GlassfishModule.USERNAME_ATTR));
-                    delegate.put((String)key, value);
-                }
+                value = delegate.computeIfAbsent((String)key, k -> 
+                            getPasswordFromKeyring(
+                                delegate.get(GlassfishModule.DISPLAY_NAME_ATTR),
+                                delegate.get(GlassfishModule.USERNAME_ATTR)));
                 return value;
             } else {
                 return delegate.computeIfPresent((String)key, (k, v) -> v);

@@ -205,14 +205,11 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
             }
             else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROME)) {
                 return ExtWebBrowser.CHROME;
-            }
-            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROMIUM)) {
+            } else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROMIUM)) {
                 return ExtWebBrowser.CHROMIUM;
-            }
-            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.MOZILLA)) {
+            } else if (sw.toString().toUpperCase().contains(ExtWebBrowser.MOZILLA)) {
                 return ExtWebBrowser.MOZILLA;
-            }
-            else {
+            } else {
                 return ExtWebBrowser.IEXPLORE;
             }
         } catch (IOException ex) {

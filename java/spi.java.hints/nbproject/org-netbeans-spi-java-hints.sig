@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.54.0
+#Version 1.56.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -307,4 +307,12 @@ hfds cancel,jackpotPattern,transformer
 CLSS public abstract interface static org.netbeans.spi.java.hints.support.TransformationSupport$Transformer
  outer org.netbeans.spi.java.hints.support.TransformationSupport
 meth public abstract void transform(org.netbeans.api.java.source.WorkingCopy,org.netbeans.api.java.source.matching.Occurrence)
+
+CLSS public abstract interface org.netbeans.spi.java.hints.unused.UsedDetector
+innr public abstract interface static Factory
+meth public abstract boolean isUsed(javax.lang.model.element.Element,com.sun.source.util.TreePath)
+
+CLSS public abstract interface static org.netbeans.spi.java.hints.unused.UsedDetector$Factory
+ outer org.netbeans.spi.java.hints.unused.UsedDetector
+meth public abstract org.netbeans.spi.java.hints.unused.UsedDetector create(org.netbeans.api.java.source.CompilationInfo)
 

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.27.0
+#Version 0.28.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -488,7 +488,7 @@ meth public void setUserName(java.lang.String)
 meth public void writeEntryHeader(byte[])
 meth public void writeEntryHeader(byte[],org.apache.commons.compress.archivers.zip.ZipEncoding,boolean) throws java.io.IOException
 supr java.lang.Object
-hfds EMPTY_TAR_ARCHIVE_ENTRY_ARRAY,aTime,birthTime,cTime,checkSumOK,dataOffset,devMajor,devMinor,extraPaxHeaders,file,groupId,groupName,isExtended,linkFlag,linkName,linkOptions,mTime,magic,mode,name,paxGNU1XSparse,paxGNUSparse,preserveAbsolutePath,realSize,size,sparseHeaders,starSparse,userId,userName,version
+hfds EMPTY_TAR_ARCHIVE_ENTRY_ARRAY,PAX_EXTENDED_HEADER_FILE_TIMES_PATTERN,aTime,birthTime,cTime,checkSumOK,dataOffset,devMajor,devMinor,extraPaxHeaders,file,groupId,groupName,isExtended,linkFlag,linkName,linkOptions,mTime,magic,mode,name,paxGNU1XSparse,paxGNUSparse,preserveAbsolutePath,realSize,size,sparseHeaders,starSparse,userId,userName,version
 
 CLSS public org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 cons public init(java.io.InputStream)
@@ -1277,7 +1277,6 @@ innr public static !enum ExtraFieldParsingMode
 intf org.apache.commons.compress.archivers.ArchiveEntry
 intf org.apache.commons.compress.archivers.EntryStreamOffsets
 meth protected int getAlignment()
-meth protected long getLocalHeaderOffset()
 meth protected void setDataOffset(long)
 meth protected void setExtra()
 meth protected void setLocalHeaderOffset(long)
@@ -1309,6 +1308,7 @@ meth public java.util.zip.ZipEntry setLastModifiedTime(java.nio.file.attribute.F
 meth public long getDataOffset()
 meth public long getDiskNumberStart()
 meth public long getExternalAttributes()
+meth public long getLocalHeaderOffset()
 meth public long getSize()
 meth public long getTime()
 meth public org.apache.commons.compress.archivers.zip.GeneralPurposeBit getGeneralPurposeBit()
@@ -1342,7 +1342,7 @@ meth public void setUnixMode(int)
 meth public void setVersionMadeBy(int)
 meth public void setVersionRequired(int)
 supr java.util.zip.ZipEntry
-hfds EMPTY_ARRAY,SHORT_MASK,SHORT_SHIFT,alignment,commentSource,dataOffset,diskNumberStart,externalAttributes,extraFields,gpb,internalAttributes,isStreamContiguous,lastModifiedDateSet,localHeaderOffset,method,name,nameSource,platform,rawFlag,rawName,size,time,unparseableExtra,versionMadeBy,versionRequired
+hfds EMPTY_ARRAY,EMPTY_LINKED_LIST,SHORT_MASK,SHORT_SHIFT,alignment,commentSource,dataOffset,diskNumberStart,externalAttributes,extraFields,gpb,internalAttributes,isStreamContiguous,lastModifiedDateSet,localHeaderOffset,method,name,nameSource,platform,rawFlag,rawName,size,time,unparseableExtra,versionMadeBy,versionRequired
 
 CLSS public final static !enum org.apache.commons.compress.archivers.zip.ZipArchiveEntry$CommentSource
  outer org.apache.commons.compress.archivers.zip.ZipArchiveEntry
@@ -1701,8 +1701,8 @@ meth public int read(byte[],int,int) throws java.io.IOException
 meth public long getBytesRemaining()
 meth public long skip(long) throws java.io.IOException
 meth public void close()
-supr java.io.InputStream
-hfds bytesRemaining,in
+supr java.io.FilterInputStream
+hfds bytesRemaining
 
 CLSS public org.apache.commons.compress.utils.BoundedSeekableByteChannelInputStream
 cons public init(long,long,java.nio.channels.SeekableByteChannel)
@@ -1787,23 +1787,20 @@ supr java.lang.Object
 CLSS public org.apache.commons.compress.utils.ChecksumCalculatingInputStream
 cons public init(java.util.zip.Checksum,java.io.InputStream)
 meth public int read() throws java.io.IOException
-meth public int read(byte[]) throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
 meth public long getValue()
 meth public long skip(long) throws java.io.IOException
-supr java.io.InputStream
-hfds checksum,in
+supr java.io.FilterInputStream
+hfds checksum
 
 CLSS public org.apache.commons.compress.utils.ChecksumVerifyingInputStream
 cons public init(java.util.zip.Checksum,java.io.InputStream,long,long)
 meth public int read() throws java.io.IOException
-meth public int read(byte[]) throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
 meth public long getBytesRemaining()
 meth public long skip(long) throws java.io.IOException
-meth public void close() throws java.io.IOException
-supr java.io.InputStream
-hfds bytesRemaining,checksum,expectedChecksum,in
+supr java.io.FilterInputStream
+hfds bytesRemaining,checksum,expectedChecksum
 
 CLSS public org.apache.commons.compress.utils.CloseShieldFilterInputStream
 cons public init(java.io.InputStream)

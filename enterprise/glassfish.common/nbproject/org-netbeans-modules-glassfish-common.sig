@@ -1657,7 +1657,7 @@ meth public static org.netbeans.modules.glassfish.common.ServerDetails valueOf(j
 meth public static org.netbeans.modules.glassfish.common.ServerDetails[] values()
 meth public static org.openide.WizardDescriptor$InstantiatingIterator getInstantiatingIterator()
 supr java.lang.Enum<org.netbeans.modules.glassfish.common.ServerDetails>
-hfds directUrl,displayName,indirectUrl,licenseUrl,serverDetails,uriFragment,versionInt
+hfds directUrl,displayName,glassFishVersion,indirectUrl,licenseUrl,serverDetails,uriFragment
 hcls DomainParser
 
 CLSS public org.netbeans.modules.glassfish.common.SimpleIO

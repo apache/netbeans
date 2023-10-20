@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.61
+#Version 2.62
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -2182,7 +2182,6 @@ supr org.apache.lucene.search.DocIdSetIterator
 
 CLSS public abstract org.apache.lucene.index.ByteVectorValues
 cons protected init()
-fld public final static int MAX_DIMENSIONS = 1024
 meth public abstract byte[] vectorValue() throws java.io.IOException
 meth public abstract int dimension()
 meth public abstract int size()
@@ -2415,8 +2414,8 @@ meth public final org.apache.lucene.index.SortedSetDocValues getSortedSetDocValu
 meth public final org.apache.lucene.index.StoredFields storedFields() throws java.io.IOException
 meth public final org.apache.lucene.index.TermVectors termVectors() throws java.io.IOException
 meth public final org.apache.lucene.index.Terms terms(java.lang.String) throws java.io.IOException
-meth public final org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,byte[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
-meth public final org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,float[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
+meth public final void searchNearestVectors(java.lang.String,byte[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits) throws java.io.IOException
+meth public final void searchNearestVectors(java.lang.String,float[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits) throws java.io.IOException
 meth public org.apache.lucene.index.Fields getTermVectors(int) throws java.io.IOException
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void checkIntegrity() throws java.io.IOException
@@ -2615,7 +2614,8 @@ meth public org.apache.lucene.index.SortedDocValues getSortedDocValues(java.lang
 meth public org.apache.lucene.index.SortedNumericDocValues getSortedNumericDocValues(java.lang.String) throws java.io.IOException
 meth public org.apache.lucene.index.SortedSetDocValues getSortedSetDocValues(java.lang.String) throws java.io.IOException
 meth public org.apache.lucene.index.Terms terms(java.lang.String) throws java.io.IOException
-meth public org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,float[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
+meth public void searchNearestVectors(java.lang.String,byte[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits) throws java.io.IOException
+meth public void searchNearestVectors(java.lang.String,float[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits) throws java.io.IOException
 supr org.apache.lucene.index.FilterLeafReader
 hfds DOCS_BETWEEN_TIMEOUT_CHECK,queryTimeout
 hcls ExitableByteVectorValues,ExitableFloatVectorValues
@@ -2828,12 +2828,12 @@ meth public org.apache.lucene.index.SortedSetDocValues getSortedSetDocValues(jav
 meth public org.apache.lucene.index.StoredFields storedFields() throws java.io.IOException
 meth public org.apache.lucene.index.TermVectors termVectors() throws java.io.IOException
 meth public org.apache.lucene.index.Terms terms(java.lang.String) throws java.io.IOException
-meth public org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,byte[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
-meth public org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,float[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
 meth public org.apache.lucene.util.Bits getLiveDocs()
 meth public static org.apache.lucene.index.LeafReader unwrap(org.apache.lucene.index.LeafReader)
 meth public void checkIntegrity() throws java.io.IOException
 meth public void document(int,org.apache.lucene.index.StoredFieldVisitor) throws java.io.IOException
+meth public void searchNearestVectors(java.lang.String,byte[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits) throws java.io.IOException
+meth public void searchNearestVectors(java.lang.String,float[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits) throws java.io.IOException
 supr org.apache.lucene.index.LeafReader
 
 CLSS public abstract static org.apache.lucene.index.FilterLeafReader$FilterFields
@@ -3024,7 +3024,6 @@ supr java.lang.Enum<org.apache.lucene.index.FilteredTermsEnum$AcceptStatus>
 
 CLSS public abstract org.apache.lucene.index.FloatVectorValues
 cons protected init()
-fld public final static int MAX_DIMENSIONS = 1024
 meth public abstract float[] vectorValue() throws java.io.IOException
 meth public abstract int dimension()
 meth public abstract int size()
@@ -3348,6 +3347,7 @@ meth public long tryDeleteDocument(org.apache.lucene.index.IndexReader,int) thro
 meth public long updateBinaryDocValue(org.apache.lucene.index.Term,java.lang.String,org.apache.lucene.util.BytesRef) throws java.io.IOException
 meth public long updateDocument(org.apache.lucene.index.Term,java.lang.Iterable<? extends org.apache.lucene.index.IndexableField>) throws java.io.IOException
 meth public long updateDocuments(org.apache.lucene.index.Term,java.lang.Iterable<? extends java.lang.Iterable<? extends org.apache.lucene.index.IndexableField>>) throws java.io.IOException
+meth public long updateDocuments(org.apache.lucene.search.Query,java.lang.Iterable<? extends java.lang.Iterable<? extends org.apache.lucene.index.IndexableField>>) throws java.io.IOException
 meth public long updateNumericDocValue(org.apache.lucene.index.Term,java.lang.String,long) throws java.io.IOException
 meth public org.apache.lucene.analysis.Analyzer getAnalyzer()
 meth public org.apache.lucene.index.IndexWriter$DocStats getDocStats()
@@ -3508,10 +3508,10 @@ meth public abstract org.apache.lucene.index.SortedDocValues getSortedDocValues(
 meth public abstract org.apache.lucene.index.SortedNumericDocValues getSortedNumericDocValues(java.lang.String) throws java.io.IOException
 meth public abstract org.apache.lucene.index.SortedSetDocValues getSortedSetDocValues(java.lang.String) throws java.io.IOException
 meth public abstract org.apache.lucene.index.Terms terms(java.lang.String) throws java.io.IOException
-meth public abstract org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,byte[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
-meth public abstract org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,float[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
 meth public abstract org.apache.lucene.util.Bits getLiveDocs()
 meth public abstract void checkIntegrity() throws java.io.IOException
+meth public abstract void searchNearestVectors(java.lang.String,byte[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits) throws java.io.IOException
+meth public abstract void searchNearestVectors(java.lang.String,float[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits) throws java.io.IOException
 meth public final int docFreq(org.apache.lucene.index.Term) throws java.io.IOException
 meth public final int getDocCount(java.lang.String) throws java.io.IOException
 meth public final long getSumDocFreq(java.lang.String) throws java.io.IOException
@@ -3520,6 +3520,8 @@ meth public final long totalTermFreq(org.apache.lucene.index.Term) throws java.i
 meth public final org.apache.lucene.index.LeafReaderContext getContext()
 meth public final org.apache.lucene.index.PostingsEnum postings(org.apache.lucene.index.Term) throws java.io.IOException
 meth public final org.apache.lucene.index.PostingsEnum postings(org.apache.lucene.index.Term,int) throws java.io.IOException
+meth public final org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,byte[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
+meth public final org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,float[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
 supr org.apache.lucene.index.IndexReader
 hfds readerContext
 
@@ -4071,11 +4073,11 @@ meth public org.apache.lucene.index.SortedSetDocValues getSortedSetDocValues(jav
 meth public org.apache.lucene.index.StoredFields storedFields() throws java.io.IOException
 meth public org.apache.lucene.index.TermVectors termVectors() throws java.io.IOException
 meth public org.apache.lucene.index.Terms terms(java.lang.String) throws java.io.IOException
-meth public org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,byte[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
-meth public org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,float[],int,org.apache.lucene.util.Bits,int) throws java.io.IOException
 meth public org.apache.lucene.util.Bits getLiveDocs()
 meth public void checkIntegrity() throws java.io.IOException
 meth public void document(int,org.apache.lucene.index.StoredFieldVisitor) throws java.io.IOException
+meth public void searchNearestVectors(java.lang.String,byte[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits) throws java.io.IOException
+meth public void searchNearestVectors(java.lang.String,float[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits) throws java.io.IOException
 supr org.apache.lucene.index.LeafReader
 hfds closeSubReaders,completeReaderSet,fieldInfos,fieldToReader,hasDeletions,maxDoc,metaData,numDocs,parallelReaders,storedFieldsReaders,termsFieldToReader,tvFieldToReader
 hcls ParallelFields
@@ -4553,6 +4555,7 @@ meth public org.apache.lucene.index.IndexReader$CacheHelper getCoreCacheHelper()
 meth public org.apache.lucene.index.IndexReader$CacheHelper getReaderCacheHelper()
 meth public org.apache.lucene.index.LeafMetaData getMetaData()
 meth public org.apache.lucene.util.Bits getLiveDocs()
+meth public static org.apache.lucene.index.CodecReader wrap(org.apache.lucene.index.CodecReader,org.apache.lucene.index.Sorter$DocMap,org.apache.lucene.search.Sort)
 meth public static org.apache.lucene.index.CodecReader wrap(org.apache.lucene.index.CodecReader,org.apache.lucene.search.Sort) throws java.io.IOException
 supr org.apache.lucene.index.FilterCodecReader
 hfds cacheIsNorms,cacheStats,cachedField,cachedObject,docMap,metaData
@@ -4773,6 +4776,7 @@ CLSS public abstract !enum org.apache.lucene.index.VectorSimilarityFunction
 fld public final static org.apache.lucene.index.VectorSimilarityFunction COSINE
 fld public final static org.apache.lucene.index.VectorSimilarityFunction DOT_PRODUCT
 fld public final static org.apache.lucene.index.VectorSimilarityFunction EUCLIDEAN
+fld public final static org.apache.lucene.index.VectorSimilarityFunction MAXIMUM_INNER_PRODUCT
 meth public abstract float compare(byte[],byte[])
 meth public abstract float compare(float[],float[])
 meth public static org.apache.lucene.index.VectorSimilarityFunction valueOf(java.lang.String)
@@ -4782,6 +4786,20 @@ supr java.lang.Enum<org.apache.lucene.index.VectorSimilarityFunction>
 CLSS public abstract org.apache.lucene.index.VectorValues
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.apache.lucene.index.FloatVectorValues
+
+CLSS public abstract org.apache.lucene.search.AbstractKnnCollector
+cons protected init(int,long)
+intf org.apache.lucene.search.KnnCollector
+meth public abstract boolean collect(int,float)
+meth public abstract float minCompetitiveSimilarity()
+meth public abstract org.apache.lucene.search.TopDocs topDocs()
+meth public final boolean earlyTerminated()
+meth public final int k()
+meth public final long visitLimit()
+meth public final long visitedCount()
+meth public final void incVisitedCount(int)
+supr java.lang.Object
+hfds k,visitLimit,visitedCount
 
 CLSS public org.apache.lucene.search.AutomatonQuery
 cons public init(org.apache.lucene.index.Term,org.apache.lucene.util.automaton.Automaton)
@@ -4811,7 +4829,7 @@ innr public abstract static RewriteMethod
 innr public static Builder
 innr public static DisjunctionMaxRewrite
 meth public boolean equals(java.lang.Object)
-meth public final org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public final org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public int hashCode()
 meth public java.lang.String toString(java.lang.String)
 meth public void visit(org.apache.lucene.search.QueryVisitor)
@@ -4843,17 +4861,6 @@ CLSS public abstract static org.apache.lucene.search.BlendedTermQuery$RewriteMet
 cons protected init()
 meth public abstract org.apache.lucene.search.Query rewrite(org.apache.lucene.search.Query[])
 supr java.lang.Object
-
-CLSS public org.apache.lucene.search.BlockMaxDISI
-cons public init(org.apache.lucene.search.DocIdSetIterator,org.apache.lucene.search.Scorer)
-fld protected final org.apache.lucene.search.Scorer scorer
-meth public int advance(int) throws java.io.IOException
-meth public int docID()
-meth public int nextDoc() throws java.io.IOException
-meth public long cost()
-meth public void setMinCompetitiveScore(float)
-supr org.apache.lucene.search.DocIdSetIterator
-hfds in,maxScore,minScore,upTo
 
 CLSS public final org.apache.lucene.search.BooleanClause
 cons public init(org.apache.lucene.search.Query,org.apache.lucene.search.BooleanClause$Occur)
@@ -4889,7 +4896,7 @@ meth public int getMinimumNumberShouldMatch()
 meth public int hashCode()
 meth public java.lang.String toString(java.lang.String)
 meth public java.util.List<org.apache.lucene.search.BooleanClause> clauses()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float) throws java.io.IOException
 meth public static int getMaxClauseCount()
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
@@ -4939,7 +4946,7 @@ meth public float getBoost()
 meth public int hashCode()
 meth public java.lang.String toString(java.lang.String)
 meth public org.apache.lucene.search.Query getQuery()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
 supr org.apache.lucene.search.Query
@@ -4962,6 +4969,10 @@ supr org.apache.lucene.search.FilterCollector
 hfds INITIAL_ARRAY_SIZE,cached
 hcls CachedScorable,NoScoreCachingCollector,NoScoreCachingLeafCollector,ScoreCachingCollector,ScoreCachingLeafCollector
 
+CLSS public abstract interface org.apache.lucene.search.CheckedIntConsumer<%0 extends java.lang.Exception>
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract void accept(int) throws {org.apache.lucene.search.CheckedIntConsumer%0}
+
 CLSS public org.apache.lucene.search.CollectionStatistics
 cons public init(java.lang.String,long,long,long,long)
 meth public final java.lang.String field()
@@ -4975,6 +4986,7 @@ hfds docCount,field,maxDoc,sumDocFreq,sumTotalTermFreq
 
 CLSS public final org.apache.lucene.search.CollectionTerminatedException
 cons public init()
+meth public java.lang.Throwable fillInStackTrace()
 supr java.lang.RuntimeException
 
 CLSS public abstract interface org.apache.lucene.search.Collector
@@ -5002,7 +5014,7 @@ meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public java.lang.String toString(java.lang.String)
 meth public org.apache.lucene.search.Query getQuery()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
 supr org.apache.lucene.search.Query
@@ -5056,6 +5068,7 @@ meth public java.util.Iterator<org.apache.lucene.search.DisiWrapper> iterator()
 meth public org.apache.lucene.search.DisiWrapper add(org.apache.lucene.search.DisiWrapper)
 meth public org.apache.lucene.search.DisiWrapper pop()
 meth public org.apache.lucene.search.DisiWrapper top()
+meth public org.apache.lucene.search.DisiWrapper top2()
 meth public org.apache.lucene.search.DisiWrapper topList()
 meth public org.apache.lucene.search.DisiWrapper updateTop()
 meth public void addAll(org.apache.lucene.search.DisiWrapper[],int,int)
@@ -5074,7 +5087,7 @@ fld public final org.apache.lucene.search.TwoPhaseIterator twoPhaseView
 fld public int doc
 fld public org.apache.lucene.search.DisiWrapper next
 supr java.lang.Object
-hfds maxScore,scaledMaxScore
+hfds maxWindowScore,scaledMaxScore
 
 CLSS public org.apache.lucene.search.DisjunctionDISIApproximation
 cons public init(org.apache.lucene.search.DisiPriorityQueue)
@@ -5095,7 +5108,7 @@ meth public int hashCode()
 meth public java.lang.String toString(java.lang.String)
 meth public java.util.Collection<org.apache.lucene.search.Query> getDisjuncts()
 meth public java.util.Iterator<org.apache.lucene.search.Query> iterator()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
 supr org.apache.lucene.search.Query
@@ -5109,6 +5122,7 @@ meth public boolean isCacheable(org.apache.lucene.index.LeafReaderContext)
 meth public org.apache.lucene.search.Explanation explain(org.apache.lucene.index.LeafReaderContext,int) throws java.io.IOException
 meth public org.apache.lucene.search.Matches matches(org.apache.lucene.index.LeafReaderContext,int) throws java.io.IOException
 meth public org.apache.lucene.search.Scorer scorer(org.apache.lucene.index.LeafReaderContext) throws java.io.IOException
+meth public org.apache.lucene.search.ScorerSupplier scorerSupplier(org.apache.lucene.index.LeafReaderContext) throws java.io.IOException
 supr org.apache.lucene.search.Weight
 hfds scoreMode
 
@@ -5132,6 +5146,12 @@ meth public abstract long cost()
 meth public final static org.apache.lucene.search.DocIdSetIterator all(int)
 meth public final static org.apache.lucene.search.DocIdSetIterator empty()
 meth public final static org.apache.lucene.search.DocIdSetIterator range(int,int)
+supr java.lang.Object
+
+CLSS public abstract org.apache.lucene.search.DocIdStream
+cons protected init()
+meth public abstract void forEach(org.apache.lucene.search.CheckedIntConsumer<java.io.IOException>) throws java.io.IOException
+meth public int count() throws java.io.IOException
 supr java.lang.Object
 
 CLSS public final org.apache.lucene.search.DocValuesFieldExistsQuery
@@ -5273,7 +5293,7 @@ meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public java.lang.String getField()
 meth public java.lang.String toString(java.lang.String)
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float)
 meth public static org.apache.lucene.search.DocIdSetIterator getDocValuesDocIdSetIterator(java.lang.String,org.apache.lucene.index.LeafReader) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
@@ -5316,6 +5336,7 @@ fld protected final org.apache.lucene.search.LeafCollector in
 intf org.apache.lucene.search.LeafCollector
 meth public java.lang.String toString()
 meth public void collect(int) throws java.io.IOException
+meth public void finish() throws java.io.IOException
 meth public void setScorer(org.apache.lucene.search.Scorable) throws java.io.IOException
 supr java.lang.Object
 
@@ -5365,7 +5386,7 @@ supr org.apache.lucene.search.Weight
 CLSS public abstract org.apache.lucene.search.FilteredDocIdSetIterator
 cons public init(org.apache.lucene.search.DocIdSetIterator)
 fld protected org.apache.lucene.search.DocIdSetIterator _innerIter
-meth protected abstract boolean match(int)
+meth protected abstract boolean match(int) throws java.io.IOException
 meth public int advance(int) throws java.io.IOException
 meth public int docID()
 meth public int nextDoc() throws java.io.IOException
@@ -5432,16 +5453,15 @@ meth protected final boolean lessThan(org.apache.lucene.search.ScoreDoc,org.apac
 supr org.apache.lucene.util.PriorityQueue<org.apache.lucene.search.ScoreDoc>
 
 CLSS public final org.apache.lucene.search.ImpactsDISI
-cons public init(org.apache.lucene.search.DocIdSetIterator,org.apache.lucene.index.ImpactsSource,org.apache.lucene.search.similarities.Similarity$SimScorer)
-meth public float getMaxScore(int) throws java.io.IOException
+cons public init(org.apache.lucene.search.DocIdSetIterator,org.apache.lucene.search.MaxScoreCache)
 meth public int advance(int) throws java.io.IOException
-meth public int advanceShallow(int) throws java.io.IOException
 meth public int docID()
 meth public int nextDoc() throws java.io.IOException
 meth public long cost()
+meth public org.apache.lucene.search.MaxScoreCache getMaxScoreCache()
 meth public void setMinCompetitiveScore(float)
 supr org.apache.lucene.search.DocIdSetIterator
-hfds impactsSource,in,maxScore,maxScoreCache,minCompetitiveScore,upTo
+hfds in,maxScore,maxScoreCache,minCompetitiveScore,upTo
 
 CLSS public final org.apache.lucene.search.IndexOrDocValuesQuery
 cons public init(org.apache.lucene.search.Query,org.apache.lucene.search.Query)
@@ -5450,7 +5470,7 @@ meth public int hashCode()
 meth public java.lang.String toString(java.lang.String)
 meth public org.apache.lucene.search.Query getIndexQuery()
 meth public org.apache.lucene.search.Query getRandomAccessQuery()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
 supr org.apache.lucene.search.Query
@@ -5513,7 +5533,8 @@ meth public void setQueryCachingPolicy(org.apache.lucene.search.QueryCachingPoli
 meth public void setSimilarity(org.apache.lucene.search.similarities.Similarity)
 meth public void setTimeout(org.apache.lucene.index.QueryTimeout)
 supr java.lang.Object
-hfds DEFAULT_CACHING_POLICY,DEFAULT_QUERY_CACHE,MAX_DOCS_PER_SLICE,MAX_SEGMENTS_PER_SLICE,TOTAL_HITS_THRESHOLD,defaultSimilarity,executor,leafSlices,maxClauseCount,partialResult,queryCache,queryCachingPolicy,queryTimeout,reader,similarity,sliceExecutor
+hfds DEFAULT_CACHING_POLICY,DEFAULT_QUERY_CACHE,MAX_DOCS_PER_SLICE,MAX_SEGMENTS_PER_SLICE,TOTAL_HITS_THRESHOLD,defaultSimilarity,executor,leafSlicesSupplier,maxClauseCount,partialResult,queryCache,queryCachingPolicy,queryTimeout,reader,similarity,taskExecutor
+hcls CachingLeafSlicesSupplier
 
 CLSS public static org.apache.lucene.search.IndexSearcher$LeafSlice
  outer org.apache.lucene.search.IndexSearcher
@@ -5540,7 +5561,7 @@ meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public java.lang.String toString(java.lang.String)
 meth public org.apache.lucene.search.Query getFallbackQuery()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
 supr org.apache.lucene.search.Query
@@ -5617,10 +5638,20 @@ meth public int hashCode()
 meth public java.lang.String getField()
 meth public java.lang.String toString(java.lang.String)
 meth public org.apache.lucene.search.Query getFilter()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
 supr org.apache.lucene.search.Query
 hfds NO_RESULTS,target
+
+CLSS public abstract interface org.apache.lucene.search.KnnCollector
+meth public abstract boolean collect(int,float)
+meth public abstract boolean earlyTerminated()
+meth public abstract float minCompetitiveSimilarity()
+meth public abstract int k()
+meth public abstract long visitLimit()
+meth public abstract long visitedCount()
+meth public abstract org.apache.lucene.search.TopDocs topDocs()
+meth public abstract void incVisitedCount(int)
 
 CLSS public org.apache.lucene.search.KnnFloatVectorQuery
 cons public init(java.lang.String,float[],int)
@@ -5636,7 +5667,7 @@ meth public int hashCode()
 meth public java.lang.String getField()
 meth public java.lang.String toString(java.lang.String)
 meth public org.apache.lucene.search.Query getFilter()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
 supr org.apache.lucene.search.Query
 hfds NO_RESULTS,target
@@ -5697,6 +5728,8 @@ CLSS public abstract interface org.apache.lucene.search.LeafCollector
 meth public abstract void collect(int) throws java.io.IOException
 meth public abstract void setScorer(org.apache.lucene.search.Scorable) throws java.io.IOException
 meth public org.apache.lucene.search.DocIdSetIterator competitiveIterator() throws java.io.IOException
+meth public void collect(org.apache.lucene.search.DocIdStream) throws java.io.IOException
+meth public void finish() throws java.io.IOException
 
 CLSS public abstract interface org.apache.lucene.search.LeafFieldComparator
 meth public abstract int compareBottom(int) throws java.io.IOException
@@ -5829,6 +5862,13 @@ meth public void setMaxNonCompetitiveBoost(float)
 supr org.apache.lucene.util.AttributeImpl
 hfds competitiveTerm,maxNonCompetitiveBoost
 
+CLSS public final org.apache.lucene.search.MaxScoreCache
+cons public init(org.apache.lucene.index.ImpactsSource,org.apache.lucene.search.similarities.Similarity$SimScorer)
+meth public float getMaxScore(int) throws java.io.IOException
+meth public int advanceShallow(int) throws java.io.IOException
+supr java.lang.Object
+hfds globalMaxScore,impactsSource,maxScoreCache,maxScoreCacheUpTo,scorer
+
 CLSS public org.apache.lucene.search.MultiCollector
 intf org.apache.lucene.search.Collector
 meth public !varargs static org.apache.lucene.search.Collector wrap(org.apache.lucene.search.Collector[])
@@ -5860,7 +5900,7 @@ meth public int getSlop()
 meth public int hashCode()
 meth public int[] getPositions()
 meth public org.apache.lucene.index.Term[][] getTermArrays()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
 supr org.apache.lucene.search.Query
@@ -5923,7 +5963,7 @@ meth protected abstract org.apache.lucene.index.TermsEnum getTermsEnum(org.apach
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.String getField()
 meth public final org.apache.lucene.index.TermsEnum getTermsEnum(org.apache.lucene.index.Terms) throws java.io.IOException
-meth public final org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public final org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public int hashCode()
 meth public long getTermsCount() throws java.io.IOException
 meth public org.apache.lucene.search.MultiTermQuery$RewriteMethod getRewriteMethod()
@@ -5986,7 +6026,7 @@ meth public int hashCode()
 meth public int[] getPositions()
 meth public java.lang.String toString(java.lang.String)
 meth public org.apache.lucene.index.Term[] getTerms()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
 supr org.apache.lucene.search.Query
 hfds n,phraseQuery
@@ -6030,7 +6070,7 @@ meth public int[] getPositions()
 meth public java.lang.String getField()
 meth public java.lang.String toString(java.lang.String)
 meth public org.apache.lucene.index.Term[] getTerms()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float) throws java.io.IOException
 meth public static float termPositionsCost(org.apache.lucene.index.TermsEnum) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
@@ -6138,9 +6178,11 @@ meth public abstract java.lang.String toString(java.lang.String)
 meth public abstract void visit(org.apache.lucene.search.QueryVisitor)
 meth public final java.lang.String toString()
 meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float) throws java.io.IOException
 supr java.lang.Object
-hfds CLASS_NAME_HASH
+hfds CLASS_NAME_HASH,isDeprecatedRewriteMethodOverridden,newMethod,oldMethod
 
 CLSS public abstract interface org.apache.lucene.search.QueryCache
 meth public abstract org.apache.lucene.search.Weight doCache(org.apache.lucene.search.Weight,org.apache.lucene.search.QueryCachingPolicy)
@@ -6275,6 +6317,7 @@ CLSS public abstract org.apache.lucene.search.ScorerSupplier
 cons public init()
 meth public abstract long cost()
 meth public abstract org.apache.lucene.search.Scorer get(long) throws java.io.IOException
+meth public void setTopLevelScoringClause() throws java.io.IOException
 supr java.lang.Object
 
 CLSS public abstract org.apache.lucene.search.ScoringRewrite<%0 extends java.lang.Object>
@@ -6535,7 +6578,7 @@ meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public java.lang.String toString(java.lang.String)
 meth public java.util.List<org.apache.lucene.index.Term> getTerms()
-meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.index.IndexReader) throws java.io.IOException
+meth public org.apache.lucene.search.Query rewrite(org.apache.lucene.search.IndexSearcher) throws java.io.IOException
 meth public org.apache.lucene.search.Weight createWeight(org.apache.lucene.search.IndexSearcher,org.apache.lucene.search.ScoreMode,float) throws java.io.IOException
 meth public void visit(org.apache.lucene.search.QueryVisitor)
 supr org.apache.lucene.search.Query
@@ -6603,6 +6646,7 @@ supr org.apache.lucene.search.AutomatonQuery
 hfds includeLower,includeUpper,lowerTerm,upperTerm
 
 CLSS public final org.apache.lucene.search.TermScorer
+cons public init(org.apache.lucene.search.Weight,org.apache.lucene.index.ImpactsEnum,org.apache.lucene.search.LeafSimScorer,boolean)
 cons public init(org.apache.lucene.search.Weight,org.apache.lucene.index.PostingsEnum,org.apache.lucene.search.LeafSimScorer)
 meth public final int freq() throws java.io.IOException
 meth public float getMaxScore(int) throws java.io.IOException
@@ -6614,7 +6658,7 @@ meth public java.lang.String toString()
 meth public org.apache.lucene.search.DocIdSetIterator iterator()
 meth public void setMinCompetitiveScore(float)
 supr org.apache.lucene.search.Scorer
-hfds docScorer,impactsDisi,impactsEnum,iterator,postingsEnum
+hfds docScorer,impactsDisi,iterator,maxScoreCache,postingsEnum
 
 CLSS public org.apache.lucene.search.TermStatistics
 cons public init(org.apache.lucene.util.BytesRef,long,long)
@@ -6715,6 +6759,15 @@ CLSS public org.apache.lucene.search.TopFieldDocs
 cons public init(org.apache.lucene.search.TotalHits,org.apache.lucene.search.ScoreDoc[],org.apache.lucene.search.SortField[])
 fld public org.apache.lucene.search.SortField[] fields
 supr org.apache.lucene.search.TopDocs
+
+CLSS public final org.apache.lucene.search.TopKnnCollector
+cons public init(int,int)
+meth public boolean collect(int,float)
+meth public float minCompetitiveSimilarity()
+meth public java.lang.String toString()
+meth public org.apache.lucene.search.TopDocs topDocs()
+supr org.apache.lucene.search.AbstractKnnCollector
+hfds queue
 
 CLSS public abstract org.apache.lucene.search.TopScoreDocCollector
 innr public abstract static ScorerLeafCollector
@@ -6821,7 +6874,6 @@ meth public org.apache.lucene.search.BulkScorer bulkScorer(org.apache.lucene.ind
 meth public org.apache.lucene.search.Matches matches(org.apache.lucene.index.LeafReaderContext,int) throws java.io.IOException
 meth public org.apache.lucene.search.ScorerSupplier scorerSupplier(org.apache.lucene.index.LeafReaderContext) throws java.io.IOException
 supr java.lang.Object
-hcls StartDISIWrapper
 
 CLSS protected static org.apache.lucene.search.Weight$DefaultBulkScorer
  outer org.apache.lucene.search.Weight
@@ -7035,11 +7087,11 @@ meth public org.apache.lucene.index.SortedSetDocValues getSortedSetDocValues(jav
 meth public org.apache.lucene.index.StoredFields storedFields() throws java.io.IOException
 meth public org.apache.lucene.index.TermVectors termVectors() throws java.io.IOException
 meth public org.apache.lucene.index.Terms terms(java.lang.String) throws java.io.IOException
-meth public org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,byte[],int,org.apache.lucene.util.Bits,int)
-meth public org.apache.lucene.search.TopDocs searchNearestVectors(java.lang.String,float[],int,org.apache.lucene.util.Bits,int)
 meth public org.apache.lucene.util.Bits getLiveDocs()
 meth public void checkIntegrity() throws java.io.IOException
 meth public void document(int,org.apache.lucene.index.StoredFieldVisitor) throws java.io.IOException
+meth public void searchNearestVectors(java.lang.String,byte[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits)
+meth public void searchNearestVectors(java.lang.String,float[],org.apache.lucene.search.KnnCollector,org.apache.lucene.util.Bits)
 supr org.apache.lucene.index.LeafReader
 hfds fieldInfos,fields
 
@@ -7216,6 +7268,9 @@ meth public org.apache.lucene.store.BufferedIndexInput clone()
 meth public org.apache.lucene.store.IndexInput slice(java.lang.String,long,long) throws java.io.IOException
 meth public static int bufferSize(org.apache.lucene.store.IOContext)
 meth public static org.apache.lucene.store.BufferedIndexInput wrap(java.lang.String,org.apache.lucene.store.IndexInput,long,long)
+meth public void readFloats(float[],int,int) throws java.io.IOException
+meth public void readInts(int[],int,int) throws java.io.IOException
+meth public void readLongs(long[],int,int) throws java.io.IOException
 supr org.apache.lucene.store.IndexInput
 hfds EMPTY_BYTEBUFFER,buffer,bufferSize,bufferStart
 hcls SlicedIndexInput
@@ -7354,7 +7409,7 @@ meth public void writeSetOfStrings(java.util.Set<java.lang.String>)
 meth public void writeShort(short)
 meth public void writeString(java.lang.String)
 supr org.apache.lucene.store.DataOutput
-hfds EMPTY,EMPTY_BYTE_ARRAY,HALF_SHIFT,MAX_BLOCKS_BEFORE_BLOCK_EXPANSION,SURROGATE_OFFSET,blockAllocate,blockBits,blockReuse,blocks,currentBlock,maxBitsPerBlock,ramBytesUsed
+hfds EMPTY,EMPTY_BYTE_ARRAY,MAX_BLOCKS_BEFORE_BLOCK_EXPANSION,MAX_CHARS_PER_WINDOW,blockAllocate,blockBits,blockReuse,blocks,currentBlock,maxBitsPerBlock,ramBytesUsed
 
 CLSS public final static org.apache.lucene.store.ByteBuffersDataOutput$ByteBufferRecycler
  outer org.apache.lucene.store.ByteBuffersDataOutput
@@ -8093,6 +8148,7 @@ meth public abstract void clear(int)
 meth public abstract void clear(int,int)
 meth public abstract void set(int)
 meth public static org.apache.lucene.util.BitSet of(org.apache.lucene.search.DocIdSetIterator,int) throws java.io.IOException
+meth public void clear()
 meth public void or(org.apache.lucene.search.DocIdSetIterator) throws java.io.IOException
 supr java.lang.Object
 
@@ -8589,6 +8645,7 @@ meth public static org.apache.lucene.util.FixedBitSet ensureCapacity(org.apache.
 meth public void and(org.apache.lucene.util.FixedBitSet)
 meth public void andNot(org.apache.lucene.search.DocIdSetIterator) throws java.io.IOException
 meth public void andNot(org.apache.lucene.util.FixedBitSet)
+meth public void clear()
 meth public void clear(int)
 meth public void clear(int,int)
 meth public void flip(int)
@@ -8687,7 +8744,7 @@ supr java.lang.Object
 hfds defaultInfoStream
 hcls NoOutput
 
-CLSS public final org.apache.lucene.util.IntBlockPool
+CLSS public org.apache.lucene.util.IntBlockPool
 cons public init()
 cons public init(org.apache.lucene.util.IntBlockPool$Allocator)
 fld public final static int INT_BLOCK_MASK = 8191
@@ -8699,13 +8756,11 @@ fld public int[] buffer
 fld public int[][] buffers
 innr public abstract static Allocator
 innr public final static DirectAllocator
-innr public final static SliceReader
-innr public static SliceWriter
 meth public void nextBuffer()
 meth public void reset()
 meth public void reset(boolean,boolean)
 supr java.lang.Object
-hfds FIRST_LEVEL_SIZE,LEVEL_SIZE_ARRAY,NEXT_LEVEL_ARRAY,allocator,bufferUpto
+hfds allocator,bufferUpto
 
 CLSS public abstract static org.apache.lucene.util.IntBlockPool$Allocator
  outer org.apache.lucene.util.IntBlockPool
@@ -8720,25 +8775,6 @@ CLSS public final static org.apache.lucene.util.IntBlockPool$DirectAllocator
 cons public init()
 meth public void recycleIntBlocks(int[][],int,int)
 supr org.apache.lucene.util.IntBlockPool$Allocator
-
-CLSS public final static org.apache.lucene.util.IntBlockPool$SliceReader
- outer org.apache.lucene.util.IntBlockPool
-cons public init(org.apache.lucene.util.IntBlockPool)
-meth public boolean endOfSlice()
-meth public int readInt()
-meth public void reset(int,int)
-supr java.lang.Object
-hfds buffer,bufferOffset,bufferUpto,end,level,limit,pool,upto
-
-CLSS public static org.apache.lucene.util.IntBlockPool$SliceWriter
- outer org.apache.lucene.util.IntBlockPool
-cons public init(org.apache.lucene.util.IntBlockPool)
-meth public int getCurrentOffset()
-meth public int startNewSlice()
-meth public void reset(int)
-meth public void writeInt(int)
-supr java.lang.Object
-hfds offset,pool
 
 CLSS public abstract org.apache.lucene.util.IntroSelector
 cons public init()
@@ -8917,6 +8953,7 @@ meth public static double asinh(double)
 meth public static double atanh(double)
 meth public static double log(double,double)
 meth public static double sumRelativeErrorBound(int)
+meth public static double sumUpperBound(double,int)
 meth public static int log(long,int)
 meth public static long gcd(long,long)
 supr java.lang.Object
@@ -9026,12 +9063,12 @@ cons public init(org.apache.lucene.store.ChecksumIndexInput,java.lang.String)
 fld protected final java.lang.String name
 fld protected final long end
 fld protected final org.apache.lucene.store.ChecksumIndexInput in
+fld protected final org.apache.lucene.util.BytesRefBuilder ref
 intf java.io.Closeable
 intf org.apache.lucene.util.BytesRefIterator
 meth public org.apache.lucene.util.BytesRef next() throws java.io.IOException
 meth public void close() throws java.io.IOException
 supr java.lang.Object
-hfds ref
 
 CLSS public static org.apache.lucene.util.OfflineSorter$ByteSequencesWriter
  outer org.apache.lucene.util.OfflineSorter
@@ -9422,6 +9459,7 @@ meth public int nextSetBit(int)
 meth public int prevSetBit(int)
 meth public java.lang.String toString()
 meth public long ramBytesUsed()
+meth public void clear()
 meth public void clear(int)
 meth public void clear(int,int)
 meth public void or(org.apache.lucene.search.DocIdSetIterator) throws java.io.IOException
@@ -9460,6 +9498,16 @@ CLSS public abstract interface !annotation org.apache.lucene.util.SuppressForbid
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.String reason()
 
+CLSS public org.apache.lucene.util.TermAndVector
+cons public init(org.apache.lucene.util.BytesRef,float[])
+meth public float[] getVector()
+meth public int size()
+meth public java.lang.String toString()
+meth public org.apache.lucene.util.BytesRef getTerm()
+meth public void normalizeVector()
+supr java.lang.Object
+hfds term,vector
+
 CLSS public final org.apache.lucene.util.ThreadInterruptedException
 cons public init(java.lang.InterruptedException)
 supr java.lang.RuntimeException
@@ -9488,6 +9536,7 @@ fld public final static int UNI_SUR_HIGH_START = 55296
 fld public final static int UNI_SUR_LOW_END = 57343
 fld public final static int UNI_SUR_LOW_START = 56320
 fld public final static org.apache.lucene.util.BytesRef BIG_TERM
+innr public final static UTF8CodePoint
 meth public static boolean validUTF16String(char[],int)
 meth public static boolean validUTF16String(java.lang.CharSequence)
 meth public static int UTF16toUTF8(char[],int,int,byte[])
@@ -9501,8 +9550,16 @@ meth public static int codePointCount(org.apache.lucene.util.BytesRef)
 meth public static int maxUTF8Length(int)
 meth public static java.lang.String newString(int[],int,int)
 meth public static java.lang.String toHexString(java.lang.String)
+meth public static org.apache.lucene.util.UnicodeUtil$UTF8CodePoint codePointAt(byte[],int,org.apache.lucene.util.UnicodeUtil$UTF8CodePoint)
 supr java.lang.Object
 hfds HALF_MASK,HALF_SHIFT,LEAD_SURROGATE_MIN_VALUE,LEAD_SURROGATE_OFFSET_,LEAD_SURROGATE_SHIFT_,SUPPLEMENTARY_MIN_VALUE,SURROGATE_OFFSET,TRAIL_SURROGATE_MASK_,TRAIL_SURROGATE_MIN_VALUE,UNI_MAX_BMP,utf8CodeLength
+
+CLSS public final static org.apache.lucene.util.UnicodeUtil$UTF8CodePoint
+ outer org.apache.lucene.util.UnicodeUtil
+cons public init()
+fld public int codePoint
+fld public int numBytes
+supr java.lang.Object
 
 CLSS public abstract interface org.apache.lucene.util.Unwrappable<%0 extends java.lang.Object>
 meth public abstract {org.apache.lucene.util.Unwrappable%0} unwrap()
@@ -9513,13 +9570,16 @@ meth public static float cosine(byte[],byte[])
 meth public static float cosine(float[],float[])
 meth public static float dotProduct(float[],float[])
 meth public static float dotProductScore(byte[],byte[])
+meth public static float scaleMaxInnerProductScore(float)
 meth public static float squareDistance(float[],float[])
+meth public static float[] checkFinite(float[])
 meth public static float[] l2normalize(float[])
 meth public static float[] l2normalize(float[],boolean)
 meth public static int dotProduct(byte[],byte[])
 meth public static int squareDistance(byte[],byte[])
 meth public static void add(float[],float[])
 supr java.lang.Object
+hfds IMPL
 
 CLSS public final org.apache.lucene.util.Version
 fld public final int bugfix
@@ -9597,6 +9657,10 @@ fld public final static org.apache.lucene.util.Version LUCENE_9_4_2
 fld public final static org.apache.lucene.util.Version LUCENE_9_5_0
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.apache.lucene.util.Version LUCENE_9_6_0
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+fld public final static org.apache.lucene.util.Version LUCENE_9_7_0
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+fld public final static org.apache.lucene.util.Version LUCENE_9_8_0
 fld public final static org.apache.lucene.util.Version LUCENE_CURRENT
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean equals(java.lang.Object)

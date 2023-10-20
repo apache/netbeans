@@ -20,7 +20,6 @@
 package org.netbeans.modules.gradle.loaders;
 
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.modules.gradle.api.execute.GradleCommandLine;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,12 +30,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.gradle.tooling.BuildAction;
-import org.gradle.tooling.BuildActionExecuter;
-import org.gradle.tooling.BuildController;
-import org.gradle.tooling.GradleConnectionException;
-import org.gradle.tooling.GradleConnector;
-import org.gradle.tooling.ProjectConnection;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.Places;
 import org.openide.util.RequestProcessor;
@@ -55,11 +48,6 @@ public final class GradleDaemon {
     private static final String PROP_TOOLING_JAR = "NETBEANS_TOOLING_JAR";
     private static final String TOOLING_JAR = InstalledFileLocator.getDefault().locate(TOOLING_JAR_NAME, NbGradleProject.CODENAME_BASE, false).getAbsolutePath().replace("\\", "\\\\");
 
-    private static final String DAEMON_LOADED = "Daemon Loaded."; //NOI18N
-    private static final String LOADER_PROJECT_NAME = "modules/gradle/daemon-loader"; //NOI18N
-    private static final File LOADER_PROJECT_DIR = InstalledFileLocator.getDefault().locate(LOADER_PROJECT_NAME, NbGradleProject.CODENAME_BASE, false);
-    private static final DummyBuildAction DUMMY_ACTION = new DummyBuildAction();
-    
     private static final Logger LOG = Logger.getLogger(GradleDaemon.class.getName());
 
     private GradleDaemon() {}
@@ -82,32 +70,4 @@ public final class GradleDaemon {
         }
         return initScript.getAbsolutePath();
     }
-    
-    private static void doLoadDaemon() {
-        GradleConnector gconn = GradleConnector.newConnector();
-        ProjectConnection pconn = gconn.forProjectDirectory(LOADER_PROJECT_DIR).connect();
-        BuildActionExecuter<String> action = pconn.action(DUMMY_ACTION);
-        GradleCommandLine cmd = new GradleCommandLine();
-        cmd.setFlag(GradleCommandLine.Flag.OFFLINE, true);
-        cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, initScript());
-        cmd.configure(action);
-        try {
-            action.run();
-        } catch (GradleConnectionException | IllegalStateException ex) {
-            // Well for some reason we were  not able to load Gradle.
-            // Ignoring that for now
-        } finally {
-            pconn.close();
-        }
-    }
-
-    private static class DummyBuildAction implements BuildAction<String> {
-
-        @Override
-        public String execute(BuildController bc) {
-            return DAEMON_LOADED;
-        }
-
-    }
-
 }

@@ -90,11 +90,8 @@ public final class WildflyMessageDestinationManager implements MessageDestinatio
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser parser = factory.newSAXParser();
             WildflyMessageDestinationHandler handler = new WildflyMessageDestinationHandler();
-            InputStream is = new BufferedInputStream(configFile.getInputStream());
-            try {
+            try (InputStream is = new BufferedInputStream(configFile.getInputStream())) {
                 parser.parse(is, handler);
-            } finally {
-                is.close();
             }
             messageDestinations.addAll(handler.getMessageDestinations());
         } catch (IOException ex) {

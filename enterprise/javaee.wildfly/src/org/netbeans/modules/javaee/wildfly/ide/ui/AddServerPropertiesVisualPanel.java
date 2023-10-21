@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
@@ -47,7 +48,7 @@ import org.openide.util.NbBundle;
  */
 public class AddServerPropertiesVisualPanel extends JPanel {
 
-    private final Set listeners = new HashSet();
+    private final Set listeners = ConcurrentHashMap.newKeySet();
 
     private javax.swing.JComboBox  domainField;  // Domain name (list of registered domains) can be edited
     private javax.swing.JTextField domainPathField;  //
@@ -77,15 +78,11 @@ public class AddServerPropertiesVisualPanel extends JPanel {
     }
 
     public void addChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
-        }
+        listeners.add(l);
     }
 
     public void removeChangeListener(ChangeListener l ) {
-        synchronized (listeners) {
-            listeners.remove(l);
-        }
+        listeners.remove(l);
     }
 
     private void somethingChanged() {

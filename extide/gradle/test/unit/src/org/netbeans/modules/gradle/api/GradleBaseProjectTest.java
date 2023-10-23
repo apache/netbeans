@@ -245,6 +245,7 @@ public class GradleBaseProjectTest extends AbstractGradleProjectTestCase {
         OpenProjects.getDefault().openProjects().get();
         
         NbGradleProject.get(p).toQuality("Load data", NbGradleProject.Quality.FULL, false).toCompletableFuture().get();
+        gconn.disconnect();
         return p;
     }
     

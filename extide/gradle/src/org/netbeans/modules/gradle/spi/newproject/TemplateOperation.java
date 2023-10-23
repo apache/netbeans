@@ -318,6 +318,7 @@ public final class TemplateOperation implements Runnable {
                 // Well for some reason we were  not able to load Gradle.
                 // Ignoring that for now
             }
+            gconn.disconnect();
             return Collections.singleton(FileUtil.toFileObject(target));
         }
     }
@@ -492,6 +493,7 @@ public final class TemplateOperation implements Runnable {
                 // Well for some reason we were  not able to load Gradle.
                 // Ignoring that for now
             }
+            gconn.disconnect();
             return null;
         }
 

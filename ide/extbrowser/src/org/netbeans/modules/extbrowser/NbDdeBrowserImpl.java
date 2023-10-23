@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.extbrowser;
 
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
 import java.awt.EventQueue;
 import java.net.*;
 
@@ -135,154 +137,47 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
     public static native String getDefaultOpenCommand() throws NbBrowserException;
     
     /**
-     * Get the default browser name using java
-     * part of the solution source https://stackoverflow.com/questions/62289/read-write-to-windows-registry-using-java
-     * @return 
+     * Get the default browser name using Java JNA library
+     * @return String
      */
     private static String getDefaultWindowsBrowser() {
-        try {
-            Process process = Runtime.getRuntime().exec("reg query HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\Shell\\Associations\\URLAssociations\\https\\UserChoice /f ProgId /v");
-            
-            InputStream is = process.getInputStream();
-            StringBuilder sw = new StringBuilder();
-            
-            int c;
-            while ((c = is.read()) != -1) {
-                sw.append((char)c);
-            }
-            
-            String output = sw.toString();
-//            String output = new String();
-//            
-//            try (InputStream is = process.getInputStream()) {
-                // keeps encountering  error: cannot find symbol readAllBytes(), module source level 
-               // has been set to 11 - don't know if related to openjdk
-//                output = new String(is.readAllBytes(), StandardCharsets.UTF_8); // change to whatever charset reg uses
-//            }
-//            catch (Exception ex)
-//            {
-//                // using print stack trace for the time being until I become aware of a better option
-//                ex.printStackTrace();
-//            }
+        String userChoice = Advapi32Util
+                .registryGetStringValue(
+                        WinReg.HKEY_CURRENT_USER,
+                        "SOFTWARE\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\https\\UserChoice",
+                        "ProgId"
+                )
+                .toUpperCase(Locale.ROOT);
 
-            // Output has the following format:
-            // \n<Version information>\n\n<key>    <registry type>    <value>\r\n\r\n
-            int i = output.indexOf("REG_SZ");
-            if (i == -1) {
-                return "";
-            }
-
-            sw = new StringBuilder();
-            i += 6; // skip REG_SZ
-
-            // skip spaces or tabs
-            for (;;) {
-               if (i > output.length()) {
-                   break;
-               }
-               char charExamine = output.charAt(i);
-               if (charExamine != ' ' && charExamine != '\t') {
-                   break;
-               }
-               ++i;
-            }
-
-            // take everything until end of line
-            for (;;) {
-               if (i > output.length()) {
-                   break;
-               }
-               char charExamine = output.charAt(i);
-               if (charExamine == '\r' || charExamine == '\n')
-                   break;
-               sw.append(charExamine);
-               ++i;
-            }
-            
-            // done this way so that values like FirefoxURL-308046B0AF4A39CB can be handled
-            if (sw.toString().toUpperCase().contains(ExtWebBrowser.FIREFOX)) {
-                return ExtWebBrowser.FIREFOX;
-            }
-            else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROME)) {
-                return ExtWebBrowser.CHROME;
-            } else if (sw.toString().toUpperCase().contains(ExtWebBrowser.CHROMIUM)) {
-                return ExtWebBrowser.CHROMIUM;
-            } else if (sw.toString().toUpperCase().contains(ExtWebBrowser.MOZILLA)) {
-                return ExtWebBrowser.MOZILLA;
-            } else {
-                return ExtWebBrowser.IEXPLORE;
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return "";
+        // done this way so that values like FirefoxURL-308046B0AF4A39CB can be handled
+        if (userChoice.toUpperCase().contains(ExtWebBrowser.FIREFOX)) {
+            return ExtWebBrowser.FIREFOX;
+        }
+        else if (userChoice.toUpperCase().contains(ExtWebBrowser.CHROME)) {
+            return ExtWebBrowser.CHROME;
+        } else if (userChoice.toUpperCase().contains(ExtWebBrowser.CHROMIUM)) {
+            return ExtWebBrowser.CHROMIUM;
+        } else if (userChoice.toUpperCase().contains(ExtWebBrowser.MOZILLA)) {
+            return ExtWebBrowser.MOZILLA;
+        } else {
+            return ExtWebBrowser.IEXPLORE;
         }
     }
     
+    /**
+     * Retrieves the browser execution path from the registry using the java JNA library
+     * @param browser
+     * @return String
+     */
     private static String getDefaultWindowsOpenCommandPath(String browser) {
-        try {
-            Process process = Runtime.getRuntime().exec("reg query HKEY_CLASSES_ROOT\\Applications\\" + browser.toLowerCase() + ".exe\\shell\\open\\command /t REG_SZ");
-            
-            InputStream is = process.getInputStream();
-            StringBuilder sw = new StringBuilder();
-            
-            int c;
-            while ((c = is.read()) != -1) {
-                sw.append((char)c);
-            }
-            
-            String output = sw.toString();
-            
-//            String output = new String();
-            
-//            try (InputStream is = process.getInputStream()) {
-                // keeps encountering  error: cannot find symbol readAllBytes(), module source level 
-               // has been set to 11 - don't know if related to openjdk
-//                output = new String(is.readAllBytes(), StandardCharsets.UTF_8); // change to whatever charset reg uses
-//            }
-//            catch (Exception ex)
-//            {
-//                // using print stack trace for the time being until I become aware of a better option
-//                ex.printStackTrace();
-//            }
-            
-            // Output has the following format:
-            // \n<Version information>\n\n<key>    <registry type>    <value>\r\n\r\n
-            int i = output.indexOf("REG_SZ");
-            if (i == -1) {
-                return "";
-            }
-
-            sw = new StringBuilder();
-            i += 6; // skip REG_SZ
-
-            // skip spaces or tabs
-            for (;;) {
-               if (i > output.length()) {
-                   break;
-               }
-               char charExamine = output.charAt(i);
-               if (charExamine != ' ' && charExamine != '\t') {
-                   break;
-               }
-               ++i;
-            }
-
-            // take everything until end of line
-            for (;;) {
-               if (i > output.length()) {
-                   break;
-               }
-               char charExamine = output.charAt(i);
-               if (charExamine == '\r' || charExamine == '\n')
-                   break;
-               sw.append(charExamine);
-               ++i;
-            }
-            return sw.toString();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return "";
-        }
+        String executionCommand = Advapi32Util
+                .registryGetStringValue(
+                        WinReg.HKEY_CLASSES_ROOT,
+                        "Applications\\" + browser.toLowerCase() + ".exe\\shell\\open\\command",
+                        ""
+                );
+        
+        return executionCommand;
     }
     
     public static String getDefaultWindowsOpenCommand() {

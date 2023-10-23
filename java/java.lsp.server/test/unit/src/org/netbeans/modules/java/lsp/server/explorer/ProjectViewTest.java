@@ -358,7 +358,7 @@ public class ProjectViewTest extends NbTestCase {
     public class ServerLookupExtractionCommand extends CodeActionsProvider {
 
         @Override
-        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
             return Collections.emptyList();
         }
 

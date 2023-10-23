@@ -102,9 +102,7 @@ public class WildflyClassLoader extends URLClassLoader {
     private static void findJarAddUrl(List<URL> urlList, Path folder, String pathMatcherRaw) {
         PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher(pathMatcherRaw);
 
-        Stream<Path> walk = null;
-        try {
-            walk = Files.walk(folder);
+        try (Stream<Path> walk = Files.walk(folder)) {
             Optional<Path> firstJarMatching = walk
                     .filter(pathMatcher::matches)
                     .findFirst();
@@ -115,10 +113,6 @@ public class WildflyClassLoader extends URLClassLoader {
             }
         } catch (IOException ex) {
             LOGGER.log(Level.INFO, null, ex);
-        } finally {
-            if (walk != null) {
-                walk.close();
-            }
         }
     }
 

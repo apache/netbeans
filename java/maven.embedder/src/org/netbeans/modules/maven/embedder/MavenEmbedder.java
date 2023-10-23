@@ -20,6 +20,8 @@
 package org.netbeans.modules.maven.embedder;
 
 import java.io.File;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +37,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.DefaultMaven;
 import org.apache.maven.Maven;
-import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.InvalidRepositoryException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -98,8 +99,8 @@ import org.openide.util.Exceptions;
 import org.openide.util.BaseUtilities;
 import org.eclipse.aether.repository.Authentication;
 import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.internal.impl.EnhancedLocalRepositoryManagerFactory;
-import org.eclipse.aether.internal.impl.SimpleLocalRepositoryManagerFactory;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
@@ -479,6 +480,7 @@ public final class MavenEmbedder {
      * @throws ModelBuildingException if the POM or parents could not even be parsed; warnings are not reported
      */
     public ModelBuildingResult executeModelBuilder(File pom) throws ModelBuildingException {
+        setUpLegacySupport();
         ModelBuilder mb = lookupComponent(ModelBuilder.class);
         assert mb!=null : "ModelBuilder component not found in maven";
         ModelBuildingRequest req = new DefaultModelBuildingRequest();
@@ -599,60 +601,81 @@ public final class MavenEmbedder {
     }
     
     /**
+     * Do not keep the reference to the session. Plexus will hopefully keep it for us.
+     */
+    private volatile Reference<MavenSession> thisRepositorySession = new WeakReference<>(null);
+    
+    /**
      * Needed to avoid an NPE in {@link org.eclipse.org.eclipse.aether.DefaultArtifactResolver#resolveArtifacts} under some conditions.
      * (Also {@link org.eclipse.org.eclipse.aether.DefaultMetadataResolver#resolve}; wherever a {@link org.eclipse.aether.RepositorySystemSession} is used.)
      * Should be called in the same thread as whatever thread was throwing the NPE.
      */
     public void setUpLegacySupport() {
         LegacySupport support = lookupComponent(LegacySupport.class);
-        if (support.getSession() != null) {
-            return;
-        }
-        DefaultRepositorySystemSession session = new DefaultRepositorySystemSession();
-        session.setOffline(isOffline());
-        EnhancedLocalRepositoryManagerFactory f = lookupComponent(EnhancedLocalRepositoryManagerFactory.class);
-        try {
-            session.setLocalRepositoryManager(f.newInstance(session, new LocalRepository(getLocalRepository().getBasedir())));
-        } catch (NoLocalRepositoryManagerException ex) {
-            LOG.log(Level.WARNING, null, ex);
-        }
-        // Adapted from DefaultMaven.newRepositorySession, but does not look like that can be called directly:
-        DefaultMirrorSelector mirrorSelector = new DefaultMirrorSelector();
-        Settings _settings = getSettings();
-        for (Mirror m : _settings.getMirrors()) {
-            mirrorSelector.add(m.getId(), m.getUrl(), m.getLayout(), false, m.getMirrorOf(), m.getMirrorOfLayouts());
-        }
-        session.setMirrorSelector(mirrorSelector);
-        SettingsDecryptionResult decryptionResult = settingsDecrypter.decrypt(new DefaultSettingsDecryptionRequest(_settings));
-        
-        DefaultProxySelector proxySelector = new DefaultProxySelector();
-        for (Proxy p : decryptionResult.getProxies()) {
-            if (p.isActive()) {
-                AuthenticationBuilder ab = new AuthenticationBuilder();
-                ab.addUsername(p.getUsername());
-                ab.addPassword(p.getPassword());
-                Authentication a = ab.build();
-               //#null -> getProtocol() #209499
-               proxySelector.add(new org.eclipse.aether.repository.Proxy(p.getProtocol(), p.getHost(), p.getPort(), a), p.getNonProxyHosts());
+        MavenSession existing = support.getSession();
+        MavenSession initializedSession = thisRepositorySession.get();
+        if (existing != null) {
+            RepositorySystemSession existingRepo = existing.getRepositorySession();
+            if (initializedSession != null && initializedSession.getRepositorySession() == existingRepo) {
+                return;
             }
         }
-        session.setProxySelector(proxySelector);
-        DefaultAuthenticationSelector authenticationSelector = new DefaultAuthenticationSelector();
-        for (Server s : decryptionResult.getServers()) {
-            AuthenticationBuilder ab = new AuthenticationBuilder();
-            ab.addUsername(s.getUsername());
-            ab.addPassword(s.getPassword());
-            ab.addPrivateKey(s.getPrivateKey(), s.getPassphrase());
-            Authentication a = ab.build();            
-            authenticationSelector.add(s.getId(), a);
+        if (initializedSession == null) {
+            DefaultRepositorySystemSession session = new DefaultRepositorySystemSession();
+            session.setOffline(isOffline());
+            EnhancedLocalRepositoryManagerFactory f = lookupComponent(EnhancedLocalRepositoryManagerFactory.class);
+            try {
+                session.setLocalRepositoryManager(f.newInstance(session, new LocalRepository(getLocalRepository().getBasedir())));
+            } catch (NoLocalRepositoryManagerException ex) {
+                LOG.log(Level.WARNING, null, ex);
+            }
+            // Adapted from DefaultMaven.newRepositorySession, but does not look like that can be called directly:
+            DefaultMirrorSelector mirrorSelector = new DefaultMirrorSelector();
+            Settings _settings = getSettings();
+            for (Mirror m : _settings.getMirrors()) {
+                mirrorSelector.add(m.getId(), m.getUrl(), m.getLayout(), false, m.getMirrorOf(), m.getMirrorOfLayouts());
+            }
+            session.setMirrorSelector(mirrorSelector);
+            SettingsDecryptionResult decryptionResult = settingsDecrypter.decrypt(new DefaultSettingsDecryptionRequest(_settings));
+
+            DefaultProxySelector proxySelector = new DefaultProxySelector();
+            for (Proxy p : decryptionResult.getProxies()) {
+                if (p.isActive()) {
+                    AuthenticationBuilder ab = new AuthenticationBuilder();
+                    ab.addUsername(p.getUsername());
+                    ab.addPassword(p.getPassword());
+                    Authentication a = ab.build();
+                   //#null -> getProtocol() #209499
+                   proxySelector.add(new org.eclipse.aether.repository.Proxy(p.getProtocol(), p.getHost(), p.getPort(), a), p.getNonProxyHosts());
+                }
+            }
+            session.setProxySelector(proxySelector);
+            DefaultAuthenticationSelector authenticationSelector = new DefaultAuthenticationSelector();
+            for (Server s : decryptionResult.getServers()) {
+                AuthenticationBuilder ab = new AuthenticationBuilder();
+                ab.addUsername(s.getUsername());
+                ab.addPassword(s.getPassword());
+                ab.addPrivateKey(s.getPrivateKey(), s.getPassphrase());
+                Authentication a = ab.build();            
+                authenticationSelector.add(s.getId(), a);
+            }
+            session.setAuthenticationSelector(authenticationSelector);
+            DefaultMavenExecutionRequest mavenExecutionRequest = new DefaultMavenExecutionRequest();
+            mavenExecutionRequest.setSystemProperties(embedderConfiguration.getSystemProperties());
+            mavenExecutionRequest.setOffline(isOffline());
+            mavenExecutionRequest.setTransferListener(ProgressTransferListener.activeListener());
+            session.setTransferListener(ProgressTransferListener.activeListener());
+
+            MavenSession s = new MavenSession(getPlexus(), session, mavenExecutionRequest, new DefaultMavenExecutionResult());
+            synchronized (this) {
+                initializedSession = thisRepositorySession.get();
+                if (initializedSession == null) {
+                    initializedSession = s;
+                    thisRepositorySession = new WeakReference<>(s);
+                }
+            }
         }
-        session.setAuthenticationSelector(authenticationSelector);
-        DefaultMavenExecutionRequest mavenExecutionRequest = new DefaultMavenExecutionRequest();
-        mavenExecutionRequest.setSystemProperties(embedderConfiguration.getSystemProperties());
-        mavenExecutionRequest.setOffline(isOffline());
-        mavenExecutionRequest.setTransferListener(ProgressTransferListener.activeListener());
-        session.setTransferListener(ProgressTransferListener.activeListener());
-        lookupComponent(LegacySupport.class).setSession(new MavenSession(getPlexus(), session, mavenExecutionRequest, new DefaultMavenExecutionResult()));
+        lookupComponent(LegacySupport.class).setSession(initializedSession);
     }
 
     

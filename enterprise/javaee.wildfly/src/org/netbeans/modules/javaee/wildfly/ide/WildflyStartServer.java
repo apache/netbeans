@@ -31,6 +31,7 @@ import org.netbeans.modules.j2ee.deployment.plugins.api.ServerDebugInfo;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.StartServer;
 import org.openide.util.RequestProcessor;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.deploy.spi.DeploymentManager;
@@ -78,8 +79,8 @@ public class WildflyStartServer extends StartServer implements ProgressObject {
 
     private boolean consoleConfigured = false;
 
-    private static final Set<String> IS_DEBUG_MODE_URI = Collections.synchronizedSet(
-            new HashSet<String>(AVERAGE_SERVER_INSTANCES));
+    private static final Set<String> IS_DEBUG_MODE_URI = 
+            ConcurrentHashMap.newKeySet(AVERAGE_SERVER_INSTANCES);
 
     public WildflyStartServer(DeploymentManager dm) {
         this.dm = (WildflyDeploymentManager) dm;

@@ -423,6 +423,7 @@ public class CherryPickCommand extends GitCommand {
         @Override
         public ThreeWayMerger newMerger (Repository db, boolean inCore) {
             return new RecursiveMerger(db, inCore) {
+                @Override
                 protected boolean mergeTreeWalk (TreeWalk treeWalk, boolean ignoreConflicts)
                         throws IOException {
                     boolean ok = true;
@@ -436,7 +437,7 @@ public class CherryPickCommand extends GitCommand {
                                 treeWalk.getTree(T_INDEX, DirCacheBuildIterator.class),
                                 hasWorkingTreeIterator ? treeWalk.getTree(T_FILE, WorkingTreeIterator.class) : null,
                                 ignoreConflicts,
-                                hasAttributeNodeProvider ? treeWalk.getAttributes() : NO_ATTRIBUTES
+                                new Attributes[]{ hasAttributeNodeProvider ? treeWalk.getAttributes() : NO_ATTRIBUTES }
                         )) {
                             ok = false;
                         }
@@ -445,7 +446,7 @@ public class CherryPickCommand extends GitCommand {
                         }
                     }
                     if (!ok) {
-                        cleanUp();
+                        workTreeUpdater.revertModifiedFiles();
                     }
                     return ok;
                 }

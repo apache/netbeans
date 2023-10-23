@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -102,7 +103,7 @@ import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskDependency;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.api.tasks.testing.Test;
-import org.gradle.internal.extensibility.DefaultExtraPropertiesExtension;
+import org.gradle.internal.resolve.ArtifactResolveException;
 import org.gradle.jvm.JvmLibrary;
 import org.gradle.language.base.artifact.SourcesArtifact;
 import org.gradle.language.java.artifact.JavadocArtifact;
@@ -274,7 +275,7 @@ class NbProjectInfoBuilder {
         addTypes(nonDecorated, classes);
         return classes.stream().map(Class::getName).sorted().collect(Collectors.joining(","));
     }
-    
+   
     private static final Set<String> EXCLUDE_TASK_PROPERTIES = new HashSet<>(Arrays.asList(
         "dependsOn",
         "project",
@@ -418,6 +419,10 @@ class NbProjectInfoBuilder {
         long time = System.currentTimeMillis();
         try {
             r.run();
+        } catch (RuntimeException ex) {
+            // convert will eventually throw a different exception
+            convertOfflineException(ex);
+            LOG.debug("Error encountered during {0}: {1}", s, ex);
         } finally {
             long span = System.currentTimeMillis() - time;
             model.registerPerf(s, span);
@@ -509,8 +514,14 @@ class NbProjectInfoBuilder {
     public static final String COLLECTION_KEYS_MARKER = "#keys"; // NOI18N
     
     
+    /**
+     * Prevents the recursive descent to loop back to an already processed structure. 
+     */
+    private Map<Object, Boolean> valueIdentities = new IdentityHashMap<>();
+    
     private static boolean isPrimitiveOrString(Class c) {
-        if (c == Object.class) {
+        // Cannot export a Class as an object, the Class may not exist in the netbeans VM.
+        if (c == Object.class || c == Class.class) {
             return false;
         }
         String n = c.getName();
@@ -533,10 +544,15 @@ class NbProjectInfoBuilder {
     }
     
     private void inspectObjectAndValues(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues, Set<String> excludes, boolean type) {
+        if (valueIdentities.put(object, Boolean.TRUE) == Boolean.TRUE) {
+            return;
+        }
         try {
             inspectObjectAndValues0(clazz, object, prefix, globalTypes, propertyTypes, defaultValues, excludes, type);
         } catch (RuntimeException ex) {
             LOG.warn("Error during inspection of {}, value {}, prefix {}", clazz, object, prefix);
+        } finally {
+            valueIdentities.remove(object);
         }
     }
     
@@ -1188,12 +1204,16 @@ class NbProjectInfoBuilder {
                         model.getInfo().put(propBase + "classpath_compile", storeSet(sourceSet.getCompileClasspath().getFiles()));
                         model.getInfo().put(propBase + "classpath_runtime", storeSet(sourceSet.getRuntimeClasspath().getFiles()));
                     } catch(Exception e) {
+                        convertOfflineException(e);
+                        // will not be reached
                         model.noteProblem(e);
                     }
                     sinceGradle("4.6", () -> {
                         try {
                             model.getInfo().put(propBase + "classpath_annotation", storeSet(getProperty(sourceSet, "annotationProcessorPath", "files")));
                         } catch(Exception e) {
+                            convertOfflineException(e);
+                            // will not be reached
                             model.noteProblem(e);
                         }
                         model.getInfo().put(propBase + "configuration_annotation", getProperty(sourceSet, "annotationProcessorConfigurationName"));
@@ -1403,17 +1423,21 @@ class NbProjectInfoBuilder {
                         // hidden configurations like 'testCodeCoverageReportExecutionData' might contain unresolvable artifacts.
                         // do not report problems here
                         Throwable failure = ((UnresolvedDependencyResult) it2).getFailure();
-                        if (project.getGradle().getStartParameter().isOffline()) {
-                            // if the unresolvable is bcs. offline mode, throw an exception to get retry in online mode.
-                            Throwable prev = null;
-                            for (Throwable t = failure; t != prev && t != null; prev = t, t = t.getCause()) {
-                                if (t.getMessage().contains("available for offline")) {
-                                    throw new NeedOnlineModeException("Need online mode", failure);
-                                }
-                            }
-                        }
+                        convertOfflineException(failure);
                         unresolvedProblems.putIfAbsent(id, ((UnresolvedDependencyResult) it2).getFailure().getMessage());
                     }
+                }
+            }
+        }
+    }
+    
+    private void convertOfflineException(Throwable failure) {
+        if (project.getGradle().getStartParameter().isOffline()) {
+            // if the unresolvable is bcs. offline mode, throw an exception to get retry in online mode.
+            Throwable prev = null;
+            for (Throwable t = failure; t != prev && t != null; prev = t, t = t.getCause()) {
+                if (t.getMessage().contains("available for offline")) {
+                    throw new NeedOnlineModeException("Need online mode", failure);
                 }
             }
         }
@@ -1501,15 +1525,7 @@ class NbProjectInfoBuilder {
                                 // hidden configurations like 'testCodeCoverageReportExecutionData' might contain unresolvable artifacts.
                                 // do not report problems here
                                 Throwable failure = ((UnresolvedDependencyResult) it2).getFailure();
-                                if (project.getGradle().getStartParameter().isOffline()) {
-                                    // if the unresolvable is bcs. offline mode, throw an exception to get retry in online mode.
-                                    Throwable prev = null;
-                                    for (Throwable t = failure; t != prev && t != null; prev = t, t = t.getCause()) {
-                                        if (t.getMessage().contains("available for offline")) {
-                                            throw new NeedOnlineModeException("Need online mode", failure);
-                                        }
-                                    }
-                                }
+                                convertOfflineException(failure);
                                 unresolvedProblems.put(id, ((UnresolvedDependencyResult) it2).getFailure().getMessage());
                             }
                         }
@@ -1581,10 +1597,16 @@ class NbProjectInfoBuilder {
                             resolvedJvmArtifacts.putIfAbsent(a.getId().getComponentIdentifier().toString(), Collections.singleton(a.getFile()));
                         }
                     });
-                    it.getResolvedConfiguration()
-                            .getLenientConfiguration()
-                            .getFirstLevelModuleDependencies(Specs.SATISFIES_ALL)
-                            .forEach(rd -> collectArtifacts(rd, resolvedJvmArtifacts));
+                    try {
+                        it.getResolvedConfiguration()
+                                .getLenientConfiguration()
+                                .getFirstLevelModuleDependencies(Specs.SATISFIES_ALL)
+                                .forEach(rd -> collectArtifacts(rd, resolvedJvmArtifacts));
+                    } catch (ArtifactResolveException ex) {
+                        convertOfflineException(ex);
+                        // will not be reached, if the exception is converted
+                        throw ex;
+                    }
                 } catch (NullPointerException ex) {
                     //This can happen if the configuration resolution had issues
                 }

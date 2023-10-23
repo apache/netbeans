@@ -60,7 +60,7 @@
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
             A <a href="@TOP@/org/netbeans/api/lsp/SignatureInformation.html">SignatureInformation</a> class
-            and <a href="@TOP@/org/netbeans/api/lsp/SignatureInformationCollecto.html">SignatureInformationCollector</a> interface
+            and <a href="@TOP@/org/netbeans/spi/lsp/SignatureInformationCollector.html">SignatureInformationCollector</a> interface
             introduced that allows to compute and collect signature information.
         </description>
         <class package="org.netbeans.api.lsp" name="SignatureInformation"/>

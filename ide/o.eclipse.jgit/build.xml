@@ -21,27 +21,5 @@
 -->
 <project name="ide/o.eclipse.jgit" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <target name="jar" depends="-define-FileCRC32Calculator">
-        <property name="o.eclipse.jgit.sourcefile" value="external/org.eclipse.jgit-5.7.0.202003110725-r.jar" />
-        <FileCRC32Calculator file="${o.eclipse.jgit.sourcefile}" property="o.eclipse.jgit.crc32" />
-        <!--
-            Update the MANIFEST of the jgit OSGI module. For version
-            5.7.0.202003110725 the manifest is missing an Import-Package
-            declaration for javax.management
-        -->
-        <mkdir dir="build" />
-        <unzip src="${o.eclipse.jgit.sourcefile}" dest="build" overwrite="true">
-            <flattenmapper/>
-            <patternset>
-                <include name="META-INF/MANIFEST.MF"/>
-            </patternset>
-        </unzip>
-        <manifest file="build/MANIFEST.MF" mode="update">
-            <attribute name="Import-Package" value='com.googlecode.javaewah;version="[1.1.6,2.0.0)",com.jcraft.jsch;version="[0.1.37,0.2.0)",javax.crypto,javax.net.ssl,org.bouncycastle;version="[1.61.0,2.0.0)",org.bouncycastle.bcpg;version="[1.61.0,2.0.0)",org.bouncycastle.gpg;version="[1.61.0,2.0.0)",org.bouncycastle.gpg.keybox;version="[1.61.0,2.0.0)",org.bouncycastle.gpg.keybox.jcajce;version="[1.61.0,2.0.0)",org.bouncycastle.jce.provider;version="[1.61.0,2.0.0)",org.bouncycastle.openpgp;version="[1.61.0,2.0.0)",org.bouncycastle.openpgp.jcajce;version="[1.61.0,2.0.0)",org.bouncycastle.openpgp.operator;version="[1.61.0,2.0.0)",org.bouncycastle.openpgp.operator.jcajce;version="[1.61.0,2.0.0)",org.bouncycastle.util.encoders;version="[1.61.0,2.0.0)",org.slf4j;version="[1.7.0,2.0.0)",org.xml.sax,org.xml.sax.helpers,javax.management'/>
-            <attribute name="NB-Original-CRC" value="${o.eclipse.jgit.crc32}"/>
-        </manifest>
-        <jar jarfile="${cluster}/${module.jar}" manifest="build/MANIFEST.MF">
-            <zipfileset src="${o.eclipse.jgit.sourcefile}" excludes="META-INF/ECLIPSE_.RSA META-INF/ECLIPSE_.SF"/>
-        </jar>
-    </target>
+    <target name="jar" />
 </project>

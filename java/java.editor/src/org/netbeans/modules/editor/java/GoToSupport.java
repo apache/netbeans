@@ -881,7 +881,7 @@ public class GoToSupport {
             }
             private boolean process(TreePath path) {
 
-                Element resolved = TreeShims.toRecordComponent(info.getTrees().getElement(path));
+                Element resolved = org.netbeans.modules.java.editor.base.semantic.Utilities.toRecordComponent(info.getTrees().getElement(path));
                 if (toFind.equals(resolved)) {
                     found = getCurrentPath();
                     return true;

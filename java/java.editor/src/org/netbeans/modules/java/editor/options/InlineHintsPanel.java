@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.editor.options;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,13 +28,14 @@ import java.util.Map;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JCheckBox;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.openide.util.Exceptions;
 
+/**
+ * UI for inline-hints settings (Tools-&gt;Options-&gt;Editor-&gt;Inline Hints).
+ */
 public class InlineHintsPanel extends javax.swing.JPanel {
 
     public static final String JAVA_INLINE_HINT_PARAMETER_NAME = "javaInlineHintParameterName"; //NOI18N
@@ -49,38 +52,41 @@ public class InlineHintsPanel extends javax.swing.JPanel {
         DEFAULT_VALUES = Collections.unmodifiableMap(defaultValuesBuilder);
     }
 
-    private List<JCheckBox> boxes;
+    private List<JCheckBox> parameterBoxes;
     private InlineHintsOptionsPanelController controller;
     private boolean changed = false;
 
-    /**
-     * Creates new form InlineHintsPanel
-     */
     public InlineHintsPanel(InlineHintsOptionsPanelController controller) {
         initComponents();
-//        if( "Windows".equals(UIManager.getLookAndFeel().getID()) ) //NOI18N
-//            setOpaque( false );
         fillBoxes();
         addListeners();
-        load(controller);
     }
 
     public void load(InlineHintsOptionsPanelController controller) {
         this.controller = controller;
 
+        javaInlineHintsCB.setSelected(InlineHintsSettings.isInlineHintsEnabled());
+
         Preferences node = InlineHintsSettings.getCurrentNode();
 
-        for (JCheckBox box : boxes) {
+        for (JCheckBox box : parameterBoxes) {
             box.setSelected(node.getBoolean(box.getActionCommand(), DEFAULT_VALUES.get(box.getActionCommand())));
         }
+
+        updateCheckBoxEnabledState(null);
 
         changed = false;
     }
 
     public void store() {
+
+        if (javaInlineHintsCB.isSelected() != InlineHintsSettings.isInlineHintsEnabled()) {
+            InlineHintsSettings.setInlineHintsEnabled(javaInlineHintsCB.isSelected());
+        }
+
         Preferences node = InlineHintsSettings.getCurrentNode();
 
-        for (javax.swing.JCheckBox box : boxes) {
+        for (JCheckBox box : parameterBoxes) {
             boolean value = box.isSelected();
             boolean original = node.getBoolean(box.getActionCommand(),
                     DEFAULT_VALUES.get(box.getActionCommand()));
@@ -117,62 +123,83 @@ public class InlineHintsPanel extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         javaInlineHintParameterNameCB = new javax.swing.JCheckBox();
         javaInlineHintChainedTypesCB = new javax.swing.JCheckBox();
         javaInlineHintVarTypeCB = new javax.swing.JCheckBox();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+        javaInlineHintsCB = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 8, 8, 8));
-        setLayout(new java.awt.GridBagLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(javaInlineHintParameterNameCB, org.openide.util.NbBundle.getMessage(InlineHintsPanel.class, "InlineHintsPanel.javaInlineHintParameterNameCB.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(javaInlineHintParameterNameCB, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(javaInlineHintChainedTypesCB, org.openide.util.NbBundle.getMessage(InlineHintsPanel.class, "InlineHintsPanel.javaInlineHintChainedTypesCB.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(javaInlineHintChainedTypesCB, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(javaInlineHintVarTypeCB, org.openide.util.NbBundle.getMessage(InlineHintsPanel.class, "InlineHintsPanel.javaInlineHintVarTypeCB.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
-        add(javaInlineHintVarTypeCB, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        add(filler1, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(javaInlineHintsCB, org.openide.util.NbBundle.getMessage(InlineHintsPanel.class, "InlineHintsPanel.javaInlineHintsCB.text")); // NOI18N
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(javaInlineHintVarTypeCB)
+                            .addComponent(javaInlineHintChainedTypesCB)
+                            .addComponent(javaInlineHintParameterNameCB)))
+                    .addComponent(javaInlineHintsCB))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(javaInlineHintsCB)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(javaInlineHintParameterNameCB)
+                .addGap(6, 6, 6)
+                .addComponent(javaInlineHintChainedTypesCB)
+                .addGap(6, 6, 6)
+                .addComponent(javaInlineHintVarTypeCB)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void updateCheckBoxEnabledState(ActionEvent evt) {
+        if (javaInlineHintsCB.isSelected() && parameterBoxes.stream().noneMatch(JCheckBox::isSelected)) {
+            if (evt != null && evt.getSource() == javaInlineHintsCB) {
+                // restore default if hints are toggled on and no other parameter boxes are selected
+                // this ensures that the view aciton won't become a no-op
+                for (JCheckBox box : parameterBoxes) {
+                    box.setSelected(DEFAULT_VALUES.get(box.getActionCommand()));
+                }
+            } else {
+                // disable inline hints if none of the parameter boxes are selected
+                javaInlineHintsCB.setSelected(false);
+            }
+        }
+        // enable parameter boxes only if inline hints are active
+        parameterBoxes.forEach(box -> box.setEnabled(javaInlineHintsCB.isSelected()));
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.Box.Filler filler1;
     private javax.swing.JCheckBox javaInlineHintChainedTypesCB;
     private javax.swing.JCheckBox javaInlineHintParameterNameCB;
     private javax.swing.JCheckBox javaInlineHintVarTypeCB;
+    private javax.swing.JCheckBox javaInlineHintsCB;
     // End of variables declaration//GEN-END:variables
-    // End of variables declaration
 
     private void fillBoxes() {
-        boxes = new ArrayList<JCheckBox>();
-        boxes.add(javaInlineHintParameterNameCB);
-        boxes.add(javaInlineHintChainedTypesCB);
-        boxes.add(javaInlineHintVarTypeCB);
+        parameterBoxes = new ArrayList<>();
+        parameterBoxes.add(javaInlineHintParameterNameCB);
+        parameterBoxes.add(javaInlineHintChainedTypesCB);
+        parameterBoxes.add(javaInlineHintVarTypeCB);
 
         javaInlineHintParameterNameCB.setActionCommand(JAVA_INLINE_HINT_PARAMETER_NAME);
         javaInlineHintChainedTypesCB.setActionCommand(JAVA_INLINE_HINT_CHAINED_TYPES);
@@ -180,31 +207,27 @@ public class InlineHintsPanel extends javax.swing.JPanel {
     }
 
     private void addListeners() {
-        ChangeListener cl = new CheckChangeListener();
-
-        for (JCheckBox box : boxes) {
-            box.addChangeListener(cl);
+        ActionListener al = e -> checkBoxChanged(e);
+        javaInlineHintsCB.addActionListener(al);
+        for (JCheckBox box : parameterBoxes) {
+            box.addActionListener(al);
         }
-
     }
 
-    private void fireChanged() {
+    private void checkBoxChanged(ActionEvent evt) {
+        updateCheckBoxEnabledState(evt);
+        if (javaInlineHintsCB.isSelected() != InlineHintsSettings.isInlineHintsEnabled()) {
+            changed = true;
+            return;
+        }        
         Preferences node = InlineHintsSettings.getCurrentNode();
-        for (JCheckBox box : boxes) {
+        for (JCheckBox box : parameterBoxes) {
             if (node.getBoolean(box.getActionCommand(), DEFAULT_VALUES.get(box.getActionCommand())) != box.isSelected()) {
                 changed = true;
                 return;
             }
         }
         changed = false;
-    }
-
-    private class CheckChangeListener implements ChangeListener {
-
-        @Override
-        public void stateChanged(ChangeEvent evt) {
-            fireChanged();
-        }
     }
 
 }

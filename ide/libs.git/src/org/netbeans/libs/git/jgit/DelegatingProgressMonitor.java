@@ -56,4 +56,8 @@ public final class DelegatingProgressMonitor implements ProgressMonitor {
         return monitor.isCanceled();
     }
 
+    @Override
+    public void showDuration(boolean bln) {
+    }
+
 }

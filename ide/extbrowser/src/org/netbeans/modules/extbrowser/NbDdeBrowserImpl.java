@@ -137,7 +137,7 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
     public static native String getDefaultOpenCommand() throws NbBrowserException;
     
     /**
-     * Get the default browser name using java
+     * Get the default browser name using Java JNA library
      * @return String
      */
     private static String getDefaultWindowsBrowser() {
@@ -164,6 +164,11 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
         }
     }
     
+    /**
+     * Retrieves the browser execution path from the registry using the java JNA library
+     * @param browser
+     * @return String
+     */
     private static String getDefaultWindowsOpenCommandPath(String browser) {
         String executionCommand = Advapi32Util
                 .registryGetStringValue(

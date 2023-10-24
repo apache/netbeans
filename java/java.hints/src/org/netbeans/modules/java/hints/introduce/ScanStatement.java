@@ -120,7 +120,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
     @Override
     public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
         nesting++;
-        if (node.equals(firstInSelection)) {
+        if (node == firstInSelection) {
             phase = PHASE_INSIDE_SELECTION;
         }
         isLambda = true;

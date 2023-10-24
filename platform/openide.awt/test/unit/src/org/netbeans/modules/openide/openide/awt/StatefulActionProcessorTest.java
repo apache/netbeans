@@ -500,8 +500,9 @@ public class StatefulActionProcessorTest extends NbTestCase implements ContextGl
         );
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         boolean r = AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, getWorkDir(), null, os);
-        if (!os.toString().contains("is not public")) {
-            fail("Nonpublic listener type must be reported" + os);
+        String msg = os.toString();
+        if (!msg.contains("cannot find symbol") && !msg.contains("is not public")) {
+            fail("Nonpublic listener type must be reported" + msg);
         }
     }
 

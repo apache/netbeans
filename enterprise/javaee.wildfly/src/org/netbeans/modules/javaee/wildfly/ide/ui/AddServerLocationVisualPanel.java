@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -41,7 +42,7 @@ import org.openide.util.NbBundle;
  */
 public class AddServerLocationVisualPanel extends javax.swing.JPanel {
 
-    private final Set listeners = new HashSet();
+    private final Set listeners = ConcurrentHashMap.newKeySet();
 
     /**
      * Creates new form AddServerLocationVisualPanel
@@ -92,15 +93,11 @@ public class AddServerLocationVisualPanel extends javax.swing.JPanel {
     }
 
     public void addChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
-        }
+        listeners.add(l);
     }
 
     public void removeChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.remove(l);
-        }
+        listeners.remove(l);
     }
 
     private void fireChangeEvent() {

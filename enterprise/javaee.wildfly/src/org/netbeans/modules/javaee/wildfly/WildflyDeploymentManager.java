@@ -23,11 +23,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.deploy.model.DeployableObject;
@@ -83,8 +83,8 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
      * server instance bcs instance properties are also removed along with
      * instance.
      */
-    private static final Map<InstanceProperties, Boolean> PROPERTIES_TO_IS_RUNNING
-            = Collections.synchronizedMap(new WeakHashMap());
+    private static final ConcurrentMap<InstanceProperties, Boolean> PROPERTIES_TO_IS_RUNNING
+            = new ConcurrentHashMap(new WeakHashMap());
 
     private final DeploymentFactory df;
 

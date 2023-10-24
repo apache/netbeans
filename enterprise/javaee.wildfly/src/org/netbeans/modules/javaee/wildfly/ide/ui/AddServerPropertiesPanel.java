@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties;
@@ -181,19 +182,15 @@ public class AddServerPropertiesPanel implements WizardDescriptor.Panel, ChangeL
         }
     }
 
-    private final transient Set listeners = new HashSet(1);
+    private final transient Set listeners = ConcurrentHashMap.newKeySet(2);
     @Override
     public void removeChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.remove(l);
-        }
+        listeners.remove(l);
     }
 
     @Override
     public void addChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
-        }
+        listeners.add(l);
     }
 
     @Override

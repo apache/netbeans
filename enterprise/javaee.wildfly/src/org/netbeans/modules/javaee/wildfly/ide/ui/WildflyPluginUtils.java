@@ -106,6 +106,10 @@ public class WildflyPluginUtils {
     public static final Version WILDFLY_27_0_0 = new Version("27.0.0", true); // NOI18N
     
     public static final Version WILDFLY_28_0_0 = new Version("28.0.0", true); // NOI18N
+    
+    public static final Version WILDFLY_29_0_0 = new Version("29.0.0", true); // NOI18N
+    
+    public static final Version WILDFLY_30_0_0 = new Version("30.0.0", true); // NOI18N
 
     private static final Logger LOGGER = Logger.getLogger(WildflyPluginUtils.class.getName());
 

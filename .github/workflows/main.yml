@@ -893,120 +893,159 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: platform/api.htmlui
+        if: always()
         run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/api.htmlui test
   
       - name: platform/htmlui
+        if: always()
         run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/htmlui test
 
       - name: platform/api.intent
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.intent test
 
       - name: platform/api.io
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.io test
 
       - name: platform/api.progress
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.progress test
 
       - name: platform/api.progress.nb
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.progress.nb test
 
       - name: platform/api.scripting
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.scripting test
 
       - name: platform/api.search
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.search test
 
       - name: platform/api.templates
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.templates test
 
       - name: platform/api.visual
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.visual test
 
       - name: platform/applemenu
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/applemenu test
 
       - name: platform/autoupdate.cli
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/autoupdate.cli test
 
       - name: platform/autoupdate.services
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/autoupdate.services test
 
       - name: platform/autoupdate.ui
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/autoupdate.ui test
 
       - name: platform/core.execution
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.execution test
 
       - name: platform/core.io.ui
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.io.ui test
 
       - name: platform/core.kit
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.kit test
 
       - name: platform/core.multiview
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.multiview test
 
       - name: platform/core.netigso
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.netigso test
 
       - name: platform/core.osgi
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.osgi test
 
       - name: platform/core.output2
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.output2 test
 
       - name: platform/core.startup
+        if: always()
         run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/core.startup test
 
       - name: platform/core.startup.base
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.startup.base test
 
       - name: platform/core.ui
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.ui test
 
       - name: platform/core.windows
+        if: always()
         run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/core.windows test
 
       - name: platform/editor.mimelookup
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/editor.mimelookup test
 
       - name: platform/editor.mimelookup.impl
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/editor.mimelookup.impl test
 
       - name: platform/favorites
+        if: always()
         run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/favorites test
 
       - name: platform/javahelp
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/javahelp test-unit
 
       - name: platform/keyring.fallback
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/keyring.fallback test
 
       - name: platform/keyring.impl
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/keyring.impl test
 
       - name: platform/lib.uihandler
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/lib.uihandler test
 
       - name: platform/libs.javafx
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/libs.javafx test
 
       - name: platform/libs.junit4
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/libs.junit4 test
 
       - name: platform/masterfs
+        if: always()
         run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/masterfs test
 
       - name: platform/masterfs.linux
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/masterfs.linux test
 
       - name: platform/o.n.core
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.core test-unit
 
       - name: platform/o.n.swing.outline
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.swing.outline test
 
       - name: platform/o.n.swing.tabcontrol
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.swing.tabcontrol test
 
       - name: Set up JDK 11
@@ -1024,6 +1063,7 @@ jobs:
           restore-keys: ${{ runner.os }}-
 
       - name: platform build from platform-src zip
+        if: always()
         run: |
           ant $OPTS -quiet build-source-config -Dcluster.config=platform
           mkdir tmpplatform && cd tmpplatform && unzip -qq ../nbbuild/build/platform-src*
@@ -1037,6 +1077,7 @@ jobs:
 
       # required by netbinox tests
       - name: isolate platform build
+        if: always()
         run: |
           cp -r platform/ _platform/ && cp -r harness/ _harness/ && cp nbbuild/build/nbantext.jar .
           cp -r nbbuild/netbeans/platform/ _nb_platform/ && cp -r nbbuild/netbeans/harness/ _nb_harness/
@@ -1046,6 +1087,7 @@ jobs:
           mv _nb_platform/ nbbuild/netbeans/platform/ && mv _nb_harness/ nbbuild/netbeans/harness/
 
       - name: platform/netbinox
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/netbinox test -Dtest.config=stableBTD
 
       - name: Create Test Summary
@@ -1093,102 +1135,135 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: platform/openide.actions
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.actions test
 
       - name: platform/openide.awt
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.awt test
 
       - name: platform/openide.compat
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.compat test
 
       - name: platform/openide.dialogs
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.dialogs test
 
       - name: platform/openide.execution
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.execution test
 
       - name: platform/openide.execution.compat8
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.execution.compat8 test
 
       - name: platform/openide.explorer
+        if: always()
         run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.explorer test
 
       - name: platform/openide.filesystems
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.filesystems test
 
       - name: platform/openide.filesystems.compat8
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.filesystems.compat8 test
 
       - name: platform/openide.filesystems.nb
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.filesystems.nb test
 
       - name: platform/openide.io
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.io test
 
       - name: platform/openide.loaders
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.loaders test
 
       - name: platform/openide.modules
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.modules test
 
       - name: platform/openide.nodes
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.nodes test
 
       - name: platform/openide.options
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.options test
 
       - name: platform/openide.text
+        if: always()
         run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.text test
 
       - name: platform/openide.util
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.util test
 
       - name: platform/openide.util.lookup
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.util.lookup test
 
       - name: platform/openide.util.ui
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.util.ui test
 
       - name: platform/openide.windows
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.windows test
 
       - name: platform/options.api
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/options.api test-unit
 
       - name: platform/options.keymap
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/options.keymap test
 
       - name: platform/print
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/print test
 
       - name: platform/progress.ui
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/progress.ui test
 
       - name: platform/queries
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/queries test
 
       - name: platform/sampler
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/sampler test
 
       - name: platform/sendopts
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/sendopts test
 
       - name: platform/settings
+        if: always()
         run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/settings test
 
       - name: platform/spi.actions
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/spi.actions test
 
       - name: platform/spi.quicksearch
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/spi.quicksearch test
 
       - name: platform/templates
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/templates test
 
       - name: platform/templatesui
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/templatesui test
 
       - name: platform/uihandler
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/uihandler test
 
       - name: Set up JDK 11
@@ -1198,6 +1273,7 @@ jobs:
           distribution: ${{ env.default_java_distribution }}
         
       - name: platform/o.n.bootstrap on 11
+        if: always()
         run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.bootstrap test
  
       - name: Create Test Summary
@@ -1493,18 +1569,23 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: apisupport.ant
+        if: always()
         run: ant $OPTS -f apisupport/apisupport.ant test
 
       - name: apisupport.project
+        if: always()
         run: ant $OPTS -f apisupport/apisupport.project test
 
       - name: apisupport.refactoring
+        if: always()
         run: ant $OPTS -f apisupport/apisupport.refactoring test
 
       - name: apisupport.wizards
+        if: always()
         run: ant $OPTS -f apisupport/apisupport.wizards test
 
       - name: timers
+        if: always()
         run: ant $OPTS -f apisupport/timers test -Dtest.config=stable
 
       - name: Create Test Summary
@@ -1877,12 +1958,15 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: groovy/groovy.editor
+        if: always()
         run: ant $OPTS -f groovy/groovy.editor test
 
       - name: groovy/groovy.gsp
+        if: always()
         run: ant $OPTS -f groovy/groovy.gsp test
 
       - name: groovy/groovy.support
+        if: always()
         run: ant $OPTS -f groovy/groovy.support test
 
 #      - name: groovy/groovy

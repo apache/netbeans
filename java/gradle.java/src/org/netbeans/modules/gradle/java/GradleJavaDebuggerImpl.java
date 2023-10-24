@@ -18,25 +18,13 @@
  */
 package org.netbeans.modules.gradle.java;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.java.classpath.ClassPath;
-import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gradle.java.api.ProjectSourcesClassPathProvider;
 import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
-import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation2;
-import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.netbeans.modules.gradle.java.spi.debug.GradleJavaDebugger;
 
@@ -58,8 +46,8 @@ public final class GradleJavaDebuggerImpl implements GradleJavaDebugger {
     @Override
     public void attachDebugger(String name, String transport, String host, String address) throws Exception {
         final Object[] lock = new Object [1];
-        ClassPath sourcePath = getSources();
-        ClassPath jdkSourcePath = getJdkSources();
+        ClassPath sourcePath = Utils.getSources(project);
+        ClassPath jdkSourcePath = Utils.getJdkSources(project);
 
         final Map properties = new HashMap();
         properties.put("sourcepath", sourcePath); //NOI18N
@@ -114,42 +102,4 @@ public final class GradleJavaDebuggerImpl implements GradleJavaDebugger {
         }
     }
 
-    private ClassPath getJdkSources() {
-        JavaPlatform jdk = JavaRunUtils.getActivePlatform(project).second();
-        if (jdk != null) {
-            return jdk.getSourceFolders();
-        }
-        return null;
-    }
-
-    private ClassPath getSources() {
-        ProjectSourcesClassPathProvider pgcpp = project.getLookup().lookup(ProjectSourcesClassPathProvider.class);
-        List<SourceForBinaryQueryImplementation2> sourceQueryImpls = new ArrayList<>(2);
-        sourceQueryImpls.addAll(project.getLookup().lookupAll(SourceForBinaryQueryImplementation2.class));
-        sourceQueryImpls.addAll(Lookup.getDefault().lookupAll(SourceForBinaryQueryImplementation2.class));
-
-        Set<FileObject> srcs = new LinkedHashSet<>();
-        for (ClassPath projectSourcePath : pgcpp.getProjectClassPath(ClassPath.SOURCE)) {
-            srcs.addAll(Arrays.asList(projectSourcePath.getRoots()));
-        }
-
-        for (ClassPath cp : pgcpp.getProjectClassPath(ClassPath.EXECUTE)) {
-            for (ClassPath.Entry entry : cp.entries()) {
-                URL url = entry.getURL();
-                SourceForBinaryQueryImplementation2.Result ret;
-                for (SourceForBinaryQueryImplementation2 sourceQuery : sourceQueryImpls) {
-                    ret = sourceQuery.findSourceRoots2(url);
-                    if (ret != null) {
-                        List<FileObject> roots = Arrays.asList(ret.getRoots());
-                        if (!roots.isEmpty()) {
-                            srcs.addAll(roots);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        FileObject[] roots = srcs.toArray(new FileObject[srcs.size()]);
-        return ClassPathSupport.createClassPath(roots);
-    }
 }

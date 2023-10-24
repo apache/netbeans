@@ -19,7 +19,9 @@
 
 package org.netbeans.modules.gradle.tooling;
 
+import java.util.Arrays;
 import static java.util.Arrays.asList;
+import java.util.HashSet;
 import java.util.Set;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.logging.Logger;
@@ -43,37 +45,55 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
 
     private static final String RUN_SINGLE_TASK = "runSingle";
     private static final String RUN_SINGLE_MAIN = "runClassName";
-    private static final String RUN_SINGLE_ARGS = "runArgs";
-    private static final String RUN_SINGLE_JVM_ARGS = "runJvmArgs";
-    private static final String RUN_SINGLE_CWD = "runWorkingDir";
+    private static final String RUN_ARGS = "runArgs";
+    private static final String RUN_JVM_ARGS = "runJvmArgs";
+    private static final String RUN_JVM_DEBUG_ARGS = "runJvmDebugArgs";
+    private static final String RUN_CWD = "runWorkingDir";
+
+    private static final Set<String> KNOWN_PROPERTIES = new HashSet<>(Arrays.asList(
+        RUN_SINGLE_MAIN, RUN_ARGS, RUN_JVM_ARGS, RUN_JVM_DEBUG_ARGS,
+        RUN_CWD
+    ));
 
     @Override
     public void apply(Project project) {
         project.afterEvaluate(p -> {
-            if (project.getPlugins().hasPlugin("java") 
-                    && (project.getTasks().findByPath(RUN_SINGLE_TASK) == null)
-                    && project.hasProperty(RUN_SINGLE_MAIN)) {
-                Set<Task> runTasks = p.getTasksByName("run", false);
-                Task r = runTasks.isEmpty() ? null : runTasks.iterator().next();
-                String mainClass = project.property(RUN_SINGLE_MAIN).toString();
+            if (project.getPlugins().hasPlugin("java") &&
+                KNOWN_PROPERTIES.stream().anyMatch(project::hasProperty)) {
+                String mainClass = project.hasProperty(RUN_SINGLE_MAIN) ? project.property(RUN_SINGLE_MAIN).toString()
+                                                                        : null;
                 p.getTasks().withType(JavaExec.class).configureEach(je -> {
-                    if (GRADLE_VERSION.compareTo(GradleVersion.version("6.4")) < 0) {
-                        // Using setMain to keep the backward compatibility before Gradle 6.4
-                        je.setMain(mainClass);
-                    } else {
-                        je.getMainClass().set(mainClass);
+                    if (mainClass != null) {
+                        if (GRADLE_VERSION.compareTo(GradleVersion.version("6.4")) < 0) {
+                            // Using setMain to keep the backward compatibility before Gradle 6.4
+                            je.setMain(mainClass);
+                        } else {
+                            je.getMainClass().set(mainClass);
+                        }
                     }
-                    if (project.hasProperty(RUN_SINGLE_ARGS)) {
-                        je.setArgs(asList(project.property(RUN_SINGLE_ARGS).toString().split(" ")));
+                    if (project.hasProperty(RUN_ARGS)) {
+                        je.setArgs(asList(project.property(RUN_ARGS).toString().split(" ")));
                     }
-                    if (p.hasProperty(RUN_SINGLE_JVM_ARGS)) {
+                    if (p.hasProperty(RUN_JVM_ARGS) || p.hasProperty(RUN_JVM_DEBUG_ARGS)) {
                         // Property jvmArgumentProviders should not be implemented as a lambda to allow execution optimizations.
                         // See https://docs.gradle.org/current/userguide/validation_problems.html#implementation_unknown
                         je.getJvmArgumentProviders().add(new CommandLineArgumentProvider() {
                             // Do not convert to lambda.
                             @Override
                             public Iterable<String> asArguments() {
-                                return asList(p.property(RUN_SINGLE_JVM_ARGS).toString().split(" "));
+                                String args = null;
+                                if (p.hasProperty(RUN_JVM_ARGS)) {
+                                    args = p.property(RUN_JVM_ARGS).toString();
+                                }
+                                if (p.hasProperty(RUN_JVM_DEBUG_ARGS)) {
+                                    String debugArgs = p.property(RUN_JVM_DEBUG_ARGS).toString();
+                                    if (args == null) {
+                                        args = debugArgs;
+                                    } else {
+                                        args = args + " " + debugArgs;
+                                    }
+                                }
+                                return asList(args.split(" "));
                             }
                         });
                     }
@@ -86,11 +106,16 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
                             LOG.info("Failed to set STDIN for Plugin: " + je.toString());
                         }
                     }
-                    if (project.hasProperty(RUN_SINGLE_CWD)) {
-                        je.setWorkingDir(project.property(RUN_SINGLE_CWD).toString());
+                    if (project.hasProperty(RUN_CWD)) {
+                        je.setWorkingDir(project.property(RUN_CWD).toString());
                     }
                 });
-                addTask(project, r);
+                if (mainClass != null
+                    && (project.getTasks().findByPath(RUN_SINGLE_TASK) == null)) {
+                    Set<Task> runTasks = p.getTasksByName("run", false);
+                    Task r = runTasks.isEmpty() ? null : runTasks.iterator().next();
+                    addTask(project, r);
+                }
             }
         });
     }

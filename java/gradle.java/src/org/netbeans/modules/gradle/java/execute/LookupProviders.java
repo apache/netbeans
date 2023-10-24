@@ -20,6 +20,7 @@ package org.netbeans.modules.gradle.java.execute;
 
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.java.execute.JavaDebugTokenProvider.DebugTokenHook;
 import org.netbeans.spi.project.LookupProvider;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -38,6 +39,7 @@ public class LookupProviders {
                 Project project = baseContext.lookup(Project.class);
                 return Lookups.fixed(
                         new DebugFixHooks(project),
+                        new DebugTokenHook(),
                         new ShowJavadocHook(project)
                 );
             }

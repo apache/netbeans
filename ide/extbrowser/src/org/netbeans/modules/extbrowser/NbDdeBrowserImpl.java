@@ -39,8 +39,6 @@ import org.openide.util.NbBundle;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -274,7 +272,7 @@ public class NbDdeBrowserImpl extends ExtBrowserImpl {
             /** if not found with getDefaultWindowsOpenCommand function
              *  fallback to previous method
              */
-            if (cmd.isEmpty())
+            if (cmd.isEmpty() || cmd == null)
                 {
                     cmd = getDefaultOpenCommand();
                 }

@@ -125,7 +125,7 @@ export function waitCommandsReady() : Promise<void> {
         function checkCommands(attempts : number, cb : () => void) {
             try {
                 // this command is parameterless
-                vscode.commands.executeCommand("java.attachDebugger.configurations")
+                vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.attachDebugger.configurations")
                 console.log("NBLS commands ready.");
                 resolve();
             } catch (e) {
@@ -159,9 +159,9 @@ async function waitProjectRecognized(someJavaFile : string) {
     return waitCommandsReady().then(() => {
         const u : vscode.Uri = vscode.Uri.file(someJavaFile);
         // clear out possible bad or negative caches.
-        return vscode.commands.executeCommand("java.clear.project.caches").then(
+        return vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".clear.project.caches").then(
             // this should assure opening the root with the created project.
-            () => vscode.commands.executeCommand("java.get.project.packages", u.toString())
+            () => vscode.commands.executeCommand(myExtension.COMMAND_PREFIX + ".java.get.project.packages", u.toString())
         );
     });
 }

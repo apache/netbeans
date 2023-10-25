@@ -47,11 +47,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 200)
 public final class ImplementAllAbstractMethodsAction extends CodeActionsProvider {
 
-    private static final String IMPLEMENT_ALL_ABSTRACT_METHODS = "java.implement.all.abstract.methods"; //NOI18N
+    private static final String IMPLEMENT_ALL_ABSTRACT_METHODS = "nbls.java.implement.all.abstract.methods"; //NOI18N
     private final Gson gson = new Gson();
 
     @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         return Collections.emptyList();
     }
 

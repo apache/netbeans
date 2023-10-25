@@ -99,7 +99,8 @@
          <package-artifact-from-dir jarbasename="test-lib3-12.6" relpath="projects/dependencies/repo/grp/test-lib3/12.6"/>
          <package-artifact-from-dir jarbasename="test-lib4-12.6" relpath="projects/dependencies/repo/grp/test-lib4/12.6"/>
          <package-artifact-from-dir jarbasename="test-processor-12.6" relpath="projects/dependencies/repo/grp/test-processor/12.6"/>
-
+         
+         <chmod file="${build.test.unit.dir}/data/projects/multiproject/democa/mvnw" perm="ugo+rwx"/>
     </target>
 
 </project>

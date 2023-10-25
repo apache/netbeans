@@ -91,7 +91,7 @@ public final class ConstructorGenerator extends CodeActionsProvider {
     @NbBundle.Messages({
         "DN_GenerateConstructor=Generate Constructor...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null) {
             return Collections.emptyList();
@@ -187,7 +187,7 @@ public final class ConstructorGenerator extends CodeActionsProvider {
         data.put(OFFSET, startOffset);
         data.put(CONSTRUCTORS, constructors);
         data.put(FIELDS, fields);
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateConstructor(), isSource ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, data, "workbench.action.focusActiveEditorGroup"));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateConstructor(), isSource ? CODE_GENERATOR_KIND : CodeActionKind.QuickFix, data, "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override

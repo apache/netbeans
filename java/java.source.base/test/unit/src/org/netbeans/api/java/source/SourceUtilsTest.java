@@ -84,6 +84,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
         clearWorkDir();
         SourceUtilsTestUtil.prepareTest(
@@ -539,6 +540,16 @@ public class SourceUtilsTest extends ClassIndexTestCase {
                          "    void main() {}\n" +
                          "}\n",
                          "Test:main:([Ljava/lang/String;)V"),
+            new TestCase("public class Test {\n" +
+                         "    public static void plain(String... args) {}\n" +
+                         "    void main() {}\n" +
+                         "}\n",
+                         "Test:main:()V"),
+            new TestCase("public class Test {\n" +
+                         "    void main() {}\n" +
+                         "    public static void plain(String... args) {}\n" +
+                         "}\n",
+                         "Test:main:()V"),
         };
         File work = getWorkDir();
         FileObject workFO = FileUtil.toFileObject(work);

@@ -65,8 +65,8 @@ public class CodeLensProviderImpl implements CodeLensProvider {
         Tag testTag = testTags.get(0);
         Range lenSpan = new Range(testTag.getTagStart(), testTag.getTagEnd());
         List<Object> params = Collections.singletonList(file.toURI().toString());
-        return Collections.unmodifiableList(Arrays.asList(new CodeLens(lenSpan, new Command(Bundle.DN_RunTest(), "java.run.test", params), null),
-                                                          new CodeLens(lenSpan, new Command(Bundle.DN_DebugTest(), "java.debug.test", params), null)));
+        return Collections.unmodifiableList(Arrays.asList(new CodeLens(lenSpan, new Command(Bundle.DN_RunTest(), "nbls.run.test", params), null),
+                                                          new CodeLens(lenSpan, new Command(Bundle.DN_DebugTest(), "nbls.debug.test", params), null)));
     }
 
 }

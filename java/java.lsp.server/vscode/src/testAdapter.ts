@@ -21,6 +21,7 @@
 import { commands, debug, tests, workspace, CancellationToken, TestController, TestItem, TestRunProfileKind, TestRunRequest, Uri, TestRun, TestMessage, Location, Position, MarkdownString } from "vscode";
 import * as path from 'path';
 import { asRange, TestCase, TestSuite } from "./protocol";
+import { COMMAND_PREFIX } from "./extension";
 
 export class NbTestAdapter {
 
@@ -41,7 +42,7 @@ export class NbTestAdapter {
 
     async load(): Promise<void> {
         for (let workspaceFolder of workspace.workspaceFolders || []) {
-            const loadedTests: any = await commands.executeCommand('java.load.workspace.tests', workspaceFolder.uri.toString());
+            const loadedTests: any = await commands.executeCommand(COMMAND_PREFIX + '.load.workspace.tests', workspaceFolder.uri.toString());
             if (loadedTests) {
                 loadedTests.forEach((suite: TestSuite) => {
                     this.updateTests(suite);
@@ -64,7 +65,7 @@ export class NbTestAdapter {
                         this.set(item, 'enqueued');
                         const idx = item.id.indexOf(':');
                         if (!cancellation.isCancellationRequested) {
-                            await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.single' : 'java.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1));
+                            await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.single' : COMMAND_PREFIX + '.run.single', item.uri.toString(), idx < 0 ? undefined : item.id.slice(idx + 1));
                         }
                     }
                 }
@@ -72,7 +73,7 @@ export class NbTestAdapter {
                 this.testController.items.forEach(item => this.set(item, 'enqueued'));
                 for (let workspaceFolder of workspace.workspaceFolders || []) {
                     if (!cancellation.isCancellationRequested) {
-                        await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? 'java.debug.test': 'java.run.test', workspaceFolder.uri.toString());
+                        await commands.executeCommand(request.profile?.kind === TestRunProfileKind.Debug ? COMMAND_PREFIX + '.debug.test': COMMAND_PREFIX + '.run.test', workspaceFolder.uri.toString());
                     }
                 }
             }
@@ -308,7 +309,7 @@ export class NbTestAdapter {
             }
             const result = regExp.exec(line);
             if (result) {
-                message.appendText(result[1]).appendText('(').appendMarkdown(`[${result[3]}](command:java.open.stacktrace?${encodeURIComponent(JSON.stringify([currentTestUri, result[2], result[4], +result[5]]))})`).appendText(')');
+                message.appendText(result[1]).appendText('(').appendMarkdown(`[${result[3]}](command:${COMMAND_PREFIX}.open.stacktrace?${encodeURIComponent(JSON.stringify([currentTestUri, result[2], result[4], +result[5]]))})`).appendText(')');
             } else {
                 message.appendText(line);
             }

@@ -75,7 +75,7 @@ import org.openide.util.lookup.ServiceProvider;
 })
 @ServiceProvider(service = CodeActionsProvider.class)
 public class DBAddConnection extends CodeActionsProvider {
-    public static final String DB_ADD_CONNECTION =  "db.add.connection"; // NOI18N
+    public static final String DB_ADD_CONNECTION =  "nbls.db.add.connection"; // NOI18N
     public static final String USER_ID =  "userId"; // NOI18N
     public static final String PASSWORD =  "password"; // NOI18N
     public static final String DRIVER =  "driver"; // NOI18N
@@ -306,7 +306,7 @@ public class DBAddConnection extends CodeActionsProvider {
     }
 
     @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         return Collections.emptyList();
     }
     

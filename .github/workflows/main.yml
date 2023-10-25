@@ -758,7 +758,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '11', '17' ]
     steps:
 
       - name: Set up JDK ${{ matrix.java }}

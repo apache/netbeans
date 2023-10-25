@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -38,7 +40,7 @@ import org.openide.util.Utilities;
  * @author  Milos Kleint
  */
 class CompileClassPathImpl extends AbstractProjectClassPathImpl implements FlaggedClassPathImplementation {
-
+    private static final Logger LOGGER = Logger.getLogger(CompileClassPathImpl.class.getName());
     private volatile boolean incomplete;
     private final boolean addOutputDir;
 
@@ -52,6 +54,9 @@ class CompileClassPathImpl extends AbstractProjectClassPathImpl implements Flagg
     URI[] createPath() {
         List<URI> lst = new ArrayList<>();
         boolean broken = getCompileArtifacts(getMavenProject().getOriginalMavenProject(), lst);
+        MavenProject mp = getMavenProject().getOriginalMavenProjectOrNull();
+        LOGGER.log(Level.FINER, "{0} for project {1}: creating path for {2}: size {4} - {3}", 
+                new Object[] { getClass(), getMavenProject(), System.identityHashCode(mp == null ? this : mp), lst, lst.size() });
         if(addOutputDir) {
             lst.add(Utilities.toURI(getProject().getProjectWatcher().getOutputDirectory(false)));
         }

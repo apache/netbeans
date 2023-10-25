@@ -369,7 +369,7 @@ public class WebView implements Closeable {
     public static final class Server extends CodeActionsProvider {
 
         private static final Map<String, WebView.Command> SESSIONS = new HashMap<>();
-        private static final String PROCESS_COMMAND = "nb.htmlui.process.command"; // NOI18N
+        private static final String PROCESS_COMMAND = "nbls.htmlui.process.command"; // NOI18N
         private static final String ID = "id"; // NOI18N
         private final Gson gson = new Gson();
 
@@ -394,7 +394,7 @@ public class WebView implements Closeable {
         }
 
         @Override
-        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
             return Collections.emptyList();
         }
     } // end of Server

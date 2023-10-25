@@ -74,7 +74,6 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
     final NbGradleProjectImpl project;
     private GradleDistribution dist;
     private final PropertyChangeListener pcl;
-    private URI distributionURI;
 
     public GradleDistributionProviderImpl(Project project) {
         this.project = (NbGradleProjectImpl) project;
@@ -83,8 +82,7 @@ public class GradleDistributionProviderImpl implements GradleDistributionProvide
                 URI uri = (URI) evt.getNewValue();
                 if ((uri != null) && (uri.getPath() != null) && uri.getPath().endsWith(GradleFiles.WRAPPER_PROPERTIES)) {
                     URI newDistURI = getWrapperDistributionURI();
-                    if (GradleSettings.getDefault().isWrapperPreferred() && (distributionURI != null) && !Objects.equal(distributionURI, newDistURI)) {
-                        distributionURI = newDistURI;
+                    if (GradleSettings.getDefault().isWrapperPreferred() && (dist != null) && !Objects.equal(dist.getDistributionURI(), newDistURI)) {
                         distributionChanged();
                     }
                 }

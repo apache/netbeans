@@ -83,6 +83,20 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="partial-maven-project">
+            <api name="general"/>
+            <summary>Support for partially loaded projects</summary>
+            <version major="2" minor="161"/>
+            <date day="3" month="10" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                Added a <a href="@TOP@/org/netbeans/modules/maven/api/NbMavenProject.html#getPartialProject-org.apache.maven.project.MavenProject-">
+                getPratialProject</a> that returns potentially incompletely loaded project instead of a mocked-up fallback (see <a href="@TOP@/org/netbeans/modules/maven/api/NbMavenProject.html#isErrorPlaceholder-org.apache.maven.project.MavenProject-">isErrorPlaceholder()</a>.
+                Also added a <a href="@TOP@/org/netbeans/modules/maven/api/NbMavenProject.html#isIncomplete-org.apache.maven.project.MavenProject-">isIncomplete()</a> check that checks project's status.
+            </description>
+            <class package="org.netbeans.modules.maven.api" name="NbMavenProject"/>
+        </change>
         <change id="runutils-createconfig-action">
             <api name="general"/>
             <summary></summary>

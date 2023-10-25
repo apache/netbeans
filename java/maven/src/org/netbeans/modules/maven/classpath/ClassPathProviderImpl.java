@@ -538,6 +538,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
             boolean reset = false;            
             if( (NbMavenProject.PROP_RESOURCE.equals(evt.getPropertyName()) && evt.getNewValue() instanceof URI)) {
                 File file = Utilities.toFile((URI) evt.getNewValue());
+                LOGGER.log(Level.FINER, "{0} checking reset with file {1}", new Object[] { getClass(), file });
                 for (String sourceRoot : proj.getOriginalMavenProject().getCompileSourceRoots()) {
                     if(file.equals(new File(sourceRoot, MODULE_INFO_JAVA))) {
                         reset = true;
@@ -701,6 +702,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
             // maven checks recursively all source roots for module-info,
             // for performace reasons we will be checking and listening only on the root of a source root
             NbMavenProject.addPropertyChangeListener(proj, (evt) -> {
+                LOGGER.log(Level.FINER, "{0} got property change {1} from {2}", new Object[] { getClass(), evt, proj });
                 if (isReset(evt)) {
                     active = null;
                     support.firePropertyChange(PROP_ACTIVE_CLASS_PATH, null, null);

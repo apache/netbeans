@@ -38,6 +38,9 @@ import org.openide.util.Utilities;
  * Browser factory for System default Win browser.
  *
  * @author Martin Grebac
+ * 
+ * @author James Pollard
+ * year: 2023
  */
 public class SystemDefaultBrowser extends ExtWebBrowser {
 
@@ -121,27 +124,28 @@ public class SystemDefaultBrowser extends ExtWebBrowser {
             return new NbProcessDescriptor("", ""); // NOI18N
         }
 
-        String b;
+        String browser;
         String params = ""; // NOI18N
         try {
             // finds HKEY_CLASSES_ROOT\\".html" and respective HKEY_CLASSES_ROOT\\<value>\\shell\\open\\command
             // we will ignore all params here
-            b = NbDdeBrowserImpl.getDefaultOpenCommand();
-            String[] args = Utilities.parseParameters(b);
+            browser = NbDdeBrowserImpl.getDefaultWindowsOpenCommand();
+             
+            String[] args = Utilities.parseParameters(browser);
 
             if (args == null || args.length == 0) {
                 throw new NbBrowserException();
             }
-            b = args[0];
+            browser = args[0];
             params += " {" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
         } catch (NbBrowserException e) {
-            b = ""; // NOI18N
+            browser = ""; // NOI18N
         } catch (UnsatisfiedLinkError e) {
             // someone is customizing this on non-Win platform
-            b = "iexplore"; // NOI18N
+            browser = "iexplore"; // NOI18N
         }
 
-        NbProcessDescriptor p = new NbProcessDescriptor(b, params,
+        NbProcessDescriptor p = new NbProcessDescriptor(browser, params,
                 ExtWebBrowser.UnixBrowserFormat.getHint());
         return p;
     }

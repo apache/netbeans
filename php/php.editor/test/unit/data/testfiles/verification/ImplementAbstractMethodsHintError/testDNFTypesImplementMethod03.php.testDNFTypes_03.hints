@@ -1,0 +1,5 @@
+    class Implement implements ImplementMethodTest {
+          ---------
+HINT:\Test2\Implement is not abstract and does not override abstract method  testMethod((Foo&Bar)|Baz $param1, Baz|(Foo&Bar) $param2, (Foo&Bar)|(Bar&Baz) $param3, Foo|(Bar&Baz)|null $param4) in \Test1\ImplementMethodTest
+FIX:Implement All Abstract Methods
+FIX:Declare Abstract Class

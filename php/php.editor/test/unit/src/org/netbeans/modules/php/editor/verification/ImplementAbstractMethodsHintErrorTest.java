@@ -273,6 +273,38 @@ public class ImplementAbstractMethodsHintErrorTest extends PHPHintsTestBase {
         applyHint(new ImplementAbstractMethodsHintError(), "testEnumerations_01.php", "enum TestEnumWith^Trait {", "Implement");
     }
 
+    public void testDNFTypes_01() throws Exception {
+        checkHints(new ImplementAbstractMethodsHintError(), "testDNFTypesImplementMethod01.php");
+    }
+
+    public void testDNFTypes_02() throws Exception {
+        checkHints(new ImplementAbstractMethodsHintError(), "testDNFTypesImplementMethod02.php");
+    }
+
+    public void testDNFTypes_03() throws Exception {
+        checkHints(new ImplementAbstractMethodsHintError(), "testDNFTypesImplementMethod03.php");
+    }
+
+    public void testDNFTypes_04() throws Exception {
+        checkHints(new ImplementAbstractMethodsHintError(), "testDNFTypesImplementMethod04.php");
+    }
+
+    public void testDNFTypesFix_01() throws Exception {
+        applyHint(new ImplementAbstractMethodsHintError(), "testDNFTypesImplementMethod01.php", "class Impleme^nt", "Implement");
+    }
+
+    public void testDNFTypesFix_02() throws Exception {
+        applyHint(new ImplementAbstractMethodsHintError(), "testDNFTypesImplementMethod02.php", "class Impleme^nt", "Implement");
+    }
+
+    public void testDNFTypesFix_03() throws Exception {
+        applyHint(new ImplementAbstractMethodsHintError(), "testDNFTypesImplementMethod03.php", "class Impleme^nt", "Implement");
+    }
+
+    public void testDNFTypesFix_04() throws Exception {
+        applyHint(new ImplementAbstractMethodsHintError(), "testDNFTypesImplementMethod04.php", "class Impleme^nt extends ImplementMethodTest {", "Implement");
+    }
+
     //~ Inner classes
     private static final class ImplementAbstractMethodsHintErrorStub extends ImplementAbstractMethodsHintError {
 

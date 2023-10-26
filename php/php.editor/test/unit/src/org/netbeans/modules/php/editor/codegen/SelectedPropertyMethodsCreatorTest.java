@@ -750,4 +750,85 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
         ));
     }
 
+    // GH-4725 PHP 8.2
+    public void testDNFTypesConstructor() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_82);
+        cgsInfo.setPublicModifier(true);
+        selectAllProperties(cgsInfo.getInstanceProperties());
+        checkResult(CGSGenerator.GenType.CONSTRUCTOR.getTemplateText(cgsInfo));
+    }
+
+    public void testDNFTypesGetter() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_82);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleGetters()),
+                new SinglePropertyMethodCreator.SingleGetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testDNFTypesSetter() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_82);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectAllProperties(cgsInfo.getPossibleSetters()),
+                new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)
+        ));
+    }
+
+    public void testDNFTypesOverrideMethod01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends OverrideMethodTest {^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testDNFTypesOverrideMethod02() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends OverrideMethodTest {^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testDNFTypesOverrideMethod03() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Child extends OverrideMethodTest {^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testDNFTypesImplementMethod01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement implements ImplementMethodTest {^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testDNFTypesImplementMethod02() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement implements ImplementMethodTest {^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testDNFTypesImplementMethod03() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement implements ImplementMethodTest {^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testDNFTypesImplementMethod04() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Implement extends ImplementMethodTest {^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "testMethod"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
 }

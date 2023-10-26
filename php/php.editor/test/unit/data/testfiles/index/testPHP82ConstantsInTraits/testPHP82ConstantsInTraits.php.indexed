@@ -25,7 +25,7 @@ Searchable Keys:
   clz.const : private;PRIVATE;982;'private';0;<TESTURL>/testPHP82ConstantsInTraits.php;2;
   clz.const : protected;PROTECTED;939;'protected';0;<TESTURL>/testPHP82ConstantsInTraits.php;4;
   clz.const : public;PUBLIC;900;'public';0;<TESTURL>/testPHP82ConstantsInTraits.php;1;
-  method : method;method;1024;;void;1;0;<TESTURL>/testPHP82ConstantsInTraits.php;0;0;
+  method : method;method;1024;;void;1;0;<TESTURL>/testPHP82ConstantsInTraits.php;0;0;void;
   top : exampletrait
   trait : exampletrait;ExampleTrait;820;;;0;<TESTURL>/testPHP82ConstantsInTraits.php;
 

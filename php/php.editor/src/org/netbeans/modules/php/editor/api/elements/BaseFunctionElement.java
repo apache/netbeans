@@ -42,6 +42,12 @@ public interface BaseFunctionElement extends PhpElement {
     List<ParameterElement> getParameters();
     Collection<TypeResolver> getReturnTypes();
     /**
+     * Get the declared return type in the declaration.
+     *
+     * @return declared return type
+     */
+    String getDeclaredReturnType();
+    /**
      * Check whether return type is a union type.
      *
      * @return {@code true} if not phpdoc but actual return type is a union

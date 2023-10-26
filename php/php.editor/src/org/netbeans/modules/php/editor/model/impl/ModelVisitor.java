@@ -1354,26 +1354,20 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     @Override
     public void visit(PHPDocVarTypeTag node) {
         Scope currentScope = modelBuilder.getCurrentScope();
-        StringBuilder sb = new StringBuilder();
-        StringBuilder fqNames = new StringBuilder();
+        String defaultType = null;
+        String fqType = null;
+        if (isPropertyTag(node)) {
+            defaultType = getDefaultType(node);
+            if (defaultType != null) {
+                fqType = getFqName(defaultType, node, currentScope);
+            }
+        }
         List<? extends PhpDocTypeTagInfo> tagInfos = PhpDocTypeTagInfo.create(node, currentScope);
         for (Iterator<? extends PhpDocTypeTagInfo> it = tagInfos.iterator(); it.hasNext();) {
             PhpDocTypeTagInfo phpDocTypeTagInfo = it.next();
             if (phpDocTypeTagInfo.getKind().equals(Kind.FIELD) && !phpDocTypeTagInfo.getName().isEmpty()) {
-                String typeName = phpDocTypeTagInfo.getTypeName();
-                if (typeName != null) {
-                    if (sb.length() > 0) {
-                        sb.append(SEPARATOR);
-                    }
-                    if (fqNames.length() > 0) {
-                        fqNames.append(SEPARATOR);
-                    }
-                    String qualifiedTypeNames = VariousUtils.qualifyTypeNames(typeName, node.getStartOffset(), currentScope);
-                    fqNames.append(qualifiedTypeNames);
-                    sb.append(typeName);
-                }
                 if ((currentScope instanceof ClassScope || currentScope instanceof TraitScope) && !it.hasNext()) {
-                    new FieldElementImpl(currentScope, sb.length() > 0 ? sb.toString() : null, fqNames.length() > 0 ? fqNames.toString() : null, phpDocTypeTagInfo, true);
+                    new FieldElementImpl(currentScope, defaultType, fqType, phpDocTypeTagInfo, true);
                 }
             } else if (node.getKind().equals(PHPDocTag.Type.GLOBAL) && phpDocTypeTagInfo.getKind().equals(Kind.VARIABLE)) {
                 final String typeName = phpDocTypeTagInfo.getTypeName();
@@ -1396,6 +1390,57 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
 
         occurencesBuilder.prepare(node, currentScope);
         super.visit(node);
+    }
+
+    private static boolean isPropertyTag(PHPDocVarTypeTag node) {
+        return node.getKind() == PHPDocTag.Type.PROPERTY
+                || node.getKind() == PHPDocTag.Type.PROPERTY_READ
+                || node.getKind() == PHPDocTag.Type.PROPERTY_WRITE
+                || node.getKind() == PHPDocTag.Type.PARAM;
+    }
+
+    private String getDefaultType(PHPDocVarTypeTag node) {
+        // e.g. @property (X&Y)|Z $prop description
+        String[] values = node.getValue().trim().split(" ", 2); // NOI18N
+        if (values[0].startsWith("$") || values.length < 2) { // NOI18N
+            return null;
+        }
+        // e.g. string[]
+        String defaultType = values[0].replace("[]", ""); // NOI18N
+        return defaultType;
+    }
+
+    private String getFqName(String defaultType, PHPDocVarTypeTag node, Scope currentScope) {
+        int typeStart = 0;
+        String fqType = null;
+        StringBuilder fqNames = new StringBuilder();
+        for (int i = 0; i < defaultType.length(); i++) {
+            switch (defaultType.charAt(i)) {
+                case '(': // no break
+                case ')': // no break
+                case '|': // no break
+                case '&': // no break
+                case '?':
+                    String type = defaultType.substring(typeStart, i);
+                    if (!type.isEmpty()) {
+                        fqNames.append(VariousUtils.qualifyTypeNames(type, node.getStartOffset(), currentScope));
+                    }
+                    fqNames.append(defaultType.charAt(i));
+                    typeStart = i + 1;
+                    break;
+                default:
+                    // noop
+                    break;
+            }
+            if (i == defaultType.length() - 1) {
+                String type = defaultType.substring(typeStart, defaultType.length());
+                if (!type.isEmpty()) {
+                    fqNames.append(VariousUtils.qualifyTypeNames(type, node.getStartOffset(), currentScope));
+                }
+                fqType = fqNames.length() > 0 ? fqNames.toString() : null;
+            }
+        }
+        return fqType;
     }
 
     public FileScope getFileScope() {

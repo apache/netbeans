@@ -117,6 +117,12 @@ final class MethodScopeImpl extends FunctionScopeImpl implements MethodScope, Va
     }
 
     @Override
+    public String getDeclaredReturnType() {
+        scan();
+        return super.getDeclaredReturnType();
+    }
+
+    @Override
     public Collection<? extends TypeScope> getReturnTypes() {
         scan();
         return super.getReturnTypes();
@@ -284,6 +290,7 @@ final class MethodScopeImpl extends FunctionScopeImpl implements MethodScope, Va
         sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER);
         sb.append(isReturnUnionType() ? 1 : 0).append(Signature.ITEM_DELIMITER);
         sb.append(isReturnIntersectionType() ? 1 : 0).append(Signature.ITEM_DELIMITER);
+        sb.append((getDeclaredReturnType() != null) ? getDeclaredReturnType() : "").append(Signature.ITEM_DELIMITER); // NOI18N
         return sb.toString();
     }
 

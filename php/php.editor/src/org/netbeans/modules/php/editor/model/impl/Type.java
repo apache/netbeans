@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.php.api.util.StringUtils;
+import org.netbeans.modules.php.editor.CodeUtils;
 
 /**
  *
@@ -120,13 +121,13 @@ public final class Type {
         }
         return retval;
     }
-    
+
     public static boolean isPrimitiveAlias(String typeName) {
         boolean retval = false;
         if (BOOLEAN.equals(typeName)) {
             retval = true;
         }
-        return retval;        
+        return retval;
     }
 
     public static boolean isArray(String typeName) {
@@ -235,5 +236,42 @@ public final class Type {
      */
     public static String getTypeSeparator(boolean isIntersection) {
         return isIntersection ? SEPARATOR_INTERSECTION : SEPARATOR;
+    }
+
+    /**
+     * Get all types from the declared type.
+     *
+     * @param declaredType the declared type. can be {@code null} e.g. (X&Y)|Z
+     * @return all type names, if it's a nullable type, the type name with nullable type prefix("?")
+     */
+    public static String[] splitTypes(@NullAllowed String declaredType) {
+        if (!StringUtils.hasText(declaredType)) {
+            return new String[0];
+        }
+        String type = declaredType.trim();
+        if (type.startsWith("(")) { // NOI18N
+            type = type.substring(1);
+        }
+        if (type.endsWith(")")) { // NOI18N
+            type = type.substring(0, type.length() - 1);
+        }
+        return CodeUtils.SPLIT_TYPES_PATTERN.split(type.replace(" ", "")); // NOI18N
+    }
+
+    /**
+     * Convert the type declaration to the type template. e.g.
+     * <pre>
+     * - Type1|Type2|Type3 -> %s|%s|%s
+     * - Type1&Type2&Type3 -> %s&%s&%s
+     * - (Type1&Type2)|Type3 -> (%s&%s)|%s
+     * - ?Type1 -> ?%s
+     * </pre>
+     *
+     * @param typeDeclaration the type declaration (e.g.
+     * {@code (X&Y)|Z, X|Y|Z, ?Nullable})
+     * @return the type template (e.g. {@code (%s&%s)|%s, %s|%s|%s, ?%s})
+     */
+    public static String toTypeTemplate(String typeDeclaration) {
+        return CodeUtils.TYPE_NAMES_IN_TYPE_DECLARATION_PATTERN.matcher(typeDeclaration.replace(" ", "")).replaceAll("%s"); // NOI18N
     }
 }

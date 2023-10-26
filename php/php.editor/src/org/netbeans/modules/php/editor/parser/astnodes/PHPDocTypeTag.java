@@ -20,6 +20,7 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 import java.util.List;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.spi.annotation.AnnotationParsedLine;
 
 /**
@@ -49,33 +50,26 @@ public class PHPDocTypeTag extends PHPDocTag {
 
     @Override
     public String getDocumentation() {
-        if (documentation == null && types.size() > 0) {
+        if (documentation == null && !types.isEmpty()) {
             PHPDocTypeNode lastType = types.get(0);
-            boolean isLastNodeArray = lastType.isArray();
             for (PHPDocTypeNode node : types) {
                 if (lastType.getEndOffset() < node.getEndOffset()) {
                     lastType = node;
-                    isLastNodeArray = node.isArray();
                 }
             }
-            int indexAfterTypeWithoutArrayPostfix = getValue().indexOf(lastType.getValue()) + lastType.getValue().length();
-            if (isLastNodeArray) {
-                String documentationWithArrayPrefix = getValue().substring(indexAfterTypeWithoutArrayPostfix).trim();
-                int firstSpace = documentationWithArrayPrefix.indexOf(" "); //NOI18N
-                int firstTab = documentationWithArrayPrefix.indexOf("\t"); //NOI18N
-                int min = -1;
-                if (firstSpace > 0 && (firstSpace < firstTab || firstTab == -1)) {
-                    min = firstSpace;
-                } else if (firstTab > 0 && (firstTab < firstSpace || firstSpace == -1)) {
-                    min = firstTab;
-                }
-                if (min == -1) {
-                    documentation = ""; //NOI18N
-                } else {
-                    documentation = getValue().substring(indexAfterTypeWithoutArrayPostfix + min).trim();
-                }
+            // e.g. (A&B&C)|(A&B) description
+            // arr[] description
+            // The last type is `B`. If we get the position using String.indexOf(), we get the wrong position
+            String[] split = CodeUtils.WHITE_SPACES_PATTERN.split(getValue().trim(), 2);
+            String value = lastType.getValue();
+            if (split[0]. contains(value)) {
+                value = split[0];
+            }
+            int indexAfterType = getValue().indexOf(value) + value.length();
+            if (indexAfterType < 0) {
+                documentation = ""; // NOI18N
             } else {
-                documentation = getValue().substring(indexAfterTypeWithoutArrayPostfix).trim();
+                documentation = getValue().substring(indexAfterType).trim();
             }
         }
         return documentation;

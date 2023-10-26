@@ -605,6 +605,8 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                             variableToUseName.getName(),
                             param.getDefaultValue(),
                             param.getOffset(),
+                            param.getDeclaredType(),
+                            param.getPhpdocType(),
                             param.getTypes(),
                             param.isMandatory(),
                             param.hasDeclaredType(),
@@ -979,6 +981,10 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         @Override
         protected String getTypeName() {
+            String declaredType = getField().getDeclaredType();
+            if (declaredType != null) {
+                return StringUtils.truncate(declaredType, 0, TYPE_NAME_MAX_LENGTH, CodeUtils.ELLIPSIS);
+            }
             Set<TypeResolver> types = getField().getInstanceTypes();
             List<String> typeNames = new ArrayList<>();
             for (TypeResolver type : types) {

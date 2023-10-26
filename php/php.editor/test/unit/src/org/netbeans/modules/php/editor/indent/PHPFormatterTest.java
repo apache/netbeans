@@ -1099,4 +1099,9 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/php82/readonlyClasses_01b.php", options);
     }
+
+    public void testDNFTypes_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php82/dnfTypes_01.php", options);
+    }
 }

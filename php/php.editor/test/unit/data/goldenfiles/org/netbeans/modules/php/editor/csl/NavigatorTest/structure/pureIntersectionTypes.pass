@@ -2,15 +2,15 @@
 |-Y [831, 835] : ESCAPED{Y}
 |-Z [842, 846] : ESCAPED{Z}
 |-paramType [857, 892] : ESCAPED{paramType}ESCAPED{(}<font color="#999999">ESCAPED{X}ESCAPED{&}ESCAPED{Y}ESCAPED{ }</font>ESCAPED{$test}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|-returnType [903, 929] : ESCAPED{returnType}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{\X}ESCAPED{&}ESCAPED{\Y}</font>
+|-returnType [903, 929] : ESCAPED{returnType}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{X}ESCAPED{&}ESCAPED{Y}</font>
 |-TestClass [937, 1133] : ESCAPED{TestClass}
 |--$test [966, 970] : ESCAPED{$test}<font color="#999999">:ESCAPED{X}ESCAPED{&}ESCAPED{Y}</font>
 |--paramType [993, 1056] : ESCAPED{paramType}ESCAPED{(}<font color="#999999">ESCAPED{X}ESCAPED{&}ESCAPED{Y}ESCAPED{ }</font>ESCAPED{$test}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|--returnType [1078, 1131] : ESCAPED{returnType}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{\X}ESCAPED{&}ESCAPED{\Y}</font>
+|--returnType [1078, 1131] : ESCAPED{returnType}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{X}ESCAPED{&}ESCAPED{Y}</font>
 |-TestTrait [1141, 1352] : ESCAPED{TestTrait}
 |--$test [1170, 1174] : ESCAPED{$test}<font color="#999999">:ESCAPED{X}ESCAPED{&}ESCAPED{Y}</font>
 |--paramType [1197, 1275] : ESCAPED{paramType}ESCAPED{(}<font color="#999999">ESCAPED{X}ESCAPED{&}ESCAPED{Y}ESCAPED{ }</font>ESCAPED{$test1}ESCAPED{, }<font color="#999999">ESCAPED{X}ESCAPED{&}ESCAPED{Y}ESCAPED{&}ESCAPED{Z}ESCAPED{ }</font>ESCAPED{$test2}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
-|--returnType [1297, 1350] : ESCAPED{returnType}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{\X}ESCAPED{&}ESCAPED{\Y}</font>
-|-TestInterfase [1364, 1468] : ESCAPED{TestInterfase}
+|--returnType [1297, 1350] : ESCAPED{returnType}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{X}ESCAPED{&}ESCAPED{Y}</font>
+|-TestInterface [1364, 1468] : ESCAPED{TestInterface}
 |--paramType [1401, 1424] : ESCAPED{paramType}ESCAPED{(}<font color="#999999">ESCAPED{X}ESCAPED{&}ESCAPED{Y}ESCAPED{&}ESCAPED{Z}ESCAPED{ }</font>ESCAPED{$test}ESCAPED{)}
-|--returnType [1445, 1465] : ESCAPED{returnType}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{\X}ESCAPED{&}ESCAPED{\Y}ESCAPED{&}ESCAPED{\Z}</font>
+|--returnType [1445, 1465] : ESCAPED{returnType}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{X}ESCAPED{&}ESCAPED{Y}ESCAPED{&}ESCAPED{Z}</font>

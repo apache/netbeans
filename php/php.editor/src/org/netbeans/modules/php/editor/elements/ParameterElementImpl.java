@@ -23,9 +23,9 @@ import java.util.EnumSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.api.util.StringUtils;
-import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
@@ -40,6 +40,8 @@ import org.openide.util.Exceptions;
 public final class ParameterElementImpl implements ParameterElement {
     private final String name;
     private final String defaultValue;
+    private final String declaredType;
+    private final String phpdocType;
     private final Set<TypeResolver> types;
     private final int offset;
     private final boolean isRawType;
@@ -54,6 +56,8 @@ public final class ParameterElementImpl implements ParameterElement {
             final String name,
             final String defaultValue,
             final int offset,
+            final String declaredType,
+            final String phpdocType,
             final Set<TypeResolver> types,
             final boolean isMandatory,
             final boolean isRawType,
@@ -67,6 +71,8 @@ public final class ParameterElementImpl implements ParameterElement {
         this.isMandatory = isMandatory;
         this.defaultValue = (!isMandatory && defaultValue != null) ? decode(defaultValue) : ""; //NOI18N
         this.offset = offset;
+        this.declaredType = declaredType;
+        this.phpdocType = (phpdocType != null && phpdocType.contains(";")) ? null : phpdocType; // NOI18N e.g. Ty;p;e (see: issue240824)
         this.types = types;
         this.isRawType = isRawType;
         this.isReference = isReference;
@@ -112,8 +118,10 @@ public final class ParameterElementImpl implements ParameterElement {
             int modifier = Integer.parseInt(parts[8]);
             boolean isIntersectionType = Integer.parseInt(parts[9]) > 0;
             String defValue = parts.length > 3 ? parts[3] : null;
+            String declaredType = parts.length > 10 ? parts[10] : null;
+            String phpdocType = parts.length > 11 ? parts[11] : null;
             retval = new ParameterElementImpl(
-                    paramName, defValue, -1, types, isMandatory, isRawType, isReference, isVariadic, isUnionType, modifier, isIntersectionType);
+                    paramName, defValue, -1, declaredType, phpdocType, types, isMandatory, isRawType, isReference, isVariadic, isUnionType, modifier, isIntersectionType);
         }
         return retval;
     }
@@ -124,6 +132,8 @@ public final class ParameterElementImpl implements ParameterElement {
         assert parameterName.equals(encode(parameterName)) : parameterName;
         sb.append(parameterName).append(Separator.COLON);
         StringBuilder typeBuilder = new StringBuilder();
+        // XXX just keep all types
+        // note: dnf types are indexed as union types e.g. (X&Y)|Z -> X|Y|Z
         for (TypeResolver typeResolver : getTypes()) {
             TypeResolverImpl resolverImpl = (TypeResolverImpl) typeResolver;
             if (typeBuilder.length() > 0) {
@@ -153,6 +163,10 @@ public final class ParameterElementImpl implements ParameterElement {
         sb.append(modifier);
         sb.append(Separator.COLON);
         sb.append(isIntersectionType ? 1 : 0);
+        sb.append(Separator.COLON);
+        sb.append((declaredType != null) ? declaredType : ""); // NOI18N
+        sb.append(Separator.COLON);
+        sb.append((phpdocType != null) ? phpdocType : ""); // NOI18N
         checkSignature(sb);
         return sb.toString();
     }
@@ -172,6 +186,18 @@ public final class ParameterElementImpl implements ParameterElement {
         // use LinkedHashSet to keep the type order
         // avoid being changed type order(e.g. int|float|Foo|Bar) when an override method is generated
         return new LinkedHashSet<>(types);
+    }
+
+    @CheckForNull
+    @Override
+    public String getDeclaredType() {
+        return declaredType;
+    }
+
+    @CheckForNull
+    @Override
+    public String getPhpdocType() {
+        return phpdocType;
     }
 
     @Override
@@ -282,6 +308,16 @@ public final class ParameterElementImpl implements ParameterElement {
                 assert isUnionType() == parsedParameter.isUnionType() : signature;
                 assert getModifier() == parsedParameter.getModifier() : signature;
                 assert isIntersectionType() == parsedParameter.isIntersectionType() : signature;
+                String declType = getDeclaredType();
+                if (declType != null) {
+                    String paramDeclaredType = parsedParameter.getDeclaredType();
+                    assert paramDeclaredType != null && declType.equals(paramDeclaredType) : signature;
+                }
+                String docType = getPhpdocType();
+                if (docType != null) {
+                    String paramPhpDocType = parsedParameter.getPhpdocType();
+                    assert paramPhpDocType != null && docType.equals(paramPhpDocType) : signature;
+                }
             } catch (NumberFormatException originalException) {
                 final String message = String.format("%s [for signature: %s]", originalException.getMessage(), signature); //NOI18N
                 final NumberFormatException formatException = new NumberFormatException(message);
@@ -320,30 +356,17 @@ public final class ParameterElementImpl implements ParameterElement {
             }
         }
         if (forDeclaration && hasDeclaredType()) {
-            if (isUnionType || isIntersectionType) {
-                boolean firstType = true;
-                for (TypeResolver typeResolver : typesResolvers) {
-                    if (typeResolver.isResolved()) {
-                        if (firstType) {
-                            firstType = false;
-                        } else {
-                            sb.append(Type.getTypeSeparator(isIntersectionType));
-                        }
-                        sb.append(typeNameResolver.resolve(typeResolver.getTypeName(false)));
+            if (StringUtils.hasText(getDeclaredType())) {
+                String[] splitTypes = Type.splitTypes(getDeclaredType());
+                List<String> resolvedTypes = new ArrayList<>();
+                if (splitTypes.length == typesResolvers.size()) {
+                    String template = Type.toTypeTemplate(getDeclaredType());
+                    for (TypeResolver typeResolver : typesResolvers) {
+                        resolvedTypes.add(typeNameResolver.resolve(typeResolver.getTypeName(false)).toString());
                     }
-                }
-                sb.append(' ');
-            } else if (typesResolvers.size() > 1 && !isUnionType && !isIntersectionType) {
-                sb.append(Type.MIXED).append(' ');
-            } else {
-                for (TypeResolver typeResolver : typesResolvers) {
-                    if (typeResolver.isResolved()) {
-                        if (typeResolver.isNullableType()) {
-                            sb.append(CodeUtils.NULLABLE_TYPE_PREFIX);
-                        }
-                        sb.append(typeNameResolver.resolve(typeResolver.getTypeName(false))).append(' '); //NOI18N
-                        break;
-                    }
+                    sb.append(String.format(template, resolvedTypes.toArray(new String[0]))).append(' ');
+                } else {
+                    sb.append(getDeclaredType()).append(' ');
                 }
             }
         }

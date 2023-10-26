@@ -20,6 +20,7 @@
 package org.netbeans.modules.php.editor.parser;
 
 import java.util.ArrayList;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocNode;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocStaticAccessType;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTag;
@@ -60,7 +61,7 @@ public class PHPVarCommentParser {
             if (isExpectedPartsLength(isPHPDoc, parts)
                     && parts[variableIndex].charAt(0) == '$') { //NOI18N
                 //counting types
-                String[] types = parts[typeIndex].split("[|]"); //NOI18N
+                String[] types = Type.splitTypes(parts[typeIndex]);
                 int typePosition = startOffset + comment.indexOf(parts[typeIndex]);
                 ArrayList<PHPDocTypeNode> typeNodes = new ArrayList<>();
                 for (String type: types) {

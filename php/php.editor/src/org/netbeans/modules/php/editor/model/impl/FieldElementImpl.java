@@ -161,7 +161,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
     public Collection<? extends TypeScope> getDefaultTypes() {
         Collection<TypeScope> typeScopes = new HashSet<>();
         if (defaultFQType != null && defaultFQType.length() > 0) {
-            String[] allTypeNames = defaultFQType.split("\\&|\\|"); // NOI18N
+            String[] allTypeNames = Type.splitTypes(defaultFQType);
             for (String typeName : allTypeNames) {
                 String modifiedTypeName = typeName;
                 if (typeName.indexOf("[") != -1) {
@@ -252,16 +252,7 @@ class FieldElementImpl extends ScopeImpl implements FieldElement {
 
     @Override
     public Collection<? extends String> getDefaultTypeNames() {
-        Collection<String> retval = Collections.<String>emptyList();
-        if (defaultType != null && defaultType.length() > 0) {
-            retval = new ArrayList<>();
-            for (String typeName : defaultType.split("\\&|\\|")) { //NOI18N
-                if (!VariousUtils.isSemiType(typeName)) {
-                    retval.add(typeName);
-                }
-            }
-        }
-        return retval;
+        return VariousUtils.getAllTypeNames(defaultType);
     }
 
     @CheckForNull

@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.php.editor.elements;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +41,6 @@ import org.netbeans.modules.php.editor.api.elements.TypeMemberElement;
 import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.model.impl.Type;
-import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.IntersectionType;
 import org.netbeans.modules.php.editor.parser.astnodes.UnionType;
@@ -159,6 +160,13 @@ public class BaseFunctionElementSupport  {
                 break;
             case ReturnTypes:
                 boolean hasArray = false;
+                String declaredReturnType = getDeclaredReturnType();
+                if (StringUtils.hasText(declaredReturnType)) {
+                    String typeTemplate = Type.toTypeTemplate(declaredReturnType);
+                    List<String> types = Arrays.asList(Type.splitTypes(declaredReturnType));
+                    template.append(String.format(typeTemplate, (Object[]) resolveReturnTypes(types, typeNameResolver, element)));
+                    break;
+                }
                 for (TypeResolver typeResolver : getReturnTypes()) {
                     if (typeResolver.isResolved()) {
                         QualifiedName typeName = typeResolver.getTypeName(false);
@@ -168,23 +176,7 @@ public class BaseFunctionElementSupport  {
                                 template.append(CodeUtils.NULLABLE_TYPE_PREFIX);
                             }
                             String returnType = typeNameResolver.resolve(typeName).toString();
-                            if (("\\" + Type.SELF).equals(returnType) // NOI18N
-                                    && element instanceof TypeMemberElement) {
-                                // #267563
-                                returnType = typeNameResolver.resolve(((TypeMemberElement) element).getType().getFullyQualifiedName()).toString();
-                            }
-                            if (("\\" + Type.PARENT).equals(returnType) // NOI18N
-                                    && element instanceof TypeMemberElement) {
-                                TypeElement typeElement = ((TypeMemberElement) element).getType();
-                                if (typeElement instanceof ClassElement) {
-                                    QualifiedName superClassName = ((ClassElement) typeElement).getSuperClassName();
-                                    if (superClassName != null) {
-                                        returnType = typeNameResolver.resolve(superClassName).toString();
-                                    } else {
-                                        returnType = Type.PARENT;
-                                    }
-                                }
-                            }
+                            returnType = resolveSpecialType(returnType, element, typeNameResolver);
                             // NETBEANS-5370: related to NETBEANS-4509
                             if (returnType.endsWith("[]")) { // NOI18N
                                 returnType = Type.ARRAY;
@@ -204,6 +196,54 @@ public class BaseFunctionElementSupport  {
                 assert false : as;
         }
         return template.toString();
+    }
+
+    private String[] resolveReturnTypes(List<String> types, TypeNameResolver typeNameResolver, BaseFunctionElement element) {
+        List<String> replaced = new ArrayList<>(types.size());
+        if (types.size() == getReturnTypes().size()) {
+            for (TypeResolver typeResolver : getReturnTypes()) {
+                if (typeResolver.isResolved()) {
+                    QualifiedName typeName = typeResolver.getTypeName(false);
+                    if (typeName != null) {
+                        String returnType = typeNameResolver.resolve(typeName).toString();
+                        // NETBEANS-5370: related to NETBEANS-4509
+                        if (returnType.endsWith("[]")) { // NOI18N
+                            returnType = Type.ARRAY;
+                        }
+                        returnType = resolveSpecialType(returnType, element, typeNameResolver);
+                        replaced.add(returnType);
+                    }
+                }
+            }
+        } else {
+            replaced.addAll(types);
+        }
+        return replaced.toArray(new String[0]);
+    }
+
+    private String resolveSpecialType(String returnType, BaseFunctionElement element, TypeNameResolver typeNameResolver) {
+        String resolvedType = returnType;
+        if (resolvedType.equals("\\" + Type.SELF) // NOI18N
+                || resolvedType.equals("\\" + Type.PARENT)) { // NOI18N
+            resolvedType = resolvedType.substring(1);
+        }
+        if ((Type.SELF).equals(resolvedType)
+                && element instanceof TypeMemberElement) {
+            // #267563
+            resolvedType = typeNameResolver.resolve(((TypeMemberElement) element).getType().getFullyQualifiedName()).toString();
+        } else if ((Type.PARENT).equals(resolvedType)
+                && element instanceof TypeMemberElement) {
+            TypeElement typeElement = ((TypeMemberElement) element).getType();
+            if (typeElement instanceof ClassElement) {
+                QualifiedName superClassName = ((ClassElement) typeElement).getSuperClassName();
+                if (superClassName != null) {
+                    resolvedType = typeNameResolver.resolve(superClassName).toString();
+                } else {
+                    resolvedType = Type.PARENT;
+                }
+            }
+        }
+        return resolvedType;
     }
 
     private void appendSeparator(StringBuilder template) {

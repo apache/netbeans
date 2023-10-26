@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -627,6 +628,66 @@ public class PHP82CodeCompletionTest extends PHPCodeCompletionTestBase {
 
     public void testDNFTypes_ParameterTypeInCCList01() throws Exception {
         checkCompletion("dnfTypes", "$this->param^(null);");
+    }
+
+    public void testDNFTypesImplementMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesImplementMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesImplementMethod02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesImplementMethod02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesImplementMethod03a() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesImplementMethod03a"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesImplementMethod03b() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesImplementMethod03b"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesImplementMethod04() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesImplementMethod04"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesOverrideMethod01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesOverrideMethod01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesOverrideMethod02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesOverrideMethod02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesOverrideMethod03() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesOverrideMethod03"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesOverrideMethodSpecialTypes01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesOverrideMethodSpecialTypes01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesOverrideMethodSpecialTypes02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesOverrideMethodSpecialTypes02"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesOverrideMethodSpecialTypes03() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesOverrideMethodSpecialTypes03"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testDNFTypesOverrideMethodSpecialTypes04() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testDNFTypesOverrideMethodSpecialTypes04"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
     }
 
 }

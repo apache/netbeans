@@ -808,7 +808,7 @@ jobs:
 
 
   build-tools:
-    name: Build Tools on Linux/JDK ${{ matrix.java }}
+    name: Build Tools on Linux/JDK ${{ matrix.java }} (some on 17)
     # label triggers: Ant, Gradle, Maven, MX
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Ant') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'MX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
@@ -816,7 +816,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '17' ]
+        java: [ '11', '21' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -837,17 +838,6 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
-
-      # run unreliable steps first to fail early
-      - name: java/java.mx.project
-        continue-on-error: ${{ github.event_name != 'pull_request' }}
-        run: .github/retry.sh ant $OPTS -f java/java.mx.project test
-        
-      - name: java/gradle.java
-        run: .github/retry.sh ant $OPTS -f java/gradle.java test
-
-      - name: extide/gradle
-        run: ant $OPTS -f extide/gradle test
 
       - name: java/maven
         run: ant $OPTS -f java/maven test
@@ -903,6 +893,24 @@ jobs:
 #      - name: java/ant.grammar
 #        run: ant $OPTS -f java/ant.grammar test
 
+      - name: Set up JDK 17 for JDK 21 incompatible tests
+        if: ${{ matrix.java == '21' }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: ${{ env.default_java_distribution }}
+
+      # TODO fix JDK 21 incompatibilites
+      - name: java/java.mx.project
+        continue-on-error: ${{ github.event_name != 'pull_request' }}
+        run: .github/retry.sh ant $OPTS -f java/java.mx.project test
+
+      - name: java/gradle.java
+        run: .github/retry.sh ant $OPTS -f java/gradle.java test
+
+      - name: extide/gradle
+        run: ant $OPTS -f extide/gradle test
+
       - name: extide/o.apache.tools.ant.module
         run: ant $OPTS -f extide/o.apache.tools.ant.module test
 
@@ -914,7 +922,7 @@ jobs:
 
 
   platform-modules-test1:
-    name: Platform Modules batch1 on Linux/JDK ${{ matrix.java }}
+    name: Platform Modules batch1 on Linux/JDK ${{ matrix.java }} (some on 8)
     # equals env.test_platform == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
@@ -922,7 +930,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -945,123 +953,136 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: platform/api.htmlui
-        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/api.htmlui test
+        run: .github/retry.sh ant $OPTS -f platform/api.htmlui test
   
       - name: platform/htmlui
-        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/htmlui test
+        run: .github/retry.sh ant $OPTS -f platform/htmlui test
 
       - name: platform/api.intent
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.intent test
+        run: ant $OPTS -f platform/api.intent test
 
       - name: platform/api.io
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.io test
+        run: ant $OPTS -f platform/api.io test
 
       - name: platform/api.progress
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.progress test
+        run: ant $OPTS -f platform/api.progress test
 
       - name: platform/api.progress.nb
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.progress.nb test
+        run: ant $OPTS -f platform/api.progress.nb test
 
       - name: platform/api.scripting
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.scripting test
+        run: ant $OPTS -f platform/api.scripting test
 
       - name: platform/api.search
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.search test
+        run: ant $OPTS -f platform/api.search test
 
       - name: platform/api.templates
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.templates test
+        run: ant $OPTS -f platform/api.templates test
 
       - name: platform/api.visual
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/api.visual test
+        run: ant $OPTS -f platform/api.visual test
 
       - name: platform/applemenu
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/applemenu test
+        run: ant $OPTS -f platform/applemenu test
 
       - name: platform/autoupdate.cli
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/autoupdate.cli test
+        run: ant $OPTS -f platform/autoupdate.cli test
 
       - name: platform/autoupdate.services
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/autoupdate.services test
+        run: ant $OPTS -f platform/autoupdate.services test
 
       - name: platform/autoupdate.ui
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/autoupdate.ui test
+        run: ant $OPTS -f platform/autoupdate.ui test
 
       - name: platform/core.execution
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.execution test
+        run: ant $OPTS -f platform/core.execution test
 
       - name: platform/core.io.ui
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.io.ui test
+        run: ant $OPTS -f platform/core.io.ui test
 
       - name: platform/core.kit
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.kit test
+        run: ant $OPTS -f platform/core.kit test
 
       - name: platform/core.multiview
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.multiview test
+        run: ant $OPTS -f platform/core.multiview test
 
       - name: platform/core.netigso
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.netigso test
+        run: ant $OPTS -f platform/core.netigso test
 
       - name: platform/core.osgi
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.osgi test
+        run: ant $OPTS -f platform/core.osgi test
 
       - name: platform/core.output2
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.output2 test
+        run: ant $OPTS -f platform/core.output2 test
 
       - name: platform/core.startup
-        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/core.startup test
+        run: .github/retry.sh ant $OPTS -f platform/core.startup test
 
       - name: platform/core.startup.base
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.startup.base test
+        run: ant $OPTS -f platform/core.startup.base test
 
       - name: platform/core.ui
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/core.ui test
+        run: ant $OPTS -f platform/core.ui test
 
       - name: platform/core.windows
-        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/core.windows test
+        run: .github/retry.sh ant $OPTS -f platform/core.windows test
 
       - name: platform/editor.mimelookup
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/editor.mimelookup test
+        run: ant $OPTS -f platform/editor.mimelookup test
 
       - name: platform/editor.mimelookup.impl
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/editor.mimelookup.impl test
+        run: ant $OPTS -f platform/editor.mimelookup.impl test
 
       - name: platform/favorites
-        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/favorites test
+        run: .github/retry.sh ant $OPTS -f platform/favorites test
 
       - name: platform/javahelp
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/javahelp test-unit
+        run: ant $OPTS -f platform/javahelp test-unit
 
       - name: platform/keyring.fallback
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/keyring.fallback test
+        run: ant $OPTS -f platform/keyring.fallback test
 
       - name: platform/keyring.impl
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/keyring.impl test
-
-      - name: platform/lib.uihandler
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/lib.uihandler test
+        run: ant $OPTS -f platform/keyring.impl test
 
       - name: platform/libs.javafx
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/libs.javafx test
+        run: ant $OPTS -f platform/libs.javafx test
 
       - name: platform/libs.junit4
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/libs.junit4 test
+        run: ant $OPTS -f platform/libs.junit4 test
 
       - name: platform/masterfs
-        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/masterfs test
+        run: .github/retry.sh ant $OPTS -f platform/masterfs test
 
       - name: platform/masterfs.linux
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/masterfs.linux test
+        run: ant $OPTS -f platform/masterfs.linux test
 
       - name: platform/o.n.core
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.core test-unit
+        run: ant $OPTS -f platform/o.n.core test-unit
 
       - name: platform/o.n.swing.outline
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.swing.outline test
+        run: ant $OPTS -f platform/o.n.swing.outline test
 
       - name: platform/o.n.swing.tabcontrol
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.swing.tabcontrol test
+        run: ant $OPTS -f platform/o.n.swing.tabcontrol test
 
-      # required by netbinox tests
+      - name: Set up JDK 8 for incompatibe tests
+        uses: actions/setup-java@v3
+        with:
+          java-version: 8
+          distribution: ${{ env.default_java_distribution }}
+
+      # TODO fix JDK 11 incompatibilities
+      - name: platform/lib.uihandler
+        run: ant $OPTS -f platform/lib.uihandler test
+
+      - name: platform/openide.text
+        run: .github/retry.sh ant $OPTS -f platform/openide.text test
+
+      - name: platform/openide.util.ui
+        run: ant $OPTS -f platform/openide.util.ui test
+
+      # isolation required by netbinox tests
       - name: isolate platform build
         run: |
           cp -r platform/ _platform/ && cp -r harness/ _harness/ && cp nbbuild/build/nbantext.jar .
@@ -1072,7 +1093,7 @@ jobs:
           mv _nb_platform/ nbbuild/netbeans/platform/ && mv _nb_harness/ nbbuild/netbeans/harness/
 
       - name: platform/netbinox
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/netbinox test -Dtest.config=stableBTD
+        run: ant $OPTS -f platform/netbinox test -Dtest.config=stableBTD
 
       - name: Create Test Summary
         uses: test-summary/action@v2
@@ -1082,7 +1103,7 @@ jobs:
 
 
   platform-modules-test2:
-    name: Platform Modules batch2 on Linux/JDK ${{ matrix.java }} (some on 11)
+    name: Platform Modules batch2 on Linux/JDK ${{ matrix.java }}
     # equals env.test_platform == 'true'
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
@@ -1090,7 +1111,7 @@ jobs:
     timeout-minutes: 90
     strategy:
       matrix:
-        java: [ '8' ]
+        java: [ '11' ]
     steps:
 
       - name: Set up JDK 11
@@ -1119,113 +1140,101 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: platform/openide.actions
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.actions test
+        run: ant $OPTS -f platform/openide.actions test
 
       - name: platform/openide.awt
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.awt test
+        run: ant $OPTS -f platform/openide.awt test
 
       - name: platform/openide.compat
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.compat test
+        run: ant $OPTS -f platform/openide.compat test
 
       - name: platform/openide.dialogs
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.dialogs test
+        run: ant $OPTS -f platform/openide.dialogs test
 
       - name: platform/openide.execution
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.execution test
+        run: ant $OPTS -f platform/openide.execution test
 
       - name: platform/openide.execution.compat8
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.execution.compat8 test
+        run: ant $OPTS -f platform/openide.execution.compat8 test
 
       - name: platform/openide.explorer
-        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.explorer test
+        run: .github/retry.sh ant $OPTS -f platform/openide.explorer test
 
       - name: platform/openide.filesystems
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.filesystems test
+        run: ant $OPTS -f platform/openide.filesystems test
 
       - name: platform/openide.filesystems.compat8
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.filesystems.compat8 test
+        run: ant $OPTS -f platform/openide.filesystems.compat8 test
 
       - name: platform/openide.filesystems.nb
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.filesystems.nb test
+        run: ant $OPTS -f platform/openide.filesystems.nb test
 
       - name: platform/openide.io
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.io test
+        run: ant $OPTS -f platform/openide.io test
 
       - name: platform/openide.loaders
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.loaders test
+        run: ant $OPTS -f platform/openide.loaders test
 
       - name: platform/openide.modules
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.modules test
+        run: ant $OPTS -f platform/openide.modules test
 
       - name: platform/openide.nodes
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.nodes test
+        run: ant $OPTS -f platform/openide.nodes test
 
       - name: platform/openide.options
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.options test
-
-      - name: platform/openide.text
-        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.text test
+        run: ant $OPTS -f platform/openide.options test
 
       - name: platform/openide.util
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.util test
+        run: ant $OPTS -f platform/openide.util test
 
       - name: platform/openide.util.lookup
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.util.lookup test
-
-      - name: platform/openide.util.ui
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.util.ui test
+        run: ant $OPTS -f platform/openide.util.lookup test
 
       - name: platform/openide.windows
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/openide.windows test
+        run: ant $OPTS -f platform/openide.windows test
 
       - name: platform/options.api
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/options.api test-unit
+        run: ant $OPTS -f platform/options.api test-unit
 
       - name: platform/options.keymap
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/options.keymap test
+        run: ant $OPTS -f platform/options.keymap test
 
       - name: platform/print
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/print test
+        run: ant $OPTS -f platform/print test
 
       - name: platform/progress.ui
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/progress.ui test
+        run: ant $OPTS -f platform/progress.ui test
 
       - name: platform/queries
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/queries test
+        run: ant $OPTS -f platform/queries test
 
       - name: platform/sampler
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/sampler test
+        run: ant $OPTS -f platform/sampler test
 
       - name: platform/sendopts
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/sendopts test
+        run: ant $OPTS -f platform/sendopts test
 
       - name: platform/settings
-        run: .github/retry.sh ant $OPTS -Dvanilla.javac.exists=true -f platform/settings test
+        run: .github/retry.sh ant $OPTS -f platform/settings test
 
       - name: platform/spi.actions
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/spi.actions test
+        run: ant $OPTS -f platform/spi.actions test
 
       - name: platform/spi.quicksearch
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/spi.quicksearch test
+        run: ant $OPTS -f platform/spi.quicksearch test
 
       - name: platform/templates
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/templates test
+        run: ant $OPTS -f platform/templates test
 
       - name: platform/templatesui
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/templatesui test
+        run: ant $OPTS -f platform/templatesui test
 
       - name: platform/uihandler
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/uihandler test
+        run: ant $OPTS -f platform/uihandler test
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: ${{ env.default_java_distribution }}
-        
-      - name: platform/o.n.bootstrap on 11
-        run: ant $OPTS -Dvanilla.javac.exists=true -f platform/o.n.bootstrap test
- 
+      - name: platform/o.n.bootstrap
+        run: ant $OPTS -f platform/o.n.bootstrap test
+
       - name: Create Test Summary
         uses: test-summary/action@v2
         if: failure()
@@ -1265,16 +1274,16 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: harness/o.n.insane
-        run: ant $OPTS -Dvanilla.javac.exists=true -f harness/o.n.insane test
+        run: ant $OPTS -f harness/o.n.insane test
 
       - name: harness/apisupport.harness
-        run: ant $OPTS -Dvanilla.javac.exists=true -f harness/apisupport.harness test
+        run: ant $OPTS -f harness/apisupport.harness test
 
       - name: harness/harness/nbjunit
-        run: ant $OPTS -Dvanilla.javac.exists=true -f harness/nbjunit test
+        run: ant $OPTS -f harness/nbjunit test
 
       - name: harness/jellytools.platform
-        run: ant $OPTS -Dvanilla.javac.exists=true -f harness/jellytools.platform test -Dtest.config=stable
+        run: ant $OPTS -f harness/jellytools.platform test -Dtest.config=stable
 
       - name: ergonomics/ide.ergonomics
         run: ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
@@ -1600,7 +1609,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '17' ]
+        java: [ '11', '21' ]
       fail-fast: false
     steps:
 

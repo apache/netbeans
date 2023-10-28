@@ -182,7 +182,7 @@ public class GlassfishInstance implements ServerInstanceImplementation,
 
         @Override
         public boolean containsKey(Object key) {
-            return delegate.computeIfPresent((String) key, (k, v) -> v) != null;
+            return delegate.containsKey((String) key);
         }
 
         @Override

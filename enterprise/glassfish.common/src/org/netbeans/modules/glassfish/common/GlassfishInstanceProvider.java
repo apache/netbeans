@@ -261,14 +261,16 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
      */
     public void addServerInstance(GlassfishInstance si) {
         try {
-            instanceMap.put(si.getDeployerUri(), si);
-            activeDisplayNames.add(si.getDisplayName());
-            // TODO: Do this for the first of every type or the first of the Map?
-            // getGlassfishInstance(String uri);
-            if (instanceMap.size() == 1) { // only need to do if this first of this type
-                RegisteredDDCatalog catalog = getDDCatalog();
-                if (null != catalog) {
-                    catalog.refreshRunTimeDDCatalog(this, si.getGlassfishRoot());
+            synchronized (instanceMap) {
+                instanceMap.put(si.getDeployerUri(), si);
+                activeDisplayNames.add(si.getDisplayName());
+                // TODO: Do this for the first of every type or the first of the Map?
+                // getGlassfishInstance(String uri);
+                if (instanceMap.size() == 1) { // only need to do if this first of this type
+                    RegisteredDDCatalog catalog = getDDCatalog();
+                    if (null != catalog) {
+                        catalog.refreshRunTimeDDCatalog(this, si.getGlassfishRoot());
+                    }
                 }
             }
             GlassfishInstance.writeInstanceToFile(si);

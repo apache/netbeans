@@ -69,6 +69,15 @@ public class NBClassFinderTest extends NbTestCase {
         assertEquals(expectedErrors, actualErrors);
     }
 
+    public void testEmptyClassPath2() throws Exception {
+        String code = "package java.lang.nb.test; public class Test { String t(String s) { return s.toString(); } }";
+        List<String> expectedErrors;
+        expectedErrors = Arrays.asList("");
+        List<String> actualErrors;
+        actualErrors = compile(code, "-XDrawDiagnostics", "-XDide", "-Xlint:-options");
+        assertEquals(expectedErrors, actualErrors);
+    }
+
     private static class MyFileObject extends SimpleJavaFileObject {
         private String text;
 

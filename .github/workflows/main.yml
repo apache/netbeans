@@ -271,7 +271,7 @@ jobs:
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '22-ea' ]
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -287,11 +287,10 @@ jobs:
           persist-credentials: false
           submodules: false
           show-progress: false
-          fetch-depth: 10
 
-      - name: Print last 10 Commits
+      - name: Check Commit Headers
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
-        run: git log --oneline -n10 --pretty=format:'%h %an [%ae] %s'
+        run: java --enable-preview --source 22 .github/scripts/CommitHeaderChecker.java https://github.com/apache/netbeans/pull/${{ github.event.number }}
 
       - name: Check line endings and verify RAT report
         if: ${{ !cancelled() }}

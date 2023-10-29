@@ -53,6 +53,10 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                 return CompletionCollector.newBuilder(item.getInsertPrefix().toString())
                         .insertText(item.getInsertPrefix().toString().replace("\"", "\\\""))
                         .kind(Completion.Kind.Property)
+                        .sortText(String.format("%010d%s",
+                                Long.valueOf(item.getSortPriority()) + Math.abs(Long.valueOf(Integer.MIN_VALUE)),
+                                item.getSortText())
+                        )
                         .build();
             }
         }).stream().forEach(consumer);

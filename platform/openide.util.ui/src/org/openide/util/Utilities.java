@@ -758,8 +758,8 @@ public final class Utilities {
 
         Field[] fields = KeyEvent.class.getDeclaredFields();
 
-        Map<String,Integer> names = new HashMap<String,Integer>(fields.length * 4 / 3 + 5, 0.75f);
-        Map<Integer,String> values = new HashMap<Integer,String>(fields.length * 4 / 3 + 5, 0.75f);
+        Map<String,Integer> names = new HashMap<>(fields.length * 4 / 3 + 5, 0.75f);
+        Map<Integer,String> values = new HashMap<>(fields.length * 4 / 3 + 5, 0.75f);
 
         for (Field f : fields) {
             if (Modifier.isStatic(f.getModifiers())) {
@@ -771,8 +771,7 @@ public final class Utilities {
                         int numb = f.getInt(null);
                         names.put(name, numb);
                         values.put(numb, name);
-                    } catch (IllegalArgumentException ex) {
-                    } catch (IllegalAccessException ex) {
+                    } catch (IllegalArgumentException | IllegalAccessException ex) {
                     }
                 }
             }
@@ -790,15 +789,20 @@ public final class Utilities {
         values.put(0x290,"MOUSE_WHEEL_UP");
         values.put(0x291,"MOUSE_WHEEL_DOWN");
 
-        for (int button = 4; button < 10; button++) {
+        names.put("MOUSE_WHEEL_LEFT", 0x292);
+        names.put("MOUSE_WHEEL_RIGHT", 0x293);
+        values.put(0x292,"MOUSE_WHEEL_LEFT");
+        values.put(0x293,"MOUSE_WHEEL_RIGHT");
+
+        for (int button = 4; button < 8; button++) {
             String name = "MOUSE_BUTTON" + button; // NOI18N
-            int code = 0x292 + (button - 1);
+            int code = 0x294 + (button - 1);
             names.put(name, code);
             values.put(code, name);
         }
 
         NamesAndValues nav = new NamesAndValues(values, names);
-        namesAndValues = new SoftReference<NamesAndValues>(nav);
+        namesAndValues = new SoftReference<>(nav);
         return nav;
     }
 
@@ -850,7 +854,14 @@ public final class Utilities {
      */
     public static int mouseButtonKeyCode(int button) {
         if (button >= 4 && button < 10) {
-            return 0x292 + (button - 1);
+            if (getOperatingSystem() == OS_LINUX) {
+                // On Linux Button 4 and Button 5 are mapped for horizontal wheel
+                // Aligning the rest of extra buttons with Mac and Windows
+                // Buton >=6 are assigned to MOUSE_BUTTON4 and on
+                return button < 6 ? 0x292 + (button - 4) : 0x294 + (button - 3);
+            } else { 
+                return 0x294 + (button - 1);
+            }
         } else {
             return KeyEvent.VK_UNDEFINED;
         }
@@ -874,7 +885,7 @@ public final class Utilities {
     }
 
     private static void appendRest(StringBuilder sb, KeyStroke stroke) {
-        String c = initNameAndValues().keyToString.get(Integer.valueOf(stroke.getKeyCode()));
+        String c = initNameAndValues().keyToString.get(stroke.getKeyCode());
 
         if (c == null) {
             sb.append(stroke.getKeyChar());

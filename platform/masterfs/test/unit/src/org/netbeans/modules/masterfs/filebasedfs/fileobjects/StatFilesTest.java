@@ -58,6 +58,8 @@ public class StatFilesTest extends NbTestCase {
 
         assertTrue(testFile.exists());
         //init
+        //make sure Utilities is loaded:
+        Utilities.isUnix();
         FileUtil.toFileObject(testFile);
         monitor = new StatFiles();
         System.setSecurityManager(monitor);

@@ -28,6 +28,8 @@ import java.util.logging.Logger;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.masterfs.filebasedfs.FileBasedFileSystem;
+import org.netbeans.modules.masterfs.filebasedfs.fileobjects.LockForFile.HardLockPath;
+import org.netbeans.modules.masterfs.filebasedfs.fileobjects.LockForFile.HardLockRegistry;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -181,16 +183,13 @@ public class LockForFileTest extends NbTestCase {
         LockForFile lock = LockForFile.tryLock(testFile);
         lock.releaseLock();
         assertFalse(lock.isValid());
-        File lockFile = lock.getLock();
-        if (!lockFile.exists()) {
-            assertTrue(lockFile.createNewFile());
-        }
-        assertTrue(lockFile.exists());
+        HardLockPath hardLock = lock.getLock();
+        HardLockRegistry.getInstance().doHardLock(hardLock, "");
         lock = LockForFile.tryLock(testFile);
         try {
             assertNotNull(lock);
             assertTrue(lock.isValid());
-            assertTrue(lockFile.exists());
+            assertTrue(HardLockRegistry.getInstance().hardLockExists(hardLock));
         } finally {
             lock.releaseLock();
         }
@@ -216,9 +215,9 @@ public class LockForFileTest extends NbTestCase {
         lock.releaseLock();
         LOG.info("releaseLock");
 
-        File lockFile = LockForFile.getLockFile(testFile);
-        LOG.log(Level.INFO, "Get lock file: {0}", lockFile);
-        assertFalse(lockFile.exists());
+        HardLockPath hardLock = LockForFile.getLockFile(testFile);
+        LOG.log(Level.INFO, "Get lock file: {0}", hardLock);
+        assertFalse(HardLockRegistry.getInstance().hardLockExists(hardLock));
         LOG.info("OK");
     }
 
@@ -253,9 +252,9 @@ public class LockForFileTest extends NbTestCase {
         } catch (IOException ex) {
         //after rename is still locked and there isn't possible to get other lock
         }
-        File lockFile = LockForFile.getLockFile(file);
+        HardLockPath hardLock = LockForFile.getLockFile(file);
         lockForFile.releaseLock();
-        assertFalse(lockFile.exists());//lock file is deleted after releasing lock
+        assertFalse(HardLockRegistry.getInstance().hardLockExists(hardLock));//lock file is deleted after releasing lock
         LockForFile.tryLock(file);//there is possible to get lock after releasing lock
     }
 

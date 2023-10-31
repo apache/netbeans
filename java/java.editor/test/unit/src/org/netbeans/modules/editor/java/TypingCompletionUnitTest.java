@@ -1413,6 +1413,12 @@ public void testPositionInTextBlock() throws Exception {
         ctx.assertDocumentTextEquals("\"\\{}|\"");
     }
 
+    public void testX() throws Exception {
+        Context ctx = new Context(new JavaKit(), "");
+        ctx.typeChar('{');
+        ctx.assertDocumentTextEquals("{");
+    }
+
     private boolean isInsideString(String code) throws BadLocationException {
         int pos = code.indexOf('|');
 

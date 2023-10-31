@@ -113,7 +113,8 @@ import org.openide.util.Pair;
     "Cancel=Cancel",
     "SecretExists=Secrets with name {0} already exists",
     "NoProfile=There is not any OCI profile in the config",
-    "NoCompartment=There are no compartments in the Tenancy"
+    "NoCompartment=There are no compartments in the Tenancy",
+    "Password=Enter password for Database user {0}"
 })
 public class AddDbConnectionToVault implements ActionListener {
 
@@ -209,7 +210,7 @@ public class AddDbConnectionToVault implements ActionListener {
         }
     }
 
-    static class CompartmentStep implements Step<TenancyItem, CompartmentItem> {
+    class CompartmentStep implements Step<TenancyItem, CompartmentItem> {
 
         private Map<String, OCIItem> compartments = null;
         private CompartmentItem selected;
@@ -261,7 +262,7 @@ public class AddDbConnectionToVault implements ActionListener {
         }
     }
 
-    static class VaultStep implements Step<CompartmentItem, VaultItem> {
+    class VaultStep implements Step<CompartmentItem, VaultItem> {
 
         private Map<String, VaultItem> vaults = null;
         private VaultItem selected;
@@ -307,7 +308,7 @@ public class AddDbConnectionToVault implements ActionListener {
         }
     }
 
-    static class KeyStep implements Step<VaultItem, Pair<VaultItem, KeyItem>> {
+    class KeyStep implements Step<VaultItem, Pair<VaultItem, KeyItem>> {
 
         private Map<String, KeyItem> keys = null;
         private KeyItem selected;
@@ -363,7 +364,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
     }
 
-    static class DatasourceNameStep implements Step<Pair<VaultItem, KeyItem>, Result> {
+    class DatasourceNameStep implements Step<Pair<VaultItem, KeyItem>, Result> {
 
         private Result result = new Result();
 
@@ -401,7 +402,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
     }
 
-    static class OverwriteStep implements Step<Result, Result> {
+    class OverwriteStep implements Step<Result, Result> {
 
         private Result result;
         private Set<String> dsNames;
@@ -428,7 +429,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public Step getNext() {
-            return null;
+            return new PasswordStep().prepare(result);
         }
 
         @Override
@@ -451,11 +452,51 @@ public class AddDbConnectionToVault implements ActionListener {
         }
 
     }
+    
+    class PasswordStep implements Step<Result, Result> {
 
+        private Result item;
+        private boolean ask;
+
+        @Override
+        public Step<Result, Result> prepare(Result item) {
+            item.password = context.getPassword();
+            ask = item.password == null || item.password.isEmpty();
+            this.item = item;
+            return this;
+        }
+
+        @Override
+        public NotifyDescriptor createInput() {
+            return new NotifyDescriptor.InputLine("DEFAULT", Bundle.Password(context.getUser())); //NOI18N
+        }
+
+        @Override
+        public boolean onlyOneChoice() {
+            return !ask;
+        }
+
+        @Override
+        public Step getNext() {
+            return null;
+        }
+
+        @Override
+        public void setValue(String password) {
+            item.password = password;
+        }
+
+        @Override
+        public Result getValue() {
+            return item;
+        }
+    }
+    
     static class Result {
         VaultItem vault;
         KeyItem key;
         String datasourceName;
+        String password;
         private boolean update;
     }
 
@@ -523,25 +564,23 @@ public class AddDbConnectionToVault implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         Multistep multistep = new Multistep(new TenancyStep());
 
         NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADB(), 3, multistep.createInput());
         if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(ci)) {
             if (multistep.getResult() != null) {
-                Result v = (Result) multistep.getResult();
-                addDbConnectionToVault(v.vault, v.key, context, v.datasourceName);
+                addDbConnectionToVault((Result) multistep.getResult());
             }
         }
 
     }
 
-    private static void addDbConnectionToVault(VaultItem vault, KeyItem key, DatabaseConnection connection, String datasourceName) {
+    private void addDbConnectionToVault(Result item) {
         VaultsClient client = VaultsClient.builder().build(getDefault().getActiveProfile().getConfigProvider());
 
         ListSecretsRequest listSecretsRequest = ListSecretsRequest.builder()
-                .compartmentId(vault.getCompartmentId())
-                .vaultId(vault.getKey().getValue())
+                .compartmentId(item.vault.getCompartmentId())
+                .vaultId(item.vault.getKey().getValue())
                 .limit(88)
                 .build();
 
@@ -552,16 +591,16 @@ public class AddDbConnectionToVault implements ActionListener {
 
         Map<String, String> values = new HashMap<String, String>() {
             {
-                put("Username", connection.getUser()); //NOI18N
-                put("Password", connection.getPassword()); //NOI18N
-                put("OCID", (String) connection.getConnectionProperties().get("OCID")); //NOI18N
+                put("Username", context.getUser()); //NOI18N
+                put("Password", item.password); //NOI18N
+                put("OCID", (String) context.getConnectionProperties().get("OCID")); //NOI18N
                 put("wallet_Password", UUID.randomUUID().toString()); //NOI18N
             }
         };
 
         try {
             for (Entry<String, String> entry : values.entrySet()) {
-                String secretName = "DATASOURCES_" + datasourceName + "_" + entry.getKey().toUpperCase(); //NOI18N
+                String secretName = "DATASOURCES_" + item.datasourceName + "_" + entry.getKey().toUpperCase(); //NOI18N
                 String base64Content = Base64.getEncoder().encodeToString(entry.getValue().getBytes(StandardCharsets.UTF_8));
 
                 SecretContentDetails contentDetails = Base64SecretContentDetails.builder()
@@ -582,9 +621,9 @@ public class AddDbConnectionToVault implements ActionListener {
                             .secretContent(contentDetails)
                             .secretRules(new ArrayList<>(Arrays.asList(SecretReuseRule.builder()
                                     .isEnforcedOnDeletedSecretVersions(false).build())))
-                            .compartmentId(vault.getCompartmentId())
-                            .vaultId(vault.getKey().getValue())
-                            .keyId(key.getKey().getValue())
+                            .compartmentId(item.vault.getCompartmentId())
+                            .vaultId(item.vault.getKey().getValue())
+                            .keyId(item.key.getKey().getValue())
                             .build();
                     CreateSecretRequest request = CreateSecretRequest
                             .builder()

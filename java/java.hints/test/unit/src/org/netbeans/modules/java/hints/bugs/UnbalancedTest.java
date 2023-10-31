@@ -527,4 +527,53 @@ com.sun.tools.javac.tree.JCTree$JCCompilationUnit@1b5a415
                 .run(Unbalanced.Collection.class)
                 .assertWarnings();
     }
+
+    public void testListForEach() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void t() {\n" +
+                       "        java.util.List<String> coll = new java.util.ArrayList<String>();\n" +
+                       "        coll.add(\"\");\n" +
+                       "        coll.forEach(e -> {});\n" +
+                       "    }\n" +
+                       "}\n")
+                .run(Unbalanced.Collection.class)
+                .assertWarnings();
+    }
+
+    public void testSequencedCollection1() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void t() {\n" +
+                       "        java.util.List<String> coll = new java.util.ArrayList<String>();\n" +
+                       "        coll.addFirst(\"\");\n" +
+                       "        coll.addLast(\"\");\n" +
+                       "    }\n" +
+                       "}\n", false)
+                .run(Unbalanced.Collection.class)
+                .assertWarnings("3:31-3:35:verifier:ERR_UnbalancedCollectionWRITE coll");
+    }
+
+    public void testSequencedCollection2() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void t() {\n" +
+                       "        java.util.List<String> coll = new java.util.ArrayList<String>();\n" +
+                       "        Object sink;\n" +
+                       "        sink = coll.reversed();\n" +
+                       "        sink = coll.getFirst();\n" +
+                       "        sink = coll.getLast();\n" +
+                       "        sink = coll.removeFirst();\n" +
+                       "        sink = coll.removeLast();\n" +
+                       "    }\n" +
+                       "}\n", false)
+                .run(Unbalanced.Collection.class)
+                .assertWarnings("3:31-3:35:verifier:ERR_UnbalancedCollectionREAD coll");
+    }
 }

@@ -62,8 +62,8 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = CodeActionsProvider.class)
 public class DBConnectionProvider extends CodeActionsProvider{
-   private static final Logger LOG = Logger.getLogger(DBConnectionProvider.class.getName());
-   private static final String  GET_DB_CONNECTION = "java.db.connection"; //NOI18N
+    private static final Logger LOG = Logger.getLogger(DBConnectionProvider.class.getName());
+    private static final String  GET_DB_CONNECTION = "nbls.db.connection"; //NOI18N
 
     private static final boolean POSIX = FileSystems.getDefault().supportedFileAttributeViews().contains("posix");  // NOI18N
     private static final EnumSet<PosixFilePermission> readWritePosix = EnumSet.of(OWNER_READ, OWNER_WRITE);
@@ -81,7 +81,7 @@ public class DBConnectionProvider extends CodeActionsProvider{
     }
 
     @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         return Collections.emptyList();
     }
 

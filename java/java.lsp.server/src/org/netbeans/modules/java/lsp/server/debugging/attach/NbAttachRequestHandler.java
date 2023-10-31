@@ -51,6 +51,7 @@ import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
 import org.netbeans.modules.java.lsp.server.debugging.ni.NILocationVisualizer;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
@@ -163,7 +164,9 @@ public final class NbAttachRequestHandler {
     @Messages({"# {0} - connector name", "MSG_InvalidConnector=Invalid connector name: {0}"})
     private CompletableFuture<Void> attachToJVM(Map<String, Object> attachArguments, DebugAdapterContext context) {
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
-        ConfigurationAttributes configurationAttributes = AttachConfigurations.get().findConfiguration(attachArguments);
+        NbCodeLanguageClient client = context.getLspSession().getLookup().lookup(NbCodeLanguageClient.class);
+        NbCodeClientCapabilities clientCapa = client != null ? client.getNbCodeCapabilities() : null;
+        ConfigurationAttributes configurationAttributes = AttachConfigurations.get(clientCapa).findConfiguration(attachArguments);
         if (configurationAttributes != null) {
             Connector connector = configurationAttributes.getConnector();
             RP.post(() -> attachTo(connector, attachArguments, context, resultFuture));

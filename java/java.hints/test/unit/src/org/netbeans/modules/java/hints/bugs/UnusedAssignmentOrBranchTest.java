@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.hints.bugs;
 
+import org.junit.Assume;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 
@@ -210,5 +211,31 @@ public class UnusedAssignmentOrBranchTest extends NbTestCase {
                        "}")
                 .run(UnusedAssignmentOrBranch.class)
                 .assertWarnings();
+    }
+
+    public void testRecordCompactConstructor() throws Exception {
+        Assume.assumeTrue(isRecordClassPresent());
+
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "\n" +
+                       "public record Test(int i, int j) {\n" +
+                       "    public Test {\n" +
+                       "        i = -i;\n" +
+                       "    }\n" +
+                       "}")
+                .sourceLevel("21")
+                .run(UnusedAssignmentOrBranch.class)
+                .assertWarnings();
+    }
+
+    private boolean isRecordClassPresent() {
+        try {
+            Class.forName("java.lang.Record");
+            return true;
+        } catch (ClassNotFoundException ex) {
+            return false;
+        }
     }
 }

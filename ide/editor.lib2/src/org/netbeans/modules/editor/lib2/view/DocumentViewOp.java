@@ -30,6 +30,7 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.font.FontRenderContext;
@@ -72,6 +73,7 @@ import org.netbeans.modules.editor.lib2.EditorPreferencesDefaults;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
+import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 
 /**
@@ -89,7 +91,7 @@ public final class DocumentViewOp
     private static final Logger LOG = Logger.getLogger(DocumentViewOp.class.getName());
 
     // Whether use fractional metrics rendering hint
-    static final Map<Object, Object> extraRenderingHints = new HashMap<Object, Object>();
+    static final Map<Object, Object> extraRenderingHints = new HashMap<>();
     
     static final Boolean doubleBuffered;
     
@@ -149,7 +151,7 @@ public final class DocumentViewOp
         if (contrast != null) {
             try {
                 extraRenderingHints.put(RenderingHints.KEY_TEXT_LCD_CONTRAST,
-                        Integer.parseInt(contrast));
+                        Integer.valueOf(contrast));
             } catch (NumberFormatException ex) {
                 // Do not add the key
             }
@@ -917,14 +919,13 @@ public final class DocumentViewOp
     
     /* private */ void updatePreferencesSettings(boolean nonInitialUpdate) {
         boolean nonPrintableCharactersVisibleOrig = isAnyStatusBit(NON_PRINTABLE_CHARACTERS_VISIBLE);
-        boolean nonPrintableCharactersVisible = Boolean.TRUE.equals(prefs.getBoolean(
-                SimpleValueNames.NON_PRINTABLE_CHARACTERS_VISIBLE, false));
+        boolean nonPrintableCharactersVisible = prefs.getBoolean(SimpleValueNames.NON_PRINTABLE_CHARACTERS_VISIBLE, false);
         updateStatusBits(NON_PRINTABLE_CHARACTERS_VISIBLE, nonPrintableCharactersVisible);
         // Line height correction
         float lineHeightCorrectionOrig = rowHeightCorrection;
         rowHeightCorrection = prefs.getFloat(SimpleValueNames.LINE_HEIGHT_CORRECTION, 1.0f);
         boolean inlineHintsEnableOrig = inlineHintsEnable;
-        inlineHintsEnable = Boolean.TRUE.equals(prefs.getBoolean("enable.inline.hints", true)); // NOI18N
+        inlineHintsEnable = prefs.getBoolean("enable.inline.hints", false); // NOI18N
         boolean updateMetrics = (rowHeightCorrection != lineHeightCorrectionOrig);
         boolean releaseChildren = nonInitialUpdate && 
                 ((nonPrintableCharactersVisible != nonPrintableCharactersVisibleOrig) ||
@@ -938,7 +939,7 @@ public final class DocumentViewOp
         if (releaseChildren) {
             releaseChildren(false);
         }
-        boolean currentGuideLinesEnable = Boolean.TRUE.equals(prefs.getBoolean("enable.guide.lines", true)); // NOI18N
+        boolean currentGuideLinesEnable = prefs.getBoolean("enable.guide.lines", true); // NOI18N
         if (nonInitialUpdate && guideLinesEnable != currentGuideLinesEnable) {
             docView.op.notifyRepaint(visibleRect.getMinX(), visibleRect.getMinY(), visibleRect.getMaxX(), visibleRect.getMaxY());    
         }
@@ -1512,17 +1513,21 @@ public final class DocumentViewOp
         Keymap keymap = textComponent.getKeymap();
         double wheelRotation = evt.getPreciseWheelRotation();
         if (wheelRotation < 0) {
-            Action action = keymap.getAction(KeyStroke.getKeyStroke(0x290, modifiers)); //WHEEL_UP constant
+            int mouseUpKeyCode = Utilities.mouseWheelUpKeyCode();
+            Action action = mouseUpKeyCode == KeyEvent.VK_UNDEFINED ? null
+                    : keymap.getAction(KeyStroke.getKeyStroke(mouseUpKeyCode, modifiers));
             if (action != null) {
-                action.actionPerformed(new ActionEvent(docView.getTextComponent(),0,""));
+                action.actionPerformed(new ActionEvent(docView.getTextComponent(), 0, ""));
                 textComponent.repaint(); // Consider repaint triggering elsewhere
             } else {
                 delegator.delegateToOriginalListener(evt, activeScrollPane);
             }
         } else if (wheelRotation > 0) {
-            Action action = keymap.getAction(KeyStroke.getKeyStroke(0x291, modifiers)); //WHEEL_DOWN constant
+            int mouseDownKeyCode = Utilities.mouseWheelDownKeyCode();
+            Action action = mouseDownKeyCode == KeyEvent.VK_UNDEFINED ? null
+                    : keymap.getAction(KeyStroke.getKeyStroke(mouseDownKeyCode, modifiers));
             if (action != null) {
-                action.actionPerformed(new ActionEvent(docView.getTextComponent(),0,""));
+                action.actionPerformed(new ActionEvent(docView.getTextComponent(), 0, ""));
                 textComponent.repaint(); // Consider repaint triggering elsewhere
             } else {
                 delegator.delegateToOriginalListener(evt, activeScrollPane);

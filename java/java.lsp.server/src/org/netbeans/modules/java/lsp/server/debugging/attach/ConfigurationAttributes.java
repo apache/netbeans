@@ -25,6 +25,8 @@ import com.sun.jdi.connect.ListeningConnector;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 
 import org.netbeans.modules.java.lsp.server.protocol.Server;
 import org.openide.util.NbBundle;
@@ -63,7 +65,7 @@ final class ConfigurationAttributes {
                         "DESC_HostName=Name or IP address of the host machine to connect to",
                         "DESC_Port=Port number to connect to",
                         "DESC_ShMem=Shared memory transport address at which the target VM is listening"})
-    ConfigurationAttributes(Connector ac) {
+    ConfigurationAttributes(NbCodeClientCapabilities capa, Connector ac) {
         this.ac = ac;
         String connectorName = ac.name();
         this.id = connectorName;
@@ -72,7 +74,7 @@ final class ConfigurationAttributes {
         switch (connectorName) {
             case CONNECTOR_PROCESS:
                 this.name = Bundle.LBL_AttachToProcess();
-                attributes.put(PROCESS_ARG_PID, new ConfigurationAttribute("${command:" + Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH + "}", "", true)); // NOI18N
+                attributes.put(PROCESS_ARG_PID, new ConfigurationAttribute("${command:" + Utils.encodeCommand(Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH, capa) + "}", "", true)); // NOI18N
                 break;
             case CONNECTOR_SOCKET:
                 this.name = Bundle.LBL_AttachToPort();

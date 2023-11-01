@@ -28,7 +28,6 @@ import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.modules.extbrowser.PrivateBrowserFamilyId;
 import org.openide.awt.HtmlBrowser;
 import org.openide.execution.NbProcessDescriptor;
 import org.openide.util.NbBundle;
@@ -44,32 +43,18 @@ public class SystemDefaultBrowser extends ExtWebBrowser {
 
     private static final long serialVersionUID = -7317179197254112564L;
     private static final Logger logger = Logger.getLogger(SystemDefaultBrowser.class.getName());
-    private static RequestProcessor RP = new RequestProcessor(SystemDefaultBrowser.class.getName(), 3);
+    private static final RequestProcessor RP = new RequestProcessor(SystemDefaultBrowser.class.getName(), 3);
     private transient AtomicBoolean detected = new AtomicBoolean(false);
 
-    private static final boolean ACTIVE;
-    static {
-        if (Boolean.getBoolean("org.netbeans.modules.extbrowser.UseDesktopBrowse")) {
-            if (Boolean.getBoolean("java.net.useSystemProxies") && Utilities.isUnix()) {
-                // remove this check if JDK's bug 6496491 is fixed or if we can assume ORBit >= 2.14.2 and gnome-vfs >= 2.16.1
-                logger.log(Level.FINE, "Ignoring java.awt.Desktop.browse support to avoid hang from #89540");
-                ACTIVE = false;
-            } else {
-                ACTIVE = Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE);
-            }
-        } else {
-            ACTIVE = false;
-        }
-    }
+    private static final boolean USE_JDK_BROWSER = Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)
+            && Boolean.getBoolean("org.netbeans.modules.extbrowser.UseDesktopBrowse");
 
     /** Determines whether the browser should be visible or not
      *  @return true when OS is not Windows and is not Unix with Default Browser capability and Desktop is inactive.
      *          false in all other cases.
      */
     public static Boolean isHidden() {
-        return Boolean.valueOf(
-                (!Utilities.isWindows() && !defaultBrowserUnixReady() && !Utilities.isMac())
-                && !ACTIVE);
+        return !Utilities.isWindows() && !defaultBrowserUnixReady() && !Utilities.isMac() && !USE_JDK_BROWSER;
     }
 
     private static boolean defaultBrowserUnixReady() {
@@ -88,13 +73,13 @@ public class SystemDefaultBrowser extends ExtWebBrowser {
      */
     @Override
     public HtmlBrowser.Impl createHtmlBrowserImpl() {
-        if (ACTIVE) {
-            return new Jdk6BrowserImpl();
+        if (USE_JDK_BROWSER) {
+            return new JdkBrowserImpl();
         } else if (Utilities.isWindows()) {
             return new NbDdeBrowserImpl(this);
         } else if (Utilities.isMac()) {
             return new MacBrowserImpl(this);
-        } else if (Utilities.isUnix() && !Utilities.isMac()) {
+        } else if (Utilities.isUnix()) {
             return new NbDefaultUnixBrowserImpl(this);
         } else {
             throw new UnsupportedOperationException(NbBundle.getMessage(SystemDefaultBrowser.class, "MSG_CannotUseBrowser"));
@@ -121,7 +106,7 @@ public class SystemDefaultBrowser extends ExtWebBrowser {
     }
 
     /** Default command for browser execution.
-     * Can be overriden to return browser that suits to platform and settings.
+     * Can be overridden to return browser that suits to platform and settings.
      *
      * @return process descriptor that allows to start browser.
      */
@@ -132,7 +117,7 @@ public class SystemDefaultBrowser extends ExtWebBrowser {
                 "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}", // NOI18N
                 ExtWebBrowser.UnixBrowserFormat.getHint());
         }
-        if (!Utilities.isWindows() || ACTIVE) {
+        if (!Utilities.isWindows() || USE_JDK_BROWSER) {
             return new NbProcessDescriptor("", ""); // NOI18N
         }
 
@@ -181,19 +166,16 @@ public class SystemDefaultBrowser extends ExtWebBrowser {
         final HtmlBrowser.Impl impl = createHtmlBrowserImpl();
         final ExtBrowserImpl extImpl = impl instanceof ExtBrowserImpl ? (ExtBrowserImpl)impl : null;
         if (extImpl != null) {
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    setPrivateBrowserFamilyId(extImpl.detectPrivateBrowserFamilyId());
-                }
+            RP.post(() -> {
+                setPrivateBrowserFamilyId(extImpl.detectPrivateBrowserFamilyId());
             });
         }
     }
 
-    private static final class Jdk6BrowserImpl extends ExtBrowserImpl {
+    private static final class JdkBrowserImpl extends ExtBrowserImpl {
 
-        public Jdk6BrowserImpl() {
-            assert ACTIVE;
+        public JdkBrowserImpl() {
+            assert USE_JDK_BROWSER;
         }
 
         @Override

@@ -56,8 +56,8 @@
         <!-- we use jarjar to repackage simple json, to avoid clashes with 3rd party maven plugins possibly including it in their dependencies -->
         <taskdef name="jarjar" classname="org.pantsbuild.jarjar.JarJarTask" loaderref="lib.path.loader">
             <classpath>
-                <pathelement location="${libs.asm.dir}/core/asm-9.5.jar"/>
-                <pathelement location="${libs.asm.dir}/core/asm-commons-9.5.jar"/>
+                <pathelement location="${libs.asm.dir}/core/asm-9.6.jar"/>
+                <pathelement location="${libs.asm.dir}/core/asm-commons-9.6.jar"/>
                 <pathelement location="./external/jarjar-1.7.2.jar"/>
             </classpath>
         </taskdef>
@@ -99,7 +99,8 @@
          <package-artifact-from-dir jarbasename="test-lib3-12.6" relpath="projects/dependencies/repo/grp/test-lib3/12.6"/>
          <package-artifact-from-dir jarbasename="test-lib4-12.6" relpath="projects/dependencies/repo/grp/test-lib4/12.6"/>
          <package-artifact-from-dir jarbasename="test-processor-12.6" relpath="projects/dependencies/repo/grp/test-processor/12.6"/>
-
+         
+         <chmod file="${build.test.unit.dir}/data/projects/multiproject/democa/mvnw" perm="ugo+rwx"/>
     </target>
 
 </project>

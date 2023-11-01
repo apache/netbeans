@@ -2362,7 +2362,18 @@ public class FormatVisitor extends DefaultVisitor {
         }
         includeWSBeforePHPDoc = true;
         isFirstUseTraitStatementPart = true;
+        Block block = (Block) path.get(1);
+        int index = 0;
+        List<Statement> statements = block.getStatements();
         super.visit(node);
+        while (index < statements.size() && statements.get(index).getStartOffset() < node.getStartOffset()) {
+            index++;
+        }
+        if (index == statements.size() - 1
+                || ((index < statements.size() - 1) && !(statements.get(index + 1) instanceof UseTraitStatement))) {
+            addRestOfLine();
+            formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_USE_TRAIT, ts.offset() + ts.token().length()));
+        }
     }
 
     @Override

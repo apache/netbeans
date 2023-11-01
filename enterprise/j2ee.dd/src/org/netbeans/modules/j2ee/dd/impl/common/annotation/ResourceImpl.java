@@ -45,7 +45,8 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.parser.Pa
 public class ResourceImpl {
     
     // package private because of unit tests
-    static final String DEFAULT_AUTHENTICATION_TYPE = AuthenticationType.CONTAINER.name();
+    static final String DEFAULT_AUTHENTICATION_TYPE = "javax.annotation.Resource.AuthenticationType.CONTAINER";
+    static final String DEFAULT_AUTHENTICATION_TYPE_JAKARTA = "jakarta.annotation.Resource.AuthenticationType.CONTAINER";
     static final String DEFAULT_SHAREABLE = Boolean.TRUE.toString();
     static final String DEFAULT_MAPPED_NAME = "";
     static final String DEFAULT_DESCRIPTION = "";
@@ -70,8 +71,12 @@ public class ResourceImpl {
         this.element = element;
         
         Map<String, ? extends AnnotationMirror> annByType = annotationModelHelper.getAnnotationsByType(element.getAnnotationMirrors());
-        
-        parseResult = parseAnnotation(annByType.get(javax.annotation.Resource.class.getName()));
+
+        AnnotationMirror annotationMirror = annByType.get("jakarta.annotation.Resource"); //NOI18N
+        if (annotationMirror == null) {
+            annotationMirror = annByType.get("javax.annotation.Resource"); //NOI18N
+        }
+        parseResult = parseAnnotation(annotationMirror);
     }
     
     private ParseResult parseAnnotation(AnnotationMirror resourceAnnotation) {
@@ -116,12 +121,20 @@ public class ResourceImpl {
                 return Object.class.getName();
             }
         });
-        
-        // The authentication type to use for the resource, default AuthenticationType.CONTAINER
-        parser.expectEnumConstant(
-                "authenticationType", // NOI18N
-                annotationModelHelper.resolveType("javax.annotation.Resource.AuthenticationType"),
-                parser.defaultValue(DEFAULT_AUTHENTICATION_TYPE));
+
+        if(((TypeElement) resourceAnnotation.getAnnotationType().asElement()).getQualifiedName().toString().startsWith("jakarta.")) {
+            // The authentication type to use for the resource, default AuthenticationType.CONTAINER
+            parser.expectEnumConstant(
+                    "authenticationType", // NOI18N
+                    annotationModelHelper.resolveType("jakarta.annotation.Resource.AuthenticationType"),
+                    parser.defaultValue(DEFAULT_AUTHENTICATION_TYPE_JAKARTA));
+        } else {
+            // The authentication type to use for the resource, default AuthenticationType.CONTAINER
+            parser.expectEnumConstant(
+                    "authenticationType", // NOI18N
+                    annotationModelHelper.resolveType("javax.annotation.Resource.AuthenticationType"),
+                    parser.defaultValue(DEFAULT_AUTHENTICATION_TYPE));
+        }
         
         // Indicates whether the resource can be shared, default true
         parser.expectPrimitive("shareable", Boolean.class, parser.defaultValue(Boolean.parseBoolean(DEFAULT_SHAREABLE))); // NOI18N

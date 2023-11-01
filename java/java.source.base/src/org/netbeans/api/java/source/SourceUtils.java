@@ -1048,7 +1048,12 @@ public class SourceUtils {
         int highestPriority = Integer.MAX_VALUE;
 
         for (ExecutableElement sibling : ElementFilter.methodsIn(method.getEnclosingElement().getEnclosedElements())) {
-            highestPriority = Math.min(highestPriority, mainMethodPriority(sibling));
+            if (mainCandidate(sibling)) {
+                highestPriority = Math.min(highestPriority, mainMethodPriority(sibling));
+                if (highestPriority < currentMethodPriority) {
+                    break;
+                }
+            } 
         }
 
         return currentMethodPriority == highestPriority;
@@ -1085,22 +1090,15 @@ public class SourceUtils {
         return true;
     }
 
+    // 0 is highest
     private static int mainMethodPriority(ExecutableElement method) {
         long flags = ((Symbol.MethodSymbol)method).flags();
         boolean isStatic = (flags & Flags.STATIC) != 0;
         boolean hasParams = !method.getParameters().isEmpty();
         if (isStatic) {
-            if (hasParams) {
-                return 0;
-            } else {
-                return 1;
-            }
+            return hasParams ? 0 : 1;
         } else {
-            if (hasParams) {
-                return 2;
-            } else {
-                return 3;
-            }
+            return hasParams ? 2 : 3;
         }
     }
 

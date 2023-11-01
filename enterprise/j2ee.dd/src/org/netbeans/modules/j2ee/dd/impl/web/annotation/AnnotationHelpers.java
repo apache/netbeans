@@ -33,7 +33,6 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.Persisten
 /**
  * @author Petr Slechta
  */
-// @todo: Support JakartaEE
 public class AnnotationHelpers {
 
     private AnnotationModelHelper helper;
@@ -52,7 +51,7 @@ public class AnnotationHelpers {
 
     public PersistentObjectManager<WebServlet> getWebServletPOM() {
         if (webServletsPOM == null)
-            webServletsPOM = helper.createPersistentObjectManager(new AnnotationProvider("javax.servlet.annotation.WebServlet") {
+            webServletsPOM = helper.createPersistentObjectManager(new AnnotationProvider("jakarta.servlet.annotation.WebServlet", "javax.servlet.annotation.WebServlet") {
                 @Override
                 WebServlet newItem(AnnotationModelHelper helper, TypeElement typeElement) {
                     return new WebServlet(helper, typeElement);
@@ -63,7 +62,7 @@ public class AnnotationHelpers {
 
     public PersistentObjectManager<WebFilter> getWebFilterPOM() {
         if (webFiltersPOM == null)
-            webFiltersPOM = helper.createPersistentObjectManager(new AnnotationProvider("javax.servlet.annotation.WebFilter") {
+            webFiltersPOM = helper.createPersistentObjectManager(new AnnotationProvider("jakarta.servlet.annotation.WebFilter", "javax.servlet.annotation.WebFilter") {
                 @Override
                 WebFilter newItem(AnnotationModelHelper helper, TypeElement typeElement) {
                     return new WebFilter(helper, typeElement);
@@ -74,7 +73,7 @@ public class AnnotationHelpers {
 
     public PersistentObjectManager<SecurityRoles> getSecurityRolesPOM() {
         if (securityRolesPOM == null)
-            securityRolesPOM = helper.createPersistentObjectManager(new AnnotationProvider("javax.annotation.security.DeclareRoles") {
+            securityRolesPOM = helper.createPersistentObjectManager(new AnnotationProvider("jakarta.annotation.security.DeclareRoles", "javax.annotation.security.DeclareRoles") {
                 @Override
                 SecurityRoles newItem(AnnotationModelHelper helper, TypeElement typeElement) {
                     return new SecurityRoles(helper, typeElement);
@@ -86,26 +85,30 @@ public class AnnotationHelpers {
     // -------------------------------------------------------------------------
     private abstract class AnnotationProvider<T extends Refreshable> implements ObjectProvider<T> {
 
-        private String annotationName;
+        private String[] annotationNames;
 
-        AnnotationProvider(String annotationName) {
-            this.annotationName = annotationName;
+        AnnotationProvider(String... annotationNames) {
+            this.annotationNames = annotationNames;
         }
 
         public List<T> createInitialObjects() throws InterruptedException {
             final List<T> result = new ArrayList<T>();
-            helper.getAnnotationScanner().findAnnotations(annotationName, AnnotationScanner.TYPE_KINDS, new AnnotationHandler() {
-                public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
-                    result.add(newItem(helper, type));
-                }
-            });
+            for (String annotationName : annotationNames) {
+                helper.getAnnotationScanner().findAnnotations(annotationName, AnnotationScanner.TYPE_KINDS, new AnnotationHandler() {
+                    public void handleAnnotation(TypeElement type, Element element, AnnotationMirror annotation) {
+                        result.add(newItem(helper, type));
+                    }
+                });
+            }
             return result;
         }
 
         public List<T> createObjects(TypeElement type) {
             final List<T> result = new ArrayList<T>();
-            if (helper.hasAnnotation(type.getAnnotationMirrors(), annotationName)) {
-                result.add(newItem(helper, type));
+            for (String annotationName : annotationNames) {
+                if (helper.hasAnnotation(type.getAnnotationMirrors(), annotationName)) {
+                    result.add(newItem(helper, type));
+                }
             }
             return result;
         }

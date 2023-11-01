@@ -68,6 +68,7 @@ import static org.netbeans.modules.gradle.customizer.GradleExecutionPanel.HINT_J
 import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.execute.ProjectConfigurationSupport;
+import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.gradle.spi.actions.ProjectActionMappingProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
@@ -694,17 +695,21 @@ public final class RunUtils {
      */
     public static JavaRuntime getActiveRuntime(Project project) {
         return ProjectManager.mutex().readAccess(() -> {
+            GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
+
             Project root = ProjectUtils.rootOf(project);
             AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
             String id = aux.get(HINT_JDK_PLATFORM, true);
-            id = id != null ? id : JavaRuntimeManager.DEFAULT_RUNTIME_ID;
-
-            JavaRuntimeManager mgr = Lookup.getDefault().lookup(JavaRuntimeManager.class);
-            Map<String, JavaRuntime> runtimes = mgr.getAvailableRuntimes();
-            if (runtimes.containsKey(id)) {
-                return runtimes.get(id);
+            if (id == null) {
+                return experimental.getDefaultJavaRuntime();
+            } else {
+                JavaRuntimeManager mgr = Lookup.getDefault().lookup(JavaRuntimeManager.class);
+                Map<String, JavaRuntime> runtimes = mgr.getAvailableRuntimes();
+                if (runtimes.containsKey(id)) {
+                    return runtimes.get(id);
+                }
+                return JavaRuntimeManager.createJavaRuntime(id, null);
             }
-            return JavaRuntimeManager.createJavaRuntime(id, null);
         });
     }
 
@@ -719,9 +724,11 @@ public final class RunUtils {
      */
     public static void setActiveRuntime(Project project, JavaRuntime runtime) {
         ProjectManager.mutex().postWriteRequest(() -> {
+            GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
+            
             Project root = ProjectUtils.rootOf(project);
             AuxiliaryProperties aux = root.getLookup().lookup(AuxiliaryProperties.class);
-            String id = (runtime != null) && !JavaRuntimeManager.DEFAULT_RUNTIME_ID.equals(runtime.getId()) ? runtime.getId() : null;
+            String id = (runtime != null) && experimental.getDefaultJavaRuntime() != runtime ? runtime.getId() : null;
             aux.put(HINT_JDK_PLATFORM, id, true);
         });
     }

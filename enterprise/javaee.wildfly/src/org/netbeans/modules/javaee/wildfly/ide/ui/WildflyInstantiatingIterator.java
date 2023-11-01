@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -65,19 +66,15 @@ public class WildflyInstantiatingIterator implements WizardDescriptor.Instantiat
 
 
     // private InstallPanel panel;
-    private final transient Set listeners = new HashSet(1);
+    private final transient Set listeners = ConcurrentHashMap.newKeySet(2);
     @Override
     public void removeChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.remove(l);
-        }
+        listeners.remove(l);
     }
 
     @Override
     public void addChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
-        }
+        listeners.add(l);
     }
 
     @Override

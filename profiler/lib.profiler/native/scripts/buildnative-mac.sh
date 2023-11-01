@@ -41,52 +41,19 @@ SOURCES="../src-jdk15/class_file_cache.c \
 	../src-jdk15/Stacks.c \
 	../src-jdk15/common_functions.c"
 
-DEST="../../release/lib/deployed/jdk16/mac/"
+DEST="../../release/lib/deployed/jdk16/mac"
+
+mkdir -p $DEST
 
 UNILIB="$DEST/libprofilerinterface.jnilib"
-
-if [ ! -f "$UNILIB" ]; then
-  echo "Error: This script expects Universal Library $UNILIB to exist."
-  exit 1
-fi
-
 
 cc $CPPFLAGS ../src-jdk15/config.c -o ../build/config && ../build/config > ../build/config.h
 
 echo "Content of config.h :"
 cat ../build/config.h
 
-cc $CFLAGS $SOURCES -o ../build/libprofilerinterface.x86_64.dylib
-
-
-# Now we have a library specific to 'x86_64'. However what we use in lib.profiler
-# is a so-called Universal Library (one library file which contains embedded libraries for
-# multiple architectures .. this is an Apple speciality .. also known as a 'fat library').
-#
-# At some point in the history of NetBeans someone has created a Universal Library file
-# for the Profiler Interface which as of Jan 2021 contains libraries for the following platforms: 
-#    ppc 
-#    ppc64 
-#    i386 
-#    x86_64
-# Nowadays, Jan 2021, only 'x86_64' is relevant. Apple has abandonned the PowerPC architecture.
-# Coming up is the Apple Sillicon architecture which is named 'arm64' in short form. No attempt
-# is made here to support that, yet. 
-#
-# We re-use the existing Universal Library file and simply replace its contents but only
-# for the 'x86_64' architecture. This means that libraries for other architectures will
-# continue to exist in the bundle, albeit in the older form (meaning they'll not receive bug fixes)
-#
-
-
-
-# List architecture of the produced ".dylib" file  
-# (just to be sure .. we expect it to be 'x86_64')
-lipo ../build/libprofilerinterface.x86_64.dylib -info
+# build universal libary for x86_64 and arm64
+cc $CFLAGS -arch x86_64 -arch arm64 $SOURCES -o "$UNILIB"
 
 # List content of existing universal library
 lipo "$UNILIB" -info
-
-# Update the existing universal library so that the content for x86_64 is replaced
-# with our recent build
-lipo "$UNILIB" -replace x86_64 ../build/libprofilerinterface.x86_64.dylib -output "$UNILIB"

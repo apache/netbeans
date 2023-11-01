@@ -38,13 +38,13 @@ import io.foojay.api.discoclient.pkg.MajorVersion;
 import io.foojay.api.discoclient.pkg.Pkg;
 import io.foojay.api.discoclient.pkg.Scope;
 import io.foojay.api.discoclient.util.PkgInfo;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
-
-import static java.util.Arrays.asList;
+import java.util.stream.Stream;
 
 public class Client {
 
@@ -53,6 +53,8 @@ public class Client {
     private DiscoClient client = null;
     private List<MajorVersion> majorVersions;
     private List<Distribution> distributions;
+
+    private Client() {}
 
     public static Client getInstance() {
         return INSTANCE;
@@ -65,35 +67,51 @@ public class Client {
         return client;
     }
 
-    private Client() {
+    public synchronized List<MajorVersion> getAllMajorVersions() {
+        if (majorVersions == null) {
+            majorVersions = Collections.unmodifiableList(new ArrayList<>(getDisco().getAllMajorVersions(true)));
+        }
+        return majorVersions;
+    }
+
+    public synchronized List<Distribution> getDistributions() {
+        if (distributions == null) {
+            distributions = Collections.unmodifiableList(
+                getDisco().getDistributions().stream()
+                    .filter(distribution -> distribution.getScopes().contains(Scope.BUILD_OF_OPEN_JDK))
+                    .filter(distribution -> distribution.getScopes().contains(Scope.PUBLIC))
+                    .collect(Collectors.toList())
+            );
+        }
+        return distributions;
     }
 
     /**
      * Returns all major versions which are still maintained (excludes EA releases).
      */
-    public synchronized final List<MajorVersion> getAllMaintainedMajorVersions() {
-        if (majorVersions == null) {
-            majorVersions = getDisco().getAllMajorVersions(
-                    Optional.of(true),   // maintained
-                    Optional.of(false),  // EA
-                    Optional.of(true),   // GA
-                    Optional.of(false)); // build
-        }
-        return majorVersions;
+    public Stream<MajorVersion> getAllMaintainedMajorVersions() {
+        return getAllMajorVersions().stream()
+                .filter(v -> v.isEarlyAccessOnly() != null && !v.isEarlyAccessOnly())
+                .filter(MajorVersion::isMaintained);
     }
 
-    public synchronized MajorVersion getLatestLts(boolean includeEA) {
-        return getDisco().getLatestLts(includeEA);
+    public MajorVersion getLatestGAVersion() {
+        return getAllMaintainedMajorVersions()
+                .findFirst()
+                .orElse(new MajorVersion(21));
     }
 
-    public synchronized MajorVersion getLatestSts(boolean includeEA) {
-        return getDisco().getLatestSts(includeEA);
+    public MajorVersion getLatestEAVersion() {
+        return getAllMajorVersions().stream()
+                .filter(v -> v.isEarlyAccessOnly() != null && v.isEarlyAccessOnly())
+                .findFirst()
+                .orElse(new MajorVersion(21));
     }
 
     public synchronized List<Pkg> getPkgs(final Distribution distribution, final VersionNumber versionNumber, final Latest latest, final OperatingSystem operatingSystem,
             final Architecture architecture, final ArchiveType archiveType, final PackageType packageType,
             final boolean ea, final boolean javafxBundled) {
-        return getDisco().getPkgs(asList(distribution),
+        return getDisco().getPkgs(List.of(distribution),
                 versionNumber,
                 latest,
                 operatingSystem,
@@ -104,26 +122,14 @@ public class Client {
                 packageType,
                 javafxBundled,
                 /*directlyDownloadable*/ true,
-                ea ? asList(ReleaseStatus.GA, ReleaseStatus.EA) : asList(ReleaseStatus.GA),
+                ea ? List.of(ReleaseStatus.GA, ReleaseStatus.EA) : List.of(ReleaseStatus.GA),
                 TermOfSupport.NONE,
-                asList(Scope.PUBLIC),
+                List.of(Scope.PUBLIC),
                 null
         );
     }
 
-    public synchronized List<Distribution> getDistributions() {
-        if (distributions == null) {
-            distributions = Collections.unmodifiableList(getDisco().getDistributions()
-                    .stream()
-                    .filter(distribution -> distribution.getScopes().contains(Scope.BUILD_OF_OPEN_JDK))
-                    .filter(distribution -> distribution.getScopes().contains(Scope.PUBLIC))
-                    .collect(Collectors.toList())
-            );
-        }
-        return distributions;
-    }
-
-    public synchronized Optional<Distribution> getDistribution(String text) {
+    public Optional<Distribution> getDistribution(String text) {
         return getDistributions().stream()
                 .filter(d -> d.getSynonyms().contains(text))
                 .findFirst();

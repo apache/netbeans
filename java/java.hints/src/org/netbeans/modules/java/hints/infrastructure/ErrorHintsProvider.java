@@ -165,7 +165,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             }
         }
         if (messageRuleCount < allRules.size()) {
-            ehm = new CreatorBasedLazyFixList(info.getFileObject(), code, pos, allRules, data);
+            ehm = new CreatorBasedLazyFixList(info.getFileObject(), code, desc, pos, allRules, data);
         } else if (processDefault) {
             ehm = ErrorDescriptionFactory.lazyListForFixes(Collections.<Fix>emptyList());
         } else {

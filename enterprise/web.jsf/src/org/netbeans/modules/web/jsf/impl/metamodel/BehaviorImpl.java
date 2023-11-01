@@ -64,8 +64,10 @@ class BehaviorImpl extends PersistentObject implements Behavior, Refreshable {
         Map<String, ? extends AnnotationMirror> types = 
             getHelper().getAnnotationsByType(getHelper().getCompilationController().
                     getElements().getAllAnnotationMirrors(type));
-        AnnotationMirror annotationMirror = types.get(
-                "javax.faces.component.behavior.FacesBehavior");        // NOI18N
+        AnnotationMirror annotationMirror = types.get("jakarta.faces.component.behavior.FacesBehavior"); //NOI18N
+        if (annotationMirror == null) {
+            annotationMirror = types.get("javax.faces.component.behavior.FacesBehavior"); // NOI18N
+        }
         if (annotationMirror == null) {
             return false;
         }

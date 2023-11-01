@@ -49,6 +49,7 @@ import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletionException;
+import java.util.stream.Collectors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
@@ -71,6 +72,7 @@ import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SetTraceParams;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.SignatureHelpOptions;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.TextDocumentSyncOptions;
@@ -357,8 +359,8 @@ public final class Server {
 
     public static class LanguageServerImpl implements LanguageServer, LanguageClientAware, LspServerState, NbLanguageServer {
 
-        private static final String NETBEANS_FORMAT = "netbeans.format";
-        private static final String NETBEANS_JAVA_IMPORTS = "netbeans.java.imports";
+        private static final String NETBEANS_FORMAT = "format";
+        private static final String NETBEANS_JAVA_IMPORTS = "java.imports";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
         private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
@@ -771,7 +773,7 @@ public final class Server {
             }
         }
 
-        private InitializeResult constructInitResponse(InitializeParams init, JavaSource src) {
+        private InitializeResult constructInitResponse(InitializeParams init, JavaSource src, NbCodeClientCapabilities capa) {
             ServerCapabilities capabilities = new ServerCapabilities();
             if (src != null) {
                 TextDocumentSyncOptions textDocumentSyncOptions = new TextDocumentSyncOptions();
@@ -783,6 +785,10 @@ public final class Server {
                 completionOptions.setResolveProvider(true);
                 completionOptions.setTriggerCharacters(Arrays.asList(".", "#", "@", "*"));
                 capabilities.setCompletionProvider(completionOptions);
+                SignatureHelpOptions signatureHelpOptions = new SignatureHelpOptions();
+                signatureHelpOptions.setTriggerCharacters(Arrays.asList("("));
+                signatureHelpOptions.setRetriggerCharacters(Arrays.asList(","));
+                capabilities.setSignatureHelpProvider(signatureHelpOptions);
                 capabilities.setHoverProvider(true);
                 CodeActionOptions codeActionOptions = new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix, CodeActionKind.Source, CodeActionKind.SourceOrganizeImports, CodeActionKind.Refactor));
                 codeActionOptions.setResolveProvider(true);
@@ -799,33 +805,35 @@ public final class Server {
                 CallHierarchyRegistrationOptions chOpts = new CallHierarchyRegistrationOptions();
                 chOpts.setWorkDoneProgress(true);
                 capabilities.setCallHierarchyProvider(chOpts);
-                Set<String> commands = new LinkedHashSet<>(Arrays.asList(GRAALVM_PAUSE_SCRIPT,
+                Set<String> commands = new LinkedHashSet<>(Arrays.asList(NBLS_GRAALVM_PAUSE_SCRIPT,
                         NBLS_BUILD_WORKSPACE,
                         NBLS_CLEAN_WORKSPACE,
                         NBLS_GET_ARCHIVE_FILE_CONTENT,
-                        JAVA_RUN_PROJECT_ACTION,
+                        NBLS_RUN_PROJECT_ACTION,
                         JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS,
                         JAVA_FIND_DEBUG_PROCESS_TO_ATTACH,
-                        JAVA_FIND_PROJECT_CONFIGURATIONS,
+                        NBLS_FIND_PROJECT_CONFIGURATIONS,
                         JAVA_GET_PROJECT_CLASSPATH,
                         JAVA_GET_PROJECT_PACKAGES,
                         JAVA_GET_PROJECT_SOURCE_ROOTS,
-                        JAVA_LOAD_WORKSPACE_TESTS,
-                        JAVA_RESOLVE_STACKTRACE_LOCATION,
-                        JAVA_NEW_FROM_TEMPLATE,
-                        JAVA_NEW_PROJECT,
-                        JAVA_PROJECT_CONFIGURATION_COMPLETION,
-                        JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS,
+                        NBLS_LOAD_WORKSPACE_TESTS,
+                        NBLS_RESOLVE_STACKTRACE_LOCATION,
+                        NBLS_NEW_FROM_TEMPLATE,
+                        NBLS_NEW_PROJECT,
+                        NBLS_PROJECT_CONFIGURATION_COMPLETION,
+                        NBLS_PROJECT_RESOLVE_PROJECT_PROBLEMS,
                         JAVA_SUPER_IMPLEMENTATION,
-                        JAVA_CLEAR_PROJECT_CACHES,
+                        NBLS_CLEAR_PROJECT_CACHES,
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH,
-                        JAVA_PROJECT_INFO,
+                        NBLS_PROJECT_INFO,
                         JAVA_ENABLE_PREVIEW,
                         NBLS_DOCUMENT_SYMBOLS
                 ));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
                 }
+                Utils.ensureCommandsPrefixed(commands);
+                commands = commands.stream().map(cmd -> Utils.encodeCommand(cmd, capa)).collect(Collectors.toSet());
                 capabilities.setExecuteCommandProvider(new ExecuteCommandOptions(new ArrayList<>(commands)));
                 WorkspaceSymbolOptions wsOpts = new WorkspaceSymbolOptions();
                 wsOpts.setResolveProvider(true);
@@ -915,7 +923,7 @@ public final class Server {
             // but complete the InitializationRequest independently of the project initialization.
             return CompletableFuture.completedFuture(
                     finishInitialization(
-                        constructInitResponse(init, checkJavaSupport())
+                        constructInitResponse(init, checkJavaSupport(), capa)
                     )
             );
         }
@@ -942,13 +950,13 @@ public final class Server {
                     ConfigurationItem item = new ConfigurationItem();
                     FileObject fo = projects[0].getProjectDirectory();
                     item.setScopeUri(Utils.toUri(fo));
-                    item.setSection(NETBEANS_FORMAT);
+                    item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_FORMAT);
                     client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
                         if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
                             workspaceService.updateJavaFormatPreferences(fo, (JsonObject) c.get(0));
                         }
                     });
-                    item.setSection(NETBEANS_JAVA_IMPORTS);
+                    item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_IMPORTS);
                     client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
                         if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
                             workspaceService.updateJavaImportPreferences(fo, (JsonObject) c.get(0));
@@ -1032,60 +1040,60 @@ public final class Server {
 
     public static final String NBLS_BUILD_WORKSPACE =  "nbls.build.workspace";
     public static final String NBLS_CLEAN_WORKSPACE =  "nbls.clean.workspace";
-    public static final String JAVA_NEW_FROM_TEMPLATE =  "java.new.from.template";
-    public static final String JAVA_NEW_PROJECT =  "java.new.project";
-    public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "java.get.project.source.roots";
-    public static final String JAVA_GET_PROJECT_CLASSPATH = "java.get.project.classpath";
-    public static final String JAVA_GET_PROJECT_PACKAGES = "java.get.project.packages";
-    public static final String JAVA_LOAD_WORKSPACE_TESTS =  "java.load.workspace.tests";
-    public static final String JAVA_RESOLVE_STACKTRACE_LOCATION =  "java.resolve.stacktrace.location";
-    public static final String JAVA_SUPER_IMPLEMENTATION =  "java.super.implementation";
-    public static final String GRAALVM_PAUSE_SCRIPT =  "graalvm.pause.script";
-    public static final String JAVA_RUN_PROJECT_ACTION = "java.project.run.action";
+    public static final String NBLS_NEW_FROM_TEMPLATE =  "nbls.new.from.template";
+    public static final String NBLS_NEW_PROJECT =  "nbls.new.project";
+    public static final String JAVA_GET_PROJECT_SOURCE_ROOTS = "nbls.java.get.project.source.roots";
+    public static final String JAVA_GET_PROJECT_CLASSPATH = "nbls.java.get.project.classpath";
+    public static final String JAVA_GET_PROJECT_PACKAGES = "nbls.java.get.project.packages";
+    public static final String NBLS_LOAD_WORKSPACE_TESTS =  "nbls.load.workspace.tests";
+    public static final String NBLS_RESOLVE_STACKTRACE_LOCATION = "nbls.resolve.stacktrace.location";
+    public static final String JAVA_SUPER_IMPLEMENTATION = "nbls.java.super.implementation";
+    public static final String NBLS_GRAALVM_PAUSE_SCRIPT = "nbls.graalvm.pause.script";
+    public static final String NBLS_RUN_PROJECT_ACTION = "nbls.project.run.action";
     public static final String NBLS_GET_ARCHIVE_FILE_CONTENT = "nbls.get.archive.file.content";
 
     /**
      * Enumerates project configurations.
      */
-    public static final String JAVA_FIND_PROJECT_CONFIGURATIONS = "java.project.configurations";
+    public static final String NBLS_FIND_PROJECT_CONFIGURATIONS = "nbls.project.configurations";
     /**
      * Enumerates attach debugger configurations.
      */
-    public static final String JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS = "java.attachDebugger.configurations";
+    public static final String JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS = "nbls.java.attachDebugger.configurations";
     /**
      * Enumerates JVM processes eligible for debugger attach.
      */
-    public static final String JAVA_FIND_DEBUG_PROCESS_TO_ATTACH = "java.attachDebugger.pickProcess";
+    public static final String JAVA_FIND_DEBUG_PROCESS_TO_ATTACH = "nbls.java.attachDebugger.pickProcess";
     /**
      * Enumerates native processes eligible for debugger attach.
      */
-    public static final String NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH = "nativeImage.attachDebugger.pickProcess";
+    public static final String NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH = "nbls.nativeImage.attachDebugger.pickProcess";
     /**
      * Provides code-completion of configurations.
      */
-    public static final String JAVA_PROJECT_CONFIGURATION_COMPLETION = "java.project.configuration.completion";
+    public static final String NBLS_PROJECT_CONFIGURATION_COMPLETION = "nbls.project.configuration.completion";
     /**
      * Provides resolution of project problems.
      */
-    public static final String JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS = "java.project.resolveProjectProblems";
+    public static final String NBLS_PROJECT_RESOLVE_PROJECT_PROBLEMS = "nbls.project.resolveProjectProblems";
 
 
     /**
      * Diagnostic / test command: clears NBLS internal project caches. Useful between testcases and after
      * new project files were generated into workspace subtree.
      */
-    public static final String JAVA_CLEAR_PROJECT_CACHES =  "java.clear.project.caches";
+    public static final String NBLS_CLEAR_PROJECT_CACHES =  "nbls.clear.project.caches";
     
     /**
      * For a project directory, returns basic project information and structure.
      * Syntax: nbls.project.info(locations : String | String[], options? : { projectStructure? : boolean; actions? : boolean; recursive? : boolean }) : LspProjectInfo
      */
-    public static final String JAVA_PROJECT_INFO = "nbls.project.info";
+    public static final String NBLS_PROJECT_INFO = "nbls.project.info";
 
     /**
      * Provides enable preview for given project
      */
-    public static final String JAVA_ENABLE_PREVIEW = "java.project.enable.preview";
+    public static final String JAVA_ENABLE_PREVIEW = "nbls.java.project.enable.preview";
 
     /**
      * Provides symbols for the given document

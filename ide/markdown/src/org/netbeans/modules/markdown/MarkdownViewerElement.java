@@ -19,6 +19,7 @@
 package org.netbeans.modules.markdown;
 
 import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension;
+import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
@@ -48,6 +49,7 @@ import javax.swing.text.StyledDocument;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
+import org.netbeans.modules.markdown.ui.preview.MarkdownEditorKit;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.UndoRedo;
 import org.openide.cookies.EditorCookie;
@@ -91,19 +93,17 @@ public class MarkdownViewerElement implements MultiViewElement {
     static final DataHolder OPTIONS = new MutableDataSet()
             .set(Parser.EXTENSIONS, Arrays.asList(
                     AnchorLinkExtension.create(),
-                    TablesExtension.create()
+                    TablesExtension.create(),
+                    TaskListExtension.create()
             ))
-
             .set(HtmlRenderer.INDENT_SIZE, 2)
             .set(HtmlRenderer.RENDER_HEADER_ID, true)
             .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "")
-
             // JEditorPane search for the name attribute
             .set(AnchorLinkExtension.ANCHORLINKS_SET_NAME, true)
             .set(AnchorLinkExtension.ANCHORLINKS_SET_ID, false)
             .set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "")
             .set(AnchorLinkExtension.ANCHORLINKS_TEXT_PREFIX, "")
-
             // Make the table generation SWING Friendly
             .set(TablesExtension.COLUMN_SPANS, false)
             .set(TablesExtension.MIN_HEADER_ROWS, 1)
@@ -144,10 +144,10 @@ public class MarkdownViewerElement implements MultiViewElement {
     public JComponent getVisualRepresentation() {
         if (component == null) {
             viewer = new JEditorPane();
-            viewer.setContentType("text/html");
+            viewer.setEditorKit(new MarkdownEditorKit());
             viewer.setEditable(false);
             viewer.addHyperlinkListener(this::linkHandler);
-            
+
             JPanel panel = new JPanel(new BorderLayout());
             panel.add(new JScrollPane(viewer), BorderLayout.CENTER);
 
@@ -230,7 +230,6 @@ public class MarkdownViewerElement implements MultiViewElement {
         return CloseOperationState.STATE_OK;
     }
 
-
     @Messages("TXT_MarkdownViewerElement_Error=<html>Something happened during markdown parsing.")
     public void updateView() {
         if ((source != null) && (viewer != null)) {
@@ -241,14 +240,14 @@ public class MarkdownViewerElement implements MultiViewElement {
                 String html = renderer.render(parser.parse(content));
 
                 Reader htmlReader = new StringReader(html);
-                HTMLEditorKit kit = new HTMLEditorKit();
+                HTMLEditorKit kit = (HTMLEditorKit) viewer.getEditorKit();
 
                 HTMLDocument doc = (HTMLDocument) viewer.getDocument();
 
                 // Would be better to create some diff and update the changed elemets
                 doc.remove(0, doc.getLength());
                 kit.read(htmlReader, doc, 0);
-                
+
                 viewer.scrollRectToVisible(vis);
 
             } catch (IOException ex) {

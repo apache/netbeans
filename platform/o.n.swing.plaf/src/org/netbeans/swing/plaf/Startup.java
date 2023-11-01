@@ -334,6 +334,9 @@ public final class Startup {
             defaults.putDefaults (customs.getLookAndFeelCustomizationKeysAndValues());
         }
 
+        if (defaults.getBoolean("windowDefaultLookAndFeelDecorated")) {
+            JFrame.setDefaultLookAndFeelDecorated(true);
+        }
     }
 
     private void runPostInstall() {

@@ -52,8 +52,10 @@ public class PersistenceUnitDataObjectTest extends PersistenceEditorTestBase{
             persistenceUnit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
         } else if(Persistence.VERSION_2_0.equals(version)) {
             persistenceUnit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
-        } else {
+        } else if(Persistence.VERSION_1_0.equals(version)) {
             persistenceUnit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
+        } else {
+            persistenceUnit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
         }
         
         persistenceUnit.setName("em3");

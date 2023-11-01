@@ -65,4 +65,8 @@ public interface LaunchConfigurationCompletion {
      */
     @NonNull
     CompletableFuture<List<CompletionItem>> attributeValues(Supplier<CompletableFuture<Project>> projectSupplier, Map<String, Object> attributes, String attributeName);
+
+    public interface Factory {
+        public LaunchConfigurationCompletion createLaunchConfigurationCompletion(NbCodeClientCapabilities capa);
+    }
 }

@@ -105,6 +105,7 @@ public class MicronautEntity extends RelatedCMPWizard {
 
     @NbBundle.Messages({
         "MSG_NoDbConn=No database connection found",
+        "MSG_NoDdSupport=No database support libraries found for {0}",
         "MSG_NoProject=No project found for {0}",
         "MSG_NoSourceGroup=No source group found for {0}",
         "MSG_SelectTables=Select Database Tables",
@@ -135,6 +136,10 @@ public class MicronautEntity extends RelatedCMPWizard {
                     SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), folder);
                     if (sourceGroup == null) {
                         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    if (!Utils.isDBSupported(sourceGroup) && !Utils.isJPASupported(sourceGroup)) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDdSupport(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
                         return Collections.emptyList();
                     }
                     DatabaseConnection connection = ConnectionManager.getDefault().getPreferredConnection(true);

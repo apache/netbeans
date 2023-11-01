@@ -44,6 +44,8 @@ import javax.lang.model.element.Name;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.*;
 import org.netbeans.api.java.source.support.ReferencesCount;
+import org.netbeans.api.lexer.PartType;
+import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.UserTask;
@@ -233,8 +235,11 @@ abstract class BaseTask extends UserTask {
                             ts.token().id().primaryCategory().startsWith("string") || //NOI18N
                             ts.token().id().primaryCategory().equals("literal")) //NOI18N
                     { //TODO: Use isKeyword(...) when available
-                        prefix = ts.token().text().toString().substring(0, len);
-                        offset = ts.offset();
+                        String prefixInToken = ts.token().text().toString().substring(0, len);
+                        if (!ts.token().id().primaryCategory().startsWith("string") || !prefixInToken.endsWith("\\{")) {
+                            prefix = prefixInToken;
+                            offset = ts.offset();
+                        }
                     } else if ((ts.token().id() == JavaTokenId.DOUBLE_LITERAL
                             || ts.token().id() == JavaTokenId.FLOAT_LITERAL
                             || ts.token().id() == JavaTokenId.FLOAT_LITERAL_INVALID
@@ -308,7 +313,7 @@ abstract class BaseTask extends UserTask {
                 && (parent.getKind() == Tree.Kind.METHOD || TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind()))) {
             controller.toPhase(withinAnonymousOrLocalClass(tu, path) ? JavaSource.Phase.RESOLVED : JavaSource.Phase.ELEMENTS_RESOLVED);
             int blockPos = (int) sourcePositions.getStartPosition(root, tree);
-            String blockText = controller.getText().substring(blockPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(root, tree));
+            String blockText = fixStringTemplates(path, controller.getText().substring(blockPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(root, tree)));
             final SourcePositions[] sp = new SourcePositions[1];
             final StatementTree block = (((BlockTree) tree).isStatic() ? tu.parseStaticBlock(blockText, sp) : tu.parseStatement(blockText, sp));
             if (block == null) {
@@ -618,7 +623,34 @@ abstract class BaseTask extends UserTask {
         }
         return null;
     }
-    
+
+    private static String fixStringTemplates(TreePath tp, String blockText) {
+        if (!blockText.contains("\\{")) {
+            return blockText;
+        }
+
+        TokenHierarchy<String> th = TokenHierarchy.create(blockText, JavaTokenId.language());
+        TokenSequence<JavaTokenId> ts = th.tokenSequence(JavaTokenId.language());
+        StringBuilder augmented = new StringBuilder();
+
+        augmented.append(blockText);
+        ts.moveEnd();
+
+        while (ts.movePrevious()) {
+            if ((ts.token().id() == JavaTokenId.STRING_LITERAL ||
+                 ts.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) &&
+                ts.token().partType() == PartType.START) {
+                if (ts.token().id() == JavaTokenId.STRING_LITERAL) {
+                    augmented.append("}\"");
+                } else {
+                    augmented.append("}\"\"\"");
+                }
+            }
+        }
+
+        return augmented.toString();
+    }
+
     private static String whitespaceString(int length) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {

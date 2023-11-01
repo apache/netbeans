@@ -37,6 +37,3 @@ block
     : IDENTIFIER (stringLit | IDENTIFIER)* LBRACE body RBRACE
     ;
 
-stringLit
-    : QUOTE stringContent+ QUOTE
-    ;

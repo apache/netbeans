@@ -118,11 +118,11 @@ public class GrammarResolverListenerTest extends CssTestBase {
         String next = itr.next().toString();
         assertEquals("[S0|font]/[L1]/[S60|font-size]/[S63|@length]/[L64]/!length (20px(LENGTH;0-4))", next);
         next = itr.next().toString();
-        assertEquals("[S0|font]/[L1]/[L103]// (/(SOLIDUS;5-6))", next);
+        assertEquals("[S0|font]/[L1]/[L234]// (/(SOLIDUS;5-6))", next);
         next = itr.next().toString();
-        assertEquals("[S0|font]/[L1]/[L103]/[S104|line-height]/[S106|@length]/[L107]/!length (20px(LENGTH;7-11))", next);
+        assertEquals("[S0|font]/[L1]/[L234]/[S235|line-height]/[S237|@length]/[L238]/!length (20px(LENGTH;7-11))", next);
         next = itr.next().toString();
-        assertEquals("[S0|font]/[L1]/[L110|font-family]/[L111]/[S112]/[S119|@generic-family]/fantasy (fantasy(IDENT;12-19))", next);
+        assertEquals("[S0|font]/[L1]/[L241|font-family]/[L242]/[S243]/[S250|@generic-family]/fantasy (fantasy(IDENT;12-19))", next);
     }
 
     public void testZeroMultiplicity() {

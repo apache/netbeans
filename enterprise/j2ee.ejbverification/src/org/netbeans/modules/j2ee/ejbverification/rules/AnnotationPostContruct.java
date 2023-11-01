@@ -46,6 +46,7 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author Martin Fousek <marfous@netbeans.org>
  */
+// @todo: Support JakartaEE
 @Hint(displayName = "#AnnotationPostContruct.display.name",
             description = "#AnnotationPostContruct.description",
             id = "o.n.m.j2ee.ejbverification.AnnotationPostContruct",

@@ -52,6 +52,7 @@
                 <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.lsp.server.explorer.NodeActionsProvider.forFile"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddADBAction" stringvalue="Tools"/>
+                <attr name="action:org.netbeans.modules.cloud.oracle.actions.AddDbConnectionToVault" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction" stringvalue="Tools"/>
                 <attr name="action:org.netbeans.modules.cloud.oracle.actions.CloudRefresh" stringvalue="Tools"/>
@@ -122,5 +123,50 @@
             <file name="XMLCatalog.xml_hidden"/>
         </folder>
         <folder name="Persistence_hidden"/>
+    </folder>
+    <folder name="Projects">
+        <folder name="org-netbeans-modules-maven">
+            <folder name="Lookup">
+                <file name="maven-actions-override.instance">
+                    <attr name="position" intvalue="10000"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                    <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
+                    <attr name="resource" stringvalue="nbres:/org/netbeans/modules/nbcode/integration/maven-actions-override.xml"/>
+                </file>
+            </folder>
+
+            <!-- For Micornaut 3.x -->
+            <folder name="io.micronaut.build:micronaut-maven-plugin">
+                <folder name="Lookup">
+                    <file name="maven-project-actions.instance">
+                        <attr name="position" intvalue="10000"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
+                        <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/micronaut-actions-override.xml"/>
+                    </file>
+                </folder>
+            </folder>
+            <!-- Micronaut 4.x -->
+            <folder name="io.micronaut.maven:micronaut-maven-plugin">
+                <folder name="Lookup">
+                    <file name="maven-project-actions.instance">
+                        <attr name="position" intvalue="10000"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
+                        <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/micronaut-actions-override.xml"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="org.springframework.boot:spring-boot-maven-plugin">
+                <folder name="Lookup">
+                    <file name="maven-project-actions.instance">
+                        <attr name="position" intvalue="10000"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.project.LookupProvider"/>
+                        <attr name="instanceCreate" methodvalue="org.netbeans.api.maven.MavenActions.forProjectLayer"/>
+                        <attr name="resource" stringvalue="nbres:/org/netbeans/modules/micronaut/resources/spring-actions-override.xml"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
     </folder>
 </filesystem>

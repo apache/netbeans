@@ -204,7 +204,7 @@ public final class GitModuleConfig {
     }
 
     public boolean getAutoReplaceInvalidBranchNameCharacters() {
-        return getPreferences().getBoolean(AUTO_REPLACE_INVALID_BRANCH_NAME_CHARACTERS, false);
+        return getPreferences().getBoolean(AUTO_REPLACE_INVALID_BRANCH_NAME_CHARACTERS, true);
     }
 
     public void setAutoReplaceInvalidBranchNameCharacters(boolean value) {

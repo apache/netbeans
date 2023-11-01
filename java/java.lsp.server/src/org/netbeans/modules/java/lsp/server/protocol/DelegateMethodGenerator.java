@@ -85,7 +85,7 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
     @NbBundle.Messages({
         "DN_GenerateDelegateMethod=Generate Delegate Method...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Source)) {
             return Collections.emptyList();
@@ -135,7 +135,7 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
         data.put(OFFSET, offset);
         data.put(TYPE, typeItem);
         data.put(FIELDS, fields);
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateDelegateMethod(), CODE_GENERATOR_KIND, data, "workbench.action.focusActiveEditorGroup"));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateDelegateMethod(), CODE_GENERATOR_KIND, data, "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override

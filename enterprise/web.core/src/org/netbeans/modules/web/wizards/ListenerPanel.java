@@ -43,6 +43,7 @@ import org.netbeans.modules.web.api.webmodule.WebModule;
  *
  * @author  Milan Kuchtiak
  */
+// @todo: Support JakartaEE
 public class ListenerPanel implements WizardDescriptor.Panel {
     
     /** The visual component that displays this panel.

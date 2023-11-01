@@ -28,7 +28,7 @@ body:
       multiple: false
       options:
         - "Apache NetBeans 19"
-#       - "Apache NetBeans 20 release candidate"
+        - "Apache NetBeans 20 release candidate"
         - "Apache NetBeans latest daily build"
     validations:
       required: true
@@ -64,6 +64,7 @@ body:
       multiple: false
       options:
         - "No / Don't know"
+        - "Apache NetBeans 19"
         - "Apache NetBeans 18"
         - "Apache NetBeans 17"
         - "Apache NetBeans 16"

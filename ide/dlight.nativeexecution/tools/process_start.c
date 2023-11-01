@@ -25,6 +25,10 @@
 #include <stropts.h>
 #endif
 
+#if defined(TIOCSCTTY)
+#include <sys/ioctl.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

@@ -24,22 +24,25 @@ package org.netbeans.modules.languages.hcl.ast;
  */
 public abstract class HCLIdentifier extends HCLElement {
 
-    final String id;
-
-    public HCLIdentifier(HCLElement parent, String id) {
-        super(parent);
+    public final String id;
+    
+    public HCLIdentifier(String id) {
         this.id = id;
     }
 
-    @Override
     public String id() {
         return id;
     }
 
+    @Override
+    public final void accept(Visitor v) {
+        v.visit(this);
+    }
+
     public final static class SimpleId extends HCLIdentifier {
 
-        public SimpleId(HCLElement parent, String id) {
-            super(parent, id);
+        public SimpleId(String id) {
+            super(id);
         }
 
         @Override
@@ -50,8 +53,8 @@ public abstract class HCLIdentifier extends HCLElement {
 
     public final static class StringId extends HCLIdentifier {
 
-        public StringId(HCLElement parent, String id) {
-            super(parent, id);
+        public StringId(String id) {
+            super(id);
         }
 
         @Override

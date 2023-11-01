@@ -27,7 +27,6 @@ import org.netbeans.modules.java.hints.infrastructure.TreeRuleTestBase;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.openide.filesystems.FileObject;
-import org.netbeans.junit.RandomlyFails;
 
 /**
  *
@@ -38,15 +37,15 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
     public AssignResultToVariableTest(String testName) {
         super(testName);
     }
-    @RandomlyFails
+
     public void testDoNothingForVoidReturnType() throws Exception {
         performAnalysisTest("test/Test.java", "package test; public class Test {public void t() {get();} public void get() {}}", 51);
     }
-    @RandomlyFails
+
     public void testProposeHint() throws Exception {
         performAnalysisTest("test/Test.java", "package test; public class Test {public void t() {get();} public int get() {}}", 51, "0:51-0:51:hint:Assign Return Value To New Variable");
     }
-    @RandomlyFails
+
     public void testApplyHintGenericType() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() {java.util.List<String> l = null; l.get(0);}}",
@@ -55,7 +54,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() {java.util.List<String> l = null; String get = l.get(0); }}");
     }
-    @RandomlyFails
+
     public void testApplyHintGenericType2() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() {java.util.List<? extends String> l = null; l.get(0);}}",
@@ -64,7 +63,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() {java.util.List<? extends String> l = null; String get = l.get(0); }}");
     }
-    @RandomlyFails
+
     public void testApplyHintGenericType3() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test<T> {public void t() {get();} T get() {return null;}}",
@@ -73,7 +72,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test<T> {public void t() {T get = get(); } T get() {return null;}}");
     }
-    @RandomlyFails
+
     public void testApplyHintGenericType4() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() {test();} private Iterable<? extends CharSequence> test() {return null;}}",
@@ -82,7 +81,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() {Iterable<? extends CharSequence> test = test(); } private Iterable<? extends CharSequence> test() {return null;}}");
     }
-    @RandomlyFails
+
     public void testApplyHintGenericType5() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() {test();} private Iterable<? super CharSequence> test() {return null;}}",
@@ -91,7 +90,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() {Iterable<? super CharSequence> test = test(); } private Iterable<? super CharSequence> test() {return null;}}");
     }
-    @RandomlyFails
+
     public void testApplyHintGenericType6() throws Exception {
         performFixTest("test/Test.java",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null;l.get(0); } }",
@@ -100,7 +99,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null;Object get = l.get(0); } }");
     }
-    @RandomlyFails
+
     public void testCommentsCopied() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() {\n/*t*/get();\n} String get() {return null;}}",
@@ -109,7 +108,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() { /*t*/ String get = get(); } String get() {return null;}}");
     }
-    @RandomlyFails
+
     public void testNewClass1() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() { new Te|st(); } private static class Test {} }",
@@ -117,7 +116,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() { Test test = new Test(); } private static class Test {} }");
     }
-    @RandomlyFails
+
     public void testNewClass2() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() { new te|st(); } private static class test {} }",
@@ -125,7 +124,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() { test test = new test(); } private static class test {} }");
     }
-    @RandomlyFails
+
     public void testNewClass133825a() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() { new Te|st<String>(); } private static class Test<T> {}}",
@@ -133,7 +132,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() { Test<String> test = new Test<String>(); } private static class Test<T> {}}");
     }
-    @RandomlyFails
+
     public void testNewClass133825b() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() { new Test.In|ner(); } private static class Inner {} }",
@@ -141,7 +140,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() { Inner inner = new Test.Inner(); } private static class Inner {} }");
     }
-    @RandomlyFails
+
     public void testAnonymousClass138223() throws Exception {
         performFixTest("test/Test.java",
                 "package test; public class Test {public void t() { new Run|nable() { public void run() { } }; } }",
@@ -149,7 +148,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                 "FixImpl",
                 "package test; public class Test {public void t() { Runnable runnable = new Runnable() { public void run() { } }; } }");
     }
-    @RandomlyFails
+
     public void testForgiving1() throws Exception {
         performFixTest("test/Test.java",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null;\n  l.get(0);|\n } }",
@@ -157,7 +156,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null; Object get = l.get(0); } }");
     }
-    @RandomlyFails
+
     public void testForgiving2() throws Exception {
         performFixTest("test/Test.java",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null;\n  l.get(0)|;\n } }",
@@ -165,7 +164,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null; Object get = l.get(0); } }");
     }
-    @RandomlyFails
+
     public void testForgiving3() throws Exception {
         performFixTest("test/Test.java",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null;\n  |l.get(0);\n } }",
@@ -173,7 +172,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null; Object get = l.get(0); } }");
     }
-    @RandomlyFails
+
     public void testForgiving4() throws Exception {
         performFixTest("test/Test.java",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null;\n  l.get(0);    |\n } }",
@@ -181,7 +180,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null; Object get = l.get(0); } }");
     }
-    @RandomlyFails
+
     public void testForgiving5() throws Exception {
         performFixTest("test/Test.java",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null;\n|  l.get(0);\n } }",
@@ -189,7 +188,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null; Object get = l.get(0); } }");
     }
-    @RandomlyFails
+
     public void testForgiving6() throws Exception {
         performFixTest("test/Test.java",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null;\n  l.get(0);    //tttt|\n } }",
@@ -197,7 +196,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null; Object get = l.get(0); //tttt } }");
     }
-    @RandomlyFails
+
     public void testForgiving7() throws Exception {
         performFixTest("test/Test.java",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null;/*\n|*/  l.get(0);\n } }",
@@ -205,22 +204,22 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; import java.util.List; public class Test {public Test() {List<?> l = null;/* */ Object get = l.get(0); } }");
     }
-    @RandomlyFails
+
     public void testForgivingNegative1() throws Exception {
         performAnalysisTest("test/Test.java",
                             "package test; import java.util.List; public class Test {public Test() {int i = 0;i++;| } }");
     }
-    @RandomlyFails
+
     public void testForgivingNegative2() throws Exception {
         performAnalysisTest("test/Test.java",
                             "package test; import java.util.List; public class Test {public Test() {List<?> l = null;\n  l.get(0);|l.get(0);\n } }");
     }
-    @RandomlyFails
+
     public void testForgivingNegative3() throws Exception {
         performAnalysisTest("test/Test.java",
                             "package test; import java.util.List; public class Test {public Test() {List<?> l = null;\n  l.get(0); | l.get(0);\n } }");
     }
-    @RandomlyFails
+
     public void testForgivingNegative188326() throws Exception {
         performAnalysisTest("test/Test.java",
                             "package test;\n" +
@@ -236,7 +235,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                             "    }\n" +
                             "}");
     }
-    @RandomlyFails
+
     public void testAddSemicolon1() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() { new Run|nable() { public void run() { } } } }",
@@ -244,7 +243,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() { Runnable runnable = new Runnable() { public void run() { } }; } }");
     }
-    @RandomlyFails
+
     public void testAddSemicolon2() throws Exception {
         performFixTest("test/Test.java",
                        "package test; public class Test {public void t() {java.util.List<String> l = null; l.ge|t(0) }}",
@@ -252,7 +251,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                        "FixImpl",
                        "package test; public class Test {public void t() {java.util.List<String> l = null; String get = l.get(0); }}");
     }
-    @RandomlyFails
+
     public void test197050() throws Exception {
         performFixTest("test/Test.java",
                             "package test;\n" +
@@ -272,7 +271,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                              "    }\n" +
                              "}").replaceAll("\\s+", " "));
     }
-    @RandomlyFails
+
     public void test235716NewVariable() throws Exception {
         performFixTest("test/Test.java",
             "package test;\n" +
@@ -293,7 +292,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
              "    }\n" +
              "}").replaceAll("\\s+", " "));
     }
-    @RandomlyFails
+
     public void testInferBounds258167() throws Exception {
         performFixTest("test/Test.java",
             "package test;\n" +
@@ -315,6 +314,7 @@ public class AssignResultToVariableTest extends TreeRuleTestBase {
                 + "}").replaceAll("\\s+", " "));
     }
 
+    @Override
     protected List<ErrorDescription> computeErrors(CompilationInfo info, TreePath path, int offset) {
         while (path != null && !new AssignResultToVariable().getTreeKinds().contains(path.getLeaf().getKind()))
             path = path.getParentPath();

@@ -64,6 +64,9 @@ public class ReactorChecker implements PrerequisitesChecker {
             // Unloadable?
             return true;
         }
+        if (NbMavenProject.isErrorPlaceholder(mavenprj.getMavenProject())) {
+            return true; // broken project
+        }
         NbMavenProject reactor = findReactor(mavenprj);
         File reactorRoot = reactor.getMavenProject().getBasedir();
         
@@ -101,7 +104,7 @@ public class ReactorChecker implements PrerequisitesChecker {
      * @return its apparent reactor root; maybe just the same project
      */
     public static @NonNull NbMavenProject findReactor(@NonNull NbMavenProject module) { // #197232
-        MavenProject prj = NbMavenProject.getPartialProject(module.getMavenProject());
+        MavenProject prj = module.getMavenProject();
         List<ModelDescription> models = MavenEmbedder.getModelDescriptors(prj);
         File moduleDir = prj.getBasedir();
         File current = moduleDir;
@@ -131,11 +134,8 @@ public class ReactorChecker implements PrerequisitesChecker {
             }
         }
         NbMavenProject p = load(prj.getBasedir().getParentFile());
-        if (p != null) {
-            MavenProject mp = NbMavenProject.getPartialProject(p.getMavenProject());
-            if (listsModule(moduleDir.getParentFile(), moduleDir, mp.getModules())) {
-                return findReactor(p);
-            }
+        if (p != null && listsModule(moduleDir.getParentFile(), moduleDir, p.getMavenProject().getModules())) {
+            return findReactor(p);
         }
         return module;
     }

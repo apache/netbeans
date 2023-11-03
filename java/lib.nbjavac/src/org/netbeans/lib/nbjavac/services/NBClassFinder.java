@@ -24,6 +24,8 @@ import com.sun.tools.javac.code.Kinds.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.Completer;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticInfo;
@@ -54,6 +56,7 @@ public class NBClassFinder extends ClassFinder {
 
     private final Context context;
     private final Names names;
+    private final Symtab syms;
     private final JCDiagnostic.Factory diagFactory;
     private final Log log;
 
@@ -61,6 +64,7 @@ public class NBClassFinder extends ClassFinder {
         super(context);
         this.context = context;
         this.names = Names.instance(context);
+        this.syms = Symtab.instance(context);
         this.diagFactory = JCDiagnostic.Factory.instance(context);
         this.log = Log.instance(context);
     }
@@ -95,6 +99,7 @@ public class NBClassFinder extends ClassFinder {
                     delegate.complete(sym);
                     if (sym.kind == Kind.PCK &&
                         sym.flatName() == names.java_lang &&
+                        ((PackageSymbol) sym).modle == syms.java_base &&
                         sym.members().isEmpty()) {
                         sym.flags_field |= Flags.EXISTS;
                         try {

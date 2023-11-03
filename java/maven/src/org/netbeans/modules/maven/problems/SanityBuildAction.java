@@ -20,15 +20,15 @@
 package org.netbeans.modules.maven.problems;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.maven.TestChecker;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.RunConfig.ReactorStyle;
@@ -36,14 +36,13 @@ import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.execute.BeanRunConfig;
 import org.netbeans.modules.maven.execute.MavenProxySupport;
 import org.netbeans.modules.maven.execute.MavenProxySupport.ProxyResult;
-import org.netbeans.modules.maven.modelcache.MavenProjectCache;
 import org.netbeans.modules.maven.options.MavenSettings;
 import static org.netbeans.modules.maven.problems.Bundle.*;
+import org.netbeans.spi.project.RootProjectProvider;
 import org.netbeans.spi.project.ui.ProjectProblemResolver;
 import org.netbeans.spi.project.ui.ProjectProblemsProvider;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
@@ -89,10 +88,6 @@ public class SanityBuildAction implements ProjectProblemResolver {
     })
     @Override
     public CompletableFuture<ProjectProblemsProvider.Result> resolve() {
-        return resolve(null);
-    }
-    
-    public CompletableFuture<ProjectProblemsProvider.Result> resolve(Lookup context) {
         CompletableFuture<ProjectProblemsProvider.Result> pr = pendingResult;
         if (pr != null && !pr.isDone()) {
             LOG.log(Level.FINE, "SanityBuild.resolve returns: {0}", pendingResult);
@@ -117,12 +112,8 @@ public class SanityBuildAction implements ProjectProblemResolver {
                 try {
                     LOG.log(Level.FINE, "Configuring sanity build");
                     BeanRunConfig config = new BeanRunConfig();
-                    if (context != null) {
-                        config.setActionContext(context);
-                    }
                     config.setExecutionDirectory(FileUtil.toFile(nbproject.getProjectDirectory()));
                     NbMavenProject mavenPrj = nbproject.getLookup().lookup(NbMavenProject.class);
-                    MavenProject loaded = NbMavenProject.getPartialProject(mavenPrj.getMavenProject());
                     String goals;
                     if (mavenPrj != null
                             && mavenPrj.getMavenProject().getVersion() != null 
@@ -184,7 +175,7 @@ public class SanityBuildAction implements ProjectProblemResolver {
             }
             pendingResult = publicResult;
         }
-        ((NbMavenProjectImpl)this.nbproject).scheduleProjectOperation(MavenModelProblemsProvider.RP, toRet, 0);
+        MavenModelProblemsProvider.RP.submit(toRet);
         return publicResult;
     }
     

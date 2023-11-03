@@ -97,11 +97,9 @@
     <bind actionName="jump-list-next" key="O-RIGHT"/>
     <bind actionName="jump-list-next" key="O-KP_RIGHT"/>
     <bind actionName="jump-list-next" key="MOUSE_BUTTON5"/>
-    <bind actionName="jump-list-next" key="MOUSE_BUTTON7"/>
     <bind actionName="jump-list-prev" key="O-LEFT"/>
     <bind actionName="jump-list-prev" key="O-KP_LEFT"/>
     <bind actionName="jump-list-prev" key="MOUSE_BUTTON4"/>
-    <bind actionName="jump-list-prev" key="MOUSE_BUTTON6"/>
     <bind actionName="page-down" key="PAGE_DOWN"/>
     <bind actionName="page-up" key="PAGE_UP"/>
     <bind actionName="paste-formated" key="DS-V"/>

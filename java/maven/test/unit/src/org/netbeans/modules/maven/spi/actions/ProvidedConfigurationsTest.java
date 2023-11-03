@@ -241,7 +241,6 @@ public class ProvidedConfigurationsTest extends NbTestCase {
      */
     public void testExampleProviderConfigurationUsage() throws Exception {
         MockMavenExec mme = new MockMavenExec();
-        MockMavenExec.Reporter r = new MockMavenExec.Reporter();
         MockLookup.setLayersAndInstances(mme);
         
         setupOKProject();
@@ -253,15 +252,15 @@ public class ProvidedConfigurationsTest extends NbTestCase {
         ProjectConfigurationProvider<MavenConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
         ProjectConfiguration configToUse = pcp.getConfigurations().stream().
                 filter(x -> "Micronaut: dev mode".equals(x.getDisplayName())).findAny().get();
-        Lookup ctx = Lookups.fixed(theFile, configToUse, r);
+        Lookup ctx = Lookups.fixed(theFile, configToUse);
         if (!ap.isActionEnabled(ActionProvider.COMMAND_RUN, ctx)) {
             // action not enabled
             return;
         }
         ap.invokeAction(ActionProvider.COMMAND_RUN, ctx);
         
-        r.executedLatch.await();
-        assertEquals(Arrays.asList("mn:run"), r.executedConfig.getGoals());
+        mme.executedLatch.await();
+        assertEquals(Arrays.asList("mn:run"), mme.executedConfig.getGoals());
     }
     
     @ProjectServiceProvider(service = MavenActionsProvider.class, projectType = NbMavenProject.TYPE)

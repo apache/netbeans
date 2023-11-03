@@ -172,13 +172,13 @@ public class PrimingActionTest extends NbTestCase {
         assertFalse(enabled);
     }
     
+    
     /**
      * Checks that the priming build does not actually run on OK project, although
      * the action may be temporarily enabled.
      */
     public void testPrimingBuildNotRunOnOK() throws Exception {
         MockMavenExec mme = new MockMavenExec();
-        MockMavenExec.Reporter r = new MockMavenExec.Reporter();
         MockLookup.setLayersAndInstances(mme);
         CountDownLatch cdl = new CountDownLatch(1);
         MavenModelProblemsProvider.RP.submit(() -> {
@@ -194,8 +194,7 @@ public class PrimingActionTest extends NbTestCase {
         Collection<? extends ProjectProblemsProvider.ProjectProblem> probs = collectProblems(p);
         assertEquals(0, probs.size());
         ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
-        
-        boolean enabled = ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookups.fixed(r));
+        boolean enabled = ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookup.EMPTY);
         
         // the actual detection is still broken.
         assertTrue(enabled);
@@ -229,7 +228,7 @@ public class PrimingActionTest extends NbTestCase {
         assertTrue(progress.finished);
         
         // but the execution was NOT really done
-        assertFalse(r.executed);
+        assertFalse(mme.executed);
         
         // check that the action is now disabled.
         assertFalse(ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookup.EMPTY));
@@ -245,13 +244,12 @@ public class PrimingActionTest extends NbTestCase {
 
         System.setProperty("test.reload.sync", "true");
 
-        MockMavenExec.Reporter r = new MockMavenExec.Reporter();
         setupBrokenProject();
         Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir()));
         Collection<? extends ProjectProblemsProvider.ProjectProblem> probs = collectProblems(p);
         assertEquals(1, probs.size());
         ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
-        boolean enabled = ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookups.fixed(r));
+        boolean enabled = ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookup.EMPTY);
         assertTrue(enabled);
         class Prog extends ActionProgress {
             CountDownLatch finish = new CountDownLatch(1);
@@ -272,10 +270,10 @@ public class PrimingActionTest extends NbTestCase {
         
         Prog progress = new Prog();
 
-        ap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(progress, r));
+        ap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(progress));
         progress.finish.await();
 
         // but the execution was NOT really done
-        assertTrue(r.executed);
+        assertTrue(mme.executed);
     }
 }

@@ -168,8 +168,10 @@ class TypingCompletion {
             return;
         }
 
+        char insChr = context.getText().charAt(0);
+
         if (isString(currentToken)) {
-            if (context.getOffset() >= 1 && context.getText().charAt(0) == '{') {
+            if (context.getOffset() >= 1 && insChr == '{') {
                 char chr = context.getDocument().getText(context.getOffset() - 1, 1).charAt(0);
 
                 if (chr == '\\') {
@@ -180,10 +182,14 @@ class TypingCompletion {
             return ;
         }
 
+        if (insChr == '{') {
+            //curly brace should only be matched in string templates:
+            return ;
+        }
+
         char chr = context.getDocument().getText(context.getOffset(), 1).charAt(0);
 
         if (chr == ')' || chr == ',' || chr == '\"' || chr == '\'' || chr == ' ' || chr == ']' || chr == '}' || chr == '\n' || chr == '\t' || chr == ';') {
-            char insChr = context.getText().charAt(0);
             context.setText("" + insChr + matching(insChr), 1);  // NOI18N
         }
     }

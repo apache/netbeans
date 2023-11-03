@@ -206,13 +206,34 @@ public class SourceModeler extends ResourceModel {
         ExecutableElement method , CompilationController controller , 
         Collection<TypeMirror> boxedPrimitives)
     {
-        AnnotationMirror pathAnnotation = restAnnotations.get(RestConstants.PATH);
-        AnnotationMirror produceAnnotion = restAnnotations.get(RestConstants.PRODUCE_MIME);
-        AnnotationMirror consumeAnnotion = restAnnotations.get(RestConstants.CONSUME_MIME);
-        AnnotationMirror getAnnotion = restAnnotations.get(RestConstants.GET);
-        AnnotationMirror postAnnotion = restAnnotations.get(RestConstants.POST);
-        AnnotationMirror putAnnotion = restAnnotations.get(RestConstants.PUT);
-        AnnotationMirror deleteAnnotion = restAnnotations.get(RestConstants.DELETE);
+        AnnotationMirror pathAnnotation = restAnnotations.get(RestConstants.PATH_JAKARTA);
+        if (pathAnnotation == null) {
+            pathAnnotation = restAnnotations.get(RestConstants.PATH);
+        }
+        AnnotationMirror produceAnnotion = restAnnotations.get(RestConstants.PRODUCE_MIME_JAKARTA);
+        if (produceAnnotion == null) {
+            produceAnnotion = restAnnotations.get(RestConstants.PRODUCE_MIME);
+        }
+        AnnotationMirror consumeAnnotion = restAnnotations.get(RestConstants.CONSUME_MIME_JAKARTA);
+        if (produceAnnotion == null) {
+            consumeAnnotion = restAnnotations.get(RestConstants.CONSUME_MIME);
+        }
+        AnnotationMirror getAnnotion = restAnnotations.get(RestConstants.GET_JAKARTA);
+        if (produceAnnotion == null) {
+            getAnnotion = restAnnotations.get(RestConstants.GET);
+        }
+        AnnotationMirror postAnnotion = restAnnotations.get(RestConstants.POST_JAKARTA);
+        if (produceAnnotion == null) {
+            postAnnotion = restAnnotations.get(RestConstants.POST);
+        }
+        AnnotationMirror putAnnotion = restAnnotations.get(RestConstants.PUT_JAKARTA);
+        if (produceAnnotion == null) {
+            putAnnotion = restAnnotations.get(RestConstants.PUT);
+        }
+        AnnotationMirror deleteAnnotion = restAnnotations.get(RestConstants.DELETE_JAKARTA);
+        if (produceAnnotion == null) {
+            deleteAnnotion = restAnnotations.get(RestConstants.DELETE);
+        }
         
         AnnotationMirror httpAnnotation = chooseNotNull( getAnnotion, postAnnotion, 
                 putAnnotion, deleteAnnotion);
@@ -301,7 +322,7 @@ public class SourceModeler extends ResourceModel {
     {
         String fqn = ((TypeElement)httpAnnotation.getAnnotationType().asElement()).
             getQualifiedName().toString();
-        if ( RestConstants.GET.equals( fqn ) ){
+        if ( RestConstants.GET.equals( fqn ) || RestConstants.GET_JAKARTA.equals( fqn ) ){
             List<String> mimes = getAnnotationMimes(produceAnnotion );
             if ( mimes != null ) { 
                 restMethod.setResponseMimes( mimes );
@@ -327,9 +348,10 @@ public class SourceModeler extends ResourceModel {
                 methodElement, method);
         restMethod.setParamType( paramEntity );
         for( HttpMethodType type : HttpMethodType.values() ){
-            String annotationType = type.getAnnotationType();
-            if ( annotationType.equals( fqn )){
-                restMethod.setType( type );
+            String annotationTypeJakarta = type.getAnnotationType(true);
+            String annotationTypeJavax = type.getAnnotationType(false);
+            if (annotationTypeJakarta.equals(fqn) || annotationTypeJavax.equals(fqn)) {
+                restMethod.setType(type);
                 break;
             }
         }
@@ -355,8 +377,11 @@ public class SourceModeler extends ResourceModel {
                     String fqn = ((TypeElement)annotationElement).
                         getQualifiedName().toString();
                     // skip arguments which are URI parameters ( query param or path param )
-                    if ( fqn.equals(RestConstants.QUERY_PARAM) || 
-                            fqn.equals(RestConstants.PATH_PARAM))
+                    if (fqn.equals(RestConstants.QUERY_PARAM_JAKARTA)
+                            || fqn.equals(RestConstants.QUERY_PARAM)
+                            || fqn.equals(RestConstants.PATH_PARAM_JAKARTA)
+                            || fqn.equals(RestConstants.PATH_PARAM)
+                            )
                     {
                         isUriParam = true;
                         break;
@@ -459,14 +484,22 @@ public class SourceModeler extends ResourceModel {
         return null;    
     }
     
-    private boolean isRestAnnotation( String annotation ){
-        return annotation.equals(RestConstants.PATH) || 
-            annotation.equals(RestConstants.PRODUCE_MIME) ||
-                annotation.equals(RestConstants.CONSUME_MIME) ||
-                    annotation.equals(RestConstants.GET) ||
-                        annotation.equals(RestConstants.POST) ||
-                            annotation.equals(RestConstants.PUT) ||
-                                annotation.equals(RestConstants.DELETE) ;
+    private boolean isRestAnnotation(String annotation) {
+        return annotation.equals(RestConstants.PATH_JAKARTA)
+                || annotation.equals(RestConstants.PATH)
+                || annotation.equals(RestConstants.PRODUCE_MIME_JAKARTA)
+                || annotation.equals(RestConstants.PRODUCE_MIME)
+                || annotation.equals(RestConstants.CONSUME_MIME_JAKARTA)
+                || annotation.equals(RestConstants.CONSUME_MIME)
+                || annotation.equals(RestConstants.GET_JAKARTA)
+                || annotation.equals(RestConstants.GET)
+                || annotation.equals(RestConstants.POST_JAKARTA)
+                || annotation.equals(RestConstants.POST)
+                || annotation.equals(RestConstants.PUT_JAKARTA)
+                || annotation.equals(RestConstants.PUT)
+                || annotation.equals(RestConstants.DELETE_JAKARTA)
+                || annotation.equals(RestConstants.DELETE)
+                ;
     }
     
     private List<String> getAnnotationMimes( AnnotationMirror mirror ) {
@@ -502,11 +535,11 @@ public class SourceModeler extends ResourceModel {
             if ( annotationElement instanceof TypeElement ){
                 TypeElement annotation = (TypeElement)annotationElement;
                 String name = annotation.getQualifiedName().toString();
-                if ( RestConstants.PRODUCE_MIME.equals( name ) ){
+                if ( RestConstants.PRODUCE_MIME_JAKARTA.equals( name ) || RestConstants.PRODUCE_MIME.equals( name ) ){
                     List<String> mimes = getAnnotationMimes( annotationMirror );
                     method.setResponseMimes( mimes );
                 }
-                else if ( RestConstants.CONSUME_MIME.equals( name ) ){
+                else if ( RestConstants.CONSUME_MIME_JAKARTA.equals( name ) || RestConstants.CONSUME_MIME.equals( name ) ){
                     List<String> mimes = getAnnotationMimes( annotationMirror );
                     method.setRequestMimes( mimes );
                 }

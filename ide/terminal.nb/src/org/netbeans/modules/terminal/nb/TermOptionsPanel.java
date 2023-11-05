@@ -20,6 +20,7 @@ package org.netbeans.modules.terminal.nb;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -58,12 +59,9 @@ public final class TermOptionsPanel extends JPanel {
 	"FontChooser.defaultFont.label=Default Font"
     })
     public TermOptionsPanel() {
-	propertyListener = new PropertyChangeListener() {
-	    @Override
-	    public void propertyChange(PropertyChangeEvent e) {
-		refreshView();
-	    }
-	};
+        propertyListener = (PropertyChangeEvent e) -> {
+            refreshView();
+        };
 	
 	initComponents();
 	initCustomComponents();
@@ -170,7 +168,7 @@ public final class TermOptionsPanel extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(fontSizeLabel, org.openide.util.NbBundle.getMessage(TermOptionsPanel.class, "TermOptionsPanel.fontSizeLabel.text")); // NOI18N
 
-        fontSizeSpinner.setModel(new SpinnerNumberModel(12, TermOptions.MIN_FONT_SIZE, TermOptions.MAX_FONT_SIZE, 1));
+        fontSizeSpinner.setModel(new SpinnerNumberModel(12, termOptions.MIN_FONT_SIZE, termOptions.MAX_FONT_SIZE, 1));
         fontSizeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 fontSizeSpinnerStateChanged(evt);
@@ -278,7 +276,6 @@ public final class TermOptionsPanel extends JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(fontLabel)
@@ -290,7 +287,7 @@ public final class TermOptionsPanel extends JPanel {
                     .addComponent(descriptionLabel))
                 .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(foregroundComboBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+                    .addComponent(foregroundComboBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(backgroundComboBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(selectionComboBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(selectByWordTextField, javax.swing.GroupLayout.Alignment.LEADING)
@@ -309,28 +306,31 @@ public final class TermOptionsPanel extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tabSizeLabel)
                     .addComponent(previewLabel)
-                    .addComponent(selectByWordLabel)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(ignoreKeymapCheckBox)
-                        .addGap(86, 86, 86)
-                        .addComponent(altSendsEscapeCheckBox))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(scrollOnInputCheckBox)
-                        .addGap(18, 18, 18)
-                        .addComponent(scrollOnOutputCheckBox))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(clickToTypeCheckBox)
-                        .addGap(31, 31, 31)
-                        .addComponent(lineWrapCheckBox)))
+                    .addComponent(selectByWordLabel))
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrollOnInputCheckBox)
+                    .addComponent(clickToTypeCheckBox))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lineWrapCheckBox)
+                    .addComponent(scrollOnOutputCheckBox))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ignoreKeymapCheckBox)
+                    .addComponent(altSendsEscapeCheckBox))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(descriptionLabel)
-                    .addComponent(restoreButton))
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(restoreButton)
+                    .addComponent(descriptionLabel, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontLabel)
                     .addComponent(fontButton)
@@ -363,22 +363,20 @@ public final class TermOptionsPanel extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectByWordLabel)
                     .addComponent(selectByWordTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(16, 16, 16)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ignoreKeymapCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(altSendsEscapeCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(clickToTypeCheckBox)
-                    .addComponent(lineWrapCheckBox))
+                    .addComponent(lineWrapCheckBox)
+                    .addComponent(ignoreKeymapCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(scrollOnInputCheckBox)
-                    .addComponent(scrollOnOutputCheckBox))
+                    .addComponent(scrollOnOutputCheckBox)
+                    .addComponent(altSendsEscapeCheckBox))
                 .addGap(18, 18, 18)
                 .addComponent(previewLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -389,7 +387,7 @@ public final class TermOptionsPanel extends JPanel {
 	}
 	Object fontSizeObj = fontSizeSpinner.getValue();
 	if (fontSizeObj instanceof Integer) {
-	    int fontSize = ((Integer) fontSizeObj).intValue();
+	    int fontSize = (Integer) fontSizeObj;
 	    termOptions.setFontSize(fontSize);
 	}
     }//GEN-LAST:event_fontSizeSpinnerStateChanged
@@ -400,7 +398,7 @@ public final class TermOptionsPanel extends JPanel {
 	}
 	Object historySizeObj = historySizeSpinner.getValue();
 	if (historySizeObj instanceof Integer) {
-	    int historySize = ((Integer) historySizeObj).intValue();
+	    int historySize = (Integer) historySizeObj;
 	    termOptions.setHistorySize(historySize);
 	}
     }//GEN-LAST:event_historySizeSpinnerStateChanged
@@ -411,7 +409,7 @@ public final class TermOptionsPanel extends JPanel {
 	}
 	Object tabSizeObj = tabSizeSpinner.getValue();
 	if (tabSizeObj instanceof Integer) {
-	    int tabSize = ((Integer) tabSizeObj).intValue();
+	    int tabSize = (Integer) tabSizeObj;
 	    termOptions.setTabSize(tabSize);
 	}
     }//GEN-LAST:event_tabSizeSpinnerStateChanged
@@ -425,7 +423,9 @@ public final class TermOptionsPanel extends JPanel {
 	    String defaultFontString = FontChooser_defaultFont_label();
 	    dd.setOptions(new Object[]{DialogDescriptor.OK_OPTION,
 		defaultFontString, DialogDescriptor.CANCEL_OPTION});  //NOI18N
-	    DialogDisplayer.getDefault().createDialog(dd).setVisible(true);
+            Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
+            dialog.setSize(460, 380);
+	    dialog.setVisible(true);
 	    if (dd.getValue() == DialogDescriptor.OK_OPTION) {
 		Font f = (Font) pe.getValue();
 		termOptions.setFont(f);

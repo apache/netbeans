@@ -21,6 +21,7 @@ package org.netbeans.modules.options.colors;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Insets;
@@ -51,7 +52,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -89,12 +89,10 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     private String              currentLanguage;
     private String              currentProfile;
     /** cache Map (String (profile name) > Map (String (language name) > List (AttributeSet))). */
-    private Map<String, Map<String, List<AttributeSet>>>
-                                profiles = new HashMap<String, Map<String, List<AttributeSet>>>();
+    private Map<String, Map<String, List<AttributeSet>>> profiles = new HashMap<>();
     /** Map (String (profile name) > Set (String (language name))) of names of changed languages. */
-    private Map<String, Set<String>>
-                                toBeSaved = new HashMap<String, Set<String>>();
-    private boolean             listen = false;
+    private Map<String, Set<String>> toBeSaved = new HashMap<>();
+    private boolean listen = false;
     private boolean changed = false;
     private static Logger log = Logger.getLogger(SyntaxColoringPanel.class.getName ());
 
@@ -122,12 +120,9 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
         lCategories.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
         lCategories.setVisibleRowCount (3);
         lCategories.setCellRenderer (new CategoryRenderer ());
-        lCategories.addListSelectionListener (new ListSelectionListener () {
-            @Override
-            public void valueChanged (ListSelectionEvent e) {
-                if (!listen) return;
-                selectTask.schedule (200);
-            }
+        lCategories.addListSelectionListener ((ListSelectionEvent e) -> {
+            if (!listen) return;
+            selectTask.schedule (200);
         });
         lCategories.setSelectedIndex(0);
         tfFont.setEditable (false);
@@ -197,7 +192,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
         lLanguage = new javax.swing.JLabel();
         lCategory = new javax.swing.JLabel();
         spCategories = new javax.swing.JScrollPane();
-        lCategories = new javax.swing.JList<AttributeSet>();
+        lCategories = new javax.swing.JList<>();
         lPreview = new javax.swing.JLabel();
         spPreview = new javax.swing.JScrollPane();
         pPreview = new javax.swing.JPanel();
@@ -208,7 +203,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
         lEffectColor = new javax.swing.JLabel();
         cbForeground = new org.openide.awt.ColorComboBox();
         cbBackground = new ColorComboBox();
-        cbEffects = new javax.swing.JComboBox<String>();
+        cbEffects = new javax.swing.JComboBox<>();
         cbEffectColor = new ColorComboBox();
         tfFont = new javax.swing.JTextField();
         bFont = new javax.swing.JButton();
@@ -332,7 +327,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     private javax.swing.JComboBox cbEffectColor;
     private javax.swing.JComboBox<String> cbEffects;
     private javax.swing.JComboBox cbForeground;
-    private final javax.swing.JComboBox<String> cbLanguage = new javax.swing.JComboBox<String>();
+    private final javax.swing.JComboBox<String> cbLanguage = new javax.swing.JComboBox<>();
     private javax.swing.JLabel lBackground;
     private javax.swing.JList<AttributeSet> lCategories;
     private javax.swing.JLabel lCategory;
@@ -360,11 +355,9 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
             }
 	    cbEffectColor.setEnabled (cbEffects.getSelectedIndex () > 0);
             updateData ();
-	} else
-	if (evt.getSource () == cbLanguage) {
+	} else if (evt.getSource () == cbLanguage) {
             updateLanguageCombobox();
-	} else
-        if (evt.getSource () == bFont) {
+	} else if (evt.getSource () == bFont) {
             PropertyEditor pe = PropertyEditorManager.findEditor (Font.class);
             AttributeSet category = getCurrentCategory ();
             if (category == null) {
@@ -381,15 +374,16 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
                 loc ("CTL_Font_Inherited"),                          // NOI18N
                 DialogDescriptor.CANCEL_OPTION
             });
-            DialogDisplayer.getDefault ().createDialog (dd).setVisible (true);
+            Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
+            dialog.setSize(460, 380);
+            dialog.setVisible (true);
             if (dd.getValue () == DialogDescriptor.OK_OPTION) {
                 f = (Font) pe.getValue ();
                 category = modifyFont (category, f);
                 replaceCurrrentCategory (category);
                 setToBeSaved (currentProfile, currentLanguage);
                 refreshUI (); // refresh font viewer
-            } else
-            if (dd.getValue ().equals (loc ("CTL_Font_Inherited"))) {
+            } else if (dd.getValue ().equals (loc ("CTL_Font_Inherited"))) {
                 String fontName = (String) getDefault (currentLanguage, category, StyleConstants.FontFamily);
                 int style = 0;
                 if (Boolean.TRUE.equals(getDefault (currentLanguage, category, StyleConstants.Bold))) {
@@ -407,8 +401,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
                 setToBeSaved (currentProfile, currentLanguage);
                 refreshUI (); // refresh font viewer
             }
-        } else
-        if (evt.getSource () instanceof JComboBox) {
+        } else if (evt.getSource () instanceof JComboBox) {
             updateData ();
         }
         fireChanged();
@@ -446,13 +439,13 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
 
         @Override
         public void run() {
-            final List<String> languages = new ArrayList<String>(colorModel.getLanguages());
+            final List<String> languages = new ArrayList<>(colorModel.getLanguages());
             EventQueue.invokeLater(new Runnable() {
 
                 @Override
                 public void run() {
                     languages.remove("text/x-all-languages");
-                    Collections.sort(languages, new LanguagesComparator());
+                    languages.sort(new LanguagesComparator());
                     Iterator<String> it = languages.iterator();
                     synchronized (cbLanguage) {
                         Object lastLanguage = cbLanguage.getSelectedItem();
@@ -495,8 +488,8 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     
     @Override
     public void cancel () {
-        toBeSaved = new HashMap<String, Set<String>>();
-        profiles = new HashMap<String, Map<String, List<AttributeSet>>>();
+        toBeSaved = new HashMap<>();
+        profiles = new HashMap<>();
         changed = false;
     }
     
@@ -515,8 +508,8 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
                 );
             }
         }
-        toBeSaved = new HashMap<String, Set<String>>();
-        profiles = new HashMap<String, Map<String, List<AttributeSet>>>();
+        toBeSaved = new HashMap<>();
+        profiles = new HashMap<>();
         changed = false;
     }
     
@@ -529,12 +522,11 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     public void setCurrentProfile (String currentProfile) {
         String oldProfile = this.currentProfile;
         this.currentProfile = currentProfile;
-        if (!colorModel.getProfiles ().contains (currentProfile) && 
-            !profiles.containsKey (currentProfile)
-        )
-            cloneScheme (oldProfile, currentProfile);
+        if (!colorModel.getProfiles().contains(currentProfile) && !profiles.containsKey(currentProfile)) {
+            cloneScheme(oldProfile, currentProfile);
+        }
         List<AttributeSet> categories = getCategories (currentProfile, currentLanguage);
-        lCategories.setListData (categories.toArray(new AttributeSet[categories.size()]));
+        lCategories.setListData (categories.toArray(new AttributeSet[0]));
         blink = false;
         lCategories.setSelectedIndex (0);
         blink = true;
@@ -544,7 +536,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
 
     @Override
     public void deleteProfile (String profile) {
-        Map<String, List<AttributeSet>> m = new HashMap<String, List<AttributeSet>> ();
+        Map<String, List<AttributeSet>> m = new HashMap<> ();
         boolean custom = colorModel.isCustomProfile (profile);
         for (String language : colorModel.getLanguages ()) {
             if (custom) {
@@ -554,7 +546,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
             }
         }
         profiles.put (profile, m);
-        toBeSaved.put (profile, new HashSet<String> (colorModel.getLanguages ()));
+        toBeSaved.put (profile, new HashSet<> (colorModel.getLanguages ()));
         if (!custom) {
             refreshUI ();
         }
@@ -569,16 +561,14 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     // other methods ...........................................................
     
     private void cloneScheme(String oldScheme, String newScheme) {
-        Map<String, List<AttributeSet>> m = new HashMap<String, List<AttributeSet>>();
+        Map<String, List<AttributeSet>> m = new HashMap<>();
         for(String language : colorModel.getLanguages()) {
             List<AttributeSet> v = getCategories(oldScheme, language);
-            List<AttributeSet> newV = new ArrayList<AttributeSet> ();
-            Iterator<AttributeSet> it = v.iterator ();
-            while (it.hasNext ()) {
-                AttributeSet attributeSet = it.next ();
+            List<AttributeSet> newV = new ArrayList<>();
+            for (AttributeSet attributeSet : v) {
                 newV.add(new SimpleAttributeSet (attributeSet));
             }
-            m.put(language, new ArrayList<AttributeSet>(newV));
+            m.put(language, newV);
             setToBeSaved(newScheme, language);
         }
         profiles.put(newScheme, m);
@@ -600,7 +590,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
         
         // setup categories list
         blink = false;
-        lCategories.setListData (getCategories (currentProfile, currentLanguage).toArray(new AttributeSet[]{}));
+        lCategories.setListData (getCategories (currentProfile, currentLanguage).toArray(new AttributeSet[0]));
         lCategories.setSelectedIndex (0);
         blink = true;
         refreshUI ();
@@ -725,7 +715,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     
     private Collection<AttributeSet> invertCategory (Collection<AttributeSet> c, AttributeSet category) {
         if (category == null) return c;
-        ArrayList<AttributeSet> result = new ArrayList<AttributeSet> (c);
+        ArrayList<AttributeSet> result = new ArrayList<> (c);
         int i = result.indexOf (category);
         SimpleAttributeSet as = new SimpleAttributeSet (category);
         Color highlight = (Color) getValue (currentLanguage, category, StyleConstants.Background);
@@ -788,28 +778,23 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
             cbEffects.setSelectedIndex (1);
             cbEffectColor.setEnabled (true);
             ((ColorComboBox)cbEffectColor).setSelectedColor((Color) category.getAttribute (StyleConstants.Underline));
-        } else
-        if (category.getAttribute (EditorStyleConstants.WaveUnderlineColor) != null) {
+        } else if (category.getAttribute (EditorStyleConstants.WaveUnderlineColor) != null) {
             cbEffects.setSelectedIndex (2);
             cbEffectColor.setEnabled (true);
             ((ColorComboBox)cbEffectColor).setSelectedColor((Color) category.getAttribute (EditorStyleConstants.WaveUnderlineColor));
-        } else
-        if (category.getAttribute (StyleConstants.StrikeThrough) != null) {
+        } else if (category.getAttribute (StyleConstants.StrikeThrough) != null) {
             cbEffects.setSelectedIndex (3);
             cbEffectColor.setEnabled (true);
             ((ColorComboBox)cbEffectColor).setSelectedColor((Color) category.getAttribute (StyleConstants.StrikeThrough));
-        } else
-        if (getDefault (currentLanguage, category, StyleConstants.Underline) != null) {
+        } else if (getDefault (currentLanguage, category, StyleConstants.Underline) != null) {
             cbEffects.setSelectedIndex (1);
             cbEffectColor.setEnabled (true);
             ((ColorComboBox)cbEffectColor).setSelectedColor((Color) getDefault (currentLanguage, category, StyleConstants.Underline));
-        } else
-        if (getDefault (currentLanguage, category, EditorStyleConstants.WaveUnderlineColor) != null) {
+        } else if (getDefault (currentLanguage, category, EditorStyleConstants.WaveUnderlineColor) != null) {
             cbEffects.setSelectedIndex (2);
             cbEffectColor.setEnabled (true);
             ((ColorComboBox)cbEffectColor).setSelectedColor((Color) getDefault (currentLanguage, category, EditorStyleConstants.WaveUnderlineColor));
-        } else
-        if (getDefault (currentLanguage, category, StyleConstants.StrikeThrough) != null) {
+        } else if (getDefault (currentLanguage, category, StyleConstants.StrikeThrough) != null) {
             cbEffects.setSelectedIndex (3);
             cbEffectColor.setEnabled (true);
             ((ColorComboBox)cbEffectColor).setSelectedColor((Color) getDefault (currentLanguage, category, StyleConstants.StrikeThrough));
@@ -823,12 +808,8 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     }
     
     private void setToBeSaved(String currentProfile, String currentLanguage) {
-        Set<String> s = toBeSaved.get(currentProfile);
-        if (s == null) {
-            s = new HashSet<String>();
-            toBeSaved.put(currentProfile, s);
-        }
-        s.add(currentLanguage);
+        toBeSaved.computeIfAbsent(currentProfile, k -> new HashSet<>())
+                 .add(currentLanguage);
     }
     
     private void fireChanged() {
@@ -897,11 +878,11 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
         if (italic == null) {
             italic = Boolean.FALSE;
         }
-        int style = bold.booleanValue() ? Font.BOLD : Font.PLAIN;
-        if (italic.booleanValue()) {
+        int style = bold ? Font.BOLD : Font.PLAIN;
+        if (italic) {
             style += Font.ITALIC;
         }
-        Font currentFont = new Font(name, style, size.intValue());
+        Font currentFont = new Font(name, style, size);
         
         name = (String) getValue(language, savedAS, StyleConstants.FontFamily);
         assert (name != null);
@@ -915,11 +896,11 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
         if (italic == null) {
             italic = Boolean.FALSE;
         }
-        style = bold.booleanValue() ? Font.BOLD : Font.PLAIN;
-        if (italic.booleanValue()) {
+        style = bold ? Font.BOLD : Font.PLAIN;
+        if (italic) {
             style += Font.ITALIC;
         }
-        Font savedFont = new Font(name, style, size.intValue());
+        Font savedFont = new Font(name, style, size);
         return !currentFont.equals(savedFont);
     }
     
@@ -940,7 +921,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     private Map<String, String> languageToMimeType;
     private Map<String, String> getLanguageToMimeTypeMap() {
         if (languageToMimeType == null) {
-            languageToMimeType = new HashMap<String, String>();
+            languageToMimeType = new HashMap<>();
             Set<String> mimeTypes = EditorSettings.getDefault().getMimeTypes();
             for(String mimeType : mimeTypes) {
                 String name = EditorSettings.getDefault().getLanguageName (mimeType);
@@ -961,7 +942,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     
     private Map<String, AttributeSet> toMap(Collection<AttributeSet> categories) {
         if (categories == null) return null;
-        Map<String, AttributeSet> result = new HashMap<String, AttributeSet>();
+        Map<String, AttributeSet> result = new HashMap<>();
         for(AttributeSet as : categories) {
             result.put((String) as.getAttribute(StyleConstants.NameAttribute), as);
         }
@@ -970,45 +951,32 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
     // end copied from ColorModel
     
     private List<AttributeSet> getCategories(String profile, String language) {
-        if (colorModel == null) return null;
-        Map<String, List<AttributeSet>> m = profiles.get(profile);
-        if (m == null) {
-            m = new HashMap<String, List<AttributeSet>>();
-            profiles.put(profile, m);
+        if (colorModel == null) {
+            return null;
         }
-        List<AttributeSet> v = m.get(language);
-        if (v == null) {
+        Map<String, List<AttributeSet>> p = profiles.computeIfAbsent(profile, k -> new HashMap<String, List<AttributeSet>>());
+        return p.computeIfAbsent(language, k -> {
+            List<AttributeSet> l = new ArrayList<>();
             Collection<AttributeSet> c = colorModel.getCategories(profile, language);
-            if (c == null) {
-                c = Collections.<AttributeSet>emptySet(); // XXX OK?
+            if (c != null) {
+                l.addAll(c);
             }
-            List<AttributeSet> l = new ArrayList<AttributeSet>(c);
-            Collections.sort(l, new CategoryComparator());
-            v = new ArrayList<AttributeSet>(l);
-            m.put(language, v);
-        }
-        return v;
+            l.sort(new CategoryComparator());
+            return l;
+        });
     }
 
-    private Map<String, Map<String, List<AttributeSet>>> defaults = new HashMap<String, Map<String, List<AttributeSet>>>();
+    private Map<String, Map<String, List<AttributeSet>>> defaults = new HashMap<>();
     /**
      * Returns original colors for given profile.
      */
     private List<AttributeSet> getDefaults(String profile, String language) {
-        Map<String, List<AttributeSet>> m = defaults.get(profile);
-        if (m == null) {
-            m = new HashMap<String, List<AttributeSet>>();
-            defaults.put(profile, m);
-        }
-        List<AttributeSet> v = m.get(language);
-        if (v == null) {
-            Collection<AttributeSet> c = colorModel.getDefaults(profile, language);
-            List<AttributeSet> l = new ArrayList<AttributeSet>(c);
-            Collections.sort(l, new CategoryComparator());
-            v = new ArrayList<AttributeSet>(l);
-            m.put(language, v);
-        }
-        return new ArrayList<AttributeSet>(v);
+        Map<String, List<AttributeSet>> m = defaults.computeIfAbsent(profile, k -> new HashMap<>());
+        return new ArrayList<>(m.computeIfAbsent(language, k -> {
+            List<AttributeSet> v = new ArrayList<>(colorModel.getDefaults(profile, language));
+            v.sort(new CategoryComparator());
+            return v;
+        }));
     }
     
     private AttributeSet getCurrentCategory () {
@@ -1082,94 +1050,88 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
         if (bold == null) bold = Boolean.FALSE;
         Boolean italic = (Boolean) getValue (currentLanguage, category, StyleConstants.Italic);
         if (italic == null) italic = Boolean.FALSE;
-        int style = bold.booleanValue () ? Font.BOLD : Font.PLAIN;
-        if (italic.booleanValue ()) style += Font.ITALIC;
-        return new Font (name, style, size.intValue ());
+        int style = bold ? Font.BOLD : Font.PLAIN;
+        if (italic) style += Font.ITALIC;
+        return new Font (name, style, size);
     }
     
     private AttributeSet modifyFont (AttributeSet category, Font f) {
-        String fontName = f.getName ();
-        Integer fontSize = new Integer (f.getSize ());
-        Boolean bold = Boolean.valueOf (f.isBold ());
-        Boolean italic = Boolean.valueOf (f.isItalic ());
+        String fontName = f.getName();
+        Integer fontSize = f.getSize();
+        Boolean bold = f.isBold();
+        Boolean italic = f.isItalic();
         boolean isDefault = "default".equals (
             category.getAttribute (StyleConstants.NameAttribute)
         );
-        if (fontName.equals (
-            getDefault (currentLanguage, category, StyleConstants.FontFamily)
-        ) && !isDefault)
+        if (fontName.equals(getDefault(currentLanguage, category, StyleConstants.FontFamily)) && !isDefault) {
             fontName = null;
-        if (fontSize.equals (
-            getDefault (currentLanguage, category, StyleConstants.FontSize)
-        ) && !isDefault)
+        }
+        if (fontSize.equals(getDefault(currentLanguage, category, StyleConstants.FontSize)) && !isDefault) {
             fontSize = null;
-        if (bold.equals (getDefault (currentLanguage, category, StyleConstants.Bold))
-        )
+        }
+        if (bold.equals(getDefault(currentLanguage, category, StyleConstants.Bold))) {
             bold = null;
-        else
-        if (bold.equals (Boolean.FALSE) &&
-            getDefault (currentLanguage, category, StyleConstants.Bold) == null
-        )
+        } else if (bold.equals(Boolean.FALSE) && getDefault(currentLanguage, category, StyleConstants.Bold) == null) {
             bold = null;
-        if (italic.equals (getDefault (currentLanguage, category, StyleConstants.Italic))
-        )
+        }
+        if (italic.equals(getDefault(currentLanguage, category, StyleConstants.Italic))) {
             italic = null;
-        else
-        if (italic.equals (Boolean.FALSE) &&
-            getDefault (currentLanguage, category, StyleConstants.Italic) == null
-        )
+        } else if (italic.equals(Boolean.FALSE) && getDefault(currentLanguage, category, StyleConstants.Italic) == null) {
             italic = null;
-        SimpleAttributeSet c = new SimpleAttributeSet (category);
-        if (fontName != null)
-            c.addAttribute (
-                StyleConstants.FontFamily,
-                fontName
+        }
+        SimpleAttributeSet c = new SimpleAttributeSet(category);
+        if (fontName != null) {
+            c.addAttribute(
+                    StyleConstants.FontFamily,
+                    fontName
             );
-        else
-            c.removeAttribute (StyleConstants.FontFamily);
-        if (fontSize != null)
-            c.addAttribute (
-                StyleConstants.FontSize,
-                fontSize
+        } else {
+            c.removeAttribute(StyleConstants.FontFamily);
+        }
+        if (fontSize != null) {
+            c.addAttribute(
+                    StyleConstants.FontSize,
+                    fontSize
             );
-        else
-            c.removeAttribute (StyleConstants.FontSize);
-        if (bold != null)
-            c.addAttribute (
-                StyleConstants.Bold,
-                bold
+        } else {
+            c.removeAttribute(StyleConstants.FontSize);
+        }
+        if (bold != null) {
+            c.addAttribute(
+                    StyleConstants.Bold,
+                    bold
             );
-        else
-            c.removeAttribute (StyleConstants.Bold);
-        if (italic != null)
-            c.addAttribute (
-                StyleConstants.Italic,
-                italic
+        } else {
+            c.removeAttribute(StyleConstants.Bold);
+        }
+        if (italic != null) {
+            c.addAttribute(
+                    StyleConstants.Italic,
+                    italic
             );
-        else
-            c.removeAttribute (StyleConstants.Italic);
+        } else {
+            c.removeAttribute(StyleConstants.Italic);
+        }
         
         return c;
     }
     
     private String fontToString (AttributeSet category) {
-        if ("default".equals (
-            category.getAttribute (StyleConstants.NameAttribute)
-        )) {
-            StringBuffer sb = new StringBuffer ();
+        if ("default".equals(category.getAttribute (StyleConstants.NameAttribute))) {
+            StringBuilder sb = new StringBuilder ();
             sb.append (getValue (currentLanguage, category, StyleConstants.FontFamily));
             sb.append (' ');
             sb.append (getValue (currentLanguage, category, StyleConstants.FontSize));
             Boolean bold = (Boolean) getValue (currentLanguage, category, StyleConstants.Bold);
-            if (bold != null && bold.booleanValue ())
+            if (bold != null && bold)
                 sb.append (' ').append (loc ("CTL_Bold"));                // NOI18N
             Boolean italic = (Boolean) getValue (currentLanguage, category, StyleConstants.Italic);
-            if (italic != null && italic.booleanValue ())
+            if (italic != null && italic)
                 sb.append (' ').append (loc ("CTL_Italic"));              // NOI18N
             return sb.toString ();
         }
         boolean def = false;
-        StringBuffer sb = new StringBuffer ();
+        StringBuilder sb = new StringBuilder();
         if (category.getAttribute (StyleConstants.FontFamily) != null)
             sb.append ('+').append (category.getAttribute (StyleConstants.FontFamily));
         else
@@ -1196,7 +1158,7 @@ public class SyntaxColoringPanel extends JPanel implements ActionListener,
         }
     }
     
-    private static Map<String, String> convertALC = new HashMap<String, String>();
+    private static final Map<String, String> convertALC = new HashMap<>();
     
     static {
         convertALC.put("character", "char"); //NOI18N

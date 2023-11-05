@@ -71,7 +71,7 @@ import org.openide.windows.TopComponent;
 @MultiViewElement.Registration(
         displayName = "#LBL_MarkdownViewer",
         iconBase = "org/netbeans/modules/markdown/markdown.png",
-        mimeType = "text/x-markdown",
+        mimeType = MarkdownDataObject.MIME_TYPE,
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "MarkdownViewer",
         position = 2000

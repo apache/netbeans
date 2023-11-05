@@ -29,6 +29,7 @@ import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
+import org.netbeans.modules.markdown.MarkdownDataObject;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.WeakListeners;
@@ -57,7 +58,7 @@ public class MarkdownEditorKit extends HTMLEditorKit {
             ss.addStyleSheet(defaultStyles);
             
             String profile = EditorSettings.getDefault().getCurrentFontColorProfile();
-            String configPath = "Editors/text/x-markdown/FontsColors/" + profile + "/Defaults/viewer.css";
+            String configPath = "Editors/" + MarkdownDataObject.MIME_TYPE +"/FontsColors/" + profile + "/Defaults/viewer.css";
             FileObject config = FileUtil.getSystemConfigFile(configPath);
       
             if (config != null) {

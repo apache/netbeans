@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.api.common.singlesourcefile;
+package org.netbeans.modules.java.file.launcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,9 +25,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
+import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
+import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation.Result;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -37,10 +42,10 @@ import org.openide.util.Lookup;
  *
  * @author Arunava Sinha
  */
-final class SingleSourceFileUtil {
-    static final Logger LOG = Logger.getLogger(SingleSourceFileUtil.class.getPackage().getName());
+public final class SingleSourceFileUtil {
+    public static final Logger LOG = Logger.getLogger(SingleSourceFileUtil.class.getPackage().getName());
 
-    static int findJavaVersion() throws NumberFormatException {
+    public static int findJavaVersion() throws NumberFormatException {
         // JEP-330 is supported only on JDK-11 and above.
         String javaVersion = System.getProperty("java.specification.version"); //NOI18N
         if (javaVersion.startsWith("1.")) { //NOI18N
@@ -53,7 +58,7 @@ final class SingleSourceFileUtil {
     public static final String FILE_ARGUMENTS = "single_file_run_arguments"; //NOI18N
     public static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
 
-    static FileObject getJavaFileWithoutProjectFromLookup(Lookup lookup) {
+    public static FileObject getJavaFileWithoutProjectFromLookup(Lookup lookup) {
         for (DataObject dObj : lookup.lookupAll(DataObject.class)) {
             FileObject fObj = dObj.getPrimaryFile();
             if (isSingleSourceFile(fObj)) {
@@ -68,7 +73,7 @@ final class SingleSourceFileUtil {
         return null;
     }
 
-    static boolean isSingleSourceFile(FileObject fObj) {
+    public static boolean isSingleSourceFile(FileObject fObj) {
         Project p = FileOwnerQuery.getOwner(fObj);
         if (p != null || !fObj.getExt().equalsIgnoreCase("java")) { //NOI18N
             return false;
@@ -76,7 +81,7 @@ final class SingleSourceFileUtil {
         return true;
     }
 
-    static Process compileJavaSource(FileObject fileObject) {
+    public static Process compileJavaSource(FileObject fileObject) {
         FileObject javac = JavaPlatformManager.getDefault().getDefaultPlatform().findTool("javac"); //NOI18N
         File javacFile = FileUtil.toFile(javac);
         String javacPath = javacFile.getAbsolutePath();
@@ -101,8 +106,46 @@ final class SingleSourceFileUtil {
         return null;
     }
 
-    static boolean hasClassSibling(FileObject fo) {
+    public static boolean hasClassSibling(FileObject fo) {
         return fo.getParent().getFileObject(fo.getName(), "class") != null;
+    }
+
+    public static Result getOptionsFor(FileObject file) {
+        if (MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT) {
+            return null;
+        }
+
+        for (SingleFileOptionsQueryImplementation  i : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImplementation.class)) {
+            Result r = i.optionsFor(file);
+
+            if (r != null) {
+                return r;
+            }
+        }
+        return null;
+    }
+
+    public static List<String> parseLine(String line) {
+        return PARSER.doParse(line);
+    }
+
+    private static final LineParser PARSER = new LineParser();
+
+    private static class LineParser extends CompilerOptionsQueryImplementation.Result {
+        public List<String> doParse(String line) {
+            return parseLine(line);
+        }
+
+        @Override
+        public List<? extends String> getArguments() {
+            return null;
+        }
+
+        @Override
+        public void addChangeListener(ChangeListener listener) {}
+
+        @Override
+        public void removeChangeListener(ChangeListener listener) {}
     }
 
 }

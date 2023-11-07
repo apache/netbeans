@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.api.common.singlesourcefile;
+package org.netbeans.modules.java.file.launcher.actions;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import static junit.framework.TestCase.assertEquals;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 

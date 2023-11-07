@@ -43,12 +43,15 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.DeferredCompletionFailureHandler;
+import com.sun.tools.javac.code.DeferredCompletionFailureHandler.Handler;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Kinds.Kind;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Source.Feature;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.RecordComponent;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -550,6 +553,7 @@ final class VanillaCompileWorker extends CompileWorker {
         Elements el = JavacElements.instance(ctx);
         Source source = Source.instance(ctx);
         boolean hasMatchException = el.getTypeElement("java.lang.MatchException") != null;
+        DeferredCompletionFailureHandler dcfh = DeferredCompletionFailureHandler.instance(ctx);
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
             private Set<JCNewClass> anonymousClasses = Collections.newSetFromMap(new LinkedHashMap<>());
@@ -675,8 +679,14 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             private JCStatement throwTree(SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> diags) {
-                String message = diags.isEmpty() ? "Uncompilable code"
-                                                 : "Uncompilable code - " + DIAGNOSTIC_TO_TEXT.apply(diags.values().iterator().next().get(0));
+                String message = diags.isEmpty() ? null
+                                                 : DIAGNOSTIC_TO_TEXT.apply(diags.values().iterator().next().get(0));
+                return throwTree(message);
+            }
+
+            private JCStatement throwTree(String message) {
+                message = message == null ? "Uncompilable code"
+                                          : "Uncompilable code - " + message;
                 JCNewClass nct =
                         make.NewClass(null,
                                       com.sun.tools.javac.util.List.nil(),
@@ -754,6 +764,7 @@ final class VanillaCompileWorker extends CompileWorker {
                         clazz.defs = com.sun.tools.javac.util.List.filter(clazz.defs, def);
                     }
                 }
+                fixRecordMethods(clazz);
                 super.visitClass(node, p);
                 //remove anonymous classes that remained in the tree from anonymousClasses:
                 new TreeScanner<Void, Void>() {
@@ -785,6 +796,32 @@ final class VanillaCompileWorker extends CompileWorker {
                     anonymousClasses = oldAnonymousClasses;
                 }
                 return null;
+            }
+
+            private final Set<String> RECORD_METHODS = new HashSet<>(Arrays.asList("toString", "hashCode", "equals"));
+
+            private void fixRecordMethods(JCClassDecl clazz) {
+                if ((clazz.sym.flags() & Flags.RECORD) == 0) {
+                    return ;
+                }
+                Handler prevHandler = dcfh.setHandler(dcfh.speculativeCodeHandler);
+                try {
+                    try {
+                        syms.objectMethodsType.tsym.flags();
+                    } catch (CompletionFailure cf) {
+                        //ignore
+                    }
+                    if (!syms.objectMethodsType.tsym.type.isErroneous()) {
+                        //ObjectMethods exist:
+                        return ;
+                    }
+                } finally {
+                    dcfh.setHandler(prevHandler);
+                }
+                for (Symbol s : clazz.sym.members().getSymbols(s -> (s.flags() & Flags.RECORD) != 0 && s.kind == Kind.MTH && RECORD_METHODS.contains(s.name.toString()))) {
+                    clazz.defs = clazz.defs.prepend(make.MethodDef((MethodSymbol) s, make.Block(0, com.sun.tools.javac.util.List.of(throwTree("java.lang.runtime.ObjectMethods does not exist!")))));
+                    s.flags_field &= ~Flags.RECORD;
+                }
             }
 
             private JCStatement clearAndWrapAnonymous(JCNewClass nc) {

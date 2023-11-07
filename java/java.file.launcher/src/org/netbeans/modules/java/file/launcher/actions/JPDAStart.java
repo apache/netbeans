@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.api.common.singlesourcefile;
+package org.netbeans.modules.java.file.launcher.actions;
 
 import java.io.File;
 import java.util.HashMap;
@@ -37,6 +37,7 @@ import org.openide.filesystems.FileUtil;
 
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.windows.InputOutput;
 

@@ -88,6 +88,7 @@ public final class CodeUtils {
     public static final String STATIC_METHOD_TYPE_PREFIX = "@static.mtd:"; // NOI18N
     public static final String NULLABLE_TYPE_PREFIX = "?"; // NOI18N
     public static final String ELLIPSIS = "..."; // NOI18N
+    public static final String VAR_TAG = "@var"; // NOI18N
 
     public static final Pattern WHITE_SPACES_PATTERN = Pattern.compile("\\s+"); // NOI18N
     public static final Pattern SPLIT_TYPES_PATTERN = Pattern.compile("[()|&]+"); // NOI18N

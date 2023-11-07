@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:methodBar<|(): (Foo&Bar)|Baz {}
+        self::$staticFieldClass->|>MARK_OCCURRENCES:metho^dBar<|();

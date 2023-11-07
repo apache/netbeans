@@ -320,12 +320,12 @@ public class JSPVariablesFilter implements TreeModelFilter {
     
     public static class ImplicitLocals {
         private List locals = new ArrayList ();
-        private static HashSet localsNames = null;
+        private static HashSet<String> localsNames = null;
 
         public static boolean isImplicitLocal(String aLocalName) {
 
             if (localsNames == null) {
-                localsNames = new HashSet();
+                localsNames = new HashSet<>();
                 localsNames.add("application");
                 localsNames.add("config");
                 localsNames.add("out");

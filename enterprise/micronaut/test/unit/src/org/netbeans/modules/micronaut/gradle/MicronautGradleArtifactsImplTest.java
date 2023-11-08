@@ -19,13 +19,17 @@
 package org.netbeans.modules.micronaut.gradle;
 
 import java.io.File;
+import java.util.Set;
+import java.util.stream.Collectors;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.ProjectTrust;
+import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.ProjectArtifactsQuery;
@@ -51,8 +55,7 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         return new File(destDir);
     }
     
-    FileObject d;
-    FileObject dataFO;
+    private FileObject dataFO;
 
     @org.openide.util.lookup.ServiceProvider(service=org.openide.modules.InstalledFileLocator.class, position = 1000)
     public static class InstalledFileLocator extends DummyInstalledFileLocator {
@@ -66,7 +69,6 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         // it back to System.err - loop is formed. Initialize IOProvider first, it gets
         // the real System.err/out references.
         IOProvider p = IOProvider.getDefault();
-        d = FileUtil.toFileObject(getWorkDir());
         System.setProperty("test.reload.sync", "true");
         dataFO = FileUtil.toFileObject(getDataDir());
         
@@ -83,7 +85,9 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         ProjectTrust.getDefault().trustProject(p);
+
         NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        assertNoProblems(p);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, ProjectArtifactsQuery.newQuery(null));
         
         assertNotNull(ar);
@@ -100,7 +104,9 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         ProjectTrust.getDefault().trustProject(p);
+        
         NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        assertNoProblems(p);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, ProjectArtifactsQuery.newQuery("exe"));
         
         assertNotNull(ar);
@@ -115,7 +121,9 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         ProjectTrust.getDefault().trustProject(p);
+
         NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        assertNoProblems(p);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
                 ProjectArtifactsQuery.newQuery(null, null, 
                         ProjectActionContext.newBuilder(p).forProjectAction("native-build").context()
@@ -136,7 +144,9 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         ProjectTrust.getDefault().trustProject(p);
+
         NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        assertNoProblems(p);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
                 ProjectArtifactsQuery.newQuery(null, null, 
                         ProjectActionContext.newBuilder(p).forProjectAction("native-build").context()
@@ -157,7 +167,9 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         ProjectTrust.getDefault().trustProject(p);
-        NbGradleProject.get(p).toQuality("TEst", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+
+        NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        assertNoProblems(p);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
                 ProjectArtifactsQuery.newQuery("jar", null, 
                         ProjectActionContext.newBuilder(p).forProjectAction("native-build").context()
@@ -178,7 +190,9 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         ProjectTrust.getDefault().trustProject(p);
+
         NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        assertNoProblems(p);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
                 ProjectArtifactsQuery.newQuery("exe", null, 
                         ProjectActionContext.newBuilder(p).forProjectAction("native-build").context()
@@ -203,6 +217,7 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         ProjectTrust.getDefault().trustProject(p);
 
         NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        assertNoProblems(p);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, ProjectArtifactsQuery.newQuery(null));
         
         assertNotNull(ar);
@@ -223,6 +238,7 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         ProjectTrust.getDefault().trustProject(p);
 
         NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        assertNoProblems(p);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
                 ProjectArtifactsQuery.newQuery(null, null, null, ArtifactSpec.TAG_SHADED)
         );
@@ -242,7 +258,9 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         
         Project p = ProjectManager.getDefault().findProject(prjCopy.getFileObject("oci"));
         ProjectTrust.getDefault().trustProject(p);
+
         NbGradleProject.get(p).toQuality("Test", NbGradleProject.Quality.FULL, true).toCompletableFuture().get();
+        assertNoProblems(p);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
                 ProjectArtifactsQuery.newQuery("exe", null, 
                         ProjectActionContext.newBuilder(p).forProjectAction("native-build").context()
@@ -253,6 +271,19 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         assertEquals(1, ar.getArtifacts().size());
         ArtifactSpec spec = ar.getArtifacts().get(0);
         assertEquals("exe", spec.getType());
+    }
+
+    private static void assertNoProblems(Project project) {
+        assertNotNull(project);
+        Set<GradleReport> problems = ((NbGradleProjectImpl)project).getGradleProject().getBaseProject().getProblems();
+        assertTrue(
+            problems.size()+" problem(s) found>>>\n"+
+            problems.stream()
+                .map(p -> p.toString())
+                .collect(Collectors.joining("\n"))
+            +"\n<<<end of problems",
+            problems.isEmpty()
+        );
     }
 }
 

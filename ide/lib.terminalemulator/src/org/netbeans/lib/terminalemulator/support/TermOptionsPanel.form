@@ -84,8 +84,8 @@
     </Component>
     <Component class="javax.swing.JTextField" name="fontText">
       <Properties>
-        <Property name="columns" type="int" value="20"/>
         <Property name="editable" type="boolean" value="false"/>
+        <Property name="columns" type="int" value="20"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

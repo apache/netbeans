@@ -51,6 +51,7 @@ import org.netbeans.modules.csl.api.CodeCompletionResult;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.Documentation;
 import org.netbeans.modules.csl.api.ElementHandle;
+import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.ParameterInfo;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
@@ -644,6 +645,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             case CLASS_MEMBER_IN_STRING:
                 autoCompleteClassFields(completionResult, request);
                 break;
+            case NAMESPACED_FUNCTION_PARAMETER_IDENTIFIER:
+                autoCompleteNamespacedFunctionParameterIdentifier(info, completionResult, request);
+                break;
             case SERVER_ENTRY_CONSTANTS:
                 //TODO: probably better PHPCompletionItem instance should be used
                 //autoCompleteMagicItems(proposals, request, PredefinedSymbols.SERVER_ENTRY_CONSTANTS);
@@ -1200,6 +1204,34 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
     private void autoCompleteInInterfaceContext(final PHPCompletionResult completionResult, final PHPCompletionItem.CompletionRequest request) {
         autoCompleteKeywords(completionResult, request, INTERFACE_CONTEXT_KEYWORD_PROPOSAL);
+    }
+
+    private void autoCompleteNamespacedFunctionParameterIdentifier(
+        ParserResult info,
+        final PHPCompletionResult completionResult,
+        PHPCompletionItem.CompletionRequest request) {
+        if (CancelSupport.getDefault().isCancelled()) {
+            return;
+        }
+
+        TokenHierarchy<?> th = info.getSnapshot().getTokenHierarchy();
+        TokenSequence<PHPTokenId> tokenSequence = th.tokenSequence(PHPTokenId.language());
+        assert tokenSequence != null;
+
+        tokenSequence.move(request.anchor - 1);
+
+        if (!tokenSequence.movePrevious()) {
+            return;
+        }
+
+        final String namespace = tokenSequence.token().text().toString();
+        final String varName = "$" + namespace.substring(0, 1).toLowerCase() + namespace.substring(1);
+        completionResult.add(new PHPCompletionItem.KeywordItem(varName, request) {
+            @Override
+            public ElementKind getKind() {
+                return ElementKind.VARIABLE;
+            }
+        });
     }
 
     private void autoCompleteInClassContext(

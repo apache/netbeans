@@ -223,6 +223,38 @@ public class InitializeFieldsSuggestionTest extends PHPHintsTestBase {
         applyHint(new InitializeFieldSuggestionStub(PhpVersion.PHP_81), "intersectionTypes_01.php", "            \\Test\\Foo&Bar $par^am2,", "Initialize Field");
     }
 
+    public void testDnfTypes_01a() throws Exception {
+        checkHints(new InitializeFieldSuggestion(), "dnfTypes_01.php", "            (Foo&Bar)|Baz $para^m1,");
+    }
+
+    public void testDnfTypes_01b() throws Exception {
+        checkHints(new InitializeFieldSuggestion(), "dnfTypes_01.php", "            (\\Test\\Foo&Bar)|(Foo&Baz) $par^am2,");
+    }
+
+    public void testDnfTypes_01c() throws Exception {
+        checkHints(new InitializeFieldSuggestion(), "dnfTypes_01.php", "            Foo|(Foo&Baz) $para^m3,");
+    }
+
+    public void testDnfTypes_01d() throws Exception {
+        checkHints(new InitializeFieldSuggestion(), "dnfTypes_01.php", "            Foo|(Foo&Baz)|null $para^m4,");
+    }
+
+    public void testDnfTypesFix_01a() throws Exception {
+        applyHint(new InitializeFieldSuggestionStub(PhpVersion.PHP_82), "dnfTypes_01.php", "            (Foo&Bar)|Baz $par^am1,", "Initialize Field");
+    }
+
+    public void testDnfTypesFix_01b() throws Exception {
+        applyHint(new InitializeFieldSuggestionStub(PhpVersion.PHP_82), "dnfTypes_01.php", "            (\\Test\\Foo&Bar)|(Foo&Baz) $pa^ram2,", "Initialize Field");
+    }
+
+    public void testDnfTypesFix_01c() throws Exception {
+        applyHint(new InitializeFieldSuggestionStub(PhpVersion.PHP_82), "dnfTypes_01.php", "            Foo|(Foo&Baz) $para^m3,", "Initialize Field");
+    }
+
+    public void testDnfTypesFix_01d() throws Exception {
+        applyHint(new InitializeFieldSuggestionStub(PhpVersion.PHP_82), "dnfTypes_01.php", "            Foo|(Foo&Baz)|null $para^m4,", "Initialize Field");
+    }
+
     //~ Inner classes
     private static class InitializeFieldSuggestionStub extends InitializeFieldSuggestion {
 

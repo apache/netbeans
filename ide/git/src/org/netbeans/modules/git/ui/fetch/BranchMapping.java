@@ -49,7 +49,7 @@ public class BranchMapping extends ItemSelector.Item {
         this.remoteBranchName = remoteBranchName;
         this.localBranch = localBranch;
         this.remote = remote;
-        if (isDeletion()) {
+        if (isDestructive()) {
             // to remove
             label = MessageFormat.format(BRANCH_DELETE_MAPPING_LABEL, localBranch.getName(), "<font color=\"" + COLOR_REMOVED + "\">R</font>");
 
@@ -93,7 +93,7 @@ public class BranchMapping extends ItemSelector.Item {
     }
 
     public String getRefSpec () {
-        if (isDeletion()) {
+        if (isDestructive()) {
             return GitUtils.getDeletedRefSpec(localBranch);
         } else {
             return GitUtils.getRefSpec(remoteBranchName, remote.getRemoteName());
@@ -125,12 +125,12 @@ public class BranchMapping extends ItemSelector.Item {
         }
         if(t instanceof BranchMapping) {
             BranchMapping other = (BranchMapping) t;
-            if (isDeletion() && other.isDeletion()) {
+            if (isDestructive() && other.isDestructive()) {
                 return localBranch.getName().compareTo(other.localBranch.getName());
-            } else if (isDeletion() && !other.isDeletion()) {
+            } else if (isDestructive() && !other.isDestructive()) {
                 // deleted branches should be at the bottom
                 return 1;
-            } else if (!isDeletion() && other.isDeletion()) {
+            } else if (!isDestructive() && other.isDestructive()) {
                 // deleted branches should be at the bottom
                 return -1;
             } else {

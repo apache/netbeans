@@ -228,7 +228,7 @@ public class FetchBranchesStep extends AbstractWizardPanel implements WizardDesc
     static String getDeletedBranchesMessage (List<BranchMapping> selectedBranches) {
         StringBuilder sb = new StringBuilder(100);
         for (BranchMapping m : selectedBranches) {
-            if (m.isDeletion()) {
+            if (m.isDestructive()) {
                 sb.append(Bundle.MSG_FetchBranchesStep_toBeDeletedBranch(m.getLocalBranch().getName())).append("<br>");
             }
         }

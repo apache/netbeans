@@ -250,7 +250,7 @@ public class PushTest extends AbstractGitTestCase {
         write(f, "huhu2");
         add(f);
         id = getClient(workDir).commit(new File[] { f }, "some change before merge", null, null, NULL_PROGRESS_MONITOR).getRevision();
-        updates = getClient(workDir).push(remoteUri, Arrays.asList(new String[] { "+refs/heads/localbranch:refs/heads/master" }), Collections.<String>emptyList(), NULL_PROGRESS_MONITOR).getRemoteRepositoryUpdates();
+        updates = getClient(workDir).push(remoteUri, Arrays.asList(new String[] { "refs/heads/localbranch:refs/heads/master" }), Collections.<String>emptyList(), NULL_PROGRESS_MONITOR).getRemoteRepositoryUpdates();
         remoteBranches = getClient(workDir).listRemoteBranches(remoteUri, NULL_PROGRESS_MONITOR);
         assertEquals(1, remoteBranches.size());
         assertEquals(newid, remoteBranches.get("master").getId());
@@ -263,7 +263,7 @@ public class PushTest extends AbstractGitTestCase {
         assertEquals(newid, remoteBranches.get("master").getId());
         assertEquals(1, updates.size());
         assertUpdate(updates.get("master"), "localbranch", "master", id, newid, new URIish(remoteUri).toString(), Type.BRANCH, GitRefUpdateResult.REJECTED_NONFASTFORWARD);
-        
+
         // if starts failing, the WA at GitTransportUpdate.(URIish uri, TrackingRefUpdate update) should be removed
         // this.result = GitRefUpdateResult.valueOf((update.getResult() == null ? RefUpdate.Result.NOT_ATTEMPTED : update.getResult()).name());
         Transport transport = Transport.open(getRepository(getClient(workDir)), new URIish(remoteUri));

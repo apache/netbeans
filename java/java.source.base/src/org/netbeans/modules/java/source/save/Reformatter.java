@@ -2999,7 +2999,11 @@ public class Reformatter implements ReformatTask {
                         if (stat.getKind() == Tree.Kind.BLOCK) {
                             indent = lastIndent;
                         }
-                        wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
+                        if (stat.getKind() == Tree.Kind.TRY) {
+                            wrapTree(cs.wrapCaseStatements(), -1, 1, stat);
+                        } else {
+                            wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
+                        }
                     } else {
                         newline();
                         scan(stat, p);

@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,29 +17,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.verification;
 
-public class ConstantRedeclarationHintTest extends PHPHintsTestBase {
-
-    public ConstantRedeclarationHintTest(String testName) {
-        super(testName);
+trait IntroduceConst1 {
+    use IntroduceConst2;
+    public function test($param) {
+        echo self::CONSTANT;
     }
+}
 
-    @Override
-    protected String getTestDirectory() {
-        return TEST_DIRECTORY + "ConstantRedeclarationHint/";
-    }
-
-    public void testConstantRedeclarationHint() throws Exception {
-        checkHints(new ConstantRedeclarationHintError(), "testConstantRedeclarationHint.php");
-    }
-
-    public void testEnumCases() throws Exception {
-        checkHints(new ConstantRedeclarationHintError(), "testEnumCases.php");
-    }
-
-    public void testTraits() throws Exception {
-        checkHints(new ConstantRedeclarationHintError(), "testTraits.php");
-    }
-
+trait IntroduceConst2 {
+    public const CONSTANT = "IntroduceConst2";
 }

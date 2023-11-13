@@ -239,6 +239,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports constants in traits.
+     *
+     * @return {@code true} if this version supports constants in traits,
+     * {@code false} otherwise
+     * @since 2.92
+     */
+    public boolean hasConstantsInTraits() {
+        return this.compareTo(PhpVersion.PHP_82) >= 0;
+    }
+
+    /**
      * Check whether this is supported version yet by PHP official.
      *
      * @return {@code true} if this is supported version, {@code false}

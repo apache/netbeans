@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,29 +17,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.verification;
+trait TestTrait1
+{
+    public $TRAIT_TEST;
+    const TRAIT_TEST = "trait1";
+    const TRAIT_TEST = "trait1";
+    const trait_test = "trait1";
+}
 
-public class ConstantRedeclarationHintTest extends PHPHintsTestBase {
-
-    public ConstantRedeclarationHintTest(String testName) {
-        super(testName);
-    }
-
-    @Override
-    protected String getTestDirectory() {
-        return TEST_DIRECTORY + "ConstantRedeclarationHint/";
-    }
-
-    public void testConstantRedeclarationHint() throws Exception {
-        checkHints(new ConstantRedeclarationHintError(), "testConstantRedeclarationHint.php");
-    }
-
-    public void testEnumCases() throws Exception {
-        checkHints(new ConstantRedeclarationHintError(), "testEnumCases.php");
-    }
-
-    public void testTraits() throws Exception {
-        checkHints(new ConstantRedeclarationHintError(), "testTraits.php");
-    }
-
+trait TestTrait2
+{
+    public $trait_test;
+    const trait_test = "trait2";
+    const trait_test = "trait2";
+    const TRAIT_TEST = "trait2";
 }

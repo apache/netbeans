@@ -827,7 +827,9 @@ public final class Server {
                         NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH,
                         NBLS_PROJECT_INFO,
                         JAVA_ENABLE_PREVIEW,
-                        NBLS_DOCUMENT_SYMBOLS
+                        NBLS_DOCUMENT_SYMBOLS,
+                        NBLS_GET_DIAGNOSTICS,
+                        NBLS_GET_SERVER_DIRECTORIES
                 ));
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     commands.addAll(codeActionsProvider.getCommands());
@@ -1099,6 +1101,17 @@ public final class Server {
      * Provides symbols for the given document
      */
     public static final String NBLS_DOCUMENT_SYMBOLS =  "nbls.document.symbols";
+    
+    /**
+     * Returns diagnostics as they would be published by the asynchronous diagnotic task triggered by
+     * text changes.
+     */
+    public static final String NBLS_GET_DIAGNOSTICS = "nbls.get.diagnostics";
+    
+    /**
+     * Returns the directories of NBLS. Returns userdir and the cluster directories.
+     */
+    public static final String NBLS_GET_SERVER_DIRECTORIES = "nbls.server.directories";
 
     static final String INDEXING_COMPLETED = "Indexing completed.";
     static final String NO_JAVA_SUPPORT = "Cannot initialize Java support on JDK ";

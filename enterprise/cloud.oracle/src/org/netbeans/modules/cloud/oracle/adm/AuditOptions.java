@@ -28,6 +28,7 @@ import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
 public final class AuditOptions {
     private boolean forceAuditExecution;
     private boolean runIfNotExists;
+    private boolean disableCache;
     private String auditName;
     private OCISessionInitiator session;
     private boolean returnData;
@@ -47,6 +48,15 @@ public final class AuditOptions {
         return this;
     }
 
+    public boolean isDisableCache() {
+        return disableCache;
+    }
+
+    public AuditOptions setDisableCache(boolean disableCache) {
+        this.disableCache = disableCache;
+        return this;
+    }
+    
     public boolean isRunIfNotExists() {
         return runIfNotExists;
     }

@@ -131,6 +131,7 @@ import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.jumpto.type.SearchType;
+import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -141,7 +142,9 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -721,6 +724,32 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
                 return CompletableFuture.completedFuture(result);
+            }
+            case Server.NBLS_GET_DIAGNOSTICS: {
+                    List<Object> arguments = params.getArguments();
+                    String source = ((JsonPrimitive) arguments.get(0)).getAsString();
+                    EnumSet<ErrorProvider.Kind> s;
+                    if (arguments.size() > 1 && arguments.get(1) instanceof JsonArray) {
+                        s = EnumSet.noneOf(ErrorProvider.Kind.class);
+                        for (JsonElement jse : ((JsonArray)arguments.get(1))) {
+                            if (jse instanceof JsonPrimitive) {
+                                ErrorProvider.Kind k = ErrorProvider.Kind.valueOf(jse.getAsString());
+                                s.add(k);
+                            }
+                        }
+                    } else {
+                        s = EnumSet.allOf(ErrorProvider.Kind.class);
+                    }
+                    return (CompletableFuture<Object>)(CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).computeDiagnostics(source, s);
+            }
+            case Server.NBLS_GET_SERVER_DIRECTORIES: {
+                JsonObject o = new JsonObject();
+                o.addProperty("userdir", Places.getUserDirectory().toString());
+                o.addProperty("dirs", System.getProperty("netbeans.dirs"));
+                o.addProperty("extra.dirs", System.getProperty("netbeans.extra.dirs"));
+                o.addProperty("cache", Places.getCacheDirectory().toString());
+                o.addProperty("config", FileUtil.toFile(FileUtil.getConfigRoot()).toString());
+                return CompletableFuture.completedFuture(o);
             }
             default:
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {

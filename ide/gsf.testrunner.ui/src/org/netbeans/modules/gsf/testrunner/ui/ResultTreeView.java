@@ -68,6 +68,7 @@ final class ResultTreeView extends BeanTreeView implements Runnable {
      */
     private final class DelegatingTreeCellRenderer implements TreeCellRenderer {
 
+        @Override
         public Component getTreeCellRendererComponent(JTree tree,
                                                       Object value,
                                                       boolean selected,
@@ -126,6 +127,7 @@ final class ResultTreeView extends BeanTreeView implements Runnable {
     
     /**
      */
+    @Override
     public void run() {
         tree.setScrollsOnExpand(true);
     }

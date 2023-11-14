@@ -19,17 +19,17 @@ Not Searchable Keys:
 Document 1
 Searchable Keys:
   clz : magickmethods;MagickMethods;2411;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;
-  method : dnftype1;dnfType1;1674;$param1::0::1:0:0:0:0:0::,$param2:X|Y|Y|Z|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|Z:(X&Y)|(Y&Z)|Z;(\X&\Y)|(\Y&\Z)|(\X&\Z);1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
-  method : dnftype2;dnfType2;1750;$param1::0::1:0:0:0:0:0::,$param2:X|Y|Z|Z:1::1:0:0:0:0:0:X|(Y&Z)|Z:X|(Y&Z)|Z;\Y|(\Y&\Z)|\X;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : dnftype1;dnfType1;1674;$param1::0::1:0:0:0:0:0::,$param2:X|Y|Y|Z|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|Z:(X&Y)\u007c(Y&Z)\u007cZ;(\X&\Y)|(\Y&\Z)|(\X&\Z);1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : dnftype2;dnfType2;1750;$param1::0::1:0:0:0:0:0::,$param2:X|Y|Z|Z:1::1:0:0:0:0:0:X|(Y&Z)|Z:X\u007c(Y&Z)\u007cZ;\Y|(\Y&\Z)|\X;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
   method : getdefault;getDefault;2376;;?\Example;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
-  method : staticdnftype1;staticDnfType1;1994;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)|(Y&Z)|(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;(\X&\Y)|(\Y&\Z)|(\X&\Z);9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
-  method : staticdnftype2;staticDnfType2;2091;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)|(Y&Z)|(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;\X|(\Y&\Z)|\Z;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
-  method : staticdnftype3;staticDnfType3;2186;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)|(Y&Z)|(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;\X|(\Y&\Z);9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
-  method : statictestnullable;staticTestNullable;2278;$param:?string:1::1:0:0:0:0:0:?string:?string,$param2:X|Y|Y|X|Z:1::1:0:0:0:0:0:(X&Y)|Y|(X&Z):(X&Y)|Y|(X&Z);?int;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
-  method : statictesttype;staticTestType;1889;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)|(Y&Z)|(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;int;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
-  method : statictestvoid;staticTestVoid;1819;$test:Test|Y|Z|X:1::1:0:0:0:0:0:(Test&Y)|Z|X:(Test&Y)|Z|X;void;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
-  method : testtype;testType;1603;$test:X|X|Y|Z|Z:1::1:0:0:0:0:0:X|(X&Y&Z)|Z:X|(X&Y&Z)|Z;int;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
-  method : testvoid;testVoid;1544;$test:X|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y&Z)|(X&Z):(X&Y&Z)|(X&Z);void;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : staticdnftype1;staticDnfType1;1994;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)\u007c(Y&Z)\u007c(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;(\X&\Y)|(\Y&\Z)|(\X&\Z);9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : staticdnftype2;staticDnfType2;2091;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)\u007c(Y&Z)\u007c(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;\X|(\Y&\Z)|\Z;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : staticdnftype3;staticDnfType3;2186;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)\u007c(Y&Z)\u007c(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;\X|(\Y&\Z);9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : statictestnullable;staticTestNullable;2278;$param:?string:1::1:0:0:0:0:0:?string:?string,$param2:X|Y|Y|X|Z:1::1:0:0:0:0:0:(X&Y)|Y|(X&Z):(X&Y)\u007cY\u007c(X&Z);?int;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : statictesttype;staticTestType;1889;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)\u007c(Y&Z)\u007c(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;int;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : statictestvoid;staticTestVoid;1819;$test:Test|Y|Z|X:1::1:0:0:0:0:0:(Test&Y)|Z|X:(Test&Y)\u007cZ\u007cX;void;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : testtype;testType;1603;$test:X|X|Y|Z|Z:1::1:0:0:0:0:0:X|(X&Y&Z)|Z:X\u007c(X&Y&Z)\u007cZ;int;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : testvoid;testVoid;1544;$test:X|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y&Z)|(X&Z):(X&Y&Z)\u007c(X&Z);void;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
   top : magickmethods
 
 Not Searchable Keys:

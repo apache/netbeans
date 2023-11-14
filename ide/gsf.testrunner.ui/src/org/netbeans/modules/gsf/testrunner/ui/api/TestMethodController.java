@@ -62,12 +62,10 @@ public class TestMethodController {
             doc.putProperty(TestMethodAnnotation.DOCUMENT_ANNOTATION_LINES_KEY, annotationLines);
         }
 
+        Set<TestMethod> added = new HashSet<>(methods);
         Map<TestMethod, TestMethodAnnotation> removed = new HashMap<>(annotations);
 
-        methods.forEach(tm -> removed.remove(tm));
-
-        Set<TestMethod> added = new HashSet<>(methods);
-
+        removed.keySet().removeAll(added);
         added.removeAll(annotations.keySet());
 
         for (TestMethod method : added) {

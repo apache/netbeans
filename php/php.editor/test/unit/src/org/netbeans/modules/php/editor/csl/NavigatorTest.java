@@ -144,4 +144,8 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/php82/dnfFieldTypes");
     }
 
+    public void testFunctionGuessingArrayReturnType() throws Exception {
+        performTest("structure/functionGuessingArrayReturnType");
+    }
+
 }

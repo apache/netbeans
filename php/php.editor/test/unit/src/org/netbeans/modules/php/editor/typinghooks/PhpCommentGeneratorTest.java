@@ -870,6 +870,48 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "?>\n");
     }
 
+    public void testFunctionGuessingArrayReturnType() throws Exception {
+        insertBreak( "<?php\n" +
+                            "/**^\n" +
+                            "function foo() {\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "/**\n" +
+                            " * \n" +
+                            " * @return array^\n" +
+                            " */\n" +
+                            "function foo() {\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
+    public void testFunctionGuessingArrayReturnTypeWithUnionType() throws Exception {
+        insertBreak( "<?php\n" +
+                            "/**^\n" +
+                            "function foo() {\n" +
+                            "    if (true) {\n" +
+                            "       return 'str';\n" +
+                            "    }\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "/**\n" +
+                            " * \n" +
+                            " * @return string|array^\n" +
+                            " */\n" +
+                            "function foo() {\n" +
+                            "    if (true) {\n" +
+                            "       return 'str';\n" +
+                            "    }\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
     @Override
     public void insertNewline(String source, String reformatted, IndentPrefs preferences) throws Exception {
         int sourcePos = source.indexOf('^');

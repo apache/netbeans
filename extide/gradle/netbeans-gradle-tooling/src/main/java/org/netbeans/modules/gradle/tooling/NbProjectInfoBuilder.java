@@ -226,6 +226,7 @@ class NbProjectInfoBuilder {
 
     public NbProjectInfo buildAll() {
         adapter.setModel(model);
+        
         runAndRegisterPerf(model, "meta", this::detectProjectMetadata);
         detectProps(model);
         detectLicense(model);
@@ -239,15 +240,13 @@ class NbProjectInfoBuilder {
         // introspection is only allowed for gradle 7.4 and above.
         // TODO: investigate if some of the instrospection could be done for earlier Gradles.
         sinceGradle("7.0", () -> {
+            initIntrospection();
+            
             runAndRegisterPerf(model, "detectExtensions", this::detectExtensions);
-        });
-        sinceGradle("7.0", () -> {
             runAndRegisterPerf(model, "detectPlugins2", this::detectAdditionalPlugins);
-        });
-        sinceGradle("7.0", () -> {
             runAndRegisterPerf(model, "taskDependencies", this::detectTaskDependencies);
+            runAndRegisterPerf(model, "taskProperties", this::detectTaskProperties);
         });
-        runAndRegisterPerf(model, "taskProperties", this::detectTaskProperties);
         runAndRegisterPerf(model, "artifacts", this::detectConfigurationArtifacts);
         storeGlobalTypes(model);
         return model;
@@ -446,7 +445,7 @@ class NbProjectInfoBuilder {
         model.getInfo().put("extensions.globalTypes", globalTypes); // NOI18N
     }
     
-    private void detectExtensions(NbProjectInfoModel model) {
+    private void initIntrospection() {
         StringBuilder sb = new StringBuilder();
         for (String s : IGNORED_SYSTEM_CLASSES_REGEXP) {
             if (sb.length() > 0) {
@@ -455,7 +454,9 @@ class NbProjectInfoBuilder {
             sb.append(s);
         }
         ignoreClassesPattern = Pattern.compile(sb.toString());
-
+    }
+    
+    private void detectExtensions(NbProjectInfoModel model) {
         inspectExtensions("", project.getExtensions());
         model.getInfo().put("extensions.propertyTypes", propertyTypes); // NOI18N
         model.getInfo().put("extensions.propertyValues", values); // NOI18N

@@ -18,15 +18,10 @@
  */
 package org.netbeans.modules.micronaut.db;
 
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.TypeParameterTree;
-import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.sql.Connection;
@@ -176,8 +171,6 @@ public class MicronautRepository implements TemplateWizard.Iterator {
         };
     }
 
-    static final String PROP_ENTITIES = "wizard-entities"; //NOI18N
-    static final String PROP_SELECTED_ENTITIES = "wizard-selected-entities"; //NOI18N
     private WizardDescriptor.Panel panel;
     private WizardDescriptor wizardDescriptor;
     private FileObject targetFolder;
@@ -187,7 +180,7 @@ public class MicronautRepository implements TemplateWizard.Iterator {
     public Set<DataObject> instantiate(TemplateWizard wiz) throws IOException {
         String dialect = getDialect(jpaSupported);
         Set<DataObject> generated = new HashSet<>();
-        Map<String, String> selectedEntities = (Map<String, String>) wiz.getProperty(PROP_SELECTED_ENTITIES);
+        Map<String, String> selectedEntities = (Map<String, String>) wiz.getProperty(ClassesSelectorPanel.PROP_SELECTED_CLASSES);
         for (Map.Entry<String, String> entry : selectedEntities.entrySet()) {
             String fqn = entry.getKey();
             int idx = fqn.lastIndexOf('.');
@@ -204,11 +197,13 @@ public class MicronautRepository implements TemplateWizard.Iterator {
     public void initialize(TemplateWizard wiz) {
         wizardDescriptor = wiz;
 
-        panel = new EntityClassesPanel.WizardPanel(NbBundle.getMessage(MicronautRepository.class, "Templates/Micronaut/Repository"));
+        panel = new ClassesSelectorPanel.WizardPanel(NbBundle.getMessage(MicronautRepository.class, "Templates/Micronaut/Repository"), "Entities", selectedEntities -> {
+            return selectedEntities.isEmpty() ? NbBundle.getMessage(MicronautRepository.class, "ERR_SelectEntities") : null;
+        });
         Wizards.mergeSteps(wizardDescriptor, new WizardDescriptor.Panel[] {
             panel
         }, new String[] {
-            NbBundle.getMessage(MicronautRepository.class, "LBL_EntityClasses")
+            NbBundle.getMessage(MicronautRepository.class, "LBL_Entities")
         });
 
         targetFolder = Templates.getTargetFolder(wizardDescriptor);
@@ -216,8 +211,8 @@ public class MicronautRepository implements TemplateWizard.Iterator {
         SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), targetFolder);
         if (sourceGroup != null) {
             jpaSupported = Utils.isJPASupported(sourceGroup);
-            Map<String, String> entities = MicronautRepository.getEntityClasses(sourceGroup, jpaSupported);
-            wiz.putProperty(PROP_ENTITIES, entities);
+            Map<String, String> entities = getEntityClasses(sourceGroup, jpaSupported);
+            wiz.putProperty(ClassesSelectorPanel.PROP_CLASSES, entities);
         }
     }
 
@@ -263,7 +258,7 @@ public class MicronautRepository implements TemplateWizard.Iterator {
     public void removeChangeListener(ChangeListener l) {
     }
 
-    static Map<String, String> getEntityClasses(SourceGroup sg, boolean jpaSupported) {
+    private static Map<String, String> getEntityClasses(SourceGroup sg, boolean jpaSupported) {
         final Map<String, String> entities = new HashMap<>();
         JavaSource js = JavaSource.create(ClasspathInfo.create(sg.getRootFolder()));
         if (js != null) {

@@ -22,9 +22,11 @@ package org.netbeans.modules.micronaut.db;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
@@ -42,13 +44,18 @@ import org.openide.util.NbBundle;
  *
  * @author Dusan Balek
  */
-public class EntityClassesPanel extends javax.swing.JPanel {
+public class ClassesSelectorPanel extends javax.swing.JPanel {
+
+    static final String PROP_CLASSES = "wizard-classes"; //NOI18N
+    static final String PROP_SELECTED_CLASSES = "wizard-selected-classes"; //NOI18N
 
     private final ChangeSupport changeSupport = new ChangeSupport(this);
-    private final Set<String> availableEntities = new HashSet<>();
-    private final Set<String> selectedEntities = new HashSet<>();
+    private final Set<String> available = new HashSet<>();
+    private final Set<String> selected = new HashSet<>();
+    private final String bundleKey;
 
-    public EntityClassesPanel() {
+    public ClassesSelectorPanel(String key) {
+        bundleKey = key;
         initComponents();
         ListSelectionListener selectionListener = new ListSelectionListener() {
             @Override
@@ -56,8 +63,8 @@ public class EntityClassesPanel extends javax.swing.JPanel {
                 updateButtons();
             }
         };
-        availableEntitiesList.getSelectionModel().addListSelectionListener(selectionListener);
-        selectedEntitiesList.getSelectionModel().addListSelectionListener(selectionListener);
+        availableList.getSelectionModel().addListSelectionListener(selectionListener);
+        selectedList.getSelectionModel().addListSelectionListener(selectionListener);
     }
 
     public void addChangeListener(ChangeListener listener) {
@@ -65,21 +72,29 @@ public class EntityClassesPanel extends javax.swing.JPanel {
     }
 
     public void initialize(Set<String> entities) {
-        availableEntities.addAll(entities);
-        availableEntitiesList.setListData(availableEntities.toArray(new String[availableEntities.size()]));
-        selectedEntitiesList.setListData(selectedEntities.toArray(new String[selectedEntities.size()]));
+        available.addAll(entities.stream().map(fqn -> {
+            int idx = fqn.lastIndexOf('.');
+            return idx < 0 ? fqn : fqn.substring(idx + 1) + " (" + fqn.substring(0, idx) + ')';
+        }).collect(Collectors.toSet()));
+        String[] availableArray = available.toArray(new String[0]);
+        Arrays.sort(availableArray);
+        availableList.setListData(availableArray);
+        selectedList.setListData(selected.toArray(new String[0]));
         updateButtons();
     }
 
-    public Set<String> getSelectedEntities() {
-        return selectedEntities;
+    public Set<String> getSelectedClasses() {
+        return selected.stream().map(item -> {
+            int idx = item.indexOf(" (");
+            return idx < 0 ? item : item.substring(idx + 2, item.length() - 1) + '.' + item.substring(0, idx);
+        }).collect(Collectors.toSet());
     }
 
     private void updateButtons() {
-        addButton.setEnabled(availableEntitiesList.getSelectedIndices().length > 0);
-        addAllButton.setEnabled(!availableEntities.isEmpty());
-        removeButton.setEnabled(selectedEntitiesList.getSelectedIndices().length > 0);
-        removeAllButton.setEnabled(!selectedEntities.isEmpty());
+        addButton.setEnabled(availableList.getSelectedIndices().length > 0);
+        addAllButton.setEnabled(!available.isEmpty());
+        removeButton.setEnabled(selectedList.getSelectedIndices().length > 0);
+        removeAllButton.setEnabled(!selected.isEmpty());
     }
 
     /** This method is called from within the constructor to
@@ -91,13 +106,13 @@ public class EntityClassesPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        entitiesPanel = new EntitiesPanel();
-        availableEntitiesLabel = new javax.swing.JLabel();
-        availableEntitiesScrollPane = new javax.swing.JScrollPane();
-        availableEntitiesList = new javax.swing.JList<>();
-        selectedEntitiesLabel = new javax.swing.JLabel();
-        selectedEntitiesScrollPane = new javax.swing.JScrollPane();
-        selectedEntitiesList = new javax.swing.JList<>();
+        classesPanel = new ClassesPanel();
+        availableLabel = new javax.swing.JLabel();
+        availableScrollPane = new javax.swing.JScrollPane();
+        availableList = new javax.swing.JList<>();
+        selectedLabel = new javax.swing.JLabel();
+        selectedScrollPane = new javax.swing.JScrollPane();
+        selectedList = new javax.swing.JList<>();
         buttonPanel = new javax.swing.JPanel();
         addButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
@@ -105,27 +120,26 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         removeAllButton = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(200, 300));
-        setName(org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "LBL_EntityClasses")); // NOI18N
+        setName(org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "LBL_" + bundleKey));
         setPreferredSize(new java.awt.Dimension(496, 350));
         setLayout(new java.awt.GridBagLayout());
 
-        entitiesPanel.setPreferredSize(new java.awt.Dimension(440, 174));
-        entitiesPanel.setLayout(new java.awt.GridBagLayout());
+        classesPanel.setLayout(new java.awt.GridBagLayout());
 
-        availableEntitiesLabel.setLabelFor(availableEntitiesList);
-        org.openide.awt.Mnemonics.setLocalizedText(availableEntitiesLabel, org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "LBL_AvailableEntities")); // NOI18N
-        availableEntitiesLabel.setToolTipText(org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "TXT_AvailableEntities")); // NOI18N
+        availableLabel.setLabelFor(availableList);
+        org.openide.awt.Mnemonics.setLocalizedText(availableLabel, org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "LBL_Available" + bundleKey));
+        availableLabel.setToolTipText(org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "LBL_Available" + bundleKey));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        entitiesPanel.add(availableEntitiesLabel, gridBagConstraints);
+        classesPanel.add(availableLabel, gridBagConstraints);
 
-        availableEntitiesScrollPane.setPreferredSize(new java.awt.Dimension(160, 130));
+        availableScrollPane.setPreferredSize(new java.awt.Dimension(160, 130));
 
-        availableEntitiesList.setNextFocusableComponent(addButton);
-        availableEntitiesScrollPane.setViewportView(availableEntitiesList);
-        availableEntitiesList.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "ACSN_AvailableEntities")); // NOI18N
-        availableEntitiesList.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "ACSD_AvailableEntities")); // NOI18N
+        availableList.setNextFocusableComponent(addButton);
+        availableScrollPane.setViewportView(availableList);
+        availableList.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "ACSN_Available" + bundleKey));
+        availableList.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "ACSD_Available" + bundleKey));
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -134,22 +148,22 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        entitiesPanel.add(availableEntitiesScrollPane, gridBagConstraints);
+        classesPanel.add(availableScrollPane, gridBagConstraints);
 
-        selectedEntitiesLabel.setLabelFor(selectedEntitiesList);
-        org.openide.awt.Mnemonics.setLocalizedText(selectedEntitiesLabel, org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "LBL_SelectedEntities")); // NOI18N
-        selectedEntitiesLabel.setToolTipText(org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "TXT_SelectedEntities")); // NOI18N
+        selectedLabel.setLabelFor(selectedList);
+        org.openide.awt.Mnemonics.setLocalizedText(selectedLabel, org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "LBL_Selected" + bundleKey));
+        selectedLabel.setToolTipText(org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "LBL_Selected" + bundleKey));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        entitiesPanel.add(selectedEntitiesLabel, gridBagConstraints);
+        classesPanel.add(selectedLabel, gridBagConstraints);
 
-        selectedEntitiesScrollPane.setPreferredSize(new java.awt.Dimension(160, 130));
-        selectedEntitiesScrollPane.setViewportView(selectedEntitiesList);
-        selectedEntitiesList.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "ACSN_SelectedEntities")); // NOI18N
-        selectedEntitiesList.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "ACSD_SelectedEntities")); // NOI18N
+        selectedScrollPane.setPreferredSize(new java.awt.Dimension(160, 130));
+        selectedScrollPane.setViewportView(selectedList);
+        selectedList.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "ACSN_Selected" + bundleKey));
+        selectedList.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "ACSD_Selected" + bundleKey));
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -158,11 +172,11 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        entitiesPanel.add(selectedEntitiesScrollPane, gridBagConstraints);
+        classesPanel.add(selectedScrollPane, gridBagConstraints);
 
         buttonPanel.setLayout(new java.awt.GridBagLayout());
 
-        org.openide.awt.Mnemonics.setLocalizedText(addButton, org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "LBL_Add")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(addButton, org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "LBL_Add")); // NOI18N
         addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addButtonActionPerformed(evt);
@@ -172,7 +186,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         buttonPanel.add(addButton, gridBagConstraints);
 
-        org.openide.awt.Mnemonics.setLocalizedText(removeButton, org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "LBL_Remove")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(removeButton, org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "LBL_Remove")); // NOI18N
         removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeButtonActionPerformed(evt);
@@ -185,7 +199,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         buttonPanel.add(removeButton, gridBagConstraints);
 
-        org.openide.awt.Mnemonics.setLocalizedText(addAllButton, org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "LBL_AddAll")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(addAllButton, org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "LBL_AddAll")); // NOI18N
         addAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addAllButtonActionPerformed(evt);
@@ -198,7 +212,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(17, 0, 0, 0);
         buttonPanel.add(addAllButton, gridBagConstraints);
 
-        org.openide.awt.Mnemonics.setLocalizedText(removeAllButton, org.openide.util.NbBundle.getMessage(EntityClassesPanel.class, "LBL_RemoveAll")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(removeAllButton, org.openide.util.NbBundle.getMessage(ClassesSelectorPanel.class, "LBL_RemoveAll")); // NOI18N
         removeAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeAllButtonActionPerformed(evt);
@@ -217,51 +231,52 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 11, 0, 11);
-        entitiesPanel.add(buttonPanel, gridBagConstraints);
+        classesPanel.add(buttonPanel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipady = 80;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.weighty = 2.0;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 0);
-        add(entitiesPanel, gridBagConstraints);
+        add(classesPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void removeAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAllButtonActionPerformed
-        availableEntities.addAll(selectedEntities);
-        selectedEntities.clear();
-        availableEntitiesList.setListData(availableEntities.toArray(new String[availableEntities.size()]));
-        selectedEntitiesList.setListData(selectedEntities.toArray(new String[selectedEntities.size()]));
+        available.addAll(selected);
+        selected.clear();
+        availableList.setListData(available.toArray(new String[available.size()]));
+        selectedList.setListData(selected.toArray(new String[selected.size()]));
         updateButtons();
         changeSupport.fireChange();
     }//GEN-LAST:event_removeAllButtonActionPerformed
 
     private void addAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAllButtonActionPerformed
-        selectedEntities.addAll(availableEntities);
-        availableEntities.clear();
-        availableEntitiesList.setListData(availableEntities.toArray(new String[availableEntities.size()]));
-        selectedEntitiesList.setListData(selectedEntities.toArray(new String[selectedEntities.size()]));
+        selected.addAll(available);
+        available.clear();
+        availableList.setListData(available.toArray(new String[available.size()]));
+        selectedList.setListData(selected.toArray(new String[selected.size()]));
         updateButtons();
         changeSupport.fireChange();
     }//GEN-LAST:event_addAllButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        availableEntities.addAll(selectedEntitiesList.getSelectedValuesList());
-        selectedEntities.removeAll(selectedEntitiesList.getSelectedValuesList());
-        availableEntitiesList.setListData(availableEntities.toArray(new String[availableEntities.size()]));
-        selectedEntitiesList.setListData(selectedEntities.toArray(new String[selectedEntities.size()]));
+        available.addAll(selectedList.getSelectedValuesList());
+        selected.removeAll(selectedList.getSelectedValuesList());
+        availableList.setListData(available.toArray(new String[available.size()]));
+        selectedList.setListData(selected.toArray(new String[selected.size()]));
         updateButtons();
         changeSupport.fireChange();
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        selectedEntities.addAll(availableEntitiesList.getSelectedValuesList());
-        availableEntities.removeAll(availableEntitiesList.getSelectedValuesList());
-        availableEntitiesList.setListData(availableEntities.toArray(new String[availableEntities.size()]));
-        selectedEntitiesList.setListData(selectedEntities.toArray(new String[selectedEntities.size()]));
+        selected.addAll(availableList.getSelectedValuesList());
+        available.removeAll(availableList.getSelectedValuesList());
+        availableList.setListData(available.toArray(new String[available.size()]));
+        selectedList.setListData(selected.toArray(new String[selected.size()]));
         updateButtons();
         changeSupport.fireChange();
     }//GEN-LAST:event_addButtonActionPerformed
@@ -270,26 +285,26 @@ public class EntityClassesPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addAllButton;
     private javax.swing.JButton addButton;
-    private javax.swing.JLabel availableEntitiesLabel;
-    private javax.swing.JList<String> availableEntitiesList;
-    private javax.swing.JScrollPane availableEntitiesScrollPane;
+    private javax.swing.JLabel availableLabel;
+    private javax.swing.JList<String> availableList;
+    private javax.swing.JScrollPane availableScrollPane;
     private javax.swing.JPanel buttonPanel;
-    private javax.swing.JPanel entitiesPanel;
+    private javax.swing.JPanel classesPanel;
     private javax.swing.JButton removeAllButton;
     private javax.swing.JButton removeButton;
-    private javax.swing.JLabel selectedEntitiesLabel;
-    private javax.swing.JList<String> selectedEntitiesList;
-    private javax.swing.JScrollPane selectedEntitiesScrollPane;
+    private javax.swing.JLabel selectedLabel;
+    private javax.swing.JList<String> selectedList;
+    private javax.swing.JScrollPane selectedScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    private final class EntitiesPanel extends JPanel {
+    private final class ClassesPanel extends JPanel {
 
         @Override
         public void doLayout() {
             super.doLayout();
 
-            Rectangle availableBounds = availableEntitiesScrollPane.getBounds();
-            Rectangle selectedBounds = selectedEntitiesScrollPane.getBounds();
+            Rectangle availableBounds = availableScrollPane.getBounds();
+            Rectangle selectedBounds = selectedScrollPane.getBounds();
 
             if (Math.abs(availableBounds.width - selectedBounds.width) > 1) {
                 GridBagConstraints buttonPanelConstraints = ((GridBagLayout)getLayout()).getConstraints(buttonPanel);
@@ -298,40 +313,44 @@ public class EntityClassesPanel extends javax.swing.JPanel {
                 int xOffset = equalWidth - availableBounds.width;
 
                 availableBounds.width = equalWidth;
-                availableEntitiesScrollPane.setBounds(availableBounds);
+                availableScrollPane.setBounds(availableBounds);
 
                 Rectangle buttonBounds = buttonPanel.getBounds();
                 buttonBounds.x += xOffset;
                 buttonPanel.setBounds(buttonBounds);
 
-                Rectangle labelBounds = selectedEntitiesLabel.getBounds();
+                Rectangle labelBounds = selectedLabel.getBounds();
                 labelBounds.x += xOffset;
-                selectedEntitiesLabel.setBounds(labelBounds);
+                selectedLabel.setBounds(labelBounds);
 
                 selectedBounds.x += xOffset;
                 selectedBounds.width = totalWidth - equalWidth;
-                selectedEntitiesScrollPane.setBounds(selectedBounds);
+                selectedScrollPane.setBounds(selectedBounds);
             }
         }
     }
 
-    public static final class WizardPanel implements WizardDescriptor.Panel<WizardDescriptor>, ChangeListener {
+    public static final class WizardPanel implements WizardDescriptor.FinishablePanel<WizardDescriptor>, ChangeListener {
 
         private final ChangeSupport changeSupport = new ChangeSupport(this);
         private final String title;
-        private EntityClassesPanel component;
+        private final String key;
+        private final Function<Set<String>, String> validator;
+        private ClassesSelectorPanel component;
         private boolean componentInitialized;
         private WizardDescriptor wizardDescriptor;
-        private Map<String, String> entities;
+        private Map<String, Object> classes;
 
-        public WizardPanel(String wizardTitle) {
-            title = wizardTitle;
+        public WizardPanel(String title, String key, Function<Set<String>, String> validator) {
+            this.title = title;
+            this.key = key;
+            this.validator = validator;
         }
 
         @Override
-        public EntityClassesPanel getComponent() {
+        public ClassesSelectorPanel getComponent() {
             if (component == null) {
-                component = new EntityClassesPanel();
+                component = new ClassesSelectorPanel(key);
                 component.addChangeListener(this);
             }
             return component;
@@ -339,7 +358,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
 
         @Override
         public HelpCtx getHelp() {
-                return new HelpCtx(EntityClassesPanel.class);
+                return new HelpCtx(ClassesSelectorPanel.class);
         }
 
         @Override
@@ -360,19 +379,20 @@ public class EntityClassesPanel extends javax.swing.JPanel {
             }
             if (!componentInitialized) {
                 componentInitialized = true;
-                entities = (Map<String, String>) settings.getProperty(MicronautRepository.PROP_ENTITIES);
-                getComponent().initialize(entities.keySet());
+                classes = (Map<String, Object>) settings.getProperty(PROP_CLASSES);
+                getComponent().initialize(classes.keySet());
             }
         }
 
         @Override
         public boolean isValid() {
-            if (entities.isEmpty()) {
-                setErrorMessage(NbBundle.getMessage(EntityClassesPanel.class, "ERR_NoEntities", ProjectUtils.getInformation(Templates.getProject(wizardDescriptor)).getDisplayName()));
+            if (classes.isEmpty()) {
+                setErrorMessage(NbBundle.getMessage(ClassesSelectorPanel.class, "ERR_No" + key, ProjectUtils.getInformation(Templates.getProject(wizardDescriptor)).getDisplayName()));
                 return false;
             }
-            if (getComponent().getSelectedEntities().isEmpty()) {
-                setErrorMessage(NbBundle.getMessage(EntityClassesPanel.class, "ERR_SelectEntities"));
+            String err = validator.apply(getComponent().getSelectedClasses());
+            if (err != null) {
+                setErrorMessage(err);
                 return false;
             }
             setErrorMessage(" "); // NOI18N
@@ -380,10 +400,15 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         }
 
         @Override
+        public boolean isFinishPanel() {
+            return !getComponent().getSelectedClasses().isEmpty();
+        }
+
+        @Override
         public void storeSettings(WizardDescriptor settings) {
-            Set<String> selected = getComponent().getSelectedEntities();
-            Map<String, String> selEntities = entities.entrySet().stream().filter(entry -> selected.contains(entry.getKey())).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
-            wizardDescriptor.putProperty(MicronautRepository.PROP_SELECTED_ENTITIES, selEntities);
+            Set<String> selected = getComponent().getSelectedClasses();
+            Map<String, Object> selEntities = classes.entrySet().stream().filter(entry -> selected.contains(entry.getKey())).collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+            wizardDescriptor.putProperty(PROP_SELECTED_CLASSES, selEntities);
         }
 
         @Override

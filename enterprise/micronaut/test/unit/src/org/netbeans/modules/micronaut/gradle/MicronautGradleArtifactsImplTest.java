@@ -26,6 +26,7 @@ import static junit.framework.TestCase.assertNotNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.ProjectTrust;
@@ -83,6 +84,7 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
        // Configure the DummyFilesLocator with NB harness dir
         File destDirF = getTestNBDestDir();
         DummyInstalledFileLocator.registerDestDir(destDirF);
+        Main.getModuleSystem();
     }
     
     public void testProjectArtifactWithNormalQuery() throws Exception {

@@ -1,0 +1,7 @@
+user : String
+T(...)
+ctx[...]
+env[...]
+firstValue() : String
+getUser() : String
+secondValue() : String

@@ -3,4 +3,3 @@ OpenIDE-Module: org.netbeans.modules.java.source.base
 OpenIDE-Module-Implementation-Version: 6
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/java/source/base/Bundle.properties
 OpenIDE-Module-Layer: org/netbeans/modules/java/source/base/layer.xml
-OpenIDE-Module-Recommends: org.netbeans.libs.nbjavac

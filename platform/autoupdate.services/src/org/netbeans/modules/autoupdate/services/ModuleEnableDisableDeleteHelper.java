@@ -59,18 +59,18 @@ import org.xml.sax.SAXException;
  *
  * @author  Jiri Rechtacek
  */
-public final class ModuleDeleterImpl  {
-    private static final ModuleDeleterImpl INSTANCE = new ModuleDeleterImpl();
+public final class ModuleEnableDisableDeleteHelper  {
+    private static final ModuleEnableDisableDeleteHelper INSTANCE = new ModuleEnableDisableDeleteHelper();
     private static final String ELEMENT_MODULE = "module"; // NOI18N
     private static final String ELEMENT_VERSION = "module_version"; // NOI18N
     private static final String ATTR_LAST = "last"; // NOI18N
     private static final String ATTR_FILE_NAME = "name"; // NOI18N
     
-    private static final Logger err = Logger.getLogger (ModuleDeleterImpl.class.getName ()); // NOI18N
+    private static final Logger err = Logger.getLogger (ModuleEnableDisableDeleteHelper.class.getName ()); // NOI18N
     
     private Set<File> storageFilesForDelete = null;
     
-    public static ModuleDeleterImpl getInstance() {
+    public static ModuleEnableDisableDeleteHelper getInstance() {
         return INSTANCE;
     }
     
@@ -88,7 +88,7 @@ public final class ModuleDeleterImpl  {
         }
     }
     
-    public Collection<File> markForDisable (Collection<ModuleInfo> modules, ProgressHandle handle) {
+    public Collection<File> findControlFiles(Collection<ModuleInfo> modules, ProgressHandle handle) {
         if (modules == null) {
             throw new IllegalArgumentException ("ModuleInfo argument cannot be null.");
         }
@@ -96,7 +96,11 @@ public final class ModuleDeleterImpl  {
         if (handle != null) {
             handle.switchToDeterminate (modules.size() + 1);
         }
-        
+
+        return doFindControlFiles(modules, handle);
+    }
+
+    private Collection<File> doFindControlFiles(Collection<ModuleInfo> modules, ProgressHandle handle) {
         Collection<File> configs = new HashSet<File> ();
         int i = 0;
         for (ModuleInfo moduleInfo : modules) {
@@ -125,18 +129,9 @@ public final class ModuleDeleterImpl  {
             handle.switchToDeterminate (modules.size () * 2 + 1);
         }
 
-        Collection<File> configFiles = new HashSet<File> ();
-        int i = 0;
-        for (ModuleInfo moduleInfo : modules) {
-            Collection<File> configs = locateAllConfigFiles (moduleInfo);
-            assert configs != null : "Located config files for " + moduleInfo.getCodeName ();
-            assert ! configs.isEmpty () : configs + " config files must exists for " + moduleInfo.getCodeName ();
-            configFiles.addAll (configs);
-            err.log(Level.FINE, "Locate config files of " + moduleInfo.getCodeNameBase () + ": " + configs);
-            if (handle != null) {
-                handle.progress (++i);
-            }
-        }
+        Collection<File> configFiles = doFindControlFiles(modules, handle);
+        int i = configFiles.size();
+
         getStorageFilesForDelete ().addAll (configFiles);
         
         for (ModuleInfo moduleInfo : modules) {

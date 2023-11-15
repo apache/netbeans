@@ -50,6 +50,16 @@ import org.openide.util.actions.SystemAction;
 public class CreateBranchAction extends SingleRepositoryAction {
 
     private static final Logger LOG = Logger.getLogger(CreateBranchAction.class.getName());
+    private static final String ICON_RESOURCE = "org/netbeans/modules/git/resources/icons/branch.png"; //NOI18N
+
+    public CreateBranchAction() {
+        super(ICON_RESOURCE);
+    }
+
+    @Override
+    protected String iconResource() {
+        return ICON_RESOURCE;
+    }
 
     @Override
     protected void performAction (File repository, File[] roots, VCSContext context) {

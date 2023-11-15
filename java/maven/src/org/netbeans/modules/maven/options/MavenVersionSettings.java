@@ -60,12 +60,11 @@ public final class MavenVersionSettings {
     public String getVersion(String plugin) {
         String toRet = getProperty(plugin);
         if (toRet == null) {
-            // XXX these should rather read the most recent version from the repository index
+            // XXX these should rather read the most recent version from the repository index (agreed)
             if (VERSION_RESOURCES.equals(plugin)) {
-                toRet = "2.4.3"; //NOI18N
-            }
-            else if (VERSION_COMPILER.equals(plugin)) {
-                toRet = "2.3.2"; //NOI18N
+                toRet = "3.3.1"; //NOI18N
+            } else if (VERSION_COMPILER.equals(plugin)) {
+                toRet = "3.11.0"; //NOI18N
             }
         }
         if (toRet == null) {

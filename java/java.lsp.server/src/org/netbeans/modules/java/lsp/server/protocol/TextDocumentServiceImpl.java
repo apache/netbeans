@@ -1661,10 +1661,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 if (doc == null) {
                     doc = ec.openDocument();
                 }
-                if (!text.contentEquals(doc.getText(0, doc.getLength()))) {
-                    doc.remove(0, doc.getLength());
-                    doc.insertString(0, text, null);
-                }
+                updateDocumentIfNeeded(text, doc);
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
                 //TODO: include stack trace:
@@ -1681,6 +1678,42 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         } finally {
             reportNotificationDone("didOpen", params);
         }
+    }
+
+    static void updateDocumentIfNeeded(String text, Document doc) throws BadLocationException {
+        String docText = doc.getText(0, doc.getLength());
+
+        if (text.contentEquals(docText)) {
+            //the texts are the same, no need to change the Document content:
+            return ;
+        }
+
+        //normalize line endings:
+        StringBuilder newText = new StringBuilder(text.length());
+        int len = text.length();
+        boolean modified = false;
+
+        for (int i = 0; i < len; i++) {
+            char c = text.charAt(i);
+            if (c == '\r') {
+                if (i + 1 < len && text.charAt(i + 1) == '\n') {
+                    i++;
+                }
+                c = '\n';
+                modified = true;
+            }
+            newText.append(c);
+        }
+
+        String newTextString = newText.toString();
+
+        if (modified && docText.equals(newTextString)) {
+            //only change in line endings, no need to change the Document content:
+            return ;
+        }
+
+        doc.remove(0, doc.getLength());
+        doc.insertString(0, newTextString, null);
     }
 
     @Override

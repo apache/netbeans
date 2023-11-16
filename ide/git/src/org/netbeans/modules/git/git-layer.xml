@@ -72,10 +72,6 @@
                 <attr name="originalFile" stringvalue="Actions/Git/org-netbeans-modules-git-ui-diff-DiffAction.instance"/>
                 <attr name="position" intvalue="500"/>
             </file>
-            <file name="sep1.instance">
-                <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                <attr intvalue="510" name="position"/>
-            </file>
             <file name="org-netbeans-modules-git-ui-branch-CreateBranchAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Git/org-netbeans-modules-git-ui-branch-CreateBranchAction.instance"/>
                 <attr name="position" intvalue="520"/>
@@ -83,10 +79,6 @@
             <file name="org-netbeans-modules-git-ui-checkout-SwitchBranchAction.instance.shadow">
                 <attr name="originalFile" stringvalue="Actions/Git/org-netbeans-modules-git-ui-checkout-SwitchBranchAction.instance"/>
                 <attr name="position" intvalue="525"/>
-            </file>
-            <file name="sep2.instance">
-                <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                <attr intvalue="550" name="position"/>
             </file>
             <file name="org-netbeans-modules-git-ui-fetch-PullFromUpstreamAction.instance.shadow">
                   <attr name="originalFile" stringvalue="Actions/Git/org-netbeans-modules-git-ui-fetch-PullFromUpstreamAction.instance"/>

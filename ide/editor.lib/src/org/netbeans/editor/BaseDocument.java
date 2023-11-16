@@ -2169,30 +2169,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
     *   the function itself computes the begining of the line first
     */
     int getVisColFromPos(int offset) throws BadLocationException {
-        if (offset < 0 || offset > getLength()) {
-            throw new BadLocationException("Invalid offset", offset); // NOI18N
-        }
-        int startLineOffset = Utilities.getRowStart(this, offset);
-        int tabSize = getTabSize();
-        CharSequence docText = org.netbeans.lib.editor.util.swing.DocumentUtilities.getText(this);
-        int visCol = 0;
-        for (int i = startLineOffset; i < offset; i++) {
-            char ch = docText.charAt(i);
-            if (ch == '\t') {
-                visCol = (visCol + tabSize) / tabSize * tabSize;
-            } else {
-                // #17356
-                int codePoint;
-                if (Character.isHighSurrogate(ch) && i + 1 < docText.length()) {
-                    codePoint = Character.toCodePoint(ch, docText.charAt(++i));
-                } else {
-                    codePoint = ch;
-                }
-                int w = WcwdithUtil.wcwidth(codePoint);
-                visCol += w > 0 ? w : 0;
-            }
-        }
-        return visCol;
+        return Utilities.getVisColFromPos(this, offset);
     }
 
     protected Dictionary createDocumentProperties(Dictionary origDocumentProperties) {

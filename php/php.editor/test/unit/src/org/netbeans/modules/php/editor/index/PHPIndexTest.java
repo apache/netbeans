@@ -772,6 +772,10 @@ public class PHPIndexTest extends PHPNavTestBase {
         checkIndexer(getTestPath());
     }
 
+    public void testPhpDocParameterTypes() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
     @Override
     protected FileObject[] createSourceClassPathsForTest() {
         final File folder = new File(getDataDir(), getTestFolderPath());

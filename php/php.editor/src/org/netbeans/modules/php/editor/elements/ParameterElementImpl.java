@@ -72,7 +72,7 @@ public final class ParameterElementImpl implements ParameterElement {
         this.defaultValue = (!isMandatory && defaultValue != null) ? decode(defaultValue) : ""; //NOI18N
         this.offset = offset;
         this.declaredType = declaredType;
-        this.phpdocType = (phpdocType != null && phpdocType.contains(";")) ? null : phpdocType; // NOI18N e.g. Ty;p;e (see: issue240824)
+        this.phpdocType = (phpdocType != null) ? decode(phpdocType) : null;
         this.types = types;
         this.isRawType = isRawType;
         this.isReference = isReference;
@@ -166,7 +166,9 @@ public final class ParameterElementImpl implements ParameterElement {
         sb.append(Separator.COLON);
         sb.append((declaredType != null) ? declaredType : ""); // NOI18N
         sb.append(Separator.COLON);
-        sb.append((phpdocType != null) ? phpdocType : ""); // NOI18N
+        // PhpDoc may have separators(":", ";", ",")
+        // e.g. @param (callable(CacheItemInterface,bool):T)|(callable(ItemInterface,bool):T)|CallbackInterface<T>
+        sb.append((phpdocType != null) ? encode(phpdocType) : ""); // NOI18N
         checkSignature(sb);
         return sb.toString();
     }
@@ -316,7 +318,7 @@ public final class ParameterElementImpl implements ParameterElement {
                 String docType = getPhpdocType();
                 if (docType != null) {
                     String paramPhpDocType = parsedParameter.getPhpdocType();
-                    assert paramPhpDocType != null && docType.equals(paramPhpDocType) : signature;
+                    assert paramPhpDocType != null && docType.equals(paramPhpDocType) : "signature:" + signature + ", paramPhpDocType: " + paramPhpDocType + ", docType: " + docType; // NOI18N
                 }
             } catch (NumberFormatException originalException) {
                 final String message = String.format("%s [for signature: %s]", originalException.getMessage(), signature); //NOI18N

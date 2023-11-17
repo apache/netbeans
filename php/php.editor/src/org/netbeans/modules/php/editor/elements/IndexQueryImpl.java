@@ -42,6 +42,7 @@ import org.netbeans.modules.php.api.editor.PhpBaseElement;
 import org.netbeans.modules.php.api.editor.PhpClass;
 import org.netbeans.modules.php.api.editor.PhpType;
 import org.netbeans.modules.php.api.editor.PhpVariable;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.api.AbstractElementQuery;
 import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.ElementQuery;
@@ -1254,6 +1255,9 @@ public final class IndexQueryImpl implements ElementQuery.Index {
             TraitedElement traitedElement = (TraitedElement) typeElement;
             Collection<QualifiedName> usedTraits = traitedElement.getUsedTraits();
             for (QualifiedName trait : usedTraits) {
+                if (StringUtils.isEmpty(trait.getName())) {
+                    continue;
+                }
                 final Set<TypeMemberElement> traitTypes = new LinkedHashSet<>();
                 if (memberKinds.size() != 1) {
                     traitTypes.addAll(ElementFilter.forFiles(typeElement.getFileObject()).prefer(getTypeMembers(NameKind.exact(trait), NameKind.empty())));
@@ -1298,7 +1302,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
 
     private Set<TypeMemberElement> getDirectInheritedClassTypes(QualifiedName superClassName, EnumSet<PhpElementKind> memberKinds, final TypeElement typeElement) {
         final Set<TypeMemberElement> classTypes = new LinkedHashSet<>();
-        if (superClassName != null) {
+        if (superClassName != null && !StringUtils.isEmpty(superClassName.getName())) {
             classTypes.addAll(extendedQuery.getFields(NameKind.exact(superClassName), NameKind.empty()));
             classTypes.addAll(extendedQuery.getMethods(NameKind.exact(superClassName), NameKind.empty()));
             classTypes.addAll(extendedQuery.getTypeConstants(NameKind.exact(superClassName), NameKind.empty()));

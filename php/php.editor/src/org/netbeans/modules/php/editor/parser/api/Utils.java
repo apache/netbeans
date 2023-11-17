@@ -75,12 +75,19 @@ public final class Utils {
                 }
             }
             if (possible != null && (possible.getEndOffset() + 1 < node.getStartOffset())) {
-                List<ASTNode> nodes = (new NodeRangeLocator()).locate(root, new OffsetRange(possible.getEndOffset() + 1, getNodeRangeLocatorEndOffset(node)));
-                if (!nodes.isEmpty()) {
-                    if (!isConstantDeclaration(nodes, node)
-                            && !isFieldDeclaration(nodes, node)) {
-                        possible = null;
+                int start = possible.getEndOffset() + 1;
+                int end = getNodeRangeLocatorEndOffset(node);
+                if (start <= end) {
+                    List<ASTNode> nodes = (new NodeRangeLocator()).locate(root, new OffsetRange(start, end));
+                    if (!nodes.isEmpty()) {
+                        if (!isConstantDeclaration(nodes, node)
+                                && !isFieldDeclaration(nodes, node)) {
+                            possible = null;
+                        }
                     }
+                } else {
+                    // e.g. public self|A /* comment */ |null $unionType; (start > end)
+                    possible = null;
                 }
             }
         }

@@ -698,6 +698,36 @@ public class PhpTypedTextInterceptorTest extends PhpTypinghooksTestBase {
         insertChar(original, ' ', expected);
     }
 
+    public void testIssueGH6706_01() throws Exception {
+        String original = ""
+                + "$test = \"[$variable test]\";\n"
+                + "$array['key'^];";
+        String expected = ""
+                + "$test = \"[$variable test]\";\n"
+                + "$array['key']^;";
+        insertChar(original, ']', expected);
+    }
+
+    public void testIssueGH6706_02() throws Exception {
+        String original = ""
+                + "$test = \"[test $variable]\";\n"
+                + "$array['key'^];";
+        String expected = ""
+                + "$test = \"[test $variable]\";\n"
+                + "$array['key']^;";
+        insertChar(original, ']', expected);
+    }
+
+    public void testIssueGH6706_03() throws Exception {
+        String original = ""
+                + "$test = \"[$variable]\";\n"
+                + "$array['key'^];";
+        String expected = ""
+                + "$test = \"[$variable]\";\n"
+                + "$array['key']^;";
+        insertChar(original, ']', expected);
+    }
+
 //    Uncomment when CslTestBase.insertChar() will support ambiguous selection strings
 //
 //    public void testIssue242358() throws Exception {

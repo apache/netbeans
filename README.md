@@ -1,116 +1,149 @@
-<!--
+[!Licensed](Apache2.0)
+to the Apache Software 
+Foundation  "ASF" 
+under one or more contributor license agreements
+See the NOTICE file
+------
+distributed with this work 
+for additional information
+regarding copyright ownership
+The ASF licenses this file
+to you under the Apache 
+License Version 2.0 
+(the
+License);
+you may not use this 
+file except in compliance
+    with the License
+    You may obtain a copy of the         License at                            http://www.apache.org
+    /
+    licenses/LICENSE-2.0
+------
+  Unless required by applicable 
+  law or agreed to in writing
+  software distributed under 
+  the License is distributed
+  on an
+    "AS IS" BASIS
+    WITHOUT WARRANTIES 
+    OR CONDITIONS OF ANY
+    KIND, either express 
+    or implied 
+    See the License for 
+    the
+    specific language 
+    governing permissions
+    and limitations under the            License-->
+</a>href="https://foojay.io/today/works-with-openjdk"><img align="right" src="https://github.com/foojayio/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png" width="100"></a>
+---
+# Apache NetBeans is an open source development environment 
+tooling platform and application framework
+---
+is Build status
+|GitHub actions:[![Build Status](https://github.com/apache/netbeans/actions/workflows/main.yml/badge.svg?|branch=master)](https://github.com/apache/netbeans/actions/workflows/main.yml)|
+|
+[![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
+|Apache Jenkins Linux:
+[![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
+|Windows:[![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows) |
+License Status Apache Rat and ant verify-libs-and-licenses: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-license/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-license/)
 
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+# Requirements
+| Git   
+|-|
+|Ant 1.9.9 or above|
+| JDK 11 or above|
+|(to build and run NetBeans)|
 
-      http://www.apache.org/licenses/LICENSE-2.0
+# Notes:  NetBeans license violation checks are managed via the 
+[rat-exclusions.txt](https://github.com/apache/netbeans/blob/master/nbbuild/rat-exclusions.txt) 
+file.Set `JAVA_HOME`
+and `ANT_HOME` appropriately or 
+leave them undefined.
 
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
+# Building NetBeans
+Build the default `release` config See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19)  property
+---
+`$ ant build`
+Build the basic project mainly Java features: `$ant 
+-Dcluster.config = basic build`
+Build the full project
+may include clusters which
+are not be in the release:
+`
+$ant 
+-Dcluster
+.config.= full 
+-build`
 
--->
-
-<a href="https://foojay.io/today/works-with-openjdk"><img align="right" src="https://github.com/foojayio/badges/raw/main/works_with_openjdk/Works-with-OpenJDK.png" width="100"></a>
-
-# Apache NetBeans
-
-Apache NetBeans is an open source development environment, tooling platform, and application framework.
-
-### Build status
-   * GitHub actions
-     * [![Build Status](https://github.com/apache/netbeans/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/main.yml)
-     * [![Profiler Lib Native Binaries](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml/badge.svg?branch=master)](https://github.com/apache/netbeans/actions/workflows/native-binary-build-lib.profiler.yml)
-   * Apache Jenkins:
-     * Linux: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/)
-     * Windows: [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-windows) 
-   * License Status ( Apache Rat and ant verify-libs-and-licenses )
-     * [![Build Status](https://ci-builds.apache.org/job/Netbeans/job/netbeans-license/badge/icon)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-license/)
-
-### Requirements
-
-  * Git
-  * Ant 1.9.9 or above
-  * JDK 11 or above (to build and run NetBeans)
-
-#### Notes:
-
-* NetBeans license violation checks are managed via the [rat-exclusions.txt](https://github.com/apache/netbeans/blob/master/nbbuild/rat-exclusions.txt) file.
-* Set JAVA_HOME and ANT_HOME appropriately or leave them undefined.
-
-### Building NetBeans
-
-Build the default `release` config (See the [cluster.config](https://github.com/apache/netbeans/blob/ab66c7fdfdcbf0bde67b96ddb075c83451cdd1a6/nbbuild/cluster.properties#L19) property.)
-```
-$ ant build
-```
-Build the basic project (mainly Java features):
-```
-$ ant -Dcluster.config=basic build
-```
-Build the full project (may include clusters which are not be in the release):
-```
-$ ant -Dcluster.config=full build
-```
 Build the NetBeans Platform:
-```
-$ ant -Dcluster.config=platform build
-```
+`$ ant
+-Dcluster
+.config = platform 
+build`
+
 Cleanup:
-```
-$ ant -q clean
-```
+`$ant
+-q clean`
 
-#### Notes:
-* You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
-* Once built, you can simply open individual modules of interest with NetBeans and run/rebuild/debug them like any other project
-* Building the gradle modules on recent JDKs might fail with "Unsupported class file major version" errors. In that case the gradle daemon must be
-  configured to run on a compatible JDK (for example add `org.gradle.java.home=/home/duke/jdk17` to your `~/.gradle/gradle.properties`, see [gradle doc](https://docs.gradle.org/current/userguide/build_environment.html)).
+# Notes:
+You can also use
+`php`
+`enterprise`
+ See the
+ [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties)
+ file.
+ Once-in-a-lifetime built
+ you can simply open 
+ individual modules of 
+ interest with NetBeans
+ and run/rebuild/debug
+ them like any other project
+ Building the gradle modules 
+ on recent JDKs might fail
+ with "Unsupported class file
+ major version" errors. In that
+ case the gradle daemon must be
+configured to run on a compatible JDK for example add `org.gradle.java.home=/home/duke/jdk17` 
+to your `~/.gradle/gradle.properties`
+see
+[gradle doc](https://docs.gradle.org/current/userguide/build_environment.html)).
 
-#### Generating Javadoc
-
+# Generating Javadoc
 Build javadoc:
-```
-$ ant build javadoc
-```
+`$ ant build javadoc`
 
-**Note** Run `javadoc-nb` task in Netbeans to run the javadoc build and display it in a web browser.
-
-### Running NetBeans
-
+**Note** 
+Run 
+`javadoc-nb` 
+task in Netbeans to run
+the javadoc build and display
+it in a web browser
+# Running NetBeans
 Run the build:
-```
-$ ant tryme
-```
+`$ ant tryme`
+**Note:** 
+Look in nbbuild/netbeans
+for the NetBeans installation created by the build 
+process
 
-**Note:** Look in nbbuild/netbeans for the NetBeans installation created by the build process.
-
-### Get In Touch
-
-[Subscribe](mailto:users-subscribe@netbeans.apache.org) or [mail](mailto:users@netbeans.apache.org) the [users@netbeans.apache.org](mailto:users@netbeans.apache.org) list - Ask questions, find answers, and also help other users.
-
-[Subscribe](mailto:dev-subscribe@netbeans.apache.org) or [mail](mailto:dev@netbeans.apache.org) the [dev@netbeans.apache.org](mailto:dev@netbeans.apache.org) list - Join development discussions, propose new ideas and connect with contributors.
-
-### Download
-
-Developer builds can be downloaded: [Latest build (netbeans-xxx.zip)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/).
-
-Latest release (convenience binary of released source artifacts): https://netbeans.apache.org/download/index.html.
-
-### Reporting Bugs
-
-[How to report bugs](https://netbeans.apache.org/participate/report-issue.html)
-
-### Log, Config and Cache Locations
-
+# Get In Touch
+[Subscribe](mailto:users-subscribe@netbeans.apache.org)
+or
+[mail](mailto:users@netbeans.apache.org) 
+t [users@netbeans.apache.org](mailto:users@netbeans.apache.org) list - Ask questions, find answers, and also help other users
+[Subscribe](mailto:dev-subscribe@netbeans.apache.org) 
+or [mail](mailto:dev@netbeans.apache.org) 
+the [dev@netbeans.apache.org](mailto:dev@netbeans.apache.org) list - 
+Join development discussions, propose new ideas and connect with contributors Download
+Developer builds can be
+downloaded:
+[Latest build (netbeans-xxx.zip)](https://ci-builds.apache.org/job/Netbeans/job/netbeans-linux/lastSuccessfulBuild/artifact/nbbuild/).
+Latest release 
+convenience binary 
+of released source artifacts: https://netbeans.apache.org/download/index.html
+# Reporting Bugs
+[How to report bugs](https://netbeans.apache.org/participate/report-issue.html)Log, Config and Cache Locations
  * start config (JVM settings, default JDK, userdir, cachedir location and more):  
    `netbeans/etc/netbeans.conf`
  * user settings storage (preferences, installed plugins, logs):  

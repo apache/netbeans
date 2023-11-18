@@ -539,13 +539,16 @@ public class PhpTypedTextInterceptor implements TypedTextInterceptor {
             }
             token = ts.token();
             while (token != null) {
-                if ((LexUtilities.textEquals(token.text(), '(')) || (LexUtilities.textEquals(token.text(), '['))) {
-                    if (LexUtilities.textEquals(token.text(), leftBracket)) {
-                        bracketBalanceWithNewBracket++;
-                    }
-                } else if ((LexUtilities.textEquals(token.text(), ')')) || (LexUtilities.textEquals(token.text(), ']'))) {
-                    if (LexUtilities.textEquals(token.text(), bracket)) {
-                        bracketBalanceWithNewBracket--;
+                // GH-6706 we can get "[" as PHP_ENCAPSED_AND_WHITESPACE token e.g. $x = "[$y example]"
+                if (token.id() == PHPTokenId.PHP_TOKEN) {
+                    if ((LexUtilities.textEquals(token.text(), '(')) || (LexUtilities.textEquals(token.text(), '['))) {
+                        if (LexUtilities.textEquals(token.text(), leftBracket)) {
+                            bracketBalanceWithNewBracket++;
+                        }
+                    } else if ((LexUtilities.textEquals(token.text(), ')')) || (LexUtilities.textEquals(token.text(), ']'))) {
+                        if (LexUtilities.textEquals(token.text(), bracket)) {
+                            bracketBalanceWithNewBracket--;
+                        }
                     }
                 }
                 if (!ts.moveNext()) {
@@ -553,11 +556,7 @@ public class PhpTypedTextInterceptor implements TypedTextInterceptor {
                 }
                 token = ts.token();
             }
-            if (bracketBalanceWithNewBracket == 0) {
-                skipClosingBracket = false;
-            } else {
-                skipClosingBracket = true;
-            }
+            skipClosingBracket = bracketBalanceWithNewBracket != 0;
         }
 
         return skipClosingBracket;

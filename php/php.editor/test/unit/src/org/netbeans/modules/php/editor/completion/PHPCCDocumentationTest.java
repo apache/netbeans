@@ -602,6 +602,14 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "static::$phpdocStaticFiel^d;", false, "");
     }
 
+    public void testFunctionGuessingArrayReturnType_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionGuessingArrayReturnType.php", "testArrayReturn^Type();", false, "");
+    }
+
+    public void testFunctionGuessingArrayReturnType_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionGuessingArrayReturnType.php", "testArrayReturnTypeWithUnion^Type();", false, "");
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");

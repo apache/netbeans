@@ -311,7 +311,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                         }
                     }
                 }
-            } else if (expression instanceof Scalar) {
+            } else if (expression instanceof Scalar || expression instanceof ArrayCreation) {
                 typeName = VariousUtils.extractVariableTypeFromExpression(expression, null);
             }
             if (!StringUtils.isEmpty(typeName)) {

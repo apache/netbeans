@@ -129,19 +129,17 @@ public enum JavaTokenId implements TokenId {
     STRING_LITERAL(null, "string"),
     /**@since 1.41*/
     MULTILINE_STRING_LITERAL(null, "string"),
-    
+
     TRUE("true", "literal"),
     FALSE("false", "literal"),
     NULL("null", "literal"),
-    
+
     LPAREN("(", "separator"),
     RPAREN(")", "separator"),
     LBRACE("{", "separator"),
     RBRACE("}", "separator"),
     LBRACKET("[", "separator"),
     RBRACKET("]", "separator"),
-    LANGLE("<", "separator"),
-    RANGLE(">", "separator"),
     SEMICOLON(";", "separator"),
     COMMA(",", "separator"),
     DOT(".", "separator"),
@@ -187,15 +185,15 @@ public enum JavaTokenId implements TokenId {
     GTGTGTEQ(">>>=", "operator"),
     /**@since 1.23*/
     ARROW("->", "operator"),
-    
+
     ELLIPSIS("...", "special"),
     AT("@", "special"),
-    
+
     WHITESPACE(null, "whitespace"),
     LINE_COMMENT(null, "comment"), // Token includes ending new-line
     BLOCK_COMMENT(null, "comment"),
     JAVADOC_COMMENT(null, "comment"),
-    
+
     // Errors
     INVALID_COMMENT_END("*/", "error"),
     FLOAT_LITERAL_INVALID(null, "number");
@@ -229,21 +227,21 @@ public enum JavaTokenId implements TokenId {
         protected Collection<JavaTokenId> createTokenIds() {
             return EnumSet.allOf(JavaTokenId.class);
         }
-        
+
         @Override
         protected Map<String,Collection<JavaTokenId>> createTokenCategories() {
             Map<String,Collection<JavaTokenId>> cats = new HashMap<String,Collection<JavaTokenId>>();
             // Additional literals being a lexical error
             cats.put("error", EnumSet.of(
-                JavaTokenId.FLOAT_LITERAL_INVALID
+                    JavaTokenId.FLOAT_LITERAL_INVALID
             ));
             // Literals category
             EnumSet<JavaTokenId> l = EnumSet.of(
-                JavaTokenId.INT_LITERAL,
-                JavaTokenId.LONG_LITERAL,
-                JavaTokenId.FLOAT_LITERAL,
-                JavaTokenId.DOUBLE_LITERAL,
-                JavaTokenId.CHAR_LITERAL
+                    JavaTokenId.INT_LITERAL,
+                    JavaTokenId.LONG_LITERAL,
+                    JavaTokenId.FLOAT_LITERAL,
+                    JavaTokenId.DOUBLE_LITERAL,
+                    JavaTokenId.CHAR_LITERAL
             );
             l.add(JavaTokenId.STRING_LITERAL);
             cats.put("literal", l);
@@ -258,7 +256,7 @@ public enum JavaTokenId implements TokenId {
 
         @Override
         protected LanguageEmbedding<?> embedding(
-        Token<JavaTokenId> token, LanguagePath languagePath, InputAttributes inputAttributes) {
+                Token<JavaTokenId> token, LanguagePath languagePath, InputAttributes inputAttributes) {
             // Test language embedding in the block comment
             switch (token.id()) {
                 case JAVADOC_COMMENT:

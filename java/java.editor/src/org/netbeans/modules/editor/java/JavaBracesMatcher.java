@@ -51,21 +51,21 @@ import org.openide.util.Exceptions;
 public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFactory, BracesMatcher.ContextLocator {
 
     private static final char [] PAIRS = new char [] { '(', ')', '[', ']', '{', '}', '<', '>' }; //NOI18N
-    private static final JavaTokenId [] PAIR_TOKEN_IDS = new JavaTokenId [] { 
-        JavaTokenId.LPAREN, JavaTokenId.RPAREN, 
-        JavaTokenId.LBRACKET, JavaTokenId.RBRACKET, 
-        JavaTokenId.LBRACE, JavaTokenId.RBRACE,
-            JavaTokenId.LANGLE, JavaTokenId.RANGLE
+    private static final JavaTokenId [] PAIR_TOKEN_IDS = new JavaTokenId [] {
+            JavaTokenId.LPAREN, JavaTokenId.RPAREN,
+            JavaTokenId.LBRACKET, JavaTokenId.RBRACKET,
+            JavaTokenId.LBRACE, JavaTokenId.RBRACE,
+            JavaTokenId.LT, JavaTokenId.GT
     };
-    
+
     private final MatcherContext context;
-    
+
     private int originOffset;
     private char originChar;
     private char matchingChar;
     private boolean backward;
     private List<TokenSequence<?>> sequences;
-    
+
     public JavaBracesMatcher() {
         this(null);
     }
@@ -73,30 +73,30 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
     private JavaBracesMatcher(MatcherContext context) {
         this.context = context;
     }
-    
+
     private JavaBracesMatcher(MatcherContext context, int searchOffset) {
         this(context);
         this.searchOffset = searchOffset;
     }
-    
+
     private int searchOffset = -1;
-    
+
     private int getSearchOffset() {
         return searchOffset >=0 ? searchOffset : context.getSearchOffset();
     }
-    
+
     // -----------------------------------------------------
     // BracesMatcher implementation
     // -----------------------------------------------------
-    
+
     public int[] findOrigin() throws BadLocationException, InterruptedException {
         ((AbstractDocument) context.getDocument()).readLock();
         try {
             int [] origin = BracesMatcherSupport.findChar(
-                context.getDocument(), 
-                getSearchOffset(), 
-                context.getLimitOffset(), 
-                PAIRS
+                    context.getDocument(),
+                    getSearchOffset(),
+                    context.getLimitOffset(),
+                    PAIRS
             );
 
             if (origin != null) {
@@ -115,7 +115,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                     seq.move(originOffset);
                     if (seq.moveNext()) {
                         if (seq.token().id() == JavaTokenId.BLOCK_COMMENT ||
-                            seq.token().id() == JavaTokenId.LINE_COMMENT
+                                seq.token().id() == JavaTokenId.LINE_COMMENT
                         ) {
                             return null;
                         }
@@ -194,7 +194,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                                 Token<?> t = seq.token();
 
                                 if (t.id() == JavaTokenId.STRING_LITERAL ||
-                                    t.id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                                        t.id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
 
                                     switch (t.partType()) {
                                         case START: counter++; break;
@@ -217,7 +217,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                                 Token<?> t = seq.token();
 
                                 if (t.id() == JavaTokenId.STRING_LITERAL ||
-                                    t.id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+                                        t.id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
 
                                     switch (t.partType()) {
                                         case END: counter++; break;
@@ -236,7 +236,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                                 }
                             }
                         }
-                        return null;                        
+                        return null;
                     }
                 }
 
@@ -264,12 +264,12 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
             ((AbstractDocument) context.getDocument()).readUnlock();
         }
     }
-    
+
     /**
      * Start of the matched brace/bracket
      */
     private int matchStart;
-    
+
     /**
      * Provides better context if the matched counterpart character is the opening curly brace.
      */
@@ -284,14 +284,14 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
         }
         return null;
     }
-    
+
     public BraceContext findContextBackwards(final int p2) throws BadLocationException, IOException {
         // sanity check, do not accept anything but the original offset for now.
         if (p2 != originOffset) {
             return null;
         }
         final int position = matchStart;
-        
+
         JavaSource src = JavaSource.forDocument(context.getDocument());
         if (src == null) {
             return null;
@@ -313,7 +313,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                 } else {
                     block = null;
                 }
-                
+
                 switch (path.getLeaf().getKind()) {
                     case IF: {
                         IfTree ifTree = (IfTree)path.getLeaf();
@@ -334,7 +334,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                                         while (seq.movePrevious()) {
                                             TokenId id = seq.token().id();
                                             if (!(id == JavaTokenId.WHITESPACE || id == JavaTokenId.BLOCK_COMMENT ||
-                                                id == JavaTokenId.LINE_COMMENT)) {
+                                                    id == JavaTokenId.LINE_COMMENT)) {
                                                 break;
                                             }
                                         }
@@ -348,26 +348,26 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                             int ifStart = (int)ctrl.getTrees().getSourcePositions().getStartPosition(
                                     ctrl.getCompilationUnit(), ifTree);
                             int ifEnd;
-                            
+
                             if (ifTree.getThenStatement().getKind() == Tree.Kind.BLOCK) {
                                 ifEnd = (int)ctrl.getTrees().getSourcePositions().getStartPosition(
-                                    ctrl.getCompilationUnit(), ifTree.getThenStatement());
+                                        ctrl.getCompilationUnit(), ifTree.getThenStatement());
                             } else {
                                 ifEnd = (int)ctrl.getTrees().getSourcePositions().getEndPosition(
-                                    ctrl.getCompilationUnit(), ifTree.getCondition());
+                                        ctrl.getCompilationUnit(), ifTree.getCondition());
                             }
                             BraceContext rel = BraceContext.create(
                                     context.getDocument().createPosition(ifStart),
                                     context.getDocument().createPosition(ifEnd + 1));
                             ret[0] = rel.createRelated(
-                                    context.getDocument().createPosition(elseStart[0]), 
+                                    context.getDocument().createPosition(elseStart[0]),
                                     context.getDocument().createPosition(position + 1));
                             return;
                         }
                     }
                     // fall through
                     case SWITCH:
-                    case WHILE_LOOP: 
+                    case WHILE_LOOP:
                     case METHOD:
                     case NEW_CLASS:
                     case CASE:
@@ -376,8 +376,8 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                         long start = ctrl.getTrees().getSourcePositions().getStartPosition(
                                 ctrl.getCompilationUnit(), path.getLeaf());
                         ret[0] = BraceContext.create(
-                            context.getDocument().createPosition((int)start),
-                            context.getDocument().createPosition(position));
+                                context.getDocument().createPosition((int)start),
+                                context.getDocument().createPosition(position));
                         return;
                     }
                     case CLASS:
@@ -385,24 +385,24 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                         long start = ctrl.getTrees().getSourcePositions().getStartPosition(
                                 ctrl.getCompilationUnit(), block != null ? block : path.getLeaf());
                         ret[0] = BraceContext.create(
-                            context.getDocument().createPosition((int)start),
-                            context.getDocument().createPosition(position));
+                                context.getDocument().createPosition((int)start),
+                                context.getDocument().createPosition(position));
                         return;
                     }
                     default:
                         return;
-                        
+
                 }
             }
         }, true);
-        
+
         return ret[0];
     }
-    
+
     // -----------------------------------------------------
     // private implementation
     // -----------------------------------------------------
-    
+
     private JavaTokenId getTokenId(char ch) {
         for(int i = 0; i < PAIRS.length; i++) {
             if (PAIRS[i] == ch) {
@@ -411,9 +411,9 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
         }
         return null;
     }
-    
+
     public static List<TokenSequence<?>> getEmbeddedTokenSequences(
-        TokenHierarchy<?> th, int offset, boolean backwardBias, Language<?> language
+            TokenHierarchy<?> th, int offset, boolean backwardBias, Language<?> language
     ) {
         List<TokenSequence<?>> sequences = th.embeddedTokenSequences(offset, backwardBias);
 
@@ -425,23 +425,23 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                 sequences.remove(i);
             }
         }
-        
+
         return sequences;
     }
-    
+
     private static final class TokenSequenceIterator {
-        
+
         private final List<TokenSequence<?>> list;
         private final boolean backward;
-        
+
         private int index;
-        
+
         public TokenSequenceIterator(List<TokenSequence<?>> list, boolean backward) {
             this.list = list;
             this.backward = backward;
             this.index = -1;
         }
-        
+
         public boolean hasMore() {
             return backward ? hasPrevious() : hasNext();
         }
@@ -450,60 +450,60 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
             assert index >= 0 && index < list.size() : "No sequence available, call hasMore() first."; //NOI18N
             return list.get(index);
         }
-        
+
         private boolean hasPrevious() {
             boolean anotherSeq = false;
-            
+
             if (index == -1) {
                 index = list.size() - 1;
                 anotherSeq = true;
             }
-            
+
             for( ; index >= 0; index--) {
                 TokenSequence<?> seq = list.get(index);
                 if (anotherSeq) {
                     seq.moveEnd();
                 }
-                
+
                 if (seq.movePrevious()) {
                     return true;
                 }
-                
+
                 anotherSeq = true;
             }
-            
+
             return false;
         }
-        
+
         private boolean hasNext() {
             boolean anotherSeq = false;
-            
+
             if (index == -1) {
                 index = 0;
                 anotherSeq = true;
             }
-            
+
             for( ; index < list.size(); index++) {
                 TokenSequence<?> seq = list.get(index);
                 if (anotherSeq) {
                     seq.moveStart();
                 }
-                
+
                 if (seq.moveNext()) {
                     return true;
                 }
-                
+
                 anotherSeq = true;
             }
-            
+
             return false;
         }
     } // End of TokenSequenceIterator class
-    
+
     // -----------------------------------------------------
     // BracesMatcherFactory implementation
     // -----------------------------------------------------
-    
+
     /** */
     public BracesMatcher createMatcher(MatcherContext context) {
         return new JavaBracesMatcher(context);

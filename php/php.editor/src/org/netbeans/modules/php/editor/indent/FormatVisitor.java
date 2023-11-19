@@ -3133,6 +3133,17 @@ public class FormatVisitor extends DefaultVisitor {
             removedWS = formatTokens.remove(formatTokens.size() - 1);
             index--;
             lastToken = formatTokens.get(index);
+        } else if (lastToken.getId() == FormatToken.Kind.INDENT) {
+            // GH-5380 there are whitespaces before ")" in the method invocation with ternary or null-coalescing operator
+            // e.g. var_dump($a ? 1 : 2  ); var_dump($a ?? null    );
+            if (index - 1 > 0) {
+                FormatToken possibleWSToken = formatTokens.get(index -1);
+                if (possibleWSToken.isWhitespace()) {
+                    removedWS = formatTokens.remove(index - 1);
+                    index -= 2;
+                    lastToken = formatTokens.get(index);
+                }
+            }
         }
 
         if (lastToken.getId() == FormatToken.Kind.WHITESPACE_AFTER_COMMA) {

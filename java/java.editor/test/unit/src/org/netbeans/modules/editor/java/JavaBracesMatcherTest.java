@@ -42,6 +42,14 @@ public class JavaBracesMatcherTest extends NbTestCase {
         assertMatches2("\"\\^{test^}\"");
     }
 
+    public void testMultilineStringBrackets() throws Exception {
+        assertMatches2(
+                  "\"\"\"\n"
+                + "^(\n"
+                + "^)\n"
+                + "\"\"\"");
+    }
+
     //from CslTestBase:
     protected void assertMatches2(String original) throws Exception {
         int caretPos = original.indexOf('^');

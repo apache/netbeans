@@ -71,15 +71,18 @@ import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.View;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.lib.editor.util.swing.DocumentListenerPriority;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.editor.lib.BeforeSaveTasks;
+import org.netbeans.modules.editor.lib.WcwdithUtil;
 import org.netbeans.modules.editor.lib2.EditorPreferencesDefaults;
 import org.netbeans.modules.editor.lib2.view.DocumentView;
 import org.netbeans.modules.editor.lib2.view.EditorView;
@@ -152,7 +155,40 @@ public class Utilities {
         }
         return -1;
     }
-
+    
+    /** Get visual column from position. This method can be used
+    * only for superfixed font i.e. all characters of all font styles
+    * have the same width.
+    * @param offset position for which the visual column should be returned
+    *   the function itself computes the begining of the line first
+    */
+    static int getVisColFromPos(LineDocument doc, int offset) throws BadLocationException {
+        if (offset < 0 || offset > doc.getLength()) {
+            throw new BadLocationException("Invalid offset", offset); // NOI18N
+        }
+        int startLineOffset =  LineDocumentUtils.getLineStart(doc, offset);
+        int tabSize = IndentUtils.tabSize(doc);
+        CharSequence docText = org.netbeans.lib.editor.util.swing.DocumentUtilities.getText(doc);
+        int visCol = 0;
+        for (int i = startLineOffset; i < offset; i++) {
+            char ch = docText.charAt(i);
+            if (ch == '\t') {
+                visCol = (visCol + tabSize) / tabSize * tabSize;
+            } else {
+                // #17356
+                int codePoint;
+                if (Character.isHighSurrogate(ch) && i + 1 < docText.length()) {
+                    codePoint = Character.toCodePoint(ch, docText.charAt(++i));
+                } else {
+                    codePoint = ch;
+                }
+                int w = WcwdithUtil.wcwidth(codePoint);
+                visCol += w > 0 ? w : 0;
+            }
+        }
+        return visCol;
+    }
+    
     /** Get the starting position of the row.
     * @param doc document to operate on
     * @param offset position in document where to start searching
@@ -583,6 +619,22 @@ public class Utilities {
         }
 
         return doc.getVisColFromPos(offset);
+    }
+    
+    /** Return visual column (with expanded tabs) on the line.
+    * @param doc document to operate on
+    * @param offset position in document for which the visual column should be found
+    * @return visual column on the line determined by position
+    */
+    public static int getVisualColumn(LineDocument doc, int offset)
+    throws BadLocationException {
+        
+        int docLen = doc.getLength();
+        if (offset == docLen + 1) { // at ending extra '\n' => make docLen to proceed without BLE
+            offset = docLen;
+        }
+
+        return getVisColFromPos(doc,offset);
     }
 
     /** Get the identifier around the given position or null if there's no identifier

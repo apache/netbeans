@@ -207,7 +207,7 @@ NodeActionsProviderFilter, TableModel, Constants {
         return model.getDisplayName (o);
     }
     
-    private Map shortDescriptionMap = new HashMap();
+    private Map<Object, Object> shortDescriptionMap = new HashMap<>();
     
     public String getShortDescription (final NodeModel model, final Object o) throws 
     UnknownTypeException {

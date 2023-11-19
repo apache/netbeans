@@ -1,0 +1,85 @@
+blank : boolean
+bytes : byte[]
+empty : boolean
+charAt(int index) : char
+chars() : IntStream
+codePointAt(int index) : int
+codePointBefore(int index) : int
+codePointCount(int beginIndex, int endIndex) : int
+codePoints() : IntStream
+compareTo(String anotherString) : int
+compareToIgnoreCase(String str) : int
+concat(String str) : String
+contains(CharSequence s) : boolean
+contentEquals(CharSequence cs) : boolean
+contentEquals(StringBuffer sb) : boolean
+copyValueOf(char[] data) : String
+copyValueOf(char[] data, int offset, int count) : String
+describeConstable() : Optional<String>
+endsWith(String suffix) : boolean
+equals(Object anObject) : boolean
+equalsIgnoreCase(String anotherString) : boolean
+format(String format, Object... args) : String
+format(Locale l, String format, Object... args) : String
+formatted(Object... args) : String
+getBytes() : byte[]
+getBytes(Charset charset) : byte[]
+getBytes(String charsetName) : byte[]
+getBytes(int srcBegin, int srcEnd, byte[] dst, int dstBegin) : void
+getChars(int srcBegin, int srcEnd, char[] dst, int dstBegin) : void
+hashCode() : int
+indent(int n) : String
+indexOf(String str) : int
+indexOf(int ch) : int
+indexOf(String str, int fromIndex) : int
+indexOf(int ch, int fromIndex) : int
+intern() : String
+isBlank() : boolean
+isEmpty() : boolean
+join(CharSequence delimiter, CharSequence... elements) : String
+join(CharSequence delimiter, Iterable<? extends CharSequence> elements) : String
+lastIndexOf(String str) : int
+lastIndexOf(int ch) : int
+lastIndexOf(String str, int fromIndex) : int
+lastIndexOf(int ch, int fromIndex) : int
+length() : int
+lines() : Stream<String>
+matches(String regex) : boolean
+offsetByCodePoints(int index, int codePointOffset) : int
+regionMatches(int toffset, String other, int ooffset, int len) : boolean
+regionMatches(boolean ignoreCase, int toffset, String other, int ooffset, int len) : boolean
+repeat(int count) : String
+replace(CharSequence target, CharSequence replacement) : String
+replace(char oldChar, char newChar) : String
+replaceAll(String regex, String replacement) : String
+replaceFirst(String regex, String replacement) : String
+resolveConstantDesc(Lookup lookup) : String
+split(String regex) : String[]
+split(String regex, int limit) : String[]
+startsWith(String prefix) : boolean
+startsWith(String prefix, int toffset) : boolean
+strip() : String
+stripIndent() : String
+stripLeading() : String
+stripTrailing() : String
+subSequence(int beginIndex, int endIndex) : CharSequence
+substring(int beginIndex) : String
+substring(int beginIndex, int endIndex) : String
+toCharArray() : char[]
+toLowerCase() : String
+toLowerCase(Locale locale) : String
+toString() : String
+toUpperCase() : String
+toUpperCase(Locale locale) : String
+transform(Function<? super String, ? extends R> f) : R
+translateEscapes() : String
+trim() : String
+valueOf(Object obj) : String
+valueOf(boolean b) : String
+valueOf(char c) : String
+valueOf(char[] data) : String
+valueOf(double d) : String
+valueOf(float f) : String
+valueOf(int i) : String
+valueOf(long l) : String
+valueOf(char[] data, int offset, int count) : String

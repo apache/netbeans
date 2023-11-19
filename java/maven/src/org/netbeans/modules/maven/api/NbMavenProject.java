@@ -194,9 +194,9 @@ public final class NbMavenProject {
     }
     
     /**
-     * Checks if the project is completely broken. Also see {@link #getPartialProject}.
-     * @return true, if the project is broken and could not be loaded
-     * @see #getPartialProject
+     * 
+     * @return 
+     * @since 
      */
     public boolean isUnloadable() {
         return MavenProjectCache.isFallbackproject(getMavenProject());
@@ -586,12 +586,10 @@ public final class NbMavenProject {
      * 
      */ 
     private RequestProcessor.Task fireProjectReload() {
-        return project.fireProjectReload(true);
+        return project.fireProjectReload();
     }
     
     private void doFireReload() {
-        MavenProject p = project.getOriginalMavenProjectOrNull();
-        LOG.log(Level.FINE, "Firing PROJECT change for maven project {0}, mavenprj {1}", new Object[] { this, System.identityHashCode(p == null ? this : p) });
         FileUtil.refreshFor(FileUtil.toFile(project.getProjectDirectory()));
         NbMavenProjectImpl.refreshLocalRepository(project);
         support.firePropertyChange(PROP_PROJECT, null, null);
@@ -632,57 +630,15 @@ public final class NbMavenProject {
             assert false : "Attempted to remove PropertyChangeListener from project " + prj; //NOI18N
         }
     }
-    
-    /**
-     * Retrieves at least partial project information. A MavenProject instance may be a <b>fallback</b> in case the reading
-     * fails because of locally missing artifacts and/or referenced parents. However partial model may be available. The function
-     * returns the passed project, if it read correctly. Otherwise, it attempts to locate a partially load project and returns that one.
-     * If a partial project is not available, it will return the passed (fallback) project.
-     * <p>
-     * The result can be checked to be {@link #isErrorPlaceholder} to determine if the result was a returned partial project or not.
-     * Note that partial projects may not resolve all references properly, be prepared for unresolved artifacts and/or plugins. Do not pass
-     * partial projects blindly around.
-     * <p>
-     * Returns {@code null} if the passed project is {@code null}
-     * @param project the project to check
-     * @return partial project if the passed project did not load properly and the partial project is available.
-     * @since 2.161
-     */
-    public static MavenProject getPartialProject(MavenProject project) {
-        if (project == null) {
-            return null;
-        }
-        if (isIncomplete(project)) {
-            MavenProject pp = MavenProjectCache.getPartialProject(project);
-            if (pp != null) {
-                return pp;
-            }
-        }
-        return project;
-    }
 
     /**
-     * Checks whether a given project is just an error placeholder. Such project may be fundamentally broken, i.e. missing
-     * declarations from the parent, unresolved dependencies or versions. Also see {@link #isIncomplete}
+     * Checks whether a given project is just an error placeholder.
      * @param project a project loaded by e.g. {@link #getMavenProject}
      * @return true if it was loaded as an error fallback, false for a normal project
      * @since 2.24
-     * @see #isIncomplete
-     * @see #getPartialProject
      */
     public static boolean isErrorPlaceholder(@NonNull MavenProject project) {
         return MavenProjectCache.isFallbackproject(project); // see NbMavenProjectImpl.getFallbackProject
-    }
-    
-    /**
-     * Checks if the project resolved using incomplete or missing information. Each {@link #isErrorPlaceholder} is an incomplete project.
-     * If the project is just missing proper referenced artifacts, it will not be reported as a {@link #isErrorPlaceholder}, but as {@link #isIncomplete}.
-     * @param project
-     * @return true, if the project is not completely resolved
-     * @since 2.161
-     */
-    public static boolean isIncomplete(@NonNull MavenProject project) {
-        return MavenProjectCache.isIncompleteProject(project); 
     }
 
     @Override public String toString() {

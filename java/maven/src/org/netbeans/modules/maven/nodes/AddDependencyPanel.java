@@ -821,9 +821,6 @@ public class AddDependencyPanel extends javax.swing.JPanel {
             }
             try {
                 localProj = p.loadParentOf(EmbedderFactory.getProjectEmbedder(), localProj);
-                if (NbMavenProject.isErrorPlaceholder(localProj)) {
-                    break;
-                }
             } catch (ProjectBuildingException x) {
                 break;
             }

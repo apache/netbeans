@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.artifact.Artifact;
@@ -83,7 +86,7 @@ import org.openide.util.Pair;
     }, projectType = "org-netbeans-modules-maven"
 )
 public class MavenModelProblemsProvider implements ProjectProblemsProvider, InternalActionDelegate {
-    static final RequestProcessor RP  = new RequestProcessor(MavenModelProblemsProvider.class);
+    static final ScheduledExecutorService RP  = new RequestProcessor(MavenModelProblemsProvider.class);
     private static final Logger LOG = Logger.getLogger(MavenModelProblemsProvider.class.getName());
     
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
@@ -246,10 +249,6 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                         NbMavenProject.fireMavenProjectReload(project);
                         prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
                     }
-                }
-                if (prj != null && !sanityBuildStatus) {
-                    prj.setContextValue("org.netbeans.modules.maven.problems.primingNotDone", null);
-                    LOG.log(Level.FINE, "Clearing priming status of {0}, fallback status is {1}", new Object[] { prj, NbMavenProject.isErrorPlaceholder(prj) });
                 }
                 //mark the project model as checked once and cached
                 firePropertyChange();
@@ -496,7 +495,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                 listener.finished(true);
             } else {
                 LOG.log(Level.FINE, "Resolving sanity build action");
-                CompletableFuture<ProjectProblemsProvider.Result> r = saba.resolve(context);
+                CompletableFuture<ProjectProblemsProvider.Result> r = saba.resolve();
                 r.whenComplete((a, e) -> {
                    listener.finished(e == null); 
                 });

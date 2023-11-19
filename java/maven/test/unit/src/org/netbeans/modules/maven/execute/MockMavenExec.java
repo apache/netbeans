@@ -28,23 +28,14 @@ import org.openide.windows.InputOutput;
  */
 public class MockMavenExec extends MavenCommandLineExecutor.ExecuteMaven {
 
-    public static class Reporter {
-        public volatile boolean executed;
-        public volatile RunConfig executedConfig;
-        public CountDownLatch executedLatch = new CountDownLatch(1);
-
-        public void executed(RunConfig config) {
-            executed = true;
-            executedConfig = config;
-        }
-    }
+    public volatile boolean executed;
+    public volatile RunConfig executedConfig;
+    public CountDownLatch executedLatch = new CountDownLatch(1);
 
     @Override
     public ExecutorTask execute(RunConfig config, InputOutput io, AbstractMavenExecutor.TabContext tc) {
-        Reporter r = config.getActionContext().lookup(Reporter.class);
-        if (r != null) {
-            r.executed(config);
-        }
+        executed = true;
+        executedConfig = config;
         ExecutorTask t = new ExecutorTask(() -> {
         }) {
             @Override
@@ -62,9 +53,7 @@ public class MockMavenExec extends MavenCommandLineExecutor.ExecuteMaven {
             }
         };
         t.run();
-        if (r != null) {
-            r.executedLatch.countDown();
-        }
+        executedLatch.countDown();
         return t;
     }
     

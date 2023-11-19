@@ -656,8 +656,8 @@ jobs:
       - name: ide/libs.freemarker
         run: ant $OPTS -f ide/libs.freemarker test
 
-#      - name: ide/libs.git
-#        run: ant $OPTS -f ide/libs.git test
+      - name: ide/libs.git
+        run: ant $OPTS -f ide/libs.git test
 
       - name: ide/libs.graalsdk
         run: ant $OPTS -f ide/libs.graalsdk test

@@ -37,7 +37,14 @@ import org.openide.util.Exceptions;
  */
 public class AddMissingAltAttributeRule extends HtmlRule {
 
-    public static AddMissingAltAttributeRule SINGLETON = new AddMissingAltAttributeRule();
+    private final static AddMissingAltAttributeRule INSTANCE = new AddMissingAltAttributeRule();
+
+    private AddMissingAltAttributeRule() {
+    }
+
+    public static AddMissingAltAttributeRule getInstance() {
+        return INSTANCE;
+    }
 
     @Override
     public boolean appliesTo(RuleContext context) {
@@ -65,7 +72,7 @@ public class AddMissingAltAttributeRule extends HtmlRule {
     protected void run(HtmlRuleContext context, List<Hint> result) {
         try {
             HtmlParserResult parserResult = context.getHtmlParserResult();
-            AltAttributeVisitor visitor = new AltAttributeVisitor(this, context, result, "img|applet|area");
+            AltAttributeVisitor visitor = new AltAttributeVisitor(this, context, result); // NOI18N
 
             ElementUtils.visitChildren(parserResult.root(), visitor, ElementType.OPEN_TAG);
         } catch (IOException ioe) {

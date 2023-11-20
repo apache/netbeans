@@ -20,22 +20,11 @@ package org.netbeans.modules.html.editor.hints.other;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Pattern;
-import javax.swing.text.Document;
-import org.netbeans.api.html.lexer.HTMLTokenId;
-import org.netbeans.api.lexer.Token;
-import org.netbeans.api.lexer.TokenHierarchy;
-import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Rule;
-import org.netbeans.modules.html.editor.api.Utils;
 import org.netbeans.modules.html.editor.hints.HtmlRuleContext;
 import org.netbeans.modules.html.editor.lib.api.elements.*;
-import org.netbeans.modules.html.editor.refactoring.InlinedStyleInfo;
-import org.netbeans.modules.parsing.api.Source;
 
 /**
  *
@@ -43,71 +32,32 @@ import org.netbeans.modules.parsing.api.Source;
  */
 public class AltAttributeVisitor implements ElementVisitor {
 
-    private static final CharSequence ALT_ATTR = "alt"; // NOI18N
+    private static final String ALT_ATTR = "alt"; // NOI18N
 
     private final HtmlRuleContext context;
     private final List<Hint> hints;
-    private final String tagToFindRegEx;
 
-    public AltAttributeVisitor(Rule rule, HtmlRuleContext context, List<Hint> hints, String tagToFindRegEx) throws IOException {
+    public AltAttributeVisitor(Rule rule, HtmlRuleContext context, List<Hint> hints) throws IOException {
         this.context = context;
         this.hints = hints;
-        this.tagToFindRegEx = tagToFindRegEx;
     }
 
     @Override
     public void visit(Element node) {
-        Source source = Source.create(context.getFile());
-        Document doc = source.getDocument(false);
-        final AtomicReference<List<InlinedStyleInfo>> result = new AtomicReference<>();
+        // We should only be invoked for opening tags
+        if (!(node instanceof OpenTag)) {
+            return;
+        }
 
-        doc.render(() -> {
-            List<InlinedStyleInfo> found = new LinkedList<>();
-            result.set(found);
+        // We are only interested in img, area, applet elements
+        String lowerCaseTag = node.id().toString().toLowerCase();
+        if (!(lowerCaseTag.equals("img") || lowerCaseTag.equals("area") || lowerCaseTag.equals("applet"))) {
+            return;
+        }
 
-            TokenHierarchy th = TokenHierarchy.get(doc);
-            TokenSequence<HTMLTokenId> ts = Utils.getJoinedHtmlSequence(th, node.from());
-
-            if (ts == null) {
-                return;
-            }
-
-            OffsetRange range;
-            CharSequence tag = null;
-            CharSequence attr = null;
-            int startTagOffset = 0;
-            int endTagOffset = 0;
-
-            do {
-                Token<HTMLTokenId> t = ts.token();
-
-                if (t == null) {
-                    return;
-                }
-
-                if (t.id() == HTMLTokenId.TAG_OPEN) {
-                    tag = t.text();
-                    attr = null;
-
-                    startTagOffset = ts.offset();
-                } else if (t.id() == HTMLTokenId.TAG_CLOSE_SYMBOL) {
-                    endTagOffset = ts.offset();
-
-                    range = new OffsetRange(startTagOffset, endTagOffset);
-                    //closing tag, produce the info
-                    if (tag != null && Pattern.matches(tagToFindRegEx, tag) && attr == null) {
-                        //alt attribute found
-                        hints.add(new AddMissingAltAttributeHint(context, range));
-
-                        tag = attr = null;
-                    }
-                } else if (t.id() == HTMLTokenId.ARGUMENT) {
-                    if (TokenUtilities.textEquals(t.text(), ALT_ATTR)) {
-                        attr = t.text();
-                        range = null;
-                    }
-                }
-            } while (ts.moveNext() && ts.offset() <= node.to());
-        });
+        OpenTag ot = (OpenTag) node;
+        if (ot.getAttribute(ALT_ATTR) == null) {
+            hints.add(new AddMissingAltAttributeHint(context, new OffsetRange(node.from(), node.to())));
+        }
     }
 }

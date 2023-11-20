@@ -37,8 +37,8 @@ import org.netbeans.modules.parsing.api.Source;
 public class AddMissingAltAttributeHint extends Hint {
 
     public AddMissingAltAttributeHint(HtmlRuleContext context, OffsetRange range) {
-        super(AddMissingAltAttributeRule.SINGLETON,
-            AddMissingAltAttributeRule.SINGLETON.getDescription(),
+        super(AddMissingAltAttributeRule.getInstance(),
+            AddMissingAltAttributeRule.getInstance().getDescription(),
             context.getFile(),
             range,
             Collections.<HintFix>singletonList(new AddMissingAltAttributeHintFix(context, range)),
@@ -59,7 +59,7 @@ public class AddMissingAltAttributeHint extends Hint {
 
         @Override
         public String getDescription() {
-            return AddMissingAltAttributeRule.SINGLETON.getDisplayName();
+            return AddMissingAltAttributeRule.getInstance().getDisplayName();
         }
 
         @Override
@@ -71,7 +71,7 @@ public class AddMissingAltAttributeHint extends Hint {
 
                     source.getDocument(false).insertString(adjustContextRange.getEnd(), " alt=\"\"", null); // NOI18N
                 } catch (BadLocationException ex) {
-                    LOGGER.log(Level.SEVERE, ex.getMessage());
+                    LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested());
                 }
             });
 

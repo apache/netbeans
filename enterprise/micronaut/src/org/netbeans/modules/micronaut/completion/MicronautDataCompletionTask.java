@@ -67,6 +67,7 @@ import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletion;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionContext;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionResultSet;
 import org.netbeans.modules.micronaut.expression.EvaluationContext;
+import org.netbeans.modules.micronaut.expression.MicronautExpressionLanguageParser;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -104,7 +105,6 @@ public class MicronautDataCompletionTask {
     private static final boolean COMPLETION_CASE_SENSITIVE_DEFAULT = true;
     private static final String JAVA_COMPLETION_SUBWORDS = "javaCompletionSubwords"; //NOI18N
     private static final boolean JAVA_COMPLETION_SUBWORDS_DEFAULT = false;
-    private static final Pattern MEXP_PATTERN = Pattern.compile("#\\{(.*?)}");
     private static final PreferenceChangeListener preferencesTracker = new PreferenceChangeListener() {
         @Override
         public void preferenceChange(PreferenceChangeEvent evt) {
@@ -212,7 +212,7 @@ public class MicronautDataCompletionTask {
     }
 
     private <T> List<T> resolveExpressionLanguage(CompilationInfo info, TreePath path, String prefix, int off, MicronautExpressionLanguageCompletion.ItemFactory<T> factory) {
-        Matcher matcher = MEXP_PATTERN.matcher(prefix);
+        Matcher matcher = MicronautExpressionLanguageParser.MEXP_PATTERN.matcher(prefix);
         while (matcher.find() && matcher.groupCount() == 1) {
             if (off >= matcher.start(1) && off <= matcher.end(1)) {
                 EvaluationContext ctx = EvaluationContext.get(info, path);

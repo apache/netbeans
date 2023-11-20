@@ -21,6 +21,7 @@ package org.netbeans.modules.micronaut.expression;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -31,6 +32,8 @@ import static org.netbeans.modules.micronaut.expression.ExpressionTree.*;
  * @author Dusan Balek
  */
 public class MicronautExpressionLanguageParser {
+
+    public static final Pattern MEXP_PATTERN = Pattern.compile("#\\{(.*?)}");
 
     private final TokenSequence<?> ts;
     private String tokenType;

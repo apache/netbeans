@@ -49,9 +49,10 @@
 -->
  <answer id="arch-overall">
   <p>
-    This is the library wrapper module for JSR 311 - Java API for RESTful Web Services and
-    and its reference implementation called Jersey.  It contains JAR files for JSR 311 API, 
-    Jersey runtime and API, grizzly web server and other components Jersey depends on internally.  
+    This is the library wrapper module for Jakarta RESTful Web Services, (JAX-RS; 
+    formerly Java API for RESTful Web Services) and its reference implementation 
+    called Jersey. It contains JAR files for JAX-RS API, Jersey runtime and API 
+    and other components Jersey depends on internally.  
   </p>
  </answer>
 
@@ -72,8 +73,7 @@
 -->
  <answer id="arch-quality">
   <p>
-    We are currently bundling the 0.8 version of the JSR-311 API and Jersey which will 
-    become 1.0 in the later part of 2008.
+   XXX no answer for arch-quality
   </p>
  </answer>
 
@@ -92,7 +92,7 @@
 -->
  <answer id="arch-time">
   <p>
-   1.0 version of JSR 311 and Jersey should be released before the end of 2008.
+   XXX no answer for arch-time
   </p>
  </answer>
 
@@ -116,13 +116,8 @@
 -->
  <answer id="arch-usecases">
   <p>
-   The main usecase for this library module is for NB end-users to develope and run
-      RESTful web services using JSR 311 API.
-      
-      There are also other interesting usecases for NB developers if this module is made public.
-      For example, you can implement a project opener module that starts up an embedded Jersey runtime using 
-      the Grizzly web server.  You can then send a HTTP request to open a project given a file-based URL location.
-      (Note: This idea came from Paul Sandoz, author of Jersey.)
+   The main usecase for this library module is for NB end-users to develop and run
+   RESTful web services using JAX-RS API.
   </p>
  </answer>
 

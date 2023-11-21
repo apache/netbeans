@@ -241,7 +241,7 @@ public class ServerTest extends NbTestCase {
         }
         
         @Override
-        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
             return Collections.emptyList();
         }
 
@@ -2623,7 +2623,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(3).getNewText());
         Command command = introduceVariable.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -2726,7 +2726,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(2).getNewText());
         Command command = introduceConstant.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -2829,7 +2829,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(2).getNewText());
         Command command = introduceField.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -2935,7 +2935,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(2).getNewText());
         Command command = introduceMethod.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -5459,7 +5459,7 @@ public class ServerTest extends NbTestCase {
         }
         
         @Override
-        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
             return Collections.emptyList();
         }
         
@@ -5500,7 +5500,7 @@ public class ServerTest extends NbTestCase {
 
         @Override
         public Set<String> getCommands() {
-            return Collections.singleton("_progressCommand");
+            return Collections.singleton("test._progressCommand");
         }
 
 
@@ -5570,7 +5570,7 @@ public class ServerTest extends NbTestCase {
         
         // now invoke the build
         ExecuteCommandParams ecp = new ExecuteCommandParams();
-        ecp.setCommand("_progressCommand");
+        ecp.setCommand("test._progressCommand");
         CompletableFuture<Object> buildF = server.getWorkspaceService().executeCommand(ecp);
         
         // the progress must be received at the client w/ the token, we need the token to issue cancel

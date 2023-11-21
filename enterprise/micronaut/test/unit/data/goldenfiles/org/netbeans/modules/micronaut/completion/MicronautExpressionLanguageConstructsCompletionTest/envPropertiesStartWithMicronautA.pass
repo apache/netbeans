@@ -1,0 +1,7 @@
+micronaut.application.default-charset
+micronaut.application.instance
+micronaut.application.instance.group
+micronaut.application.instance.id
+micronaut.application.instance.metadata
+micronaut.application.instance.zone
+micronaut.application.name

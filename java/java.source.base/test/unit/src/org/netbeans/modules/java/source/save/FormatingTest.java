@@ -2205,6 +2205,133 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("indentCasesFromSwitch", true);
 
     }
+
+    public void testSwitchWithTryExpr() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+
+        String content
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "        case 0:\n"
+                + "        try {\n"
+                + "        System.out.println(i);\n"
+                + "        } catch (Exception ex) {\n"
+                + "        System.out.println(ex);\n"
+                + "        }\n"
+                + "        break;\n"
+                + "        case 1:\n"
+                + "        try {\n"
+                + "        System.out.println(i);\n"
+                + "        } catch (Exception ex) {\n"
+                + "        System.out.println(ex);\n"
+                + "        } finally {\n"
+                + "        System.out.println(\"FINALLY\");\n"
+                + "        }\n"
+                + "        break;\n"
+                + "        case 2:\n"
+                + "        try (  StringReader r = new StringReader(\"\")  ) {\n"
+                + "        System.out.println(i);\n"
+                + "        } catch (Exception ex) {\n"
+                + "        System.out.println(ex);\n"
+                + "        }\n"
+                + "        break;\n"
+                + "        default:\n"
+                + "        try {\n"
+                + "        System.out.println(\"DEFAULT\");\n"
+                + "        } catch (Exception ex) {\n"
+                + "        System.out.println(ex);\n"
+                + "        }\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+
+        String golden
+                = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "            case 0:\n"
+                + "                try {\n"
+                + "                    System.out.println(i);\n"
+                + "                } catch (Exception ex) {\n"
+                + "                    System.out.println(ex);\n"
+                + "                }\n"
+                + "                break;\n"
+                + "            case 1:\n"
+                + "                try {\n"
+                + "                    System.out.println(i);\n"
+                + "                } catch (Exception ex) {\n"
+                + "                    System.out.println(ex);\n"
+                + "                } finally {\n"
+                + "                    System.out.println(\"FINALLY\");\n"
+                + "                }\n"
+                + "                break;\n"
+                + "            case 2:\n"
+                + "                try (StringReader r = new StringReader(\"\")) {\n"
+                + "                    System.out.println(i);\n"
+                + "                } catch (Exception ex) {\n"
+                + "                    System.out.println(ex);\n"
+                + "                }\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                try {\n"
+                + "                    System.out.println(\"DEFAULT\");\n"
+                + "                } catch (Exception ex) {\n"
+                + "                    System.out.println(ex);\n"
+                + "                }\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+
+        reformat(doc, content, golden);
+
+        content = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "        case 0:\n"
+                + "        int x = i*2;\n"
+                + "        try {\n"
+                + "        System.out.println(x);\n"
+                + "        } catch (Exception ex) {\n"
+                + "        System.out.println(ex);\n"
+                + "        }\n"
+                + "        break;\n"
+                + "        default:\n"
+                + "        System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+
+        golden = "package hierbas.del.litoral;\n\n"
+                + "public class Test {\n\n"
+                + "    public void taragui(int i) {\n"
+                + "        switch (i) {\n"
+                + "            case 0:\n"
+                + "                int x = i * 2;\n"
+                + "                try {\n"
+                + "                    System.out.println(x);\n"
+                + "                } catch (Exception ex) {\n"
+                + "                    System.out.println(ex);\n"
+                + "                }\n"
+                + "                break;\n"
+                + "            default:\n"
+                + "                System.out.println(\"DEFAULT\");\n"
+                + "        }\n"
+                + "    }\n"
+                + "}\n";
+        reformat(doc, content, golden);
+
+    }
+
     public void testRuleSwitch() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile,

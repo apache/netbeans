@@ -37,6 +37,8 @@ import org.gradle.tooling.ProjectConnection;
 import org.gradle.tooling.ResultHandler;
 import org.gradle.tooling.TestLauncher;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
 import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
@@ -151,8 +153,8 @@ public final class GradleProjectConnection implements ProjectConnection {
         return launcher;
     }
 
-    private static ProjectConnection createConnection(GradleDistribution dist, File projectDir) {
-        GradleConnector gconn = GradleConnector.newConnector();
+    private ProjectConnection createConnection(GradleDistribution dist, File projectDir) {
+        GradleConnector gconn = GradleConnectorManager.getDefault().getConnector(project);
         gconn = gconn.useGradleUserHomeDir(dist.getGradleUserHome());
         if (dist.isAvailable()) {
             gconn = gconn.useInstallation(dist.getDistributionDir());

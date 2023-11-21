@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.List;
+import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.diff.ContentSource;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
@@ -115,7 +116,7 @@ public class ExportDiffCommand extends GitCommand {
                 formatter.format(ent);
             }
             formatter.flush();
-        } catch (IOException ex) {
+        } catch (IOException | CanceledException ex) {
             throw new GitException(ex);
         }
     }

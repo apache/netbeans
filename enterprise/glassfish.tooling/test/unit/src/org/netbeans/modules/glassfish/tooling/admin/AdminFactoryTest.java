@@ -176,7 +176,7 @@ public class AdminFactoryTest extends CommandTest {
     @Test
     public void testGetInstanceforVersionGF7() {
         GlassFishServerEntity srv = new GlassFishServerEntity();
-        srv.setVersion(GlassFishVersion.GF_7_0_6);
+        srv.setVersion(GlassFishVersion.GF_7_0_9);
         AdminFactory af = AdminFactory.getInstance(srv.getVersion());
         assertTrue(af instanceof AdminFactoryRest);
         Command cmd = new CommandVersion();

@@ -83,6 +83,26 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-setting-deprecation">
+            <api name="general"/>
+            <summary>Some Gradle Settings Removed from Use</summary>
+            <version major="2" minor="36"/>
+            <date day="2" month="10" year="2023"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="incompatible" />
+            <description>
+                <p>
+                    Setting the following properties: <code>startDaemonOnStart</code>, <code>silentInstall</code>, and <code>noRebuild</code> are
+                    no longer in use. Their setters are no-ops,their getters returning <code>false</code>.
+                </p>
+                <p>
+                    The <code>gradleVersion</code> setting has also been deprecated, in favor of using Gradle Wrapper as a way to specify the
+                    Gradle Version used for a project. It is still possible to use specific version of Gradle by using custom Gradle version.
+                    The getter for the <code>gradleVersion</code> returns the version of the Gradle Tooling API bundled with the IDE.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.spi.newproject" name="TemplateOperation"/>
+        </change>
         <change id="gradle-wrapper-version">
             <api name="general"/>
             <summary>Method to set the Gradle version when initalizing the wrapper</summary>

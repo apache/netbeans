@@ -266,10 +266,10 @@ import org.openide.util.lookup.ServiceProvider;
 public class TextDocumentServiceImpl implements TextDocumentService, LanguageClientAware {
     private static final Logger LOG = Logger.getLogger(TextDocumentServiceImpl.class.getName());
     
-    private static final String COMMAND_RUN_SINGLE = "java.run.single";         // NOI18N
-    private static final String COMMAND_DEBUG_SINGLE = "java.debug.single";     // NOI18N
-    private static final String NETBEANS_JAVADOC_LOAD_TIMEOUT = "netbeans.javadoc.load.timeout";// NOI18N
-    private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "netbeans.java.onSave.organizeImports";// NOI18N
+    private static final String COMMAND_RUN_SINGLE = "nbls.run.single";         // NOI18N
+    private static final String COMMAND_DEBUG_SINGLE = "nbls.debug.single";     // NOI18N
+    private static final String NETBEANS_JAVADOC_LOAD_TIMEOUT = "javadoc.load.timeout";// NOI18N
+    private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "java.onSave.organizeImports";// NOI18N
     private static final String URL = "url";// NOI18N
     private static final String INDEX = "index";// NOI18N
     
@@ -346,7 +346,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             StyledDocument doc = (StyledDocument)rawDoc;
             ConfigurationItem conf = new ConfigurationItem();
             conf.setScopeUri(uri);
-            conf.setSection(NETBEANS_JAVADOC_LOAD_TIMEOUT);
+            conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVADOC_LOAD_TIMEOUT);
             return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
                 if (c != null && !c.isEmpty()) {
                     javadocTimeout.set(((JsonPrimitive)c.get(0)).getAsInt());
@@ -396,7 +396,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                         org.netbeans.api.lsp.Command command = completion.getCommand();
                         if (command != null) {
-                            item.setCommand(new Command(command.getTitle(), command.getCommand(), command.getArguments()));
+                            item.setCommand(new Command(command.getTitle(), Utils.encodeCommand(command.getCommand(), client.getNbCodeCapabilities()), command.getArguments()));
                         }
                         if (completion.getAdditionalTextEdits() != null && completion.getAdditionalTextEdits().isDone()) {
                             List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().getNow(null);
@@ -1008,7 +1008,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                     commandParams.addAll(inputAction.getCommand().getArguments());
                                 }
 
-                                action.setCommand(new Command(inputAction.getCommand().getTitle(), inputAction.getCommand().getCommand(), commandParams));
+                                action.setCommand(new Command(inputAction.getCommand().getTitle(), Utils.encodeCommand(inputAction.getCommand().getCommand(), client.getNbCodeCapabilities()), commandParams));
                             }
                             if (inputAction instanceof LazyCodeAction && ((LazyCodeAction) inputAction).getLazyEdit() != null) {
                                 lastCodeActions.add((LazyCodeAction) inputAction);
@@ -1064,7 +1064,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         //code generators:
                         for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                             try {
-                                for (CodeAction codeAction : codeGenerator.getCodeActions(resultIterator, params)) {
+                                for (CodeAction codeAction : codeGenerator.getCodeActions(client, resultIterator, params)) {
                                     result.add(Either.forRight(codeAction));
                                 }
                             } catch (Exception ex) {
@@ -1103,7 +1103,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                             codeAction.setEdit(new WorkspaceEdit(documentChanges));
                                                             int renameOffset = ((IntroduceFixBase) fix).getNameOffset(changes);
                                                             if (renameOffset >= 0) {
-                                                                codeAction.setCommand(new Command("Rename", "java.rename.element.at", Collections.singletonList(renameOffset)));
+                                                                codeAction.setCommand(new Command("Rename", client.getNbCodeCapabilities().getCommandPrefix() + ".rename.element.at", Collections.singletonList(renameOffset)));
                                                             }
                                                             result.add(Either.forRight(codeAction));
                                                         }
@@ -1215,7 +1215,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         for (org.netbeans.api.lsp.CodeLens len : origin) {
             Command cmd = null;
             if (len.getCommand() != null) {
-                cmd = new Command(len.getCommand().getTitle(), len.getCommand().getCommand(), len.getCommand().getArguments());
+                cmd = new Command(len.getCommand().getTitle(), Utils.encodeCommand(len.getCommand().getCommand(), client.getNbCodeCapabilities()), len.getCommand().getArguments());
             }
             result.add(new CodeLens(callRange2Range(len.getRange(), doc), cmd, len.getData()));
         }
@@ -1661,10 +1661,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 if (doc == null) {
                     doc = ec.openDocument();
                 }
-                if (!text.contentEquals(doc.getText(0, doc.getLength()))) {
-                    doc.remove(0, doc.getLength());
-                    doc.insertString(0, text, null);
-                }
+                updateDocumentIfNeeded(text, doc);
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
                 //TODO: include stack trace:
@@ -1681,6 +1678,42 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         } finally {
             reportNotificationDone("didOpen", params);
         }
+    }
+
+    static void updateDocumentIfNeeded(String text, Document doc) throws BadLocationException {
+        String docText = doc.getText(0, doc.getLength());
+
+        if (text.contentEquals(docText)) {
+            //the texts are the same, no need to change the Document content:
+            return ;
+        }
+
+        //normalize line endings:
+        StringBuilder newText = new StringBuilder(text.length());
+        int len = text.length();
+        boolean modified = false;
+
+        for (int i = 0; i < len; i++) {
+            char c = text.charAt(i);
+            if (c == '\r') {
+                if (i + 1 < len && text.charAt(i + 1) == '\n') {
+                    i++;
+                }
+                c = '\n';
+                modified = true;
+            }
+            newText.append(c);
+        }
+
+        String newTextString = newText.toString();
+
+        if (modified && docText.equals(newTextString)) {
+            //only change in line endings, no need to change the Document content:
+            return ;
+        }
+
+        doc.remove(0, doc.getLength());
+        doc.insertString(0, newTextString, null);
     }
 
     @Override
@@ -1736,7 +1769,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
         ConfigurationItem conf = new ConfigurationItem();
         conf.setScopeUri(uri);
-        conf.setSection(NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS);
+        conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS);
         return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
             if (c != null && !c.isEmpty() && ((JsonPrimitive) c.get(0)).getAsBoolean()) {
                 try {
@@ -1896,9 +1929,44 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             });
         }).schedule(DELAY);
     }
+    
+    CompletableFuture<List<Diagnostic>> computeDiagnostics(String uri, EnumSet<ErrorProvider.Kind> types) {
+        CompletableFuture<List<Diagnostic>> r = new CompletableFuture<>();
+        BACKGROUND_TASKS.post(() -> {
+            try {
+                Document originalDoc = server.getOpenedDocuments().getDocument(uri);
+                long originalVersion = documentVersion(originalDoc);
+                List<Diagnostic> result = Collections.emptyList();
+                if (types.contains(ErrorProvider.Kind.ERRORS)) {
+                    result = computeDiags(uri, -1, ErrorProvider.Kind.ERRORS, originalVersion);
+                }
+                if (types.contains(ErrorProvider.Kind.HINTS)) {
+                    result = computeDiags(uri, -1, ErrorProvider.Kind.HINTS, originalVersion);
+                }
+                r.complete(result);
+            } catch (ThreadDeath td) {
+                throw td;
+            } catch (Throwable t) {
+                r.completeExceptionally(t);
+            }
+        });
+        return r;
+    }
 
     private static final int DELAY = 500;
 
+    
+    /**
+     * Recomputes a specific kinds of diagnostics for the file, and returns a complete set diagnostics for that
+     * file. If the document changes during the computation, the computation aborts and returns an empty list. 
+     * It is possible to provide the reference version of the document, any change beyond that is detected.
+     * 
+     * @param uri the file that should be processed.
+     * @param offset offset to compute diagnostics for.
+     * @param errorKind the kind of diagnostics to recompute/update
+     * @param orgV version of the document. or -1 to obtain the current version.
+     * @return complete list of diagnostics for the file.
+     */
     private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long orgV) {
         List<Diagnostic> result = new ArrayList<>();
         FileObject file = fromURI(uri);

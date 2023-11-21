@@ -43,6 +43,8 @@ SOURCES="../src-jdk15/class_file_cache.c \
 
 DEST="../../release/lib/deployed/jdk16/mac"
 
+mkdir -p $DEST
+
 UNILIB="$DEST/libprofilerinterface.jnilib"
 
 cc $CPPFLAGS ../src-jdk15/config.c -o ../build/config && ../build/config > ../build/config.h

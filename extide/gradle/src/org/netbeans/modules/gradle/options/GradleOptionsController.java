@@ -51,12 +51,6 @@ public class GradleOptionsController extends OptionsPanelController {
     @Override
     public void applyChanges() {
         getPanel().applyValues();
-        if (GradleSettings.getDefault().isSilentInstall()) {
-            // If allowed, let's just install the required Gradle version.
-            GradleDistributionManager gdm = GradleDistributionManager.get();
-            GradleDistribution dist = gdm.distributionFromVersion(GradleSettings.getDefault().getGradleVersion());
-            dist.install();
-        }
     }
 
     @Override

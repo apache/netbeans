@@ -29,7 +29,7 @@ import org.netbeans.api.editor.EditorActionRegistration;
                           preferencesDefault=ShowInlineHintsAction.DEF_LINES)
 public class ShowInlineHintsAction extends AbstractAction {
     public static final String KEY_LINES = "enable.inline.hints";
-    public static final boolean DEF_LINES = true;
+    public static final boolean DEF_LINES = false;
     @Override
     public void actionPerformed(ActionEvent e) {
     }

@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -70,12 +72,12 @@ import org.openide.util.lookup.ServiceProvider;
     "MSG_SelectDriver=Select db driver",
     "MSG_DriverNotFound=Driver not found",
     "MSG_ConnectionAdded=Connection added",
-    "MSG_ConnectionFailed=Connection failed",
+    "MSG_ConnectionFailed=Could not connect to the database \"{0}\", user {1}:\n{2}",
     "MSG_SelectSchema=Select Database Schema"
 })
 @ServiceProvider(service = CodeActionsProvider.class)
 public class DBAddConnection extends CodeActionsProvider {
-    public static final String DB_ADD_CONNECTION =  "db.add.connection"; // NOI18N
+    public static final String DB_ADD_CONNECTION =  "nbls.db.add.connection"; // NOI18N
     public static final String USER_ID =  "userId"; // NOI18N
     public static final String PASSWORD =  "password"; // NOI18N
     public static final String DRIVER =  "driver"; // NOI18N
@@ -83,6 +85,7 @@ public class DBAddConnection extends CodeActionsProvider {
     public static final String SCHEMA =  "schema"; // NOI18N
     public static final String DISPLAY_NAME =  "displayName"; // NOI18N
 
+    private static final Logger LOG = Logger.getLogger(DBAddConnection.class.getName());
     private static final Map<String, String> urlTemplates = new HashMap<> ();
     static {
         urlTemplates.put("org.postgresql.Driver", "jdbc:postgresql://<HOST>:5432/<DB>");
@@ -138,6 +141,7 @@ public class DBAddConnection extends CodeActionsProvider {
                                 ConnectionManager.getDefault().addConnection(dbconn);
                                 client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
                             } catch (DatabaseException ex) {
+                                LOG.log(Level.INFO, "Add connection", ex);
                                 client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                             }
                         });
@@ -147,6 +151,7 @@ public class DBAddConnection extends CodeActionsProvider {
                             ConnectionManager.getDefault().addConnection(dbconn);
                             client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
                         } catch (DatabaseException ex) {
+                            LOG.log(Level.INFO, "Add connection with schema", ex);
                             client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                         }
                     }
@@ -245,8 +250,20 @@ public class DBAddConnection extends CodeActionsProvider {
                                     ConnectionManager.getDefault().addConnection(dbconn);
                                     schemas.addAll(getSchemas(dbconn));
                                     failed = false;
-                                } catch(DatabaseException | SQLException ex) {
+                                } catch(SQLException ex) {
+                                    LOG.log(Level.INFO, "vaildate", ex);
                                     return CompletableFuture.completedFuture(ex.getMessage());
+                                } catch (DatabaseException ex) {
+                                    String message;
+                                    Throwable cause = ex.getCause();
+                                    if (cause == null) cause = ex;
+                                    if (cause.getCause() != null) {
+                                        message = Bundle.MSG_ConnectionFailed(urlData.getRight(), userData.getRight(), cause.getCause().getMessage());
+                                    } else {
+                                        message = cause.getMessage();
+                                    }
+                                    LOG.log(Level.INFO, "validate", ex);
+                                    return CompletableFuture.completedFuture(message);
                                 } finally {
                                     try {
                                         if (failed || !schemas.isEmpty()) {
@@ -273,10 +290,11 @@ public class DBAddConnection extends CodeActionsProvider {
                     DatabaseConnection dbconn = DatabaseConnection.create(driver, urlData.getRight(), userData.getRight(), schema, passwordData.getRight(), true);
                     try {
                         ConnectionManager.getDefault().addConnection(dbconn);
+                        client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
                     } catch (DatabaseException ex) {
+                        LOG.log(Level.INFO, "add", ex);
                         client.showMessage(new MessageParams(MessageType.Error, ex.getMessage()));
                     }
-                    client.showMessage(new MessageParams(MessageType.Info, Bundle.MSG_ConnectionAdded()));
                 }
                 return null;
             });
@@ -306,7 +324,7 @@ public class DBAddConnection extends CodeActionsProvider {
     }
 
     @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         return Collections.emptyList();
     }
     

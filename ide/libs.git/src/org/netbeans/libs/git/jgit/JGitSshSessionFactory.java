@@ -41,9 +41,9 @@ import java.util.logging.Logger;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.transport.CredentialItem;
 import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.JschConfigSessionFactory;
-import org.eclipse.jgit.transport.OpenSshConfig;
-import org.eclipse.jgit.transport.OpenSshConfig.Host;
+import org.eclipse.jgit.transport.ssh.jsch.JschConfigSessionFactory;
+import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig;
+import org.eclipse.jgit.transport.ssh.jsch.OpenSshConfig.Host;
 import org.eclipse.jgit.transport.RemoteSession;
 import org.eclipse.jgit.transport.SshSessionFactory;
 import org.eclipse.jgit.transport.URIish;
@@ -83,7 +83,7 @@ public class JGitSshSessionFactory extends JschConfigSessionFactory {
     private final Map<String, JSch> byHostName;
 
     public JGitSshSessionFactory () {
-        byHostName = new HashMap<String, JSch>();
+        byHostName = new HashMap<>();
     }
 
     @Override
@@ -153,7 +153,7 @@ public class JGitSshSessionFactory extends JschConfigSessionFactory {
                     host,
                     port == -1 ? 22 : port,
                     null, null, null));
-            if (proxies.size() > 0) {
+            if (!proxies.isEmpty()) {
                 Proxy p = proxies.iterator().next();
                 if (p.type() == Proxy.Type.DIRECT) {
                     session.setProxy(null);

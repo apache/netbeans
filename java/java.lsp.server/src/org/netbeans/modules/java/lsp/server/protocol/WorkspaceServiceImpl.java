@@ -131,6 +131,7 @@ import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.jumpto.type.SearchType;
+import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -141,7 +142,9 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -172,15 +175,15 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     @Override
     public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
-        String command = params.getCommand();
+        String command = Utils.decodeCommand(params.getCommand(), client.getNbCodeCapabilities());
         switch (command) {
-            case Server.GRAALVM_PAUSE_SCRIPT:
+            case Server.NBLS_GRAALVM_PAUSE_SCRIPT:
                 ActionsManager am = DebuggerManager.getDebuggerManager().getCurrentEngine().getActionsManager();
                 am.doAction("pauseInGraalScript");
                 return CompletableFuture.completedFuture(true);
-            case Server.JAVA_NEW_FROM_TEMPLATE:
+            case Server.NBLS_NEW_FROM_TEMPLATE:
                 return LspTemplateUI.createFromTemplate("Templates", client, params);
-            case Server.JAVA_NEW_PROJECT:
+            case Server.NBLS_NEW_PROJECT:
                 return LspTemplateUI.createProject("Templates/Project", client, params);
             case Server.NBLS_BUILD_WORKSPACE: {
                 final CommandProgress progressOfCompilation = new CommandProgress();
@@ -194,7 +197,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 progressOfCompilation.checkStatus();
                 return progressOfCompilation.getFinishFuture();
             }
-            case Server.JAVA_RUN_PROJECT_ACTION: {
+            case Server.NBLS_RUN_PROJECT_ACTION: {
                 // TODO: maybe a structure would be better for future compatibility / extensions, i.e. what to place in the action's context Lookup.
                 List<FileObject> targets = new ArrayList<>();
                 ProjectActionParams actionParams = gson.fromJson(gson.toJson(params.getArguments().get(0)), ProjectActionParams.class);
@@ -337,7 +340,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return future;
                 });
             }
-            case Server.JAVA_LOAD_WORKSPACE_TESTS: {
+            case Server.NBLS_LOAD_WORKSPACE_TESTS: {
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 FileObject file;
                 try {
@@ -420,7 +423,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return future;
                 });
             }
-            case Server.JAVA_RESOLVE_STACKTRACE_LOCATION: {
+            case Server.NBLS_RESOLVE_STACKTRACE_LOCATION: {
                 CompletableFuture<Object> future = new CompletableFuture<>();
                 try {
                     if (params.getArguments().size() >= 3) {
@@ -467,7 +470,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 String uri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 Position pos = gson.fromJson(gson.toJson(params.getArguments().get(1)), Position.class);
                 return (CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).superImplementations(uri, pos);
-            case Server.JAVA_FIND_PROJECT_CONFIGURATIONS: {
+            case Server.NBLS_FIND_PROJECT_CONFIGURATIONS: {
                 String fileUri = ((JsonPrimitive) params.getArguments().get(0)).getAsString();
                 
                 FileObject file;
@@ -481,7 +484,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return findProjectConfigurations(file);
             }
             case Server.JAVA_FIND_DEBUG_ATTACH_CONFIGURATIONS: {
-                return AttachConfigurations.findConnectors();
+                return AttachConfigurations.findConnectors(client.getNbCodeCapabilities());
             }
             case Server.JAVA_FIND_DEBUG_PROCESS_TO_ATTACH: {
                 return AttachConfigurations.findProcessAttachTo(client);
@@ -489,7 +492,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             case Server.NATIVE_IMAGE_FIND_DEBUG_PROCESS_TO_ATTACH: {
                 return AttachNativeConfigurations.findProcessAttachTo(client);
             }
-            case Server.JAVA_PROJECT_CONFIGURATION_COMPLETION: {
+            case Server.NBLS_PROJECT_CONFIGURATION_COMPLETION: {
                 // We expect one, two or three arguments.
                 // The first argument is always the URI of the launch.json file.
                 // When not more arguments are provided, all available configurations ought to be provided.
@@ -497,7 +500,11 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 // and additional attributes valid in that particular configuration ought to be provided.
                 // When a third argument is present, it's an attribute name whose possible values ought to be provided.
                 List<Object> arguments = params.getArguments();
-                Collection<? extends LaunchConfigurationCompletion> configurations = Lookup.getDefault().lookupAll(LaunchConfigurationCompletion.class);
+                Collection<? extends LaunchConfigurationCompletion> configurations = Lookup.getDefault()
+                                                                                           .lookupAll(LaunchConfigurationCompletion.Factory.class)
+                                                                                           .stream()
+                                                                                           .map(f -> f.createLaunchConfigurationCompletion(client.getNbCodeCapabilities()))
+                                                                                           .collect(Collectors.toList());
                 List<CompletableFuture<List<CompletionItem>>> completionFutures;
                 String configUri = ((JsonPrimitive) arguments.get(0)).getAsString();
                 Supplier<CompletableFuture<Project>> projectSupplier = () -> {
@@ -534,7 +541,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                         .thenApply(avoid -> completionFutures.stream().flatMap(c -> c.join().stream()).collect(Collectors.toList()));
                 return (CompletableFuture<Object>) (CompletableFuture<?>) joinedFuture;
             }
-            case Server.JAVA_PROJECT_RESOLVE_PROJECT_PROBLEMS: {
+            case Server.NBLS_PROJECT_RESOLVE_PROJECT_PROBLEMS: {
                 final CompletableFuture<Object> result = new CompletableFuture<>();
                 List<Object> arguments = params.getArguments();
                 if (!arguments.isEmpty()) {
@@ -590,7 +597,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
                 return result;
             }
-            case Server.JAVA_CLEAR_PROJECT_CACHES: {
+            case Server.NBLS_CLEAR_PROJECT_CACHES: {
                 // politely clear project manager's cache of "no project" answers
                 ProjectManager.getDefault().clearNonProjectCache();
                 // impolitely clean the project-based traversal's cache, so any affiliation of intermediate folders will disappear
@@ -614,7 +621,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return (CompletableFuture<Object>) (CompletableFuture<?>)result;
             }
             
-            case Server.JAVA_PROJECT_INFO: {
+            case Server.NBLS_PROJECT_INFO: {
                 final CompletableFuture<Object> result = new CompletableFuture<>();
                 List<Object> arguments = params.getArguments();
                 if (arguments.size() < 1) {
@@ -717,6 +724,32 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     return CompletableFuture.completedFuture(Collections.emptyList());
                 }
                 return CompletableFuture.completedFuture(result);
+            }
+            case Server.NBLS_GET_DIAGNOSTICS: {
+                    List<Object> arguments = params.getArguments();
+                    String source = ((JsonPrimitive) arguments.get(0)).getAsString();
+                    EnumSet<ErrorProvider.Kind> s;
+                    if (arguments.size() > 1 && arguments.get(1) instanceof JsonArray) {
+                        s = EnumSet.noneOf(ErrorProvider.Kind.class);
+                        for (JsonElement jse : ((JsonArray)arguments.get(1))) {
+                            if (jse instanceof JsonPrimitive) {
+                                ErrorProvider.Kind k = ErrorProvider.Kind.valueOf(jse.getAsString());
+                                s.add(k);
+                            }
+                        }
+                    } else {
+                        s = EnumSet.allOf(ErrorProvider.Kind.class);
+                    }
+                    return (CompletableFuture<Object>)(CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).computeDiagnostics(source, s);
+            }
+            case Server.NBLS_GET_SERVER_DIRECTORIES: {
+                JsonObject o = new JsonObject();
+                o.addProperty("userdir", Places.getUserDirectory().toString());
+                o.addProperty("dirs", System.getProperty("netbeans.dirs"));
+                o.addProperty("extra.dirs", System.getProperty("netbeans.extra.dirs"));
+                o.addProperty("cache", Places.getCacheDirectory().toString());
+                o.addProperty("config", FileUtil.toFile(FileUtil.getConfigRoot()).toString());
+                return CompletableFuture.completedFuture(o);
             }
             default:
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
@@ -1256,17 +1289,24 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     @Override
     public void didChangeConfiguration(DidChangeConfigurationParams params) {
+        String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
+        String configPrefix = fullConfigPrefix.substring(0, fullConfigPrefix.length() - 1);
         server.openedProjects().thenAccept(projects -> {
             if (projects != null && projects.length > 0) {
-                updateJavaFormatPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject("netbeans").getAsJsonObject("format"));
-                updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject("netbeans").getAsJsonObject("java").getAsJsonObject("imports"));
+                updateJavaFormatPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("format"));
+                updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("java").getAsJsonObject("imports"));
             }
         });
+        String fullAltConfigPrefix = client.getNbCodeCapabilities().getAltConfigurationPrefix();
+        String altConfigPrefix = fullConfigPrefix.substring(0, fullAltConfigPrefix.length() - 1);
         boolean modified = false;
         String newVMOptions = "";
-        JsonObject javaPlus = ((JsonObject) params.getSettings()).getAsJsonObject("java+");
+        JsonObject javaPlus = ((JsonObject) params.getSettings()).getAsJsonObject(altConfigPrefix);
         if (javaPlus != null) {
-            newVMOptions = javaPlus.getAsJsonObject("runConfig").getAsJsonPrimitive("vmOptions").getAsString();
+            JsonObject runConfig = javaPlus.getAsJsonObject("runConfig");
+            if (runConfig != null) {
+                newVMOptions = runConfig.getAsJsonPrimitive("vmOptions").getAsString();
+            }
         }
         for (CompilerOptionsQueryImpl query : Lookup.getDefault().lookupAll(CompilerOptionsQueryImpl.class)) {
             modified |= query.setConfiguration(client, newVMOptions);

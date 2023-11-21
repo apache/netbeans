@@ -19,14 +19,16 @@ package org.netbeans.modules.java.editor.options;
  * under the License.
  */
 
-
-import org.netbeans.modules.java.editor.options.*;
 import java.util.prefs.Preferences;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.openide.util.NbPreferences;
 
 public class InlineHintsSettings {
     
     private static final String INLINE_HINTS = "InlineHints"; // NOI18N
+
+    // see org.netbeans.modules.editor.actions.ShowInlineHintsAction
+    private static final String JAVA_INLINE_HINTS_KEY = "enable.inline.hints"; // NOI18N
 
     private InlineHintsSettings() {
     }
@@ -35,7 +37,22 @@ public class InlineHintsSettings {
         Preferences preferences = NbPreferences.forModule(MarkOccurencesOptionsPanelController.class);
         return preferences.node(INLINE_HINTS).node(getCurrentProfileId());
     }
-    
+
+    private static Preferences getJavaEditorPreferences() {
+        // ShowInlineHintsAction is registering the action without setting the mime type
+        // this means this is a global toggle right now
+        return MimeLookup.getLookup("").lookup(Preferences.class);
+//        return MimeLookup.getLookup(JavaKit.JAVA_MIME_TYPE).lookup(Preferences.class);
+    }
+
+    public static boolean isInlineHintsEnabled() {
+        return getJavaEditorPreferences().getBoolean(JAVA_INLINE_HINTS_KEY, false);
+    }
+
+    public static void setInlineHintsEnabled(boolean enabled) {
+        getJavaEditorPreferences().putBoolean(JAVA_INLINE_HINTS_KEY, enabled);
+    }
+
     private static String getCurrentProfileId() {
         return "default"; // NOI18N
     }

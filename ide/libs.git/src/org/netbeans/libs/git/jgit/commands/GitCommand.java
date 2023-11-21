@@ -19,7 +19,6 @@
 
 package org.netbeans.libs.git.jgit.commands;
 
-import java.nio.file.Path;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;

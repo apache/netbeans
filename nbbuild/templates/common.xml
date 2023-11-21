@@ -79,10 +79,10 @@
         <tstamp>
             <format property="module.build.started.time" pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ"/>
         </tstamp>
-        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-9.5.jar">
-            <available file="${nbplatform.active.dir}/platform/core/asm-9.5.jar"/>
+        <condition property="asm.jar" value="${nbplatform.active.dir}/platform/core/asm-9.6.jar">
+            <available file="${nbplatform.active.dir}/platform/core/asm-9.6.jar"/>
         </condition>
-        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-9.5.jar"/>
+        <property name="asm.jar" location="${platform/libs.asm.dir}/core/asm-9.6.jar"/>
         <property name="tsaurl" value=""/>
         <property name="tsacert" value=""/>
     </target>
@@ -736,6 +736,7 @@
     </target>
 
     <target name="-do-junit" depends="test-init">
+        <property name="test.jms.flags" value=""/>
         <macrodef name="junit-impl">
             <attribute name="test.type"/>
             <attribute name="disable.apple.ui" default="false"/>
@@ -747,6 +748,7 @@
                     <classpath refid="test.@{test.type}.run.cp"/>
                     <syspropertyset refid="test.@{test.type}.properties"/>
                     <jvmarg value="${test.bootclasspath.prepend.args}"/>
+                    <jvmarg line="${test.jms.flags}"/>
                     <jvmarg line="${test.insane.prepend.args}"/>
                     <jvmarg line="${test.run.args}"/>
                     <jvmarg line="${nbjdk.enable_security_manager}" />

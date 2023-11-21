@@ -23,14 +23,14 @@ import { assertNever, isObject, isRecord, isString, IsType } from '../typesUtil'
 import { makeHtmlForProperties } from './propertiesHtmlBuilder';
 import { TreeViewService, TreeNodeListener, Visualizer } from '../explorer';
 import { NodeChangeType } from '../protocol';
+import { COMMAND_PREFIX } from '../extension';
 
 function isVisualizer(node : any) : node is Visualizer {
 	return node?.id && node?.rootId;
 }
 export class PropertiesView {
-	private static readonly COMMAND_PREFIX = "java.";
-	private static readonly COMMAND_GET_NODE_PROPERTIES = PropertiesView.COMMAND_PREFIX + "node.properties.get";      // NOI18N
-	private static readonly COMMAND_SET_NODE_PROPERTIES = PropertiesView.COMMAND_PREFIX + "node.properties.set";      // NOI18N
+	private static readonly COMMAND_GET_NODE_PROPERTIES = COMMAND_PREFIX + ".node.properties.get";      // NOI18N
+	private static readonly COMMAND_SET_NODE_PROPERTIES = COMMAND_PREFIX + ".node.properties.set";      // NOI18N
 
 	private static extensionUri: vscode.Uri;
 	private static scriptPath: vscode.Uri;

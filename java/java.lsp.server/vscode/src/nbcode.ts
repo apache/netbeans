@@ -88,7 +88,7 @@ export function launch(
     return process;
 }
 
-if (typeof process === 'object' && process.argv0 === 'node') {
+if (typeof process === 'object' && typeof process.argv0 ==='string' && process.argv0.startsWith('node')) {
     let extension = path.join(process.argv[1], '..', '..');
     let nbcode = path.join(extension, 'nbcode');
     if (!fs.existsSync(nbcode)) {

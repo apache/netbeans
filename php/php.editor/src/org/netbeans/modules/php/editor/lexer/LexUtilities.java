@@ -507,6 +507,7 @@ public final class LexUtilities {
         Token token;
         int balance = 0;
         int curlyBalance = 0;
+        boolean isInQuotes = false; // GH-6731 for checking a variable in string
         do {
             token = ts.token();
             if (token.id() == PHPTokenId.PHP_TOKEN) {
@@ -519,6 +520,14 @@ public final class LexUtilities {
                         break;
                     default:
                         //no-op
+                }
+            } else if (token.id() == PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING) {
+                // GH-6731 for checking a variable in string
+                // e.g. "example {$example}"
+                if ((token.text().length() == 1 && TokenUtilities.textEquals(token.text(), "\"")) // NOI18N
+                        || (!TokenUtilities.startsWith(token.text(), "\"") && TokenUtilities.endsWith(token.text(), "\"")) // NOI18N
+                        || (TokenUtilities.startsWith(token.text(), "\"") && !TokenUtilities.endsWith(token.text(), "\""))) { // NOI18N
+                    isInQuotes = !isInQuotes;
                 }
             } else if ((token.id() == PHPTokenId.PHP_SEMICOLON || token.id() == PHPTokenId.PHP_OPENTAG)
                     && ts.moveNext()) {
@@ -584,7 +593,7 @@ public final class LexUtilities {
                 break;
             } else if (token.id() == PHPTokenId.PHP_CURLY_CLOSE) {
                 curlyBalance--;
-                if (curlyBalance == -1 && ts.moveNext()) {
+                if (!isInQuotes && curlyBalance == -1 && ts.moveNext()) {
                     // we are after previous blog close
                     LexUtilities.findNext(ts, Arrays.asList(
                             PHPTokenId.WHITESPACE,
@@ -600,7 +609,7 @@ public final class LexUtilities {
                 }
             } else if (token.id() == PHPTokenId.PHP_CURLY_OPEN) {
                 curlyBalance++;
-                if (curlyBalance == 1 && ts.moveNext()) {
+                if (!isInQuotes && curlyBalance == 1 && ts.moveNext()) {
                     // we are at the begining of a blog
                     LexUtilities.findNext(ts, Arrays.asList(
                             PHPTokenId.WHITESPACE,

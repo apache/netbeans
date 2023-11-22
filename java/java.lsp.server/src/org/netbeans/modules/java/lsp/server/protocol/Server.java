@@ -207,7 +207,7 @@ public final class Server {
                 LOG.log(Level.WARNING, "Error occurred during LSP message dispatch", t);
                 if (t instanceof CompletionException) {
                     if (t.getCause() instanceof ResponseErrorException) {
-                        return ((ResponseErrorException)t).getResponseError();
+                        return ((ResponseErrorException)t.getCause()).getResponseError();
                     }
                     Throwable cause = t.getCause();
                     ResponseError error = new ResponseError();

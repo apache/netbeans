@@ -180,14 +180,14 @@
 					"name": "punctuation.bracket.square.beging.mexp"
 				}
 			},
-			"contentName": "meta.bean-context-access.argument.mexp",
+			"contentName": "meta.environment-access.argument.mexp",
 			"end": "\\]",
 			"endCaptures": {
 				"0": {
 					"name": "punctuation.bracket.square.end.mexp"
 				}
 			},
-			"name": "meta.bean-context-access.mexp",
+			"name": "meta.environment-access.mexp",
 			"patterns": [
 				{ "include": "#code" }
 			]

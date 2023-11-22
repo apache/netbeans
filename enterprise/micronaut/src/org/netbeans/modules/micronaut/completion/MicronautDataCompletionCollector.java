@@ -31,6 +31,7 @@ import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.TextEdit;
+import org.netbeans.modules.micronaut.expression.MicronautExpressionLanguageUtilities;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.lsp.CompletionCollector;
 
@@ -147,6 +148,7 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                             .sortText(String.format("%04d%s#%02d%s", 100, simpleName, cnt, sortParams.toString()))
                             .insertText(insertText.toString())
                             .insertTextFormat(asTemplate ? Completion.TextFormat.Snippet : Completion.TextFormat.PlainText)
+                            .documentation(() -> MicronautExpressionLanguageUtilities.getJavadocText(info, element, false, 3))
                             .build();
                 }
                 Builder builder = CompletionCollector.newBuilder(simpleName);
@@ -167,7 +169,7 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                     default:
                         throw new IllegalStateException("Unexpected Java element kind: " + element.getKind());
                 }
-                return builder.build();
+                return builder.documentation(() -> MicronautExpressionLanguageUtilities.getJavadocText(info, element, false, 3)).build();
             }
         }).stream().forEach(consumer);
         return true;

@@ -22,6 +22,7 @@ import java.beans.Introspector;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -39,7 +40,8 @@ import javax.lang.model.util.ElementFilter;
 public abstract class ExpressionTree {
 
     private final Kind kind;
-    private TypeMirror type;
+    protected Element element;
+    protected TypeMirror typeMirror;
 
     private ExpressionTree(Kind kind) {
         this.kind = kind;
@@ -49,19 +51,26 @@ public abstract class ExpressionTree {
         return kind;
     }
 
-    public TypeMirror getType(EvaluationContext ctx) {
-        if (type == null) {
-            type = resolve(ctx);
+    public Element getElement(EvaluationContext ctx) {
+        if (typeMirror == null && element == null) {
+            resolve(ctx);
         }
-        return type;
+        return element;
+    }
+
+    public TypeMirror getTypeMirror(EvaluationContext ctx) {
+        if (typeMirror == null && element == null) {
+            resolve(ctx);
+        }
+        return typeMirror;
     }
 
     public abstract int getStartPosition();
     public abstract int getEndPosition();
     public abstract <R,D> R accept(Scanner<R,D> scanner, D data);
 
-    protected TypeMirror resolve(EvaluationContext ctx) {
-        return ctx.getTypes().getNoType(TypeKind.NONE);
+    protected void resolve(EvaluationContext ctx) {
+        typeMirror = ctx.getTypes().getNoType(TypeKind.NONE);
     }
 
     private static TypeMirror unbox(EvaluationContext ctx, TypeMirror tm) {
@@ -120,22 +129,29 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
+        protected void resolve(EvaluationContext ctx) {
             switch (getKind()) {
                 case NULL_LITERAL:
-                    return ctx.getTypes().getNullType();
+                    typeMirror = ctx.getTypes().getNullType();
+                    break;
                 case BOOLEAN_LITERAL:
-                    return ctx.getTypes().getPrimitiveType(TypeKind.BOOLEAN);
+                    typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.BOOLEAN);
+                    break;
                 case STRING_LITERAL:
-                    return ctx.getElements().getTypeElement("java.lang.String").asType();
+                    typeMirror = ctx.getElements().getTypeElement("java.lang.String").asType();
+                    break;
                 case INT_LITERAL:
-                    return ctx.getTypes().getPrimitiveType(TypeKind.INT);
+                    typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.INT);
+                    break;
                 case LONG_LITERAL:
-                    return ctx.getTypes().getPrimitiveType(TypeKind.LONG);
+                    typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.LONG);
+                    break;
                 case FLOAT_LITERAL:
-                    return ctx.getTypes().getPrimitiveType(TypeKind.FLOAT);
+                    typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.FLOAT);
+                    break;
                 case DOUBLE_LITERAL:
-                    return ctx.getTypes().getPrimitiveType(TypeKind.DOUBLE);
+                    typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.DOUBLE);
+                    break;
                 default:
                     throw new AssertionError("Unexpected kind: " + getKind());
             }
@@ -173,12 +189,13 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
-            TypeMirror tm = unbox(ctx, expression.getType(ctx));
+        protected void resolve(EvaluationContext ctx) {
+            TypeMirror tm = unbox(ctx, expression.getTypeMirror(ctx));
             switch (getKind()) {
                 case NOT:
                 case EMPTY:
-                    return ctx.getTypes().getPrimitiveType(TypeKind.BOOLEAN);
+                    typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.BOOLEAN);
+                    break;
                 case PLUS:
                 case MINUS:
                     switch (tm.getKind()) {
@@ -186,10 +203,12 @@ public abstract class ExpressionTree {
                         case LONG:
                         case FLOAT:
                         case DOUBLE:
-                            return tm;
+                            typeMirror = tm;
+                            break;
                         default:
-                            return ctx.getTypes().getNoType(TypeKind.INT);
+                            typeMirror = ctx.getTypes().getNoType(TypeKind.INT);
                     }
+                    break;
                 default:
                     throw new AssertionError("Unexpected kind: " + getKind());
             }
@@ -231,9 +250,9 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
-            TypeMirror leftTM = unbox(ctx, left.getType(ctx));
-            TypeMirror rightTM = unbox(ctx, right.getType(ctx));
+        protected void resolve(EvaluationContext ctx) {
+            TypeMirror leftTM = unbox(ctx, left.getTypeMirror(ctx));
+            TypeMirror rightTM = unbox(ctx, right.getTypeMirror(ctx));
             switch (getKind()) {
                 case EQUAL_TO:
                 case NOT_EQUAL_TO:
@@ -245,10 +264,12 @@ public abstract class ExpressionTree {
                 case AND:
                 case OR:
                 case ELVIS:
-                    return ctx.getTypes().getPrimitiveType(TypeKind.BOOLEAN);
+                    typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.BOOLEAN);
+                    break;
                 case PLUS:
                     if (leftTM.getKind() == TypeKind.DECLARED && "java.lang.String".contentEquals(((TypeElement) ((DeclaredType) leftTM).asElement()).getQualifiedName())) {
-                        return leftTM;
+                        typeMirror = leftTM;
+                        break;
                     }
                 case MINUS:
                 case MULTIPLY:
@@ -256,16 +277,15 @@ public abstract class ExpressionTree {
                 case REMAINDER:
                 case POWER:
                     if (leftTM.getKind() == TypeKind.DOUBLE || rightTM.getKind() == TypeKind.DOUBLE) {
-                        return ctx.getTypes().getPrimitiveType(TypeKind.DOUBLE);
-                    }
-                    if (leftTM.getKind() == TypeKind.FLOAT || rightTM.getKind() == TypeKind.FLOAT) {
-                        return ctx.getTypes().getPrimitiveType(TypeKind.FLOAT);
-                    }
-                    if (leftTM.getKind() == TypeKind.LONG || rightTM.getKind() == TypeKind.LONG) {
-                        return ctx.getTypes().getPrimitiveType(TypeKind.LONG);
+                        typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.DOUBLE);
+                    } else if (leftTM.getKind() == TypeKind.FLOAT || rightTM.getKind() == TypeKind.FLOAT) {
+                        typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.FLOAT);
+                    } else if (leftTM.getKind() == TypeKind.LONG || rightTM.getKind() == TypeKind.LONG) {
+                        typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.LONG);
                     } else {
-                        return ctx.getTypes().getPrimitiveType(TypeKind.INT);
+                        typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.INT);
                     }
+                    break;
                 default:
                     throw new AssertionError("Unexpected kind: " + getKind());
             }
@@ -307,8 +327,8 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
-            return ctx.getTypes().getPrimitiveType(TypeKind.BOOLEAN);
+        protected void resolve(EvaluationContext ctx) {
+            typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.BOOLEAN);
         }
     }
 
@@ -353,22 +373,20 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
-            TypeMirror trueTM = unbox(ctx, trueExpression.getType(ctx));
-            TypeMirror falseTM = unbox(ctx, falseExpression.getType(ctx));
+        protected void resolve(EvaluationContext ctx) {
+            TypeMirror trueTM = unbox(ctx, trueExpression.getTypeMirror(ctx));
+            TypeMirror falseTM = unbox(ctx, falseExpression.getTypeMirror(ctx));
             if (trueTM.getKind() == TypeKind.DOUBLE || falseTM.getKind() == TypeKind.DOUBLE) {
-                return ctx.getTypes().getPrimitiveType(TypeKind.DOUBLE);
+                typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.DOUBLE);
+            } else if (trueTM.getKind() == TypeKind.FLOAT || falseTM.getKind() == TypeKind.FLOAT) {
+                typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.FLOAT);
+            } else if (trueTM.getKind() == TypeKind.LONG || falseTM.getKind() == TypeKind.LONG) {
+                typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.LONG);
+            } else if (trueTM.getKind() == TypeKind.INT || falseTM.getKind() == TypeKind.INT) {
+                typeMirror = ctx.getTypes().getPrimitiveType(TypeKind.INT);
+            } else {
+                typeMirror = trueTM;
             }
-            if (trueTM.getKind() == TypeKind.FLOAT || falseTM.getKind() == TypeKind.FLOAT) {
-                return ctx.getTypes().getPrimitiveType(TypeKind.FLOAT);
-            }
-            if (trueTM.getKind() == TypeKind.LONG || falseTM.getKind() == TypeKind.LONG) {
-                return ctx.getTypes().getPrimitiveType(TypeKind.LONG);
-            }
-            if (trueTM.getKind() == TypeKind.INT || falseTM.getKind() == TypeKind.INT) {
-                return ctx.getTypes().getPrimitiveType(TypeKind.INT);
-            }
-            return trueTM;
         }
     }
 
@@ -405,8 +423,8 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
-            return expression.resolve(ctx);
+        protected void resolve(EvaluationContext ctx) {
+            typeMirror = expression.getTypeMirror(ctx);
         }
     }
 
@@ -449,12 +467,12 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
-            TypeElement te = ctx.getElements().getTypeElement(typeName);
-            if (te == null) {
-                te = ctx.getElements().getTypeElement("java.lang." + typeName);
+        protected void resolve(EvaluationContext ctx) {
+            element = ctx.getElements().getTypeElement(typeName);
+            if (element == null) {
+                element = ctx.getElements().getTypeElement("java.lang." + typeName);
             }
-            return te != null ? te.asType() : ctx.getTypes().getNoType(TypeKind.NONE);
+            typeMirror = element != null ? element.asType() : ctx.getTypes().getNoType(TypeKind.NONE);
         }
     }
 
@@ -485,9 +503,9 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
+        protected void resolve(EvaluationContext ctx) {
             TypeElement te = ctx.getScope().getEnclosingClass();
-            return te != null ? te.asType() : ctx.getTypes().getNoType(TypeKind.NONE);
+            typeMirror = te != null ? te.asType() : ctx.getTypes().getNoType(TypeKind.NONE);
         }
     }
 
@@ -545,20 +563,20 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
+        protected void resolve(EvaluationContext ctx) {
             List<ExecutableElement> methods = null;
             DeclaredType dt = null;
             if (callee == null) {
                 methods = ctx.getContextMethods();
             } else {
-                TypeMirror calleeTM = callee.getType(ctx);
+                TypeMirror calleeTM = callee.getTypeMirror(ctx);
                 if (calleeTM.getKind() == TypeKind.DECLARED) {
                     dt = (DeclaredType) calleeTM;
                     methods = ElementFilter.methodsIn(((TypeElement) dt.asElement()).getEnclosedElements());
                 }
             }
             if (methods != null && !methods.isEmpty()) {
-                List<TypeMirror> argTypes = arguments.stream().map(arg -> arg.getType(ctx)).collect(Collectors.toList());
+                List<TypeMirror> argTypes = arguments.stream().map(arg -> arg.getTypeMirror(ctx)).collect(Collectors.toList());
                 for (ExecutableElement ee : methods) {
                     TypeMirror enclType = dt != null ? dt : ee.getEnclosingElement().asType();
                     if (enclType.getKind() == TypeKind.DECLARED && identifier.contentEquals(ee.getSimpleName()) && ctx.getTrees().isAccessible(ctx.getScope(), ee, (DeclaredType) enclType)) {
@@ -578,13 +596,15 @@ public abstract class ExpressionTree {
                                 }
                             }
                             if (match) {
-                                return et.getReturnType();
+                                element = ee;
+                                typeMirror = et.getReturnType();
+                                return;
                             }
                         }
                     }
                 }
             }
-            return ctx.getTypes().getNoType(TypeKind.NONE);
+            typeMirror = ctx.getTypes().getNoType(TypeKind.NONE);
         }
     }
 
@@ -635,13 +655,13 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
+        protected void resolve(EvaluationContext ctx) {
             List<ExecutableElement> methods = null;
             DeclaredType dt = null;
             if (callee == null) {
                 methods = ctx.getContextMethods();
             } else {
-                TypeMirror calleeTM = callee.getType(ctx);
+                TypeMirror calleeTM = callee.getTypeMirror(ctx);
                 if (calleeTM.getKind() == TypeKind.DECLARED) {
                     dt = (DeclaredType) calleeTM;
                     methods = ElementFilter.methodsIn(((TypeElement) dt.asElement()).getEnclosedElements());
@@ -652,11 +672,13 @@ public abstract class ExpressionTree {
                     TypeMirror enclType = dt != null ? dt : ee.getEnclosingElement().asType();
                     if (enclType.getKind() == TypeKind.DECLARED && identifier.equals(getPropertyName(ee)) && ctx.getTrees().isAccessible(ctx.getScope(), ee, (DeclaredType) enclType)) {
                         ExecutableType et = (ExecutableType) ctx.getTypes().asMemberOf((DeclaredType) enclType, ee);
-                        return et.getReturnType();
+                        element = ee;
+                        typeMirror = et.getReturnType();
+                        return;
                     }
                 }
             }
-            return ctx.getTypes().getNoType(TypeKind.NONE);
+            typeMirror = ctx.getTypes().getNoType(TypeKind.NONE);
         }
     }
 
@@ -697,9 +719,9 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
-            TypeMirror calleeTM = callee.getType(ctx);
-            return calleeTM.getKind() == TypeKind.ARRAY ? ((ArrayType) calleeTM).getComponentType() : ctx.getTypes().getNoType(TypeKind.NONE);
+        protected void resolve(EvaluationContext ctx) {
+            TypeMirror calleeTM = callee.getTypeMirror(ctx);
+            typeMirror = calleeTM.getKind() == TypeKind.ARRAY ? ((ArrayType) calleeTM).getComponentType() : ctx.getTypes().getNoType(TypeKind.NONE);
         }
     }
 
@@ -736,8 +758,8 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
-            return getTypeReference().getType(ctx);
+        protected void resolve(EvaluationContext ctx) {
+            typeMirror = typeReference.getTypeMirror(ctx);
         }
     }
 
@@ -774,8 +796,8 @@ public abstract class ExpressionTree {
         }
 
         @Override
-        protected TypeMirror resolve(EvaluationContext ctx) {
-            return ctx.getElements().getTypeElement("java.lang.String").asType();
+        protected void resolve(EvaluationContext ctx) {
+            typeMirror = ctx.getElements().getTypeElement("java.lang.String").asType();
         }
     }
 

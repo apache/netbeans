@@ -22,6 +22,8 @@ import java.awt.Color;
 import java.io.CharConversionException;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -35,6 +37,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ui.ElementJavadoc;
 import org.netbeans.lib.editor.codetemplates.api.CodeTemplateManager;
 import org.netbeans.spi.editor.completion.CompletionDocumentation;
 import org.netbeans.spi.editor.completion.CompletionItem;
@@ -187,46 +190,30 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
 
                 @Override
                 public CompletionItem createEnvPropertyItem(String name, String documentation, int anchorOffset, int offset) {
+                    CompletionDocumentation cd = new CompletionDocumentation() {
+                        @Override
+                        public String getText() {
+                            return documentation;
+                        }
+                        @Override
+                        public URL getURL() {
+                            return null;
+                        }
+                        @Override
+                        public CompletionDocumentation resolveLink(String link) {
+                            return null;
+                        }
+                        @Override
+                        public Action getGotoSourceAction() {
+                            return null;
+                        }
+                    };
                     return CompletionUtilities.newCompletionItemBuilder(name)
                             .iconResource(ATTRIBUTE_VALUE)
                             .leftHtmlText(ATTRIBUTE_VALUE_COLOR + name + COLOR_END)
                             .sortPriority(30)
                             .startOffset(anchorOffset)
-                            .documentationTask(() -> {
-                                return documentation == null ? null : new CompletionTask() {
-                                    private CompletionDocumentation cd = new CompletionDocumentation() {
-                                        @Override
-                                        public String getText() {
-                                            return documentation;
-                                        }
-                                        @Override
-                                        public URL getURL() {
-                                            return null;
-                                        }
-                                        @Override
-                                        public CompletionDocumentation resolveLink(String link) {
-                                            return null;
-                                        }
-                                        @Override
-                                        public Action getGotoSourceAction() {
-                                            return null;
-                                        }
-                                    };
-                                    @Override
-                                    public void query(CompletionResultSet resultSet) {
-                                        resultSet.setDocumentation(cd);
-                                        resultSet.finish();
-                                    }
-                                    @Override
-                                    public void refresh(CompletionResultSet resultSet) {
-                                        resultSet.setDocumentation(cd);
-                                        resultSet.finish();
-                                    }
-                                    @Override
-                                    public void cancel() {
-                                    }
-                                };
-                            })
+                            .documentationTask(getDocTask(cd, null))
                             .build();
                 }
 
@@ -286,7 +273,8 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                         } else {
                             builder.insertText(insertText.toString());
                         }
-                        return builder.build();
+                        AtomicBoolean cancel = new AtomicBoolean();
+                        return builder.documentationTask(getDocTask(new JavaCompletionDoc(ElementJavadoc.create(info, element, () -> cancel.get())), cancel)).build();
                     }
                     CompletionUtilities.CompletionItemBuilder builder = CompletionUtilities.newCompletionItemBuilder(simpleName).startOffset(offset);
                     switch (element.getKind()) {
@@ -310,12 +298,36 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
                         default:
                             throw new IllegalStateException("Unexpected Java element kind: " + element.getKind());
                     }
-                    return builder.build();
+                    AtomicBoolean cancel = new AtomicBoolean();
+                    return builder.documentationTask(getDocTask(new JavaCompletionDoc(ElementJavadoc.create(info, element, () -> cancel.get())), cancel)).build();
                 }
             }));
             resultSet.setAnchorOffset(task.getAnchorOffset());
             resultSet.finish();
         }
+    }
+
+    private static Supplier<CompletionTask> getDocTask(CompletionDocumentation doc, AtomicBoolean cancel) {
+        return () -> {
+            return new CompletionTask() {
+                @Override
+                public void query(CompletionResultSet resultSet) {
+                    resultSet.setDocumentation(doc);
+                    resultSet.finish();
+                }
+                @Override
+                public void refresh(CompletionResultSet resultSet) {
+                    resultSet.setDocumentation(doc);
+                    resultSet.finish();
+                }
+                @Override
+                public void cancel() {
+                    if (cancel != null) {
+                        cancel.set(true);
+                    }
+                }
+            };
+        };
     }
 
     private static String getHTMLColor(int r, int g, int b) {
@@ -334,5 +346,35 @@ public final class MicronautDataCompletionProvider implements CompletionProvider
             } catch (CharConversionException ex) {}
         }
         return s;
+    }
+
+    private static class JavaCompletionDoc implements CompletionDocumentation {
+
+        private final ElementJavadoc elementJavadoc;
+
+        private JavaCompletionDoc(ElementJavadoc elementJavadoc) {
+            this.elementJavadoc = elementJavadoc;
+        }
+
+        @Override
+        public JavaCompletionDoc resolveLink(String link) {
+            ElementJavadoc doc = elementJavadoc.resolveLink(link);
+            return doc != null ? new JavaCompletionDoc(doc) : null;
+        }
+
+        @Override
+        public URL getURL() {
+            return elementJavadoc.getURL();
+        }
+
+        @Override
+        public String getText() {
+            return elementJavadoc.getText();
+        }
+
+        @Override
+        public Action getGotoSourceAction() {
+            return elementJavadoc.getGotoSourceAction();
+        }
     }
 }

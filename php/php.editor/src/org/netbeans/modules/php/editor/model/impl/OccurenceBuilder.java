@@ -2460,7 +2460,11 @@ class OccurenceBuilder {
                     }
                     ASTNodeInfo<Variable> nodeInfo = entry.getKey();
                     boolean addOccurence = false;
-                    if (NameKind.exact(nodeInfo.getName()).matchesName(PhpElementKind.VARIABLE, nodeName)) {
+                    String name = nodeInfo.getName();
+                    if (!StringUtils.hasText(name)) {
+                        continue;
+                    }
+                    if (NameKind.exact(name).matchesName(PhpElementKind.VARIABLE, nodeName)) {
                         if (!var.isGloballyVisible()) {
                             Scope nextScope = entry.getValue();
                             if (var.representsThis() && nextScope.getInScope() instanceof TypeScope) {

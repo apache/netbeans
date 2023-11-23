@@ -114,7 +114,11 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             this.superClass = Union2.<String, List<ClassScopeImpl>>createFirst(null);
         }
         for (QualifiedName usedTrait : nodeInfo.getUsedTraits()) {
-            usedTraits.add(VariousUtils.getFullyQualifiedName(usedTrait, nodeInfo.getOriginalNode().getStartOffset(), inScope));
+            if (!usedTrait.getName().isEmpty()) {
+                // GH-6634
+                // avoid getting traits from the index with an empty string
+                usedTraits.add(VariousUtils.getFullyQualifiedName(usedTrait, nodeInfo.getOriginalNode().getStartOffset(), inScope));
+            }
         }
     }
 
@@ -139,7 +143,12 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             this.superClass = Union2.<String, List<ClassScopeImpl>>createFirst(null);
         }
         for (QualifiedName usedTrait : nodeInfo.getUsedTraits()) {
-            usedTraits.add(VariousUtils.getFullyQualifiedName(usedTrait, nodeInfo.getOriginalNode().getStartOffset(), inScope));
+            QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(usedTrait, nodeInfo.getOriginalNode().getStartOffset(), inScope);
+            if (!fullyQualifiedName.getName().isEmpty()) {
+                // GH-6634
+                // avoid getting traits from the index with an empty string
+                usedTraits.add(fullyQualifiedName);
+            }
         }
     }
 
@@ -493,6 +502,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
                 } else {
                     first = true;
                 }
+                assert !qualifiedName.getName().isEmpty();
                 sb.append(qualifiedName.toString());
             }
         }
@@ -529,6 +539,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
                 if (traitSb.length() > 0) {
                     traitSb.append(","); //NOI18N
                 }
+                assert !usedTrait.getName().isEmpty();
                 traitSb.append(usedTrait.toString());
             }
             sb.append(traitSb);
@@ -542,6 +553,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             if (mixinSb.length() > 0) {
                 mixinSb.append(","); // NOI18N
             }
+            assert !mixinClassName.getName().isEmpty();
             mixinSb.append(mixinClassName.toString());
         }
         sb.append(mixinSb);
@@ -654,7 +666,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
 
     @Override
     public Collection<QualifiedName> getUsedTraits() {
-        return usedTraits;
+        return Collections.unmodifiableCollection(usedTraits);
     }
 
     @Override
@@ -748,14 +760,14 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             sb.append(" extends ").append(extClass.getName()); //NOI18N
         }
         List<? extends InterfaceScope> implementedInterfaces = getSuperInterfaceScopes();
-        if (implementedInterfaces.size() > 0) {
+        if (!implementedInterfaces.isEmpty()) {
             sb.append(" implements "); //NOI18N
             for (InterfaceScope interfaceScope : implementedInterfaces) {
                 sb.append(interfaceScope.getName()).append(" ");
             }
         }
         Collection<? extends TraitScope> traits = getTraits();
-        if (traits.size() > 0) {
+        if (!traits.isEmpty()) {
             sb.append(" uses "); //NOI18N
             for (TraitScope traitScope : traits) {
                 sb.append(traitScope.getName()).append(" ");

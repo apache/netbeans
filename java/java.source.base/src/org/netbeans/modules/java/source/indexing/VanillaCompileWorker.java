@@ -90,6 +90,7 @@ import org.netbeans.lib.nbjavac.services.CancelService;
 import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Pair;
 import java.io.File;
 import java.io.IOException;
@@ -541,6 +542,7 @@ final class VanillaCompileWorker extends CompileWorker {
             return ;
         }
         hu.handled.add(cut);
+        Names names = Names.instance(ctx);
         Symtab syms = Symtab.instance(ctx);
         Trees trees = Trees.instance(BasicJavacTask.instance(ctx));
         Types types = Types.instance(ctx);
@@ -732,6 +734,13 @@ final class VanillaCompileWorker extends CompileWorker {
                 for (RecordComponent rc : clazz.sym.getRecordComponents()) {
                     rc.type = error2Object(rc.type);
                     scan(rc.accessorMeth, p);
+                    if (rc.accessor == null) {
+                        //the accessor is not created when the component type matches
+                        //a non-arg j.l.Object method (which is a compile-time error)
+                        //but the missing accessor will break Lower.
+                        //initialize the field:
+                        rc.accessor = new MethodSymbol(0, names.empty, new MethodType(com.sun.tools.javac.util.List.nil(), syms.errType, com.sun.tools.javac.util.List.nil(), syms.methodClass), clazz.sym);
+                    }
                 }
                 for (JCTree def : clazz.defs) {
                     boolean errorClass = isErroneousClass(def);

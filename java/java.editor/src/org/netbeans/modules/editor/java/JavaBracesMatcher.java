@@ -43,6 +43,8 @@ import org.netbeans.spi.editor.bracesmatching.BracesMatcherFactory;
 import org.netbeans.spi.editor.bracesmatching.MatcherContext;
 import org.netbeans.spi.editor.bracesmatching.support.BracesMatcherSupport;
 import org.openide.util.Exceptions;
+import org.netbeans.modules.micronaut.expression.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 
 /**
  *
@@ -259,10 +261,47 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                 }
             }
 
+            if (matchingChar == '<') {
+                // Additional handling for generic type arguments
+                BraceContext genericTypeContext = findGenericTypeContext();
+                if (genericTypeContext != null) {
+                    return new int[]{originOffset, genericTypeContext.getEnd().getOffset()};
+                }
+            }
+
             return null;
-        } finally {
+        } catch (IOException ioException) {
+            return null;
+        }
+        finally {
             ((AbstractDocument) context.getDocument()).readUnlock();
         }
+    }
+
+    private BraceContext findGenericTypeContext() throws BadLocationException, IOException {
+        BraceContext genericTypeContext = findContext(matchStart);
+        if (genericTypeContext != null) {
+            return genericTypeContext;
+        }
+
+        // Check for the case where the matching character is '>' and it is part of a generic type argument
+        if (!sequences.isEmpty() && sequences.get(sequences.size() - 1).language() == JavaTokenId.language()) {
+            TokenSequence<?> lastSeq = sequences.get(sequences.size() - 1);
+            lastSeq.move(originOffset);
+
+            if (lastSeq.movePrevious()) {
+                Token<?> token = lastSeq.token();
+                if (token.id() == JavaTokenId.GT) {
+                    int startPos = lastSeq.offset();
+                    return BraceContext.create(
+                            context.getDocument().createPosition(startPos),
+                            context.getDocument().createPosition(startPos + 1)
+                    );
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -282,7 +321,59 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                 Exceptions.printStackTrace(ex);
             }
         }
+        if (backward && matchingChar == '<') {
+            try {
+                return findGenericTypeContextBackwards(originOrMatchPosition);
+            } catch (BadLocationException | IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
         return null;
+    }
+
+    private BraceContext findGenericTypeContextBackwards(final int position) throws BadLocationException, IOException {
+        // Sanity check
+        if (position != originOffset) {
+            return null;
+        }
+
+        JavaSource src = JavaSource.forDocument(context.getDocument());
+        if (src == null) {
+            return null;
+        }
+
+        final BraceContext[] ret = new BraceContext[1];
+        src.runUserActionTask(new Task<CompilationController>() {
+            @Override
+            public void run(CompilationController ctrl) throws Exception {
+                ctrl.toPhase(JavaSource.Phase.PARSED);
+                TreePath path = ctrl.getTreeUtilities().pathFor(position + 1);
+                if (path == null) {
+                    return;
+                }
+
+                // Check if the angle bracket is part of a generic type argument
+                ExpressionTree expression = null;
+                if (path.getLeaf() instanceof ExpressionTree) {
+                    expression = (ExpressionTree) path.getLeaf();
+                } else if (path.getParentPath() != null && path.getParentPath().getLeaf() instanceof ExpressionTree) {
+                    expression = (ExpressionTree) path.getParentPath().getLeaf();
+                }
+
+                if (expression instanceof MethodInvocationTree) {
+                    MethodInvocationTree methodInvocation = (MethodInvocationTree) expression;
+                    List<? extends ExpressionTree> arguments = (List<? extends ExpressionTree>) methodInvocation.getArguments();
+                    if (arguments != null && !arguments.isEmpty()) {
+                        ret[0] = BraceContext.create(
+                                context.getDocument().createPosition(position),
+                                context.getDocument().createPosition(position + 1)
+                        );
+                    }
+                }
+            }
+        }, true);
+
+        return ret[0];
     }
 
     public BraceContext findContextBackwards(final int p2) throws BadLocationException, IOException {

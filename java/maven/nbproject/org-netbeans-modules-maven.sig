@@ -2383,13 +2383,12 @@ supr java.lang.Enum<org.netbeans.modules.maven.options.MavenSettings$OutputTabNa
 CLSS public final org.netbeans.modules.maven.options.MavenVersionSettings
 fld public final static java.lang.String VERSION_COMPILER = "maven-compiler-plugin"
 fld public final static java.lang.String VERSION_RESOURCES = "maven-resources-plugin"
-meth protected final java.lang.String getProperty(java.lang.String)
-meth protected final java.lang.String putProperty(java.lang.String,java.lang.String)
-meth protected final java.util.prefs.Preferences getPreferences()
+meth public java.lang.String getNBVersion()
 meth public java.lang.String getVersion(java.lang.String)
+meth public java.lang.String getVersion(java.lang.String,java.lang.String)
 meth public static org.netbeans.modules.maven.options.MavenVersionSettings getDefault()
 supr java.lang.Object
-hfds INSTANCE
+hfds INSTANCE,fallback
 
 CLSS public final !enum org.netbeans.modules.maven.options.NetworkProxySettings
 fld public final static org.netbeans.modules.maven.options.NetworkProxySettings ASK

@@ -853,7 +853,8 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(StaticConstantAccess node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "StaticConstantAccess");
+        XMLPrintNode printNode = new XMLPrintNode(node, "StaticConstantAccess",
+                new String[]{"isDynamicName", (node.isDynamicName() ? "true" : "false")});
         printNode.addChild(node.getDispatcher());
         printNode.addChild("Constant", node.getConstant());
         printNode.addChild("Member", node.getMember());

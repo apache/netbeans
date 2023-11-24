@@ -4805,6 +4805,12 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM static_class_constant_array_access:c
     RESULT = new StaticConstantAccess(classNameleft, constantright, className, constant);
 :}
 
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    ReflectionVariable reflectionVariable = new ReflectionVariable(startleft, endright, expr);
+    RESULT = new StaticConstantAccess(classNameleft, endright, className, reflectionVariable, true);
+:}
+
 // GH-4725 PHP 8.2: Fetch properties of enums in const expressions
 // https://wiki.php.net/rfc/fetch_property_in_const_expressions
 // e.g.
@@ -4845,6 +4851,12 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM static_class_constant_array_access:c
 | static_class_constant:constant T_NULLSAFE_OBJECT_OPERATOR T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
 {:
     RESULT = new FieldAccess(constantleft, endright, constant,
+            new ReflectionVariable(startleft, endright, expr), true);
+:}
+
+| static_class_constant:constant T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    RESULT = new StaticConstantAccess(constantleft, endright, constant,
             new ReflectionVariable(startleft, endright, expr), true);
 :}
 ;
@@ -5594,6 +5606,12 @@ variable_without_objects:var
 {:
     RESULT = var;
 :}
+
+| T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    // e.g. Example::{method('foo')}()::{method('bar')}();
+    RESULT = new ReflectionVariable(startleft, endright, expr);
+:}
 ;
 
 object_property ::=
@@ -5944,10 +5962,27 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant
     RESULT = new StaticConstantAccess(classNameleft, constantright, className, constant);
 :}
 
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    ReflectionVariable reflectionVariable = new ReflectionVariable(startleft, endright, expr);
+    RESULT = new StaticConstantAccess(classNameleft, endright, className, reflectionVariable, true);
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    ReflectionVariable reflectionVariable = new ReflectionVariable(startleft, endright, expr);
+    RESULT = new StaticConstantAccess(classNameleft, endright, className, reflectionVariable, true);
+:}
+
 | enum_constant:enumConst T_PAAMAYIM_NEKUDOTAYIM identifier:constant
 {:
     // Name::ENUM_CASE::CONSTANT;
     RESULT = new StaticConstantAccess(enumConstleft, constantright, enumConst, constant);
+:}
+| enum_constant:enumConst T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    ReflectionVariable reflectionVariable = new ReflectionVariable(startleft, endright, expr);
+    RESULT = new StaticConstantAccess(enumConstleft, endright, enumConst, reflectionVariable, true);
 :}
 ;
 

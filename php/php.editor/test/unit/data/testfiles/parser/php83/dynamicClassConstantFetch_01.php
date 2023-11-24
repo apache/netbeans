@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,25 +17,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.parser.astnodes;
 
-/**
- * Represents an indirect reference to a variable.
- * e.g.
- * <pre>
- * $$a
- * $$foo()
- * {$var} // e.g. $a->{$var}, Foo::{$var}
- * </pre>
- */
-public class ReflectionVariable extends Variable {
-
-    public ReflectionVariable(int start, int end, Expression variable) {
-        super(start, end, variable);
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
+class Test {
+    public const BAR = 'bar';
+    public const BA = 'BA';
+    public const R = 'R';
+    public const A = self::{'BAR'};
+    public const B = self::{'BA' . 'R'};
+    public const C = self::{self::BA . self::R};
 }
+
+$bar = 'BAR';
+
+Test::{"BAR"};
+$test::{"BAR"};
+Test::{$bar};
+$test::{$bar};
+Test::{$bar . $r};
+$test::{$bar . $r};
+Test::{strtoupper("bar")};
+$test::{strtoupper("bar")};
+Test::{'$barr'};
+$test::{'$barr'};
+Test::{strtolower("CLASS")};
+$test::{strtolower("CLASS")};
+Test::{100};
+$test::{100};
+Test::{[]};
+$test::{[]};
+
+Test::{foo()}::{bar()};
+Test::{test('foo')}::{test('bar')};

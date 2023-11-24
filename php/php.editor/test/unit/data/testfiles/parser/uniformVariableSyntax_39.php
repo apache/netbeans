@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,25 +17,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.parser.astnodes;
-
-/**
- * Represents an indirect reference to a variable.
- * e.g.
- * <pre>
- * $$a
- * $$foo()
- * {$var} // e.g. $a->{$var}, Foo::{$var}
- * </pre>
- */
-public class ReflectionVariable extends Variable {
-
-    public ReflectionVariable(int start, int end, Expression variable) {
-        super(start, end, variable);
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
-    }
-}
+$test->{test('foo')}->{test('bar')};
+$test->{test('foo')}()->{test('bar')}();
+Test::{test('foo')}()::{test('bar')}();
+$test[test('foo')][test('bar')];

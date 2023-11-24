@@ -72,7 +72,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.callback.CallbackHandler;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
-import org.netbeans.modules.j2ee.deployment.common.api.MessageDestination;
 import org.netbeans.modules.j2ee.deployment.common.api.MessageDestination.Type;
 import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.DeploymentContext;
@@ -122,6 +121,7 @@ import static org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils.WILD
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import org.netbeans.modules.javaee.wildfly.WildflyClassLoader;
 import org.netbeans.modules.javaee.wildfly.config.WildflyJaxrsResource;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginProperties;
 import org.netbeans.modules.javaee.wildfly.ide.ui.WildflyPluginUtils.Version;
@@ -185,14 +185,14 @@ public class WildflyClient {
      * @return the value of serverPort
      */
     public String getServerLog() throws IOException {
-        WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+        WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
         LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
         values.put(SUBSYSTEM, "logging");
         values.put("periodic-rotating-file-handler", "FILE");
         return resolvePath(cl, values);
     }
 
-    private String resolvePath(WildflyDeploymentFactory.WildFlyClassLoader cl, LinkedHashMap<Object, Object> values) throws IOException {
+    private String resolvePath(WildflyClassLoader cl, LinkedHashMap<Object, Object> values) throws IOException {
         try {
             final Object readPathOperation = createModelNode(cl);
             setModelNodeChildString(cl, getModelNodeChild(cl, readPathOperation, OP), RESOLVE_PATH);
@@ -237,7 +237,7 @@ public class WildflyClient {
     }
 
     // ModelControllerClient
-    private synchronized Object getClient(WildflyDeploymentFactory.WildFlyClassLoader cl) {
+    private synchronized Object getClient(WildflyClassLoader cl) {
         if (client == null) {
             try {
                 this.client = createClient(cl, version, serverAddress, serverPort, handler);
@@ -262,7 +262,7 @@ public class WildflyClient {
 
     public synchronized void shutdownServer(int timeout) throws IOException, InterruptedException, TimeoutException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             // ModelNode
             Object shutdownOperation = createModelNode(cl);
             setModelNodeChildString(cl, getModelNodeChild(cl, shutdownOperation, OP), SHUTDOWN);
@@ -279,7 +279,7 @@ public class WildflyClient {
 
     public synchronized boolean isServerRunning(String homeDir, String configFile) {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             // ModelNode
             Object statusOperation = createModelNode(cl);
             setModelNodeChildString(cl, getModelNodeChild(cl, statusOperation, OP), READ_ATTRIBUTE_OPERATION);
@@ -312,7 +312,7 @@ public class WildflyClient {
     }
 
     // ModelNode
-    private synchronized Object executeOnModelNode(WildflyDeploymentFactory.WildFlyClassLoader cl, Object modelNode) throws IOException, ClassNotFoundException, NoSuchMethodException,
+    private synchronized Object executeOnModelNode(WildflyClassLoader cl, Object modelNode) throws IOException, ClassNotFoundException, NoSuchMethodException,
             InvocationTargetException, IllegalAccessException {
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
         Object clientLocal = getClient(cl);
@@ -324,7 +324,7 @@ public class WildflyClient {
     }
 
     // ModelNode
-    private synchronized Object executeOnOperation(WildflyDeploymentFactory.WildFlyClassLoader cl, Object operation) throws IOException, ClassNotFoundException, NoSuchMethodException,
+    private synchronized Object executeOnOperation(WildflyClassLoader cl, Object operation) throws IOException, ClassNotFoundException, NoSuchMethodException,
             InvocationTargetException, IllegalAccessException {
         Class operationClazz = cl.loadClass("org.jboss.as.controller.client.Operation"); // NOI18N
         Object clientLocal = getClient(cl);
@@ -335,7 +335,7 @@ public class WildflyClient {
         return method.invoke(clientLocal, operation);
     }
 
-    private synchronized Future<?> executeAsync(WildflyDeploymentFactory.WildFlyClassLoader cl, Object modelNode, Object operationMessageHandler) throws IOException, ClassNotFoundException, NoSuchMethodException,
+    private synchronized Future<?> executeAsync(WildflyClassLoader cl, Object modelNode, Object operationMessageHandler) throws IOException, ClassNotFoundException, NoSuchMethodException,
             InvocationTargetException, IllegalAccessException {
         Class modelClazz = cl.loadClass("org.jboss.dmr.ModelNode"); // NOI18N
         Class handlerClazz = cl.loadClass("org.jboss.as.controller.client.OperationMessageHandler"); // NOI18N
@@ -349,7 +349,7 @@ public class WildflyClient {
 
     public Collection<WildflyModule> listAvailableModules() throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyModule> modules = new ArrayList<>();
             // ModelNode
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, null);
@@ -382,7 +382,7 @@ public class WildflyClient {
 
     public Collection<WildflyWebModuleNode> listWebModules(Lookup lookup) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyWebModuleNode> modules = new ArrayList<>();
             // ModelNode
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, null);
@@ -417,7 +417,7 @@ public class WildflyClient {
 
     public String getWebModuleURL(String webModuleName) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             // ModelNode
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, webModuleName);
             // ModelNode
@@ -459,7 +459,7 @@ public class WildflyClient {
 
     public Collection<WildflyEjbModuleNode> listEJBModules(Lookup lookup) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyEjbModuleNode> modules = new ArrayList<>();
             // ModelNode
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, null);
@@ -494,7 +494,7 @@ public class WildflyClient {
 
     public boolean startModule(WildflyTargetModuleID tmid) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             // ModelNode
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, tmid.getModuleID());
             // ModelNode
@@ -512,7 +512,7 @@ public class WildflyClient {
 
     public boolean startModule(String moduleName) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             // ModelNode
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, moduleName);
             // ModelNode
@@ -526,7 +526,7 @@ public class WildflyClient {
 
     public boolean stopModule(String moduleName) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             // ModelNode
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, moduleName);
             // ModelNode
@@ -539,7 +539,7 @@ public class WildflyClient {
 
     public boolean undeploy(String fileName) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             // ModelNode
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, fileName);
 
@@ -559,7 +559,7 @@ public class WildflyClient {
 
     public boolean deploy(DeploymentContext deployment) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             String fileName = deployment.getModuleFile().getName();
             undeploy(fileName);
 
@@ -602,7 +602,7 @@ public class WildflyClient {
 
     private Set<Datasource> listDatasources() throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             Set<Datasource> listedDatasources = new HashSet<>();
             // ModelNode
             final Object readDatasources = createModelNode(cl);
@@ -631,7 +631,7 @@ public class WildflyClient {
         }
     }
 
-    private WildflyDatasource getDatasource(WildflyDeploymentFactory.WildFlyClassLoader cl, String name) throws IOException {
+    private WildflyDatasource getDatasource(WildflyClassLoader cl, String name) throws IOException {
         try {
             // ModelNode
             final Object readDatasource = createModelNode(cl);
@@ -662,7 +662,7 @@ public class WildflyClient {
 
     public boolean removeDatasource(String name) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
             values.put(SUBSYSTEM, DATASOURCES_SUBSYSTEM);
             values.put(DATASOURCE_TYPE, name);
@@ -677,7 +677,7 @@ public class WildflyClient {
         }
     }
 
-    private Pair<String, String> getServerPaths(WildflyDeploymentFactory.WildFlyClassLoader cl) {
+    private Pair<String, String> getServerPaths(WildflyClassLoader cl) {
         try {
             // ModelNode
             final Object readEnvironment = createModelNode(cl);
@@ -728,7 +728,7 @@ public class WildflyClient {
 
     public List<WildflyMessageDestination> listDestinationForDeployment(String deployment) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyMessageDestination> destinations = new ArrayList<>();
             // ModelNode
             final Object readMessagingServers = createModelNode(cl);
@@ -762,7 +762,7 @@ public class WildflyClient {
 
     public List<WildflyMessageDestination> listDestinations() throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyMessageDestination> destinations = new ArrayList<>();
             // ModelNode
             final Object readMessagingServers = createModelNode(cl);
@@ -795,7 +795,7 @@ public class WildflyClient {
 
     private List<WildflyMessageDestination> getJMSDestinationForServerDeployment(String deployment, String serverName, Type messageType) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyMessageDestination> listedDestinations = new ArrayList<>();
             // ModelNode
             final Object readQueues = createModelNode(cl);
@@ -841,7 +841,7 @@ public class WildflyClient {
 
     private List<WildflyMessageDestination> getJMSDestinationForServer(String serverName, Type messageType) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyMessageDestination> listedDestinations = new ArrayList<>();
             // ModelNode
             final Object readQueues = createModelNode(cl);
@@ -896,7 +896,7 @@ public class WildflyClient {
 
     public boolean addMessageDestination(WildflyMessageDestination destination) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
             values.put(SUBSYSTEM, getMessagingSubsystem());
             values.put(getMessagingServerType(), "default");
@@ -922,7 +922,7 @@ public class WildflyClient {
 
     public boolean removeMessageDestination(WildflyMessageDestination destination) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
             values.put(SUBSYSTEM, getMessagingSubsystem());
             values.put(getMessagingServerType(), "default");
@@ -951,7 +951,7 @@ public class WildflyClient {
 
     private Collection<WildflyJaxrsResource> listJaxrsResources(String deployment) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             Map<String, WildflyJaxrsResource> jaxrsResources = new HashMap<>();
             // ModelNode
             final Object readJaxrsResources = createModelNode(cl);
@@ -991,7 +991,7 @@ public class WildflyClient {
 
     public Collection<WildflyMailSessionResource> listMailSessions() throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyMailSessionResource> modules = new ArrayList<>();
             LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
             values.put(SUBSYSTEM, MAIL_SUBSYSTEM);
@@ -1021,7 +1021,7 @@ public class WildflyClient {
 
     public Collection listEarApplications(Lookup lookup) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyEarApplicationNode> modules = new ArrayList<>();
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, null);
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
@@ -1044,7 +1044,7 @@ public class WildflyClient {
 
     public Collection listEarSubModules(Lookup lookup, String jeeApplicationName) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List modules = new ArrayList();
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, jeeApplicationName);
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
@@ -1087,7 +1087,7 @@ public class WildflyClient {
 
     public Collection listEJBForDeployment(Lookup lookup, String applicationName) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List modules = new ArrayList();
             Object deploymentAddressModelNode = createDeploymentPathAddressAsModelNode(cl, applicationName);
             Object readDeployments = createReadResourceOperation(cl, deploymentAddressModelNode, true, true);
@@ -1112,7 +1112,7 @@ public class WildflyClient {
         }
     }
 
-    private List<WildflyEjbComponentNode> listEJBs(WildflyDeploymentFactory.WildFlyClassLoader cl,
+    private List<WildflyEjbComponentNode> listEJBs(WildflyClassLoader cl,
             Object deployment, WildflyEjbComponentNode.Type type) throws IllegalAccessException, NoSuchMethodException,
             InvocationTargetException {
         List<WildflyEjbComponentNode> modules = new ArrayList<>();
@@ -1128,7 +1128,7 @@ public class WildflyClient {
     private WildflySocket fillSocket(String name, boolean outBound) throws
             ClassNotFoundException, NoSuchMethodException,
             InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
-        WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+        WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
         WildflySocket socket = new WildflySocket();
         LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
         values.put("socket-binding-group", "standard-sockets");
@@ -1162,7 +1162,7 @@ public class WildflyClient {
 
     public Collection<WildflyConnectionFactory> listConnectionFactories() throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyConnectionFactory> connectionFactories = new ArrayList<>();
             // ModelNode
             final Object readMessagingServers = createModelNode(cl);
@@ -1194,7 +1194,7 @@ public class WildflyClient {
 
     private Collection<? extends WildflyConnectionFactory> getConnectionFactoriesForServer(String messagingServerName) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyConnectionFactory> listedConnectionFactories = new ArrayList<>();
             // ModelNode
             final Object readConnectionFactories = createModelNode(cl);
@@ -1232,7 +1232,7 @@ public class WildflyClient {
     private WildflyConnectionFactory fillConnectionFactory(String name, Object configuration) throws
             ClassNotFoundException, NoSuchMethodException,
             InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
-        WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+        WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
         List properties = modelNodeAsPropertyList(cl, configuration);
         Map<String, String> attributes = new HashMap<>(properties.size());
         for (Object property : properties) {
@@ -1248,7 +1248,7 @@ public class WildflyClient {
     private WildflyMailSessionResource fillMailSession(String name, Object mailSession) throws
             ClassNotFoundException, NoSuchMethodException,
             InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
-        WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+        WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
 
         Object configuration = modelNodeAsPropertyForValue(cl, mailSession);
         List properties = modelNodeAsPropertyList(cl, configuration);
@@ -1280,7 +1280,7 @@ public class WildflyClient {
     }
 
     public String getDeploymentDirectory() throws IOException {
-        WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+        WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
         LinkedHashMap<Object, Object> values = new LinkedHashMap<>();
         values.put(SUBSYSTEM, "deployment-scanner");
         values.put("scanner", "default");
@@ -1289,7 +1289,7 @@ public class WildflyClient {
 
     private String resolveExpression(String unresolvedString) throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             final Object resolveExpression = createModelNode(cl);
             setModelNodeChildString(cl, getModelNodeChild(cl, resolveExpression, OP), RESOLVE_EXPRESSION);
             Object rootAddress = createPathAddressAsModelNode(cl, new LinkedHashMap<>());
@@ -1314,7 +1314,7 @@ public class WildflyClient {
 
     public Collection<WildflyResourceAdapter> listResourceAdapters() throws IOException {
         try {
-            WildflyDeploymentFactory.WildFlyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
+            WildflyClassLoader cl = WildflyDeploymentFactory.getInstance().getWildFlyClassLoader(ip);
             List<WildflyResourceAdapter> resourceAdapters = new ArrayList<>();
             // ModelNode
             final Object readResourceAdapters = createModelNode(cl);

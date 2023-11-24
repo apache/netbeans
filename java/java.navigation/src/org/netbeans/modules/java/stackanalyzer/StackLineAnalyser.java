@@ -60,8 +60,8 @@ class StackLineAnalyser {
         "at\\s" +                                       //  initial at // NOI18N
         "("+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" + // optional module name // NOI18N
         "(("+IDENTIFIER+"(\\."+IDENTIFIER+")*)\\.)?("+IDENTIFIER+")" + // class name // NOI18N
-        "\\.("+IDENTIFIER+"|\\<init\\>|\\<clinit\\>)\\((?:"+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" +IDENTIFIER+"\\.java" + // method and file name // NOI18N
-        "\\:([0-9]*)\\)");                              // line number // NOI18N
+        "\\.("+IDENTIFIER+"|\\<init\\>|\\<clinit\\>)\\((?:"+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" +IDENTIFIER+"\\.?("+IDENTIFIER+ // method and file name // NOI18N
+        ")\\:([0-9]*)\\)");                              // line number // NOI18N
 
     static boolean matches(String line) {
         Matcher matcher = LINE_PATTERN.matcher(line);
@@ -73,7 +73,7 @@ class StackLineAnalyser {
         if (matcher.find()) {
             int lineNumber = -1;
             try {
-                lineNumber = Integer.parseInt(matcher.group(7));
+                lineNumber = Integer.parseInt(matcher.group(8));
             } catch (NumberFormatException nfe) {
                 return null;
             }
@@ -81,40 +81,43 @@ class StackLineAnalyser {
             if (matcher.group(1) != null) {
                 moduleStart = matcher.start(1);
             }
+            String ext = "." + matcher.group(7);
             if (matcher.group(2)==null ) {
                 return new Link(matcher.group(5),
                             lineNumber,
                             moduleStart != (-1) ? moduleStart : matcher.start(5),
-                            matcher.end(7)+1
+                            matcher.end(8)+1, ext
                             );
-                
+
             }
             return new Link(matcher.group(2) + matcher.group(5),
                             lineNumber,
                             moduleStart != (-1) ? moduleStart : matcher.start(2),
-                            matcher.end(7)+1
+                            matcher.end(8)+1, ext
                             );
         }
         return null;
     }
 
-    static class Link {
+    static final class Link {
+        private final String className;
+        private final int lineNumber;
+        private final int startOffset;
+        private final int endOffset;
+        private final String extension;
 
-        private String          className;
-        private int             lineNumber;
-        private int             startOffset;
-        private int             endOffset;
-        
-        private  Link (
-            String              className,
-            int                 lineNumber,
-            int                 startOffset,
-            int                 endOffset
+        private Link(
+            String className,
+            int lineNumber,
+            int startOffset,
+            int endOffset,
+            String extension
         ) {
             this.className = className;
             this.lineNumber = lineNumber;
             this.startOffset = startOffset;
             this.endOffset = endOffset;
+            this.extension = extension;
         }
 
         int getStartOffset () {
@@ -125,13 +128,19 @@ class StackLineAnalyser {
             return endOffset;
         }
 
+        String getExtension() {
+            return extension;
+        }
+
         void show () {
             String name = className.replace('.', '/');
             final List<String> resources = new ArrayList<>();
+            resources.add(name + getExtension()); //NOI18N
             resources.add(name + ".java"); //NOI18N
             int idx = name.lastIndexOf('$');
             while (idx >= 0) {
                 name = name.substring(0, idx);
+                resources.add(name + getExtension()); //NOI18N
                 resources.add(name + ".java"); //NOI18N
                 idx = name.lastIndexOf('$');
             }

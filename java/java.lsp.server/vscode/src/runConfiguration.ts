@@ -23,14 +23,7 @@ import { homedir } from 'os';
 export async function initializeRunConfiguration(): Promise<boolean> {
 	const java = await vscode.workspace.findFiles('**/*.java', '**/node_modules/**', 1);
 	if (java?.length > 0) {
-		const maven = await vscode.workspace.findFiles('pom.xml', '**/node_modules/**', 1);
-		if (maven?.length > 0) {
-			return true;
-		}
-		const gradle = await vscode.workspace.findFiles('build.gradle', '**/node_modules/**', 1);
-		if (gradle?.length > 0) {
-			return true;
-		}
+            return true;
 	}
 	return false;
 }

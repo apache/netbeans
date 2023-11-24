@@ -18,15 +18,11 @@
  */
 package org.netbeans.modules.micronaut.db;
 
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.TypeParameterTree;
-import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -43,6 +39,8 @@ import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.PrimitiveType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.db.explorer.ConnectionManager;
@@ -68,6 +66,8 @@ import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.NotifyDescriptor.QuickPick;
+import org.openide.NotifyDescriptor.QuickPick.Item;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
@@ -87,7 +87,12 @@ public class MicronautRepository implements TemplateWizard.Iterator {
 
     @NbBundle.Messages({
         "MSG_SelectEntities=Select Entity Classes",
-        "MSG_NoEntities=No entity class found in {0}"
+        "MSG_NoEntities=No entity class found in {0}",
+        "MSG_Repository_Type=Select Repository Type",
+        "MSG_CrudRepository=CRUD Repository",
+        "DESC_CrudRepository=CrudRepository enables automatic generation of CRUD operations.",
+        "MSG_PageableRepository=Pageable Repository",
+        "DESC_PageableRepository=PageableRepository extends CrudRepository and adds methods for pagination."
     })
     public static CreateFromTemplateHandler handler() {
         return new CreateFromTemplateHandler() {
@@ -110,6 +115,15 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
                         return Collections.emptyList();
                     }
+                    if (!Utils.isDBSupported(sourceGroup) && !Utils.isJPASupported(sourceGroup)) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDdSupport(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    DatabaseConnection connection = ConnectionManager.getDefault().getPreferredConnection(true);
+                    if (connection == null) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDbConn(), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
                     final boolean jpaSupported = Utils.isJPASupported(sourceGroup);
                     final Map<String, String> entity2idTypes = getEntityClasses(sourceGroup, jpaSupported);
                     final List<NotifyDescriptor.QuickPick.Item> entities = new ArrayList<>();
@@ -125,6 +139,14 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoEntities(sourceGroup.getRootFolder().getPath()), NotifyDescriptor.ERROR_MESSAGE));
                         return Collections.emptyList();
                     }
+                    List<Item> repoType = new ArrayList<>();
+                    Item pageableItem = new Item(Bundle.MSG_PageableRepository(), null /*Bundle.DESC_PageableRepository()*/);
+                    repoType.add(new Item(Bundle.MSG_CrudRepository(), null /*Bundle.DESC_CrudRepository()*/));
+                    repoType.add(pageableItem);
+                    QuickPick qpt = new QuickPick(Bundle.MSG_Repository_Type(), Bundle.MSG_Repository_Type(), repoType, false);
+                    if (DialogDescriptor.OK_OPTION != DialogDisplayer.getDefault().notify(qpt)) {
+                        return Collections.emptyList();
+                    }
                     NotifyDescriptor.QuickPick qp = new NotifyDescriptor.QuickPick(Bundle.MSG_SelectEntities(), Bundle.MSG_SelectEntities(), entities, true);
                     if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(qp)) {
                         String dialect = getDialect(jpaSupported);
@@ -133,7 +155,7 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                             if (item.isSelected()) {
                                 String fqn = item.getDescription() != null ? item.getDescription() + '.' + item.getLabel() : item.getLabel();
                                 String entityIdType = entity2idTypes.get(fqn);
-                                FileObject fo = generate(folder, item.getLabel(), fqn, entityIdType, dialect);
+                                FileObject fo = generate(folder, item.getLabel(), fqn, entityIdType, dialect, pageableItem.isSelected());
                                 if (fo != null) {
                                     generated.add(fo);
                                 }
@@ -149,8 +171,6 @@ public class MicronautRepository implements TemplateWizard.Iterator {
         };
     }
 
-    static final String PROP_ENTITIES = "wizard-entities"; //NOI18N
-    static final String PROP_SELECTED_ENTITIES = "wizard-selected-entities"; //NOI18N
     private WizardDescriptor.Panel panel;
     private WizardDescriptor wizardDescriptor;
     private FileObject targetFolder;
@@ -160,12 +180,12 @@ public class MicronautRepository implements TemplateWizard.Iterator {
     public Set<DataObject> instantiate(TemplateWizard wiz) throws IOException {
         String dialect = getDialect(jpaSupported);
         Set<DataObject> generated = new HashSet<>();
-        Map<String, String> selectedEntities = (Map<String, String>) wiz.getProperty(PROP_SELECTED_ENTITIES);
+        Map<String, String> selectedEntities = (Map<String, String>) wiz.getProperty(ClassesSelectorPanel.PROP_SELECTED_CLASSES);
         for (Map.Entry<String, String> entry : selectedEntities.entrySet()) {
             String fqn = entry.getKey();
             int idx = fqn.lastIndexOf('.');
             String label = idx < 0 ? fqn : fqn.substring(idx + 1);
-            FileObject fo = generate(targetFolder, label, fqn, entry.getValue(), dialect);
+            FileObject fo = generate(targetFolder, label, fqn, entry.getValue(), dialect, false);
             if (fo != null) {
                 generated.add(DataObject.find(fo));
             }
@@ -177,11 +197,13 @@ public class MicronautRepository implements TemplateWizard.Iterator {
     public void initialize(TemplateWizard wiz) {
         wizardDescriptor = wiz;
 
-        panel = new EntityClassesPanel.WizardPanel(NbBundle.getMessage(MicronautRepository.class, "Templates/Micronaut/Repository"));
+        panel = new ClassesSelectorPanel.WizardPanel(NbBundle.getMessage(MicronautRepository.class, "Templates/Micronaut/Repository"), "Entities", selectedEntities -> {
+            return selectedEntities.isEmpty() ? NbBundle.getMessage(MicronautRepository.class, "ERR_SelectEntities") : null;
+        });
         Wizards.mergeSteps(wizardDescriptor, new WizardDescriptor.Panel[] {
             panel
         }, new String[] {
-            NbBundle.getMessage(MicronautRepository.class, "LBL_EntityClasses")
+            NbBundle.getMessage(MicronautRepository.class, "LBL_Entities")
         });
 
         targetFolder = Templates.getTargetFolder(wizardDescriptor);
@@ -189,8 +211,8 @@ public class MicronautRepository implements TemplateWizard.Iterator {
         SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), targetFolder);
         if (sourceGroup != null) {
             jpaSupported = Utils.isJPASupported(sourceGroup);
-            Map<String, String> entities = MicronautRepository.getEntityClasses(sourceGroup, jpaSupported);
-            wiz.putProperty(PROP_ENTITIES, entities);
+            Map<String, String> entities = getEntityClasses(sourceGroup, jpaSupported);
+            wiz.putProperty(ClassesSelectorPanel.PROP_CLASSES, entities);
         }
     }
 
@@ -236,7 +258,7 @@ public class MicronautRepository implements TemplateWizard.Iterator {
     public void removeChangeListener(ChangeListener l) {
     }
 
-    static Map<String, String> getEntityClasses(SourceGroup sg, boolean jpaSupported) {
+    private static Map<String, String> getEntityClasses(SourceGroup sg, boolean jpaSupported) {
         final Map<String, String> entities = new HashMap<>();
         JavaSource js = JavaSource.create(ClasspathInfo.create(sg.getRootFolder()));
         if (js != null) {
@@ -244,7 +266,10 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                 js.runWhenScanFinished(cc -> {
                     TypeElement typeElement = cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Entity" : "io.micronaut.data.annotation.MappedEntity"); //NOI18N
                     if (typeElement != null) {
-                        TypeElement idTypeElement = cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Id" : "io.micronaut.data.annotation.Id"); //NOI18N
+                        TypeElement[] idTypeElements = new TypeElement[] {
+                            cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.Id" : "io.micronaut.data.annotation.Id"), //NOI18N
+                            cc.getElements().getTypeElement(jpaSupported ? "javax.persistence.EmbeddedId" : "io.micronaut.data.annotation.EmbeddedId") //NOI18N
+                        };
                         Set<ElementHandle<TypeElement>> elementHandles = cc.getClasspathInfo().getClassIndex().getElements(ElementHandle.create(typeElement), EnumSet.of(ClassIndex.SearchKind.TYPE_REFERENCES), EnumSet.of(ClassIndex.SearchScope.SOURCE));
                         for (ElementHandle<TypeElement> elementHandle : elementHandles) {
                             TypeElement type = elementHandle.resolve(cc);
@@ -257,12 +282,14 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                                     }
                                 }
                                 if (fqn != null) {
-                                    if (idTypeElement != null) {
-                                        for (VariableElement field : ElementFilter.fieldsIn(type.getEnclosedElements())) {
-                                            if (idType == null) {
-                                                for (AnnotationMirror annotationMirror : field.getAnnotationMirrors()) {
-                                                    if (idType == null && idTypeElement == annotationMirror.getAnnotationType().asElement()) {
-                                                        idType = cc.getTypeUtilities().getTypeName(field.asType(), TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
+                                    for (TypeElement idTypeElement : idTypeElements) {
+                                        if (idTypeElement != null) {
+                                            for (VariableElement field : ElementFilter.fieldsIn(type.getEnclosedElements())) {
+                                                if (idType == null) {
+                                                    for (AnnotationMirror annotationMirror : field.getAnnotationMirrors()) {
+                                                        if (idType == null && idTypeElement == annotationMirror.getAnnotationType().asElement()) {
+                                                            idType = cc.getTypeUtilities().getTypeName(field.asType(), TypeUtilities.TypeNameOptions.PRINT_FQN).toString();
+                                                        }
                                                     }
                                                 }
                                             }
@@ -312,10 +339,13 @@ public class MicronautRepository implements TemplateWizard.Iterator {
         return null;
     }
 
+    private static final String CRUD_REPOSITORY = "io.micronaut.data.repository.CrudRepository";            // NOI18N
+    private static final String PAGEABLE_REPOSITORY = "io.micronaut.data.repository.PageableRepository";    // NOI18N
+
     @NbBundle.Messages({
         "MSG_Repository_Interface=Repository interface {0}\n"
     })
-    private static FileObject generate(FileObject folder, String entityName, String entityFQN, String entityIdType, String dialect) {
+    private static FileObject generate(FileObject folder, String entityName, String entityFQN, String entityIdType, String dialect, boolean pageable) {
         try {
             String name = entityName + "Repository"; // NOI18N
             FileObject fo = GenerationUtils.createInterface(folder, name, Bundle.MSG_Repository_Interface(name));
@@ -328,8 +358,10 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                         if (origTree.getKind() == Tree.Kind.INTERFACE) {
                             GenerationUtils gu = GenerationUtils.newInstance(copy);
                             TreeMaker tm = copy.getTreeMaker();
-                            List<ExpressionTree> args = Arrays.asList(tm.QualIdent(entityFQN), tm.QualIdent(entityIdType));
-                            ParameterizedTypeTree type = tm.ParameterizedType(tm.QualIdent("io.micronaut.data.repository.CrudRepository"), args); //NOI18N
+                            TypeMirror entityIdTM = copy.getTreeUtilities().parseType(entityIdType, (TypeElement) copy.getTrees().getElement(new TreePath(new TreePath(copy.getCompilationUnit()), origTree)));
+                            List<ExpressionTree> args = Arrays.asList(tm.QualIdent(entityFQN), entityIdTM != null && entityIdTM.getKind().isPrimitive() ? tm.QualIdent(copy.getTypes().boxedClass((PrimitiveType) entityIdTM)) : tm.QualIdent(entityIdType));
+                            String repoFaq = pageable ? PAGEABLE_REPOSITORY : CRUD_REPOSITORY;
+                            ParameterizedTypeTree type = tm.ParameterizedType(tm.QualIdent(repoFaq), args);
                             ClassTree cls = tm.addClassImplementsClause((ClassTree) origTree, type);
                             if (dialect == null) {
                                 cls = gu.addAnnotation(cls, gu.createAnnotation("io.micronaut.data.annotation.Repository")); //NOI18N
@@ -339,10 +371,6 @@ public class MicronautRepository implements TemplateWizard.Iterator {
                                 List<ExpressionTree> annArgs = Collections.singletonList(gu.createAnnotationArgument("dialect", "io.micronaut.data.model.query.builder.sql.Dialect", dialect)); //NOI18N
                                 cls = gu.addAnnotation(cls, gu.createAnnotation("io.micronaut.data.jdbc.annotation.JdbcRepository", annArgs)); //NOI18N
                             }
-                            ModifiersTree mods = tm.Modifiers(Collections.emptySet(), Arrays.asList(gu.createAnnotation("java.lang.Override"), gu.createAnnotation("io.micronaut.core.annotation.NonNull"))); //NOI18N
-                            ParameterizedTypeTree retType = tm.ParameterizedType(tm.QualIdent("java.util.List"), Collections.singletonList(tm.QualIdent(entityFQN))); //NOI18N
-                            MethodTree findAllMethod = tm.Method(mods, "findAll", retType, Collections.<TypeParameterTree>emptyList(), Collections.<VariableTree>emptyList(), Collections.<ExpressionTree>emptyList(), (BlockTree)null, null); //NOI18N
-                            cls = tm.addClassMember(cls, findAllMethod);
                             copy.rewrite(origTree, cls);
                         }
                     }).commit();

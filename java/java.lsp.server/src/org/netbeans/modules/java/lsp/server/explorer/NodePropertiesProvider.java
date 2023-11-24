@@ -52,7 +52,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class NodePropertiesProvider extends CodeActionsProvider {
     private static final Logger LOG = Logger.getLogger(NodePropertiesProvider.class.getName());
 
-    private static final String COMMAND_PREFIX = "java.";
+    private static final String COMMAND_PREFIX = "nbls.";
     private static final String COMMAND_GET_NODE_PROPERTIES = COMMAND_PREFIX + "node.properties.get";      // NOI18N
     private static final String COMMAND_SET_NODE_PROPERTIES = COMMAND_PREFIX + "node.properties.set";      // NOI18N
 
@@ -76,15 +76,12 @@ public class NodePropertiesProvider extends CodeActionsProvider {
     private final Gson gson = new Gson();
 
     @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         return Collections.emptyList();
     }
 
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!COMMANDS.contains(command)) {
-            return CompletableFuture.completedFuture(null);
-        }
         if (arguments == null || arguments.isEmpty()) {
             return CompletableFuture.completedFuture(null);
         }

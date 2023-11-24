@@ -108,7 +108,15 @@ public enum GlassFishVersion {
     /** GlassFish 7.0.4 */
     GF_7_0_4       ((short) 7, (short) 0, (short) 4, (short) 0, GlassFishVersion.GF_7_0_4_STR),
     /** GlassFish 7.0.5 */
-    GF_7_0_5       ((short) 7, (short) 0, (short) 5, (short) 0, GlassFishVersion.GF_7_0_5_STR);
+    GF_7_0_5       ((short) 7, (short) 0, (short) 5, (short) 0, GlassFishVersion.GF_7_0_5_STR),
+    /** GlassFish 7.0.6 */
+    GF_7_0_6       ((short) 7, (short) 0, (short) 6, (short) 0, GlassFishVersion.GF_7_0_6_STR),
+    /** GlassFish 7.0.7 */
+    GF_7_0_7       ((short) 7, (short) 0, (short) 7, (short) 0, GlassFishVersion.GF_7_0_7_STR),
+    /** GlassFish 7.0.8 */
+    GF_7_0_8       ((short) 7, (short) 0, (short) 8, (short) 0, GlassFishVersion.GF_7_0_8_STR),
+    /** GlassFish 7.0.9 */
+    GF_7_0_9       ((short) 7, (short) 0, (short) 9, (short) 0, GlassFishVersion.GF_7_0_9_STR);
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
     ////////////////////////////////////////////////////////////////////////////
@@ -289,6 +297,26 @@ public enum GlassFishVersion {
     /** Additional {@code String} representations of GF_7_0_5 value. */
     static final String GF_7_0_5_STR_NEXT[] = {"7.0.5", "7.0.5.0"};
 
+    /** A {@code String} representation of GF_7_0_6 value. */
+    static final String GF_7_0_6_STR = "7.0.6";
+    /** Additional {@code String} representations of GF_7_0_6 value. */
+    static final String GF_7_0_6_STR_NEXT[] = {"7.0.6", "7.0.6.0"};
+    
+    /** A {@code String} representation of GF_7_0_7 value. */
+    static final String GF_7_0_7_STR = "7.0.7";
+    /** Additional {@code String} representations of GF_7_0_6 value. */
+    static final String GF_7_0_7_STR_NEXT[] = {"7.0.7", "7.0.7.0"};
+    
+    /** A {@code String} representation of GF_7_0_8 value. */
+    static final String GF_7_0_8_STR = "7.0.8";
+    /** Additional {@code String} representations of GF_7_0_8 value. */
+    static final String GF_7_0_8_STR_NEXT[] = {"7.0.8", "7.0.8.0"};
+    
+    /** A {@code String} representation of GF_7_0_9 value. */
+    static final String GF_7_0_9_STR = "7.0.9";
+    /** Additional {@code String} representations of GF_7_0_9 value. */
+    static final String GF_7_0_9_STR_NEXT[] = {"7.0.9", "7.0.9.0"};
+
     /**
      * Stored <code>String</code> values for backward <code>String</code>
      * conversion.
@@ -331,6 +359,10 @@ public enum GlassFishVersion {
         initStringValuesMapFromArray(GF_7_0_3, GF_7_0_3_STR_NEXT);
         initStringValuesMapFromArray(GF_7_0_4, GF_7_0_4_STR_NEXT);
         initStringValuesMapFromArray(GF_7_0_5, GF_7_0_5_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_6, GF_7_0_6_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_7, GF_7_0_7_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_8, GF_7_0_8_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_9, GF_7_0_9_STR_NEXT);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -595,6 +627,22 @@ public enum GlassFishVersion {
         sb.append(SEPARATOR);
         sb.append(Integer.toString(build));
         return sb.toString();
+    }
+    
+    /**
+     * Convert <code>GlassFishVersion</code> value to <code>int</code>
+     * containing all version numbers.
+     * <p/>
+     * @return A <code>String</code> representation of the value of this object
+     *         containing all version numbers.
+     */
+    public int toFullInteger() {
+        StringBuilder sb = new StringBuilder(8);
+        sb.append(Integer.toString(major));
+        sb.append(Integer.toString(minor));
+        sb.append(Integer.toString(update));
+        sb.append(Integer.toString(build));
+        return Integer.parseInt(sb.toString());
     }
 
 }

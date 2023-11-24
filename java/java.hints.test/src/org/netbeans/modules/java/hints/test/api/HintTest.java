@@ -823,17 +823,23 @@ public class HintTest {
         }
 
         /**Assert that the hint(s) produced warnings do not include the given warnings. The provided strings
-         * should match {@code toString()} results of {@link ErrorDescription}s produced
+         * should match {@code getDescription()} results of {@link ErrorDescription}s produced
          * by the hint(s).
          *
-         * @param warnings expected {@code toString()} results of {@link ErrorDescription}s produced
+         * @param warnings expected {@code getDescription()} results of {@link ErrorDescription}s produced
          *                 by the hint
          * @return itself
-         * @throws AssertionError if the given warnings do not match the actual warnings
+         * @throws AssertionError if the given warnings contain the actual warnings
          */
         public HintOutput assertNotContainsWarnings(String... warnings) {
             Set<String> goldenSet = new HashSet<String>(Arrays.asList(warnings));
             List<String> errorsNames = new LinkedList<String>();
+            
+            for (String warning : goldenSet) {
+                if (warning.split(":").length >= 5) {
+                    assertFalse("this method expects hint descriptions, not toString()! errors found: "+errors, true);
+                }
+            }
 
             boolean fail = false;
             for (ErrorDescription d : errors) {

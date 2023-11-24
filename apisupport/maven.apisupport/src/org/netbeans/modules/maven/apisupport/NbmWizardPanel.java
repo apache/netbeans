@@ -29,7 +29,7 @@ import org.openide.util.NbBundle.Messages;
 import static org.netbeans.modules.maven.apisupport.Bundle.*;
 
 /**
- * Panel just asking for nb platform relatd information.
+ * Panel just asking for nb platform related information.
  * @author mkleint
  */
 public class NbmWizardPanel implements WizardDescriptor.FinishablePanel<WizardDescriptor> {

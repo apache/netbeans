@@ -85,6 +85,17 @@ public final class PathArchive extends AbstractPathArchive {
     }
 
     @Override
+    public URI getDirectory(String dirName) throws IOException {
+        if (separator != FileObjects.NBFS_SEPARATOR_CHAR) {
+            dirName = dirName.replace(FileObjects.NBFS_SEPARATOR_CHAR, separator);
+        }
+        final Path target = root.resolve(dirName);
+        return Files.isDirectory(target) ?
+                target.toUri() :
+                null;
+    }
+
+    @Override
     public JavaFileObject create(String relativeName, JavaFileFilterImplementation filter) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Write not supported");   //NOI18N
     }

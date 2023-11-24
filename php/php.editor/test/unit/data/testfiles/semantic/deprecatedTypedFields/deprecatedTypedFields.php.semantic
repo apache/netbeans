@@ -1,0 +1,121 @@
+<?php
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+class |>CLASS:TypedFields<| {
+
+    /** @deprecated */
+    public int $|>DEPRECATED,FIELD:typedField<|;
+
+    /** @deprecated */
+    public int $|>DEPRECATED,FIELD:multiField1<|, $|>DEPRECATED,FIELD:multiField2<|;
+
+    /** @deprecated */
+    public ?string $|>DEPRECATED,FIELD:nullableTypeField<|;
+
+    /**
+     * @deprecated
+     */
+    public string|TypedFields $|>DEPRECATED,FIELD:unionTypeField<|;
+
+    /**
+     * @deprecated
+     */
+    public Foo&Bar $|>DEPRECATED,FIELD:intersectionTypeField<|;
+
+    /**
+     * @deprecated
+     */
+    public (Foo&Bar)|Baz $|>DEPRECATED,FIELD:dnfTypeField<|;
+
+    /** @deprecated */
+    public static int $|>DEPRECATED,FIELD,STATIC:typedStaticField<|;
+
+    /** @deprecated */
+    public static int $|>DEPRECATED,FIELD,STATIC:multiStaticField1<|, $|>DEPRECATED,FIELD,STATIC:multiStaticField2<|;
+
+    /** @deprecated */
+    public static ?string $|>DEPRECATED,FIELD,STATIC:nullableTypeStaticField<|;
+
+    /**
+     * @deprecated
+     */
+    public static string|TypedFields $|>DEPRECATED,FIELD,STATIC:unionTypeStaticField<|;
+
+    /**
+     * @deprecated
+     */
+    public static Foo&Bar $|>DEPRECATED,FIELD,STATIC:intersectionTypeStaticField<|;
+
+    /**
+     * @deprecated
+     */
+    public static (Foo&Bar)|Baz $|>DEPRECATED,FIELD,STATIC:dnfTypeStaticField<|;
+}
+
+trait |>CLASS:TypedFieldsTrait<| {
+
+    /** @deprecated */
+    public int $|>DEPRECATED,FIELD:typedField<|;
+
+    /** @deprecated */
+    public int $|>DEPRECATED,FIELD:multiField1<|, $|>DEPRECATED,FIELD:multiField2<|;
+
+    /** @deprecated */
+    public ?string $|>DEPRECATED,FIELD:nullableTypeField<|;
+
+    /**
+     * @deprecated
+     */
+    public string|TypedFields $|>DEPRECATED,FIELD:unionTypeField<|;
+
+    /**
+     * @deprecated
+     */
+    public Foo&Bar $|>DEPRECATED,FIELD:intersectionTypeField<|;
+
+    /**
+     * @deprecated
+     */
+    public (Foo&Bar)|Baz $|>DEPRECATED,FIELD:dnfTypeField<|;
+
+    /** @deprecated */
+    public static int $|>DEPRECATED,FIELD,STATIC:typedStaticField<|;
+
+    /** @deprecated */
+    public static int $|>DEPRECATED,FIELD,STATIC:multiStaticField1<|, $|>DEPRECATED,FIELD,STATIC:multiStaticField2<|;
+
+    /** @deprecated */
+    public static ?string $|>DEPRECATED,FIELD,STATIC:nullableTypeStaticField<|;
+
+    /**
+     * @deprecated
+     */
+    public static string|TypedFields $|>DEPRECATED,FIELD,STATIC:unionTypeStaticField<|;
+
+    /**
+     * @deprecated
+     */
+    public static Foo&Bar $|>DEPRECATED,FIELD,STATIC:intersectionTypeStaticField<|;
+
+    /**
+     * @deprecated
+     */
+    public static (Foo&Bar)|Baz $|>DEPRECATED,FIELD,STATIC:dnfTypeStaticField<|;
+}

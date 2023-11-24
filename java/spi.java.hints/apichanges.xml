@@ -25,6 +25,23 @@
         <apidef name="JavaHintsSPI">Java Hints SPI</apidef>
     </apidefs>
     <changes>
+        <change id="UsedDetector">
+            <api name="JavaHintsSPI"/>
+            <summary>Added UsedDetector SPI to mark an arbitrary elements as used</summary>
+            <version major="1" minor="56"/>
+            <date day="2" month="8" year="2023"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    The SPI to mark an arbitrary element as used was added.
+                    Allows to suppress the standard NetBeans unused element detection
+                    and to prevent the "unused" hint being displayed on given elements.
+                    Can be used by various framework libraries that sometimes honor
+                    annotations (i.e. injections or bindings) even on private methods.
+                </p>
+            </description>
+            <class package="org.netbeans.spi.java.hints.unused" name="UsedDetector" link="no" />
+        </change>
         <change id="openRefactoringUI">
             <api name="JavaHintsSPI"/>
             <summary>Added utility methods and SPI to open UI for hints</summary>
@@ -34,12 +51,12 @@
             <description>
                 <p>
                     Internal helper method added to open refactoring UI with selected hints. 
-                    <a href="@TOP@/org/netbeans/modules/java/hints/spiimpl/HintsRefactoringFactory.html">Added SPI</a> that 
+                    Added SPI that 
                     can be implemented by UI module(s) to actually provide the UI implementation.
                 </p>
             </description>
-            <class package="org.netbeans.modules.java.hints.spiimpl" name="HintsRefactoringFactory"/>
-            <class package="org.netbeans.modules.java.hints.spiimpl" name="Utilities"/>
+            <class package="org.netbeans.modules.java.hints.spiimpl" name="HintsRefactoringFactory" link="no" />
+            <class package="org.netbeans.modules.java.hints.spiimpl" name="Utilities" link="no"/>
         </change>
         <change id="JavaFixUtilities.isPrimary">
             <api name="JavaHintsSPI"/>

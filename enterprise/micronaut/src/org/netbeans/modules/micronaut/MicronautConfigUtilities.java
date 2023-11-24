@@ -24,14 +24,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.util.ElementFilter;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
@@ -223,8 +234,8 @@ public class MicronautConfigUtilities {
         }
         return spans;
     }
-    
-    private static ConfigurationMetadataProperty getProperty(Map<String, ConfigurationMetadataGroup> groups, String propertyName, List<ConfigurationMetadataSource> sources) {
+
+    public static ConfigurationMetadataProperty getProperty(Map<String, ConfigurationMetadataGroup> groups, String propertyName, List<ConfigurationMetadataSource> sources) {
         for (Map.Entry<String, ConfigurationMetadataGroup> groupEntry : groups.entrySet()) {
             String groupKey = groupEntry.getKey();
             if (groupKey.endsWith(".*")) {
@@ -244,6 +255,53 @@ public class MicronautConfigUtilities {
             }
         }
         return null;
+    }
+
+    public static ElementHandle getElementHandle(ClasspathInfo cpInfo, String typeName, String propertyName, AtomicBoolean cancel) {
+        ElementHandle[] handle = new ElementHandle[1];
+        if (typeName != null) {
+            handle[0] = ElementHandle.createTypeElementHandle(ElementKind.CLASS, typeName);
+            if (cpInfo != null && propertyName != null) {
+                try {
+                    JavaSource.create(cpInfo).runUserActionTask(controller -> {
+                        if (cancel != null && cancel.get()) {
+                            return;
+                        }
+                        controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                        TypeElement te = (TypeElement) handle[0].resolve(controller);
+                        if (te != null) {
+                            ElementHandle found = null;
+                            String name = "set" + propertyName.replace("-", "");
+                            for (ExecutableElement executableElement : ElementFilter.methodsIn(te.getEnclosedElements())) {
+                                if (name.equalsIgnoreCase(executableElement.getSimpleName().toString())) {
+                                    found = ElementHandle.create(executableElement);
+                                    break;
+                                }
+                            }
+                            if (found == null) {
+                                TypeElement typeElement = controller.getElements().getTypeElement("io.micronaut.context.annotation.Property");
+                                for (VariableElement variableElement : ElementFilter.fieldsIn(te.getEnclosedElements())) {
+                                    for (AnnotationMirror annotationMirror : variableElement.getAnnotationMirrors()) {
+                                        if (typeElement == annotationMirror.getAnnotationType().asElement()) {
+                                            for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
+                                                if ("name".contentEquals(entry.getKey().getSimpleName()) && propertyName.equals(entry.getValue().getValue())) {
+                                                    found = ElementHandle.create(variableElement);
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (found != null) {
+                                handle[0] = found;
+                            }
+                        }
+                    }, true);
+                } catch (IOException ex) {}
+            }
+        }
+        return handle[0];
     }
 
     private static void scan(List<? extends StructureItem> structures, Stack<StructureItem> context, Function<Stack<StructureItem>, Boolean> visitor) {

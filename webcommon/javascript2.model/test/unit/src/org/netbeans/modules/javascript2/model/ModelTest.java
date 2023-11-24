@@ -298,4 +298,12 @@ public class ModelTest extends ModelTestBase {
     public void testClassConstructor() throws Exception {
         checkModel("testfiles/model/classConstructor.js");
     }
+
+    public void testClassInAnonymousFunction() throws Exception {
+        checkModel("testfiles/model/classInAnonymousFunction.js");
+    }
+
+    public void testClassInAnonymousFunction2() throws Exception {
+        checkModel("testfiles/model/classInAnonymousFunction2.js");
+    }
 }

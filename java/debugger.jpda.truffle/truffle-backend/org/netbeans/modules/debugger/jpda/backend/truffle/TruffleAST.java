@@ -22,10 +22,8 @@ package org.netbeans.modules.debugger.jpda.backend.truffle;
 import com.oracle.truffle.api.CallTarget;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
-import com.oracle.truffle.api.frame.Frame;
 import com.oracle.truffle.api.frame.FrameInstance;
 import com.oracle.truffle.api.frame.FrameInstanceVisitor;
-import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.instrumentation.InstrumentableNode;
 import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.instrumentation.Tag;
@@ -73,7 +71,7 @@ public class TruffleAST {
     public Object[] getRawArguments() {
         return frameInstance.getFrame(FrameInstance.FrameAccess.MATERIALIZE).getArguments();
     }
-
+/* TODO: deprecations removed since 22.0
     public Object[] getRawSlots() {
         Frame frame = frameInstance.getFrame(FrameInstance.FrameAccess.MATERIALIZE);
         List<? extends FrameSlot> slots = frame.getFrameDescriptor().getSlots();
@@ -86,7 +84,7 @@ public class TruffleAST {
         }
         return slotInfo;
     }
-
+*/
     /**
      * Get the nodes hierarchy. Every node is described by:
      * <ul>

@@ -527,7 +527,21 @@ public class UnusedDetectorTest extends NbTestCase {
                     "7:test1:NOT_USED");
     }
 
+
+    @Test
+    public void testNoUnusedForMainMethod() throws Exception {
+        sourceLevel = "21";
+        options = Arrays.asList("--enable-preview");
+        performTest("Test.java",
+                    "package test;\n" +
+                    "public class Test {\n" +
+                    "    void main() {\n" +
+                    "    }\n" +
+                    "}\n");
+    }
+
     protected String sourceLevel = "1.8";
+    protected List<String> options = null;
 
     protected void performTest(String fileName, String code, String... expected) throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[] {}, new Object[] {new TestBase.MIMEResolverImpl()});
@@ -536,7 +550,8 @@ public class UnusedDetectorTest extends NbTestCase {
 	FileObject cache   = scratch.createFolder("cache");
 
         File wd         = getWorkDir();
-        File testSource = new File(wd, "test/" + fileName + ".java");
+        File srcDir     = new File(wd, "src");
+        File testSource = new File(srcDir, fileName + ".java");
 
         testSource.getParentFile().mkdirs();
         TestUtilities.copyStringToFile(testSource, code);
@@ -547,6 +562,13 @@ public class UnusedDetectorTest extends NbTestCase {
 
         if (sourceLevel != null) {
             SourceUtilsTestUtil.setSourceLevel(testSourceFO, sourceLevel);
+        }
+
+        if (options != null) {
+            FileObject srcDirFO = FileUtil.toFileObject(srcDir);
+
+            assertNotNull(srcDirFO);
+            SourceUtilsTestUtil.setCompilerOptions(srcDirFO, options);
         }
 
         File testBuildTo = new File(wd, "test-build");

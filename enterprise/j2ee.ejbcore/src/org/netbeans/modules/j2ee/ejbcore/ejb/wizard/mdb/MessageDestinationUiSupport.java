@@ -247,7 +247,13 @@ public abstract class MessageDestinationUiSupport {
                 @Override
                 public Void run(JndiResourcesModel metadata) throws Exception {
                     for (final JmsDestination jmsDestination : metadata.getJmsDestinations()) {
-                        Type type = "javax.ejb.Topic".equals(jmsDestination.getClassName()) ? Type.TOPIC : Type.QUEUE; //NOI18N
+                        Type type;
+                        if ("jakarta.ejb.Topic".equals(jmsDestination.getClassName()) //NOI18N
+                                || "javax.ejb.Topic".equals(jmsDestination.getClassName())) { //NOI18N
+                            type = Type.TOPIC;
+                        } else {
+                            type = Type.QUEUE;
+                        }
                         allDestinations.add(new JmsDestinationDefinition(jmsDestination.getName(), type, false));
                     }
                     return null;

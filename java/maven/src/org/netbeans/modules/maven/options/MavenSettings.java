@@ -95,6 +95,23 @@ public final class MavenSettings  {
     private static final MavenSettings INSTANCE = new MavenSettings();
     
     private final Set<PropertyChangeListener> listeners = new WeakSet<>();
+    
+    /**
+     * Specifies how should be proxies handled by default, if no setting is given.
+     */
+    private static final String SYSPROP_DEFAULT_PROXY_BEHAVIOUR = "netbeans.networkProxy";
+    
+    private static final NetworkProxySettings DEFAULT_PROXY_BEHAVIOUR;
+    
+    static {
+        NetworkProxySettings def;
+        try {
+            def = NetworkProxySettings.valueOf(System.getProperty(SYSPROP_DEFAULT_PROXY_BEHAVIOUR, NetworkProxySettings.ASK.name()).toUpperCase());
+        } catch (IllegalArgumentException e) {
+            def = NetworkProxySettings.ASK;
+        }
+        DEFAULT_PROXY_BEHAVIOUR = def;
+    }
 
     public static MavenSettings getDefault() {
         return INSTANCE;
@@ -617,11 +634,11 @@ public final class MavenSettings  {
     }
     
     public NetworkProxySettings getNetworkProxy() {
-        String s = getPreferences().get(PROP_NETWORK_PROXY, NetworkProxySettings.ASK.name());
+        String s = getPreferences().get(PROP_NETWORK_PROXY, DEFAULT_PROXY_BEHAVIOUR.name());
         try {
             return NetworkProxySettings.valueOf(s);
         } catch (IllegalArgumentException ex) {
-            return NetworkProxySettings.ASK;
+            return DEFAULT_PROXY_BEHAVIOUR;
         }
     }
     

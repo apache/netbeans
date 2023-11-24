@@ -1,2 +1,2 @@
 OpenIDE-Module: org.apache.commons.lang3
-OpenIDE-Module-Specification-Version: 1.16
+OpenIDE-Module-Specification-Version: 1.18

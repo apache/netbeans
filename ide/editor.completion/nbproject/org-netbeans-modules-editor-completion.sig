@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.65.0
+#Version 1.66.0
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()

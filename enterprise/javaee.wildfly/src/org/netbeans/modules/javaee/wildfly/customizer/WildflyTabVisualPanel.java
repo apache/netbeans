@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.enterprise.deploy.spi.DeploymentManager;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -85,16 +86,12 @@ public final class WildflyTabVisualPanel extends JPanel {
 
     // Event handling
     //
-    private final Set<ChangeListener> listeners = new HashSet<>(1);
+    private final Set<ChangeListener> listeners = ConcurrentHashMap.newKeySet(2);
     public final void addChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
-        }
+        listeners.add(l);
     }
     public final void removeChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.remove(l);
-        }
+        listeners.remove(l);
     }
     protected final void fireChangeEvent() {
         Iterator<ChangeListener> it;

@@ -47,7 +47,10 @@ public class JoinTableImpl implements JoinTable {
                 return result;
             }
         };
-        TypeMirror joinColumnType = helper.resolveType("javax.persistence.JoinColumn"); // NOI18N
+        TypeMirror joinColumnType = helper.resolveType("jakarta.persistence.JoinColumn"); // NOI18N
+        if (joinColumnType == null) {
+            joinColumnType = helper.resolveType("javax.persistence.JoinColumn"); // NOI18N
+        }
         parser.expectAnnotationArray("joinColumn", joinColumnType, joinColumnHandler, parser.defaultValue(Collections.emptyList())); // NOI18N
         parser.expectAnnotationArray("inverseJoinColumn", joinColumnType, joinColumnHandler, parser.defaultValue(Collections.emptyList())); // NOI18N
         parseResult = parser.parse(annotation);

@@ -67,6 +67,7 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
 
         Boolean trust = null;
 
+        GradleProject best = null;
         GradleProject ret = null;
         for (AbstractProjectLoader loader : loaders) {
             if (loader.isEnabled()) {
@@ -88,17 +89,19 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
                     ret = loader.load();
                     LOGGER.log(Level.FINER, "Loaded with loader {0} -> {1}", new Object[] { loader, ret });
                 }
-                if ((ret != null) && ret.getQuality().atLeast(aim)) {
-                    // We have the quality we are looking for, let's be happy with that
-                    break;
+                if (ret != null) {
+                    if (best == null || best.getQuality().notBetterThan(ret.getQuality())) {
+                        best = ret;
+                    }
+                    if (ret.getQuality().atLeast(aim)) {
+                        // We have the quality we are looking for, let's be happy with that
+                        break;
+                    }
                 }
             } else {
                 LOGGER.log(Level.FINER, "Loaded disabled: {0}", loader);
             }
         }
-        if (ret == null) {
-            throw new NullPointerException("Could not load Gradle Project: " + project);
-        }
-        return ret;
+        return best;
     }
 }

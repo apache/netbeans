@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.source.parsing;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -28,6 +29,7 @@ import java.util.stream.StreamSupport;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
+import static junit.framework.TestCase.assertTrue;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileUtil;
@@ -88,6 +90,17 @@ public class FileObjectArchiveTest extends NbTestCase {
                 true);
         //Explicit list of non-package returns FileObejcts with prefix
         assertEquals(Arrays.asList("non-package.org.me.X", "non-package.org.me.Y"), toInferedName(res));    //NOI18N
+    }
+
+    public void testGetDirectory() throws IOException {
+        File dir1 = new File(new File(root, "dir1"), "a");
+        assertTrue(dir1.mkdirs());
+        File dir2 = new File(new File(root, "dir2"), "a");
+        assertTrue(dir2.mkdirs());
+        new FileOutputStream(new File(dir2, "test.txt")).close();
+        final Archive a = new FileObjectArchive(FileUtil.toFileObject(root));
+        assertEquals(dir1.toURI(), a.getDirectory("dir1/a"));
+        assertEquals(dir2.toURI(), a.getDirectory("dir2/a"));
     }
 
     private static List<String> toInferedName(

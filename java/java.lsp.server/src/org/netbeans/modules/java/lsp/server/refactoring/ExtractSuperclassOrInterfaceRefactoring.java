@@ -79,8 +79,8 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 170)
 public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactoring {
 
-    private static final String EXTRACT_SUPERCLASS_REFACTORING_COMMAND =  "java.refactor.extract.superclass";
-    private static final String EXTRACT_INTERFACE_REFACTORING_COMMAND =  "java.refactor.extract.interface";
+    private static final String EXTRACT_SUPERCLASS_REFACTORING_COMMAND =  "nbls.java.refactor.extract.superclass";
+    private static final String EXTRACT_INTERFACE_REFACTORING_COMMAND =  "nbls.java.refactor.extract.interface";
     private static final ClassPath EMPTY_PATH = ClassPathSupport.createClassPath(new URL[0]);
 
     private final Set<String> commands = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(EXTRACT_INTERFACE_REFACTORING_COMMAND, EXTRACT_SUPERCLASS_REFACTORING_COMMAND)));
@@ -91,12 +91,12 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
         "DN_ExtractSuperclass=Extract Superclass...",
         "DN_ExtractInterface=Extract Interface...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Refactor)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null || !JavaRefactoringUtils.isRefactorable(info.getFileObject())) {
             return Collections.emptyList();
         }
@@ -158,10 +158,10 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
             QuickPickItem elementItem = new QuickPickItem(createLabel(info, type));
             elementItem.setUserData(new ElementData(type));
             if (!type.getKind().isInterface()) {
-                result.add(createCodeAction(Bundle.DN_ExtractSuperclass(), CodeActionKind.RefactorExtract, null, EXTRACT_SUPERCLASS_REFACTORING_COMMAND, uri, elementItem, allMembers));
+                result.add(createCodeAction(client, Bundle.DN_ExtractSuperclass(), CodeActionKind.RefactorExtract, null, EXTRACT_SUPERCLASS_REFACTORING_COMMAND, uri, elementItem, allMembers));
             }
             if (!members.isEmpty()) {
-                result.add(createCodeAction(Bundle.DN_ExtractInterface(), CodeActionKind.RefactorExtract, null, EXTRACT_INTERFACE_REFACTORING_COMMAND, uri, elementItem, members));
+                result.add(createCodeAction(client, Bundle.DN_ExtractInterface(), CodeActionKind.RefactorExtract, null, EXTRACT_INTERFACE_REFACTORING_COMMAND, uri, elementItem, members));
             }
         }
         return result;

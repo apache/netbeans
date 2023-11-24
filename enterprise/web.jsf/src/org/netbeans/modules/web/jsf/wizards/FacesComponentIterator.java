@@ -33,6 +33,9 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.web.api.webmodule.WebModule;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.spi.java.project.support.ui.templates.JavaTemplates;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -77,6 +80,18 @@ public class FacesComponentIterator implements TemplateWizard.Iterator {
         }
         if (createSampleCode) {
             templateProperties.put("sampleCode", Boolean.TRUE); //NOI18N
+        }
+        Project project = Templates.getProject(wizard);
+        WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
+        if (webModule != null) {
+            JsfVersion version = JsfVersionUtils.forWebModule(webModule);
+            if (version != null && version.isAtLeast(JsfVersion.JSF_3_0)) {
+                templateProperties.put("jakartaJsfPackages", true); //NOI18N
+            } else {
+                templateProperties.put("jakartaJsfPackages", false); //NOI18N
+            }
+        } else {
+            templateProperties.put("jakartaJsfPackages", true); //NOI18N
         }
         DataObject result = dTemplate.createFromTemplate(dataFolder, targetName, templateProperties);
         return Collections.singleton(result);

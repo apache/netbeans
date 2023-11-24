@@ -34,6 +34,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -82,6 +84,7 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         super(testName);
     }
 
+    @Override
     protected void setUp() throws Exception {
         clearWorkDir();
         SourceUtilsTestUtil.prepareTest(
@@ -504,6 +507,85 @@ public class SourceUtilsTest extends ClassIndexTestCase {
             count++;
         }
         assertEquals("One element found", 1, count);
+    }
+
+    public void testNewMainMethod() throws Exception {
+        class TestCase {
+            public final String code;
+            public final String mainMethod;
+
+            public TestCase(String code, String mainMethod) {
+                this.code = code;
+                this.mainMethod = mainMethod;
+            }
+        }
+        TestCase[] testCases = new TestCase[] {
+            new TestCase("public class Test {\n" +
+                         "    static void main(String... args) {}\n" +
+                         "    static void main() {}\n" +
+                         "}\n",
+                         "Test:main:([Ljava/lang/String;)V"),
+            new TestCase("public class Test {\n" +
+                         "    static void main(String... args) {}\n" +
+                         "    void main() {}\n" +
+                         "}\n",
+                         "Test:main:([Ljava/lang/String;)V"),
+            new TestCase("public class Test {\n" +
+                         "    static void main() {}\n" +
+                         "    void main(String... args) {}\n" +
+                         "}\n",
+                         "Test:main:()V"),
+            new TestCase("public class Test {\n" +
+                         "    void main(String... args) {}\n" +
+                         "    void main() {}\n" +
+                         "}\n",
+                         "Test:main:([Ljava/lang/String;)V"),
+            new TestCase("public class Test {\n" +
+                         "    public static void plain(String... args) {}\n" +
+                         "    void main() {}\n" +
+                         "}\n",
+                         "Test:main:()V"),
+            new TestCase("public class Test {\n" +
+                         "    void main() {}\n" +
+                         "    public static void plain(String... args) {}\n" +
+                         "}\n",
+                         "Test:main:()V"),
+        };
+        File work = getWorkDir();
+        FileObject workFO = FileUtil.toFileObject(work);
+
+        assertNotNull(workFO);
+
+        FileObject src = FileUtil.createFolder(workFO, "src");
+        FileObject build = FileUtil.createFolder(workFO, "build");
+        FileObject cache = FileUtil.createFolder(workFO, "cache");
+        FileObject testFile = FileUtil.createData(src, "Test.java");
+        SourceUtilsTestUtil.setSourceLevel(testFile, Integer.toString(SourceVersion.latest().ordinal()));
+        SourceUtilsTestUtil.setCompilerOptions(src, Arrays.asList("--enable-preview"));
+        SourceUtilsTestUtil.prepareTest(src, build, cache);
+
+        for (TestCase tc : testCases) {
+            TestUtilities.copyStringToFile(testFile, tc.code);
+            js = JavaSource.forFileObject(testFile);
+            assertNotNull("JavaSource found", js);
+            info = SourceUtilsTestUtil.getCompilationInfo(js, JavaSource.Phase.RESOLVED);
+            assertNotNull("info found", info);
+            ExecutableElement mainMethod = null;
+            for (TypeElement test : info.getTopLevelElements()) {
+                if (test.getSimpleName().contentEquals("Test")) {
+                    for (ExecutableElement el : ElementFilter.methodsIn(test.getEnclosedElements())) {
+                        if (SourceUtils.isMainMethod(el)) {
+                            assertNull(mainMethod);
+                            mainMethod = el;
+                        }
+                    }
+                }
+            }
+            String mainMethodSignature = 
+                    Arrays.stream(SourceUtils.getJVMSignature(ElementHandle.create(mainMethod)))
+                          .collect(Collectors.joining(":"));
+            assertEquals(tc.mainMethod, mainMethodSignature);
+        }
     }
 
     //<editor-fold defaultstate="collapsed" desc="Helper methods & Mock services">

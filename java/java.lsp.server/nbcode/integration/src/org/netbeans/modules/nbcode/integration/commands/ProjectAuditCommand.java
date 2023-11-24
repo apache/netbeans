@@ -87,6 +87,30 @@ public class ProjectAuditCommand implements CommandProvider {
         gson = new Gson();
     }
 
+    /**
+     * Implements commands {@code nbls.projectAudit.execute} and {@code nbls.projectAudit.display}. The command accepts parameters
+     * <ol>
+     * <li>URI that identifies the project or a file within a project. If the file is not a part of a project, an exception is thrown
+     * <li>knowledgebase OCID. It must not be empty and the knowledgebase must exist.
+     * <li>options structure, optional.
+     * </ol>
+     * If the project does not support vulnerability audits, an exception is thrown. The following options are supported:
+     * <ul>
+     * <li><b>profile</b> : string - OCI profile to use for communication (default: null = default profile)
+     * <li><b>force</b> : boolean - forces audit execution in OCI, bypasses local caches and older audit results (default: false).
+     * <li><b>compute</b> : boolean - for .display, computes the audit, if there are no results in OCI (default: true)
+     * <li><b>disableCache</b> : boolean - do not load from local cache (default: false)
+     * <li><b>suppressErrors</b> : boolean - suppresses displaying errors by NBLS, only fails the Future with an exception (default: false)
+     * <li><b>configPath</b> : string - custom OCI config path (default: null)
+     * <li><b>returnData</b> : boolean - if true, summary data is returned from the command. If false, the command just indicates success, returns audit OCID (default: false).
+     * <li><b>displaySummary</b> : boolean - if true, NBLS displays audit summary at completion of the command (default: true)
+     * </ul>
+     * The .execute command defaults to {@code force = true}.
+     * @param client the LSP client to communicate with
+     * @param command the command name
+     * @param arguments arguments to the command
+     * @return Future that contains audit ID or response structure {@link AuditResult}.
+     */
     @NbBundle.Messages({
         "# {0} - project name",
         "# {1} - cause message",
@@ -121,7 +145,7 @@ public class ProjectAuditCommand implements CommandProvider {
         }
         
         String knowledgeBase = ((JsonPrimitive) arguments.get(1)).getAsString();
-        Object o = arguments.get(2);
+        Object o = arguments.size() > 2 ? arguments.get(2) : new JsonObject();
         if (!(o instanceof JsonObject)) {
             throw new IllegalArgumentException("Expected structure, got  " + o);
         }
@@ -132,6 +156,8 @@ public class ProjectAuditCommand implements CommandProvider {
         LOG.log(Level.FINE, "Running audit command with context: {0}", ctx);
         
         boolean forceAudit = options.has("force") && options.get("force").getAsBoolean();
+        boolean executeIfNotExists = forceAudit || !options.has("compute") ||  options.get("compute").getAsBoolean();
+        boolean disableCache = forceAudit || (options.has("disableCache") && options.get("disableCache").getAsBoolean());
         String preferredName = options.has("auditName") ? options.get("auditName").getAsString() : null;
         
         final OCIProfile auditWithProfile;
@@ -200,7 +226,11 @@ public class ProjectAuditCommand implements CommandProvider {
                     break;
                 case COMMAND_LOAD_AUDIT:
                 case COMMAND_LOAD_AUDIT_OLD: {
-                    exec = v.runProjectAudit(kb, auditOpts.setRunIfNotExists(forceAudit).setAuditName(preferredName));
+                    exec = v.runProjectAudit(kb, 
+                            auditOpts.
+                                    setRunIfNotExists(executeIfNotExists).
+                                    setForceAuditExecution(forceAudit).
+                                    setDisableCache(disableCache));
                     break;
                 }
                 default:

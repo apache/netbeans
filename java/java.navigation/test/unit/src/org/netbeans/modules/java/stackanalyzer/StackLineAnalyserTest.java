@@ -51,6 +51,15 @@ public class StackLineAnalyserTest extends NbTestCase {
     }
 
     @Test
+    public void testMatchesScalaLines() throws Exception {
+        assertTrue(StackLineAnalyser.matches("at org.enso.compiler.core.ir.MetadataStorage.$anonfun$getUnsafe$1(MetadataStorage.scala:80)"));
+        StackLineAnalyser.Link l = StackLineAnalyser.analyse("at org.enso.compiler.core.ir.MetadataStorage.$anonfun$getUnsafe$1(MetadataStorage.scala:80)");
+        assertEquals(3, l.getStartOffset());
+        assertEquals(91, l.getEndOffset());
+        assertEquals(".scala", l.getExtension());
+    }
+
+    @Test
     public void testModuleStackTraceMatches() throws Exception {
         assertTrue(StackLineAnalyser.matches("at library.Library.init(Utilities/Library.java:24)"));
         assertTrue(StackLineAnalyser.matches("at library.Library.init(org.netbeans.api.Utilities/Library.java:24)"));

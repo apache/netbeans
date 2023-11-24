@@ -27,7 +27,6 @@ import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
-import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -94,6 +93,7 @@ public final class FormEditorCustomizer extends JPanel implements  ActionListene
         cbListenerStyle.addItem(loc("Anonymous")); // NOI18N
         cbListenerStyle.addItem(loc("InnerClass")); // NOI18N
         cbListenerStyle.addItem(loc("MainClass")); // NOI18N
+        cbListenerStyle.addItem(loc("Lambdas")); // NOI18N
         cbAutoI18n.addItem(loc("CTL_AUTO_RESOURCE_DEFAULT")); // NOI18N
         cbAutoI18n.addItem(loc("CTL_AUTO_RESOURCE_ON")); // NOI18N
         cbAutoI18n.addItem(loc("CTL_AUTO_RESOURCE_OFF")); // NOI18N

@@ -30,12 +30,15 @@ github:
     issues: true
     projects: true
   enabled_merge_buttons:
-    squash:  true
+    squash:  false
     merge:   true
     rebase:  true
   protected_branches:
     # no force push to master
     master: {}
+  collaborators:
+    - asbachb
+    - troizet
 
 notifications:
     commits:      commits@netbeans.apache.org

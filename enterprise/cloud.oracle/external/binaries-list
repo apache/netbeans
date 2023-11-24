@@ -15,16 +15,18 @@
 # specific language governing permissions and limitations
 # under the License.
 
-F89364D98A616CBA66CA535759EA092C54B4BF75 com.oracle.oci.sdk:oci-java-sdk-common:3.9.0
-7BB77013E6B91FCC7CD72D3338EB9F4019E20EA9 com.oracle.oci.sdk:oci-java-sdk-database:3.9.0
-8AB9B9CA57124F30B6D25CBAC944A7CEE0373068 com.oracle.oci.sdk:oci-java-sdk-identity:3.9.0
-F2071C1D75795350EB4D6807C4327AA333C5930C com.oracle.oci.sdk:oci-java-sdk-circuitbreaker:3.9.0
-10D73A80C8F66F959C84189272A7FC1C0CB1C435 com.oracle.oci.sdk:oci-java-sdk-workrequests:3.9.0
-031597E1BEEED3E48203BE6ECEBBA442E6FE177E com.oracle.oci.sdk:oci-java-sdk-devops:3.9.0
-5E52AF447D216717453E91782FCB965DF5669D5C com.oracle.oci.sdk:oci-java-sdk-adm:3.9.0
-C81CF0C79C300BF0526DF80D7890F688C1E32803 com.oracle.oci.sdk:oci-java-sdk-common-httpclient:3.9.0
-19C42576CC31E6028F29639F442EBA0CD895ADB3 com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey:3.9.0
-9499C6360FFDBEBC6F0F1285A20DD91485FEDD46 com.oracle.oci.sdk:oci-java-sdk-addons-apache-configurator-jersey:3.9.0
+01713F2F4C8533893B8BD73C9461698F16F2B091 com.oracle.oci.sdk:oci-java-sdk-common:3.25.3
+5E25BDEF20C9897C16EA939DBF185177F158EC40 com.oracle.oci.sdk:oci-java-sdk-database:3.25.3
+D1015B3664782EABF06354C63748152E6D3BF268 com.oracle.oci.sdk:oci-java-sdk-vault:3.25.3
+0B6A6C71B4880A87B1FB034B3F1AB6E5361FC558 com.oracle.oci.sdk:oci-java-sdk-keymanagement:3.25.3
+E46F0CE2219BBCDA94B87D4CB4EF4166DAF6C925 com.oracle.oci.sdk:oci-java-sdk-identity:3.25.3
+832F50EFBFB3B320CA5CAEC75FE607FB8CEDF40E com.oracle.oci.sdk:oci-java-sdk-circuitbreaker:3.25.3
+78C9D083AD254C858E4A69F51958A9A46D260F97 com.oracle.oci.sdk:oci-java-sdk-workrequests:3.25.3
+9D89873EC1059B5B75058DB5FF1C25D66A9EC859 com.oracle.oci.sdk:oci-java-sdk-devops:3.25.3
+95F57672B60D7A611582262828DCED3F7544BA7C com.oracle.oci.sdk:oci-java-sdk-adm:3.25.3
+A8B7EBCA334E8145469A8FE0365C02A2727218EE com.oracle.oci.sdk:oci-java-sdk-common-httpclient:3.25.3
+AECECCD95E5ED92C73E455B7BA4AC714229041EE com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey:3.25.3
+0CEE99CE7AA783353D19C56AC9F1AD72485DDBE8 com.oracle.oci.sdk:oci-java-sdk-addons-apache-configurator-jersey:3.25.3
 
 E5F6CAE5CA7ECAAC1EC2827A9E2D65AE2869CADA org.apache.httpcomponents:httpclient:4.5.13
 853B96D3AFBB7BF8CC303FE27EE96836A10C1834 org.apache.httpcomponents:httpcore:4.4.13

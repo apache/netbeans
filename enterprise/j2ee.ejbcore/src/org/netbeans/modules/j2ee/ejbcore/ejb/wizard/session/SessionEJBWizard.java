@@ -88,20 +88,14 @@ public final class SessionEJBWizard implements WizardDescriptor.AsynchronousInst
         EjbJar ejbModule = EjbJar.getEjbJar(pkg);
         // TODO: UI - add checkbox for Java EE 5 to create also EJB 2.1 style EJBs
         Profile profile = ejbModule.getJ2eeProfile();
-        boolean isSimplified = Profile.JAVA_EE_5.equals(profile) || Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_6_WEB.equals(profile)
-                || Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile)
-                || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile)
-                || Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile)
-                || Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_9_WEB.equals(profile)
-                || Profile.JAKARTA_EE_9_1_FULL.equals(profile) || Profile.JAKARTA_EE_9_1_WEB.equals(profile)
-                || Profile.JAKARTA_EE_10_FULL.equals(profile) || Profile.JAKARTA_EE_10_WEB.equals(profile);
+        boolean isSimplified = profile.isAtLeast(Profile.JAVA_EE_5);
         SessionGenerator sessionGenerator = SessionGenerator.create(
                 Templates.getTargetName(wiz),
                 pkg,
                 ejbPanel.hasRemote(),
                 ejbPanel.hasLocal(),
                 ejbPanel.getSessionType(),
-                isSimplified,
+                profile,
                 true, // TODO: UI - add checkbox for creation of business interface
                 !isSimplified, // TODO: UI - add checkbox for option XML (not annotation) usage
                 ejbPanel.getTimerOptions(),

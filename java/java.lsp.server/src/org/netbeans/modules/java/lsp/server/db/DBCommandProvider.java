@@ -19,11 +19,13 @@
 package org.netbeans.modules.java.lsp.server.db;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.modules.java.lsp.server.explorer.TreeNodeRegistry;
@@ -38,7 +40,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = CommandProvider.class)
 public class DBCommandProvider implements CommandProvider{
-    private static final String  COMMAND_GET_PREFERRED_CONNECTION = "java.db.preferred.connection";
+    private static final String  COMMAND_GET_PREFERRED_CONNECTION = "nbls.db.preferred.connection";
     
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
         COMMAND_GET_PREFERRED_CONNECTION
@@ -46,9 +48,6 @@ public class DBCommandProvider implements CommandProvider{
 
     @Override
     public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
-        if (!COMMAND_GET_PREFERRED_CONNECTION.equals(command)) {
-            return null;
-        }
         TreeNodeRegistry r = Lookup.getDefault().lookup(TreeNodeRegistry.class);
         DatabaseConnection conn = ConnectionManager.getDefault().getPreferredConnection(true);
         if (conn == null || r == null) {
@@ -68,6 +67,6 @@ public class DBCommandProvider implements CommandProvider{
 
     @Override
     public Set<String> getCommands() {
-        return COMMANDS;
+        return Collections.singleton(COMMAND_GET_PREFERRED_CONNECTION);
     }
 }

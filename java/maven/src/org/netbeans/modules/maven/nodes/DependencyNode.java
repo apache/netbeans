@@ -499,7 +499,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                 artifact.getType(),
                 classifier); 
             progress.progress(org.openide.util.NbBundle.getMessage(DependencyNode.class, bundleName,artifact.getId()), 1);
-            online.resolve(sources, prjimpl.getOriginalMavenProject().getRemoteArtifactRepositories(), prjimpl.getEmbedder().getLocalRepository());
+            online.resolveArtifact(sources, prjimpl.getOriginalMavenProject().getRemoteArtifactRepositories(), prjimpl.getEmbedder().getLocalRepository());
             if (artifact.getFile() != null && artifact.getFile().exists()) {
                 List<Coordinates> coordinates = RepositoryForBinaryQueryImpl.getJarMetadataCoordinates(artifact.getFile());
                 if (coordinates != null) {
@@ -511,7 +511,7 @@ public class DependencyNode extends AbstractNode implements PreferenceChangeList
                             "jar",
                             baseClassifier);
                         progress.progress(org.openide.util.NbBundle.getMessage(DependencyNode.class, bundleName, artifact.getId()), 1);
-                        online.resolve(sources, prjimpl.getOriginalMavenProject().getRemoteArtifactRepositories(), prjimpl.getEmbedder().getLocalRepository());
+                        online.resolveArtifact(sources, prjimpl.getOriginalMavenProject().getRemoteArtifactRepositories(), prjimpl.getEmbedder().getLocalRepository());
                     }
                 }
             }

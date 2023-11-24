@@ -43,6 +43,7 @@ public enum PropertyCategory {
     BACKGROUND,
     COLORS,
     CONTENT, //generated & repl. content
+    CONTAIN,
     FLEXIBLE_BOX_LAYOUT,
     FONTS,
     FRAGMENTATION,

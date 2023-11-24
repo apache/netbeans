@@ -23,9 +23,8 @@ package org.netbeans.modules.web.jsf;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.xml.catalog.spi.*;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -311,30 +310,30 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
         return null;
     }
 
-    public static JSFVersion extractVersion(Document document) {
+    public static JsfVersion extractVersion(Document document) {
         // first check the doc type to see if there is one
         DocumentType dt = document.getDoctype();
-        JSFVersion value = JSFVersion.JSF_1_0;
+        JsfVersion value = JsfVersion.JSF_1_0;
         // This is the default version
         if (dt != null) {
             if (JSF_ID_1_0.equals(dt.getPublicId())) {
-                value = JSFVersion.JSF_1_0;
+                value = JsfVersion.JSF_1_0;
             } else if (JSF_ID_1_1.equals(dt.getPublicId())) {
-                value = JSFVersion.JSF_1_1;
+                value = JsfVersion.JSF_1_1;
             } else if (JSF_ID_1_2.equals(dt.getPublicId())) {
-                value = JSFVersion.JSF_1_2;
+                value = JsfVersion.JSF_1_2;
             } else if (JSF_ID_2_0.equals(dt.getPublicId())) {
-                value = JSFVersion.JSF_2_0;
+                value = JsfVersion.JSF_2_0;
             } else if (JSF_ID_2_1.equals(dt.getPublicId())) {
-                value = JSFVersion.JSF_2_1;
+                value = JsfVersion.JSF_2_1;
             } else if (JSF_ID_2_2.equals(dt.getPublicId())) {
-                value = JSFVersion.JSF_2_2;
+                value = JsfVersion.JSF_2_2;
             } else if (JSF_ID_2_3.equals(dt.getPublicId())) {
-                value = JSFVersion.JSF_2_3;
+                value = JsfVersion.JSF_2_3;
             } else if (JSF_ID_3_0.equals(dt.getPublicId())) {
-                value = JSFVersion.JSF_3_0;
+                value = JsfVersion.JSF_3_0;
             }else if (JSF_ID_4_0.equals(dt.getPublicId())) {
-                value = JSFVersion.JSF_4_0;
+                value = JsfVersion.JSF_4_0;
             }
         }
         return value;

@@ -74,7 +74,7 @@ public class EnablePreviewSingleSourceFile implements PreviewEnabler {
         if (compilerArgs.contains(SOURCE_FLAG)) {
             compilerArgs = m.replaceAll("--enable-preview " + SOURCE_FLAG + " " + newSourceLevel);
         } else {
-            compilerArgs = (compilerArgs.isEmpty() ? "" : " ") + ENABLE_PREVIEW_FLAG + " " + SOURCE_FLAG + " " + newSourceLevel;
+            compilerArgs += (compilerArgs.isEmpty() ? "" : " ") + ENABLE_PREVIEW_FLAG + " " + SOURCE_FLAG + " " + newSourceLevel;
         }
         file.setAttribute(FILE_VM_OPTIONS, compilerArgs);
         storeEditableProperties(ep, file);

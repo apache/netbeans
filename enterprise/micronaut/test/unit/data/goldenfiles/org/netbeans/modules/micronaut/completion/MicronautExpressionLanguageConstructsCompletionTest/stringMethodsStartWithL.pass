@@ -1,0 +1,6 @@
+lastIndexOf(String str) : int
+lastIndexOf(int ch) : int
+lastIndexOf(String str, int fromIndex) : int
+lastIndexOf(int ch, int fromIndex) : int
+length() : int
+lines() : Stream<String>

@@ -23,6 +23,7 @@ import org.netbeans.modules.java.hints.spiimpl.TestCompilerSettings;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.prefs.Preferences;
 import javax.lang.model.SourceVersion;
@@ -191,13 +192,7 @@ public class ErrorHintsProviderTest extends NbTestCase {
     }
     
     public void testShortErrors8() throws Exception {
-        TestCompilerSettings.commandLine = "--enable-preview";
-
-        try {
-            performTest("TestShortErrors8", false, "20");
-        } finally {
-            TestCompilerSettings.commandLine = null;
-        }
+        performTest("TestShortErrors8", false, "21");
     }
     
     public void testShortErrors9() throws Exception {
@@ -266,6 +261,15 @@ public class ErrorHintsProviderTest extends NbTestCase {
                            "}\n");
     }
 
+    public void testUnnamedClass() throws Exception {
+        performFullInlinedTest("Test.java",
+                               "void main() {\n" +
+                               "}\n",
+                               "21",
+                               //TODO: needs to be adjusted when the error in javac is fixed:
+                               "0:0-0:13::Test.java:1:1: compiler.err.preview.feature.disabled.plural: (compiler.misc.feature.unnamed.classes)");
+    }
+
     private void performInlinedTest(String name, String code) throws Exception {
         int[] expectedSpan = new int[2];
         code = TestUtilities.detectOffsets(code, expectedSpan);
@@ -311,6 +315,53 @@ public class ErrorHintsProviderTest extends NbTestCase {
             golden.add(e);
         }
         
+        assertEquals(golden, actual);
+    }
+
+    private void performFullInlinedTest(String name, String code, String sourceLevel, String... expected) throws Exception {
+        FileObject workFO = FileUtil.toFileObject(getWorkDir());
+
+        assertNotNull(workFO);
+
+        FileObject sourceRoot = workFO.createFolder("src");
+        FileObject buildRoot  = workFO.createFolder("build");
+
+        SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cacheFO);
+
+        testSource = FileUtil.createData(sourceRoot, name);
+
+        assertNotNull(testSource);
+
+        org.netbeans.api.java.source.TestUtilities.copyStringToFile(testSource, code);
+
+        js = JavaSource.forFileObject(testSource);
+
+        assertNotNull(js);
+
+        SourceUtilsTestUtil.setSourceLevel(testSource, sourceLevel);
+        SourceUtilsTestUtil.setCompilerOptions(sourceRoot, Arrays.asList("-XDrawDiagnostics"));
+
+        info = SourceUtilsTestUtil.getCompilationInfo(js, Phase.RESOLVED);
+
+        assertNotNull(info);
+
+        DataObject testData = DataObject.find(testSource);
+        EditorCookie ec = testData.getLookup().lookup(EditorCookie.class);
+        Document doc = ec.openDocument();
+
+        doc.putProperty(Language.class, JavaTokenId.language());
+
+        List<String> actual = new ArrayList<>();
+
+        for (ErrorDescription ed : new ErrorHintsProvider().computeErrors(info, doc, Utilities.JAVA_MIME_TYPE)) {
+            String err = ed.getRange().getBegin().getLine() + ":" + ed.getRange().getBegin().getColumn() + "-" +
+                         ed.getRange().getEnd().getLine() + ":" + ed.getRange().getEnd().getColumn() + "::" +
+                         ed.getDescription();
+            actual.add(err);
+        }
+
+        List<String> golden = Arrays.asList(expected);
+
         assertEquals(golden, actual);
     }
 

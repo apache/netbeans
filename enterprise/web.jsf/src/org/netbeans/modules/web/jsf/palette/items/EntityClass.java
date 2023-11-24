@@ -122,7 +122,11 @@ public abstract class EntityClass {
     static boolean isId(ExecutableElement method, boolean isFieldAccess) {
         Element element = isFieldAccess ? JpaControllerUtil.guessField(method) : method;
         if (element != null) {
-            if (JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.Id") || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.EmbeddedId")) { // NOI18N
+            if (JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.Id")
+                    || JpaControllerUtil.isAnnotatedWith(element, "jakarta.persistence.EmbeddedId")
+                    || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.Id")
+                    || JpaControllerUtil.isAnnotatedWith(element, "javax.persistence.EmbeddedId")
+                    ) { // NOI18N
                 return true;
             }
         }
@@ -132,7 +136,10 @@ public abstract class EntityClass {
     static String getTemporal(ExecutableElement method, boolean isFieldAccess) {
         Element element = isFieldAccess ? JpaControllerUtil.guessField(method) : method;
         if (element != null) {
-            AnnotationMirror annotationMirror = JpaControllerUtil.findAnnotation(element, "javax.persistence.Temporal"); // NOI18N
+            AnnotationMirror annotationMirror = JpaControllerUtil.findAnnotation(element, "jakarta.persistence.Temporal"); // NOI18N
+            if(annotationMirror == null) {
+                annotationMirror = JpaControllerUtil.findAnnotation(element, "javax.persistence.Temporal"); // NOI18N
+            }
             if (annotationMirror != null) {
                 Collection<? extends AnnotationValue> attributes = annotationMirror.getElementValues().values();
                 if (attributes.iterator().hasNext()) {
@@ -163,7 +170,8 @@ public abstract class EntityClass {
     }
     
     public static boolean isEntityClass(TypeElement typeElement) {
-        if (JpaControllerUtil.isAnnotatedWith(typeElement, "javax.persistence.Entity")) {
+        if (JpaControllerUtil.isAnnotatedWith(typeElement, "jakarta.persistence.Entity")
+                || JpaControllerUtil.isAnnotatedWith(typeElement, "javax.persistence.Entity")) {
             return true;
         }
         return false;

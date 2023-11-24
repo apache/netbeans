@@ -85,7 +85,7 @@ public class DefaultCssEditorModule extends CssEditorModule {
         module("ruby", "http://www.w3.org/TR/css3-ruby"), //NOI18N
         module("multi-column_layout", "http://www.w3.org/TR/css3-multicol"), //NOI18N
         module("values_and_units", "http://www.w3.org/TR/css3-values"), //NOI18N
-        module("text", "http://www.w3.org/TR/css3-text"), //NOI18N
+        module("text", "http://www.w3.org/TR/css-text-4"), //NOI18N
         module("writing_modes", "http://www.w3.org/TR/css3-writing-modes"), //NOI18N
         module("generated_content_for_paged_media", "http://www.w3.org/TR/css3-gcpm"), //NOI18N
         module("fonts", "http://www.w3.org/TR/css3-fonts"), //NOI18N
@@ -106,6 +106,7 @@ public class DefaultCssEditorModule extends CssEditorModule {
         module("fragmentation", "http://www.w3.org/TR/css-break-3"), //NOI18N
         module("positioning", "http://www.w3.org/TR/css-position-3"), //NOI18N
         module("sizing", "http://www.w3.org/TR/css-sizing-3"), //NOI18N
+        module("contain", "http://www.w3.org/TR/css-contain-3"), //NOI18N
         module("other", null) //NOI18N
     };
     private static Map<String, PropertyDefinition> propertyDescriptors;

@@ -305,7 +305,7 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
                 .addComponent(cbAugmentedBuild)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbAugmentedBuild, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbIncludeOpenProjects)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbIncludeOpenProjects, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -399,7 +399,7 @@ public class GradleExecutionPanel extends javax.swing.JPanel {
         }
     }
 
-    private class RuntimeRenderer extends JLabel implements ListCellRenderer, UIResource {
+    private static class RuntimeRenderer extends JLabel implements ListCellRenderer, UIResource {
 
         @Override
         @NbBundle.Messages({

@@ -34,15 +34,14 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.web.api.webmodule.WebModule;
-import org.netbeans.modules.web.beans.CdiUtil;
 import org.netbeans.modules.web.jsf.JSFConfigUtilities;
 import org.netbeans.modules.web.jsf.JSFUtils;
 import org.netbeans.modules.web.jsf.api.ConfigurationUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.FacesConfig;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.ManagedBean;
-import org.netbeans.modules.web.jsf.palette.items.JsfLibrariesSupport;
 import org.netbeans.modules.web.jsf.wizards.ManagedBeanIterator.NamedScope;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -308,8 +307,8 @@ public class ManagedBeanPanelVisual extends javax.swing.JPanel implements HelpCt
 
         Object scope = jComboBoxScope.getSelectedItem();
         if (scope instanceof NamedScope && scope == NamedScope.FLOW) {
-            JSFVersion jsfVersion = JSFVersion.forWebModule(wm);
-            if (jsfVersion != null && !jsfVersion.isAtLeast(JSFVersion.JSF_2_2)) {
+            JsfVersion jsfVersion = JsfVersionUtils.forWebModule(wm);
+            if (jsfVersion != null && !jsfVersion.isAtLeast(JsfVersion.JSF_2_2)) {
                 wizardDescriptor.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,
                         Bundle.ManagedBeanPanelVisual_warn_flowScoped_low_version());
                 return false;

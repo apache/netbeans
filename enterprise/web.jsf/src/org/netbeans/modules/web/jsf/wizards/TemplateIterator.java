@@ -38,8 +38,9 @@ import org.netbeans.modules.web.api.webmodule.WebProjectConstants;
 import org.netbeans.modules.web.jsf.JSFConfigUtilities;
 import org.netbeans.modules.web.jsf.JSFFrameworkProvider;
 import org.netbeans.modules.web.jsf.JSFUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
@@ -90,9 +91,9 @@ public class TemplateIterator implements TemplateWizard.Iterator {
                 JSFConfigUtilities.extendJsfFramework(dir, false);
             }
 
-            JSFVersion version = JSFVersion.forWebModule(wm);
+            JsfVersion version = JsfVersionUtils.forWebModule(wm);
             String templateFile = TEMPLATE_XHTML2;
-            if (version != null && version.isAtLeast(JSFVersion.JSF_2_2)) {
+            if (version != null && version.isAtLeast(JsfVersion.JSF_2_2)) {
                 templateFile = TEMPLATE_XHTML22;
             }
             String content = JSFFrameworkProvider.readResource(Thread.currentThread().getContextClassLoader().getResourceAsStream(FL_RESOURCE_FOLDER + templateFile), ENCODING);
@@ -118,16 +119,16 @@ public class TemplateIterator implements TemplateWizard.Iterator {
                 if (!JSFConfigUtilities.hasJsfFramework(docBase)) {
                     JSFConfigUtilities.extendJsfFramework(dir, false);
                 }
-                final JSFVersion jsfVersion = JSFVersion.forWebModule(wm) != null ? JSFVersion.forWebModule(wm) : JSFVersion.JSF_2_2;
+                final JsfVersion jsfVersion = JsfVersionUtils.forWebModule(wm) != null ? JsfVersionUtils.forWebModule(wm) : JsfVersion.JSF_2_2;
                 FileObject cssFolder = handleCssFolderCreation(jsfVersion, docBase);
                 return createTemplate(wiz, df, targetName, cssFolder, jsfVersion);
             } else {
                 // get the JSF version
                 Project project = Templates.getProject(wiz);
-                JSFVersion jsfVersion = JSFVersion.forProject(project);
-                jsfVersion = jsfVersion == null ? JSFVersion.JSF_2_2 : jsfVersion;
+                JsfVersion jsfVersion = JsfVersionUtils.forProject(project);
+                jsfVersion = jsfVersion == null ? JsfVersion.JSF_2_2 : jsfVersion;
 
-                String folderName = (jsfVersion == null || jsfVersion.isAtLeast(JSFVersion.JSF_2_0)) ? CSS_FOLDER2 : CSS_FOLDER;
+                String folderName = (jsfVersion == null || jsfVersion.isAtLeast(JsfVersion.JSF_2_0)) ? CSS_FOLDER2 : CSS_FOLDER;
                 Sources sources = ProjectUtils.getSources(project);
                 SourceGroup[] sourceGroups = sources.getSourceGroups("java"); //NOII18N
                 if (sourceGroups.length > 0) {
@@ -274,8 +275,8 @@ public class TemplateIterator implements TemplateWizard.Iterator {
         return res;
     }
 
-    private FileObject handleCssFolderCreation(JSFVersion jsfVersion, FileObject rootDir) throws IOException {
-        String folderName = (jsfVersion == null || jsfVersion.isAtLeast(JSFVersion.JSF_2_0)) ? CSS_FOLDER2 : CSS_FOLDER;
+    private FileObject handleCssFolderCreation(JsfVersion jsfVersion, FileObject rootDir) throws IOException {
+        String folderName = (jsfVersion == null || jsfVersion.isAtLeast(JsfVersion.JSF_2_0)) ? CSS_FOLDER2 : CSS_FOLDER;
         FileObject cssFolder = rootDir.getFileObject(folderName);
         if (cssFolder == null) {
             cssFolder = FileUtil.createFolder(rootDir, folderName);
@@ -283,7 +284,7 @@ public class TemplateIterator implements TemplateWizard.Iterator {
         return cssFolder;
     }
 
-    private Set<DataObject> createTemplate(TemplateWizard wiz, DataFolder df, String targetName, FileObject cssFolder, JSFVersion jsfVersion) throws IOException {
+    private Set<DataObject> createTemplate(TemplateWizard wiz, DataFolder df, String targetName, FileObject cssFolder, JsfVersion jsfVersion) throws IOException {
         CreateTemplateAction createTemplateAction = new CreateTemplateAction(
                 templatePanel.getComponent(),
                 Templates.getTargetName(wiz),
@@ -304,11 +305,11 @@ public class TemplateIterator implements TemplateWizard.Iterator {
         private final String templateName;
         private final FileObject targetFolder;
         private final FileObject cssTargetFolder;
-        private final JSFVersion jsfVersion;
+        private final JsfVersion jsfVersion;
         private FileObject result;
 
         public CreateTemplateAction(TemplatePanelVisual templatePanel, String templateName, FileObject targetFolder,
-                FileObject cssTargetFolder, JSFVersion jsfVersion) {
+                FileObject cssTargetFolder, JsfVersion jsfVersion) {
             this.templatePanel = templatePanel;
             this.templateName = templateName;
             this.targetFolder = targetFolder;
@@ -340,10 +341,10 @@ public class TemplateIterator implements TemplateWizard.Iterator {
 
             is = templatePanel.getTemplate();
             String content = JSFFrameworkProvider.readResource(is, ENCODING);
-            if (!jsfVersion.isAtLeast(JSFVersion.JSF_2_0)) {
+            if (!jsfVersion.isAtLeast(JsfVersion.JSF_2_0)) {
                 content = content.replace("h:head", "head").replace("h:body", "body"); //NOI18N
             }
-            String namespaceLocation = jsfVersion.isAtLeast(JSFVersion.JSF_2_2) ? NamespaceUtils.JCP_ORG_LOCATION : NamespaceUtils.SUN_COM_LOCATION;
+            String namespaceLocation = jsfVersion.isAtLeast(JsfVersion.JSF_2_2) ? NamespaceUtils.JCP_ORG_LOCATION : NamespaceUtils.SUN_COM_LOCATION;
 
             HashMap args = new HashMap();
             args.put("LAYOUT_CSS_PATH", layoutPath);    //NOI18N

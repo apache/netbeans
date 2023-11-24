@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.33
+#Version 2.34
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1062,6 +1062,7 @@ meth public org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitOpe
 meth public void addConfigureProject(java.io.File,org.netbeans.modules.gradle.spi.newproject.TemplateOperation$ProjectConfigurator)
 meth public void addProjectPreload(java.io.File)
 meth public void addWrapperInit(java.io.File)
+meth public void addWrapperInit(java.io.File,java.lang.String)
 meth public void copyFromFile(java.lang.String,java.io.File,java.util.Map<java.lang.String,?>)
 meth public void copyFromTemplate(java.lang.String,java.io.File,java.util.Map<java.lang.String,?>)
 meth public void createFolder(java.io.File)

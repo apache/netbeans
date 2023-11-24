@@ -31,11 +31,10 @@ import org.netbeans.api.lexer.LanguagePath;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
+import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
-import org.netbeans.modules.languages.hcl.terraform.TerraformLanguage;
-import org.netbeans.modules.languages.hcl.terraform.TerraformParserResult;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.editor.fold.FoldTypeProvider;
 import org.netbeans.spi.lexer.EmbeddingPresence;
@@ -155,6 +154,11 @@ public class HCLLanguage extends DefaultLanguageConfig {
     }
 
     @Override
+    public SemanticAnalyzer getSemanticAnalyzer() {
+        return new HCLSemanticAnalyzer();
+    }
+
+    @Override
     public boolean hasStructureScanner() {
         return true;
     }
@@ -169,7 +173,7 @@ public class HCLLanguage extends DefaultLanguageConfig {
         return new HCLStructureScanner();
     }
 
-    private static final Language<HCLTokenId> language = new LanguageHierarchy<HCLTokenId>() {
+    static final Language<HCLTokenId> language = new LanguageHierarchy<HCLTokenId>() {
 
         @Override
         protected String mimeType() {

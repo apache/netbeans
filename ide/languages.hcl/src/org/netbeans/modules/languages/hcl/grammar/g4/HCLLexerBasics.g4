@@ -28,11 +28,11 @@ fragment Hws
     ;
 
 fragment Vws
-    : [\r\n\f]
+    : '\r'? '\n'
     ;
 
 fragment NonVws
-    : ~[\r\n\f]
+    : ~[\r\n]
     ;
 
 fragment BlockComment
@@ -110,9 +110,12 @@ fragment UnicodeEsc
     : 'u' HexDigit*
     ;
 
-fragment BoolLiteral
+fragment True
     : 'true'
-    | 'false'
+    ;
+
+fragment False
+    : 'false'
     ;
 
 fragment Null

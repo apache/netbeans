@@ -414,23 +414,24 @@ public final class Actions extends Object {
             return null;
         }
 
+        // what order is this? requires comment
         public static void reorderAfterAddition(final DataFolder favourities, final DataObject[] children, final List<? extends DataObject> listAdd) {
             List<DataObject> listDest = new ArrayList<>();
             if (listAdd.size() > 0) {
                 //Insert new nodes just before last (root) node
                 DataObject root = null;
                 //Find root
-                for (DataObject children1 : children) {
-                    FileObject fo = children1.getPrimaryFile();
-                    if ("Favorites/Root.instance".equals(fo.getPath())) {
-                        //NOI18N
-                        root = children1;
+                for (DataObject child : children) {
+                    FileObject fo = child.getPrimaryFile();
+                    if ("Favorites/Root.instance".equals(fo.getPath())) { //NOI18N
+                        root = child;
+                        break;
                     }
                 }
                 if (root != null) {
-                    for (DataObject children1 : children) {
-                        if (!root.equals(children1)) {
-                            listDest.add(children1);
+                    for (DataObject child : children) {
+                        if (!root.equals(child)) {
+                            listDest.add(child);
                         }
                     }
                     listDest.addAll(listAdd);
@@ -440,7 +441,7 @@ public final class Actions extends Object {
                     listDest.addAll(listAdd);
                 }
                 //Set desired order
-                DataObject [] newOrder = listDest.toArray(new DataObject[listDest.size()]);
+                DataObject [] newOrder = listDest.toArray(new DataObject[0]);
                 try {
                     favourities.setOrder(newOrder);
                 } catch (IOException ex) {

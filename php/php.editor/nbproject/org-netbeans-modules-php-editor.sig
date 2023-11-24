@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.24.0
+#Version 2.25.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -1531,6 +1531,7 @@ meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNames
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNamespaceScope(org.netbeans.modules.php.editor.model.ModelElement)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNamespaceScope(org.netbeans.modules.php.editor.parser.PHPParseResult,int)
 meth public static org.netbeans.modules.php.editor.model.NamespaceScope getNamespaceScope(org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration,org.netbeans.modules.php.editor.model.FileScope)
 meth public static org.netbeans.modules.php.editor.model.TypeScope getTypeScope(org.netbeans.modules.php.editor.model.ModelElement)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()

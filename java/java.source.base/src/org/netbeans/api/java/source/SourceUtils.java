@@ -49,8 +49,10 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Preview;
 import com.sun.tools.javac.code.Scope.NamedImportScope;
 import com.sun.tools.javac.code.Scope.StarImportScope;
+import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.*;
 import com.sun.tools.javac.code.Type;
@@ -85,6 +87,7 @@ import org.netbeans.api.java.source.matching.Occurrence;
 import org.netbeans.api.java.source.matching.Pattern;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
+import org.netbeans.lib.nbjavac.services.NBNames;
 import org.netbeans.modules.java.preprocessorbridge.spi.ImportProcessor;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ElementUtils;
@@ -1023,30 +1026,80 @@ public class SourceUtils {
      * @return true when the method is a main method
      */
     public static boolean isMainMethod (final ExecutableElement method) {
+        if (!mainCandidate(method)) {
+            return false;
+        }
+
+        Context ctx = ((NBNames) ((Symbol.MethodSymbol)method).name.table.names).getContext();
+        Source source = Source.instance(ctx);
+        Preview preview = Preview.instance(ctx);
+
+        if (source.compareTo(Source.JDK21) < 0 || !preview.isEnabled()) {
+            long flags = ((Symbol.MethodSymbol)method).flags();
+
+            if (((flags & Flags.PUBLIC) == 0) || ((flags & Flags.STATIC) == 0)) {
+                return false;
+            }
+            return !method.getParameters().isEmpty();
+        }
+
+        //new launch prototocol from JEP 445:
+        int currentMethodPriority = mainMethodPriority(method);
+        int highestPriority = Integer.MAX_VALUE;
+
+        for (ExecutableElement sibling : ElementFilter.methodsIn(method.getEnclosingElement().getEnclosedElements())) {
+            if (mainCandidate(sibling)) {
+                highestPriority = Math.min(highestPriority, mainMethodPriority(sibling));
+                if (highestPriority < currentMethodPriority) {
+                    break;
+                }
+            } 
+        }
+
+        return currentMethodPriority == highestPriority;
+    }
+
+    private static boolean mainCandidate(ExecutableElement method) {
         if (!"main".contentEquals(method.getSimpleName())) {                //NOI18N
             return false;
         }
-        long flags = ((Symbol.MethodSymbol)method).flags();                 //faster
-        if (((flags & Flags.PUBLIC) == 0) || ((flags & Flags.STATIC) == 0)) {
+        long flags = ((Symbol.MethodSymbol)method).flags();
+        if ((flags & Flags.PRIVATE) != 0) {
             return false;
         }
         if (method.getReturnType().getKind() != TypeKind.VOID) {
             return false;
         }
         List<? extends VariableElement> params = method.getParameters();
-        if (params.size() != 1) {
+        if (params.size() > 1) {
             return false;
+        } else if (params.size() == 1) {
+            TypeMirror param = params.get(0).asType();
+            if (param.getKind() != TypeKind.ARRAY) {
+                return false;
+            }
+            ArrayType array = (ArrayType) param;
+            TypeMirror compound = array.getComponentType();
+            if (compound.getKind() != TypeKind.DECLARED) {
+                return false;
+            }
+            if (!"java.lang.String".contentEquals(((TypeElement)((DeclaredType)compound).asElement()).getQualifiedName())) {    //NOI18N
+                return false;
+            }
         }
-        TypeMirror param = params.get(0).asType();
-        if (param.getKind() != TypeKind.ARRAY) {
-            return false;
+        return true;
+    }
+
+    // 0 is highest
+    private static int mainMethodPriority(ExecutableElement method) {
+        long flags = ((Symbol.MethodSymbol)method).flags();
+        boolean isStatic = (flags & Flags.STATIC) != 0;
+        boolean hasParams = !method.getParameters().isEmpty();
+        if (isStatic) {
+            return hasParams ? 0 : 1;
+        } else {
+            return hasParams ? 2 : 3;
         }
-        ArrayType array = (ArrayType) param;
-        TypeMirror compound = array.getComponentType();
-        if (compound.getKind() != TypeKind.DECLARED) {
-            return false;
-        }
-        return "java.lang.String".contentEquals(((TypeElement)((DeclaredType)compound).asElement()).getQualifiedName());   //NOI18N
     }
 
     /**

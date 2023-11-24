@@ -25,7 +25,6 @@ import com.sun.source.util.Trees;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.EnumSet;
@@ -78,21 +77,20 @@ import org.openide.util.lookup.ServiceProvider;
 public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
 
     private static final String CHANGE_METHOD_PARAMS_REFACTORING_KIND = "refactor.change.method.params";
-    private static final String CHANGE_METHOD_PARAMS_REFACTORING_COMMAND =  "java.refactor.change.method.params";
+    private static final String CHANGE_METHOD_PARAMS_REFACTORING_COMMAND =  "nbls.java.refactor.change.method.params";
 
-    private final Set<String> commands = Collections.singleton(CHANGE_METHOD_PARAMS_REFACTORING_COMMAND);
     private final Gson gson = new Gson();
 
     @Override
     @NbBundle.Messages({
         "DN_ChangeMethodParams=Change Method Parameters...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Refactor)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null || !JavaRefactoringUtils.isRefactorable(info.getFileObject())) {
             return Collections.emptyList();
         }
@@ -127,12 +125,12 @@ public final class ChangeMethodParametersRefactoring extends CodeRefactoring {
         }
         QuickPickItem elementItem = new QuickPickItem(createLabel(info, element, true));
         elementItem.setUserData(new ElementData(element));
-        return Collections.singletonList(createCodeAction(Bundle.DN_ChangeMethodParams(), CHANGE_METHOD_PARAMS_REFACTORING_KIND, null, CHANGE_METHOD_PARAMS_REFACTORING_COMMAND, Utils.toUri(elementSource), elementItem));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_ChangeMethodParams(), CHANGE_METHOD_PARAMS_REFACTORING_KIND, null, CHANGE_METHOD_PARAMS_REFACTORING_COMMAND, Utils.toUri(elementSource), elementItem));
     }
 
     @Override
     public Set<String> getCommands() {
-        return commands;
+        return Collections.singleton(CHANGE_METHOD_PARAMS_REFACTORING_COMMAND);
     }
 
     @Override

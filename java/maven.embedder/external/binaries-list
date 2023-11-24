@@ -14,6 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-A2AC1CD690AB4C80DEFE7F9BCE14D35934C35CEC jdom:jdom:1.0
+DC15DFF8F701B227EE523EEB7A17F77C10EAFE2F org.jdom:jdom2:2.0.6.1
 5D9CE6ADD7B714B8095F0E3E396C5E9F8C5DCFEF org.apache.maven.shared:maven-dependency-tree:2.2
-E0FFA838CBB9BDF7DC89CF987A30EE1CAF4B3FB6 org.apache.maven:apache-maven:3.9.2:bin@zip
+448660E65018FF4354574800D0EFA831C7F5F469 org.apache.maven:apache-maven:3.9.5:bin@zip

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.13
+#Version 1.15
 
 CLSS public java.io.IOException
 cons public init()
@@ -81,6 +81,32 @@ meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
 
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
+
 CLSS public abstract interface org.jsoup.Connection
 innr public abstract interface static Base
 innr public abstract interface static KeyVal
@@ -88,7 +114,9 @@ innr public abstract interface static Request
 innr public abstract interface static Response
 innr public final static !enum Method
 meth public abstract !varargs org.jsoup.Connection data(java.lang.String[])
+meth public abstract java.net.CookieStore cookieStore()
 meth public abstract org.jsoup.Connection cookie(java.lang.String,java.lang.String)
+meth public abstract org.jsoup.Connection cookieStore(java.net.CookieStore)
 meth public abstract org.jsoup.Connection cookies(java.util.Map<java.lang.String,java.lang.String>)
 meth public abstract org.jsoup.Connection data(java.lang.String,java.lang.String)
 meth public abstract org.jsoup.Connection data(java.lang.String,java.lang.String,java.io.InputStream)
@@ -102,6 +130,7 @@ meth public abstract org.jsoup.Connection ignoreContentType(boolean)
 meth public abstract org.jsoup.Connection ignoreHttpErrors(boolean)
 meth public abstract org.jsoup.Connection maxBodySize(int)
 meth public abstract org.jsoup.Connection method(org.jsoup.Connection$Method)
+meth public abstract org.jsoup.Connection newRequest()
 meth public abstract org.jsoup.Connection parser(org.jsoup.parser.Parser)
 meth public abstract org.jsoup.Connection postDataCharset(java.lang.String)
 meth public abstract org.jsoup.Connection proxy(java.lang.String,int)
@@ -115,7 +144,6 @@ meth public abstract org.jsoup.Connection timeout(int)
 meth public abstract org.jsoup.Connection url(java.lang.String)
 meth public abstract org.jsoup.Connection url(java.net.URL)
 meth public abstract org.jsoup.Connection userAgent(java.lang.String)
-meth public abstract org.jsoup.Connection validateTLSCertificates(boolean)
 meth public abstract org.jsoup.Connection$KeyVal data(java.lang.String)
 meth public abstract org.jsoup.Connection$Request request()
 meth public abstract org.jsoup.Connection$Response execute() throws java.io.IOException
@@ -123,7 +151,7 @@ meth public abstract org.jsoup.Connection$Response response()
 meth public abstract org.jsoup.nodes.Document get() throws java.io.IOException
 meth public abstract org.jsoup.nodes.Document post() throws java.io.IOException
 
-CLSS public abstract interface static org.jsoup.Connection$Base<%0 extends org.jsoup.Connection$Base>
+CLSS public abstract interface static org.jsoup.Connection$Base<%0 extends org.jsoup.Connection$Base<{org.jsoup.Connection$Base%0}>>
  outer org.jsoup.Connection
 meth public abstract boolean hasCookie(java.lang.String)
 meth public abstract boolean hasHeader(java.lang.String)
@@ -178,7 +206,6 @@ intf org.jsoup.Connection$Base<org.jsoup.Connection$Request>
 meth public abstract boolean followRedirects()
 meth public abstract boolean ignoreContentType()
 meth public abstract boolean ignoreHttpErrors()
-meth public abstract boolean validateTLSCertificates()
 meth public abstract int maxBodySize()
 meth public abstract int timeout()
 meth public abstract java.lang.String postDataCharset()
@@ -199,7 +226,6 @@ meth public abstract org.jsoup.Connection$Request requestBody(java.lang.String)
 meth public abstract org.jsoup.Connection$Request timeout(int)
 meth public abstract org.jsoup.parser.Parser parser()
 meth public abstract void sslSocketFactory(javax.net.ssl.SSLSocketFactory)
-meth public abstract void validateTLSCertificates(boolean)
 
 CLSS public abstract interface static org.jsoup.Connection$Response
  outer org.jsoup.Connection
@@ -219,23 +245,26 @@ CLSS public org.jsoup.HttpStatusException
 cons public init(java.lang.String,int,java.lang.String)
 meth public int getStatusCode()
 meth public java.lang.String getUrl()
-meth public java.lang.String toString()
 supr java.io.IOException
 hfds statusCode,url
 
 CLSS public org.jsoup.Jsoup
-meth public static boolean isValid(java.lang.String,org.jsoup.safety.Whitelist)
-meth public static java.lang.String clean(java.lang.String,java.lang.String,org.jsoup.safety.Whitelist)
-meth public static java.lang.String clean(java.lang.String,java.lang.String,org.jsoup.safety.Whitelist,org.jsoup.nodes.Document$OutputSettings)
-meth public static java.lang.String clean(java.lang.String,org.jsoup.safety.Whitelist)
+meth public static boolean isValid(java.lang.String,org.jsoup.safety.Safelist)
+meth public static java.lang.String clean(java.lang.String,java.lang.String,org.jsoup.safety.Safelist)
+meth public static java.lang.String clean(java.lang.String,java.lang.String,org.jsoup.safety.Safelist,org.jsoup.nodes.Document$OutputSettings)
+meth public static java.lang.String clean(java.lang.String,org.jsoup.safety.Safelist)
 meth public static org.jsoup.Connection connect(java.lang.String)
+meth public static org.jsoup.Connection newSession()
+meth public static org.jsoup.nodes.Document parse(java.io.File) throws java.io.IOException
 meth public static org.jsoup.nodes.Document parse(java.io.File,java.lang.String) throws java.io.IOException
 meth public static org.jsoup.nodes.Document parse(java.io.File,java.lang.String,java.lang.String) throws java.io.IOException
+meth public static org.jsoup.nodes.Document parse(java.io.File,java.lang.String,java.lang.String,org.jsoup.parser.Parser) throws java.io.IOException
 meth public static org.jsoup.nodes.Document parse(java.io.InputStream,java.lang.String,java.lang.String) throws java.io.IOException
 meth public static org.jsoup.nodes.Document parse(java.io.InputStream,java.lang.String,java.lang.String,org.jsoup.parser.Parser) throws java.io.IOException
 meth public static org.jsoup.nodes.Document parse(java.lang.String)
 meth public static org.jsoup.nodes.Document parse(java.lang.String,java.lang.String)
 meth public static org.jsoup.nodes.Document parse(java.lang.String,java.lang.String,org.jsoup.parser.Parser)
+meth public static org.jsoup.nodes.Document parse(java.lang.String,org.jsoup.parser.Parser)
 meth public static org.jsoup.nodes.Document parse(java.net.URL,int) throws java.io.IOException
 meth public static org.jsoup.nodes.Document parseBodyFragment(java.lang.String)
 meth public static org.jsoup.nodes.Document parseBodyFragment(java.lang.String,java.lang.String)
@@ -250,6 +279,7 @@ supr java.lang.RuntimeException
 
 CLSS public org.jsoup.UncheckedIOException
 cons public init(java.io.IOException)
+cons public init(java.lang.String)
 meth public java.io.IOException ioException()
 supr java.lang.RuntimeException
 
@@ -260,4 +290,12 @@ meth public java.lang.String getUrl()
 meth public java.lang.String toString()
 supr java.io.IOException
 hfds mimeType,url
+
+CLSS public abstract interface !annotation org.jsoup.internal.NonnullByDefault
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
+intf java.lang.annotation.Annotation
+
+CLSS abstract interface org.jsoup.package-info
+ anno 0 org.jsoup.internal.NonnullByDefault()
 

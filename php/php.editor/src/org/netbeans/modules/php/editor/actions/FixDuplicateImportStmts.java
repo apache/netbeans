@@ -56,20 +56,20 @@ import org.openide.util.NbBundle;
  */
 public class FixDuplicateImportStmts extends JPanel {
 
+    private static final long serialVersionUID = -6191791129600727827L;
     private JComboBox[] combos;
     private FixImportsBottomPanel fixImportsBottomPanel;
-    private static final long serialVersionUID = 7865344850303958108L;
 
     public FixDuplicateImportStmts() {
         initComponents();
     }
 
-    public void initPanel(ImportData importData, boolean removeUnusedImports, boolean putInPSR12Order) {
-        initComponentsMore(importData, removeUnusedImports, putInPSR12Order);
+    public void initPanel(ImportData importData, boolean removeUnusedImports) {
+        initComponentsMore(importData, removeUnusedImports);
         setAccessible();
     }
 
-    private void initComponentsMore(ImportData importData, boolean removeUnusedImports, boolean putInPSR12Order) {
+    private void initComponentsMore(ImportData importData, boolean removeUnusedImports) {
         contentPanel.setLayout(new GridBagLayout());
         contentPanel.setBackground(UIManager.getColor("Table.background")); //NOI18N
         jScrollPane1.setBorder(UIManager.getBorder("ScrollPane.border")); //NOI18N
@@ -119,7 +119,6 @@ public class FixDuplicateImportStmts extends JPanel {
         lblHeader.setText(getBundleString("FixDupImportStmts_Header")); //NOI18N
         fixImportsBottomPanel = new FixImportsBottomPanel(combos, importData);
         fixImportsBottomPanel.setRemoveUnusedImports(removeUnusedImports);
-        fixImportsBottomPanel.setPSR12Order(putInPSR12Order);
         bottomPanel.add(fixImportsBottomPanel);
     }
 
@@ -165,10 +164,6 @@ public class FixDuplicateImportStmts extends JPanel {
 
     public boolean getRemoveUnusedImports() {
         return fixImportsBottomPanel.removeUnusedImports();
-    }
-
-    public boolean isPSR12Order() {
-        return fixImportsBottomPanel.isPSR12Order();
     }
 
     /**

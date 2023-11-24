@@ -39,6 +39,7 @@ import org.netbeans.modules.web.beans.impl.model.WebBeansModelProviderImpl;
  * @author ads
  *
  */
+// @todo: Support JakartaEE
 public class ResultImpl extends BaseResult implements DependencyInjectionResult.ResolutionResult {
     
     private static final String ALTERNATIVE = 

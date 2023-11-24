@@ -72,21 +72,20 @@ import org.openide.util.lookup.ServiceProvider;
 public final class PushDownRefactoring extends CodeRefactoring {
 
     private static final String PUSH_DOWN_REFACTORING_KIND = "refactor.push.down";
-    private static final String PUSH_DOWN_REFACTORING_COMMAND =  "java.refactor.push.down";
+    private static final String PUSH_DOWN_REFACTORING_COMMAND =  "nbls.java.refactor.push.down";
 
-    private final Set<String> commands = Collections.singleton(PUSH_DOWN_REFACTORING_COMMAND);
     private final Gson gson = new Gson();
 
     @Override
     @NbBundle.Messages({
         "DN_PushDown=Push Down...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Refactor)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null || !JavaRefactoringUtils.isRefactorable(info.getFileObject())) {
             return Collections.emptyList();
         }
@@ -137,12 +136,12 @@ public final class PushDownRefactoring extends CodeRefactoring {
         }
         QuickPickItem elementItem = new QuickPickItem(createLabel(info, element));
         elementItem.setUserData(new ElementData(element));
-        return Collections.singletonList(createCodeAction(Bundle.DN_PushDown(), PUSH_DOWN_REFACTORING_KIND, null, PUSH_DOWN_REFACTORING_COMMAND, uri, elementItem, members));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_PushDown(), PUSH_DOWN_REFACTORING_KIND, null, PUSH_DOWN_REFACTORING_COMMAND, uri, elementItem, members));
     }
 
     @Override
     public Set<String> getCommands() {
-        return commands;
+        return Collections.singleton(PUSH_DOWN_REFACTORING_COMMAND);
     }
 
     @Override

@@ -1040,7 +1040,7 @@ public class NotifyDescriptor extends Object {
          * when the input text's value changes,
          * if enabled using {@link #setInputTextEventsEnabled(boolean) }.
          *
-         * @since 7.68
+         * @since 7.70
          */
         public static final String PROP_INPUT_TEXT = "inputText"; // NOI18N
 
@@ -1102,7 +1102,7 @@ public class NotifyDescriptor extends Object {
          * @param value {@code true} if the {@code PROP_INPUT_TEXT} even should be fired
          *              when the input text is modified, {@code false} otherwise.
          *
-         * @since 7.68
+         * @since 7.70
          */
         public void setInputTextEventEnabled(boolean value) {
             inputTextEventEnabled.set(value);

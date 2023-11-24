@@ -30,10 +30,14 @@
         <unzip src="external/profiler-external-binaries-8.2.zip" 
                overwrite="false"
                dest="${profiler.cluster}"/>
-        <!-- AL2 licensed binaries, build from ASF code (overwrites CDDL binaries) -->
-        <unzip src="external/profiler-external-binaries-ASF-5273a10f9471d5cf60ed894dc26ec0e59e71cc24.zip"
+        <!-- AL2 licensed binaries from ASF code -->
+        <unzip src="external/profiler-external-binaries-1-24aefa9.zip"
                overwrite="true"
-               dest="${profiler.cluster}"/>
+               dest="${profiler.cluster}">
+          <patternset>
+            <include name="lib/**"/>
+          </patternset>
+        </unzip>
     </target>
 
   <!-- Compile the JFluid engine system library, that depends on JDK version - so there are two libraries -->

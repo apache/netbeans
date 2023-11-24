@@ -48,6 +48,9 @@
                         <!--org.netbeans.modules.cloud.oracle.database.DatabaseNode.getDatabases()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.database.DatabaseNode.getDatabases" name="instanceCreate"/>
                     </file>
+                    <file name="org-netbeans-modules-cloud-oracle-vault-VaultNode-getVaults.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.VaultNode.getVaults" name="instanceCreate"/>
+                    </file>
                     <file name="org-netbeans-modules-cloud-oracle-devops-DevopsProjectNode-listDevopsProjects.instance">
                         <!--org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode.listDevopsProjects()-->
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.devops.DevopsProjectNode.listDevopsProjects" name="instanceCreate"/>
@@ -161,6 +164,34 @@
                         <attr methodvalue="org.netbeans.modules.cloud.oracle.database.DatabaseNode.createNode" name="instanceCreate"/>
                     </file>
                 </folder>
+            </folder>
+            <folder name="Vault">
+                <folder name="Nodes">
+                    <file name="org-netbeans-modules-cloud-oracle-vault-VaultNode-createNode.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.VaultNode.createNode" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-vault-SecretNode-getSecrets.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.SecretNode.getSecrets" name="instanceCreate"/>
+                    </file>
+                    <file name="org-netbeans-modules-cloud-oracle-vault-KeyNode-getKeys.instance">
+                        <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.KeyNode.getKeys" name="instanceCreate"/>
+                    </file>
+                </folder>
+                <folder name="Key">
+                    <folder name="Nodes">
+                        <file name="org-netbeans-modules-cloud-oracle-vault-KeyNode-createNode.instance">
+                            <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.KeyNode.createNode" name="instanceCreate"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="Secret">
+                    <folder name="Nodes">
+                        <file name="org-netbeans-modules-cloud-oracle-vault-SecretNode-createNode.instance">
+                            <attr methodvalue="org.netbeans.modules.cloud.oracle.vault.SecretNode.createNode" name="instanceCreate"/>
+                        </file>
+                    </folder>
+                </folder>
+                
             </folder>
             <folder name="BuildRun">
                 <folder name="Nodes">

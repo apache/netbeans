@@ -21,7 +21,7 @@ package org.netbeans.modules.glassfish.tooling.utils;
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3;
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_4;
 import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_6_2_5;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_7_0_5;
+import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_7_0_9;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import org.testng.annotations.Test;
@@ -47,8 +47,8 @@ public class EnumUtilsTest {
      */
     @Test
     public void testEq() {
-        assertFalse(EnumUtils.eq(GF_7_0_5, GF_6_2_5), "Equals for a > b shall be false.");
-        assertTrue(EnumUtils.eq(GF_7_0_5, GF_7_0_5), "Equals for a == b shall be true.");
+        assertFalse(EnumUtils.eq(GF_7_0_9, GF_6_2_5), "Equals for a > b shall be false.");
+        assertTrue(EnumUtils.eq(GF_7_0_9, GF_7_0_9), "Equals for a == b shall be true.");
         assertFalse(EnumUtils.eq(GF_4, GF_3), "Equals for a > b shall be false.");
         assertTrue(EnumUtils.eq(GF_4, GF_4), "Equals for a == b shall be true.");
         assertFalse(EnumUtils.eq(GF_3, GF_4), "Equals for a < b shall be false.");
@@ -69,8 +69,8 @@ public class EnumUtilsTest {
      */
     @Test
     public void testNe() {
-        assertTrue(EnumUtils.ne(GF_7_0_5, GF_6_2_5), "Not equals for a > b shall be true.");
-        assertFalse(EnumUtils.ne(GF_7_0_5, GF_7_0_5), "Not equals for a == b shall be false.");
+        assertTrue(EnumUtils.ne(GF_7_0_9, GF_6_2_5), "Not equals for a > b shall be true.");
+        assertFalse(EnumUtils.ne(GF_7_0_9, GF_7_0_9), "Not equals for a == b shall be false.");
         assertTrue(EnumUtils.ne(GF_4, GF_3), "Not equals for a > b shall be true.");
         assertFalse(EnumUtils.ne(GF_4, GF_4), "Not equals for a == b shall be false.");
         assertTrue(EnumUtils.ne(GF_3, GF_4), "Not equals for a < b shall be true.");
@@ -91,8 +91,8 @@ public class EnumUtilsTest {
      */
     @Test
     public void testLt() {
-        assertFalse(EnumUtils.lt(GF_7_0_5, GF_6_2_5), "Less than for a > b shall be false.");
-        assertFalse(EnumUtils.lt(GF_7_0_5, GF_7_0_5), "Less than for a == b shall be false.");
+        assertFalse(EnumUtils.lt(GF_7_0_9, GF_6_2_5), "Less than for a > b shall be false.");
+        assertFalse(EnumUtils.lt(GF_7_0_9, GF_7_0_9), "Less than for a == b shall be false.");
         assertFalse(EnumUtils.lt(GF_4, GF_3), "Less than for a > b shall be false.");
         assertFalse(EnumUtils.lt(GF_4, GF_4), "Less than for a == b shall be false.");
         assertTrue(EnumUtils.lt(GF_3, GF_4), "Less than for a < b shall be true.");
@@ -113,8 +113,8 @@ public class EnumUtilsTest {
      */
     @Test
     public void testLe() {
-        assertFalse(EnumUtils.le(GF_7_0_5, GF_6_2_5), "Less than or equal for a > b shall be false.");
-        assertTrue(EnumUtils.le(GF_7_0_5, GF_7_0_5), "Less than or equal for a == b shall be true.");
+        assertFalse(EnumUtils.le(GF_7_0_9, GF_6_2_5), "Less than or equal for a > b shall be false.");
+        assertTrue(EnumUtils.le(GF_7_0_9, GF_7_0_9), "Less than or equal for a == b shall be true.");
         assertFalse(EnumUtils.le(GF_4, GF_3), "Less than or equal for a > b shall be false.");
         assertTrue(EnumUtils.le(GF_4, GF_4), "Less than or equal for a == b shall be true.");
         assertTrue(EnumUtils.le(GF_3, GF_4), "Less than or equal for a < b shall be true.");
@@ -135,8 +135,8 @@ public class EnumUtilsTest {
      */
     @Test
     public void testGt() {
-        assertTrue(EnumUtils.gt(GF_7_0_5, GF_6_2_5), "Greater than for a > b shall be true.");
-        assertFalse(EnumUtils.gt(GF_7_0_5, GF_7_0_5), "Greater than for a == b shall be false.");
+        assertTrue(EnumUtils.gt(GF_7_0_9, GF_6_2_5), "Greater than for a > b shall be true.");
+        assertFalse(EnumUtils.gt(GF_7_0_9, GF_7_0_9), "Greater than for a == b shall be false.");
         assertTrue(EnumUtils.gt(GF_4, GF_3), "Greater than for a > b shall be true.");
         assertFalse(EnumUtils.gt(GF_4, GF_4), "Greater than for a == b shall be false.");
         assertFalse(EnumUtils.gt(GF_3, GF_4), "Greater than for a < b shall be false.");
@@ -157,8 +157,8 @@ public class EnumUtilsTest {
      */
     @Test
     public void testGe() {
-        assertTrue(EnumUtils.ge(GF_7_0_5, GF_6_2_5), "Greater than or equal for a > b shall be true.");
-        assertTrue(EnumUtils.ge(GF_7_0_5, GF_7_0_5), "Greater than or equal for a == b shall be true.");
+        assertTrue(EnumUtils.ge(GF_7_0_9, GF_6_2_5), "Greater than or equal for a > b shall be true.");
+        assertTrue(EnumUtils.ge(GF_7_0_9, GF_7_0_9), "Greater than or equal for a == b shall be true.");
         assertTrue(EnumUtils.ge(GF_4, GF_3), "Greater than or equal for a > b shall be true.");
         assertTrue(EnumUtils.ge(GF_4, GF_4), "Greater than or equal for a == b shall be true.");
         assertFalse(EnumUtils.ge(GF_3, GF_4), "Greater than or equal for a < b shall be false.");

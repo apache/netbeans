@@ -20,6 +20,7 @@ package org.netbeans.modules.java.source.transform;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.AnyPatternTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssertTree;
@@ -65,13 +66,13 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
-import com.sun.source.tree.ParenthesizedPatternTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.StringTemplateTree;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
@@ -195,8 +196,8 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
     @Override
     public Tree visitCase(CaseTree tree, Void p) {
         CaseTree n = tree.getCaseKind() == CaseTree.CaseKind.STATEMENT
-                ? make.Case(tree.getExpressions(), tree.getStatements())
-                : make.Case(tree.getExpressions(), tree.getBody());
+                ? make.CaseMultiplePatterns(tree.getLabels(), tree.getGuard(), tree.getStatements())
+                : make.CaseMultiplePatterns(tree.getLabels(), tree.getGuard(), tree.getBody());
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));
@@ -692,7 +693,7 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
 
     @Override
     public Tree visitPatternCaseLabel(PatternCaseLabelTree tree, Void p) {
-        PatternCaseLabelTree n = make.PatternCaseLabel(tree.getPattern(), tree.getGuard());
+        PatternCaseLabelTree n = make.PatternCaseLabel(tree.getPattern());
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));
@@ -709,8 +710,13 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
     }
 
     @Override
-    public Tree visitParenthesizedPattern(ParenthesizedPatternTree tree, Void p) {
-        ParenthesizedPatternTree n = make.ParenthesizedPattern(tree.getPattern());
+    public Tree visitAnyPattern(AnyPatternTree tree, Void p) {
+        return make.AnyPattern();
+    }
+
+    @Override
+    public Tree visitStringTemplate(StringTemplateTree tree, Void p) {
+        StringTemplateTree n = make.StringTemplate(tree.getProcessor(), tree.getFragments(), tree.getExpressions());
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));

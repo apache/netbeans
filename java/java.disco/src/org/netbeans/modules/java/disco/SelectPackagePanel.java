@@ -128,11 +128,11 @@ public class SelectPackagePanel extends FirstPanel {
         //loading stuff when ui shown
         submit(() -> {
             int minVersion = 6;
-            int maxVersion = discoClient.getLatestSts(true).getAsInt();
-            int current    = discoClient.getLatestSts(false).getAsInt();
+            int maxVersion = discoClient.getLatestEAVersion().getAsInt();
+            int current    = discoClient.getLatestGAVersion().getAsInt();
 
             // limit to LTS + current
-            Map<Integer, TermOfSupport> maintainedVersions = discoClient.getAllMaintainedMajorVersions().stream()
+            Map<Integer, TermOfSupport> maintainedVersions = discoClient.getAllMaintainedMajorVersions()
                     .filter(v -> v.getAsInt() >= minVersion && v.getAsInt() <= current)   // defensive filter, the API returned an EA JDK as released
                     .filter(v -> v.getAsInt() == current || v.getTermOfSupport() == TermOfSupport.LTS)
                     .collect(Collectors.toMap(MajorVersion::getAsInt, MajorVersion::getTermOfSupport));

@@ -340,7 +340,7 @@ public class POMModelPanel extends javax.swing.JPanel implements ExplorerManager
                             assert version != null;
                             Artifact a = embedder.createArtifact(groupId, m.getArtifactId(), version, m.getPackaging());
                             try {
-                                embedder.resolve(a, Collections.<ArtifactRepository>emptyList(), embedder.getLocalRepository());
+                                embedder.resolveArtifact(a, Collections.<ArtifactRepository>emptyList(), embedder.getLocalRepository());
                             } catch (Exception x) {
                                 LOG.log(Level.INFO, "could not resolve " + a, x);
                             }

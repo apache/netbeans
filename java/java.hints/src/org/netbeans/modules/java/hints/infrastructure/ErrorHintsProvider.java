@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.java.hints.infrastructure;
 
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
@@ -55,6 +56,7 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaParserResultTask;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -163,7 +165,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             }
         }
         if (messageRuleCount < allRules.size()) {
-            ehm = new CreatorBasedLazyFixList(info.getFileObject(), code, pos, allRules, data);
+            ehm = new CreatorBasedLazyFixList(info.getFileObject(), code, desc, pos, allRules, data);
         } else if (processDefault) {
             ehm = ErrorDescriptionFactory.lazyListForFixes(Collections.<Fix>emptyList());
         } else {
@@ -630,6 +632,23 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             return null;
         }
         
+        if ("compiler.err.preview.feature.disabled.plural".equals(d.getCode())) {
+            //workaround for: JDK-8310314
+            Diagnostic[] nested = Hacks.getNestedDiagnostics(d);
+            if ("compiler.misc.feature.unnamed.classes".equals(nested[0].getCode())) {
+                if (endOffset == info.getText().length()) {
+                    ClassTree topLevelClass = (ClassTree) info.getCompilationUnit().getTypeDecls().get(0);
+                    TreePath topLevelClassTP = new TreePath(new TreePath(info.getCompilationUnit()), topLevelClass);
+                    Tree firstNonClass = topLevelClass.getMembers().stream().filter(t -> !TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind())).filter(t -> !info.getTreeUtilities().isSynthetic(new TreePath(topLevelClassTP, t))).findFirst().orElse(null);
+
+                    if (firstNonClass != null) {
+                        soff = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), firstNonClass);
+                        endOffset = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), firstNonClass);
+                    }
+                }
+            }
+        }
+
         PosExtractor ex = new PosExtractor(info, sdoc, soff, endOffset, dObj, rangePrepared);
         // getText also fetches lineOffset
         final String text = ex.getText();

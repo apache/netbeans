@@ -20,11 +20,9 @@ package org.netbeans.modules.maven.j2ee.web;
 
 import java.io.IOException;
 import org.netbeans.api.j2ee.core.Profile;
-import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
 import org.netbeans.modules.maven.j2ee.JavaEEMavenTestBase;
 import org.netbeans.modules.maven.j2ee.PomBuilder;
 import org.netbeans.modules.maven.j2ee.PomBuilder.PomPlugin;
-import org.netbeans.modules.maven.j2ee.utils.MavenProjectSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 

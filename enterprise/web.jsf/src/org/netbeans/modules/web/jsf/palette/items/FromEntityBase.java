@@ -48,7 +48,7 @@ import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.JSFUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
@@ -215,7 +215,8 @@ public abstract class FromEntityBase {
             JpaControllerUtil.EmbeddedPkSupport embeddedPkSupport = null;
             for (ExecutableElement method : methods) {
                 // filter out @Transient methods
-                if (JpaControllerUtil.findAnnotation(method, "javax.persistence.Transient") != null) { //NOI18N
+                if (JpaControllerUtil.findAnnotation(method, "jakarta.persistence.Transient") != null //NOI18N
+                        || JpaControllerUtil.findAnnotation(method, "javax.persistence.Transient") != null) { //NOI18N
                     continue;
                 }
 
@@ -593,7 +594,8 @@ public abstract class FromEntityBase {
             if (fieldElement == null) {
                 fieldElement = method;
             }
-            return JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Lob"); // NOI18N
+            return JpaControllerUtil.isAnnotatedWith(fieldElement, "jakarta.persistence.Lob") // NOI18N
+                    || JpaControllerUtil.isAnnotatedWith(fieldElement, "javax.persistence.Lob"); // NOI18N
         }
 
         @Override

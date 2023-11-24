@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.158.0
+#Version 2.159.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2193,18 +2193,18 @@ supr java.lang.Object
 CLSS public org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter
 cons public init()
 innr public Counter
-meth protected org.jdom.Element findAndReplaceProperties(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.lang.String,java.util.Map)
-meth protected org.jdom.Element findAndReplaceSimpleElement(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.lang.String,java.lang.String,java.lang.String)
-meth protected org.jdom.Element findAndReplaceSimpleLists(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.util.Collection,java.lang.String,java.lang.String)
-meth protected org.jdom.Element findAndReplaceXpp3DOM(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.lang.String,org.codehaus.plexus.util.xml.Xpp3Dom)
-meth protected org.jdom.Element updateElement(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.lang.String,boolean)
-meth protected void insertAtPreferredLocation(org.jdom.Element,org.jdom.Element,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter)
-meth protected void iterate2NetbeansActionMapping(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element,java.util.Collection,java.lang.String)
-meth protected void replaceXpp3DOM(org.jdom.Element,org.codehaus.plexus.util.xml.Xpp3Dom,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter)
-meth protected void updateActionToGoalMapping(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,java.lang.String,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element)
-meth protected void updateNetbeansActionMapping(org.netbeans.modules.maven.execute.model.NetbeansActionMapping,java.lang.String,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom.Element)
-meth public void write(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,org.jdom.Document,java.io.OutputStreamWriter) throws java.io.IOException
-meth public void write(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,org.jdom.Document,java.io.Writer,org.jdom.output.Format) throws java.io.IOException
+meth protected org.jdom2.Element findAndReplaceProperties(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.lang.String,java.util.Map)
+meth protected org.jdom2.Element findAndReplaceSimpleElement(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.lang.String,java.lang.String,java.lang.String)
+meth protected org.jdom2.Element findAndReplaceSimpleLists(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.util.Collection,java.lang.String,java.lang.String)
+meth protected org.jdom2.Element findAndReplaceXpp3DOM(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.lang.String,org.codehaus.plexus.util.xml.Xpp3Dom)
+meth protected org.jdom2.Element updateElement(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.lang.String,boolean)
+meth protected void insertAtPreferredLocation(org.jdom2.Element,org.jdom2.Element,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter)
+meth protected void iterate2NetbeansActionMapping(org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element,java.util.Collection,java.lang.String)
+meth protected void replaceXpp3DOM(org.jdom2.Element,org.codehaus.plexus.util.xml.Xpp3Dom,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter)
+meth protected void updateActionToGoalMapping(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,java.lang.String,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element)
+meth protected void updateNetbeansActionMapping(org.netbeans.modules.maven.execute.model.NetbeansActionMapping,java.lang.String,org.netbeans.modules.maven.execute.model.io.jdom.NetbeansBuildActionJDOMWriter$Counter,org.jdom2.Element)
+meth public void write(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,org.jdom2.Document,java.io.OutputStreamWriter) throws java.io.IOException
+meth public void write(org.netbeans.modules.maven.execute.model.ActionToGoalMapping,org.jdom2.Document,java.io.Writer,org.jdom2.output.Format) throws java.io.IOException
 supr java.lang.Object
 hfds factory,lineSeparator
 
@@ -2410,8 +2410,8 @@ fld public final static java.lang.String BUNDLED_RUNTIME_VERSION
 meth public void applyValues()
 meth public void setValues()
 supr javax.swing.JPanel
-hfds AVAILABLE_OPTIONS,RP,SEPARATOR,btnDirectory,btnGoals,btnIndex,btnOptions,buttonGroup1,cbAlternateLocation,cbAlwaysShow,cbCollapseSuccessFolds,cbEnableIndexDownload,cbEnableIndexing,cbNetworkProxy,cbOutputTabShowConfig,cbPreferWrapper,cbProjectNodeNameMode,cbReuse,cbShowInfoLevel,cbSkipTests,cbUseBestMaven,changed,comBinaries,comIndex,comJavadoc,comJdkHome,comManageJdks,comMavenHome,comSource,completer,controller,jLabel3,jLabel4,jScrollPane1,jdkHomeDataModel,lastSelected,lbNetworkSettings,lblBinaries,lblCategory,lblCommandLine,lblDirectory,lblExternalVersion,lblHint,lblIndex,lblJavadoc,lblJdkHome,lblOptions,lblOutputTab,lblSource,listItemChangedListener,listener,lstCategory,mavenHomeDataModel,mavenRuntimeHome,plnExperimental,pnlAppearance,pnlCards,pnlDependencies,pnlExecution,pnlIndex,predefinedRuntimes,rbOutputTabId,rbOutputTabName,txtDirectory,txtOptions,txtProjectNodeNameCustomPattern,userDefinedMavenRuntimes,userDefinedMavenRuntimesStored,valid
-hcls ActionListenerImpl,ComboBoxRenderer,DocumentListenerImpl
+hfds AVAILABLE_OPTIONS,RP,SEPARATOR,bgIndexFilter,btnDirectory,btnGoals,btnIndex,btnOptions,buttonGroup1,cbAlternateLocation,cbAlwaysShow,cbCollapseSuccessFolds,cbEnableIndexDownload,cbEnableIndexing,cbEnableMultiThreading,cbNetworkProxy,cbOutputTabShowConfig,cbPreferWrapper,cbProjectNodeNameMode,cbReuse,cbShowInfoLevel,cbSkipTests,cbUseBestMaven,changed,comBinaries,comIndex,comJavadoc,comJdkHome,comManageJdks,comMavenHome,comSource,completer,controller,jLabel3,jLabel4,jScrollPane1,jdkHomeDataModel,lastSelected,lbNetworkSettings,lblBinaries,lblCategory,lblCommandLine,lblDirectory,lblExternalVersion,lblHint,lblIndex,lblIndexFilter,lblJavadoc,lblJdkHome,lblOptions,lblOutputTab,lblSource,listItemChangedListener,listener,lstCategory,mavenHomeDataModel,mavenRuntimeHome,permissionsTable,plnExperimental,pnlAppearance,pnlCards,pnlDependencies,pnlExecution,pnlIndex,predefinedRuntimes,rb2Years,rb5Years,rbFullIndex,rbOutputTabId,rbOutputTabName,txtDirectory,txtOptions,txtProjectNodeNameCustomPattern,userDefinedMavenRuntimes,userDefinedMavenRuntimesStored,valid
+hcls ActionListenerImpl,ComboBoxRenderer,DocumentListenerImpl,IndexDownloadPermissionTableModel
 
 CLSS public org.netbeans.modules.maven.options.UnsetProxyChecker
 cons public init()

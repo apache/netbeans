@@ -66,10 +66,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.WeakHashMap;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -788,9 +790,76 @@ public final class Utilities {
         values.put(0x290,"MOUSE_WHEEL_UP");
         values.put(0x291,"MOUSE_WHEEL_DOWN");
 
+        for (int button = 4; button < 10; button++) {
+            String name = "MOUSE_BUTTON" + button; // NOI18N
+            int code = 0x292 + (button - 1);
+            names.put(name, code);
+            values.put(code, name);
+        }
+
         NamesAndValues nav = new NamesAndValues(values, names);
         namesAndValues = new SoftReference<NamesAndValues>(nav);
         return nav;
+    }
+
+    /**
+     * Check whether the provided keycode is within the range reserved for mouse
+     * event pseudo-keycodes. Note that not all keycodes in the range may be
+     * mapped.
+     *
+     * @param keycode keycode to check
+     * @return true if in mouse range
+     * @since 9.31
+     */
+    public static boolean isMouseKeyCode(int keycode) {
+        return keycode >= 0x290 && keycode <= 0x29F;
+    }
+
+    /**
+     * Get the pseudo-keycode used for mouse wheel up events. May return
+     * {@link KeyEvent#VK_UNDEFINED} if not available.
+     *
+     * @return mouse wheel up keycode if defined
+     * @since 9.31
+     */
+    public static int mouseWheelUpKeyCode() {
+        return 0x290;
+    }
+
+    /**
+     * Get the pseudo-keycode used for mouse wheel up events. May return
+     * {@link KeyEvent#VK_UNDEFINED} if not available.
+     *
+     * @return mouse wheel down keycode if defined
+     * @since 9.31
+     */
+    public static int mouseWheelDownKeyCode() {
+        return 0x291;
+    }
+
+    /**
+     * Get the pseudo-keycode used for the provided mouse button. Returns
+     * {@link KeyEvent#VK_UNDEFINED} if not available.
+     * <p>
+     * Implementation note : only extended mouse buttons in the range BUTTON4 to
+     * BUTTON9 are currently mapped to keycodes. The caller may pass in values
+     * that best reflect the desired mouse button rather than the actual value
+     * from the OS or MouseEvent. eg. on Linux, the JDK excludes X button values
+     * for vertical scrolling when generating the range of buttons, and the
+     * default NetBeans window system further excludes the horizontal scroll
+     * button values - button 4 passed in here might be JDK button 6 and X event
+     * button 8.
+     *
+     * @param button mouse button
+     * @return keycode if defined
+     * @since 9.31
+     */
+    public static int mouseButtonKeyCode(int button) {
+        if (button >= 4 && button < 10) {
+            return 0x292 + (button - 1);
+        } else {
+            return KeyEvent.VK_UNDEFINED;
+        }
     }
 
     /** Converts a Swing key stroke descriptor to a familiar Emacs-like name.
@@ -1343,29 +1412,66 @@ public final class Utilities {
     }
 
     /**
-     * This is for use in situations where a standard swing API,
-     * such as {@linkplain javax.swing.JOptionPane}.show* or {@linkplain javax.swing.JFileChooser}.show*,
-     * is used to display a dialog. {@code null} should never be used
-     * as a dialog's parent because it
+     * Finds an appropriate component to use for a dialog's parent. This is for
+     * use in situations where a standard swing API, such as
+     * {@linkplain javax.swing.JOptionPane}.show* or
+     * {@linkplain javax.swing.JFileChooser}.show*, is used to display a dialog.
+     * {@code null} should never be used as a dialog's parent because it
      * frequently does the wrong thing in a multi-screen setup.
      * <p>
      * The use of the NetBeans API
      * <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault--">DialogDisplayer.getDefault*</a>
-     * is encouraged to display a dialog, but stuff happens.
-     * @return A suitable parent component for swing dialog displayers.
+     * is encouraged to display a dialog.
+     *
+     * @return A suitable parent component for swing dialogs
      * @since 9.26
      */
     // PR4739
     public static Component findDialogParent() {
-        Component parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        return findDialogParent(null);
+    }
+
+    /**
+     * Finds an appropriate component to use for a dialog's parent. Similar to
+     * {@link #findDialogParent()} with the ability to specify a suggested
+     * parent component. The suggested parent will be returned if it is
+     * non-null, and either there is no active modal dialog or it is contained
+     * within that dialog.
+     *
+     * @param suggestedParent the component to return if non-null and valid
+     * @return the suggested parent if suitable, otherwise another suitable
+     * parent component for swing dialogs
+     * @since 9.30
+     */
+    public static Component findDialogParent(Component suggestedParent) {
+        Component parent = suggestedParent;
         if (parent == null) {
-            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        }
+        Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        if (parent == null) {
+            parent = active;
+        } else if (active instanceof Dialog && ((Dialog) active).isModal()) {
+            Window suggested = parent instanceof Window ? (Window) parent : SwingUtilities.windowForComponent(parent);
+            if (suggested != active) {
+                return active;
+            }
         }
         if (parent == null) {
-            // PR#5280
             parent = findMainWindow();
         }
         return parent;
+    }
+
+    /**
+     * Check whether a modal dialog is open.
+     *
+     * @return true if a modal dialog is open, false otherwise
+     * @since 9.30
+     */
+    public static boolean isModalDialogOpen() {
+        Window active = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        return active instanceof Dialog && ((Dialog) active).isModal();
     }
 
     /** @return size of the screen. The size is modified for Windows OS

@@ -26,7 +26,6 @@ import java.awt.Container;
 import java.awt.DefaultKeyboardFocusManager;
 import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
@@ -89,7 +88,6 @@ import org.openide.NotificationLineSupport;
 import org.openide.NotifyDescriptor;
 import org.openide.WizardDescriptor;
 import org.openide.awt.Mnemonics;
-import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Mutex;
@@ -106,9 +104,6 @@ import org.openide.util.Utilities;
 class NbPresenter extends JDialog
 implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparator<Object> {
 
-    /** variable holding current modal dialog in the system */
-    public static NbPresenter currentModalDialog;
-    private static final ChangeSupport cs = new ChangeSupport(NbPresenter.class);
     private static Boolean isJava17 = null;
 
     protected NotifyDescriptor descriptor;
@@ -1092,6 +1087,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         }
     }
 
+    @Override
     public Void run() {
         doShow();
         return null;
@@ -1108,30 +1104,21 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                     gd.setFullScreenWindow( null );
             }
         }
-        NbPresenter prev = null;
         try {
             MenuSelectionManager.defaultManager().clearSelectedPath();
         } catch( NullPointerException npE ) {
             //#216184
             LOG.log( Level.FINE, null, npE );
         }
-        if (isModal()) {
-            prev = currentModalDialog;
-            currentModalDialog = this;
-            fireChangeEvent();
-        }
 
         superShow();
 
-        if( null != fullScreenWindow )
+        if( null != fullScreenWindow ) {
             getGraphicsConfiguration().getDevice().setFullScreenWindow( fullScreenWindow );
-
-        if (currentModalDialog != prev) {
-            currentModalDialog = prev;
-            fireChangeEvent();
         }
     }
 
+    @Override
     public void propertyChange(final java.beans.PropertyChangeEvent evt) {
         if( !SwingUtilities.isEventDispatchThread() ) {
             SwingUtilities.invokeLater(new Runnable() {
@@ -1274,19 +1261,13 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
     public void windowActivated(final java.awt.event.WindowEvent p1) {
     }
 
-    // Used by JavaHelp:
+    @Deprecated
     public static void addChangeListener(ChangeListener l) {
-        cs.addChangeListener(l);
+        // Does nothing
     }
+    @Deprecated
     public static void removeChangeListener(ChangeListener l) {
-        cs.removeChangeListener(l);
-    }
-    private static void fireChangeEvent() {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                cs.fireChange();
-            }
-        });
+        // Does nothing
     }
 
     private final class EscapeAction extends AbstractAction {
@@ -1603,7 +1584,10 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                 }
             }
         }
-        while( null != w && !w.isShowing() ) {
+        while( null != w ) {
+            if ((w instanceof Frame || w instanceof Dialog) && w.isShowing()) {
+                break;
+            }
             w = w.getOwner();
         }
         return w;

@@ -103,9 +103,9 @@ public final class RustAST {
             if (offendingSymbol instanceof Token) {
                 Token offendingToken = (Token) offendingSymbol;
                 errorStartIndex = offendingToken.getStartIndex();
-                errorStopIndex = offendingToken.getStopIndex();
+                errorStopIndex = offendingToken.getStopIndex() + 1;
             }
-            errors.add(new DefaultError(null, msg, null, fileObject, errorStartIndex, errorStopIndex, Severity.ERROR));
+            errors.add(new DefaultError(null, msg, null, fileObject, errorStartIndex, errorStopIndex, errorStartIndex != errorStopIndex, Severity.ERROR));
         }
     }
 
@@ -127,8 +127,8 @@ public final class RustAST {
             String msg = sb.toString();
             RecognitionException ex = new RecognitionException(msg, recognizer, recognizer.getInputStream(), recognizer.getContext());
             int start = e.getOffendingToken().getStartIndex();
-            int stop = e.getOffendingToken().getStopIndex();
-            errors.add(new DefaultError(null, msg, null, fileObject, start, stop, Severity.ERROR));
+            int stop = e.getOffendingToken().getStopIndex() + 1;
+            errors.add(new DefaultError(null, msg, null, fileObject, start, stop, false, Severity.ERROR));
         }
 
     }

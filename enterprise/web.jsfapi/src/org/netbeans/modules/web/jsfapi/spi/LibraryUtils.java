@@ -24,8 +24,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
@@ -44,8 +46,8 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.web.common.api.WebUtils;
 import org.netbeans.modules.web.jsfapi.api.JsfSupport;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
-import org.netbeans.modules.web.jsfapi.api.LibraryType;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 
 /**
@@ -54,25 +56,36 @@ import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
  */
 public class LibraryUtils {
 
-    public static final String COMPOSITE_LIBRARY_NS = "http://xmlns.jcp.org/jsf/composite"; //NOI18N
-    public static final String COMPOSITE_LIBRARY_LEGACY_NS = "http://java.sun.com/jsf/composite"; //NOI18N
+    public static final String COMPOSITE_LIBRARY_JAKARTA_NS = "jakarta.faces.composite"; //NOI18N
+    public static final String COMPOSITE_LIBRARY_JCP_NS = "http://xmlns.jcp.org/jsf/composite"; //NOI18N
+    public static final String COMPOSITE_LIBRARY_SUN_NS = "http://java.sun.com/jsf/composite"; //NOI18N
     public static final String XHTML_NS = "http://www.w3.org/1999/xhtml"; //NOI18N
 
-    public static String getCompositeLibraryURL(String libraryFolderPath, boolean jsf22Plus) {
-        if (jsf22Plus) {
-            return COMPOSITE_LIBRARY_NS + "/" + libraryFolderPath; //NOI18N
+    public static String getCompositeLibraryURL(String libraryFolderPath, JsfVersion jsfVersion) {
+        if (jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
+            return COMPOSITE_LIBRARY_JAKARTA_NS + "/" + libraryFolderPath;
+        } else if (jsfVersion.isAtLeast(JsfVersion.JSF_2_2)) {
+            return COMPOSITE_LIBRARY_JCP_NS + "/" + libraryFolderPath;
         } else {
-            return COMPOSITE_LIBRARY_LEGACY_NS + "/" + libraryFolderPath; //NOI18N
+            return COMPOSITE_LIBRARY_SUN_NS + "/" + libraryFolderPath;
         }
     }
 
-    @Deprecated
-    public static boolean isCompositeComponentLibrary(Library library) {
-        return library.getType() == LibraryType.COMPOSITE;
+    public static Set<String> getAllCompositeLibraryNamespaces(String libraryName, JsfVersion jsfVersion) {
+        Set<String> namespaces = new LinkedHashSet<>();
+        if (jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
+            namespaces.add(COMPOSITE_LIBRARY_JAKARTA_NS + "/" + libraryName);
+        }
+        if (jsfVersion.isAtLeast(JsfVersion.JSF_2_2)) {
+            namespaces.add(COMPOSITE_LIBRARY_JCP_NS + "/" + libraryName);
+        }
+
+        namespaces.add(COMPOSITE_LIBRARY_SUN_NS + "/" + libraryName);
+        return namespaces;
     }
 
-    public static boolean importLibrary(Document document, Library library, String prefix, boolean isJsf22Plus) {
-        return !importLibrary(document, Collections.singletonMap(library, prefix), isJsf22Plus).isEmpty();
+    public static boolean importLibrary(Document document, Library library, String prefix) {
+        return !importLibrary(document, Collections.singletonMap(library, prefix)).isEmpty();
     }
 
     /**
@@ -84,10 +97,10 @@ public class LibraryUtils {
      *
      * @return a map of library2declared prefixes which contains just the imported pairs
      */
-    public static Map<Library, String> importLibrary(Document document, Map<Library, String> libraries2prefixes, final boolean isJsf22Plus) {
+    public static Map<Library, String> importLibrary(Document document, Map<Library, String> libraries2prefixes) {
         assert document instanceof BaseDocument;
 
-        final Map<Library, String> imports = new LinkedHashMap<Library, String>(libraries2prefixes);
+        final Map<Library, String> imports = new LinkedHashMap<>(libraries2prefixes);
 
         //verify and update the imports map
         Iterator<Library> libsIterator = imports.keySet().iterator();
@@ -131,7 +144,7 @@ public class LibraryUtils {
             Element root = null;
             //no html root node, we need to find a root node of some other ast tree
             //belonging to some namespace
-            Collection<Node> roots = new ArrayList<Node>();
+            Collection<Node> roots = new ArrayList<>();
             roots.addAll(result.roots().values());
             roots.add(result.rootOfUndeclaredTagsParseTree());
 
@@ -151,7 +164,7 @@ public class LibraryUtils {
                     }
                 });
 
-                List<Element> chsList = new ArrayList<Element>(chs);
+                List<Element> chsList = new ArrayList<>(chs);
                 
                 if (!chsList.isEmpty()) {
                     Element top = chsList.get(0);
@@ -226,8 +239,7 @@ public class LibraryUtils {
                                 String prefixToDeclare = imports.get(library);
                                 int insertPosition = originalInsertPosition + offset_shift;
 
-                                String namespace = isJsf22Plus || library.getLegacyNamespace() == null ?
-                                        library.getNamespace() : library.getLegacyNamespace();
+                                String namespace = library.getNamespace();
                                 String text = (!noAttributes ? "\n" : "") + " xmlns:" + prefixToDeclare + //NOI18N
                                         "=\"" + namespace + "\""; //NOI18N
 
@@ -262,7 +274,7 @@ public class LibraryUtils {
     public static Map<String, Library> getDeclaredLibraries(HtmlParsingResult result) {
         //find all usages of composite components tags for this page
         Collection<String> declaredNamespaces = result.getNamespaces().keySet();
-        Map<String, Library> declaredLibraries = new HashMap<String, Library>();
+        Map<String, Library> declaredLibraries = new HashMap<>();
         JsfSupport jsfSupport = JsfSupportProvider.get(result.getSyntaxAnalyzerResult().getSource().getSourceFileObject());
         if (jsfSupport != null) {
             Map<String, ? extends Library> libs = jsfSupport.getLibraries();

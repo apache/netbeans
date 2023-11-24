@@ -78,9 +78,7 @@ public class FixUsesAction extends BaseAction {
     static final String ACTION_NAME = "fix-uses"; //NOI18N
     private static final String PREFERENCES_NODE_KEY = FixUsesAction.class.getName();
     private static final String KEY_REMOVE_UNUSED_USES = "remove.unused.uses"; //NOI18N
-    private static final String KEY_PSR12_ORDER = "psr12.order"; // NOI18N class-based, function-based, constant-based
     private static final boolean REMOVE_UNUSED_USES_DEFAULT = true;
-    private static final boolean PSR12_ORDER_DEFAULT = false;
     private static final long serialVersionUID = -8544670573081125944L;
 
     public FixUsesAction() {
@@ -113,7 +111,7 @@ public class FixUsesAction extends BaseAction {
                                 importData.set(data);
                             }
                         } else {
-                            performFixUses((PHPParseResult) parserResult, data, data.getDefaultVariants(), isRemoveUnusedUses(), isPSR12Order());
+                            performFixUses((PHPParseResult) parserResult, data, data.getDefaultVariants(), isRemoveUnusedUses());
                         }
                     }
                 }
@@ -155,18 +153,10 @@ public class FixUsesAction extends BaseAction {
         getPreferences().putBoolean(KEY_REMOVE_UNUSED_USES, removeUnusedUses);
     }
 
-    private static boolean isPSR12Order() {
-        return getPreferences().getBoolean(KEY_PSR12_ORDER, PSR12_ORDER_DEFAULT);
-    }
-
-    private static void setPSR12Order(final boolean putInPSR12Order) {
-        getPreferences().putBoolean(KEY_PSR12_ORDER, putInPSR12Order);
-    }
-
     private static ImportData computeUses(final PHPParseResult parserResult, final int caretPosition) {
         Map<String, List<UsedNamespaceName>> filteredExistingNames = new UsedNamesCollector(parserResult, caretPosition).collectNames();
         Index index = parserResult.getModel().getIndexScope().getIndex();
-        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult.getModel().getFileScope(), caretPosition);
+        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(parserResult, caretPosition);
         assert namespaceScope != null;
         ImportData importData = new ImportDataCreator(filteredExistingNames, index, namespaceScope.getNamespaceName(), createOptions(parserResult)).create();
         importData.caretPosition = caretPosition;
@@ -177,9 +167,8 @@ public class FixUsesAction extends BaseAction {
             final PHPParseResult parserResult,
             final ImportData importData,
             final List<ImportData.ItemVariant> selections,
-            final boolean removeUnusedUses,
-            final boolean putInPSR12Order) {
-        new FixUsesPerformer(parserResult, importData, selections, removeUnusedUses, putInPSR12Order, createOptions(parserResult)).perform();
+            final boolean removeUnusedUses) {
+        new FixUsesPerformer(parserResult, importData, selections, removeUnusedUses, createOptions(parserResult)).perform();
     }
 
     private static Options createOptions(final PHPParseResult parserResult) {
@@ -196,7 +185,7 @@ public class FixUsesAction extends BaseAction {
     })
     private static void showFixUsesDialog(final JTextComponent target, final ImportData importData) {
     final FixDuplicateImportStmts panel = new FixDuplicateImportStmts();
-        panel.initPanel(importData, isRemoveUnusedUses(), isPSR12Order());
+        panel.initPanel(importData, isRemoveUnusedUses());
         final JButton ok = new JButton(Bundle.LBL_Ok());
         final JButton cancel = new JButton(Bundle.LBL_Cancel());
         final AtomicBoolean stop = new AtomicBoolean();
@@ -213,7 +202,6 @@ public class FixUsesAction extends BaseAction {
                 ok.setEnabled(false);
                 final List<ItemVariant> selections = panel.getSelections();
                 final boolean removeUnusedUses = panel.getRemoveUnusedImports();
-                final boolean putInPSR12Order = panel.isPSR12Order();
                 WORKER.post(new Runnable() {
 
                     @Override
@@ -236,7 +224,7 @@ public class FixUsesAction extends BaseAction {
                                         if (stop.get()) {
                                             return;
                                         }
-                                        performFixUses((PHPParseResult) parserResult, importData, selections, removeUnusedUses, putInPSR12Order);
+                                        performFixUses((PHPParseResult) parserResult, importData, selections, removeUnusedUses);
                                     }
                                 }
                             });
@@ -244,7 +232,6 @@ public class FixUsesAction extends BaseAction {
                             Exceptions.printStackTrace(ex);
                         }
                         setRemoveUnusedUses(removeUnusedUses);
-                        setPSR12Order(putInPSR12Order);
                         SwingUtilities.invokeLater(new Runnable() {
 
                             @Override
@@ -295,7 +282,83 @@ public class FixUsesAction extends BaseAction {
         private final boolean preferGroupUses;
         private final boolean startUseWithNamespaceSeparator;
         private final boolean aliasesCapitalsOfNamespaces;
+        private final boolean putInPSR12Order;
+        private final boolean keepExistingUseTypeOrder;
+        private final int blankLinesBetweenUseTypes;
         private final PhpVersion phpVersion;
+
+        public static class Builder {
+
+            private boolean preferFullyQualifiedNames = false;
+            private boolean preferMultipleUseStatementsCombined = false;
+            private boolean preferGroupUses = false;
+            private boolean startUseWithNamespaceSeparator = false;
+            private boolean aliasesCapitalsOfNamespaces = false;
+            private boolean putInPSR12Order = false;
+            private boolean keepExistingUseTypeOrder = false;
+            private int blankLinesBetweenUseTypes = 0;
+            private final PhpVersion phpVersion;
+
+            public Builder(PhpVersion phpVersion) {
+                this.phpVersion = phpVersion;
+            }
+
+            public Builder preferFullyQualifiedNames(boolean preferFullyQualifiedNames) {
+                this.preferFullyQualifiedNames = preferFullyQualifiedNames;
+                return this;
+            }
+
+            public Builder preferMultipleUseStatementsCombined(boolean preferMultipleUseStatementsCombined) {
+                this.preferMultipleUseStatementsCombined = preferMultipleUseStatementsCombined;
+                return this;
+            }
+
+            public Builder preferGroupUses(boolean preferGroupUses) {
+                this.preferGroupUses = preferGroupUses;
+                return this;
+            }
+
+            public Builder startUseWithNamespaceSeparator(boolean startUseWithNamespaceSeparator) {
+                this.startUseWithNamespaceSeparator = startUseWithNamespaceSeparator;
+                return this;
+            }
+
+            public Builder aliasesCapitalsOfNamespaces(boolean aliasesCapitalsOfNamespaces) {
+                this.aliasesCapitalsOfNamespaces = aliasesCapitalsOfNamespaces;
+                return this;
+            }
+
+            public Builder putInPSR12Order(boolean putInPSR12Order) {
+                this.putInPSR12Order = putInPSR12Order;
+                return this;
+            }
+
+            public Builder keepExistingUseTypeOrder(boolean keepExistingUseTypeOrder) {
+                this.keepExistingUseTypeOrder = keepExistingUseTypeOrder;
+                return this;
+            }
+
+            public Builder setBlankLinesBetweenUseTypes(int blankLinesBetweenUseTypes) {
+                this.blankLinesBetweenUseTypes = blankLinesBetweenUseTypes;
+                return this;
+            }
+
+            public Options build() {
+                return new Options(this);
+            }
+        }
+
+        private Options(Builder builder) {
+            this.preferFullyQualifiedNames = builder.preferFullyQualifiedNames;
+            this.preferMultipleUseStatementsCombined = builder.preferMultipleUseStatementsCombined;
+            this.preferGroupUses = builder.preferGroupUses;
+            this.startUseWithNamespaceSeparator = builder.startUseWithNamespaceSeparator;
+            this.aliasesCapitalsOfNamespaces = builder.aliasesCapitalsOfNamespaces;
+            this.putInPSR12Order = builder.putInPSR12Order;
+            this.keepExistingUseTypeOrder = builder.keepExistingUseTypeOrder;
+            this.blankLinesBetweenUseTypes = builder.blankLinesBetweenUseTypes;
+            this.phpVersion = builder.phpVersion;
+        }
 
         // for unit tests
         Options(
@@ -304,13 +367,29 @@ public class FixUsesAction extends BaseAction {
                 boolean preferGroupUses,
                 boolean startUseWithNamespaceSeparator,
                 boolean aliasesCapitalsOfNamespaces,
+                boolean putInPSR12Order,
+                boolean keepExistingUseTypeOrder,
+                int blankLinesBetweenUseTypes,
                 PhpVersion phpVersion) {
             this.preferFullyQualifiedNames = preferFullyQualifiedNames;
             this.preferMultipleUseStatementsCombined = preferMultipleUseStatementsCombined;
             this.preferGroupUses = preferGroupUses;
             this.startUseWithNamespaceSeparator = startUseWithNamespaceSeparator;
             this.aliasesCapitalsOfNamespaces = aliasesCapitalsOfNamespaces;
+            this.putInPSR12Order = putInPSR12Order;
+            this.keepExistingUseTypeOrder = keepExistingUseTypeOrder;
+            this.blankLinesBetweenUseTypes = blankLinesBetweenUseTypes;
             this.phpVersion = phpVersion;
+        }
+
+        Options(
+                boolean preferFullyQualifiedNames,
+                boolean preferMultipleUseStatementsCombined,
+                boolean preferGroupUses,
+                boolean startUseWithNamespaceSeparator,
+                boolean aliasesCapitalsOfNamespaces,
+                PhpVersion phpVersion) {
+            this(preferFullyQualifiedNames, preferMultipleUseStatementsCombined, preferGroupUses, startUseWithNamespaceSeparator, aliasesCapitalsOfNamespaces, false, false, 0, phpVersion);
         }
 
         // legacy, for unit tests
@@ -320,7 +399,7 @@ public class FixUsesAction extends BaseAction {
                 boolean startUseWithNamespaceSeparator,
                 boolean aliasesCapitalsOfNamespaces,
                 boolean isPhp56OrGreater) {
-            this(preferFullyQualifiedNames, preferMultipleUseStatementsCombined, false, startUseWithNamespaceSeparator, aliasesCapitalsOfNamespaces,
+            this(preferFullyQualifiedNames, preferMultipleUseStatementsCombined, false, startUseWithNamespaceSeparator, aliasesCapitalsOfNamespaces, false, false, 0,
                     isPhp56OrGreater ? PhpVersion.PHP_56 : PhpVersion.PHP_5);
         }
 
@@ -332,7 +411,7 @@ public class FixUsesAction extends BaseAction {
                 boolean startUseWithNamespaceSeparator,
                 boolean aliasesCapitalsOfNamespaces,
                 boolean isPhp56OrGreater) {
-            this(preferFullyQualifiedNames, preferMultipleUseStatementsCombined, preferGroupUses, startUseWithNamespaceSeparator, aliasesCapitalsOfNamespaces,
+            this(preferFullyQualifiedNames, preferMultipleUseStatementsCombined, preferGroupUses, startUseWithNamespaceSeparator, aliasesCapitalsOfNamespaces, false, false, 0,
                     isPhp56OrGreater ? PhpVersion.PHP_56 : PhpVersion.PHP_5);
         }
 
@@ -342,6 +421,9 @@ public class FixUsesAction extends BaseAction {
             this.preferGroupUses = codeStyle.preferGroupUses();
             this.startUseWithNamespaceSeparator = codeStyle.startUseWithNamespaceSeparator();
             this.aliasesCapitalsOfNamespaces = codeStyle.aliasesFromCapitalsOfNamespaces();
+            this.putInPSR12Order = codeStyle.putInPSR12Order();
+            this.keepExistingUseTypeOrder = codeStyle.usesKeepExistingTypeOrder();
+            this.blankLinesBetweenUseTypes = codeStyle.getBlankLinesBetweenUseTypes();
             this.phpVersion = CodeUtils.getPhpVersion(fileObject);
         }
 
@@ -363,6 +445,18 @@ public class FixUsesAction extends BaseAction {
 
         public boolean aliasesCapitalsOfNamespaces() {
             return aliasesCapitalsOfNamespaces;
+        }
+
+        public boolean putInPSR12Order() {
+            return putInPSR12Order;
+        }
+
+        public boolean keepExistingUseTypeOrder() {
+            return keepExistingUseTypeOrder;
+        }
+
+        public int getBlankLinesBetweenUseTypes() {
+            return blankLinesBetweenUseTypes;
         }
 
         public PhpVersion getPhpVersion() {

@@ -3349,9 +3349,9 @@ public class Utilities {
                         typeCastTree = ((JCTree.JCTypeCast)body).getType();
                         body = ((JCTree.JCTypeCast)body).getExpression();
                     }
-                newCases.add(make.CasePatterns(patterns, make.ExpressionStatement((ExpressionTree) body)));
+                newCases.add(make.CasePatterns(patterns, ct.getGuard(), make.ExpressionStatement((ExpressionTree) body)));
             } else {
-                newCases.add(make.CasePatterns(patterns, body));
+                newCases.add(make.CasePatterns(patterns, ct.getGuard(), body));
             }
 
             patterns = new ArrayList<>();

@@ -90,15 +90,12 @@ public class NodeActionsProvider extends CodeActionsProvider {
     }
 
     @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         return Collections.emptyList();
     }
     
     @Override
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-        if (!command.startsWith(NBLS_ACTION_PREFIX)) {
-            return CompletableFuture.completedFuture(false);
-        }
         JsonElement el = null;
         if (arguments.size() > 0) {
             JsonObject item = gson.fromJson(gson.toJson(arguments.get(0)), JsonObject.class);

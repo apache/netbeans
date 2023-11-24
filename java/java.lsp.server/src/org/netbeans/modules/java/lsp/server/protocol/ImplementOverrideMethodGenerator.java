@@ -75,12 +75,12 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
         "DN_GenerateOverrideMethod=Generate Override Method...",
         "DN_From=(from {0})",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Source)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null) {
             return Collections.emptyList();
         }
@@ -107,7 +107,7 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
                 implementMethods.add(new QuickPickItem(createLabel(info, method), enclosingTypeName, null, mustImplement, new ElementData(method)));
             }
             if (!implementMethods.isEmpty()) {
-                result.add(createCodeAction(Bundle.DN_GenerateImplementMethod(), CODE_GENERATOR_KIND, data(uri, offset, true, implementMethods), "workbench.action.focusActiveEditorGroup"));
+                result.add(createCodeAction(client, Bundle.DN_GenerateImplementMethod(), CODE_GENERATOR_KIND, data(uri, offset, true, implementMethods), "workbench.action.focusActiveEditorGroup"));
             }
         }
         if (typeElement.getKind().isClass() || typeElement.getKind().isInterface()) {
@@ -123,7 +123,7 @@ public final class ImplementOverrideMethodGenerator extends CodeActionsProvider 
                 overrideMethods.add(item);
             }
             if (!overrideMethods.isEmpty()) {
-                result.add(createCodeAction(Bundle.DN_GenerateOverrideMethod(), CODE_GENERATOR_KIND, data (uri, offset, false, overrideMethods), "workbench.action.focusActiveEditorGroup"));
+                result.add(createCodeAction(client, Bundle.DN_GenerateOverrideMethod(), CODE_GENERATOR_KIND, data (uri, offset, false, overrideMethods), "workbench.action.focusActiveEditorGroup"));
             }
         }
         return result;

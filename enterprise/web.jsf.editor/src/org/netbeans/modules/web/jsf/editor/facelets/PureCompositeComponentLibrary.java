@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.web.jsf.editor.facelets;
 
+import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
+
 /**
  * Represents a composite components library w/o the facelets descriptor
  *
@@ -26,17 +28,11 @@ package org.netbeans.modules.web.jsf.editor.facelets;
 public class PureCompositeComponentLibrary extends CompositeComponentLibrary {
     
     public PureCompositeComponentLibrary(FaceletsLibrarySupport support, String libraryName) {
-        super(support, libraryName, null, null);
+        super(support, libraryName, LibraryUtils.getAllCompositeLibraryNamespaces(libraryName, support.getJsfSupport().getJsfVersion()), null);
     }
 
     @Override
     protected LibraryDescriptor getFaceletsLibraryDescriptor() throws LibraryDescriptorException {
         return new CCVirtualLibraryDescriptor();
     }
-
-    @Override
-    public String getNamespace() {
-        return getDefaultNamespace();
-    }
-    
 }

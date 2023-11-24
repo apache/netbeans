@@ -276,9 +276,22 @@ public final class TreeMaker {
      * @since 2.39
      */
     public CaseTree CasePatterns(List<? extends Tree> patterns, Tree body) {
-        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), body);
+        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), null, body);
     }
     
+    /**
+     * Creates a new CaseTree for a rule case (case &lt;constants&gt; -> &lt;body&gt;).
+     *
+     * @param patterns the labels for this case statement.
+     * @param guard the case's guard
+     * @param body the case's body
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.63
+     */
+    public CaseTree CasePatterns(List<? extends Tree> patterns, ExpressionTree guard, Tree body) {
+        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), guard, body);
+    }
+
     /**
      * Creates a new CaseTree.
      *
@@ -288,7 +301,20 @@ public final class TreeMaker {
      * @since 2.39
      */
     public CaseTree CasePatterns(List<? extends Tree> patterns, List<? extends StatementTree> statements) {
-        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), statements);
+        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), null, statements);
+    }
+
+    /**
+     * Creates a new CaseTree.
+     *
+     * @param patterns the labels for this case statement.
+     * @param guard the case's guard
+     * @param statements the list of statements.
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.63
+     */
+    public CaseTree CasePatterns(List<? extends Tree> patterns, ExpressionTree guard, List<? extends StatementTree> statements) {
+        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), guard, statements);
     }
 
     private List<? extends CaseLabelTree> toCaseLabelTrees(List<? extends Tree> patterns) {
@@ -300,7 +326,7 @@ public final class TreeMaker {
                 return delegate.ConstantCaseLabel((ExpressionTree) p);
             }
             if (p instanceof PatternTree) {
-                return delegate.PatternCaseLabel((PatternTree) p, null);
+                return delegate.PatternCaseLabel((PatternTree) p);
             }
             throw new IllegalArgumentException("Invalid pattern kind: " + p.getKind()); //NOI18N
         }).collect(Collectors.toList());
@@ -3535,6 +3561,17 @@ public final class TreeMaker {
     }
 
     /**Creates a new javadoc comment.
+     *
+     * @param fullBody the entire body of the comment
+     * @param tags the block tags of the comment (after the main body)
+     * @return newly created DocCommentTree
+     * @since 2.62
+     */
+    public DocCommentTree DocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
+        return delegate.DocComment(fullBody, tags);
+    }
+
+    /**Creates a new javadoc comment.
      * 
      * @param firstSentence the javadoc comment's first sentence
      * @param body the main body of the comment
@@ -3879,4 +3916,17 @@ public final class TreeMaker {
     public LambdaExpressionTree setLambdaBody(LambdaExpressionTree method, Tree newBody) {
         return delegate.setLambdaBody(method, newBody);
     }
+
+    /**Creates a new string template expression from the given parameters.
+     *
+     * @param processor the processor of the string template
+     * @param fragments the template fragments
+     * @param expressions the template expressions
+     * @return the string template instance
+     * @since 2.65
+     */
+    public StringTemplateTree StringTemplate(ExpressionTree processor, List<String> fragments, List<? extends ExpressionTree> expressions) {
+        return delegate.StringTemplate(processor, fragments, expressions);
+    }
+
 }

@@ -636,6 +636,8 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
             private boolean decimalCommentExist = false;
 
+            protected final String enterprisePrefix;
+
             public ClassGenerator(WorkingCopy copy, EntityClass entityClass) throws IOException {
                 this.copy = copy;
                 copy.toPhase(Phase.RESOLVED);
@@ -659,6 +661,17 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 assert originalClassTree != null;
                 newClassTree = originalClassTree;
                 genUtils = GenerationUtils.newInstance(copy);
+
+                String enterprisePrefix;
+                ClassPath compileClassPath = copy.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
+                if (compileClassPath.findResource("jakarta/persistence/EntityManager.class") != null) {
+                    enterprisePrefix = "jakarta";
+                } else if (compileClassPath.findResource("javax/persistence/EntityManager.class") != null) {
+                    enterprisePrefix = "javax";
+                } else {
+                    enterprisePrefix = "jakarta";
+                }
+                this.enterprisePrefix = enterprisePrefix;
             }
 
             protected String createFieldName(String capitalizedFieldName) {
@@ -686,13 +699,13 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
                 //add @Id() only if not in an embeddable PK class
                 if (isPKMember && !needsPKClass) {
-                    annotations.add(genUtils.createAnnotation("javax.persistence.Id")); // NOI18N
+                    annotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.Id")); // NOI18N
                     if (m.isAutoIncrement()) {
                         // Can only support strategy=GenerationType.IDENTITY.
                         // See issue 76357 - desc 17
                         List<ExpressionTree> annArguments = new ArrayList<>();
-                        annArguments.add(genUtils.createAnnotationArgument("strategy", "javax.persistence.GenerationType", "IDENTITY")); // NOI18N
-                        annotations.add(genUtils.createAnnotation("javax.persistence.GeneratedValue", annArguments)); //NOI18N
+                        annArguments.add(genUtils.createAnnotationArgument("strategy", enterprisePrefix + ".persistence.GenerationType", "IDENTITY")); // NOI18N
+                        annotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.GeneratedValue", annArguments)); //NOI18N
                     }
                 }
 
@@ -700,7 +713,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 if (!m.isNullable()) {
                     List<ExpressionTree> basicAnnArguments = new ArrayList<>();
                     basicAnnArguments.add(genUtils.createAnnotationArgument("optional", false)); //NOI18N
-                    annotations.add(genUtils.createAnnotation("javax.persistence.Basic", basicAnnArguments)); //NOI18N
+                    annotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.Basic", basicAnnArguments)); //NOI18N
                     //Add @NotNull constraint
                     if (generateValidationConstraints && !m.isAutoIncrement()) {   //NOI18N
                         annotations.add(genUtils.createAnnotation("javax.validation.constraints.NotNull")); //NOI18N
@@ -709,7 +722,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
                 boolean isLobType = m.isLobType();
                 if (isLobType) {
-                    annotations.add(genUtils.createAnnotation("javax.persistence.Lob")); // NOI18N
+                    annotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.Lob")); // NOI18N
                 }
 
                 List<ExpressionTree> columnAnnArguments = new ArrayList<>();
@@ -775,13 +788,13 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 if(useDefaults && (columnAnnArguments == null || columnAnnArguments.isEmpty())){
                     //skip default
                 } else {
-                    annotations.add(genUtils.createAnnotation("javax.persistence.Column", columnAnnArguments)); //NOI18N
+                    annotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.Column", columnAnnArguments)); //NOI18N
                 }
 
                 String temporalType = getMemberTemporalType(m);
                 if (temporalType != null) {
-                    ExpressionTree temporalAnnValueArgument = genUtils.createAnnotationArgument(null, "javax.persistence.TemporalType", temporalType); //NOI18N
-                    annotations.add(genUtils.createAnnotation("javax.persistence.Temporal", Collections.singletonList(temporalAnnValueArgument)));
+                    ExpressionTree temporalAnnValueArgument = genUtils.createAnnotationArgument(null, enterprisePrefix + ".persistence.TemporalType", temporalType); //NOI18N
+                    annotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.Temporal", Collections.singletonList(temporalAnnValueArgument)));
                 }
 
                 return new Property(Modifier.PRIVATE, annotations, comment, memberType, memberName);
@@ -1060,7 +1073,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     String pkFieldName = createFieldName(pkClassName);
                     pkProperty = new Property(
                             Modifier.PROTECTED,
-                            Collections.singletonList(genUtils.createAnnotation("javax.persistence.EmbeddedId")),
+                            Collections.singletonList(genUtils.createAnnotation(enterprisePrefix + ".persistence.EmbeddedId")),
                             null,
                             pkFQClassName,
                             pkFieldName);
@@ -1070,7 +1083,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 if (UpdateType.UPDATE.equals(updateType)) {
                     collectExistingColumns();
                 } else {
-                    newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation(generateMappedSC ? "javax.persistence.MappedSuperclass" : "javax.persistence.Entity")); // NOI18N
+                    newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation(generateMappedSC ? enterprisePrefix + ".persistence.MappedSuperclass" : enterprisePrefix + ".persistence.Entity")); // NOI18N
                     List<ExpressionTree> tableAnnArgs = new ArrayList<>();
                     if(useDefaults && entityClassName.equalsIgnoreCase(dbMappings.getTableName())){
                         //skip
@@ -1099,7 +1112,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                                 colArgs.add(genUtils.createAnnotationArgument(null, colName));
                             }
                             ExpressionTree columnNamesArg = genUtils.createAnnotationArgument("columnNames", colArgs); // NOI18N
-                            uniqueConstraintAnnotations.add(genUtils.createAnnotation("javax.persistence.UniqueConstraint",
+                            uniqueConstraintAnnotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.UniqueConstraint",
                                     Collections.singletonList(columnNamesArg))); //NOI18N
                         }
 
@@ -1107,7 +1120,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     }
 
                     if(!useDefaults || !tableAnnArgs.isEmpty()) {
-                        newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("javax.persistence.Table", tableAnnArgs));//NOI18N
+                        newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation(enterprisePrefix + ".persistence.Table", tableAnnArgs));//NOI18N
                     }
 
                     if (generateJAXBAnnotations) {
@@ -1367,7 +1380,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     namedQueryAnnArguments.add(genUtils.createAnnotationArgument(
                             "query", namedQueryPrefix + //NOI18N
                             memberAccessString + ((genNamedParams) ? (" = :" + memberName) : "= ?1"))); //NOI18N
-                    namedQueryAnnotations.add(genUtils.createAnnotation("javax.persistence.NamedQuery", namedQueryAnnArguments)); //NOI18N
+                    namedQueryAnnotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.NamedQuery", namedQueryAnnArguments)); //NOI18N
                 }
             }
 
@@ -1381,7 +1394,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 namedQueryAnnArguments.add(genUtils.createAnnotationArgument("query", queryString)); // NOI18N
 
                 // Have the findAll as the first NameQuery
-                namedQueryAnnotations.add(0, genUtils.createAnnotation("javax.persistence.NamedQuery", namedQueryAnnArguments)); //NOI18N
+                namedQueryAnnotations.add(0, genUtils.createAnnotation(enterprisePrefix + ".persistence.NamedQuery", namedQueryAnnArguments)); //NOI18N
             }
 
             @Override
@@ -1389,7 +1402,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 if (!UpdateType.UPDATE.equals(updateType) && !generateMappedSC) {
                     addFindAllNamedQueryAnnotation();
 
-                    newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("javax.persistence.NamedQueries", // NOI18N
+                    newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation(enterprisePrefix + ".persistence.NamedQueries", // NOI18N
                             Collections.singletonList(genUtils.createAnnotationArgument(null, namedQueryAnnotations))));
                 }
             }
@@ -1437,7 +1450,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 List<AnnotationTree> annotations = new ArrayList<>();
                 List<ExpressionTree> annArguments = new ArrayList<>();
                 if (role.isCascade()) {
-                    annArguments.add(genUtils.createAnnotationArgument("cascade", "javax.persistence.CascadeType", "ALL")); // NOI18N
+                    annArguments.add(genUtils.createAnnotationArgument("cascade", enterprisePrefix + ".persistence.CascadeType", "ALL")); // NOI18N
                 }
                 if (role.equals(role.getParent().getRoleB())) { // Role B
                     String fName = role.getParent().getRoleA().getFieldName();
@@ -1487,7 +1500,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                             if (regenTablesAttrs && !columns[colIndex].isNullable()) {
                                 attrs.add(genUtils.createAnnotationArgument("nullable", false)); //NOI18N
                             }
-                            joinCols.add(genUtils.createAnnotation("javax.persistence.JoinColumn", attrs)); //NOI18N
+                            joinCols.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.JoinColumn", attrs)); //NOI18N
                         }
                         joinTableAnnArguments.add(genUtils.createAnnotationArgument("joinColumns", joinCols)); // NOI18N
 
@@ -1501,11 +1514,11 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                             if (regenTablesAttrs && !invColumns[colIndex].isNullable()) {
                                 attrs.add(genUtils.createAnnotationArgument("nullable", false)); //NOI18N
                             }
-                            inverseCols.add(genUtils.createAnnotation("javax.persistence.JoinColumn", attrs)); // NOI18N
+                            inverseCols.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.JoinColumn", attrs)); // NOI18N
                         }
                         joinTableAnnArguments.add(genUtils.createAnnotationArgument("inverseJoinColumns", inverseCols)); // NOI18N
 
-                        annotations.add(genUtils.createAnnotation("javax.persistence.JoinTable", joinTableAnnArguments)); // NOI18N
+                        annotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.JoinTable", joinTableAnnArguments)); // NOI18N
                     } else { // ManyToOne, OneToMany, OneToOne
                         ColumnData[] columns = dbMappings.getCmrFieldMapping().get(role.getFieldName());
                         CMPMappingModel relatedMappings = beanMap.get(role.getParent().getRoleB().getEntityName()).getCMPMapping();
@@ -1521,7 +1534,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                                 attrs.add(genUtils.createAnnotationArgument("nullable", false));
                             }
                             makeReadOnlyIfNecessary(pkColumnNames, columns[0].getColumnName(), attrs);
-                            annotations.add(genUtils.createAnnotation("javax.persistence.JoinColumn", attrs)); //NOI18N
+                            annotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.JoinColumn", attrs)); //NOI18N
                         } else {
                             if(existingJoinColumnss.get(fieldType) != null){
                                 return; //currently do not overgenerate and do not update etc existing JoinColumns
@@ -1536,10 +1549,10 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                                     attrs.add(genUtils.createAnnotationArgument("nullable", false));
                                 }
                                 makeReadOnlyIfNecessary(pkColumnNames, columns[colIndex].getColumnName(), attrs);
-                                joinCols.add(genUtils.createAnnotation("javax.persistence.JoinColumn", attrs)); // NOI18N
+                                joinCols.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.JoinColumn", attrs)); // NOI18N
                             }
                             ExpressionTree joinColumnsNameAttrValue = genUtils.createAnnotationArgument(null, joinCols);
-                            AnnotationTree joinColumnsAnnotation = genUtils.createAnnotation("javax.persistence.JoinColumns", Collections.singletonList(joinColumnsNameAttrValue)); //NOI18N
+                            AnnotationTree joinColumnsAnnotation = genUtils.createAnnotation(enterprisePrefix + ".persistence.JoinColumns", Collections.singletonList(joinColumnsNameAttrValue)); //NOI18N
                             annotations.add(joinColumnsAnnotation);
                         }
                     }
@@ -1565,13 +1578,13 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
 
                 //FetchType
                 if (fetchType.equals(FetchType.LAZY)) {
-                    annArguments.add(genUtils.createAnnotationArgument("fetch", "javax.persistence.FetchType", "LAZY")); // NOI18N
+                    annArguments.add(genUtils.createAnnotationArgument("fetch", enterprisePrefix + ".persistence.FetchType", "LAZY")); // NOI18N
                 } else if (fetchType.equals(FetchType.EAGER)) {
-                    annArguments.add(genUtils.createAnnotationArgument("fetch", "javax.persistence.FetchType", "EAGER")); // NOI18N
+                    annArguments.add(genUtils.createAnnotationArgument("fetch", enterprisePrefix + ".persistence.FetchType", "EAGER")); // NOI18N
                 }
 
                 // Create the relationship annotation 
-                annotations.add(genUtils.createAnnotation("javax.persistence." + relationAnn, annArguments)); // NOI18N
+                annotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence." + relationAnn, annArguments)); // NOI18N
 
                 if (generateJAXBAnnotations && role.isToMany()) {
                     properties.add(new Property(Modifier.PRIVATE, annotations, null, fieldType, memberName, true));
@@ -1692,7 +1705,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                 newClassTree = genUtils.ensureNoArgConstructor(newClassTree);
                 // primary key class must be serializable and @Embeddable
                 newClassTree = genUtils.addImplementsClause(newClassTree, "java.io.Serializable"); //NOI18N
-                newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("javax.persistence.Embeddable")); // NOI18N
+                newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation(enterprisePrefix + ".persistence.Embeddable")); // NOI18N
             }
 
             @Override

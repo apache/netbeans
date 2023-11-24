@@ -34,7 +34,6 @@ import static org.netbeans.modules.gradle.api.execute.GradleCommandLine.Paramete
 public class ExecutionOptionsPanel extends javax.swing.JPanel {
     
     private static final GradleCommandLine CLI_MASK = new GradleCommandLine(
-        "--no-rebuild", 
         "--offline", 
         "-x", TEST_TASK, 
         "-x", CHECK_TASK,
@@ -57,7 +56,6 @@ public class ExecutionOptionsPanel extends javax.swing.JPanel {
     }
 
     public void setCommandLine(GradleCommandLine cli) {
-        cbNoRebuild.setSelected(cli.hasFlag(NO_REBUILD));
         cbOffline.setSelected(cli.hasFlag(OFFLINE));
         cbConfigureOnDemand.setSelected(cli.hasFlag(CONFIGURE_ON_DEMAND));
         Set<String> excluded = cli.getExcludedTasks();
@@ -70,7 +68,6 @@ public class ExecutionOptionsPanel extends javax.swing.JPanel {
     public GradleCommandLine getCommandLine() {
         GradleCommandLine ret = new GradleCommandLine();
         ret.setFlag(OFFLINE, cbOffline.isSelected());
-        ret.setFlag(NO_REBUILD, cbNoRebuild.isSelected());
         ret.setFlag(CONFIGURE_ON_DEMAND, cbConfigureOnDemand.isSelected());
         ret.setLogLevel((LogLevel) cbLogLevel.getSelectedItem());
         ret.setStackTrace((StackTrace) cbStackTrace.getSelectedItem());
@@ -99,7 +96,6 @@ public class ExecutionOptionsPanel extends javax.swing.JPanel {
         cbOffline = new javax.swing.JCheckBox();
         cbSkipTest = new javax.swing.JCheckBox();
         cbSkipCheck = new javax.swing.JCheckBox();
-        cbNoRebuild = new javax.swing.JCheckBox();
         cbConfigureOnDemand = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         cbLogLevel = new javax.swing.JComboBox<>();
@@ -113,8 +109,6 @@ public class ExecutionOptionsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbSkipTest, org.openide.util.NbBundle.getMessage(ExecutionOptionsPanel.class, "ExecutionOptionsPanel.cbSkipTest.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSkipCheck, org.openide.util.NbBundle.getMessage(ExecutionOptionsPanel.class, "ExecutionOptionsPanel.cbSkipCheck.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbNoRebuild, org.openide.util.NbBundle.getMessage(ExecutionOptionsPanel.class, "ExecutionOptionsPanel.cbNoRebuild.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbConfigureOnDemand, org.openide.util.NbBundle.getMessage(ExecutionOptionsPanel.class, "ExecutionOptionsPanel.cbConfigureOnDemand.text")); // NOI18N
 
@@ -132,13 +126,11 @@ public class ExecutionOptionsPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbNoRebuild, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
-                            .addComponent(cbOffline, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(cbOffline, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(9, 9, 9))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cbConfigureOnDemand)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cbSkipTest, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbSkipCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -161,11 +153,10 @@ public class ExecutionOptionsPanel extends javax.swing.JPanel {
                     .addComponent(cbSkipCheck))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbNoRebuild, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbSkipTest))
+                    .addComponent(cbSkipTest)
+                    .addComponent(cbConfigureOnDemand))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbConfigureOnDemand)
                     .addComponent(jLabel1)
                     .addComponent(cbLogLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
@@ -178,7 +169,6 @@ public class ExecutionOptionsPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cbConfigureOnDemand;
     private javax.swing.JComboBox<LogLevel> cbLogLevel;
-    private javax.swing.JCheckBox cbNoRebuild;
     private javax.swing.JCheckBox cbOffline;
     private javax.swing.JCheckBox cbSkipCheck;
     private javax.swing.JCheckBox cbSkipTest;

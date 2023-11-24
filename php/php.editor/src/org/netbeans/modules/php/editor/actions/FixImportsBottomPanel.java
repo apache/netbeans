@@ -31,11 +31,11 @@ import org.openide.util.NbBundle;
 
 class FixImportsBottomPanel extends JPanel {
 
+    private static final long serialVersionUID = -5097455518929178104L;
     private final JComboBox[] comboBoxes;
     private final ImportData importData;
     private ImportData.ItemVariant[] defaultVariants;
     private ImportData.ItemVariant[] dontUseVariants;
-    private static final long serialVersionUID = 7771810767310773171L;
 
     public FixImportsBottomPanel(JComboBox[] comboBoxes, ImportData importData) {
         this.comboBoxes = comboBoxes;
@@ -64,16 +64,8 @@ class FixImportsBottomPanel extends JPanel {
         return removeUnusedImportsCheckBox.isSelected();
     }
 
-    public boolean isPSR12Order() {
-        return putInPSR12OrderCheckBox.isSelected();
-    }
-
     public void setRemoveUnusedImports(boolean removeUnusedImports) {
         removeUnusedImportsCheckBox.setSelected(removeUnusedImports);
-    }
-
-    public void setPSR12Order(boolean isPSR12Order) {
-        putInPSR12OrderCheckBox.setSelected(isPSR12Order);
     }
 
     /**
@@ -86,13 +78,10 @@ class FixImportsBottomPanel extends JPanel {
     private void initComponents() {
 
         removeUnusedImportsCheckBox = new JCheckBox();
-        putInPSR12OrderCheckBox = new JCheckBox();
         clearSuggestionsButton = new JButton();
         restoreDefaultsButton = new JButton();
 
         Mnemonics.setLocalizedText(removeUnusedImportsCheckBox, NbBundle.getMessage(FixImportsBottomPanel.class, "FixImportsBottomPanel.removeUnusedImportsCheckBox.text")); // NOI18N
-
-        Mnemonics.setLocalizedText(putInPSR12OrderCheckBox, NbBundle.getMessage(FixImportsBottomPanel.class, "FixImportsBottomPanel.putInPSR12OrderCheckBox.text")); // NOI18N
 
         Mnemonics.setLocalizedText(clearSuggestionsButton, NbBundle.getMessage(FixImportsBottomPanel.class, "FixImportsBottomPanel.clearSuggestionsButton.text")); // NOI18N
         clearSuggestionsButton.addActionListener(new ActionListener() {
@@ -114,8 +103,6 @@ class FixImportsBottomPanel extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(removeUnusedImportsCheckBox)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(putInPSR12OrderCheckBox)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(clearSuggestionsButton)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -128,13 +115,11 @@ class FixImportsBottomPanel extends JPanel {
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(removeUnusedImportsCheckBox)
                     .addComponent(clearSuggestionsButton)
-                    .addComponent(restoreDefaultsButton)
-                    .addComponent(putInPSR12OrderCheckBox))
+                    .addComponent(restoreDefaultsButton))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         removeUnusedImportsCheckBox.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FixImportsBottomPanel.class, "FixImportsBottomPanel.removeUnusedImportsCheckBox.AccessibleContext.accessibleDescription")); // NOI18N
-        putInPSR12OrderCheckBox.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(FixImportsBottomPanel.class, "FixImportsBottomPanel.putInPSR12OrderCheckBox.AccessibleContext.accessibleDescription")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
     private void clearSuggestionsButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_clearSuggestionsButtonActionPerformed
@@ -151,9 +136,9 @@ class FixImportsBottomPanel extends JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton clearSuggestionsButton;
-    private JCheckBox putInPSR12OrderCheckBox;
     private JCheckBox removeUnusedImportsCheckBox;
     private JButton restoreDefaultsButton;
     // End of variables declaration//GEN-END:variables
 
 }
+

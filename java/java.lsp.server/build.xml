@@ -128,7 +128,7 @@
         <taskdef name="createlicensesummary" classname="org.netbeans.nbbuild.extlibs.CreateLicenseSummary" classpath="${nbantext.jar}"/>
 
         <property name="config.javadoc.all" value="" />
-        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${clusters.config.java.list}"/>
+        <resolvelist name="allmodules" path="modules.fullpath" dir="${nb_all}" list="${clusters.config.release.list}"/>
 
         <createlicensesummary licenseStub="${nb_all}/LICENSE"
                               noticeStub="${nb_all}/nbbuild/notice-stub.txt"

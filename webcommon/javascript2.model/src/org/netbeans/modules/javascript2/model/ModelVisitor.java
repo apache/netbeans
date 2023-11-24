@@ -62,10 +62,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -2479,6 +2479,12 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
         return super.enterUnaryNode(unaryNode);
     }
 
+    // Track objects pushed to ModelBuilder from VarNode handling. objects are
+    // only conditionally pushed enterVarNode and thus leaveVarNode must only
+    // pop that state if it came from enterVarNode. There should be a better
+    // solution, but should be ok in the interim
+    private final Map<JsObject, VarNode> varNodeScopes = new IdentityHashMap<>();
+
     @Override
     public boolean enterVarNode(VarNode varNode) {
         Node init = varNode.getInit();
@@ -2522,10 +2528,10 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
 //            }
 
         }
-         if (!(init instanceof ObjectNode || rNode != null
-                 || init instanceof LiteralNode.ArrayLiteralNode
-                 || init instanceof ClassNode
-                 || varNode.isExport())) {
+        if (!(init instanceof ObjectNode || rNode != null
+                || init instanceof LiteralNode.ArrayLiteralNode
+                || init instanceof ClassNode
+                || varNode.isExport())) {
             JsObject parent = modelBuilder.getCurrentObject();
             //parent = canBeSingletonPattern(1) ? resolveThis(parent) : parent;
             if (parent instanceof CatchBlockImpl) {
@@ -2605,6 +2611,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                     }
 
                 }
+                varNodeScopes.put(variable, varNode);
                 modelBuilder.setCurrentObject(variable);
                 Collection<TypeUsage> types = ModelUtils.resolveSemiTypeOfExpression(modelBuilder, init);
                 if (modelBuilder.getCurrentWith() != null) {
@@ -2636,6 +2643,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                 }
                 if (variable != null) {
                     variable.setJsKind(JsElement.Kind.OBJECT_LITERAL);
+                    varNodeScopes.put(variable, varNode);
                     modelBuilder.setCurrentObject(variable);
                 }
             }
@@ -2747,6 +2755,9 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
 
 
             }
+        }
+        if (varNodeScopes.containsKey(modelBuilder.getCurrentObject())) {
+            varNodeScopes.remove(modelBuilder.getCurrentObject());
             modelBuilder.reset();
         }
         return super.leaveVarNode(varNode);

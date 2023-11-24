@@ -1357,15 +1357,12 @@ public abstract class JavaCompletionItem implements CompletionItem {
             Iterator<? extends RecordComponentElement> it = elem.getRecordComponents().iterator();
             StringBuilder sb = new StringBuilder();
             RecordComponentElement recordComponent;
-            String name;
             sb.append("(");
             while (it.hasNext()) {
                 recordComponent = it.next();
-                name = recordComponent.getAccessor().getReturnType().toString();
-                name = name.substring(name.lastIndexOf(".") + 1);
-                sb.append(name);
+                sb.append(Utilities.getTypeName(info, recordComponent.getAccessor().getReturnType(), false));
                 sb.append(" ");
-                sb.append(recordComponent.getSimpleName().toString());
+                sb.append(recordComponent.getSimpleName());
                 if (it.hasNext()) {
                     sb.append(", "); //NOI18N
                 }
@@ -2091,7 +2088,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                         if (toAddText.length() > idx + 1) {
                             sb.append(toAddText.substring(idx + 1));
                         }
-                        showTooltip = true;
+                        showTooltip = Utilities.popupPrameterTooltip();
                     }
                 }
             }
@@ -2708,7 +2705,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             if (sb.length() == 0) {
                 return cs;
             }
-            showTooltip = true;
+            showTooltip = Utilities.popupPrameterTooltip();
             return sb;
         }
 
@@ -3001,7 +2998,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                 }
             }
             sb.append(toAdd);
-            showTooltip = true;
+            showTooltip = Utilities.popupPrameterTooltip();
             return sb;
         }
 

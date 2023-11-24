@@ -140,10 +140,30 @@ public abstract class AbstractAntlrLexerBridge<L extends Lexer, T extends TokenI
         input.seek(preFetchedToken.getStartIndex());
         return token(id);
     }
-    
+
+    /**
+     * Implementations can overwrite this method to help the {@linkplain #token(org.netbeans.api.lexer.TokenId)}
+     * method return Flyweight tokens, that could improve the lexer performance.
+     *
+     * The default implementation simply returns {@code null} that means no
+     * flyweight token creation.
+     *
+     * @param id the token id.
+     * @return the static text shall be used for flyweight tokens, if applicable
+     *         {@code null} otherwise.
+     *
+     * @since 1.3
+     */
+    protected String flyweightText(T id) {
+        return null;
+    }
+
     protected final Token<T> token(T id) {
         input.markToken();
-        return tokenFactory.createToken(id);
+        String ft = flyweightText(id);
+        return (ft != null) && (ft.length() == input.readLength())
+                ? tokenFactory.getFlyweightToken(id, ft)
+                : tokenFactory.createToken(id);
     }
 
     private org.antlr.v4.runtime.Token nextRealToken() {

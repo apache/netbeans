@@ -21,6 +21,7 @@ package org.netbeans.modules.java.lsp.server.db;
 import com.google.gson.Gson;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+
 import java.net.URL;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -33,6 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
@@ -65,12 +69,12 @@ import org.openide.util.lookup.ServiceProvider;
     "MSG_SelectDriver=Select db driver",
     "MSG_DriverNotFound=Driver not found",
     "MSG_ConnectionAdded=Connection added",
-    "MSG_ConnectionFailed=Connection failed",
+    "MSG_ConnectionFailed=Could not connect to the database \"{0}\", user {1}:\n{2}",
     "MSG_SelectSchema=Select Database Schema"
 })
 @ServiceProvider(service = CommandProvider.class)
 public class DBAddConnection implements CommandProvider {
-    public static final String DB_ADD_CONNECTION =  "db.add.connection"; // NOI18N
+    public static final String DB_ADD_CONNECTION =  "nbls.db.add.connection"; // NOI18N
     public static final String USER_ID =  "userId"; // NOI18N
     public static final String PASSWORD =  "password"; // NOI18N
     public static final String DRIVER =  "driver"; // NOI18N
@@ -78,6 +82,7 @@ public class DBAddConnection implements CommandProvider {
     public static final String SCHEMA =  "schema"; // NOI18N
     public static final String DISPLAY_NAME =  "displayName"; // NOI18N
 
+    private static final Logger LOG = Logger.getLogger(DBAddConnection.class.getName());
     private static final Map<String, String> urlTemplates = new HashMap<> ();
     static {
         urlTemplates.put("org.postgresql.Driver", "jdbc:postgresql://<HOST>:5432/<DB>");
@@ -91,10 +96,6 @@ public class DBAddConnection implements CommandProvider {
 
     @Override
     public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
-        if (!DB_ADD_CONNECTION.equals(command)) {
-            return null;
-        }
-        
         if (arguments != null && !arguments.isEmpty()) {
             final Map m = arguments.get(0) instanceof JsonNull ? Collections.emptyMap() : gson.fromJson((JsonObject) arguments.get(0), Map.class);
             String userId = m != null ? (String) m.get(USER_ID) : null;
@@ -103,19 +104,21 @@ public class DBAddConnection implements CommandProvider {
             String driverClass = m != null ? (String) m.get(DRIVER) : null;
             if (dbUrl != null && driverClass != null) {
 
-                JDBCDriver[] driver = JDBCDriverManager.getDefault().getDrivers(driverClass); //NOI18N
+                JDBCDriver[] driver = JDBCDriverManager.getDefault().getDrivers(driverClass);
                 if (driver != null && driver.length > 0) {
                     if (userId == null || password == null) {
                         Callback inputCallback = (input, number) -> {
                             switch (number) {
                                 case 1: {
                                     InputLine inputLine = new InputLine("", Bundle.MSG_EnterUsername());
-                                    inputLine.setInputText(userId == null ? "" : userId);
+                                    String userIdVal = userId != null ? userId : "";
+                                    inputLine.setInputText(userIdVal);
                                     return inputLine;
                                 }
                                 case 2: {
                                     PasswordLine inputLine = new PasswordLine("", Bundle.MSG_EnterUsername());
-                                    inputLine.setInputText(password == null ? "" : password);
+                                    String passwordVal = password != null ? password : "";
+                                    inputLine.setInputText(passwordVal);
                                     return inputLine;
                                 }
                                 default:
@@ -130,6 +133,7 @@ public class DBAddConnection implements CommandProvider {
                                 ConnectionManager.getDefault().addConnection(dbconn);
                                 DialogDisplayer.getDefault().notifyLater(new Message(Bundle.MSG_ConnectionAdded(), Message.INFORMATION_MESSAGE));
                             } catch (DatabaseException ex) {
+                                LOG.log(Level.INFO, "Add connection", ex);
                                 DialogDisplayer.getDefault().notifyLater(new Message(ex.getMessage(), Message.ERROR_MESSAGE));
                             }
                         });
@@ -139,6 +143,7 @@ public class DBAddConnection implements CommandProvider {
                             ConnectionManager.getDefault().addConnection(dbconn);
                             DialogDisplayer.getDefault().notifyLater(new Message(Bundle.MSG_ConnectionAdded(), Message.INFORMATION_MESSAGE));
                         } catch (DatabaseException ex) {
+                            LOG.log(Level.INFO, "Add connection with schema", ex);
                             DialogDisplayer.getDefault().notifyLater(new Message(ex.getMessage(), Message.ERROR_MESSAGE));
                         }
                     }
@@ -237,8 +242,21 @@ public class DBAddConnection implements CommandProvider {
                         ConnectionManager.getDefault().addConnection(dbconn);
                         schemas.addAll(getSchemas(dbconn));
                         failed = false;
-                    } catch(DatabaseException | SQLException ex) {
+                    } catch(SQLException ex) {
+                        LOG.log(Level.INFO, "validate", ex);
                         current.createNotificationLineSupport().setErrorMessage(ex.getMessage());
+                        current.setValid(false);
+                    } catch (DatabaseException ex) {
+                        String message;
+                        Throwable cause = ex.getCause();
+                        if (cause == null) cause = ex;
+                        if (cause.getCause() != null) {
+                            message = Bundle.MSG_ConnectionFailed(url, user, cause.getCause().getMessage());
+                        } else {
+                            message = cause.getMessage();
+                        }
+                        LOG.log(Level.INFO, "validate", ex);
+                        current.createNotificationLineSupport().setErrorMessage(message);
                         current.setValid(false);
                     } finally {
                         try {
@@ -260,10 +278,11 @@ public class DBAddConnection implements CommandProvider {
                     DatabaseConnection dbconn = DatabaseConnection.create(driver, url, user, schema, passwd, true);
                     try {
                         ConnectionManager.getDefault().addConnection(dbconn);
+                        DialogDisplayer.getDefault().notifyLater(new Message(Bundle.MSG_ConnectionAdded(), Message.INFORMATION_MESSAGE));
                     } catch (DatabaseException ex) {
+                        LOG.log(Level.INFO, "add", ex);
                         DialogDisplayer.getDefault().notifyLater(new Message(ex.getMessage(), Message.ERROR_MESSAGE));
                     }
-                    DialogDisplayer.getDefault().notifyLater(new Message(Bundle.MSG_ConnectionAdded(), Message.INFORMATION_MESSAGE));
                 }
                 return null;
             });

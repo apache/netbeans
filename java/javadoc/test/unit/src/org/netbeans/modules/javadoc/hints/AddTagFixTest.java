@@ -159,7 +159,7 @@ public class AddTagFixTest extends NbTestCase {
                 + "}\n");
     }
 
-    public void testAddReturnTagFixInEmpty1LineJavadoc() throws Exception {
+    public void DISABLE_testAddReturnTagFixInEmpty1LineJavadoc() throws Exception { //JDK-8312093
         HintTest.create()
                 .input(
                 "package test;\n"

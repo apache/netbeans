@@ -916,6 +916,57 @@ public class EnablePreviewMavenProjTest extends NbTestCase {
                 "</project>");
     }
 
+    public void testHasBuildButNotCompilerPlugin() throws Exception {
+        runTest("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>test</groupId>\n" +
+                "    <artifactId>mavenproject1</artifactId>\n" +
+                "    <version>1.0-SNAPSHOT</version>\n" +
+                "    <packaging>jar</packaging>\n" +
+                "    <build>\n" +
+                "        <plugins>\n" +
+                "            <plugin>\n" +
+                "                <groupId>org.apache.maven.plugins</groupId>\n" +
+                "                <artifactId>maven-surefire-plugin</artifactId>\n" +
+                "                <version>3.1.0</version>\n" +
+                "            </plugin>\n" +
+                "        </plugins>\n" +
+                "    </build>\n" +
+                "</project>",
+                "21",
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
+                "    <modelVersion>4.0.0</modelVersion>\n" +
+                "    <groupId>test</groupId>\n" +
+                "    <artifactId>mavenproject1</artifactId>\n" +
+                "    <version>1.0-SNAPSHOT</version>\n" +
+                "    <packaging>jar</packaging>\n" +
+                "    <build>\n" +
+                "        <plugins>\n" +
+                "            <plugin>\n" +
+                "                <groupId>org.apache.maven.plugins</groupId>\n" +
+                "                <artifactId>maven-surefire-plugin</artifactId>\n" +
+                "                <version>3.1.0</version>\n" +
+                "            </plugin>\n" +
+                "            <plugin>\n" +
+                "                <groupId>org.apache.maven.plugins</groupId>\n" +
+                "                <artifactId>maven-compiler-plugin</artifactId>\n" +
+                "                <version>3.11.0</version>\n" +
+                "                <configuration>\n" +
+                "                    <compilerArgs>\n" +
+                "                        <arg>--enable-preview</arg>\n" +
+                "                    </compilerArgs>\n" +
+                "                </configuration>\n" +
+                "            </plugin>\n" +
+                "        </plugins>\n" +
+                "    </build>\n" +
+                "    <properties>\n" +
+                "        <maven.compiler.release>21</maven.compiler.release>\n" +
+                "    </properties>\n" +
+                "</project>");
+    }
+
     private void runTest(String original, String newSL, String expected) throws Exception {
         runTest(original, newSL, expected, true);
     }

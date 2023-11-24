@@ -58,7 +58,7 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
     private final NbGradleProject gp;
     private final Project gradleProject;
     private final Dependency root;
-    private boolean valid;
+    private boolean valid = true;
 
     // @GuardedBy(this)
     PropertyChangeListener wL;
@@ -135,6 +135,7 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
         List<ChangeListener> ll;
         synchronized (this) {
             valid = false;
+            sourceMapping = null;
             if (listeners == null || listeners.isEmpty()) {
                 return;
             }

@@ -108,6 +108,7 @@ import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.MarkupContent;
 import org.eclipse.lsp4j.MessageActionItem;
 import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.ParameterInformation;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.ProgressParams;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
@@ -122,7 +123,12 @@ import org.eclipse.lsp4j.SemanticTokensCapabilities;
 import org.eclipse.lsp4j.SemanticTokensLegend;
 import org.eclipse.lsp4j.SemanticTokensParams;
 import org.eclipse.lsp4j.ResourceOperationKind;
+import org.eclipse.lsp4j.ShowDocumentParams;
+import org.eclipse.lsp4j.ShowDocumentResult;
 import org.eclipse.lsp4j.ShowMessageRequestParams;
+import org.eclipse.lsp4j.SignatureHelp;
+import org.eclipse.lsp4j.SignatureHelpParams;
+import org.eclipse.lsp4j.SignatureInformation;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
@@ -235,7 +241,7 @@ public class ServerTest extends NbTestCase {
         }
         
         @Override
-        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
             return Collections.emptyList();
         }
 
@@ -248,11 +254,8 @@ public class ServerTest extends NbTestCase {
 
         @Override
         public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-            if (COMMAND_EXTRACT_LOOKUP.equals(command)) {
-                commandLookup = Lookup.getDefault();
-                return CompletableFuture.completedFuture(true);
-            }
-            return null;
+            commandLookup = Lookup.getDefault();
+            return CompletableFuture.completedFuture(true);
         }
     }
     @Override
@@ -332,7 +335,6 @@ public class ServerTest extends NbTestCase {
         
         @Override
         public void telemetryEvent(Object arg0) {
-            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
@@ -423,6 +425,9 @@ public class ServerTest extends NbTestCase {
         assertTrue(log, codeActions.get(0).isRight());
         CodeAction action = codeActions.get(0).getRight();
         assertEquals("Cast ...o to String", action.getTitle());
+        assertNull(action.getEdit());
+        action = server.getTextDocumentService().resolveCodeAction(action).get();
+        assertNotNull(action.getEdit());
         assertEquals(1, action.getEdit().getDocumentChanges().size());
         assertEquals(1, action.getEdit().getDocumentChanges().get(0).getLeft().getEdits().size());
         TextEdit edit = action.getEdit().getDocumentChanges().get(0).getLeft().getEdits().get(0);
@@ -671,7 +676,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -710,6 +714,9 @@ public class ServerTest extends NbTestCase {
         assertTrue(log, codeActions.get(0).isRight());
         CodeAction action = codeActions.get(0).getRight();
         assertEquals("Remove .toString()", action.getTitle());
+        assertNull(action.getEdit());
+        action = server.getTextDocumentService().resolveCodeAction(action).get();
+        assertNotNull(action.getEdit());
         assertEquals(1, action.getEdit().getDocumentChanges().size());
         assertEquals(1, action.getEdit().getDocumentChanges().get(0).getLeft().getEdits().size());
         TextEdit edit = action.getEdit().getDocumentChanges().get(0).getLeft().getEdits().get(0);
@@ -778,7 +785,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -921,7 +927,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1005,7 +1010,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1070,7 +1074,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1134,7 +1137,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object params) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1236,7 +1238,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1304,7 +1305,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1354,7 +1354,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1395,6 +1394,65 @@ public class ServerTest extends NbTestCase {
                 "\n");
     }
 
+    public void testSignatureHelp() throws Exception {
+        File src = new File(getWorkDir(), "Test.java");
+        src.getParentFile().mkdirs();
+        String code = "/**\n" +
+                      " * This is a test class with Javadoc.\n" +
+                      " */\n" +
+                      "public class Test {\n" +
+                      "    public static void main(String[] args) {\n" +
+                      "        System.out.println(\"len: \" + args.length);\n" +
+                      "    }\n" +
+                      "}\n";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        FileUtil.refreshFor(getWorkDir());
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
+            @Override
+            public void telemetryEvent(Object arg0) {
+            }
+
+            @Override
+            public void publishDiagnostics(PublishDiagnosticsParams params) {
+            }
+
+            @Override
+            public void showMessage(MessageParams arg0) {
+            }
+
+            @Override
+            public CompletableFuture<MessageActionItem> showMessageRequest(ShowMessageRequestParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+            @Override
+            public void logMessage(MessageParams arg0) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        assertNotNull(result.getCapabilities().getSignatureHelpProvider());
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
+        SignatureHelp help = server.getTextDocumentService().signatureHelp(new SignatureHelpParams(new TextDocumentIdentifier(toURI(src)), new Position(5, 30))).get();
+        assertNotNull(help);
+        List<SignatureInformation> signatures = help.getSignatures();
+        assertNotNull(signatures);
+        SignatureInformation sInfo = signatures.stream().filter(si -> "println(String x) : void".equals(si.getLabel())).findFirst().get();
+        assertNotNull(sInfo);
+        assertEquals(signatures.indexOf(sInfo), help.getActiveSignature().intValue());
+        assertEquals(0, help.getActiveParameter().intValue());
+        List<ParameterInformation> params = sInfo.getParameters();
+        assertNotNull(params);
+        assertEquals(1, params.size());
+        assertTrue(params.get(0).getLabel().isLeft());
+        assertEquals("String x", params.get(0).getLabel().getLeft());
+        assertEquals(0, sInfo.getActiveParameter().intValue());
+    }
+
     public void testAdvancedCompletion1() throws Exception {
         String javaVersion = System.getProperty("java.specification.version");
         File src = new File(getWorkDir(), "Test.java");
@@ -1413,7 +1471,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1552,7 +1609,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1672,8 +1728,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> "Add import for java.util.List".equals(a.getTitle()))
                            .findAny();
         assertTrue(addImport.isPresent());
-        assertEquals(addImport.get().getKind(), CodeActionKind.QuickFix);
-        List<Either<TextDocumentEdit, ResourceOperation>> changes = addImport.get().getEdit().getDocumentChanges();
+        CodeAction action = addImport.get();
+        assertEquals(action.getKind(), CodeActionKind.QuickFix);
+        assertNull(action.getEdit());
+        action = server.getTextDocumentService().resolveCodeAction(action).get();
+        assertNotNull(action.getEdit());
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = action.getEdit().getDocumentChanges();
         assertEquals(1, changes.size());
         assertTrue(changes.get(0).isLeft());
         TextDocumentEdit edit = changes.get(0).getLeft();
@@ -1710,7 +1770,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1815,7 +1874,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1841,6 +1899,11 @@ public class ServerTest extends NbTestCase {
             public void logMessage(MessageParams arg0) {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
+
+            @Override
+            public CompletableFuture<ShowDocumentResult> showDocument(ShowDocumentParams params) {
+                return CompletableFuture.completedFuture(new ShowDocumentResult(true));
+            }
         }, client.getInputStream(), client.getOutputStream());
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
@@ -1849,13 +1912,21 @@ public class ServerTest extends NbTestCase {
         InitializeResult result = server.initialize(initParams).get();
         indexingComplete.await();
         Either<List<? extends SymbolInformation>, List<? extends WorkspaceSymbol>> symbols = server.getWorkspaceService().symbol(new WorkspaceSymbolParams("Tes")).get();
-        List<String> actual = symbols.getRight().stream().map(ws -> ws.getKind() + ":" + ws.getName() + ":" + ws.getContainerName() + ":"
-                + (ws.getLocation().isLeft() ? toString(ws.getLocation().getLeft()) : toString(ws.getLocation().getRight()))).collect(Collectors.toList());
+        List<String> actual = symbols.getRight().stream().map(symbol -> {
+            WorkspaceSymbol ws = null;
+            try {
+                ws = server.getWorkspaceService().resolveWorkspaceSymbol(symbol).get();
+            } catch (Exception ex) {}
+            if (ws == null) {
+                ws = symbol;
+            }
+            return ws.getKind() + ":" + ws.getName() + ":" + ws.getContainerName() + ":" + (ws.getLocation().isLeft() ? toString(ws.getLocation().getLeft()) : toString(ws.getLocation().getRight()));
+        }).collect(Collectors.toList());
         assertEquals(Arrays.asList("Constructor:Test():Test:Test.java:0:7-0:7",
                                    "Method:testMethod():Test:Test.java:2:4-2:38",
                                    "Constructor:TestNested():Test.TestNested:Test.java:1:18-1:18",
-                                   "Class:Test:null:Test",
-                                   "Class:TestNested:Test:Test%24TestNested"),
+                                   "Class:Test:null:?CLASS#Test",
+                                   "Class:TestNested:Test:?CLASS#Test$TestNested"),
                      actual);
     }
 
@@ -1875,7 +1946,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -1928,8 +1998,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> "Create local variable \"name\"".equals(a.getTitle()))
                            .findAny();
         assertTrue(generateVariable.isPresent());
-        assertEquals(generateVariable.get().getKind(), CodeActionKind.QuickFix);
-        List<Either<TextDocumentEdit, ResourceOperation>> changes = generateVariable.get().getEdit().getDocumentChanges();
+        CodeAction gvAction = generateVariable.get();
+        assertEquals(gvAction.getKind(), CodeActionKind.QuickFix);
+        assertNull(gvAction.getEdit());
+        gvAction = server.getTextDocumentService().resolveCodeAction(gvAction).get();
+        assertNotNull(gvAction.getEdit());
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = gvAction.getEdit().getDocumentChanges();
         assertEquals(1, changes.size());
         assertTrue(changes.get(0).isLeft());
         TextDocumentEdit edit = changes.get(0).getLeft();
@@ -1949,8 +2023,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> "Create field \"name\" in Test".equals(a.getTitle()))
                            .findAny();
         assertTrue(generateField.isPresent());
-        assertEquals(generateField.get().getKind(), CodeActionKind.QuickFix);
-        changes = generateField.get().getEdit().getDocumentChanges();
+        CodeAction gfAction = generateField.get();
+        assertEquals(gfAction.getKind(), CodeActionKind.QuickFix);
+        assertNull(gfAction.getEdit());
+        gfAction = server.getTextDocumentService().resolveCodeAction(gfAction).get();
+        assertNotNull(gfAction.getEdit());
+        changes = gfAction.getEdit().getDocumentChanges();
         assertEquals(1, changes.size());
         assertTrue(changes.get(0).isLeft());
         edit = changes.get(0).getLeft();
@@ -1971,8 +2049,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> "Create parameter \"name\"".equals(a.getTitle()))
                            .findAny();
         assertTrue(generateParameter.isPresent());
-        assertEquals(generateParameter.get().getKind(), CodeActionKind.QuickFix);
-        changes = generateParameter.get().getEdit().getDocumentChanges();
+        CodeAction gpAction = generateParameter.get();
+        assertEquals(gpAction.getKind(), CodeActionKind.QuickFix);
+        assertNull(gpAction.getEdit());
+        gpAction = server.getTextDocumentService().resolveCodeAction(gpAction).get();
+        assertNotNull(gpAction.getEdit());
+        changes = gpAction.getEdit().getDocumentChanges();
         assertEquals(1, changes.size());
         assertTrue(changes.get(0).isLeft());
         edit = changes.get(0).getLeft();
@@ -2003,7 +2085,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2056,8 +2137,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> "Create method \"convertToString(int)\" in Test".equals(a.getTitle()))
                            .findAny();
         assertTrue(generateMehtod.isPresent());
-        assertEquals(generateMehtod.get().getKind(), CodeActionKind.QuickFix);
-        List<Either<TextDocumentEdit, ResourceOperation>> changes = generateMehtod.get().getEdit().getDocumentChanges();
+        CodeAction action = generateMehtod.get();
+        assertEquals(action.getKind(), CodeActionKind.QuickFix);
+        assertNull(action.getEdit());
+        action = server.getTextDocumentService().resolveCodeAction(action).get();
+        assertNotNull(action.getEdit());
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = action.getEdit().getDocumentChanges();
         assertEquals(1, changes.size());
         assertTrue(changes.get(0).isLeft());
         TextDocumentEdit edit = changes.get(0).getLeft();
@@ -2089,7 +2174,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2142,8 +2226,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> "Create class \"Hello\" in Test".equals(a.getTitle()))
                            .findAny();
         assertTrue(generateClass.isPresent());
-        assertEquals(generateClass.get().getKind(), CodeActionKind.QuickFix);
-        List<Either<TextDocumentEdit, ResourceOperation>> changes = generateClass.get().getEdit().getDocumentChanges();
+        CodeAction action = generateClass.get();
+        assertEquals(action.getKind(), CodeActionKind.QuickFix);
+        assertNull(action.getEdit());
+        action = server.getTextDocumentService().resolveCodeAction(action).get();
+        assertNotNull(action.getEdit());
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = action.getEdit().getDocumentChanges();
         assertEquals(1, changes.size());
         assertTrue(changes.get(0).isLeft());
         TextDocumentEdit edit = changes.get(0).getLeft();
@@ -2176,7 +2264,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2229,8 +2316,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> "Implement all abstract methods".equals(a.getTitle()))
                            .findAny();
         assertTrue(implementAllAbstractMethods.isPresent());
-        assertEquals(implementAllAbstractMethods.get().getKind(), CodeActionKind.QuickFix);
-        List<Either<TextDocumentEdit, ResourceOperation>> changes = implementAllAbstractMethods.get().getEdit().getDocumentChanges();
+        CodeAction action = implementAllAbstractMethods.get();
+        assertEquals(action.getKind(), CodeActionKind.QuickFix);
+        assertNull(action.getEdit());
+        action = server.getTextDocumentService().resolveCodeAction(action).get();
+        assertNotNull(action.getEdit());
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = action.getEdit().getDocumentChanges();
         assertEquals(1, changes.size());
         assertTrue(changes.get(0).isLeft());
         TextDocumentEdit edit = changes.get(0).getLeft();
@@ -2266,7 +2357,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2319,8 +2409,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> "Implement all abstract methods".equals(a.getTitle()))
                            .findAny();
         assertTrue(implementAllAbstractMethods.isPresent());
-        assertEquals(implementAllAbstractMethods.get().getKind(), CodeActionKind.QuickFix);
-        List<Either<TextDocumentEdit, ResourceOperation>> changes = implementAllAbstractMethods.get().getEdit().getDocumentChanges();
+        CodeAction action = implementAllAbstractMethods.get();
+        assertEquals(action.getKind(), CodeActionKind.QuickFix);
+        assertNull(action.getEdit());
+        action = server.getTextDocumentService().resolveCodeAction(action).get();
+        assertNotNull(action.getEdit());
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = action.getEdit().getDocumentChanges();
         assertEquals(1, changes.size());
         assertTrue(changes.get(0).isLeft());
         TextDocumentEdit edit = changes.get(0).getLeft();
@@ -2353,7 +2447,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2406,8 +2499,12 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> "Implement all abstract methods".equals(a.getTitle()))
                            .findAny();
         assertTrue(implementAllAbstractMethods.isPresent());
-        assertEquals(implementAllAbstractMethods.get().getKind(), CodeActionKind.QuickFix);
-        List<Either<TextDocumentEdit, ResourceOperation>> changes = implementAllAbstractMethods.get().getEdit().getDocumentChanges();
+        CodeAction action = implementAllAbstractMethods.get();
+        assertEquals(action.getKind(), CodeActionKind.QuickFix);
+        assertNull(action.getEdit());
+        action = server.getTextDocumentService().resolveCodeAction(action).get();
+        assertNotNull(action.getEdit());
+        List<Either<TextDocumentEdit, ResourceOperation>> changes = action.getEdit().getDocumentChanges();
         assertEquals(1, changes.size());
         assertTrue(changes.get(0).isLeft());
         TextDocumentEdit edit = changes.get(0).getLeft();
@@ -2441,7 +2538,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2527,7 +2623,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(3).getNewText());
         Command command = introduceVariable.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -2550,7 +2646,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2631,7 +2726,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(2).getNewText());
         Command command = introduceConstant.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -2654,7 +2749,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2735,7 +2829,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(2).getNewText());
         Command command = introduceField.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -2758,7 +2852,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2842,7 +2935,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(2).getNewText());
         Command command = introduceMethod.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -2865,7 +2958,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -2999,7 +3091,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -3519,7 +3610,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -3653,7 +3743,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -4542,7 +4631,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -4622,7 +4710,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -4706,7 +4793,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -4785,7 +4871,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -4854,7 +4939,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -4989,7 +5073,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -5052,7 +5135,6 @@ public class ServerTest extends NbTestCase {
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LanguageClient() {
             @Override
             public void telemetryEvent(Object arg0) {
-                throw new UnsupportedOperationException("Not supported yet.");
             }
 
             @Override
@@ -5377,7 +5459,7 @@ public class ServerTest extends NbTestCase {
         }
         
         @Override
-        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
             return Collections.emptyList();
         }
         
@@ -5387,10 +5469,6 @@ public class ServerTest extends NbTestCase {
         
         @Override
         public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
-            if (!command.equals("_progressCommand")) {
-                return null;
-            }
-
             return CompletableFuture.<Object>supplyAsync(() -> {
                 ProgressHandle h = ProgressHandle.createHandle("Test Command", this::cancel);
                 try {
@@ -5422,7 +5500,7 @@ public class ServerTest extends NbTestCase {
 
         @Override
         public Set<String> getCommands() {
-            return Collections.singleton("_progressCommand");
+            return Collections.singleton("test._progressCommand");
         }
 
 
@@ -5492,7 +5570,7 @@ public class ServerTest extends NbTestCase {
         
         // now invoke the build
         ExecuteCommandParams ecp = new ExecuteCommandParams();
-        ecp.setCommand("_progressCommand");
+        ecp.setCommand("test._progressCommand");
         CompletableFuture<Object> buildF = server.getWorkspaceService().executeCommand(ecp);
         
         // the progress must be received at the client w/ the token, we need the token to issue cancel

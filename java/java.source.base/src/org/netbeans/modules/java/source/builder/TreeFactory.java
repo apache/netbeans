@@ -218,8 +218,18 @@ public class TreeFactory {
         return make.at(NOPOS).ConstantCaseLabel((JCExpression) expr);
     }
 
-    public PatternCaseLabelTree PatternCaseLabel(PatternTree pat, ExpressionTree guard) {
-        return make.at(NOPOS).PatternCaseLabel((JCPattern) pat, (JCExpression) guard);
+    public PatternCaseLabelTree PatternCaseLabel(PatternTree pat) {
+        return make.at(NOPOS).PatternCaseLabel((JCPattern) pat);
+    }
+
+    public StringTemplateTree StringTemplate(ExpressionTree processor, List<String> fragments, List<? extends ExpressionTree> expressions) {
+        return make.at(NOPOS).StringTemplate((JCExpression) processor,
+                                             fragments.stream().collect(com.sun.tools.javac.util.List.collector()),
+                                             expressions.stream().map(expr -> (JCExpression) expr).collect(com.sun.tools.javac.util.List.collector()));
+    }
+
+    public AnyPatternTree AnyPattern() {
+        return make.at(NOPOS).AnyPattern();
     }
 
     public DeconstructionPatternTree DeconstructionPattern(ExpressionTree deconstructor, List<? extends PatternTree> nested) {
@@ -234,31 +244,31 @@ public class TreeFactory {
     }
     
     public CaseTree Case(List<? extends ExpressionTree> expressions, List<? extends StatementTree> statements) {
-        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), statements);
+        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), null, statements);
     }
     
     public CaseTree Case(List<? extends ExpressionTree> expressions, Tree body) {
-        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), body);
+        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), null, body);
     }
     
-    public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, Tree body) {
+    public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, ExpressionTree guard, Tree body) {
         ListBuffer<JCStatement> lb = new ListBuffer<>();
         lb.append(body instanceof ExpressionTree ? (JCStatement) Yield((ExpressionTree) body) : (JCStatement) body);
         ListBuffer<JCCaseLabel> exprs = new ListBuffer<>();
         for (Tree t : expressions)
             exprs.append((JCCaseLabel)t);
-        return make.at(NOPOS).Case(CaseKind.RULE, exprs.toList(), lb.toList(), (JCTree) body);
+        return make.at(NOPOS).Case(CaseKind.RULE, exprs.toList(), (JCExpression) guard, lb.toList(), (JCTree) body);
     }
     
 
-    public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, List<? extends StatementTree> statements) {
+    public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, ExpressionTree guard, List<? extends StatementTree> statements) {
         ListBuffer<JCStatement> lb = new ListBuffer<JCStatement>();
         for (StatementTree t : statements)
             lb.append((JCStatement)t);
         ListBuffer<JCCaseLabel> exprs = new ListBuffer<>();
         for (Tree t : expressions)
             exprs.append((JCCaseLabel)t);
-        return make.at(NOPOS).Case(CaseKind.STATEMENT, exprs.toList(), lb.toList(), null);
+        return make.at(NOPOS).Case(CaseKind.STATEMENT, exprs.toList(), (JCExpression) guard, lb.toList(), null);
     }
     
     public CatchTree Catch(VariableTree parameter, BlockTree block) {
@@ -467,7 +477,16 @@ public class TreeFactory {
     }
     
     public ImportTree Import(Tree qualid, boolean importStatic) {
-        return make.at(NOPOS).Import((JCTree)qualid, importStatic);
+        if (qualid.getKind() == Kind.IDENTIFIER) {
+            //existing code sometimes sends the FQN as an identifier:
+            String fqn = ((IdentifierTree) qualid).getName().toString();
+            int lastDot = fqn.lastIndexOf('.');
+            if (lastDot != (-1)) {
+                qualid = make.Select(make.Ident(names.fromString(fqn.substring(0, lastDot))),
+                                     names.fromString(fqn.substring(lastDot + 1)));
+            }
+        }
+        return make.at(NOPOS).Import((JCFieldAccess)qualid, importStatic);
     }
     
     public InstanceOfTree InstanceOf(ExpressionTree expression, Tree type) {
@@ -925,10 +944,6 @@ public class TreeFactory {
         return make.at(NOPOS).BindingPattern((JCVariableDecl) vt);
     }
 
-    public ParenthesizedPatternTree ParenthesizedPattern(PatternTree pattern) {
-        return make.at(NOPOS).ParenthesizedPattern((JCPattern) pattern);
-    }
-
     public VariableTree Variable(VariableElement variable, ExpressionTree initializer) {
         return make.at(NOPOS).VarDef((Symbol.VarSymbol)variable, (JCExpression)initializer);
     }
@@ -1025,8 +1040,9 @@ public class TreeFactory {
     }
     
     private CaseTree modifyCaseStatement(CaseTree kejs, int index, StatementTree statement, Operation op) {
-        CaseTree copy = Case(
-                kejs.getExpression(),
+        CaseTree copy = CaseMultiplePatterns(
+                kejs.getLabels(),
+                kejs.getGuard(),
                 c(kejs.getStatements(), index, statement, op)
         );
         return copy;

@@ -50,6 +50,7 @@ import org.openide.util.Exceptions;
  *
  * @author Libor Kotouc
  */
+// @todo: Support JakartaEE
 public final class JspPaletteUtilities {
 
     public static final String CARET = "&CARET&";// NOI18N

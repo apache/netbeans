@@ -54,8 +54,8 @@
     <change id="CommandProvider">
         <api name="LSP_API"/>
         <summary>Added CommandProvider interface</summary>
-        <version major="1" minor="18"/>
-        <date day="30" month="6" year="2023"/>
+        <version major="1" minor="22"/>
+        <date day="30" month="11" year="2023"/>
         <author login="jlahoda"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
@@ -63,6 +63,33 @@
             has been added to allow server provide arbitrary commands runnable from a client.
         </description>
         <class package="org.netbeans.spi.lsp" name="CommandProvider"/>
+    </change>
+    <change id="SignatureInformation">
+        <api name="LSP_API"/>
+        <summary>Added SignatureInformation and SignatureInformationCollector</summary>
+        <version major="1" minor="20"/>
+        <date day="21" month="9" year="2023"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            A <a href="@TOP@/org/netbeans/api/lsp/SignatureInformation.html">SignatureInformation</a> class
+            and <a href="@TOP@/org/netbeans/spi/lsp/SignatureInformationCollector.html">SignatureInformationCollector</a> interface
+            introduced that allows to compute and collect signature information.
+        </description>
+        <class package="org.netbeans.api.lsp" name="SignatureInformation"/>
+        <class package="org.netbeans.spi.lsp" name="SignatureInformationCollector"/>
+    </change>
+    <change id="LazyCodeAction">
+        <api name="LSP_API"/>
+        <summary>Added CodeAction with lazy edit computation</summary>
+        <version major="1" minor="18"/>
+        <date day="17" month="7" year="2023"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/api/lsp/LazyCodeAction.html">LazyCodeAction</a> allows for lazy edit computation.
+        </description>
+        <class package="org.netbeans.api.lsp" name="LazyCodeAction"/>
     </change>
     <change id="Completion_getCommand">
         <api name="LSP_API"/>
@@ -72,7 +99,7 @@
         <author login="dbalek"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
-            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getCommand">Completion.getCommand</a> to get an optional command
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getCommand--">Completion.getCommand</a> to get an optional command
             that is executed after inserting the completion.
         </description>
         <class package="org.netbeans.api.lsp" name="Completion"/>

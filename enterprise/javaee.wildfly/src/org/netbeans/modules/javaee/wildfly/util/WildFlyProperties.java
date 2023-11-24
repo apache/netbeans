@@ -232,12 +232,16 @@ public class WildFlyProperties {
     }
 
     public List<URL> getClasses() {
-        List<URL> list = selectJars(FileUtil.toFileObject(new File(getModulePath("javax"))));
+        List<URL> classes = new ArrayList<>();
+
+        classes.addAll(selectJars(FileUtil.toFileObject(new File(getModulePath("jakarta")))));
+        classes.addAll(selectJars(FileUtil.toFileObject(new File(getModulePath("javax")))));
+
         File glassfish = new File(getModulePath("org/glassfish/javax"));
         if(glassfish.exists()) {
-            list.addAll(selectJars(FileUtil.toFileObject(glassfish)));
+            classes.addAll(selectJars(FileUtil.toFileObject(glassfish)));
         }
-        return list;
+        return classes;
     }
 
     public List<URL> getSources() {

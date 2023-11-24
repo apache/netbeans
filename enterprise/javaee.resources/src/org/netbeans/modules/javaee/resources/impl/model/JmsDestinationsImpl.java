@@ -73,6 +73,18 @@ public final class JmsDestinationsImpl extends PersistentObject implements JmsDe
     private void parseAnnotation(AnnotationMirror annotationMirror) {
         destinations = new ArrayList<JmsDestination>();
         AnnotationParser parser = AnnotationParser.create(getHelper());
+        parser.expectAnnotationArray("value", getHelper().resolveType(JndiResourcesDefinition.ANN_JMS_DESTINATION_JAKARTA), new ArrayValueHandler() { //NOI18N
+            @Override
+            public Object handleArray(List<AnnotationValue> arrayMembers) {
+                for (AnnotationValue arrayMember : arrayMembers) {
+                    Object arrayMemberValue = arrayMember.getValue();
+                    if (arrayMemberValue instanceof AnnotationMirror) {
+                        destinations.add(JmsDestinationImpl.parseAnnotation(getHelper(), (AnnotationMirror) arrayMemberValue));
+                    }
+                }
+                return null;
+            }
+        }, null);
         parser.expectAnnotationArray("value", getHelper().resolveType(JndiResourcesDefinition.ANN_JMS_DESTINATION), new ArrayValueHandler() { //NOI18N
             @Override
             public Object handleArray(List<AnnotationValue> arrayMembers) {
@@ -93,7 +105,10 @@ public final class JmsDestinationsImpl extends PersistentObject implements JmsDe
     }
 
     private static AnnotationMirror getSpecificAnnotationMirror(Map<String, ? extends AnnotationMirror> types) {
-        AnnotationMirror annotationMirror = types.get(JndiResourcesDefinition.ANN_JMS_DESTINATIONS);
+        AnnotationMirror annotationMirror = types.get(JndiResourcesDefinition.ANN_JMS_DESTINATIONS_JAKARTA);
+        if (annotationMirror == null) {
+            annotationMirror = types.get(JndiResourcesDefinition.ANN_JMS_DESTINATIONS);
+        }
         return annotationMirror;
     }
 

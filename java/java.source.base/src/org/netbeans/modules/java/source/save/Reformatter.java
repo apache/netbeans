@@ -2817,10 +2817,6 @@ public class Reformatter implements ReformatTask {
         @Override
         public Boolean visitPatternCaseLabel(PatternCaseLabelTree node, Void p) {
             scan(node.getPattern(), p);
-            space();
-            accept(IDENTIFIER);
-            space();
-            scan(node.getGuard(), p);
             return true;
         }
 
@@ -2831,16 +2827,6 @@ public class Reformatter implements ReformatTask {
             accept(LPAREN);
             spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
             wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, node.getNestedPatterns());
-            accept(RPAREN);
-            return true;
-        }
-
-        @Override
-        public Boolean visitParenthesizedPattern(ParenthesizedPatternTree node, Void p) {
-            accept(LPAREN);
-            spaces(0);
-            scan(node.getPattern(), p);
-            spaces(0);
             accept(RPAREN);
             return true;
         }
@@ -2975,6 +2961,12 @@ public class Reformatter implements ReformatTask {
                             space();
                         }
                     }
+                    if (node.getGuard() != null) {
+                        space();
+                        accept(IDENTIFIER);
+                        space();
+                        scan(node.getGuard(), p);
+                    }
                 }
             } else if (!node.getExpressions().isEmpty()) {
                 List<? extends ExpressionTree> exprs = node.getExpressions();
@@ -3007,7 +2999,11 @@ public class Reformatter implements ReformatTask {
                         if (stat.getKind() == Tree.Kind.BLOCK) {
                             indent = lastIndent;
                         }
-                        wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
+                        if (stat.getKind() == Tree.Kind.TRY) {
+                            wrapTree(cs.wrapCaseStatements(), -1, 1, stat);
+                        } else {
+                            wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
+                        }
                     } else {
                         newline();
                         scan(stat, p);
@@ -3557,6 +3553,18 @@ public class Reformatter implements ReformatTask {
             lastBlankLines = -1;
             lastBlankLinesTokenIndex = -1;
             lastBlankLinesDiff = null;
+            return true;
+        }
+
+        @Override
+        public Boolean visitStringTemplate(StringTemplateTree node, Void p) {
+            scan(node.getProcessor(), p);
+            accept(DOT);
+            for (ExpressionTree expression : node.getExpressions()) {
+                accept(STRING_LITERAL);
+                scan(expression, p);
+            }
+            accept(STRING_LITERAL);
             return true;
         }
 

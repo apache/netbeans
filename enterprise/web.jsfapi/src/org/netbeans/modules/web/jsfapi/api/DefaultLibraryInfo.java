@@ -18,49 +18,121 @@
  */
 package org.netbeans.modules.web.jsfapi.api;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Stream;
+
 public enum DefaultLibraryInfo implements LibraryInfo {
 
     // JSF 2.0, JSF 2.1
-    HTML("http://xmlns.jcp.org/jsf/html", "Html Basic", "h"), //NOI18N
-    JSF_CORE("http://xmlns.jcp.org/jsf/core", "Jsf Core", "f"), //NOI18N
-    JSTL_CORE("http://xmlns.jcp.org/jsp/jstl/core", "Jstl Core", "c"), //NOI18N
-    JSTL_CORE_FUNCTIONS("http://xmlns.jcp.org/jsp/jstl/functions", "Jstl Core Functions", "fn"), //NOI18N
-    FACELETS("http://xmlns.jcp.org/jsf/facelets", "Facelets", "ui"), //NOI18N
-    COMPOSITE("http://xmlns.jcp.org/jsf/composite", "Composite Components", "cc"), //NOI18N
+    HTML(
+            sortedSet(
+                    "jakarta.faces.html",
+                    "http://xmlns.jcp.org/jsf/html",
+                    "http://java.sun.com/jsf/html"
+            ),
+            "Html Basic",
+            "h"
+    ), //NOI18N
+    JSF_CORE(
+            sortedSet(
+                    "jakarta.faces.core",
+                    "http://xmlns.jcp.org/jsf/core",
+                    "http://java.sun.com/jsf/core"
+            ),
+            "Jsf Core",
+            "f"
+    ), //NOI18N
+    JSTL_CORE(
+            sortedSet(
+                    "jakarta.tags.core",
+                    "http://xmlns.jcp.org/jsp/jstl/core",
+                    "http://java.sun.com/jsp/jstl/core"
+            ),
+            "Jstl Core",
+            "c"
+    ), //NOI18N
+    JSTL_CORE_FUNCTIONS(
+            sortedSet(
+                    "jakarta.tags.functions",
+                    "http://xmlns.jcp.org/jsp/jstl/functions",
+                    "http://java.sun.com/jsp/jstl/functions"
+            ),
+            "Jstl Core Functions",
+            "fn"
+    ), //NOI18N
+    FACELETS(
+            sortedSet(
+                    "jakarta.faces.facelets",
+                    "http://xmlns.jcp.org/jsf/facelets",
+                    "http://java.sun.com/jsf/facelets"
+            ),
+            "Facelets",
+            "ui"
+    ), //NOI18N
+    COMPOSITE(
+            sortedSet(
+                    "jakarta.faces.composite",
+                    "http://xmlns.jcp.org/jsf/composite",
+                    "http://java.sun.com/jsf/composite"
+            ),
+            "Composite Components",
+            "cc"
+    ), //NOI18N
 
     // PrimeFaces
-    PRIMEFACES("http://primefaces.org/ui", "PrimeFaces", "p"), //NOI18N
-    PRIMEFACES_MOBILE("http://primefaces.org/mobile", "PrimeFaces Mobile", "pm"), //NOI18N
+    PRIMEFACES(
+            sortedSet(
+                    "http://primefaces.org/ui"
+            ),
+            "PrimeFaces",
+            "p"
+    ), //NOI18N
+    PRIMEFACES_MOBILE(
+            sortedSet(
+                    "http://primefaces.org/mobile"
+            ),
+            "PrimeFaces Mobile",
+            "pm"
+    ), //NOI18N
 
     // JSF 2.2+
-    JSF("http://xmlns.jcp.org/jsf", "Jsf", "jsf"), //NOI18N
-    PASSTHROUGH("http://xmlns.jcp.org/jsf/passthrough", "Passthrough", "p"); //NOI18N
+    JSF(
+            sortedSet(
+                    "jakarta.faces",
+                    "http://xmlns.jcp.org/jsf"
+            ),
+            "Jsf",
+            "jsf"
+    ), //NOI18N
+    PASSTHROUGH(
+            sortedSet(
+                    "jakarta.faces.passthrough",
+                    "http://xmlns.jcp.org/jsf/passthrough"
+            ),
+            "Passthrough",
+            "p"
+    ); //NOI18N
 
-    private static final DefaultLibraryInfo[] ALL_INFOS = values();
+    private final Set<String> allValidNamespaces;
+    private final String displayName;
+    private final String defaultPrefix;
 
-    private String namespace;
-    private String displayName;
-    private String defaultPrefix;
-
-
-    private DefaultLibraryInfo(String namespace, String displayName, String defaultPrefix) {
-        this.namespace = namespace;
+    private DefaultLibraryInfo(Set<String> allValidNamespaces, String displayName, String defaultPrefix) {
+        this.allValidNamespaces = allValidNamespaces;
         this.displayName = displayName;
         this.defaultPrefix = defaultPrefix;
     }
 
     @Override
     public String getNamespace() {
-        return namespace;
+        return allValidNamespaces.iterator().next();
     }
 
-    /**
-     * Second supported namespace by the library.
-     * @return legacy namespace if any or {@code null}
-     */
     @Override
-    public String getLegacyNamespace() {
-        return NamespaceUtils.NS_MAPPING.get(namespace);
+    public Set<String> getValidNamespaces() {
+        return allValidNamespaces;
     }
 
     @Override
@@ -74,15 +146,16 @@ public enum DefaultLibraryInfo implements LibraryInfo {
     }
 
     public static LibraryInfo forNamespace(String namespace) {
-        for (int i = 0; i < ALL_INFOS.length; i++) {
-            LibraryInfo li = ALL_INFOS[i];
-            if (li.getNamespace().equals(namespace)
-                    || (li.getLegacyNamespace() != null && li.getLegacyNamespace().equals(namespace))) {
-                return li;
-            }
-        }
-        return null;
+        return Stream.of(values())
+                .filter(lib -> lib.getValidNamespaces().contains(namespace))
+                .findFirst()
+                .orElse(null);
     }
 
+    private static Set<String> sortedSet(String... entries) {
+        Set<String> sortedSet = new LinkedHashSet<>();
+        Stream.of(entries).forEach(sortedSet::add);
 
+        return Collections.unmodifiableSet(sortedSet);
+    }
 }

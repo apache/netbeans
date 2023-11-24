@@ -116,6 +116,7 @@ import org.netbeans.modules.java.source.builder.CommentSetImpl;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.save.CasualDiff;
+import org.netbeans.modules.java.source.save.CasualDiff.StringTemplateFragmentTree;
 import org.netbeans.modules.java.source.save.DiffContext;
 import org.netbeans.modules.java.source.save.PositionEstimator;
 import org.netbeans.modules.java.source.save.Reformatter;
@@ -1342,6 +1343,11 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 printNoParenExpr(lab);
                 sep = ", "; //TODO: space or not should be a configuration setting
             }
+            if (tree.getGuard() != null) {
+                needSpace();
+                print("when ");
+                print(tree.getGuard());
+            }
         }
         Object caseKind = tree.getCaseKind();
         if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
@@ -1860,7 +1866,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         if (   diffContext != null
             && diffContext.origUnit != null
             && (start = diffContext.trees.getSourcePositions().getStartPosition(diffContext.origUnit, tree)) >= 0 //#137564
-            && (end = diffContext.trees.getSourcePositions().getEndPosition(diffContext.origUnit, tree)) >= 0
+            && (end = diffContext.getEndPosition(diffContext.origUnit, tree)) >= 0
             && origText != null) {
             print(origText.substring((int) start, (int) end));
             return ;
@@ -1868,7 +1874,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         if (   diffContext != null
             && diffContext.mainUnit != null
             && (start = diffContext.trees.getSourcePositions().getStartPosition(diffContext.mainUnit, tree)) >= 0 //#137564
-            && (end = diffContext.trees.getSourcePositions().getEndPosition(diffContext.mainUnit, tree)) >= 0
+            && (end = diffContext.getEndPosition(diffContext.mainUnit, tree)) >= 0
             && diffContext.mainCode != null) {
             print(diffContext.mainCode.substring((int) start, (int) end));
             return ;
@@ -1894,7 +1900,22 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	    break;
 	   case CLASS:
              if (tree.value instanceof String) {
-                 print("\"" + quote((String) tree.value, '\'') + "\"");
+                 String leading;
+                 String trailing;
+                 if (tree instanceof StringTemplateFragmentTree) {
+                     StringTemplateFragmentTree stf = (StringTemplateFragmentTree) tree;
+                     switch (stf.fragmentKind) {
+                         case START: leading = "\""; trailing = "\\{"; break;
+                         case MIDDLE: leading = "}"; trailing = "\\{"; break;
+                         case END: leading = "}"; trailing = "\""; break;
+                         default: throw new IllegalStateException(stf.fragmentKind.name());
+                     }
+                 } else {
+                     leading = trailing = "\"";
+                 }
+                 print(leading);
+                 print(quote((String) tree.value, '\''));
+                 print(trailing);
              } else if (tree.value instanceof String[]) {
                  int indent = out.col;
                  print("\"\"\"");
@@ -2072,12 +2093,28 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
-    public void visitPatternCaseLabel(JCPatternCaseLabel tree) {
-        print(tree.pat);
-        if (tree.guard != null) {
-            print(" when ");
-            printExpr(tree.guard);
+    public void visitStringTemplate(JCStringTemplate tree) {
+        printExpr(tree.processor, TreeInfo.postfixPrec);
+        print('.');
+
+        Iterator<? extends String> fragmentIt = tree.fragments.iterator();
+        Iterator<? extends JCExpression> expressionIt = tree.expressions.iterator();
+        boolean start = true;
+
+        while (expressionIt.hasNext()) {
+            if (start) {
+                print("\"");
+            } else {
+                print("}");
+            }
+            print(quote(fragmentIt.next(), '\''));
+            print("\\{");
+            print(expressionIt.next());
+            start = false;
         }
+        print("}");
+        print(quote(fragmentIt.next(), '\''));
+        print("\"");
     }
 
     @Override
@@ -2095,7 +2132,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         print("(UNKNOWN: " + tree + ")");
         newline();
     }
-    
+
+    @Override
+    public void visitPatternCaseLabel(JCPatternCaseLabel tree) {
+        print(tree.pat);
+    }
+
     @Override
     public void visitRecordPattern(JCRecordPattern tree) {
         print(tree.deconstructor);

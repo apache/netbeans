@@ -4376,6 +4376,13 @@ base_variable:var T_OBJECT_OPERATOR object_property:firstVarProperty dynamic_cla
      ClassName name = new ClassName(varleft, varright, var);
      RESULT = name;
 :}
+
+| parenthesis_expr:expr
+{:
+    ClassName name = new ClassName(exprleft, exprright, expr);
+    RESULT = name;
+:}
+
 ;
 
 dynamic_class_name_variable_properties ::=

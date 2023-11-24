@@ -54,6 +54,44 @@ public class EntityMappingsUtilities {
     private static final Set<String> ORM_ANNOTATIONS = new HashSet<String>();
 
     static {
+        ORM_ANNOTATIONS.add("jakarta.persistence.AssociationOverride");      // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.AssociationOverrides");     // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.AttributeOverride");        // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.AttributeOverrides");       // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Basic");                    // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Column");                   // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.DiscriminatorColumn");      // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.DiscriminatorValue");       // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Embeddable");               // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Embedded");                 // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.EmbeddedId");               // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Enumerated");               // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.GeneratedValue");           // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Id");                       // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.IdClass");                  // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Inheritance");              // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.JoinColumn");               // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.JoinColumns");              // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.JoinTable");                // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Lob");                      // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.ManyToMany");               // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.ManyToOne");                // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.MapKey");                   // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.MappedSuperclass");         // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.OneToMany");                // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.OneToOne");                 // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.OrderBy");                  // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.PrimaryKeyJoinColumn");     // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.PrimaryKeyJoinColumns");    // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.SecondaryTable");           // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.SecondaryTables");          // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.SequenceGenerator");        // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Table");                    // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.TableGenerator");           // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Temporal");                 // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Transient");                // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.UniqueConstraint");         // NOI18N
+        ORM_ANNOTATIONS.add("jakarta.persistence.Version");                  // NOI18N
         ORM_ANNOTATIONS.add("javax.persistence.AssociationOverride");      // NOI18N
         ORM_ANNOTATIONS.add("javax.persistence.AssociationOverrides");     // NOI18N
         ORM_ANNOTATIONS.add("javax.persistence.AttributeOverride");        // NOI18N
@@ -95,7 +133,9 @@ public class EntityMappingsUtilities {
     }
 
     public static boolean isTransient(Map<String, ? extends AnnotationMirror> annByType, Set<Modifier> modifiers) {
-        return annByType.containsKey("javax.persistence.Transient") || modifiers.contains(Modifier.TRANSIENT); // NOI18N
+        return annByType.containsKey("jakarta.persistence.Transient")
+                || annByType.containsKey("javax.persistence.Transient")
+                || modifiers.contains(Modifier.TRANSIENT); // NOI18N
     }
 
     public static boolean hasFieldAccess(AnnotationModelHelper helper, List<? extends Element> elements) {
@@ -154,12 +194,20 @@ public class EntityMappingsUtilities {
         final List<JoinColumn> result = new ArrayList<JoinColumn>();
         AnnotationMirror joinColumnAnn = annByType.get("javax.persistence.JoinColumn"); // NOI18N
         if (joinColumnAnn != null) {
+            joinColumnAnn = annByType.get("jakarta.persistence.JoinColumn"); // NOI18N
+        }
+        if (joinColumnAnn != null) {
             result.add(new JoinColumnImpl(helper, joinColumnAnn));
         } else {
-            AnnotationMirror joinColumnsAnnotation = annByType.get("javax.persistence.JoinColumns"); // NOI18N
+            AnnotationMirror joinColumnsAnnotation = annByType.get("jakarta.persistence.JoinColumns"); // NOI18N
+            String type = "jakarta.persistence.JoinColumn"; // NOI18N
+            if (joinColumnsAnnotation == null) {
+                joinColumnsAnnotation = annByType.get("javax.persistence.JoinColumns"); // NOI18N
+                type = "javax.persistence.JoinColumn"; // NOI18N
+            }
             if (joinColumnsAnnotation != null) {
                 AnnotationParser jcParser = AnnotationParser.create(helper);
-                jcParser.expectAnnotationArray("value", helper.resolveType("javax.persistence.JoinColumn"), new ArrayValueHandler() { // NOI18N
+                jcParser.expectAnnotationArray("value", helper.resolveType(type), new ArrayValueHandler() { // NOI18N
                     public Object handleArray(List<AnnotationValue> arrayMembers) {
                         for (AnnotationValue arrayMember : arrayMembers) {
                             AnnotationMirror joinColumnAnnotation = (AnnotationMirror)arrayMember.getValue();
@@ -176,14 +224,22 @@ public class EntityMappingsUtilities {
 
     public static List<PrimaryKeyJoinColumn> getPrimaryKeyJoinColumns(final AnnotationModelHelper helper, Map<String, ? extends AnnotationMirror> annByType) {
         final List<PrimaryKeyJoinColumn> result = new ArrayList<PrimaryKeyJoinColumn>();
-        AnnotationMirror pkJoinColumnAnn = annByType.get("javax.persistence.PrimaryKeyJoinColumn"); // NOI18N
+        AnnotationMirror pkJoinColumnAnn = annByType.get("jakarta.persistence.PrimaryKeyJoinColumn"); // NOI18N
+        if (pkJoinColumnAnn == null) {
+            pkJoinColumnAnn = annByType.get("javax.persistence.PrimaryKeyJoinColumn"); // NOI18N
+        }
         if (pkJoinColumnAnn != null) {
             result.add(new PrimaryKeyJoinColumnImpl(helper, pkJoinColumnAnn));
         } else {
             AnnotationMirror pkJoinColumnsAnnotation = annByType.get("javax.persistence.PrimaryKeyJoinColumns"); // NOI18N
+            String type = "javax.persistence.PrimaryKeyJoinColumn";
+            if (pkJoinColumnsAnnotation == null) {
+                pkJoinColumnsAnnotation = annByType.get("jakarta.persistence.PrimaryKeyJoinColumns"); // NOI18N
+                type = "jakarta.persistence.PrimaryKeyJoinColumn";
+            }
             if (pkJoinColumnsAnnotation != null) {
                 AnnotationParser pkjcParser = AnnotationParser.create(helper);
-                pkjcParser.expectAnnotationArray("value", helper.resolveType("javax.persistence.PrimaryKeyJoinColumn"), new ArrayValueHandler() { // NOI18N
+                pkjcParser.expectAnnotationArray("value", helper.resolveType(type), new ArrayValueHandler() { // NOI18N
                     public Object handleArray(List<AnnotationValue> arrayMembers) {
                         for (AnnotationValue arrayMember : arrayMembers) {
                             AnnotationMirror joinColumnAnnotation = (AnnotationMirror)arrayMember.getValue();
@@ -199,13 +255,23 @@ public class EntityMappingsUtilities {
     }
 
     public static String getTemporalType(AnnotationModelHelper helper, AnnotationMirror temporalAnnotation) {
-        AnnotationParser parser = AnnotationParser.create(helper);
-        parser.expectEnumConstant("value", helper.resolveType("javax.persistence.TemporalType"), null); // NOI18N
-        return parser.parse(temporalAnnotation).get("value", String.class);
+        if(((TypeElement) temporalAnnotation.getAnnotationType().asElement()).getQualifiedName().toString().startsWith("jakarta.")) {
+            AnnotationParser parser = AnnotationParser.create(helper);
+            parser.expectEnumConstant("value", helper.resolveType("jakarta.persistence.TemporalType"), null); // NOI18N
+            return parser.parse(temporalAnnotation).get("value", String.class);
+        } else {
+            AnnotationParser parser = AnnotationParser.create(helper);
+            parser.expectEnumConstant("value", helper.resolveType("javax.persistence.TemporalType"), null); // NOI18N
+            return parser.parse(temporalAnnotation).get("value", String.class);
+        }
     }
 
     public static IdClassImpl getIdClass(AnnotationModelHelper helper, TypeElement typeElement) {
-        AnnotationMirror idClassAnn = helper.getAnnotationsByType(typeElement.getAnnotationMirrors()).get("javax.persistence.IdClass"); // NOI18N
+        Map<String, ? extends AnnotationMirror> annByType = helper.getAnnotationsByType(typeElement.getAnnotationMirrors());
+        AnnotationMirror idClassAnn = annByType.get("jakarta.persistence.IdClass"); // NOI18N
+        if (idClassAnn == null) {
+            idClassAnn = annByType.get("javax.persistence.IdClass"); // NOI18N
+        }
         if (idClassAnn == null) {
             return null;
         }

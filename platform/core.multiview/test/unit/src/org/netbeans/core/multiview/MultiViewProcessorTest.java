@@ -343,10 +343,6 @@ public class MultiViewProcessorTest extends NbTestCase {
         AnnotationProcessorTestUtils.makeSource(getWorkDir(), "pkg.Test", src);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         boolean res = AnnotationProcessorTestUtils.runJavac(getWorkDir(), null, getWorkDir(), null, os);
-        if (AnnotationProcessorTestUtils.searchClasspathBroken()) {
-            assertTrue("Alas, compilation succeded", res);
-            return;
-        }
         assertFalse("Compilation should fail:\n" + os.toString(), res);
         assertTrue("because of missing icon:\n" + os.toString(), os.toString().contains("iconBase"));
         assertTrue("because of missing icon:\n" + os.toString(), os.toString().contains("Cannot find resource pkg/none-existing.png"));

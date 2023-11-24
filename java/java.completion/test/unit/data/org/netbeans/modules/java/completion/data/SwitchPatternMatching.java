@@ -21,18 +21,21 @@ package test;
 
 import java.util.stream.IntStream;
 
-public class Test{
-    
-     public void op(int a) {
-        Object obj = "test";
+public class Test {
+
+     public void op(Object obj) {
         String result = switch (obj) {
-            case null, String  ->
-                "null & String";
-            case CharSequence s when s. && obj. && IntStream.of(1).max().->
+            case null ->
+                "null";
+            case CharSequence s when s. && obj. ->
                 "CharSequence";
-            case (java.util.List list when list. && new StringBuilder().ERROR. && java.util.ArrayList<String>.)->"list";
+            case Point(var v, Integer j) when v. ->
+                "Point";
             default ->
                 "default";
         };
     }
-}    
+}
+
+record Point(Number x, Number y) {}
+enum Color {RED, GREEN, BLUE}

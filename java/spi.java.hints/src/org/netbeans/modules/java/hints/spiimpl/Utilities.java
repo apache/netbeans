@@ -1392,7 +1392,7 @@ public class Utilities {
         }
         
         @Override
-        public com.sun.tools.javac.util.List<JCTree> classOrInterfaceOrRecordBodyDeclaration(com.sun.tools.javac.util.Name className, boolean isInterface, boolean isRecord) {
+        public com.sun.tools.javac.util.List<JCTree> classOrInterfaceOrRecordBodyDeclaration(JCModifiers mods, com.sun.tools.javac.util.Name className, boolean isInterface, boolean isRecord) {
 
             if (token.kind == TokenKind.IDENTIFIER) {
                 if (token.name().startsWith(dollar)) {
@@ -1409,7 +1409,7 @@ public class Utilities {
                 }
             }
 
-            return super.classOrInterfaceOrRecordBodyDeclaration(className, isInterface, isRecord);
+            return super.classOrInterfaceOrRecordBodyDeclaration(mods, className, isInterface, isRecord);
         }
         
         @Override
@@ -1445,7 +1445,7 @@ public class Utilities {
                         JCIdent identTree = F.at(pos).Ident(name);
                         JCConstantCaseLabel labelTree = F.at(pos).ConstantCaseLabel(identTree);
                         return com.sun.tools.javac.util.List.of(
-                                new JackpotTrees.CaseWildcard(name, identTree, STATEMENT, com.sun.tools.javac.util.List.of(labelTree), com.sun.tools.javac.util.List.nil(), null)
+                                new JackpotTrees.CaseWildcard(name, identTree, STATEMENT, com.sun.tools.javac.util.List.of(labelTree), null, com.sun.tools.javac.util.List.nil(), null)
                         );
                     }
                 }

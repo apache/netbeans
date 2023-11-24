@@ -27,15 +27,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -63,6 +66,8 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletion;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionContext;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionResultSet;
+import org.netbeans.modules.micronaut.expression.EvaluationContext;
+import org.netbeans.modules.micronaut.expression.MicronautExpressionLanguageParser;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -123,7 +128,7 @@ public class MicronautDataCompletionTask {
 
     private int anchorOffset;
 
-    public static interface ItemFactory<T> {
+    public static interface ItemFactory<T> extends MicronautExpressionLanguageCompletion.ItemFactory<T> {
         T createFinderMethodItem(String name, String returnType, int offset);
         T createFinderMethodNameItem(String prefix, String name, int offset);
         T createSQLItem(CompletionItem item);
@@ -137,7 +142,7 @@ public class MicronautDataCompletionTask {
                 public void run(ResultIterator resultIterator) throws Exception {
                     CompilationController cc = CompilationController.get(resultIterator.getParserResult(caretOffset));
                     if (cc != null) {
-                        cc.toPhase(JavaSource.Phase.PARSED);
+                        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         anchorOffset = caretOffset;
                         String prefix = EMPTY;
                         TokenSequence<JavaTokenId> ts = cc.getTokenHierarchy().tokenSequence(JavaTokenId.language());
@@ -186,9 +191,10 @@ public class MicronautDataCompletionTask {
                                 break;
                             case STRING_LITERAL:
                                 if (path.getParentPath().getLeaf().getKind() == Tree.Kind.ASSIGNMENT && path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.ANNOTATION) {
-                                    resolveQueryAnnotation(cc, path.getParentPath().getParentPath(), prefix, caretOffset - anchorOffset, item -> {
+                                    items.addAll(resolveExpressionLanguage(cc, path.getParentPath(), prefix, caretOffset - anchorOffset, factory));
+                                    for (CompletionItem item : resolveQueryAnnotation(cc, path.getParentPath().getParentPath(), prefix, caretOffset - anchorOffset)) {
                                         items.add(factory.createSQLItem(item));
-                                    });
+                                    }
                                 }
                                 break;
                         }
@@ -205,13 +211,31 @@ public class MicronautDataCompletionTask {
         return anchorOffset;
     }
 
-    private <T> void resolveQueryAnnotation(CompilationController cc, TreePath path, String prefix, int off, java.util.function.Consumer<CompletionItem> consumer) throws IOException {
-        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-        Element el = cc.getTrees().getElement(path);
+    private <T> List<T> resolveExpressionLanguage(CompilationInfo info, TreePath path, String prefix, int off, MicronautExpressionLanguageCompletion.ItemFactory<T> factory) {
+        Matcher matcher = MicronautExpressionLanguageParser.MEXP_PATTERN.matcher(prefix);
+        while (matcher.find() && matcher.groupCount() == 1) {
+            if (off >= matcher.start(1) && off <= matcher.end(1)) {
+                EvaluationContext ctx = EvaluationContext.get(info, path);
+                if (ctx != null) {
+                    MicronautExpressionLanguageCompletion completion = new MicronautExpressionLanguageCompletion(info, ctx, matcher.group(1), anchorOffset + matcher.start(1));
+                    MicronautExpressionLanguageCompletion.Result<T> result = completion.query(off - matcher.start(1), factory);
+                    int newOffset = result.getAnchorOffset();
+                    if (newOffset >= 0) {
+                        this.anchorOffset = newOffset;
+                    }
+                    return result.getItems();
+                }
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    private List<CompletionItem> resolveQueryAnnotation(CompilationInfo info, TreePath path, String prefix, int off) {
+        Element el = info.getTrees().getElement(path);
         if (el instanceof TypeElement) {
             if (QUERY_ANNOTATION_TYPE_NAME.contentEquals(((TypeElement) el).getQualifiedName())) {
-                TreePath clsPath = cc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, path);
-                if (clsPath != null && checkForRepositoryAnnotation(cc.getTrees().getElement(clsPath).getAnnotationMirrors(), false, new HashSet<>())) {
+                TreePath clsPath = info.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, path);
+                if (clsPath != null && checkForRepositoryAnnotation(info.getTrees().getElement(clsPath).getAnnotationMirrors(), false, new HashSet<>())) {
                     SQLCompletionContext ctx = SQLCompletionContext.empty()
                             .setStatement(prefix)
                             .setOffset(off)
@@ -233,18 +257,20 @@ public class MicronautDataCompletionTask {
                         } catch (BadLocationException ex) {
                         }
                     });
-                    for (CompletionItem item : resultSet.getItems()) {
-                        consumer.accept(item);
+                    int newOffset = resultSet.getAnchorOffset();
+                    if (newOffset >= 0) {
+                        this.anchorOffset = newOffset;
                     }
+                    return resultSet.getItems();
                 }
             }
         }
+        return Collections.emptyList();
     }
 
-    private <T> void resolveFinderMethods(CompilationController cc, TreePath path, String prefix, boolean full, Consumer consumer) throws IOException {
-        cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-        TypeUtilities tu = cc.getTypeUtilities();
-        TypeElement entity = getEntityFor(cc, path);
+    private <T> void resolveFinderMethods(CompilationInfo info, TreePath path, String prefix, boolean full, Consumer consumer) throws IOException {
+        TypeUtilities tu = info.getTypeUtilities();
+        TypeElement entity = getEntityFor(info, path);
         if (entity != null) {
             Map<String, String> prop2Types = new HashMap<>();
             for (ExecutableElement method : ElementFilter.methodsIn(entity.getEnclosedElements())) {
@@ -387,7 +413,18 @@ public class MicronautDataCompletionTask {
         return null;
     }
 
-    private static boolean startsWith(String theString, String prefix) {
+    static CharSequence getTypeName(CompilationInfo info, TypeMirror type, boolean fqn, boolean varArg) {
+        Set<TypeUtilities.TypeNameOptions> options = EnumSet.noneOf(TypeUtilities.TypeNameOptions.class);
+        if (fqn) {
+            options.add(TypeUtilities.TypeNameOptions.PRINT_FQN);
+        }
+        if (varArg) {
+            options.add(TypeUtilities.TypeNameOptions.PRINT_AS_VARARG);
+        }
+        return info.getTypeUtilities().getTypeName(type, options.toArray(new TypeUtilities.TypeNameOptions[0]));
+    }
+
+    static boolean startsWith(String theString, String prefix) {
         return isCamelCasePrefix(prefix) ? isCaseSensitive()
                 ? startsWithCamelCase(theString, prefix)
                 : startsWithCamelCase(theString, prefix) || startsWithPlain(theString, prefix)

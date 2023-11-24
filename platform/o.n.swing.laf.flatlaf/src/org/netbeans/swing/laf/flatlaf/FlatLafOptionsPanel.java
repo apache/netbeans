@@ -19,6 +19,7 @@
 package org.netbeans.swing.laf.flatlaf;
 
 import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.Color;
 import java.io.BufferedWriter;
@@ -52,7 +53,8 @@ import org.openide.util.RequestProcessor;
 public class FlatLafOptionsPanel extends javax.swing.JPanel {
 
     private static final Color DEFAULT = new Color(0, true);
-    private static final Color currentAccentColor = FlatLafPrefs.getAccentColor();
+    private static final Color currentAccentColor = getPrefsAccentColorOrDefault();
+    private static final boolean currentUseWindowDecorations = FlatLafPrefs.isUseWindowDecorations();
 
     private static final RequestProcessor RP = new RequestProcessor(FlatLafOptionsPanel.class);
 
@@ -108,7 +110,7 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
     }
 
     private void updateEnabled() {
-        boolean supportsWindowDecorations = FlatLaf.supportsNativeWindowDecorations();
+        boolean supportsWindowDecorations = FlatLaf.supportsNativeWindowDecorations() || new FlatLightLaf().getSupportsWindowDecorations();
         useWindowDecorationsCheckBox.setEnabled(supportsWindowDecorations);
         unifiedTitleBarCheckBox.setEnabled(supportsWindowDecorations && useWindowDecorationsCheckBox.isSelected());
         menuBarEmbeddedCheckBox.setEnabled(supportsWindowDecorations && useWindowDecorationsCheckBox.isSelected());
@@ -341,7 +343,8 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
         FlatLafPrefs.setUnderlineMenuSelection(underlineMenuSelectionCheckBox.isSelected());
         FlatLafPrefs.setAlwaysShowMnemonics(alwaysShowMnemonicsCheckBox.isSelected());
 
-        if (!Objects.equals(accentColor, currentAccentColor)) {
+        if (!Objects.equals(accentColor, currentAccentColor)
+                || SystemInfo.isLinux && useWindowDecorationsCheckBox.isSelected() != currentUseWindowDecorations) {
             askForRestart();
         }
         return false;
@@ -368,7 +371,7 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
                 NotificationDisplayer.Priority.NORMAL, NotificationDisplayer.Category.INFO);
     }
 
-    private Color getPrefsAccentColorOrDefault() {
+    private static Color getPrefsAccentColorOrDefault() {
         Color accentColor = FlatLafPrefs.getAccentColor();
         return accentColor != null ? accentColor : DEFAULT;
     }

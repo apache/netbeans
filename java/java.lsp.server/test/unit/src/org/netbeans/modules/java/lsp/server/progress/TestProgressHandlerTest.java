@@ -148,11 +148,6 @@ public class TestProgressHandlerTest extends NbTestCase {
         }
 
         @Override
-        public void telemetryEvent(Object object) {
-            fail();
-        }
-
-        @Override
         public void publishDiagnostics(PublishDiagnosticsParams diagnostics) {
             fail();
         }

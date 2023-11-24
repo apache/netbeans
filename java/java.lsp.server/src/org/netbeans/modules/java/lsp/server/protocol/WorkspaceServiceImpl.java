@@ -169,10 +169,42 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     private final LspServerState server;
     private NbCodeLanguageClient client;
 
+    /**
+     * List of workspace folders as reported by the client. Initialized in `initialize` request,
+     * and then updated by didChangeWorkspaceFolder notifications.
+     */
+    private volatile List<FileObject> clientWorkspaceFolders = Collections.emptyList();
+
     WorkspaceServiceImpl(LspServerState server) {
         this.server = server;
     }
 
+    /**
+     * Returns the set of workspace folders reported by the client. If a folder from the list is recognized
+     * as a project, it will be also present in {@link #openedProjects()} including all its subprojects.
+     * The list of client workspace folders contains just toplevel items in client's workspace, as defined in
+     * LSP protocol.
+     * @return list of workspace folders
+     */
+    public List<FileObject> getClientWorkspaceFolders() {
+        return new ArrayList<>(clientWorkspaceFolders);
+    }
+
+    public void setClientWorkspaceFolders(List<WorkspaceFolder> clientWorkspaceFolders) {
+        if (clientWorkspaceFolders == null) {
+            return;
+        }
+        List<FileObject> newWorkspaceFolders = new ArrayList<>(this.clientWorkspaceFolders);
+        try {
+            for (WorkspaceFolder clientWorkspaceFolder : clientWorkspaceFolders) {
+                newWorkspaceFolders.add(Utils.fromUri(clientWorkspaceFolder.getUri()));
+            }
+            this.clientWorkspaceFolders = newWorkspaceFolders;
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+    
     @Override
     public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
         String command = Utils.decodeCommand(params.getCommand(), client.getNbCodeCapabilities());
@@ -1368,6 +1400,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     })
     @Override
     public void didChangeWorkspaceFolders(DidChangeWorkspaceFoldersParams params) {
+        // the client > server notification stream is sequential
+        List<FileObject> newWorkspaceFolders = new ArrayList<>(this.clientWorkspaceFolders);
         List<FileObject> refreshProjectFolders = new ArrayList<>();
         for (WorkspaceFolder wkspFolder : params.getEvent().getAdded()) {
             String uri = wkspFolder.getUri();
@@ -1375,12 +1409,35 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 FileObject f = Utils.fromUri(uri);
                 if (f != null) {
                     refreshProjectFolders.add(f);
+                    // avoid duplicates
+                    if (!newWorkspaceFolders.contains(f)) {
+                        LOG.log(Level.FINE, "Adding client workspace folder {0}", f);
+                        newWorkspaceFolders.add(f);
+                    }
                 }
             } catch (MalformedURLException ex) {
                 // expected, perhaps some client-specific URL scheme ?
                 LOG.fine("Workspace folder URI could not be converted into fileobject: {0}");
             }
         }
+        
+        if (params.getEvent().getRemoved() != null) {
+            for (WorkspaceFolder wsf : params.getEvent().getRemoved()) {
+                String uri = wsf.getUri();
+                try {
+                    FileObject f = Utils.fromUri(uri);
+                    if (f != null) {
+                        LOG.log(Level.FINE, "Removing client workspace folder {0}", f);
+                        newWorkspaceFolders.remove(f);
+                    }
+                } catch (MalformedURLException ex) {
+                    // was never added 
+                }
+            }
+        }
+        // the client > server notification stream is sequential; no need to sync
+        this.clientWorkspaceFolders = newWorkspaceFolders;
+        
         if (!refreshProjectFolders.isEmpty()) {
             server.asyncOpenSelectedProjects(refreshProjectFolders, true).thenAccept((projects) -> {
                 // report initialization of a project / projects

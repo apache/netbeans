@@ -283,7 +283,7 @@ class OccurenceBuilder {
     }
 
     void prepare(StaticConstantAccess staticConstantAccess, Scope scope) {
-        if (canBePrepared(staticConstantAccess, scope)) {
+        if (!staticConstantAccess.isDynamicName() && canBePrepared(staticConstantAccess, scope)) {
             ASTNodeInfo<StaticConstantAccess> node = ASTNodeInfo.create(staticConstantAccess);
             staticConstantInvocations.put(node, scope);
         }
@@ -336,7 +336,6 @@ class OccurenceBuilder {
     void prepare(Kind kind, Expression node, Scope scope) {
         ASTNodeInfo<Expression> nodeInfo = null;
         if (node instanceof Identifier) {
-
             nodeInfo = ASTNodeInfo.create(kind, (Identifier) node);
         } else if (node instanceof NamespaceName) {
             nodeInfo = ASTNodeInfo.create(kind, (NamespaceName) node);

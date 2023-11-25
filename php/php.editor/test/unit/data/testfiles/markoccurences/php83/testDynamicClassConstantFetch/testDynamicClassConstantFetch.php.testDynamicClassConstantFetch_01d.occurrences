@@ -1,0 +1,11 @@
+class |>MARK_OCCURRENCES:Test<| {
+|>MARK_OCCURRENCES:Test<|::{"TEST"};
+|>MARK_OCCURRENCES:Test<|::{$variable};
+|>MARK_OCCURRENCES:Tes^t<|::{$variable . $e};
+|>MARK_OCCURRENCES:Test<|::{strtoupper("test")};
+|>MARK_OCCURRENCES:Test<|::{'$variablee'};
+|>MARK_OCCURRENCES:Test<|::{strtolower("CLASS")};
+|>MARK_OCCURRENCES:Test<|::{1000};
+|>MARK_OCCURRENCES:Test<|::{|>MARK_OCCURRENCES:Test<|::method()}::{test($variable)};
+|>MARK_OCCURRENCES:Test<|::{test('test1')}::{test('test2')};
+$test = new |>MARK_OCCURRENCES:Test<|();

@@ -906,13 +906,15 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (isCancelled()) {
                 return;
             }
-            Identifier constant = node.getConstantName();
-            if (constant != null) {
-                ASTNodeColoring item = privateUnusedConstants.remove(new UnusedIdentifier(constant.getName(), typeInfo));
-                if (item != null) {
-                    addColoringForNode(item.identifier, item.coloring);
+            if (!node.isDynamicName()) {
+                Identifier constant = node.getConstantName();
+                if (constant != null) {
+                    ASTNodeColoring item = privateUnusedConstants.remove(new UnusedIdentifier(constant.getName(), typeInfo));
+                    if (item != null) {
+                        addColoringForNode(item.identifier, item.coloring);
+                    }
+                    addColoringForNode(constant, ColoringAttributes.STATIC_FIELD_SET);
                 }
-                addColoringForNode(constant, ColoringAttributes.STATIC_FIELD_SET);
             }
             super.visit(node);
         }

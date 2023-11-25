@@ -56,7 +56,7 @@ public class JavaLanguageTest extends TestCase {
         Set testCats = language.tokenCategories();
         Collection cats = Arrays.asList(new String[] {
             "error", "identifier", "operator", "separator", "whitespace", "error", "comment",
-            "keyword", "string", "character", "number", "literal", "special", "keyword-directive"
+            "keyword", "string", "character", "number", "literal", "annotation-separator", "keyword-directive"
         });
         LexerTestUtilities.assertCollectionsEqual("Invalid categories", cats, testCats);
         

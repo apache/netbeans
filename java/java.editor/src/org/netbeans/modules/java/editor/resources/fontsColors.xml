@@ -23,6 +23,7 @@
 
 <fontscolors>
     <!-- JavaTokenId categories -->
+    <fontcolor name="annotation-separator"  foreColor="996600" default="separator"/>
     <fontcolor name="character" default="char"/>
     <fontcolor name="identifier" default="identifier"/>
     <fontcolor name="keyword" default="keyword"/>
@@ -52,16 +53,16 @@
         <font style="bold" />
     </fontcolor>
     <fontcolor name="mod-module-declaration" default="identifier">
-            <font style="bold" />
+        <font style="bold" />
     </fontcolor>
     <fontcolor name="mod-class-declaration" default="identifier">
-            <font style="bold" />
+        <font style="bold" />
     </fontcolor>
     <fontcolor name="mod-interface-declaration" default="identifier">
-            <font style="bold" />
+        <font style="bold" />
     </fontcolor>
     <fontcolor name="mod-annotation-type-declaration" default="identifier">
-                <font style="bold" />
+        <font style="bold" />
     </fontcolor>
     <fontcolor name="mod-enum-declaration" default="identifier">
         <font style="bold" />
@@ -77,7 +78,7 @@
     <fontcolor name="mod-class" default="identifier"/>
     <fontcolor name="mod-record" default="identifier"/>
     <fontcolor name="mod-interface" default="identifier"/>
-    <fontcolor name="mod-annotation-type" default="identifier"/>
+    <fontcolor name="mod-annotation-type" foreColor="996600" default="identifier"/>
     <fontcolor name="mod-enum" default="identifier"/>
     
     

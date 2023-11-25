@@ -479,7 +479,8 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
         private void handlePossibleIdentifier(TreePath expr, boolean declaration) {
             handlePossibleIdentifier(expr, declaration, null);
         }
-        
+
+        @SuppressWarnings("AssignmentToMethodParameter")
         private void handlePossibleIdentifier(TreePath expr, boolean declaration, Element decl) {
             if (Utilities.isKeyword(expr.getLeaf())) {
                 //ignore keywords:
@@ -503,6 +504,12 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
                                  (declKind.isClass() || declKind.isInterface());
             TreePath currentPath = getCurrentPath();
             TreePath parent = currentPath.getParentPath();
+
+            if (isDeclType && 
+                    parent.getLeaf().getKind() == Kind.IMPORT) {
+                // Coloring types upon their kind is distracting on import statements
+                return;
+            }
 
             //for new <type>(), highlight <type> as a constructor:
             if (isDeclType &&
@@ -533,12 +540,12 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             }
             
             if (decl.getKind() == ElementKind.MODULE) {
-                c = new ArrayList<ColoringAttributes>();
+                c = new ArrayList<>();
                 c.add(ColoringAttributes.MODULE);
             }
 
             if (isDeclType) {
-                c = new ArrayList<ColoringAttributes>();
+                c = new ArrayList<>();
                 
                 addModifiers(decl, c);
                 
@@ -557,7 +564,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask {
             
             if (declaration) {
                 if (c == null) {
-                    c = new ArrayList<ColoringAttributes>();
+                    c = new ArrayList<>();
                 }
                 
                 c.add(ColoringAttributes.DECLARATION);

@@ -23,6 +23,7 @@
 
 <fontscolors>
     <!-- JavaTokenId categories -->
+    <fontcolor name="annotation-separator" foreColor="ff66ccff" default="separator"/>
     <fontcolor name="character" default="char"/>
     <fontcolor name="errors" default="error"/>
     <fontcolor name="identifier" default="identifier"/>
@@ -52,7 +53,7 @@
     </fontcolor>
     <fontcolor name="mod-class" />
     <fontcolor name="mod-interface" />
-    <fontcolor name="mod-annotation-type" />
+    <fontcolor name="mod-annotation-type" foreColor="ff66ccff" default="identifier" />
     <fontcolor name="mod-enum" />
     <fontcolor name="mod-deprecated" strikeThrough="404040" />
     <fontcolor name="mod-static" >

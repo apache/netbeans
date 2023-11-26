@@ -19,9 +19,18 @@ name: NetBeans
 
 on:
   push:
+    branches:
+      - 'master'
+      - 'delivery'
+      - 'release*'
+
   pull_request:
     # unlocked event is used as super secret restart button
     types: [opened, synchronize, unlocked]
+
+  # Allows you to run this workflow manually from the Actions tab in GitHub UI
+  # keep in mind this will have ALL tests enabled
+  workflow_dispatch:
 
 # cancel other PR workflow run in the same head-base group if it exists (e.g. during PR syncs)
 # if this is not a PR run (no github.head_ref and github.base_ref defined), use an UID as group

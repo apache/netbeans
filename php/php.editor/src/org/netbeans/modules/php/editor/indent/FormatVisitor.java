@@ -88,6 +88,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.netbeans.modules.php.editor.parser.astnodes.ReflectionVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
@@ -2505,6 +2506,26 @@ public class FormatVisitor extends DefaultVisitor {
         processUnionOrIntersectionType(node.getTypes());
     }
 
+    @Override
+    public void visit(ReflectionVariable node) {
+        // e.g. {$name}
+        while (moveNext() && ts.offset() < node.getName().getStartOffset()) {
+            addFormatToken(formatTokens);
+            if (ts.token().id() == PHPTokenId.PHP_CURLY_OPEN) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_DYNAMIC_NAME_BRACES, ts.offset() + ts.token().length()));
+            }
+        }
+        ts.movePrevious();
+        scan(node.getName());
+        while (moveNext() && ts.offset() < node.getEndOffset()) {
+            if (ts.token().id() == PHPTokenId.PHP_CURLY_CLOSE) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_DYNAMIC_NAME_BRACES, ts.offset()));
+            }
+            addFormatToken(formatTokens);
+        }
+        ts.movePrevious();
+    }
+
     private void processUnionOrIntersectionType(List<Expression> types) {
         assert !types.isEmpty();
         final Expression lastType = types.get(types.size() - 1);
@@ -2603,6 +2624,11 @@ public class FormatVisitor extends DefaultVisitor {
                 break;
             case PHPDOC_COMMENT_END:
                 tokens.add(new FormatToken(FormatToken.Kind.DOC_COMMENT_END, ts.offset(), ts.token().text().toString()));
+                break;
+            case PHP_PAAMAYIM_NEKUDOTAYIM:
+                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_SCOPE_RESOLUTION_OP, ts.offset()));
+                tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_SCOPE_RESOLUTION_OP, ts.offset() + ts.token().length()));
                 break;
             case PHP_OBJECT_OPERATOR:
                 tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_OBJECT_OP, ts.offset()));

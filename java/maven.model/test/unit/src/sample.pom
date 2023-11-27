@@ -348,7 +348,7 @@
       </snapshots>
       <id>central</id>
       <name>Maven Repository Switchboard</name>
-      <url>https://repo1.maven.org/maven2</url>
+      <url>https://repo.maven.apache.org/maven2</url>
     </repository>
   </repositories>
   <pluginRepositories>
@@ -369,7 +369,7 @@
       </snapshots>
       <id>central</id>
       <name>Maven Plugin Repository</name>
-      <url>https://repo1.maven.org/maven2</url>
+      <url>https://repo.maven.apache.org/maven2</url>
     </pluginRepository>
   </pluginRepositories>
   <dependencies>

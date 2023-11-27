@@ -61,7 +61,7 @@ import org.apache.tools.ant.util.FileUtils;
  * Motivation: http://wiki.netbeans.org/wiki/view/HgMigration#section-HgMigration-Binaries
  */
 public class DownloadBinaries extends Task {
-    private static final String MAVEN_REPO = "https://repo1.maven.org/maven2/";
+    private static final String MAVEN_REPO = "https://repo.maven.apache.org/maven2/";
 
     private static final Pattern URL_PATTERN = Pattern.compile("((https?://|file:)\\S*[^/\\s]+)\\s+(\\S+)$");
 

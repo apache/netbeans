@@ -40,7 +40,6 @@ import org.apache.maven.artifact.repository.metadata.Metadata;
 import org.apache.maven.artifact.repository.metadata.io.xpp3.MetadataXpp3Reader;
 import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
-import org.openide.util.NbBundle;
 
 /**
  * Payara Platform version.
@@ -61,7 +60,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
      */
     private static final String DOWNLOAD_URL = "fish/payara/distributions/payara/%s/payara-%s.zip"; // NOI18N
 
-    public static final String DEFAULT_REPOSITORY_URL = "https://repo1.maven.org/maven2/"; // NOI18N
+    public static final String DEFAULT_REPOSITORY_URL = "https://repo.maven.apache.org/maven2/"; // NOI18N
  
     private static final String METADATA_URL = "fish/payara/distributions/payara/maven-metadata.xml"; // NOI18N
 

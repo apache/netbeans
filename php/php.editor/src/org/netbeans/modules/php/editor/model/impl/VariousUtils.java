@@ -52,7 +52,6 @@ import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.IndexScope;
-import org.netbeans.modules.php.editor.model.InterfaceScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
@@ -1684,7 +1683,8 @@ public final class VariousUtils {
                 csi = (EnumScope) methodInScope;
             }
         }
-        if (inScope instanceof ClassScope || inScope instanceof InterfaceScope) {
+        if (inScope instanceof TypeScope) {
+            // e.g. const EXAMPLE = self::UNDEFINED;
             csi = (TypeScope) inScope;
         }
         if (csi != null) {

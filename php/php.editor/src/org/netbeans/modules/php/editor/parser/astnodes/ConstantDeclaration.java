@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 
 /**
  * Represents a class or namespace constant declaration.
@@ -33,6 +35,7 @@ import java.util.List;
  * private const CONSTANT = 1; // PHP7.1
  * #[A("attribute")]
  * const MY_CONST = "const"; // PHP8.0
+ * public const string MY_CONST = "constant"; // PHP 8.3: Typed class constants
  * </pre>
  */
 public class ConstantDeclaration extends BodyDeclaration {
@@ -40,36 +43,20 @@ public class ConstantDeclaration extends BodyDeclaration {
     private final ArrayList<Identifier> names = new ArrayList<>();
     private final ArrayList<Expression> initializers = new ArrayList<>();
     private final boolean isGlobal;
+    @NullAllowed
+    private final Expression constType;
 
-    // XXX remove?
-    private ConstantDeclaration(int start, int end, List<Identifier> names, List<Expression> initializers, boolean isGlobal) {
-        super(start, end, BodyDeclaration.Modifier.IMPLICIT_PUBLIC);
-
-        if (names == null || initializers == null || names.size() != initializers.size()) {
-            throw new IllegalArgumentException();
-        }
-
-        Iterator<Identifier> iteratorNames = names.iterator();
-        Iterator<Expression> iteratorInitializers = initializers.iterator();
-        Identifier identifier;
-        while (iteratorNames.hasNext()) {
-            identifier = iteratorNames.next();
-            this.names.add(identifier);
-            Expression initializer = iteratorInitializers.next();
-            this.initializers.add(initializer);
-        }
-        this.isGlobal = isGlobal;
-    }
-
-    private ConstantDeclaration(int start, int end, int modifier, List<Identifier> names, List<Expression> initializers, boolean isGlobal, List<Attribute> attributes) {
+    private ConstantDeclaration(int start, int end, int modifier, Expression constType, List<Identifier> names, List<Expression> initializers, boolean isGlobal, List<Attribute> attributes) {
         super(start, end, modifier, false, attributes);
+        this.constType = constType;
         this.names.addAll(names);
         this.initializers.addAll(initializers);
         this.isGlobal = isGlobal;
     }
 
-    public ConstantDeclaration(int start, int end, int modifier, List variablesAndDefaults, boolean isGlobal) {
+    private ConstantDeclaration(int start, int end, int modifier, Expression constType, List variablesAndDefaults, boolean isGlobal) {
         super(start, end, modifier);
+        this.constType = constType;
         if (variablesAndDefaults == null || variablesAndDefaults.isEmpty()) {
             throw new IllegalArgumentException();
         }
@@ -84,6 +71,14 @@ public class ConstantDeclaration extends BodyDeclaration {
         this.isGlobal = isGlobal;
     }
 
+    public ConstantDeclaration(int start, int end, int modifier, List variablesAndDefaults, boolean isGlobal) {
+        this(start, end, modifier, null, variablesAndDefaults, isGlobal);
+    }
+
+    public static ConstantDeclaration create(int start, int end, int modifier, @NullAllowed Expression constType, List variablesAndDefaults, boolean isGlobal) {
+        return new ConstantDeclaration(start, end, modifier, constType, variablesAndDefaults, isGlobal);
+    }
+
     public static ConstantDeclaration create(ConstantDeclaration declaration, List<Attribute> attributes) {
         assert attributes != null;
         int start = attributes.isEmpty() ? declaration.getStartOffset() : attributes.get(0).getStartOffset();
@@ -91,6 +86,7 @@ public class ConstantDeclaration extends BodyDeclaration {
                 start,
                 declaration.getEndOffset(),
                 declaration.getModifier(),
+                declaration.getConstType(),
                 declaration.getNames(),
                 declaration.getInitializers(),
                 declaration.isGlobal(),
@@ -114,6 +110,11 @@ public class ConstantDeclaration extends BodyDeclaration {
      */
     public List<Identifier> getNames() {
         return Collections.unmodifiableList(this.names);
+    }
+
+    @CheckForNull
+    public Expression getConstType() {
+        return constType;
     }
 
     @Override

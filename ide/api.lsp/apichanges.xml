@@ -51,6 +51,19 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="ErrorProvider.Context.getHintsConfigFile">
+        <api name="LSP_API"/>
+        <summary>Adding ErrorProvider.Context.getHintsConfigFile() method</summary>
+        <version major="1" minor="25"/>
+        <date day="14" month="12" year="2023"/>
+        <author login="Achal1607"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no" />
+        <description>
+            An <code>ErrorProvider.Context.getHintsConfigFile()</code> method introduced that allows to
+            get hints preference file config.
+        </description>
+        <class package="org.netbeans.spi.lsp" name="ErrorProvider"/>
+    </change>
     <change id="Completion_getLabelDetail">
         <api name="LSP_API"/>
         <summary>Added Completion.getLabelDetail() and Completion.getLabelDescription() methods.</summary>

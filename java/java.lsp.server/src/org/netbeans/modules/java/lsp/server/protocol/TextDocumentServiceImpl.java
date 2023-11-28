@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.sun.source.tree.ClassTree;
@@ -31,6 +32,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
@@ -40,6 +42,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -246,6 +250,7 @@ import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.text.NbDocument;
@@ -257,6 +262,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Union2;
+import org.openide.util.Utilities;
 import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
@@ -1957,7 +1963,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     private static final int DELAY = 500;
-
+    public boolean hintsSettingsRead = false;
+    private FileObject hintsPrefsFile = null;
     
     /**
      * Recomputes a specific kinds of diagnostics for the file, and returns a complete set diagnostics for that
@@ -1977,6 +1984,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             // the file does not exist.
             return result;
         }
+        if(!this.hintsSettingsRead){
+            // hints preferences file is not read yet
+            return result;
+        }
         try {
             String keyPrefix = key(errorKind);
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
@@ -1987,7 +1998,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                                     .lookup(ErrorProvider.class);
             List<? extends org.netbeans.api.lsp.Diagnostic> errors;
             if (errorProvider != null) {
-                ErrorProvider.Context context = new ErrorProvider.Context(file, offset, errorKind);
+                ErrorProvider.Context context = new ErrorProvider.Context(file, offset, errorKind, hintsPrefsFile);
                 class CancelListener implements DocumentListener {
                     @Override
                     public void insertUpdate(DocumentEvent e) {
@@ -2061,6 +2072,24 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             throw new IllegalStateException(ex);
         }
         return result;
+    }
+    
+    void updateJavaHintPreferences(JsonObject configuration) {
+        this.hintsSettingsRead = true;
+        
+        if (configuration != null && configuration.has("preferences") && configuration.get("preferences").isJsonPrimitive()) {
+            JsonElement pathPrimitive = configuration.get("preferences");
+            String path = pathPrimitive.getAsString();
+            Path p = Paths.get(path);
+            FileObject preferencesFile = FileUtil.toFileObject(p);
+            if (preferencesFile != null && preferencesFile.isValid() && preferencesFile.canRead() && preferencesFile.getName().endsWith(".xml")) {
+                this.hintsPrefsFile = preferencesFile;
+            }
+            else {
+                this.hintsPrefsFile = null;
+            }
+        }
+        reRunDiagnostics();
     }
     
     private String key(ErrorProvider.Kind errorKind) {

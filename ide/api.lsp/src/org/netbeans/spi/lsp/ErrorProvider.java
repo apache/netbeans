@@ -50,6 +50,7 @@ public interface ErrorProvider {
         private final Kind errorKind;
         private final AtomicBoolean cancel = new AtomicBoolean();
         private final List<Runnable> cancelCallbacks = new ArrayList<>();
+        private final FileObject hintsConfigFile;
 
         /**
          * Construct a new {@code Context}.
@@ -71,9 +72,38 @@ public interface ErrorProvider {
          * @since 1.4
          */
         public Context(FileObject file, int offset, Kind errorKind) {
+            this(file, offset, errorKind, null);
+        }
+
+        /**
+         * Construct a new {@code Context}.
+         *
+         * @param file file for which the errors/warnings should be computed
+         * @param offset offset for which the errors/warnings should be computed
+         * @param errorKind the type of errors/warnings that should be computed
+         * @param hintsConfigFile file which contains preferences for the the errors/warnings to be computed
+         *
+         * @since 1.25
+         * 
+         */
+        public Context(FileObject file, int offset, Kind errorKind, FileObject hintsConfigFile) {
             this.file = file;
             this.offset = offset;
             this.errorKind = errorKind;
+            this.hintsConfigFile = hintsConfigFile;
+        }
+
+        /**
+         *
+         * The file which contains preferences for the the errors/warnings to be computed.
+         *
+         * @return the file which contains preferences for the the errors/warnings to be computed
+         *
+         * @since 1.25
+         * 
+         */
+        public FileObject getHintsConfigFile() {
+            return hintsConfigFile;
         }
 
         /**

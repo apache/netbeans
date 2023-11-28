@@ -1,0 +1,4 @@
+Code completion result for source line:
+case TEST4 = EnumTest::{se|lf::{self::TES} . self::T};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+KEYWORD    self::                                     null

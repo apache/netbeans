@@ -80,6 +80,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
@@ -349,7 +350,9 @@ public class IntroduceSuggestion extends SuggestionRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (lineBounds.containsInclusive(staticConstantAccess.getStartOffset())) {
+            if (!staticConstantAccess.isDynamicName()
+                    && (staticConstantAccess.getDispatcher() instanceof NamespaceName) // e.g. ClassName::CONSTANT, self::CONSTANT
+                    && lineBounds.containsInclusive(staticConstantAccess.getStartOffset())) {
                 String constName = staticConstantAccess.getConstantName().getName();
                 String clzName = CodeUtils.extractUnqualifiedClassName(staticConstantAccess);
 

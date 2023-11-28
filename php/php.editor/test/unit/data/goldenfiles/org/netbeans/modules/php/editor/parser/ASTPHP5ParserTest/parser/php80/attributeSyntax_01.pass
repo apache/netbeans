@@ -1592,7 +1592,7 @@
                                 </AttributeName>
                                 <AttributeParameters>
                                     <Scalar start='824' end='825' type='INT' value='1'/>
-                                    <StaticConstantAccess start='827' end='841'>
+                                    <StaticConstantAccess start='827' end='841' isDynamicName='false'>
                                         <NamespaceName start='827' end='831' isCurrent='false' isGlobal='false'>
                                             <Identifier start='827' end='831' name='self'/>
                                         </NamespaceName>

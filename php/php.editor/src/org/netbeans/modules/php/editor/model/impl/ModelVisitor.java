@@ -445,7 +445,9 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 && !(parent instanceof TraitMethodAliasDeclaration) && !(parent instanceof IntersectionType)) {
             occurencesBuilder.prepare(Kind.CONSTANT, namespaceName, fileScope);
         }
-        occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
+        if (!(parent instanceof FunctionName)) {
+            occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
+        }
     }
 
     @Override
@@ -737,6 +739,10 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 scan(access1.getDimension());
                 name = access1.getExpression();
             }
+        } else if (constant instanceof ReflectionVariable) {
+            // PHP 8.3: Dynamic class constant fetch
+            // e.g. Example::{$example};
+            scan(constant);
         }
     }
 
@@ -1266,7 +1272,16 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         } else {
             occurencesBuilder.prepare(node, scope);
             if (functionName instanceof NamespaceName) {
-                occurencesBuilder.prepare((NamespaceName) functionName, scope);
+                NamespaceName namespaceName = (NamespaceName) functionName;
+                QualifiedName qualifiedName = QualifiedName.create(CodeUtils.extractQualifiedName(namespaceName));
+                if (!VariousUtils.isSpecialClassName(qualifiedName.toString())
+                        && VariousUtils.isAliased(qualifiedName, namespaceName.getStartOffset(), scope)) {
+                    // avoid adding normal function names to classIds, and so on
+                    // e.g. avoid highlighting both "Test"(class name) and "test"(function name) in the following case
+                    // class Test {}
+                    // test();
+                    occurencesBuilder.prepare(namespaceName, scope);
+                }
             }
         }
         ASTNodeInfo<FunctionInvocation> nodeInfo = ASTNodeInfo.create(node);

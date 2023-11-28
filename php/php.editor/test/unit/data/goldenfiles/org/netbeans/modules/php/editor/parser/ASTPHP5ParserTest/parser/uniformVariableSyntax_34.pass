@@ -1369,7 +1369,7 @@
                 </DereferencedArrayAccess>
             </ExpressionStatement>
             <ExpressionStatement start='385' end='411'>
-                <StaticConstantAccess start='385' end='410'>
+                <StaticConstantAccess start='385' end='410' isDynamicName='false'>
                     <FieldAccess start='385' end='400' isNullsafe='false'>
                         <Variable start='385' end='390' isDollared='true'>
                             <Identifier start='386' end='390' name='test'/>
@@ -1389,7 +1389,7 @@
                 </StaticConstantAccess>
             </ExpressionStatement>
             <ExpressionStatement start='412' end='447'>
-                <StaticConstantAccess start='412' end='446'>
+                <StaticConstantAccess start='412' end='446' isDynamicName='false'>
                     <FieldAccess start='412' end='428' isNullsafe='false'>
                         <FunctionInvocation start='412' end='418'>
                             <FucntionName start='412' end='416'>
@@ -1702,7 +1702,7 @@
                 </DereferencedArrayAccess>
             </ExpressionStatement>
             <ExpressionStatement start='692' end='720'>
-                <StaticConstantAccess start='692' end='719'>
+                <StaticConstantAccess start='692' end='719' isDynamicName='false'>
                     <FieldAccess start='692' end='709' isNullsafe='false'>
                         <DereferencableVariable start='692' end='699'>
                             <Variable start='693' end='698' isDollared='true'>
@@ -1724,7 +1724,7 @@
                 </StaticConstantAccess>
             </ExpressionStatement>
             <ExpressionStatement start='721' end='758'>
-                <StaticConstantAccess start='721' end='757'>
+                <StaticConstantAccess start='721' end='757' isDynamicName='false'>
                     <FieldAccess start='721' end='739' isNullsafe='false'>
                         <DereferencableVariable start='721' end='729'>
                             <FunctionInvocation start='722' end='728'>

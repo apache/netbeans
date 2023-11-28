@@ -1,0 +1,7 @@
+Code completion result for source line:
+case TEST1 = self::{|};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+------------------------------------
+KEYWORD    array                                      null

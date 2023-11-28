@@ -52,7 +52,6 @@ import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.FunctionScope;
 import org.netbeans.modules.php.editor.model.IndexScope;
-import org.netbeans.modules.php.editor.model.InterfaceScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
 import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
@@ -1174,13 +1173,15 @@ public final class VariousUtils {
             }
         } else if (varBase instanceof StaticConstantAccess) {
             StaticConstantAccess constantAccess = (StaticConstantAccess) varBase;
-            String clsName = CodeUtils.extractUnqualifiedName(constantAccess.getDispatcher());
-            String constName = CodeUtils.extractQualifiedName(constantAccess.getConstant());
-            if (constName != null) {
-                if (clsName != null) {
-                    return PRE_OPERATION_TYPE_DELIMITER + STATIC_CONSTANT_TYPE_PREFIX + clsName + '.' + constName;
+            if (!constantAccess.isDynamicName()) {
+                String clsName = CodeUtils.extractUnqualifiedName(constantAccess.getDispatcher());
+                String constName = CodeUtils.extractQualifiedName(constantAccess.getConstant());
+                if (constName != null) {
+                    if (clsName != null) {
+                        return PRE_OPERATION_TYPE_DELIMITER + STATIC_CONSTANT_TYPE_PREFIX + clsName + '.' + constName;
+                    }
+                    return PRE_OPERATION_TYPE_DELIMITER + STATIC_CONSTANT_TYPE_PREFIX + constName;
                 }
-                return PRE_OPERATION_TYPE_DELIMITER + STATIC_CONSTANT_TYPE_PREFIX + constName;
             }
         }
 
@@ -1682,7 +1683,8 @@ public final class VariousUtils {
                 csi = (EnumScope) methodInScope;
             }
         }
-        if (inScope instanceof ClassScope || inScope instanceof InterfaceScope) {
+        if (inScope instanceof TypeScope) {
+            // e.g. const EXAMPLE = self::UNDEFINED;
             csi = (TypeScope) inScope;
         }
         if (csi != null) {

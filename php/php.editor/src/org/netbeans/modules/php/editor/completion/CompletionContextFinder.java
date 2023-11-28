@@ -61,6 +61,7 @@ final class CompletionContextFinder {
     private static final String MULTI_CATCH_EXCEPTION_TOKENS = "MULTI_CATCH_EXCEPTION_TOKENS"; //NOI18N
     private static final String COMBINED_USE_STATEMENT_TOKENS = "COMBINED_USE_STATEMENT_TOKENS"; //NOI18N
     private static final String CONST_STATEMENT_TOKENS = "CONST_STATEMENT_TOKENS"; //NOI18N
+    private static final String ENUM_CASE_STATEMENT_TOKENS = "ENUM_CASE_STATEMENT_TOKENS"; //NOI18N
     private static final String FIELD_UNION_OR_INTERSECTION_TYPE_TOKENS = "FIELD_UNION_TYPE_TOKENS"; //NOI18N
     private static final String FIELD_MODIFIERS_TOKENS = "FIELD_MODIFIERS_TOKENS"; //NOI18N
     private static final String OBJECT_OPERATOR_TOKEN = "OBJECT_OPERATOR_TOKEN"; //NOI18N
@@ -204,6 +205,10 @@ final class CompletionContextFinder {
             new Object[]{PHPTokenId.PHP_CONST, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING, PHPTokenId.WHITESPACE, CONST_STATEMENT_TOKENS},
             new Object[]{PHPTokenId.PHP_CONST, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING, CONST_STATEMENT_TOKENS}
     );
+    private static final List<Object[]> ENUM_CASE_TOKENCHAINS = Arrays.asList(
+            new Object[]{PHPTokenId.PHP_CASE, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING, PHPTokenId.WHITESPACE, CONST_STATEMENT_TOKENS},
+            new Object[]{PHPTokenId.PHP_CASE, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING, CONST_STATEMENT_TOKENS}
+    );
     private static final List<Object[]> SERVER_ARRAY_TOKENCHAINS = Collections.singletonList(
             new Object[]{PHPTokenId.PHP_VARIABLE, PHPTokenId.PHP_TOKEN});
     private static final List<String> SERVER_ARRAY_TOKENTEXTS =
@@ -211,7 +216,7 @@ final class CompletionContextFinder {
 
     public static enum CompletionContext {
 
-        EXPRESSION, GLOBAL_CONST_EXPRESSION, CLASS_CONST_EXPRESSION, MATCH_EXPRESSION,
+        EXPRESSION, GLOBAL_CONST_EXPRESSION, CLASS_CONST_EXPRESSION, MATCH_EXPRESSION, ENUM_CASE_EXPRESSION,
         HTML, CLASS_NAME, INTERFACE_NAME, BACKING_TYPE,
         TYPE_NAME, RETURN_TYPE_NAME, RETURN_UNION_OR_INTERSECTION_TYPE_NAME, FIELD_TYPE_NAME, VISIBILITY_MODIFIER_OR_TYPE_NAME, STRING,
         CLASS_MEMBER, STATIC_CLASS_MEMBER, PHPDOC, INHERITANCE, EXTENDS, IMPLEMENTS, METHOD_NAME,
@@ -328,6 +333,8 @@ final class CompletionContextFinder {
                     return CompletionContext.FIELD_TYPE_NAME;
                 } else if (acceptTokenChains(tokenSequence, CONST_TOKENCHAINS, moveNextSucces)) {
                     return CompletionContext.CLASS_CONST_EXPRESSION;
+                } else if (acceptTokenChains(tokenSequence, ENUM_CASE_TOKENCHAINS, moveNextSucces)) {
+                    return CompletionContext.ENUM_CASE_EXPRESSION;
                 } else if (acceptTokenChains(tokenSequence, CLASS_CONTEXT_KEYWORDS_TOKENCHAINS, moveNextSucces)) {
                     return CompletionContext.CLASS_CONTEXT_KEYWORDS;
                 }
@@ -540,6 +547,11 @@ final class CompletionContextFinder {
                     accept = false;
                     break;
                 }
+            } else if (tokenID == ENUM_CASE_STATEMENT_TOKENS) {
+                if (!consumeUntilEnumCaseEqual(tokenSequence)) {
+                    accept = false;
+                    break;
+                }
             } else if (tokenID == OBJECT_OPERATOR_TOKEN) {
                 if (!consumeObjectOperator(tokenSequence)) {
                     accept = false;
@@ -749,9 +761,25 @@ final class CompletionContextFinder {
     private static boolean consumeUntilConstEqual(TokenSequence tokenSequence) {
         boolean hasEqual = false;
         do {
-            if (tokenSequence.token().id() == PHPTokenId.PHP_SEMICOLON
-                    || tokenSequence.token().id() == PHPTokenId.PHP_CURLY_OPEN
-                    || tokenSequence.token().id() == PHPTokenId.PHP_CURLY_CLOSE) {
+            if (tokenSequence.token().id() == PHPTokenId.PHP_CONST
+                    || tokenSequence.token().id() == PHPTokenId.PHP_SEMICOLON) {
+                break;
+            }
+            if (isEqualSign(tokenSequence.token())) {
+                hasEqual = true;
+                tokenSequence.movePrevious();
+                break;
+            }
+        } while (tokenSequence.movePrevious());
+
+        return hasEqual;
+    }
+
+    private static boolean consumeUntilEnumCaseEqual(TokenSequence tokenSequence) {
+        boolean hasEqual = false;
+        do {
+            if (tokenSequence.token().id() == PHPTokenId.PHP_CASE
+                    || tokenSequence.token().id() == PHPTokenId.PHP_SEMICOLON) {
                 break;
             }
             if (isEqualSign(tokenSequence.token())) {

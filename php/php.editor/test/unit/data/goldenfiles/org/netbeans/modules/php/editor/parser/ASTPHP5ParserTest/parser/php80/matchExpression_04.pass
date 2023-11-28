@@ -562,7 +562,7 @@
                                         <Variable start='1134' end='1140' isDollared='true'>
                                             <Identifier start='1135' end='1140' name='state'/>
                                         </Variable>
-                                        <StaticConstantAccess start='1143' end='1153'>
+                                        <StaticConstantAccess start='1143' end='1153' isDynamicName='false'>
                                             <NamespaceName start='1143' end='1147' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='1143' end='1147' name='self'/>
                                             </NamespaceName>
@@ -583,7 +583,7 @@
                                         <MatchArms>
                                             <MatchArm start='1198' end='1236' isDefault='false'>
                                                 <Conditions>
-                                                    <StaticConstantAccess start='1198' end='1220'>
+                                                    <StaticConstantAccess start='1198' end='1220' isDynamicName='false'>
                                                         <NamespaceName start='1198' end='1213' isCurrent='false' isGlobal='false'>
                                                             <Identifier start='1198' end='1213' name='MatchExpression'/>
                                                         </NamespaceName>
@@ -613,7 +613,7 @@
                                             </MatchArm>
                                             <MatchArm start='1250' end='1292' isDefault='false'>
                                                 <Conditions>
-                                                    <StaticConstantAccess start='1250' end='1274'>
+                                                    <StaticConstantAccess start='1250' end='1274' isDynamicName='false'>
                                                         <NamespaceName start='1250' end='1265' isCurrent='false' isGlobal='false'>
                                                             <Identifier start='1250' end='1265' name='MatchExpression'/>
                                                         </NamespaceName>
@@ -638,7 +638,7 @@
                                             </MatchArm>
                                             <MatchArm start='1306' end='1349' isDefault='false'>
                                                 <Conditions>
-                                                    <StaticConstantAccess start='1306' end='1327'>
+                                                    <StaticConstantAccess start='1306' end='1327' isDynamicName='false'>
                                                         <NamespaceName start='1306' end='1321' isCurrent='false' isGlobal='false'>
                                                             <Identifier start='1306' end='1321' name='MatchExpression'/>
                                                         </NamespaceName>

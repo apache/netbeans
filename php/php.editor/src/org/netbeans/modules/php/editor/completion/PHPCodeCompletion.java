@@ -447,7 +447,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 autoCompleteConstants(completionResult, request);
                 autoCompleteKeywords(completionResult, request, PHP_GLOBAL_CONST_KEYWORDS);
                 break;
-            case CLASS_CONST_EXPRESSION:
+            case CLASS_CONST_EXPRESSION: // no break
+            case ENUM_CASE_EXPRESSION:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request, null, true);
                 autoCompleteConstants(completionResult, request);

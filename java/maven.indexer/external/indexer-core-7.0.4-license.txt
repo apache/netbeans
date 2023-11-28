@@ -3,7 +3,7 @@ Description: Maven remote repository indexing engine.
 Version: 7.0.4
 Origin: Apache Software Foundation
 License: Apache-2.0
-URL: https://repo1.maven.org/maven2/org/apache/maven/indexer/
+URL: https://repo.maven.apache.org/maven2/org/apache/maven/indexer/
 Source: https://github.com/apache/maven-indexer
 Files: indexer-core-7.0.4.jar search-api-7.0.4.jar search-backend-smo-7.0.4.jar
 

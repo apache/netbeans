@@ -43,9 +43,9 @@ public class JsBracesMatcher implements BracesMatcher {
     private static final char [] PAIRS = new char [] { '(', ')', '[', ']', '{', '}' }; //NOI18N
 
     private static final JsTokenId [] PAIR_TOKEN_IDS = new JsTokenId [] {
-        JsTokenId.BRACKET_LEFT_PAREN, JsTokenId.BRACKET_RIGHT_PAREN,
-        JsTokenId.BRACKET_LEFT_BRACKET, JsTokenId.BRACKET_RIGHT_BRACKET,
-        JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.BRACKET_RIGHT_CURLY
+            JsTokenId.BRACKET_LEFT_PAREN, JsTokenId.BRACKET_RIGHT_PAREN,
+            JsTokenId.BRACKET_LEFT_BRACKET, JsTokenId.BRACKET_RIGHT_BRACKET,
+            JsTokenId.BRACKET_LEFT_CURLY, JsTokenId.BRACKET_RIGHT_CURLY
     };
 
     private final MatcherContext context;
@@ -191,7 +191,7 @@ public class JsBracesMatcher implements BracesMatcher {
     }
 
     public static List<TokenSequence<?>> getEmbeddedTokenSequences(
-        TokenHierarchy<?> th, int offset, boolean backwardBias, Language<?> language) {
+            TokenHierarchy<?> th, int offset, boolean backwardBias, Language<?> language) {
         List<TokenSequence<?>> sequences = th.embeddedTokenSequences(offset, backwardBias);
 
         for (int i = sequences.size() - 1; i >= 0; i--) {

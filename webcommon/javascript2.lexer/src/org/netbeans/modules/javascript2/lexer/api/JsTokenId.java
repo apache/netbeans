@@ -71,11 +71,11 @@ public enum JsTokenId implements TokenId {
     STRING_BEGIN(null, "string"), // NOI18N
     STRING(null, "string"), // NOI18N
     STRING_END(null, "string"), // NOI18N
-    
+
     TEMPLATE_BEGIN(null, "string"), // NOI18N
     TEMPLATE(null, "string"), // NOI18N
     TEMPLATE_END(null, "string"), // NOI18N
-    
+
     TEMPLATE_EXP_BEGIN(null, "separator"), // NOI18N
     TEMPLATE_EXP_END(null, "separator"), // NOI18N
 
@@ -177,7 +177,7 @@ public enum JsTokenId implements TokenId {
     KEYWORD_IMPORT("import", "keyword"), // NOI18N
     KEYWORD_SUPER("super", "keyword"), // NOI18N
     KEYWORD_YIELD("yield", "keyword"), // NOI18N
-    
+
     RESERVED_ENUM("enum", "reserved"), // NOI18N
     RESERVED_IMPLEMENTS("implements", "reserved"), // NOI18N
     RESERVED_INTERFACE("interface", "reserved"), // NOI18N
@@ -187,18 +187,18 @@ public enum JsTokenId implements TokenId {
     RESERVED_PROTECTED("protected", "reserved"), // NOI18N
     RESERVED_PUBLIC("public", "reserved"), // NOI18N
     RESERVED_STATIC("static", "reserved"), // NOI18N
-    
+
     RESERVED_AWAIT("await", "reserved"), //NOI18N
-    
+
     KEYWORD_TRUE("true", "keyword"), // NOI18N
     KEYWORD_FALSE("false", "keyword"), // NOI18N
     KEYWORD_NULL("null", "keyword"), // NOI18N
-    
+
     JSX_EXP_BEGIN(null, "separator"), // NOI18N
     JSX_EXP_END(null, "separator"), // NOI18N
-    
+
     JSX_TEXT(null, "jsx_text"); //NOI18N
-    
+
     // JavaScript mimetypes
     public static final String JAVASCRIPT_MIME_TYPE = "text/javascript"; // NOI18N
     public static final String GULP_MIME_TYPE = "text/gulp+javascript"; // NOI18N
@@ -212,11 +212,11 @@ public enum JsTokenId implements TokenId {
     public static final String BOWERRC_JSON_MIME_TYPE = "text/bowerrc+x-json"; // NOI18N
     public static final String JSHINTRC_JSON_MIME_TYPE = "text/jshintrc+x-json"; // NOI18N
     private static final String JSON_MIME_TYPE_END = "x-json";  //NOI18N
-    
+
     private final String fixedText;
 
     private final String primaryCategory;
-    
+
     public static boolean isJSONBasedMimeType(String mimeType) {
         return (mimeType != null && mimeType.endsWith(JSON_MIME_TYPE_END));
     }
@@ -268,7 +268,7 @@ public enum JsTokenId implements TokenId {
 
                 @Override
                 protected LanguageEmbedding<?> embedding(Token<JsTokenId> token,
-                        LanguagePath languagePath, InputAttributes inputAttributes) {
+                                                         LanguagePath languagePath, InputAttributes inputAttributes) {
                     JsTokenId id = token.id();
 
                     if (id == DOC_COMMENT || id == BLOCK_COMMENT) {

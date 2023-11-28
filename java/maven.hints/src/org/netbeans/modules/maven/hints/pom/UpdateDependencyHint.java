@@ -35,6 +35,7 @@ import org.netbeans.modules.maven.hints.pom.spi.POMErrorFixProvider;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 import org.netbeans.modules.maven.model.pom.Build;
+import org.netbeans.modules.maven.model.pom.BuildBase;
 import org.netbeans.modules.maven.model.pom.Dependency;
 import org.netbeans.modules.maven.model.pom.DependencyManagement;
 import org.netbeans.modules.maven.model.pom.POMComponent;
@@ -42,6 +43,7 @@ import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.maven.model.pom.PluginManagement;
+import org.netbeans.modules.maven.model.pom.Profile;
 import org.netbeans.modules.maven.model.pom.Properties;
 import org.netbeans.modules.maven.model.pom.ReportPlugin;
 import org.netbeans.modules.maven.model.pom.Reporting;
@@ -82,37 +84,52 @@ public class UpdateDependencyHint implements POMErrorFixProvider {
         noMajorUpgrde = getNoMajorUpgradeOption();
 
         Map<POMComponent, ErrorDescription> hints = new HashMap<>();
+        org.netbeans.modules.maven.model.pom.Project project = model.getProject();
 
-        List<Dependency> deps = model.getProject().getDependencies();
-        if (deps != null) {
-            addHintsTo(deps, hints);
-        }
+        addHintsToDependencies(project.getDependencies(), project.getDependencyManagement(), hints);
 
-        DependencyManagement depman = model.getProject().getDependencyManagement();
-        if (depman != null && depman.getDependencies() != null) {
-            addHintsTo(depman.getDependencies(), hints);
-        }
-
-        Build build = model.getProject().getBuild();
+        Build build = project.getBuild();
         if (build != null) {
-            if (build.getPlugins() != null) {
-                addHintsTo(build.getPlugins(), hints);
-            }
-
-            PluginManagement plugman = build.getPluginManagement();
-            if (plugman != null && plugman.getPlugins() != null) {
-                addHintsTo(plugman.getPlugins(), hints);
-            }
+            addHintsToPlugins(build.getPlugins(), build.getPluginManagement(), hints);
         }
 
-        Reporting reporting = model.getProject().getReporting();
+        Reporting reporting = project.getReporting();
         if (reporting != null) {
             if (reporting.getReportPlugins() != null) {
                 addHintsTo(reporting.getReportPlugins(), hints);
             }
         }
 
+        List<Profile> profiles = project.getProfiles();
+        if (profiles != null) {
+            for (Profile profile : profiles) {
+                addHintsToDependencies(profile.getDependencies(), profile.getDependencyManagement(), hints);
+                BuildBase base = profile.getBuildBase();
+                if (base != null) {
+                    addHintsToPlugins(base.getPlugins(), base.getPluginManagement(), hints);
+                }
+            }
+        }
+
         return new ArrayList<>(hints.values());
+    }
+
+    private void addHintsToDependencies(List<Dependency> deps, DependencyManagement depman, Map<POMComponent, ErrorDescription> hints) {
+        if (deps != null) {
+            addHintsTo(deps, hints);
+        }
+        if (depman != null && depman.getDependencies() != null) {
+            addHintsTo(depman.getDependencies(), hints);
+        }
+    }
+
+    private void addHintsToPlugins(List<Plugin> plugins, PluginManagement plugman, Map<POMComponent, ErrorDescription> hints) {
+        if (plugins != null) {
+            addHintsTo(plugins, hints);
+        }
+        if (plugman != null && plugman.getPlugins() != null) {
+            addHintsTo(plugman.getPlugins(), hints);
+        }
     }
 
     private void addHintsTo(List<? extends VersionablePOMComponent> components, Map<POMComponent, ErrorDescription> hints) {
@@ -127,24 +144,66 @@ public class UpdateDependencyHint implements POMErrorFixProvider {
                 groupId = Constants.GROUP_APACHE_PLUGINS;
             }
 
-            if (artifactId != null && groupId != null) {
+            if (artifactId != null && groupId != null && comp.getVersion() != null) {
 
-                boolean property = false;
-                String version = comp.getVersion();
-                if (PomModelUtils.isPropertyExpression(version)) {
-                    version = PomModelUtils.getProperty(comp.getModel(), version);
-                    property = true;
+                class HintCandidate { // can be record
+                    final String version;
+                    final POMExtensibilityElement component;
+                    HintCandidate(String version, POMExtensibilityElement component) {
+                       this.version = version;
+                       this.component = component;
+                    }
                 }
 
-                if (version != null) {
+                List<HintCandidate> candidates = List.of();
+
+                if (PomModelUtils.isPropertyExpression(comp.getVersion())) {
+                    // properties can be set in profiles and the properties section
+                    // this collects all candidates which might need an annotation, versions are checked later
+                    candidates = new ArrayList<>();
+                    String propName = PomModelUtils.getPropertyName(comp.getVersion());
+                    Properties props = comp.getModel().getProject().getProperties();
+                    if (props != null) {
+                        POMComponent c = PomModelUtils.getFirstChild(props, propName);
+                        if (c instanceof POMExtensibilityElement) {
+                            candidates.add(new HintCandidate(props.getProperty(propName), (POMExtensibilityElement) c));
+                        }
+                    }
+                    // check profile properties for candidates
+                    List<Profile> profiles = comp.getModel().getProject().getProfiles();
+                    if (profiles != null) {
+                        for (Profile profile : profiles) {
+                            Properties profProps = profile.getProperties();
+                            if (profProps != null) {
+                                POMComponent c = PomModelUtils.getFirstChild(profProps, propName);
+                                if (c instanceof POMExtensibilityElement) {
+                                    candidates.add(new HintCandidate(profProps.getProperty(propName), (POMExtensibilityElement) c));
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // simple case, were the version is directly set where the artifact is declared
+                    POMComponent c = PomModelUtils.getFirstChild(comp, "version");
+                    if (c instanceof POMExtensibilityElement) {
+                        candidates = List.of(new HintCandidate(comp.getVersion(), (POMExtensibilityElement) c));
+                    }
+                }
+
+                if (candidates.isEmpty()) {
+                    continue;
+                }
+
+                List<NBVersionInfo> versions = RepositoryQueries.getVersionsResult(groupId, artifactId, null).getResults();
+
+                for (HintCandidate candidate : candidates) {
 
                     // don't upgrade clean numerical versions to timestamps or non-numerical versions (other way around is allowed)
-                    boolean allow_qualifier = !isNumerical(version);
-                    boolean allow_timestamp = !noTimestamp(version);
-                    String requiredPrefix = noMajorUpgrde ? getMajorComponentPrefix(version) : "";
+                    boolean allow_qualifier = !isNumerical(candidate.version);
+                    boolean allow_timestamp = !noTimestamp(candidate.version);
+                    String requiredPrefix = noMajorUpgrde ? getMajorComponentPrefix(candidate.version) : "";
 
-                    Optional<ComparableVersion> latest = RepositoryQueries.getVersionsResult(groupId, artifactId, null)
-                            .getResults().stream()
+                    Optional<ComparableVersion> latest = versions.stream()
                             .map(NBVersionInfo::getVersion)
                             .filter((v) -> !v.isEmpty() && v.startsWith(requiredPrefix))
                             .filter((v) -> allow_qualifier || !Character.isDigit(v.charAt(0)) || isNumerical(v))
@@ -152,21 +211,10 @@ public class UpdateDependencyHint implements POMErrorFixProvider {
                             .map(ComparableVersion::new)
                             .max(ComparableVersion::compareTo);
 
-                    if (latest.isPresent() && latest.get().compareTo(new ComparableVersion(version)) > 0) {
-                        POMComponent version_comp = null;
-                        if (property) {
-                            Properties props = comp.getModel().getProject().getProperties();
-                            if (props != null) {
-                                version_comp = PomModelUtils.getFirstChild(props, PomModelUtils.getPropertyName(comp.getVersion()));
-                            }
-                        } else {
-                            version_comp = PomModelUtils.getFirstChild(comp, "version");
-                        }
-                        if (version_comp instanceof POMExtensibilityElement) {
-                            ErrorDescription previous = hints.get(version_comp);
-                            if (previous == null || compare(((UpdateVersionFix) previous.getFixes().getFixes().get(0)).version, version) > 0) {
-                                hints.put(version_comp, createHintForComponent((POMExtensibilityElement) version_comp, latest.get().toString()));
-                            }
+                    if (latest.isPresent() && latest.get().compareTo(new ComparableVersion(candidate.version)) > 0) {
+                        ErrorDescription previous = hints.get(candidate.component);
+                        if (previous == null || compare(((UpdateVersionFix) previous.getFixes().getFixes().get(0)).version, candidate.version) > 0) {
+                            hints.put(candidate.component, createHintForComponent(candidate.component, latest.get().toString()));
                         }
                     }
                 }

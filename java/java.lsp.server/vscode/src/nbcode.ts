@@ -76,7 +76,7 @@ export function launch(
     ideArgs.push(...extraArgs);
     
     if (env['netbeans_debug'] && extraArgs && extraArgs.find(s => s.includes("--list"))) {
-        ideArgs.push(...['-J-Xdebug', '-J-Dnetbeans.logger.console=true', '-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000']);
+        ideArgs.push(...['-J-Dnetbeans.logger.console=true', '-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000']);
     }
 
     console.log(`Launching NBLS with arguments: ` + ideArgs);

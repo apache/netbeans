@@ -66,7 +66,7 @@
             <goal>payara-micro:start</goal>
         </goals>
         <properties>
-            <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address}</exec.args>
+            <exec.args>-Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address}</exec.args>
             <jpda.listen>true</jpda.listen>
             <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
             <netbeans.deploy>false</netbeans.deploy>
@@ -85,7 +85,7 @@
             <goal>payara-micro:start</goal>
         </goals>
         <properties>
-            <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address}</exec.args>
+            <exec.args>-Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address}</exec.args>
             <jpda.listen>true</jpda.listen>
             <netbeans.deploy.clientUrlPart>${webpagePath}</netbeans.deploy.clientUrlPart>
             <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>

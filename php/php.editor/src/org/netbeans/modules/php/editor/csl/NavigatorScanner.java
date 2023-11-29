@@ -383,6 +383,12 @@ public final class NavigatorScanner {
             if (constant.isDeprecated()) {
                 formatter.deprecated(false);
             }
+            if (constant instanceof ClassConstantElement) {
+                ClassConstantElement classConstant = (ClassConstantElement) constant;
+                if (StringUtils.hasText(classConstant.getDeclaredType())) {
+                    processDeclaredType(classConstant, formatter, classConstant.getDeclaredType(), false);
+                }
+            }
             String value = constant.getValue();
             if (value != null) {
                 formatter.appendText(" "); //NOI18N
@@ -481,7 +487,9 @@ public final class NavigatorScanner {
             if (declaredType == null) {
                 return;
             }
-            if (isReturn || modelElement instanceof FieldElement) {
+            if (isReturn
+                    || modelElement instanceof FieldElement
+                    || modelElement instanceof ClassConstantElement) {
                 formatter.appendHtml(FONT_GRAY_COLOR + ":"); // NOI18N
             } else {
                 formatter.appendHtml(FONT_GRAY_COLOR);

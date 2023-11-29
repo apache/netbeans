@@ -21,7 +21,10 @@ package org.netbeans.modules.php.editor.elements;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.NameKind;
@@ -47,9 +50,12 @@ public final class TypeConstantElementImpl extends PhpElementImpl implements Typ
     private final String value;
     private final boolean isMagic;
     private final PhpModifiers modifiers;
+    @NullAllowed
+    private final String declaredType;
 
     private TypeConstantElementImpl(
             final TypeElement enclosingType,
+            final String declaredType,
             final String constantName,
             final String value,
             final int offset,
@@ -57,11 +63,12 @@ public final class TypeConstantElementImpl extends PhpElementImpl implements Typ
             final String fileUrl,
             final ElementQuery elementQuery,
             final boolean isDeprecated) {
-        this(enclosingType, constantName, value, offset, flags, fileUrl, elementQuery, isDeprecated, false);
+        this(enclosingType, declaredType, constantName, value, offset, flags, fileUrl, elementQuery, isDeprecated, false);
     }
 
     private TypeConstantElementImpl(
             final TypeElement enclosingType,
+            final String declaredType,
             final String constantName,
             final String value,
             final int offset,
@@ -72,6 +79,7 @@ public final class TypeConstantElementImpl extends PhpElementImpl implements Typ
             final boolean isMagic) {
         super(constantName, enclosingType.getName(), fileUrl, offset, elementQuery, isDeprecated);
         this.enclosingType = enclosingType;
+        this.declaredType = declaredType;
         this.value = value;
         this.isMagic = isMagic;
         this.modifiers = PhpModifiers.fromBitMask(flags);
@@ -86,6 +94,7 @@ public final class TypeConstantElementImpl extends PhpElementImpl implements Typ
     private static TypeConstantElement createMagicConstant(TypeElement type, String constantName) {
         TypeConstantElement retval = new TypeConstantElementImpl(
                 type,
+                null,
                 constantName,
                 type.getFullyQualifiedName().toString(),
                 0,
@@ -123,6 +132,7 @@ public final class TypeConstantElementImpl extends PhpElementImpl implements Typ
         if (matchesQuery(query, signParser)) {
             retval = new TypeConstantElementImpl(
                     type,
+                    signParser.getDeclaredType(),
                     signParser.getConstantName(),
                     signParser.getValue(),
                     signParser.getOffset(),
@@ -142,7 +152,7 @@ public final class TypeConstantElementImpl extends PhpElementImpl implements Typ
         final Set<TypeConstantElement> retval = new HashSet<>();
         for (ClassConstantDeclarationInfo info : consts) {
             retval.add(new TypeConstantElementImpl(
-                    type, info.getName(), info.getValue(), info.getRange().getStart(),
+                    type, info.getDeclaredType(), info.getName(), info.getValue(), info.getRange().getStart(),
                     info.getAccessModifiers().toFlags(), fileQuery.getURL().toExternalForm(), fileQuery,
                     VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node)));
         }
@@ -158,13 +168,14 @@ public final class TypeConstantElementImpl extends PhpElementImpl implements Typ
     @Override
     public String getSignature() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getName().toLowerCase()).append(Separator.SEMICOLON);
-        sb.append(getName()).append(Separator.SEMICOLON);
-        sb.append(getOffset()).append(Separator.SEMICOLON);
-        sb.append(getValue()).append(Separator.SEMICOLON);
-        sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON);
-        sb.append(getFilenameUrl()).append(Separator.SEMICOLON);
-        sb.append(getPhpModifiers().toFlags()).append(Separator.SEMICOLON);
+        sb.append(getName().toLowerCase(Locale.ROOT)).append(Separator.SEMICOLON); // 0
+        sb.append(getName()).append(Separator.SEMICOLON); // 1
+        sb.append(getOffset()).append(Separator.SEMICOLON); // 2
+        sb.append(getValue()).append(Separator.SEMICOLON); // 3
+        sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON); // 4
+        sb.append(getFilenameUrl()).append(Separator.SEMICOLON); // 5
+        sb.append(getPhpModifiers().toFlags()).append(Separator.SEMICOLON); // 6
+        sb.append((getDeclaredType() == null) ? "" : getDeclaredType()).append(Separator.SEMICOLON); // NOI18N 7
         checkSignature(sb);
         return sb.toString();
     }
@@ -193,12 +204,22 @@ public final class TypeConstantElementImpl extends PhpElementImpl implements Typ
             assert getName().equals(parser.getConstantName());
             assert getOffset() == parser.getOffset();
             assert getPhpModifiers().toFlags() == parser.getFlags();
+            if (getDeclaredType() != null) {
+                assert getDeclaredType().equals(parser.getDeclaredType())
+                        : "getDeclaredType(): " + getDeclaredType() + ", parser.getDeclaredType(): " + parser.getDeclaredType(); // NOI18N
+            }
         }
     }
 
     @Override
     public String getValue() {
         return value;
+    }
+
+    @CheckForNull
+    @Override
+    public String getDeclaredType() {
+        return declaredType;
     }
 
     @Override
@@ -268,5 +289,13 @@ public final class TypeConstantElementImpl extends PhpElementImpl implements Typ
             return signature.integer(6);
         }
 
+        @CheckForNull
+        String getDeclaredType() {
+            String declaredType = signature.string(7);
+            if (declaredType.isEmpty()) {
+                declaredType = null;
+            }
+            return declaredType;
+        }
     }
 }

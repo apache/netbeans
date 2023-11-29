@@ -148,4 +148,7 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/functionGuessingArrayReturnType");
     }
 
+    public void testTypedClassConstants() throws Exception {
+        performTest("structure/php83/typedClassConstants");
+    }
 }

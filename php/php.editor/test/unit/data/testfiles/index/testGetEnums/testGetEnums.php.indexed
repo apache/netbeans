@@ -8,8 +8,8 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz.const : constant1;CONSTANT1;1599;"constant";0;<TESTURL>/testGetEnums.php;32;
-  clz.const : constant2;CONSTANT2;1633;?;0;<TESTURL>/testGetEnums.php;32;
+  clz.const : constant1;CONSTANT1;1599;"constant";0;<TESTURL>/testGetEnums.php;32;;
+  clz.const : constant2;CONSTANT2;1633;?;0;<TESTURL>/testGetEnums.php;32;;
   enum : attributes;Attributes;1491;;int;Iface|\Iface;1;;0;<TESTURL>/testGetEnums.php;
   enum.case : a;A;1545;1;0;<TESTURL>/testGetEnums.php;1;
   enum.case : b;B;1571;2;0;<TESTURL>/testGetEnums.php;1;

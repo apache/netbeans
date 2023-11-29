@@ -99,14 +99,6 @@ public class ProjectViewTest extends NbTestCase {
     private final Gson gson = new Gson();
     private Socket clientSocket;
     private Thread serverThread;
-    
-    static {
-        // TODO remove ASAP from MicronautGradleArtifactsImplTest and ProjectViewTest
-        // investigate "javax.net.ssl.SSLHandshakeException: Received fatal alert: handshake_failure"
-        // during gradle download "at org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitStep.execute(TemplateOperation.java:317)"
-        // this looks like a misconfigured webserver to me
-        System.setProperty("https.protocols", "TLSv1.2");
-    }
 
     public ProjectViewTest(String name) {
         super(name);

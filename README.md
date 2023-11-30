@@ -107,7 +107,7 @@ Latest release (convenience binary of released source artifacts): https://netbea
 
 ### Reporting Bugs
 
-[How to report bugs](https://netbeans.apache.org/participate/report-issue.html)
+[How to report bugs](https://netbeans.apache.org/front/main/participate/report-issue/)
 
 ### Log, Config and Cache Locations
 

@@ -51,6 +51,21 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="CodeActionProvider">
+        <api name="LSP_API"/>
+        <summary>Added CodeActionProvider interface</summary>
+        <version major="1" minor="23"/>
+        <date day="1" month="12" year="2023"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/spi/lsp/CodeActionProvider.html">CodeActionProvider</a>
+            has been added to allow server provide arbitrary code actions for a given document and range.
+        </description>
+        <class package="org.netbeans.api.lsp" name="CodeAction"/>
+        <class package="org.netbeans.api.lsp" name="LazyCodeAction"/>
+        <class package="org.netbeans.spi.lsp" name="CodeActionProvider"/>
+    </change>
     <change id="CommandProvider">
         <api name="LSP_API"/>
         <summary>Added CommandProvider interface</summary>

@@ -1017,35 +1017,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 data.put(INDEX, index.getAndIncrement());
                                 action.setData(data);
                             } else if (inputAction.getEdit() != null) {
-                                org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getEdit();
-                                List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                                for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
-                                    if (parts.hasFirst()) {
-                                        String docUri = parts.first().getDocument();
-                                        try {
-                                            FileObject file = Utils.fromUri(docUri);
-                                            if (file == null) {
-                                                file = Utils.fromUri(params.getTextDocument().getUri());
-                                            }
-                                            FileObject fo = file;
-                                            if (fo != null) {
-                                                List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
-                                                TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
-                                                documentChanges.add(Either.forLeft(tde));
-                                            }
-                                        } catch (Exception ex) {
-                                            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                                        }
-                                    } else {
-                                        if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
-                                            documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
-                                        } else {
-                                            throw new IllegalStateException(String.valueOf(parts.second()));
-                                        }
-                                    }
-                                }
-
-                                action.setEdit(new WorkspaceEdit(documentChanges));
+                                action.setEdit(fromAPI(inputAction.getEdit(), uri, client));
                             }
                             result.add(Either.forRight(action));
                         }
@@ -1133,51 +1105,37 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<CodeAction> resolveCodeAction(CodeAction unresolved) {
-        JsonObject data = (JsonObject) unresolved.getData();
-        if (data.has(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS)) {
-            String providerClass = ((JsonObject) data).getAsJsonPrimitive(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS).getAsString();
-            for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
-                try {
+        CompletableFuture<CodeAction> future = new CompletableFuture<>();
+        BACKGROUND_TASKS.post(() -> {
+            JsonObject data = (JsonObject) unresolved.getData();
+            if (data.has(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS)) {
+                String providerClass = data.getAsJsonPrimitive(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS).getAsString();
+                for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     if (codeGenerator.getClass().getName().equals(providerClass)) {
-                        return codeGenerator.resolve(client, unresolved, ((JsonObject) data).get(CodeActionsProvider.DATA));
-                    }
-                } catch (Exception ex) {
-                }
-            }
-        } else if (data.has(URL) && data.has(INDEX)) {
-            LazyCodeAction inputAction = lastCodeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt());
-            if (inputAction != null) {
-                org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getLazyEdit().get();
-                List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
-                    if (parts.hasFirst()) {
-                        String docUri = parts.first().getDocument();
                         try {
-                            FileObject file = Utils.fromUri(docUri);
-                            if (file == null) {
-                                file = Utils.fromUri(data.getAsJsonPrimitive(URL).getAsString());
-                            }
-                            FileObject fo = file;
-                            if (fo != null) {
-                                List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
-                                TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
-                                documentChanges.add(Either.forLeft(tde));
-                            }
-                        } catch (Exception ex) {
-                            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                            codeGenerator.resolve(client, unresolved, data.get(CodeActionsProvider.DATA)).thenAccept(action -> {
+                                future.complete(action);
+                            });
+                        } catch (Exception e) {
+                            future.completeExceptionally(e);
                         }
-                    } else {
-                        if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
-                            documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
-                        } else {
-                            throw new IllegalStateException(String.valueOf(parts.second()));
-                        }
+                        return;
                     }
                 }
-                unresolved.setEdit(new WorkspaceEdit(documentChanges));
+            } else if (data.has(URL) && data.has(INDEX)) {
+                LazyCodeAction inputAction = lastCodeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt());
+                if (inputAction != null) {
+                    try {
+                        unresolved.setEdit(fromAPI(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));
+                    } catch (Exception e) {
+                        future.completeExceptionally(e);
+                        return;
+                    }
+                }
             }
-        }
-        return CompletableFuture.completedFuture(unresolved);
+            future.complete(unresolved);
+        });
+        return future;
     }
 
     @NbBundle.Messages({"# {0} - method name", "LBL_Run=Run {0}",
@@ -2204,7 +2162,37 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
-    public static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {//TODO: is this still used?
+    static WorkspaceEdit fromAPI(org.netbeans.api.lsp.WorkspaceEdit edit, String uri, NbCodeLanguageClient client) {
+        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+        for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
+            if (parts.hasFirst()) {
+                String docUri = parts.first().getDocument();
+                try {
+                    FileObject file = Utils.fromUri(docUri);
+                    if (file == null) {
+                        file = Utils.fromUri(uri);
+                    }
+                    FileObject fo = file;
+                    if (fo != null) {
+                        List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
+                        TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
+                        documentChanges.add(Either.forLeft(tde));
+                    }
+                } catch (Exception ex) {
+                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                }
+            } else {
+                if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
+                    documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
+                } else {
+                    throw new IllegalStateException(String.valueOf(parts.second()));
+                }
+            }
+        }
+        return new WorkspaceEdit(documentChanges);
+    }
+
+    static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {//TODO: is this still used?
         FileObject[] file = new FileObject[1];
         LineMap[] lm = new LineMap[1];
         ModificationResult changes = js.runModificationTask(wc -> {

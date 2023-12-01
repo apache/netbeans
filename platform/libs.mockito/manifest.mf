@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.mockito
+OpenIDE-Module-Specification-Version: 1.18
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/mockito/Bundle.properties

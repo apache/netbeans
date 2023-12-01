@@ -2469,7 +2469,7 @@ jobs:
         run: .github/retry.sh ant $OPTS -Dtest.config=unreliable -f php/php.editor test
 
       - name: php.latte
-        run: ant $OPTS -f php/php.latte test
+        run: .github/retry.sh ant $OPTS -f php/php.latte test
 
       - name: php.nette.tester
         run: ant $OPTS -f php/php.nette.tester test

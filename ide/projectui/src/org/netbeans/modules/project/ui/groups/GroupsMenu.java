@@ -21,11 +21,10 @@ package org.netbeans.modules.project.ui.groups;
 
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.SwingUtilities;
 import org.netbeans.modules.project.ui.ProjectsRootNode;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -40,7 +39,6 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import static org.netbeans.modules.project.ui.groups.Bundle.*;
 import org.netbeans.modules.project.uiapi.BaseUtilities;
-import org.netbeans.modules.project.uiapi.Utilities;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -88,12 +86,9 @@ public class GroupsMenu extends AbstractAction {
         final JButton create = new JButton(GroupsMenu_new_create());
         create.setDefaultCapable(true);
         create.setEnabled(panel.isReady());
-        panel.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (NewGroupPanel.PROP_READY.equals(evt.getPropertyName())) {
-                    create.setEnabled(panel.isReady());
-                }
+        panel.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (NewGroupPanel.PROP_READY.equals(evt.getPropertyName())) {
+                create.setEnabled(panel.isReady());
             }
         });
         JButton cancel = new JButton(GroupsMenu_new_cancel());
@@ -107,12 +102,9 @@ public class GroupsMenu extends AbstractAction {
             final String name = panel.getNameField();
             final String masterProject = panel.getMasterProjectField();
             final String directory = panel.getDirectoryField();
-            RP.post(new Runnable() {
-                @Override
-                public void run() {
-                    Group g = NewGroupPanel.create(type, name, autoSync, useOpen, masterProject, directory);
-                    Group.setActiveGroup(g, true);
-                }
+            RP.post(() -> {
+                Group g = NewGroupPanel.create(type, name, autoSync, useOpen, masterProject, directory);
+                Group.setActiveGroup(g, true);
             });
         }
     }
@@ -137,36 +129,20 @@ public class GroupsMenu extends AbstractAction {
         final JButton select = new JButton();
         Mnemonics.setLocalizedText(select, GroupsMenu_manage_select_group());
         select.setDefaultCapable(true);
-        panel.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals("selection")) {
-                    select.setEnabled(panel.isExactlyOneGroupSelected());
-                }
+        panel.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals("selection")) {
+                select.setEnabled(panel.isExactlyOneGroupSelected());
             }
         });
-        select.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                RP.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Group.setActiveGroup(panel.getSelectedGroups()[0], false);
-                    }
-                });
-            }
+        select.addActionListener((ActionEvent e) -> {
+            RP.post(() -> Group.setActiveGroup(panel.getSelectedGroups()[0], false));
         });
         final JButton newGroup = new JButton();
         newGroup.setDefaultCapable(false);
         Mnemonics.setLocalizedText(newGroup, GroupsMenu_manage_new_group());
-        newGroup.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                newGroup();
-            }
-        });
+        // invokeLater ensures that the parent is disposed before the new dialog opens
+        // so that it can set a parent which doesn't disappear - fixes race condition
+        newGroup.addActionListener(e -> SwingUtilities.invokeLater(GroupsMenu::newGroup));
         JButton cancel = new JButton(GroupsMenu_new_cancel());
         cancel.setDefaultCapable(false);
         dd.setOptions(new Object[] {select, newGroup, cancel});
@@ -178,25 +154,16 @@ public class GroupsMenu extends AbstractAction {
      */
     @Messages("GroupsMenu.properties_title=Project Group Properties")
     static void openProperties(Group g) {
-            Lookup context = Lookups.fixed(new Object[] { g, BaseUtilities.ACCESSOR.createGroup(g.getName(), g.prefs()) });
-            Dialog dialog = ProjectCustomizer.createCustomizerDialog("Projects/Groups/Customizer", //NOI18N
-                                             context, 
-                                             (String)null, 
-                                             new ActionListener() {
-                                                @Override
-                                                public void actionPerformed(ActionEvent ae) {
-                                                    //noop
-                                                }
-                                            }, 
-                                             new ActionListener() {
-                                                @Override
-                                                public void actionPerformed(ActionEvent ae) {
-                                                    //noop
-                                                }
-                                             }, new HelpCtx(HELPCTX));
-            dialog.setTitle( GroupsMenu_properties_title() );
-            dialog.setModal(true);
-            dialog.setVisible(true);
+        Lookup context = Lookups.fixed(new Object[] { g, BaseUtilities.ACCESSOR.createGroup(g.getName(), g.prefs()) });
+        Dialog dialog = ProjectCustomizer.createCustomizerDialog("Projects/Groups/Customizer", //NOI18N
+                                         context, 
+                                         (String)null,
+                                         (ActionEvent ae) -> {},
+                                         (ActionEvent ae) -> {},
+                                         new HelpCtx(HELPCTX));
+        dialog.setTitle( GroupsMenu_properties_title() );
+        dialog.setModal(true);
+        dialog.setVisible(true);
     }
 
 }

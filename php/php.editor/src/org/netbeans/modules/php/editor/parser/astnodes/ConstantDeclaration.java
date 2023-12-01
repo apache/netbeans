@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 
 /**
  * Represents a class or namespace constant declaration.
@@ -127,10 +128,18 @@ public class ConstantDeclaration extends BodyDeclaration {
         StringBuilder sbAttributes = new StringBuilder();
         getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
         StringBuilder sb = new StringBuilder();
-        for (Expression expression : getInitializers()) {
-            sb.append(expression).append(","); //NOI18N
+        for (int i = 0; i < names.size(); i++) {
+            Expression initializer = initializers.get(i);
+            sb.append(names.get(i)).append(" = ").append(initializer).append(","); // NOI18N
         }
-        return sbAttributes.toString() + getModifierString() + "const " + sb; //NOI18N
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1); // delete last ","
+        }
+        return sbAttributes.toString()
+                + (!getModifierString().isEmpty() ? getModifierString() + " " : "") // NOI18N
+                + "const " // NOI18N
+                + (getConstType() != null ? VariousUtils.getDeclaredType(getConstType()) + " " : "") // NOI18N
+                + sb;
     }
 
 }

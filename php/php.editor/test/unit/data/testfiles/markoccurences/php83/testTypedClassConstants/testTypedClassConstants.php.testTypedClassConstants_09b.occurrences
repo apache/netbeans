@@ -1,0 +1,2 @@
+    private const A|B |>MARK_OCCURRENCES:UNION<| = A;
+var_dump(ClassTest::|>MARK_OCCURRENCES:UN^ION<|);

@@ -1,0 +1,2 @@
+    public const int|null |>MARK_OCCURRENCES:UNION3<| = null;
+var_dump(ClassTest::|>MARK_OCCURRENCES:UNIO^N3<|);

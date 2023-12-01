@@ -216,4 +216,376 @@ public class OccurrencesFinderImplPHP83Test extends OccurrencesFinderImplTestBas
     public void testDynamicClassConstantFetch_11j() throws Exception {
         checkOccurrences(getTestPath(), "$tes^t = new Test();", true);
     }
+
+    public void testTypedClassConstants_01a() throws Exception {
+        checkOccurrences(getTestPath(), "class ^A implements Stringable {", true);
+    }
+
+    public void testTypedClassConstants_01b() throws Exception {
+        checkOccurrences(getTestPath(), "class B extends ^A {}", true);
+    }
+
+    public void testTypedClassConstants_01c() throws Exception {
+        checkOccurrences(getTestPath(), "class C extends ^A {}", true);
+    }
+
+    public void testTypedClassConstants_01d() throws Exception {
+        checkOccurrences(getTestPath(), "    public const ?^A NULLABLE = null;", true);
+    }
+
+    public void testTypedClassConstants_01e() throws Exception {
+        checkOccurrences(getTestPath(), "    private const ^A|B UNION = A;", true);
+    }
+
+    public void testTypedClassConstants_01f() throws Exception {
+        checkOccurrences(getTestPath(), "    protected const ^A&B INTERSECTION = B;", true);
+    }
+
+    public void testTypedClassConstants_01g() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (^A&B)|C DNF = C;", true);
+    }
+
+    public void testTypedClassConstants_01h() throws Exception {
+        checkOccurrences(getTestPath(), "    public const ^A|B UNION = A; // interface", true);
+    }
+
+    public void testTypedClassConstants_01i() throws Exception {
+        checkOccurrences(getTestPath(), "    public const ^A&B INTERSECTION = B; // interface", true);
+    }
+
+    public void testTypedClassConstants_01j() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (^A&B)|C DNF = C; // interface", true);
+    }
+
+    public void testTypedClassConstants_01k() throws Exception {
+        checkOccurrences(getTestPath(), "    private const ^A|B UNION = A; // trait", true);
+    }
+
+    public void testTypedClassConstants_01l() throws Exception {
+        checkOccurrences(getTestPath(), "    protected const ^A&B INTERSECTION = B; // trait", true);
+    }
+
+    public void testTypedClassConstants_01m() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (^A&B)|C DNF = C; // trait", true);
+    }
+
+    public void testTypedClassConstants_01n() throws Exception {
+        checkOccurrences(getTestPath(), "    private const ^A|B UNION = A; // enum", true);
+    }
+
+    public void testTypedClassConstants_01o() throws Exception {
+        checkOccurrences(getTestPath(), "    protected const ^A&B INTERSECTION = B; // enum", true);
+    }
+
+    public void testTypedClassConstants_01p() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (^A&B)|(A&C) DNF = C; // enum", true);
+    }
+
+    public void testTypedClassConstants_01q() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (A&B)|(^A&C) DNF = C; // enum", true);
+    }
+
+    public void testTypedClassConstants_01r() throws Exception {
+        checkOccurrences(getTestPath(), "define(\"A\", new ^A());", true);
+    }
+
+    public void testTypedClassConstants_02a() throws Exception {
+        checkOccurrences(getTestPath(), "class ^B extends A {}", true);
+    }
+
+    public void testTypedClassConstants_02b() throws Exception {
+        checkOccurrences(getTestPath(), "    private const A|^B UNION = A;", true);
+    }
+
+    public void testTypedClassConstants_02c() throws Exception {
+        checkOccurrences(getTestPath(), "    protected const A&^B INTERSECTION = B;", true);
+    }
+
+    public void testTypedClassConstants_02d() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (A&^B)|C DNF = C;", true);
+    }
+
+    public void testTypedClassConstants_02e() throws Exception {
+        checkOccurrences(getTestPath(), "    public const A|^B UNION = A; // interface", true);
+    }
+
+    public void testTypedClassConstants_02f() throws Exception {
+        checkOccurrences(getTestPath(), "    public const A&^B INTERSECTION = B; // interface", true);
+    }
+
+    public void testTypedClassConstants_02g() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (A&^B)|C DNF = C; // interface", true);
+    }
+
+    public void testTypedClassConstants_02h() throws Exception {
+        checkOccurrences(getTestPath(), "    private const A|^B UNION = A; // trait", true);
+    }
+
+    public void testTypedClassConstants_02i() throws Exception {
+        checkOccurrences(getTestPath(), "    protected const A&^B INTERSECTION = B; // trait", true);
+    }
+
+    public void testTypedClassConstants_02j() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (A&^B)|C DNF = C; // trait", true);
+    }
+
+    public void testTypedClassConstants_02k() throws Exception {
+        checkOccurrences(getTestPath(), "    private const A|^B UNION = A; // enum", true);
+    }
+
+    public void testTypedClassConstants_02l() throws Exception {
+        checkOccurrences(getTestPath(), "    protected const A&^B INTERSECTION = B; // enum", true);
+    }
+
+    public void testTypedClassConstants_02m() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (A&^B)|(A&C) DNF = C; // enum", true);
+    }
+
+    public void testTypedClassConstants_02n() throws Exception {
+        checkOccurrences(getTestPath(), "define(\"B\", new ^B());", true);
+    }
+
+    public void testTypedClassConstants_03a() throws Exception {
+        checkOccurrences(getTestPath(), "class ^C extends A {}", true);
+    }
+
+    public void testTypedClassConstants_03b() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (A&B)|^C DNF = C;", true);
+    }
+
+    public void testTypedClassConstants_03c() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (A&B)|^C DNF = C; // interface", true);
+    }
+
+    public void testTypedClassConstants_03d() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (A&B)|^C DNF = C; // trait", true);
+    }
+
+    public void testTypedClassConstants_03e() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (A&B)|(A&^C) DNF = C; // enum", true);
+    }
+
+    public void testTypedClassConstants_03f() throws Exception {
+        checkOccurrences(getTestPath(), "define(\"C\", new ^C());", true);
+    }
+
+    public void testTypedClassConstants_04a() throws Exception {
+        checkOccurrences(getTestPath(), "class Class^Test {", true);
+    }
+
+    public void testTypedClassConstants_04b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Class^Test::WITHOUT_TYPE);", true);
+    }
+
+    public void testTypedClassConstants_04c() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Clas^sTest::NULLABLE);", true);
+    }
+
+    public void testTypedClassConstants_04d() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Cla^ssTest::UNION);", true);
+    }
+
+    public void testTypedClassConstants_04e() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Class^Test::INTERSECTION);", true);
+    }
+
+    public void testTypedClassConstants_04f() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTes^t::DNF);", true);
+    }
+
+    public void testTypedClassConstants_04g() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(C^lassTest::STRING);", true);
+    }
+
+    public void testTypedClassConstants_04h() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Class^Test::INT);", true);
+    }
+
+    public void testTypedClassConstants_04i() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Clas^sTest::FLOAT);", true);
+    }
+
+    public void testTypedClassConstants_04j() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Cla^ssTest::BOOL);", true);
+    }
+
+    public void testTypedClassConstants_04k() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Cla^ssTest::ARRAY);", true);
+    }
+
+    public void testTypedClassConstants_04l() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Cla^ssTest::ITERABLE);", true);
+    }
+
+    public void testTypedClassConstants_04m() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Clas^sTest::MIXED);", true);
+    }
+
+    public void testTypedClassConstants_04n() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Clas^sTest::OBJECT);", true);
+    }
+
+    public void testTypedClassConstants_04o() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(Cla^ssTest::UNION2);", true);
+    }
+
+    public void testTypedClassConstants_04p() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTe^st::UNION3);", true);
+    }
+
+    public void testTypedClassConstants_05a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const string|array UNION2 = 'a' . Inter^faceTest::STRING;", true);
+    }
+
+    public void testTypedClassConstants_05b() throws Exception {
+        checkOccurrences(getTestPath(), "interface Interf^aceTest {", true);
+    }
+
+    public void testTypedClassConstants_06a() throws Exception {
+        checkOccurrences(getTestPath(), "enum EnumT^est {", true);
+    }
+
+    public void testTypedClassConstants_06b() throws Exception {
+        checkOccurrences(getTestPath(), "    public const static A = Enum^Test::Test; // enum", true);
+    }
+
+    public void testTypedClassConstants_07a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const WITHOUT^_TYPE = 1;", true);
+    }
+
+    public void testTypedClassConstants_07b() throws Exception {
+        checkOccurrences(getTestPath(), "    public const mixed MIXED = 1 + self::WITHOUT_^TYPE;", true);
+    }
+
+    public void testTypedClassConstants_07c() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::WITH^OUT_TYPE);", true);
+    }
+
+    public void testTypedClassConstants_08a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const ?A NULLA^BLE = null;", true);
+    }
+
+    public void testTypedClassConstants_08b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::NUL^LABLE);", true);
+    }
+
+    public void testTypedClassConstants_09a() throws Exception {
+        checkOccurrences(getTestPath(), "    private const A|B UNI^ON = A;", true);
+    }
+
+    public void testTypedClassConstants_09b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::UN^ION);", true);
+    }
+
+    public void testTypedClassConstants_10a() throws Exception {
+        checkOccurrences(getTestPath(), "    protected const A&B INTER^SECTION = B;", true);
+    }
+
+    public void testTypedClassConstants_10b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::INTE^RSECTION);", true);
+    }
+
+    public void testTypedClassConstants_11a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const (A&B)|C D^NF = C;", true);
+    }
+
+    public void testTypedClassConstants_11b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::D^NF);", true);
+    }
+
+    public void testTypedClassConstants_12a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const string STR^ING = 'a';", true);
+    }
+
+    public void testTypedClassConstants_12b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::ST^RING);", true);
+    }
+
+    public void testTypedClassConstants_13a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const int I^NT = 1;", true);
+    }
+
+    public void testTypedClassConstants_13b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::I^NT);", true);
+    }
+
+    public void testTypedClassConstants_14a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const float FL^OAT = 1.5;", true);
+    }
+
+    public void testTypedClassConstants_14b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::FL^OAT);", true);
+    }
+
+    public void testTypedClassConstants_15a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const bool B^OOL = true;", true);
+    }
+
+    public void testTypedClassConstants_15b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::B^OOL);", true);
+    }
+
+    public void testTypedClassConstants_16a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const array A^RRAY = ['t', 'e', 's', 't'];", true);
+    }
+
+    public void testTypedClassConstants_16b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::AR^RAY);", true);
+    }
+
+    public void testTypedClassConstants_17a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const iterable ITER^ABLE = ['a', 'b', 'c'];", true);
+    }
+
+    public void testTypedClassConstants_17b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::ITE^RABLE);", true);
+    }
+
+    public void testTypedClassConstants_18a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const mixed MIX^ED = 1 + self::WITHOUT_TYPE;", true);
+    }
+
+    public void testTypedClassConstants_18b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::MI^XED);", true);
+    }
+
+    public void testTypedClassConstants_19a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const object OB^JECT = A;", true);
+    }
+
+    public void testTypedClassConstants_19b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::OBJ^ECT);", true);
+    }
+
+    public void testTypedClassConstants_20a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const string|array UNI^ON2 = 'a' . InterfaceTest::STRING;", true);
+    }
+
+    public void testTypedClassConstants_20b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::UNIO^N2);", true);
+    }
+
+    public void testTypedClassConstants_21a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const int|null UNI^ON3 = null;", true);
+    }
+
+    public void testTypedClassConstants_21b() throws Exception {
+        checkOccurrences(getTestPath(), "var_dump(ClassTest::UNIO^N3);", true);
+    }
+
+    public void testTypedClassConstants_22a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const string|array UNION2 = 'a' . InterfaceTest::STR^ING;", true);
+    }
+
+    public void testTypedClassConstants_22b() throws Exception {
+        checkOccurrences(getTestPath(), "    const string STR^ING = \"string\"; // interface", true);
+    }
+
+    public void testTypedClassConstants_23a() throws Exception {
+        checkOccurrences(getTestPath(), "    public const static A = EnumTest::Tes^t; // enum", true);
+    }
+
+    public void testTypedClassConstants_23b() throws Exception {
+        checkOccurrences(getTestPath(), "    case T^est;", true);
+    }
 }

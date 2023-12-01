@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.74
+#Version 1.75
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -739,7 +739,7 @@ meth public void setURL(java.net.URL)
 meth public void showHistory()
 meth public void stopLoading()
 supr org.openide.awt.HtmlBrowser$Impl
-hfds RP,lookup,url
+hfds RP,url
 
 CLSS public org.netbeans.modules.extbrowser.ExtWebBrowser
 cons public init()
@@ -963,8 +963,8 @@ meth public org.openide.awt.HtmlBrowser$Impl createHtmlBrowserImpl()
 meth public static java.lang.Boolean isHidden()
 meth public void setName(java.lang.String)
 supr org.netbeans.modules.extbrowser.ExtWebBrowser
-hfds ACTIVE,RP,detected,logger,serialVersionUID
-hcls Jdk6BrowserImpl
+hfds RP,USE_JDK_BROWSER,detected,logger,serialVersionUID
+hcls JdkBrowserImpl
 
 CLSS public org.netbeans.modules.extbrowser.SystemDefaultBrowserBeanInfo
 cons public init()

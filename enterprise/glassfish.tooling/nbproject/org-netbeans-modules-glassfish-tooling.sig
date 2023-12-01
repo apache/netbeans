@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.28
+#Version 1.29
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -20,8 +20,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -57,6 +59,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -1089,16 +1092,16 @@ CLSS public org.netbeans.modules.glassfish.tooling.admin.ServerAdmin
 cons public init()
 meth public !varargs static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.TaskStateListener[])
 meth public !varargs static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.data.IdeContext,org.netbeans.modules.glassfish.tooling.TaskStateListener[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public !varargs static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.TaskStateListener[])
 meth public !varargs static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.data.IdeContext,org.netbeans.modules.glassfish.tooling.TaskStateListener[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command)
 meth public static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(java.util.concurrent.ExecutorService,org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.data.IdeContext)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command)
 meth public static <%0 extends org.netbeans.modules.glassfish.tooling.admin.Result> java.util.concurrent.Future<{%%0}> exec(org.netbeans.modules.glassfish.tooling.data.GlassFishServer,org.netbeans.modules.glassfish.tooling.admin.Command,org.netbeans.modules.glassfish.tooling.data.IdeContext)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.util.concurrent.ExecutorService executor(int)
 meth public static void init(java.net.Authenticator)
 supr java.lang.Object
@@ -1418,8 +1421,12 @@ fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVer
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_4
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_5
 fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_6
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_7
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_8
+fld public final static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion GF_7_0_9
 meth public boolean equals(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
 meth public boolean equalsMajorMinor(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
+meth public int toFullInteger()
 meth public java.lang.String toFullString()
 meth public java.lang.String toString()
 meth public short getBuild()
@@ -1438,12 +1445,12 @@ meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion 
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion[] values()
 supr java.lang.Enum<org.netbeans.modules.glassfish.tooling.data.GlassFishVersion>
-hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_1_0_STR,GF_6_1_0_STR_NEXT,GF_6_2_0_STR,GF_6_2_0_STR_NEXT,GF_6_2_1_STR,GF_6_2_1_STR_NEXT,GF_6_2_2_STR,GF_6_2_2_STR_NEXT,GF_6_2_3_STR,GF_6_2_3_STR_NEXT,GF_6_2_4_STR,GF_6_2_4_STR_NEXT,GF_6_2_5_STR,GF_6_2_5_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,GF_7_0_0_STR,GF_7_0_0_STR_NEXT,GF_7_0_1_STR,GF_7_0_1_STR_NEXT,GF_7_0_2_STR,GF_7_0_2_STR_NEXT,GF_7_0_3_STR,GF_7_0_3_STR_NEXT,GF_7_0_4_STR,GF_7_0_4_STR_NEXT,GF_7_0_5_STR,GF_7_0_5_STR_NEXT,GF_7_0_6_STR,GF_7_0_6_STR_NEXT,build,major,minor,stringValuesMap,update,value
+hfds GF_1_STR,GF_1_STR_NEXT,GF_2_1_1_STR,GF_2_1_1_STR_NEXT,GF_2_1_STR,GF_2_1_STR_NEXT,GF_2_STR,GF_2_STR_NEXT,GF_3_0_1_STR,GF_3_0_1_STR_NEXT,GF_3_1_1_STR,GF_3_1_1_STR_NEXT,GF_3_1_2_2_STR,GF_3_1_2_3_STR,GF_3_1_2_4_STR,GF_3_1_2_5_STR,GF_3_1_2_STR,GF_3_1_2_STR_NEXT,GF_3_1_STR,GF_3_1_STR_NEXT,GF_3_STR,GF_3_STR_NEXT,GF_4_0_1_STR,GF_4_0_1_STR_NEXT,GF_4_1_1_STR,GF_4_1_1_STR_NEXT,GF_4_1_2_STR,GF_4_1_2_STR_NEXT,GF_4_1_STR,GF_4_1_STR_NEXT,GF_4_STR,GF_4_STR_NEXT,GF_5_0_1_STR,GF_5_0_1_STR_NEXT,GF_5_1_0_STR,GF_5_1_0_STR_NEXT,GF_5_STR,GF_5_STR_NEXT,GF_6_1_0_STR,GF_6_1_0_STR_NEXT,GF_6_2_0_STR,GF_6_2_0_STR_NEXT,GF_6_2_1_STR,GF_6_2_1_STR_NEXT,GF_6_2_2_STR,GF_6_2_2_STR_NEXT,GF_6_2_3_STR,GF_6_2_3_STR_NEXT,GF_6_2_4_STR,GF_6_2_4_STR_NEXT,GF_6_2_5_STR,GF_6_2_5_STR_NEXT,GF_6_STR,GF_6_STR_NEXT,GF_7_0_0_STR,GF_7_0_0_STR_NEXT,GF_7_0_1_STR,GF_7_0_1_STR_NEXT,GF_7_0_2_STR,GF_7_0_2_STR_NEXT,GF_7_0_3_STR,GF_7_0_3_STR_NEXT,GF_7_0_4_STR,GF_7_0_4_STR_NEXT,GF_7_0_5_STR,GF_7_0_5_STR_NEXT,GF_7_0_6_STR,GF_7_0_6_STR_NEXT,GF_7_0_7_STR,GF_7_0_7_STR_NEXT,GF_7_0_8_STR,GF_7_0_8_STR_NEXT,GF_7_0_9_STR,GF_7_0_9_STR_NEXT,build,major,minor,stringValuesMap,update,value
 
 CLSS public org.netbeans.modules.glassfish.tooling.data.IdeContext
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.glassfish.tooling.data.StartupArgs
@@ -1538,17 +1545,17 @@ meth public boolean isLoggable(java.util.logging.Level)
 meth public java.lang.String buildKey(java.lang.String,java.lang.String)
 meth public java.lang.String excMsg(java.lang.String,java.lang.String)
 meth public static boolean loggable(java.util.logging.Level)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String excMsg(java.lang.Class,java.lang.String)
 meth public static java.lang.String logMsg(java.lang.Class,java.lang.String)
 meth public static java.util.logging.Logger getLogger()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Object[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void log(java.util.logging.Level,java.lang.String,java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void exception(java.util.logging.Level,java.lang.String)
 meth public void log(java.util.logging.Level,java.lang.String,java.lang.String)
 meth public void log(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.Object)
@@ -1605,7 +1612,7 @@ cons public init(java.io.InputStream)
 supr org.netbeans.modules.glassfish.tooling.server.FetchLog
 
 CLSS public org.netbeans.modules.glassfish.tooling.server.JpaSupport
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 innr public static ApiVersion
 meth public static org.netbeans.modules.glassfish.tooling.server.JpaSupport$ApiVersion getApiVersion(org.netbeans.modules.glassfish.tooling.data.GlassFishVersion)
@@ -1720,7 +1727,7 @@ meth public static java.net.URL getBuilderConfig(org.netbeans.modules.glassfish.
 meth public static org.netbeans.modules.glassfish.tooling.server.config.ConfigBuilder getBuilder(org.netbeans.modules.glassfish.tooling.data.GlassFishServer)
 meth public static void destroyBuilder(org.netbeans.modules.glassfish.tooling.data.GlassFishServer)
 supr java.lang.Object
-hfds CONFIG_V3,CONFIG_V4,CONFIG_V4_1,CONFIG_V5,CONFIG_V5_0_1,CONFIG_V5_1,CONFIG_V6,CONFIG_V6_1_0,CONFIG_V6_2_0,CONFIG_V6_2_1,CONFIG_V6_2_2,CONFIG_V6_2_3,CONFIG_V6_2_4,CONFIG_V6_2_5,CONFIG_V7_0_0,CONFIG_V7_0_1,CONFIG_V7_0_2,CONFIG_V7_0_3,CONFIG_V7_0_4,CONFIG_V7_0_5,CONFIG_V7_0_6,builders,config
+hfds CONFIG_V3,CONFIG_V4,CONFIG_V4_1,CONFIG_V5,CONFIG_V5_0_1,CONFIG_V5_1,CONFIG_V6,CONFIG_V6_1_0,CONFIG_V6_2_0,CONFIG_V6_2_1,CONFIG_V6_2_2,CONFIG_V6_2_3,CONFIG_V6_2_4,CONFIG_V6_2_5,CONFIG_V7_0_0,CONFIG_V7_0_1,CONFIG_V7_0_2,CONFIG_V7_0_3,CONFIG_V7_0_4,CONFIG_V7_0_5,CONFIG_V7_0_6,CONFIG_V7_0_7,CONFIG_V7_0_8,CONFIG_V7_0_9,builders,config
 
 CLSS public org.netbeans.modules.glassfish.tooling.server.config.ConfigUtils
 cons public init()
@@ -1850,12 +1857,14 @@ fld public final static org.netbeans.modules.glassfish.tooling.server.config.Jav
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_7
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v1_8
 fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v20
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v21
+fld public final static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform v22
 meth public java.lang.String toString()
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform toValue(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform valueOf(java.lang.String)
 meth public static org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform[] values()
 supr java.lang.Enum<org.netbeans.modules.glassfish.tooling.server.config.JavaSEPlatform>
-hfds V11_STR,V12_STR,V13_STR,V14_STR,V15_STR,V16_STR,V17_STR,V18_STR,V19_STR,V1_1_STR,V1_2_STR,V1_3_STR,V1_4_STR,V1_5_STR,V1_6_STR,V1_7_STR,V1_8_STR,V20_STR,stringValuesMap
+hfds stringValuesMap
 
 CLSS public org.netbeans.modules.glassfish.tooling.server.config.JavaSESet
 cons public init(java.util.List<java.lang.String>,java.lang.String)

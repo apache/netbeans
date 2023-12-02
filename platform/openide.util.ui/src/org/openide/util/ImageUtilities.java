@@ -34,6 +34,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ImageObserver;
+import java.awt.image.MultiResolutionImage;
 import java.awt.image.RGBImageFilter;
 import java.awt.image.WritableRaster;
 import java.io.IOException;
@@ -46,6 +47,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -322,10 +324,9 @@ public final class ImageUtilities {
      * @return icon corresponding icon
      */    
     public static final Icon image2Icon(Image image) {
-        /* Make sure to always return a ToolTipImage, to take advantage of its rendering tweaks for
-        HiDPI screens. */
-        return (image instanceof ToolTipImage)
+        ToolTipImage ret = (image instanceof ToolTipImage)
                 ? (ToolTipImage) image : assignToolTipToImageInternal(image, "");
+        return ret.asImageIconIfRequiredForRetina();
     }
     
     /**
@@ -376,8 +377,9 @@ public final class ImageUtilities {
             // so let's try second most used one type, it satisfies AbstractButton, JCheckbox. Not all cases are
             // covered, however.
             icon.paintIcon(dummyIconComponentButton, g, 0, 0);
+        } finally {
+            g.dispose();
         }
-        g.dispose();
         return image;
     }
     
@@ -1049,15 +1051,10 @@ public final class ImageUtilities {
         it volatile instead, to be completely sure that the class is still thread-safe. */
         private volatile Icon delegate;
 
-        private IconImageIcon(Icon delegate) {
-            super(icon2Image(delegate));
+        IconImageIcon(ToolTipImage delegate) {
+            super(delegate);
             Parameters.notNull("delegate", delegate);
             this.delegate = delegate;
-        }
-
-        private static ImageIcon create(Icon delegate) {
-            return (delegate instanceof ImageIcon)
-                    ? (ImageIcon) delegate : new IconImageIcon(delegate);
         }
 
         @Override
@@ -1089,9 +1086,15 @@ public final class ImageUtilities {
     }
 
     /**
-     * Image with tool tip text (for icons with badges)
+     * Image with tool tip text (for icons with badges).
+     *
+     * <p>On MacOS, HiDPI (Retina) support in JMenuItem.setIcon(Icon) requires the Icon argument to
+     * be an instance of ImageIcon wrapping a MultiResolutionImage (see
+     * com.apple.laf.ScreenMenuIcon.setIcon, com.apple.laf.AquaIcon.getImageForIcon, and
+     * sun.lwawt.macosx.CImage.Creator.createFromImage). Thus we have this class implement
+     * MultiResolutionImage, and use asImageIcon when needed via asImageIconIfRequiredForRetina.
      */
-    private static class ToolTipImage extends BufferedImage implements Icon {
+    private static class ToolTipImage extends BufferedImage implements Icon, MultiResolutionImage {
         final String toolTipText;
         // May be null.
         final Icon delegateIcon;
@@ -1099,6 +1102,8 @@ public final class ImageUtilities {
         final URL url;
         // May be null.
         ImageIcon imageIconVersion;
+        // May be null.
+        volatile BufferedImage doubleSizeVariant;
 
         public static ToolTipImage createNew(String toolTipText, Image image, URL url) {
             ImageUtilities.ensureLoaded(image);
@@ -1137,9 +1142,16 @@ public final class ImageUtilities {
         }
 
         public synchronized ImageIcon asImageIcon() {
-          if (imageIconVersion == null)
-            imageIconVersion = IconImageIcon.create(this);
-          return imageIconVersion;
+            if (imageIconVersion == null) {
+                imageIconVersion = new IconImageIcon(this);
+            }
+            return imageIconVersion;
+        }
+
+        public Icon asImageIconIfRequiredForRetina() {
+            /* We could choose to do this only on MacOS, but doing it on all platforms will lower
+            the chance of undetected platform-specific bugs. */
+            return delegateIcon != null ? asImageIcon() : this;
         }
 
         /**
@@ -1236,6 +1248,49 @@ public final class ImageUtilities {
                 }
             }
             return super.getProperty(name, observer);
+        }
+
+        private Image getDoubleSizeVariant() {
+          if (delegateIcon == null) {
+              return null;
+          }
+          BufferedImage ret = doubleSizeVariant;
+          if (ret == null) {
+              int SCALE = 2;
+              ColorModel model = getColorModel();
+              int w = delegateIcon.getIconWidth()  * SCALE;
+              int h = delegateIcon.getIconHeight() * SCALE;
+              ret = new BufferedImage(
+                    model,
+                    model.createCompatibleWritableRaster(w, h),
+                    model.isAlphaPremultiplied(), null);
+              Graphics g = ret.createGraphics();
+              try {
+                  ((Graphics2D) g).transform(AffineTransform.getScaleInstance(SCALE, SCALE));
+                  delegateIcon.paintIcon(dummyIconComponentLabel, g, 0, 0);
+              } finally {
+                  g.dispose();
+              }
+              doubleSizeVariant = ret;
+          }
+          return ret;
+        }
+
+        @Override
+        public Image getResolutionVariant(double destImageWidth, double destImageHeight) {
+            if (destImageWidth <= getWidth(null) && destImageHeight <= getHeight(null)) {
+                /* Returning "this" should be safe here, as the same is done in
+                sun.awt.image.MultiResolutionToolkitImage. */
+                return this;
+            }
+            Image ds = getDoubleSizeVariant();
+            return ds != null ? ds : this;
+        }
+
+        @Override
+        public List<Image> getResolutionVariants() {
+            Image ds = getDoubleSizeVariant();
+            return ds == null ? List.of(this) : List.of(this, ds);
         }
     }
 

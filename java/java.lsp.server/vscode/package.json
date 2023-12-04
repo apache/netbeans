@@ -450,6 +450,10 @@
 				"title": "Properties"
 			},
 			{
+				"command": "nbls.cloud.ocid.copy",
+				"title": "Copy OCID"
+			},
+			{
 				"command": "nbls.workspace.compile",
 				"title": "Compile Workspace",
 				"category": "Java"
@@ -682,6 +686,10 @@
 					"when": "false"
 				},
 				{
+					"command": "nbls.cloud.ocid.copy",
+					"when": "false"
+				},
+				{
 					"command": "nbls:Database:netbeans.db.explorer.action.Connect",
 					"when": "false"
 				},
@@ -845,19 +853,28 @@
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.DownloadWalletAction",
-					"when": "viewItem =~ /class:oracle.database.DatabaseItem/"
+					"when": "viewItem =~ /class:oracle.database.DatabaseItem/",
+					"group": "oci@200"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.OpenServiceConsoleAction",
-					"when": "viewItem =~ /class:oracle.database.DatabaseItem/"
+					"when": "viewItem =~ /class:oracle.database.DatabaseItem/",
+					"group": "oci@300"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddDbConnectionToVault",
-					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/"
+					"when": "viewItem =~ /class:org.netbeans.api.db.explorer.DatabaseConnection/",
+					"group": "oci@400"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
-					"when": "viewItem =~ /class:oracle.compartment.CompartmentItem/"
+					"when": "viewItem =~ /class:oracle.compartment.CompartmentItem/",
+                                        "group": "oci@100"
+				},
+				{
+					"command": "nbls.cloud.ocid.copy",
+					"when": "viewItem =~ /class:oracle.items.OCIItem/",
+                                        "group": "oci@1000"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",
@@ -965,7 +982,7 @@
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/vault.svg",
 				"codeicon": "lock"
 			},
-                        {
+			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/key.svg",
 				"codeicon": "gist-secret"
 			},

@@ -23,6 +23,9 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.api.project.ui.ProjectProblems;
+import org.netbeans.modules.gradle.api.BuildPropertiesSupport;
+import org.netbeans.modules.gradle.api.BuildPropertiesSupport.Property;
+import org.netbeans.modules.gradle.api.BuildPropertiesSupport.PropertyKind;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.projectapi.nb.NbProjectManagerAccessor;
@@ -109,5 +112,31 @@ public class NbGradleProjectImpl2Test extends AbstractGradleProjectTestCase {
         assertFalse("Project was already primed", ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookup.EMPTY));
         
         assertTrue("Project has still problems", ProjectProblems.isBroken(project));
+    }
+    
+    public void testSpotbugsPlugin() throws Exception {
+        copyProject("projects/spotbugs");
+        ProjectTrust.getDefault().trustProject(project);
+
+        NbGradleProject gp1 = NbGradleProject.get(project);
+        NbGradleProject loaded =  gp1.toQuality("Load test project", NbGradleProject.Quality.FULL, false).toCompletableFuture().get();
+        assertNotNull(loaded);
+        assertTrue(loaded.getQuality().atLeast(NbGradleProject.Quality.FULL));
+        
+        BuildPropertiesSupport props = BuildPropertiesSupport.get(project);
+        assertNotNull(props);
+        Property rec = props.findExtensionProperty("", "recursiveProperty");
+        assertNotNull(rec);
+        assertEquals(PropertyKind.MAP, rec.getKind());
+        
+        Property k1 = props.get(rec, "key1", null);
+        assertNull("Avoid recursion to same object", k1);
+        
+        Property k2 = props.get(rec, "key2", null);
+        assertNotNull(k2);
+        
+        Property k3 = props.get(k2, "key3", null);
+        assertNotNull(k3);
+        assertEquals("Avoid loop references", PropertyKind.EXISTS, k3.getKind());
     }
 }

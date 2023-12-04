@@ -110,6 +110,7 @@ import org.gradle.language.java.artifact.JavadocArtifact;
 import org.gradle.plugin.use.PluginId;
 import org.gradle.util.GradleVersion;
 import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
+import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo.Report;
 
 /**
  *
@@ -125,6 +126,18 @@ class NbProjectInfoBuilder {
      * project loader is enabled to FINER level.
      */
     private static final Logger LOG =  Logging.getLogger(NbProjectInfoBuilder.class);
+    
+    /**
+     * Maximum recursion depth into structures, arrays and maps. If this depth is reached, the 
+     * builder will record a warning and stop descending.
+     */
+    private static final int MAX_INTROSPECTION_DEPTH = 25;
+    
+    /**
+     * If a warning is recorded during introspection, further warnings will
+     * be suppressed until the introspector goes up to this level.
+     */
+    private static final int INTROSPECTION_RESET_DEPTH_WARNING = 5;
 
     /**
      * Name of the default extensibility point for various domain objects defined by Gradle.
@@ -213,6 +226,7 @@ class NbProjectInfoBuilder {
 
     public NbProjectInfo buildAll() {
         adapter.setModel(model);
+        
         runAndRegisterPerf(model, "meta", this::detectProjectMetadata);
         detectProps(model);
         detectLicense(model);
@@ -226,15 +240,13 @@ class NbProjectInfoBuilder {
         // introspection is only allowed for gradle 7.4 and above.
         // TODO: investigate if some of the instrospection could be done for earlier Gradles.
         sinceGradle("7.0", () -> {
+            initIntrospection();
+            
             runAndRegisterPerf(model, "detectExtensions", this::detectExtensions);
-        });
-        sinceGradle("7.0", () -> {
             runAndRegisterPerf(model, "detectPlugins2", this::detectAdditionalPlugins);
-        });
-        sinceGradle("7.0", () -> {
             runAndRegisterPerf(model, "taskDependencies", this::detectTaskDependencies);
+            runAndRegisterPerf(model, "taskProperties", this::detectTaskProperties);
         });
-        runAndRegisterPerf(model, "taskProperties", this::detectTaskProperties);
         runAndRegisterPerf(model, "artifacts", this::detectConfigurationArtifacts);
         storeGlobalTypes(model);
         return model;
@@ -305,7 +317,7 @@ class NbProjectInfoBuilder {
             Class nonDecorated = findNonDecoratedClass(taskClass);
             
             taskPropertyTypes.put(task.getName(), nonDecorated.getName());
-            inspectObjectAndValues(taskClass, task, task.getName() + ".", globalTypes, taskPropertyTypes, taskProperties, EXCLUDE_TASK_PROPERTIES, true); // NOI18N
+            startInspectObjectAndValues(taskClass, task, task.getName() + ".", globalTypes, taskPropertyTypes, taskProperties, EXCLUDE_TASK_PROPERTIES, true); // NOI18N
         }
         
         model.getInfo().put("tasks.propertyValues", taskProperties); // NOI18N
@@ -433,7 +445,7 @@ class NbProjectInfoBuilder {
         model.getInfo().put("extensions.globalTypes", globalTypes); // NOI18N
     }
     
-    private void detectExtensions(NbProjectInfoModel model) {
+    private void initIntrospection() {
         StringBuilder sb = new StringBuilder();
         for (String s : IGNORED_SYSTEM_CLASSES_REGEXP) {
             if (sb.length() > 0) {
@@ -442,7 +454,9 @@ class NbProjectInfoBuilder {
             sb.append(s);
         }
         ignoreClassesPattern = Pattern.compile(sb.toString());
-
+    }
+    
+    private void detectExtensions(NbProjectInfoModel model) {
         inspectExtensions("", project.getExtensions());
         model.getInfo().put("extensions.propertyTypes", propertyTypes); // NOI18N
         model.getInfo().put("extensions.propertyValues", values); // NOI18N
@@ -539,19 +553,53 @@ class NbProjectInfoBuilder {
      * @param propertyTypes
      * @param defaultValues 
      */
+    private void startInspectObjectAndValues(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues) {
+        depth = 0;
+        inspectObjectAndValues(clazz, object, prefix, globalTypes, propertyTypes, defaultValues, null, true);
+    }
+    
+    private void startInspectObjectAndValues(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues, Set<String> excludes, boolean type) {
+        depth = 0;
+        inspectObjectAndValues(clazz, object, prefix, globalTypes, propertyTypes, defaultValues, excludes, type);
+    }
+
     private void inspectObjectAndValues(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues) {
         inspectObjectAndValues(clazz, object, prefix, globalTypes, propertyTypes, defaultValues, null, true);
     }
+    /**
+     * The current introspection depth
+     */
+    private int depth;
+    
+    /**
+     * If true, depth exceeded warnings will not be logged.
+     */
+    private boolean suppressDepthWarning;
     
     private void inspectObjectAndValues(Class clazz, Object object, String prefix, Map<String, Map<String, String>> globalTypes, Map<String, String> propertyTypes, Map<String, Object> defaultValues, Set<String> excludes, boolean type) {
         if (valueIdentities.put(object, Boolean.TRUE) == Boolean.TRUE) {
             return;
         }
         try {
+            if (depth++ >= MAX_INTROSPECTION_DEPTH) {
+                if (!suppressDepthWarning) {
+                    LOG.warn("Too deep structure, truncating");
+                    model.noteProblem(Report.Severity.WARNING, 
+                            String.format("Object structure too deep encountered in class %s", clazz),
+                            String.format("Object structure is too deep for the project model builder. This is unlikely to affect basic project operations. "
+                                    + "Check logs and report this issue. The path for the object: %s, current value: %s", prefix, object));
+                    suppressDepthWarning = true;
+                }
+                return;
+            } else if (depth <= INTROSPECTION_RESET_DEPTH_WARNING) {
+                suppressDepthWarning = false;
+            }
             inspectObjectAndValues0(clazz, object, prefix, globalTypes, propertyTypes, defaultValues, excludes, type);
         } catch (RuntimeException ex) {
             LOG.warn("Error during inspection of {}, value {}, prefix {}", clazz, object, prefix);
+            model.noteProblem(ex, true);
         } finally {
+            depth--;
             valueIdentities.remove(object);
         }
     }
@@ -753,7 +801,7 @@ class NbProjectInfoBuilder {
             if (v == null) {
                 defaultValues.put(prefix + "." + k, null); // NOI18N
             } else {
-                defaultValues.put(prefix + "." + k, Objects.toString(v)); // NOI18N
+                defaultValues.put(prefix + "." + k, objectToString(v)); // NOI18N
                 inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
             }
         }
@@ -789,8 +837,8 @@ class NbProjectInfoBuilder {
                 Object v = m.get(k);
                 if (v == null) {
                     defaultValues.put(prefix + "." + k, null); // NOI18N
-                } else {
-                    defaultValues.put(prefix + "." + k, Objects.toString(v)); // NOI18N
+                } else if (!v.equals(value)) {
+                    defaultValues.put(prefix + "." + k, objectToString(v)); // NOI18N
                     inspectObjectAndValues(v.getClass(), v, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
                 }
             }
@@ -821,7 +869,7 @@ class NbProjectInfoBuilder {
                         String newPrefix = prefix + "[" + index + "]."; // NOI18N
                         if (o == null) {
                             defaultValues.put(prefix + "[" + index + "]", null); //NOI18N
-                        } else {
+                        } else if (!o.equals(value)) {
                             defaultValues.put(prefix + "[" + index + "]", Objects.toString(o)); //NOI18N
                             inspectObjectAndValues(o.getClass(), o, newPrefix, globalTypes, propertyTypes, defaultValues, null, false);
                         }
@@ -869,8 +917,8 @@ class NbProjectInfoBuilder {
                     Object v = mvalue.get(o);
                     if (v == null) {
                         defaultValues.put(newPrefix, null); // NOI18N
-                    } else {
-                        defaultValues.put(newPrefix, Objects.toString(v)); // NOI18N
+                    } else if (!v.equals(value)) {
+                        defaultValues.put(newPrefix, objectToString(v)); // NOI18N
                         inspectObjectAndValues(v.getClass(), v, newPrefix + ".", globalTypes, propertyTypes, defaultValues, null, itemClass == null);
                     }
                 }
@@ -878,6 +926,17 @@ class NbProjectInfoBuilder {
             }
         }
         return dumped;
+    }
+    
+    private static String objectToString(Object o) {
+        if (o instanceof Map || o instanceof Iterable) {
+            return o.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(o));
+        } 
+        try {
+            return Objects.toString(o);
+        } catch (RuntimeException ex) {
+            return o.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(o));
+        }
     }
     
     private static Class findNonDecoratedClass(Class clazz) {
@@ -930,7 +989,7 @@ class NbProjectInfoBuilder {
             
             Class c = findNonDecoratedClass(ext.getClass());
             propertyTypes.put(prefix + extName, c.getName());
-            inspectObjectAndValues(ext.getClass(), ext, prefix + extName + ".", globalTypes, propertyTypes, values);
+            startInspectObjectAndValues(ext.getClass(), ext, prefix + extName + ".", globalTypes, propertyTypes, values);
             if (ext instanceof ExtensionAware) {
                 inspectExtensions(prefix + extName + ".", ((ExtensionAware)ext).getExtensions());  // NOI18N
             }
@@ -986,7 +1045,8 @@ class NbProjectInfoBuilder {
         try {
             model.getInfo().put("buildClassPath", storeSet(project.getBuildscript().getConfigurations().getByName("classpath").getFiles()));
         } catch (RuntimeException e) {
-            model.noteProblem(e);
+            // unexpected exception, build classpath should be available.
+            model.noteProblem(e, true);
         }
         Set<String[]> tasks = new HashSet<>();
         for (org.gradle.api.Task t : project.getTasks()) {
@@ -1206,7 +1266,7 @@ class NbProjectInfoBuilder {
                     } catch(Exception e) {
                         convertOfflineException(e);
                         // will not be reached
-                        model.noteProblem(e);
+                        model.noteProblem(e, false);
                     }
                     sinceGradle("4.6", () -> {
                         try {
@@ -1214,7 +1274,7 @@ class NbProjectInfoBuilder {
                         } catch(Exception e) {
                             convertOfflineException(e);
                             // will not be reached
-                            model.noteProblem(e);
+                            model.noteProblem(e, false);
                         }
                         model.getInfo().put(propBase + "configuration_annotation", getProperty(sourceSet, "annotationProcessorConfigurationName"));
                     });
@@ -1230,6 +1290,7 @@ class NbProjectInfoBuilder {
                 }
             } else {
                 model.getInfo().put("sourcesets", Collections.emptySet());
+                // TODO: should be this converted to Problem, severity INFO ?
                 model.noteProblem("No sourceSets found on this project. This project mightbe a Model/Rule based one which is not supported at the moment.");
             }
         }
@@ -1246,12 +1307,14 @@ class NbProjectInfoBuilder {
             try {
                 model.getInfo().put("exploded_war_dir", getProperty(project, "explodedWar", "destinationDir"));
             } catch(Exception e) {
-                model.noteProblem(e);
+                // probably not an internal error, but misconfiguration, omit trace
+                model.noteProblem(e, false);
             }
             try {
                 model.getInfo().put("web_classpath", getProperty(project, "war", "classpath", "files"));
             } catch(Exception e) {
-                model.noteProblem(e);
+                // probably not an internal error, but misconfiguration, omit trace
+                model.noteProblem(e, false);
             }
         }
         Map<String, Object> archives = new HashMap<>();
@@ -1540,7 +1603,7 @@ class NbProjectInfoBuilder {
 
                     walker.walkResolutionResult(it.getIncoming().getResolutionResult().getRoot());
                 } catch (ResolveException ex) {
-                    model.noteProblem(ex);
+                    model.noteProblem(ex, false);
                 }
             } else {
                 unresolvedIds.addAll(componentIds);

@@ -20,12 +20,15 @@
 package org.netbeans.modules.gradle.tooling;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.gradle.internal.exceptions.LocationAwareException;
 import org.gradle.internal.exceptions.MultiCauseException;
 import org.gradle.internal.resolve.ModuleVersionResolveException;
@@ -76,25 +79,33 @@ public class NbProjectInfoModel extends BaseModel implements NbProjectInfo {
      * yet, but contains exception class as a data for possible matching.
      * @param e reported issue as a Throwable.
      */
-    void noteProblem(Throwable e) {
+    void noteProblem(Throwable e, boolean unexpected) {
         if (e instanceof MultiCauseException && !(e instanceof ModuleVersionResolveException)) {
             // only handle wrapper multi-causes. They may appear in the middle of the cause chain, too, but
             // it's not yet obvious if the multi-cause errors are actually useful.
             MultiCauseException mce = (MultiCauseException)e;
             for (Throwable t : mce.getCauses()) {
-                Report r = createReport(t, false);
+                Report r = createReport(t, false, unexpected);
                 if (r != null) {
-                    ReportImpl outer = createReport(e, true);
+                    ReportImpl outer = createReport(e, true, unexpected);
                     outer.addCause(r);
                     reports.add(outer);
                 }
             }
         } else {
-            Report r = createReport(e, false);
+            Report r = createReport(e, false, unexpected);
             if (r != null) {
                 reports.add(r);
             }
         }
+    }
+    
+    void noteProblem(Report.Severity severity, String message, String detail) {
+        if (message == null) {
+            return;
+        }
+        Report r = new ReportImpl(severity, message, detail);
+        reports.add(r);
     }
     
     /**
@@ -104,27 +115,29 @@ public class NbProjectInfoModel extends BaseModel implements NbProjectInfo {
      * @param shallow if true, will encode just the throwable, not its chain
      * @return created Report
      */
-    private ReportImpl createReport(Throwable e, boolean shallow) {
+    private ReportImpl createReport(Throwable e, boolean shallow, boolean exc) {
         if (e == null) {
             return null;
         }
 
         ReportImpl report;
         Throwable reported = e;
-        
+        StackTraceElement[] els = e.getStackTrace();
+        String detail = Arrays.asList(els).stream().map(Objects::toString).collect(Collectors.joining("\n"));
+        Report.Severity s = exc ? Report.Severity.EXCEPTION : Report.Severity.ERROR;
         if (e instanceof LocationAwareException) {
             LocationAwareException lae = (LocationAwareException)e;
             reported = lae.getCause();
-            report = new ReportImpl(reported.getClass().getName(), lae.getLocation(), lae.getLineNumber(), reported.getMessage());
+            report = new ReportImpl(s, reported.getClass().getName(), lae.getLocation(), lae.getLineNumber(), reported.getMessage(), exc ? detail : null);
         } else {
-            report = new ReportImpl(reported.getClass().getName(), null, -1, e.getMessage());
+            report = new ReportImpl(s, reported.getClass().getName(), null, -1, e.getMessage(), exc ? detail : null);
             reported = e;
         }
         if (shallow) {
             return report;
         }
         if (e.getCause() != null && e.getCause() != reported) {
-            Report nested = createReport(e.getCause(), false);
+            Report nested = createReport(e.getCause(), false, exc);
             if (nested != null) {
                 report.addCause(nested);
             }
@@ -150,13 +163,26 @@ public class NbProjectInfoModel extends BaseModel implements NbProjectInfo {
         private final String scriptLocation;
         private final int lineNumber;
         private final String message;
+        private final String detail;
+        private final Severity severity;
         private Report cause;
+        
+        public ReportImpl(Severity severity, String message, String detail) {
+            this.severity = severity;
+            this.detail = detail;
+            this.errorClass = null;
+            this.scriptLocation = null;
+            this.lineNumber = -1;
+            this.message = message;
+        }
 
-        public ReportImpl(String errorClass, String scriptLocation, int lineNumber, String message) {
+        public ReportImpl(Severity severity, String errorClass, String scriptLocation, int lineNumber, String message, String detail) {
+            this.severity = severity;
             this.errorClass = errorClass;
             this.scriptLocation = scriptLocation;
             this.lineNumber = lineNumber;
             this.message = message;
+            this.detail = detail;
         }
         
         public String getErrorClass() {
@@ -181,6 +207,14 @@ public class NbProjectInfoModel extends BaseModel implements NbProjectInfo {
 
         public Report getCause() {
             return cause;
+        }
+
+        public Severity getSeverity() {
+            return severity;
+        }
+
+        public String getDetail() {
+            return detail;
         }
     }
 }

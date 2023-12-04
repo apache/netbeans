@@ -42,13 +42,50 @@ public final class GradleReport {
     private final int line;
     private final String message;
     private final GradleReport causedBy;
-
-    GradleReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
+    private final Severity severity;
+    private final String[] details;
+    
+    /**
+     * Severity of the report.
+     * 
+     * @since 2.38
+     */
+    public enum Severity {
+        /**
+         * Unexpected exception during project read, most likely an error
+         * in the project model reading code.
+         */
+        EXCEPTION,
+        
+        /**
+         * Project could not be read, essential project data is missing.
+         */
+        ERROR, 
+        
+        /**
+         * Warning that indicates some issue that happened during project model reading, but
+         * basic model properties are still read.
+         */
+        WARNING, 
+        
+        /**
+         * Notices and information messages.
+         */
+        INFO,
+    }
+    
+    GradleReport(Severity severity, String errorClass, String location, int line, String message, GradleReport causedBy, String... details) {
+        this.severity = severity;
         this.errorClass = errorClass;
         this.location = location;
         this.line = line;
         this.message = message == null ? "" : message;
         this.causedBy = causedBy;
+        this.details = details != null && details.length > 0 ? details : null;
+    }
+
+    GradleReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
+        this(Severity.ERROR, errorClass, location, line, message, causedBy);
     }
     
     public @CheckForNull String getLocation() {
@@ -75,6 +112,18 @@ public final class GradleReport {
 
     public String getErrorClass() {
         return errorClass;
+    }
+
+    /**
+     * @return the report's severity
+     * @since 2.38
+     */
+    public Severity getSeverity() {
+        return severity;
+    }
+    
+    public String[] getDetails() {
+        return details;
     }
 
     @Override
@@ -116,7 +165,10 @@ public final class GradleReport {
         "FMT_MessageWithLocation={0} ({1}:{2})",
         "# {0} - the error message",
         "# {1} - the file",
-        "FMT_MessageWithLocationNoLine={0} ({1})"
+        "FMT_MessageWithLocationNoLine={0} ({1})",
+        "# {0} - the error message",
+        "# {1} - the stack trace, one line per stack frame",
+        "FMT_MessageWithTrace={0}\nError stack trace: {1}"
     })
 
     /**
@@ -136,7 +188,13 @@ public final class GradleReport {
             msg = Bundle.FMT_AppendMessage(msg, r2.getMessage());
         }
         if (!includeLocation || getLocation() == null) {
-            return msg;
+            // exceptions from gradle contain quite descriptive messages, but runtime exceptions
+            // and exceptions from the wrapper do not. 
+            if (severity == Severity.EXCEPTION && details != null && details.length >0) {
+                return Bundle.FMT_MessageWithTrace(msg, String.join("\n", details));
+            } else {
+                return msg;
+            }
         }
         
         String locString;

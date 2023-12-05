@@ -1555,6 +1555,10 @@ public class TokenFormatter {
                                     case WHITESPACE_WITHIN_TYPE_CAST_PARENS:
                                         countSpaces = docOptions.spaceWithinTypeCastParens ? 1 : 0;
                                         break;
+                                    case WHITESPACE_WITHIN_DNF_TYPE_PARENS:
+                                        // change here if we add the option for it
+                                        countSpaces = 0;
+                                        break;
                                     case WHITESPACE_WITHIN_DYNAMIC_NAME_BRACES:
                                         // change here if we add the option for it
                                         countSpaces = 0;

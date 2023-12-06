@@ -123,7 +123,7 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
 import org.netbeans.modules.java.lsp.server.project.LspProjectInfo;
-import org.netbeans.modules.java.lsp.server.singlesourcefile.CompilerOptionsQueryImpl;
+import org.netbeans.modules.java.lsp.server.singlesourcefile.SingleFileOptionsQueryImpl;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
@@ -1298,7 +1298,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             }
         });
         String fullAltConfigPrefix = client.getNbCodeCapabilities().getAltConfigurationPrefix();
-        String altConfigPrefix = fullConfigPrefix.substring(0, fullAltConfigPrefix.length() - 1);
+        String altConfigPrefix = fullAltConfigPrefix.substring(0, fullAltConfigPrefix.length() - 1);
         boolean modified = false;
         String newVMOptions = "";
         JsonObject javaPlus = ((JsonObject) params.getSettings()).getAsJsonObject(altConfigPrefix);
@@ -1308,7 +1308,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 newVMOptions = runConfig.getAsJsonPrimitive("vmOptions").getAsString();
             }
         }
-        for (CompilerOptionsQueryImpl query : Lookup.getDefault().lookupAll(CompilerOptionsQueryImpl.class)) {
+        for (SingleFileOptionsQueryImpl query : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImpl.class)) {
             modified |= query.setConfiguration(client, newVMOptions);
         }
         if (modified) {

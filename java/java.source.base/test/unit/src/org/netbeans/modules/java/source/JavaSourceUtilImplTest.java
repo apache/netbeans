@@ -39,6 +39,7 @@ import org.junit.Test;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery;
+import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.classfile.ClassFile;
@@ -74,6 +75,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
     @Override
     public void setUp() throws Exception {
         clearWorkDir();
+        SourceUtilsTestUtil2.disableMultiFileSourceRoots();
         wd = FileUtil.toFileObject(FileUtil.normalizeFile(getWorkDir()));
         root = FileUtil.createFolder(wd, "src");    //NOI18N
         java = createFile(root, "org/nb/A.java","package nb;\n class A {}");    //NOI18N

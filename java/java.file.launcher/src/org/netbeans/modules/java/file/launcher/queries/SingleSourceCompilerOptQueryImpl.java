@@ -16,13 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.api.common.singlesourcefile;
+package org.netbeans.modules.java.file.launcher.queries;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
+import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ChangeSupport;
@@ -37,30 +37,29 @@ public class SingleSourceCompilerOptQueryImpl implements CompilerOptionsQueryImp
 
     @Override
     public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
-        String fileName = file.getName();
-        Result res = null;
-        if (SingleSourceFileUtil.isSingleSourceFile(file)) {
-            res = new ResultImpl(file);
+        SingleFileOptionsQueryImplementation.Result delegate = SingleSourceFileUtil.getOptionsFor(file);
+
+        if (delegate != null) {
+            return new ResultImpl(delegate);
+        } else {
+            return null;
         }
-        return res;
     }
 
-    private static final class ResultImpl extends CompilerOptionsQueryImplementation.Result implements PropertyChangeListener {
+    private static final class ResultImpl extends CompilerOptionsQueryImplementation.Result implements ChangeListener {
 
         private final ChangeSupport cs;
-        private final FileObject file;
+        private final SingleFileOptionsQueryImplementation.Result delegate;
 
-        ResultImpl(FileObject file) {
-
+        ResultImpl(SingleFileOptionsQueryImplementation.Result delegate) {
             this.cs = new ChangeSupport(this);
-            this.file = file;
+            this.delegate = delegate;
+            this.delegate.addChangeListener(this);
         }
 
         @Override
         public List<? extends String> getArguments() {
-
-            Object vmOptionsObj = file.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS);
-            return vmOptionsObj != null ? parseLine((String) vmOptionsObj) : new ArrayList<String>();
+            return parseLine(delegate.getOptions());
         }
 
         @Override
@@ -74,7 +73,7 @@ public class SingleSourceCompilerOptQueryImpl implements CompilerOptionsQueryImp
         }
 
         @Override
-        public void propertyChange(PropertyChangeEvent evt) {
+        public void stateChanged(ChangeEvent ce) {
             cs.fireChange();
         }
     }

@@ -257,6 +257,7 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.Union2;
 import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -315,7 +316,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 delegates = this.delegates.toArray(new TextDocumentServiceImpl[this.delegates.size()]);
             }
             for (TextDocumentServiceImpl delegate : delegates) {
-                delegate.reRunDiagnostics();
+                //augmenting the lookup with NbCodeLanguageClient, so that the
+                //correct javac configuration is used for project-less files
+                //note this lookup does not contain other services usually present
+                //while processing a request, like OperationContext:
+                ProxyLookup augmentedLookup = new ProxyLookup(Lookups.fixed(delegate.client), Lookup.getDefault());
+                Lookups.executeWith(augmentedLookup, () -> {
+                    delegate.reRunDiagnostics();
+                });
             }
         }
     }
@@ -1867,6 +1875,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 //invalidate the source, so that's it is parsed again:
                 SourceAccessor.getINSTANCE().invalidate(Source.create(originalDoc), true);
             }
+        }
+        if (Lookup.getDefault().lookup(NbCodeLanguageClient.class) == null) {
+            new Exception("no NbCodeLanguageClient!").printStackTrace();
         }
 
         diagnosticTasks.computeIfAbsent(uri, u -> {

@@ -31,7 +31,7 @@ import org.openide.util.lookup.ServiceProvider;
  * owns the affected source folder.
  * @author Tomas Zezula
  */
-@ServiceProvider(service = AccessibilityQueryImplementation2.class)
+@ServiceProvider(service = AccessibilityQueryImplementation2.class, position=100)
 public final class ProjectAccessibilityQuery2 implements AccessibilityQueryImplementation2 {
 
     public ProjectAccessibilityQuery2() {}

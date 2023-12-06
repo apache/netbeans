@@ -162,6 +162,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Result;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Trigger;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -262,6 +263,7 @@ public class ServerTest extends NbTestCase {
     protected void setUp() throws Exception {
         System.setProperty("java.awt.headless", Boolean.TRUE.toString());
         ParameterNameProviderImpl.DISABLE_PARAMETER_NAMES_LOADING = true;
+        SourceUtilsTestUtil2.disableMultiFileSourceRoots();
         super.setUp();
         clearWorkDir();
         ServerSocket srv = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());

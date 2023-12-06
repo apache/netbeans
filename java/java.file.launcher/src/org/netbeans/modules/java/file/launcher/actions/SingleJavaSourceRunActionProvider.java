@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.api.common.singlesourcefile;
+package org.netbeans.modules.java.file.launcher.actions;
 
 import java.util.concurrent.Future;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
+import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;

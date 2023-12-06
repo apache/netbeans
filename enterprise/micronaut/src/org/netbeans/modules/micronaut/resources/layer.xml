@@ -67,6 +67,17 @@
             </folder>
         </folder>
         <folder name="org-netbeans-modules-maven">
+            <folder name="RunGoals">
+                <file name="mn">
+                    <attr name="alias" stringvalue="./io.micronaut.maven:micronaut-maven-plugin"/>
+                </file>
+                <file name="io.micronaut.maven:micronaut-maven-plugin">
+                    <attr name="goals" stringvalue="run"/>
+                </file>
+                <file name="io.micronaut.build:micronaut-maven-plugin">
+                    <attr name="goals" stringvalue="run"/>
+                </file>
+            </folder>
             <!-- For Micornaut 3.x -->
             <folder name="io.micronaut.build:micronaut-maven-plugin">
                 <folder name="Lookup">

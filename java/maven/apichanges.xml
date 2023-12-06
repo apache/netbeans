@@ -83,6 +83,25 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="declare-run-goals">
+            <api name="general"/>
+            <summary>Allow extensions to declare run-like goals</summary>
+            <version major="2" minor="161"/>
+            <date day="6" month="12" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility addition="yes" semantic="compatible"/>
+            <description>
+                <p>
+                    The GUI recognizes user modifications to actions and refuses to configure
+                    a modified "run" action with vm and app arguments. It is now possible for a plugin
+                    to register an alternative goal, which is recognized as "exec"-like one and does
+                    not disable the GUI.
+                </p>
+                <p>
+                    For an example, see <a href="@TOP@/org/netbeans/modules/maven/spi/actions/MavenActionsProvider.html#declare-run-goals">MavenActionProvider</a>.
+                </p>
+            </description>
+        </change>
         <change id="runutils-createconfig-action">
             <api name="general"/>
             <summary></summary>

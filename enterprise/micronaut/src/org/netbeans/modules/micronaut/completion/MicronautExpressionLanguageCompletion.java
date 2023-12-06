@@ -44,7 +44,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.micronaut.MicronautConfigProperties;
-import static org.netbeans.modules.micronaut.completion.MicronautDataCompletionTask.startsWith;
+import org.netbeans.modules.micronaut.db.Utils;
 import org.netbeans.modules.micronaut.expression.EvaluationContext;
 import org.netbeans.modules.micronaut.expression.ExpressionTree;
 import org.netbeans.modules.micronaut.expression.MicronautExpressionLanguageParser;
@@ -353,14 +353,14 @@ public class MicronautExpressionLanguageCompletion {
             }
             if (kws != null) {
                 for (String kw : kws) {
-                    if (startsWith(kw, prefix)) {
+                    if (Utils.startsWith(kw, prefix)) {
                         items.add(factory.createKeywordItem(kw, anchorOffset));
                     }
                 }
             }
             if (builtins != null) {
                 for (int j = 0; j < builtins.size(); j += 2) {
-                    if (startsWith(builtins.get(j), prefix)) {
+                    if (Utils.startsWith(builtins.get(j), prefix)) {
                         items.add(factory.createBuiltInItem(builtins.get(j), builtins.get(j + 1), anchorOffset));
                     }
                 }
@@ -371,17 +371,17 @@ public class MicronautExpressionLanguageCompletion {
                     if (element.getKind() == ElementKind.METHOD) {
                         TypeMirror enclType = element.getEnclosingElement().asType();
                         if (enclType.getKind() == TypeKind.DECLARED) {
-                            if (startsWith(name, prefix) && info.getTrees().isAccessible(ctx.getScope(), element, (DeclaredType) enclType)) {
+                            if (Utils.startsWith(name, prefix) && info.getTrees().isAccessible(ctx.getScope(), element, (DeclaredType) enclType)) {
                                 items.add(factory.createJavaElementItem(info, element, anchorOffset));
                             }
                             String propertyName = element.getKind() == ElementKind.METHOD ? ExpressionTree.getPropertyName((ExecutableElement) element) : null;
-                            if (startsWith(propertyName, prefix) && info.getTrees().isAccessible(ctx.getScope(), element, (DeclaredType) enclType)) {
+                            if (Utils.startsWith(propertyName, prefix) && info.getTrees().isAccessible(ctx.getScope(), element, (DeclaredType) enclType)) {
                                 String returnType = MicronautDataCompletionTask.getTypeName(info, ((ExecutableElement)element).getReturnType(), false, false).toString();
                                 items.add(factory.createBeanPropertyItem(propertyName, returnType, anchorOffset));
                             }
                         }
                     } else {
-                        if (startsWith(name, prefix) && info.getTrees().isAccessible(ctx.getScope(), (TypeElement) element)) {
+                        if (Utils.startsWith(name, prefix) && info.getTrees().isAccessible(ctx.getScope(), (TypeElement) element)) {
                             items.add(factory.createJavaElementItem(info, element, anchorOffset));
                         }
                     }
@@ -389,7 +389,7 @@ public class MicronautExpressionLanguageCompletion {
             }
             if (properties != null) {
                 for (ConfigurationMetadataProperty property : properties) {
-                    if (startsWith(property.getId(), prefix)) {
+                    if (Utils.startsWith(property.getId(), prefix)) {
                         items.add(factory.createEnvPropertyItem(wrapProperties ? "'" + property.getId() + "'" : property.getId(), new MicronautConfigDocumentation(property).getText(), anchorOffset, startOffset + offset));
                     }
                 }
@@ -397,7 +397,7 @@ public class MicronautExpressionLanguageCompletion {
             if (pkgPrefix != null) {
                 Set<String> seenPkgs = new HashSet<>();
                 for (String pkgName : info.getClasspathInfo().getClassIndex().getPackageNames(pkgPrefix, false, EnumSet.allOf(ClassIndex.SearchScope.class))) {
-                    if (startsWith(pkgName, pkgPrefix + prefix)) {
+                    if (Utils.startsWith(pkgName, pkgPrefix + prefix)) {
                         String name = pkgName.substring(pkgPrefix.length());
                         int idx = name.indexOf('.');
                         if (idx > 0) {

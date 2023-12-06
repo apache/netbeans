@@ -634,7 +634,7 @@
 				"command": "editor.action.sourceAction",
 				"key": "alt+insert",
 				"mac": "ctrl+alt+enter",
-				"when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly && config.netbeans.javaSupport.enabled"
+				"when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
 			}
 		],
 		"menus": {
@@ -965,7 +965,7 @@
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/vault.svg",
 				"codeicon": "lock"
 			},
-                        {
+			{
 				"uriExpression": "nbres:/org/netbeans/modules/cloud/oracle/resources/key.svg",
 				"codeicon": "gist-secret"
 			},

@@ -113,6 +113,9 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
 
     private synchronized boolean initialize(CompilationController cc) {
         Project p = FileOwnerQuery.getOwner(cc.getFileObject());
+        if (p == null) {
+            return false;
+        }
         Boolean ret = map.get(p);
         if (ret == null) {
             ClassPath cp = ClassPath.getClassPath(p.getProjectDirectory(), ClassPath.COMPILE);

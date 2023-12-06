@@ -100,6 +100,7 @@ public final class GradleDistributionManager {
         GradleVersion.version("7.5"), // JDK-18
         GradleVersion.version("7.6"), // JDK-19
         GradleVersion.version("8.3"), // JDK-20
+        GradleVersion.version("8.5"), // JDK-21
     };
 
     final File gradleUserHome;
@@ -484,12 +485,22 @@ public final class GradleDistributionManager {
          * Checks if this Gradle distribution is compatible with the given
          * major version of Java. Java 1.6, 1.7 and 1.8 are treated as major
          * version 6, 7, and 8.
-         *
+         * <p>
+         * NetBeans uses a built in fixed list of compatibility matrix. That
+         * means it might not know about the compatibility of newer Gradle
+         * versions. Optimistic bias would return {@code true} on these
+         * versions form 2.37. 
+         * </p>
          * @param jdkMajorVersion the major version of the JDK
          * @return <code>true</code> if this version is supported with that JDK.
          */
         public boolean isCompatibleWithJava(int jdkMajorVersion) {
-            return jdkMajorVersion <= lastSupportedJava();
+            
+            GradleVersion lastKnown = JDK_COMPAT[JDK_COMPAT.length - 1];
+            // Optimistic bias, if the GradleVersion is newer than the last NB
+            // knows, we say it's compatible with any JDK
+            return lastKnown.compareTo(version.getBaseVersion()) < 0 
+                    || jdkMajorVersion <= lastSupportedJava();
         }
 
         /**

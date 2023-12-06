@@ -30,7 +30,7 @@ import org.netbeans.spi.quicksearch.SearchRequest;
 import org.netbeans.spi.quicksearch.SearchResponse;
 import org.openide.util.NbBundle.Messages;
 
-@Messages("quicksearch=Hudson") // QuickSearch/Hudson#displayName
+@Messages("quicksearch=Jenkins") // QuickSearch/Jenkins#displayName
 public class SearchProviderImpl implements SearchProvider {
 
     @Override public void evaluate(SearchRequest request, SearchResponse response) {

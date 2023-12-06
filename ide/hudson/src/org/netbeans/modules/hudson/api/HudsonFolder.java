@@ -29,7 +29,7 @@ import javax.swing.event.ChangeListener;
  * This is not such a loss, since heavy users of folders are not likely to need lots of views anyway.
  * The standard connector also assumes that there is an exported {@link primaryView} field,
  * defined in the Jenkins version of the interface.
- * <p>In the Hudson/Jenkins model, this would really in an inheritance hierarchy with {@link HudsonJob} and {@link HudsonInstance},
+ * <p>In the Jenkins model, this would really in an inheritance hierarchy with {@link HudsonJob} and {@link HudsonInstance},
  * but due to the many methods in those interfaces which make no sense on folders, it seems better to separate them.
  * @since hudson/1.31
  */

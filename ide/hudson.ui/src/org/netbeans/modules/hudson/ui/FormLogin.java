@@ -49,7 +49,7 @@ public class FormLogin extends JPanel {
     public static class AuthImpl implements PasswordAuthorizer {
 
         @Messages({
-            "FormLogin.log_in=Log in to Hudson",
+            "FormLogin.log_in=Log in to Jenkins",
             "# {0} - server location", "# {1} - user name", "FormLogin.password_description=Password for {1} on {0}"
         })
         @Override

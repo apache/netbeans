@@ -74,7 +74,7 @@ public class GroupsMenu extends AbstractAction {
     @Messages({
         "GroupsMenu.new_title=Create New Group",
         "GroupsMenu.new_create=Create Group",
-        "GroupsMenu.new_cancel=Cancel"
+        "GroupsMenu.new_close=Close"
     })
     private static void newGroup() {
         final NewGroupPanel panel = new NewGroupPanel();
@@ -91,8 +91,8 @@ public class GroupsMenu extends AbstractAction {
                 create.setEnabled(panel.isReady());
             }
         });
-        JButton cancel = new JButton(GroupsMenu_new_cancel());
-        dd.setOptions(new Object[] {create, cancel});
+        JButton close = new JButton(GroupsMenu_new_close());
+        dd.setOptions(new Object[] {create, close});
         Object result = DialogDisplayer.getDefault().notify(dd);
         if (result.equals(create)) {
             assert panel.isReady();
@@ -105,7 +105,10 @@ public class GroupsMenu extends AbstractAction {
             RP.post(() -> {
                 Group g = NewGroupPanel.create(type, name, autoSync, useOpen, masterProject, directory);
                 Group.setActiveGroup(g, true);
+                SwingUtilities.invokeLater(GroupsMenu::manageGroups);
             });
+        } else {
+            SwingUtilities.invokeLater(GroupsMenu::manageGroups);
         }
     }
     
@@ -117,7 +120,7 @@ public class GroupsMenu extends AbstractAction {
         "GroupsMenu.manage_select_group=&Select Group",
         "GroupsMenu.manage_new_group=&New Group...",
         "GroupsMenu.manage_remove=&Remove",
-        "GroupsMenu.manage_cancel=&Cancel",
+        "GroupsMenu.manage_close=Close",
         "GroupsMenu.manage_properties=&Properties",
     })
     private static void manageGroups() {
@@ -143,9 +146,9 @@ public class GroupsMenu extends AbstractAction {
         // invokeLater ensures that the parent is disposed before the new dialog opens
         // so that it can set a parent which doesn't disappear - fixes race condition
         newGroup.addActionListener(e -> SwingUtilities.invokeLater(GroupsMenu::newGroup));
-        JButton cancel = new JButton(GroupsMenu_new_cancel());
-        cancel.setDefaultCapable(false);
-        dd.setOptions(new Object[] {select, newGroup, cancel});
+        JButton close = new JButton(GroupsMenu_manage_close());
+        close.setDefaultCapable(false);
+        dd.setOptions(new Object[] {select, newGroup, close});
         DialogDisplayer.getDefault().notify(dd);
     }
 

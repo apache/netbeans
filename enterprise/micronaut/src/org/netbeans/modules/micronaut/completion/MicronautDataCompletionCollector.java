@@ -18,22 +18,43 @@
  */
 package org.netbeans.modules.micronaut.completion;
 
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.util.TreePath;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.GeneratorUtilities;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.ModificationResult;
+import org.netbeans.api.java.source.Task;
+import org.netbeans.api.java.source.TreeUtilities;
+import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.TextEdit;
+import org.netbeans.modules.micronaut.db.Utils;
 import org.netbeans.modules.micronaut.expression.MicronautExpressionLanguageUtilities;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.netbeans.spi.lsp.CompletionCollector;
+import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -45,6 +66,74 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
     @Override
     public boolean collectCompletions(Document doc, int offset, Completion.Context context, Consumer<Completion> consumer) {
         new MicronautDataCompletionTask().query(doc, offset, new MicronautDataCompletionTask.ItemFactory<Completion>() {
+            @Override
+            public Completion createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String id, int offset) {
+                String methodName = Utils.getEndpointMethodName(delegateMethod.getSimpleName().toString(), id);
+                TypeMirror delegateRepositoryType = delegateRepository.asType();
+                if (delegateRepositoryType.getKind() == TypeKind.DECLARED) {
+                    ExecutableType type = (ExecutableType) info.getTypes().asMemberOf((DeclaredType) delegateRepositoryType, delegateMethod);
+                    Iterator<? extends VariableElement> it = delegateMethod.getParameters().iterator();
+                    Iterator<? extends TypeMirror> tIt = type.getParameterTypes().iterator();
+                    StringBuilder label = new StringBuilder();
+                    StringBuilder sortParams = new StringBuilder();
+                    label.append(methodName).append("(");
+                    sortParams.append('(');
+                    int cnt = 0;
+                    while(it.hasNext() && tIt.hasNext()) {
+                        TypeMirror tm = tIt.next();
+                        if (tm == null) {
+                            break;
+                        }
+                        cnt++;
+                        String paramTypeName = MicronautDataCompletionTask.getTypeName(info, tm, false, delegateMethod.isVarArgs() && !tIt.hasNext()).toString();
+                        String paramName = it.next().getSimpleName().toString();
+                        label.append(paramTypeName).append(' ').append(paramName);
+                        sortParams.append(paramTypeName);
+                        if (tIt.hasNext()) {
+                            label.append(", ");
+                            sortParams.append(',');
+                        }
+                    }
+                    sortParams.append(')');
+                    label.append(')');
+                    TypeMirror returnType = type.getReturnType();
+                    if ("findAll".contentEquals(delegateMethod.getSimpleName()) && !delegateMethod.getParameters().isEmpty() && returnType.getKind() == TypeKind.DECLARED) {
+                        TypeElement te = (TypeElement) ((DeclaredType) returnType).asElement();
+                        Optional<ExecutableElement> getContentMethod = ElementFilter.methodsIn(te.getEnclosedElements()).stream().filter(m -> "getContent".contentEquals(m.getSimpleName()) && m.getParameters().isEmpty()).findAny();
+                        if (getContentMethod.isPresent()) {
+                            returnType = (ExecutableType) info.getTypes().asMemberOf((DeclaredType) returnType, getContentMethod.get());
+                        }
+                    }
+                    label.append(" : ").append(MicronautDataCompletionTask.getTypeName(info, returnType, false, false));
+                    FileObject fo = info.getFileObject();
+                    ElementHandle<VariableElement> repositoryHandle = ElementHandle.create(delegateRepository);
+                    ElementHandle<ExecutableElement> methodHandle = ElementHandle.create(delegateMethod);
+                    return CompletionCollector.newBuilder(String.format("%s - generate", label.toString()))
+                            .kind(Completion.Kind.Method)
+                            .sortText(String.format("%04d%s#%02d%s", 1500, methodName, cnt, sortParams.toString()))
+                            .insertTextFormat(Completion.TextFormat.PlainText)
+                            .textEdit(new TextEdit(offset, offset, ""))
+                            .additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(fo), wc -> {
+                                wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                                TreePath tp = wc.getTreeUtilities().pathFor(offset);
+                                TypeElement te = TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind()) ? (TypeElement) wc.getTrees().getElement(tp) : null;
+                                if (te != null) {
+                                    ClassTree clazz = (ClassTree) tp.getLeaf();
+                                    VariableElement repository = repositoryHandle.resolve(wc);
+                                    ExecutableElement method = methodHandle.resolve(wc);
+                                    if (repository != null && method != null) {
+                                        TypeMirror repositoryType = repository.asType();
+                                        if (repositoryType.getKind() == TypeKind.DECLARED) {
+                                            MethodTree mt = Utils.createControllerDataEndpointMethod(wc, (DeclaredType) repositoryType, repository.getSimpleName().toString(), method, id);
+                                            wc.rewrite(clazz, GeneratorUtilities.get(wc).insertClassMember(clazz, mt, offset));
+                                        }
+                                    }
+                                }
+                            })).build();
+                }
+                return null;
+            }
+
             @Override
             public Completion createFinderMethodItem(String name, String returnType, int offset) {
                 Builder builder = CompletionCollector.newBuilder(name).kind(Completion.Kind.Method).sortText(String.format("%04d%s", 10, name));
@@ -173,5 +262,25 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
             }
         }).stream().forEach(consumer);
         return true;
+    }
+
+    private static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) {
+        List<TextEdit> edits = new ArrayList<>();
+        try {
+            FileObject[] file = new FileObject[1];
+            ModificationResult changes = js.runModificationTask(wc -> {
+                task.run(wc);
+                file[0] = wc.getFileObject();
+            });
+            List<? extends ModificationResult.Difference> diffs = changes.getDifferences(file[0]);
+            if (diffs != null) {
+                for (ModificationResult.Difference diff : diffs) {
+                    edits.add(new TextEdit(diff.getStartPosition().getOffset(), diff.getEndPosition().getOffset(), diff.getNewText()));
+                }
+            }
+        } catch (IOException ioe) {
+            Exceptions.printStackTrace(ioe);
+        }
+        return edits;
     }
 }

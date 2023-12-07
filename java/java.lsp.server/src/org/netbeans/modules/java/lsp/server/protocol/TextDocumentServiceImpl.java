@@ -1220,7 +1220,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                         int start = (int) cc.getTrees().getSourcePositions().getStartPosition(cc.getCompilationUnit(), tree);
                                         int end = (int) cc.getTrees().getSourcePositions().getEndPosition(cc.getCompilationUnit(), tree);
                                         org.netbeans.api.lsp.Range range = new org.netbeans.api.lsp.Range(start, end);
-                                        List<Object> arguments = Collections.singletonList(uri);
+                                        List<Object> arguments = new ArrayList<>();
+                                        arguments.add(uri);
+                                        arguments.add(null);
+                                        arguments.add("");
                                         String method = el.getSimpleName().toString();
                                         lens.add(new org.netbeans.api.lsp.CodeLens(range,
                                                               new org.netbeans.api.lsp.Command(Bundle.LBL_Run(method), COMMAND_RUN_SINGLE, arguments),

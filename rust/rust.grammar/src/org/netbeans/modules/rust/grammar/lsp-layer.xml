@@ -19,16 +19,16 @@
     under the License.
 
 -->
-<licenseinfo>
-    <fileset>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/enum.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/function.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/interface.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/module.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/snippet.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/struct.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/trait.png</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-</licenseinfo>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-rust">
+                <file name="org-netbeans-modules-rust-grammar-lsp-RustLSP.instance">
+                    <!--org.netbeans.modules.rust.grammar.lsp.RustLSP-->
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.lsp.client.spi.LanguageServerProvider"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

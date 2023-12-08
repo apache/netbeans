@@ -39,6 +39,7 @@ import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries.Result;
+import org.netbeans.modules.maven.options.MavenVersionSettings;
 import org.netbeans.validation.api.Problems;
 import org.netbeans.validation.api.Severity;
 import org.netbeans.validation.api.Validator;
@@ -152,6 +153,9 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
                 .filter((v) -> !IGNORE_RELEASES.contains(v))
                 .sorted((v1, v2) -> v2.compareTo(v1))
                 .collect(Collectors.toCollection(ArrayList::new)); // must be mutable
+        if (versions.isEmpty()) {
+            versions.add(MavenVersionSettings.getDefault().getNBVersion()); // add a fallback version
+        }
         versions.add(NbmWizardIterator.SNAPSHOT_VERSION);
         return versions;
     }

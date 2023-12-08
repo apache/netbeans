@@ -69,7 +69,7 @@ class ClassY {
     private (ClassX&ClassZ)|(ClassY&ClassZ)|ClassX $privateYField;
     protected ClassX|(ClassY&ClassZ)|ClassY $protectedYField;
     public static (ClassY&ClassZ)|ClassX $publicStaticYField;
-    private static ( ClassY&ClassZ)|ClassY $privateStaticYField;
+    private static (ClassY&ClassZ)|ClassY $privateStaticYField;
     protected static (ClassY&ClassZ)|ClassX|ClassY $protectedStaticYField;
 
     public function publicYMethod((ClassY&ClassZ)|ClassX $param1, (ClassY&ClassZ)|ClassX|(ClassX&ClassZ) $param2): ClassX|(ClassY&ClassZ) {

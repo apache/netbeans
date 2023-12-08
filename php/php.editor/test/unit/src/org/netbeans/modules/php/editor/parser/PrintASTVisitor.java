@@ -316,6 +316,9 @@ public class PrintASTVisitor implements Visitor {
         if (node.isAttributed()) {
             printNode.addChildrenGroup("Attributes", node.getAttributes());
         }
+        if (node.getConstType() != null) {
+            printNode.addChild("ConstType", node.getConstType());
+        }
         printNode.addChildrenGroup("Names", node.getNames());
         printNode.addChildrenGroup("Initializers", node.getInitializers());
         printNode.print(this);

@@ -1448,4 +1448,8 @@ public class PhpParserErrorTest extends PHPTestBase {
     public void testDynamicClassConstantFetch_01() throws Exception {
         checkErrors("testfiles/parser/php83/dynamicClassConstantFetch_01.php");
     }
+
+    public void testTypedClassConstants_01() throws Exception {
+        checkErrors("testfiles/parser/php83/typedClassConstants_01.php");
+    }
 }

@@ -29,6 +29,7 @@ import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.visitors.DefaultVisitor;
 import org.openide.filesystems.FileObject;
@@ -88,6 +89,18 @@ public final class PHP83UnhandledError extends UnhandledErrorRule {
             }
             if (node.isDynamicName()) {
                 createError(node.getConstant());
+            }
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(ConstantDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            if (node.getConstType() != null) {
+                // e.g. const Type|null CONST_NAME = null;
+                createError(node.getConstType());
             }
             super.visit(node);
         }

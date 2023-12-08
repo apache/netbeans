@@ -1,0 +1,4 @@
+Code completion result for source line:
+private const A|B| UNION = A; // trait
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      B                               [PUBLIC]   typedClassConstants.php

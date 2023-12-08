@@ -428,11 +428,27 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             occurencesBuilder.prepare(Kind.FUNCTION, namespaceName, fileScope);
         } else if (parent instanceof Program
                 || parent instanceof Block
-                || parent instanceof FieldsDeclaration
                 || isReturnType) {
             // return type
             Kind[] kinds = {Kind.CLASS, Kind.IFACE};
             occurencesBuilder.prepare(kinds, namespaceName, modelBuilder.getCurrentScope());
+        } else if (parent instanceof ConstantDeclaration
+                || parent instanceof FieldsDeclaration) {
+            if (!isDeclaredType(parent, namespaceName)) {
+                // e.g.
+                // const C = "example";
+                // class C {}
+                // class Example {
+                //     const string|C CONSTANNT = C;
+                //                  ^type         ^const
+                //     private string|C $field = C;
+                //                    ^type      ^const
+                // }
+                occurencesBuilder.prepare(Kind.CONSTANT, namespaceName, fileScope);
+                // don't invoke the following to avoid being marked as a type name
+                // occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
+                return;
+            }
         } else if (parent instanceof ClassInstanceCreation) {
             if (((ClassInstanceCreation) parent).isAnonymous()) {
                 // superclass, ifaces
@@ -448,6 +464,24 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         if (!(parent instanceof FunctionName)) {
             occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
         }
+    }
+
+    private boolean isDeclaredType(ASTNode node, NamespaceName namespaceName) {
+        boolean isDeclaredType = false;
+        Expression declaredType = null;
+        if (node instanceof ConstantDeclaration) {
+            ConstantDeclaration constantDeclaration = (ConstantDeclaration) node;
+            declaredType = constantDeclaration.getConstType();
+        } else if (node instanceof FieldsDeclaration) {
+            FieldsDeclaration fieldsDeclaration = (FieldsDeclaration) node;
+            declaredType = fieldsDeclaration.getFieldType();
+        }
+        if (declaredType != null
+                && declaredType.getStartOffset() <= namespaceName.getStartOffset()
+                && namespaceName.getStartOffset() <= declaredType.getEndOffset()) {
+            isDeclaredType = true;
+        }
+        return isDeclaredType;
     }
 
     @Override
@@ -756,12 +790,14 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     public void visit(ConstantDeclaration node) {
         Scope scope = modelBuilder.getCurrentScope();
         if (scope instanceof NamespaceScope) {
+            // global constants
             List<? extends ConstantDeclarationInfo> constantDeclarationInfos = ConstantDeclarationInfo.create(node);
             for (ConstantDeclarationInfo nodeInfo : constantDeclarationInfos) {
                 ConstantElementImpl createElement = modelBuilder.getCurrentNameSpace().createElement(nodeInfo);
                 occurencesBuilder.prepare(nodeInfo, createElement);
             }
         } else {
+            // class constants
             modelBuilder.build(node, occurencesBuilder);
         }
         super.visit(node);

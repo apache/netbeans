@@ -101,6 +101,7 @@ public final class Type {
     private static final List<String> TYPES_FOR_EDITOR = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, NULL, FALSE, MIXED, TRUE);
     private static final List<String> TYPES_FOR_RETURN_TYPE = Arrays.asList(ARRAY, CALLABLE, ITERABLE, BOOL, FLOAT, INT, STRING, VOID, OBJECT, NULL, FALSE, MIXED, NEVER, TRUE);
     private static final List<String> TYPES_FOR_FIELD_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, SELF, PARENT, NULL, FALSE, MIXED, TRUE); // PHP 7.4 Typed Properties 2.0
+    private static final List<String> TYPES_FOR_CONST_TYPE = Arrays.asList(ARRAY, ITERABLE, BOOL, FLOAT, INT, STRING, OBJECT, STATIC, SELF, PARENT, NULL, FALSE, MIXED, TRUE); // PHP 8.3 Typed class constants
     private static final List<String> SPECIAL_TYPES_FOR_TYPE = Arrays.asList(SELF, PARENT);
     private static final List<String> TYPES_FOR_PHP_DOC = Arrays.asList(STRING, INTEGER, INT, BOOLEAN, BOOL, FLOAT, DOUBLE, OBJECT, MIXED, ARRAY,
             RESOURCE, VOID, NULL, CALLBACK, CALLABLE, ITERABLE, FALSE, TRUE, SELF);
@@ -189,6 +190,15 @@ public final class Type {
      */
     public static List<String> getTypesForFieldType() {
         return TYPES_FOR_FIELD_TYPE;
+    }
+
+    /**
+     * Get valid types for the const type. This does not contain "void", "callable", and "never".
+     *
+     * @return valid types for the const type
+     */
+    public static List<String> getTypesForConstType() {
+        return TYPES_FOR_CONST_TYPE;
     }
 
     public static List<String> getTypesForPhpDoc() {

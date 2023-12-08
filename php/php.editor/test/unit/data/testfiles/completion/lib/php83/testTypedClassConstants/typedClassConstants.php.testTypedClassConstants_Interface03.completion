@@ -1,0 +1,5 @@
+Code completion result for source line:
+public const ?in|t NULLABLE2 = 1; // interface
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    int                                        null

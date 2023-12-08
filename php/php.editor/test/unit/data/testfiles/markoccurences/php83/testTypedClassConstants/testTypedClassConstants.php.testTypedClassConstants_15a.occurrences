@@ -1,0 +1,2 @@
+    public const bool |>MARK_OCCURRENCES:B^OOL<| = true;
+var_dump(ClassTest::|>MARK_OCCURRENCES:BOOL<|);

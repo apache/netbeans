@@ -1,0 +1,5 @@
+Code completion result for source line:
+public const string|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    string                                     null

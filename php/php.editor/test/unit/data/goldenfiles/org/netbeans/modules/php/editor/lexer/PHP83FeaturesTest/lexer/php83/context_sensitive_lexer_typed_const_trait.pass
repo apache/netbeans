@@ -1,0 +1,1358 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n
+token #6 PHP_TRAIT trait
+token #7 WHITESPACE  
+token #8 PHP_STRING TraitExample
+token #9 WHITESPACE  
+token #10 PHP_CURLY_OPEN {
+token #11 WHITESPACE \n\n    
+token #12 PHP_PUBLIC public
+token #13 WHITESPACE  
+token #14 PHP_CONST const
+token #15 WHITESPACE  
+token #16 PHP_TOKEN (
+token #17 PHP_STRING A
+token #18 PHP_OPERATOR &
+token #19 PHP_STRING B
+token #20 PHP_TOKEN )
+token #21 PHP_OPERATOR |
+token #22 PHP_TYPE_STRING string
+token #23 WHITESPACE  
+token #24 PHP_STRING abstract
+token #25 WHITESPACE  
+token #26 PHP_OPERATOR =
+token #27 WHITESPACE  
+token #28 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #29 PHP_SEMICOLON ;
+token #30 WHITESPACE \n    
+token #31 PHP_PUBLIC public
+token #32 WHITESPACE  
+token #33 PHP_CONST const
+token #34 WHITESPACE  
+token #35 PHP_TOKEN ?
+token #36 PHP_TYPE_STRING string
+token #37 WHITESPACE  
+token #38 PHP_STRING and
+token #39 WHITESPACE  
+token #40 PHP_OPERATOR =
+token #41 WHITESPACE  
+token #42 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #43 PHP_SEMICOLON ;
+token #44 WHITESPACE \n    
+token #45 PHP_PUBLIC public
+token #46 WHITESPACE  
+token #47 PHP_CONST const
+token #48 WHITESPACE  
+token #49 PHP_ARRAY array
+token #50 WHITESPACE  
+token #51 PHP_STRING array
+token #52 WHITESPACE  
+token #53 PHP_OPERATOR =
+token #54 WHITESPACE  
+token #55 PHP_ARRAY array
+token #56 PHP_TOKEN (
+token #57 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #58 PHP_TOKEN ,
+token #59 WHITESPACE  
+token #60 PHP_ARRAY array
+token #61 PHP_TOKEN (
+token #62 PHP_CONSTANT_ENCAPSED_STRING "foo"
+token #63 WHITESPACE  
+token #64 PHP_OPERATOR =>
+token #65 WHITESPACE  
+token #66 PHP_NUMBER 1
+token #67 PHP_TOKEN )
+token #68 PHP_TOKEN )
+token #69 PHP_TOKEN ,
+token #70 WHITESPACE  
+token #71 PHP_STRING as
+token #72 WHITESPACE  
+token #73 PHP_OPERATOR =
+token #74 WHITESPACE  
+token #75 PHP_TOKEN [
+token #76 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #77 PHP_TOKEN ,
+token #78 WHITESPACE  
+token #79 PHP_TOKEN [
+token #80 PHP_CONSTANT_ENCAPSED_STRING "foo"
+token #81 WHITESPACE  
+token #82 PHP_OPERATOR =>
+token #83 WHITESPACE  
+token #84 PHP_NUMBER 1
+token #85 PHP_TOKEN ]
+token #86 PHP_TOKEN ]
+token #87 PHP_SEMICOLON ;
+token #88 WHITESPACE \n    
+token #89 PHP_PUBLIC public
+token #90 WHITESPACE  
+token #91 PHP_CONST const
+token #92 WHITESPACE  
+token #93 PHP_STRING A
+token #94 PHP_OPERATOR &
+token #95 PHP_STRING B
+token #96 WHITESPACE  
+token #97 PHP_STRING break
+token #98 WHITESPACE  
+token #99 PHP_OPERATOR =
+token #100 WHITESPACE  
+token #101 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #102 PHP_SEMICOLON ;
+token #103 WHITESPACE \n    
+token #104 PHP_PUBLIC public
+token #105 WHITESPACE  
+token #106 PHP_CONST const
+token #107 WHITESPACE  
+token #108 PHP_STRING bool
+token #109 WHITESPACE  
+token #110 PHP_OPERATOR =
+token #111 WHITESPACE  
+token #112 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #113 PHP_SEMICOLON ;
+token #114 WHITESPACE \n    
+token #115 PHP_PUBLIC public
+token #116 WHITESPACE  
+token #117 PHP_CONST const
+token #118 WHITESPACE  
+token #119 PHP_TYPE_STRING string
+token #120 WHITESPACE  
+token #121 PHP_STRING bool
+token #122 WHITESPACE  
+token #123 PHP_OPERATOR =
+token #124 WHITESPACE  
+token #125 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #126 PHP_SEMICOLON ;
+token #127 WHITESPACE \n    
+token #128 PHP_PUBLIC public
+token #129 WHITESPACE  
+token #130 PHP_CONST const
+token #131 WHITESPACE  
+token #132 PHP_TYPE_STRING string
+token #133 WHITESPACE  
+token #134 PHP_STRING callable
+token #135 WHITESPACE  
+token #136 PHP_OPERATOR =
+token #137 WHITESPACE  
+token #138 PHP_SELF self
+token #139 PHP_PAAMAYIM_NEKUDOTAYIM ::
+token #140 PHP_CURLY_OPEN {
+token #141 PHP_CONSTANT_ENCAPSED_STRING "and"
+token #142 PHP_CURLY_CLOSE }
+token #143 WHITESPACE  
+token #144 PHP_TOKEN .
+token #145 WHITESPACE  
+token #146 PHP_SELF self
+token #147 PHP_PAAMAYIM_NEKUDOTAYIM ::
+token #148 PHP_CURLY_OPEN {
+token #149 PHP_SELF self
+token #150 PHP_PAAMAYIM_NEKUDOTAYIM ::
+token #151 PHP_CURLY_OPEN {
+token #152 PHP_CONSTANT_ENCAPSED_STRING "abstract"
+token #153 PHP_CURLY_CLOSE }
+token #154 PHP_CURLY_CLOSE }
+token #155 PHP_SEMICOLON ;
+token #156 WHITESPACE \n    
+token #157 PHP_PUBLIC public
+token #158 WHITESPACE  
+token #159 PHP_CONST const
+token #160 WHITESPACE  
+token #161 PHP_TYPE_STRING string
+token #162 PHP_OPERATOR |
+token #163 PHP_NS_SEPARATOR \
+token #164 PHP_STRING NS
+token #165 PHP_NS_SEPARATOR \
+token #166 PHP_STRING B
+token #167 WHITESPACE  
+token #168 PHP_STRING case
+token #169 WHITESPACE  
+token #170 PHP_OPERATOR =
+token #171 WHITESPACE  
+token #172 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #173 PHP_SEMICOLON ;
+token #174 WHITESPACE \n    
+token #175 PHP_PUBLIC public
+token #176 WHITESPACE  
+token #177 PHP_CONST const
+token #178 WHITESPACE  
+token #179 PHP_TYPE_STRING string
+token #180 WHITESPACE  
+token #181 PHP_STRING catch
+token #182 WHITESPACE  
+token #183 PHP_OPERATOR =
+token #184 WHITESPACE  
+token #185 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #186 PHP_SEMICOLON ;
+token #187 WHITESPACE \n    
+token #188 PHP_PUBLIC public
+token #189 WHITESPACE  
+token #190 PHP_CONST const
+token #191 WHITESPACE  
+token #192 PHP_TYPE_STRING string
+token #193 WHITESPACE  
+token #194 PHP_STRING clone
+token #195 WHITESPACE  
+token #196 PHP_OPERATOR =
+token #197 WHITESPACE  
+token #198 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #199 PHP_SEMICOLON ;
+token #200 WHITESPACE \n    
+token #201 PHP_PUBLIC public
+token #202 WHITESPACE  
+token #203 PHP_CONST const
+token #204 WHITESPACE  
+token #205 PHP_TYPE_STRING string
+token #206 WHITESPACE  
+token #207 PHP_STRING const
+token #208 WHITESPACE  
+token #209 PHP_OPERATOR =
+token #210 WHITESPACE  
+token #211 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #212 PHP_SEMICOLON ;
+token #213 WHITESPACE \n    
+token #214 PHP_PUBLIC public
+token #215 WHITESPACE  
+token #216 PHP_CONST const
+token #217 WHITESPACE  
+token #218 PHP_TYPE_STRING string
+token #219 WHITESPACE  
+token #220 PHP_STRING continue
+token #221 WHITESPACE  
+token #222 PHP_OPERATOR =
+token #223 WHITESPACE  
+token #224 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #225 PHP_SEMICOLON ;
+token #226 WHITESPACE \n    
+token #227 PHP_PUBLIC public
+token #228 WHITESPACE  
+token #229 PHP_CONST const
+token #230 WHITESPACE  
+token #231 PHP_TYPE_STRING string
+token #232 WHITESPACE  
+token #233 PHP_STRING declare
+token #234 WHITESPACE  
+token #235 PHP_OPERATOR =
+token #236 WHITESPACE  
+token #237 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #238 PHP_SEMICOLON ;
+token #239 WHITESPACE \n    
+token #240 PHP_PUBLIC public
+token #241 WHITESPACE  
+token #242 PHP_CONST const
+token #243 WHITESPACE  
+token #244 PHP_TYPE_STRING string
+token #245 WHITESPACE  
+token #246 PHP_STRING default
+token #247 WHITESPACE  
+token #248 PHP_OPERATOR =
+token #249 WHITESPACE  
+token #250 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #251 PHP_SEMICOLON ;
+token #252 WHITESPACE \n    
+token #253 PHP_PUBLIC public
+token #254 WHITESPACE  
+token #255 PHP_CONST const
+token #256 WHITESPACE  
+token #257 PHP_TYPE_STRING string
+token #258 WHITESPACE  
+token #259 PHP_STRING define
+token #260 WHITESPACE  
+token #261 PHP_OPERATOR =
+token #262 WHITESPACE  
+token #263 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #264 PHP_SEMICOLON ;
+token #265 WHITESPACE \n    
+token #266 PHP_PUBLIC public
+token #267 WHITESPACE  
+token #268 PHP_CONST const
+token #269 WHITESPACE  
+token #270 PHP_TYPE_STRING string
+token #271 WHITESPACE  
+token #272 PHP_STRING die
+token #273 WHITESPACE  
+token #274 PHP_OPERATOR =
+token #275 WHITESPACE  
+token #276 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #277 PHP_SEMICOLON ;
+token #278 WHITESPACE \n    
+token #279 PHP_PUBLIC public
+token #280 WHITESPACE  
+token #281 PHP_CONST const
+token #282 WHITESPACE  
+token #283 PHP_TYPE_STRING string
+token #284 WHITESPACE  
+token #285 PHP_STRING do
+token #286 WHITESPACE  
+token #287 PHP_OPERATOR =
+token #288 WHITESPACE  
+token #289 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #290 PHP_SEMICOLON ;
+token #291 WHITESPACE \n    
+token #292 PHP_PUBLIC public
+token #293 WHITESPACE  
+token #294 PHP_CONST const
+token #295 WHITESPACE  
+token #296 PHP_TYPE_STRING string
+token #297 WHITESPACE  
+token #298 PHP_STRING echo
+token #299 WHITESPACE  
+token #300 PHP_OPERATOR =
+token #301 WHITESPACE  
+token #302 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #303 PHP_SEMICOLON ;
+token #304 WHITESPACE \n    
+token #305 PHP_PUBLIC public
+token #306 WHITESPACE  
+token #307 PHP_CONST const
+token #308 WHITESPACE  
+token #309 PHP_TYPE_STRING string
+token #310 WHITESPACE  
+token #311 PHP_STRING else
+token #312 WHITESPACE  
+token #313 PHP_OPERATOR =
+token #314 WHITESPACE  
+token #315 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #316 PHP_SEMICOLON ;
+token #317 WHITESPACE \n    
+token #318 PHP_PUBLIC public
+token #319 WHITESPACE  
+token #320 PHP_CONST const
+token #321 WHITESPACE  
+token #322 PHP_TYPE_STRING string
+token #323 WHITESPACE  
+token #324 PHP_STRING elseif
+token #325 WHITESPACE  
+token #326 PHP_OPERATOR =
+token #327 WHITESPACE  
+token #328 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #329 PHP_SEMICOLON ;
+token #330 WHITESPACE \n    
+token #331 PHP_PUBLIC public
+token #332 WHITESPACE  
+token #333 PHP_CONST const
+token #334 WHITESPACE  
+token #335 PHP_TYPE_STRING string
+token #336 WHITESPACE  
+token #337 PHP_STRING enddeclare
+token #338 WHITESPACE  
+token #339 PHP_OPERATOR =
+token #340 WHITESPACE  
+token #341 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #342 PHP_SEMICOLON ;
+token #343 WHITESPACE \n    
+token #344 PHP_PUBLIC public
+token #345 WHITESPACE  
+token #346 PHP_CONST const
+token #347 WHITESPACE  
+token #348 PHP_TYPE_STRING string
+token #349 WHITESPACE  
+token #350 PHP_STRING endfor
+token #351 WHITESPACE  
+token #352 PHP_OPERATOR =
+token #353 WHITESPACE  
+token #354 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #355 PHP_SEMICOLON ;
+token #356 WHITESPACE \n    
+token #357 PHP_PUBLIC public
+token #358 WHITESPACE  
+token #359 PHP_CONST const
+token #360 WHITESPACE  
+token #361 PHP_TYPE_STRING string
+token #362 WHITESPACE  
+token #363 PHP_STRING endforeach
+token #364 WHITESPACE  
+token #365 PHP_OPERATOR =
+token #366 WHITESPACE  
+token #367 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #368 PHP_SEMICOLON ;
+token #369 WHITESPACE \n    
+token #370 PHP_PUBLIC public
+token #371 WHITESPACE  
+token #372 PHP_CONST const
+token #373 WHITESPACE  
+token #374 PHP_TYPE_STRING string
+token #375 WHITESPACE  
+token #376 PHP_STRING endif
+token #377 WHITESPACE  
+token #378 PHP_OPERATOR =
+token #379 WHITESPACE  
+token #380 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #381 PHP_SEMICOLON ;
+token #382 WHITESPACE \n    
+token #383 PHP_PUBLIC public
+token #384 WHITESPACE  
+token #385 PHP_CONST const
+token #386 WHITESPACE  
+token #387 PHP_TYPE_STRING string
+token #388 WHITESPACE  
+token #389 PHP_STRING endswitch
+token #390 WHITESPACE  
+token #391 PHP_OPERATOR =
+token #392 WHITESPACE  
+token #393 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #394 PHP_SEMICOLON ;
+token #395 WHITESPACE \n    
+token #396 PHP_PUBLIC public
+token #397 WHITESPACE  
+token #398 PHP_CONST const
+token #399 WHITESPACE  
+token #400 PHP_TYPE_STRING string
+token #401 WHITESPACE  
+token #402 PHP_STRING endwhile
+token #403 WHITESPACE  
+token #404 PHP_OPERATOR =
+token #405 WHITESPACE  
+token #406 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #407 PHP_SEMICOLON ;
+token #408 WHITESPACE \n    
+token #409 PHP_PUBLIC public
+token #410 WHITESPACE  
+token #411 PHP_CONST const
+token #412 WHITESPACE  
+token #413 PHP_TYPE_STRING string
+token #414 WHITESPACE  
+token #415 PHP_STRING exit
+token #416 WHITESPACE  
+token #417 PHP_OPERATOR =
+token #418 WHITESPACE  
+token #419 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #420 PHP_SEMICOLON ;
+token #421 WHITESPACE \n    
+token #422 PHP_PUBLIC public
+token #423 WHITESPACE  
+token #424 PHP_CONST const
+token #425 WHITESPACE  
+token #426 PHP_TYPE_STRING string
+token #427 WHITESPACE  
+token #428 PHP_STRING extends
+token #429 WHITESPACE  
+token #430 PHP_OPERATOR =
+token #431 WHITESPACE  
+token #432 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #433 PHP_SEMICOLON ;
+token #434 WHITESPACE \n    
+token #435 PHP_PUBLIC public
+token #436 WHITESPACE  
+token #437 PHP_CONST const
+token #438 WHITESPACE  
+token #439 PHP_STRING false
+token #440 WHITESPACE  
+token #441 PHP_OPERATOR =
+token #442 WHITESPACE  
+token #443 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #444 PHP_SEMICOLON ;
+token #445 WHITESPACE \n    
+token #446 PHP_PUBLIC public
+token #447 WHITESPACE  
+token #448 PHP_CONST const
+token #449 WHITESPACE  
+token #450 PHP_TYPE_STRING string
+token #451 WHITESPACE  
+token #452 PHP_STRING false
+token #453 WHITESPACE  
+token #454 PHP_OPERATOR =
+token #455 WHITESPACE  
+token #456 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #457 PHP_SEMICOLON ;
+token #458 WHITESPACE \n    
+token #459 PHP_PUBLIC public
+token #460 WHITESPACE  
+token #461 PHP_CONST const
+token #462 WHITESPACE  
+token #463 PHP_TYPE_STRING string
+token #464 WHITESPACE  
+token #465 PHP_STRING final
+token #466 WHITESPACE  
+token #467 PHP_OPERATOR =
+token #468 WHITESPACE  
+token #469 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #470 PHP_SEMICOLON ;
+token #471 WHITESPACE \n    
+token #472 PHP_PUBLIC public
+token #473 WHITESPACE  
+token #474 PHP_CONST const
+token #475 WHITESPACE  
+token #476 PHP_TYPE_STRING string
+token #477 WHITESPACE  
+token #478 PHP_STRING finally
+token #479 WHITESPACE  
+token #480 PHP_OPERATOR =
+token #481 WHITESPACE  
+token #482 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #483 PHP_SEMICOLON ;
+token #484 WHITESPACE \n    
+token #485 PHP_PUBLIC public
+token #486 WHITESPACE  
+token #487 PHP_CONST const
+token #488 WHITESPACE  
+token #489 PHP_STRING float
+token #490 WHITESPACE  
+token #491 PHP_OPERATOR =
+token #492 WHITESPACE  
+token #493 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #494 PHP_SEMICOLON ;
+token #495 WHITESPACE \n    
+token #496 PHP_PUBLIC public
+token #497 WHITESPACE  
+token #498 PHP_CONST const
+token #499 WHITESPACE  
+token #500 PHP_TYPE_STRING string
+token #501 WHITESPACE  
+token #502 PHP_STRING float
+token #503 WHITESPACE  
+token #504 PHP_OPERATOR =
+token #505 WHITESPACE  
+token #506 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #507 PHP_SEMICOLON ;
+token #508 WHITESPACE \n    
+token #509 PHP_PUBLIC public
+token #510 WHITESPACE  
+token #511 PHP_CONST const
+token #512 WHITESPACE  
+token #513 PHP_STRING fn
+token #514 WHITESPACE  
+token #515 PHP_OPERATOR =
+token #516 WHITESPACE  
+token #517 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #518 PHP_SEMICOLON ;
+token #519 WHITESPACE \n    
+token #520 PHP_PUBLIC public
+token #521 WHITESPACE  
+token #522 PHP_CONST const
+token #523 WHITESPACE  
+token #524 PHP_TYPE_STRING string
+token #525 WHITESPACE  
+token #526 PHP_STRING fn
+token #527 WHITESPACE  
+token #528 PHP_OPERATOR =
+token #529 WHITESPACE  
+token #530 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #531 PHP_SEMICOLON ;
+token #532 WHITESPACE \n    
+token #533 PHP_PUBLIC public
+token #534 WHITESPACE  
+token #535 PHP_CONST const
+token #536 WHITESPACE  
+token #537 PHP_TYPE_STRING string
+token #538 WHITESPACE  
+token #539 PHP_STRING for
+token #540 WHITESPACE  
+token #541 PHP_OPERATOR =
+token #542 WHITESPACE  
+token #543 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #544 PHP_SEMICOLON ;
+token #545 WHITESPACE \n    
+token #546 PHP_PUBLIC public
+token #547 WHITESPACE  
+token #548 PHP_CONST const
+token #549 WHITESPACE  
+token #550 PHP_TYPE_STRING string
+token #551 WHITESPACE  
+token #552 PHP_STRING foreach
+token #553 WHITESPACE  
+token #554 PHP_OPERATOR =
+token #555 WHITESPACE  
+token #556 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #557 PHP_SEMICOLON ;
+token #558 WHITESPACE \n    
+token #559 PHP_PUBLIC public
+token #560 WHITESPACE  
+token #561 PHP_CONST const
+token #562 WHITESPACE  
+token #563 PHP_TYPE_STRING string
+token #564 WHITESPACE  
+token #565 PHP_STRING function
+token #566 WHITESPACE  
+token #567 PHP_OPERATOR =
+token #568 WHITESPACE  
+token #569 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #570 PHP_SEMICOLON ;
+token #571 WHITESPACE \n    
+token #572 PHP_PUBLIC public
+token #573 WHITESPACE  
+token #574 PHP_CONST const
+token #575 WHITESPACE  
+token #576 PHP_TYPE_STRING string
+token #577 WHITESPACE  
+token #578 PHP_STRING global
+token #579 WHITESPACE  
+token #580 PHP_OPERATOR =
+token #581 WHITESPACE  
+token #582 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #583 PHP_SEMICOLON ;
+token #584 WHITESPACE \n    
+token #585 PHP_PUBLIC public
+token #586 WHITESPACE  
+token #587 PHP_CONST const
+token #588 WHITESPACE  
+token #589 PHP_TYPE_STRING string
+token #590 WHITESPACE  
+token #591 PHP_STRING goto
+token #592 WHITESPACE  
+token #593 PHP_OPERATOR =
+token #594 WHITESPACE  
+token #595 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #596 PHP_SEMICOLON ;
+token #597 WHITESPACE \n    
+token #598 PHP_PUBLIC public
+token #599 WHITESPACE  
+token #600 PHP_CONST const
+token #601 WHITESPACE  
+token #602 PHP_TYPE_STRING string
+token #603 WHITESPACE  
+token #604 PHP_STRING if
+token #605 WHITESPACE  
+token #606 PHP_OPERATOR =
+token #607 WHITESPACE  
+token #608 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #609 PHP_SEMICOLON ;
+token #610 WHITESPACE \n    
+token #611 PHP_PUBLIC public
+token #612 WHITESPACE  
+token #613 PHP_CONST const
+token #614 WHITESPACE  
+token #615 PHP_TYPE_STRING string
+token #616 WHITESPACE  
+token #617 PHP_STRING implements
+token #618 WHITESPACE  
+token #619 PHP_OPERATOR =
+token #620 WHITESPACE  
+token #621 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #622 PHP_SEMICOLON ;
+token #623 WHITESPACE \n    
+token #624 PHP_PUBLIC public
+token #625 WHITESPACE  
+token #626 PHP_CONST const
+token #627 WHITESPACE  
+token #628 PHP_TYPE_STRING string
+token #629 WHITESPACE  
+token #630 PHP_STRING include
+token #631 WHITESPACE  
+token #632 PHP_OPERATOR =
+token #633 WHITESPACE  
+token #634 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #635 PHP_SEMICOLON ;
+token #636 WHITESPACE \n    
+token #637 PHP_PUBLIC public
+token #638 WHITESPACE  
+token #639 PHP_CONST const
+token #640 WHITESPACE  
+token #641 PHP_TYPE_STRING string
+token #642 WHITESPACE  
+token #643 PHP_STRING include_once
+token #644 WHITESPACE  
+token #645 PHP_OPERATOR =
+token #646 WHITESPACE  
+token #647 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #648 PHP_SEMICOLON ;
+token #649 WHITESPACE \n    
+token #650 PHP_PUBLIC public
+token #651 WHITESPACE  
+token #652 PHP_CONST const
+token #653 WHITESPACE  
+token #654 PHP_TYPE_STRING string
+token #655 WHITESPACE  
+token #656 PHP_STRING instanceof
+token #657 WHITESPACE  
+token #658 PHP_OPERATOR =
+token #659 WHITESPACE  
+token #660 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #661 PHP_SEMICOLON ;
+token #662 WHITESPACE \n    
+token #663 PHP_PUBLIC public
+token #664 WHITESPACE  
+token #665 PHP_CONST const
+token #666 WHITESPACE  
+token #667 PHP_TYPE_STRING string
+token #668 WHITESPACE  
+token #669 PHP_STRING insteadof
+token #670 WHITESPACE  
+token #671 PHP_OPERATOR =
+token #672 WHITESPACE  
+token #673 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #674 PHP_SEMICOLON ;
+token #675 WHITESPACE \n    
+token #676 PHP_PUBLIC public
+token #677 WHITESPACE  
+token #678 PHP_CONST const
+token #679 WHITESPACE  
+token #680 PHP_STRING int
+token #681 WHITESPACE  
+token #682 PHP_OPERATOR =
+token #683 WHITESPACE  
+token #684 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #685 PHP_SEMICOLON ;
+token #686 WHITESPACE \n    
+token #687 PHP_PUBLIC public
+token #688 WHITESPACE  
+token #689 PHP_CONST const
+token #690 WHITESPACE  
+token #691 PHP_TYPE_STRING string
+token #692 WHITESPACE  
+token #693 PHP_STRING int
+token #694 WHITESPACE  
+token #695 PHP_OPERATOR =
+token #696 WHITESPACE  
+token #697 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #698 PHP_SEMICOLON ;
+token #699 WHITESPACE \n    
+token #700 PHP_PUBLIC public
+token #701 WHITESPACE  
+token #702 PHP_CONST const
+token #703 WHITESPACE  
+token #704 PHP_TYPE_STRING string
+token #705 WHITESPACE  
+token #706 PHP_STRING interface
+token #707 WHITESPACE  
+token #708 PHP_OPERATOR =
+token #709 WHITESPACE  
+token #710 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #711 PHP_SEMICOLON ;
+token #712 WHITESPACE \n    
+token #713 PHP_PUBLIC public
+token #714 WHITESPACE  
+token #715 PHP_CONST const
+token #716 WHITESPACE  
+token #717 PHP_STRING iterable
+token #718 WHITESPACE  
+token #719 PHP_OPERATOR =
+token #720 WHITESPACE  
+token #721 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #722 PHP_SEMICOLON ;
+token #723 WHITESPACE \n    
+token #724 PHP_PUBLIC public
+token #725 WHITESPACE  
+token #726 PHP_CONST const
+token #727 WHITESPACE  
+token #728 PHP_TYPE_STRING string
+token #729 WHITESPACE  
+token #730 PHP_STRING iterable
+token #731 WHITESPACE  
+token #732 PHP_OPERATOR =
+token #733 WHITESPACE  
+token #734 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #735 PHP_SEMICOLON ;
+token #736 WHITESPACE \n    
+token #737 PHP_PUBLIC public
+token #738 WHITESPACE  
+token #739 PHP_CONST const
+token #740 WHITESPACE  
+token #741 PHP_TYPE_STRING string
+token #742 WHITESPACE  
+token #743 PHP_STRING list
+token #744 WHITESPACE  
+token #745 PHP_OPERATOR =
+token #746 WHITESPACE  
+token #747 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #748 PHP_SEMICOLON ;
+token #749 WHITESPACE \n    
+token #750 PHP_PUBLIC public
+token #751 WHITESPACE  
+token #752 PHP_CONST const
+token #753 WHITESPACE  
+token #754 PHP_STRING match
+token #755 WHITESPACE  
+token #756 PHP_OPERATOR =
+token #757 WHITESPACE  
+token #758 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #759 PHP_SEMICOLON ;
+token #760 WHITESPACE \n    
+token #761 PHP_PUBLIC public
+token #762 WHITESPACE  
+token #763 PHP_CONST const
+token #764 WHITESPACE  
+token #765 PHP_TYPE_STRING string
+token #766 WHITESPACE  
+token #767 PHP_STRING match
+token #768 WHITESPACE  
+token #769 PHP_OPERATOR =
+token #770 WHITESPACE  
+token #771 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #772 PHP_SEMICOLON ;
+token #773 WHITESPACE \n    
+token #774 PHP_PUBLIC public
+token #775 WHITESPACE  
+token #776 PHP_CONST const
+token #777 WHITESPACE  
+token #778 PHP_STRING mixed
+token #779 WHITESPACE  
+token #780 PHP_OPERATOR =
+token #781 WHITESPACE  
+token #782 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #783 PHP_SEMICOLON ;
+token #784 WHITESPACE \n    
+token #785 PHP_PUBLIC public
+token #786 WHITESPACE  
+token #787 PHP_CONST const
+token #788 WHITESPACE  
+token #789 PHP_TYPE_STRING string
+token #790 WHITESPACE  
+token #791 PHP_STRING mixed
+token #792 WHITESPACE  
+token #793 PHP_OPERATOR =
+token #794 WHITESPACE  
+token #795 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #796 PHP_SEMICOLON ;
+token #797 WHITESPACE \n    
+token #798 PHP_PUBLIC public
+token #799 WHITESPACE  
+token #800 PHP_CONST const
+token #801 WHITESPACE  
+token #802 PHP_TYPE_STRING string
+token #803 WHITESPACE  
+token #804 PHP_STRING namespace
+token #805 WHITESPACE  
+token #806 PHP_OPERATOR =
+token #807 WHITESPACE  
+token #808 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #809 PHP_SEMICOLON ;
+token #810 WHITESPACE \n    
+token #811 PHP_PUBLIC public
+token #812 WHITESPACE  
+token #813 PHP_CONST const
+token #814 WHITESPACE  
+token #815 PHP_TYPE_STRING string
+token #816 WHITESPACE  
+token #817 PHP_STRING new
+token #818 WHITESPACE  
+token #819 PHP_OPERATOR =
+token #820 WHITESPACE  
+token #821 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #822 PHP_SEMICOLON ;
+token #823 WHITESPACE \n    
+token #824 PHP_PUBLIC public
+token #825 WHITESPACE  
+token #826 PHP_CONST const
+token #827 WHITESPACE  
+token #828 PHP_STRING never
+token #829 WHITESPACE  
+token #830 PHP_OPERATOR =
+token #831 WHITESPACE  
+token #832 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #833 PHP_SEMICOLON ;
+token #834 WHITESPACE \n    
+token #835 PHP_PUBLIC public
+token #836 WHITESPACE  
+token #837 PHP_CONST const
+token #838 WHITESPACE  
+token #839 PHP_TYPE_STRING string
+token #840 WHITESPACE  
+token #841 PHP_STRING never
+token #842 WHITESPACE  
+token #843 PHP_OPERATOR =
+token #844 WHITESPACE  
+token #845 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #846 PHP_SEMICOLON ;
+token #847 WHITESPACE \n    
+token #848 PHP_PUBLIC public
+token #849 WHITESPACE  
+token #850 PHP_CONST const
+token #851 WHITESPACE  
+token #852 PHP_STRING null
+token #853 WHITESPACE  
+token #854 PHP_OPERATOR =
+token #855 WHITESPACE  
+token #856 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #857 PHP_SEMICOLON ;
+token #858 WHITESPACE \n    
+token #859 PHP_PUBLIC public
+token #860 WHITESPACE  
+token #861 PHP_CONST const
+token #862 WHITESPACE  
+token #863 PHP_TYPE_STRING string
+token #864 WHITESPACE  
+token #865 PHP_STRING null
+token #866 WHITESPACE  
+token #867 PHP_OPERATOR =
+token #868 WHITESPACE  
+token #869 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #870 PHP_SEMICOLON ;
+token #871 WHITESPACE \n    
+token #872 PHP_PUBLIC public
+token #873 WHITESPACE  
+token #874 PHP_CONST const
+token #875 WHITESPACE  
+token #876 PHP_STRING object
+token #877 WHITESPACE  
+token #878 PHP_OPERATOR =
+token #879 WHITESPACE  
+token #880 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #881 PHP_SEMICOLON ;
+token #882 WHITESPACE \n    
+token #883 PHP_PUBLIC public
+token #884 WHITESPACE  
+token #885 PHP_CONST const
+token #886 WHITESPACE  
+token #887 PHP_TYPE_STRING string
+token #888 WHITESPACE  
+token #889 PHP_STRING object
+token #890 WHITESPACE  
+token #891 PHP_OPERATOR =
+token #892 WHITESPACE  
+token #893 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #894 PHP_SEMICOLON ;
+token #895 WHITESPACE \n    
+token #896 PHP_PUBLIC public
+token #897 WHITESPACE  
+token #898 PHP_CONST const
+token #899 WHITESPACE  
+token #900 PHP_TYPE_STRING string
+token #901 WHITESPACE  
+token #902 PHP_STRING or
+token #903 WHITESPACE  
+token #904 PHP_OPERATOR =
+token #905 WHITESPACE  
+token #906 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #907 PHP_SEMICOLON ;
+token #908 WHITESPACE \n    
+token #909 PHP_PUBLIC public
+token #910 WHITESPACE  
+token #911 PHP_CONST const
+token #912 WHITESPACE  
+token #913 PHP_TYPE_STRING string
+token #914 WHITESPACE  
+token #915 PHP_STRING parent
+token #916 WHITESPACE  
+token #917 PHP_OPERATOR =
+token #918 WHITESPACE  
+token #919 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #920 PHP_SEMICOLON ;
+token #921 WHITESPACE \n    
+token #922 PHP_PUBLIC public
+token #923 WHITESPACE  
+token #924 PHP_CONST const
+token #925 WHITESPACE  
+token #926 PHP_TYPE_STRING string
+token #927 WHITESPACE  
+token #928 PHP_STRING print
+token #929 WHITESPACE  
+token #930 PHP_OPERATOR =
+token #931 WHITESPACE  
+token #932 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #933 PHP_SEMICOLON ;
+token #934 WHITESPACE \n    
+token #935 PHP_PUBLIC public
+token #936 WHITESPACE  
+token #937 PHP_CONST const
+token #938 WHITESPACE  
+token #939 PHP_TYPE_STRING string
+token #940 WHITESPACE  
+token #941 PHP_STRING private
+token #942 WHITESPACE  
+token #943 PHP_OPERATOR =
+token #944 WHITESPACE  
+token #945 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #946 PHP_SEMICOLON ;
+token #947 WHITESPACE \n    
+token #948 PHP_PUBLIC public
+token #949 WHITESPACE  
+token #950 PHP_CONST const
+token #951 WHITESPACE  
+token #952 PHP_TYPE_STRING string
+token #953 WHITESPACE  
+token #954 PHP_STRING protected
+token #955 WHITESPACE  
+token #956 PHP_OPERATOR =
+token #957 WHITESPACE  
+token #958 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #959 PHP_SEMICOLON ;
+token #960 WHITESPACE \n    
+token #961 PHP_PUBLIC public
+token #962 WHITESPACE  
+token #963 PHP_CONST const
+token #964 WHITESPACE  
+token #965 PHP_TYPE_STRING string
+token #966 WHITESPACE  
+token #967 PHP_STRING public
+token #968 WHITESPACE  
+token #969 PHP_OPERATOR =
+token #970 WHITESPACE  
+token #971 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #972 PHP_SEMICOLON ;
+token #973 WHITESPACE \n    
+token #974 PHP_PUBLIC public
+token #975 WHITESPACE  
+token #976 PHP_CONST const
+token #977 WHITESPACE  
+token #978 PHP_STRING readonly
+token #979 WHITESPACE  
+token #980 PHP_OPERATOR =
+token #981 WHITESPACE  
+token #982 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #983 PHP_SEMICOLON ;
+token #984 WHITESPACE \n    
+token #985 PHP_PUBLIC public
+token #986 WHITESPACE  
+token #987 PHP_CONST const
+token #988 WHITESPACE  
+token #989 PHP_TYPE_STRING string
+token #990 WHITESPACE  
+token #991 PHP_STRING readonly
+token #992 WHITESPACE  
+token #993 PHP_OPERATOR =
+token #994 WHITESPACE  
+token #995 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #996 PHP_SEMICOLON ;
+token #997 WHITESPACE \n    
+token #998 PHP_PUBLIC public
+token #999 WHITESPACE  
+token #1000 PHP_CONST const
+token #1001 WHITESPACE  
+token #1002 PHP_TYPE_STRING string
+token #1003 WHITESPACE  
+token #1004 PHP_STRING require
+token #1005 WHITESPACE  
+token #1006 PHP_OPERATOR =
+token #1007 WHITESPACE  
+token #1008 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1009 PHP_SEMICOLON ;
+token #1010 WHITESPACE \n    
+token #1011 PHP_PUBLIC public
+token #1012 WHITESPACE  
+token #1013 PHP_CONST const
+token #1014 WHITESPACE  
+token #1015 PHP_TYPE_STRING string
+token #1016 WHITESPACE  
+token #1017 PHP_STRING require_once
+token #1018 WHITESPACE  
+token #1019 PHP_OPERATOR =
+token #1020 WHITESPACE  
+token #1021 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1022 PHP_SEMICOLON ;
+token #1023 WHITESPACE \n    
+token #1024 PHP_PUBLIC public
+token #1025 WHITESPACE  
+token #1026 PHP_CONST const
+token #1027 WHITESPACE  
+token #1028 PHP_TYPE_STRING string
+token #1029 WHITESPACE  
+token #1030 PHP_STRING return
+token #1031 WHITESPACE  
+token #1032 PHP_OPERATOR =
+token #1033 WHITESPACE  
+token #1034 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1035 PHP_SEMICOLON ;
+token #1036 WHITESPACE \n    
+token #1037 PHP_PUBLIC public
+token #1038 WHITESPACE  
+token #1039 PHP_CONST const
+token #1040 WHITESPACE  
+token #1041 PHP_TYPE_STRING string
+token #1042 WHITESPACE  
+token #1043 PHP_STRING self
+token #1044 WHITESPACE  
+token #1045 PHP_OPERATOR =
+token #1046 WHITESPACE  
+token #1047 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1048 PHP_SEMICOLON ;
+token #1049 WHITESPACE \n    
+token #1050 PHP_PUBLIC public
+token #1051 WHITESPACE  
+token #1052 PHP_CONST const
+token #1053 WHITESPACE  
+token #1054 PHP_TYPE_STRING string
+token #1055 WHITESPACE  
+token #1056 PHP_STRING static
+token #1057 WHITESPACE  
+token #1058 PHP_OPERATOR =
+token #1059 WHITESPACE  
+token #1060 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1061 PHP_SEMICOLON ;
+token #1062 WHITESPACE \n    
+token #1063 PHP_PUBLIC public
+token #1064 WHITESPACE  
+token #1065 PHP_CONST const
+token #1066 WHITESPACE  
+token #1067 PHP_STRING string
+token #1068 WHITESPACE  
+token #1069 PHP_OPERATOR =
+token #1070 WHITESPACE  
+token #1071 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1072 PHP_SEMICOLON ;
+token #1073 WHITESPACE \n    
+token #1074 PHP_PUBLIC public
+token #1075 WHITESPACE  
+token #1076 PHP_CONST const
+token #1077 WHITESPACE  
+token #1078 PHP_TYPE_STRING string
+token #1079 WHITESPACE  
+token #1080 PHP_STRING string
+token #1081 WHITESPACE  
+token #1082 PHP_OPERATOR =
+token #1083 WHITESPACE  
+token #1084 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1085 PHP_SEMICOLON ;
+token #1086 WHITESPACE \n    
+token #1087 PHP_PUBLIC public
+token #1088 WHITESPACE  
+token #1089 PHP_CONST const
+token #1090 WHITESPACE  
+token #1091 PHP_TYPE_STRING string
+token #1092 WHITESPACE  
+token #1093 PHP_STRING switch
+token #1094 WHITESPACE  
+token #1095 PHP_OPERATOR =
+token #1096 WHITESPACE  
+token #1097 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1098 PHP_SEMICOLON ;
+token #1099 WHITESPACE \n    
+token #1100 PHP_PUBLIC public
+token #1101 WHITESPACE  
+token #1102 PHP_CONST const
+token #1103 WHITESPACE  
+token #1104 PHP_TYPE_STRING string
+token #1105 WHITESPACE  
+token #1106 PHP_STRING throw
+token #1107 WHITESPACE  
+token #1108 PHP_OPERATOR =
+token #1109 WHITESPACE  
+token #1110 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1111 PHP_SEMICOLON ;
+token #1112 WHITESPACE \n    
+token #1113 PHP_PUBLIC public
+token #1114 WHITESPACE  
+token #1115 PHP_CONST const
+token #1116 WHITESPACE  
+token #1117 PHP_TYPE_STRING string
+token #1118 WHITESPACE  
+token #1119 PHP_STRING trait
+token #1120 WHITESPACE  
+token #1121 PHP_OPERATOR =
+token #1122 WHITESPACE  
+token #1123 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1124 PHP_SEMICOLON ;
+token #1125 WHITESPACE \n    
+token #1126 PHP_PUBLIC public
+token #1127 WHITESPACE  
+token #1128 PHP_CONST const
+token #1129 WHITESPACE  
+token #1130 PHP_STRING true
+token #1131 WHITESPACE  
+token #1132 PHP_OPERATOR =
+token #1133 WHITESPACE  
+token #1134 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1135 PHP_SEMICOLON ;
+token #1136 WHITESPACE \n    
+token #1137 PHP_PUBLIC public
+token #1138 WHITESPACE  
+token #1139 PHP_CONST const
+token #1140 WHITESPACE  
+token #1141 PHP_TYPE_STRING string
+token #1142 WHITESPACE  
+token #1143 PHP_STRING true
+token #1144 WHITESPACE  
+token #1145 PHP_OPERATOR =
+token #1146 WHITESPACE  
+token #1147 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1148 PHP_SEMICOLON ;
+token #1149 WHITESPACE \n    
+token #1150 PHP_PUBLIC public
+token #1151 WHITESPACE  
+token #1152 PHP_CONST const
+token #1153 WHITESPACE  
+token #1154 PHP_TYPE_STRING string
+token #1155 WHITESPACE  
+token #1156 PHP_STRING try
+token #1157 WHITESPACE  
+token #1158 PHP_OPERATOR =
+token #1159 WHITESPACE  
+token #1160 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1161 PHP_SEMICOLON ;
+token #1162 WHITESPACE \n    
+token #1163 PHP_PUBLIC public
+token #1164 WHITESPACE  
+token #1165 PHP_CONST const
+token #1166 WHITESPACE  
+token #1167 PHP_TYPE_STRING string
+token #1168 WHITESPACE  
+token #1169 PHP_STRING use
+token #1170 WHITESPACE  
+token #1171 PHP_OPERATOR =
+token #1172 WHITESPACE  
+token #1173 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1174 PHP_SEMICOLON ;
+token #1175 WHITESPACE \n    
+token #1176 PHP_PUBLIC public
+token #1177 WHITESPACE  
+token #1178 PHP_CONST const
+token #1179 WHITESPACE  
+token #1180 PHP_TYPE_STRING string
+token #1181 WHITESPACE  
+token #1182 PHP_STRING var
+token #1183 WHITESPACE  
+token #1184 PHP_OPERATOR =
+token #1185 WHITESPACE  
+token #1186 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1187 PHP_SEMICOLON ;
+token #1188 WHITESPACE \n    
+token #1189 PHP_PUBLIC public
+token #1190 WHITESPACE  
+token #1191 PHP_CONST const
+token #1192 WHITESPACE  
+token #1193 PHP_STRING void
+token #1194 WHITESPACE  
+token #1195 PHP_OPERATOR =
+token #1196 WHITESPACE  
+token #1197 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1198 PHP_SEMICOLON ;
+token #1199 WHITESPACE \n    
+token #1200 PHP_PUBLIC public
+token #1201 WHITESPACE  
+token #1202 PHP_CONST const
+token #1203 WHITESPACE  
+token #1204 PHP_TYPE_STRING string
+token #1205 WHITESPACE  
+token #1206 PHP_STRING void
+token #1207 WHITESPACE  
+token #1208 PHP_OPERATOR =
+token #1209 WHITESPACE  
+token #1210 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1211 PHP_SEMICOLON ;
+token #1212 WHITESPACE \n    
+token #1213 PHP_PUBLIC public
+token #1214 WHITESPACE  
+token #1215 PHP_CONST const
+token #1216 WHITESPACE  
+token #1217 PHP_TYPE_STRING string
+token #1218 WHITESPACE  
+token #1219 PHP_STRING while
+token #1220 WHITESPACE  
+token #1221 PHP_OPERATOR =
+token #1222 WHITESPACE  
+token #1223 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1224 PHP_SEMICOLON ;
+token #1225 WHITESPACE \n    
+token #1226 PHP_PUBLIC public
+token #1227 WHITESPACE  
+token #1228 PHP_CONST const
+token #1229 WHITESPACE  
+token #1230 PHP_TYPE_STRING string
+token #1231 WHITESPACE  
+token #1232 PHP_STRING xor
+token #1233 WHITESPACE  
+token #1234 PHP_OPERATOR =
+token #1235 WHITESPACE  
+token #1236 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1237 PHP_SEMICOLON ;
+token #1238 WHITESPACE \n    
+token #1239 PHP_PUBLIC public
+token #1240 WHITESPACE  
+token #1241 PHP_CONST const
+token #1242 WHITESPACE  
+token #1243 PHP_TYPE_STRING string
+token #1244 WHITESPACE  
+token #1245 PHP_STRING yield
+token #1246 WHITESPACE  
+token #1247 PHP_OPERATOR =
+token #1248 WHITESPACE  
+token #1249 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1250 PHP_SEMICOLON ;
+token #1251 WHITESPACE \n    
+token #1252 PHP_PUBLIC public
+token #1253 WHITESPACE  
+token #1254 PHP_CONST const
+token #1255 WHITESPACE  
+token #1256 PHP_TYPE_STRING string
+token #1257 WHITESPACE  
+token #1258 PHP_STRING __CLASS__
+token #1259 WHITESPACE  
+token #1260 PHP_OPERATOR =
+token #1261 WHITESPACE  
+token #1262 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1263 PHP_SEMICOLON ;
+token #1264 WHITESPACE \n    
+token #1265 PHP_PUBLIC public
+token #1266 WHITESPACE  
+token #1267 PHP_CONST const
+token #1268 WHITESPACE  
+token #1269 PHP_TYPE_STRING string
+token #1270 WHITESPACE  
+token #1271 PHP_STRING __DIR__
+token #1272 WHITESPACE  
+token #1273 PHP_OPERATOR =
+token #1274 WHITESPACE  
+token #1275 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1276 PHP_SEMICOLON ;
+token #1277 WHITESPACE \n    
+token #1278 PHP_PUBLIC public
+token #1279 WHITESPACE  
+token #1280 PHP_CONST const
+token #1281 WHITESPACE  
+token #1282 PHP_TYPE_STRING string
+token #1283 WHITESPACE  
+token #1284 PHP_STRING __FILE__
+token #1285 WHITESPACE  
+token #1286 PHP_OPERATOR =
+token #1287 WHITESPACE  
+token #1288 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1289 PHP_SEMICOLON ;
+token #1290 WHITESPACE \n    
+token #1291 PHP_PUBLIC public
+token #1292 WHITESPACE  
+token #1293 PHP_CONST const
+token #1294 WHITESPACE  
+token #1295 PHP_TYPE_STRING string
+token #1296 WHITESPACE  
+token #1297 PHP_STRING __FUNCTION__
+token #1298 WHITESPACE  
+token #1299 PHP_OPERATOR =
+token #1300 WHITESPACE  
+token #1301 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1302 PHP_SEMICOLON ;
+token #1303 WHITESPACE \n    
+token #1304 PHP_PUBLIC public
+token #1305 WHITESPACE  
+token #1306 PHP_CONST const
+token #1307 WHITESPACE  
+token #1308 PHP_TYPE_STRING string
+token #1309 WHITESPACE  
+token #1310 PHP_STRING __LINE__
+token #1311 WHITESPACE  
+token #1312 PHP_OPERATOR =
+token #1313 WHITESPACE  
+token #1314 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1315 PHP_SEMICOLON ;
+token #1316 WHITESPACE \n    
+token #1317 PHP_PUBLIC public
+token #1318 WHITESPACE  
+token #1319 PHP_CONST const
+token #1320 WHITESPACE  
+token #1321 PHP_TYPE_STRING string
+token #1322 WHITESPACE  
+token #1323 PHP_STRING __METHOD__
+token #1324 WHITESPACE  
+token #1325 PHP_OPERATOR =
+token #1326 WHITESPACE  
+token #1327 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1328 PHP_SEMICOLON ;
+token #1329 WHITESPACE \n    
+token #1330 PHP_PUBLIC public
+token #1331 WHITESPACE  
+token #1332 PHP_CONST const
+token #1333 WHITESPACE  
+token #1334 PHP_TYPE_STRING string
+token #1335 WHITESPACE  
+token #1336 PHP_STRING __NAMESPACE__
+token #1337 WHITESPACE  
+token #1338 PHP_OPERATOR =
+token #1339 WHITESPACE  
+token #1340 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1341 PHP_SEMICOLON ;
+token #1342 WHITESPACE \n    
+token #1343 PHP_PUBLIC public
+token #1344 WHITESPACE  
+token #1345 PHP_CONST const
+token #1346 WHITESPACE  
+token #1347 PHP_TYPE_STRING string
+token #1348 WHITESPACE  
+token #1349 PHP_STRING __TRAIT__
+token #1350 WHITESPACE  
+token #1351 PHP_OPERATOR =
+token #1352 WHITESPACE  
+token #1353 PHP_CONSTANT_ENCAPSED_STRING "test"
+token #1354 PHP_SEMICOLON ;
+token #1355 WHITESPACE \n
+token #1356 PHP_CURLY_CLOSE }
+token #1357 WHITESPACE \n

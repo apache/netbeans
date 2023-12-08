@@ -1080,13 +1080,14 @@ public class FormatVisitor extends DefaultVisitor {
                 }
             }
             scan(node.getAttributes());
-            while (ts.moveNext() && ts.token().id() != PHPTokenId.PHP_STRING) {
+            while (ts.moveNext() && !isConstTypeToken(ts.token())) {
                 addFormatToken(formatTokens);
             }
+            ts.movePrevious();
             FormatToken lastWhitespace = formatTokens.remove(formatTokens.size() - 1);
             formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_MODIFIERS, lastWhitespace.getOffset(), lastWhitespace.getOldText()));
-            addFormatToken(formatTokens);
             formatTokens.add(new FormatToken.IndentToken(node.getStartOffset(), options.continualIndentSize));
+            scan(node.getConstType());
             scan(node.getNames());
             if (node.getNames().size() == 1) {
                 while (ts.moveNext()
@@ -2499,6 +2500,8 @@ public class FormatVisitor extends DefaultVisitor {
     @Override
     public void visit(UnionType node) {
         processUnionOrIntersectionType(node.getTypes());
+        // add ")" if it exists e.g. (A&B)|(B&C)
+        addAllUntilOffset(node.getEndOffset());
     }
 
     @Override
@@ -2729,6 +2732,9 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ARRAY_DECL_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_ARRAY_DECL_LEFT_PAREN, ts.offset() + ts.token().length()));
+                    } else if (parent instanceof UnionType) {
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_DNF_TYPE_PARENS, ts.offset() + ts.token().length()));
                     } else {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     }
@@ -2766,6 +2772,9 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else if (parent instanceof ArrayCreation) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ARRAY_DECL_RIGHT_PAREN, ts.offset()));
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                    } else if (parent instanceof UnionType) {
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_DNF_TYPE_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
@@ -3349,7 +3358,11 @@ public class FormatVisitor extends DefaultVisitor {
 
     private boolean isFieldTypeOrVariableToken(Token<PHPTokenId> token) {
         return PHPTokenId.PHP_VARIABLE == token.id()
-                || PHPTokenId.PHP_STRING == token.id()
+                || isConstTypeToken(token);
+    }
+
+    private boolean isConstTypeToken(Token<PHPTokenId> token) {
+        return PHPTokenId.PHP_STRING == token.id()
                 || PHPTokenId.PHP_ARRAY == token.id()
                 || PHPTokenId.PHP_ITERABLE == token.id()
                 || PHPTokenId.PHP_PARENT == token.id()
@@ -3362,9 +3375,11 @@ public class FormatVisitor extends DefaultVisitor {
                 || PHPTokenId.PHP_NULL == token.id()
                 || PHPTokenId.PHP_FALSE == token.id()
                 || PHPTokenId.PHP_NS_SEPARATOR == token.id() // \
+                || (PHPTokenId.PHP_TOKEN == token.id() && TokenUtilities.textEquals(token.text(), "(")) // NOI18N
                 || (PHPTokenId.PHP_TOKEN == token.id() && TokenUtilities.textEquals(token.text(), "?")) // NOI18N
                 || PHPTokenId.PHP_TYPE_VOID == token.id() // not supported type but just check it
                 || PHPTokenId.PHP_CALLABLE == token.id() // not supported type but just check it
+                || PHPTokenId.PHP_TYPE_NEVER == token.id() // not supported type but just check it
                 ;
     }
 

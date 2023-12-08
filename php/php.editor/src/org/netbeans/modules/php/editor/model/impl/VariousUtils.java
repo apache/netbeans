@@ -301,6 +301,24 @@ public final class VariousUtils {
         return sb.toString();
     }
 
+    @CheckForNull
+    public static String getDeclaredType(Expression declaredType) {
+        if (declaredType != null) {
+            if (declaredType instanceof UnionType) {
+                return getUnionType((UnionType) declaredType);
+            }
+            if (declaredType instanceof IntersectionType) {
+                return getIntersectionType((IntersectionType) declaredType);
+            }
+            boolean isNullableType = declaredType instanceof NullableType;
+            QualifiedName fieldTypeName = QualifiedName.create(declaredType);
+            if (fieldTypeName != null) {
+                return (isNullableType ? CodeUtils.NULLABLE_TYPE_PREFIX : "") + fieldTypeName.toString(); // NOI18N
+            }
+        }
+        return null;
+    }
+
     public static List<Pair<QualifiedName, Boolean/* isNullableType */>> getParamTypesFromUnionTypes(UnionType unionType) {
         List<Pair<QualifiedName, Boolean>> types = new ArrayList<>();
         for (QualifiedName type : QualifiedName.create(unionType)) {

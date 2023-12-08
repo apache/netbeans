@@ -1128,4 +1128,15 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         options.put(FmtOptions.SPACE_AROUND_SCOPE_RESOLUTION_OPS, true);
         reformatFileContents("testfiles/formatting/php83/dynamicClassConstantFetch_02.php", options, false, true);
     }
+
+    public void testTypedClassConstants_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php83/typedClassConstants_01.php", options, false, true);
+    }
+
+    public void testTypedClassConstants_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php83/typedClassConstants_02.php", options, false, true);
+    }
+
 }

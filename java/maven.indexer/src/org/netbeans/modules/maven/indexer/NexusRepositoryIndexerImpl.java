@@ -569,6 +569,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                         removeGroupCache(repo);
                         fetchUpdateResult = remoteIndexUpdater.fetchAndUpdateIndex(iur);
                         storeGroupCache(repo, indexingContext);
+                        // register indexed repo in services view
+                        if (fetchUpdateResult.isFullUpdate() && fetchUpdateResult.isSuccessful()) {
+                            RepositoryPreferences.getInstance().addOrModifyRepositoryInfo(repo);
+                        }
                     } catch (IOException | AlreadyClosedException | IllegalArgumentException ex) {
                         // AlreadyClosedException can happen in low storage situations when lucene is trying to handle IOEs
                         // IllegalArgumentException signals remote archive format problems

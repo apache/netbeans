@@ -346,6 +346,10 @@ public final class CodeStyle {
         return preferences.getBoolean(SPACE_AROUND_ASSIGN_OPS, getDefaultAsBoolean(SPACE_AROUND_ASSIGN_OPS));
     }
 
+    public boolean spaceAroundScopeResolutionOps() {
+        return preferences.getBoolean(SPACE_AROUND_SCOPE_RESOLUTION_OPS, getDefaultAsBoolean(SPACE_AROUND_SCOPE_RESOLUTION_OPS));
+    }
+
     public boolean spaceAroundObjectOps() {
         return preferences.getBoolean(SPACE_AROUND_OBJECT_OPS, getDefaultAsBoolean(SPACE_AROUND_OBJECT_OPS));
     }

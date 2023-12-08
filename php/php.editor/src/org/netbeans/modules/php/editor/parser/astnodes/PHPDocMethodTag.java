@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.editor.parser.astnodes;
 
 import java.util.List;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.spi.annotation.AnnotationParsedLine;
 
 /**
@@ -30,6 +31,7 @@ public class PHPDocMethodTag extends PHPDocTypeTag {
     private final List<PHPDocVarTypeTag> params;
     private final PHPDocNode name;
     private final boolean isStatic;
+    private final String returnType;
 
     public PHPDocMethodTag(int start, int end, AnnotationParsedLine kind,
             List<PHPDocTypeNode> returnTypes, PHPDocNode methodName,
@@ -57,6 +59,20 @@ public class PHPDocMethodTag extends PHPDocTypeTag {
         this.params = parameters;
         this.name = methodName;
         this.isStatic = isStatic;
+        this.returnType = getReturnType(documentation);
+    }
+
+    private String getReturnType(String documentation) {
+        String type = documentation.trim();
+        String[] split = CodeUtils.WHITE_SPACES_PATTERN.split(type, 2);
+        if (split[0].equals(org.netbeans.modules.php.editor.model.impl.Type.STATIC)) {
+            type = split[1];
+        }
+        if (type.startsWith(name.getValue() + "(")) { // NOI18N
+            return ""; // NOI18N
+        }
+        split = CodeUtils.WHITE_SPACES_PATTERN.split(type, 2);
+        return split[0];
     }
 
     /**
@@ -94,6 +110,10 @@ public class PHPDocMethodTag extends PHPDocTypeTag {
     @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
+    }
+
+    public String getReturnType() {
+        return returnType;
     }
 
     private static class CommentExtractorImpl implements CommentExtractor {

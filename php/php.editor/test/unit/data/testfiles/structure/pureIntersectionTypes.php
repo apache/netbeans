@@ -53,7 +53,7 @@ trait TestTrait {
     }
 }
 
-interface TestInterfase {
+interface TestInterface {
 
     public function paramType(X&Y&Z $test);
     public function returnType(): X&Y&Z;

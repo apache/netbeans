@@ -88,6 +88,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.NamedArgument;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NullableType;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.netbeans.modules.php.editor.parser.astnodes.ReflectionVariable;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleFieldDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
@@ -1079,13 +1080,14 @@ public class FormatVisitor extends DefaultVisitor {
                 }
             }
             scan(node.getAttributes());
-            while (ts.moveNext() && ts.token().id() != PHPTokenId.PHP_STRING) {
+            while (ts.moveNext() && !isConstTypeToken(ts.token())) {
                 addFormatToken(formatTokens);
             }
+            ts.movePrevious();
             FormatToken lastWhitespace = formatTokens.remove(formatTokens.size() - 1);
             formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_MODIFIERS, lastWhitespace.getOffset(), lastWhitespace.getOldText()));
-            addFormatToken(formatTokens);
             formatTokens.add(new FormatToken.IndentToken(node.getStartOffset(), options.continualIndentSize));
+            scan(node.getConstType());
             scan(node.getNames());
             if (node.getNames().size() == 1) {
                 while (ts.moveNext()
@@ -1465,13 +1467,16 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getAttributes());
         scan(node.getFunctionName());
 
+        // e.g. function paramHasDNFType((X&Y)|Z $test): void {}
+        boolean addedOpenParen = false;
         // #270903 add indent
         while (ts.moveNext() && (ts.token().id() == PHPTokenId.WHITESPACE
                 || isComment(ts.token())
-                || isOpenParen(ts.token()))) {
+                || (isOpenParen(ts.token()) && !addedOpenParen))) {
             addFormatToken(formatTokens);
             if (isOpenParen(ts.token())) {
                 formatTokens.add(new FormatToken.IndentToken(ts.offset() + ts.token().length(), options.continualIndentSize));
+                addedOpenParen = true;
             }
         }
         ts.movePrevious();
@@ -2495,11 +2500,33 @@ public class FormatVisitor extends DefaultVisitor {
     @Override
     public void visit(UnionType node) {
         processUnionOrIntersectionType(node.getTypes());
+        // add ")" if it exists e.g. (A&B)|(B&C)
+        addAllUntilOffset(node.getEndOffset());
     }
 
     @Override
     public void visit(IntersectionType node) {
         processUnionOrIntersectionType(node.getTypes());
+    }
+
+    @Override
+    public void visit(ReflectionVariable node) {
+        // e.g. {$name}
+        while (moveNext() && ts.offset() < node.getName().getStartOffset()) {
+            addFormatToken(formatTokens);
+            if (ts.token().id() == PHPTokenId.PHP_CURLY_OPEN) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_DYNAMIC_NAME_BRACES, ts.offset() + ts.token().length()));
+            }
+        }
+        ts.movePrevious();
+        scan(node.getName());
+        while (moveNext() && ts.offset() < node.getEndOffset()) {
+            if (ts.token().id() == PHPTokenId.PHP_CURLY_CLOSE) {
+                formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_DYNAMIC_NAME_BRACES, ts.offset()));
+            }
+            addFormatToken(formatTokens);
+        }
+        ts.movePrevious();
     }
 
     private void processUnionOrIntersectionType(List<Expression> types) {
@@ -2601,6 +2628,11 @@ public class FormatVisitor extends DefaultVisitor {
             case PHPDOC_COMMENT_END:
                 tokens.add(new FormatToken(FormatToken.Kind.DOC_COMMENT_END, ts.offset(), ts.token().text().toString()));
                 break;
+            case PHP_PAAMAYIM_NEKUDOTAYIM:
+                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_SCOPE_RESOLUTION_OP, ts.offset()));
+                tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_SCOPE_RESOLUTION_OP, ts.offset() + ts.token().length()));
+                break;
             case PHP_OBJECT_OPERATOR:
                 tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_OBJECT_OP, ts.offset()));
                 tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
@@ -2700,6 +2732,9 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ARRAY_DECL_PAREN, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AFTER_ARRAY_DECL_LEFT_PAREN, ts.offset() + ts.token().length()));
+                    } else if (parent instanceof UnionType) {
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_DNF_TYPE_PARENS, ts.offset() + ts.token().length()));
                     } else {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     }
@@ -2737,6 +2772,9 @@ public class FormatVisitor extends DefaultVisitor {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else if (parent instanceof ArrayCreation) {
                         tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_ARRAY_DECL_RIGHT_PAREN, ts.offset()));
+                        tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+                    } else if (parent instanceof UnionType) {
+                        tokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_WITHIN_DNF_TYPE_PARENS, ts.offset()));
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
                     } else {
                         tokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
@@ -3130,6 +3168,17 @@ public class FormatVisitor extends DefaultVisitor {
             removedWS = formatTokens.remove(formatTokens.size() - 1);
             index--;
             lastToken = formatTokens.get(index);
+        } else if (lastToken.getId() == FormatToken.Kind.INDENT) {
+            // GH-5380 there are whitespaces before ")" in the method invocation with ternary or null-coalescing operator
+            // e.g. var_dump($a ? 1 : 2  ); var_dump($a ?? null    );
+            if (index - 1 > 0) {
+                FormatToken possibleWSToken = formatTokens.get(index -1);
+                if (possibleWSToken.isWhitespace()) {
+                    removedWS = formatTokens.remove(index - 1);
+                    index -= 2;
+                    lastToken = formatTokens.get(index);
+                }
+            }
         }
 
         if (lastToken.getId() == FormatToken.Kind.WHITESPACE_AFTER_COMMA) {
@@ -3309,7 +3358,11 @@ public class FormatVisitor extends DefaultVisitor {
 
     private boolean isFieldTypeOrVariableToken(Token<PHPTokenId> token) {
         return PHPTokenId.PHP_VARIABLE == token.id()
-                || PHPTokenId.PHP_STRING == token.id()
+                || isConstTypeToken(token);
+    }
+
+    private boolean isConstTypeToken(Token<PHPTokenId> token) {
+        return PHPTokenId.PHP_STRING == token.id()
                 || PHPTokenId.PHP_ARRAY == token.id()
                 || PHPTokenId.PHP_ITERABLE == token.id()
                 || PHPTokenId.PHP_PARENT == token.id()
@@ -3322,9 +3375,11 @@ public class FormatVisitor extends DefaultVisitor {
                 || PHPTokenId.PHP_NULL == token.id()
                 || PHPTokenId.PHP_FALSE == token.id()
                 || PHPTokenId.PHP_NS_SEPARATOR == token.id() // \
+                || (PHPTokenId.PHP_TOKEN == token.id() && TokenUtilities.textEquals(token.text(), "(")) // NOI18N
                 || (PHPTokenId.PHP_TOKEN == token.id() && TokenUtilities.textEquals(token.text(), "?")) // NOI18N
                 || PHPTokenId.PHP_TYPE_VOID == token.id() // not supported type but just check it
                 || PHPTokenId.PHP_CALLABLE == token.id() // not supported type but just check it
+                || PHPTokenId.PHP_TYPE_NEVER == token.id() // not supported type but just check it
                 ;
     }
 

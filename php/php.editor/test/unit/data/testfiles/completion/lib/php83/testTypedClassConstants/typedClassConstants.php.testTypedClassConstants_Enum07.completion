@@ -1,0 +1,19 @@
+Code completion result for source line:
+public const (A&B)|C DNF = |C; // enum
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      A                               [PUBLIC]   typedClassConstants.php
+CLASS      B                               [PUBLIC]   typedClassConstants.php
+CLASS      C                               [PUBLIC]   typedClassConstants.php
+CLASS      TestClass                       [PUBLIC]   typedClassConstants.php
+CLASS      TestEnum                        [PUBLIC]   typedClassConstants.php
+CLASS      TestInterface                   [PUBLIC]   typedClassConstants.php
+CONSTANT   DNF ?                           [PUBLIC]   TestEnum
+CONSTANT   INTERSECTION ?                  [PROTECTE  TestEnum
+CONSTANT   NULLABLE null                   [PUBLIC]   TestEnum
+CONSTANT   NULLABLE2 1                     [PUBLIC]   TestEnum
+CONSTANT   UNION ?                         [PRIVATE]  TestEnum
+CONSTANT   WITHOUT_TYPE 1                  [PUBLIC]   TestEnum
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+------------------------------------
+KEYWORD    array                                      null

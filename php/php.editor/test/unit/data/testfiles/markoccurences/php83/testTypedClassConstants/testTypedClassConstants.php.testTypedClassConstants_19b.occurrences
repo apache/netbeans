@@ -1,0 +1,2 @@
+    public const object |>MARK_OCCURRENCES:OBJECT<| = A;
+var_dump(ClassTest::|>MARK_OCCURRENCES:OBJ^ECT<|);

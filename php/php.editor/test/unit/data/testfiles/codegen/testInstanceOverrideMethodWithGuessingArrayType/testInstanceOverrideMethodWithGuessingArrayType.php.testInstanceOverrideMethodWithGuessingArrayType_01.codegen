@@ -1,0 +1,4 @@
+public function myFoo(): array{
+return parent::myFoo();
+}
+

@@ -1705,4 +1705,27 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/spaces/php81/spaceWithinMethodCallParensWithFirstClassCallable_02b.php", options);
     }
 
+    public void testGH5380_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/gh5380_01.php", options,  false, true);
+    }
+
+    public void testGH5380_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/gh5380_01.php", options,  false, true);
+    }
+
+    public void testGH5380_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, false);
+        reformatFileContents("testfiles/formatting/spaces/gh5380_02.php", options,  false, true);
+    }
+
+    public void testGH5380_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_WITHIN_METHOD_CALL_PARENS, true);
+        reformatFileContents("testfiles/formatting/spaces/gh5380_02.php", options,  false, true);
+    }
 }

@@ -1093,7 +1093,7 @@
                 </Block>
             </ClassDeclaration>
             <ExpressionStatement start='998' end='1018'>
-                <StaticConstantAccess start='998' end='1017'>
+                <StaticConstantAccess start='998' end='1017' isDynamicName='false'>
                     <NamespaceName start='998' end='1011' isCurrent='false' isGlobal='false'>
                         <Identifier start='998' end='1011' name='ConstantClass'/>
                     </NamespaceName>
@@ -1106,7 +1106,7 @@
                 </StaticConstantAccess>
             </ExpressionStatement>
             <ExpressionStatement start='1019' end='1040'>
-                <StaticConstantAccess start='1019' end='1039'>
+                <StaticConstantAccess start='1019' end='1039' isDynamicName='false'>
                     <NamespaceName start='1019' end='1032' isCurrent='false' isGlobal='false'>
                         <Identifier start='1019' end='1032' name='ConstantClass'/>
                     </NamespaceName>
@@ -1119,7 +1119,7 @@
                 </StaticConstantAccess>
             </ExpressionStatement>
             <ExpressionStatement start='1041' end='1061'>
-                <StaticConstantAccess start='1041' end='1060'>
+                <StaticConstantAccess start='1041' end='1060' isDynamicName='false'>
                     <NamespaceName start='1041' end='1054' isCurrent='false' isGlobal='false'>
                         <Identifier start='1041' end='1054' name='ConstantClass'/>
                     </NamespaceName>

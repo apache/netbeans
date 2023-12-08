@@ -709,7 +709,7 @@
                             </NamespaceName>
                         </ClassName>
                         <Parameters>
-                            <StaticConstantAccess start='1111' end='1119'>
+                            <StaticConstantAccess start='1111' end='1119' isDynamicName='false'>
                                 <NamespaceName start='1111' end='1112' isCurrent='false' isGlobal='false'>
                                     <Identifier start='1111' end='1112' name='I'/>
                                 </NamespaceName>

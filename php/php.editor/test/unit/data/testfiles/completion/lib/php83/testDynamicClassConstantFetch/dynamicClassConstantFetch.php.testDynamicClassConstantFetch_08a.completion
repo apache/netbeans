@@ -1,0 +1,4 @@
+Code completion result for source line:
+case TEST4 = EnumTe|st::{self::{self::TES} . self::T};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      EnumTest                        [PUBLIC]   dynamicClassConstantFetch.php

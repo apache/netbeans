@@ -2,8 +2,8 @@
 
 Document 0
 Searchable Keys:
-  base : parametertype;parameterType;16;$msg:?string:1::1:0:0:0:0:0,$num:int:1::1:0:0:0:0:0;;;0;<TESTURL>/testNullableTypesForFunctions.php;0;0;
-  base : returntype;returnType;68;$str:string:1::1:0:0:0:0:0;?\Foo;;0;<TESTURL>/testNullableTypesForFunctions.php;0;0;
+  base : parametertype;parameterType;16;$msg:?string:1::1:0:0:0:0:0:?string:,$num:int:1::1:0:0:0:0:0:int:;;;0;<TESTURL>/testNullableTypesForFunctions.php;0;0;;
+  base : returntype;returnType;68;$str:string:1::1:0:0:0:0:0:string:;?\Foo;;0;<TESTURL>/testNullableTypesForFunctions.php;0;0;?Foo;
   top : parametertype
   top : returntype
 

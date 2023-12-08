@@ -1,0 +1,5 @@
+    public function |>MARK_OCCURRENCES:methodFoo<|(): (Foo&Bar)|(Bar&Baz) {}
+$vardoc1->|>MARK_OCCURRENCES:methodFoo<|();
+$unionType->|>MARK_OCCURRENCES:methodF^oo<|();
+$intersectionType->|>MARK_OCCURRENCES:methodFoo<|();
+$nullableType->|>MARK_OCCURRENCES:methodFoo<|();

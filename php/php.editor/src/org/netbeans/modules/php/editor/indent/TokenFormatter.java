@@ -109,6 +109,7 @@ public class TokenFormatter {
         public boolean spaceBeforeElse;
         public boolean spaceBeforeCatch;
         public boolean spaceBeforeFinally;
+        public boolean spaceAroundScopeResolutionOp;
         public boolean spaceAroundObjectOp;
         public boolean spaceAroundNullsafeObjectOp;
         public boolean spaceAroundDeclareEqual;
@@ -274,6 +275,7 @@ public class TokenFormatter {
             spaceBeforeCatch = codeStyle.spaceBeforeCatch();
             spaceBeforeFinally = codeStyle.spaceBeforeFinally();
 
+            spaceAroundScopeResolutionOp = codeStyle.spaceAroundScopeResolutionOps();
             spaceAroundObjectOp = codeStyle.spaceAroundObjectOps();
             spaceAroundNullsafeObjectOp = codeStyle.spaceAroundNullsafeObjectOps();
             spaceAroundDeclareEqual = codeStyle.spaceAroundDeclareEqual();
@@ -1077,6 +1079,9 @@ public class TokenFormatter {
                                             }
                                         }
                                         break;
+                                    case WHITESPACE_AROUND_SCOPE_RESOLUTION_OP:
+                                        countSpaces = docOptions.spaceAroundScopeResolutionOp ? 1 : 0;
+                                        break;
                                     case WHITESPACE_AROUND_OBJECT_OP:
                                         countSpaces = docOptions.spaceAroundObjectOp ? 1 : 0;
                                         break;
@@ -1549,6 +1554,14 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_WITHIN_TYPE_CAST_PARENS:
                                         countSpaces = docOptions.spaceWithinTypeCastParens ? 1 : 0;
+                                        break;
+                                    case WHITESPACE_WITHIN_DNF_TYPE_PARENS:
+                                        // change here if we add the option for it
+                                        countSpaces = 0;
+                                        break;
+                                    case WHITESPACE_WITHIN_DYNAMIC_NAME_BRACES:
+                                        // change here if we add the option for it
+                                        countSpaces = 0;
                                         break;
                                     case WHITESPACE_AFTER_TYPE_CAST:
                                         countSpaces = docOptions.spaceAfterTypeCast ? 1 : 0;

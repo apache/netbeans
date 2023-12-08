@@ -48,6 +48,14 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/arrayReturnType.php", "functionNam^e();", false, "");
     }
 
+    public void testArrayReturnTypeWithTab_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/arrayReturnType.php", "withTabSpace01^();", false, "");
+    }
+
+    public void testArrayReturnTypeWithTab_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/arrayReturnType.php", "withTabSpace02^();", false, "");
+    }
+
     public void testFieldWithDesc() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/fieldVar.php", "$c->fieldWithDes^c;", false, "");
     }
@@ -544,6 +552,62 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
 
     public void testDeprecatedStaticTypedTraitFields_06() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/deprecatedTypedFields/deprecatedTypedFields.php", "self::$intersectionTypeStat^icField; // trait", false, "");
+    }
+
+    public void testDNFTypesPropertyTag() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->prop^erty;", false, "");
+    }
+
+    public void testDNFTypesMethodTag() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->methodT^ag($param1, $param2);", false, "");
+    }
+
+    public void testDNFTypesStaticMethodTag() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "self::staticMethodTa^g($param1, $param2);", false, "");
+    }
+
+    public void testDNFTypesMethod() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->methodTe^st(null);", false, "");
+    }
+
+    public void testDNFTypesPhpdocMethod() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->phpdocMethodTe^st(null);", false, "");
+    }
+
+    public void testDNFTypesInheritdocMethod() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->inheritdocMetho^d(null);", false, "");
+    }
+
+    public void testDNFTypesStaticMethod() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "self::staticMethodTes^t(null);", false, "");
+    }
+
+    public void testDNFTypesPhpdocStaticMethod() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "self::phpdocStaticMethodTe^st(null);", false, "");
+    }
+
+    public void testDNFTypesField() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->privateFiel^d;", false, "");
+    }
+
+    public void testDNFTypesPhpdocField() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->phpdocFie^ld;", false, "");
+    }
+
+    public void testDNFTypesStaticField() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "static::$privateStaticFi^eld;", false, "");
+    }
+
+    public void testDNFTypesPhpdocStaticField() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "static::$phpdocStaticFiel^d;", false, "");
+    }
+
+    public void testFunctionGuessingArrayReturnType_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionGuessingArrayReturnType.php", "testArrayReturn^Type();", false, "");
+    }
+
+    public void testFunctionGuessingArrayReturnType_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/functionGuessingArrayReturnType.php", "testArrayReturnTypeWithUnion^Type();", false, "");
     }
 
     @Override

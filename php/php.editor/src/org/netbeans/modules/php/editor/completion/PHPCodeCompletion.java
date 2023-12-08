@@ -277,6 +277,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             PHPTokenId.PHPDOC_COMMENT_START, PHPTokenId.PHPDOC_COMMENT, PHPTokenId.PHPDOC_COMMENT_END,
             PHPTokenId.PHP_COMMENT_START, PHPTokenId.PHP_COMMENT, PHPTokenId.PHP_COMMENT_END
     );
+    private static final List<PHPTokenId> TYPE_TOKENS = Arrays.asList(
+            PHPTokenId.PHP_CLASS, PHPTokenId.PHP_INTERFACE, PHPTokenId.PHP_TRAIT, PHPTokenId.PHP_ENUM
+    );
     private boolean caseSensitive;
     private QuerySupport.Kind nameKind;
 
@@ -447,7 +450,8 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 autoCompleteConstants(completionResult, request);
                 autoCompleteKeywords(completionResult, request, PHP_GLOBAL_CONST_KEYWORDS);
                 break;
-            case CLASS_CONST_EXPRESSION:
+            case CLASS_CONST_EXPRESSION: // no break
+            case ENUM_CASE_EXPRESSION:
                 autoCompleteNamespaces(completionResult, request);
                 autoCompleteTypeNames(completionResult, request, null, true);
                 autoCompleteConstants(completionResult, request);
@@ -578,6 +582,11 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 break;
             case FIELD_TYPE_NAME:
                 autoCompleteFieldType(info, caretOffset, completionResult, request, false);
+                break;
+            case CONST_TYPE_NAME:
+                if (isInType(request)) {
+                    autoCompleteConstType(info, caretOffset, completionResult, request);
+                }
                 break;
             case STRING:
                 // LOCAL VARIABLES
@@ -1256,11 +1265,33 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 }
             }
         } else if (completeFieldTypes(tokenSequence, caretOffset, th, info.getSnapshot().getSource().getFileObject())){
+            request.context = CompletionContext.FIELD_TYPE_NAME;
             autoCompleteFieldType(info, caretOffset, completionResult, request, true);
         }
     }
 
+    private void autoCompleteConstType(ParserResult info, int caretOffset, final PHPCompletionResult completionResult, CompletionRequest request) {
+        autoCompleteNamespaces(completionResult, request);
+        autoCompleteTypeNames(completionResult, request);
+        if (isIntersectionType(info, caretOffset)) {
+            // Fatal Error: Foo&array, Foo&bool, Foo&callable, etc.
+            return;
+        }
+        List<String> keywords = new ArrayList<>(Type.getTypesForConstType());
+        boolean isNullableType = isNullableType(info, caretOffset);
+        if (isNullableType) {
+            keywords.remove(Type.NULL);
+        }
+        if (isUnionType(info, caretOffset)) {
+            keywords.remove(Type.MIXED);
+        }
+        autoCompleteKeywords(completionResult, request, keywords);
+    }
+
     private void autoCompleteFieldType(ParserResult info, int caretOffset, final PHPCompletionResult completionResult, CompletionRequest request, boolean isInClassContext) {
+        if (!isPhp74OrNewer(info.getSnapshot().getSource().getFileObject())) {
+            return;
+        }
         // PHP 7.4 Typed Properties 2.0
         // https://wiki.php.net/rfc/typed_properties_v2
         autoCompleteNamespaces(completionResult, request);
@@ -1858,8 +1889,24 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         tokenSequence.move(caretOffset);
         if (tokenSequence.movePrevious()) {
             Token<? extends PHPTokenId> previousToken = LexUtilities.findPrevious(tokenSequence, VALID_INTERSECTION_TYPE_TOKENS);
-            if (previousToken.id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals(previousToken.text(), Type.SEPARATOR_INTERSECTION)) {
+            if (previousToken == null) {
+                return false;
+            }
+            if ((previousToken.id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals(previousToken.text(), Type.SEPARATOR_INTERSECTION))) {
                 return true;
+            }
+            if (CompletionContextFinder.isLeftBracket(previousToken)) {
+                if (!tokenSequence.movePrevious()) {
+                    return false;
+                }
+                previousToken = tokenSequence.token();
+                if (previousToken.id() == PHPTokenId.WHITESPACE
+                        || CompletionContextFinder.isLeftBracket(previousToken)
+                        || CompletionContextFinder.isVerticalBar(previousToken)
+                        || CompletionContextFinder.isComma(previousToken)
+                    ) {
+                    return true;
+                }
             }
         }
         return false;
@@ -1899,7 +1946,69 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 }
             }
         }
+        // check tokens
+        // because can't check it correctly if there is an ASTError
+        // e.g. the following has an ASTError, so, can't get a ClassDeclaration node
+        // class Example {
+        //     const CONSTANT = 1;
+        //     const ^
+        // }
+        return findEclosingType(info, offset, TYPE_TOKENS);
+    }
+
+    @CheckForNull
+    private static EnclosingType findEclosingType(ParserResult info, int offset, List<PHPTokenId> typeTokenIds) {
+        TokenSequence<PHPTokenId> tokenSequence = getTokenSequence(info, offset);
+        if (!tokenSequence.moveNext()) {
+            return null;
+        }
+        int curlyBalance = 0;
+        Token<? extends PHPTokenId> typeToken = LexUtilities.findPreviousToken(tokenSequence, typeTokenIds);
+        if (typeToken == null) {
+            return null;
+        }
+        TokenId typeId = typeToken.id();
+        String typeName = getTypeName(tokenSequence);
+        if (typeName == null && typeId == PHPTokenId.PHP_CLASS) {
+            // anonymous class
+            typeName = "#anon"; // NOI18N
+        }
+        if (typeName == null) {
+            return null;
+        }
+        while (tokenSequence.moveNext()) {
+            if (tokenSequence.offset() >= offset) {
+                if (curlyBalance > 0) {
+                    return EnclosingType.forTokenId(typeId, typeName);
+                }
+                break;
+            }
+            Token token = tokenSequence.token();
+            TokenId id = token.id();
+            if (id.equals(PHPTokenId.PHP_CURLY_OPEN)) {
+                curlyBalance++;
+            } else if (id.equals(PHPTokenId.PHP_CURLY_CLOSE)) {
+                curlyBalance--;
+                if (curlyBalance == 0) {
+                    break;
+                }
+            }
+        }
         return null;
+    }
+
+    @CheckForNull
+    private static String getTypeName(TokenSequence<PHPTokenId> tokenSequence) {
+        String typeName = null;
+        List<PHPTokenId> typeNameTokenChains = Arrays.asList(PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING);
+        for (PHPTokenId typeNameToken : typeNameTokenChains) {
+            if (tokenSequence.moveNext() && typeNameToken == tokenSequence.token().id()) {
+                if (typeNameToken == PHPTokenId.PHP_STRING) {
+                    typeName = tokenSequence.token().text().toString();
+                }
+            }
+        }
+        return typeName;
     }
 
     @CheckForNull
@@ -2565,6 +2674,30 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 @Override
                 public String extractTypeName() {
                     return CodeUtils.extractTypeName(typeDeclaration);
+                }
+            };
+        }
+
+        static EnclosingType forTokenId(final TokenId tokenId, String typeName) {
+            return new EnclosingType() {
+                @Override
+                public boolean isClassDeclaration() {
+                    return tokenId == PHPTokenId.PHP_CLASS;
+                }
+
+                @Override
+                public boolean isTraitDeclaration() {
+                    return tokenId == PHPTokenId.PHP_TRAIT;
+                }
+
+                @Override
+                public boolean isEnumDeclaration() {
+                    return tokenId == PHPTokenId.PHP_ENUM;
+                }
+
+                @Override
+                public String extractTypeName() {
+                    return typeName;
                 }
             };
         }

@@ -1,0 +1,3 @@
+Code completion result for source line:
+public const (A&B)|(A&C) C|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

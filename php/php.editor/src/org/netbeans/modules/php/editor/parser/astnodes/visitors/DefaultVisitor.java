@@ -239,6 +239,7 @@ public class DefaultVisitor implements Visitor {
     @Override
     public void visit(ConstantDeclaration node) {
         scan(node.getAttributes());
+        scan(node.getConstType());
         scan(node.getNames());
         scan(node.getInitializers());
     }

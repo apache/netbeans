@@ -1,0 +1,2 @@
+    public const iterable |>MARK_OCCURRENCES:ITERABLE<| = ['a', 'b', 'c'];
+var_dump(ClassTest::|>MARK_OCCURRENCES:ITE^RABLE<|);

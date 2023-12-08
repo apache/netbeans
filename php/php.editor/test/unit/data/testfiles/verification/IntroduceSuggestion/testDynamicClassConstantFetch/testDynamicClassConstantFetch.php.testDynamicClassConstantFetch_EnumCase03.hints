@@ -1,0 +1,6 @@
+    case C = self::{self::BA . self::^R};
+                               -------
+HINT:Introduce Hint
+FIX:Create Constant "R" in Enum "EnumTest" (testDynamicClassConstantFetch.php)
+HINT:Introduce Hint
+FIX:Create Enum Case "R" in Enum "EnumTest" (testDynamicClassConstantFetch.php)

@@ -798,6 +798,11 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/uniformVariableSyntax_38");
     }
 
+    public void testUniformVariableSyntax_39() throws Exception {
+        // Test::{test('foo')}()::{test('bar')}();
+        performTest("parser/uniformVariableSyntax_39");
+    }
+
     public void testCloneExpression_01() throws Exception {
         performTest("parser/cloneExpression_01");
     }
@@ -1519,6 +1524,15 @@ public class ASTPHP5ParserTest extends ParserTestBase {
 
     public void testIssueGH6075_01() throws Exception {
         performTest("parser/issueGH6075_01");
+    }
+
+    // PHP 8.3
+    public void testDynamicClassConstantFetch_01() throws Exception {
+        performTest("parser/php83/dynamicClassConstantFetch_01");
+    }
+
+    public void testTypedClassConstants_01() throws Exception {
+        performTest("parser/php83/typedClassConstants_01");
     }
 
     @Override

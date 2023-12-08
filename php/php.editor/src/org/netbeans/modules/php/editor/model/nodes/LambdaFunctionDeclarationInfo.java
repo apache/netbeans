@@ -39,7 +39,7 @@ import org.openide.util.Pair;
  */
 public class LambdaFunctionDeclarationInfo extends ASTNodeInfo<LambdaFunctionDeclaration> {
 
-    private final Map<String, List<Pair<QualifiedName, Boolean>>> paramDocTypes = Collections.emptyMap();
+    private final Map<String, Pair<String /*declared type*/, List<Pair<QualifiedName, Boolean>>>> paramDocTypes = Collections.emptyMap();
 
 
     protected LambdaFunctionDeclarationInfo(LambdaFunctionDeclaration node) {

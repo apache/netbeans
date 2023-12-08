@@ -1,4 +1,4 @@
 |-PHPDocTags [130, 384] : ESCAPED{PHPDocTags}
 |--testMethod2 [34, 45] : ESCAPED{testMethod2}ESCAPED{(}<font color="#999999">ESCAPED{?}ESCAPED{PHPDocTags}ESCAPED{ }</font>ESCAPED{$tags}ESCAPED{)}<font color="#999999">:ESCAPED{?}ESCAPED{\PHPDocTags}</font>
 |--$test [103, 107] : ESCAPED{$test}<font color="#999999">:ESCAPED{?}ESCAPED{PHPDocTags}</font>
-|--testMethod [239, 381] : ESCAPED{testMethod}ESCAPED{(}<font color="#999999">ESCAPED{?}ESCAPED{PHPDocTags}ESCAPED{ }</font>ESCAPED{$tags}ESCAPED{, }ESCAPED{$isNull}ESCAPED{)}<font color="#999999">:ESCAPED{?}ESCAPED{\PHPDocTags}</font>
+|--testMethod [239, 381] : ESCAPED{testMethod}ESCAPED{(}<font color="#999999">ESCAPED{?}ESCAPED{PHPDocTags}ESCAPED{ }</font>ESCAPED{$tags}ESCAPED{, }<font color="#999999">ESCAPED{bool}ESCAPED{ }</font>ESCAPED{$isNull}ESCAPED{)}<font color="#999999">:ESCAPED{?}ESCAPED{\PHPDocTags}</font>

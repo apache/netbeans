@@ -72,10 +72,10 @@ if ($request->isMethod('post') && $form->bindAndValid($request)) {
 
     $module_action = $this->getPage()->getModuleAction();
     if ($module_action == 'main/editCompanyAddress')
-        $
-            this->redirect ($this->getHelper()->link('main/editMyCompany')->getHref());
+        $t
+            his->redirect ($this->getHelper()->link('main/editMyCompany')->getHref());
 
 }
-$this->forms['CompanyAddresses '] = $form;
+$this->forms['CompanyAddresses  '] = $form;
 
 }

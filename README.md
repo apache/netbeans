@@ -72,8 +72,6 @@ $ ant -q clean
 #### Notes:
 * You can also use `php`, `enterprise`, etc. See the [cluster.properties](https://github.com/apache/netbeans/blob/master/nbbuild/cluster.properties) file.
 * Once built, you can simply open individual modules of interest with NetBeans and run/rebuild/debug them like any other project
-* Building the gradle modules on recent JDKs might fail with "Unsupported class file major version" errors. In that case the gradle daemon must be
-  configured to run on a compatible JDK (for example add `org.gradle.java.home=/home/duke/jdk17` to your `~/.gradle/gradle.properties`, see [gradle doc](https://docs.gradle.org/current/userguide/build_environment.html)).
 
 #### Generating Javadoc
 

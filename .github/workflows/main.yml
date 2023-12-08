@@ -133,13 +133,6 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-
 
-      - name: Setup Gradle Daemon to run on JDK 11
-        if: ${{ matrix.java == '21' }}
-        run: |
-          mkdir -p ~/.gradle
-          #uses a preinstalled JDK 11 from the runner
-          echo "org.gradle.java.home=$JAVA_HOME_11_X64" >> ~/.gradle/gradle.properties
-
       - name: Build NetBeans
         run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG build-nozip
 

@@ -118,6 +118,8 @@ final class CompletionContextFinder {
             new Object[]{PHPTokenId.PHP_USE, PHPTokenId.WHITESPACE, PHPTokenId.PHP_FUNCTION, PHPTokenId.WHITESPACE, PHPTokenId.PHP_STRING},
             new Object[]{PHPTokenId.PHP_USE, PHPTokenId.WHITESPACE, PHPTokenId.PHP_FUNCTION, PHPTokenId.WHITESPACE, NAMESPACE_FALSE_TOKEN},
             new Object[]{PHPTokenId.PHP_USE, PHPTokenId.WHITESPACE, PHPTokenId.PHP_FUNCTION, COMBINED_USE_STATEMENT_TOKENS});
+    private static final Object[] NAMESPACED_FUNCTION_PARAMETERS_IDENTIFIER =
+            new Object[]{NAMESPACE_FALSE_TOKEN, PHPTokenId.WHITESPACE, PHPTokenId.PHP_TOKEN};
     private static final List<Object[]> NAMESPACE_KEYWORD_TOKENS = Arrays.asList(
             new Object[]{PHPTokenId.PHP_NAMESPACE},
             new Object[]{PHPTokenId.PHP_NAMESPACE, PHPTokenId.WHITESPACE},
@@ -235,7 +237,7 @@ final class CompletionContextFinder {
         HTML, CLASS_NAME, INTERFACE_NAME, BACKING_TYPE,
         TYPE_NAME, RETURN_TYPE_NAME, RETURN_UNION_OR_INTERSECTION_TYPE_NAME, FIELD_TYPE_NAME, CONST_TYPE_NAME, VISIBILITY_MODIFIER_OR_TYPE_NAME, STRING,
         CLASS_MEMBER, STATIC_CLASS_MEMBER, PHPDOC, INHERITANCE, EXTENDS, IMPLEMENTS, METHOD_NAME,
-        CLASS_MEMBER_PARAMETER_NAME, STATIC_CLASS_MEMBER_PARAMETER_NAME, FUNCTION_PARAMETER_NAME,
+        CLASS_MEMBER_PARAMETER_NAME, STATIC_CLASS_MEMBER_PARAMETER_NAME, FUNCTION_PARAMETER_NAME, NAMESPACED_FUNCTION_PARAMETER_IDENTIFIER,
         CLASS_CONTEXT_KEYWORDS, SERVER_ENTRY_CONSTANTS, NONE, NEW_CLASS, GLOBAL, NAMESPACE_KEYWORD,
         GROUP_USE_KEYWORD, GROUP_USE_CONST_KEYWORD, GROUP_USE_FUNCTION_KEYWORD,
         USE_KEYWORD, USE_CONST_KEYWORD, USE_FUNCTION_KEYWORD, DEFAULT_PARAMETER_VALUE, OPEN_TAG, THROW, THROW_NEW, CATCH, CLASS_MEMBER_IN_STRING,
@@ -342,7 +344,9 @@ final class CompletionContextFinder {
             }
             return CompletionContext.INTERFACE_CONTEXT_KEYWORDS;
         } else if (isInsideClassOrTraitOrEnumDeclarationBlock(info, caretOffset, tokenSequence)) {
-            if (acceptTokenChains(tokenSequence, USE_KEYWORD_TOKENS, moveNextSucces)) {
+            if (acceptTokenChain(tokenSequence, NAMESPACED_FUNCTION_PARAMETERS_IDENTIFIER, moveNextSucces)) {
+                return CompletionContext.NAMESPACED_FUNCTION_PARAMETER_IDENTIFIER;
+            } else if (acceptTokenChains(tokenSequence, USE_KEYWORD_TOKENS, moveNextSucces)) {
                 return CompletionContext.USE_TRAITS;
             } else if (acceptTokenChains(tokenSequence, METHOD_NAME_TOKENCHAINS, moveNextSucces)) {
                 return CompletionContext.METHOD_NAME;

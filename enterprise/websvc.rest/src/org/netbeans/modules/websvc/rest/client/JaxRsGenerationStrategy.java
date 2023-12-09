@@ -21,7 +21,6 @@ package org.netbeans.modules.websvc.rest.client;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -59,12 +58,21 @@ import java.util.EnumSet;
  *
  */
 class JaxRsGenerationStrategy extends ClientGenerationStrategy {
+
+    private final String packagePrefix;
+
+    public JaxRsGenerationStrategy(boolean jakarta) {
+        this.packagePrefix = jakarta ? "jakarta.ws.rs" : "javax.ws.rs";
+    }
     
     @Override
     protected void buildQueryFormParams(StringBuilder queryString){
-        queryString.append(";\n javax.ws.rs.core.Form form =");                     // NOI18N
+        queryString.append(";\n ");                     // NOI18N
+        queryString.append(packagePrefix);
+        queryString.append(".core.Form form =");                     // NOI18N
         queryString.append("getQueryOrFormParams(queryParamNames, queryParamValues);\n");// NOI18N
-        queryString.append("javax.ws.rs.core.MultivaluedMap<String,String> map = form.asMap();\n");// NOI18N
+        queryString.append(packagePrefix);
+        queryString.append("core.MultivaluedMap<String,String> map = form.asMap();\n");// NOI18N
         queryString.append("for(java.util.Map.Entry<String,java.util.List<String>> entry: ");   // NOI18N
         queryString.append("map.entrySet()){\n");                           // NOI18N
         queryString.append("java.util.List<String> list = entry.getValue();\n");// NOI18N
@@ -75,7 +83,8 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
     
     @Override
     protected void buildQParams(StringBuilder queryString){
-        queryString.append("javax.ws.rs.core.MultivaluedMap<String,String> mapOptionalParams = "); // NOI18N
+        queryString.append(packagePrefix);
+        queryString.append(".core.MultivaluedMap<String,String> mapOptionalParams = "); // NOI18N
         queryString.append("getQParams(optionalQueryParams);\n");           // NOI18N
         queryString.append("for(java.util.Map.Entry<String,java.util.List<String>> entry: ");   // NOI18N
         queryString.append("mapOptionalParams.entrySet()){\n");                           // NOI18N
@@ -94,12 +103,12 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
     {
      // add 3 fields
         ModifiersTree fieldModif =  maker.Modifiers(Collections.<Modifier>singleton(Modifier.PRIVATE));
-        Tree typeTree = JavaSourceHelper.createTypeTree(copy, "javax.ws.rs.client.WebTarget"); //NOI18N
+        Tree typeTree = JavaSourceHelper.createTypeTree(copy, packagePrefix + ".client.WebTarget"); //NOI18N
         VariableTree fieldTree = maker.Variable(fieldModif, "webTarget", typeTree, null); //NOI18N
         ClassTree modifiedClass = maker.addClassMember(classTree, fieldTree);
 
         fieldModif =  maker.Modifiers(Collections.<Modifier>singleton(Modifier.PRIVATE));
-        typeTree = JavaSourceHelper.createTypeTree(copy, "javax.ws.rs.client.Client"); //NOI18N
+        typeTree = JavaSourceHelper.createTypeTree(copy, packagePrefix + ".client.Client"); //NOI18N
         fieldTree = maker.Variable(fieldModif, "client", typeTree, null); //NOI18N
         modifiedClass = maker.addClassMember(modifiedClass, fieldTree);
 
@@ -161,9 +170,9 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
             resURI = getPathExpression(pf); //NOI18N
         }
 
-        String clientCreation = "   client = javax.ws.rs.client.ClientBuilder.newClient();";
+        String clientCreation = "   client = " + packagePrefix + ".client.ClientBuilder.newClient();";
         if (security.isSSL()) {
-            clientCreation = "client = javax.ws.rs.client.ClientBuilder.newBuilder().sslContext(getSSLContext()).build();"; // NOI18N
+            clientCreation = "client = " + packagePrefix + ".client.ClientBuilder.newBuilder().sslContext(getSSLContext()).build();"; // NOI18N
         }
 
         String body =
@@ -291,20 +300,20 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
                 VariableTree objectParam = maker.Variable(paramModifier, 
                         "requestEntity", maker.Identifier("Object"), null); //NOI18N
                 paramList.add(objectParam);
-                bodyParam= "javax.ws.rs.client.Entity.entity(requestEntity,"+
+                bodyParam= packagePrefix + ".client.Entity.entity(requestEntity,"+
                         requestMimeType.getMediaType()+")"; //NOI18N
             }
         }
         
-        if ("javax.ws.rs.core.Response".equals(responseType)) {         //NOI18N
-            TypeElement clientResponseEl = copy.getElements().getTypeElement(
-                    "javax.ws.rs.core.Response");        //NOI18N
+        if ((packagePrefix + ".core.Response").equals(responseType)) {         //NOI18N
+            TypeElement clientResponseEl = copy.getElements()
+                    .getTypeElement(packagePrefix + ".core.Response"); //NOI18N
             ret = "return "; //NOI18N
             responseTree = (clientResponseEl == null ?
-                copy.getTreeMaker().Identifier("javax.ws.rs.core.Response") : // NOI18N
+                copy.getTreeMaker().Identifier(packagePrefix + ".core.Response") : // NOI18N
                 copy.getTreeMaker().QualIdent(clientResponseEl));
             bodyParam1 = (clientResponseEl == null ?
-                "javax.ws.rs.core.Response.class" :      //NOI18N
+                (packagePrefix + ".core.Response.class") :      //NOI18N
                 "Response.class");                                //NOI18N
         } 
         else if ("void".equals(responseType)) {                         //NOI18N
@@ -335,8 +344,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
         }
 
         // throws
-        ExpressionTree throwsTree = JavaSourceHelper.createTypeTree(copy, 
-                "javax.ws.rs.ClientErrorException");     //NOI18N
+        ExpressionTree throwsTree = JavaSourceHelper.createTypeTree(copy, packagePrefix + ".ClientErrorException");     //NOI18N
 
         if (path.length() == 0) {
             // body
@@ -433,18 +441,17 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
             paramList.add(classParam);
         }
 
-        ExpressionTree throwsTree = JavaSourceHelper.createTypeTree(copy, 
-                "javax.ws.rs.ClientErrorException"); //NOI18N
+        ExpressionTree throwsTree = JavaSourceHelper.createTypeTree(copy, packagePrefix + ".ClientErrorException"); //NOI18N
 
         StringBuilder body = new StringBuilder(
                 "{ WebTarget resource = webTarget;");           // NOI18N
         StringBuilder resourceBuilder = new StringBuilder();
         if (path.length() == 0) {
+            resourceBuilder.append(".request(");  // NOI18N
             if ( mimeType != null ){
-                resourceBuilder.append(".request(");  // NOI18N
                 resourceBuilder.append(mimeType.getMediaType());
-                resourceBuilder.append(')');
             }
+            resourceBuilder.append(')');
             buildQueryParams( body , httpMethod, paramList , maker );
         } 
         else {
@@ -544,8 +551,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
                 "}";                                                        //NOI18N
         
         List<ExpressionTree> throwsList = new ArrayList<ExpressionTree>();
-        ExpressionTree throwsTree = JavaSourceHelper.createTypeTree(copy, 
-                "javax.ws.rs.ClientErrorException"); //NOI18N
+        ExpressionTree throwsTree = JavaSourceHelper.createTypeTree(copy, packagePrefix + ".ClientErrorException"); //NOI18N
         throwsList.add(throwsTree);
         if (Security.Authentication.SESSION_KEY == security.getAuthentication()) 
         {
@@ -631,14 +637,14 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
         
         if (requestMimeType != null) {
             if (requestMimeType == HttpMimeType.FORM && httpParams.hasFormParams()) {
-                bodyParam="javax.ws.rs.client.Entity.form(" +
-                		"getQueryOrFormParams(formParamNames, formParamValues))"; //NOI18N
+                bodyParam = packagePrefix + ".client.Entity.form("
+                        + "getQueryOrFormParams(formParamNames, formParamValues))"; //NOI18N
             } 
             else {
                 VariableTree objectParam = maker.Variable(paramModifier, 
                         "requestEntity", maker.Identifier("Object"), null); //NOI18N
                 paramList.add(0, objectParam);
-                bodyParam="javax.ws.rs.client.Entity.entity(requestEntity, "+requestMimeType.getMediaType()+")"; //NOI18N
+                bodyParam = packagePrefix + ".client.Entity.entity(requestEntity, " + requestMimeType.getMediaType() + ")"; //NOI18N
                 commentBuffer.append("@param requestEntity request data");
             }
         }
@@ -647,7 +653,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
 
         List<ExpressionTree> throwsList = new ArrayList<ExpressionTree>();
         ExpressionTree throwsTree = JavaSourceHelper.createTypeTree(copy, 
-                "javax.ws.rs.ClientErrorException"); //NOI18N
+                packagePrefix + ".ClientErrorException"); //NOI18N
         throwsList.add(throwsTree);
 
         if (Security.Authentication.SESSION_KEY == security.getAuthentication()) {
@@ -693,13 +699,13 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
 
     @Override
     MethodTree generateFormMethod( TreeMaker maker, WorkingCopy copy ) {
-        String form = "javax.ws.rs.core.Form"; //NOI18N
+        String form = packagePrefix + ".core.Form"; //NOI18N
         TypeElement mvMapEl = copy.getElements().getTypeElement(form);
-        String mvType = mvMapEl==null?"javax.ws.rs.core.Form":"Form"; //NOI18N
+        String mvType = mvMapEl==null? (packagePrefix + ".Form"):"Form"; //NOI18N
 
         String body =
         "{"+ //NOI18N
-            mvType+" form = new javax.ws.rs.core.Form();"+ //NOI18N
+            mvType+" form = new " + packagePrefix + ".core.Form();"+ //NOI18N
             "for (int i=0;i< paramNames.length;i++) {" + //NOI18N
             "    if (paramValues[i] != null) {"+ //NOI18N
             "        form = form.param(paramNames[i], paramValues[i]);"+ //NOI18N
@@ -711,7 +717,7 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
                 Collections.<Modifier>singleton(Modifier.PRIVATE));
         ExpressionTree returnTree =
                 mvMapEl ==null ? 
-                    copy.getTreeMaker().Identifier("javax.ws.rs.core.Form"):    //NOI18N
+                    copy.getTreeMaker().Identifier(packagePrefix + ".core.Form"):    //NOI18N
                         copy.getTreeMaker().QualIdent(mvMapEl);
         List<VariableTree> paramList = new ArrayList<VariableTree>();
         ModifiersTree paramModifier = maker.Modifiers(Collections.<Modifier>emptySet());
@@ -730,13 +736,13 @@ class JaxRsGenerationStrategy extends ClientGenerationStrategy {
 
     @Override
     MethodTree generateOptionalFormMethod( TreeMaker maker, WorkingCopy copy ) {
-        String mvMapClass = "javax.ws.rs.core.MultivaluedMap"; //NOI18N
+        String mvMapClass = packagePrefix + ".core.MultivaluedMap"; //NOI18N
         TypeElement mvMapEl = copy.getElements().getTypeElement(mvMapClass);
         String mvType = mvMapEl == null ? mvMapClass : "MultivaluedMap"; //NOI18N
 
         String body =
         "{"+ //NOI18N
-            mvType+"<String,String> qParams = new javax.ws.rs.core.MultivaluedHashMap<String,String>();"+ //NOI18N
+            mvType+"<String,String> qParams = new " + packagePrefix + ".core.MultivaluedHashMap<String,String>();"+ //NOI18N
            "for (String qParam : optionalParams) {" + //NOI18N
             "    String[] qPar = qParam.split(\"=\");"+ //NOI18N
             "    if (qPar.length > 1) qParams.add(qPar[0], qPar[1])"+ //NOI18N

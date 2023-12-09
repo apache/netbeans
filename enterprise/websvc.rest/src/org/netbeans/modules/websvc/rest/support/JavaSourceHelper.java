@@ -355,7 +355,7 @@ public class JavaSourceHelper {
         return null;
     }
 
-    public static JavaSource createJavaSource(String template, Map<String, String> params, FileObject targetFolder, String packageName, String className) {
+    public static JavaSource createJavaSource(String template, Map<String, Object> params, FileObject targetFolder, String packageName, String className) {
         try {
             FileObject fobj = targetFolder.getFileObject(className, Constants.JAVA_EXT);
             if (fobj == null) {
@@ -369,9 +369,9 @@ public class JavaSourceHelper {
         return null;
     }
 
-    private static DataObject createDataObjectFromTemplate(String template, 
-            FileObject targetFolder, String packageName, String targetName, 
-            Map<String, String> params) throws IOException {
+    private static DataObject createDataObjectFromTemplate(String template,
+            FileObject targetFolder, String packageName, String targetName,
+            Map<String, Object> params) throws IOException {
         assert template != null;
         assert targetFolder != null;
         assert targetName != null && targetName.trim().length() > 0;
@@ -380,15 +380,13 @@ public class JavaSourceHelper {
         DataObject templateDO = DataObject.find(templateFO);
         DataFolder dataFolder = DataFolder.findFolder(targetFolder);
 
-        Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, Object> parameters = new HashMap<>();
         parameters.put("package", packageName);
         if (params != null) {
-            for(Entry<String, String> entry: params.entrySet()){
-                parameters.put(entry.getKey(), entry.getValue());
-            }
+            parameters.putAll(params);
         }
 
-        return templateDO.createFromTemplate(dataFolder, targetName, params);
+        return templateDO.createFromTemplate(dataFolder, targetName, parameters);
     }
 
     public static void addClassAnnotation(WorkingCopy copy, String[] annotations, Object[] annotationAttrs) {

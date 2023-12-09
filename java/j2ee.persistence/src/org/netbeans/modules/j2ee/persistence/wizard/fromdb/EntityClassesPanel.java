@@ -152,6 +152,7 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         }
         
         final String notNullAnnotation = "javax.validation.constraints.NotNull";    //NOI18N
+        final String notNullAnnotationJakarta = "jakarta.validation.constraints.NotNull";    //NOI18N
         Sources sources=ProjectUtils.getSources(project);
         SourceGroup groups[]=sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         if(groups == null || groups.length<1){
@@ -163,7 +164,8 @@ public class EntityClassesPanel extends javax.swing.JPanel {
         if (compile == null) {
             return false;
         }
-        return compile.findResource(notNullAnnotation.replace('.', '/')+".class")!=null;//NOI18N
+        return compile.findResource(notNullAnnotation.replace('.', '/') + ".class") != null //NOI18N
+                || compile.findResource(notNullAnnotationJakarta.replace('.', '/') + ".class") != null; //NOI18N
     }
 
     public void initialize(PersistenceGenerator persistenceGen, Project project, FileObject targetFolder) {
@@ -207,7 +209,8 @@ public class EntityClassesPanel extends javax.swing.JPanel {
             javaSource.runUserActionTask( (CompilationController controller) -> {
                 controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                 TypeElement jc = controller.getElements().getTypeElement("javax.xml.bind.annotation.XmlTransient"); //NOI18N
-                if(jc == null){
+                TypeElement jcJakarta = controller.getElements().getTypeElement("jakarta.xml.bind.annotation.XmlTransient"); //NOI18N
+                if (jc == null && jcJakarta == null) {
                     generateJAXBCheckBox.setSelected(false);
                     generateJAXBCheckBox.setEnabled(false);
                 }

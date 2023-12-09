@@ -1139,11 +1139,13 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 formatter.appendText(getName());
             }
             formatter.name(getKind(), false);
-            formatter.appendText(" "); //NOI18N
-            String value = getEnumCase().getValue();
-            formatter.type(true);
-            formatter.appendText(value != null ? value : "?"); // NOI18N
-            formatter.type(false);
+            if (getEnumCase().isBacked()) {
+                formatter.appendText(" "); //NOI18N
+                String value = getEnumCase().getValue();
+                formatter.type(true);
+                formatter.appendText(value != null ? value : "?"); // NOI18N
+                formatter.type(false);
+            }
 
             return formatter.getText();
         }

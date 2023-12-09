@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,21 +17,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.model;
 
-import org.netbeans.api.annotations.common.CheckForNull;
-
-public interface CaseElement extends ClassMemberElement, ModelElement {
-
-    @CheckForNull
-    String getValue();
-
-    /**
-     * Check whether it is a case of a backed enum.
-     *
-     * @return {@code true} if it is a case of a backed enum, otherwise,
-     * {@code false}
-     * @since 2.32.0
-     */
-    boolean isBacked();
+enum EnumCase {
+    case CASE_A;
+    case CASE_B = 1; // fatal error: non-backed enum must not have a value
 }
+
+enum BackeEnumCaseString: string {
+    case CASE_A = "string";
+    case CASE_B = self::CASE_A->value. "string";
+    case CASE_C; // fatal error: backed enum must have error
+}
+
+enum BackeEnumCaseInt: int {
+    case CASE_A = 1;
+    case CASE_B = self::CASE_A->value + 2;
+    case CASE_C; // fatal error: backed enum must have error
+}
+
+EnumCase::CASE_A;
+EnumCase::CASE_B;
+BackeEnumCaseString::CASE_A;
+BackeEnumCaseString::CASE_B;
+BackeEnumCaseString::CASE_C;
+BackeEnumCaseInt::CASE_A;
+BackeEnumCaseInt::CASE_B;
+BackeEnumCaseInt::CASE_C;

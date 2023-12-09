@@ -60,7 +60,7 @@ Searchable Keys:
   clz.const : string;STRING;2026;"string";0;<TESTURL>/testPHP83TypedClassConstants.php;32;string;
   clz.const : union;UNION;2103;?;0;<TESTURL>/testPHP83TypedClassConstants.php;2;A|B;
   enum : enumtest;EnumTest;1998;;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;
-  enum.case : test;Test;2254;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;
+  enum.case : test;Test;2254;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;0;
   top : enumtest
 
 Not Searchable Keys:

@@ -37,6 +37,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.actions.IconsUtils;
 import org.netbeans.modules.php.editor.api.AliasedName;
 import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
@@ -64,7 +65,6 @@ import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.UseScope;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
-import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -79,6 +79,7 @@ public final class NavigatorScanner {
     private static ImageIcon interfaceIcon = null;
     private static ImageIcon traitIcon = null;
     private static ImageIcon enumIcon = null;
+    private static ImageIcon enumCaseIcon = null;
     private static boolean isLogged = false;
     private final FileScope fileScope;
     private final Set<TypeElement> deprecatedTypes;
@@ -218,7 +219,7 @@ public final class NavigatorScanner {
                 EnumScope enumScope = (EnumScope) type;
                 Collection<? extends CaseElement> declaredEnumCases = enumScope.getDeclaredEnumCases();
                 for (CaseElement enumCase : declaredEnumCases) {
-                    children.add(new PHPEnumCaseStructureItem(enumCase, "con")); // NOI18N
+                    children.add(new PHPEnumCaseStructureItem(enumCase, "ecase")); // NOI18N
                     declClsConstantNames.add(enumCase.getName());
                 }
             }
@@ -857,7 +858,7 @@ public final class NavigatorScanner {
         @Override
         public ImageIcon getCustomIcon() {
             if (interfaceIcon == null) {
-                interfaceIcon = new ImageIcon(ImageUtilities.loadImage(PHP_INTERFACE_ICON));
+                interfaceIcon = IconsUtils.loadInterfaceIcon();
             }
             return interfaceIcon;
         }
@@ -882,8 +883,6 @@ public final class NavigatorScanner {
 
     private class PHPTraitStructureItem extends PHPStructureItem {
 
-        @StaticResource
-        private static final String PHP_TRAIT_ICON = "org/netbeans/modules/php/editor/resources/trait.png"; //NOI18N
         private final Collection<? extends TraitScope> usedTraits;
 
         public PHPTraitStructureItem(ModelElement elementHandle, List<? extends StructureItem> children) {
@@ -894,7 +893,7 @@ public final class NavigatorScanner {
         @Override
         public ImageIcon getCustomIcon() {
             if (traitIcon == null) {
-                traitIcon = new ImageIcon(ImageUtilities.loadImage(PHP_TRAIT_ICON));
+                traitIcon = IconsUtils.loadTraitIcon();
             }
             return traitIcon;
         }
@@ -919,8 +918,6 @@ public final class NavigatorScanner {
 
     private class PHPEnumStructureItem extends PHPStructureItem {
 
-        @StaticResource
-        private static final String PHP_ENUM_ICON = "org/netbeans/modules/php/editor/resources/enum.png"; //NOI18N
         private final Collection<? extends InterfaceScope> interfaces;
         private final Collection<? extends TraitScope> usedTraits;
         private final QualifiedName backingType;
@@ -935,7 +932,7 @@ public final class NavigatorScanner {
         @Override
         public ImageIcon getCustomIcon() {
             if (enumIcon == null) {
-                enumIcon = new ImageIcon(ImageUtilities.loadImage(PHP_ENUM_ICON));
+                enumIcon = IconsUtils.loadEnumIcon();
             }
             return enumIcon;
         }
@@ -996,6 +993,14 @@ public final class NavigatorScanner {
                 formatter.appendHtml(CLOSE_FONT);
             }
             return formatter.getText();
+        }
+
+        @Override
+        public ImageIcon getCustomIcon() {
+            if (enumCaseIcon == null) {
+                enumCaseIcon = IconsUtils.loadEnumCaseIcon();
+            }
+            return enumCaseIcon;
         }
     }
 

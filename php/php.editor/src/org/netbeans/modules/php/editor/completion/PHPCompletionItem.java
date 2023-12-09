@@ -42,7 +42,6 @@ import javax.swing.ImageIcon;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.editor.completion.Completion;
 import org.netbeans.api.lexer.Token;
@@ -125,9 +124,8 @@ import org.openide.util.WeakListeners;
  */
 public abstract class PHPCompletionItem implements CompletionProposal {
 
-    @StaticResource
-    private static final String PHP_KEYWORD_ICON = "org/netbeans/modules/php/editor/resources/php16Key.png"; //NOI18N
-    protected static final ImageIcon KEYWORD_ICON = new ImageIcon(ImageUtilities.loadImage(PHP_KEYWORD_ICON));
+    protected static final ImageIcon KEYWORD_ICON = IconsUtils.loadKeywordIcon();
+    protected static final ImageIcon ENUM_CASE_ICON = IconsUtils.loadEnumCaseIcon();
     private static final int TYPE_NAME_MAX_LENGTH = Integer.getInteger("nb.php.editor.ccTypeNameMaxLength", 30); // NOI18N
     final CompletionRequest request;
     private final ElementHandle element;
@@ -1167,6 +1165,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 return "self::" + getName(); // NOI18N
             }
             return super.getCustomInsertTemplate();
+        }
+
+        @Override
+        public ImageIcon getIcon() {
+            return ENUM_CASE_ICON;
         }
     }
 

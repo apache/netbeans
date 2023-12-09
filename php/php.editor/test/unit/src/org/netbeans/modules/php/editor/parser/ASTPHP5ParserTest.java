@@ -1393,6 +1393,10 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php81/enumAsTypeName");
     }
 
+    public void testEnumCasesWithError() throws Exception {
+        performTest("parser/php81/enumCasesWithError");
+    }
+
     public void testFirstClassCallableSyntax_01() throws Exception {
         performTest("parser/php81/firstClassCallableSyntax_01");
     }

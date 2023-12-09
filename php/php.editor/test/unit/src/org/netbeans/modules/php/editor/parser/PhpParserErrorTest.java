@@ -1320,6 +1320,10 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/enumAsTypeName.php");
     }
 
+    public void testEnumCasesWithError() throws Exception {
+        checkErrors("testfiles/parser/php81/enumCasesWithError.php");
+    }
+
     public void testFirstClassCallableSyntax_01() throws Exception {
         checkErrors("testfiles/parser/php81/firstClassCallableSyntax_01.php");
     }

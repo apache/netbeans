@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,25 +17,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.editor.verification;
 
-public class IncorrectEnumHintErrorTest extends PHPHintsTestBase {
+enum EnumCase {
+    case CASE_A;
+    case CASE_B = 1; // fatal error: case of non-backed enum must not have a value
+}
 
-    public IncorrectEnumHintErrorTest(String testName) {
-        super(testName);
-    }
+enum BackeEnumCaseString: string {
+    case CASE_A = "string";
+    case CASE_B = self::CASE_A->value. "string";
+    case CASE_C; // fatal error: case of backed enum must have a value (string)
+}
 
-    @Override
-    protected String getTestDirectory() {
-        return TEST_DIRECTORY + "IncorrectEnumHintError/";
-    }
-
-    public void testIncorrectEnums() throws Exception {
-        checkHints(new IncorrectEnumHintError(), "testIncorrectEnums.php");
-    }
-
-    public void testIncorrectEnumCases_01() throws Exception {
-        checkHints(new IncorrectEnumHintError(), "testIncorrectEnumCases_01.php");
-    }
-
+enum BackeEnumCaseInt: int {
+    case CASE_A = 1;
+    case CASE_B = self::CASE_A->value + 2;
+    case CASE_C; // fatal error: case of backed enum must have a value (int)
 }

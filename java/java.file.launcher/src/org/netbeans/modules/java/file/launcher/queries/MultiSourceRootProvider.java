@@ -92,7 +92,7 @@ public class MultiSourceRootProvider implements ClassPathProvider {
         if (DISABLE_MULTI_SOURCE_ROOT) return null;
         synchronized (this) {
             //XXX: what happens if there's a Java file in user's home???
-            if (file.isData() && "text/x-java".equals(file.getMIMEType())) {
+            if (file.isValid() && file.isData() && "text/x-java".equals(file.getMIMEType())) {
                 return file2SourceCP.computeIfAbsent(file, f -> {
                     try {
                         String content = new String(file.asBytes(), FileEncodingQuery.getEncoding(file));

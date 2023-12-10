@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.java.file.launcher.api.SourceLauncher;
@@ -42,6 +44,8 @@ import org.openide.util.Exceptions;
  * @author lahvac
  */
 public class SharedRootData {
+
+    private static final Logger LOG = Logger.getLogger(SharedRootData.class.getName());
 
     private static final Map<FileObject, SharedRootData> root2Data = new HashMap<>();
 
@@ -104,11 +108,14 @@ public class SharedRootData {
         }
         String joinedCommandLine = SourceLauncher.joinCommandLines(options.values());
         try {
-            if (!joinedCommandLine.equals(root.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS))) {
+            if (
+                    !root.getFileSystem().isReadOnly() // Skip read-only FSes (like JarFileSystem)
+                    && !joinedCommandLine.equals(root.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS))
+            ) {
                 root.setAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS, joinedCommandLine);
             }
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.INFO, "Failed to set " + SingleSourceFileUtil.FILE_VM_OPTIONS + " for " + root.getPath(), ex);
         }
     }
 

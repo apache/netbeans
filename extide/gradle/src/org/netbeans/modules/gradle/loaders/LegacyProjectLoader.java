@@ -83,6 +83,7 @@ import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 
 import static org.netbeans.modules.gradle.loaders.Bundle.*;
+import org.netbeans.modules.gradle.spi.loaders.GradlePluginProvider;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
@@ -150,7 +151,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         GradleCommandLine cmd = new GradleCommandLine(RunUtils.getCompatibleGradleDistribution(ctx.project), ctx.cmd);
         cmd.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
         cmd.setFlag(GradleCommandLine.Flag.CONFIGURATION_CACHE, GradleSettings.getDefault().getUseConfigCache());
-        cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript());
+        cmd.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript(GradlePluginProvider.GradleRuntime.fromProject(ctx.project)));
         cmd.setStackTrace(GradleCommandLine.StackTrace.SHORT);
         cmd.addProjectProperty("nbSerializeCheck", "true");
 

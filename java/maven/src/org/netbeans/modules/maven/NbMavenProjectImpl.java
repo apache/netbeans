@@ -44,6 +44,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -472,13 +473,17 @@ public final class NbMavenProjectImpl implements Project {
      * the method blocks until the project reload eventually finishes in the reload thread / RP.
      * @return possibly reloaded Maven project.
      */
-    public MavenProject getFreshOriginalMavenProject() {
+    public CompletableFuture<MavenProject> getFreshOriginalMavenProject() {
         if (reloadTask.isFinished()) {
-            return getOriginalMavenProject();
+            return CompletableFuture.completedFuture(getOriginalMavenProject());
         } else {
             LOG.log(Level.FINE, "Asked for project {0} being updated, waiting for the refresh to complete.", projectFile);
-            reloadTask.waitFinished();
-            return getOriginalMavenProject();
+            CompletableFuture<MavenProject> f = new CompletableFuture<>();
+            reloadTask.addTaskListener((e) -> {
+                LOG.log(Level.FINE, "Project {0} update done.", projectFile);
+                f.complete(getOriginalMavenProject());
+            });
+            return f;
         }
     }
     

@@ -64,7 +64,7 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
                 if (NbMavenProject.PROP_RESOURCE.equals(evt.getPropertyName()) || NbMavenProject.PROP_PROJECT.equals(evt.getPropertyName())) {
                     MavenProject mp = project.getOriginalMavenProjectOrNull();
                     LOGGER.log(Level.FINE, "{0} got change {1} from project: {2} with maven project {3}", new Object[] { getClass(), evt.getPropertyName(), project,
-                        System.identityHashCode(mp == null ? this : null) });
+                        System.identityHashCode(mp == null ? this : mp) });
                     if (project.getProjectWatcher().isUnloadable()) {
                         LOGGER.log(Level.FINER, "{0} is not loadable, exiting", project);
                         return; //let's just continue with the old value, stripping classpath for broken project and re-creating it later serves no greater good.

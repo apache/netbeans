@@ -27,6 +27,7 @@ import org.netbeans.modules.gradle.cache.ProjectInfoDiskCache;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.*;
+import org.netbeans.modules.gradle.spi.loaders.GradlePluginProvider.GradleRuntime;
 
 /**
  *
@@ -52,8 +53,8 @@ public final class NbProjectInfoCachingDescriptor implements ModelCachingDescrip
     }
 
     @Override
-    public GradleCommandLine gradleCommandLine() {
-        return AbstractProjectLoader.injectNetBeansTooling(new GradleCommandLine());
+    public GradleCommandLine gradleCommandLine(GradleRuntime rt) {
+        return AbstractProjectLoader.injectNetBeansTooling(new GradleCommandLine(), rt);
     }
 
     @Override

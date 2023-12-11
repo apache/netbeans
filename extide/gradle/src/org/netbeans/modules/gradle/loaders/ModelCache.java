@@ -31,6 +31,7 @@ import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.tooling.internal.ModelFetcher;
 import static org.netbeans.modules.gradle.loaders.ModelCache.State.*;
 import org.netbeans.modules.gradle.spi.GradleSettings;
+import org.netbeans.modules.gradle.spi.loaders.GradlePluginProvider;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -77,7 +78,7 @@ public class ModelCache <T extends Model> {
         try {
             List<String> filteredTargets = descriptor.getTargets().stream().filter((String target) -> descriptor.needsRefresh(target)).collect(Collectors.toList());
             if (!filteredTargets.isEmpty()) {
-                final GradleCommandLine cmd = new GradleCommandLine(RunUtils.getCompatibleGradleDistribution(project), descriptor.gradleCommandLine());
+                final GradleCommandLine cmd = new GradleCommandLine(RunUtils.getCompatibleGradleDistribution(project), descriptor.gradleCommandLine(GradlePluginProvider.GradleRuntime.fromProject(project)));
 
                 cmd.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
                 cmd.setFlag(GradleCommandLine.Flag.CONFIGURATION_CACHE, GradleSettings.getDefault().getUseConfigCache());

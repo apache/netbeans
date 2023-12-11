@@ -100,4 +100,13 @@ public interface LspServerState {
      * @return snapshot of folders.
      */
     public List<FileObject> getAcceptedWorkspaceFolders();
+    
+    /**
+     * Returns the set of workspace folders reported by the client. If a folder from the list is recognized
+     * as a project, it will be also present in {@link #openedProjects()} including all its subprojects.
+     * The list of client workspace folders contains just toplevel items in client's workspace, as defined in
+     * LSP protocol.
+     * @return list of workspace folders
+     */
+    public List<FileObject> getClientWorkspaceFolders();
 }

@@ -922,6 +922,8 @@ public final class Server {
 
             initializeOptions();
 
+            workspaceService.setClientWorkspaceFolders(init.getWorkspaceFolders());
+
             // but complete the InitializationRequest independently of the project initialization.
             return CompletableFuture.completedFuture(
                     finishInitialization(
@@ -1037,6 +1039,11 @@ public final class Server {
         public void setTrace(SetTraceParams params) {
             // no op: there's already a lot of noise in the log, and the console log
             // can be controlled by a commandline parameter to the NBLS.
+        }
+
+        @Override
+        public List<FileObject> getClientWorkspaceFolders() {
+            return workspaceService.getClientWorkspaceFolders();
         }
     }
 

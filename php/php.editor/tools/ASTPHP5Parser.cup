@@ -2988,6 +2988,11 @@ enum_case_expr ::=
 {:
     RESULT = expr;
 :}
+
+| T_EQUAL:e error:expr
+{:
+    RESULT = new ASTErrorExpression(exprleft, exprright);
+:}
 ;
 
 class_statement ::=

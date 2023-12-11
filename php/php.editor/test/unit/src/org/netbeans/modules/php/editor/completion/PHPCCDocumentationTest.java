@@ -610,6 +610,38 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
         checkCompletionDocumentation("testfiles/completion/documentation/functionGuessingArrayReturnType.php", "testArrayReturnTypeWithUnion^Type();", false, "");
     }
 
+    public void testEnumCase_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php81/enumCases.php", "EnumCase::CASE_A^;", false, "");
+    }
+
+    public void testEnumCase_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php81/enumCases.php", "EnumCase::CASE_B^;", false, "");
+    }
+
+    public void testBackedEnumCaseString_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php81/enumCases.php", "BackeEnumCaseString::CASE_A^;", false, "");
+    }
+
+    public void testBackedEnumCaseString_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php81/enumCases.php", "BackeEnumCaseString::CASE_B^;", false, "");
+    }
+
+    public void testBackedEnumCaseString_03() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php81/enumCases.php", "BackeEnumCaseString::CASE_C^;", false, "");
+    }
+
+    public void testBackedEnumCaseInt_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php81/enumCases.php", "BackeEnumCaseInt::CASE_A^;", false, "");
+    }
+
+    public void testBackedEnumCaseInt_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php81/enumCases.php", "BackeEnumCaseInt::CASE_B^;", false, "");
+    }
+
+    public void testBackedEnumCaseInt_03() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/php81/enumCases.php", "BackeEnumCaseInt::CASE_C^;", false, "");
+    }
+
     @Override
     protected String alterDocumentationForTest(String documentation) {
         int start = documentation.indexOf("file:");

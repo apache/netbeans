@@ -64,6 +64,7 @@ import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ConstantElement;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
@@ -300,6 +301,11 @@ final class DocRenderer {
                 } else if (indexedElement instanceof TypeConstantElement) {
                     TypeConstantElement constant = (TypeConstantElement) indexedElement;
                     value = constant.getValue();
+                } else if (indexedElement instanceof EnumCaseElement) {
+                    EnumCaseElement enumCase = (EnumCaseElement) indexedElement;
+                    if (enumCase.isBacked()) {
+                        value = enumCase.getValue();
+                    }
                 }
                 if (value != null) {
                     header.appendText(" = "); //NOI18N

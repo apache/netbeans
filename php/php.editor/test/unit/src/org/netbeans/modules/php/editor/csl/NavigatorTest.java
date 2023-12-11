@@ -124,6 +124,14 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/enumerations");
     }
 
+    public void testEnumCasesWithError01() throws Exception {
+        performTest("structure/enumCasesWithError01");
+    }
+
+    public void testEnumCasesWithError02() throws Exception {
+        performTest("structure/enumCasesWithError02");
+    }
+
     public void testStandAloneTrueType() throws Exception {
         performTest("structure/standAloneTrueType");
     }

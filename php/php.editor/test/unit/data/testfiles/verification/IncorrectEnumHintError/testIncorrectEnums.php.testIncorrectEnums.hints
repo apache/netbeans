@@ -17,6 +17,9 @@ HINT:Enum cannot have properties
     public static string $staticProperty = "error";
     -----------------------------------------------
 HINT:Enum cannot have properties
+    case CASE_NAME;
+    ---------------
+HINT:Case "CASE_NAME" of backed enum must have a value
     public function __construct() {
                     -----------
 HINT:Enum cannot have a constructor
@@ -107,6 +110,12 @@ HINT:Enum cannot contain magic method method "__clone"
     public function __DebugInfo() {}
                     -----------
 HINT:Enum cannot contain magic method method "__debugInfo"
+    case CASE_NAME; // string
+    ---------------
+HINT:Case "CASE_NAME" of backed enum must have a value
+    case CASE_NAME; // int
+    ---------------
+HINT:Case "CASE_NAME" of backed enum must have a value
     case C;
     -------
 HINT:"case" can only be in enums

@@ -550,50 +550,75 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             await commands.executeCommand('nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction');
         }
     }));
-    const mergeWithLaunchConfig = (dconfig : vscode.DebugConfiguration) => {
-        const folder = vscode.workspace.workspaceFolders?.[0];
-        const uri = folder?.uri;
-        if (uri) {
-            const launchConfig = workspace.getConfiguration('launch', uri);
-            // retrieve values
-            const configurations = launchConfig.get('configurations') as (any[] | undefined);
-            if (configurations) {
-                for (let config of configurations) {
-                    if (config["type"] == dconfig.type) {
-                        for (let key in config) {
-                            if (!dconfig[key]) {
-                                dconfig[key] = config[key];
-                            }
-                        }
-                        break;
-                    }
-                }
+
+    async function findRunConfiguration(uri : vscode.Uri) : Promise<vscode.DebugConfiguration|undefined> {
+        // do not invoke debug start with no (java+) configurations, as it would probably create an user prompt
+        let cfg = vscode.workspace.getConfiguration("launch");
+        let c = cfg.get('configurations');
+        if (!Array.isArray(c)) {
+            return undefined;
+        }
+        let f = c.filter((v) => v['type'] === 'java+');
+        if (!f.length) {
+            return undefined;
+        }
+        class P implements vscode.DebugConfigurationProvider {
+            config : vscode.DebugConfiguration | undefined;
+            
+            resolveDebugConfigurationWithSubstitutedVariables(folder: vscode.WorkspaceFolder | undefined, debugConfiguration: vscode.DebugConfiguration, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
+                this.config = debugConfiguration;
+                return undefined;
             }
         }
+        let provider = new P();
+        let d = vscode.debug.registerDebugConfigurationProvider('java+', provider);
+        // let vscode to select a debug config
+        return await vscode.commands.executeCommand('workbench.action.debug.start', { config: {
+            type: 'java+',
+            mainClass: uri.toString()
+        }, noDebug: true}).then((v) => {
+            d.dispose();
+            return provider.config;
+        }, (err) => {
+            d.dispose();
+            return undefined;
+        });
     }
 
     const runDebug = async (noDebug: boolean, testRun: boolean, uri: any, methodName?: string, launchConfiguration?: string, project : boolean = false, ) => {
-        const docUri = contextUri(uri);
+    const docUri = contextUri(uri);
         if (docUri) {
-            const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
-            const debugConfig : vscode.DebugConfiguration = {
+            // attempt to find the active configuration in the vsode launch settings; undefined if no config is there.
+            let debugConfig : vscode.DebugConfiguration = await findRunConfiguration(docUri) || {
                 type: "java+",
                 name: "Java Single Debug",
-                request: "launch",
-                methodName,
-                launchConfiguration,
-                testRun
+                request: "launch"
             };
+            if (!methodName) {
+                debugConfig['methodName'] = methodName;
+            }
+            if (launchConfiguration == '') {
+                if (debugConfig['launchConfiguration']) {
+                    delete debugConfig['launchConfiguration'];
+                }
+            } else {
+                debugConfig['launchConfiguration'] = launchConfiguration;
+            }
+            debugConfig['testRun'] = testRun;
+
+            const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
             if (project) {
                 debugConfig['projectFile'] = docUri.toString();
                 debugConfig['project'] = true;
             } else {
                 debugConfig['mainClass'] =  docUri.toString();
             }
-            mergeWithLaunchConfig(debugConfig);
+            
             const debugOptions : vscode.DebugSessionOptions = {
                 noDebug: noDebug,
             }
+            
+            
             const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);
             return ret ? new Promise((resolve) => {
                 const listener = vscode.debug.onDidTerminateDebugSession(() => {
@@ -603,6 +628,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             }) : ret;
         }
     };
+    
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test', async (uri, methodName?, launchConfiguration?) => {
         await runDebug(true, true, uri, methodName, launchConfiguration);
     }));

@@ -20,6 +20,8 @@
 package org.netbeans.modules.maven.api.customizer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -272,6 +274,12 @@ public final class ModelHandle {
         Configuration conf = new Configuration();
         conf.setId(id);
         conf.setProfileBased(true);
+        List<String> l = new ArrayList<>();
+        if (!id.equals(M2Configuration.DEFAULT)) {
+            l.add(id);
+        }
+        conf.setActivatedProfiles(Collections.singletonList(id));
+        conf.setProperties(new HashMap<>());
         return conf;
     }
     
@@ -279,6 +287,8 @@ public final class ModelHandle {
         Configuration conf = new Configuration();
         conf.setId(M2Configuration.DEFAULT);
         conf.setDefault(true);
+        conf.setActivatedProfiles(new ArrayList<>());
+        conf.setProperties(new HashMap<>());
         return conf;
     }
     

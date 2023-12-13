@@ -164,6 +164,13 @@ public class Utilities {
 
     }
     
+    public static ModelSource createModelSource(final FileObject thisFileObj, final Document document) {
+        if (!(document instanceof BaseDocument)) {
+            throw new IllegalArgumentException();
+        }
+        return createModelSource(thisFileObj, null, (BaseDocument)document);
+    }
+    
     public static ModelSource createModelSource(final FileObject thisFileObj, final DataObject dobject, final BaseDocument document) {
         assert thisFileObj != null : "Null file object.";
         final File fl = FileUtil.toFile(thisFileObj);

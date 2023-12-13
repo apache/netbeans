@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.project.dependency;
 
+import java.util.Collections;
 import java.util.List;
 import org.netbeans.api.annotations.common.CheckForNull;
 
@@ -104,6 +105,16 @@ public final class Dependency {
     private static Dependency assignParent(Dependency d) {
         d.getChildren().forEach(c -> c.parent = d);
         return d;
+    }
+    
+    /**
+     * A convenience method to make a dependency descriptor.
+     * @param spec artifact specification
+     * @param scope the dependency scope
+     * @return dependency instance
+     */
+    public static Dependency make(ArtifactSpec spec, Scope scope) {
+        return create(spec, scope, Collections.emptyList(), null);
     }
     
     /**

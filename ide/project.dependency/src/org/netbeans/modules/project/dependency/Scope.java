@@ -86,7 +86,7 @@ public abstract class Scope {
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (!(obj instanceof Scope)) {
             return false;
         }
         final Scope other = (Scope) obj;

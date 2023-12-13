@@ -31,6 +31,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.ProjectSpec;
+import org.netbeans.modules.project.dependency.Scope;
 import org.netbeans.modules.project.dependency.Scopes;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -56,7 +57,7 @@ public class RegexpGradleScannerTest extends NbTestCase {
      */
     public void testComplexPrologue() throws Exception {
         FileObject f = FileUtil.toFileObject(getDataDir()).getFileObject("dependencies/parse/complexPrologue.gradle");
-        TextDependencyScanner scanner = new TextDependencyScanner();
+        TextDependencyScanner scanner = new TextDependencyScanner(true);
         
         scanner.withConfigurations(Arrays.asList(
             "runtimeOnly", "implementation"
@@ -68,7 +69,7 @@ public class RegexpGradleScannerTest extends NbTestCase {
     
     public void testSkipExecutableCodeInDependencies() throws Exception {
         FileObject f = FileUtil.toFileObject(getDataDir()).getFileObject("dependencies/parse/executableCodeInDependencies.gradle");
-        TextDependencyScanner scanner = new TextDependencyScanner();
+        TextDependencyScanner scanner = new TextDependencyScanner(true);
         
         scanner.withConfigurations(Arrays.asList(
             "runtimeOnly", "implementation"
@@ -81,7 +82,7 @@ public class RegexpGradleScannerTest extends NbTestCase {
     
     public void testScanSimpleScript() throws Exception {
         FileObject f = FileUtil.toFileObject(getDataDir()).getFileObject("dependencies/parse/simple.gradle");
-        TextDependencyScanner scanner = new TextDependencyScanner();
+        TextDependencyScanner scanner = new TextDependencyScanner(true);
         
         scanner.withConfigurations(Arrays.asList(
             "runtimeOnly", "implementation"
@@ -96,7 +97,7 @@ public class RegexpGradleScannerTest extends NbTestCase {
     
     public void testMicronautStarter() throws Exception {
         FileObject f = FileUtil.toFileObject(getDataDir()).getFileObject("dependencies/parse/starter.gradle");
-        TextDependencyScanner scanner = new TextDependencyScanner();
+        TextDependencyScanner scanner = new TextDependencyScanner(true);
         
         scanner.withConfigurations(Arrays.asList(
             "runtimeOnly", "implementation", "annotationProcessor"
@@ -124,7 +125,7 @@ public class RegexpGradleScannerTest extends NbTestCase {
      */
     public void testVariousSyntaxes() throws Exception {
         FileObject f = FileUtil.toFileObject(getDataDir()).getFileObject("dependencies/parse/variousSyntax.gradle");
-        TextDependencyScanner scanner = new TextDependencyScanner();
+        TextDependencyScanner scanner = new TextDependencyScanner(true);
         
         filteredText = filterAndStorePositions(f.asText());
         scanner.withConfigurations(Arrays.asList(
@@ -137,9 +138,44 @@ public class RegexpGradleScannerTest extends NbTestCase {
         checkDependencyMap(scanner, deps);
     }
     
+    
+    
+    /**
+     * Checks that the container is properly reported. For single dependencies, the container is null.
+     * For dependency blocks like compileOnly {...}, the container is the 'compileOnly" block.
+     * @throws Exception 
+     */
+    public void testDependencyContainers() throws Exception {
+        FileObject f = FileUtil.toFileObject(getDataDir()).getFileObject("dependencies/parse/variousSyntax.gradle");
+        TextDependencyScanner scanner = new TextDependencyScanner(true);
+        
+        filteredText = filterAndStorePositions(f.asText());
+        scanner.withConfigurations(Arrays.asList(
+            "runtimeOnly", "implementation", "annotationProcessor"
+        ));
+        List<DependencyText> deps = scanner.parseDependencyList(filteredText);
+        DependencyText text = deps.stream().filter(d -> "io.micronaut:micronaut-http-validation".equals(d.contents)).findAny().get();
+        assertNull(text.container); // no specific container
+        
+        text = deps.stream().filter(d -> "io.micronaut:micronaut-jackson-databind".equals(d.contents)).findAny().get();
+        assertNotNull("Container is found for string lists", text.container);
+        assertEquals("implementation", text.container.containerPart.partId);
+        assertEquals((int)startPosition.get("P"), text.container.containerPart.startPos);
+        assertEquals((int)startPosition.get("Q"), text.container.containerPart.endPos);
+        
+        text = deps.stream().filter(d -> "ch.qos.logback:logback-classic".equals(d.contents)).findAny().get();
+        assertNull("Parser is not fooled by braced customization", text.container); // no specific container
+
+        text = deps.stream().filter(d -> "org.ow2.asm".equals(d.group)).findAny().get();
+        assertNotNull("Container is found for map lists", text.container);
+        assertEquals("runtimeOnly", text.container.containerPart.partId);
+        assertEquals((int)startPosition.get("R"), text.container.containerPart.startPos);
+        assertEquals((int)startPosition.get("S"), text.container.containerPart.endPos);
+    }
+    
     public void testMapLikeDeclaration() throws Exception {
         FileObject f = FileUtil.toFileObject(getDataDir()).getFileObject("dependencies/parse/variousSyntax.gradle");
-        TextDependencyScanner scanner = new TextDependencyScanner();
+        TextDependencyScanner scanner = new TextDependencyScanner(true);
         
         filteredText = filterAndStorePositions(f.asText());
         scanner.withConfigurations(Arrays.asList(
@@ -154,17 +190,42 @@ public class RegexpGradleScannerTest extends NbTestCase {
     private Map<String, Integer> startPosition = new HashMap<>();
     private Map<String, Integer> endPosition = new HashMap<>();
     
+    /**
+     * Stub that only serves as an identifier, cannot answer imply/inherit questions.
+     */
+    private static final class ScopeStub extends Scope {
+        public ScopeStub(String name) {
+            super(name);
+        }
+
+        public boolean includes(Scope s) {
+            return false;
+        }
+
+        public boolean exports(Scope s) {
+            return false;
+        }
+
+        public boolean implies(Scope s) {
+            return false;
+        }
+    }
+    
+    private Scope s(String name) {
+        return new ScopeStub(name);
+    }
+    
     private void checkDependencyMap(TextDependencyScanner scanner, List<DependencyText> deps) {
         List<Dependency> list = new ArrayList<>();
         for (DependencyText t : deps) {
             if (t.keyword == null && t.name != null && t.group != null && t.version != null) {
                 ArtifactSpec as = ArtifactSpec.builder(t.group, t.name, t.version, null).build();
-                Dependency d = Dependency.create(as, Scopes.RUNTIME, Collections.emptyList(), null);
+                Dependency d = Dependency.create(as, s(t.configuration), Collections.emptyList(), null);
                 list.add(d);
             } else if ("project".equals(t.keyword)) {
                 ProjectSpec p = ProjectSpec.create(t.contents, null);
                 ArtifactSpec as = ArtifactSpec.builder(t.group, t.name, t.version, null).build();
-                Dependency d = Dependency.create(p, as, Scopes.RUNTIME, Collections.emptyList(), null);
+                Dependency d = Dependency.create(p, as, s(t.configuration), Collections.emptyList(), null);
                 list.add(d);
             }
         }

@@ -42,6 +42,7 @@ import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
 import org.netbeans.modules.project.dependency.DependencyResult;
+import org.netbeans.modules.project.dependency.ProjectScopes;
 import org.netbeans.modules.project.dependency.SourceLocation;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -59,6 +60,7 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
     private final Project gradleProject;
     private final Dependency root;
     private boolean valid = true;
+    private final GradleScopes scopes;
 
     // @GuardedBy(this)
     PropertyChangeListener wL;
@@ -73,8 +75,9 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
     
     private final FileObject projectFile;
 
-    public GradleDependencyResult(Project gradleProject, Dependency root) {
+    public GradleDependencyResult(Project gradleProject, GradleScopes scopes, Dependency root) {
         this.gradleProject = gradleProject;
+        this.scopes = scopes;
         this.root = root;
         this.gp = NbGradleProject.get(gradleProject);
         File bs = gp.getGradleFiles().getBuildScript();
@@ -94,6 +97,11 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
     @Override
     public boolean isValid() {
         return valid;
+    }
+
+    @Override
+    public ProjectScopes getScopes() {
+        return scopes;
     }
 
     @Override
@@ -149,24 +157,12 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
 
     // @GuardedBy(this)
     private DependencyText.Mapping  sourceMapping;
-
-    @Override
-    public SourceLocation getDeclarationRange(Dependency d, String part) throws IOException {
-        DependencyText.Mapping  mapping;
-        DependencyText.Part p = null;
-        
-        synchronized (this) {
-            mapping = sourceMapping;
-            if (mapping != null) {
-                return getDeclarationRange0(mapping, d, part);
-            }
-        }
-        
-        GradleBaseProject gbp = GradleBaseProject.get(gradleProject);
+    
+    static DependencyText.Mapping computeTextMappings(NbGradleProject gp, GradleBaseProject gbp, List<Dependency> children, boolean matchScopes) throws IOException {
         Collection<String> cfgNames = gbp.getConfigurations().keySet();
-        TextDependencyScanner ts = new TextDependencyScanner().withConfigurations(cfgNames);
+        TextDependencyScanner ts = new TextDependencyScanner(matchScopes).withConfigurations(cfgNames);
         
-        root.getChildren().forEach(rd -> {
+        children.forEach(rd -> {
             Info info = (Info)rd.getProjectData();
             GradleConfiguration org = info.config.getDependencyOrigin(info.gradleDependency);
             if (org == null) {
@@ -174,8 +170,9 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
             }
             ts.addDependencyOrigin(info.gradleDependency, org.getName());
         });
-        
+
         String contents = null;
+        FileObject projectFile = FileUtil.toFileObject(gp.getGradleFiles().getBuildScript());
         if (projectFile != null) {
             EditorCookie cake = null;
             cake = projectFile.getLookup().lookup(EditorCookie.class);
@@ -198,8 +195,23 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
         }
         ts.parseDependencyList(contents);
         
-        mapping = ts.mapDependencies(root.getChildren());
+        return ts.mapDependencies(children);
+    }
+
+    @Override
+    public SourceLocation getDeclarationRange(Dependency d, String part) throws IOException {
+        DependencyText.Mapping  mapping;
+        DependencyText.Part p = null;
         
+        synchronized (this) {
+            mapping = sourceMapping;
+            if (mapping != null) {
+                return getDeclarationRange0(mapping, d, part);
+            }
+        }
+        
+        mapping = computeTextMappings(gp, GradleBaseProject.get(gradleProject), root.getChildren(), false);
+
         synchronized (this) {
             if (sourceMapping == null) {
                 sourceMapping = mapping;
@@ -210,10 +222,13 @@ public final class GradleDependencyResult implements DependencyResult, PropertyC
     
     private SourceLocation getDeclarationRange0(DependencyText.Mapping mapping, Dependency d, String part) {
         Dependency direct = d;
-        while (direct.getParent() != null && direct.getParent() != root) {
-            direct = direct.getParent();
+        // there's the special case with CONTAINER part for all the dependencies.
+        if (d != null) {
+            while (direct.getParent() != null && direct.getParent() != root) {
+                direct = direct.getParent();
+            }
         }
-        DependencyText.Part found = mapping.getText(direct, part);
+        DependencyText.Part found = mapping.getText(direct == root ? null : direct, part);
         if (found == null) {
             return null;
         }

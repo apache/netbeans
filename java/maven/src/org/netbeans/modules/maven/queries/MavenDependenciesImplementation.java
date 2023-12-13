@@ -18,31 +18,26 @@
  */
 package org.netbeans.modules.maven.queries;
 
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayDeque;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Queue;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusContainerException;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.embedder.DependencyTreeFactory;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
@@ -93,19 +88,51 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
         }
     }
     
-    static final Map<Scope, String> mavenScopes;
+    /**
+     * Mapping from the abstract scopes to Maven
+     */
+    static final Map<Scope, String> scope2Maven = new HashMap<>();
+
+    /**
+     * Mapping from maven to the abstract scopes
+     */
+    static final Map<String, Scope> maven2Scope = new HashMap<>();
+    
+    static final Map<Scope, Collection<Scope>> directScopes = new HashMap<>();
+    static final Map<Scope, Collection<Scope>> impliedScopes = new HashMap<>();
+    static final Map<Scope, Collection<Scope>> reverseImplied = new HashMap<>();
     
     static {
-        mavenScopes = new HashMap<>();
-        mavenScopes.put(Scopes.PROCESS, "compile");
-        mavenScopes.put(Scopes.COMPILE, "compile");
-        mavenScopes.put(Scopes.RUNTIME, "runtime");
-        mavenScopes.put(Scopes.TEST, "test");
-        mavenScopes.put(Scopes.EXTERNAL, "provided");
+        scope2Maven.put(Scopes.PROCESS, "compile");
+        scope2Maven.put(Scopes.COMPILE, "compile");
+        scope2Maven.put(Scopes.RUNTIME, "runtime");
+        scope2Maven.put(Scopes.TEST, "test");
+        scope2Maven.put(Scopes.EXTERNAL, "provided");
+        
+        maven2Scope.put("compile", Scopes.COMPILE);
+        maven2Scope.put("runtime", Scopes.RUNTIME);
+        maven2Scope.put("test", Scopes.TEST);
+        maven2Scope.put("provided", Scopes.EXTERNAL);
+        
+        directScopes.put(Scopes.API, Arrays.asList(Scopes.COMPILE));
+        directScopes.put(Scopes.PROCESS, Arrays.asList(Scopes.COMPILE));
+        directScopes.put(Scopes.EXTERNAL, Arrays.asList(Scopes.COMPILE));
+        directScopes.put(Scopes.COMPILE, Arrays.asList(Scopes.RUNTIME, Scopes.TEST));
+        directScopes.put(Scopes.RUNTIME, Arrays.asList(Scopes.TEST));
+        
+        impliedScopes.put(Scopes.API, Arrays.asList(Scopes.COMPILE, Scopes.RUNTIME, Scopes.TEST));
+        impliedScopes.put(Scopes.PROCESS, Arrays.asList(Scopes.COMPILE, Scopes.RUNTIME, Scopes.TEST));
+        impliedScopes.put(Scopes.EXTERNAL, Arrays.asList(Scopes.COMPILE, Scopes.RUNTIME, Scopes.TEST));
+        impliedScopes.put(Scopes.COMPILE, Arrays.asList(Scopes.RUNTIME, Scopes.TEST));
+        impliedScopes.put(Scopes.RUNTIME, Arrays.asList(Scopes.TEST));
+        
+        reverseImplied.put(Scopes.TEST, Arrays.asList(Scopes.RUNTIME, Scopes.COMPILE, Scopes.API,Scopes.EXTERNAL, Scopes.PROCESS));
+        reverseImplied.put(Scopes.RUNTIME, Arrays.asList(Scopes.COMPILE, Scopes.API, Scopes.EXTERNAL, Scopes.PROCESS));
+        reverseImplied.put(Scopes.COMPILE, Arrays.asList(Scopes.API, Scopes.EXTERNAL, Scopes.PROCESS));
     }
     
     static String mavenScope(Scope s) {
-        return mavenScopes.getOrDefault(s, "runtime");
+        return scope2Maven.getOrDefault(s, "compile");
     }
     
     private ArtifactSpec mavenToArtifactSpec(Artifact a) {
@@ -117,6 +144,55 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
             return ArtifactSpec.createVersionSpec(a.getGroupId(), a.getArtifactId(), 
                     a.getType(), a.getClassifier(), a.getVersion(), a.isOptional(), f, a);
         }
+    }
+    
+    /**
+     * Returns dependencies declared right in the POM file. Respects the user's query filter for artifacts.
+     * @param query
+     * @param embedder
+     * @return 
+     */
+    private DependencyResult findDeclaredDependencies(ProjectDependencies.DependencyQuery query, MavenEmbedder embedder) {
+        NbMavenProjectImpl impl = (NbMavenProjectImpl)project.getLookup().lookup(NbMavenProjectImpl.class);
+        MavenProject proj = impl.getFreshOriginalMavenProject();
+        List<Dependency> children = new ArrayList<>();
+        for (org.apache.maven.model.Dependency d : proj.getDependencies()) {
+            String aId = d.getArtifactId();
+            String gID = d.getGroupId();
+            String scope = d.getScope();
+            String classsifier = d.getClassifier();
+            String type = d.getType();
+            String version = d.getVersion();
+            
+            ArtifactSpec a;
+            
+            if (version != null && version.endsWith("-SNAPSHOT")) {
+                a = ArtifactSpec.createSnapshotSpec(gID, aId, type, classsifier, version, d.isOptional(), 
+                        d.getSystemPath() == null ? null : FileUtil.toFileObject(new File(d.getSystemPath(), aId)), d);
+            } else {            
+                a = ArtifactSpec.createVersionSpec(gID, aId, type, classsifier, version, d.isOptional(), 
+                        d.getSystemPath() == null ? null : FileUtil.toFileObject(new File(d.getSystemPath(), aId)), d);
+            }
+            Scope s = scope == null ? Scopes.COMPILE : maven2Scope.get(scope);
+            if (s == null) {
+                s = Scopes.COMPILE;
+            }
+            Dependency dep = Dependency.create(a, s, Collections.emptyList(), d);
+            children.add(dep);
+        }
+
+        ArtifactSpec prjSpec = mavenToArtifactSpec(proj.getArtifact());
+        Dependency root = Dependency.create(prjSpec, Scopes.DECLARED, children, proj);
+        
+        return new MavenDependencyResult(proj, root, query.getScopes(), Collections.emptyList(), project, impl.getProjectWatcher());
+    }
+    
+    static Collection<Scope> implies(Scope s) {
+        return impliedScopes.getOrDefault(s, Collections.emptyList());
+    }
+    
+    static Collection<Scope> impliedBy(Scope s) {
+        return reverseImplied.getOrDefault(s, Collections.emptyList());
     }
     
     @NbBundle.Messages({
@@ -162,8 +238,13 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
             }
         }
         
+        if (query.getScopes().contains(Scopes.DECLARED)) {
+            return findDeclaredDependencies(query, embedder);
+        }
+        
         Collection<String> mavenScopes = scopes.stream().
                 map(MavenDependenciesImplementation::mavenScope).
+                filter(Objects::nonNull).
                 collect(Collectors.toList());
         
         org.apache.maven.shared.dependency.tree.DependencyNode n;
@@ -179,24 +260,7 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
                 throw e;
             }
         }
-        Set<Scope> allScopes = new HashSet<>();
-        
-        Queue<Scope> processScopes = new ArrayDeque<>(scopes);
-        while (!processScopes.isEmpty()) {
-            Scope s = processScopes.poll();
-            Set<Scope> newScopes = new HashSet<>();
-            newScopes.add(s);
-            for (Scope t : SCOPES) {
-                if (s.includes(t)) {
-                    newScopes.add(t);
-                } else if (t.implies(s)) {
-                    newScopes.add(t);
-                }
-            }
-            newScopes.removeAll(allScopes);
-            allScopes.addAll(newScopes);
-            processScopes.addAll(newScopes);
-        }
+        Set<Scope> allScopes = Stream.concat(scopes.stream(), scopes.stream().flatMap(x -> impliedBy(x).stream())).collect(Collectors.toSet());
         Set<ArtifactSpec> broken = new HashSet<>();
         Dependency.Filter compositeFiter = new Dependency.Filter() {
             @Override

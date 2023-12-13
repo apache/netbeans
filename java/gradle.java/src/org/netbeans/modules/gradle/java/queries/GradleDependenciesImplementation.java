@@ -19,15 +19,18 @@
 package org.netbeans.modules.gradle.java.queries;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -52,6 +55,7 @@ import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
+import org.openide.util.Pair;
 
 /**
  *
@@ -65,31 +69,44 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
     private final Project project;
     private final NbGradleProject nbgp;
     
-    private static final Set<Scope> SCOPES = new HashSet<>();
-
     public GradleDependenciesImplementation(Project project) {
         this.project = project;
         nbgp = NbGradleProject.get(project);
     }
     
-    static {
-        SCOPES.add(Scopes.PROCESS);
-        SCOPES.add(Scopes.COMPILE);
-        SCOPES.add(Scopes.RUNTIME);
-        SCOPES.add(Scopes.EXTERNAL);
-        SCOPES.add(Scopes.TEST);
-        SCOPES.add(Scopes.TEST_COMPILE);
-        SCOPES.add(Scopes.TEST_RUNTIME);
+    private GradleScopes scopes;
+    
+    String toGradleConfigName(Scope s) {
+        GradleScope gs = toGradleScope(s);
+        if (gs != null) {
+            return gs.getConfigurationName();
+        } else {
+            return null;
+        }
     }
     
-    static final Map<Scope, String> SCOPE_TO_CONFIURATION = new HashMap<>();
+    GradleScopes gradleScopes() {
+        if (scopes == null) {
+            scopes = new GradleScopesBuilder(project).build();
+        }
+        return scopes;
+    }
     
-    static {
-        SCOPE_TO_CONFIURATION.put(Scopes.PROCESS, "annotationProcessor");
-        SCOPE_TO_CONFIURATION.put(Scopes.COMPILE, "compileClasspath");
-        SCOPE_TO_CONFIURATION.put(Scopes.RUNTIME, "runtimeClasspath");
-        SCOPE_TO_CONFIURATION.put(Scopes.TEST_COMPILE, "testCompileClasspath");
-        SCOPE_TO_CONFIURATION.put(Scopes.TEST_RUNTIME, "testRuntimeClasspath");
+    Set<GradleScope> allScopes() {
+        return new HashSet<>(gradleScopes().scopes());
+    }
+    
+    GradleScope toGradleScope(Scope s) {
+        GradleScope gs = gradleScopes().toGradleScope(s);
+        if (gs != null) {
+            return gs;
+        }
+        String n = toGradleConfigName(s);
+        if (n != null) {
+            return gradleScopes().toGradleScope(n);
+        } else {
+            return null;
+        }
     }
 
     @NbBundle.Messages({
@@ -128,6 +145,8 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
     class Collector {
         final ProjectDependencies.DependencyQuery query;
         final GradleBaseProject base;
+        
+        boolean acceptUnresolved;
         GradleConfiguration cfg;
         Scope scope;
         List<Dependency> problems = new ArrayList<>();
@@ -149,35 +168,116 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
             base = GradleBaseProject.get(project);
         }
         
-        DependencyResult processDependencies(NbGradleProject nbgp) {
-            GradleBaseProject base =  GradleBaseProject.get(project);
-            Collection<Scope> scopes = query.getScopes();
+        /**
+         * Creates a dependency result for project's declared dependencies. Since plugins may inject dependencies not present in the
+         * build file, the dependencies from the model are filtered for those present in the build file.
+         * 
+         * @param allScopes all scopes that should be included.
+         * @return dependency result instance
+         */
+        DependencyResult declaredDependencies(Set<Scope> allScopes) {
+            acceptUnresolved = true;
+            Set<String> cfgNames = new HashSet<>();
             
-            ArrayDeque<Scope> processScopes = new ArrayDeque<>(scopes);
-            Set<Scope> allScopes = new HashSet<>(scopes);
-            allScopes.retainAll(SCOPE_TO_CONFIURATION.keySet());
-            processScopes.removeAll(allScopes);
+            List<Dependency> declared = new ArrayList<>();
             
-            // process unknown scopes
-            while (!processScopes.isEmpty()) {
-                Scope s = processScopes.poll();
-                Set<Scope> newScopes = new HashSet<>();
-                newScopes.add(s);
-                for (Scope t : SCOPES) {
-                    if (s.includes(t)) {
-                        newScopes.add(t);
-                    } else if (t.implies(s)) {
-                        newScopes.add(t);
+            Set<? extends Scope> a;
+            if (allScopes.isEmpty()) {
+                a = allScopes();
+            } else {
+                a = allScopes;
+            }
+            
+            Set<GradleScope> all = allScopes();
+            
+            Queue<GradleScope> toProcess = new ArrayDeque<>();
+            for (Scope scope : a) {
+                GradleScope gs = gradleScopes().toGradleScope(scope);
+                if (gs != null) {
+                    toProcess.add(gs);
+                }
+            }
+            
+            GradleScope gs;
+            while ((gs = toProcess.poll()) != null) {
+                cfgNames.add(gs.getConfigurationName());
+                for (GradleScope t : all) {
+                    if (t.includes(gs)) {
+                        toProcess.add(t);
                     }
                 }
-                newScopes.removeAll(allScopes);
-                allScopes.addAll(newScopes);
-                processScopes.addAll(newScopes);
+            }
+            
+            for (String cn : cfgNames) {
+                GradleConfiguration cfg = base.getConfigurations().get(cn);
+                if (cfg == null) {
+                    continue;
+                }
+                this.cfg = cfg;
+                this.scope = gradleScopes().toGradleScope(cn);
+                for (GradleDependency dep : cfg.getConfiguredDependencies()) {
+                    GradleConfiguration origin = cfg.getDependencyOrigin(dep);
+                    if (origin != null && origin != cfg) {
+                        // inherited
+                        continue;
+                    }
+                    declared.add(createDependency(dep, Collections.emptyList()));
+                }
+            }
+            File f = nbgp.getGradleFiles().getProjectDir();
+            FileObject pf = f == null ? null : FileUtil.toFileObject(f);
+            if (pf == null) {
+                throw new ProjectOperationException(project, ProjectOperationException.State.ERROR, Bundle.ERR_NoProjectDirectory(f));
+            }
+            ArtifactSpec part = createProjectArtifact(null, base.getPath(), null);
+            ProjectSpec pspec = ProjectSpec.create(base.getPath(), pf);
+            
+            Dependency tempRoot = Dependency.create(pspec, part, null, declared, project);
+            
+            NbGradleProject ngp = NbGradleProject.get(project);
+            GradleBaseProject gbp =  GradleBaseProject.get(project);
+            DependencyText.Mapping map;
+            try {
+                map = GradleDependencyResult.computeTextMappings(ngp, gbp, tempRoot.getChildren(), true);
+            } catch (IOException ex) {
+                throw new ProjectOperationException(project, ProjectOperationException.State.ERROR, "Unable to match dependencies to build script", ex);
+            }
+            for (Iterator<Dependency> it = declared.iterator(); it.hasNext(); ) {
+                if (map.getText(it.next(), null) == null) {
+                    it.remove();
+                }
+            }
+            return new GradleDependencyResult(project, scopes, tempRoot);
+        }
+        
+        DependencyResult processDependencies(NbGradleProject nbgp) {
+            GradleBaseProject base =  GradleBaseProject.get(project);
+            Collection<Scope> userScopes = query.getScopes();
+            
+            ArrayDeque<Scope> processScopes = new ArrayDeque<>(userScopes);
+            Set<Scope> allScopes = new HashSet<>();
+            
+            if (processScopes.remove(Scopes.DECLARED)) {
+                return declaredDependencies(allScopes);
+            }
+
+            // process unknown scopes
+            while (!processScopes.isEmpty()) {
+                Scope user = processScopes.poll();
+                GradleScope s = gradleScopes().toGradleScope(user);
+                if (!s.getConfigurationName().equals(s.name())) {
+                    Set<Scope> newScopes = new HashSet<>();
+                    newScopes.addAll(s.getIncluded());
+                    newScopes.removeAll(allScopes);
+                    processScopes.addAll(newScopes);
+                } else {
+                    allScopes.add(s);
+                }
             }
             
             List<Dependency> rootDeps = new ArrayList<>();
             for (Scope s : allScopes) {
-                String cfgName = SCOPE_TO_CONFIURATION.get(s);
+                String cfgName = toGradleConfigName(s);
                 if (cfgName == null) {
                     continue;
                 }
@@ -198,6 +298,7 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
                         // safeguard: we cannot determine the origin, so let's assume this configuration defines the dependency
                         this.cfg = cfg;
                     }
+                    this.scope = gradleScopes().toGradleScope(this.cfg.getName());
                     List<Dependency> ch = processLevel(cfg, dep, new LinkedHashSet<>());
                     Dependency n = createDependency(dep, ch);
                     rootDeps.add(n);
@@ -214,7 +315,7 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
             
             Dependency root = Dependency.create(pspec, part, null, rootDeps, project);
             
-            return new GradleDependencyResult(project, root);
+            return new GradleDependencyResult(project, scopes, root);
         }
         
         ArtifactSpec createProjectArtifact(GradleDependencyResult.Info info, String projectId, List<Dependency> children) {
@@ -245,7 +346,23 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
         Dependency createDependency(GradleDependency dep, List<Dependency> children) {
             GradleDependencyResult.Info info = new GradleDependencyResult.Info(cfg, dep);
             if (dep instanceof GradleDependency.UnresolvedDependency) {
-                return null;
+                if (acceptUnresolved) {
+                    GradleDependency.UnresolvedDependency gud = (GradleDependency.UnresolvedDependency)dep;
+                    String[] gav = gud.getId().split(":");
+                    if (gav.length < 2) {
+                        // not group:artifact, cannot represent as an artifact
+                        return null;
+                    }
+                    ArtifactSpec spec = 
+                            ArtifactSpec.createVersionSpec(gav[0], gav[1], 
+                                    null, 
+                                    gav.length >= 4 ? gav[3] : null,
+
+                                    gav.length >= 3 ? gav[2] : null, false, null, dep);
+                    return Dependency.create(spec, scope, children, info);
+                } else {
+                    return null;
+                }
             }            
             
             if (dep instanceof GradleDependency.ProjectDependency) {

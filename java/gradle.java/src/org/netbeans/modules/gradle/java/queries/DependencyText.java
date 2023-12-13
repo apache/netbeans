@@ -28,7 +28,7 @@ import org.netbeans.modules.project.dependency.DependencyResult;
 /**
  * Single dependency information.
  */
-class DependencyText {
+public class DependencyText {
 
     /**
      * True if the dependency is a single statement, false if declared in
@@ -73,6 +73,10 @@ class DependencyText {
     String group;
     String name;
     String version;
+    
+    Style style;
+    
+    Container container;
 
     public DependencyText(String container, int startPos) {
         this.configuration = container;
@@ -118,11 +122,42 @@ class DependencyText {
             return sb.toString();
         }
     }
+    
+    public static enum Style {
+        /**
+         * Specified as attribtute: value list
+         */
+        MAP_LITERAL,
+        
+        /**
+         * Followed by {} customization block
+         */
+        CUSTOMIZED,
+        
+        /**
+         * Specified as single string,
+         */
+        GAV_STRING,
+        
+        /**
+         * Item in a multi-valued configuration container
+         */
+        CONTAINER_ITEM,
+        /**
+         * Surrounded by brackets
+         */
+        BRACKETS,
+        
+        /**
+         * Surrounded by parenthesis
+         */
+        PARENTHESIS
+    }
 
     /**
      * Dependency part information
      */
-    static final class Part {
+    public static final class Part {
 
         /**
          * Id of the part
@@ -156,9 +191,22 @@ class DependencyText {
         }
     }
     
+    public final static class Container {
+        final List<DependencyText> items;
+        final DependencyText.Part containerPart;
+
+        public Container(List<DependencyText> items, Part containerPart) {
+            this.items = items;
+            this.containerPart = containerPart;
+        }
+    }
     
-    final static class Mapping {
+    
+    public final static class Mapping {
         private final Map<Dependency, DependencyText> textMapping;
+        /**
+         * Container for all dependencies.
+         */
         private final DependencyText.Part container;
 
         public Mapping(Map<Dependency, DependencyText> textMapping, Part container) {
@@ -167,7 +215,7 @@ class DependencyText {
         }
 
         public DependencyText.Part getText(Dependency d, String part) {
-            if (DependencyResult.PART_CONTAINER.equals(part)) {
+            if (d == null && DependencyResult.PART_CONTAINER.equals(part)) {
                 return container;
             }
             DependencyText t = textMapping.get(d);
@@ -180,6 +228,13 @@ class DependencyText {
                 p.endPos = t.endPos;
                 p.value = t.contents;
                 return p;
+            }
+            if (DependencyResult.PART_CONTAINER.equals(part)) {
+                if (t.container != null) {
+                    return t.container.containerPart;
+                } else {
+                    return null;
+                }
             }
             for (DependencyText.Part p : t.partList) {
                 if (part.equals(p.partId)) {

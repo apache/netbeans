@@ -51,6 +51,7 @@ import java.util.WeakHashMap;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
@@ -89,6 +90,7 @@ import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
 import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
+import org.eclipse.lsp4j.jsonrpc.json.MessageJsonHandler;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
@@ -172,7 +174,7 @@ public final class Server {
     public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
         LanguageServerImpl server = new LanguageServerImpl(session);
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
-        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup);
+        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup, msgProcessor::addService);
         NbCodeLanguageClient remote = serverLauncher.getRemoteProxy();
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
@@ -182,8 +184,17 @@ public final class Server {
     }
     
     private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
-            Function<MessageConsumer, MessageConsumer> processor) {
-        return new LSPLauncher.Builder<NbCodeLanguageClient>()
+            Function<MessageConsumer, MessageConsumer> processor, Consumer<Object> addService) {
+        return new LSPLauncher.Builder<NbCodeLanguageClient>() {
+                @Override
+                protected MessageJsonHandler createJsonHandler() {
+                    MessageJsonHandler h = super.createJsonHandler(); 
+                    if (addService != null) {
+                        addService.accept(h.getGson());
+                    }
+                    return h;
+                }
+            }
             .setLocalService(server)
             .setRemoteInterface(NbCodeLanguageClient.class)
             .setInput(io.first())
@@ -232,9 +243,14 @@ public final class Server {
         private final Lookup sessionLookup;
         private NbCodeLanguageClient client;
         private OperationContext initialContext;
+        private List<Object> additionalServices = new ArrayList<>();
 
         public ConsumeWithLookup(Lookup sessionLookup) {
             this.sessionLookup = sessionLookup;
+        }
+        
+        public void addService(Object o) {
+            this.additionalServices.add(o);
         }
 
         synchronized void attachClient(NbCodeLanguageClient client) {
@@ -287,6 +303,9 @@ public final class Server {
                     }
                     if (ctx != null) {
                         ic.add(ctx);
+                    }
+                    if (additionalServices != null) {
+                        additionalServices.forEach(ic::add);
                     }
                     final InternalHandle ftoCancel = toCancel;
                     try {

@@ -264,10 +264,10 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
     private Dependency convertDependencies(org.apache.maven.shared.dependency.tree.DependencyNode n, Dependency.Filter filter, Set<ArtifactSpec> broken) {
         Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> realNodes = new HashMap<>();
         findRealNodes(n, realNodes);
-        return convert2(n, filter, realNodes, broken);
+        return convert2(true, n, filter, realNodes, broken);
     }
     
-    private Dependency convert2(org.apache.maven.shared.dependency.tree.DependencyNode n, Dependency.Filter filter, Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> realNodes, Set<ArtifactSpec> broken) {
+    private Dependency convert2(boolean root, org.apache.maven.shared.dependency.tree.DependencyNode n, Dependency.Filter filter, Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> realNodes, Set<ArtifactSpec> broken) {
         List<Dependency> ch = new ArrayList<>();
         
         List<org.apache.maven.shared.dependency.tree.DependencyNode> children = null;
@@ -286,7 +286,7 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
         }
         
         for (org.apache.maven.shared.dependency.tree.DependencyNode c : children) {
-            Dependency cd = convert2(c, filter, realNodes, broken);
+            Dependency cd = convert2(false, c, filter, realNodes, broken);
             if (cd != null) {
                 ch.add(cd);
             }
@@ -303,7 +303,7 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
         }
         Scope s = scope(a);
         
-        if (!filter.accept(s, aspec)) {
+        if (!root && !filter.accept(s, aspec)) {
             return null;
         }
         

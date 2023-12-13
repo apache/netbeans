@@ -86,9 +86,6 @@ public abstract class Scope {
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
         final Scope other = (Scope) obj;
         return Objects.equals(this.name, other.name);
     }

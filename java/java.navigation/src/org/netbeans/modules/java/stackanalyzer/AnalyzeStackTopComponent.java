@@ -139,7 +139,8 @@ final class AnalyzeStackTopComponent extends TopComponent {
         String lastLine = null;
         try {
             while ((currentLine = r.readLine()) != null) {
-                currentLine = currentLine.trim();
+                // strip ANSI symbols just in case the terminal/clipboard hasn't done that
+                currentLine = currentLine.replaceAll("\u001B\\[[\\d;]*[^\\d;]", "").strip();
                 if (StackLineAnalyser.matches(currentLine)) {
                     if (lastLine != null) {
                         model.addElement(lastLine);

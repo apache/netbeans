@@ -219,4 +219,8 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
         return remote.configurationUpdate(params);
     }
     
+    @Override
+    public CompletableFuture<Boolean> requestDocumentSave(SaveDocumentRequestParams documentUris) {
+        return remote.requestDocumentSave(documentUris);
+    }
 }

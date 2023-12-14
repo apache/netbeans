@@ -51,7 +51,7 @@ import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, MutliStepInputRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
-         ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep
+         ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep, SaveDocumentsRequest, SaveDocumentRequestParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
@@ -1052,6 +1052,14 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             c.onRequest(UpdateConfigurationRequest.type, async (param) => {
                 await vscode.workspace.getConfiguration(param.section).update(param.key, param.value);
                 runConfigurationUpdateAll();
+            });
+            c.onRequest(SaveDocumentsRequest.type, async (request : SaveDocumentRequestParams) => {
+                for (let ed of window.visibleTextEditors) {
+                    if (request.documents.includes(ed.document.uri.toString())) {
+                        await vscode.commands.executeCommand('workbench.action.files.save', ed.document.uri);
+                    }
+                }
+                return true;
             });
             c.onRequest(InputBoxRequest.type, async param => {
                 return await window.showInputBox({ title: param.title, prompt: param.prompt, value: param.value, password: param.password });

@@ -20,9 +20,12 @@ package org.netbeans.modules.project.dependency;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import org.netbeans.api.actions.Savable;
 import org.netbeans.api.lsp.WorkspaceEdit;
 import org.netbeans.modules.project.dependency.impl.ProjectModificationResultImpl;
 import org.netbeans.modules.project.dependency.impl.WorkspaceEditAdapter;
@@ -40,6 +43,13 @@ public final class ProjectModificationResult implements ModificationResult {
     
     ProjectModificationResult(ProjectModificationResultImpl impl) {
         this.impl = impl;
+    }
+    
+    /**
+     * @return files that should be save in order so that build system can recognize changes.
+     */
+    public Collection<FileObject> getFilesToSave() {
+        return impl.getFilesToSave();
     }
     
     /**
@@ -62,9 +72,9 @@ public final class ProjectModificationResult implements ModificationResult {
         return wrapEdits().getResultingSource(file);
     }
     
-    private ModificationResult wrapEdits;
+    private WorkspaceEditAdapter wrapEdits;
     
-    ModificationResult wrapEdits() {
+    WorkspaceEditAdapter wrapEdits() {
         if (wrapEdits == null) {
             wrapEdits = new WorkspaceEditAdapter(impl);
         }
@@ -95,9 +105,18 @@ public final class ProjectModificationResult implements ModificationResult {
 
     @Override
     public void commit() throws IOException {
-        wrapEdits().commit();
+        WorkspaceEditAdapter r = wrapEdits();
+        r.commit();
         if (impl.getCustomEdit() != null) {
             impl.getCustomEdit().commit();
+        }
+        // save the modified files, so project system will pick things up.
+        // PENDING: make optional, at the discretion of ProjectDependencyModifier.
+        for (FileObject f : r.getFilesToSave()) {
+            Savable s = f.getLookup().lookup(Savable.class);
+            if (s != null) {
+                s.save();
+            }
         }
     }
 }

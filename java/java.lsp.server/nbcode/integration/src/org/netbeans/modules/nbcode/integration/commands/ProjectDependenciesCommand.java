@@ -19,7 +19,9 @@
 package org.netbeans.modules.nbcode.integration.commands;
 
 import com.google.gson.Gson;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,19 +31,31 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
+import org.netbeans.api.lsp.WorkspaceEdit;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.java.lsp.server.LspServerState;
+import org.netbeans.modules.java.lsp.server.LspServerUtils;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.modules.java.lsp.server.protocol.SaveDocumentRequestParams;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
+import org.netbeans.modules.project.dependency.DependencyChangeException;
 import org.netbeans.modules.project.dependency.DependencyResult;
 import org.netbeans.modules.project.dependency.ProjectDependencies;
+import org.netbeans.modules.project.dependency.ProjectModificationResult;
 import org.netbeans.modules.project.dependency.ProjectOperationException;
 import org.netbeans.modules.project.dependency.Scope;
 import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -53,7 +67,11 @@ import org.openide.util.lookup.ServiceProvider;
 public class ProjectDependenciesCommand implements CommandProvider {
     
     private static final RequestProcessor RP = new RequestProcessor(ProjectDependenciesCommand.class.getName(), 5);
-                                                            
+                                      
+    /**
+     * Finds dependencies in a project. The command expects {@link DependencyFindRequest} as a sole input, and produces
+     * {@link DependencyFindResult} as the output. Throws an exception if the operation fails.
+     */
     private static final String COMMAND_GET_DEPENDENCIES = "nbls.project.dependencies.find";
     private static final String COMMAND_CHANGE_DEPENDENCIES = "nbls.project.dependencies.change";
     
@@ -94,10 +112,18 @@ public class ProjectDependenciesCommand implements CommandProvider {
         return inst != null ? inst : gson;
     }
 
+    @NbBundle.Messages({
+        "# {0} - file uri",
+        "ERR_FileNotInProject=File {0} is not in any project.",
+        "# {0} - file uri",
+        "ERR_InvalidFileUri=Malformed URI: {0}"
+    })
+
     @Override
     public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         switch (command) {
             case COMMAND_GET_DEPENDENCIES: {
+                // Finds dependencies in a project.
                 DependencyFindRequest request = gson().fromJson(gson().toJson(arguments.get(0)), DependencyFindRequest.class);
                 FileObject dir;
                 try {
@@ -192,7 +218,74 @@ public class ProjectDependenciesCommand implements CommandProvider {
                 return future;
             }
 
-            case COMMAND_CHANGE_DEPENDENCIES:
+            case COMMAND_CHANGE_DEPENDENCIES: {
+                // Finds dependencies in a project.
+                LspDependencyChangeRequest request = gson().fromJson(gson().toJson(arguments.get(0)), LspDependencyChangeRequest.class);
+                FileObject dir;
+                Project p;
+                
+                try {
+                    dir = Utils.fromUri(request.getUri());
+                    p = FileOwnerQuery.getOwner(dir);
+                    if (p == null) {
+                        throw new IllegalArgumentException(Bundle.ERR_FileNotInProject(request.getUri()));
+                    }
+                } catch (MalformedURLException ex) {
+                    throw new IllegalArgumentException(Bundle.ERR_InvalidFileUri(request.getUri()));
+                }
+                
+                CompletableFuture future = new CompletableFuture();
+                RP.post(() -> {
+                    LspDependencyChangeResult res = new LspDependencyChangeResult();
+                    ProjectModificationResult mod;
+                    try {
+                        mod = ProjectDependencies.modifyDependencies(p, request.getChanges());
+                    } catch (DependencyChangeException ex) {
+                        future.completeExceptionally(ex);
+                        return;
+                    }
+                    if (mod == null) {
+                        future.complete(null);
+                        return;
+                    }
+                    NbCodeLanguageClient client = LspServerUtils.requireLspClient(Lookup.getDefault());
+                    WorkspaceEdit wEdit = mod.getWorkspaceEdit();
+                    org.eclipse.lsp4j.WorkspaceEdit lspEdit = Utils.workspaceEditFromApi(wEdit, null, client);
+                    res.setEdit(lspEdit);
+                    if (request.isApplyChanges()) {
+                        if (request.isSaveFromServer()) {
+                            try {
+                                mod.commit();
+                            } catch (IOException ex) {
+                                future.completeExceptionally(ex);
+                                return;
+                            }
+                        } else {
+                            client.applyEdit(new ApplyWorkspaceEditParams(lspEdit)).thenAccept((x) -> {
+                                String[] uris = new String[mod.getFilesToSave().size()];
+                                int index = 0;
+                                
+                                for (FileObject f : mod.getFilesToSave()) {
+                                    URL u = URLMapper.findURL(f, URLMapper.EXTERNAL);
+                                    if (u != null) {
+                                        String s = u.toString();
+                                        if (s.indexOf(f.getPath()) == 5) {
+                                            s = "file://" + s.substring(5);
+                                        }
+                                        uris[index++] = s;
+                                    }
+                                }
+                                client.requestDocumentSave(new SaveDocumentRequestParams(Arrays.asList(uris)));
+                                future.complete(res);
+                            });
+                        }
+                    } else {
+                        future.complete(res);
+                    }
+                    // must broadcast instructions to the client
+                });
+                return future;
+            }
         }
         return null;
     }

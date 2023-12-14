@@ -20,8 +20,10 @@ package org.netbeans.modules.project.dependency.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.netbeans.api.lsp.ResourceOperation;
@@ -30,6 +32,7 @@ import org.netbeans.api.lsp.WorkspaceEdit;
 import org.netbeans.modules.refactoring.spi.ModificationResult;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
 import org.openide.util.Union2;
 
@@ -43,6 +46,23 @@ public final class WorkspaceEditAdapter implements ModificationResult {
 
     public WorkspaceEditAdapter(ProjectModificationResultImpl impl) {
         this.impl = impl;
+    }
+    
+    public Collection<FileObject> getFilesToSave() {
+        List<FileObject> processed = new ArrayList<>();
+        for (FileObject f : impl.getFilesToSave()) {
+            if (f.isVirtual()) {
+                FileObject changed = URLMapper.findFileObject(f.toURL());
+                if (changed == null) {
+                    continue;
+                }
+                f = changed;
+            }
+            if (f.isValid()) {
+                processed.add(f);
+            }
+        }
+        return processed;
     }
 
     @Override

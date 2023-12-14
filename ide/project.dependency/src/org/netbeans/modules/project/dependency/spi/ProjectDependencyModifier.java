@@ -18,10 +18,13 @@
  */
 package org.netbeans.modules.project.dependency.spi;
 
+import java.util.Collection;
+import java.util.Collections;
 import org.netbeans.api.lsp.WorkspaceEdit;
 import org.netbeans.modules.project.dependency.DependencyChangeException;
 import org.netbeans.modules.project.dependency.DependencyChangeRequest;
 import org.netbeans.modules.project.dependency.ProjectOperationException;
+import org.openide.filesystems.FileObject;
 
 /**
  * Computes dependency modifications to project files. Must be registered in the project's
@@ -45,6 +48,16 @@ public interface ProjectDependencyModifier {
      * Result of dependency modification change.
      */
     public interface Result {
+        public static final Collection<FileObject> SAVE_ALL = Collections.singleton(null);
+        
+        /**
+         * Returns list of files that require save.
+         * @return files to save.
+         */
+        public default Collection<FileObject> requiresSave() {
+            return SAVE_ALL;
+        }
+        
         /**
          * ID of the partial result. Mainly used to override / suppress unwanted changes by
          * more specific Modified implementations.

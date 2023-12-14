@@ -23,12 +23,15 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.netbeans.api.lsp.ResourceOperation;
 import org.netbeans.api.lsp.TextDocumentEdit;
 import org.netbeans.api.lsp.TextEdit;
@@ -50,6 +53,7 @@ import org.openide.util.Union2;
 public class ProjectModificationResultImpl {
     private final Project project;
     
+    private Set<FileObject> toSave = new LinkedHashSet<>();
     private List<ModificationResult>    customModifications = new ArrayList<>();
     private List<Union2<TextDocumentEdit, ResourceOperation>> edits;
     private ModificationResult combinedResult;
@@ -90,11 +94,16 @@ public class ProjectModificationResultImpl {
         if (r.getWorkspaceEdit() == null) {
             return;
         }
+        Collection<FileObject> save = r.requiresSave();
+        boolean saveAll = save == ProjectDependencyModifier.Result.SAVE_ALL;
+        if (save != null && !saveAll) {
+            toSave.addAll(save);
+        }
         for (Union2<TextDocumentEdit, ResourceOperation> op : r.getWorkspaceEdit().getDocumentChanges()) {
             if (op.hasSecond()) {
                 addResourceOperation(op.second());
             } else if (op.hasFirst()) {
-                addTextOperation(op.first());
+                addTextOperation(op.first(), saveAll);
             }
         }
     }
@@ -190,7 +199,11 @@ public class ProjectModificationResultImpl {
         };
     }
     
-    private void addTextOperation(TextDocumentEdit edit) {
+    public Collection<FileObject> getFilesToSave() {
+        return toSave;
+    }
+    
+    private void addTextOperation(TextDocumentEdit edit, boolean saveAll) {
         FileObject fo = fromString(edit.getDocument());
         if (fo == null) {
             throw new ProjectOperationException(project, ProjectOperationException.State.ERROR, 
@@ -203,7 +216,9 @@ public class ProjectModificationResultImpl {
                         Bundle.ERR_WritingToMissingFile(edit.getDocument()), Collections.emptySet());
             }
         }
-        
+        if (saveAll) {
+            toSave.add(fo);
+        }
         TextDocumentEdit tde = fileModifications.get(fo);
         List<TextEdit> newEdits = new ArrayList<>(edit.getEdits());
         Collections.sort(newEdits,  textEditComparator(edit.getEdits()));

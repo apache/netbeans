@@ -89,17 +89,16 @@ public class RustProjectRootNode extends AbstractNode implements PropertyChangeL
 
                 });
 
+        this.setDisplayName(project.getCargoTOML().getName());
+        this.setShortDescription(project.getCargoTOML().getDescription());
         this.project.getCargoTOML().addPropertyChangeListener(this);
-        setName(project.getCargoTOML().getPackageName());
-        setDisplayName(project.getCargoTOML().getPackageName());
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String property = evt.getPropertyName();
-
-        if (CargoTOML.PROP_PACKAGENAME.equals(property)) {
-            setDisplayName(project.getCargoTOML().getPackageName());
+        if (CargoTOML.PROP_NAME.equals(property)) {
+            setDisplayName(project.getCargoTOML().getName());
         }
     }
 
@@ -115,13 +114,9 @@ public class RustProjectRootNode extends AbstractNode implements PropertyChangeL
         return actionArray;
     }
 
-    
-
     @Override
     public String getShortDescription() {
-        String description = project.getCargoTOML().getDescription();
-        description = description == null ? String.format("Rust project %s", getDisplayName()) : description;
-        return description;
+        return project.getCargoTOML().getDescription();
     }
 
     @Override

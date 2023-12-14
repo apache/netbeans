@@ -18,14 +18,10 @@
  */
 package org.netbeans.modules.rust.project;
 
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Map;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
-import org.openide.filesystems.FileObject;
 import org.openide.util.ChangeSupport;
 
 /**
@@ -43,40 +39,17 @@ public class RustSources implements Sources {
         this.project = project;
         this.changeSupport = new ChangeSupport(this);
         // TODO: What happens if "tests" folder is deleted?
-        project.getCargoTOML().addPropertyChangeListener((event)-> {
-            if (CargoTOML.PROP_WORKSPACE.equals(event.getPropertyName())) {
-                changeSupport.fireChange();
-            }
-        });
+//        project.getCargoTOML().addPropertyChangeListener((event)-> {
+//            if (CargoTOML.PROP_WORKSPACE.equals(event.getPropertyName())) {
+//                changeSupport.fireChange();
+//            }
+//        });
     }
 
     @Override
     public SourceGroup[] getSourceGroups(String type) {
         if (Sources.TYPE_GENERIC.equals(type)) {
             return new SourceGroup[] { new RustSourceGroup(project, project.getProjectDirectory()) };
-            /*
-            ArrayList<RustSourceGroup> groups = new ArrayList<>();
-            FileObject rootFO = project.getProjectDirectory();
-            // Which "SourceGroups" do we have in Rust projects?
-            // - The "tests" folder, if any.
-            // - The folders for each one of the workspace members.
-            // - The "src" folder.
-            FileObject src = rootFO.getFileObject("src"); // NOI18N
-            if (src != null) {
-                groups.add(new RustSourceGroup(project, src));
-            }
-            FileObject tests = rootFO.getFileObject("tests"); // NOI18N
-            if (tests != null) {
-                groups.add(new RustSourceGroup(project, tests));
-            }
-            for (String memberPath: project.getCargoTOML().getWorkspace().keySet()) {
-                FileObject memberDirectory = rootFO.getFileObject(memberPath);
-                if (memberDirectory != null) {
-                    groups.add(new RustSourceGroup(project, memberDirectory));
-                }
-            }
-            return groups.toArray(new RustSourceGroup[0]);
-            */
         }
         return new SourceGroup[0];
     }

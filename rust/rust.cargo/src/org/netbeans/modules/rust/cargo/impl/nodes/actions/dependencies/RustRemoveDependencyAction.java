@@ -23,13 +23,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.netbeans.modules.rust.cargo.api.CargoCommand;
+import org.netbeans.modules.rust.cargo.api.CargoCLICommand;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.cargo.api.RustPackage;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.netbeans.modules.rust.cargo.api.Cargo;
 import org.netbeans.modules.rust.cargo.impl.nodes.RustProjectDependenciesNode;
+import org.netbeans.modules.rust.cargo.api.CargoCLI;
 
 /**
  * Removes a given dependency from a rust project.
@@ -43,8 +43,8 @@ public class RustRemoveDependencyAction extends AbstractAction {
     private final RustProjectDependenciesNode.DependencyType dependencyType;
 
     public RustRemoveDependencyAction(CargoTOML cargotoml, RustPackage rustPackage, RustProjectDependenciesNode.DependencyType dependencyType) {
-        super(CargoCommand.CARGO_REMOVE.getDisplayName());
-        putValue(Action.SHORT_DESCRIPTION, CargoCommand.CARGO_REMOVE.getDescription());
+        super(CargoCLICommand.CARGO_REMOVE.getDisplayName());
+        putValue(Action.SHORT_DESCRIPTION, CargoCLICommand.CARGO_REMOVE.getDescription());
         this.cargotoml = cargotoml;
         this.dependencyType = dependencyType;
         this.rustPackage = rustPackage;
@@ -52,7 +52,7 @@ public class RustRemoveDependencyAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Cargo build = Lookup.getDefault().lookup(Cargo.class);
+        CargoCLI build = Lookup.getDefault().lookup(CargoCLI.class);
         if (build != null) {
             try {
                 ArrayList<String> arguments = new ArrayList<>();
@@ -65,7 +65,7 @@ public class RustRemoveDependencyAction extends AbstractAction {
                         break;
                 }
                 arguments.add(rustPackage.getName());
-                build.cargo(cargotoml, new CargoCommand[]{CargoCommand.CARGO_REMOVE},
+                build.cargo(cargotoml, new CargoCLICommand[]{CargoCLICommand.CARGO_REMOVE},
                         arguments.toArray(new String[0]));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);

@@ -19,403 +19,191 @@
 package org.netbeans.modules.rust.cargo.api;
 
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.event.SwingPropertyChangeSupport;
-import org.netbeans.modules.rust.cargo.impl.CargoTOMLParser;
-import org.openide.filesystems.FileAttributeEvent;
+import java.util.Optional;
+import org.netbeans.modules.rust.cargo.impl.CargoTOMLImpl;
 import org.openide.filesystems.FileChangeListener;
-import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileRenameEvent;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.AbstractLookup;
-import org.openide.util.lookup.InstanceContent;
 
 /**
  * CargoTOML is responsible for parsing the "Cargo.toml" file in a Rust project.
+ * 
+ * Note that this class is informative & read-only, i.e., we don't modify the Cargo.toml file
+ * in any way. We jsut show information. We listen to changes to the Cargo.toml file, and
+ * different PropertyChangeEvent's are fired whenever relevant information in the
+ * Cargo.toml file happens.
  *
  * @see <a href="https://doc.rust-lang.org/cargo/reference/manifest.html">Rust -
  * The Manifest Format</a>
  */
-public final class CargoTOML implements FileChangeListener {
-
-    private static final Logger LOG = Logger.getLogger(CargoTOML.class.getName());
-
-    private final FileObject cargotoml;
-    private transient final PropertyChangeSupport propertyChangeSupport;
-    private final InstanceContent instanceContent;
-    private final Lookup lookup;
+public abstract class CargoTOML implements FileChangeListener{
 
     /**
-     * Creates, and parses, a Rust Cargo.toml file.
-     *
-     * @param cargotoml The "Cargo.toml" file to parse.
-     * @throws IOException On error or if the file does not contain a mandatory
-     * property.
+     * The different kinds of Cargo.toml files.
      */
-    public CargoTOML(FileObject cargotoml) throws IOException {
-        this.cargotoml = cargotoml;
-        this.propertyChangeSupport = new SwingPropertyChangeSupport(this);
-        this.instanceContent = new InstanceContent();
-        this.lookup = new AbstractLookup(this.instanceContent);
-        if (cargotoml == null) {
-            throw new IOException("File Cargo.toml cannot be null"); // NOI18N
-        }
-        reparse();
-        cargotoml.addFileChangeListener(this);
+    public enum CargoTOMLKind {
+        /**
+         * This Cargo.toml file could not be matched in any of the other
+         * categories. For instance, if the Cargo.toml file contains errors.
+         */
+        UNKNOWN,
+        /**
+         * Cargo.toml is a "Workspace Root". These contain a `[workspace]` table
+         * and a `[package]` table.
+         *
+         * @see
+         * <a href="https://doc.rust-lang.org/cargo/reference/workspaces.html">Cargo
+         * Workspaces</a>
+         */
+        WORKSPACE_ROOT,
+        /**
+         * Cargo.toml is a "Virtual Workspace". These contain a `[workspace]`
+         * table, but not a `[package]` table.
+         *
+         * @see
+         * <a href="https://doc.rust-lang.org/cargo/reference/workspaces.html">Cargo
+         * Workspaces</a>
+         */
+        VIRTUAL_WORKSPACE,
+        /**
+         * Cargo.toml is a normal package Cargo.toml file.
+         */
+        PACKAGE
+    }
+    
+    public static final String PROP_KIND = "kind"; // NOI18N
+    public static final String PROP_PACKAGE = "package"; // NOI18N
+    public static final String PROP_WORKSPACE_PACKAGE = "workspacePackage"; // NOI18N
+    public static final String PROP_DEPENDENCIES = "dependencies"; // NOI18N
+    public static final String PROP_DEVDEPENDENCIES = "devDependencies"; // NOI18N
+    public static final String PROP_BUILDDEPENDENCIES = "buildDependencies"; // NOI18N
+    public static final String PROP_WORKSPACEDEPENDENCIES = "workspaceDependencies"; // NOI18N
+    public static final String PROP_MEMBERS = "members"; // NOI18N
+    public static final String PROP_NAME = "name"; // NOI18N
+    public static final String PROP_DESCRIPTION = "description"; // NOI18N
+
+    /**
+     * Creates a new CargoTOML from a FileObject.
+     *
+     * @param fo The FileObject (a Cargo.toml) file.
+     * @return A CargoTOML object that represents the contents of the file.
+     * @throws IOException
+     */
+    public static CargoTOML fromFileObject(FileObject fo) throws IOException {
+        return new CargoTOMLImpl(fo);
     }
 
-    public Lookup getLookup() {
-        return lookup;
+    protected CargoTOML() {
+
     }
 
-    private void reparse() throws IOException {
-        try {
-            CargoTOMLParser.parseCargoToml(cargotoml, this);
-        } catch (IOException ioe) {
-            throw ioe;
-        } catch (Throwable e) {
-            String message = String.format("Couldn't load Cargo.toml file: %s:%s", e.getMessage(), e.getClass().getName());
-            LOG.log(Level.SEVERE, message, e);
-            throw new IOException(message);
-        }
-    }
+    /**
+     * Returns true if the given FileObject is a folder and is a member of
+     * this project.
+     * @param fo the fileObjectFolder to check.
+     * @return true if fo is a member of this project, false otherwise.
+     */
+    public abstract boolean isMember(FileObject fo);
+
+    /**
+     * Returns a Lookup for this CargoTOML object that may contain stuff.
+     *
+     * @return The stuff inside this CargoTOML object. The contents of the stuff
+     * are to be determined in future versions of the API.
+     */
+    public abstract Lookup getLookup();
+
+    /**
+     * Returns the name of the package for this Cargo.toml file.
+     * @return The name of this package.
+     */
+    public abstract String getName();
+
+    /**
+     * Returns a description of this package, if any.
+     * @return A description of this package.
+     */
+    public abstract String getDescription();
+
+    /**
+     * Returns the kind of this CargoTOML object.
+     *
+     * @return The kind of Cargo.toml we're dealing with (virtual workspace,
+     * workspace root, etc.)
+     */
+    public abstract CargoTOMLKind getKind();
+
+    /**
+     * Returns the file object (Cargo.toml) for this CargoTOML.
+     * @return The Cargo.toml FileObject.
+     */
+    public abstract FileObject getFileObject();
 
     /**
      * Add PropertyChangeListener.
      *
      * @param listener
      */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
-    }
+    public abstract void addPropertyChangeListener(PropertyChangeListener listener);
 
     /**
      * Remove PropertyChangeListener.
      *
      * @param listener
      */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
-    }
-
-    // File changes
-    @Override
-    public void fileFolderCreated(FileEvent fe) {
-        // Ignored
-    }
-
-    @Override
-    public void fileDataCreated(FileEvent fe) {
-        // Ignored
-    }
-
-    @Override
-    public void fileChanged(FileEvent fe) {
-        try {
-            reparse();
-        } catch (IOException e) {
-            LOG.log(Level.WARNING, "Could not reparse 'Cargo.toml' file:{0}", e.getMessage());
-        }
-    }
-
-    @Override
-    public void fileDeleted(FileEvent fe) {
-        cargotoml.removeFileChangeListener(this);
-    }
-
-    @Override
-    public void fileRenamed(FileRenameEvent fe) {
-        cargotoml.removeFileChangeListener(this);
-    }
-
-    @Override
-    public void fileAttributeChanged(FileAttributeEvent fe) {
-        // Ignored
-    }
-
-    // - Getters / setters
-    private String packageName;
-
-    public static final String PROP_PACKAGENAME = "packageName"; // NOI18N
+    public abstract void removePropertyChangeListener(PropertyChangeListener listener);
 
     /**
-     * Get the value of packageName
-     *
-     * @return the value of packageName
+     * Returns the package section of this Cargo.toml file, if any.
+     * @see <a href="https://doc.rust-lang.org/cargo/reference/manifest.html#the-package-section">The [package] section</a>
+     * @see <a href="https://doc.rust-lang.org/cargo/reference/workspaces.html#virtual-workspace">Virtual workspace/a>
+     * @return The package section of this Cargo.toml file, if any. Virtual workspaces do not have a '[package]' section.
      */
-    public String getPackageName() {
-        return packageName;
-    }
+    public abstract Optional<RustPackage> getPackage();
+
 
     /**
-     * Set the value of packageName
-     *
-     * @param packageName new value of packageName
+     * Returns the "[workspace.package]" section of this Cargo.toml file, if any.
+     * @see <a href="https://doc.rust-lang.org/cargo/reference/workspaces.html?highlight=workspace.package#the-package-table">The package table.</a>
+     * @see <a href="https://doc.rust-lang.org/cargo/reference/workspaces.html#virtual-workspace">Virtual workspace/a>
+     * @return The "[workspace.package]" entry of a virtual workspace, if any. 
      */
-    public void setPackageName(String packageName) {
-        String oldPackageName = this.packageName;
-        this.packageName = packageName;
-        propertyChangeSupport.firePropertyChange(PROP_PACKAGENAME, oldPackageName, packageName);
-    }
-
-    private String version;
-
-    public static final String PROP_VERSION = "version"; // NOI18N
+    public abstract Optional<RustPackage> getWorkspacePackage();
 
     /**
-     * Get the value of version
-     *
-     * @return the value of version
+     * Returns a list of build dependencies.
+     * @see <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#build-dependencies">Build dependencies in the Cargo book</a>
+     * @return A List of dependencies.
      */
-    public String getVersion() {
-        return version;
-    }
+    public abstract List<RustPackage> getBuildDependencies();
 
     /**
-     * Set the value of version
-     *
-     * @param version new value of version
+     * Returns a list of dev-dependencies.
+     * @see <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#development-dependencies">Development dependencies in the Cargo book.</a>
+     * @return A list of dependencies.
      */
-    public void setVersion(String version) {
-        String oldVersion = this.version;
-        this.version = version;
-        propertyChangeSupport.firePropertyChange(PROP_VERSION, oldVersion, version);
-    }
-
-    private String edition = "2015"; // NOI18N
-
-    public static final String PROP_EDITION = "edition"; // NOI18N
+    public abstract List<RustPackage> getDevDependencies();
 
     /**
-     * Get the value of edition
-     *
-     * @return the value of edition
+     * Returns a list of dependencies.
+     * @see <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies">Specifying dependencies in the Cargo book.</a>
+     * @return A list of dependencies.
      */
-    public String getEdition() {
-        return edition;
-    }
+    public abstract List<RustPackage> getDependencies();
 
     /**
-     * Set the value of edition
-     *
-     * @param edition new value of edition
+     * Returns the list of workspace.dependencies, if any.
+     * @see <a href="https://doc.rust-lang.org/cargo/reference/workspaces.html#the-dependencies-table">workspace.dependencies inheritance</a>
+     * @return A list of dependencies.
      */
-    public void setEdition(String edition) {
-        String oldEdition = this.edition;
-        this.edition = edition;
-        propertyChangeSupport.firePropertyChange(PROP_EDITION, oldEdition, edition);
-    }
-
-    private String documentation;
-
-    public static final String PROP_DOCUMENTATION = "documentation"; // NOI18N
+    public abstract List<RustPackage> getWorkspaceDependencies();
 
     /**
-     * Get the value of documentation
-     *
-     * @return the value of documentation
+     * Returns the list of members of this workspace, or an empty list.
+     * @return 
      */
-    public String getDocumentation() {
-        return documentation;
-    }
-
-    /**
-     * Set the value of documentation
-     *
-     * @param documentation new value of documentation
-     */
-    public void setDocumentation(String documentation) {
-        String oldDocumentation = this.documentation;
-        this.documentation = documentation;
-        propertyChangeSupport.firePropertyChange(PROP_DOCUMENTATION, oldDocumentation, documentation);
-    }
-
-    private String homePage;
-
-    public static final String PROP_HOMEPAGE = "homePage"; // NOI18N
-
-    /**
-     * Get the value of homePage
-     *
-     * @return the value of homePage
-     */
-    public String getHomePage() {
-        return homePage;
-    }
-
-    /**
-     * Set the value of homePage
-     *
-     * @param homePage new value of homePage
-     */
-    public void setHomePage(String homePage) {
-        String oldHomePage = this.homePage;
-        this.homePage = homePage;
-        propertyChangeSupport.firePropertyChange(PROP_HOMEPAGE, oldHomePage, homePage);
-    }
-
-    private String rustVersion;
-
-    public static final String PROP_RUSTVERSION = "rustVersion"; // NOI18N
-
-    /**
-     * Get the value of rustVersion
-     *
-     * @return the value of rustVersion
-     */
-    public String getRustVersion() {
-        return rustVersion;
-    }
-
-    /**
-     * Set the value of rustVersion
-     *
-     * @param rustVersion new value of rustVersion
-     */
-    public void setRustVersion(String rustVersion) {
-        String oldRustVersion = this.rustVersion;
-        this.rustVersion = rustVersion;
-        propertyChangeSupport.firePropertyChange(PROP_RUSTVERSION, oldRustVersion, rustVersion);
-    }
-
-    private String description;
-
-    public static final String PROP_DESCRIPTION = "description"; // NOI18N
-
-    /**
-     * Get the value of description
-     *
-     * @return the value of description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Set the value of description
-     *
-     * @param description new value of description
-     */
-    public void setDescription(String description) {
-        String oldDescription = this.description;
-        this.description = description;
-        propertyChangeSupport.firePropertyChange(PROP_DESCRIPTION, oldDescription, description);
-    }
-
-    private List<RustPackage> dependencies = new ArrayList<>();
-
-    public static final String PROP_DEPENDENCIES = "dependencies"; // NOI18N
-
-    /**
-     * Get the value of dependencies
-     *
-     * @return the value of dependencies
-     */
-    public List<RustPackage> getDependencies() {
-        return dependencies;
-    }
-
-    /**
-     * Set the value of dependencies
-     *
-     * @param dependencies new value of dependencies
-     */
-    public void setDependencies(List<RustPackage> dependencies) {
-        List<RustPackage> oldDependencies = this.dependencies;
-        this.dependencies = Collections.unmodifiableList(dependencies);
-        propertyChangeSupport.firePropertyChange(PROP_DEPENDENCIES, oldDependencies, dependencies);
-    }
-
-    /**
-     * Returns the FileObject for this Cargo.toml file.
-     *
-     * @return the FileObject for this Cargo.toml file.
-     */
-    public FileObject getFileObject() {
-        return cargotoml;
-    }
-
-    private List<RustPackage> devDependencies = new ArrayList<>();
-
-    public static final String PROP_DEVDEPENDENCIES = "devDependencies"; // NOI18N
-
-    /**
-     * Get the value of devDependencies
-     *
-     * @return the value of devDependencies
-     */
-    public List<RustPackage> getDevDependencies() {
-        return devDependencies;
-    }
-
-    /**
-     * Set the value of devDependencies
-     *
-     * @param devDependencies new value of devDependencies
-     */
-    public void setDevDependencies(List<RustPackage> devDependencies) {
-        List<RustPackage> oldDevDependencies = this.devDependencies;
-        this.devDependencies = Collections.unmodifiableList(devDependencies);
-        propertyChangeSupport.firePropertyChange(PROP_DEVDEPENDENCIES, oldDevDependencies, devDependencies);
-    }
-
-    private List<RustPackage> buildDependencies = new ArrayList<>();
-
-    public static final String PROP_BUILDDEPENDENCIES = "buildDependencies"; // NOI18N
-
-    /**
-     * Get the value of buildDependencies
-     *
-     * @return the value of buildDependencies
-     */
-    public List<RustPackage> getBuildDependencies() {
-        return buildDependencies;
-    }
-
-    /**
-     * Set the value of buildDependencies
-     *
-     * @param buildDependencies new value of buildDependencies
-     */
-    public void setBuildDependencies(List<RustPackage> buildDependencies) {
-        List<RustPackage> oldBuildDependencies = this.buildDependencies;
-        this.buildDependencies = Collections.unmodifiableList(buildDependencies);
-        propertyChangeSupport.firePropertyChange(PROP_BUILDDEPENDENCIES, oldBuildDependencies, buildDependencies);
-    }
-
-    private Map<String, CargoTOML> workspace = new TreeMap<>();
-
-    public static final String PROP_WORKSPACE = "workspace";
-
-    /**
-     * Get the value of workspace
-     *
-     * @return the value of workspace
-     */
-    public Map<String, CargoTOML> getWorkspace() {
-        return workspace;
-    }
-
-    /**
-     * Set the value of workspace
-     *
-     * @param workspace new value of workspace
-     */
-    public void setWorkspace(Map<String, CargoTOML> workspace) {
-        Map<String, CargoTOML> oldWorkspace = this.workspace;
-        TreeMap<String, CargoTOML> newWorkspace = new TreeMap<>();
-        newWorkspace.putAll(workspace);
-        this.workspace = Collections.unmodifiableMap(newWorkspace);
-        propertyChangeSupport.firePropertyChange(PROP_WORKSPACE, oldWorkspace, workspace);
-    }
+    public abstract List<RustPackage> getMembers();
 
 }

@@ -53,6 +53,13 @@ public final class RustProjectDependenciesByTypeNode extends AbstractNode {
         }
 
         @Override
+        protected void addNotify() {
+            super.addNotify();
+            cargotoml.addPropertyChangeListener(this);
+            updateKeys();
+        }
+
+        @Override
         protected void removeNotify() {
             cargotoml.removePropertyChangeListener(this);
             super.removeNotify();
@@ -69,14 +76,9 @@ public final class RustProjectDependenciesByTypeNode extends AbstractNode {
                 case DEV_DEPENDENCY:
                     setKeys(cargotoml.getDevDependencies());
                     break;
+                case WORKSPACE_DEPENDENCY:
+                    setKeys(cargotoml.getWorkspaceDependencies());
             }
-        }
-
-        @Override
-        protected void addNotify() {
-            super.addNotify();
-            cargotoml.addPropertyChangeListener(this);
-            updateKeys();
         }
 
         @Override
@@ -84,6 +86,7 @@ public final class RustProjectDependenciesByTypeNode extends AbstractNode {
             if (CargoTOML.PROP_DEPENDENCIES.equals(evt.getPropertyName())
                     || CargoTOML.PROP_BUILDDEPENDENCIES.equals(evt.getPropertyName())
                     || CargoTOML.PROP_DEVDEPENDENCIES.equals(evt.getPropertyName())
+                    || CargoTOML.PROP_WORKSPACEDEPENDENCIES.equals(evt.getPropertyName())
                     ) {
                 updateKeys();
             }
@@ -116,7 +119,9 @@ public final class RustProjectDependenciesByTypeNode extends AbstractNode {
     @NbBundle.Messages({
         "normal-dependencies=Dependencies",
         "dev-dependencies=Dev dependencies",
-        "build-dependencies=Build dependencies",})
+        "build-dependencies=Build dependencies",
+        "workspace-dependencies=Workspace dependencies",
+    })
     public @Override
     String getDisplayName() {
         switch (dependencyType) {
@@ -126,6 +131,8 @@ public final class RustProjectDependenciesByTypeNode extends AbstractNode {
                 return NbBundle.getMessage(RustProjectDependenciesByTypeNode.class, "dev-dependencies"); // NOI18N
             case BUILD_DEPENDENCY:
                 return NbBundle.getMessage(RustProjectDependenciesByTypeNode.class, "build-dependencies"); // NOI18N
+            case WORKSPACE_DEPENDENCY:
+                return NbBundle.getMessage(RustProjectDependenciesByTypeNode.class, "workspace-dependencies"); // NOI18N
         }
         return dependencyType.name();
     }
@@ -147,6 +154,11 @@ public final class RustProjectDependenciesByTypeNode extends AbstractNode {
     })
     @Override
     public Action[] getActions(boolean context) {
+        if (dependencyType == DependencyType.WORKSPACE_DEPENDENCY) {
+            // Cargo add cannot currently add workspace dependencies
+            // https://github.com/rust-lang/cargo/issues/10608
+            return new Action[0];
+        }
         return new Action[]{
             new RustAddDependencyAction(cargotoml, dependencyType)
         };

@@ -20,7 +20,7 @@ package org.netbeans.modules.rust.project;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.netbeans.modules.rust.cargo.api.CargoCommand;
+import org.netbeans.modules.rust.cargo.api.CargoCLICommand;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Lookup;
 import org.netbeans.modules.rust.project.ui.actions.CargoExecutionCommand;
@@ -44,11 +44,11 @@ public final class RustProjectActionProvider implements ActionProvider {
     public RustProjectActionProvider(RustProject project) {
         commands = new LinkedHashMap<>();
 
-        commands.put(COMMAND_BUILD, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCommand[]{CargoCommand.CARGO_BUILD}));
-        commands.put(COMMAND_CLEAN, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCommand[]{CargoCommand.CARGO_CLEAN}));
-        commands.put(COMMAND_REBUILD, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCommand[]{CargoCommand.CARGO_CLEAN, CargoCommand.CARGO_BUILD}));
-        commands.put(COMMAND_RUN, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCommand[]{CargoCommand.CARGO_RUN}));
-        commands.put(COMMAND_TEST, new CargoExecutionCommand(project, COMMAND_TEST, new CargoCommand[]{CargoCommand.CARGO_TEST}));
+        commands.put(COMMAND_BUILD, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCLICommand[]{CargoCLICommand.CARGO_BUILD}));
+        commands.put(COMMAND_CLEAN, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCLICommand[]{CargoCLICommand.CARGO_CLEAN}));
+        commands.put(COMMAND_REBUILD, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCLICommand[]{CargoCLICommand.CARGO_CLEAN, CargoCLICommand.CARGO_BUILD}));
+        commands.put(COMMAND_RUN, new CargoExecutionCommand(project, COMMAND_BUILD, new CargoCLICommand[]{CargoCLICommand.CARGO_RUN}));
+        commands.put(COMMAND_TEST, new CargoExecutionCommand(project, COMMAND_TEST, new CargoCLICommand[]{CargoCLICommand.CARGO_TEST}));
 
         commands.put(COMMAND_COPY, new CopyCommand(project));
         commands.put(COMMAND_DELETE, new DeleteCommand(project));

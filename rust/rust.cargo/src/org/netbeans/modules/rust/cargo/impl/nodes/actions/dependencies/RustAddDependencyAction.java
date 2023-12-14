@@ -29,8 +29,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-import org.netbeans.modules.rust.cargo.api.Cargo;
-import org.netbeans.modules.rust.cargo.api.CargoCommand;
+import org.netbeans.modules.rust.cargo.api.CargoCLICommand;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.cargo.api.RustPackage;
 import org.netbeans.modules.rust.cargo.impl.nodes.RustProjectDependenciesNode;
@@ -40,6 +39,7 @@ import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
+import org.netbeans.modules.rust.cargo.api.CargoCLI;
 
 /**
  *
@@ -114,9 +114,9 @@ public class RustAddDependencyAction extends AbstractAction {
                     names.add(0, "--dev"); // NOI18N
                     break;
             }
-            Cargo cargo = Lookup.getDefault().lookup(Cargo.class);
+            CargoCLI cargo = Lookup.getDefault().lookup(CargoCLI.class);
             try {
-                cargo.cargo(cargotoml, new CargoCommand[]{CargoCommand.CARGO_ADD}, names.toArray(new String[0]));
+                cargo.cargo(cargotoml, new CargoCLICommand[]{CargoCLICommand.CARGO_ADD}, names.toArray(new String[0]));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }

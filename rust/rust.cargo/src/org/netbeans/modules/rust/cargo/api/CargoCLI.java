@@ -23,15 +23,16 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 /**
- * CargoBuildSupport is responsible for running different cargo actions, such as
- * "cargo cargo", etc.
+ * CargoCLI is responsible for running different cargo actions, such as "cargo
+ * cargo", "cargo build", etc.
  *
  * @author antonio
  */
-public interface Cargo {
+public interface CargoCLI {
 
     /**
-     * Builds a Rust project. And opens an Output window to show the
+     * Runs an array of "cargo" commands on a given project, and opens an Output
+     * window to show the result.
      *
      * @param cargotoml The Cargo.toml affected by the cargo.
      * @param commands The array of cargo commands, to be executed one after
@@ -39,10 +40,12 @@ public interface Cargo {
      * @param options optional list of options (verbose, for instance).
      * @throws IOException If a problem happens.
      */
-    public void cargo(CargoTOML cargotoml, CargoCommand[] commands, String... options) throws IOException;
+    public void cargo(CargoTOML cargotoml, CargoCLICommand[] commands, String... options) throws IOException;
 
     /**
-     * Runs `cargo search [text] --limit 15 --color never`
+     * Runs `cargo search [text] --limit 15 --color never`. This is used to
+     * search for available packages. The search is performed asynchronously and
+     * a Future<List<RustPackage>> is returned when done.
      *
      * @param cargotoml The Cargo.toml interested in the search.
      * @param text The text to search

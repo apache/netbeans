@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
-import org.netbeans.modules.rust.cargo.api.Cargo;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.cargo.api.RustPackage;
 import org.netbeans.modules.rust.cargo.impl.nodes.RustPackageNode;
@@ -42,6 +41,7 @@ import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.netbeans.modules.rust.cargo.api.CargoCLI;
 
 public final class RustAddDependencyVisualPanel1 extends JPanel implements ExplorerManager.Provider {
 
@@ -186,7 +186,7 @@ public final class RustAddDependencyVisualPanel1 extends JPanel implements Explo
         worker = new SwingWorker<List<RustPackage>, Void>() {
             @Override
             protected List<RustPackage> doInBackground() throws Exception {
-                Cargo cargo = Lookup.getDefault().lookup(Cargo.class);
+                CargoCLI cargo = Lookup.getDefault().lookup(CargoCLI.class);
                 Future<List<RustPackage>> future = cargo.search(cargotoml, text);
                 return future.get();
             }

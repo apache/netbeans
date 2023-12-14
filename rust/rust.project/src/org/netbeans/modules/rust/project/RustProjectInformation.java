@@ -21,12 +21,14 @@ package org.netbeans.modules.rust.project;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Optional;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.event.SwingPropertyChangeSupport;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
+import org.netbeans.modules.rust.cargo.api.RustPackage;
 import org.netbeans.modules.rust.project.api.RustProjectAPI;
 import org.openide.util.ImageUtilities;
 
@@ -46,12 +48,12 @@ final class RustProjectInformation implements ProjectInformation, PropertyChange
 
     @Override
     public String getName() {
-        return project.getCargoTOML().getPackageName();
+        return project.getCargoTOML().getName();
     }
 
     @Override
     public String getDisplayName() {
-        return project.getCargoTOML().getPackageName();
+        return getName();
     }
 
     @Override
@@ -77,7 +79,7 @@ final class RustProjectInformation implements ProjectInformation, PropertyChange
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String property = evt.getPropertyName();
-        if (CargoTOML.PROP_PACKAGENAME.equals(property)) {
+        if (CargoTOML.PROP_NAME.equals(property)) {
             pcs.firePropertyChange(ProjectInformation.PROP_DISPLAY_NAME, evt.getOldValue(), evt.getNewValue());
         }
     }

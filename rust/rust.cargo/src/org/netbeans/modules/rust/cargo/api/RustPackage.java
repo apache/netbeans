@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.rust.cargo.api;
 
+import java.util.Comparator;
+import org.netbeans.modules.rust.cargo.impl.CargoTOMLImpl;
+
 /**
  * Represents a Rust package.
  *
@@ -25,17 +28,20 @@ package org.netbeans.modules.rust.cargo.api;
  * <a href="https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html">specifying-dependencies</a>
  * @see <a href="https://doc.rust-lang.org/cargo/guide/index.html">Cargo
  * guide</a>
+ * 
  */
 public final class RustPackage {
 
     private final CargoTOML cargotoml;
     private final String name;
     private final String version;
-    private final SemVer semver;
+    private final RustPackageVersion packageVersion;
     private final String description;
     private final boolean optional;
     private final String git;
     private final String branch;
+    private final boolean workspace;
+    private final String path;
 
     private RustPackage(CargoTOML cargotoml, String name, String version) {
         this(cargotoml, name, version, false);
@@ -49,7 +55,12 @@ public final class RustPackage {
         this(cargotoml, name, version, false, description, null, null);
     }
 
-    private RustPackage(CargoTOML cargotoml, String name, String version, Boolean optional, String description, String git, String branch) {
+    private RustPackage(CargoTOML cargotoml, String name, String version,
+            Boolean optional, String description, String git, String branch) {
+        this(cargotoml, name, version, optional, description, git, branch, false, null);
+    }
+
+    private RustPackage(CargoTOML cargotoml, String name, String version, Boolean optional, String description, String git, String branch, boolean workspace, String path) {
         this.cargotoml = cargotoml;
         this.name = name;
         this.version = version;
@@ -57,8 +68,10 @@ public final class RustPackage {
         this.optional = optional == null ? false : optional;
         this.git = git;
         this.branch = branch;
-        // TODO: We set a "SemVer" to "0.0.0" if this comes from git.
-        this.semver = version == null ? new SemVer("0.0.0") : new SemVer(version);
+        // TODO: We set a "RustPackageVersion" to "0.0.0" if this comes from git.
+        this.packageVersion = RustPackageVersion.fromString(version);
+        this.workspace = workspace;
+        this.path = path;
     }
 
     public static final RustPackage withNameAndVersion(CargoTOML cargotoml, String name, String version) {
@@ -75,6 +88,14 @@ public final class RustPackage {
 
     public static final RustPackage withGit(CargoTOML cargotoml, String name, String git, String branch) {
         return new RustPackage(cargotoml, name, null, false, null, git, branch);
+    }
+
+    public static final RustPackage withNameAndWorkspace(CargoTOMLImpl cargotoml, String name) {
+        return new RustPackage(cargotoml, name, null, false, null, null, null, true, null);
+    }
+
+    public static final RustPackage withNameAndVersionAndPath(CargoTOMLImpl cargotoml, String name, String version, String path) {
+        return new RustPackage(cargotoml, name, version, false, null, null, null, false, path);
     }
 
     public String getGit() {
@@ -94,11 +115,13 @@ public final class RustPackage {
     }
 
     public String getVersion() {
-        return version;
+        // Well, this is complicated. A package can have a version,
+        // or be the same as it workspace
+        return workspace ? "workspace" : version;
     }
 
-    public SemVer getSemver() {
-        return semver;
+    public RustPackageVersion getSemver() {
+        return packageVersion;
     }
 
     public String getDescription() {
@@ -109,9 +132,32 @@ public final class RustPackage {
         return optional;
     }
 
+    public boolean isWorkspace() {
+        return workspace;
+    }
+
     @Override
     public String toString() {
-        return String.format("%s (%s)", name, version); // NOI18N
+        return workspace ? String.format("%s (workspace)", name) : String.format("%s (%s)", name, version); // NOI18N
     }
+
+    /**
+     * Compares two RustPackages (for sorting by name, version)
+     */
+    public static final Comparator<RustPackage> COMPARATOR = (a, b) -> {
+        String aName = a.name;
+        String bName = b.name;
+        int cmp = aName.compareTo(b.name);
+        if (cmp == 0) {
+            String aVersion = a.version;
+            String bVersion = b.version;
+            if (aVersion == null) {
+                cmp = bVersion == null ? 0 : -1;
+            } else {
+                cmp = aVersion.compareTo(bVersion);
+            }
+        }
+        return cmp;
+    };
 
 }

@@ -40,17 +40,11 @@ import org.openide.util.lookup.InstanceContent;
 @NbBundle.Messages({
     "NAME=Name",
     "VERSION=Version",
-    "MAJOR=Major version",
-    "MINOR=Minor version",
-    "PATCH=Patch version",
     "DESCRIPTION=Description",
     "GIT=Git repository",
     "BRANCH=Git repository branch",
     "NAME_DESC=The name of this package",
     "VERSION_DESC=The version of this package",
-    "MAJOR_DESC=The major version of this package",
-    "MINOR_DESC=The minor version of this package",
-    "PATCH_DESC=The patch version of this package",
     "DESCRIPTION_DESC=The description of this package",
     "GIT_DESC=A git repository where this package is downloaded from",
     "BRANCH_DESC=The branch used to fetch this package source from git",
@@ -60,9 +54,6 @@ public final class RustPackageNode extends AbstractNode {
     public enum PROPS {
         NAME,
         VERSION,
-        MAJOR,
-        MINOR,
-        PATCH,
         DESCRIPTION,
         GIT,
         BRANCH;
@@ -103,10 +94,8 @@ public final class RustPackageNode extends AbstractNode {
         Sheet.Set set = Sheet.createPropertiesSet();
 
         set.put(getNameProperty());
-        set.put(getMajorProperty());
-        set.put(getMinorProperty());
-        set.put(getPatchProperty());
         set.put(getDescriptionProperty());
+        set.put( getVersionProperty());
         set.put( getGitProperty());
         set.put( getBranchProperty());
 
@@ -118,18 +107,6 @@ public final class RustPackageNode extends AbstractNode {
 
     public Property<String> getNameProperty() {
         return getStringProperty(PROPS.NAME, RustPackage::getName);
-    }
-
-    public Property<String> getMajorProperty() {
-        return getStringProperty(PROPS.MAJOR, (p) -> "" + p.getSemver().getMajor());
-    }
-
-    public Property<String> getMinorProperty() {
-        return getStringProperty(PROPS.MINOR, p -> "" + p.getSemver().getMinor());
-    }
-
-    public Property<String> getPatchProperty() {
-        return getStringProperty(PROPS.PATCH, p -> "" + p.getSemver().getPatch());
     }
 
     public Property<String> getVersionProperty() {

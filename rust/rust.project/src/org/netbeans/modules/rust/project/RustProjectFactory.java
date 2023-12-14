@@ -45,7 +45,7 @@ public final class RustProjectFactory implements ProjectFactory2 {
         FileObject cargotoml = projectDirectory.getFileObject("Cargo.toml");
         CargoTOML cargo = null;
         try {
-            cargo = new CargoTOML(cargotoml);
+            cargo = CargoTOML.fromFileObject(cargotoml);
         } catch (IOException ex) {
             return null;
         }
@@ -66,23 +66,14 @@ public final class RustProjectFactory implements ProjectFactory2 {
         if (cargoToml == null) {
             return null;
         }
-        FileObject src = projectDirectory.getFileObject("src");
-        if (src == null || !src.isFolder()) {
-            return null;
-        }
-        return new ProjectManager.Result(new ImageIcon(ImageUtilities.loadImage(RustProjectAPI.ICON)));
+        return new ProjectManager.Result("Rust project", RustProjectAPI.RUST_PROJECT_KEY, new ImageIcon(ImageUtilities.loadImage(RustProjectAPI.ICON))); // NOI18N0:w
     }
 
     @Override
     public boolean isProject(FileObject projectDirectory) {
         if (isProject2(projectDirectory) != null) {
             FileObject cargotoml = projectDirectory.getFileObject("Cargo.toml");
-            try {
-                CargoTOML c = new CargoTOML(cargotoml);
-                return true;
-            } catch (IOException ex) {
-                // Ignored
-            }
+            return cargotoml.isData();
         }
         return false;
     }

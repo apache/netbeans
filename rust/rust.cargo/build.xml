@@ -22,4 +22,58 @@
 <project basedir="." default="netbeans" name="rust/rust.cargo">
     <description>Builds, tests, and runs the project org.netbeans.modules.rust.cargo</description>
     <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <!-- Antlr Tool classpath -->
+    <path id="antlr.path">
+        <fileset dir="../../ide/libs.antlr4.runtime/external" includes="*.jar"/>
+        <fileset dir="../../ide/libs.antlr3.runtime/external" includes="antlr-runtime-*.jar"/>
+    </path>
+
+    <target name="init-antlr">
+        <property name="antlr.apt.output.dir" location="src/org/netbeans/modules/rust/cargo/language/antlr4" />
+        <property name="antlr.apt.grammar.dir" location="src/org/netbeans/modules/rust/cargo/language/antlr4/g4" />
+    </target>
+
+    <!-- Checks if Antlr needs to be run or not (to force you may remove file "RustParser.tokens" -->
+    <target name="check-antlr-uptodate">
+        <uptodate property="antlr-uptodate" targetfile="${antlr.apt.output.dir}/TOMLParser.tokens">
+            <srcfiles dir="${antlr.apt.grammar.dir}" includes="*.g4"/>
+        </uptodate>
+        <echo message="antlr check-antlr-uptodate result: ${antlr-uptodate}"/>
+    </target>
+
+    <!-- Runs antlr4 for RustLexer.g4 and RustParser.g4 -->
+    <target name="antlr" depends="init-antlr, check-antlr-uptodate" unless="antlr-uptodate">
+        <echo message="Generating lexer from TOMLLexer.g4..." />
+        <java classname="org.antlr.v4.Tool" fork="true" failonerror="true">
+            <arg value="-Xexact-output-dir"/>
+            <arg value="-package" />
+            <arg value="org.netbeans.modules.rust.cargo.language.antlr4" />
+            <arg value="-o"/>
+            <arg value="${antlr.apt.output.dir}"/>
+            <arg value="${antlr.apt.grammar.dir}/TOMLLexer.g4"/>
+            <classpath refid="antlr.path" />
+        </java> 
+        <echo message="Generating parser from TOMLParser.g4..." />
+        <java classname="org.antlr.v4.Tool" fork="true" failonerror="true">
+            <arg value="-Xexact-output-dir"/>
+            <arg value="-package" />
+            <arg value="org.netbeans.modules.rust.cargo.language.antlr4" />
+            <arg value="-no-listener"/>
+            <arg value="-visitor"/>
+            <arg value="-o"/>
+            <arg value="${antlr.apt.output.dir}"/>
+            <arg value="${antlr.apt.grammar.dir}/TOMLParser.g4"/>
+            <classpath refid="antlr.path" />
+        </java>
+        <delete>
+            <fileset dir="${antlr.apt.output.dir}" includes="*.interp" />
+            <fileset dir="${antlr.apt.output.dir}" includes="*.tokens" />
+        </delete>
+    </target>
+
+    <!-- Compiles as usual, but invokes "antlr" first if needed -->
+    <target name="compile" depends="antlr,projectized-common.compile"/>
+
+
 </project>

@@ -20,7 +20,6 @@ package org.netbeans.modules.rust.cargo.api.nodes;
 
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.netbeans.modules.rust.cargo.impl.nodes.RustProjectDependenciesNode;
-import org.netbeans.modules.rust.cargo.impl.nodes.RustWorkspaceNode;
 import org.openide.nodes.Node;
 
 /**
@@ -38,15 +37,6 @@ public final class CargoNodes {
      */
     public static final Node newCargoDependenciesNode(CargoTOML cargotoml) {
         return new RustProjectDependenciesNode(cargotoml);
-    }
-
-    /**
-     * Returns a Node that shows the members of the workspace in a project.
-     * @param cargotoml The CargoTOML in question.
-     * @return  The node containing the workspace  members.
-     */
-    public static Node newWorkspaceNode(CargoTOML cargotoml) {
-        return new RustWorkspaceNode(cargotoml);
     }
 
 }

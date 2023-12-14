@@ -34,12 +34,11 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
-import org.netbeans.modules.rust.cargo.api.CargoCommand;
+import org.netbeans.modules.rust.cargo.api.CargoCLICommand;
 import org.netbeans.modules.rust.cargo.api.CargoTOML;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
-import org.netbeans.modules.rust.cargo.api.Cargo;
 import org.netbeans.modules.rust.cargo.api.RustPackage;
 import org.netbeans.modules.rust.cargo.output.RustConsole;
 import org.netbeans.modules.rust.cargo.output.RustErrorHyperlinkConvertorFactory;
@@ -47,16 +46,16 @@ import org.netbeans.modules.rust.options.api.CargoOptions;
 import org.openide.LifecycleManager;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.netbeans.modules.rust.cargo.api.CargoCLI;
 
 /**
- * CargoBuildImpl is used to invoke a set of predefined "cargo" commands.
+ * CargoCLIImpl is used to invoke a set of predefined "cargo" commands.
  *
- * @author antonio
  */
-@ServiceProvider(service = Cargo.class)
-public class CargoBuildImpl implements Cargo {
+@ServiceProvider(service = CargoCLI.class)
+public class CargoCLIImpl implements CargoCLI {
 
-    private static final Logger LOG = Logger.getLogger(CargoBuildImpl.class.getName());
+    private static final Logger LOG = Logger.getLogger(CargoCLIImpl.class.getName());
 
     /**
      * A Callable used to invoke a single Cargo command (such as "cargo cargo",
@@ -65,11 +64,11 @@ public class CargoBuildImpl implements Cargo {
     private static class CargoProcess implements Callable<Process> {
 
         private final CargoTOML cargotoml;
-        private final CargoCommand command;
+        private final CargoCLICommand command;
         private final RustConsole console;
         private final String[] options;
 
-        CargoProcess(CargoTOML cargotoml, CargoCommand command, String[] options, RustConsole console) {
+        CargoProcess(CargoTOML cargotoml, CargoCLICommand command, String[] options, RustConsole console) {
             this.cargotoml = cargotoml;
             this.command = command;
             this.console = console;
@@ -109,12 +108,12 @@ public class CargoBuildImpl implements Cargo {
     public static class SequentialCargoProcesses implements Callable<Integer> {
 
         private final CargoTOML cargotoml;
-        private final CargoCommand[] commands;
+        private final CargoCLICommand[] commands;
         private final String[] options;
         private final RequestProcessor requestProcessor;
         private RustConsole console;
 
-        SequentialCargoProcesses(RequestProcessor requestProcessor, CargoTOML cargotoml, CargoCommand[] commands, String[] options) {
+        SequentialCargoProcesses(RequestProcessor requestProcessor, CargoTOML cargotoml, CargoCLICommand[] commands, String[] options) {
             this.cargotoml = cargotoml;
             this.commands = commands;
             this.options = options;
@@ -128,8 +127,8 @@ public class CargoBuildImpl implements Cargo {
                 return -1;
             }
             // Get a proper console for the input/output
-            String projectName = cargotoml.getPackageName();
-            String commandNames = Arrays.stream(commands).map(CargoCommand::getDisplayName).collect(Collectors.joining(",")); // NOI18N
+            String projectName = cargotoml.getFileObject().toURI().toString();
+            String commandNames = Arrays.stream(commands).map(CargoCLICommand::getDisplayName).collect(Collectors.joining(",")); // NOI18N
             String consoleTabName = String.format("%s (%s)", projectName, commandNames); // NOI18N
 
             console = new RustConsole(cargotoml, consoleTabName, this::run);
@@ -142,12 +141,11 @@ public class CargoBuildImpl implements Cargo {
                     .frontWindowOnError(true)
                     .showProgress(false)
                     .noReset(true)
-                    .errConvertorFactory(new RustErrorHyperlinkConvertorFactory(cargotoml, console.getInputOutput()))
-                    ;
+                    .errConvertorFactory(new RustErrorHyperlinkConvertorFactory(cargotoml, console.getInputOutput()));
 
             int resultCode = 0;
 
-            for (CargoCommand command : commands) {
+            for (CargoCLICommand command : commands) {
                 CargoProcess process = new CargoProcess(cargotoml, command, options, console);
                 ExecutionService service = ExecutionService.newService(process, ed, consoleTabName);
                 Future<Integer> resultCodeFuture = service.run();
@@ -176,12 +174,12 @@ public class CargoBuildImpl implements Cargo {
 
     private final RequestProcessor requestProcessor;
 
-    public CargoBuildImpl() {
-        this.requestProcessor = new RequestProcessor(CargoBuildImpl.class);
+    public CargoCLIImpl() {
+        this.requestProcessor = new RequestProcessor(CargoCLIImpl.class);
     }
 
     @Override
-    public void cargo(CargoTOML cargotoml, CargoCommand[] commands, String... options) throws IOException {
+    public void cargo(CargoTOML cargotoml, CargoCLICommand[] commands, String... options) throws IOException {
         if (cargotoml == null) {
             throw new NullPointerException("Missing Cargo.toml file"); // NOI18N
         }
@@ -195,7 +193,6 @@ public class CargoBuildImpl implements Cargo {
         SequentialCargoProcesses sequentialCommands = new SequentialCargoProcesses(requestProcessor, cargotoml, commands, options);
         sequentialCommands.run();
     }
-
 
     /**
      * Runs `cargo search [text] --limit 15 --color never`

@@ -39,8 +39,9 @@ public class RustProjectImportantFilesNode extends AbstractNode {
     public static final String NAME = "rust-important-files"; // NOI18N
 
     private enum ImportantFileNames {
-        CARGO_TOUML("Cargo.toml"), // NOI18N
-        GITIGNORE(".gitignore"); // NOI18N
+        CARGO_TOUML("Cargo.toml"),
+        CARGO_LOCK("Cargo.lock")
+        ; // NOI18N
 
         final String fileName;
 
@@ -76,7 +77,9 @@ public class RustProjectImportantFilesNode extends AbstractNode {
             FileObject file = project.getProjectDirectory().getFileObject(filename);
             if (file != null) {
                 try {
-                    return new Node[]{DataObject.find(file).getNodeDelegate()};
+                    DataObject dataObject = DataObject.find(file);
+                    Node node = dataObject == null ? null : dataObject.getNodeDelegate().cloneNode();
+                    return node == null ? EMPTY : new Node[]{node};
                 } catch (DataObjectNotFoundException ex) {
                     Exceptions.printStackTrace(ex);
                 }

@@ -80,4 +80,11 @@ class ChildClass extends ParentClass {
 
     protected static function protectedStaticParentClassMethod(int $param1, string $param2): void {
     }
+
+    // private
+    private function privateParentClassMethod(int $param1, string $param2): void {
+    }
+
+    private static function privateStaticParentClassMethod(int $param1, string $param2): void {
+    }
 }

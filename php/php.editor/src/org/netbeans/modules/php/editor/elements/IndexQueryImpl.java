@@ -1861,7 +1861,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
             }
         } else if (typeElement.isInterface()) {
             final Collection<? extends IndexResult> result = results(PHPIndexer.FIELD_SUPER_IFACE, query,
-                    new String[] {PHPIndexer.FIELD_SUPER_IFACE, InterfaceElementImpl.IDX_FIELD, ClassElementImpl.IDX_FIELD});
+                    new String[] {PHPIndexer.FIELD_SUPER_IFACE, InterfaceElementImpl.IDX_FIELD, ClassElementImpl.IDX_FIELD, EnumElementImpl.IDX_FIELD});
             for (final IndexResult indexResult : result) {
                 String[] values = indexResult.getValues(PHPIndexer.FIELD_SUPER_IFACE);
                 for (String value : values) {
@@ -1870,6 +1870,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                     if (query.matchesName(PhpElementKind.IFACE, fqnForValue)) {
                         directTypes.addAll(InterfaceElementImpl.fromSignature(NameKind.empty(), this, indexResult));
                         directTypes.addAll(ClassElementImpl.fromSignature(NameKind.empty(), this, indexResult));
+                        directTypes.addAll(EnumElementImpl.fromSignature(NameKind.empty(), this, indexResult));
                     }
                 }
             }

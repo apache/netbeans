@@ -151,4 +151,7 @@ public interface NbCodeLanguageClient extends LanguageClient {
     @JsonRequest("config/update")
     public CompletableFuture<Void> configurationUpdate(@NonNull UpdateConfigParams params);
     
+    @JsonRequest("window/documentSave")
+    public CompletableFuture<Boolean> requestDocumentSave(@NonNull SaveDocumentRequestParams documentUri);
+    
 }

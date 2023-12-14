@@ -122,7 +122,12 @@ public class GradleInternalAdapter {
                     return new ValueAndType(provided.getType());
                 }
                 if (isFixedValue("property " + propName, etv)) {
-                    return new ValueAndType(provided.getType(), etv.getFixedValue());
+                    Object fixed = etv.getFixedValue();
+                    Class t = provided.getType();
+                    if (t == null && fixed != null) {
+                        t = fixed.getClass();
+                    }
+                    return new ValueAndType(t, fixed);
                 } else {
                     return new ValueAndType(provided.getType());
                 }

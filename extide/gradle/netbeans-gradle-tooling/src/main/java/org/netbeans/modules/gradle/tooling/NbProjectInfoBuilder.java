@@ -718,9 +718,17 @@ class NbProjectInfoBuilder {
                     if (Provider.class.isAssignableFrom(t)) {
                         ValueAndType vt = adapter.findPropertyValueInternal(propName, value);
                         if (vt != null) {
-                            t = vt.type;
                             if (vt.value.isPresent()) {
                                 value = vt.value.get();
+                            }
+                            if (vt.type != null) {
+                                t = vt.type;
+                            } else if (typeParameters != null && !typeParameters.isEmpty() && (typeParameters.get(0) instanceof Class)) {
+                                // derive the type from the provider's type parameter
+                                t = (Class)typeParameters.get(0);
+                            } else {
+                                // null value with an unspecified type from the provider
+                                t = Object.class; 
                             }
                         }
                     }
@@ -940,6 +948,9 @@ class NbProjectInfoBuilder {
     }
     
     private static Class findNonDecoratedClass(Class clazz) {
+        if (clazz == null || clazz.isInterface()) {
+            return clazz;
+        }
         while (clazz != Object.class && (clazz.getModifiers() & 0x1000 /* Modifiers.SYNTHETIC */) > 0) {
             clazz = clazz.getSuperclass();
         }

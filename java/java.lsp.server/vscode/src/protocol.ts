@@ -204,6 +204,14 @@ export namespace TextEditorDecorationDisposeNotification {
     export const type = new ProtocolNotificationType<string, void>('window/disposeTextEditorDecoration');
 }
 
+export interface SaveDocumentRequestParams {
+    documents: string[];
+}
+
+export namespace SaveDocumentsRequest {
+    export const type = new ProtocolRequestType<SaveDocumentRequestParams, boolean, never, void, void>('window/documentSave');
+}
+
 export interface NodeChangedParams {
     rootId : number;
     nodeId : number | null;
@@ -291,6 +299,7 @@ export namespace NodeInfoRequest {
         command? : string;
     }
 };
+
 
 export function asPosition(value: undefined | null): undefined;
 export function asPosition(value: Position): vscode.Position;

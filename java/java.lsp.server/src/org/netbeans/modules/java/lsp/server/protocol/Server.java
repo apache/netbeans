@@ -1252,6 +1252,12 @@ public final class Server {
             logWarning(params);
             return CompletableFuture.completedFuture(null);
         }
+
+        @Override
+        public CompletableFuture<Boolean> requestDocumentSave(SaveDocumentRequestParams documentUris) {
+            logWarning(Arrays.asList(documentUris));
+            return CompletableFuture.completedFuture(false);
+        }
     };
 
 

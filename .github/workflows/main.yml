@@ -2653,7 +2653,7 @@ jobs:
       - name: test-vscode-ext
         run: |
           cd java/java.lsp.server
-          ant $OPTS test-vscode-ext
+          env "netbeans.extra.options=-J-Dnetbeans.logger.console=true" ant $OPTS test-vscode-ext
  
 
 # last job depends on everything so that it is forced to run last even if a long job fails early

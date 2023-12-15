@@ -61,6 +61,7 @@ import { TLSSocket } from 'tls';
 import { InputStep, MultiStepInput } from './utils';
 import { env } from 'process';
 import { PropertiesView } from './propertiesView/propertiesView';
+import { dumpJava } from './test/suite/testutils';
 
 const API_VERSION : string = "1.0";
 export const COMMAND_PREFIX : string = "nbls";
@@ -276,22 +277,32 @@ function wrapCommandWithProgress(lsCommand : string, title : string, log? : vsco
                 p.report({ message: title });
                 c.outputChannel.show(true);
                 const start = new Date().getTime();
-                if (log) {
-                    handleLog(log, `starting ${lsCommand}`);
-                }
-                const res = await vscode.commands.executeCommand(lsCommand, ...args);
-                const elapsed = new Date().getTime() - start;
-                if (log) {
-                    handleLog(log, `finished ${lsCommand} in ${elapsed} ms with result ${res}`);
-                }
-                const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
-                setTimeout(() => { // set a timeout so user would still see the message when build time is short
-                    if (res) {
-                        resolve(res);
-                    } else {
-                        reject(res);
+                try {
+                    if (log) {
+                        handleLog(log, `starting ${lsCommand}`);
                     }
-                }, humanVisibleDelay);
+                    const res = await vscode.commands.executeCommand(lsCommand, ...args)
+                    const elapsed = new Date().getTime() - start;
+                    if (log) {
+                        handleLog(log, `finished ${lsCommand} in ${elapsed} ms with result ${res}`);
+                    }
+                    const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
+                    setTimeout(() => { // set a timeout so user would still see the message when build time is short
+                        if (res) {
+                            resolve(res);
+                        } else {
+                            dumpJava();
+                            if (log) {
+                                handleLog(log, `Command ${lsCommand} takes too long to start`);
+                            }
+                            reject(res);
+                        }
+                    }, humanVisibleDelay);
+                } catch (err : any) {
+                    if (log) {
+                        handleLog(log, `command ${lsCommand} executed with error: ${JSON.stringify(err)}`);
+                    }
+                }
             } else {
                 reject(`cannot run ${lsCommand}; client is ${c}`);
             }

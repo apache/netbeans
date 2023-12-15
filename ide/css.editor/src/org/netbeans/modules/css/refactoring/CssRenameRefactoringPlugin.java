@@ -114,7 +114,19 @@ public class CssRenameRefactoringPlugin implements RefactoringPlugin {
 
     @Override
     public Problem prepare(final RefactoringElementsBag refactoringElements) {
-        CssProjectSupport sup = CssProjectSupport.findFor(context.getFileObject());
+        FileObject fileObject;
+
+        if (context != null) {
+            fileObject = context.getFileObject();
+        } else {
+            fileObject = lookup.lookup(FileObject.class);
+        }
+
+        if (fileObject == null) {
+            return null;
+        }
+
+        CssProjectSupport sup = CssProjectSupport.findFor(fileObject);
         if (sup == null) {
             return null;
         }
@@ -173,20 +185,16 @@ public class CssRenameRefactoringPlugin implements RefactoringPlugin {
 
             }
 
-        } else {
-            FileObject fileObject = lookup.lookup(FileObject.class);
-
-            if(fileObject != null && !fileObject.isFolder()) {
-                //refactor a file in explorer
-                refactorFile(modificationResult, fileObject, index);
-            } else if (fileObject != null && fileObject.isFolder()) {
-                //refactor a folder in explorer
-                refactorFolder(modificationResult, fileObject, index);
-                //add folder rename element implementation, there doesn't seem to a default one
-                //like for file rename
-                // Disabled RenameFolder as it collides with FileRenamePlugin see #187635
-                //            refactoringElements.add(refactoring, new RenameFolder(folderContext.getFileObject()));
-            }
+        } else if (!fileObject.isFolder()) {
+            //refactor a file in explorer
+            refactorFile(modificationResult, fileObject, index);
+        } else if (fileObject.isFolder()) {
+            //refactor a folder in explorer
+            refactorFolder(modificationResult, fileObject, index);
+            //add folder rename element implementation, there doesn't seem to a default one
+            //like for file rename
+            // Disabled RenameFolder as it collides with FileRenamePlugin see #187635
+            //            refactoringElements.add(refactoring, new RenameFolder(folderContext.getFileObject()));
         }
 
         //commit the transaction and add the differences to the result

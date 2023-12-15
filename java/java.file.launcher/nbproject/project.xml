@@ -260,6 +260,7 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.java.lsp.server</friend>
+                <friend>org.netbeans.modules.nbcode.integration</friend>
                 <friend>org.netbeans.modules.refactoring.java</friend>
                 <package>org.netbeans.modules.java.file.launcher.api</package>
                 <package>org.netbeans.modules.java.file.launcher.spi</package>

@@ -249,6 +249,14 @@
                         <recursive/>
                         <compile-dependency/>
                     </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.editor.lib</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.editor.actions</code-name-base>
+                        <recursive/>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <public-packages/>

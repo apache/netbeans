@@ -280,7 +280,7 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
         private void checkTrailingCommas(TokenSequence<PHPTokenId> ts, List<ASTNode> nodes) {
             if (!nodes.isEmpty()) {
                 try {
-                    nodes.forEach((node) -> {
+                    for (ASTNode node: nodes) {
                         if (CancelSupport.getDefault().isCancelled()) {
                             return;
                         }
@@ -292,7 +292,7 @@ public final class PHP80UnhandledError extends UnhandledErrorRule {
                                 && TokenUtilities.textEquals(token.text(), ",")) { // NOI18N
                             createError(node);
                         }
-                    });
+                    }
                 } finally {
                     nodes.clear();
                 }

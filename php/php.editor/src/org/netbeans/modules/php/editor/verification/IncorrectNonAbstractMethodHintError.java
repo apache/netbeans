@@ -85,13 +85,13 @@ public class IncorrectNonAbstractMethodHintError extends HintErrorRule {
         "IncorrectNonAbstractMethodHintErrorHintDesc=Non-abstract method \"{0}\" must contain body"
     })
     private void addIcorrectNonAbstractMethodHints(Set<MethodDeclaration> methodDeclarations, List<Hint> hints, BaseDocument doc) {
-        methodDeclarations.forEach((methodDeclaration) -> {
+        for (MethodDeclaration methodDeclaration: methodDeclarations) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
             List<HintFix> fixes = Collections.singletonList(new AddBodyFix(doc, methodDeclaration));
             addHint(methodDeclaration, Bundle.IncorrectNonAbstractMethodHintErrorHintDesc(CodeUtils.extractMethodName(methodDeclaration)), hints, fixes);
-        });
+        }
     }
 
     private void addHint(ASTNode node, String description, List<Hint> hints, List<HintFix> fixes) {

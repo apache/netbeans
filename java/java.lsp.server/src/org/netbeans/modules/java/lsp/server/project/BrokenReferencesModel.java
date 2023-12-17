@@ -115,10 +115,9 @@ public final class BrokenReferencesModel extends AbstractListModel implements Pr
      * @param fire 
      */
     void refresh(boolean fire) {
-        AtomicBoolean changed = new AtomicBoolean(false);
         ProjectManager.mutex().postReadRequest(() -> {
             int size;
-            
+            boolean changed = false;
             synchronized (lock) {
                 final Map<ProjectProblemsProvider,Project> newProviders = new LinkedHashMap<ProjectProblemsProvider,Project>();
                 for (Project bprj : ctx.getBrokenProjects()) {
@@ -147,10 +146,10 @@ public final class BrokenReferencesModel extends AbstractListModel implements Pr
                         all.add(new ProblemReference(problem, bprj, global));
                     }
                 }
-                changed.set(updateReferencesList(problems, all));
+                changed = updateReferencesList(problems, all);
                 size = getSize();
             }
-            if (fire && changed.get()) {
+            if (fire && changed) {
                 Mutex.EVENT.postReadRequest(new Runnable() {
                     @Override
                     public void run() {

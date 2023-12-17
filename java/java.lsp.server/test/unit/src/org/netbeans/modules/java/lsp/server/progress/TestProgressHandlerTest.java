@@ -46,6 +46,7 @@ import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.protocol.SaveDocumentRequestParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestSuiteInfo;
@@ -221,6 +222,5 @@ public class TestProgressHandlerTest extends NbTestCase {
         public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
             return CompletableFuture.completedFuture(null);
         }
-
     }
 }

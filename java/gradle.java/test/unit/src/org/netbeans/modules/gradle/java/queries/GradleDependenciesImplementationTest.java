@@ -19,10 +19,13 @@
 package org.netbeans.modules.gradle.java.queries;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import static junit.framework.TestCase.assertNotNull;
+import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -37,6 +40,7 @@ import org.netbeans.modules.project.dependency.DependencyResult;
 import org.netbeans.modules.project.dependency.ProjectDependencies;
 import org.netbeans.modules.project.dependency.Scopes;
 import org.netbeans.modules.project.dependency.SourceLocation;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.DummyInstalledFileLocator;
@@ -133,6 +137,84 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         assertSame("Project is passed as project data - internal", p, r.getRoot().getProjectData());
     }
     
+    public void testDependencyNoDependencies() throws Exception {
+        Project p = makeProject("dependencies/simple2");
+        DependencyResult r = ProjectDependencies.findDependencies(p, 
+            ProjectDependencies.newQuery(Scopes.RUNTIME)
+        );
+        assertNotNull("Dependency service is supported", r);
+        SourceLocation loc = r.getDeclarationRange(null, DependencyResult.PART_CONTAINER);
+        assertNull(loc);
+        
+        loc = r.getDeclarationRange(r.getRoot(), DependencyResult.PART_CONTAINER);
+        assertNull(loc);
+    }
+    
+    public void testDependencyBlockRange() throws Exception {
+        Project p = makeProject("dependencies/micronaut");
+        DependencyResult r = ProjectDependencies.findDependencies(p, 
+            ProjectDependencies.newQuery(Scopes.RUNTIME)
+        );
+        assertNotNull("Dependency service is supported", r);
+        
+        SourceLocation loc = r.getDeclarationRange(null, DependencyResult.PART_CONTAINER);
+        assertNotNull(loc);
+        
+        loc = r.getDeclarationRange(r.getRoot(), DependencyResult.PART_CONTAINER);
+        assertNotNull(loc);
+      
+        FileObject buildGradle = projectDir.getFileObject("build.gradle");
+        EditorCookie cake = buildGradle.getLookup().lookup(EditorCookie.class);
+        LineDocument doc = LineDocumentUtils.asRequired(cake.openDocument(), LineDocument.class);
+        
+        int start = loc.getStartOffset();
+        int depStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
+        int depEnd = LineDocumentUtils.getLineEnd(doc, start);
+        
+        String s = doc.getText(depStart, depEnd - depStart);
+        assertEquals("dependencies {", s);
+        
+        int end = loc.getEndOffset();
+        s = doc.getText(end - 1, 1);
+        assertEquals("}", s);
+    }
+    
+    public void testLocationOfBlockDependencyList() throws Exception {
+        Project p = makeProject("dependencies/micronaut");
+        DependencyResult r = ProjectDependencies.findDependencies(p, 
+            ProjectDependencies.newQuery(Scopes.RUNTIME)
+        );
+        assertNotNull("Dependency service is supported", r);
+        
+        Dependency pin1 = r.getRoot().getChildren().stream().filter(d -> d.toString().contains("io.micronaut:micronaut-validation")).findAny().get();
+        Dependency pin2 = r.getRoot().getChildren().stream().filter(d -> d.toString().contains("ch.qos.logback:logback-classic")).findAny().get();
+        Dependency pin3 = r.getRoot().getChildren().stream().filter(d -> d.toString().contains("io.micronaut:micronaut-jackson-databind")).findAny().get();
+        
+        SourceLocation loc = r.getDeclarationRange(pin2, DependencyResult.PART_CONTAINER);
+        assertNull(loc);
+        
+        loc = r.getDeclarationRange(pin3, DependencyResult.PART_CONTAINER);
+        assertNull(loc);
+        
+        loc = r.getDeclarationRange(pin1, DependencyResult.PART_CONTAINER);
+        assertNotNull(loc);
+      
+        FileObject buildGradle = projectDir.getFileObject("build.gradle");
+        EditorCookie cake = buildGradle.getLookup().lookup(EditorCookie.class);
+        LineDocument doc = LineDocumentUtils.asRequired(cake.openDocument(), LineDocument.class);
+        
+        int start = loc.getStartOffset();
+        int depStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
+        int depEnd = LineDocumentUtils.getLineEnd(doc, start);
+        
+        String s = doc.getText(depStart, depEnd - depStart);
+        assertEquals("implementation(", s);
+        
+        int end = loc.getEndOffset();
+        s = doc.getText(end - 1, 1);
+        assertEquals(")", s);
+    }
+    
     public void testMicronautProject() throws Exception {
         Project p = makeProject("dependencies/micronaut");
         DependencyResult r = ProjectDependencies.findDependencies(p, 
@@ -174,5 +256,44 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         }
         assertNotNull("Implied dependency should have a root dep", rd);
         assertSame(rd, srcLoc.getImpliedBy());
-  }
+    }
+    
+    private void assertContainsDependency(List<Dependency> deps, String groupAndArtifact) {
+        for (Dependency d : deps) {
+            ArtifactSpec a = d.getArtifact();
+            if (a != null) {
+                String ga = a.getGroupId() + ":" + a.getArtifactId();
+                if (groupAndArtifact.equals(ga)) {
+                    return;
+                }
+            }
+        }
+        fail("Artifact not found: " +  groupAndArtifact);
+    }
+    
+    private static final List<String> ALL_DEPS =   Arrays.asList(
+            "io.micronaut:micronaut-http-validation",
+            "io.micronaut:micronaut-http-client",
+            "io.micronaut:micronaut-jackson-databind",
+            "jakarta.annotation:jakarta.annotation-api",
+            "ch.qos.logback:logback-classic",
+            "io.micronaut:micronaut-validation",
+            "org.apache.logging.log4j:log4j-core"
+    );
+    
+    public void testMicronautProjectDeclaredDependencies() throws Exception {
+        Project p = makeProject("dependencies/micronaut");
+ 
+        DependencyResult r = ProjectDependencies.findDependencies(p, 
+            ProjectDependencies.newQuery(Scopes.DECLARED)
+        );
+        assertNotNull("Dependency service is supported", r);
+        
+        List<Dependency> deps = r.getRoot().getChildren();
+        for (String d : ALL_DEPS) {
+            assertContainsDependency(deps, d);
+        }
+        
+        assertTrue("Contains versioned log4j dependency", deps.stream().filter(d -> d.getArtifact().toString().contains(".log4j:log4j-core:2.17.0")).findAny().isPresent());
+    }
 }

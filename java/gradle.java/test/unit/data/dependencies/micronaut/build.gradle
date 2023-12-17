@@ -32,12 +32,16 @@ repositories {
 dependencies {
     annotationProcessor("io.micronaut:micronaut-http-validation")
     implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut:micronaut-jackson-databind")
+    implementation(
+            "io.micronaut:micronaut-jackson-databind"
+    )
     implementation("jakarta.annotation:jakarta.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
-    implementation("io.micronaut:micronaut-validation")
 
-    implementation("org.apache.logging.log4j:log4j-core:2.17.0")
+    implementation(
+        "io.micronaut:micronaut-validation",
+        "org.apache.logging.log4j:log4j-core:2.17.0"
+    )
 }
 
 

@@ -184,32 +184,37 @@ public class ProjectDependenciesCommand implements CommandProvider {
                             continue;
                         }
                         toProcess.addAll(d.getChildren());
+                        boolean found = false;
                         if (matches != null && !matches.isEmpty()) {
                             for (ArtifactSpec test : matches) {
                                 if (test.getGroupId() != null && !test.getGroupId().equals(a.getGroupId())) {
-                                    continue NEXT;
+                                    continue;
                                 }
                                 if (test.getArtifactId() != null && !test.getArtifactId().equals(a.getArtifactId())) {
-                                    continue NEXT;
+                                    continue;
                                 }
                                 if (test.getVersionSpec() != null && !test.getVersionSpec().equals(a.getVersionSpec())) {
-                                    continue NEXT;
+                                    continue;
                                 }
                                 if (test.getClassifier() != null && !test.getClassifier().equals(a.getClassifier())) {
-                                    continue NEXT;
+                                    continue;
                                 }
                                 if (test.getType()!= null && !test.getType().equals(a.getType())) {
-                                    continue NEXT;
+                                    continue;
                                 }
                                 // match found, OK
+                                found = true;
                                 break;
                             }
-                        }
-                        
-                        if (request.isReturnContents()) {
-                            accepted.add(d);
                         } else {
-                            accepted.add(Dependency.create(a, d.getScope(), Collections.emptyList(), null));
+                            found = true;
+                        }
+                        if (found) {
+                            if (request.isReturnContents()) {
+                                accepted.add(d);
+                            } else {
+                                accepted.add(Dependency.create(a, d.getScope(), Collections.emptyList(), null));
+                            }
                         }
                     }
                     res.setMatches(accepted);

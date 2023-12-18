@@ -22,6 +22,11 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
@@ -29,10 +34,13 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -185,5 +193,37 @@ public class NbGsonAdapter implements LspGsonSetup {
                 }
             }
         });
+        b.registerTypeAdapter(EnumSet.class, new EnumSetDeserializer());
     }
+
+
+    /**
+     * LSP4j obscures EnumSet handling by its Collection type adapter factory. We need to register a type adapter
+     * that overrides the deserialization for enumsets. This adapter also accepts a primitive as a (singleton) EnumSet.
+     */
+    private static final class EnumSetDeserializer implements JsonDeserializer<EnumSet> {
+        @Override
+        public EnumSet deserialize(JsonElement je, Type type, JsonDeserializationContext jdc) throws JsonParseException {
+            ParameterizedType pt = (ParameterizedType)type;
+            Type itemType = pt.getActualTypeArguments()[0];
+            if (je.isJsonPrimitive()) {
+                Enum e = (Enum)jdc.deserialize(je, itemType);
+                if (e != null) {
+                    return EnumSet.of(e);
+                }
+            } else if (!je.isJsonArray()) {
+                throw new JsonParseException("Primitive or array expected");
+            }
+            JsonArray arr = je.getAsJsonArray();
+            EnumSet raw = EnumSet.noneOf((Class)itemType);
+            for (JsonElement el : arr) {
+                if (!el.isJsonPrimitive()) {
+                    throw new JsonParseException("Primitive item expected");
+                }
+                raw.add((Enum)jdc.deserialize(el, itemType));
+            }
+            return raw;
+        }
+    }
+
 }

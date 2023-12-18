@@ -23,6 +23,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -37,10 +38,12 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -103,7 +106,7 @@ public class ExtraGsonSetup implements LspGsonSetup {
         b.registerTypeAdapter(DependencyChange.class, (InstanceCreator)(t) -> DependencyChange.builder(DependencyChange.Kind.ADD).create());
         b.registerTypeAdapterFactory(new LowercaseEnumTypeAdapterFactory());
     }
-
+    
     class ArtifactDeserializer implements JsonDeserializer<ArtifactSpec> {
 
         @Override
@@ -220,7 +223,7 @@ public class ExtraGsonSetup implements LspGsonSetup {
                     if (value == null) {
                         out.nullValue();
                     } else {
-                        out.value(toLowercase(value));
+                        out.value(value.toString());
                     }
                 }
 
@@ -229,7 +232,7 @@ public class ExtraGsonSetup implements LspGsonSetup {
                         reader.nextNull();
                         return null;
                     } else {
-                        return lowercaseToConstant.get(reader.nextString());
+                        return lowercaseToConstant.get(toLowercase(reader.nextString()));
                     }
                 }
             };

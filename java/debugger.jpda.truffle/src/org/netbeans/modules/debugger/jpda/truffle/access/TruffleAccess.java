@@ -87,6 +87,7 @@ import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 import org.netbeans.modules.debugger.jpda.truffle.LanguageName;
 import org.netbeans.modules.debugger.jpda.truffle.RemoteServices;
 import org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager;
+import static org.netbeans.modules.debugger.jpda.truffle.TruffleDebugManager.configureTruffleBreakpoint;
 import org.netbeans.modules.debugger.jpda.truffle.Utils;
 import org.netbeans.modules.debugger.jpda.truffle.actions.StepActionProvider;
 import org.netbeans.modules.debugger.jpda.truffle.ast.TruffleNode;
@@ -175,7 +176,7 @@ public class TruffleAccess implements JPDABreakpointListener {
     private JPDABreakpoint createBP(String className, String methodName, JPDADebugger debugger) {
         final MethodBreakpoint mb = MethodBreakpoint.create(className, methodName);
         mb.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
-        mb.setHidden(true);
+        configureTruffleBreakpoint(mb);
         mb.setSession(debugger);
         mb.addJPDABreakpointListener(this);
         DebuggerManager.getDebuggerManager().addBreakpoint(mb);
@@ -310,7 +311,7 @@ public class TruffleAccess implements JPDABreakpointListener {
         MethodBreakpoint clearLeakingReferencesBreakpoint = MethodBreakpoint.create(CLEAR_REFERENCES_CLASS, CLEAR_REFERENCES_METHOD);
         clearLeakingReferencesBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
         clearLeakingReferencesBreakpoint.setThreadFilters(debugger, new JPDAThread[] { thread });
-        clearLeakingReferencesBreakpoint.setHidden(true);
+        configureTruffleBreakpoint(clearLeakingReferencesBreakpoint);
         Function<EventSet, Boolean> breakpointEventInterceptor = eventSet -> {
             try {
                 ThreadReference etr = null;

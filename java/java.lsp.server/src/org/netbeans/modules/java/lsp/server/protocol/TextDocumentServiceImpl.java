@@ -1635,6 +1635,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public void didOpen(DidOpenTextDocumentParams params) {
+        LOG.log(Level.FINER, "didOpen: {0}", params);
         try {
             FileObject file = fromURI(params.getTextDocument().getUri(), true);
             if (file == null) {
@@ -1706,6 +1707,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public void didChange(DidChangeTextDocumentParams params) {
+        LOG.log(Level.FINER, "didChange: {0}", params);
         String uri = params.getTextDocument().getUri();
         Document rawDoc = server.getOpenedDocuments().getDocument(uri);
         if (rawDoc != null) {
@@ -1732,6 +1734,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
+        LOG.log(Level.FINER, "didClose: {0}", params);
         try {
             String uri = params.getTextDocument().getUri();
             // the order here is important ! As the file may cease to exist, it's
@@ -1755,6 +1758,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<TextEdit>> willSaveWaitUntil(WillSaveTextDocumentParams params) {
+        LOG.log(Level.FINER, "willSaveWaitUntil: {0}", params);
         String uri = params.getTextDocument().getUri();
         JavaSource js = getJavaSource(uri);
         if (js == null) {
@@ -1782,6 +1786,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didSave(DidSaveTextDocumentParams arg0) {
         //TODO: nothing for now?
+        LOG.log(Level.FINER, "didSave: {0}", arg0);
     }
 
     CompletableFuture<List<? extends Location>> superImplementations(String uri, Position position) {

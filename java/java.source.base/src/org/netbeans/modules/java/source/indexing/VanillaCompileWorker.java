@@ -137,6 +137,7 @@ import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.OutputFileManager;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ExecutableFilesIndex;
+import org.netbeans.modules.java.source.util.AbortChecker;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.SuspendStatus;
@@ -223,32 +224,33 @@ final class VanillaCompileWorker extends CompileWorker {
                 units.put(cut, tuple);
                 computeFQNs(file2FQNs, cut, tuple);
             }
-//            Log.instance(jt.getContext()).nerrors = 0;
-        } catch (CancelAbort ca) {
-            if (context.isCancelled() && JavaIndex.LOG.isLoggable(Level.FINEST)) {
-                JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
-            }
         } catch (Throwable t) {
-            if (JavaIndex.LOG.isLoggable(Level.WARNING)) {
-                final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
-                final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
-                final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-                final String message = String.format("VanillaCompileWorker caused an exception\nFile: %s\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
+            if (AbortChecker.isCancelAbort(t)) {
+                if (context.isCancelled() && JavaIndex.LOG.isLoggable(Level.FINEST)) {
+                    JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), t);  //NOI18N
+                }
+            } else {
+                if (JavaIndex.LOG.isLoggable(Level.WARNING)) {
+                    final ClassPath bootPath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
+                    final ClassPath classPath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
+                    final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
+                    final String message = String.format("VanillaCompileWorker caused an exception\nFile: %s\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
                             fileObjects.values().iterator().next().indexable.getURL().toString(),
                             FileUtil.getFileDisplayName(context.getRoot()),
-                            bootPath == null   ? null : bootPath.toString(),
-                            classPath == null  ? null : classPath.toString(),
+                            bootPath == null ? null : bootPath.toString(),
+                            classPath == null ? null : classPath.toString(),
                             sourcePath == null ? null : sourcePath.toString()
-                            );
-                JavaIndex.LOG.log(Level.WARNING, message, t);  //NOI18N
-            }
-            if (t instanceof ThreadDeath) {
-                throw (ThreadDeath) t;
-            } else {
-                jt = null;
-                units = null;
-                dc.cleanDiagnostics();
-                freeMemory(false);
+                    );
+                    JavaIndex.LOG.log(Level.WARNING, message, t);  //NOI18N
+                }
+                if (t instanceof ThreadDeath) {
+                    throw (ThreadDeath) t;
+                } else {
+                    jt = null;
+                    units = null;
+                    dc.cleanDiagnostics();
+                    freeMemory(false);
+                }
             }
         }
         if (jt == null || units == null || JavaCustomIndexer.NO_ONE_PASS_COMPILE_WORKER) {
@@ -415,30 +417,32 @@ final class VanillaCompileWorker extends CompileWorker {
                             );
                 JavaIndex.LOG.log(Level.FINEST, message, isp);
             }
-        } catch (CancelAbort ca) {
-            if (isLowMemory(new boolean[] {true})) {
-                fallbackCopyExistingClassFiles(context, javaContext, files);
-                return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
-            } else if (JavaIndex.LOG.isLoggable(Level.FINEST)) {
-                JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
-            }
         } catch (Throwable t) {
-            Exceptions.printStackTrace(t);
-             if (t instanceof ThreadDeath) {
-                throw (ThreadDeath) t;
+            if (AbortChecker.isCancelAbort(t)) {
+                if (isLowMemory(new boolean[]{true})) {
+                    fallbackCopyExistingClassFiles(context, javaContext, files);
+                    return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
+                } else if (JavaIndex.LOG.isLoggable(Level.FINEST)) {
+                    JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), t);  //NOI18N
+                }
             } else {
-                Level level = t instanceof FatalError ? Level.FINEST : Level.WARNING;
-                if (JavaIndex.LOG.isLoggable(level)) {
-                    final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
-                    final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
-                    final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-                    final String message = String.format("VanillaCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
-                                FileUtil.getFileDisplayName(context.getRoot()),
-                                bootPath == null   ? null : bootPath.toString(),
-                                classPath == null  ? null : classPath.toString(),
-                                sourcePath == null ? null : sourcePath.toString()
-                                );
-                    JavaIndex.LOG.log(level, message, t);  //NOI18N
+                Exceptions.printStackTrace(t);
+                if (t instanceof ThreadDeath) {
+                    throw (ThreadDeath) t;
+                } else {
+                    Level level = t instanceof FatalError ? Level.FINEST : Level.WARNING;
+                    if (JavaIndex.LOG.isLoggable(level)) {
+                        final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
+                        final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
+                        final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
+                        final String message = String.format("VanillaCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
+                                    FileUtil.getFileDisplayName(context.getRoot()),
+                                    bootPath == null   ? null : bootPath.toString(),
+                                    classPath == null  ? null : classPath.toString(),
+                                    sourcePath == null ? null : sourcePath.toString()
+                                    );
+                        JavaIndex.LOG.log(level, message, t);  //NOI18N
+                    }
                 }
             }
         }

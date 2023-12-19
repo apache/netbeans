@@ -114,6 +114,7 @@ import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.tasklist.CompilerSettings;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ClasspathInfoAccessor;
+import org.netbeans.modules.java.source.util.AbortChecker;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.Task;
@@ -781,29 +782,31 @@ public class JavacParser extends Parser {
             if (currentPhase == Phase.RESOLVED && phase.compareTo(Phase.UP_TO_DATE)>=0) {
                 currentPhase = Phase.UP_TO_DATE;
             }
-        } catch (CancelAbort ca) {
-            if (lowMemoryCancel.get()) {
-                currentInfo.markIncomplete();
-                HUGE_SNAPSHOTS.add(new WeakReference<>(snapshots));
-            } else {
-                //real cancel
-                currentPhase = Phase.MODIFIED;
-                invalidate(false);
-            }
-        } catch (Abort abort) {
-            parserError = currentPhase;
-        } catch (RuntimeException | Error ex) {
-            if (lowMemoryCancel.get()) {
-                currentInfo.markIncomplete();
-                HUGE_SNAPSHOTS.add(new WeakReference<>(snapshots));
-            } else {
-                if (cancellable && parserCanceled.get()) {
+        } catch (Throwable ex) {
+            if (AbortChecker.isCancelAbort(ex)) {
+                if (lowMemoryCancel.get()) {
+                    currentInfo.markIncomplete();
+                    HUGE_SNAPSHOTS.add(new WeakReference<>(snapshots));
+                } else {
+                    //real cancel
                     currentPhase = Phase.MODIFIED;
                     invalidate(false);
+                }
+            } else if (AbortChecker.isAbort(ex)) {
+                parserError = currentPhase;
+            } else {
+                if (lowMemoryCancel.get()) {
+                    currentInfo.markIncomplete();
+                    HUGE_SNAPSHOTS.add(new WeakReference<>(snapshots));
                 } else {
-                    parserError = currentPhase;
-                    dumpSource(currentInfo, ex);
-                    throw ex;
+                    if (cancellable && parserCanceled.get()) {
+                        currentPhase = Phase.MODIFIED;
+                        invalidate(false);
+                    } else {
+                        parserError = currentPhase;
+                        dumpSource(currentInfo, ex);
+                        throw ex;
+                    }
                 }
             }
         } finally {

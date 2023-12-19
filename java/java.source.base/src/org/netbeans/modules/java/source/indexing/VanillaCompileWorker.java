@@ -88,7 +88,6 @@ import com.sun.tools.javac.tree.JCTree.JCSwitchExpression;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
-import org.netbeans.lib.nbjavac.services.CancelAbort;
 import org.netbeans.lib.nbjavac.services.CancelService;
 import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.ListBuffer;
@@ -142,7 +141,6 @@ import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.SuspendStatus;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
@@ -154,6 +152,7 @@ import org.openide.util.Exceptions;
 final class VanillaCompileWorker extends CompileWorker {
 
     @Override
+    @SuppressWarnings("UseSpecificCatch")
     protected ParsingOutput compile(
             final ParsingOutput previous,
             final Context context,
@@ -168,8 +167,8 @@ final class VanillaCompileWorker extends CompileWorker {
         final Set<javax.tools.FileObject> aptGenerated = previous != null ? previous.aptGenerated : new HashSet<>();
 
         final DiagnosticListenerImpl dc = new DiagnosticListenerImpl();
-        final LinkedList<CompilationUnitTree> trees = new LinkedList<CompilationUnitTree>();
-        Map<CompilationUnitTree, CompileTuple> units = new IdentityHashMap<CompilationUnitTree, CompileTuple>();
+        final LinkedList<CompilationUnitTree> trees = new LinkedList<>();
+        Map<CompilationUnitTree, CompileTuple> units = new IdentityHashMap<>();
         JavacTaskImpl jt = null;
 
         boolean nop = true;
@@ -177,7 +176,6 @@ final class VanillaCompileWorker extends CompileWorker {
         final SourcePrefetcher sourcePrefetcher = SourcePrefetcher.create(files, suspendStatus);
         Map<JavaFileObject, CompileTuple> fileObjects = new IdentityHashMap<>();
         try {
-            final boolean flm[] = {true};
             while (sourcePrefetcher.hasNext())  {
                 final CompileTuple tuple = sourcePrefetcher.next();
                 try {
@@ -235,7 +233,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     final ClassPath classPath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
                     final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
                     final String message = String.format("VanillaCompileWorker caused an exception\nFile: %s\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
-                            fileObjects.values().iterator().next().indexable.getURL().toString(),
+                            fileObjects.values().iterator().next().indexable.getURL(),
                             FileUtil.getFileDisplayName(context.getRoot()),
                             bootPath == null ? null : bootPath.toString(),
                             classPath == null ? null : classPath.toString(),
@@ -275,7 +273,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
-            final Map<Element, CompileTuple> clazz2Tuple = new IdentityHashMap<Element, CompileTuple>();
+            final Map<Element, CompileTuple> clazz2Tuple = new IdentityHashMap<>();
             Enter enter = Enter.instance(jt.getContext());
             for (Element type : types) {
                 if (type.getKind().isClass() || type.getKind().isInterface() || type.getKind() == ElementKind.MODULE) {
@@ -359,43 +357,40 @@ final class VanillaCompileWorker extends CompileWorker {
                 dropMethodsAndErrors(jtFin.getContext(), env.toplevel, dc);
                 log.nerrors = 0;
             });
-            final Future<Void> done = FileManagerTransaction.runConcurrent(new FileSystem.AtomicAction() {
-                @Override
-                public void run() throws IOException {
-                    Modules modules = Modules.instance(jtFin.getContext());
-                    compiler.shouldStopPolicyIfError = CompileState.FLOW; 
-                    for (Element type : types) {
-                        if (isErroneousClass(type)) {
-                            //likely a duplicate of another class, don't touch:
-                            continue;
-                        }
-                        TreePath tp = Trees.instance(jtFin).getPath(type);
-                        assert tp != null;
-                        log.nerrors = 0;
-                        Iterable<? extends JavaFileObject> generatedFiles = jtFin.generate(Collections.singletonList(type));
-                        CompileTuple unit = clazz2Tuple.get(type);
-                        if (unit == null || !unit.virtual) {
-                            for (JavaFileObject generated : generatedFiles) {
-                                if (generated instanceof FileObjects.FileBase) {
-                                    createdFiles.add(((FileObjects.FileBase) generated).getFile());
-                                } else {
-                                    // presumably should not happen
-                                }
+            final Future<Void> done = FileManagerTransaction.runConcurrent(() -> {
+                Modules modules = Modules.instance(jtFin.getContext());
+                compiler.shouldStopPolicyIfError = CompileState.FLOW;
+                for (Element type : types) {
+                    if (isErroneousClass(type)) {
+                        //likely a duplicate of another class, don't touch:
+                        continue;
+                    }
+                    TreePath tp = Trees.instance(jtFin).getPath(type);
+                    assert tp != null;
+                    log.nerrors = 0;
+                    Iterable<? extends JavaFileObject> generatedFiles = jtFin.generate(Collections.singletonList(type));
+                    CompileTuple unit = clazz2Tuple.get(type);
+                    if (unit == null || !unit.virtual) {
+                        for (JavaFileObject generated : generatedFiles) {
+                            if (generated instanceof FileObjects.FileBase) {
+                                createdFiles.add(((FileObjects.FileBase) generated).getFile());
+                            } else {
+                                // presumably should not happen
                             }
                         }
                     }
-                    if (!moduleName.assigned) {
-                        ModuleElement module = !trees.isEmpty() ?
+                }
+                if (!moduleName.assigned) {
+                    ModuleElement module = !trees.isEmpty() ?
                             ((JCTree.JCCompilationUnit)trees.getFirst()).modle :
                             null;
-                        if (module == null) {
-                            module = modules.getDefaultModule();
-                        }
-                        moduleName.name = module == null || module.isUnnamed() ?
+                    if (module == null) {
+                        module = modules.getDefaultModule();
+                    }
+                    moduleName.name = module == null || module.isUnnamed() ?
                             null :
                             module.getQualifiedName().toString();
-                        moduleName.assigned = true;
-                    }
+                    moduleName.assigned = true;
                 }
             });
             for (Entry<CompilationUnitTree, CompileTuple> unit : units.entrySet()) {
@@ -533,16 +528,18 @@ final class VanillaCompileWorker extends CompileWorker {
         }
     }
 
-    public static class HandledUnits {
+    private static class HandledUnits {
         public final List<CompilationUnitTree> handled = new ArrayList<>();
     }
 
-    public static BiConsumer<JavaFileObject, CompilationUnitTree> fixedListener = (file, cut) -> {};
+    @SuppressWarnings("PackageVisibleField") // Unittests
+    static BiConsumer<JavaFileObject, CompilationUnitTree> fixedListener = (file, cut) -> {};
 
     private void dropMethodsAndErrors(com.sun.tools.javac.util.Context ctx, CompilationUnitTree cut, DiagnosticListenerImpl dc) {
         HandledUnits hu = ctx.get(HandledUnits.class);
         if (hu == null) {
-            ctx.put(HandledUnits.class, hu = new HandledUnits());
+            hu = new HandledUnits();
+            ctx.put(HandledUnits.class, hu);
         }
         if (hu.handled.contains(cut)) {
             //already seen
@@ -1034,10 +1031,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     }
                     return false;
                 } else if (annotation instanceof Attribute.Class) {
-                    if (isErroneous(((Attribute.Class) annotation).classType)) {
-                        return true;
-                    }
-                    return false;
+                    return isErroneous(((Attribute.Class) annotation).classType);
                 } else if (annotation instanceof Attribute.Compound) {
                     for (Pair<MethodSymbol, Attribute> p : ((Attribute.Compound) annotation).values) {
                         if (isAnnotationErroneous(p.snd)) {
@@ -1062,7 +1056,7 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             private boolean errorFound;
-            private Map<Type, Boolean> seen = new IdentityHashMap<>();
+            private final Map<Type, Boolean> seen = new IdentityHashMap<>();
 
             private Type error2Object(Type t) {
                 if (t == null)
@@ -1174,5 +1168,6 @@ final class VanillaCompileWorker extends CompileWorker {
         return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.OTHER);
     }
 
-    public static Function<Diagnostic<?>, String> DIAGNOSTIC_TO_TEXT = d -> d.getMessage(null);
+    @SuppressWarnings("PackageVisibleField") // Unittests
+    static Function<Diagnostic<?>, String> DIAGNOSTIC_TO_TEXT = d -> d.getMessage(null);
 }

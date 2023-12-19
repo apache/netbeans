@@ -15,8 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-TMPFLD = ../../../../target/tmp/
-OFLD = ../../../../target/ide/
+TMPFLD = ./build/
+OFLD = ./build/
 
 all: prepfolder netbeans64.exe netbeans.exe
 
@@ -30,11 +30,11 @@ clean:
 netbeans64.res: netbeans.rc netbeans64.exe.manifest
 	x86_64-w64-mingw32-windres -o$(TMPFLD)netbeans64.res -Ocoff -DMANIFEST_FILE=netbeans64.exe.manifest netbeans.rc
 
-netbeans64.exe: netbeans.cpp  nblauncher.cpp netbeans64.res ../bootstrap/utilsfuncs.cpp
-	x86_64-w64-mingw32-gcc -s -DNBEXEC_DLL='"/lib/nbexec64.dll"' -DARCHITECTURE=64 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -mwindows netbeans.cpp nblauncher.cpp $(TMPFLD)netbeans64.res ../bootstrap/utilsfuncs.cpp -I ../bootstrap/ -o$(OFLD)netbeans64.exe -static -lstdc++ -static-libstdc++ -static-libgcc
+netbeans64.exe: netbeans.cpp  nblauncher.cpp netbeans64.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp
+	x86_64-w64-mingw32-gcc -s -DNBEXEC_DLL='"/lib/nbexec64.dll"' -DARCHITECTURE=64 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -mwindows netbeans.cpp nblauncher.cpp $(TMPFLD)netbeans64.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp -I ../../../platform/o.n.bootstrap/launcher/windows/ -o$(OFLD)netbeans64.exe -static -lstdc++ -static-libstdc++ -static-libgcc
 
 netbeans.res: netbeans.rc netbeans.exe.manifest
 	i686-w64-mingw32-windres -o$(TMPFLD)netbeans.res -Ocoff  -DMANIFEST_FILE=netbeans.exe.manifest netbeans.rc
 
-netbeans.exe: netbeans.cpp  nblauncher.cpp netbeans.res ../bootstrap/utilsfuncs.cpp
-	i686-w64-mingw32-gcc -s -DNBEXEC_DLL='"/lib/nbexec.dll"' -DARCHITECTURE=32 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -mwindows netbeans.cpp nblauncher.cpp $(TMPFLD)netbeans.res ../bootstrap/utilsfuncs.cpp -I ../bootstrap/ -o$(OFLD)netbeans.exe -static -lstdc++ -static-libstdc++ -static-libgcc
+netbeans.exe: netbeans.cpp  nblauncher.cpp netbeans.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp
+	i686-w64-mingw32-gcc -s -DNBEXEC_DLL='"/lib/nbexec.dll"' -DARCHITECTURE=32 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -mwindows netbeans.cpp nblauncher.cpp $(TMPFLD)netbeans.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp -I ../../../platform/o.n.bootstrap/launcher/windows/ -o$(OFLD)netbeans.exe -static -lstdc++ -static-libstdc++ -static-libgcc

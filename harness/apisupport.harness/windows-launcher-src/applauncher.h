@@ -27,7 +27,7 @@
 #include <windows.h>
 
 #include "shlobj.h"
-#include "../ide/nblauncher.h"
+#include "../../../nb/ide.launcher/windows/nblauncher.h"
 
 class AppLauncher : public NbLauncher {
 

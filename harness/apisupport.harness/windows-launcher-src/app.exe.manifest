@@ -20,7 +20,7 @@
 
 -->
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
-<assemblyIdentity version="9.0.0.0"
+<assemblyIdentity version="101.1.0.0"
    processorArchitecture="x86"
    name="app.exe"
    type="win32"/>

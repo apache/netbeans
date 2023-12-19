@@ -15,8 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-TMPFLD = ../../../../target/tmp/
-OFLD = ../../../../target/bootstrap/
+TMPFLD = ./build/
+OFLD = ./build/
 
 all: prepfolder nbexec64.dll nbexec64.exe nbexec.dll nbexec.exe
 

@@ -139,7 +139,8 @@ import org.openide.util.Pair;
     "CreatingSecret=Creating secret {0}",
     "UpdatingSecret=Updating secret {0}",
     "UpdatingVault=Updating {0} Vault",
-    "ReadingSecrets=Reading existing Secrets"
+    "ReadingSecrets=Reading existing Secrets",
+    "DatasourceEmpty=Datasource name cannot be empty"
 })
 public class AddDbConnectionToVault implements ActionListener {
 
@@ -437,6 +438,9 @@ public class AddDbConnectionToVault implements ActionListener {
         @Override
         public Step<Result, Result> prepare(Result result) {
             this.result = result;
+            if (result.datasourceName == null || result.datasourceName.isEmpty()) {
+                return this;
+            }
             List<SecretItem> secrets = SecretNode.getSecrets().apply(result.vault);
             this.dsNames = secrets.stream()
                     .map(s -> extractDatasourceName(s.getName()))
@@ -447,6 +451,9 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public NotifyDescriptor createInput() {
+            if (result.datasourceName == null || result.datasourceName.isEmpty()) {
+                return new NotifyDescriptor.QuickPick("", Bundle.DatasourceEmpty(), Collections.emptyList(), false);
+            }
             List<Item> yesNo = new ArrayList();
             yesNo.add(new Item(Bundle.AddVersion(), ""));
             yesNo.add(new Item(Bundle.Cancel(), ""));
@@ -474,7 +481,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public boolean onlyOneChoice() {
-            return !dsNames.contains(result.datasourceName);
+            return dsNames != null && !dsNames.contains(result.datasourceName);
         }
 
     }
@@ -664,10 +671,16 @@ public class AddDbConnectionToVault implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Multistep multistep = new Multistep(new TenancyStep());
 
-        NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADB(), 3, multistep.createInput());
+        NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADBToVault(), 3, multistep.createInput());
         if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(ci)) {
             if (multistep.getResult() != null) {
-                addDbConnectionToVault((Result) multistep.getResult());
+                Result result = (Result) multistep.getResult();
+                if (result.datasourceName == null || result.datasourceName.isEmpty()) {
+                    NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.DatasourceEmpty());
+                    DialogDisplayer.getDefault().notify(msg);
+                    return;
+                }
+                addDbConnectionToVault(result);
             }
         }
 

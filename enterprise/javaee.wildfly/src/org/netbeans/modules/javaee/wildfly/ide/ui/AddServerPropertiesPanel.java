@@ -20,8 +20,7 @@ package org.netbeans.modules.javaee.wildfly.ide.ui;
 
 import java.awt.Component;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.event.ChangeEvent;
@@ -169,20 +168,10 @@ public class AddServerPropertiesPanel implements WizardDescriptor.Panel, ChangeL
 
     @Override
     public void stateChanged(ChangeEvent ev) {
-        fireChangeEvent(ev);
+        new ArrayList<>(listeners).forEach(l -> l.stateChanged(ev));
     }
 
-    private void fireChangeEvent(ChangeEvent ev) {
-        Iterator it;
-        synchronized (listeners) {
-            it = new HashSet(listeners).iterator();
-        }
-        while (it.hasNext()) {
-            ((ChangeListener)it.next()).stateChanged(ev);
-        }
-    }
-
-    private final transient Set listeners = ConcurrentHashMap.newKeySet(2);
+    private final transient Set<ChangeListener> listeners = ConcurrentHashMap.newKeySet(2);
     @Override
     public void removeChangeListener(ChangeListener l) {
         listeners.remove(l);

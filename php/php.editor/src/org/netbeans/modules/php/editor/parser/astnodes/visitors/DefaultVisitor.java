@@ -249,7 +249,7 @@ public class DefaultVisitor implements Visitor {
         scan(node.getAttributes());
         scan(node.getName());
         scan(node.getSuperClass());
-        scan(node.getInterfaes());
+        scan(node.getInterfaces());
         scan(node.getBody());
     }
 
@@ -326,7 +326,7 @@ public class DefaultVisitor implements Visitor {
         scan(node.getAttributes());
         scan(node.getName());
         scan(node.getBackingType());
-        scan(node.getInterfaes());
+        scan(node.getInterfaces());
         scan(node.getBody());
     }
 
@@ -454,7 +454,7 @@ public class DefaultVisitor implements Visitor {
     public void visit(InterfaceDeclaration node) {
         scan(node.getAttributes());
         scan(node.getName());
-        scan(node.getInterfaes());
+        scan(node.getInterfaces());
         scan(node.getBody());
     }
 

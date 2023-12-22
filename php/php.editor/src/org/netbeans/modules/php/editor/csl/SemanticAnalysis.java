@@ -406,7 +406,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             typeInfo = new TypeDeclarationTypeInfo(cldec);
             scan(cldec.getAttributes());
             scan(cldec.getSuperClass());
-            scan(cldec.getInterfaes());
+            scan(cldec.getInterfaces());
             Identifier name = cldec.getName();
             addColoringForNode(name, createTypeNameColoring(name));
             needToScan.put(typeInfo, new ArrayList<>());
@@ -655,7 +655,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
             addToPath(node);
             scan(node.getAttributes());
-            scan(node.getInterfaes());
+            scan(node.getInterfaces());
             typeInfo = new TypeDeclarationTypeInfo(node);
             Identifier name = node.getName();
             addColoringForNode(name, createTypeNameColoring(name));

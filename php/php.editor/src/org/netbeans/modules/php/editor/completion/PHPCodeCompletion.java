@@ -2761,7 +2761,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
                 @Override
                 public List<Expression> getInterfaces() {
-                    return classDeclaration.getInterfaes();
+                    return classDeclaration.getInterfaces();
                 }
 
                 @Override
@@ -2820,7 +2820,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
 
                 @Override
                 public List<Expression> getInterfaces() {
-                    return enumDeclaration.getInterfaes();
+                    return enumDeclaration.getInterfaces();
                 }
 
                 @Override

@@ -75,9 +75,21 @@ public abstract class TypeDeclaration extends Statement implements Attributed {
      * List of interfaces that this type implements / extends.
      *
      * @return interfaces
+     * @deprecated instead, use {@link #getInterfaces()}
      */
+    @Deprecated
     public List<Expression> getInterfaes() {
-        return Collections.unmodifiableList(this.interfaces);
+        return getInterfaces();
+    }
+
+    /**
+     * List of interfaces that this type implements / extends.
+     *
+     * @return interfaces
+     * @since 2.34.0
+     */
+    public List<Expression> getInterfaces() {
+        return Collections.unmodifiableList(interfaces);
     }
 
     /**
@@ -111,7 +123,7 @@ public abstract class TypeDeclaration extends Statement implements Attributed {
         StringBuilder sbAttributes = new StringBuilder();
         getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
         StringBuilder sb = new StringBuilder();
-        for (Expression expression : getInterfaes()) {
+        for (Expression expression : getInterfaces()) {
             sb.append(expression).append(","); //NOI18N
         }
         return sbAttributes.toString() + getName() + (sb.length() > 0 ? " " + sb.toString() : " ") + getBody(); //NOI18N

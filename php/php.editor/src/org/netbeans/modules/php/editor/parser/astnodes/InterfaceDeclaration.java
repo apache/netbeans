@@ -55,7 +55,7 @@ public class InterfaceDeclaration extends TypeDeclaration {
                 start,
                 declaration.getEndOffset(),
                 declaration.getName(),
-                declaration.getInterfaes(),
+                declaration.getInterfaces(),
                 declaration.getBody(),
                 attributes
         );

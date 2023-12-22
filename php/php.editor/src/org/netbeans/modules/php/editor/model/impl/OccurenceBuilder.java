@@ -425,7 +425,7 @@ class OccurenceBuilder {
                     prepare(Kind.CLASS, classDeclaration.getSuperClass(), scope);
                 }
             }
-            List<Expression> interfaes = classDeclaration.getInterfaes();
+            List<Expression> interfaes = classDeclaration.getInterfaces();
             for (Expression iface : interfaes) {
                 QualifiedName ifaceName = QualifiedName.create(iface);
                 if (ifaceName != null && VariousUtils.isAlias(ifaceName, classDeclaration.getStartOffset(), scope)) {
@@ -441,7 +441,7 @@ class OccurenceBuilder {
         if (canBePrepared(interfaceDeclaration, scope)) {
             InterfaceDeclarationInfo node = InterfaceDeclarationInfo.create(interfaceDeclaration);
             ifaceDeclarations.put(node, scope);
-            List<Expression> interfaes = interfaceDeclaration.getInterfaes();
+            List<Expression> interfaes = interfaceDeclaration.getInterfaces();
             for (Expression iface : interfaes) {
                 prepare(Kind.IFACE, iface, scope);
             }
@@ -459,7 +459,7 @@ class OccurenceBuilder {
         if (canBePrepared(enumDeclaration, scope)) {
             EnumDeclarationInfo node = EnumDeclarationInfo.create(enumDeclaration);
             enumDeclarations.put(node, scope);
-            List<Expression> interfaes = enumDeclaration.getInterfaes();
+            List<Expression> interfaes = enumDeclaration.getInterfaces();
             for (Expression iface : interfaes) {
                 QualifiedName ifaceName = QualifiedName.create(iface);
                 if (ifaceName != null && VariousUtils.isAlias(ifaceName, enumDeclaration.getStartOffset(), scope)) {

@@ -284,7 +284,7 @@ public class IncorrectEnumHintError extends HintErrorRule {
             scan(node.getAttributes());
             scan(node.getName());
             scan(node.getSuperClass());
-            scan(node.getInterfaes());
+            scan(node.getInterfaces());
             checkEnumCases(node.getBody().getStatements());
         }
 
@@ -318,7 +318,7 @@ public class IncorrectEnumHintError extends HintErrorRule {
             }
             scan(node.getAttributes());
             scan(node.getName());
-            scan(node.getInterfaes());
+            scan(node.getInterfaces());
             Expression backingType = node.getBackingType();
             if (backingType != null) {
                 String name = CodeUtils.extractQualifiedName(backingType);

@@ -78,12 +78,12 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
     }
 
     public List<? extends Expression> getInterfaces() {
-        return getOriginalNode().getInterfaes();
+        return getOriginalNode().getInterfaces();
     }
 
     public Set<QualifiedName> getInterfaceNames() {
         final Set<QualifiedName> retval = new HashSet<>();
-        final List<Expression> interfaes = getOriginalNode().getInterfaes();
+        final List<Expression> interfaes = getOriginalNode().getInterfaces();
         for (Expression iface : interfaes) {
             QualifiedName ifaceName = QualifiedName.create(iface);
             if (ifaceName != null) {

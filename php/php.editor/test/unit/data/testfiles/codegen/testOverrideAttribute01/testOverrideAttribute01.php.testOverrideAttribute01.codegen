@@ -1,0 +1,38 @@
+#[\Override]
+protected function testAbstractProtectedClassMethod(): string{
+}
+#[\Override]
+protected static function testAbstractProtectedStaticClassMethod(): int{
+}
+#[\Override]
+public function testAbstractPublicClassMethod(): void{
+}
+#[\Override]
+public static function testAbstractPublicStaticClassMethod(): int{
+}
+#[\Override]
+private static function testAbstractPrivateStaticTraitMethod(): int{
+}
+#[\Override]
+private function testAbstractPrivateTraitMethod(): string{
+}
+#[\Override]
+protected static function testAbstractProtectedStaticTraitMethod(): int{
+}
+#[\Override]
+protected function testAbstractProtectedTraitMethod(): string{
+}
+#[\Override]
+public static function testAbstractPublicStaticTraitMethod(): int{
+}
+#[\Override]
+public function testAbstractPublicTraitMethod(): void{
+}
+#[\Override]
+public function testInterfaceMethod(): void{
+}
+#[\Override]
+public function testClassMethod(): void{
+}
+public function testTraitMethod(): void{
+}

@@ -104,6 +104,7 @@ import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
 import org.netbeans.modules.php.editor.NavUtils;
 import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
 import org.netbeans.modules.php.editor.api.elements.EnumElement;
+import org.netbeans.modules.php.editor.elements.ElementUtils;
 import org.netbeans.modules.php.editor.options.CodeCompletionPanel.CodeCompletionType;
 import org.netbeans.modules.php.editor.options.OptionsUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
@@ -1237,13 +1238,29 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         public String getCustomInsertTemplate() {
             StringBuilder template = new StringBuilder();
             String modifierStr = BodyDeclaration.Modifier.toString(getBaseFunctionElement().getFlags());
+            template.append(getOverrideAttribute()); // PHP 8.3
             if (modifierStr.length() != 0) {
-                modifierStr = modifierStr.replace("abstract", "").trim(); //NOI18N
+                modifierStr = modifierStr.replace("abstract", CodeUtils.EMPTY_STRING).trim(); //NOI18N
                 template.append(modifierStr);
             }
             template.append(" ").append("function"); //NOI18N
             template.append(getNameAndFunctionBodyForTemplate());
             return template.toString();
+        }
+
+        private String getOverrideAttribute() {
+            MethodElement method = (MethodElement) getBaseFunctionElement();
+            TypeElement type = method.getType();
+            if (!isMagic()
+                    && (!type.isTrait() || ElementUtils.isAbstractTraitMethod(method))
+                    && request != null) {
+                FileObject fileObject = request.result.getSnapshot().getSource().getFileObject();
+                PhpVersion phpVersion = getPhpVersion(fileObject);
+                if (phpVersion.hasOverrideAttribute()) {
+                    return CodeUtils.OVERRIDE_ATTRIBUTE + CodeUtils.NEW_LINE;
+                }
+            }
+            return CodeUtils.EMPTY_STRING;
         }
 
         protected String getNameAndFunctionBodyForTemplate() {
@@ -1304,10 +1321,10 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             StringBuilder template = new StringBuilder();
             MethodElement method = (MethodElement) getBaseFunctionElement();
             TypeElement type = method.getType();
-            if (isMagic() || type.isInterface() || method.isAbstract()) {
+            Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
+            if (isMagic() || type.isInterface() || method.isAbstract() || type.isTrait() || ElementUtils.isVoidOrNeverType(returnTypes)) {
                 template.append("${cursor};\n"); //NOI18N
             } else {
-                Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
                 if (returnTypes.size() == 1 || getBaseFunctionElement().isReturnUnionType()) {
                     template.append("${cursor}return parent::").append(getSignature().replace("&$", "$")).append(";\n"); //NOI18N
                 } else {

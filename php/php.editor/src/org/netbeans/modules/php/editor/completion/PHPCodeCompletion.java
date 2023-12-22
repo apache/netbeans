@@ -717,17 +717,17 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             String fullyQualifiedClassName = VariousUtils.qualifyTypeNames(clsName, request.anchor, namespaceScope);
             if (fullyQualifiedClassName != null) {
                 final FileObject fileObject = request.result.getSnapshot().getSource().getFileObject();
-                final ElementFilter classFilter = ElementFilter.allOf(
+                final ElementFilter typeFilter = ElementFilter.allOf(
                         ElementFilter.forFiles(fileObject), ElementFilter.allOf(superTypeIndices));
-                Set<ClassElement> classes = classFilter.filter(request.index.getClasses(NameKind.exact(fullyQualifiedClassName)));
-                for (ClassElement classElement : classes) {
+                Set<TypeElement> types = typeFilter.filter(request.index.getTypes(NameKind.exact(fullyQualifiedClassName)));
+                for (TypeElement typeElement : types) {
                     if (CancelSupport.getDefault().isCancelled()) {
                         return;
                     }
                     ElementFilter methodFilter = ElementFilter.allOf(
-                            ElementFilter.forExcludedNames(toNames(request.index.getDeclaredMethods(classElement)), PhpElementKind.METHOD),
+                            ElementFilter.forExcludedNames(toNames(request.index.getDeclaredMethods(typeElement)), PhpElementKind.METHOD),
                             ElementFilter.forName(NameKind.caseInsensitivePrefix(QualifiedName.create(request.prefix))));
-                    Set<MethodElement> accessibleMethods = methodFilter.filter(request.index.getAccessibleMethods(classElement, classElement));
+                    Set<MethodElement> accessibleMethods = methodFilter.filter(request.index.getAccessibleMethods(typeElement, typeElement));
                     for (MethodElement method : accessibleMethods) {
                         if (CancelSupport.getDefault().isCancelled()) {
                             return;
@@ -736,7 +736,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                             completionResult.add(PHPCompletionItem.MethodDeclarationItem.forMethodName(method, request));
                         }
                     }
-                    Set<MethodElement> magicMethods = methodFilter.filter(request.index.getAccessibleMagicMethods(classElement));
+                    Set<MethodElement> magicMethods = methodFilter.filter(request.index.getAccessibleMagicMethods(typeElement));
                     for (MethodElement magicMethod : magicMethods) {
                         if (magicMethod != null) {
                             completionResult.add(PHPCompletionItem.MethodDeclarationItem.forMethodName(magicMethod, request));
@@ -1232,17 +1232,17 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 String fullyQualifiedClassName = VariousUtils.qualifyTypeNames(clsName, request.anchor, namespaceScope);
                 if (fullyQualifiedClassName != null) {
                     final FileObject fileObject = request.result.getSnapshot().getSource().getFileObject();
-                    final ElementFilter classFilter = ElementFilter.allOf(
+                    final ElementFilter typeFilter = ElementFilter.allOf(
                             ElementFilter.forFiles(fileObject), ElementFilter.allOf(superTypeIndices));
-                    Set<ClassElement> classes = classFilter.filter(request.index.getClasses(NameKind.exact(fullyQualifiedClassName)));
-                    for (ClassElement classElement : classes) {
+                    Set<TypeElement> types = typeFilter.filter(request.index.getTypes(NameKind.exact(fullyQualifiedClassName)));
+                    for (TypeElement typeElement : types) {
                         if (CancelSupport.getDefault().isCancelled()) {
                             return;
                         }
                         ElementFilter methodFilter = ElementFilter.allOf(
-                                ElementFilter.forExcludedNames(toNames(request.index.getDeclaredMethods(classElement)), PhpElementKind.METHOD),
+                                ElementFilter.forExcludedNames(toNames(request.index.getDeclaredMethods(typeElement)), PhpElementKind.METHOD),
                                 ElementFilter.forName(NameKind.caseInsensitivePrefix(QualifiedName.create(request.prefix))));
-                        Set<MethodElement> accessibleMethods = methodFilter.filter(request.index.getAccessibleMethods(classElement, classElement));
+                        Set<MethodElement> accessibleMethods = methodFilter.filter(request.index.getAccessibleMethods(typeElement, typeElement));
                         for (MethodElement method : accessibleMethods) {
                             if (CancelSupport.getDefault().isCancelled()) {
                                 return;
@@ -1251,7 +1251,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                                 completionResult.add(PHPCompletionItem.MethodDeclarationItem.getDeclarationItem(method, request));
                             }
                         }
-                        Set<MethodElement> magicMethods = methodFilter.filter(request.index.getAccessibleMagicMethods(classElement));
+                        Set<MethodElement> magicMethods = methodFilter.filter(request.index.getAccessibleMagicMethods(typeElement));
                         for (MethodElement magicMethod : magicMethods) {
                             if (CancelSupport.getDefault().isCancelled()) {
                                 return;
@@ -2019,6 +2019,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             if (node instanceof ClassDeclaration
                     && node.getEndOffset() > offset) {
                 return EnclosingClass.forClassDeclaration((ClassDeclaration) node);
+            }
+            if (node instanceof EnumDeclaration
+                    && node.getEndOffset() > offset) {
+                return EnclosingClass.forEnumDeclaration((EnumDeclaration) node);
             }
             if (node instanceof ClassInstanceCreation
                     && node.getEndOffset() > offset) {
@@ -2802,6 +2806,34 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             };
         }
 
+        static EnclosingClass forEnumDeclaration(final EnumDeclaration enumDeclaration) {
+            return new EnclosingClass() {
+                @Override
+                public String getClassName() {
+                    return enumDeclaration.getName().getName();
+                }
+
+                @Override
+                public Expression getSuperClass() {
+                    return null;
+                }
+
+                @Override
+                public List<Expression> getInterfaces() {
+                    return enumDeclaration.getInterfaes();
+                }
+
+                @Override
+                public String extractClassName() {
+                    return CodeUtils.extractTypeName(enumDeclaration);
+                }
+
+                @Override
+                public String extractUnqualifiedSuperClassName() {
+                    return null;
+                }
+            };
+        }
     }
 
 }

@@ -1,0 +1,4 @@
+$anon = new class () extends AbstractClass implements TestInterface {
+            -----
+HINT:Anonymous class is not abstract and does not override abstract method  abstractPrivateStaticTraitMethod() in \Test\Override\Attribute2\AbstractTrait
+FIX:Implement All Abstract Methods

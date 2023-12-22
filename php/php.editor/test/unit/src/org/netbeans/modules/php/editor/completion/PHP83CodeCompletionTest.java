@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.project.api.PhpSourcePath;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
@@ -482,6 +483,36 @@ public class PHP83CodeCompletionTest extends PHPCodeCompletionTestBase {
 
     public void testTypedClassConstantsTypingInterface10() throws Exception {
         checkCompletion("typedClassConstantsTypingInterface10", "    public const (A&B)|(A&C) CONST_NAME = ^");
+    }
+
+    public void testOverrideAttribute01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testOverrideAttribute01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_83, "test"), true);
+    }
+
+    public void testOverrideAttribute01_PHP82() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testOverrideAttribute01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testOverrideAttributeAnonClass01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testOverrideAttributeAnonClass01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_83, "test"), true);
+    }
+
+    public void testOverrideAttributeAnonClass01_PHP82() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testOverrideAttributeAnonClass01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
+    }
+
+    public void testOverrideAttributeEnum01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testOverrideAttributeEnum01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_83, "test"), true);
+    }
+
+    public void testOverrideAttributeEnum01_PHP82() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("testOverrideAttributeEnum01"), "    test^",
+                new DefaultFilter(PhpVersion.PHP_82, "test"), true);
     }
 
 }

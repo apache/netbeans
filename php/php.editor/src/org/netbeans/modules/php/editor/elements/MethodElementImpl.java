@@ -35,6 +35,7 @@ import org.netbeans.modules.php.editor.api.NameKind.Exact;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement.PrintAs;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
@@ -82,23 +83,26 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
     public static Set<MethodElement> getMagicMethods(final TypeElement type) {
         Set<MethodElement> retval = new HashSet<>();
         retval.add(createMagicMethod(type, "__callStatic", Modifier.PUBLIC | Modifier.STATIC, "$name", "$arguments")); //NOI18N
-        retval.add(createMagicMethod(type, "__set_state", Modifier.PUBLIC | Modifier.STATIC, "$array")); //NOI18N
         retval.add(createMagicMethod(type, "__call",  Modifier.PUBLIC, "$name", "$arguments")); //NOI18N
-        retval.add(createMagicMethod(type, "__clone",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__construct",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__destruct",  Modifier.PUBLIC)); //NOI18N
         retval.add(createMagicMethod(type, "__invoke",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__get",  Modifier.PUBLIC, "$name")); //NOI18N
-        retval.add(createMagicMethod(type, "__set",  Modifier.PUBLIC, "$name", "$value")); //NOI18N
-        retval.add(createMagicMethod(type, "__isset",  Modifier.PUBLIC, "$name")); //NOI18N
-        retval.add(createMagicMethod(type, "__unset",  Modifier.PUBLIC, "$name")); //NOI18N
-        retval.add(createMagicMethod(type, "__sleep",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__wakeup",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__toString",  Modifier.PUBLIC)); //NOI18N
-        // PHP 7.4 New custom object serialization mechanism
-        // https://wiki.php.net/rfc/custom_object_serialization
-        retval.add(createMagicMethod(type, "__serialize", Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__unserialize", Modifier.PUBLIC, "array $data")); //NOI18N
+        if (!(type instanceof EnumElement)) {
+            // Enum can't contain these
+            retval.add(createMagicMethod(type, "__set_state", Modifier.PUBLIC | Modifier.STATIC, "$array")); //NOI18N
+            retval.add(createMagicMethod(type, "__clone", Modifier.PUBLIC)); //NOI18N
+            retval.add(createMagicMethod(type, "__construct", Modifier.PUBLIC)); //NOI18N
+            retval.add(createMagicMethod(type, "__destruct", Modifier.PUBLIC)); //NOI18N
+            retval.add(createMagicMethod(type, "__get", Modifier.PUBLIC, "$name")); //NOI18N
+            retval.add(createMagicMethod(type, "__set", Modifier.PUBLIC, "$name", "$value")); //NOI18N
+            retval.add(createMagicMethod(type, "__isset", Modifier.PUBLIC, "$name")); //NOI18N
+            retval.add(createMagicMethod(type, "__unset", Modifier.PUBLIC, "$name")); //NOI18N
+            retval.add(createMagicMethod(type, "__sleep", Modifier.PUBLIC)); //NOI18N
+            retval.add(createMagicMethod(type, "__wakeup", Modifier.PUBLIC)); //NOI18N
+            retval.add(createMagicMethod(type, "__toString", Modifier.PUBLIC)); //NOI18N
+            // PHP 7.4 New custom object serialization mechanism
+            // https://wiki.php.net/rfc/custom_object_serialization
+            retval.add(createMagicMethod(type, "__serialize", Modifier.PUBLIC)); //NOI18N
+            retval.add(createMagicMethod(type, "__unserialize", Modifier.PUBLIC, "array $data")); //NOI18N
+        }
         return retval;
     }
 

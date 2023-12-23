@@ -843,4 +843,52 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
                 new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
         ));
     }
+
+    public void testOverrideAttribute01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_83);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testOverrideAttribute01_PHP82() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testOverrideAttributeAnonClass01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_83);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testOverrideAttributeAnonClass01_PHP82() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "test"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testOverrideAttributeEnum01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_83);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testOverrideAttributeEnum01_PHP82() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
 }

@@ -341,6 +341,7 @@
                     <attr name="position" intvalue="100"/>
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.editor.verification.Bundle"/>
                     <file name="org-netbeans-modules-php-editor-verification-AccidentalAssignmentHint.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-AddOverrideAttributeHint.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-AmbiguousComparisonHint.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-ArrayDimensionSyntaxSuggestionHint.instance"/>
                     <folder name="braces">

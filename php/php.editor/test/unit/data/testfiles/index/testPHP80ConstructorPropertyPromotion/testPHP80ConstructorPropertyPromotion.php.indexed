@@ -2,7 +2,7 @@
 
 Document 0
 Searchable Keys:
-  clz : #anon#testphp80constructorpropertypromotion_php#1;#anon#testPHP80ConstructorPropertyPromotion_php#1;2162;;;;1;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;;
+  clz : #anon#testphp80constructorpropertypromotion_php#1;#anon#testPHP80ConstructorPropertyPromotion_php#1;2166;;;;1;;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;;
   field : x;x;2231;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
   field : y;y;2254;1;int;int;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;
   method : __construct;__construct;2198;$x:int:1::1:0:0:0:1:0:int:,$y:int:1:0:0:0:0:0:1:0:int:;;1;0;<TESTURL>/testPHP80ConstructorPropertyPromotion.php;0;0;;

@@ -1,0 +1,29 @@
+#[\Override]
+private static function testAbstractPrivateStaticTraitMethod(): int{
+}
+#[\Override]
+private function testAbstractPrivateTraitMethod(): string{
+}
+#[\Override]
+protected static function testAbstractProtectedStaticTraitMethod(): int{
+}
+#[\Override]
+protected function testAbstractProtectedTraitMethod(): string{
+}
+#[\Override]
+public static function testAbstractPublicStaticTraitMethod(): int{
+}
+#[\Override]
+public function testAbstractPublicTraitMethod(): void{
+}
+#[\Override]
+public function testInterfaceMethod(): void{
+}
+public function testTraitMethod(): void{
+}
+public function __call($name, $arguments){
+}
+public static function __callStatic($name, $arguments){
+}
+public function __invoke(){
+}

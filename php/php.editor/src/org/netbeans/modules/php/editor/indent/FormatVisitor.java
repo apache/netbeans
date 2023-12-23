@@ -743,10 +743,10 @@ public class FormatVisitor extends DefaultVisitor {
                     addFormatToken(formatTokens);
                     break;
                 case PHP_IMPLEMENTS:
-                    if (!node.getInterfaes().isEmpty()) {
+                    if (!node.getInterfaces().isEmpty()) {
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_EXTENDS_IMPLEMENTS, ts.offset()));
                         ts.movePrevious();
-                        addListOfNodes(node.getInterfaes(), FormatToken.Kind.WHITESPACE_IN_INTERFACE_LIST);
+                        addListOfNodes(node.getInterfaces(), FormatToken.Kind.WHITESPACE_IN_INTERFACE_LIST);
                     }
                     break;
                 case PHP_EXTENDS:
@@ -761,7 +761,7 @@ public class FormatVisitor extends DefaultVisitor {
         ts.movePrevious();
         scan(node.getName());
         scan(node.getSuperClass());
-        scan(node.getInterfaes());
+        scan(node.getInterfaces());
         scan(node.getBody());
     }
 
@@ -807,10 +807,10 @@ public class FormatVisitor extends DefaultVisitor {
         while (ts.moveNext() && ts.token().id() != PHPTokenId.PHP_CURLY_OPEN) {
             switch (ts.token().id()) {
                 case PHP_IMPLEMENTS:
-                    if (!node.getInterfaes().isEmpty()) {
+                    if (!node.getInterfaces().isEmpty()) {
                         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_BEFORE_EXTENDS_IMPLEMENTS, ts.offset()));
                         ts.movePrevious();
-                        addListOfNodes(node.getInterfaes(), FormatToken.Kind.WHITESPACE_IN_INTERFACE_LIST);
+                        addListOfNodes(node.getInterfaces(), FormatToken.Kind.WHITESPACE_IN_INTERFACE_LIST);
                     }
                     break;
                 default:
@@ -821,7 +821,7 @@ public class FormatVisitor extends DefaultVisitor {
         ts.movePrevious();
         scan(node.getName());
         scan(node.getBackingType());
-        scan(node.getInterfaes());
+        scan(node.getInterfaces());
         scan(node.getBody());
     }
 

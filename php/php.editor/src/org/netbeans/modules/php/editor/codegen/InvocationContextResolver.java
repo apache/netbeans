@@ -34,11 +34,15 @@ import org.netbeans.modules.php.editor.NavUtils;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.EmptyStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.InterfaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 
 /**
  *
@@ -93,7 +97,11 @@ public final class InvocationContextResolver {
         CLASS {
             @Override
             boolean isExactlyIn(ASTNode lastNode) {
-                return lastNode instanceof ClassDeclaration;
+                return lastNode instanceof ClassDeclaration
+                        || lastNode instanceof TraitDeclaration
+                        || lastNode instanceof InterfaceDeclaration
+                        || lastNode instanceof EnumDeclaration
+                        || (lastNode instanceof ClassInstanceCreation && ((ClassInstanceCreation) lastNode).isAnonymous());
             }
         },
 

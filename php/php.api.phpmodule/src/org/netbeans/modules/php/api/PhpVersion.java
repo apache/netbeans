@@ -256,6 +256,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports [#\Override] attribute.
+     *
+     * @return {@code true} if this version supports [#\Override] attribute,
+     * {@code false} otherwise
+     * @since 2.94
+     */
+    public boolean hasOverrideAttribute() {
+        return this.compareTo(PhpVersion.PHP_83) >= 0;
+    }
+
+    /**
      * Check whether this is supported version yet by PHP official.
      *
      * @return {@code true} if this is supported version, {@code false}

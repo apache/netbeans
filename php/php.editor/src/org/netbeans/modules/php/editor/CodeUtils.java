@@ -89,6 +89,11 @@ public final class CodeUtils {
     public static final String NULLABLE_TYPE_PREFIX = "?"; // NOI18N
     public static final String ELLIPSIS = "..."; // NOI18N
     public static final String VAR_TAG = "@var"; // NOI18N
+    public static final String OVERRIDE_ATTRIBUTE_NAME = "Override"; // NOI18N
+    public static final String OVERRIDE_ATTRIBUTE_FQ_NAME = "\\" + OVERRIDE_ATTRIBUTE_NAME; // NOI18N
+    public static final String OVERRIDE_ATTRIBUTE = "#[" + OVERRIDE_ATTRIBUTE_FQ_NAME + "]"; // NOI18N
+    public static final String EMPTY_STRING = ""; // NOI18N
+    public static final String NEW_LINE = "\n"; // NOI18N
 
     public static final Pattern WHITE_SPACES_PATTERN = Pattern.compile("\\s+"); // NOI18N
     public static final Pattern SPLIT_TYPES_PATTERN = Pattern.compile("[()|&]+"); // NOI18N

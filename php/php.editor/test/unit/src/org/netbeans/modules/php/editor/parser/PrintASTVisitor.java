@@ -340,7 +340,7 @@ public class PrintASTVisitor implements Visitor {
         }
         printNode.addChildrenGroup("ClassName", new ASTNode[]{classDeclaration.getName()});
         printNode.addChildrenGroup("SuperClassName", new ASTNode[]{classDeclaration.getSuperClass()});
-        printNode.addChildrenGroup("Interfaces", classDeclaration.getInterfaes());
+        printNode.addChildrenGroup("Interfaces", classDeclaration.getInterfaces());
         printNode.addChild(classDeclaration.getBody());
         printNode.print(this);
     }
@@ -450,7 +450,7 @@ public class PrintASTVisitor implements Visitor {
         }
         printNode.addChildrenGroup("EnumName", new ASTNode[]{enumDeclaration.getName()});
         printNode.addChildrenGroup("BackingType", new ASTNode[]{enumDeclaration.getBackingType()});
-        printNode.addChildrenGroup("Interfaces", enumDeclaration.getInterfaes());
+        printNode.addChildrenGroup("Interfaces", enumDeclaration.getInterfaces());
         printNode.addChild(enumDeclaration.getBody());
         printNode.print(this);
     }

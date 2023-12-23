@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -58,7 +60,9 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
@@ -251,9 +255,9 @@ public final class CGSInfo {
         PHPParseResult info = (PHPParseResult) resultIterator.getParserResult();
         if (info != null) {
             int caretOffset = textComp.getCaretPosition();
-            TypeDeclaration typeDecl = findEnclosingClassOrTrait(info, caretOffset);
+            ASTNode typeDecl = findEnclosingType(info, caretOffset);
             if (typeDecl != null) {
-                className = typeDecl.getName().getName();
+                className = getTypeName(typeDecl);
                 if (className != null) {
                     FileObject fileObject = info.getSnapshot().getSource().getFileObject();
                     Index index = ElementQueryFactory.getIndexQuery(info);
@@ -262,17 +266,19 @@ public final class CGSInfo {
                             QualifiedName.create(className),
                             caretOffset,
                             info.getModel().getVariableScope(caretOffset));
-                    Set<ClassElement> classes = forFilesFilter.filter(index.getClasses(NameKind.exact(fullyQualifiedName)));
-                    for (ClassElement classElement : classes) {
-                        ElementFilter forNotDeclared = ElementFilter.forExcludedElements(index.getDeclaredMethods(classElement));
+                    Set<TypeElement> types = forFilesFilter.filter(index.getTypes(NameKind.exact(fullyQualifiedName)));
+                    for (TypeElement typeElement : types) {
+                        ElementFilter forNotDeclared = ElementFilter.forExcludedElements(index.getDeclaredMethods(typeElement));
                         final Set<MethodElement> accessibleMethods = new HashSet<>();
-                        accessibleMethods.addAll(forNotDeclared.filter(index.getAccessibleMethods(classElement, classElement)));
+                        accessibleMethods.addAll(forNotDeclared.filter(index.getAccessibleMethods(typeElement, typeElement)));
+                        if (typeElement instanceof ClassElement) {
+                            accessibleMethods.addAll(
+                                    ElementFilter.forExcludedElements(accessibleMethods).filter(forNotDeclared.filter(index.getConstructors((ClassElement) typeElement))));
+                        }
                         accessibleMethods.addAll(
-                                ElementFilter.forExcludedElements(accessibleMethods).filter(forNotDeclared.filter(index.getConstructors(classElement))));
-                        accessibleMethods.addAll(
-                                ElementFilter.forExcludedElements(accessibleMethods).filter(forNotDeclared.filter(index.getAccessibleMagicMethods(classElement))));
+                                ElementFilter.forExcludedElements(accessibleMethods).filter(forNotDeclared.filter(index.getAccessibleMagicMethods(typeElement))));
                         final Set<TypeElement> preferedTypes = forFilesFilter.prefer(ElementTransformation.toMemberTypes().transform(accessibleMethods));
-                        final TreeElement<TypeElement> enclosingType = index.getInheritedTypesAsTree(classElement, preferedTypes);
+                        final TreeElement<TypeElement> enclosingType = index.getInheritedTypesAsTree(typeElement, preferedTypes);
                         final List<MethodProperty> methodProperties = new ArrayList<>();
                         final Set<MethodElement> methods = ElementFilter.forMembersOfTypes(preferedTypes).filter(accessibleMethods);
                         for (final MethodElement methodElement : methods) {
@@ -290,6 +296,11 @@ public final class CGSInfo {
 
                 PropertiesVisitor visitor = new PropertiesVisitor(existingGetters, existingSetters, Utils.getRoot(info));
                 visitor.scan(typeDecl);
+                if (typeDecl instanceof EnumDeclaration) {
+                    // Enum can't have a constructor
+                    // to avoid adding the list of code generators, change this
+                    hasConstructor = true;
+                }
                 String propertyName;
                 boolean existGetter, existSetter;
                 for (Property property : getProperties()) {
@@ -311,22 +322,48 @@ public final class CGSInfo {
     }
 
     /**
-     * Find out class enclosing caret
-     * @param info
+     * Find out the type enclosing the caret.
+     *
+     * @param info parser result
      * @param offset caret offset
-     * @return class declaration or null
+     * @return type declaration or class instance creation(anonymous class),
+     * otherwise {@code null}
      */
-    private TypeDeclaration findEnclosingClassOrTrait(ParserResult info, int offset) {
+    @CheckForNull
+    private ASTNode findEnclosingType(ParserResult info, int offset) {
         List<ASTNode> nodes = NavUtils.underCaret(info, offset);
         int count = nodes.size();
         if (count > 2) {  // the cursor has to be in class block see issue #142417
             ASTNode declaration = nodes.get(count - 2);
             ASTNode block = nodes.get(count - 1);
-            if (block instanceof Block &&  (declaration instanceof ClassDeclaration || declaration instanceof TraitDeclaration)) {
-                return (TypeDeclaration) declaration;
+            if (block instanceof Block && isValidEnclosingType(declaration)) {
+                return declaration;
             }
         }
         return null;
+    }
+
+    private boolean isValidEnclosingType(ASTNode typeDeclaration) {
+        return typeDeclaration instanceof ClassDeclaration
+                || typeDeclaration instanceof TraitDeclaration
+                || typeDeclaration instanceof EnumDeclaration
+                || (typeDeclaration instanceof ClassInstanceCreation && ((ClassInstanceCreation) typeDeclaration).isAnonymous());
+    }
+
+    @CheckForNull
+    private String getTypeName(@NullAllowed ASTNode typeDeclaration) {
+        if (typeDeclaration == null) {
+            return null;
+        }
+        String typeName = null;
+        if (typeDeclaration instanceof TypeDeclaration) {
+            typeName = ((TypeDeclaration) typeDeclaration).getName().getName();
+        } else if (typeDeclaration instanceof ClassInstanceCreation) {
+            typeName = CodeUtils.extractClassName((ClassInstanceCreation) typeDeclaration);
+        } else {
+            assert false : "Expected: TypeDeclaration or ClassInstanceCreation, but got" + typeDeclaration.getClass(); // NOI18N
+        }
+        return typeName;
     }
 
     private class PropertiesVisitor extends DefaultVisitor {
@@ -432,7 +469,7 @@ public final class CGSInfo {
             boolean canBeNull = false;
             if (typeTag.getTypes().size() > 1) {
                 for (PHPDocTypeNode typeNode : typeTag.getTypes()) {
-                    String type = typeNode.getValue().toLowerCase(new Locale("en_US")); // NOI18N
+                    String type = typeNode.getValue().toLowerCase(Locale.ROOT);
                     if (type.equals(Type.NULL)) {
                         canBeNull = true;
                         break;

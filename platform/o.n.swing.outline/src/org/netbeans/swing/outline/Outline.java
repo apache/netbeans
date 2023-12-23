@@ -801,7 +801,11 @@ public class Outline extends ETable {
         }
             
         boolean res = false;
-        if (!isTreeColumn || e instanceof MouseEvent && row >= 0 && isEditEvent(row, column, (MouseEvent) e)) {
+        if (!isTreeColumn ||
+                e instanceof MouseEvent && row >= 0 && isEditEvent(row, column, (MouseEvent) e) ||
+                // Allow F2 to be used to invoke Rename.
+                e instanceof ActionEvent && row >= 0)
+        {
             res = super.editCellAt(row, column, e);
         }
         if( res && isTreeColumn && row >= 0 && null != getEditorComponent() ) {

@@ -36,6 +36,7 @@ import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.editor.indent.spi.Context;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
@@ -455,7 +456,9 @@ public class TokenFormatter {
                     int extraLines;
                     int column = 0;
                     int indentOfOpenTag = 0;
+                    int methodCallParenBalance = 0; // GH-6714 for nested arguments
                     final Deque<Integer> lastBracedBlockIndent = new ArrayDeque<>();
+                    final Deque<FormatToken.AnchorToken> lastAnchorTokenStack = new ArrayDeque<>(); // GH-6714 for nested arguments
 
                     FormatToken formatToken;
                     String newText = null;
@@ -1455,12 +1458,17 @@ public class TokenFormatter {
                                         }
                                         // NETBEANS-3391
                                         if (isLeftParen(formatTokens.get(index - 1))) {
+                                            methodCallParenBalance++;
                                             if (hasNewLineWithinParensForward(index, formatTokens, formatToken.getId())
                                                     && docOptions.wrapMethodCallArgsAfterLeftParen) {
                                                 indentLine = true;
                                                 newLines = 1;
                                             }
                                         } else {
+                                            methodCallParenBalance--;
+                                            if (methodCallParenBalance > 0 && !lastAnchorTokenStack.isEmpty()) {
+                                                lastAnchor = lastAnchorTokenStack.pop();
+                                            }
                                             if (hasNewLineWithinParensBackward(index, formatTokens, formatToken.getId())
                                                     && docOptions.wrapMethodCallArgsRightParen) {
                                                 indentLine = true;
@@ -1741,6 +1749,9 @@ public class TokenFormatter {
                                         lastPHPIndent += indentDelta;
                                         break;
                                     case ANCHOR:
+                                        if (methodCallParenBalance > 0 && lastAnchor != null) {
+                                            lastAnchorTokenStack.push(lastAnchor);
+                                        }
                                         lastAnchor = (FormatToken.AnchorToken) formatToken;
                                         lastAnchor.setAnchorColumn(column + 1);
                                         break;
@@ -2156,6 +2167,9 @@ public class TokenFormatter {
                                     }
                                     break;
                                 case ANCHOR:
+                                    if (methodCallParenBalance > 0 && lastAnchor != null) {
+                                        lastAnchorTokenStack.push(lastAnchor);
+                                    }
                                     lastAnchor = (FormatToken.AnchorToken) formatToken;
                                     lastAnchor.setAnchorColumn(column);
                                     break;
@@ -2221,22 +2235,25 @@ public class TokenFormatter {
                         }
 
                         delta = replaceString(doc, changeOffset, index, oldText, newText, delta, templateEdit);
+                        // GH-6714 if text have TABs, get incorrect column
+                        // so, use countOfSpaces() instead of newText.length()
                         if (newText == null) {
-                            String formatTokenOldText = formatToken.getOldText() == null ? "" : formatToken.getOldText();
-                            int formatTokenOldTextLength = formatTokenOldText.length();
+                            String formatTokenOldText = formatToken.getOldText() == null ? CodeUtils.EMPTY_STRING : formatToken.getOldText();
+                            int formatTokenOldTextLength = countOfSpaces(formatTokenOldText, docOptions.tabSize);
                             int lines = countOfNewLines(formatTokenOldText);
                             if (lines > 0) {
-                                int lastNewLine = formatTokenOldText.lastIndexOf('\n'); //NOI18N
-                                column = formatTokenOldText.substring(lastNewLine).length();
+                                int lastNewLine = formatTokenOldText.lastIndexOf(CodeUtils.NEW_LINE);
+                                String substring = formatTokenOldText.substring(lastNewLine);
+                                column = countOfSpaces(substring, docOptions.tabSize);
                             } else {
                                 column += formatTokenOldTextLength;
                             }
                         } else {
                             int lines = countOfNewLines(newText);
                             if (lines > 0) {
-                                column = newText.length() - lines;
+                                column = countOfSpaces(newText, docOptions.tabSize) - lines;
                             } else {
-                                column += newText.length();
+                                column += countOfSpaces(newText, docOptions.tabSize);
                             }
                         }
                         newText = null;

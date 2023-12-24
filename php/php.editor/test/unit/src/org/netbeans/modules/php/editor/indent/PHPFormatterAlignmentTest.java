@@ -26,8 +26,14 @@ import java.util.HashMap;
  */
 public class PHPFormatterAlignmentTest extends PHPFormatterTestBase {
 
+    private static final String TEST_DIRECTORY_PATH = "testfiles/formatting/alignment/";
+
     public PHPFormatterAlignmentTest(String testName) {
         super(testName);
+    }
+
+    private String getTestFilePath(String fileName) {
+        return TEST_DIRECTORY_PATH + fileName;
     }
 
     public void testAlignmentKeywords01() throws Exception {
@@ -211,6 +217,102 @@ public class PHPFormatterAlignmentTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, true);
         reformatFileContents("testfiles/formatting/alignment/issue244566.php", options);
+    }
+
+    public void testGH6714WithTab_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        reformatFileContents(getTestFilePath("gh6714_01.php"), options, false, true);
+    }
+
+    public void testGH6714WithTab_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, false);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        reformatFileContents(getTestFilePath("gh6714_01.php"), options, false, true);
+    }
+
+    public void testGH6714WithTab_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, true);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        reformatFileContents(getTestFilePath("gh6714_02.php"), options, false, true);
+    }
+
+    public void testGH6714WithTab_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, false);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        reformatFileContents(getTestFilePath("gh6714_02.php"), options, false, true);
+    }
+
+    public void testGH6714WithSpaces_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, true);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        reformatFileContents(getTestFilePath("gh6714_01.php"), options, false, true);
+    }
+
+    public void testGH6714WithSpaces_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, false);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        reformatFileContents(getTestFilePath("gh6714_01.php"), options, false, true);
+    }
+
+    public void testGH6714WithSpaces_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, true);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        reformatFileContents(getTestFilePath("gh6714_02.php"), options, false, true);
+    }
+
+    public void testGH6714WithSpaces_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, false);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        reformatFileContents(getTestFilePath("gh6714_02.php"), options, false, true);
     }
 
 }

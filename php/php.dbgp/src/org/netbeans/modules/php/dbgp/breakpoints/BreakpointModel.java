@@ -49,6 +49,7 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
     public static final String CURRENT_LINE_CONDITIONAL_BREAKPOINT = "org/netbeans/modules/debugger/resources/breakpointsView/ConditionalBreakpointHit"; // NOI18N
     public static final String DISABLED_LINE_CONDITIONAL_BREAKPOINT = "org/netbeans/modules/debugger/resources/breakpointsView/DisabledConditionalBreakpoint"; // NOI18N
     public static final String BROKEN_LINE_BREAKPOINT = "org/netbeans/modules/debugger/resources/breakpointsView/Breakpoint_broken"; // NOI18N
+    public static final String BROKEN_BREAKPOINT = "org/netbeans/modules/debugger/resources/breakpointsView/NonLineBreakpoint_broken"; // NOI18N
     private static final String METHOD = "TXT_Method"; // NOI18N
     private static final String EXCEPTION = "TXT_Exception"; // NOI18N
     private static final String PARENS = "()"; // NOI18N
@@ -99,8 +100,7 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
             if (!breakpoint.isEnabled()) {
                 return DISABLED_LINE_BREAKPOINT;
             } else {
-                VALIDITY validity = breakpoint.getValidity();
-                if (validity.equals(VALIDITY.VALID) || validity.equals(VALIDITY.UNKNOWN)) {
+                if (Utils.isValid(breakpoint)) {
                     return LINE_BREAKPOINT;
                 } else {
                     return BROKEN_LINE_BREAKPOINT;
@@ -110,8 +110,13 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
             AbstractBreakpoint breakpoint = (AbstractBreakpoint) node;
             if (!breakpoint.isEnabled()) {
                 return DISABLED_BREAKPOINT;
+            } else {
+                if (Utils.isValid(breakpoint)) {
+                    return BREAKPOINT;
+                } else {
+                    return BROKEN_BREAKPOINT;
+                }
             }
-            return BREAKPOINT;
         }
         throw new UnknownTypeException(node);
     }

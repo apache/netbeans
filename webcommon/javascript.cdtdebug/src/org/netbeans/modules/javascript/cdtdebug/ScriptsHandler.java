@@ -20,6 +20,7 @@ package org.netbeans.modules.javascript.cdtdebug;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -236,9 +237,11 @@ public class ScriptsHandler {
         }
     }
 
-    @NonNull
     public FileObject getFile(@NonNull CDTScript script) {
         String name = script.getUrl().getPath();
+        if(name == null) {
+            return null;
+        }
         File localFile = null;
         if (doPathTranslation) {
             try {

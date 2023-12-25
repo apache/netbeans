@@ -38,6 +38,9 @@ public final class EditorUtils {
     private EditorUtils() {}
 
     public static Line getLine(CDTDebugger dbg, FileObject fo, int line, Integer column) {
+        if(fo == null) {
+            return null;
+        }
         SourceMapsTranslator smtr = dbg.getScriptsHandler().getSourceMapsTranslator();
         if (smtr != null) {
             if (column == 0) {

@@ -176,8 +176,8 @@ public class DebuggingModel extends ViewModelSupport implements TreeModel, Exten
             String scriptName;
             long line;
             long column;
-            if (translatedLocation != null) {
-                scriptName = getScriptName(translatedLocation.getFile());
+            if (translatedLocation != null && translatedLocation.getFile() != null) {
+                scriptName = translatedLocation.getFile().getNameExt();
                 line = translatedLocation.getLine()+1;
                 column = translatedLocation.getColumn()+1;
             } else {
@@ -220,10 +220,6 @@ public class DebuggingModel extends ViewModelSupport implements TreeModel, Exten
             return scriptName;
         }
         return null;
-    }
-
-    private static String getScriptName(FileObject fo) {
-        return fo.getNameExt();
     }
 
     @Override

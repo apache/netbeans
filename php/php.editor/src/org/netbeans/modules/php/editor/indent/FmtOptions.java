@@ -195,6 +195,7 @@ public final class FmtOptions {
     public static final String ALIGN_MULTILINE_ARRAY_INIT = "alignMultilineArrayInit"; //NOI18N
     public static final String GROUP_ALIGNMENT_ASSIGNMENT = "groupAlignmentAssignment"; //NOI18N
     public static final String GROUP_ALIGNMENT_ARRAY_INIT = "groupAlignmentArrayInit"; //NOI18N
+    public static final String GROUP_ALIGNMENT_MATCH_ARM_ARROW = "groupAlignmentMatchArmArrow"; //NOI18N
     public static final String WRAP_GROUP_USE_LIST = "wrapGroupUseList"; //NOI18N
     public static final String WRAP_EXTENDS_IMPLEMENTS_KEYWORD = "wrapExtendsImplementsKeyword"; //NOI18N
     public static final String WRAP_EXTENDS_IMPLEMENTS_LIST = "wrapExtendsImplementsList"; //NOI18N
@@ -392,6 +393,7 @@ public final class FmtOptions {
             {PLACE_NEW_LINE_AFTER_MODIFIERS, FALSE}, //NOI18N
 
             {GROUP_ALIGNMENT_ARRAY_INIT, FALSE},
+            {GROUP_ALIGNMENT_MATCH_ARM_ARROW, FALSE},
             {GROUP_ALIGNMENT_ASSIGNMENT, FALSE},
             {WRAP_GROUP_USE_LIST, WRAP_ALWAYS},
             {WRAP_EXTENDS_IMPLEMENTS_KEYWORD, WRAP_NEVER}, //NOI18N

@@ -150,4 +150,8 @@ $data=[
 'very_looong_key'=>100,
 ];
 
-?>
+$match = match ($type) {
+    "condition" => 1,
+    "loooooong condition" => 2,
+    default => 0,
+};

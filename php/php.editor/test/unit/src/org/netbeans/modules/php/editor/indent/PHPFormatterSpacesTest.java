@@ -236,6 +236,18 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/alignment/issue210617.php", options);
     }
 
+    public void testIssue210617_TabSize8() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, true);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ASSIGNMENT, true);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 8);
+        options.put(FmtOptions.INDENT_SIZE, 8);
+        options.put(FmtOptions.ITEMS_IN_ARRAY_DECLARATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        reformatFileContents("testfiles/formatting/alignment/issue210617.php", options, false, true);
+    }
+
     public void testIssue181624_01() throws Exception {
         HashMap<String, Object> options = new HashMap<String, Object>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/spaces/issue181624_01.php", options);

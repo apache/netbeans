@@ -4,31 +4,31 @@ $v = 'test';
 
 $va = 'test';
 
-$v			 = 'test';
-$va			 = 'test';
-$var		 = 'test';
-$var1		 = 'test';
-$var11		 = 'test';
-$var111		 = 'test';
-$var1111	 = 'test';
-$var11111	 = 'test';
-$var111111	 = 'test';
-$var1111111	 = 'test';
+$v	     = 'test';
+$va	     = 'test';
+$var	     = 'test';
+$var1	     = 'test';
+$var11	     = 'test';
+$var111	     = 'test';
+$var1111     = 'test';
+$var11111    = 'test';
+$var111111   = 'test';
+$var1111111  = 'test';
 $longVarName = 'test';
 
-$v			= 'test';
-$va			= 'test';
-$var		= 'test';
-$var1		= 'test';
-$var11		= 'test';
-$var111		= 'test';
-$var1111	= 'test';
-$var11111	= 'test';
-$var111111	= 'test';
+$v	    = 'test';
+$va	    = 'test';
+$var	    = 'test';
+$var1	    = 'test';
+$var11	    = 'test';
+$var111	    = 'test';
+$var1111    = 'test';
+$var11111   = 'test';
+$var111111  = 'test';
 $var1111111 = 'test';
 
-$v		   = 'test';
-$va		   = 'test';
+$v	   = 'test';
+$va	   = 'test';
 $var	   = 'test';
 $var1	   = 'test';
 $var11	   = 'test';
@@ -37,8 +37,8 @@ $var1111   = 'test';
 $var11111  = 'test';
 $var111111 = 'test';
 
-$v		  = 'test';
-$va		  = 'test';
+$v	  = 'test';
+$va	  = 'test';
 $var	  = 'test';
 $var1	  = 'test';
 $var11	  = 'test';
@@ -46,37 +46,37 @@ $var111	  = 'test';
 $var1111  = 'test';
 $var11111 = 'test';
 
-$v		 = 'test';
-$va		 = 'test';
+$v	 = 'test';
+$va	 = 'test';
 $var	 = 'test';
 $var1	 = 'test';
 $var11	 = 'test';
 $var111	 = 'test';
 $var1111 = 'test';
 
-$v		= 'test';
-$va		= 'test';
+$v	= 'test';
+$va	= 'test';
 $var	= 'test';
 $var1	= 'test';
 $var11	= 'test';
 $var111 = 'test';
 
-$v	   = 'test';
-$va	   = 'test';
+$v     = 'test';
+$va    = 'test';
 $var   = 'test';
 $var1  = 'test';
 $var11 = 'test';
 
-$v	  = 'test';
-$va	  = 'test';
+$v    = 'test';
+$va   = 'test';
 $var  = 'test';
 $var1 = 'test';
 
-$v	 = 'test';
-$va	 = 'test';
+$v   = 'test';
+$va  = 'test';
 $var = 'test';
 
-$v	= 'test';
+$v  = 'test';
 $va = 'test';
 
 $short	 = 'test';
@@ -113,6 +113,6 @@ $var1 = 'test';
 $var	  = 'test';
 $var11111 = 'test';
 
-$v			 = 'test';
+$v	     = 'test';
 $longVarName = 'test';
 ?>

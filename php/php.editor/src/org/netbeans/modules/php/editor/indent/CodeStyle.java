@@ -576,12 +576,16 @@ public final class CodeStyle {
         return preferences.getBoolean(PLACE_NEW_LINE_AFTER_MODIFIERS, getDefaultAsBoolean(PLACE_NEW_LINE_AFTER_MODIFIERS));
     }
 
-    public boolean groupMulitlineAssignment() {
+    public boolean groupMultilineAssignment() {
         return preferences.getBoolean(GROUP_ALIGNMENT_ASSIGNMENT, getDefaultAsBoolean(GROUP_ALIGNMENT_ASSIGNMENT));
     }
 
-    public boolean groupMulitlineArrayInit() {
+    public boolean groupMultilineArrayInit() {
         return preferences.getBoolean(GROUP_ALIGNMENT_ARRAY_INIT, getDefaultAsBoolean(GROUP_ALIGNMENT_ARRAY_INIT));
+    }
+
+    public boolean groupMultilineMatchArmArrow() {
+        return preferences.getBoolean(GROUP_ALIGNMENT_MATCH_ARM_ARROW, getDefaultAsBoolean(GROUP_ALIGNMENT_MATCH_ARM_ARROW));
     }
 
     // Wrapping ----------------------------------------------------------------

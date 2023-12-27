@@ -35,6 +35,7 @@ import org.netbeans.api.lexer.TokenUtilities;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.GsfUtilities;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.indent.FormatToken.AssignmentAnchorToken;
 import org.netbeans.modules.php.editor.indent.TokenFormatter.DocumentOptions;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
@@ -419,7 +420,7 @@ public class FormatVisitor extends DefaultVisitor {
             scan(node.getKey());
             while (ts.moveNext() && ts.offset() < node.getValue().getStartOffset()) {
                 if (isKeyValueOperator(ts.token())) {
-                    handleGroupAlignment(node.getKey(), multilinedArray);
+                    handleGroupAlignment(node.getKey(), multilinedArray, AssignmentAnchorToken.Type.ARRAY);
                 }
                 addFormatToken(formatTokens);
             }
@@ -2245,6 +2246,7 @@ public class FormatVisitor extends DefaultVisitor {
         scan(node.getExpression());
 
         addWhitespaceBeforeMatchLeftBraceToken(node);
+        createGroupAlignment();
         List<MatchArm> matchArms = node.getMatchArms();
         if (!matchArms.isEmpty()) {
             MatchArm first = matchArms.get(0);
@@ -2259,6 +2261,8 @@ public class FormatVisitor extends DefaultVisitor {
         if (disabled) {
             enableIndentForFunctionInvocation(node.getEndOffset());
         }
+        addAllUntilOffset(node.getEndOffset());
+        resetGroupAlignment();
     }
 
     private void addWhitespaceBeforeMatchRightBraceToken(MatchExpression node) {
@@ -2287,6 +2291,53 @@ public class FormatVisitor extends DefaultVisitor {
             }
             addFormatToken(formatTokens);
         }
+    }
+
+    private boolean isMultilinedMatchArm(MatchExpression matchExpression, MatchArm matchArm) {
+        boolean result = false;
+        List<MatchArm> matchArms = matchExpression.getMatchArms();
+        int start = matchExpression.getStartOffset();
+        for (MatchArm arm : matchArms) {
+            if (arm.getStartOffset() == matchArm.getStartOffset()) {
+                int end = arm.getStartOffset();
+                try {
+                    result = document.getText(start, end - start).contains(CodeUtils.NEW_LINE);
+                } catch (BadLocationException ex) {
+                    LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested()); // NOI18N
+                }
+            }
+            start = arm.getEndOffset();
+        }
+        return result;
+    }
+
+    @Override
+    public void visit(MatchArm node) {
+        scan(node.getConditions());
+        MatchExpression parentMatchExpression = getParentMatchExpression();
+        boolean isMultilined = isMultilinedMatchArm(parentMatchExpression, node);
+        while (ts.moveNext() && ts.offset() < node.getExpression().getStartOffset()) {
+            if (isKeyValueOperator(ts.token())) {
+                List<Expression> conditions = node.getConditions();
+                handleGroupAlignment(conditions, isMultilined, AssignmentAnchorToken.Type.MATCH_ARM);
+            }
+            addFormatToken(formatTokens);
+        }
+        ts.movePrevious();
+        scan(node.getExpression());
+    }
+
+    @CheckForNull
+    private MatchExpression getParentMatchExpression() {
+        MatchExpression result = null;
+        for (int i = 0; i < path.size(); i++) {
+            ASTNode parentInPath = path.get(i);
+            if (parentInPath instanceof MatchExpression) {
+                result = (MatchExpression) parentInPath;
+                break;
+            }
+        }
+        return result;
     }
 
     @Override
@@ -3284,26 +3335,49 @@ public class FormatVisitor extends DefaultVisitor {
      * the group
      */
     private void handleGroupAlignment(int nodeLength, boolean multilined) {
+        handleGroupAlignment(nodeLength, multilined, AssignmentAnchorToken.Type.ASSIGNMENT);
+    }
+
+    /**
+     * Handle group alignment.
+     *
+     * @param nodeLength the node length
+     * @param multilined {@code true} if it has a new line, otherwise {@code false}
+     * @param type the assingment type
+     */
+    private void handleGroupAlignment(int nodeLength, boolean multilined, AssignmentAnchorToken.Type type) {
         if (groupAlignmentTokenHolders.isEmpty()) {
             createGroupAlignment();
         }
         GroupAlignmentTokenHolder tokenHolder = groupAlignmentTokenHolders.peek();
-        FormatToken.AssignmentAnchorToken previousGroupToken = tokenHolder.getToken();
+        AssignmentAnchorToken previousGroupToken = tokenHolder.getToken();
         if (previousGroupToken == null) {
             // it's the first line in the group
-            previousGroupToken = new FormatToken.AssignmentAnchorToken(ts.offset(), multilined);
-            previousGroupToken.setLenght(nodeLength);
+            previousGroupToken = new AssignmentAnchorToken(ts.offset(), multilined, type);
+            previousGroupToken.setLength(nodeLength);
             previousGroupToken.setMaxLength(nodeLength);
         } else {
             // it's a next line in the group.
-            FormatToken.AssignmentAnchorToken aaToken = new FormatToken.AssignmentAnchorToken(ts.offset(), multilined);
-            aaToken.setLenght(nodeLength);
+            AssignmentAnchorToken aaToken = new AssignmentAnchorToken(ts.offset(), multilined, type);
+            aaToken.setLength(nodeLength);
             aaToken.setPrevious(previousGroupToken);
             aaToken.setIsInGroup(true);
             if (!previousGroupToken.isInGroup()) {
                 previousGroupToken.setIsInGroup(true);
             }
-            if (previousGroupToken.getMaxLength() < nodeLength) {
+            if (type == AssignmentAnchorToken.Type.MATCH_ARM) {
+                int maxLength = getValidMaxLength(aaToken);
+                previousGroupToken = aaToken;
+                do {
+                    aaToken.setMaxLength(maxLength);
+                    AssignmentAnchorToken previousToken = aaToken.getPrevious();
+                    if (previousToken != null
+                            && previousToken.getMaxLength() == maxLength) {
+                        break;
+                    }
+                    aaToken = previousToken;
+                } while (aaToken != null);
+            } else if (previousGroupToken.getMaxLength() < nodeLength) {
                 // if the length of the current identifier is bigger, then is in
                 // the group so far, change max length for all items in the group
                 previousGroupToken = aaToken;
@@ -3320,6 +3394,25 @@ public class FormatVisitor extends DefaultVisitor {
         formatTokens.add(previousGroupToken);
     }
 
+    private int getValidMaxLength(FormatToken.AssignmentAnchorToken assignmentAnchorToken) {
+        // e.g. avoid adding extra spaces after "1" and "2" in the following case
+        // match ($type) {
+        //     "1" => 1, "maxLength" => "maxLength", "2" => 2,
+        // }
+        int maxLength = assignmentAnchorToken.getLength();
+        AssignmentAnchorToken aaToken = assignmentAnchorToken;
+        int multilinedMaxLength = -1;
+        do {
+            int length = aaToken.getLength();
+            maxLength = Integer.max(maxLength, length);
+            if (aaToken.isMultilined()) {
+                multilinedMaxLength = Integer.max(multilinedMaxLength, length);
+            }
+            aaToken = aaToken.getPrevious();
+        } while (aaToken != null);
+        return multilinedMaxLength != -1 ? multilinedMaxLength : maxLength;
+    }
+
     private void handleGroupAlignment(int nodeLength) {
         handleGroupAlignment(nodeLength, false);
     }
@@ -3328,8 +3421,14 @@ public class FormatVisitor extends DefaultVisitor {
         handleGroupAlignment(node.getEndOffset() - node.getStartOffset(), false);
     }
 
-    private void handleGroupAlignment(ASTNode node, boolean multilined) {
-        handleGroupAlignment(node.getEndOffset() - node.getStartOffset(), multilined);
+    private void handleGroupAlignment(ASTNode node, boolean multilined, AssignmentAnchorToken.Type type) {
+        handleGroupAlignment(node.getEndOffset() - node.getStartOffset(), multilined, type);
+    }
+
+    private void handleGroupAlignment(List<? extends ASTNode> nodes, boolean multilined, AssignmentAnchorToken.Type type) {
+        int start = nodes.get(0).getStartOffset();
+        int end = nodes.get(nodes.size() - 1).getEndOffset();
+        handleGroupAlignment(end - start, multilined, type);
     }
 
     private void resetAndCreateGroupAlignment() {

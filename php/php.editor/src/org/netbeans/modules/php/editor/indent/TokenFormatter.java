@@ -37,6 +37,7 @@ import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.indent.FormatToken.AssignmentAnchorToken;
 import org.netbeans.modules.php.editor.lexer.LexUtilities;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
@@ -216,8 +217,9 @@ public class TokenFormatter {
         public boolean alignMultilineFor; // not implemented yet
         @org.netbeans.api.annotations.common.SuppressWarnings({"URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"})
         public boolean alignMultilineArrayInit; //not implemented yet
-        public boolean groupMulitilineAssignment;
-        public boolean groupMulitilineArrayInit;
+        public boolean groupMultilineAssignment;
+        public boolean groupMultilineArrayInit;
+        public boolean groupMultilineMatchArmArrow;
 
         boolean wrapNeverKeepLines = Boolean.getBoolean("nb.php.editor.formatting.never.keep.lines"); // NOI18N
 
@@ -382,8 +384,9 @@ public class TokenFormatter {
             alignMultilineAssignment = codeStyle.alignMultilineAssignment();
             alignMultilineFor = codeStyle.alignMultilineFor();
             alignMultilineArrayInit = codeStyle.alignMultilineArrayInit();
-            groupMulitilineArrayInit = codeStyle.groupMulitlineArrayInit();
-            groupMulitilineAssignment = codeStyle.groupMulitlineAssignment();
+            groupMultilineArrayInit = codeStyle.groupMultilineArrayInit();
+            groupMultilineMatchArmArrow = codeStyle.groupMultilineMatchArmArrow();
+            groupMultilineAssignment = codeStyle.groupMultilineAssignment();
         }
 
     }
@@ -1199,12 +1202,17 @@ public class TokenFormatter {
                                     case WHITESPACE_BEFORE_ASSIGN_OP:
                                         indentRule = true;
                                         countSpaces = 0;
-                                        if (index > 0 && docOptions.groupMulitilineAssignment
+                                        boolean addSpaceBeforeAssign = true;
+                                        if (index > 0 && docOptions.groupMultilineAssignment
                                                 && formatTokens.get(index - 1).getId() == FormatToken.Kind.ASSIGNMENT_ANCHOR) {
                                             FormatToken.AssignmentAnchorToken aaToken = (FormatToken.AssignmentAnchorToken) formatTokens.get(index - 1);
+                                            // space of options is added if the token is grouped and tab is not expanded
                                             countSpaces = new SpacesCounter(docOptions).count(aaToken);
+                                            addSpaceBeforeAssign = addSpaceAroundAssignment(aaToken, docOptions);
                                         }
-                                        countSpaces = countSpaces + (docOptions.spaceAroundAssignOps ? 1 : 0);
+                                        if (addSpaceBeforeAssign) {
+                                            countSpaces += (docOptions.spaceAroundAssignOps ? 1 : 0);
+                                        }
                                         newLines = 0;
                                         if (!docOptions.wrapAfterAssignOps) {
                                             switch (docOptions.wrapAssignOps) {
@@ -1228,12 +1236,17 @@ public class TokenFormatter {
                                     case WHITESPACE_AFTER_ASSIGN_OP:
                                         indentRule = true;
                                         countSpaces = 0;
-                                        if (index > 0 && docOptions.groupMulitilineAssignment
+                                        boolean addSpaceAfterAssign = true;
+                                        if (index > 0 && docOptions.groupMultilineAssignment
                                                 && formatTokens.get(index - 1).getId() == FormatToken.Kind.ASSIGNMENT_ANCHOR) {
                                             FormatToken.AssignmentAnchorToken aaToken = (FormatToken.AssignmentAnchorToken) formatTokens.get(index - 1);
+                                            // space of options is added if the token is grouped and tab is not expanded
                                             countSpaces = new SpacesCounter(docOptions).count(aaToken);
+                                            addSpaceAfterAssign = addSpaceAroundAssignment(aaToken, docOptions);
                                         }
-                                        countSpaces = countSpaces + (docOptions.spaceAroundAssignOps ? 1 : 0);
+                                        if (addSpaceAfterAssign) {
+                                            countSpaces += (docOptions.spaceAroundAssignOps ? 1 : 0);
+                                        }
                                         newLines = 0;
                                         if (docOptions.wrapAfterAssignOps) {
                                             switch (docOptions.wrapAssignOps) {
@@ -1256,14 +1269,30 @@ public class TokenFormatter {
                                         break;
                                     case WHITESPACE_AROUND_KEY_VALUE_OP:
                                         countSpaces = 0;
-                                        FormatToken lastToken = formatTokens.get(index - 1);
-                                        if (index > 0 && docOptions.groupMulitilineArrayInit && lastToken.getId() == FormatToken.Kind.ASSIGNMENT_ANCHOR) {
-                                            FormatToken.AssignmentAnchorToken anchorToken = (FormatToken.AssignmentAnchorToken) lastToken;
-                                            if (docOptions.wrapArrayInit == CodeStyle.WrapStyle.WRAP_ALWAYS || anchorToken.isMultilined()) {
-                                                countSpaces = new SpacesCounter(docOptions).count(anchorToken);
+                                        FormatToken lastToken = null;
+                                        if (index > 0) {
+                                            lastToken = formatTokens.get(index - 1);
+                                        }
+                                        boolean addSpaceAroundKeyValue = true;
+                                        if (lastToken != null && lastToken.getId() == FormatToken.Kind.ASSIGNMENT_ANCHOR) {
+                                            AssignmentAnchorToken anchorToken = (AssignmentAnchorToken) lastToken;
+                                            if (anchorToken.getType() == AssignmentAnchorToken.Type.ARRAY && docOptions.groupMultilineArrayInit) {
+                                                if (docOptions.wrapArrayInit == CodeStyle.WrapStyle.WRAP_ALWAYS || anchorToken.isMultilined()) {
+                                                    // space of options is added if the token is grouped and tab is not expanded
+                                                    countSpaces = new SpacesCounter(docOptions).count(anchorToken);
+                                                    addSpaceAroundKeyValue = addSpaceAroundAssignment(anchorToken, docOptions);
+                                                }
+                                            } else if (anchorToken.getType() == AssignmentAnchorToken.Type.MATCH_ARM && docOptions.groupMultilineMatchArmArrow) {
+                                                if (anchorToken.isMultilined()) {
+                                                    // space of options is added if the token is grouped and tab is not expanded
+                                                    countSpaces = new SpacesCounter(docOptions).count(anchorToken);
+                                                    addSpaceAroundKeyValue = addSpaceAroundAssignment(anchorToken, docOptions);
+                                                }
                                             }
                                         }
-                                        countSpaces = countSpaces + (docOptions.spaceAroundKeyValueOps ? 1 : 0);
+                                        if (addSpaceAroundKeyValue) {
+                                            countSpaces += docOptions.spaceAroundKeyValueOps ? 1 : 0;
+                                        }
                                         break;
                                     case WHITESPACE_BEFORE_ANONYMOUS_CLASS_PAREN:
                                         countSpaces = docOptions.spaceBeforeAnonymousClassParen ? 1 : 0;
@@ -3184,6 +3213,10 @@ public class TokenFormatter {
         return lineEndings;
     }
 
+    private boolean addSpaceAroundAssignment(AssignmentAnchorToken token, DocumentOptions docOption) {
+        return docOption.expandTabsToSpaces || !token.isInGroup();
+    }
+
     private static final class SpacesCounter {
         private final DocumentOptions documentOptions;
 
@@ -3202,7 +3235,7 @@ public class TokenFormatter {
         private int countSpacesForGroupedToken(final FormatToken.AssignmentAnchorToken token) {
             int spaces;
             if (documentOptions.expandTabsToSpaces) {
-                spaces = token.getMaxLength() - token.getLenght();
+                spaces = token.getMaxLength() - token.getLength();
             } else {
                 spaces = countSpacesWhenNotExpandingTabs(token);
             }
@@ -3211,53 +3244,71 @@ public class TokenFormatter {
 
         private int countSpacesWhenNotExpandingTabs(final FormatToken.AssignmentAnchorToken token) {
             int spaces;
+            int spaceAroundAssignment = getSpaceAroundAssignment(token);
+            // consider also the space around assinment here
+            // to avoid adding extra spaces before assignment
+            final int maxLength = token.getMaxLength() + spaceAroundAssignment;
+            final int tokenLength = token.getLength();
             // 1 tabSize will be reduced to tabWidthToComplete...
-            int tabWidthToCompleteMaxLengthToTab = documentOptions.tabSize - (token.getMaxLength() % documentOptions.tabSize);
-            int tabWidthToCompleteLengthToTab = documentOptions.tabSize - (token.getLenght() % documentOptions.tabSize);
-            if (tabWidthToCompleteMaxLengthToTab == documentOptions.tabSize) {
-                // the biggest item of the group doesn't have to be expanded by one Tab
-                tabWidthToCompleteMaxLengthToTab = 0;
-            }
+            int tabWidthToCompleteLengthToTab = documentOptions.tabSize - (tokenLength % documentOptions.tabSize);
             if (tabWidthToCompleteLengthToTab == documentOptions.tabSize) {
                 // current item is on the Tab offset
                 tabWidthToCompleteLengthToTab = 0;
             }
+            boolean hasIncompleteTab = tabWidthToCompleteLengthToTab != 0;
 
-            if (token.getLenght() == token.getMaxLength()) {
-                spaces = countSpacesForBiggestItem(tabWidthToCompleteLengthToTab);
+            if (tokenLength == token.getMaxLength()) {
+                spaces = spaceAroundAssignment;
             } else {
-                spaces = countSpacesForCommonItem(token, tabWidthToCompleteLengthToTab, tabWidthToCompleteMaxLengthToTab);
-            }
-            return spaces;
-        }
-
-        private int countSpacesForBiggestItem(final int tabWidthToCompleteLengthToTab) {
-            int spaces = 0;
-            if (tabWidthToCompleteLengthToTab != 0) {
-                // and this biggest item has to be expanded by one tab
-                spaces = documentOptions.tabSize;
-            }
-            return spaces;
-        }
-
-        private int countSpacesForCommonItem(final FormatToken.AssignmentAnchorToken token, final int tabWidthToCompleteLengthToTab, final int tabWidthToCompleteMaxLengthToTab) {
-            int spaces;
-            if (tabWidthToCompleteMaxLengthToTab == 0) {
-                if (tabWidthToCompleteLengthToTab == 0) {
-                    spaces = token.getMaxLength() - token.getLenght();
+                spaces = maxLength - tabWidthToCompleteLengthToTab - tokenLength;
+                // e.g. tab size: 4, spaceAroundKeyValueOps: true
+                // match ($cond) {
+                //     666666 => 6,
+                //     22 => 2,
+                // };
+                //     666666 =>
+                //     ^^^^^^^
+                //     maxLength = 7
+                //     22
+                //       ^^
+                //       tabWidthToCompleteLengthToTab = 2 (has incomplete tab, i.e. must add 4(tab size) instead of 2)
+                //     ^^
+                //     tokenLength = 2
+                //     666666 =>
+                //     22
+                //         ^^^
+                //         spaces = 3 = 7 - 2 - 2
+                if (spaces < 0) {
+                    // e.g. tab size: 4, spaceAroundKeyValueOps: true, spaces = -1
+                    // in this case, add maxLength - tokenLength = 2
+                    // match ($cond) {
+                    //     22 => 1, // max length = 3
+                    //     1 => 0, // tabWidthToCompleteLengthToTab = 3, token length = 1
+                    // };
+                    spaces = maxLength - tokenLength;
                 } else {
-                    spaces = (token.getMaxLength() - token.getLenght()) - tabWidthToCompleteLengthToTab + documentOptions.tabSize;
-                }
-            } else {
-                if (tabWidthToCompleteLengthToTab == 0) {
-                    spaces = (token.getMaxLength() + tabWidthToCompleteMaxLengthToTab) - token.getLenght();
-                } else {
-                    spaces = (token.getMaxLength() + tabWidthToCompleteMaxLengthToTab) - (token.getLenght() + tabWidthToCompleteLengthToTab) + documentOptions.tabSize;
+                    if (hasIncompleteTab) {
+                        spaces += documentOptions.tabSize;
+                    }
                 }
             }
             return spaces;
         }
 
+        private int getSpaceAroundAssignment(AssignmentAnchorToken token) {
+            int space = 0;
+            switch (token.getType()) {
+                case ARRAY: // no break
+                case MATCH_ARM:
+                    space = documentOptions.spaceAroundKeyValueOps ? 1 : 0;
+                    break;
+                case ASSIGNMENT:
+                    space = documentOptions.spaceAroundAssignOps ? 1 : 0;
+                    break;
+                default:
+                    assert false : "Unhandled AssignmentAnchorToken.Type: " + token.getType(); // NOI18N
+            }
+            return space;
+        }
     }
-
 }

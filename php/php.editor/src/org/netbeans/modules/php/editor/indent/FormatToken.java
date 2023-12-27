@@ -297,6 +297,12 @@ public class FormatToken {
      */
     public static class AssignmentAnchorToken extends FormatToken {
 
+        public enum Type {
+            ASSIGNMENT, // "="
+            ARRAY, // "=>"
+            MATCH_ARM, // "=>"
+        }
+
         /**
          * length of the identifier that is before the aligned operator
          */
@@ -315,22 +321,28 @@ public class FormatToken {
          */
         private AssignmentAnchorToken previous;
         private final boolean multilined;
+        private final Type type;
 
         public AssignmentAnchorToken(int offset, boolean multilined) {
+            this(offset, multilined, Type.ASSIGNMENT);
+        }
+
+        public AssignmentAnchorToken(int offset, boolean multilined, Type type) {
             super(Kind.ASSIGNMENT_ANCHOR, offset);
             length = -1;
             maxLength = -1;
             previous = null;
             isInGroup = false;
             this.multilined = multilined;
+            this.type = type;
         }
 
-        public int getLenght() {
+        public int getLength() {
             return length;
         }
 
-        public void setLenght(int lenght) {
-            this.length = lenght;
+        public void setLength(int length) {
+            this.length = length;
         }
 
         public int getMaxLength() {
@@ -361,6 +373,9 @@ public class FormatToken {
             return multilined;
         }
 
+        public Type getType() {
+            return type;
+        }
     }
 
     public static class UnbreakableSequenceToken extends FormatToken {

@@ -1,5 +1,5 @@
-Name: Bouncy Castle Java Provider
-Version: 1.76
+Name: Bouncy Castle Java OpenPGP/BCPG
+Version: 1.77
 License: MIT-bouncycastle
 Origin: https://www.bouncycastle.org/latest_releases.html
 Description: Legion of the Bouncy Castle Java cryptography APIs

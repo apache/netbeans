@@ -22,44 +22,37 @@ import org.netbeans.modules.php.dbgp.DebugSession;
 import org.netbeans.modules.php.dbgp.breakpoints.BreakpointModel;
 import org.w3c.dom.Node;
 
-/**
- * @author ads
- *
- */
-public class FeatureSetResponse extends DbgpResponse {
-    private static final String SUCCESS = "success"; // NOI18N
-    private static final String FEATURE_NAME = "feature_name"; // NOI18N
-    private static final String ERROR = "error"; // NOI18N
+public class RunResponse extends StatusResponse {
+    private static final String BREAKPOINT = "breakpoint"; //NOI18N
+    private static final String BREAKPOINT_ID = "id"; //NOI18N
 
-    FeatureSetResponse(Node node) {
+    RunResponse(Node node) {
         super(node);
     }
 
-    public String getFeature() {
-        return getAttribute(getNode(), FEATURE_NAME);
-    }
-
-    public boolean isSuccess() {
-        return getBoolean(getNode(), SUCCESS);
-    }
-
     @Override
-    public void process(DebugSession session, DbgpCommand command) {
-        if (command instanceof FeatureSetCommand) {
-            String feature = ((FeatureSetCommand) command).getFeature();
-            if (feature.equals(FeatureGetCommand.Feature.BREAKPOINT_DETAILS.toString())) {
-                Node error = getChild(getNode(), ERROR);
-                setSearchCurrentBreakpointById(session, error == null);
+    public void process(DebugSession dbgSession, DbgpCommand command) {
+        Status status = getStatus();
+        Reason reason = getReason();
+        if (status != null && reason != null) {
+            dbgSession.processStatus(status, reason, command);
+        }
+
+        Node breakpoint = getChild(getNode(), BREAKPOINT);
+        if (breakpoint != null) {
+            String id = DbgpMessage.getAttribute(breakpoint, BREAKPOINT_ID);
+            if (id != null) {
+                updateBreakpointsView(dbgSession, id);
             }
         }
     }
 
-    private void setSearchCurrentBreakpointById(DebugSession session, boolean value) {
+    private void updateBreakpointsView(DebugSession session, String id) {
         DebugSession.IDESessionBridge bridge = session.getBridge();
         if (bridge != null) {
             BreakpointModel breakpointModel = bridge.getBreakpointModel();
-            if (breakpointModel != null) {
-                breakpointModel.setSearchCurrentBreakpointById(value);
+            if (breakpointModel != null && breakpointModel.isSearchCurrentBreakpointById()) {
+                breakpointModel.setCurrentBreakpoint(session, id);
             }
         }
     }

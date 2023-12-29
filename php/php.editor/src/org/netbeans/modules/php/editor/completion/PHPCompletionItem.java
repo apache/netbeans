@@ -1264,17 +1264,19 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         }
 
         protected String getNameAndFunctionBodyForTemplate() {
+            FileObject fileObject = null;
+            if (request != null) {
+                fileObject = request.result.getSnapshot().getSource().getFileObject();
+            }
+            PhpVersion phpVersion = getPhpVersion(fileObject);
             StringBuilder template = new StringBuilder();
             TypeNameResolver typeNameResolver = getBaseFunctionElement().getParameters().isEmpty() || request == null
                     ? TypeNameResolverImpl.forNull()
                     : CodegenUtils.createSmarterTypeNameResolver(getBaseFunctionElement(), request.result.getModel(), request.anchor);
-            template.append(getBaseFunctionElement().asString(PrintAs.NameAndParamsDeclaration, typeNameResolver));
+            template.append(getBaseFunctionElement().asString(PrintAs.NameAndParamsDeclaration, typeNameResolver, phpVersion));
             // #270237
-            FileObject fileObject = null;
             if (request != null) {
                 // resquest is null if completion items are used in the IntroduceSuggestion hint
-                fileObject = request.result.getSnapshot().getSource().getFileObject();
-                PhpVersion phpVersion = getPhpVersion(fileObject);
                 if (phpVersion != null
                         && phpVersion.compareTo(PhpVersion.PHP_70) >= 0) {
                     Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();

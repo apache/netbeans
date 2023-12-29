@@ -19,12 +19,16 @@
 package org.netbeans.modules.php.editor.elements;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
@@ -38,6 +42,7 @@ import org.openide.util.Exceptions;
  * @author Radek Matous
  */
 public final class ParameterElementImpl implements ParameterElement {
+
     private final String name;
     private final String defaultValue;
     private final String declaredType;
@@ -51,6 +56,8 @@ public final class ParameterElementImpl implements ParameterElement {
     private final boolean isUnionType;
     private final boolean isIntersectionType;
     private final int modifier;
+
+    private boolean isMagicMethod = false;
 
     public ParameterElementImpl(
             final String name,
@@ -80,6 +87,23 @@ public final class ParameterElementImpl implements ParameterElement {
         this.isUnionType = isUnionType;
         this.isIntersectionType = isIntersectionType;
         this.modifier = modifier;
+    }
+
+    private ParameterElementImpl(Builder builder) {
+        this.name = builder.name;
+        this.isMandatory = builder.isMandatory;
+        this.defaultValue = builder.defaultValue;
+        this.offset = builder.offset;
+        this.declaredType = builder.declaredType;
+        this.phpdocType = builder.phpdocType;
+        this.types = builder.types;
+        this.isRawType = builder.isRawType;
+        this.isReference = builder.isReference;
+        this.isVariadic = builder.isVariadic;
+        this.isUnionType = builder.isUnionType;
+        this.isIntersectionType = builder.isIntersectionType;
+        this.modifier = builder.modifier;
+        this.isMagicMethod = builder.isMagicMethod;
     }
 
     static List<ParameterElement> parseParameters(final String signature) {
@@ -342,6 +366,11 @@ public final class ParameterElementImpl implements ParameterElement {
 
     @Override
     public String asString(OutputType outputType, TypeNameResolver typeNameResolver) {
+        return asString(outputType, typeNameResolver, null);
+    }
+
+    @Override
+    public String asString(OutputType outputType, TypeNameResolver typeNameResolver, @NullAllowed PhpVersion phpVersion) {
         StringBuilder sb = new StringBuilder();
         Set<TypeResolver> typesResolvers = getTypes();
         boolean forDeclaration = outputType == OutputType.COMPLETE_DECLARATION
@@ -361,7 +390,12 @@ public final class ParameterElementImpl implements ParameterElement {
             if (StringUtils.hasText(getDeclaredType())) {
                 String[] splitTypes = Type.splitTypes(getDeclaredType());
                 List<String> resolvedTypes = new ArrayList<>();
-                if (splitTypes.length == typesResolvers.size()) {
+                if (isMagicMethod && phpVersion != null) {
+                    String validType = MethodElementImpl.getValidType(getDeclaredType(), phpVersion);
+                    if (StringUtils.hasText(validType)) {
+                        sb.append(validType).append(' ');
+                    }
+                } else if (splitTypes.length == typesResolvers.size()) {
                     String template = Type.toTypeTemplate(getDeclaredType());
                     for (TypeResolver typeResolver : typesResolvers) {
                         resolvedTypes.add(typeNameResolver.resolve(typeResolver.getTypeName(false)).toString());
@@ -419,5 +453,97 @@ public final class ParameterElementImpl implements ParameterElement {
     @Override
     public boolean isIntersectionType() {
         return isIntersectionType;
+    }
+
+    //~ inner class
+    static class Builder {
+
+        private final String name;
+        private String defaultValue = null;
+        private String declaredType = null;
+        private String phpdocType = null;
+        private Set<TypeResolver> types = Collections.emptySet();
+        private int offset = 0;
+        private int modifier = 0;
+        private boolean isRawType = false;
+        private boolean isMandatory = false;
+        private boolean isReference = false;
+        private boolean isVariadic = false;
+        private boolean isUnionType = false;
+        private boolean isIntersectionType = false;
+        private boolean isMagicMethod = false; // this is false as a field of ParameterElementImpl by default
+
+        public Builder(String name) {
+            this.name = name;
+        }
+
+        public ParameterElement build() {
+            return new ParameterElementImpl(this);
+        }
+
+        public Builder defaultValue(@NullAllowed String defaultValue) {
+            this.defaultValue = defaultValue;
+            return this;
+        }
+
+        public Builder declaredType(@NullAllowed String declaredType) {
+            this.declaredType = declaredType;
+            return this;
+        }
+
+        public Builder setPhpdocType(String phpdocType) {
+            this.phpdocType = phpdocType;
+            return this;
+        }
+
+        public Builder setTypes(Set<TypeResolver> types) {
+            this.types = new HashSet<>(types);
+            return this;
+        }
+
+        public Builder offset(int offset) {
+            this.offset = offset;
+            return this;
+        }
+
+        public Builder isRawType(boolean isRawType) {
+            this.isRawType = isRawType;
+            return this;
+        }
+
+        public Builder isMandatory(boolean isMandatory) {
+            this.isMandatory = isMandatory;
+            return this;
+        }
+
+        public Builder isReference(boolean isReference) {
+            this.isReference = isReference;
+            return this;
+        }
+
+        public Builder isVariadic(boolean isVariadic) {
+            this.isVariadic = isVariadic;
+            return this;
+        }
+
+        public Builder isUnionType(boolean isUnionType) {
+            this.isUnionType = isUnionType;
+            return this;
+        }
+
+        public Builder isIntersectionType(boolean isIntersectionType) {
+            this.isIntersectionType = isIntersectionType;
+            return this;
+        }
+
+        public Builder modifier(int modifier) {
+            this.modifier = modifier;
+            return this;
+        }
+
+        public Builder isMagicMethod(boolean isMagicMethod) {
+            this.isMagicMethod = isMagicMethod;
+            return this;
+        }
     }
 }

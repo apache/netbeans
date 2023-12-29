@@ -283,7 +283,7 @@ public final class CGSInfo {
                         final Set<MethodElement> methods = ElementFilter.forMembersOfTypes(preferedTypes).filter(accessibleMethods);
                         for (final MethodElement methodElement : methods) {
                             if (!methodElement.isFinal()) {
-                                methodProperties.add(new MethodProperty(methodElement, enclosingType));
+                                methodProperties.add(new MethodProperty(methodElement, enclosingType, phpVersion));
                             }
                         }
                         Collections.<MethodProperty>sort(methodProperties, MethodProperty.getComparator());

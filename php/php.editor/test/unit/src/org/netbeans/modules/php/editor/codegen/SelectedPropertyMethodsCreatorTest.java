@@ -891,4 +891,84 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
                 new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
         ));
     }
+
+    public void testMagicMethods01_PHP56() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_56);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMagicMethods01_PHP70() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_70);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMagicMethods01_PHP71() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_71);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMagicMethods01_PHP72() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_72);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMagicMethods01_PHP73() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_73);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMagicMethods01_PHP74() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_74);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMagicMethods01_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_80);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMagicMethods01_PHP81() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_81);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMagicMethods01_PHP82() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_82);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMagicMethods01_PHP83() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_83);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), ""),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
 }

@@ -65,7 +65,7 @@ ${cursor};
 
 Name: __toString
 public function __toString() {
-${cursor};
+return "MagicMethods[]";${cursor}
 }
 
 Name: __unserialize

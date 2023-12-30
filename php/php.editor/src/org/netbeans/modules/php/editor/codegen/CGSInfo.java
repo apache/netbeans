@@ -108,7 +108,8 @@ public final class CGSInfo {
     private boolean generateDoc;
     private boolean fluentSetter;
     private boolean isPublicModifier;
-
+    @NullAllowed
+    private Index index;
 
     private CGSInfo(JTextComponent textComp, PhpVersion phpVersion) {
         properties = new ArrayList<>();
@@ -215,6 +216,11 @@ public final class CGSInfo {
         return phpVersion;
     }
 
+    @CheckForNull
+    public Index getIndex() {
+        return index;
+    }
+
     public TypeNameResolver createTypeNameResolver(MethodElement method) {
         TypeNameResolver result;
         if (method.getParameters().isEmpty()) {
@@ -260,7 +266,7 @@ public final class CGSInfo {
                 className = getTypeName(typeDecl);
                 if (className != null) {
                     FileObject fileObject = info.getSnapshot().getSource().getFileObject();
-                    Index index = ElementQueryFactory.getIndexQuery(info);
+                    index = ElementQueryFactory.getIndexQuery(info);
                     final ElementFilter forFilesFilter = ElementFilter.forFiles(fileObject);
                     QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(
                             QualifiedName.create(className),
@@ -513,12 +519,12 @@ public final class CGSInfo {
          */
         private List<String> getAllPossibleProperties(String possibleProperty) {
             List<String> allPossibleProperties = new LinkedList<>();
-            possibleProperty = possibleProperty.toLowerCase();
-            allPossibleProperties.add(possibleProperty);
-            if (possibleProperty.startsWith("_")) { // NOI18N
-                allPossibleProperties.add(possibleProperty.substring(1));
+            String lowerCasePossibleProperty = possibleProperty.toLowerCase(Locale.ROOT);
+            allPossibleProperties.add(lowerCasePossibleProperty);
+            if (lowerCasePossibleProperty.startsWith("_")) { // NOI18N
+                allPossibleProperties.add(lowerCasePossibleProperty.substring(1));
             } else {
-                allPossibleProperties.add("_" + possibleProperty); // NOI18N
+                allPossibleProperties.add("_" + lowerCasePossibleProperty); // NOI18N
             }
             return allPossibleProperties;
         }

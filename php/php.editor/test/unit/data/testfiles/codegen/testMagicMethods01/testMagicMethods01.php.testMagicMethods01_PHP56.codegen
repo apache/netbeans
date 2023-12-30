@@ -25,6 +25,7 @@ public static function __set_state(array $properties){
 public function __sleep(){
 }
 public function __toString(){
+return "TestMagicMethods[]";
 }
 public function __unserialize(array $data){
 }

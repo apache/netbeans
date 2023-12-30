@@ -84,6 +84,16 @@ public class PHPCodeCompletionMagicMethodTest extends PHPCodeCompletionTestBase 
                 new DefaultFilter(PhpVersion.PHP_83, "__"), true);
     }
 
+    public void testToStringCustomTemplate_01_PHP83() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("toString01"), "    __^",
+                new DefaultFilter(PhpVersion.PHP_83, "__toString"), true);
+    }
+
+    public void testToStringCustomTemplate_02_PHP83() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("toString02"), "    __^",
+                new DefaultFilter(PhpVersion.PHP_83, "__toString"), true);
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

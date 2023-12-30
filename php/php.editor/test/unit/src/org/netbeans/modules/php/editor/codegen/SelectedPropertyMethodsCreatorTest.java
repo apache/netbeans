@@ -971,4 +971,20 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
                 new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
         ));
     }
+
+    public void testMagicMethodToString01_PHP83() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_83);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "__toString"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
+
+    public void testMagicMethodToString02_PHP83() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("    // test^", PhpVersion.PHP_83);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "__toString"),
+                new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)
+        ));
+    }
 }

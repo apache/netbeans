@@ -18,8 +18,13 @@
  */
 package org.netbeans.modules.php.editor.elements;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import org.netbeans.modules.php.editor.api.ElementQuery.Index;
+import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
+import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.model.impl.Type;
 
@@ -42,5 +47,36 @@ public final class ElementUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isToStringMagicMethod(MethodElement method) {
+        return method.getName().equals("__toString"); // NOI18N
+    }
+
+    public static String getToStringMagicMethodBody(TypeElement type, Index index) {
+        StringBuilder sb = new StringBuilder();
+        if (index != null) {
+            List<FieldElement> allFields = new ArrayList<>(index.getAlllFields(type));
+            allFields.sort((f1, f2) -> Integer.compare(f1.getOffset(), f2.getOffset()));
+            sb.append("return \"").append(type.getName()).append("["); // NOI18N
+            if (allFields.isEmpty()) {
+                sb.append("]\";"); // NOI18N
+            } else {
+                boolean isFirst = true;
+                for (FieldElement field : allFields) {
+                    if (field.isStatic()) {
+                        continue;
+                    }
+                    if (isFirst) {
+                        isFirst = false;
+                    } else {
+                        sb.append("\n. \", "); // NOI18N
+                    }
+                    sb.append(field.getName(false)).append("=\"").append(" . $this->").append(field.getName(false));
+                }
+                sb.append("\n. \"]\";"); // NOI18N
+            }
+        }
+        return sb.toString();
     }
 }

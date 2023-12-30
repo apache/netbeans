@@ -58,6 +58,7 @@ public class InitMessage extends DbgpMessage {
         setMaxDepth(session);
         setMaxChildren(session);
         setMaxDataSize(session);
+        setBreakpointDetails(session);
         setBreakpoints(session);
         negotiateOutputStream(session);
         negotiateRequestedUrls(session);
@@ -80,6 +81,10 @@ public class InitMessage extends DbgpMessage {
 
     private void setShowHidden(DebugSession session) {
         setFeature(session, Feature.SHOW_HIDDEN, "1"); //NOI18N
+    }
+
+    private void setBreakpointDetails(DebugSession session) {
+        setFeature(session, Feature.BREAKPOINT_DETAILS, "1"); //NOI18N
     }
 
     private void setBreakpointResolution(DebugSession session) {

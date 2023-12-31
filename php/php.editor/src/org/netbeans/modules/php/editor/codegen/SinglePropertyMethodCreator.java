@@ -61,6 +61,12 @@ public interface SinglePropertyMethodCreator<T extends Property> {
                         BaseFunctionElement.PrintAs.DeclarationWithEmptyBody,
                         cgsInfo.createTypeNameResolver(method),
                         cgsInfo.getPhpVersion()).replace("abstract ", CodeUtils.EMPTY_STRING)); //NOI18N;
+                if (ElementUtils.isToStringMagicMethod(method)) {
+                    // GH-6783
+                    inheritedMethod.deleteCharAt(inheritedMethod.length() - 1); // delete "}"
+                    inheritedMethod.append(ElementUtils.getToStringMagicMethodBody(method.getType(), cgsInfo.getIndex()));
+                    inheritedMethod.append("\n}"); // NOI18N
+                }
             } else {
                 inheritedMethod.append(method.asString(
                         BaseFunctionElement.PrintAs.DeclarationWithParentCallInBody,

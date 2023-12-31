@@ -34,6 +34,7 @@ import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement.PrintAs;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
+import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement.OutputType;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
@@ -88,12 +89,12 @@ public class BaseFunctionElementSupport  {
         switch (as) {
             case NameAndParamsDeclaration:
                 template.append(" ").append(element.getName()).append("("); //NOI18N
-                template.append(parameters2String(element, getParameters(), OutputType.COMPLETE_DECLARATION, typeNameResolver));
+                template.append(parameters2String(element, getParameters(), OutputType.COMPLETE_DECLARATION, typeNameResolver, phpVersion));
                 template.append(")"); //NOI18N
                 break;
             case NameAndParamsInvocation:
                 template.append(" ").append(element.getName()).append("("); //NOI18N
-                template.append(parameters2String(element, getParameters(), OutputType.SIMPLE_NAME, typeNameResolver));
+                template.append(parameters2String(element, getParameters(), OutputType.SIMPLE_NAME, typeNameResolver, phpVersion));
                 template.append(")"); //NOI18N
                 break;
             case DeclarationWithoutBody:
@@ -162,6 +163,14 @@ public class BaseFunctionElementSupport  {
                 boolean hasArray = false;
                 String declaredReturnType = getDeclaredReturnType();
                 if (StringUtils.hasText(declaredReturnType)) {
+                    if (element instanceof MethodElement) {
+                        MethodElement method = (MethodElement) element;
+                        if (method.isMagic()) {
+                            assert phpVersion != null;
+                            template.append(MethodElementImpl.getValidType(declaredReturnType, phpVersion));
+                            break;
+                        }
+                    }
                     String typeTemplate = Type.toTypeTemplate(declaredReturnType);
                     List<String> types = Arrays.asList(Type.splitTypes(declaredReturnType));
                     template.append(String.format(typeTemplate, (Object[]) resolveReturnTypes(types, typeNameResolver, element)));
@@ -257,7 +266,7 @@ public class BaseFunctionElementSupport  {
         }
     }
 
-    private static String parameters2String(final BaseFunctionElement element, final List<ParameterElement> parameterList, OutputType stringOutputType, TypeNameResolver typeNameResolver) {
+    private static String parameters2String(final BaseFunctionElement element, final List<ParameterElement> parameterList, OutputType stringOutputType, TypeNameResolver typeNameResolver, PhpVersion phpVersion) {
         StringBuilder template = new StringBuilder();
         if (parameterList.size() > 0) {
             for (int i = 0, n = parameterList.size(); i < n; i++) {
@@ -266,7 +275,7 @@ public class BaseFunctionElementSupport  {
                     paramSb.append(", "); //NOI18N
                 }
                 final ParameterElement param = parameterList.get(i);
-                String paramInfo = param.asString(stringOutputType, typeNameResolver);
+                String paramInfo = param.asString(stringOutputType, typeNameResolver, phpVersion);
                 boolean isNullableType = CodeUtils.isNullableType(paramInfo);
                 if (isNullableType) {
                     paramInfo = paramInfo.substring(1);
@@ -409,11 +418,26 @@ public class BaseFunctionElementSupport  {
             return new ReturnTypesImpl(returnTypes, node);
         }
 
+        public static ReturnTypes create(@NullAllowed String declaredType) {
+            if (StringUtils.isEmpty(declaredType)) {
+                return ReturnTypes.NONE;
+            }
+            Set<TypeResolver> returnTypes = TypeResolverImpl.parseTypes(declaredType);
+            return new ReturnTypesImpl(returnTypes, declaredType);
+        }
+
         private ReturnTypesImpl(Set<TypeResolver> returnTypes, Expression node) {
             this.returnTypes = returnTypes;
             this.isUnionType = node instanceof UnionType;
             this.isIntersectionType = node instanceof IntersectionType;
             this.declaredReturnType = CodeUtils.extractQualifiedName(node);
+        }
+
+        private ReturnTypesImpl(Set<TypeResolver> returnTypes, String declaredType) {
+            this.returnTypes = returnTypes;
+            this.isUnionType = Type.isUnionType(declaredType);
+            this.isIntersectionType = Type.isIntersectionType(declaredType);
+            this.declaredReturnType = declaredType;
         }
 
         @Override

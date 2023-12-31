@@ -1055,7 +1055,7 @@ public class IntroduceSuggestion extends SuggestionRule {
 
     private static PHPCompletionItem.MethodDeclarationItem createMethodDeclarationItem(final TypeScope typeScope, final MethodInvocation node) {
         final String methodName = CodeUtils.extractFunctionName(node.getMethod());
-        final MethodElement method = MethodElementImpl.createMagicMethod(typeScope,
+        final MethodElement method = MethodElementImpl.forIntroduceHint(typeScope,
                 methodName, 0, getParameters(node.getMethod().getParameters()));
         return typeScope.isInterface()
                 ? PHPCompletionItem.MethodDeclarationItem.forIntroduceInterfaceHint(method, null)
@@ -1064,7 +1064,7 @@ public class IntroduceSuggestion extends SuggestionRule {
 
     private static PHPCompletionItem.MethodDeclarationItem createMethodDeclarationItem(final TypeScope typeScope, final StaticMethodInvocation node) {
         final String methodName = CodeUtils.extractFunctionName(node.getMethod());
-        final MethodElement method = MethodElementImpl.createMagicMethod(typeScope, methodName,
+        final MethodElement method = MethodElementImpl.forIntroduceHint(typeScope, methodName,
                 Modifier.STATIC, getParameters(node.getMethod().getParameters()));
         return PHPCompletionItem.MethodDeclarationItem.forIntroduceHint(method, null);
     }

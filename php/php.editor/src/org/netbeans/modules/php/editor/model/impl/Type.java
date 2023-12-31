@@ -284,4 +284,37 @@ public final class Type {
     public static String toTypeTemplate(String typeDeclaration) {
         return CodeUtils.TYPE_NAMES_IN_TYPE_DECLARATION_PATTERN.matcher(typeDeclaration.replace(" ", "")).replaceAll("%s"); // NOI18N
     }
+
+    /**
+     * Check whether a declaration type is a union type.
+     *
+     * @param typeDeclaration a type declaration
+     * @return {@code true} if it's a union type, {@code false} otherwise
+     */
+    public static boolean isUnionType(@NullAllowed String typeDeclaration) {
+        return typeDeclaration != null
+                && typeDeclaration.contains(SEPARATOR);
+    }
+
+    /**
+     * Check whether a declaration type is an intersection type.
+     *
+     * @param typeDeclaration a type declaration
+     * @return {@code true} if it's an intersection type, {@code false}
+     * otherwise
+     */
+    public static boolean isIntersectionType(@NullAllowed String typeDeclaration) {
+        return typeDeclaration != null
+                && typeDeclaration.contains(SEPARATOR_INTERSECTION);
+    }
+
+    /**
+     * Check whether a declaration type is a DNF type.
+     *
+     * @param typeDeclaration a type declaration
+     * @return {@code true} if it's a DNF type, {@code false} otherwise
+     */
+    public static boolean isDNFType(@NullAllowed String typeDeclaration) {
+        return isUnionType(typeDeclaration) && isIntersectionType(typeDeclaration);
+    }
 }

@@ -201,6 +201,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports an object type.
+     *
+     * @return {@code true} if this version supports an object type,
+     * {@code false} otherwise
+     * @since 2.95
+     */
+    public boolean hasObjectType() {
+        return this.compareTo(PhpVersion.PHP_72) >= 0;
+    }
+
+    /**
      * Check whether this version supports typed properties.
      *
      * @return {@code true} if this version supports typed properties,

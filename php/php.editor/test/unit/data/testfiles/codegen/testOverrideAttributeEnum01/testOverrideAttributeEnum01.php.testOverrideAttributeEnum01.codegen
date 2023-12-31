@@ -21,9 +21,9 @@ public function testInterfaceMethod(): void{
 }
 public function testTraitMethod(): void{
 }
-public function __call($name, $arguments){
+public function __call(string $name, array $arguments): mixed{
 }
-public static function __callStatic($name, $arguments){
+public static function __callStatic(string $name, array $arguments): mixed{
 }
-public function __invoke(){
+public function __invoke(): mixed{
 }

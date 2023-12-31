@@ -1264,17 +1264,19 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         }
 
         protected String getNameAndFunctionBodyForTemplate() {
+            FileObject fileObject = null;
+            if (request != null) {
+                fileObject = request.result.getSnapshot().getSource().getFileObject();
+            }
+            PhpVersion phpVersion = getPhpVersion(fileObject);
             StringBuilder template = new StringBuilder();
             TypeNameResolver typeNameResolver = getBaseFunctionElement().getParameters().isEmpty() || request == null
                     ? TypeNameResolverImpl.forNull()
                     : CodegenUtils.createSmarterTypeNameResolver(getBaseFunctionElement(), request.result.getModel(), request.anchor);
-            template.append(getBaseFunctionElement().asString(PrintAs.NameAndParamsDeclaration, typeNameResolver));
+            template.append(getBaseFunctionElement().asString(PrintAs.NameAndParamsDeclaration, typeNameResolver, phpVersion));
             // #270237
-            FileObject fileObject = null;
             if (request != null) {
                 // resquest is null if completion items are used in the IntroduceSuggestion hint
-                fileObject = request.result.getSnapshot().getSource().getFileObject();
-                PhpVersion phpVersion = getPhpVersion(fileObject);
                 if (phpVersion != null
                         && phpVersion.compareTo(PhpVersion.PHP_70) >= 0) {
                     Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
@@ -1322,7 +1324,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             MethodElement method = (MethodElement) getBaseFunctionElement();
             TypeElement type = method.getType();
             Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
-            if (isMagic() || type.isInterface() || method.isAbstract() || type.isTrait() || ElementUtils.isVoidOrNeverType(returnTypes)) {
+            if (ElementUtils.isToStringMagicMethod(method)) {
+                template.append(getToStringMethodBody(type)).append("${cursor}\n"); // NOI18N
+            } else if (isMagic() || type.isInterface() || method.isAbstract() || type.isTrait() || ElementUtils.isVoidOrNeverType(returnTypes)) {
                 template.append("${cursor};\n"); //NOI18N
             } else {
                 if (returnTypes.size() == 1 || getBaseFunctionElement().isReturnUnionType()) {
@@ -1332,6 +1336,13 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 }
             }
             return template.toString();
+        }
+
+        private String getToStringMethodBody(TypeElement type) {
+            if (request != null) {
+                return ElementUtils.getToStringMagicMethodBody(type, request.index);
+            }
+            return CodeUtils.EMPTY_STRING;
         }
 
         private String getSignature() {

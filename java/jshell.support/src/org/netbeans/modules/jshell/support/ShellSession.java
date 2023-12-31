@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.jshell.support;
 
+import com.sun.jdi.connect.VMStartException;
 import java.beans.PropertyChangeListener;
 import org.netbeans.modules.jshell.tool.JShellLauncher;
 import org.netbeans.modules.jshell.tool.JShellTool;
@@ -30,6 +31,7 @@ import org.netbeans.modules.jshell.model.ConsoleModel;
 import org.netbeans.modules.jshell.model.ConsoleEvent;
 import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -778,8 +780,7 @@ public class ShellSession  {
                 builder.compilerOptions("--boot-class-path", getClasspathAsString(PathKind.BOOT));
             }
         }
-        JavaPlatform platform = ShellProjectUtils.findPlatform(p);
-        
+
         String classpath;
         String modulepath = "";
         
@@ -942,10 +943,41 @@ public class ShellSession  {
         }
         reportShellMessage(s);
     }
-    
+
+    @NbBundle.Messages({
+        "MSG_JShell_Start_STDOUT=Standard output:",
+        "MSG_JShell_Start_STDERR=Error output:"
+    })
     public void reportErrorMessage(Throwable t) {
-        LOG.log(Level.INFO, "Error in JSHell", t);
-        reportShellMessage(buildErrorMessage(t));
+        StringBuilder processOutput = null;
+        VMStartException startException = findVMStartException(t);
+        if(startException != null) {
+            processOutput = new StringBuilder();
+            // VMStartException is raised when target VM fails to start. At time
+            // of writing com.sun.tools.jdi.AbstractLauncher does not read the
+            // process output, so diagnostic output is lost, try to recover it.
+            assert !startException.process().isAlive() : "Process expected to be not alive"; // NOI18N
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try {
+                startException.process().getInputStream().transferTo(baos);
+            } catch (IOException ex) {}
+            processOutput.append(Bundle.MSG_JShell_Start_STDOUT());
+            processOutput.append("\n");
+            processOutput.append(baos.toString(StandardCharsets.UTF_8));
+            baos.reset();
+            processOutput.append(Bundle.MSG_JShell_Start_STDERR());
+            try {
+                startException.process().getErrorStream().transferTo(baos);
+            } catch (IOException ex) {}
+            processOutput.append(baos.toString(StandardCharsets.UTF_8));
+        }
+        if(processOutput == null) {
+            LOG.log(Level.INFO, "Error in JSHell", t); // NOI18N
+            reportShellMessage(buildErrorMessage(t));
+        } else {
+            LOG.log(Level.INFO, "Error in JSHell\n" + processOutput.toString(), t); // NOI18N
+            reportShellMessage(buildErrorMessage(t) + "\n\n" + processOutput.toString()); // NOI18N
+        }
     }
     
     private void reportShellMessage(String msg) {
@@ -964,7 +996,19 @@ public class ShellSession  {
         sb.append("\n"); // NOI18N
         writeToShellDocument(sb.toString());
     }
-    
+
+    private static VMStartException findVMStartException(Throwable thrw) {
+        Throwable curr = thrw;
+        while (true) {
+            if(curr instanceof VMStartException) {
+                return (VMStartException) curr;
+            } else if (curr == null) {
+                return null;
+            }
+            curr = curr.getCause();
+        }
+    }
+
     private boolean scrollbackEndsWithNewline() {
         boolean[] ret = new boolean[1];
         ConsoleSection s = model.getInputSection();

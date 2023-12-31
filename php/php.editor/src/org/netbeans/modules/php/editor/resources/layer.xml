@@ -433,6 +433,7 @@
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectMixedGroupUseHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectNamedArgumentsHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectNonAbstractMethodHintError.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-IncorrectStaticContextHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-LoopOnlyKeywordsUnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-MethodRedeclarationHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-ModifiersCheckHintError.instance"/>

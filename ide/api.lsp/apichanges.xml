@@ -51,6 +51,22 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="Completion_getLabelDetail">
+        <api name="LSP_API"/>
+        <summary>Added Completion.getLabelDetail() and Completion.getLabelDescription() methods.</summary>
+        <version major="1" minor="24"/>
+        <date day="2" month="1" year="2024"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getLabelDetail--">Completion.getLabelDetail()</a>
+            to get an optional string describing function signatures or type annotations.
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getLabelDescription--">Completion.getLabelDescription()</a>
+            to get an optional string describing fully qualified names or file path.
+        </description>
+        <class package="org.netbeans.api.lsp" name="Completion"/>
+        <class package="org.netbeans.spi.lsp" name="CompletionCollector"/>
+    </change>
     <change id="CodeActionProvider">
         <api name="LSP_API"/>
         <summary>Added CodeActionProvider interface</summary>
@@ -108,13 +124,13 @@
     </change>
     <change id="Completion_getCommand">
         <api name="LSP_API"/>
-        <summary>Added URL to diagnostic code description</summary>
+        <summary>Added Completion.getCommand() to get an optional command</summary>
         <version major="1" minor="17"/>
         <date day="23" month="5" year="2023"/>
         <author login="dbalek"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
-            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getCommand--">Completion.getCommand</a> to get an optional command
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getCommand--">Completion.getCommand()</a> to get an optional command
             that is executed after inserting the completion.
         </description>
         <class package="org.netbeans.api.lsp" name="Completion"/>

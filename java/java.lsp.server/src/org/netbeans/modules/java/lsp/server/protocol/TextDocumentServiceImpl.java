@@ -94,6 +94,7 @@ import org.eclipse.lsp4j.CodeLensParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
+import org.eclipse.lsp4j.CompletionItemLabelDetails;
 import org.eclipse.lsp4j.CompletionItemTag;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
@@ -372,6 +373,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     prefs.put("classMemberInsertionPoint", CodeStyle.InsertionPoint.CARET_LOCATION.name());
                     boolean isComplete = Completion.collect(doc, caret, context, completion -> {
                         CompletionItem item = new CompletionItem(completion.getLabel());
+                        if (completion.getLabelDetail() != null || completion.getLabelDescription() != null) {
+                            CompletionItemLabelDetails labelDetails = new CompletionItemLabelDetails();
+                            labelDetails.setDetail(completion.getLabelDetail());
+                            labelDetails.setDescription(completion.getLabelDescription());
+                            item.setLabelDetails(labelDetails);
+                        }
                         if (completion.getKind() != null) {
                             item.setKind(CompletionItemKind.valueOf(completion.getKind().name()));
                         }

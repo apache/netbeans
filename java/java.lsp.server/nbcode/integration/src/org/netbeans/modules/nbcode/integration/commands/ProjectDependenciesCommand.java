@@ -261,12 +261,12 @@ public class ProjectDependenciesCommand implements CommandProvider {
                         if (request.isSaveFromServer()) {
                             try {
                                 mod.commit();
+                                future.complete(res);
                             } catch (IOException ex) {
                                 future.completeExceptionally(ex);
-                                return;
                             }
                         } else {
-                            client.applyEdit(new ApplyWorkspaceEditParams(lspEdit)).thenAccept((x) -> {
+                            client.applyEdit(new ApplyWorkspaceEditParams(lspEdit)).thenApply((x) -> {
                                 String[] uris = new String[mod.getFilesToSave().size()];
                                 int index = 0;
                                 
@@ -280,7 +280,12 @@ public class ProjectDependenciesCommand implements CommandProvider {
                                         uris[index++] = s;
                                     }
                                 }
-                                client.requestDocumentSave(new SaveDocumentRequestParams(Arrays.asList(uris)));
+                                return client.requestDocumentSave(new SaveDocumentRequestParams(Arrays.asList(uris)));
+                            }).exceptionally(t -> {
+                                future.completeExceptionally(t);
+                                return CompletableFuture.completedFuture(false);
+                            }).thenAccept((b) -> {
+                                // only complete the action after a save attempt. Will have no effect if already completed exceptionally.
                                 future.complete(res);
                             });
                         }

@@ -32,10 +32,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.artifact.Artifact;
@@ -86,7 +84,7 @@ import org.openide.util.Pair;
     }, projectType = "org-netbeans-modules-maven"
 )
 public class MavenModelProblemsProvider implements ProjectProblemsProvider, InternalActionDelegate {
-    static final ScheduledExecutorService RP  = new RequestProcessor(MavenModelProblemsProvider.class);
+    static final RequestProcessor RP  = new RequestProcessor(MavenModelProblemsProvider.class);
     private static final Logger LOG = Logger.getLogger(MavenModelProblemsProvider.class.getName());
     
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
@@ -165,7 +163,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
      * @param sync if the call should complete synchronously
      */
     private Pair<Collection<ProjectProblem>, Boolean> doGetProblems1(boolean sync) {
-        final MavenProject updatedPrj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
+        final CompletableFuture<MavenProject> pending = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
         Callable<Pair<Collection<ProjectProblem>, Boolean>> c;
     
         synchronized (this) {
@@ -179,25 +177,50 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
             
             }
             MavenProject o = analysedProject.get();
-            LOG.log(Level.FINER, "Called getProblems for {0}, analysed = {1}, current = {2}", 
-                    new Object[] { project, o == null ? 0 : System.identityHashCode(o), System.identityHashCode(updatedPrj) });
             //for non changed project models, no need to recalculate, always return the cached value
-            Object wasprocessed = updatedPrj.getContextValue(MavenModelProblemsProvider.class.getName());
-            if (o == updatedPrj && wasprocessed != null) {
-                Pair<Collection<ProjectProblem>, Boolean> cached = problemsCache;
-                LOG.log(Level.FINER, "getProblems: Project was processed, cached is: {0}", cached);
-                if (cached != null) {
-                    return cached;
+            if (pending.isDone()) {
+                try {
+                    // cannot block, if .isDone().
+                    MavenProject updatedPrj = pending.get();
+                    LOG.log(Level.FINER, "Called getProblems for {0}, analysed = {1}, current = {2}", 
+                            new Object[] { project, System.identityHashCode(o), System.identityHashCode(updatedPrj) });
+                    Object wasprocessed = updatedPrj.getContextValue(MavenModelProblemsProvider.class.getName());
+                    if (o == updatedPrj && wasprocessed != null) {
+                        Pair<Collection<ProjectProblem>, Boolean> cached = problemsCache;
+                        LOG.log(Level.FINER, "getProblems: Project was processed, cached is: {0}", cached);
+                        if (cached != null) {
+                            return cached;
+                        }
+                    } 
+                } catch (ExecutionException | InterruptedException ex) {
+                    LOG.log(Level.FINER, "Project load for {0} threw exception {1}", new Object[] { project, ex.getMessage() });
+                    LOG.log(Level.FINER, "Stacktrace:", ex);
                 }
-            } 
+            } else {
+                LOG.log(Level.FINER, "Called getProblems for {0}, analysed = {1}, current = PENDING",
+                        new Object[] { project, System.identityHashCode(o) });
+            }
             
             SanityBuildAction sba = cachedSanityBuild.get();
             if (sba != null && sba.getPendingResult() == null) {
                 cachedSanityBuild.clear();
             }
+            
+            // PENDING: think if .thenApplyAsync would be more useful.
             c = () -> {
                 // double check, the project may be invalidated during the time.
-                MavenProject prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
+                MavenProject prj;
+                
+                try {
+                    prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject().get();
+                    LOG.log(Level.FINER, "Evaluating getProblems for {0}, analysed = {1}, current = {2}", 
+                            new Object[] { project, System.identityHashCode(o), System.identityHashCode(prj) });
+                } catch (ExecutionException | InterruptedException ex) {
+                    // should not happen
+                    LOG.log(Level.FINER, "Project load for {0} threw exception {1}", new Object[] { project, ex.getMessage() });
+                    LOG.log(Level.FINER, "Stacktrace:", ex);
+                    return Pair.of( new ArrayList<>(), sanityBuildStatus);
+                }
                 Object wasprocessed2 = prj.getContextValue(MavenModelProblemsProvider.class.getName());
                 synchronized (MavenModelProblemsProvider.this) {
                     if (wasprocessed2 != null) {
@@ -247,8 +270,19 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                                 new Object[] { round, prj });
                         // force reload, then wait for the reload to complete
                         NbMavenProject.fireMavenProjectReload(project);
-                        prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject();
+                        try {
+                            prj = ((NbMavenProjectImpl)project).getFreshOriginalMavenProject().get();
+                        } catch (ExecutionException | InterruptedException ex2) {
+                            // should not happen
+                            LOG.log(Level.FINER, "Project load for {0} threw exception {1}", new Object[] { project, ex2.getMessage() });
+                            LOG.log(Level.FINER, "Stacktrace:", ex2);
+                            break;
+                        }
                     }
+                }
+                if (prj != null && !sanityBuildStatus) {
+                    prj.setContextValue("org.netbeans.modules.maven.problems.primingNotDone", null);
+                    LOG.log(Level.FINE, "Clearing priming status of {0}, fallback status is {1}", new Object[] { prj, NbMavenProject.isErrorPlaceholder(prj) });
                 }
                 //mark the project model as checked once and cached
                 firePropertyChange();
@@ -495,7 +529,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                 listener.finished(true);
             } else {
                 LOG.log(Level.FINE, "Resolving sanity build action");
-                CompletableFuture<ProjectProblemsProvider.Result> r = saba.resolve();
+                CompletableFuture<ProjectProblemsProvider.Result> r = saba.resolve(context);
                 r.whenComplete((a, e) -> {
                    listener.finished(e == null); 
                 });

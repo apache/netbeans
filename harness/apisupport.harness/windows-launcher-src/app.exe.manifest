@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+<assemblyIdentity version="101.1.0.0"
+   processorArchitecture="x86"
+   name="app.exe"
+   type="win32"/>
+
+<description>NBP application process</description>
+<dependency>
+  <dependentAssembly>
+    <assemblyIdentity
+      type="win32"
+      name="Microsoft.Windows.Common-Controls"
+      version="6.0.0.0"
+      processorArchitecture="*"
+      publicKeyToken="6595b64144ccf1df"
+      language="*"
+    />
+  </dependentAssembly>
+</dependency>
+<!-- Identify the application security requirements. -->
+<trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+  <security>
+    <requestedPrivileges>
+      <requestedExecutionLevel
+        level="asInvoker"
+        uiAccess="false"/>
+      </requestedPrivileges>
+     </security>
+</trustInfo>
+<!-- See https://learn.microsoft.com/en-us/windows/apps/design/globalizing/use-utf8-code-page -->
+<application>
+  <windowsSettings>
+    <activeCodePage xmlns="http://schemas.microsoft.com/SMI/2019/WindowsSettings">UTF-8</activeCodePage>
+  </windowsSettings>
+</application>
+<!-- NETBEANS-1227: Indicate the same HiDPI capabilities as javaw.exe from JDK 11. -->
+<asmv3:application xmlns:asmv3="urn:schemas-microsoft-com:asm.v3">
+  <asmv3:windowsSettings xmlns:dpi1="http://schemas.microsoft.com/SMI/2005/WindowsSettings" xmlns:dpi2="http://schemas.microsoft.com/SMI/2016/WindowsSettings">
+    <dpi1:dpiAware>true/PM</dpi1:dpiAware>
+    <dpi2:dpiAwareness>PerMonitorV2, PerMonitor, system</dpi2:dpiAwareness>
+  </asmv3:windowsSettings>
+</asmv3:application>
+<!-- List of explicitly supported Windows versions. This is the list from
+     javaw.exe on JDK 8.0.172, which is the same as that of JDK 11ea. -->
+<compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+  <application>
+    <supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}"/>
+    <supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>
+    <supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}"/>
+    <supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}"/>
+    <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
+  </application>
+</compatibility>
+</assembly>

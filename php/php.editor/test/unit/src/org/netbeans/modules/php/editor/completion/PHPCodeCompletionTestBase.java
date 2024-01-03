@@ -213,6 +213,11 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
             this.prefix = prefix;
         }
 
+        public DefaultFilter(String prefix) {
+            this.phpVersion = PhpVersion.getDefault();
+            this.prefix = prefix;
+        }
+
         @Override
         public boolean accept(CompletionProposal proposal) {
             if (proposal instanceof PHPCompletionItem.MethodDeclarationItem) {
@@ -222,6 +227,14 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
                     item.setPhpVersion(phpVersion);
                     return true;
                 }
+            }
+            if (proposal instanceof PHPCompletionItem.KeywordItem) {
+                // ignore KeywordItem because it invokes EditorRegistry.lastFocusedComponent().getDocument() (NPE)
+                return false;
+            }
+            if (proposal != null) {
+                String name = proposal.getName();
+                return name.startsWith(prefix);
             }
             return false;
         }

@@ -57,6 +57,7 @@ import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Kind;
 import org.netbeans.modules.php.api.PhpVersion;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.NavUtils;
 import org.netbeans.modules.php.editor.PredefinedSymbols;
@@ -431,6 +432,10 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                 break;
             case EXPRESSION:
                 autoCompleteExpression(completionResult, request);
+                break;
+            case CONSTRUCTOR_PARAMETER_NAME:
+                autoCompleteExpression(completionResult, request);
+                autoCompleteConstructorParameterName(completionResult, request);
                 break;
             case CLASS_MEMBER_PARAMETER_NAME:
                 autoCompleteExpression(completionResult, request);
@@ -1604,6 +1609,32 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         }
     }
 
+    private void autoCompleteConstructorParameterName(final PHPCompletionResult completionResult, final PHPCompletionItem.CompletionRequest request) {
+        if (CancelSupport.getDefault().isCancelled()) {
+            return;
+        }
+        TokenHierarchy<?> th = request.info.getSnapshot().getTokenHierarchy();
+        TokenSequence<PHPTokenId> tokenSequence = LexUtilities.getPHPTokenSequence(th, request.anchor);
+        if (tokenSequence == null) {
+            return;
+        }
+        Token<? extends PHPTokenId> constructorTypeName = CompletionContextFinder.findFunctionInvocationName(tokenSequence, request.anchor);
+        if (constructorTypeName != null) {
+            Model model = request.result.getModel();
+            NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(model.getFileScope(), request.anchor);
+            String fqTypeName = VariousUtils.qualifyTypeNames(constructorTypeName.text().toString(), request.anchor, namespaceScope);
+            Set<AliasedName> aliasedNames = ModelUtils.getAliasedNames(model, request.anchor);
+            Set<MethodElement> constructors = request.index.getConstructors(NameKind.exact(fqTypeName), aliasedNames, Trait.ALIAS);
+            Set<String> duplicateCheck = new HashSet<>();
+            for (MethodElement constructor : constructors) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                addParameterNameItems(completionResult, request, constructor.getParameters(), duplicateCheck);
+            }
+        }
+    }
+
     private void autoCompleteClassMethodParameterName(
             final PHPCompletionResult completionResult,
             PHPCompletionItem.CompletionRequest request,
@@ -1685,6 +1716,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                             accessibleTypeMembers.addAll(request.index.getAccessibleMixinTypeMembers(typeScope, enclosingType));
                         }
                     }
+                    Set<String> duplicateCheck = new HashSet<>();
                     for (final PhpElement phpElement : accessibleTypeMembers) {
                         if (CancelSupport.getDefault().isCancelled()) {
                             return;
@@ -1692,19 +1724,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                         if (duplicateElementCheck.add(phpElement)) {
                             if (methodsFilter.isAccepted(phpElement)) {
                                 MethodElement method = (MethodElement) phpElement;
-                                for (ParameterElement parameter : method.getParameters()) {
-                                    if (CancelSupport.getDefault().isCancelled()) {
-                                        return;
-                                    }
-                                    String name = parameter.getName();
-                                    if (name != null) {
-                                        name = name.substring(1);
-                                    }
-                                    if (name != null
-                                            && name.startsWith(request.prefix)) {
-                                        completionResult.add(new PHPCompletionItem.ParameterNameItem(parameter, request));
-                                    }
-                                }
+                                addParameterNameItems(completionResult, request, method.getParameters(), duplicateCheck);
                             }
                         }
                     }
@@ -1739,21 +1759,26 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
                     if (functionElement.isAnonymous()) {
                         continue;
                     }
-                    for (ParameterElement parameter : functionElement.getParameters()) {
-                        if (CancelSupport.getDefault().isCancelled()) {
-                            return;
-                        }
-                        String name = parameter.getName();
-                        if (name != null) {
-                            name = name.substring(1);
-                        }
-                        if (name != null
-                                && name.startsWith(request.prefix)
-                                && duplicateCheck.add(name)) {
-                            completionResult.add(new PHPCompletionItem.ParameterNameItem(parameter, request));
-                        }
-                    }
+                    addParameterNameItems(completionResult, request, functionElement.getParameters(), duplicateCheck);
                 }
+            }
+        }
+    }
+
+    private void addParameterNameItems(final PHPCompletionResult completionResult, final PHPCompletionItem.CompletionRequest request,
+            List<ParameterElement> parameters, Set<String> duplicateCheck) {
+        for (ParameterElement parameter : parameters) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            String name = parameter.getName();
+            if (!StringUtils.isEmpty(name)) {
+                name = name.substring(1);
+            }
+            if (!StringUtils.isEmpty(name)
+                    && name.startsWith(request.prefix)
+                    && duplicateCheck.add(name)) {
+                completionResult.add(new PHPCompletionItem.ParameterNameItem(parameter, request));
             }
         }
     }

@@ -51,8 +51,13 @@ public class CustomIndexerImpl extends CustomIndexer {
 
     @Override
     protected void index(Iterable<? extends Indexable> files, Context context) {
+        FileObject root = context.getRoot();
+
+        if (root == null) {
+            return ; //ignore
+        }
+
         handleStoredFiles(context, props -> {
-            FileObject root = context.getRoot();
             for (Indexable i : files) {
                 FileObject file = root.getFileObject(i.getRelativePath());
                 if (file != null) {

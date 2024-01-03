@@ -90,6 +90,8 @@ public interface CompletionCollector {
     public static final class Builder {
 
         private String label;
+        private String labelDetail;
+        private String labelDescription;
         private Completion.Kind kind;
         private List<Completion.Tag> tags;
         private CompletableFuture<String> detail;
@@ -117,6 +119,32 @@ public interface CompletionCollector {
         @NonNull
         public Builder label(@NonNull String label) {
             this.label = label;
+            return this;
+        }
+
+        /**
+         * An optional string which is rendered less prominently directly after
+         * {@link Completion#getLabel() label}, without any spacing. Should be
+         * used for function signatures or type annotations.
+         *
+         * @since 1.24
+         */
+        @NonNull
+        public Builder labelDetail(@NonNull String labelDetail) {
+            this.labelDetail = labelDetail;
+            return this;
+        }
+
+        /**
+         * An optional string which is rendered less prominently after
+         * {@link Completion#getLabelDetail() label detail}. Should be used for fully qualified
+         * names or file path.
+         *
+         * @since 1.24
+         */
+        @NonNull
+        public Builder labelDescription(@NonNull String labelDescription) {
+            this.labelDescription = labelDescription;
             return this;
         }
 
@@ -344,10 +372,10 @@ public interface CompletionCollector {
          */
         @NonNull
         public Completion build() {
-            return CompletionAccessor.getDefault().createCompletion(label, kind,
-                    tags, detail, documentation, preselect, sortText, filterText,
-                    insertText, insertTextFormat, textEdit, command, additionalTextEdits,
-                    commitCharacters);
+            return CompletionAccessor.getDefault().createCompletion(label, labelDetail,
+                    labelDescription, kind, tags, detail, documentation, preselect, sortText,
+                    filterText, insertText, insertTextFormat, textEdit, command,
+                    additionalTextEdits, commitCharacters);
         }
 
         private static class LazyCompletableFuture<T> extends CompletableFuture<T> {

@@ -74,9 +74,9 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                     ExecutableType type = (ExecutableType) info.getTypes().asMemberOf((DeclaredType) delegateRepositoryType, delegateMethod);
                     Iterator<? extends VariableElement> it = delegateMethod.getParameters().iterator();
                     Iterator<? extends TypeMirror> tIt = type.getParameterTypes().iterator();
-                    StringBuilder label = new StringBuilder();
+                    StringBuilder labelDetail = new StringBuilder();
                     StringBuilder sortParams = new StringBuilder();
-                    label.append(methodName).append("(");
+                    labelDetail.append("(");
                     sortParams.append('(');
                     int cnt = 0;
                     while(it.hasNext() && tIt.hasNext()) {
@@ -87,15 +87,15 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                         cnt++;
                         String paramTypeName = MicronautDataCompletionTask.getTypeName(info, tm, false, delegateMethod.isVarArgs() && !tIt.hasNext()).toString();
                         String paramName = it.next().getSimpleName().toString();
-                        label.append(paramTypeName).append(' ').append(paramName);
+                        labelDetail.append(paramTypeName).append(' ').append(paramName);
                         sortParams.append(paramTypeName);
                         if (tIt.hasNext()) {
-                            label.append(", ");
+                            labelDetail.append(", ");
                             sortParams.append(',');
                         }
                     }
                     sortParams.append(')');
-                    label.append(')');
+                    labelDetail.append(')');
                     TypeMirror returnType = type.getReturnType();
                     if ("findAll".contentEquals(delegateMethod.getSimpleName()) && !delegateMethod.getParameters().isEmpty() && returnType.getKind() == TypeKind.DECLARED) {
                         TypeElement te = (TypeElement) ((DeclaredType) returnType).asElement();
@@ -104,12 +104,13 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                             returnType = (ExecutableType) info.getTypes().asMemberOf((DeclaredType) returnType, getContentMethod.get());
                         }
                     }
-                    label.append(" : ").append(MicronautDataCompletionTask.getTypeName(info, returnType, false, false));
                     FileObject fo = info.getFileObject();
                     ElementHandle<VariableElement> repositoryHandle = ElementHandle.create(delegateRepository);
                     ElementHandle<ExecutableElement> methodHandle = ElementHandle.create(delegateMethod);
-                    return CompletionCollector.newBuilder(String.format("%s - generate", label.toString()))
+                    return CompletionCollector.newBuilder(methodName)
                             .kind(Completion.Kind.Method)
+                            .labelDetail(String.format("%s - generate", labelDetail.toString()))
+                            .labelDescription(MicronautDataCompletionTask.getTypeName(info, returnType, false, false).toString())
                             .sortText(String.format("%04d%s#%02d%s", 1500, methodName, cnt, sortParams.toString()))
                             .insertTextFormat(Completion.TextFormat.PlainText)
                             .textEdit(new TextEdit(offset, offset, ""))
@@ -203,11 +204,11 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                 if (element.getKind() == ElementKind.METHOD) {
                     Iterator<? extends VariableElement> it = ((ExecutableElement)element).getParameters().iterator();
                     Iterator<? extends TypeMirror> tIt = ((ExecutableType) element.asType()).getParameterTypes().iterator();
-                    StringBuilder label = new StringBuilder();
+                    StringBuilder labelDetail = new StringBuilder();
                     StringBuilder insertText = new StringBuilder();
                     StringBuilder sortParams = new StringBuilder();
-                    label.append(simpleName).append("(");
-                    insertText.append(simpleName).append("(");
+                    labelDetail.append('(');
+                    insertText.append(simpleName).append('(');
                     sortParams.append('(');
                     int cnt = 0;
                     boolean asTemplate = false;
@@ -219,21 +220,23 @@ public class MicronautDataCompletionCollector implements CompletionCollector {
                         cnt++;
                         String paramTypeName = MicronautDataCompletionTask.getTypeName(info, tm, false, ((ExecutableElement)element).isVarArgs() && !tIt.hasNext()).toString();
                         String paramName = it.next().getSimpleName().toString();
-                        label.append(paramTypeName).append(' ').append(paramName);
+                        labelDetail.append(paramTypeName).append(' ').append(paramName);
                         sortParams.append(paramTypeName);
-                        insertText.append("${").append(cnt).append(":").append(paramName).append("}");
+                        insertText.append("${").append(cnt).append(':').append(paramName).append('}');
                         asTemplate = true;
                         if (tIt.hasNext()) {
-                            label.append(", ");
+                            labelDetail.append(", ");
                             sortParams.append(',');
                             insertText.append(", ");
                         }
                     }
-                    label.append(") : ").append(MicronautDataCompletionTask.getTypeName(info, ((ExecutableElement)element).getReturnType(), false, false).toString());
+                    labelDetail.append(')');
                     insertText.append(')');
                     sortParams.append(')');
-                    return CompletionCollector.newBuilder(label.toString())
+                    return CompletionCollector.newBuilder(simpleName)
                             .kind(Completion.Kind.Method)
+                            .labelDetail(labelDetail.toString())
+                            .labelDescription(MicronautDataCompletionTask.getTypeName(info, ((ExecutableElement)element).getReturnType(), false, false).toString())
                             .sortText(String.format("%04d%s#%02d%s", 100, simpleName, cnt, sortParams.toString()))
                             .insertText(insertText.toString())
                             .insertTextFormat(asTemplate ? Completion.TextFormat.Snippet : Completion.TextFormat.PlainText)

@@ -74,7 +74,6 @@ export function launch(
         ideArgs.push(...env['netbeans.extra.options'].split(' '));
     }
     ideArgs.push(...extraArgs);
-    ideArgs.push(...['-J-Dnetbeans.logger.console=true', '-J-Dorg.netbeans.modules.java.lsp.server.protocol.level=300']);
     if (env['netbeans_debug'] && extraArgs && extraArgs.find(s => s.includes("--list"))) {
         ideArgs.push(...['-J-Dnetbeans.logger.console=true', '-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000']);
     }

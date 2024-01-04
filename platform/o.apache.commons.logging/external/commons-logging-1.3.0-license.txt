@@ -1,6 +1,6 @@
 Name: Apache Jakarta Commons Logging
 Origin: Apache Software Foundation
-Version: 1.2
+Version: 1.3.0
 License: Apache-2.0
 Description: Logging component
 URL: https://commons.apache.org/proper/commons-logging/

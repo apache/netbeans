@@ -3,7 +3,7 @@
 Document 0
 Searchable Keys:
   clz : a;A;820;;;Stringable|\Stringable;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;
-  method : __tostring;__toString;866;;@static.constant:static.class;1;0;<TESTURL>/testPHP83TypedClassConstants.php;0;0;;
+  method : __tostring;__toString;866;;@static.constant-type:static.class;1;0;<TESTURL>/testPHP83TypedClassConstants.php;0;0;;
   superiface : stringable;Stringable;
   top : a
 

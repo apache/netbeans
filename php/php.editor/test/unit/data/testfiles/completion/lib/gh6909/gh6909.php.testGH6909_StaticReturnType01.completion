@@ -1,0 +1,6 @@
+Code completion result for source line:
+self::Type()->|example;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     method()                        [PUBLIC]   ExampleClass
+METHOD     staticMethod()                  [STATIC]   ExampleClass
+VARIABLE   int example                     [PUBLIC]   ExampleClass

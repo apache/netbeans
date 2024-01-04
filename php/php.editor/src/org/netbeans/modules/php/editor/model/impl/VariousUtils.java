@@ -116,16 +116,18 @@ public final class VariousUtils {
     public static final String PRE_OPERATION_TYPE_DELIMITER = "@"; //NOI18N
     public static final String POST_OPERATION_TYPE_DELIMITER = ":"; //NOI18N
     public static final String POST_OPERATION_TYPE_DELIMITER_SUBS = "_POTD_"; //NOI18N
-    public static final String CONSTRUCTOR_TYPE_PREFIX = "constuct" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
-    public static final String FUNCTION_TYPE_PREFIX = "fn" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
-    public static final String METHOD_TYPE_PREFIX = "mtd" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
-    public static final String STATIC_METHOD_TYPE_PREFIX = "static.mtd" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
-    public static final String FIELD_TYPE_PREFIX = "fld" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
-    public static final String STATIC_FIELD_TYPE_PREFIX = "static.fld" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
-    public static final String STATIC_CONSTANT_TYPE_PREFIX = "static.constant" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
-    public static final String VAR_TYPE_PREFIX = "var" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
-    public static final String ARRAY_TYPE_PREFIX = "array" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
-    public static final String TYPE_TYPE_PREFIX = "type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    // GH-6909 To avoid conflicting with member names, add "-type" suffix
+    // because "-" can not be contained to member names
+    public static final String CONSTRUCTOR_TYPE_PREFIX = "constuct-type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String FUNCTION_TYPE_PREFIX = "fn-type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String METHOD_TYPE_PREFIX = "mtd-type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String STATIC_METHOD_TYPE_PREFIX = "static.mtd-type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String FIELD_TYPE_PREFIX = "fld-type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String STATIC_FIELD_TYPE_PREFIX = "static.fld-type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String STATIC_CONSTANT_TYPE_PREFIX = "static.constant-type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String VAR_TYPE_PREFIX = "var-type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String ARRAY_TYPE_PREFIX = "array-type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
+    public static final String TYPE_TYPE_PREFIX = "type-type" + POST_OPERATION_TYPE_DELIMITER; //NOI18N
     private static final Collection<String> SPECIAL_CLASS_NAMES = new LinkedList<>();
     private static final Collection<String> STATIC_CLASS_NAMES = new LinkedList<>();
     private static final String VAR_TYPE_COMMENT_PREFIX = "@var"; //NOI18N

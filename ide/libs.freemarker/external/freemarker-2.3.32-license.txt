@@ -1,5 +1,5 @@
 Name: Apache FreeMarker
-Version: 2.3.30
+Version: 2.3.32
 Origin: Apache Software Foundation
 License: Apache-2.0-freemarker
 Description: Template engine

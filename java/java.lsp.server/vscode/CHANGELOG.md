@@ -20,6 +20,20 @@
     under the License.
 
 -->
+## Version 20.0.301
+* Micronaut: 
+  * Micronaut Expression Language added - Syntax highlighting, Code Completion, Go to Declaration
+  * Micronaut Controllers can be based on Repository interfaces to allow data access
+  * Pageable data Repositories added to New from Template multistep wizard
+* Database and OCI:
+  * OCI Vault support for Database applications run in OKE
+  * Copy OCID for OCI resources
+  * Number of bug fixes & improvements
+* Numerous LSP improvements & bug fixes
+* Number of fixes and improvements in project management
+  * Priming build reload issues fixed
+  * Using selected launch config for F5 and code lenses
+  * and others...
 
 ## Version 19.0.301
 * LSP: Micronaut Symbols recognized and shown in Find Symbol in VSCode

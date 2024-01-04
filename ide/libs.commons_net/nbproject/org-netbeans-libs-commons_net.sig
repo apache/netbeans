@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.44.0
+#Version 2.45.0
 
 CLSS public java.io.IOException
 cons public init()
@@ -9,6 +9,9 @@ cons public init(java.lang.Throwable)
 supr java.lang.Exception
 
 CLSS public abstract interface java.io.Serializable
+
+CLSS public abstract interface java.lang.AutoCloseable
+meth public abstract void close() throws java.lang.Exception
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
@@ -153,14 +156,18 @@ fld protected boolean _isOpen_
 fld protected int _timeout_
 fld protected java.net.DatagramSocket _socket_
 fld protected org.apache.commons.net.DatagramSocketFactory _socketFactory_
+intf java.lang.AutoCloseable
+meth protected java.net.DatagramSocket checkOpen()
 meth public boolean isOpen()
 meth public int getDefaultTimeout()
 meth public int getLocalPort()
 meth public int getSoTimeout() throws java.net.SocketException
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getCharsetName()
  anno 0 java.lang.Deprecated()
 meth public java.net.InetAddress getLocalAddress()
 meth public java.nio.charset.Charset getCharset()
+meth public java.time.Duration getSoTimeoutDuration() throws java.net.SocketException
 meth public void close()
 meth public void open() throws java.net.SocketException
 meth public void open(int) throws java.net.SocketException
@@ -168,7 +175,11 @@ meth public void open(int,java.net.InetAddress) throws java.net.SocketException
 meth public void setCharset(java.nio.charset.Charset)
 meth public void setDatagramSocketFactory(org.apache.commons.net.DatagramSocketFactory)
 meth public void setDefaultTimeout(int)
+ anno 0 java.lang.Deprecated()
+meth public void setDefaultTimeout(java.time.Duration)
 meth public void setSoTimeout(int) throws java.net.SocketException
+ anno 0 java.lang.Deprecated()
+meth public void setSoTimeout(java.time.Duration) throws java.net.SocketException
 supr java.lang.Object
 hfds DEFAULT_SOCKET_FACTORY,charset
 
@@ -255,12 +266,14 @@ fld protected int connectTimeout
 fld protected java.io.InputStream _input_
 fld protected java.io.OutputStream _output_
 fld protected java.lang.String _hostname_
+fld protected java.net.InetSocketAddress remoteInetSocketAddress
 fld protected java.net.Socket _socket_
 fld protected javax.net.ServerSocketFactory _serverSocketFactory_
 fld protected javax.net.SocketFactory _socketFactory_
 fld public final static java.lang.String NETASCII_EOL = "\r\n"
 meth protected int getReceiveBufferSize()
 meth protected int getSendBufferSize()
+meth protected java.net.InetSocketAddress getRemoteInetSocketAddress()
 meth protected org.apache.commons.net.ProtocolCommandSupport getCommandSupport()
 meth protected void _connectAction_() throws java.io.IOException
 meth protected void applySocketAttributes() throws java.net.SocketException
@@ -426,6 +439,7 @@ fld public final static int ACTIVE_LOCAL_DATA_CONNECTION_MODE = 0
 fld public final static int ACTIVE_REMOTE_DATA_CONNECTION_MODE = 1
 fld public final static int PASSIVE_LOCAL_DATA_CONNECTION_MODE = 2
 fld public final static int PASSIVE_REMOTE_DATA_CONNECTION_MODE = 3
+fld public final static java.lang.String FTP_IP_ADDRESS_FROM_PASV_RESPONSE = "org.apache.commons.net.ftp.ipAddressFromPasvResponse"
 fld public final static java.lang.String FTP_SYSTEM_TYPE = "org.apache.commons.net.ftp.systemType"
 fld public final static java.lang.String FTP_SYSTEM_TYPE_DEFAULT = "org.apache.commons.net.ftp.systemType.default"
 fld public final static java.lang.String SYSTEM_TYPE_PROPERTIES = "/systemType.properties"
@@ -465,6 +479,7 @@ meth public boolean getListHiddenFiles()
 meth public boolean hasFeature(java.lang.String) throws java.io.IOException
 meth public boolean hasFeature(java.lang.String,java.lang.String) throws java.io.IOException
 meth public boolean hasFeature(org.apache.commons.net.ftp.FTPCmd) throws java.io.IOException
+meth public boolean isIpAddressFromPasvResponse()
 meth public boolean isRemoteVerificationEnabled()
 meth public boolean isUseEPSVwithIPv4()
 meth public boolean login(java.lang.String,java.lang.String) throws java.io.IOException
@@ -493,6 +508,7 @@ meth public boolean storeUniqueFile(java.lang.String,java.io.InputStream) throws
 meth public boolean structureMount(java.lang.String) throws java.io.IOException
 meth public int getBufferSize()
 meth public int getControlKeepAliveReplyTimeout()
+ anno 0 java.lang.Deprecated()
 meth public int getDataConnectionMode()
 meth public int getPassivePort()
 meth public int getReceiveDataSocketBufferSize()
@@ -521,8 +537,13 @@ meth public java.lang.String[] featureValues(java.lang.String) throws java.io.IO
 meth public java.lang.String[] listNames() throws java.io.IOException
 meth public java.lang.String[] listNames(java.lang.String) throws java.io.IOException
 meth public java.net.InetAddress getPassiveLocalIPAddress()
+meth public java.time.Duration getControlKeepAliveReplyTimeoutDuration()
+meth public java.time.Duration getControlKeepAliveTimeoutDuration()
+meth public java.time.Duration getDataTimeout()
+meth public java.time.Instant mdtmInstant(java.lang.String) throws java.io.IOException
 meth public java.util.Calendar mdtmCalendar(java.lang.String) throws java.io.IOException
 meth public long getControlKeepAliveTimeout()
+ anno 0 java.lang.Deprecated()
 meth public long getRestartOffset()
 meth public org.apache.commons.net.ftp.FTPFile mdtmFile(java.lang.String) throws java.io.IOException
 meth public org.apache.commons.net.ftp.FTPFile mlistFile(java.lang.String) throws java.io.IOException
@@ -549,9 +570,16 @@ meth public void setActivePortRange(int,int)
 meth public void setAutodetectUTF8(boolean)
 meth public void setBufferSize(int)
 meth public void setControlKeepAliveReplyTimeout(int)
+ anno 0 java.lang.Deprecated()
+meth public void setControlKeepAliveReplyTimeout(java.time.Duration)
+meth public void setControlKeepAliveTimeout(java.time.Duration)
 meth public void setControlKeepAliveTimeout(long)
+ anno 0 java.lang.Deprecated()
 meth public void setCopyStreamListener(org.apache.commons.net.io.CopyStreamListener)
 meth public void setDataTimeout(int)
+ anno 0 java.lang.Deprecated()
+meth public void setDataTimeout(java.time.Duration)
+meth public void setIpAddressFromPasvResponse(boolean)
 meth public void setListHiddenFiles(boolean)
 meth public void setParserFactory(org.apache.commons.net.ftp.parser.FTPFileEntryParserFactory)
 meth public void setPassiveLocalIPAddress(java.lang.String) throws java.net.UnknownHostException
@@ -566,7 +594,7 @@ meth public void setRestartOffset(long)
 meth public void setSendDataSocketBufferSize(int)
 meth public void setUseEPSVwithIPv4(boolean)
 supr org.apache.commons.net.ftp.FTP
-hfds PARMS_PAT,activeExternalHost,activeMaxPort,activeMinPort,autodetectEncoding,bufferSize,configuration,controlKeepAliveReplyTimeoutMillis,controlKeepAliveTimeoutMillis,copyStreamListener,cslDebug,dataConnectionMode,dataTimeoutMillis,entryParser,entryParserKey,featuresMap,fileFormat,fileStructure,fileTransferMode,fileType,listHiddenFiles,parserFactory,passiveHost,passiveLocalHost,passiveNatWorkaroundStrategy,passivePort,random,receiveDataSocketBufferSize,remoteVerificationEnabled,reportActiveExternalHost,restartOffset,sendDataSocketBufferSize,systemName,useEPSVwithIPv4
+hfds PARMS_PAT,activeExternalHost,activeMaxPort,activeMinPort,autodetectEncoding,bufferSize,configuration,controlKeepAliveReplyTimeout,controlKeepAliveTimeout,copyStreamListener,cslDebug,dataConnectionMode,dataTimeout,entryParser,entryParserKey,featuresMap,fileFormat,fileStructure,fileTransferMode,fileType,ipAddressFromPasvResponse,listHiddenFiles,parserFactory,passiveHost,passiveLocalHost,passiveNatWorkaroundStrategy,passivePort,random,receiveDataSocketBufferSize,remoteVerificationEnabled,reportActiveExternalHost,restartOffset,sendDataSocketBufferSize,systemName,useEPSVwithIPv4
 hcls CSL,PropertiesSingleton
 
 CLSS public abstract interface static org.apache.commons.net.ftp.FTPClient$HostnameResolver
@@ -779,7 +807,7 @@ fld public final static int USER = 0
 fld public final static int USERNAME = 0
 meth public static java.lang.String getCommand(int)
 supr java.lang.Object
-hfds LAST,_commands
+hfds COMMANDS,LAST
 
 CLSS public org.apache.commons.net.ftp.FTPConnectionClosedException
 cons public init()
@@ -816,6 +844,7 @@ meth public java.lang.String getUser()
 meth public java.lang.String toFormattedString()
 meth public java.lang.String toFormattedString(java.lang.String)
 meth public java.lang.String toString()
+meth public java.time.Instant getTimestampInstant()
 meth public java.util.Calendar getTimestamp()
 meth public long getSize()
 meth public void setGroup(java.lang.String)
@@ -829,7 +858,7 @@ meth public void setTimestamp(java.util.Calendar)
 meth public void setType(int)
 meth public void setUser(java.lang.String)
 supr java.lang.Object
-hfds date,group,hardLinkCount,link,name,permissions,rawListing,serialVersionUID,size,type,user
+hfds calendar,group,hardLinkCount,link,name,permissions,rawListing,serialVersionUID,size,type,user
 
 CLSS public abstract interface org.apache.commons.net.ftp.FTPFileEntryParser
 meth public abstract java.lang.String readNextEntry(java.io.BufferedReader) throws java.io.IOException
@@ -863,12 +892,13 @@ meth protected java.net.Socket _openDataConnection_(int,java.lang.String) throws
 meth protected java.net.Socket _openDataConnection_(java.lang.String,java.lang.String) throws java.io.IOException
 meth public void connect(java.lang.String,int) throws java.io.IOException
 supr org.apache.commons.net.ftp.FTPClient
-hfds CRLF,base64,charset,proxyHost,proxyPassword,proxyPort,proxyUsername,tunnelHost
+hfds CRLF,charset,proxyHost,proxyPassword,proxyPort,proxyUsername,tunnelHost
 
 CLSS public org.apache.commons.net.ftp.FTPListParseEngine
 cons public init(org.apache.commons.net.ftp.FTPFileEntryParser)
 meth public boolean hasNext()
 meth public boolean hasPrevious()
+meth public java.util.List<org.apache.commons.net.ftp.FTPFile> getFileList(org.apache.commons.net.ftp.FTPFileFilter)
 meth public org.apache.commons.net.ftp.FTPFile[] getFiles() throws java.io.IOException
 meth public org.apache.commons.net.ftp.FTPFile[] getFiles(org.apache.commons.net.ftp.FTPFileFilter) throws java.io.IOException
 meth public org.apache.commons.net.ftp.FTPFile[] getNext(int)
@@ -1054,7 +1084,12 @@ meth public void checkClientTrusted(java.security.cert.X509Certificate[],java.la
 meth public void checkServerTrusted(java.security.cert.X509Certificate[],java.lang.String) throws java.security.cert.CertificateException
 supr java.lang.Object
 
+CLSS abstract interface org.apache.commons.net.ftp.package-info
+
+CLSS abstract interface org.apache.commons.net.package-info
+
 CLSS public org.apache.commons.net.util.Base64
+ anno 0 java.lang.Deprecated()
 cons public init()
 cons public init(boolean)
 cons public init(int)
@@ -1112,6 +1147,7 @@ hfds listeners,serialVersionUID
 
 CLSS public org.apache.commons.net.util.NetConstants
 fld public final static byte[] EMPTY_BTYE_ARRAY
+fld public final static int EOS = -1
 fld public final static java.lang.String[] EMPTY_STRING_ARRAY
 fld public final static java.security.cert.X509Certificate[] EMPTY_X509_CERTIFICATE_ARRAY
 supr java.lang.Object
@@ -1135,7 +1171,7 @@ meth public org.apache.commons.net.util.SubnetUtils getNext()
 meth public org.apache.commons.net.util.SubnetUtils getPrevious()
 meth public void setInclusiveHostCount(boolean)
 supr java.lang.Object
-hfds IP_ADDRESS,NBITS,PARSE_FAIL,SLASH_FORMAT,address,addressPattern,broadcast,cidrPattern,inclusiveHostCount,netmask,network
+hfds ADDRESS_PATTERN,CIDR_PATTERN,IP_ADDRESS,NBITS,PARSE_FAIL,SLASH_FORMAT,address,broadcast,inclusiveHostCount,netmask,network
 
 CLSS public final org.apache.commons.net.util.SubnetUtils$SubnetInfo
  outer org.apache.commons.net.util.SubnetUtils
@@ -1167,4 +1203,6 @@ meth public static javax.net.ssl.X509TrustManager getValidateServerCertificateTr
 supr java.lang.Object
 hfds ACCEPT_ALL,CHECK_SERVER_VALIDITY
 hcls TrustManager
+
+CLSS abstract interface org.apache.commons.net.util.package-info
 

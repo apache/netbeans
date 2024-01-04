@@ -408,6 +408,31 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         return null;
     }
 
+    public static boolean insertOnlyParameterName(CompletionRequest request) {
+        boolean result = false;
+        TokenHierarchy<?> tokenHierarchy = request.result.getSnapshot().getTokenHierarchy();
+        TokenSequence<PHPTokenId> tokenSequence = (TokenSequence<PHPTokenId>) tokenHierarchy.tokenSequence();
+        if (tokenSequence != null) {
+            tokenSequence.move(request.anchor);
+            // na^me: -> only parameter name
+            // n^ age: -> add also ":"
+            while (tokenSequence.moveNext()) {
+                Token<PHPTokenId> token = tokenSequence.token();
+                PHPTokenId id = token.id();
+                if (id == PHPTokenId.PHP_STRING) {
+                    continue;
+                }
+                if (id == PHPTokenId.PHP_TOKEN
+                        && TokenUtilities.textEquals(token.text(), ":")) { // NOI18N
+                    result = true;
+                    break;
+                }
+                break;
+            }
+        }
+        return result;
+    }
+
     public static boolean insertOnlyMethodsName(CompletionRequest request) {
         if (request.insertOnlyMethodsName != null) {
             return request.insertOnlyMethodsName;
@@ -2048,7 +2073,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         @Override
         public String getName() {
-            return parameterElement.getName().substring(1) + ":"; // NOI18N
+            return getParameterName() + ":"; // NOI18N
+        }
+
+        private String getParameterName() {
+            return parameterElement.getName().substring(1);
         }
 
         @Override
@@ -2091,6 +2120,12 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         @Override
         public String getCustomInsertTemplate() {
+            if (insertOnlyParameterName(request)) {
+                // ^maxLength: (^: caret)
+                // we are unsure whether a user expects to add or override an item in this context
+                // so, just add a name (i.e. don't add ":")
+                return getParameterName();
+            }
             return getName() + " "; // NOI18N
         }
     }

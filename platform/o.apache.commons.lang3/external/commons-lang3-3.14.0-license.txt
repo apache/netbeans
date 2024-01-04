@@ -1,5 +1,5 @@
 Name: Commons Lang
-Version: 3.12.0
+Version: 3.14.0
 License: Apache-2.0
 Origin: https://commons.apache.org/proper/commons-lang/
 Description: Provides extra functionality for classes in java.lang.

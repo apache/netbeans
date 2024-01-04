@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,6 +46,7 @@ import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
+import org.netbeans.modules.project.dependency.DependencyChangeException;
 import org.netbeans.modules.project.dependency.DependencyResult;
 import org.netbeans.modules.project.dependency.ProjectDependencies;
 import org.netbeans.modules.project.dependency.ProjectOperationException;
@@ -154,7 +157,13 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
      */
     private DependencyResult findDeclaredDependencies(ProjectDependencies.DependencyQuery query, MavenEmbedder embedder) {
         NbMavenProjectImpl impl = (NbMavenProjectImpl)project.getLookup().lookup(NbMavenProjectImpl.class);
-        MavenProject proj = impl.getFreshOriginalMavenProject();
+        MavenProject proj;
+        
+        try {
+            proj = impl.getFreshOriginalMavenProject().get();
+        } catch (ExecutionException | InterruptedException | CancellationException ex) {
+            throw new ProjectOperationException(project, ProjectOperationException.State.ERROR, "Unexpected exception", ex);
+        }
         List<Dependency> children = new ArrayList<>();
         for (org.apache.maven.model.Dependency d : proj.getDependencies()) {
             String aId = d.getArtifactId();

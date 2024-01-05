@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -255,6 +256,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return server.asyncOpenSelectedProjects(targets, false).thenCompose((Project[] owners) -> {
                     Map<Project, List<FileObject>> items = new LinkedHashMap<>();
                     for (int i = 0; i < owners.length; i++) {
+                        if (owners[i] == null) {
+                            continue;
+                        }
                         items.computeIfAbsent(owners[i], (p) -> new ArrayList<>()).add(targets.get(i));
                     }
                     final CommandProgress progressOfCompilation = new CommandProgress();
@@ -821,6 +825,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         
         LspProjectInfo fillProjectInfo(Project p) {
+            if (p == null) {
+                return null;
+            }
             LspProjectInfo info = infos.get(p.getProjectDirectory());
             if (info != null) {
                 return info;
@@ -1442,22 +1449,23 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             server.asyncOpenSelectedProjects(refreshProjectFolders, true).thenAccept((projects) -> {
                 // report initialization of a project / projects
                 String msg;
-                if (projects.length == 0) {
+                Project[] opened = Arrays.asList(projects).stream().filter(Objects::nonNull).toArray(Project[]::new);
+                if (opened.length == 0) {
                     // this should happen immediately
                     return;
                 } 
-                ProjectInformation pi = ProjectUtils.getInformation(projects[0]);
+                ProjectInformation pi = ProjectUtils.getInformation(opened[0]);
                 String n = pi.getDisplayName();
                 if (n == null) {
                     n = pi.getName();
                 }
                 if (n == null) {
-                    n = projects[0].getProjectDirectory().getName();
+                    n = opened[0].getProjectDirectory().getName();
                 }
-                if (projects.length == 1) {
+                if (opened.length == 1) {
                     msg = Bundle.MSG_ProjectFolderInitializationComplete(n);
                 } else {
-                    msg = Bundle.MSG_ProjectFolderInitializationComplete2(n, projects.length);
+                    msg = Bundle.MSG_ProjectFolderInitializationComplete2(n, opened.length);
                 }
                 StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
             });

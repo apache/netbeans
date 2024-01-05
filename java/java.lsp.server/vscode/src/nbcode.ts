@@ -71,10 +71,9 @@ export function launch(
     }
     ideArgs.push(`-J-Dnetbeans.extra.dirs=${clusterPath}`)
     if (env['netbeans.extra.options']) {
-        ideArgs.push(env['netbeans.extra.options']);
+        ideArgs.push(...env['netbeans.extra.options'].split(' '));
     }
     ideArgs.push(...extraArgs);
-    
     if (env['netbeans_debug'] && extraArgs && extraArgs.find(s => s.includes("--list"))) {
         ideArgs.push(...['-J-Dnetbeans.logger.console=true', '-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000']);
     }

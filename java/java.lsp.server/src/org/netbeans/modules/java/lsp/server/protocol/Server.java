@@ -47,6 +47,7 @@ import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
 import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
@@ -578,16 +579,22 @@ public final class Server {
             List<Project> projects = new ArrayList<>();
             List<FileObject> nonProjects = new ArrayList<>();
             List<FileObject> haveProjects = new ArrayList<>();
+            
+            Project[] candidateMapping = new Project[projectCandidates.size()];
             try {
+                int index = 0;
                 if (projectCandidates != null) {
                     for (FileObject candidate : projectCandidates) {
                         Project prj = FileOwnerQuery.getOwner(candidate);
+                        LOG.log(Level.FINER, "Opening {0} for candidate {1}, directory is {2}", new Object[] { prj, candidate, prj == null ? null : prj.getProjectDirectory() });
                         if (prj != null) {
+                            candidateMapping[index] = prj;
                             projects.add(prj);
                             haveProjects.add(prj.getProjectDirectory());
                         } else if (validParents && candidate.isFolder()) {
                             nonProjects.add(candidate);
                         }
+                        index++;
                     }
                     
                     synchronized (this) {
@@ -631,13 +638,13 @@ public final class Server {
                     throw new IllegalStateException(ex);
 
                 }
-                asyncOpenSelectedProjects1(f, previouslyOpened, projects, asWorkspaceProjects);
+                asyncOpenSelectedProjects1(f, previouslyOpened, candidateMapping, projects, asWorkspaceProjects);
             } catch (RuntimeException ex) {
                 f.completeExceptionally(ex);
             }
         }
 
-        private void asyncOpenSelectedProjects1(CompletableFuture<Project[]> f, Project[] previouslyOpened, List<Project> projects, boolean addToWorkspace) {
+        private void asyncOpenSelectedProjects1(CompletableFuture<Project[]> f, Project[] previouslyOpened, Project[] candidateMapping, List<Project> projects, boolean addToWorkspace) {
             int id = this.openRequestId.getAndIncrement();
 
             List<CompletableFuture> primingBuilds = new ArrayList<>();
@@ -697,6 +704,7 @@ public final class Server {
                 for (Project prj : projects) {
                     Set<Project> containedProjects = ProjectUtils.getContainedProjects(prj, true);
                     if (containedProjects != null) {
+                        LOG.log(Level.FINE, "Project {0} reports contained projects: {1}", new Object[] { prj, containedProjects });
                         additionalProjects.addAll(containedProjects);
                     }
                 }
@@ -730,6 +738,7 @@ public final class Server {
                         List<Project> current = Arrays.asList(workspaceProjects.getNow(new Project[0]));
                         int s = current.size();
                         ns.addAll(current);
+                        LOG.log(Level.FINER, "Current is: {0}, ns: {1}", new Object[] { current, ns });
                         if (s != ns.size()) {
                             prjs = ns.toArray(new Project[ns.size()]);
                             workspaceProjects = CompletableFuture.completedFuture(prjs);
@@ -740,7 +749,7 @@ public final class Server {
                         openingFileOwners.put(p, f.thenApply(unused -> p));
                     }
                 }
-                f.complete(prjsRequested);
+                f.complete(candidateMapping);
                 LOG.log(Level.INFO, "{0} projects opened in {1}ms", new Object[] { prjsRequested.length, (System.currentTimeMillis() - t) });
             }).exceptionally(e -> {
                 f.completeExceptionally(e);
@@ -906,7 +915,10 @@ public final class Server {
                     //TODO: use getRootPath()?
                 }
             }
-            CompletableFuture<Project[]> prjs = workspaceProjects;
+            CompletableFuture<Project[]> possibleWaitedPrjs = workspaceProjects;
+            // this Future will receive candidates, some of them possibly null. Cannot complete directly the existing `workspaceProjects` wit the returned candidates,
+            // as this could return nulls to clients that do not expect any.
+            CompletableFuture<Project[]> prjs = new CompletableFuture<Project[]>();
             SERVER_INIT_RP.post(() -> {
                 List<FileObject> additionalCandidates = new ArrayList<>();
                 AtomicBoolean cancel = new AtomicBoolean();
@@ -937,7 +949,11 @@ public final class Server {
             });
 
             // chain showIndexingComplete message after initial project open.
-            prjs.thenApply(this::showIndexingCompleted);
+            prjs.thenApply((candidates) -> {
+                Project[] nonNulls = Arrays.asList(candidates).stream().filter(Objects::nonNull).toArray(Project[]::new);
+                possibleWaitedPrjs.complete(nonNulls);
+                return nonNulls;
+            }).thenApply(this::showIndexingCompleted);
 
             initializeOptions();
 

@@ -1135,28 +1135,30 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         CompletableFuture<CodeAction> future = new CompletableFuture<>();
         BACKGROUND_TASKS.post(() -> {
             JsonObject data = (JsonObject) unresolved.getData();
-            if (data.has(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS)) {
-                String providerClass = data.getAsJsonPrimitive(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS).getAsString();
-                for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
-                    if (codeGenerator.getClass().getName().equals(providerClass)) {
+            if (data != null) {
+                if (data.has(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS)) {
+                    String providerClass = data.getAsJsonPrimitive(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS).getAsString();
+                    for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                        if (codeGenerator.getClass().getName().equals(providerClass)) {
+                            try {
+                                codeGenerator.resolve(client, unresolved, data.get(CodeActionsProvider.DATA)).thenAccept(action -> {
+                                    future.complete(action);
+                                });
+                            } catch (Exception e) {
+                                future.completeExceptionally(e);
+                            }
+                            return;
+                        }
+                    }
+                } else if (data.has(URL) && data.has(INDEX)) {
+                    LazyCodeAction inputAction = lastCodeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt());
+                    if (inputAction != null) {
                         try {
-                            codeGenerator.resolve(client, unresolved, data.get(CodeActionsProvider.DATA)).thenAccept(action -> {
-                                future.complete(action);
-                            });
+                            unresolved.setEdit(fromAPI(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));
                         } catch (Exception e) {
                             future.completeExceptionally(e);
+                            return;
                         }
-                        return;
-                    }
-                }
-            } else if (data.has(URL) && data.has(INDEX)) {
-                LazyCodeAction inputAction = lastCodeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt());
-                if (inputAction != null) {
-                    try {
-                        unresolved.setEdit(fromAPI(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));
-                    } catch (Exception e) {
-                        future.completeExceptionally(e);
-                        return;
                     }
                 }
             }

@@ -32,10 +32,8 @@ import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.openide.filesystems.FileObject;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.ServiceProvider;
 
-@ServiceProvider(service=SingleFileOptionsQueryImplementation.class, position=100)
-public class SingleFileOptionsQueryImpl implements SingleFileOptionsQueryImplementation {
+public abstract class SingleFileOptionsQueryImpl implements SingleFileOptionsQueryImplementation {
 
     private final Map<NbCodeLanguageClient, ResultImpl> client2Options = new WeakHashMap<>();
     private final GlobalResultImpl globalOptions = new GlobalResultImpl();

@@ -859,6 +859,9 @@ jobs:
       - name: java/maven.indexer
         run: ant $OPTS -f java/maven.indexer test
 
+      - name: java/maven.refactoring
+        run: ant $OPTS -f java/maven.refactoring test
+
       - name: java/maven.junit
         run: ant $OPTS -f java/maven.junit test
 
@@ -912,6 +915,9 @@ jobs:
 
       - name: extide/gradle
         run: ant $OPTS -f extide/gradle test
+
+      - name: java/gradle.dependencies
+        run: ant $OPTS -f java/gradle.dependencies test
 
       - name: extide/o.apache.tools.ant.module
         run: ant $OPTS -f extide/o.apache.tools.ant.module test

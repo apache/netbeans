@@ -18,7 +18,10 @@
  */
 package org.netbeans.modules.project.dependency;
 
+import java.util.Collections;
+import java.util.Set;
 import org.netbeans.api.project.Project;
+import org.openide.filesystems.FileObject;
 
 /**
  * The exception is thrown when an error happens during project operation because
@@ -55,22 +58,43 @@ public final class ProjectOperationException extends IllegalStateException {
         /**
          * The project is OK. The project operation threw an exception.
          */
-        OK
+        OK,
+        
+        /**
+         * Project files are modified, and the model may be out of sync. The client
+         * should save project changes and/or reload the model before retry.
+         * @since 1.7
+         */
+        OUT_OF_SYNC,
+        
+        /**
+         * Project configuration is unsupported, or is defined in a way that 
+         * makes an operation impossible.
+         * @since 1.7
+         */
+        UNSUPPORTED,
     }
     
     private final Project project;
     private final State state;
-
+    private Set<FileObject> files;
+    
     public ProjectOperationException(Project project, State state, String s) {
+        this(project, state, s, Collections.emptySet());
+    }
+
+    public ProjectOperationException(Project project, State state, String s, Set<FileObject> files) {
         super(s);
+        this.files = files;
         this.project = project;
         this.state = state;
     }
-
+    
     public ProjectOperationException(Project project, State state, String message, Throwable cause) {
         super(message, cause);
         this.state = state;
         this.project = project;
+        this.files = Collections.emptySet();
     }
 
     public Project getProject() {
@@ -79,5 +103,9 @@ public final class ProjectOperationException extends IllegalStateException {
 
     public State getState() {
         return state;
+    }
+
+    public Set<FileObject> getFiles() {
+        return files;
     }
 }

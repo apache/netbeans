@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.17.0
+#Version 1.18.0
 
 CLSS public java.awt.Color
 cons public init(float,float,float)
@@ -224,6 +224,8 @@ meth public java.awt.im.InputMethodRequests getInputMethodRequests()
 meth public java.awt.image.ColorModel getColorModel()
 meth public java.awt.image.VolatileImage createVolatileImage(int,int)
 meth public java.awt.image.VolatileImage createVolatileImage(int,int,java.awt.ImageCapabilities) throws java.awt.AWTException
+meth public java.awt.peer.ComponentPeer getPeer()
+ anno 0 java.lang.Deprecated()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners()
 meth public java.beans.PropertyChangeListener[] getPropertyChangeListeners(java.lang.String)
 meth public java.lang.String getName()
@@ -22875,7 +22877,6 @@ supr java.lang.Object
 CLSS public org.apache.batik.script.rhino.RhinoClassLoader
 
 CLSS public org.apache.batik.script.rhino.RhinoClassShutter
-hfds WHITELIST
 
 CLSS public abstract org.apache.batik.util.AbstractParsedURLProtocolHandler
 cons public init(java.lang.String)
@@ -26268,6 +26269,7 @@ CLSS public org.apache.xmlgraphics.image.loader.impl.ImageLoaderFactoryRaw
 cons public init()
 fld public final static java.lang.String MIME_EMF = "image/x-emf"
 meth public boolean isAvailable()
+meth public boolean isSupported(org.apache.xmlgraphics.image.loader.ImageInfo)
 meth public java.lang.String[] getSupportedMIMETypes()
 meth public org.apache.xmlgraphics.image.loader.ImageFlavor[] getSupportedFlavors(java.lang.String)
 meth public org.apache.xmlgraphics.image.loader.spi.ImageLoader newImageLoader(org.apache.xmlgraphics.image.loader.ImageFlavor)
@@ -26329,7 +26331,6 @@ supr org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader
 CLSS public org.apache.xmlgraphics.image.loader.impl.ImageLoaderRawPNG
 cons public init()
 fld protected final static org.apache.commons.logging.Log log
-meth public int getUsagePenalty()
 meth public org.apache.xmlgraphics.image.loader.Image loadImage(org.apache.xmlgraphics.image.loader.ImageInfo,java.util.Map,org.apache.xmlgraphics.image.loader.ImageSessionContext) throws java.io.IOException,org.apache.xmlgraphics.image.loader.ImageException
 meth public org.apache.xmlgraphics.image.loader.ImageFlavor getTargetFlavor()
 supr org.apache.xmlgraphics.image.loader.impl.AbstractImageLoader
@@ -27548,6 +27549,7 @@ meth protected void processPathIteratorCached(java.awt.Shape) throws java.io.IOE
 meth public boolean drawImage(java.awt.Image,int,int,int,int,java.awt.image.ImageObserver)
 meth public boolean drawImage(java.awt.Image,int,int,java.awt.image.ImageObserver)
 meth public boolean drawImage(java.awt.Image,int,int,java.awt.image.ImageObserver,java.awt.Color)
+meth public boolean drawImage(java.awt.Image,int,int,java.awt.image.ImageObserver,java.awt.Color,java.awt.image.RenderedImage)
 meth public boolean shouldBeClipped(java.awt.Shape,java.awt.Shape)
 meth public int processShape(java.awt.Shape,boolean) throws java.io.IOException
 meth public java.awt.FontMetrics getFontMetrics(java.awt.Font)
@@ -27842,14 +27844,14 @@ meth public static org.apache.xmlgraphics.ps.PSResource writeReusableImage(byte[
 meth public static void paintForm(org.apache.xmlgraphics.ps.PSResource,java.awt.geom.Dimension2D,java.awt.geom.Rectangle2D,org.apache.xmlgraphics.ps.PSGenerator) throws java.io.IOException
 meth public static void paintForm(org.apache.xmlgraphics.ps.PSResource,java.awt.geom.Rectangle2D,org.apache.xmlgraphics.ps.PSGenerator) throws java.io.IOException
 meth public static void paintReusableImage(java.lang.String,java.awt.geom.Rectangle2D,org.apache.xmlgraphics.ps.PSGenerator) throws java.io.IOException
-meth public static void renderBitmapImage(java.awt.image.RenderedImage,float,float,float,float,org.apache.xmlgraphics.ps.PSGenerator,java.awt.Color) throws java.io.IOException
+meth public static void renderBitmapImage(java.awt.image.RenderedImage,float,float,float,float,org.apache.xmlgraphics.ps.PSGenerator,java.awt.Color,boolean) throws java.io.IOException
 meth public static void renderEPS(byte[],java.lang.String,float,float,float,float,float,float,float,float,org.apache.xmlgraphics.ps.PSGenerator) throws java.io.IOException
 meth public static void renderEPS(java.io.InputStream,java.lang.String,java.awt.geom.Rectangle2D,java.awt.geom.Rectangle2D,org.apache.xmlgraphics.ps.PSGenerator) throws java.io.IOException
 meth public static void translateAndScale(org.apache.xmlgraphics.ps.PSGenerator,java.awt.geom.Dimension2D,java.awt.geom.Rectangle2D) throws java.io.IOException
 meth public static void writeImage(byte[],java.awt.Dimension,java.lang.String,java.awt.geom.Rectangle2D,boolean,java.awt.color.ColorSpace,org.apache.xmlgraphics.ps.PSGenerator) throws java.io.IOException
 meth public static void writeImage(org.apache.xmlgraphics.ps.ImageEncoder,java.awt.Dimension,java.lang.String,java.awt.geom.Rectangle2D,java.awt.color.ColorSpace,int,boolean,org.apache.xmlgraphics.ps.PSGenerator) throws java.io.IOException
 meth public static void writeImage(org.apache.xmlgraphics.ps.ImageEncoder,java.awt.Dimension,java.lang.String,java.awt.geom.Rectangle2D,java.awt.image.ColorModel,org.apache.xmlgraphics.ps.PSGenerator) throws java.io.IOException
-meth public static void writeImage(org.apache.xmlgraphics.ps.ImageEncoder,java.awt.Dimension,java.lang.String,java.awt.geom.Rectangle2D,java.awt.image.ColorModel,org.apache.xmlgraphics.ps.PSGenerator,java.awt.image.RenderedImage) throws java.io.IOException
+meth public static void writeImage(org.apache.xmlgraphics.ps.ImageEncoder,java.awt.Dimension,java.lang.String,java.awt.geom.Rectangle2D,java.awt.image.ColorModel,org.apache.xmlgraphics.ps.PSGenerator,java.awt.image.RenderedImage,boolean) throws java.io.IOException
 meth public static void writeImage(org.apache.xmlgraphics.ps.ImageEncoder,java.awt.Dimension,java.lang.String,java.awt.geom.Rectangle2D,java.awt.image.ColorModel,org.apache.xmlgraphics.ps.PSGenerator,java.awt.image.RenderedImage,java.awt.Color) throws java.io.IOException
 supr java.lang.Object
 hfds HEX
@@ -28660,10 +28662,11 @@ meth public java.lang.String toString()
 meth public org.apache.xmlgraphics.xmp.XMPArrayType getType()
 meth public org.apache.xmlgraphics.xmp.XMPStructure getStructure(int)
 meth public void add(java.lang.Object)
-meth public void add(java.lang.String,java.lang.String)
+meth public void add(java.lang.Object,java.lang.String)
+meth public void add(java.lang.Object,java.lang.String,java.lang.String)
 meth public void toSAX(org.xml.sax.ContentHandler) throws org.xml.sax.SAXException
 supr org.apache.xmlgraphics.xmp.XMPComplexValue
-hfds type,values,xmllang
+hfds parseTypes,type,values,xmllang
 
 CLSS public final org.apache.xmlgraphics.xmp.XMPArrayType
 fld public final static org.apache.xmlgraphics.xmp.XMPArrayType ALT
@@ -28718,6 +28721,7 @@ supr java.lang.Object
 
 CLSS public org.apache.xmlgraphics.xmp.XMPProperty
 cons public init(org.apache.xmlgraphics.util.QName,java.lang.Object)
+fld protected boolean attribute
 intf org.apache.xmlgraphics.util.XMLizable
 meth public boolean isArray()
 meth public boolean isQualifiedProperty()
@@ -28788,6 +28792,7 @@ hfds DEFAULT_ENCODING
 
 CLSS public org.apache.xmlgraphics.xmp.XMPStructure
 cons public init()
+fld protected java.util.Map properties
 intf org.apache.xmlgraphics.xmp.PropertyAccess
 meth public int getPropertyCount()
 meth public java.lang.Object getSimpleValue()
@@ -28800,7 +28805,11 @@ meth public org.apache.xmlgraphics.xmp.XMPProperty removeProperty(org.apache.xml
 meth public void setProperty(org.apache.xmlgraphics.xmp.XMPProperty)
 meth public void toSAX(org.xml.sax.ContentHandler) throws org.xml.sax.SAXException
 supr org.apache.xmlgraphics.xmp.XMPComplexValue
-hfds properties
+
+CLSS public org.apache.xmlgraphics.xmp.XMPThinStructure
+cons public init()
+meth public void toSAX(org.xml.sax.ContentHandler) throws org.xml.sax.SAXException
+supr org.apache.xmlgraphics.xmp.XMPStructure
 
 CLSS public org.apache.xmlgraphics.xmp.merge.ArrayAddPropertyMerger
 cons public init()

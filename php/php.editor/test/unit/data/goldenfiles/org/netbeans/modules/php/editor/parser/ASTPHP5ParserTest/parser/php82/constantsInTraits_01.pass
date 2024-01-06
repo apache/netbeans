@@ -423,7 +423,7 @@
                             <Block start='1039' end='1218' isCurly='true'>
                                 <EchoStatement start='1049' end='1094'>
                                     <InfixExpression start='1054' end='1093' operator='CONCAT'>
-                                        <StaticConstantAccess start='1054' end='1083'>
+                                        <StaticConstantAccess start='1054' end='1083' isDynamicName='false'>
                                             <NamespaceName start='1054' end='1066' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='1054' end='1066' name='ExampleTrait'/>
                                             </NamespaceName>
@@ -441,7 +441,7 @@
                                 </EchoStatement>
                                 <EchoStatement start='1103' end='1131'>
                                     <InfixExpression start='1108' end='1130' operator='CONCAT'>
-                                        <StaticConstantAccess start='1108' end='1120'>
+                                        <StaticConstantAccess start='1108' end='1120' isDynamicName='false'>
                                             <NamespaceName start='1108' end='1112' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='1108' end='1112' name='self'/>
                                             </NamespaceName>
@@ -459,7 +459,7 @@
                                 </EchoStatement>
                                 <EchoStatement start='1140' end='1171'>
                                     <InfixExpression start='1145' end='1170' operator='CONCAT'>
-                                        <StaticConstantAccess start='1145' end='1160'>
+                                        <StaticConstantAccess start='1145' end='1160' isDynamicName='false'>
                                             <Identifier start='1145' end='1151' name='static'/>
                                             <Constant>
                                                 <Identifier start='1153' end='1160' name='PRIVATE'/>
@@ -475,7 +475,7 @@
                                 </EchoStatement>
                                 <EchoStatement start='1180' end='1212'>
                                     <InfixExpression start='1185' end='1211' operator='CONCAT'>
-                                        <StaticConstantAccess start='1185' end='1201'>
+                                        <StaticConstantAccess start='1185' end='1201' isDynamicName='false'>
                                             <Variable start='1185' end='1190' isDollared='true'>
                                                 <Identifier start='1186' end='1190' name='this'/>
                                             </Variable>
@@ -569,7 +569,7 @@
             </TraitDeclaration>
             <EchoStatement start='1505' end='1541'>
                 <InfixExpression start='1510' end='1540' operator='CONCAT'>
-                    <StaticConstantAccess start='1510' end='1530'>
+                    <StaticConstantAccess start='1510' end='1530' isDynamicName='false'>
                         <NamespaceName start='1510' end='1522' isCurrent='false' isGlobal='false'>
                             <Identifier start='1510' end='1522' name='ExampleTrait'/>
                         </NamespaceName>
@@ -587,7 +587,7 @@
             </EchoStatement>
             <EchoStatement start='1542' end='1584'>
                 <InfixExpression start='1547' end='1583' operator='CONCAT'>
-                    <StaticConstantAccess start='1547' end='1573'>
+                    <StaticConstantAccess start='1547' end='1573' isDynamicName='false'>
                         <AnonymousObjectVariable start='1547' end='1565'>
                             <ClassInstanceCreation start='1548' end='1564' anonymous='false'>
                                 <ClassName start='1552' end='1564'>

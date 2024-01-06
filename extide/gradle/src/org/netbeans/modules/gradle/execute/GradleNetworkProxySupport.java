@@ -22,12 +22,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -93,6 +96,12 @@ public class GradleNetworkProxySupport {
     private static final int PORT_DEFAULT_HTTPS = 1080;
     private static final int PORT_DEFAULT_HTTP = 80;
     
+    /**
+     * Timeout for the network probe. The probe is done in case project settings mismatch with the autodetected ones.
+     * If set to 0 or negative number, the project proxy configuration will not be probed.
+     */
+    private static final int PROXY_PROBE_TIMEOUT = Integer.getInteger("netbeans.networkProxy.timeout", 1000);
+    
     private final Project project;
     
     /**
@@ -101,7 +110,7 @@ public class GradleNetworkProxySupport {
      * effective proxy is detected, the user is not asked again.
      */
     // @GuardedBy(this)
-    private Map<String, ProxyResult>    acknowledgedResults = new HashMap<>();
+    private static Map<String, ProxyResult>    acknowledgedResults = new HashMap<>();
     
     public GradleNetworkProxySupport(Project project) {
         this.project = project;
@@ -293,6 +302,48 @@ public class GradleNetworkProxySupport {
                 supportOverride = false;
                 if (action == NetworkProxySettings.OVERRIDE) {
                     action = NetworkProxySettings.NOTICE;
+                }
+            }
+            if (action != NetworkProxySettings.IGNORE && PROXY_PROBE_TIMEOUT > 0) {
+                // last check: make an outbound connection to a public site
+                URL probeUrl;
+                P: try {
+                    Proxy probeProxy;
+                    
+                    if (proxyHost != null) {
+                        LOG.log(Level.FINE, "Trying to probe with proxy {0}", proxyAuthority);
+                        InetSocketAddress sa = new InetSocketAddress(proxyHost, proxyPort);
+                        if (!sa.isUnresolved()) {
+                            probeProxy = new Proxy(Proxy.Type.HTTP, sa);
+                        } else {
+                            LOG.log(Level.FINE, "Tool proxy {0} probe not resolvable", proxyAuthority);
+                            break P;
+                        }
+                    } else {
+                        probeProxy = Proxy.NO_PROXY;
+                    }
+                    probeUrl = new URL(PROBE_URI_STRING);
+                    HttpURLConnection c = null;
+                    try {
+                        c = (HttpURLConnection)probeUrl.openConnection(probeProxy);
+                        c.setReadTimeout(PROXY_PROBE_TIMEOUT);
+                        c.setConnectTimeout(PROXY_PROBE_TIMEOUT);
+                        c.setRequestMethod("HEAD");
+                        c.connect();
+                        // force something through
+                        c.getLastModified();
+                        return CompletableFuture.completedFuture(new ProxyResult(Status.CONTINUE, probeProxy, proxyAuthority, publicProxySpec, publicProxyHost, publicProxyPort));
+                    } catch (IOException ex) {
+                        // the probe has failed
+                        LOG.log(Level.FINE, "Tool proxy {0} probe failed", proxyAuthority);
+                    } finally {
+                        if (c != null) {
+                            c.disconnect();
+                        }
+                    }
+                } catch (MalformedURLException ex) {
+                    // this is competely unexpected
+                    Exceptions.printStackTrace(ex);
                 }
             }
             switch (action) {

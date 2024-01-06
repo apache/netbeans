@@ -25,16 +25,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.apache.maven.AbstractMavenLifecycleParticipant;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
@@ -45,6 +48,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.modules.maven.M2AuxilaryConfigImpl;
+import org.netbeans.modules.maven.NbArtifactFixer;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.configurations.M2Configuration;
@@ -67,7 +71,27 @@ public final class MavenProjectCache {
     
     private static final Logger LOG = Logger.getLogger(MavenProjectCache.class.getName());
     private static final String CONTEXT_EXECUTION_RESULT = "NB_Execution_Result";
+    
+    /**
+     * The value contains the set of artifacts, that have been faked during the reading operation.
+     */
+    private static final String CONTEXT_FAKED_ARTIFACTS = "NB_FakedArtifacts";
+    
+    /**
+     * Marks a project that observed unknown build participants.
+     */
     private static final String CONTEXT_PARTICIPANTS = "NB_AbstractParticipant_Present";
+    /**
+     * Marks a fallback project. The project was not fully read. Value of the context key is either a Boolean.TRUE as an indicator, or
+     * the partially read project, which does not resolve fully. Can be extracted with {@link #getPartialProject(org.apache.maven.project.MavenProject)}.
+     */
+    private static final String CONTEXT_PARTIAL_PROJECT = "org.netbeans.modules.maven.partialProject"; // NOI18N
+    
+    /**
+     * Marks a fallback project. The project is forged and is not read from the maven infrastructure. A fallback project may have a {@link #getPartialProject(org.apache.maven.project.MavenProject) partial project}
+     * attached.
+     */
+    private static final String CONTEXT_FALLBACK_PROJECT = "org.netbeans.modules.maven.fallbackProject"; // NOI18N
     
     /**
      * Folder with module-configurable whitelist of lifecycle participants. Currently only 'ignore' can be specified.
@@ -172,8 +196,107 @@ public final class MavenProjectCache {
         return check != null && check.getAttribute(ATTR_IGNORE_ON_LOAD) == Boolean.TRUE;
     }
     
-    private static @NonNull MavenProject loadOriginalMavenProject(final File pomFile, ProjectActionContext ctx, RunConfig runConf) {
+    public static MavenProject loadOriginalMavenProjectInternal(MavenEmbedder projectEmbedder, MavenExecutionRequest req) {
+        MavenProject newproject = null;
+        File pomFile = req.getPom();
+        
+        MavenExecutionResult res = null;
+        Set<Artifact> fakes = new HashSet<>();
         long startLoading = System.currentTimeMillis();
+        
+        try {
+            res = NbArtifactFixer.collectFallbackArtifacts(() -> projectEmbedder.readProjectWithDependencies(req, true), (c) -> 
+                c.forEach(a -> {
+                    // artifact fixer only fakes POMs.
+                    fakes.add(projectEmbedder.createArtifactWithClassifier(a.getGroupId(), a.getArtifactId(), a.getVersion(), "pom", a.getClassifier())); // NOI18N
+                }
+            ));
+            newproject = res.getProject();
+            
+            //#204898
+            if (newproject != null) {
+                LOG.log(Level.FINE, "Loaded project for {0}, packaging: {1}", new Object[] { pomFile, newproject.getPackaging() });
+                ClassLoader projectRealm = newproject.getClassRealm();
+                if (projectRealm != null) {
+                    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+                    Thread.currentThread().setContextClassLoader(projectRealm);
+                    try {
+                        //boolean execute = EnableParticipantsBuildAction.isEnabled(aux);
+                        List<AbstractMavenLifecycleParticipant> lookup = projectEmbedder.getPlexus().lookupList(AbstractMavenLifecycleParticipant.class);
+                        if (lookup.size() > 0) { //just in case..
+//                            if (execute) {
+//                                LOG.info("Executing External Build Participants...");
+//                                MavenSession session = new MavenSession( projectEmbedder.getPlexus(), newproject.getProjectBuildingRequest().getRepositorySession(), req, res );
+//                                session.setCurrentProject(newproject);
+//                                session.setProjects(Collections.singletonList(newproject));
+//                                projectEmbedder.setUpLegacySupport();
+//                                projectEmbedder.getPlexus().lookup(LegacySupport.class).setSession(session);
+//                                
+//                                for (AbstractMavenLifecycleParticipant part : lookup) {
+//                                    try {
+//                                        Thread.currentThread().setContextClassLoader( part.getClass().getClassLoader() );
+//                                        part.afterSessionStart(session);
+//                                        part.afterProjectsRead(session);
+//                                    } catch (MavenExecutionException ex) {
+//                                        Exceptions.printStackTrace(ex);
+//                                    }
+//                                }
+//                            } else {
+                                List<String> parts = new ArrayList<String>();
+                                for (AbstractMavenLifecycleParticipant part : lookup) {
+                                    if (isLifecycleParticipatnIgnored(part)) {
+                                        //#204898 create a whitelist of known not harmful participants that can be just ignored
+                                        continue;
+                                    }
+                                    String name = part.getClass().getName();
+                                    parts.add(name);
+                                }
+                                if (parts.size() > 0) {
+                                    newproject.setContextValue(CONTEXT_PARTICIPANTS, parts);
+                                }
+//                            }
+                        }
+                    } catch (ComponentLookupException e) {
+                        // this is just silly, lookupList should return an empty list!
+                    } finally {
+                        Thread.currentThread().setContextClassLoader(originalClassLoader);
+                    }
+                }
+            }
+        } catch (RuntimeException exc) {
+            //guard against exceptions that are not processed by the embedder
+            //#136184 NumberFormatException
+            LOG.log(Level.INFO, "Runtime exception thrown while loading maven project at " + pomFile, exc); //NOI18N
+            res = new DefaultMavenExecutionResult();
+            res.addException(exc);
+        } finally {
+            if (newproject == null) {
+                newproject = getFallbackProject(res, pomFile);
+            } 
+            //#215159 clear the project building request, it references multiple Maven Models via the RepositorySession cache
+            //is not used in maven itself, most likely used by m2e only..
+            newproject.setProjectBuildingRequest(null);
+            long endLoading = System.currentTimeMillis();
+            LOG.log(Level.FINE, "Loaded project in {0} msec at {1}", new Object[] {endLoading - startLoading, pomFile.getPath()});
+            if (LOG.isLoggable(Level.FINE) && SwingUtilities.isEventDispatchThread()) {
+                LOG.log(Level.FINE, "Project " + pomFile.getPath() + " loaded in AWT event dispatching thread!", new RuntimeException());
+            }
+            if (LOG.isLoggable(Level.FINE) && !res.getExceptions().isEmpty()) {
+                LOG.log(Level.FINE, "Errors encountered during loading the project:");
+                for (Throwable t : res.getExceptions()) {
+                    LOG.log(Level.FINE, "Maven reported:", t);
+                }
+            }
+            if (!fakes.isEmpty() && !isIncompleteProject(newproject)) {
+                LOG.log(Level.FINE, "Incomplete artifact encountered during loading the project: {0}", fakes);
+                newproject.setContextValue(CONTEXT_PARTIAL_PROJECT, Boolean.TRUE);
+                newproject.setContextValue(CONTEXT_FAKED_ARTIFACTS, fakes);
+            }
+        }
+        return newproject;
+    }
+    
+    private static @NonNull MavenProject loadOriginalMavenProject(final File pomFile, ProjectActionContext ctx, RunConfig runConf) {
         MavenEmbedder projectEmbedder = EmbedderFactory.getProjectEmbedder();
         MavenProject newproject = null;
         //TODO have independent from M2AuxiliaryConfigImpl
@@ -194,7 +317,6 @@ public final class MavenProjectCache {
             }
         }
         
-        MavenExecutionResult res = null;
         try {
             List<String> mavenConfigOpts = Collections.emptyList();
             for (FileObject root = projectDir; root != null; root = root.getParent()) {
@@ -277,92 +399,19 @@ public final class MavenProjectCache {
                 LOG.log(Level.FINE, "request property 'packaging': {0}", req.getSystemProperties().get("packaging"));
                 LOG.log(Level.FINE, "embedder property 'packaging': {0}", projectEmbedder.getSystemProperties().get("packaging"));
             }
-            res = projectEmbedder.readProjectWithDependencies(req, true);
-            newproject = res.getProject();
-            
-            //#204898
-            if (newproject != null) {
-                LOG.log(Level.FINE, "Loaded project for {0}, packaging: {1}", new Object[] { pomFile, newproject.getPackaging() });
-                ClassLoader projectRealm = newproject.getClassRealm();
-                if (projectRealm != null) {
-                    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-                    Thread.currentThread().setContextClassLoader(projectRealm);
-                    try {
-                        //boolean execute = EnableParticipantsBuildAction.isEnabled(aux);
-                        List<AbstractMavenLifecycleParticipant> lookup = projectEmbedder.getPlexus().lookupList(AbstractMavenLifecycleParticipant.class);
-                        if (lookup.size() > 0) { //just in case..
-//                            if (execute) {
-//                                LOG.info("Executing External Build Participants...");
-//                                MavenSession session = new MavenSession( projectEmbedder.getPlexus(), newproject.getProjectBuildingRequest().getRepositorySession(), req, res );
-//                                session.setCurrentProject(newproject);
-//                                session.setProjects(Collections.singletonList(newproject));
-//                                projectEmbedder.setUpLegacySupport();
-//                                projectEmbedder.getPlexus().lookup(LegacySupport.class).setSession(session);
-//                                
-//                                for (AbstractMavenLifecycleParticipant part : lookup) {
-//                                    try {
-//                                        Thread.currentThread().setContextClassLoader( part.getClass().getClassLoader() );
-//                                        part.afterSessionStart(session);
-//                                        part.afterProjectsRead(session);
-//                                    } catch (MavenExecutionException ex) {
-//                                        Exceptions.printStackTrace(ex);
-//                                    }
-//                                }
-//                            } else {
-                                List<String> parts = new ArrayList<String>();
-                                for (AbstractMavenLifecycleParticipant part : lookup) {
-                                    if (isLifecycleParticipatnIgnored(part)) {
-                                        //#204898 create a whitelist of known not harmful participants that can be just ignored
-                                        continue;
-                                    }
-                                    String name = part.getClass().getName();
-                                    parts.add(name);
-                                }
-                                if (parts.size() > 0) {
-                                    newproject.setContextValue(CONTEXT_PARTICIPANTS, parts);
-                                }
-//                            }
-                        }
-                    } catch (ComponentLookupException e) {
-                        // this is just silly, lookupList should return an empty list!
-                    } finally {
-                        Thread.currentThread().setContextClassLoader(originalClassLoader);
-                    }
-                }
-            }
-        } catch (RuntimeException | IOException exc) {
+            newproject = loadOriginalMavenProjectInternal(projectEmbedder, req);
+        } catch (IOException exc) {
+            MavenExecutionResult res = null;
             //guard against exceptions that are not processed by the embedder
             //#136184 NumberFormatException
             LOG.log(Level.INFO, "Runtime exception thrown while loading maven project at " + pomFile, exc); //NOI18N
             res = new DefaultMavenExecutionResult();
             res.addException(exc);
-        } finally {
-            if (newproject == null) {
-                newproject = getFallbackProject(res, pomFile);
-            }
-            //#215159 clear the project building request, it references multiple Maven Models via the RepositorySession cache
-            //is not used in maven itself, most likely used by m2e only..
-            newproject.setProjectBuildingRequest(null);
-            //TODO some exceptions in result contain various model caches as well..
-            newproject.setContextValue(CONTEXT_EXECUTION_RESULT, res);
-            long endLoading = System.currentTimeMillis();
-            LOG.log(Level.FINE, "Loaded project in {0} msec at {1}", new Object[] {endLoading - startLoading, pomFile.getPath()});
-            if (LOG.isLoggable(Level.FINE) && SwingUtilities.isEventDispatchThread()) {
-                LOG.log(Level.FINE, "Project " + pomFile.getPath() + " loaded in AWT event dispatching thread!", new RuntimeException());
-            }
-            if (LOG.isLoggable(Level.FINE) && !res.getExceptions().isEmpty()) {
-                LOG.log(Level.FINE, "Errors encountered during loading the project:");
-                for (Throwable t : res.getExceptions()) {
-                    LOG.log(Level.FINE, "Maven reported:", t);
-                }
-            }
+            newproject = getFallbackProject(res, pomFile);
         }
         return newproject;
     }
 
-    private static final String CONTEXT_PARTIAL_PROJECT = "org.netbeans.modules.maven.partialProject"; // NOI18N
-    private static final String CONTEXT_FALLBACK_PROJECT = "org.netbeans.modules.maven.fallbackProject"; // NOI18N
-    
     /**
      * Create a fallback project, but patch the incomplete project from the building result into it.
      * The method will eventually start to return the partial project but still flagged as a fallback - see {@link #isFallbackproject(org.apache.maven.project.MavenProject)}.
@@ -377,6 +426,7 @@ public final class MavenProjectCache {
         if (result == null) {
             return toReturn;
         }
+        toReturn.setContextValue(CONTEXT_EXECUTION_RESULT, result);
         MavenProject partial = null;
         
         for (Throwable t : result.getExceptions()) {
@@ -417,11 +467,24 @@ public final class MavenProjectCache {
         return newproject;
     }
     
+    public static boolean isIncompleteProject(MavenProject prj) {
+        return prj.getContextValue(CONTEXT_PARTIAL_PROJECT) != null;
+    }
+    
     public static boolean isFallbackproject(MavenProject prj) {
         if ("error".equals(prj.getGroupId()) && "error".equals(prj.getArtifactId()) && Bundle.LBL_Incomplete_Project_Name().equals(prj.getName())) {
             return true;
         } else {
-            return prj.getContextValue(CONTEXT_PARTIAL_PROJECT) == Boolean.TRUE;
+            return prj.getContextValue(CONTEXT_FALLBACK_PROJECT) != null;
+        }
+    }
+    
+    public static MavenProject getPartialProject(MavenProject prj) {
+        Object o = prj.getContextValue(CONTEXT_PARTIAL_PROJECT);
+        if (o instanceof MavenProject) {
+            return (MavenProject)o;
+        } else {
+            return null;
         }
     }
     

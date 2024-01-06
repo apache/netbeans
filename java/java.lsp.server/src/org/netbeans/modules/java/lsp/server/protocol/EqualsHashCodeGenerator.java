@@ -75,7 +75,7 @@ public final class EqualsHashCodeGenerator extends CodeActionsProvider {
         "DN_GenerateHashCode=Generate hashCode()...",
         "DN_GenerateEqualsHashCode=Generate equals() and hashCode()...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Source)) {
             return Collections.emptyList();
@@ -113,11 +113,11 @@ public final class EqualsHashCodeGenerator extends CodeActionsProvider {
         String uri = Utils.toUri(info.getFileObject());
         if (equalsHashCode[0] == null) {
             if (equalsHashCode[1] == null) {
-                return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEqualsHashCode(), CODE_GENERATOR_KIND, data(0, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
+                return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateEqualsHashCode(), CODE_GENERATOR_KIND, data(0, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
             }
-            return Collections.singletonList(createCodeAction(Bundle.DN_GenerateEquals(), CODE_GENERATOR_KIND, data(EQUALS_ONLY, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
+            return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateEquals(), CODE_GENERATOR_KIND, data(EQUALS_ONLY, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
         }
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateHashCode(), CODE_GENERATOR_KIND, data(HASH_CODE_ONLY, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateHashCode(), CODE_GENERATOR_KIND, data(HASH_CODE_ONLY, uri, offset, fields), "workbench.action.focusActiveEditorGroup"));
     }
 
     @Override

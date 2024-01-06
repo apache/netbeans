@@ -48,6 +48,9 @@ public interface LspServerState {
      * Asynchronously opens projects that contain the passed files. Completes with the list
      * of opened projects, in no particular order. File owners will be registered as opened in the 
      * workspace.
+     * <p>
+     * For each input FileObject, the resulting array will contain its owning projects at the corresponding array index,
+     * or {@code null}, if the FileObject is not owned by any recognized project.
      * @param fileCandidates reference / owned files
      * @return opened projects.
      */
@@ -60,10 +63,12 @@ public interface LspServerState {
      * of opened projects, in no particular order. addWorkspace controls if the projects will
      * be registered as a part of client workspace. Content of workspace project and their subprojects are 
      * trusted, no questions are asked about opening.
-     * 
+     * <p>
+     * For each input FileObject, the resulting array will contain its owning projects at the corresponding array index,
+     * or {@code null}, if the FileObject is not owned by any recognized project.
      * @param addWorkspace register projects as part of client workspace.
      * @param fileCandidates reference / owned files
-     * @return opened projects.
+     * @return opened projects, in the same order as the input FileObjects.
      */
     public CompletableFuture<Project[]>   asyncOpenSelectedProjects(List<FileObject> fileCandidates, boolean addWorkspace);
     
@@ -100,4 +105,13 @@ public interface LspServerState {
      * @return snapshot of folders.
      */
     public List<FileObject> getAcceptedWorkspaceFolders();
+    
+    /**
+     * Returns the set of workspace folders reported by the client. If a folder from the list is recognized
+     * as a project, it will be also present in {@link #openedProjects()} including all its subprojects.
+     * The list of client workspace folders contains just toplevel items in client's workspace, as defined in
+     * LSP protocol.
+     * @return list of workspace folders
+     */
+    public List<FileObject> getClientWorkspaceFolders();
 }

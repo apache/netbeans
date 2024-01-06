@@ -27,7 +27,9 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.TreeInfo;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -190,6 +192,37 @@ public abstract class PositionEstimator {
         
     }
     
+    static class StringTemaplateEstimator extends BaseEstimator {
+        StringTemaplateEstimator(List<? extends Tree> oldL, 
+                             List<? extends Tree> newL,
+                             DiffContext diffContext)
+        {
+            super(DOT, oldL, newL, diffContext);
+        }
+
+        @Override
+        public String head() {
+            return precToken.fixedText();
+        }
+
+        @Override
+        public int getInsertPos(int index) {
+            if (index == oldL.size()) {
+                return diffContext.getEndPosition(diffContext.origUnit, (JCTree) oldL.get(index - 1));
+            }
+            return (int) diffContext.trees.getSourcePositions().getStartPosition(diffContext.origUnit, oldL.get(index));
+        }
+
+        @Override
+        public int[] getPositions(int index) {
+            int start = (int) diffContext.trees.getSourcePositions().getStartPosition(diffContext.origUnit, oldL.get(index));
+            int end = diffContext.getEndPosition(diffContext.origUnit, (JCTree) oldL.get(index));
+
+            return new int[] {start, end};
+        }
+
+    }
+
     static class ExportsOpensToEstimator extends BaseEstimator {
         
         ExportsOpensToEstimator(List<? extends ExpressionTree> oldL,

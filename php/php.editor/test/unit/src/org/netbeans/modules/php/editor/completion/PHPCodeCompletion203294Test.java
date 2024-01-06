@@ -38,7 +38,10 @@ public class PHPCodeCompletion203294Test extends PHPCodeCompletionTestBase {
     }
 
     public void testUseCase1() throws Exception {
-        checkCompletion("testfiles/completion/lib/test203294/test203294.php", "$f->^", false);
+        // @method tag syntax is `@method [[static] return type] [name]([[type] [parameter]<, ...>]) [<description>]`
+        // see: https://docs.phpdoc.org/3.0/guide/references/phpdoc/tags/method.html#method
+        // so, `@method int i() i($a = array()) Comment 10` is incorrect
+        // checkCompletion("testfiles/completion/lib/test203294/test203294.php", "$f->^", false);
     }
 
     @Override

@@ -47,23 +47,19 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.eclipse.lsp4j.CodeAction;
-import org.eclipse.lsp4j.CodeActionParams;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
-import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Jan Horvath
  */
-@ServiceProvider(service = CodeActionsProvider.class)
-public class DBConnectionProvider extends CodeActionsProvider{
-   private static final Logger LOG = Logger.getLogger(DBConnectionProvider.class.getName());
-   private static final String  GET_DB_CONNECTION = "java.db.connection"; //NOI18N
+@ServiceProvider(service = CommandProvider.class)
+public class DBConnectionProvider implements CommandProvider {
+    private static final Logger LOG = Logger.getLogger(DBConnectionProvider.class.getName());
+    private static final String  GET_DB_CONNECTION = "nbls.db.connection"; //NOI18N
 
     private static final boolean POSIX = FileSystems.getDefault().supportedFileAttributeViews().contains("posix");  // NOI18N
     private static final EnumSet<PosixFilePermission> readWritePosix = EnumSet.of(OWNER_READ, OWNER_WRITE);
@@ -81,12 +77,7 @@ public class DBConnectionProvider extends CodeActionsProvider{
     }
 
     @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+    public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         Map<String, String> result = new HashMap<> ();
         CompletableFuture ret = new CompletableFuture();
         Properties dbProps = new Properties();

@@ -25,12 +25,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.SocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -166,12 +169,18 @@ public class MavenProxySupport {
     private static final int PORT_DEFAULT_HTTP = 80;
     
     /**
+     * Timeout for the network probe. The probe is done in case project settings mismatch with the autodetected ones.
+     * If set to 0 or negative number, the project proxy configuration will not be probed.
+     */
+    private static final int PROXY_PROBE_TIMEOUT = Integer.getInteger("netbeans.networkProxy.timeout", 1000);
+
+    /**
      * Past decisions made by the user during this session. The Map is used so the user si not bothered that often with questions.
      * If the user chooses 'override' or 'continue' (no action), the Map receives the public proxy spec and the result. If the same
      * effective proxy is detected, the user is not asked again.
      */
     // @GuardedBy(this)
-    private Map<String, ProxyResult>    acknowledgedResults = new HashMap<>();
+    private static Map<String, ProxyResult>    acknowledgedResults = new HashMap<>();
     
     public MavenProxySupport(Project project) {
     }
@@ -689,6 +698,48 @@ public class MavenProxySupport {
                 }
             }
 
+            if (action != NetworkProxySettings.IGNORE && PROXY_PROBE_TIMEOUT > 0) {
+                // last check: make an outbound connection to a public site
+                URL probeUrl;
+                P: try {
+                    Proxy probeProxy;
+                    
+                    if (proxyHost != null) {
+                        LOG.log(Level.FINE, "Trying to probe with proxy {0}", proxyAuthority);
+                        InetSocketAddress sa = new InetSocketAddress(proxyHost, proxyPort);
+                        if (!sa.isUnresolved()) {
+                            probeProxy = new Proxy(Proxy.Type.HTTP, sa);
+                        } else {
+                            LOG.log(Level.FINE, "Tool proxy {0} probe not resolvable", proxyAuthority);
+                            break P;
+                        }
+                    } else {
+                        probeProxy = Proxy.NO_PROXY;
+                    }
+                    probeUrl = new URL(PROBE_URI_STRING);
+                    HttpURLConnection c = null;
+                    try {
+                        c = (HttpURLConnection)probeUrl.openConnection(probeProxy);
+                        c.setReadTimeout(PROXY_PROBE_TIMEOUT);
+                        c.setConnectTimeout(PROXY_PROBE_TIMEOUT);
+                        c.setRequestMethod("HEAD");
+                        c.connect();
+                        // force something through
+                        c.getLastModified();
+                        return CompletableFuture.completedFuture(new ProxyResult(Status.CONTINUE, probeProxy, proxyAuthority, publicProxySpec, publicProxyHost, publicProxyPort, publicProxyNonDefaultPort > 0, mavenSettings));
+                    } catch (IOException ex) {
+                        // the probe has failed
+                        LOG.log(Level.FINE, "Tool proxy {0} probe failed", proxyAuthority);
+                    } finally {
+                        if (c != null) {
+                            c.disconnect();
+                        }
+                    }
+                } catch (MalformedURLException ex) {
+                    // this is competely unexpected
+                    Exceptions.printStackTrace(ex);
+                }
+            }
             switch (action) {
                 case IGNORE:
                     return CompletableFuture.completedFuture(createResult(Status.CONTINUE));

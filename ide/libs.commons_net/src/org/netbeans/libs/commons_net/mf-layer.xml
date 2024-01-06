@@ -27,7 +27,7 @@
             <file name="org-netbeans-lib-commons_net-antlibrary.instance">
                 <attr name="instanceCreate" methodvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspath.url"/>
                 <attr name="instanceOf" stringvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspathProvider"/>
-                <attr name="url" urlvalue="nbinst://org.netbeans.libs.commons_net/modules/ext/commons-net-3.8.0.jar"/>
+                <attr name="url" urlvalue="nbinst://org.netbeans.libs.commons_net/modules/ext/commons-net-3.10.0.jar"/>
             </file>
         </folder>
     </folder>

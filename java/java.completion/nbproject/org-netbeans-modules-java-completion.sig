@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.6.0
+#Version 2.8.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -134,15 +134,17 @@ CLSS public final org.netbeans.modules.java.completion.JavaTooltipTask
 fld protected final int caretOffset
 fld protected final java.util.concurrent.Callable<java.lang.Boolean> cancel
 meth protected void resolve(org.netbeans.api.java.source.CompilationController) throws java.io.IOException
+meth public int getActiveSignatureIndex()
 meth public int getAnchorOffset()
 meth public int getTooltipIndex()
 meth public int getTooltipOffset()
+meth public java.util.List<java.lang.String> getTooltipSignatures()
 meth public java.util.List<java.util.List<java.lang.String>> getTooltipData()
 meth public static org.netbeans.modules.java.completion.JavaTooltipTask create(int,java.util.concurrent.Callable<java.lang.Boolean>)
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
 meth public void run(org.netbeans.modules.parsing.api.ResultIterator) throws java.lang.Exception
 supr org.netbeans.modules.parsing.api.UserTask
-hfds INIT,SUPER_KEYWORD,THIS_KEYWORD,anchorOffset,toolTipData,toolTipIndex,toolTipOffset
+hfds INIT,SUPER_KEYWORD,THIS_KEYWORD,activeSignatureIndex,anchorOffset,toolTipData,toolTipIndex,toolTipOffset,toolTipSignatures
 
 CLSS public final org.netbeans.modules.java.completion.Utilities
 meth public static boolean isCaseSensitive()

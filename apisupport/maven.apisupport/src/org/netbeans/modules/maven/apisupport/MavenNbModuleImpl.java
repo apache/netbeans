@@ -69,6 +69,7 @@ import org.netbeans.modules.maven.model.pom.Configuration;
 import org.netbeans.modules.maven.model.pom.POMExtensibilityElement;
 import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.Plugin;
+import org.netbeans.modules.maven.options.MavenVersionSettings;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -102,7 +103,6 @@ public class MavenNbModuleImpl implements NbModuleProvider {
     public static final String GROUPID_MOJO = "org.codehaus.mojo";
     public static final String GROUPID_APACHE = "org.apache.netbeans.utilities";
     public static final String NBM_PLUGIN = "nbm-maven-plugin";
-    static final String LATEST_NBM_PLUGIN_VERSION = "4.8";
 
     public static final String NETBEANSAPI_GROUPID = "org.netbeans.api";
 
@@ -123,14 +123,7 @@ public class MavenNbModuleImpl implements NbModuleProvider {
      * This method will not wait for the index to be downloaded, it will return a default value instead.
      */
     public static String getLatestNbmPluginVersion() {
-        RepositoryQueries.Result<NBVersionInfo> versionsResult = RepositoryQueries.getVersionsResult(GROUPID_APACHE, NBM_PLUGIN, null);
-
-        // Versions are sorted in descending order
-        return versionsResult.getResults().stream()
-                .map(NBVersionInfo::getVersion)
-                .filter(v -> !v.endsWith("-SNAPSHOT"))
-                .findFirst()
-                .orElse(LATEST_NBM_PLUGIN_VERSION);
+        return MavenVersionSettings.getDefault().getVersion(GROUPID_APACHE, NBM_PLUGIN);
     }
 
     private File getModuleXmlLocation() {

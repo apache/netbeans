@@ -36,8 +36,8 @@
                 <package>org.apache.commons.compress.utils</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/commons-compress-1.24.0.jar</runtime-relative-path>
-                <binary-origin>external/commons-compress-1.24.0.jar</binary-origin>
+                <runtime-relative-path>ext/commons-compress-1.25.0.jar</runtime-relative-path>
+                <binary-origin>external/commons-compress-1.25.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

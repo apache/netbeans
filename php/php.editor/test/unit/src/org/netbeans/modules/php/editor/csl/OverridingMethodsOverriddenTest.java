@@ -33,8 +33,20 @@ public class OverridingMethodsOverriddenTest extends OverridingMethodsImplTestBa
         super(testName);
     }
 
-    public void testOverridden_01() throws Exception {
-        performTest("overriding/overridden/overridden_01");
+    public void testClass_01() throws Exception {
+        performTest();
+    }
+
+    public void testInterface_01() throws Exception {
+        performTest();
+    }
+
+    private void performTest() throws Exception {
+        performTest(getTestPath());
+    }
+
+    private String getTestPath() {
+        return "overriding/overridden/" + getName() + "/" + getName();
     }
 
     @Override
@@ -42,7 +54,7 @@ public class OverridingMethodsOverriddenTest extends OverridingMethodsImplTestBa
         return Collections.singletonMap(
             PhpSourcePath.SOURCE_CP,
             ClassPathSupport.createClassPath(new FileObject[] {
-                FileUtil.toFileObject(new File(getDataDir(), "/testfiles/overriding/overridden"))
+                FileUtil.toFileObject(new File(getDataDir(), "/testfiles/overriding/overridden/" + getName()))
             })
         );
     }

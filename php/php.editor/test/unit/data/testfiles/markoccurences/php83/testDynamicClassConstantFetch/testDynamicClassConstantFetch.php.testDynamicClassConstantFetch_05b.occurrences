@@ -1,0 +1,2 @@
+    public static function |>MARK_OCCURRENCES:method<|(): void {}
+Test::{Test::|>MARK_OCCURRENCES:met^hod<|()}::{test($variable)};

@@ -92,10 +92,11 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         CompilationController cc = CompilationController.get(parserResult);
         if (initialize(cc)) {
             try {
-                cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                List<SymbolLocation> symbols = scan(cc);
-                if (!symbols.isEmpty()) {
-                    store(context.getIndexFolder(), indexable.getURL(), indexable.getRelativePath(), symbols);
+                if (cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED).compareTo(JavaSource.Phase.ELEMENTS_RESOLVED) >= 0) {
+                    List<SymbolLocation> symbols = scan(cc);
+                    if (!symbols.isEmpty()) {
+                        store(context.getIndexFolder(), indexable.getURL(), indexable.getRelativePath(), symbols);
+                    }
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
@@ -112,6 +113,9 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
 
     private synchronized boolean initialize(CompilationController cc) {
         Project p = FileOwnerQuery.getOwner(cc.getFileObject());
+        if (p == null) {
+            return false;
+        }
         Boolean ret = map.get(p);
         if (ret == null) {
             ClassPath cp = ClassPath.getClassPath(p.getProjectDirectory(), ClassPath.COMPILE);

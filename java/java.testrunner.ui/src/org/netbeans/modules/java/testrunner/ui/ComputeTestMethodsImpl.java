@@ -103,7 +103,8 @@ public class ComputeTestMethodsImpl extends EditorAwareJavaSourceTaskFactory {
                 }
 
                 if (!cancel.get()) {
-                    WORKER.post(() -> TestMethodController.setTestMethods(doc, methods));
+                    List<TestMethod> updateMethods = new ArrayList<>(methods);
+                    WORKER.post(() -> TestMethodController.setTestMethods(doc, updateMethods));
                 }
             }
         }

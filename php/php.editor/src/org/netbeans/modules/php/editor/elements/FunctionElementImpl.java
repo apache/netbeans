@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
@@ -149,6 +150,7 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
         sb.append(getFilenameUrl()).append(Separator.SEMICOLON);
         sb.append(isReturnUnionType() ? 1 : 0).append(Separator.SEMICOLON);
         sb.append(isReturnIntersectionType() ? 1 : 0).append(Separator.SEMICOLON);
+        sb.append(getDeclaredReturnType()).append(Separator.SEMICOLON);
         return sb.toString();
     }
 
@@ -163,6 +165,7 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
             assert getOffset() == parser.getOffset();
             assert getParameters().size() == parser.getParameters().size();
             assert getReturnTypes().size() == parser.getReturnTypes().size();
+            assert getDeclaredReturnType().equals(parser.getDeclaredReturnType());
         }
     }
 
@@ -174,6 +177,11 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
     @Override
     public Collection<TypeResolver> getReturnTypes() {
         return this.functionSupport.getReturnTypes();
+    }
+
+    @Override
+    public String getDeclaredReturnType() {
+        return this.functionSupport.getDeclaredReturnType();
     }
 
     @Override
@@ -247,6 +255,10 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
         boolean isReturnIntersectionType() {
             return signature.integer(9) == 1;
         }
+
+        String getDeclaredReturnType() {
+            return signature.string(10);
+        }
     }
 
     private static final class ParametersFromSignature implements BaseFunctionElementSupport.Parameters {
@@ -273,11 +285,14 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
         private Set<TypeResolver> retrievedReturnTypes = null;
         private final boolean isUnionType;
         private final boolean isIntersectionType;
+        @NullAllowed
+        private final String declaredReturnType;
 
         public ReturnTypesFromSignature(FunctionSignatureParser functionSignatureParser) {
             this.functionSignatureParser = functionSignatureParser;
             this.isUnionType = functionSignatureParser.isReturnUnionType();
             this.isIntersectionType = functionSignatureParser.isReturnIntersectionType();
+            this.declaredReturnType = functionSignatureParser.getDeclaredReturnType();
         }
 
         @Override
@@ -296,6 +311,11 @@ public final class FunctionElementImpl extends FullyQualifiedElementImpl impleme
         @Override
         public boolean isIntersectionType() {
             return isIntersectionType;
+        }
+
+        @Override
+        public String getDeclaredReturnType() {
+            return declaredReturnType;
         }
 
     }

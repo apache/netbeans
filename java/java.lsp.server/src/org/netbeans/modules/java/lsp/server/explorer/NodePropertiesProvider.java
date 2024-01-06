@@ -25,7 +25,6 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,11 +34,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.eclipse.lsp4j.CodeAction;
-import org.eclipse.lsp4j.CodeActionParams;
-import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
@@ -48,11 +43,11 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Tomas Hurka
  */
-@ServiceProvider(service = CodeActionsProvider.class)
-public class NodePropertiesProvider extends CodeActionsProvider {
+@ServiceProvider(service = CommandProvider.class)
+public class NodePropertiesProvider implements CommandProvider {
     private static final Logger LOG = Logger.getLogger(NodePropertiesProvider.class.getName());
 
-    private static final String COMMAND_PREFIX = "java.";
+    private static final String COMMAND_PREFIX = "nbls.";
     private static final String COMMAND_GET_NODE_PROPERTIES = COMMAND_PREFIX + "node.properties.get";      // NOI18N
     private static final String COMMAND_SET_NODE_PROPERTIES = COMMAND_PREFIX + "node.properties.set";      // NOI18N
 
@@ -76,12 +71,7 @@ public class NodePropertiesProvider extends CodeActionsProvider {
     private final Gson gson = new Gson();
 
     @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+    public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         if (arguments == null || arguments.isEmpty()) {
             return CompletableFuture.completedFuture(null);
         }

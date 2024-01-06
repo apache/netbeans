@@ -1575,20 +1575,38 @@
 					"begin": "\"",
 					"beginCaptures": {
 						"0": {
-							"name": "punctuation.definition.string.begin.java"
+							"name": "punctuation.definition.string.begin.java string.quoted.double.java"
 						}
 					},
 					"end": "\"",
 					"endCaptures": {
 						"0": {
-							"name": "punctuation.definition.string.end.java"
+							"name": "punctuation.definition.string.end.java string.quoted.double.java"
 						}
 					},
-					"name": "string.quoted.double.java",
 					"patterns": [
 						{
+							"begin": "\\\\{",
+							"beginCaptures": {
+								"0": {
+									"name": "punctuation.definition.string.end.java string.quoted.double.java"
+								}
+							},
+							"end": "}",
+							"endCaptures": {
+								"0": {
+									"name": "punctuation.definition.string.begin.java string.quoted.double.java"
+								}
+							},
+							"patterns": [{"include": "#code"}]
+						},
+						{
 							"match": "\\\\.",
-							"name": "constant.character.escape.java"
+							"name": "constant.character.escape.java string.quoted.double.java"
+						},
+						{
+							"match": ".",
+							"name": "string.quoted.double.java"
 						}
 					]
 				},

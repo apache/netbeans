@@ -33,6 +33,8 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;
+import static org.netbeans.modules.csl.api.ElementKind.CLASS;
+import static org.netbeans.modules.csl.api.ElementKind.INTERFACE;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
@@ -122,10 +124,13 @@ public abstract class OverridingMethodsImplTestBase extends ParserTestBase {
     }
 
     private void print(StringBuilder sb, final Map<ElementHandle, Collection<? extends DeclarationFinder.AlternativeLocation>> overriding, boolean isOverriding) {
+        if (sb.length() > 0) {
+            sb.append("\n");
+        }
         if (isOverriding) {
-            sb.append("[Overring]\n\n");
+            sb.append("[Overrides]\n");
         } else {
-            sb.append("[Overridden]\n\n");
+            sb.append("[Overridden]\n");
         }
         Map<String, List<String>> overridingNames = new LinkedHashMap<>();
         overridingNames.put("Constant", new ArrayList<>());
@@ -137,13 +142,30 @@ public abstract class OverridingMethodsImplTestBase extends ParserTestBase {
             Collection<? extends DeclarationFinder.AlternativeLocation> values = entry.getValue();
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(elementHandle.getName()).append(" ");
-            List<String> fileNames = new ArrayList<>();
+            List<String> types = new ArrayList<>();
             for (DeclarationFinder.AlternativeLocation value : values) {
-                fileNames.add(value.getElement().getFileObject().getNameExt());
+                switch (elementHandle.getKind()) {
+                    case CLASS:
+                    case INTERFACE:
+                        types.add(value.getElement().getName());
+                        break;
+                    default:
+                        types.add(value.getElement().getIn());
+                        break;
+                }
             }
-            Collections.sort(fileNames);
-            for (String fileName : fileNames) {
-                stringBuilder.append("(").append(fileName).append(")");
+            switch (elementHandle.getKind()) {
+                case CLASS:
+                case INTERFACE:
+                    // noop
+                    break;
+                default:
+                    stringBuilder.append(": ").append(elementHandle.getIn()).append(" ");
+                    break;
+            }
+            Collections.sort(types);
+            for (String fileName : types) {
+                stringBuilder.append("(").append((isOverriding ? "from " : "by ")).append(fileName).append(")");
             }
             switch (elementHandle.getKind()) {
                 case CONSTANT:

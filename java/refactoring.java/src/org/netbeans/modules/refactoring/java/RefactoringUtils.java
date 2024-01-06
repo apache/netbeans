@@ -55,6 +55,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.ui.OpenProjects;
+import org.netbeans.modules.java.file.launcher.api.SourceLauncher;
 import org.netbeans.modules.refactoring.java.plugins.LocalVarScanner;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.cookies.EditorCookie;
@@ -288,7 +289,7 @@ public class RefactoringUtils {
         }
         Project p = FileOwnerQuery.getOwner(file);
         if (p == null) {
-            return false;
+            return SourceLauncher.isSourceLauncherFile(file);
         }
         return isOpenProject(p);
     }

@@ -692,6 +692,11 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/uniformVariableSyntax_38.php");
     }
 
+    public void testUniformVariableSyntax_39() throws Exception {
+        // Test::{test('foo')}()::{test('bar')}();
+        checkErrors("testfiles/parser/uniformVariableSyntax_39.php");
+    }
+
     public void testCloneExpression_01() throws Exception {
         checkErrors("testfiles/parser/cloneExpression_01.php");
     }
@@ -1315,6 +1320,10 @@ public class PhpParserErrorTest extends PHPTestBase {
         checkErrors("testfiles/parser/php81/enumAsTypeName.php");
     }
 
+    public void testEnumCasesWithError() throws Exception {
+        checkErrors("testfiles/parser/php81/enumCasesWithError.php");
+    }
+
     public void testFirstClassCallableSyntax_01() throws Exception {
         checkErrors("testfiles/parser/php81/firstClassCallableSyntax_01.php");
     }
@@ -1437,5 +1446,14 @@ public class PhpParserErrorTest extends PHPTestBase {
 
     public void testIssueGH5933_01() throws Exception {
         checkErrors("testfiles/parser/issueGH5933_01.php");
+    }
+
+    // PHP 8.3
+    public void testDynamicClassConstantFetch_01() throws Exception {
+        checkErrors("testfiles/parser/php83/dynamicClassConstantFetch_01.php");
+    }
+
+    public void testTypedClassConstants_01() throws Exception {
+        checkErrors("testfiles/parser/php83/typedClassConstants_01.php");
     }
 }

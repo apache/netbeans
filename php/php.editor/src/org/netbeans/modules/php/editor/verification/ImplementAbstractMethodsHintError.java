@@ -192,7 +192,10 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
                             }
                             TypeNameResolver typeNameResolver = TypeNameResolverImpl.forChainOf(typeNameResolvers);
                             String skeleton = methodElement.asString(PrintAs.DeclarationWithEmptyBody, typeNameResolver, phpVersion);
-                            skeleton = skeleton.replace(ABSTRACT_PREFIX, ""); //NOI18N
+                            if (phpVersion.hasOverrideAttribute()) {
+                                skeleton = CodeUtils.OVERRIDE_ATTRIBUTE + CodeUtils.NEW_LINE + skeleton; // PHP 8.3
+                            }
+                            skeleton = skeleton.replace(ABSTRACT_PREFIX, CodeUtils.EMPTY_STRING);
                             methodSkeletons.add(skeleton);
                             lastMethodElement = methodElement;
                         }

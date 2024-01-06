@@ -56,7 +56,7 @@ public class ItemSelector<I extends Item> implements ListSelectionListener {
 
     public ItemSelector(String title) {
         panel = new ItemsPanel();
-        panel.btnAllowDeletes.setVisible(false);
+        panel.btnAllowDestructiveActions.setVisible(false);
         Mnemonics.setLocalizedText(panel.titleLabel, title); 
         panel.list.setCellRenderer(new ItemRenderer());
         attachListeners();
@@ -79,8 +79,8 @@ public class ItemSelector<I extends Item> implements ListSelectionListener {
         DefaultListModel<I> model = new DefaultListModel<>();
         for (I i : branches) {
             model.addElement(i);
-            if (i.isDeletion()) {
-                panel.btnAllowDeletes.setVisible(true);
+            if (i.isDestructive()) {
+                panel.btnAllowDestructiveActions.setVisible(true);
             }
         }
         panel.list.setModel(model);        
@@ -165,7 +165,7 @@ public class ItemSelector<I extends Item> implements ListSelectionListener {
                 selectAll(false);
             }
         });
-        panel.btnAllowDeletes.addActionListener(new ActionListener() {
+        panel.btnAllowDestructiveActions.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -175,7 +175,7 @@ public class ItemSelector<I extends Item> implements ListSelectionListener {
                     int maxItemsCount = panel.list.getModel().getSize();
                     for (int i = 0; i < maxItemsCount; i++) {
                         Item item = (Item) panel.list.getModel().getElementAt(i);
-                        if (item.isDelete) {
+                        if (item.isDestructive()) {
                             fireChange = item.isSelected;
                             item.isSelected = false;
                         }
@@ -183,9 +183,9 @@ public class ItemSelector<I extends Item> implements ListSelectionListener {
                 }
                 panel.list.repaint();
                 if (deletesAllowed) {
-                    Mnemonics.setLocalizedText(panel.btnAllowDeletes, NbBundle.getMessage(ItemsPanel.class, "ItemsPanel.btnDisableDeletes.text")); //NOI18N
+                    Mnemonics.setLocalizedText(panel.btnAllowDestructiveActions, NbBundle.getMessage(ItemsPanel.class, "ItemsPanel.btnDisableDestructiveActions.text")); //NOI18N
                 } else {
-                    Mnemonics.setLocalizedText(panel.btnAllowDeletes, NbBundle.getMessage(ItemsPanel.class, "ItemsPanel.btnAllowDeletes.text")); //NOI18N
+                    Mnemonics.setLocalizedText(panel.btnAllowDestructiveActions, NbBundle.getMessage(ItemsPanel.class, "ItemsPanel.btnAllowDestructiveActions.text")); //NOI18N
                 }
                 if (fireChange) {
                     changeSupport.fireChange();
@@ -224,7 +224,7 @@ public class ItemSelector<I extends Item> implements ListSelectionListener {
     }
     
     private boolean isSelectedStateAllowed (Item item) {
-        return !item.isDelete || deletesAllowed;
+        return !item.isDestructive() || deletesAllowed;
     }
     
     public class ItemRenderer implements ListCellRenderer {
@@ -249,7 +249,7 @@ public class ItemSelector<I extends Item> implements ListSelectionListener {
                 renderer.setText("<html>" + item.getText() + "</html>");
                 renderer.setToolTipText(item.getTooltipText());
                 renderer.setSelected(item.isSelected);
-                renderer.setEnabled(!item.isDelete || deletesAllowed);
+                renderer.setEnabled(!item.isDestructive() || deletesAllowed);
             }
             renderer.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
             return renderer;
@@ -259,18 +259,18 @@ public class ItemSelector<I extends Item> implements ListSelectionListener {
     
     public abstract static class Item implements Comparable<Item> {
         boolean isSelected;
-        private final boolean isDelete;
+        private final boolean isDestructive;
 
-        protected Item (boolean selected, boolean delete) {
+        protected Item (boolean selected, boolean isDestructive) {
             this.isSelected = selected;
-            this.isDelete = delete;
+            this.isDestructive = isDestructive;
         }
         
         public abstract String getText();
         public abstract String getTooltipText();
 
-        public final boolean isDeletion () {
-            return isDelete;
+        public final boolean isDestructive () {
+            return isDestructive;
         }
     }
     

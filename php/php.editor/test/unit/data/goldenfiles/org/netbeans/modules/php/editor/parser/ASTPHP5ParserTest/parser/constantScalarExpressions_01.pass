@@ -288,7 +288,7 @@
                                 <NamespaceName start='102' end='105' isCurrent='false' isGlobal='false'>
                                     <Identifier start='102' end='105' name='ONE'/>
                                 </NamespaceName>
-                                <StaticConstantAccess start='108' end='119'>
+                                <StaticConstantAccess start='108' end='119' isDynamicName='false'>
                                     <NamespaceName start='108' end='112' isCurrent='false' isGlobal='false'>
                                         <Identifier start='108' end='112' name='self'/>
                                     </NamespaceName>
@@ -309,7 +309,7 @@
                         <Initializers>
                             <InfixExpression start='142' end='178' operator='CONCAT'>
                                 <Scalar start='142' end='166' type='STRING' value='&apos;The value of THREE is &apos;'/>
-                                <StaticConstantAccess start='167' end='178'>
+                                <StaticConstantAccess start='167' end='178' isDynamicName='false'>
                                     <NamespaceName start='167' end='171' isCurrent='false' isGlobal='false'>
                                         <Identifier start='167' end='171' name='self'/>
                                     </NamespaceName>
@@ -340,7 +340,7 @@
                                             <NamespaceName start='208' end='211' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='208' end='211' name='ONE'/>
                                             </NamespaceName>
-                                            <StaticConstantAccess start='214' end='225'>
+                                            <StaticConstantAccess start='214' end='225' isDynamicName='false'>
                                                 <NamespaceName start='214' end='218' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='214' end='218' name='self'/>
                                                 </NamespaceName>
@@ -396,7 +396,7 @@
                 </InfixExpression>
             </EchoStatement>
             <EchoStatement start='281' end='298'>
-                <StaticConstantAccess start='286' end='297'>
+                <StaticConstantAccess start='286' end='297' isDynamicName='false'>
                     <NamespaceName start='286' end='287' isCurrent='false' isGlobal='false'>
                         <Identifier start='286' end='287' name='C'/>
                     </NamespaceName>

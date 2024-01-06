@@ -1,0 +1,6 @@
+Code completion result for source line:
+Test::{Test::method()}::{te|st($variable)};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Test                            [PUBLIC]   dynamicClassConstantFetch.php
+METHOD     test()                          [PUBLIC]   dynamicClassConstantFetch.php
+METHOD     test(string $param = "test")    [PUBLIC]   dynamicClassConstantFetch.php

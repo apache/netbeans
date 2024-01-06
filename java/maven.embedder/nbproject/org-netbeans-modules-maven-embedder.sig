@@ -1,12 +1,5 @@
 #Signature file v4.1
-#Version 2.75
-
-CLSS public abstract interface !annotation com.google.common.annotations.Beta
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, CONSTRUCTOR, FIELD, METHOD, TYPE])
-intf java.lang.annotation.Annotation
+#Version 2.77
 
 CLSS public abstract interface !annotation com.google.common.annotations.GwtCompatible
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -24,6 +17,12 @@ CLSS public abstract interface !annotation com.google.common.annotations.GwtInco
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, CONSTRUCTOR, FIELD])
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.String value()
+
+CLSS public abstract interface !annotation com.google.common.annotations.J2ktIncompatible
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, METHOD, CONSTRUCTOR, FIELD])
+intf java.lang.annotation.Annotation
 
 CLSS public final com.google.common.base.Ascii
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -195,8 +194,9 @@ supr java.lang.Object
 hfds DOUBLE_DEFAULT,FLOAT_DEFAULT
 
 CLSS public final com.google.common.base.Enums
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 meth public static <%0 extends java.lang.Enum<{%%0}>> com.google.common.base.Converter<java.lang.String,{%%0}> stringConverter(java.lang.Class<{%%0}>)
+ anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 meth public static <%0 extends java.lang.Enum<{%%0}>> com.google.common.base.Optional<{%%0}> getIfPresent(java.lang.Class<{%%0}>,java.lang.String)
 meth public static java.lang.reflect.Field getField(java.lang.Enum<?>)
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
@@ -210,12 +210,7 @@ supr java.lang.Object
 
 CLSS public final com.google.common.base.Equivalence$Wrapper
 intf java.io.Serializable
-meth public boolean equals(java.lang.Object)
-meth public int hashCode()
-meth public java.lang.Object get()
-meth public java.lang.String toString()
 supr java.lang.Object
-hfds equivalence,reference,serialVersionUID
 
 CLSS public abstract com.google.common.base.FinalizablePhantomReference<%0 extends java.lang.Object>
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
@@ -263,20 +258,14 @@ hfds separator
 CLSS public final static com.google.common.base.Joiner$MapJoiner
  outer com.google.common.base.Joiner
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.lang.Iterable<? extends java.util.Map$Entry<?,?>>) throws java.io.IOException
- anno 0 com.google.common.annotations.Beta()
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.util.Iterator<? extends java.util.Map$Entry<?,?>>) throws java.io.IOException
- anno 0 com.google.common.annotations.Beta()
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.util.Map<?,?>) throws java.io.IOException
 meth public com.google.common.base.Joiner$MapJoiner useForNull(java.lang.String)
 meth public java.lang.String join(java.lang.Iterable<? extends java.util.Map$Entry<?,?>>)
- anno 0 com.google.common.annotations.Beta()
 meth public java.lang.String join(java.util.Iterator<? extends java.util.Map$Entry<?,?>>)
- anno 0 com.google.common.annotations.Beta()
 meth public java.lang.String join(java.util.Map<?,?>)
 meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.lang.Iterable<? extends java.util.Map$Entry<?,?>>)
- anno 0 com.google.common.annotations.Beta()
 meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.util.Iterator<? extends java.util.Map$Entry<?,?>>)
- anno 0 com.google.common.annotations.Beta()
 meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.util.Map<?,?>)
 supr java.lang.Object
 hfds joiner,keyValueSeparator
@@ -327,7 +316,6 @@ meth public abstract java.lang.String toString()
 meth public abstract java.util.Set<{com.google.common.base.Optional%0}> asSet()
 meth public abstract {com.google.common.base.Optional%0} get()
 meth public abstract {com.google.common.base.Optional%0} or(com.google.common.base.Supplier<? extends {com.google.common.base.Optional%0}>)
- anno 0 com.google.common.annotations.Beta()
 meth public abstract {com.google.common.base.Optional%0} or({com.google.common.base.Optional%0})
 meth public abstract {com.google.common.base.Optional%0} orNull()
 meth public java.util.Optional<{com.google.common.base.Optional%0}> toJavaUtil()
@@ -336,7 +324,6 @@ meth public static <%0 extends java.lang.Object> com.google.common.base.Optional
 meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> fromNullable({%%0})
 meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> of({%%0})
 meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> presentInstances(java.lang.Iterable<? extends com.google.common.base.Optional<? extends {%%0}>>)
- anno 0 com.google.common.annotations.Beta()
 meth public static <%0 extends java.lang.Object> java.util.Optional<{%%0}> toJavaUtil(com.google.common.base.Optional<{%%0}>)
 supr java.lang.Object
 hfds serialVersionUID
@@ -361,15 +348,11 @@ meth public com.google.common.base.Splitter omitEmptyStrings()
 meth public com.google.common.base.Splitter trimResults()
 meth public com.google.common.base.Splitter trimResults(com.google.common.base.CharMatcher)
 meth public com.google.common.base.Splitter$MapSplitter withKeyValueSeparator(char)
- anno 0 com.google.common.annotations.Beta()
 meth public com.google.common.base.Splitter$MapSplitter withKeyValueSeparator(com.google.common.base.Splitter)
- anno 0 com.google.common.annotations.Beta()
 meth public com.google.common.base.Splitter$MapSplitter withKeyValueSeparator(java.lang.String)
- anno 0 com.google.common.annotations.Beta()
 meth public java.lang.Iterable<java.lang.String> split(java.lang.CharSequence)
 meth public java.util.List<java.lang.String> splitToList(java.lang.CharSequence)
 meth public java.util.stream.Stream<java.lang.String> splitToStream(java.lang.CharSequence)
- anno 0 com.google.common.annotations.Beta()
 meth public static com.google.common.base.Splitter fixedLength(int)
 meth public static com.google.common.base.Splitter on(char)
 meth public static com.google.common.base.Splitter on(com.google.common.base.CharMatcher)
@@ -384,7 +367,6 @@ hcls SplittingIterator,Strategy
 
 CLSS public final static com.google.common.base.Splitter$MapSplitter
  outer com.google.common.base.Splitter
- anno 0 com.google.common.annotations.Beta()
 meth public java.util.Map<java.lang.String,java.lang.String> split(java.lang.CharSequence)
 supr java.lang.Object
 hfds INVALID_ENTRY_MESSAGE,entrySplitter,outerSplitter
@@ -497,7 +479,6 @@ supr java.lang.Object
 hfds SYSTEM_TICKER
 
 CLSS public final com.google.common.base.Utf8
- anno 0 com.google.common.annotations.Beta()
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
 meth public static boolean isWellFormed(byte[])
 meth public static boolean isWellFormed(byte[],int,int)
@@ -1407,6 +1388,45 @@ CLSS public abstract interface !annotation javax.inject.Singleton
  anno 0 javax.inject.Scope()
 intf java.lang.annotation.Annotation
 
+CLSS public abstract interface javax.xml.namespace.NamespaceContext
+meth public abstract java.lang.String getNamespaceURI(java.lang.String)
+meth public abstract java.lang.String getPrefix(java.lang.String)
+meth public abstract java.util.Iterator getPrefixes(java.lang.String)
+
+CLSS public abstract interface javax.xml.stream.XMLStreamWriter
+meth public abstract java.lang.Object getProperty(java.lang.String)
+meth public abstract java.lang.String getPrefix(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract javax.xml.namespace.NamespaceContext getNamespaceContext()
+meth public abstract void close() throws javax.xml.stream.XMLStreamException
+meth public abstract void flush() throws javax.xml.stream.XMLStreamException
+meth public abstract void setDefaultNamespace(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void setNamespaceContext(javax.xml.namespace.NamespaceContext) throws javax.xml.stream.XMLStreamException
+meth public abstract void setPrefix(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeAttribute(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeAttribute(java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeAttribute(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeCData(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeCharacters(char[],int,int) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeCharacters(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeComment(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeDTD(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeDefaultNamespace(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeEmptyElement(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeEmptyElement(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeEmptyElement(java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeEndDocument() throws javax.xml.stream.XMLStreamException
+meth public abstract void writeEndElement() throws javax.xml.stream.XMLStreamException
+meth public abstract void writeEntityRef(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeNamespace(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeProcessingInstruction(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeProcessingInstruction(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeStartDocument() throws javax.xml.stream.XMLStreamException
+meth public abstract void writeStartDocument(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeStartDocument(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeStartElement(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeStartElement(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public abstract void writeStartElement(java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+
 CLSS public abstract interface !annotation org.apache.http.annotation.Contract
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=CLASS)
@@ -2277,7 +2297,6 @@ hfds merged,metadata
 hcls MetadataRepository
 
 CLSS public org.apache.maven.artifact.repository.metadata.Plugin
- anno 0 java.lang.Deprecated()
 cons public init()
 intf java.io.Serializable
 intf java.lang.Cloneable
@@ -10617,12 +10636,13 @@ fld public final static boolean DEFAULT_IMPLICIT_PRIORITIES = false
 fld public final static boolean DEFAULT_INTERACTIVE = false
 fld public final static boolean DEFAULT_PERSISTED_CHECKSUMS = true
 fld public final static int DEFAULT_CONNECT_TIMEOUT = 10000
-fld public final static int DEFAULT_HTTP_CONNECTION_MAX_TTL = 600
+fld public final static int DEFAULT_HTTP_CONNECTION_MAX_TTL = 300
 fld public final static int DEFAULT_HTTP_MAX_CONNECTIONS_PER_ROUTE = 50
 fld public final static int DEFAULT_HTTP_RETRY_HANDLER_COUNT = 3
 fld public final static int DEFAULT_REQUEST_TIMEOUT = 1800000
 fld public final static java.lang.String CONNECT_TIMEOUT = "aether.connector.connectTimeout"
 fld public final static java.lang.String DEFAULT_HTTP_CREDENTIAL_ENCODING = "ISO-8859-1"
+fld public final static java.lang.String DEFAULT_HTTP_RETRY_HANDLER_SERVICE_UNAVAILABLE = "429,503"
 fld public final static java.lang.String DEFAULT_USER_AGENT = "Aether"
 fld public final static java.lang.String HTTPS_SECURITY_MODE = "aether.connector.https.securityMode"
 fld public final static java.lang.String HTTPS_SECURITY_MODE_DEFAULT = "default"
@@ -10633,6 +10653,9 @@ fld public final static java.lang.String HTTP_HEADERS = "aether.connector.http.h
 fld public final static java.lang.String HTTP_MAX_CONNECTIONS_PER_ROUTE = "aether.connector.http.maxConnectionsPerRoute"
 fld public final static java.lang.String HTTP_PREEMPTIVE_AUTH = "aether.connector.http.preemptiveAuth"
 fld public final static java.lang.String HTTP_RETRY_HANDLER_COUNT = "aether.connector.http.retryHandler.count"
+fld public final static java.lang.String HTTP_RETRY_HANDLER_INTERVAL = "aether.connector.http.retryHandler.interval"
+fld public final static java.lang.String HTTP_RETRY_HANDLER_INTERVAL_MAX = "aether.connector.http.retryHandler.intervalMax"
+fld public final static java.lang.String HTTP_RETRY_HANDLER_SERVICE_UNAVAILABLE = "aether.connector.http.retryHandler.serviceUnavailable"
 fld public final static java.lang.String HTTP_REUSE_CONNECTIONS = "aether.connector.http.reuseConnections"
 fld public final static java.lang.String IMPLICIT_PRIORITIES = "aether.priority.implicit"
 fld public final static java.lang.String INTERACTIVE = "aether.interactive"
@@ -10640,6 +10663,8 @@ fld public final static java.lang.String PERSISTED_CHECKSUMS = "aether.connector
 fld public final static java.lang.String PREFIX_PRIORITY = "aether.priority."
 fld public final static java.lang.String REQUEST_TIMEOUT = "aether.connector.requestTimeout"
 fld public final static java.lang.String USER_AGENT = "aether.connector.userAgent"
+fld public final static long DEFAULT_HTTP_RETRY_HANDLER_INTERVAL = 5000
+fld public final static long DEFAULT_HTTP_RETRY_HANDLER_INTERVAL_MAX = 300000
 supr java.lang.Object
 hfds PREFIX_AETHER,PREFIX_CONNECTOR
 
@@ -11735,130 +11760,209 @@ CLSS public abstract interface !annotation org.eclipse.sisu.bean.IgnoreSetters
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 intf java.lang.annotation.Annotation
 
-CLSS public org.jdom.Attribute
+CLSS public org.jdom2.Attribute
 cons protected init()
 cons public init(java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,int)
-cons public init(java.lang.String,java.lang.String,int,org.jdom.Namespace)
-cons public init(java.lang.String,java.lang.String,org.jdom.Namespace)
-fld protected int type
-fld protected java.lang.Object parent
+ anno 0 java.lang.Deprecated()
+cons public init(java.lang.String,java.lang.String,int,org.jdom2.Namespace)
+ anno 0 java.lang.Deprecated()
+cons public init(java.lang.String,java.lang.String,org.jdom2.AttributeType)
+cons public init(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)
+cons public init(java.lang.String,java.lang.String,org.jdom2.Namespace)
+fld protected boolean specified
 fld protected java.lang.String name
 fld protected java.lang.String value
-fld protected org.jdom.Namespace namespace
-fld public final static int CDATA_TYPE = 1
-fld public final static int ENTITIES_TYPE = 6
-fld public final static int ENTITY_TYPE = 5
-fld public final static int ENUMERATED_TYPE = 10
-fld public final static int IDREFS_TYPE = 4
-fld public final static int IDREF_TYPE = 3
-fld public final static int ID_TYPE = 2
-fld public final static int NMTOKENS_TYPE = 8
-fld public final static int NMTOKEN_TYPE = 7
-fld public final static int NOTATION_TYPE = 9
-fld public final static int UNDECLARED_TYPE = 0
+fld protected org.jdom2.AttributeType type
+fld protected org.jdom2.Element parent
+fld protected org.jdom2.Namespace namespace
+fld public final static org.jdom2.AttributeType CDATA_TYPE
+fld public final static org.jdom2.AttributeType ENTITIES_TYPE
+fld public final static org.jdom2.AttributeType ENTITY_TYPE
+fld public final static org.jdom2.AttributeType ENUMERATED_TYPE
+fld public final static org.jdom2.AttributeType IDREFS_TYPE
+fld public final static org.jdom2.AttributeType IDREF_TYPE
+fld public final static org.jdom2.AttributeType ID_TYPE
+fld public final static org.jdom2.AttributeType NMTOKENS_TYPE
+fld public final static org.jdom2.AttributeType NMTOKEN_TYPE
+fld public final static org.jdom2.AttributeType NOTATION_TYPE
+fld public final static org.jdom2.AttributeType UNDECLARED_TYPE
 intf java.io.Serializable
 intf java.lang.Cloneable
-meth protected org.jdom.Attribute setParent(org.jdom.Element)
-meth public boolean getBooleanValue() throws org.jdom.DataConversionException
-meth public double getDoubleValue() throws org.jdom.DataConversionException
-meth public final boolean equals(java.lang.Object)
-meth public final int hashCode()
-meth public float getFloatValue() throws org.jdom.DataConversionException
-meth public int getAttributeType()
-meth public int getIntValue() throws org.jdom.DataConversionException
-meth public java.lang.Object clone()
+intf org.jdom2.NamespaceAware
+meth protected org.jdom2.Attribute setParent(org.jdom2.Element)
+meth public boolean getBooleanValue() throws org.jdom2.DataConversionException
+meth public boolean isSpecified()
+meth public double getDoubleValue() throws org.jdom2.DataConversionException
+meth public float getFloatValue() throws org.jdom2.DataConversionException
+meth public int getIntValue() throws org.jdom2.DataConversionException
 meth public java.lang.String getName()
 meth public java.lang.String getNamespacePrefix()
 meth public java.lang.String getNamespaceURI()
 meth public java.lang.String getQualifiedName()
 meth public java.lang.String getValue()
 meth public java.lang.String toString()
-meth public long getLongValue() throws org.jdom.DataConversionException
-meth public org.jdom.Attribute detach()
-meth public org.jdom.Attribute setAttributeType(int)
-meth public org.jdom.Attribute setName(java.lang.String)
-meth public org.jdom.Attribute setNamespace(org.jdom.Namespace)
-meth public org.jdom.Attribute setValue(java.lang.String)
-meth public org.jdom.Document getDocument()
-meth public org.jdom.Element getParent()
-meth public org.jdom.Namespace getNamespace()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesInScope()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesInherited()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesIntroduced()
+meth public long getLongValue() throws org.jdom2.DataConversionException
+meth public org.jdom2.Attribute clone()
+meth public org.jdom2.Attribute detach()
+meth public org.jdom2.Attribute setAttributeType(int)
+ anno 0 java.lang.Deprecated()
+meth public org.jdom2.Attribute setAttributeType(org.jdom2.AttributeType)
+meth public org.jdom2.Attribute setName(java.lang.String)
+meth public org.jdom2.Attribute setNamespace(org.jdom2.Namespace)
+meth public org.jdom2.Attribute setValue(java.lang.String)
+meth public org.jdom2.AttributeType getAttributeType()
+meth public org.jdom2.Document getDocument()
+meth public org.jdom2.Element getParent()
+meth public org.jdom2.Namespace getNamespace()
+meth public void setSpecified(boolean)
 supr java.lang.Object
-hfds CVS_ID
+hfds serialVersionUID
 
-CLSS public org.jdom.CDATA
+CLSS public final !enum org.jdom2.AttributeType
+fld public final static org.jdom2.AttributeType CDATA
+fld public final static org.jdom2.AttributeType ENTITIES
+fld public final static org.jdom2.AttributeType ENTITY
+fld public final static org.jdom2.AttributeType ENUMERATION
+fld public final static org.jdom2.AttributeType ID
+fld public final static org.jdom2.AttributeType IDREF
+fld public final static org.jdom2.AttributeType IDREFS
+fld public final static org.jdom2.AttributeType NMTOKEN
+fld public final static org.jdom2.AttributeType NMTOKENS
+fld public final static org.jdom2.AttributeType NOTATION
+fld public final static org.jdom2.AttributeType UNDECLARED
+meth public final static org.jdom2.AttributeType byIndex(int)
+ anno 0 java.lang.Deprecated()
+meth public final static org.jdom2.AttributeType getAttributeType(java.lang.String)
+meth public static org.jdom2.AttributeType valueOf(java.lang.String)
+meth public static org.jdom2.AttributeType[] values()
+supr java.lang.Enum<org.jdom2.AttributeType>
+
+CLSS public org.jdom2.CDATA
 cons protected init()
 cons public init(java.lang.String)
+meth protected org.jdom2.CDATA setParent(org.jdom2.Parent)
 meth public java.lang.String toString()
-meth public org.jdom.Text setText(java.lang.String)
+meth public org.jdom2.CDATA clone()
+meth public org.jdom2.CDATA detach()
+meth public org.jdom2.CDATA setText(java.lang.String)
 meth public void append(java.lang.String)
-supr org.jdom.Text
-hfds CVS_ID
+meth public void append(org.jdom2.Text)
+supr org.jdom2.Text
+hfds serialVersionUID
 
-CLSS public org.jdom.Comment
+CLSS public org.jdom2.Comment
 cons protected init()
 cons public init(java.lang.String)
 fld protected java.lang.String text
+meth protected org.jdom2.Comment setParent(org.jdom2.Parent)
 meth public java.lang.String getText()
 meth public java.lang.String getValue()
 meth public java.lang.String toString()
-meth public org.jdom.Comment setText(java.lang.String)
-supr org.jdom.Content
-hfds CVS_ID
+meth public org.jdom2.Comment clone()
+meth public org.jdom2.Comment detach()
+meth public org.jdom2.Comment setText(java.lang.String)
+supr org.jdom2.Content
+hfds serialVersionUID
 
-CLSS public abstract org.jdom.Content
-cons protected init()
-fld protected org.jdom.Parent parent
+CLSS public abstract org.jdom2.Content
+cons protected init(org.jdom2.Content$CType)
+fld protected final org.jdom2.Content$CType ctype
+fld protected org.jdom2.Parent parent
+innr public final static !enum CType
 intf java.io.Serializable
 intf java.lang.Cloneable
-meth protected org.jdom.Content setParent(org.jdom.Parent)
+intf org.jdom2.NamespaceAware
+meth protected org.jdom2.Content setParent(org.jdom2.Parent)
 meth public abstract java.lang.String getValue()
 meth public final boolean equals(java.lang.Object)
 meth public final int hashCode()
-meth public java.lang.Object clone()
-meth public org.jdom.Content detach()
-meth public org.jdom.Document getDocument()
-meth public org.jdom.Element getParentElement()
-meth public org.jdom.Parent getParent()
+meth public final org.jdom2.Content$CType getCType()
+meth public final org.jdom2.Element getParentElement()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesInScope()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesInherited()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesIntroduced()
+meth public org.jdom2.Content clone()
+meth public org.jdom2.Content detach()
+meth public org.jdom2.Document getDocument()
+meth public org.jdom2.Parent getParent()
 supr java.lang.Object
+hfds serialVersionUID
 
-CLSS public org.jdom.DataConversionException
+CLSS public final static !enum org.jdom2.Content$CType
+ outer org.jdom2.Content
+fld public final static org.jdom2.Content$CType CDATA
+fld public final static org.jdom2.Content$CType Comment
+fld public final static org.jdom2.Content$CType DocType
+fld public final static org.jdom2.Content$CType Element
+fld public final static org.jdom2.Content$CType EntityRef
+fld public final static org.jdom2.Content$CType ProcessingInstruction
+fld public final static org.jdom2.Content$CType Text
+meth public static org.jdom2.Content$CType valueOf(java.lang.String)
+meth public static org.jdom2.Content$CType[] values()
+supr java.lang.Enum<org.jdom2.Content$CType>
+
+CLSS public org.jdom2.DataConversionException
 cons public init(java.lang.String,java.lang.String)
-supr org.jdom.JDOMException
-hfds CVS_ID
+supr org.jdom2.JDOMException
+hfds serialVersionUID
 
-CLSS public org.jdom.DefaultJDOMFactory
+CLSS public org.jdom2.DefaultJDOMFactory
 cons public init()
-intf org.jdom.JDOMFactory
-meth public org.jdom.Attribute attribute(java.lang.String,java.lang.String)
-meth public org.jdom.Attribute attribute(java.lang.String,java.lang.String,int)
-meth public org.jdom.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom.Namespace)
-meth public org.jdom.Attribute attribute(java.lang.String,java.lang.String,org.jdom.Namespace)
-meth public org.jdom.CDATA cdata(java.lang.String)
-meth public org.jdom.Comment comment(java.lang.String)
-meth public org.jdom.DocType docType(java.lang.String)
-meth public org.jdom.DocType docType(java.lang.String,java.lang.String)
-meth public org.jdom.DocType docType(java.lang.String,java.lang.String,java.lang.String)
-meth public org.jdom.Document document(org.jdom.Element)
-meth public org.jdom.Document document(org.jdom.Element,org.jdom.DocType)
-meth public org.jdom.Document document(org.jdom.Element,org.jdom.DocType,java.lang.String)
-meth public org.jdom.Element element(java.lang.String)
-meth public org.jdom.Element element(java.lang.String,java.lang.String)
-meth public org.jdom.Element element(java.lang.String,java.lang.String,java.lang.String)
-meth public org.jdom.Element element(java.lang.String,org.jdom.Namespace)
-meth public org.jdom.EntityRef entityRef(java.lang.String)
-meth public org.jdom.EntityRef entityRef(java.lang.String,java.lang.String)
-meth public org.jdom.EntityRef entityRef(java.lang.String,java.lang.String,java.lang.String)
-meth public org.jdom.ProcessingInstruction processingInstruction(java.lang.String,java.lang.String)
-meth public org.jdom.ProcessingInstruction processingInstruction(java.lang.String,java.util.Map)
-meth public org.jdom.Text text(java.lang.String)
-meth public void addContent(org.jdom.Parent,org.jdom.Content)
-meth public void addNamespaceDeclaration(org.jdom.Element,org.jdom.Namespace)
-meth public void setAttribute(org.jdom.Element,org.jdom.Attribute)
+intf org.jdom2.JDOMFactory
+meth public final org.jdom2.CDATA cdata(java.lang.String)
+meth public final org.jdom2.Comment comment(java.lang.String)
+meth public final org.jdom2.DocType docType(java.lang.String)
+meth public final org.jdom2.DocType docType(java.lang.String,java.lang.String)
+meth public final org.jdom2.DocType docType(java.lang.String,java.lang.String,java.lang.String)
+meth public final org.jdom2.Element element(java.lang.String)
+meth public final org.jdom2.Element element(java.lang.String,java.lang.String)
+meth public final org.jdom2.Element element(java.lang.String,java.lang.String,java.lang.String)
+meth public final org.jdom2.Element element(java.lang.String,org.jdom2.Namespace)
+meth public final org.jdom2.EntityRef entityRef(java.lang.String)
+meth public final org.jdom2.EntityRef entityRef(java.lang.String,java.lang.String)
+meth public final org.jdom2.EntityRef entityRef(java.lang.String,java.lang.String,java.lang.String)
+meth public final org.jdom2.ProcessingInstruction processingInstruction(java.lang.String)
+meth public final org.jdom2.ProcessingInstruction processingInstruction(java.lang.String,java.lang.String)
+meth public final org.jdom2.ProcessingInstruction processingInstruction(java.lang.String,java.util.Map<java.lang.String,java.lang.String>)
+meth public final org.jdom2.Text text(java.lang.String)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int)
+ anno 0 java.lang.Deprecated()
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom2.Namespace)
+ anno 0 java.lang.Deprecated()
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.Namespace)
+meth public org.jdom2.CDATA cdata(int,int,java.lang.String)
+meth public org.jdom2.Comment comment(int,int,java.lang.String)
+meth public org.jdom2.DocType docType(int,int,java.lang.String)
+meth public org.jdom2.DocType docType(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.DocType docType(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public org.jdom2.Document document(org.jdom2.Element)
+meth public org.jdom2.Document document(org.jdom2.Element,org.jdom2.DocType)
+meth public org.jdom2.Document document(org.jdom2.Element,org.jdom2.DocType,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String,org.jdom2.Namespace)
+meth public org.jdom2.EntityRef entityRef(int,int,java.lang.String)
+meth public org.jdom2.EntityRef entityRef(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.EntityRef entityRef(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String)
+meth public org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String,java.util.Map<java.lang.String,java.lang.String>)
+meth public org.jdom2.Text text(int,int,java.lang.String)
+meth public void addContent(org.jdom2.Parent,org.jdom2.Content)
+meth public void addNamespaceDeclaration(org.jdom2.Element,org.jdom2.Namespace)
+meth public void setAttribute(org.jdom2.Element,org.jdom2.Attribute)
+meth public void setRoot(org.jdom2.Document,org.jdom2.Element)
 supr java.lang.Object
-hfds CVS_ID
 
-CLSS public org.jdom.DocType
+CLSS public org.jdom2.DocType
 cons protected init()
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.String)
@@ -11867,99 +11971,115 @@ fld protected java.lang.String elementName
 fld protected java.lang.String internalSubset
 fld protected java.lang.String publicID
 fld protected java.lang.String systemID
+meth protected org.jdom2.DocType setParent(org.jdom2.Parent)
 meth public java.lang.String getElementName()
 meth public java.lang.String getInternalSubset()
 meth public java.lang.String getPublicID()
 meth public java.lang.String getSystemID()
 meth public java.lang.String getValue()
 meth public java.lang.String toString()
-meth public org.jdom.DocType setElementName(java.lang.String)
-meth public org.jdom.DocType setPublicID(java.lang.String)
-meth public org.jdom.DocType setSystemID(java.lang.String)
+meth public org.jdom2.DocType clone()
+meth public org.jdom2.DocType detach()
+meth public org.jdom2.DocType setElementName(java.lang.String)
+meth public org.jdom2.DocType setPublicID(java.lang.String)
+meth public org.jdom2.DocType setSystemID(java.lang.String)
+meth public org.jdom2.Document getParent()
 meth public void setInternalSubset(java.lang.String)
-supr org.jdom.Content
-hfds CVS_ID
+supr org.jdom2.Content
+hfds serialVersionUID
 
-CLSS public org.jdom.Document
+CLSS public org.jdom2.Document
 cons public init()
-cons public init(java.util.List)
-cons public init(org.jdom.Element)
-cons public init(org.jdom.Element,org.jdom.DocType)
-cons public init(org.jdom.Element,org.jdom.DocType,java.lang.String)
+cons public init(java.util.List<? extends org.jdom2.Content>)
+cons public init(org.jdom2.Element)
+cons public init(org.jdom2.Element,org.jdom2.DocType)
+cons public init(org.jdom2.Element,org.jdom2.DocType,java.lang.String)
 fld protected java.lang.String baseURI
-intf org.jdom.Parent
+intf java.lang.Cloneable
+intf org.jdom2.Parent
+meth public <%0 extends org.jdom2.Content> java.util.List<{%%0}> getContent(org.jdom2.filter.Filter<{%%0}>)
+meth public <%0 extends org.jdom2.Content> java.util.List<{%%0}> removeContent(org.jdom2.filter.Filter<{%%0}>)
+meth public <%0 extends org.jdom2.Content> org.jdom2.util.IteratorIterable<{%%0}> getDescendants(org.jdom2.filter.Filter<{%%0}>)
 meth public boolean hasRootElement()
-meth public boolean removeContent(org.jdom.Content)
+meth public boolean removeContent(org.jdom2.Content)
 meth public final boolean equals(java.lang.Object)
 meth public final int hashCode()
 meth public final java.lang.String getBaseURI()
 meth public final void setBaseURI(java.lang.String)
 meth public int getContentSize()
-meth public int indexOf(org.jdom.Content)
-meth public java.lang.Object clone()
+meth public int indexOf(org.jdom2.Content)
 meth public java.lang.Object getProperty(java.lang.String)
 meth public java.lang.String toString()
-meth public java.util.Iterator getDescendants()
-meth public java.util.Iterator getDescendants(org.jdom.filter.Filter)
-meth public java.util.List cloneContent()
-meth public java.util.List getContent()
-meth public java.util.List getContent(org.jdom.filter.Filter)
-meth public java.util.List removeContent()
-meth public java.util.List removeContent(org.jdom.filter.Filter)
-meth public org.jdom.Content getContent(int)
-meth public org.jdom.Content removeContent(int)
-meth public org.jdom.DocType getDocType()
-meth public org.jdom.Document addContent(int,java.util.Collection)
-meth public org.jdom.Document addContent(int,org.jdom.Content)
-meth public org.jdom.Document addContent(java.util.Collection)
-meth public org.jdom.Document addContent(org.jdom.Content)
-meth public org.jdom.Document getDocument()
-meth public org.jdom.Document setContent(int,java.util.Collection)
-meth public org.jdom.Document setContent(int,org.jdom.Content)
-meth public org.jdom.Document setContent(java.util.Collection)
-meth public org.jdom.Document setContent(org.jdom.Content)
-meth public org.jdom.Document setDocType(org.jdom.DocType)
-meth public org.jdom.Document setRootElement(org.jdom.Element)
-meth public org.jdom.Element detachRootElement()
-meth public org.jdom.Element getRootElement()
-meth public org.jdom.Parent getParent()
+meth public java.util.List<org.jdom2.Content> cloneContent()
+meth public java.util.List<org.jdom2.Content> getContent()
+meth public java.util.List<org.jdom2.Content> removeContent()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesInScope()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesInherited()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesIntroduced()
+meth public org.jdom2.Content getContent(int)
+meth public org.jdom2.Content removeContent(int)
+meth public org.jdom2.DocType getDocType()
+meth public org.jdom2.Document addContent(int,java.util.Collection<? extends org.jdom2.Content>)
+meth public org.jdom2.Document addContent(int,org.jdom2.Content)
+meth public org.jdom2.Document addContent(java.util.Collection<? extends org.jdom2.Content>)
+meth public org.jdom2.Document addContent(org.jdom2.Content)
+meth public org.jdom2.Document clone()
+meth public org.jdom2.Document getDocument()
+meth public org.jdom2.Document setContent(int,java.util.Collection<? extends org.jdom2.Content>)
+meth public org.jdom2.Document setContent(int,org.jdom2.Content)
+meth public org.jdom2.Document setContent(java.util.Collection<? extends org.jdom2.Content>)
+meth public org.jdom2.Document setContent(org.jdom2.Content)
+meth public org.jdom2.Document setDocType(org.jdom2.DocType)
+meth public org.jdom2.Document setRootElement(org.jdom2.Element)
+meth public org.jdom2.Element detachRootElement()
+meth public org.jdom2.Element getRootElement()
+meth public org.jdom2.Parent getParent()
+meth public org.jdom2.util.IteratorIterable<org.jdom2.Content> getDescendants()
+meth public void canContainContent(org.jdom2.Content,int,boolean)
 meth public void setProperty(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds CVS_ID,content,propertyMap
+hfds content,propertyMap,serialVersionUID
 
-CLSS public org.jdom.Element
+CLSS public org.jdom2.Element
 cons protected init()
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.lang.String)
-cons public init(java.lang.String,org.jdom.Namespace)
+cons public init(java.lang.String,org.jdom2.Namespace)
 fld protected java.lang.String name
-fld protected java.util.List additionalNamespaces
-fld protected org.jdom.Namespace namespace
-intf org.jdom.Parent
-meth public boolean isAncestor(org.jdom.Element)
+fld protected org.jdom2.Namespace namespace
+intf org.jdom2.Parent
+meth public <%0 extends org.jdom2.Content> java.util.List<{%%0}> getContent(org.jdom2.filter.Filter<{%%0}>)
+meth public <%0 extends org.jdom2.Content> java.util.List<{%%0}> removeContent(org.jdom2.filter.Filter<{%%0}>)
+meth public <%0 extends org.jdom2.Content> org.jdom2.util.IteratorIterable<{%%0}> getDescendants(org.jdom2.filter.Filter<{%%0}>)
+meth public <%0 extends org.jdom2.Content> void sortContent(org.jdom2.filter.Filter<{%%0}>,java.util.Comparator<? super {%%0}>)
+meth public boolean addNamespaceDeclaration(org.jdom2.Namespace)
+meth public boolean coalesceText(boolean)
+meth public boolean hasAdditionalNamespaces()
+meth public boolean hasAttributes()
+meth public boolean isAncestor(org.jdom2.Element)
 meth public boolean isRootElement()
 meth public boolean removeAttribute(java.lang.String)
-meth public boolean removeAttribute(java.lang.String,org.jdom.Namespace)
-meth public boolean removeAttribute(org.jdom.Attribute)
+meth public boolean removeAttribute(java.lang.String,org.jdom2.Namespace)
+meth public boolean removeAttribute(org.jdom2.Attribute)
 meth public boolean removeChild(java.lang.String)
-meth public boolean removeChild(java.lang.String,org.jdom.Namespace)
+meth public boolean removeChild(java.lang.String,org.jdom2.Namespace)
 meth public boolean removeChildren(java.lang.String)
-meth public boolean removeChildren(java.lang.String,org.jdom.Namespace)
-meth public boolean removeContent(org.jdom.Content)
+meth public boolean removeChildren(java.lang.String,org.jdom2.Namespace)
+meth public boolean removeContent(org.jdom2.Content)
+meth public int getAttributesSize()
 meth public int getContentSize()
-meth public int indexOf(org.jdom.Content)
-meth public java.lang.Object clone()
+meth public int indexOf(org.jdom2.Content)
 meth public java.lang.String getAttributeValue(java.lang.String)
 meth public java.lang.String getAttributeValue(java.lang.String,java.lang.String)
-meth public java.lang.String getAttributeValue(java.lang.String,org.jdom.Namespace)
-meth public java.lang.String getAttributeValue(java.lang.String,org.jdom.Namespace,java.lang.String)
+meth public java.lang.String getAttributeValue(java.lang.String,org.jdom2.Namespace)
+meth public java.lang.String getAttributeValue(java.lang.String,org.jdom2.Namespace,java.lang.String)
 meth public java.lang.String getChildText(java.lang.String)
-meth public java.lang.String getChildText(java.lang.String,org.jdom.Namespace)
+meth public java.lang.String getChildText(java.lang.String,org.jdom2.Namespace)
 meth public java.lang.String getChildTextNormalize(java.lang.String)
-meth public java.lang.String getChildTextNormalize(java.lang.String,org.jdom.Namespace)
+meth public java.lang.String getChildTextNormalize(java.lang.String,org.jdom2.Namespace)
 meth public java.lang.String getChildTextTrim(java.lang.String)
-meth public java.lang.String getChildTextTrim(java.lang.String,org.jdom.Namespace)
+meth public java.lang.String getChildTextTrim(java.lang.String,org.jdom2.Namespace)
 meth public java.lang.String getName()
 meth public java.lang.String getNamespacePrefix()
 meth public java.lang.String getNamespaceURI()
@@ -11969,48 +12089,54 @@ meth public java.lang.String getTextNormalize()
 meth public java.lang.String getTextTrim()
 meth public java.lang.String getValue()
 meth public java.lang.String toString()
-meth public java.util.Iterator getDescendants()
-meth public java.util.Iterator getDescendants(org.jdom.filter.Filter)
-meth public java.util.List cloneContent()
-meth public java.util.List getAdditionalNamespaces()
-meth public java.util.List getAttributes()
-meth public java.util.List getChildren()
-meth public java.util.List getChildren(java.lang.String)
-meth public java.util.List getChildren(java.lang.String,org.jdom.Namespace)
-meth public java.util.List getContent()
-meth public java.util.List getContent(org.jdom.filter.Filter)
-meth public java.util.List removeContent()
-meth public java.util.List removeContent(org.jdom.filter.Filter)
-meth public org.jdom.Attribute getAttribute(java.lang.String)
-meth public org.jdom.Attribute getAttribute(java.lang.String,org.jdom.Namespace)
-meth public org.jdom.Content getContent(int)
-meth public org.jdom.Content removeContent(int)
-meth public org.jdom.Element addContent(int,java.util.Collection)
-meth public org.jdom.Element addContent(int,org.jdom.Content)
-meth public org.jdom.Element addContent(java.lang.String)
-meth public org.jdom.Element addContent(java.util.Collection)
-meth public org.jdom.Element addContent(org.jdom.Content)
-meth public org.jdom.Element getChild(java.lang.String)
-meth public org.jdom.Element getChild(java.lang.String,org.jdom.Namespace)
-meth public org.jdom.Element setAttribute(java.lang.String,java.lang.String)
-meth public org.jdom.Element setAttribute(java.lang.String,java.lang.String,org.jdom.Namespace)
-meth public org.jdom.Element setAttribute(org.jdom.Attribute)
-meth public org.jdom.Element setAttributes(java.util.List)
-meth public org.jdom.Element setContent(int,org.jdom.Content)
-meth public org.jdom.Element setContent(java.util.Collection)
-meth public org.jdom.Element setContent(org.jdom.Content)
-meth public org.jdom.Element setName(java.lang.String)
-meth public org.jdom.Element setNamespace(org.jdom.Namespace)
-meth public org.jdom.Element setText(java.lang.String)
-meth public org.jdom.Namespace getNamespace()
-meth public org.jdom.Namespace getNamespace(java.lang.String)
-meth public org.jdom.Parent setContent(int,java.util.Collection)
-meth public void addNamespaceDeclaration(org.jdom.Namespace)
-meth public void removeNamespaceDeclaration(org.jdom.Namespace)
-supr org.jdom.Content
-hfds CVS_ID,INITIAL_ARRAY_SIZE,attributes,content
+meth public java.net.URI getXMLBaseURI() throws java.net.URISyntaxException
+meth public java.util.List<org.jdom2.Attribute> getAttributes()
+meth public java.util.List<org.jdom2.Content> cloneContent()
+meth public java.util.List<org.jdom2.Content> getContent()
+meth public java.util.List<org.jdom2.Content> removeContent()
+meth public java.util.List<org.jdom2.Element> getChildren()
+meth public java.util.List<org.jdom2.Element> getChildren(java.lang.String)
+meth public java.util.List<org.jdom2.Element> getChildren(java.lang.String,org.jdom2.Namespace)
+meth public java.util.List<org.jdom2.Namespace> getAdditionalNamespaces()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesInScope()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesInherited()
+meth public java.util.List<org.jdom2.Namespace> getNamespacesIntroduced()
+meth public org.jdom2.Attribute getAttribute(java.lang.String)
+meth public org.jdom2.Attribute getAttribute(java.lang.String,org.jdom2.Namespace)
+meth public org.jdom2.Content getContent(int)
+meth public org.jdom2.Content removeContent(int)
+meth public org.jdom2.Element addContent(int,java.util.Collection<? extends org.jdom2.Content>)
+meth public org.jdom2.Element addContent(int,org.jdom2.Content)
+meth public org.jdom2.Element addContent(java.lang.String)
+meth public org.jdom2.Element addContent(java.util.Collection<? extends org.jdom2.Content>)
+meth public org.jdom2.Element addContent(org.jdom2.Content)
+meth public org.jdom2.Element clone()
+meth public org.jdom2.Element detach()
+meth public org.jdom2.Element getChild(java.lang.String)
+meth public org.jdom2.Element getChild(java.lang.String,org.jdom2.Namespace)
+meth public org.jdom2.Element setAttribute(java.lang.String,java.lang.String)
+meth public org.jdom2.Element setAttribute(java.lang.String,java.lang.String,org.jdom2.Namespace)
+meth public org.jdom2.Element setAttribute(org.jdom2.Attribute)
+meth public org.jdom2.Element setAttributes(java.util.Collection<? extends org.jdom2.Attribute>)
+meth public org.jdom2.Element setContent(int,org.jdom2.Content)
+meth public org.jdom2.Element setContent(java.util.Collection<? extends org.jdom2.Content>)
+meth public org.jdom2.Element setContent(org.jdom2.Content)
+meth public org.jdom2.Element setName(java.lang.String)
+meth public org.jdom2.Element setNamespace(org.jdom2.Namespace)
+meth public org.jdom2.Element setText(java.lang.String)
+meth public org.jdom2.Namespace getNamespace()
+meth public org.jdom2.Namespace getNamespace(java.lang.String)
+meth public org.jdom2.Parent setContent(int,java.util.Collection<? extends org.jdom2.Content>)
+meth public org.jdom2.util.IteratorIterable<org.jdom2.Content> getDescendants()
+meth public void canContainContent(org.jdom2.Content,int,boolean)
+meth public void removeNamespaceDeclaration(org.jdom2.Namespace)
+meth public void sortAttributes(java.util.Comparator<? super org.jdom2.Attribute>)
+meth public void sortChildren(java.util.Comparator<? super org.jdom2.Element>)
+meth public void sortContent(java.util.Comparator<? super org.jdom2.Content>)
+supr org.jdom2.Content
+hfds INITIAL_ARRAY_SIZE,additionalNamespaces,attributes,content,serialVersionUID
 
-CLSS public org.jdom.EntityRef
+CLSS public org.jdom2.EntityRef
 cons protected init()
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.String)
@@ -12018,180 +12144,280 @@ cons public init(java.lang.String,java.lang.String,java.lang.String)
 fld protected java.lang.String name
 fld protected java.lang.String publicID
 fld protected java.lang.String systemID
+meth protected org.jdom2.EntityRef setParent(org.jdom2.Parent)
 meth public java.lang.String getName()
 meth public java.lang.String getPublicID()
 meth public java.lang.String getSystemID()
 meth public java.lang.String getValue()
 meth public java.lang.String toString()
-meth public org.jdom.EntityRef setName(java.lang.String)
-meth public org.jdom.EntityRef setPublicID(java.lang.String)
-meth public org.jdom.EntityRef setSystemID(java.lang.String)
-supr org.jdom.Content
-hfds CVS_ID
+meth public org.jdom2.Element getParent()
+meth public org.jdom2.EntityRef clone()
+meth public org.jdom2.EntityRef detach()
+meth public org.jdom2.EntityRef setName(java.lang.String)
+meth public org.jdom2.EntityRef setPublicID(java.lang.String)
+meth public org.jdom2.EntityRef setSystemID(java.lang.String)
+supr org.jdom2.Content
+hfds serialVersionUID
 
-CLSS public org.jdom.IllegalAddException
+CLSS public org.jdom2.IllegalAddException
 cons public init(java.lang.String)
 supr java.lang.IllegalArgumentException
-hfds CVS_ID
+hfds serialVersionUID
 
-CLSS public org.jdom.IllegalDataException
+CLSS public org.jdom2.IllegalDataException
 cons public init(java.lang.String)
 supr java.lang.IllegalArgumentException
-hfds CVS_ID
+hfds serialVersionUID
 
-CLSS public org.jdom.IllegalNameException
+CLSS public org.jdom2.IllegalNameException
 cons public init(java.lang.String)
 supr java.lang.IllegalArgumentException
-hfds CVS_ID
+hfds serialVersionUID
 
-CLSS public org.jdom.IllegalTargetException
+CLSS public org.jdom2.IllegalTargetException
 cons public init(java.lang.String)
 supr java.lang.IllegalArgumentException
-hfds CVS_ID
+hfds serialVersionUID
 
-CLSS public org.jdom.JDOMException
+CLSS public final org.jdom2.JDOMConstants
+fld public final static java.lang.String JDOM2_FEATURE_JDOMRESULT = "http://jdom.org/jdom2/transform/JDOMResult/feature"
+fld public final static java.lang.String JDOM2_FEATURE_JDOMSOURCE = "http://jdom.org/jdom2/transform/JDOMSource/feature"
+fld public final static java.lang.String JDOM2_PROPERTY_LINE_SEPARATOR = "org.jdom2.output.LineSeparator"
+fld public final static java.lang.String JDOM2_PROPERTY_XPATH_FACTORY = "org.jdom2.xpath.XPathFactory"
+fld public final static java.lang.String NS_PREFIX_DEFAULT = ""
+fld public final static java.lang.String NS_PREFIX_XML = "xml"
+fld public final static java.lang.String NS_PREFIX_XMLNS = "xmlns"
+fld public final static java.lang.String NS_URI_DEFAULT = ""
+fld public final static java.lang.String NS_URI_XML = "http://www.w3.org/XML/1998/namespace"
+fld public final static java.lang.String NS_URI_XMLNS = "http://www.w3.org/2000/xmlns/"
+fld public final static java.lang.String SAX_FEATURE_EXTERNAL_ENT = "http://xml.org/sax/features/external-general-entities"
+fld public final static java.lang.String SAX_FEATURE_NAMESPACES = "http://xml.org/sax/features/namespaces"
+fld public final static java.lang.String SAX_FEATURE_NAMESPACE_PREFIXES = "http://xml.org/sax/features/namespace-prefixes"
+fld public final static java.lang.String SAX_FEATURE_VALIDATION = "http://xml.org/sax/features/validation"
+fld public final static java.lang.String SAX_PROPERTY_DECLARATION_HANDLER = "http://xml.org/sax/properties/declaration-handler"
+fld public final static java.lang.String SAX_PROPERTY_DECLARATION_HANDLER_ALT = "http://xml.org/sax/handlers/DeclHandler"
+fld public final static java.lang.String SAX_PROPERTY_LEXICAL_HANDLER = "http://xml.org/sax/properties/lexical-handler"
+fld public final static java.lang.String SAX_PROPERTY_LEXICAL_HANDLER_ALT = "http://xml.org/sax/handlers/LexicalHandler"
+supr java.lang.Object
+
+CLSS public org.jdom2.JDOMException
 cons public init()
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
-meth public java.lang.String getMessage()
-meth public java.lang.Throwable getCause()
-meth public java.lang.Throwable initCause(java.lang.Throwable)
-meth public void printStackTrace()
-meth public void printStackTrace(java.io.PrintStream)
-meth public void printStackTrace(java.io.PrintWriter)
 supr java.lang.Exception
-hfds CVS_ID,cause
+hfds serialVersionUID
 
-CLSS public abstract interface org.jdom.JDOMFactory
-meth public abstract org.jdom.Attribute attribute(java.lang.String,java.lang.String)
-meth public abstract org.jdom.Attribute attribute(java.lang.String,java.lang.String,int)
-meth public abstract org.jdom.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom.Namespace)
-meth public abstract org.jdom.Attribute attribute(java.lang.String,java.lang.String,org.jdom.Namespace)
-meth public abstract org.jdom.CDATA cdata(java.lang.String)
-meth public abstract org.jdom.Comment comment(java.lang.String)
-meth public abstract org.jdom.DocType docType(java.lang.String)
-meth public abstract org.jdom.DocType docType(java.lang.String,java.lang.String)
-meth public abstract org.jdom.DocType docType(java.lang.String,java.lang.String,java.lang.String)
-meth public abstract org.jdom.Document document(org.jdom.Element)
-meth public abstract org.jdom.Document document(org.jdom.Element,org.jdom.DocType)
-meth public abstract org.jdom.Document document(org.jdom.Element,org.jdom.DocType,java.lang.String)
-meth public abstract org.jdom.Element element(java.lang.String)
-meth public abstract org.jdom.Element element(java.lang.String,java.lang.String)
-meth public abstract org.jdom.Element element(java.lang.String,java.lang.String,java.lang.String)
-meth public abstract org.jdom.Element element(java.lang.String,org.jdom.Namespace)
-meth public abstract org.jdom.EntityRef entityRef(java.lang.String)
-meth public abstract org.jdom.EntityRef entityRef(java.lang.String,java.lang.String)
-meth public abstract org.jdom.EntityRef entityRef(java.lang.String,java.lang.String,java.lang.String)
-meth public abstract org.jdom.ProcessingInstruction processingInstruction(java.lang.String,java.lang.String)
-meth public abstract org.jdom.ProcessingInstruction processingInstruction(java.lang.String,java.util.Map)
-meth public abstract org.jdom.Text text(java.lang.String)
-meth public abstract void addContent(org.jdom.Parent,org.jdom.Content)
-meth public abstract void addNamespaceDeclaration(org.jdom.Element,org.jdom.Namespace)
-meth public abstract void setAttribute(org.jdom.Element,org.jdom.Attribute)
+CLSS public abstract interface org.jdom2.JDOMFactory
+meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String)
+meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int)
+ anno 0 java.lang.Deprecated()
+meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom2.Namespace)
+ anno 0 java.lang.Deprecated()
+meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType)
+meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)
+meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.Namespace)
+meth public abstract org.jdom2.CDATA cdata(int,int,java.lang.String)
+meth public abstract org.jdom2.CDATA cdata(java.lang.String)
+meth public abstract org.jdom2.Comment comment(int,int,java.lang.String)
+meth public abstract org.jdom2.Comment comment(java.lang.String)
+meth public abstract org.jdom2.DocType docType(int,int,java.lang.String)
+meth public abstract org.jdom2.DocType docType(int,int,java.lang.String,java.lang.String)
+meth public abstract org.jdom2.DocType docType(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public abstract org.jdom2.DocType docType(java.lang.String)
+meth public abstract org.jdom2.DocType docType(java.lang.String,java.lang.String)
+meth public abstract org.jdom2.DocType docType(java.lang.String,java.lang.String,java.lang.String)
+meth public abstract org.jdom2.Document document(org.jdom2.Element)
+meth public abstract org.jdom2.Document document(org.jdom2.Element,org.jdom2.DocType)
+meth public abstract org.jdom2.Document document(org.jdom2.Element,org.jdom2.DocType,java.lang.String)
+meth public abstract org.jdom2.Element element(int,int,java.lang.String)
+meth public abstract org.jdom2.Element element(int,int,java.lang.String,java.lang.String)
+meth public abstract org.jdom2.Element element(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public abstract org.jdom2.Element element(int,int,java.lang.String,org.jdom2.Namespace)
+meth public abstract org.jdom2.Element element(java.lang.String)
+meth public abstract org.jdom2.Element element(java.lang.String,java.lang.String)
+meth public abstract org.jdom2.Element element(java.lang.String,java.lang.String,java.lang.String)
+meth public abstract org.jdom2.Element element(java.lang.String,org.jdom2.Namespace)
+meth public abstract org.jdom2.EntityRef entityRef(int,int,java.lang.String)
+meth public abstract org.jdom2.EntityRef entityRef(int,int,java.lang.String,java.lang.String)
+meth public abstract org.jdom2.EntityRef entityRef(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public abstract org.jdom2.EntityRef entityRef(java.lang.String)
+meth public abstract org.jdom2.EntityRef entityRef(java.lang.String,java.lang.String)
+meth public abstract org.jdom2.EntityRef entityRef(java.lang.String,java.lang.String,java.lang.String)
+meth public abstract org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String)
+meth public abstract org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String,java.lang.String)
+meth public abstract org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String,java.util.Map<java.lang.String,java.lang.String>)
+meth public abstract org.jdom2.ProcessingInstruction processingInstruction(java.lang.String)
+meth public abstract org.jdom2.ProcessingInstruction processingInstruction(java.lang.String,java.lang.String)
+meth public abstract org.jdom2.ProcessingInstruction processingInstruction(java.lang.String,java.util.Map<java.lang.String,java.lang.String>)
+meth public abstract org.jdom2.Text text(int,int,java.lang.String)
+meth public abstract org.jdom2.Text text(java.lang.String)
+meth public abstract void addContent(org.jdom2.Parent,org.jdom2.Content)
+meth public abstract void addNamespaceDeclaration(org.jdom2.Element,org.jdom2.Namespace)
+meth public abstract void setAttribute(org.jdom2.Element,org.jdom2.Attribute)
+meth public abstract void setRoot(org.jdom2.Document,org.jdom2.Element)
 
-CLSS public final org.jdom.Namespace
-fld public final static org.jdom.Namespace NO_NAMESPACE
-fld public final static org.jdom.Namespace XML_NAMESPACE
+CLSS public final org.jdom2.Namespace
+fld public final static org.jdom2.Namespace NO_NAMESPACE
+fld public final static org.jdom2.Namespace XML_NAMESPACE
+intf java.io.Serializable
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public java.lang.String getPrefix()
 meth public java.lang.String getURI()
 meth public java.lang.String toString()
-meth public static org.jdom.Namespace getNamespace(java.lang.String)
-meth public static org.jdom.Namespace getNamespace(java.lang.String,java.lang.String)
+meth public static org.jdom2.Namespace getNamespace(java.lang.String)
+meth public static org.jdom2.Namespace getNamespace(java.lang.String,java.lang.String)
 supr java.lang.Object
-hfds CVS_ID,namespaces,prefix,uri
+hfds XMLNS_NAMESPACE,namespacemap,prefix,serialVersionUID,uri
+hcls NamespaceSerializationProxy
 
-CLSS public abstract interface org.jdom.Parent
+CLSS public abstract interface org.jdom2.NamespaceAware
+meth public abstract java.util.List<org.jdom2.Namespace> getNamespacesInScope()
+meth public abstract java.util.List<org.jdom2.Namespace> getNamespacesInherited()
+meth public abstract java.util.List<org.jdom2.Namespace> getNamespacesIntroduced()
+
+CLSS public abstract interface org.jdom2.Parent
 intf java.io.Serializable
 intf java.lang.Cloneable
-meth public abstract boolean removeContent(org.jdom.Content)
+intf org.jdom2.NamespaceAware
+meth public abstract <%0 extends org.jdom2.Content> java.util.List<{%%0}> getContent(org.jdom2.filter.Filter<{%%0}>)
+meth public abstract <%0 extends org.jdom2.Content> java.util.List<{%%0}> removeContent(org.jdom2.filter.Filter<{%%0}>)
+meth public abstract <%0 extends org.jdom2.Content> org.jdom2.util.IteratorIterable<{%%0}> getDescendants(org.jdom2.filter.Filter<{%%0}>)
+meth public abstract boolean removeContent(org.jdom2.Content)
 meth public abstract int getContentSize()
-meth public abstract int indexOf(org.jdom.Content)
+meth public abstract int indexOf(org.jdom2.Content)
 meth public abstract java.lang.Object clone()
-meth public abstract java.util.Iterator getDescendants()
-meth public abstract java.util.Iterator getDescendants(org.jdom.filter.Filter)
-meth public abstract java.util.List cloneContent()
-meth public abstract java.util.List getContent()
-meth public abstract java.util.List getContent(org.jdom.filter.Filter)
-meth public abstract java.util.List removeContent()
-meth public abstract java.util.List removeContent(org.jdom.filter.Filter)
-meth public abstract org.jdom.Content getContent(int)
-meth public abstract org.jdom.Content removeContent(int)
-meth public abstract org.jdom.Document getDocument()
-meth public abstract org.jdom.Parent getParent()
+meth public abstract java.util.List<org.jdom2.Content> cloneContent()
+meth public abstract java.util.List<org.jdom2.Content> getContent()
+meth public abstract java.util.List<org.jdom2.Content> removeContent()
+meth public abstract org.jdom2.Content getContent(int)
+meth public abstract org.jdom2.Content removeContent(int)
+meth public abstract org.jdom2.Document getDocument()
+meth public abstract org.jdom2.Parent addContent(int,java.util.Collection<? extends org.jdom2.Content>)
+meth public abstract org.jdom2.Parent addContent(int,org.jdom2.Content)
+meth public abstract org.jdom2.Parent addContent(java.util.Collection<? extends org.jdom2.Content>)
+meth public abstract org.jdom2.Parent addContent(org.jdom2.Content)
+meth public abstract org.jdom2.Parent getParent()
+meth public abstract org.jdom2.util.IteratorIterable<org.jdom2.Content> getDescendants()
+meth public abstract void canContainContent(org.jdom2.Content,int,boolean)
 
-CLSS public org.jdom.ProcessingInstruction
+CLSS public org.jdom2.ProcessingInstruction
 cons protected init()
+cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.String)
-cons public init(java.lang.String,java.util.Map)
+cons public init(java.lang.String,java.util.Map<java.lang.String,java.lang.String>)
 fld protected java.lang.String rawData
 fld protected java.lang.String target
-fld protected java.util.Map mapData
+fld protected java.util.Map<java.lang.String,java.lang.String> mapData
+meth protected org.jdom2.ProcessingInstruction setParent(org.jdom2.Parent)
 meth public boolean removePseudoAttribute(java.lang.String)
-meth public java.lang.Object clone()
 meth public java.lang.String getData()
 meth public java.lang.String getPseudoAttributeValue(java.lang.String)
 meth public java.lang.String getTarget()
 meth public java.lang.String getValue()
 meth public java.lang.String toString()
-meth public java.util.List getPseudoAttributeNames()
-meth public org.jdom.ProcessingInstruction setData(java.lang.String)
-meth public org.jdom.ProcessingInstruction setData(java.util.Map)
-meth public org.jdom.ProcessingInstruction setPseudoAttribute(java.lang.String,java.lang.String)
-meth public org.jdom.ProcessingInstruction setTarget(java.lang.String)
-supr org.jdom.Content
-hfds CVS_ID
+meth public java.util.List<java.lang.String> getPseudoAttributeNames()
+meth public org.jdom2.ProcessingInstruction clone()
+meth public org.jdom2.ProcessingInstruction detach()
+meth public org.jdom2.ProcessingInstruction setData(java.lang.String)
+meth public org.jdom2.ProcessingInstruction setData(java.util.Map<java.lang.String,java.lang.String>)
+meth public org.jdom2.ProcessingInstruction setPseudoAttribute(java.lang.String,java.lang.String)
+meth public org.jdom2.ProcessingInstruction setTarget(java.lang.String)
+supr org.jdom2.Content
+hfds serialVersionUID
 
-CLSS public org.jdom.Text
+CLSS public org.jdom2.SlimJDOMFactory
+cons public init()
+cons public init(boolean)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int)
+ anno 0 java.lang.Deprecated()
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom2.Namespace)
+ anno 0 java.lang.Deprecated()
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.Namespace)
+meth public org.jdom2.CDATA cdata(int,int,java.lang.String)
+meth public org.jdom2.Comment comment(int,int,java.lang.String)
+meth public org.jdom2.DocType docType(int,int,java.lang.String)
+meth public org.jdom2.DocType docType(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.DocType docType(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String,org.jdom2.Namespace)
+meth public org.jdom2.EntityRef entityRef(int,int,java.lang.String)
+meth public org.jdom2.EntityRef entityRef(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.EntityRef entityRef(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String)
+meth public org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String,java.util.Map<java.lang.String,java.lang.String>)
+meth public org.jdom2.Text text(int,int,java.lang.String)
+meth public void clearCache()
+supr org.jdom2.DefaultJDOMFactory
+hfds cache,cachetext
+
+CLSS public org.jdom2.Text
 cons protected init()
+cons protected init(org.jdom2.Content$CType)
 cons public init(java.lang.String)
 fld protected java.lang.String value
-meth public java.lang.Object clone()
+meth protected org.jdom2.Text setParent(org.jdom2.Parent)
 meth public java.lang.String getText()
 meth public java.lang.String getTextNormalize()
 meth public java.lang.String getTextTrim()
 meth public java.lang.String getValue()
 meth public java.lang.String toString()
-meth public org.jdom.Text setText(java.lang.String)
+meth public org.jdom2.Element getParent()
+meth public org.jdom2.Text clone()
+meth public org.jdom2.Text detach()
+meth public org.jdom2.Text setText(java.lang.String)
 meth public static java.lang.String normalizeString(java.lang.String)
 meth public void append(java.lang.String)
-meth public void append(org.jdom.Text)
-supr org.jdom.Content
-hfds CVS_ID,EMPTY_STRING
+meth public void append(org.jdom2.Text)
+supr org.jdom2.Content
+hfds EMPTY_STRING,serialVersionUID
 
-CLSS public org.jdom.UncheckedJDOMFactory
+CLSS public org.jdom2.UncheckedJDOMFactory
 cons public init()
-intf org.jdom.JDOMFactory
-meth public org.jdom.Attribute attribute(java.lang.String,java.lang.String)
-meth public org.jdom.Attribute attribute(java.lang.String,java.lang.String,int)
-meth public org.jdom.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom.Namespace)
-meth public org.jdom.Attribute attribute(java.lang.String,java.lang.String,org.jdom.Namespace)
-meth public org.jdom.CDATA cdata(java.lang.String)
-meth public org.jdom.Comment comment(java.lang.String)
-meth public org.jdom.DocType docType(java.lang.String)
-meth public org.jdom.DocType docType(java.lang.String,java.lang.String)
-meth public org.jdom.DocType docType(java.lang.String,java.lang.String,java.lang.String)
-meth public org.jdom.Document document(org.jdom.Element)
-meth public org.jdom.Document document(org.jdom.Element,org.jdom.DocType)
-meth public org.jdom.Document document(org.jdom.Element,org.jdom.DocType,java.lang.String)
-meth public org.jdom.Element element(java.lang.String)
-meth public org.jdom.Element element(java.lang.String,java.lang.String)
-meth public org.jdom.Element element(java.lang.String,java.lang.String,java.lang.String)
-meth public org.jdom.Element element(java.lang.String,org.jdom.Namespace)
-meth public org.jdom.EntityRef entityRef(java.lang.String)
-meth public org.jdom.EntityRef entityRef(java.lang.String,java.lang.String)
-meth public org.jdom.EntityRef entityRef(java.lang.String,java.lang.String,java.lang.String)
-meth public org.jdom.ProcessingInstruction processingInstruction(java.lang.String,java.lang.String)
-meth public org.jdom.ProcessingInstruction processingInstruction(java.lang.String,java.util.Map)
-meth public org.jdom.Text text(java.lang.String)
-meth public void addContent(org.jdom.Parent,org.jdom.Content)
-meth public void addNamespaceDeclaration(org.jdom.Element,org.jdom.Namespace)
-meth public void setAttribute(org.jdom.Element,org.jdom.Attribute)
-supr java.lang.Object
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int)
+ anno 0 java.lang.Deprecated()
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom2.Namespace)
+ anno 0 java.lang.Deprecated()
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)
+meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.Namespace)
+meth public org.jdom2.CDATA cdata(int,int,java.lang.String)
+meth public org.jdom2.Comment comment(int,int,java.lang.String)
+meth public org.jdom2.DocType docType(int,int,java.lang.String)
+meth public org.jdom2.DocType docType(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.DocType docType(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public org.jdom2.Document document(org.jdom2.Element)
+meth public org.jdom2.Document document(org.jdom2.Element,org.jdom2.DocType)
+meth public org.jdom2.Document document(org.jdom2.Element,org.jdom2.DocType,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public org.jdom2.Element element(int,int,java.lang.String,org.jdom2.Namespace)
+meth public org.jdom2.EntityRef entityRef(int,int,java.lang.String)
+meth public org.jdom2.EntityRef entityRef(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.EntityRef entityRef(int,int,java.lang.String,java.lang.String,java.lang.String)
+meth public org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String)
+meth public org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String,java.lang.String)
+meth public org.jdom2.ProcessingInstruction processingInstruction(int,int,java.lang.String,java.util.Map<java.lang.String,java.lang.String>)
+meth public org.jdom2.Text text(int,int,java.lang.String)
+meth public void addContent(org.jdom2.Parent,org.jdom2.Content)
+meth public void addNamespaceDeclaration(org.jdom2.Element,org.jdom2.Namespace)
+meth public void setAttribute(org.jdom2.Element,org.jdom2.Attribute)
+meth public void setRoot(org.jdom2.Document,org.jdom2.Element)
+supr org.jdom2.DefaultJDOMFactory
 
-CLSS public final org.jdom.Verifier
+CLSS public final org.jdom2.Verifier
+meth public final static boolean isAllXMLWhitespace(java.lang.String)
 meth public static boolean isHexDigit(char)
+meth public static boolean isHighSurrogate(char)
+meth public static boolean isLowSurrogate(char)
 meth public static boolean isURICharacter(char)
 meth public static boolean isXMLCharacter(int)
 meth public static boolean isXMLCombiningChar(char)
@@ -12202,16 +12428,21 @@ meth public static boolean isXMLLetterOrDigit(char)
 meth public static boolean isXMLNameCharacter(char)
 meth public static boolean isXMLNameStartCharacter(char)
 meth public static boolean isXMLPublicIDCharacter(char)
+meth public static boolean isXMLWhitespace(char)
+meth public static int decodeSurrogatePair(char,char)
 meth public static java.lang.String checkAttributeName(java.lang.String)
 meth public static java.lang.String checkCDATASection(java.lang.String)
 meth public static java.lang.String checkCharacterData(java.lang.String)
 meth public static java.lang.String checkCommentData(java.lang.String)
 meth public static java.lang.String checkElementName(java.lang.String)
-meth public static java.lang.String checkNamespaceCollision(org.jdom.Attribute,org.jdom.Element)
-meth public static java.lang.String checkNamespaceCollision(org.jdom.Namespace,java.util.List)
-meth public static java.lang.String checkNamespaceCollision(org.jdom.Namespace,org.jdom.Attribute)
-meth public static java.lang.String checkNamespaceCollision(org.jdom.Namespace,org.jdom.Element)
-meth public static java.lang.String checkNamespaceCollision(org.jdom.Namespace,org.jdom.Namespace)
+meth public static java.lang.String checkNamespaceCollision(org.jdom2.Attribute,org.jdom2.Element)
+meth public static java.lang.String checkNamespaceCollision(org.jdom2.Attribute,org.jdom2.Element,int)
+meth public static java.lang.String checkNamespaceCollision(org.jdom2.Namespace,java.util.List<?>)
+meth public static java.lang.String checkNamespaceCollision(org.jdom2.Namespace,java.util.List<?>,int)
+meth public static java.lang.String checkNamespaceCollision(org.jdom2.Namespace,org.jdom2.Attribute)
+meth public static java.lang.String checkNamespaceCollision(org.jdom2.Namespace,org.jdom2.Element)
+meth public static java.lang.String checkNamespaceCollision(org.jdom2.Namespace,org.jdom2.Element,int)
+meth public static java.lang.String checkNamespaceCollision(org.jdom2.Namespace,org.jdom2.Namespace)
 meth public static java.lang.String checkNamespacePrefix(java.lang.String)
 meth public static java.lang.String checkNamespaceURI(java.lang.String)
 meth public static java.lang.String checkProcessingInstructionData(java.lang.String)
@@ -12221,19 +12452,32 @@ meth public static java.lang.String checkSystemLiteral(java.lang.String)
 meth public static java.lang.String checkURI(java.lang.String)
 meth public static java.lang.String checkXMLName(java.lang.String)
 supr java.lang.Object
-hfds CVS_ID
+hfds CHARCNT,CHARFLAGS,LENCONST,MASKURICHAR,MASKXMLCHARACTER,MASKXMLCOMBINING,MASKXMLDIGIT,MASKXMLLETTER,MASKXMLLETTERORDIGIT,MASKXMLNAMECHAR,MASKXMLSTARTCHAR,VALCONST
 
-CLSS public abstract org.jdom.filter.AbstractFilter
+CLSS public abstract org.jdom2.filter.AbstractFilter<%0 extends java.lang.Object>
 cons public init()
-intf org.jdom.filter.Filter
-meth public abstract boolean matches(java.lang.Object)
-meth public org.jdom.filter.Filter and(org.jdom.filter.Filter)
-meth public org.jdom.filter.Filter negate()
-meth public org.jdom.filter.Filter or(org.jdom.filter.Filter)
+intf org.jdom2.filter.Filter<{org.jdom2.filter.AbstractFilter%0}>
+meth public <%0 extends java.lang.Object> org.jdom2.filter.Filter<{%%0}> refine(org.jdom2.filter.Filter<{%%0}>)
+meth public final boolean matches(java.lang.Object)
+meth public final org.jdom2.filter.Filter<? extends org.jdom2.Content> or(org.jdom2.filter.Filter<?>)
+meth public final org.jdom2.filter.Filter<?> negate()
+meth public final org.jdom2.filter.Filter<{org.jdom2.filter.AbstractFilter%0}> and(org.jdom2.filter.Filter<?>)
+meth public java.util.List<{org.jdom2.filter.AbstractFilter%0}> filter(java.util.List<?>)
 supr java.lang.Object
-hfds CVS_ID
+hfds serialVersionUID
 
-CLSS public org.jdom.filter.ContentFilter
+CLSS public org.jdom2.filter.AttributeFilter
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,org.jdom2.Namespace)
+cons public init(org.jdom2.Namespace)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public org.jdom2.Attribute filter(java.lang.Object)
+supr org.jdom2.filter.AbstractFilter<org.jdom2.Attribute>
+hfds name,namespace,serialVersionUID
+
+CLSS public org.jdom2.filter.ContentFilter
 cons public init()
 cons public init(boolean)
 cons public init(int)
@@ -12246,9 +12490,9 @@ fld public final static int ENTITYREF = 32
 fld public final static int PI = 16
 fld public final static int TEXT = 4
 meth public boolean equals(java.lang.Object)
-meth public boolean matches(java.lang.Object)
 meth public int getFilterMask()
 meth public int hashCode()
+meth public org.jdom2.Content filter(java.lang.Object)
 meth public void setCDATAVisible(boolean)
 meth public void setCommentVisible(boolean)
 meth public void setDefaultMask()
@@ -12260,77 +12504,119 @@ meth public void setEntityRefVisible(boolean)
 meth public void setFilterMask(int)
 meth public void setPIVisible(boolean)
 meth public void setTextVisible(boolean)
-supr org.jdom.filter.AbstractFilter
-hfds CVS_ID,filterMask
+supr org.jdom2.filter.AbstractFilter<org.jdom2.Content>
+hfds filterMask,serialVersionUID
 
-CLSS public org.jdom.filter.ElementFilter
+CLSS public org.jdom2.filter.ElementFilter
 cons public init()
 cons public init(java.lang.String)
-cons public init(java.lang.String,org.jdom.Namespace)
-cons public init(org.jdom.Namespace)
+cons public init(java.lang.String,org.jdom2.Namespace)
+cons public init(org.jdom2.Namespace)
 meth public boolean equals(java.lang.Object)
-meth public boolean matches(java.lang.Object)
 meth public int hashCode()
-supr org.jdom.filter.AbstractFilter
-hfds CVS_ID,name,namespace
+meth public java.lang.String toString()
+meth public org.jdom2.Element filter(java.lang.Object)
+supr org.jdom2.filter.AbstractFilter<org.jdom2.Element>
+hfds name,namespace,serialVersionUID
 
-CLSS public abstract interface org.jdom.filter.Filter
+CLSS public abstract interface org.jdom2.filter.Filter<%0 extends java.lang.Object>
 intf java.io.Serializable
+meth public abstract <%0 extends java.lang.Object> org.jdom2.filter.Filter<{%%0}> refine(org.jdom2.filter.Filter<{%%0}>)
 meth public abstract boolean matches(java.lang.Object)
+meth public abstract java.util.List<{org.jdom2.filter.Filter%0}> filter(java.util.List<?>)
+meth public abstract org.jdom2.filter.Filter<?> negate()
+meth public abstract org.jdom2.filter.Filter<?> or(org.jdom2.filter.Filter<?>)
+meth public abstract org.jdom2.filter.Filter<{org.jdom2.filter.Filter%0}> and(org.jdom2.filter.Filter<?>)
+meth public abstract {org.jdom2.filter.Filter%0} filter(java.lang.Object)
 
-CLSS public org.jdom.input.BuilderErrorHandler
-cons public init()
-intf org.xml.sax.ErrorHandler
-meth public void error(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
-meth public void fatalError(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
-meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+CLSS public final org.jdom2.filter.Filters
+meth public final static <%0 extends java.lang.Object> org.jdom2.filter.Filter<{%%0}> fclass(java.lang.Class<{%%0}>)
+meth public final static org.jdom2.filter.Filter<java.lang.Boolean> fboolean()
+meth public final static org.jdom2.filter.Filter<java.lang.Double> fdouble()
+meth public final static org.jdom2.filter.Filter<java.lang.Object> fpassthrough()
+meth public final static org.jdom2.filter.Filter<java.lang.String> fstring()
+meth public final static org.jdom2.filter.Filter<org.jdom2.Attribute> attribute()
+meth public final static org.jdom2.filter.Filter<org.jdom2.Attribute> attribute(java.lang.String)
+meth public final static org.jdom2.filter.Filter<org.jdom2.Attribute> attribute(java.lang.String,org.jdom2.Namespace)
+meth public final static org.jdom2.filter.Filter<org.jdom2.Attribute> attribute(org.jdom2.Namespace)
+meth public final static org.jdom2.filter.Filter<org.jdom2.CDATA> cdata()
+meth public final static org.jdom2.filter.Filter<org.jdom2.Comment> comment()
+meth public final static org.jdom2.filter.Filter<org.jdom2.Content> content()
+meth public final static org.jdom2.filter.Filter<org.jdom2.DocType> doctype()
+meth public final static org.jdom2.filter.Filter<org.jdom2.Document> document()
+meth public final static org.jdom2.filter.Filter<org.jdom2.Element> element()
+meth public final static org.jdom2.filter.Filter<org.jdom2.Element> element(java.lang.String)
+meth public final static org.jdom2.filter.Filter<org.jdom2.Element> element(java.lang.String,org.jdom2.Namespace)
+meth public final static org.jdom2.filter.Filter<org.jdom2.Element> element(org.jdom2.Namespace)
+meth public final static org.jdom2.filter.Filter<org.jdom2.EntityRef> entityref()
+meth public final static org.jdom2.filter.Filter<org.jdom2.ProcessingInstruction> processinginstruction()
+meth public final static org.jdom2.filter.Filter<org.jdom2.Text> text()
+meth public final static org.jdom2.filter.Filter<org.jdom2.Text> textOnly()
 supr java.lang.Object
-hfds CVS_ID
+hfds fattribute,fboolean,fcdata,fcomment,fcontent,fdoctype,fdocument,fdouble,felement,fentityref,fpassthrough,fpi,fstring,ftext,ftextonly
 
-CLSS public org.jdom.input.DOMBuilder
+CLSS public org.jdom2.input.DOMBuilder
 cons public init()
-cons public init(java.lang.String)
-meth public org.jdom.Document build(org.w3c.dom.Document)
-meth public org.jdom.Element build(org.w3c.dom.Element)
-meth public org.jdom.JDOMFactory getFactory()
-meth public void setFactory(org.jdom.JDOMFactory)
+meth public org.jdom2.CDATA build(org.w3c.dom.CDATASection)
+meth public org.jdom2.Comment build(org.w3c.dom.Comment)
+meth public org.jdom2.DocType build(org.w3c.dom.DocumentType)
+meth public org.jdom2.Document build(org.w3c.dom.Document)
+meth public org.jdom2.Element build(org.w3c.dom.Element)
+meth public org.jdom2.EntityRef build(org.w3c.dom.EntityReference)
+meth public org.jdom2.JDOMFactory getFactory()
+meth public org.jdom2.ProcessingInstruction build(org.w3c.dom.ProcessingInstruction)
+meth public org.jdom2.Text build(org.w3c.dom.Text)
+meth public void setFactory(org.jdom2.JDOMFactory)
 supr java.lang.Object
-hfds CVS_ID,adapterClass,factory
+hfds factory
 
-CLSS public org.jdom.input.JDOMParseException
+CLSS public org.jdom2.input.JDOMParseException
 cons public init(java.lang.String,java.lang.Throwable)
-cons public init(java.lang.String,java.lang.Throwable,org.jdom.Document)
+cons public init(java.lang.String,java.lang.Throwable,org.jdom2.Document)
 meth public int getColumnNumber()
 meth public int getLineNumber()
 meth public java.lang.String getPublicId()
 meth public java.lang.String getSystemId()
-meth public org.jdom.Document getPartialDocument()
-supr org.jdom.JDOMException
-hfds CVS_ID,partialDocument
+meth public org.jdom2.Document getPartialDocument()
+supr org.jdom2.JDOMException
+hfds partialDocument,serialVersionUID
 
-CLSS public org.jdom.input.SAXBuilder
+CLSS public org.jdom2.input.SAXBuilder
 cons public init()
 cons public init(boolean)
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String)
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,boolean)
-meth protected org.jdom.input.SAXHandler createContentHandler()
-meth protected org.xml.sax.XMLReader createParser() throws org.jdom.JDOMException
-meth protected void configureContentHandler(org.jdom.input.SAXHandler)
-meth protected void configureParser(org.xml.sax.XMLReader,org.jdom.input.SAXHandler) throws org.jdom.JDOMException
+ anno 0 java.lang.Deprecated()
+cons public init(org.jdom2.input.sax.XMLReaderJDOMFactory)
+cons public init(org.jdom2.input.sax.XMLReaderJDOMFactory,org.jdom2.input.sax.SAXHandlerFactory,org.jdom2.JDOMFactory)
+intf org.jdom2.input.sax.SAXEngine
+meth protected org.xml.sax.XMLReader createParser() throws org.jdom2.JDOMException
+meth protected void configureParser(org.xml.sax.XMLReader,org.jdom2.input.sax.SAXHandler) throws org.jdom2.JDOMException
 meth public boolean getExpandEntities()
+meth public boolean getIgnoringBoundaryWhitespace()
 meth public boolean getIgnoringElementContentWhitespace()
 meth public boolean getReuseParser()
 meth public boolean getValidation()
+ anno 0 java.lang.Deprecated()
+meth public boolean isValidating()
 meth public java.lang.String getDriverClass()
-meth public org.jdom.Document build(java.io.File) throws java.io.IOException,org.jdom.JDOMException
-meth public org.jdom.Document build(java.io.InputStream) throws java.io.IOException,org.jdom.JDOMException
-meth public org.jdom.Document build(java.io.InputStream,java.lang.String) throws java.io.IOException,org.jdom.JDOMException
-meth public org.jdom.Document build(java.io.Reader) throws java.io.IOException,org.jdom.JDOMException
-meth public org.jdom.Document build(java.io.Reader,java.lang.String) throws java.io.IOException,org.jdom.JDOMException
-meth public org.jdom.Document build(java.lang.String) throws java.io.IOException,org.jdom.JDOMException
-meth public org.jdom.Document build(java.net.URL) throws java.io.IOException,org.jdom.JDOMException
-meth public org.jdom.Document build(org.xml.sax.InputSource) throws java.io.IOException,org.jdom.JDOMException
-meth public org.jdom.JDOMFactory getFactory()
+ anno 0 java.lang.Deprecated()
+meth public org.jdom2.Document build(java.io.File) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.io.InputStream) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.io.InputStream,java.lang.String) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.io.Reader) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.io.Reader,java.lang.String) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.lang.String) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.net.URL) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(org.xml.sax.InputSource) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.JDOMFactory getFactory()
+ anno 0 java.lang.Deprecated()
+meth public org.jdom2.JDOMFactory getJDOMFactory()
+meth public org.jdom2.input.sax.SAXEngine buildEngine() throws org.jdom2.JDOMException
+meth public org.jdom2.input.sax.SAXHandlerFactory getSAXHandlerFactory()
+meth public org.jdom2.input.sax.XMLReaderJDOMFactory getXMLReaderFactory()
 meth public org.xml.sax.DTDHandler getDTDHandler()
 meth public org.xml.sax.EntityResolver getEntityResolver()
 meth public org.xml.sax.ErrorHandler getErrorHandler()
@@ -12339,212 +12625,566 @@ meth public void setDTDHandler(org.xml.sax.DTDHandler)
 meth public void setEntityResolver(org.xml.sax.EntityResolver)
 meth public void setErrorHandler(org.xml.sax.ErrorHandler)
 meth public void setExpandEntities(boolean)
-meth public void setFactory(org.jdom.JDOMFactory)
+meth public void setFactory(org.jdom2.JDOMFactory)
+ anno 0 java.lang.Deprecated()
+meth public void setFastReconfigure(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setFeature(java.lang.String,boolean)
+meth public void setIgnoringBoundaryWhitespace(boolean)
 meth public void setIgnoringElementContentWhitespace(boolean)
+meth public void setJDOMFactory(org.jdom2.JDOMFactory)
 meth public void setProperty(java.lang.String,java.lang.Object)
 meth public void setReuseParser(boolean)
+meth public void setSAXHandlerFactory(org.jdom2.input.sax.SAXHandlerFactory)
 meth public void setValidation(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setXMLFilter(org.xml.sax.XMLFilter)
+meth public void setXMLReaderFactory(org.jdom2.input.sax.XMLReaderJDOMFactory)
 supr java.lang.Object
-hfds CVS_ID,DEFAULT_SAX_DRIVER,class$java$util$Map,expand,factory,features,ignoringWhite,properties,reuseParser,saxDTDHandler,saxDriverClass,saxEntityResolver,saxErrorHandler,saxParser,saxXMLFilter,validate
+hfds DEFAULTJDOMFAC,DEFAULTSAXHANDLERFAC,engine,features,handlerfac,ignoringBoundaryWhite,ignoringWhite,jdomfac,properties,readerfac,reuseParser,saxDTDHandler,saxEntityResolver,saxErrorHandler,saxXMLFilter
 
-CLSS public org.jdom.input.SAXHandler
+CLSS public org.jdom2.input.StAXEventBuilder
 cons public init()
-cons public init(org.jdom.JDOMFactory)
+meth public org.jdom2.Document build(javax.xml.stream.XMLEventReader) throws org.jdom2.JDOMException
+meth public org.jdom2.JDOMFactory getFactory()
+meth public void setFactory(org.jdom2.JDOMFactory)
+supr java.lang.Object
+hfds factory
+
+CLSS public org.jdom2.input.StAXStreamBuilder
+cons public init()
+meth public java.util.List<org.jdom2.Content> buildFragments(javax.xml.stream.XMLStreamReader,org.jdom2.input.stax.StAXFilter) throws org.jdom2.JDOMException
+meth public org.jdom2.Content fragment(javax.xml.stream.XMLStreamReader) throws org.jdom2.JDOMException
+meth public org.jdom2.Document build(javax.xml.stream.XMLStreamReader) throws org.jdom2.JDOMException
+meth public org.jdom2.JDOMFactory getFactory()
+meth public void setFactory(org.jdom2.JDOMFactory)
+supr java.lang.Object
+hfds builderfactory
+
+CLSS public org.jdom2.input.StAXStreamWriter
+cons public init()
+cons public init(org.jdom2.JDOMFactory,boolean)
+intf javax.xml.stream.XMLStreamWriter
+meth public java.lang.Object getProperty(java.lang.String)
+meth public java.lang.String getPrefix(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public javax.xml.namespace.NamespaceContext getNamespaceContext()
+meth public org.jdom2.Document getDocument()
+meth public void close() throws javax.xml.stream.XMLStreamException
+meth public void flush() throws javax.xml.stream.XMLStreamException
+meth public void setDefaultNamespace(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void setNamespaceContext(javax.xml.namespace.NamespaceContext) throws javax.xml.stream.XMLStreamException
+meth public void setPrefix(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeAttribute(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeAttribute(java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeAttribute(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeCData(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeCharacters(char[],int,int) throws javax.xml.stream.XMLStreamException
+meth public void writeCharacters(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeComment(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeDTD(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeDefaultNamespace(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeEmptyElement(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeEmptyElement(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeEmptyElement(java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeEndDocument() throws javax.xml.stream.XMLStreamException
+meth public void writeEndElement() throws javax.xml.stream.XMLStreamException
+meth public void writeEntityRef(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeNamespace(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeProcessingInstruction(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeProcessingInstruction(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeStartDocument() throws javax.xml.stream.XMLStreamException
+meth public void writeStartDocument(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeStartDocument(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeStartElement(java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeStartElement(java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+meth public void writeStartElement(java.lang.String,java.lang.String,java.lang.String) throws javax.xml.stream.XMLStreamException
+supr java.lang.Object
+hfds DEFFAC,activeelement,activetext,boundstack,document,done,factory,genprefix,globalcontext,isempty,parent,pendingns,repairnamespace,usednsstack
+
+CLSS public abstract org.jdom2.input.sax.AbstractReaderSchemaFactory
+cons public init(javax.xml.parsers.SAXParserFactory,javax.xml.validation.Schema)
+intf org.jdom2.input.sax.XMLReaderJDOMFactory
+meth public boolean isValidating()
+meth public org.xml.sax.XMLReader createXMLReader() throws org.jdom2.JDOMException
+supr java.lang.Object
+hfds saxfac
+
+CLSS public org.jdom2.input.sax.AbstractReaderXSDFactory
+cons public !varargs init(javax.xml.parsers.SAXParserFactory,org.jdom2.input.sax.AbstractReaderXSDFactory$SchemaFactoryProvider,java.io.File[]) throws org.jdom2.JDOMException
+cons public !varargs init(javax.xml.parsers.SAXParserFactory,org.jdom2.input.sax.AbstractReaderXSDFactory$SchemaFactoryProvider,java.lang.String[]) throws org.jdom2.JDOMException
+cons public !varargs init(javax.xml.parsers.SAXParserFactory,org.jdom2.input.sax.AbstractReaderXSDFactory$SchemaFactoryProvider,java.net.URL[]) throws org.jdom2.JDOMException
+cons public !varargs init(javax.xml.parsers.SAXParserFactory,org.jdom2.input.sax.AbstractReaderXSDFactory$SchemaFactoryProvider,javax.xml.transform.Source[]) throws org.jdom2.JDOMException
+innr protected abstract interface static SchemaFactoryProvider
+supr org.jdom2.input.sax.AbstractReaderSchemaFactory
+
+CLSS protected abstract interface static org.jdom2.input.sax.AbstractReaderXSDFactory$SchemaFactoryProvider
+ outer org.jdom2.input.sax.AbstractReaderXSDFactory
+meth public abstract javax.xml.validation.SchemaFactory getSchemaFactory()
+
+CLSS public org.jdom2.input.sax.BuilderErrorHandler
+cons public init()
+intf org.xml.sax.ErrorHandler
+meth public void error(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+meth public void fatalError(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
+supr java.lang.Object
+
+CLSS public final org.jdom2.input.sax.DefaultSAXHandlerFactory
+cons public init()
+intf org.jdom2.input.sax.SAXHandlerFactory
+meth public org.jdom2.input.sax.SAXHandler createSAXHandler(org.jdom2.JDOMFactory)
+supr java.lang.Object
+hcls DefaultSAXHandler
+
+CLSS public org.jdom2.input.sax.SAXBuilderEngine
+cons public init(org.xml.sax.XMLReader,org.jdom2.input.sax.SAXHandler,boolean)
+intf org.jdom2.input.sax.SAXEngine
+meth public boolean getExpandEntities()
+meth public boolean getIgnoringBoundaryWhitespace()
+meth public boolean getIgnoringElementContentWhitespace()
+meth public boolean isValidating()
+meth public org.jdom2.Document build(java.io.File) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.io.InputStream) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.io.InputStream,java.lang.String) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.io.Reader) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.io.Reader,java.lang.String) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.lang.String) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(java.net.URL) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.Document build(org.xml.sax.InputSource) throws java.io.IOException,org.jdom2.JDOMException
+meth public org.jdom2.JDOMFactory getJDOMFactory()
+meth public org.xml.sax.DTDHandler getDTDHandler()
+meth public org.xml.sax.EntityResolver getEntityResolver()
+meth public org.xml.sax.ErrorHandler getErrorHandler()
+supr java.lang.Object
+hfds saxHandler,saxParser,validating
+
+CLSS public abstract interface org.jdom2.input.sax.SAXEngine
+meth public abstract boolean getExpandEntities()
+meth public abstract boolean getIgnoringBoundaryWhitespace()
+meth public abstract boolean getIgnoringElementContentWhitespace()
+meth public abstract boolean isValidating()
+meth public abstract org.jdom2.Document build(java.io.File) throws java.io.IOException,org.jdom2.JDOMException
+meth public abstract org.jdom2.Document build(java.io.InputStream) throws java.io.IOException,org.jdom2.JDOMException
+meth public abstract org.jdom2.Document build(java.io.InputStream,java.lang.String) throws java.io.IOException,org.jdom2.JDOMException
+meth public abstract org.jdom2.Document build(java.io.Reader) throws java.io.IOException,org.jdom2.JDOMException
+meth public abstract org.jdom2.Document build(java.io.Reader,java.lang.String) throws java.io.IOException,org.jdom2.JDOMException
+meth public abstract org.jdom2.Document build(java.lang.String) throws java.io.IOException,org.jdom2.JDOMException
+meth public abstract org.jdom2.Document build(java.net.URL) throws java.io.IOException,org.jdom2.JDOMException
+meth public abstract org.jdom2.Document build(org.xml.sax.InputSource) throws java.io.IOException,org.jdom2.JDOMException
+meth public abstract org.jdom2.JDOMFactory getJDOMFactory()
+meth public abstract org.xml.sax.DTDHandler getDTDHandler()
+meth public abstract org.xml.sax.EntityResolver getEntityResolver()
+meth public abstract org.xml.sax.ErrorHandler getErrorHandler()
+
+CLSS public org.jdom2.input.sax.SAXHandler
+cons public init()
+cons public init(org.jdom2.JDOMFactory)
 intf org.xml.sax.DTDHandler
 intf org.xml.sax.ext.DeclHandler
 intf org.xml.sax.ext.LexicalHandler
 meth protected void flushCharacters() throws org.xml.sax.SAXException
 meth protected void flushCharacters(java.lang.String) throws org.xml.sax.SAXException
-meth protected void pushElement(org.jdom.Element)
+meth protected void pushElement(org.jdom2.Element)
+meth protected void resetSubCLass()
 meth public boolean getExpandEntities()
+meth public boolean getIgnoringBoundaryWhitespace()
 meth public boolean getIgnoringElementContentWhitespace()
-meth public org.jdom.Document getDocument()
-meth public org.jdom.Element getCurrentElement() throws org.xml.sax.SAXException
-meth public org.jdom.JDOMFactory getFactory()
+meth public final void reset()
+meth public org.jdom2.Document getDocument()
+meth public org.jdom2.Element getCurrentElement() throws org.xml.sax.SAXException
+meth public org.jdom2.JDOMFactory getFactory()
 meth public org.xml.sax.Locator getDocumentLocator()
-meth public void attributeDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void attributeDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 meth public void characters(char[],int,int) throws org.xml.sax.SAXException
 meth public void comment(char[],int,int) throws org.xml.sax.SAXException
-meth public void elementDecl(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void elementDecl(java.lang.String,java.lang.String)
 meth public void endCDATA() throws org.xml.sax.SAXException
-meth public void endDTD() throws org.xml.sax.SAXException
+meth public void endDTD()
 meth public void endElement(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void endEntity(java.lang.String) throws org.xml.sax.SAXException
 meth public void externalEntityDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void ignorableWhitespace(char[],int,int) throws org.xml.sax.SAXException
-meth public void internalEntityDecl(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void internalEntityDecl(java.lang.String,java.lang.String)
 meth public void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void processingInstruction(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void setDocumentLocator(org.xml.sax.Locator)
 meth public void setExpandEntities(boolean)
+meth public void setIgnoringBoundaryWhitespace(boolean)
 meth public void setIgnoringElementContentWhitespace(boolean)
 meth public void skippedEntity(java.lang.String) throws org.xml.sax.SAXException
-meth public void startCDATA() throws org.xml.sax.SAXException
+meth public void startCDATA()
 meth public void startDTD(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void startDocument()
 meth public void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public void startEntity(java.lang.String) throws org.xml.sax.SAXException
 meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
-meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 supr org.xml.sax.helpers.DefaultHandler
-hfds CVS_ID,atRoot,attrNameToTypeMap,currentElement,declaredNamespaces,document,entityDepth,expand,externalEntities,factory,ignoringWhite,inCDATA,inDTD,inInternalSubset,internalSubset,locator,previousCDATA,suppress,textBuffer
+hfds atRoot,currentDocument,currentElement,currentLocator,declaredNamespaces,entityDepth,expand,externalEntities,factory,ignoringBoundaryWhite,ignoringWhite,inCDATA,inDTD,inInternalSubset,internalSubset,lastcol,lastline,previousCDATA,suppress,textBuffer
 
-CLSS public org.jdom.output.DOMOutputter
+CLSS public abstract interface org.jdom2.input.sax.SAXHandlerFactory
+meth public abstract org.jdom2.input.sax.SAXHandler createSAXHandler(org.jdom2.JDOMFactory)
+
+CLSS public org.jdom2.input.sax.XMLReaderJAXPFactory
+cons public init(java.lang.String,java.lang.ClassLoader,boolean)
+intf org.jdom2.input.sax.XMLReaderJDOMFactory
+meth public boolean isValidating()
+meth public org.xml.sax.XMLReader createXMLReader() throws org.jdom2.JDOMException
+supr java.lang.Object
+hfds instance,validating
+
+CLSS public abstract interface org.jdom2.input.sax.XMLReaderJDOMFactory
+meth public abstract boolean isValidating()
+meth public abstract org.xml.sax.XMLReader createXMLReader() throws org.jdom2.JDOMException
+
+CLSS public org.jdom2.input.sax.XMLReaderSAX2Factory
+cons public init(boolean)
+cons public init(boolean,java.lang.String)
+intf org.jdom2.input.sax.XMLReaderJDOMFactory
+meth public boolean isValidating()
+meth public java.lang.String getDriverClassName()
+meth public org.xml.sax.XMLReader createXMLReader() throws org.jdom2.JDOMException
+supr java.lang.Object
+hfds saxdriver,validate
+
+CLSS public org.jdom2.input.sax.XMLReaderSchemaFactory
+cons public init(java.lang.String,java.lang.ClassLoader,javax.xml.validation.Schema)
+cons public init(javax.xml.validation.Schema)
+supr org.jdom2.input.sax.AbstractReaderSchemaFactory
+
+CLSS public org.jdom2.input.sax.XMLReaderXSDFactory
+cons public !varargs init(java.io.File[]) throws org.jdom2.JDOMException
+cons public !varargs init(java.lang.String,java.lang.ClassLoader,java.io.File[]) throws org.jdom2.JDOMException
+cons public !varargs init(java.lang.String,java.lang.ClassLoader,java.lang.String[]) throws org.jdom2.JDOMException
+cons public !varargs init(java.lang.String,java.lang.ClassLoader,java.net.URL[]) throws org.jdom2.JDOMException
+cons public !varargs init(java.lang.String,java.lang.ClassLoader,javax.xml.transform.Source[]) throws org.jdom2.JDOMException
+cons public !varargs init(java.lang.String[]) throws org.jdom2.JDOMException
+cons public !varargs init(java.net.URL[]) throws org.jdom2.JDOMException
+cons public !varargs init(javax.xml.transform.Source[]) throws org.jdom2.JDOMException
+supr org.jdom2.input.sax.AbstractReaderXSDFactory
+hfds xsdschemas
+
+CLSS public final !enum org.jdom2.input.sax.XMLReaders
+fld public final static org.jdom2.input.sax.XMLReaders DTDVALIDATING
+fld public final static org.jdom2.input.sax.XMLReaders NONVALIDATING
+fld public final static org.jdom2.input.sax.XMLReaders XSDVALIDATING
+intf org.jdom2.input.sax.XMLReaderJDOMFactory
+meth public boolean isValidating()
+meth public org.xml.sax.XMLReader createXMLReader() throws org.jdom2.JDOMException
+meth public static org.jdom2.input.sax.XMLReaders valueOf(java.lang.String)
+meth public static org.jdom2.input.sax.XMLReaders[] values()
+supr java.lang.Enum<org.jdom2.input.sax.XMLReaders>
+hfds singletonID
+hcls DTDSingleton,FactorySupplier,NONSingleton,XSDSingleton
+
+CLSS abstract interface org.jdom2.input.sax.package-info
+
+CLSS public org.jdom2.output.DOMOutputter
 cons public init()
 cons public init(java.lang.String)
-meth public org.w3c.dom.Document output(org.jdom.Document) throws org.jdom.JDOMException
+ anno 0 java.lang.Deprecated()
+cons public init(org.jdom2.adapters.DOMAdapter)
+cons public init(org.jdom2.adapters.DOMAdapter,org.jdom2.output.Format,org.jdom2.output.support.DOMOutputProcessor)
+cons public init(org.jdom2.output.support.DOMOutputProcessor)
+meth public boolean getForceNamespaceAware()
+ anno 0 java.lang.Deprecated()
+meth public java.util.List<org.w3c.dom.Node> output(java.util.List<? extends org.jdom2.Content>) throws org.jdom2.JDOMException
+meth public java.util.List<org.w3c.dom.Node> output(org.w3c.dom.Document,java.util.List<? extends org.jdom2.Content>) throws org.jdom2.JDOMException
+meth public org.jdom2.adapters.DOMAdapter getDOMAdapter()
+meth public org.jdom2.output.Format getFormat()
+meth public org.jdom2.output.support.DOMOutputProcessor getDOMOutputProcessor()
+meth public org.w3c.dom.Attr output(org.jdom2.Attribute) throws org.jdom2.JDOMException
+meth public org.w3c.dom.Attr output(org.w3c.dom.Document,org.jdom2.Attribute) throws org.jdom2.JDOMException
+meth public org.w3c.dom.CDATASection output(org.jdom2.CDATA) throws org.jdom2.JDOMException
+meth public org.w3c.dom.CDATASection output(org.w3c.dom.Document,org.jdom2.CDATA) throws org.jdom2.JDOMException
+meth public org.w3c.dom.Comment output(org.jdom2.Comment) throws org.jdom2.JDOMException
+meth public org.w3c.dom.Comment output(org.w3c.dom.Document,org.jdom2.Comment) throws org.jdom2.JDOMException
+meth public org.w3c.dom.Document output(org.jdom2.Document) throws org.jdom2.JDOMException
+meth public org.w3c.dom.DocumentType output(org.jdom2.DocType) throws org.jdom2.JDOMException
+meth public org.w3c.dom.Element output(org.jdom2.Element) throws org.jdom2.JDOMException
+meth public org.w3c.dom.Element output(org.w3c.dom.Document,org.jdom2.Element) throws org.jdom2.JDOMException
+meth public org.w3c.dom.EntityReference output(org.jdom2.EntityRef) throws org.jdom2.JDOMException
+meth public org.w3c.dom.EntityReference output(org.w3c.dom.Document,org.jdom2.EntityRef) throws org.jdom2.JDOMException
+meth public org.w3c.dom.ProcessingInstruction output(org.jdom2.ProcessingInstruction) throws org.jdom2.JDOMException
+meth public org.w3c.dom.ProcessingInstruction output(org.w3c.dom.Document,org.jdom2.ProcessingInstruction) throws org.jdom2.JDOMException
+meth public org.w3c.dom.Text output(org.jdom2.Text) throws org.jdom2.JDOMException
+meth public org.w3c.dom.Text output(org.w3c.dom.Document,org.jdom2.Text) throws org.jdom2.JDOMException
+meth public void setDOMAdapter(org.jdom2.adapters.DOMAdapter)
+meth public void setDOMOutputProcessor(org.jdom2.output.support.DOMOutputProcessor)
+meth public void setForceNamespaceAware(boolean)
+ anno 0 java.lang.Deprecated()
+meth public void setFormat(org.jdom2.output.Format)
 supr java.lang.Object
-hfds CVS_ID,DEFAULT_ADAPTER_CLASS,adapterClass
+hfds DEFAULT_ADAPTER,DEFAULT_PROCESSOR,adapter,format,processor
+hcls DefaultDOMOutputProcessor
 
-CLSS public abstract interface org.jdom.output.EscapeStrategy
+CLSS public abstract interface org.jdom2.output.EscapeStrategy
 meth public abstract boolean shouldEscape(char)
 
-CLSS public org.jdom.output.Format
-innr public static TextMode
+CLSS public org.jdom2.output.Format
+innr public final static !enum TextMode
 intf java.lang.Cloneable
-meth protected java.lang.Object clone()
 meth public boolean getExpandEmptyElements()
 meth public boolean getIgnoreTrAXEscapingPIs()
 meth public boolean getOmitDeclaration()
 meth public boolean getOmitEncoding()
+meth public boolean isSpecifiedAttributesOnly()
+meth public final static java.lang.String compact(java.lang.String)
+meth public final static java.lang.String escapeAttribute(org.jdom2.output.EscapeStrategy,java.lang.String)
+meth public final static java.lang.String escapeText(org.jdom2.output.EscapeStrategy,java.lang.String,java.lang.String)
+meth public final static java.lang.String trimBoth(java.lang.String)
+meth public final static java.lang.String trimLeft(java.lang.String)
+meth public final static java.lang.String trimRight(java.lang.String)
 meth public java.lang.String getEncoding()
 meth public java.lang.String getIndent()
 meth public java.lang.String getLineSeparator()
-meth public org.jdom.output.EscapeStrategy getEscapeStrategy()
-meth public org.jdom.output.Format setEncoding(java.lang.String)
-meth public org.jdom.output.Format setEscapeStrategy(org.jdom.output.EscapeStrategy)
-meth public org.jdom.output.Format setExpandEmptyElements(boolean)
-meth public org.jdom.output.Format setIndent(java.lang.String)
-meth public org.jdom.output.Format setLineSeparator(java.lang.String)
-meth public org.jdom.output.Format setOmitDeclaration(boolean)
-meth public org.jdom.output.Format setOmitEncoding(boolean)
-meth public org.jdom.output.Format setTextMode(org.jdom.output.Format$TextMode)
-meth public org.jdom.output.Format$TextMode getTextMode()
-meth public static org.jdom.output.Format getCompactFormat()
-meth public static org.jdom.output.Format getPrettyFormat()
-meth public static org.jdom.output.Format getRawFormat()
+meth public org.jdom2.output.EscapeStrategy getEscapeStrategy()
+meth public org.jdom2.output.Format clone()
+meth public org.jdom2.output.Format setEncoding(java.lang.String)
+meth public org.jdom2.output.Format setEscapeStrategy(org.jdom2.output.EscapeStrategy)
+meth public org.jdom2.output.Format setExpandEmptyElements(boolean)
+meth public org.jdom2.output.Format setIndent(java.lang.String)
+meth public org.jdom2.output.Format setLineSeparator(java.lang.String)
+meth public org.jdom2.output.Format setLineSeparator(org.jdom2.output.LineSeparator)
+meth public org.jdom2.output.Format setOmitDeclaration(boolean)
+meth public org.jdom2.output.Format setOmitEncoding(boolean)
+meth public org.jdom2.output.Format setTextMode(org.jdom2.output.Format$TextMode)
+meth public org.jdom2.output.Format$TextMode getTextMode()
+meth public static org.jdom2.output.Format getCompactFormat()
+meth public static org.jdom2.output.Format getPrettyFormat()
+meth public static org.jdom2.output.Format getRawFormat()
 meth public void setIgnoreTrAXEscapingPIs(boolean)
+meth public void setSpecifiedAttributesOnly(boolean)
 supr java.lang.Object
-hfds CVS_ID,STANDARD_ENCODING,STANDARD_INDENT,STANDARD_LINE_SEPARATOR,class$java$lang$String,encoding,escapeStrategy,expandEmptyElements,ignoreTrAXEscapingPIs,indent,lineSeparator,mode,omitDeclaration,omitEncoding
-hcls DefaultEscapeStrategy
+hfds Bits7EscapeStrategy,Bits8EscapeStrategy,DefaultEscapeStrategy,STANDARD_ENCODING,STANDARD_INDENT,STANDARD_LINE_SEPARATOR,UTFEscapeStrategy,encoding,escapeStrategy,expandEmptyElements,ignoreTrAXEscapingPIs,indent,lineSeparator,mode,omitDeclaration,omitEncoding,specifiedAttributesOnly
+hcls DefaultCharsetEscapeStrategy,EscapeStrategy7Bits,EscapeStrategy8Bits,EscapeStrategyUTF
 
-CLSS public static org.jdom.output.Format$TextMode
- outer org.jdom.output.Format
-fld public final static org.jdom.output.Format$TextMode NORMALIZE
-fld public final static org.jdom.output.Format$TextMode PRESERVE
-fld public final static org.jdom.output.Format$TextMode TRIM
-fld public final static org.jdom.output.Format$TextMode TRIM_FULL_WHITE
-meth public java.lang.String toString()
-supr java.lang.Object
-hfds name
+CLSS public final static !enum org.jdom2.output.Format$TextMode
+ outer org.jdom2.output.Format
+fld public final static org.jdom2.output.Format$TextMode NORMALIZE
+fld public final static org.jdom2.output.Format$TextMode PRESERVE
+fld public final static org.jdom2.output.Format$TextMode TRIM
+fld public final static org.jdom2.output.Format$TextMode TRIM_FULL_WHITE
+meth public static org.jdom2.output.Format$TextMode valueOf(java.lang.String)
+meth public static org.jdom2.output.Format$TextMode[] values()
+supr java.lang.Enum<org.jdom2.output.Format$TextMode>
 
-CLSS public org.jdom.output.JDOMLocator
-meth public java.lang.Object getNode()
-supr org.xml.sax.helpers.LocatorImpl
-hfds CVS_ID,node
+CLSS public abstract interface org.jdom2.output.JDOMLocator
+intf org.xml.sax.Locator
+meth public abstract java.lang.Object getNode()
 
-CLSS public org.jdom.output.SAXOutputter
+CLSS public final !enum org.jdom2.output.LineSeparator
+fld public final static org.jdom2.output.LineSeparator CR
+fld public final static org.jdom2.output.LineSeparator CRNL
+fld public final static org.jdom2.output.LineSeparator DEFAULT
+fld public final static org.jdom2.output.LineSeparator DOS
+fld public final static org.jdom2.output.LineSeparator NL
+fld public final static org.jdom2.output.LineSeparator NONE
+fld public final static org.jdom2.output.LineSeparator SYSTEM
+fld public final static org.jdom2.output.LineSeparator UNIX
+meth public java.lang.String value()
+meth public static org.jdom2.output.LineSeparator valueOf(java.lang.String)
+meth public static org.jdom2.output.LineSeparator[] values()
+supr java.lang.Enum<org.jdom2.output.LineSeparator>
+hfds value
+
+CLSS public org.jdom2.output.SAXOutputter
 cons public init()
+cons public init(org.jdom2.output.support.SAXOutputProcessor,org.jdom2.output.Format,org.xml.sax.ContentHandler,org.xml.sax.ErrorHandler,org.xml.sax.DTDHandler,org.xml.sax.EntityResolver,org.xml.sax.ext.LexicalHandler)
 cons public init(org.xml.sax.ContentHandler)
 cons public init(org.xml.sax.ContentHandler,org.xml.sax.ErrorHandler,org.xml.sax.DTDHandler,org.xml.sax.EntityResolver)
 cons public init(org.xml.sax.ContentHandler,org.xml.sax.ErrorHandler,org.xml.sax.DTDHandler,org.xml.sax.EntityResolver,org.xml.sax.ext.LexicalHandler)
-meth protected org.xml.sax.XMLReader createParser() throws java.lang.Exception
 meth public boolean getFeature(java.lang.String) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
 meth public boolean getReportDTDEvents()
 meth public boolean getReportNamespaceDeclarations()
 meth public java.lang.Object getProperty(java.lang.String) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
-meth public org.jdom.output.JDOMLocator getLocator()
+meth public org.jdom2.output.Format getFormat()
+meth public org.jdom2.output.JDOMLocator getLocator()
+ anno 0 java.lang.Deprecated()
+meth public org.jdom2.output.support.SAXOutputProcessor getSAXOutputProcessor()
 meth public org.xml.sax.ContentHandler getContentHandler()
 meth public org.xml.sax.DTDHandler getDTDHandler()
 meth public org.xml.sax.EntityResolver getEntityResolver()
 meth public org.xml.sax.ErrorHandler getErrorHandler()
 meth public org.xml.sax.ext.DeclHandler getDeclHandler()
 meth public org.xml.sax.ext.LexicalHandler getLexicalHandler()
-meth public void output(java.util.List) throws org.jdom.JDOMException
-meth public void output(org.jdom.Document) throws org.jdom.JDOMException
-meth public void output(org.jdom.Element) throws org.jdom.JDOMException
-meth public void outputFragment(java.util.List) throws org.jdom.JDOMException
-meth public void outputFragment(org.jdom.Content) throws org.jdom.JDOMException
+meth public void output(java.util.List<? extends org.jdom2.Content>) throws org.jdom2.JDOMException
+meth public void output(org.jdom2.Document) throws org.jdom2.JDOMException
+meth public void output(org.jdom2.Element) throws org.jdom2.JDOMException
+meth public void outputFragment(java.util.List<? extends org.jdom2.Content>) throws org.jdom2.JDOMException
+meth public void outputFragment(org.jdom2.Content) throws org.jdom2.JDOMException
 meth public void setContentHandler(org.xml.sax.ContentHandler)
 meth public void setDTDHandler(org.xml.sax.DTDHandler)
 meth public void setDeclHandler(org.xml.sax.ext.DeclHandler)
 meth public void setEntityResolver(org.xml.sax.EntityResolver)
 meth public void setErrorHandler(org.xml.sax.ErrorHandler)
 meth public void setFeature(java.lang.String,boolean) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
+meth public void setFormat(org.jdom2.output.Format)
 meth public void setLexicalHandler(org.xml.sax.ext.LexicalHandler)
 meth public void setProperty(java.lang.String,java.lang.Object) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
 meth public void setReportDTDEvents(boolean)
 meth public void setReportNamespaceDeclarations(boolean)
+meth public void setSAXOutputProcessor(org.jdom2.output.support.SAXOutputProcessor)
 supr java.lang.Object
-hfds CVS_ID,DECL_HANDLER_ALT_PROPERTY,DECL_HANDLER_SAX_PROPERTY,LEXICAL_HANDLER_ALT_PROPERTY,LEXICAL_HANDLER_SAX_PROPERTY,NAMESPACES_SAX_FEATURE,NS_PREFIXES_SAX_FEATURE,VALIDATION_SAX_FEATURE,attrTypeToNameMap,contentHandler,declHandler,declareNamespaces,dtdHandler,entityResolver,errorHandler,lexicalHandler,locator,reportDtdEvents
+hfds DEFAULT_PROCESSOR,contentHandler,declHandler,declareNamespaces,dtdHandler,entityResolver,errorHandler,format,lexicalHandler,processor,reportDtdEvents
+hcls DefaultSAXOutputProcessor
 
-CLSS public org.jdom.output.XMLOutputter
+CLSS public final org.jdom2.output.StAXEventOutputter
 cons public init()
-cons public init(org.jdom.output.Format)
-cons public init(org.jdom.output.XMLOutputter)
-fld protected final static org.jdom.output.Format preserveFormat
-fld protected org.jdom.output.Format currentFormat
-innr protected NamespaceStack
+cons public init(javax.xml.stream.XMLEventFactory)
+cons public init(org.jdom2.output.Format)
+cons public init(org.jdom2.output.Format,org.jdom2.output.support.StAXEventProcessor,javax.xml.stream.XMLEventFactory)
+cons public init(org.jdom2.output.support.StAXEventProcessor)
 intf java.lang.Cloneable
-meth protected void printAttributes(java.io.Writer,java.util.List,org.jdom.Element,org.jdom.output.XMLOutputter$NamespaceStack) throws java.io.IOException
-meth protected void printCDATA(java.io.Writer,org.jdom.CDATA) throws java.io.IOException
-meth protected void printComment(java.io.Writer,org.jdom.Comment) throws java.io.IOException
-meth protected void printDeclaration(java.io.Writer,org.jdom.Document,java.lang.String) throws java.io.IOException
-meth protected void printDocType(java.io.Writer,org.jdom.DocType) throws java.io.IOException
-meth protected void printElement(java.io.Writer,org.jdom.Element,int,org.jdom.output.XMLOutputter$NamespaceStack) throws java.io.IOException
-meth protected void printEntityRef(java.io.Writer,org.jdom.EntityRef) throws java.io.IOException
-meth protected void printProcessingInstruction(java.io.Writer,org.jdom.ProcessingInstruction) throws java.io.IOException
-meth protected void printText(java.io.Writer,org.jdom.Text) throws java.io.IOException
-meth public java.lang.Object clone()
+meth public final void output(java.util.List<? extends org.jdom2.Content>,javax.xml.stream.util.XMLEventConsumer) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.CDATA,javax.xml.stream.util.XMLEventConsumer) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.Comment,javax.xml.stream.util.XMLEventConsumer) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.DocType,javax.xml.stream.util.XMLEventConsumer) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.Document,javax.xml.stream.util.XMLEventConsumer) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.Element,javax.xml.stream.util.XMLEventConsumer) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.EntityRef,javax.xml.stream.util.XMLEventConsumer) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.ProcessingInstruction,javax.xml.stream.util.XMLEventConsumer) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.Text,javax.xml.stream.util.XMLEventConsumer) throws javax.xml.stream.XMLStreamException
+meth public final void outputElementContent(org.jdom2.Element,javax.xml.stream.util.XMLEventConsumer) throws javax.xml.stream.XMLStreamException
+meth public java.lang.String toString()
+meth public javax.xml.stream.XMLEventFactory getEventFactory()
+meth public org.jdom2.output.Format getFormat()
+meth public org.jdom2.output.StAXEventOutputter clone()
+meth public org.jdom2.output.support.StAXEventProcessor getStAXStream()
+meth public void setEventFactory(javax.xml.stream.XMLEventFactory)
+meth public void setFormat(org.jdom2.output.Format)
+meth public void setStAXEventProcessor(org.jdom2.output.support.StAXEventProcessor)
+supr java.lang.Object
+hfds DEFAULTEVENTFACTORY,DEFAULTPROCESSOR,myEventFactory,myFormat,myProcessor
+hcls DefaultStAXEventProcessor
+
+CLSS public final org.jdom2.output.StAXStreamOutputter
+cons public init()
+cons public init(org.jdom2.output.Format)
+cons public init(org.jdom2.output.Format,org.jdom2.output.support.StAXStreamProcessor)
+cons public init(org.jdom2.output.support.StAXStreamProcessor)
+intf java.lang.Cloneable
+meth public final void output(java.util.List<? extends org.jdom2.Content>,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.CDATA,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.Comment,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.DocType,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.Document,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.Element,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.EntityRef,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.ProcessingInstruction,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
+meth public final void output(org.jdom2.Text,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
+meth public final void outputElementContent(org.jdom2.Element,javax.xml.stream.XMLStreamWriter) throws javax.xml.stream.XMLStreamException
+meth public java.lang.String toString()
+meth public org.jdom2.output.Format getFormat()
+meth public org.jdom2.output.StAXStreamOutputter clone()
+meth public org.jdom2.output.support.StAXStreamProcessor getStAXStream()
+meth public void setFormat(org.jdom2.output.Format)
+meth public void setStAXStreamProcessor(org.jdom2.output.support.StAXStreamProcessor)
+supr java.lang.Object
+hfds DEFAULTPROCESSOR,myFormat,myProcessor
+hcls DefaultStAXStreamProcessor
+
+CLSS public final org.jdom2.output.StAXStreamReader
+cons public init()
+cons public init(org.jdom2.output.Format)
+cons public init(org.jdom2.output.Format,org.jdom2.output.support.StAXStreamReaderProcessor)
+cons public init(org.jdom2.output.StAXStreamReader)
+cons public init(org.jdom2.output.support.StAXStreamReaderProcessor)
+intf java.lang.Cloneable
+meth public final javax.xml.stream.XMLStreamReader output(org.jdom2.Document)
+meth public java.lang.String toString()
+meth public org.jdom2.output.Format getFormat()
+meth public org.jdom2.output.StAXStreamReader clone()
+meth public org.jdom2.output.support.StAXStreamReaderProcessor getStAXAsStreamProcessor()
+meth public void setFormat(org.jdom2.output.Format)
+meth public void setStAXAsStreamProcessor(org.jdom2.output.support.StAXStreamReaderProcessor)
+supr java.lang.Object
+hfds DEFAULTPROCESSOR,myFormat,myProcessor
+hcls DefaultStAXAsStreamProcessor
+
+CLSS public final org.jdom2.output.XMLOutputter
+cons public init()
+cons public init(org.jdom2.output.Format)
+cons public init(org.jdom2.output.Format,org.jdom2.output.support.XMLOutputProcessor)
+cons public init(org.jdom2.output.XMLOutputter)
+cons public init(org.jdom2.output.support.XMLOutputProcessor)
+intf java.lang.Cloneable
+meth public final java.lang.String outputElementContentString(org.jdom2.Element)
+meth public final java.lang.String outputString(java.util.List<? extends org.jdom2.Content>)
+meth public final java.lang.String outputString(org.jdom2.CDATA)
+meth public final java.lang.String outputString(org.jdom2.Comment)
+meth public final java.lang.String outputString(org.jdom2.DocType)
+meth public final java.lang.String outputString(org.jdom2.Document)
+meth public final java.lang.String outputString(org.jdom2.Element)
+meth public final java.lang.String outputString(org.jdom2.EntityRef)
+meth public final java.lang.String outputString(org.jdom2.ProcessingInstruction)
+meth public final java.lang.String outputString(org.jdom2.Text)
+meth public final void output(java.util.List<? extends org.jdom2.Content>,java.io.OutputStream) throws java.io.IOException
+meth public final void output(java.util.List<? extends org.jdom2.Content>,java.io.Writer) throws java.io.IOException
+meth public final void output(org.jdom2.CDATA,java.io.OutputStream) throws java.io.IOException
+meth public final void output(org.jdom2.CDATA,java.io.Writer) throws java.io.IOException
+meth public final void output(org.jdom2.Comment,java.io.OutputStream) throws java.io.IOException
+meth public final void output(org.jdom2.Comment,java.io.Writer) throws java.io.IOException
+meth public final void output(org.jdom2.DocType,java.io.OutputStream) throws java.io.IOException
+meth public final void output(org.jdom2.DocType,java.io.Writer) throws java.io.IOException
+meth public final void output(org.jdom2.Document,java.io.OutputStream) throws java.io.IOException
+meth public final void output(org.jdom2.Document,java.io.Writer) throws java.io.IOException
+meth public final void output(org.jdom2.Element,java.io.OutputStream) throws java.io.IOException
+meth public final void output(org.jdom2.Element,java.io.Writer) throws java.io.IOException
+meth public final void output(org.jdom2.EntityRef,java.io.Writer) throws java.io.IOException
+meth public final void output(org.jdom2.ProcessingInstruction,java.io.OutputStream) throws java.io.IOException
+meth public final void output(org.jdom2.ProcessingInstruction,java.io.Writer) throws java.io.IOException
+meth public final void output(org.jdom2.Text,java.io.OutputStream) throws java.io.IOException
+meth public final void output(org.jdom2.Text,java.io.Writer) throws java.io.IOException
+meth public final void outputElementContent(org.jdom2.Element,java.io.OutputStream) throws java.io.IOException
+meth public final void outputElementContent(org.jdom2.Element,java.io.Writer) throws java.io.IOException
 meth public java.lang.String escapeAttributeEntities(java.lang.String)
 meth public java.lang.String escapeElementEntities(java.lang.String)
-meth public java.lang.String outputString(java.util.List)
-meth public java.lang.String outputString(org.jdom.CDATA)
-meth public java.lang.String outputString(org.jdom.Comment)
-meth public java.lang.String outputString(org.jdom.DocType)
-meth public java.lang.String outputString(org.jdom.Document)
-meth public java.lang.String outputString(org.jdom.Element)
-meth public java.lang.String outputString(org.jdom.EntityRef)
-meth public java.lang.String outputString(org.jdom.ProcessingInstruction)
-meth public java.lang.String outputString(org.jdom.Text)
 meth public java.lang.String toString()
-meth public org.jdom.output.Format getFormat()
-meth public void output(java.util.List,java.io.OutputStream) throws java.io.IOException
-meth public void output(java.util.List,java.io.Writer) throws java.io.IOException
-meth public void output(org.jdom.CDATA,java.io.OutputStream) throws java.io.IOException
-meth public void output(org.jdom.CDATA,java.io.Writer) throws java.io.IOException
-meth public void output(org.jdom.Comment,java.io.OutputStream) throws java.io.IOException
-meth public void output(org.jdom.Comment,java.io.Writer) throws java.io.IOException
-meth public void output(org.jdom.DocType,java.io.OutputStream) throws java.io.IOException
-meth public void output(org.jdom.DocType,java.io.Writer) throws java.io.IOException
-meth public void output(org.jdom.Document,java.io.OutputStream) throws java.io.IOException
-meth public void output(org.jdom.Document,java.io.Writer) throws java.io.IOException
-meth public void output(org.jdom.Element,java.io.OutputStream) throws java.io.IOException
-meth public void output(org.jdom.Element,java.io.Writer) throws java.io.IOException
-meth public void output(org.jdom.EntityRef,java.io.OutputStream) throws java.io.IOException
-meth public void output(org.jdom.EntityRef,java.io.Writer) throws java.io.IOException
-meth public void output(org.jdom.ProcessingInstruction,java.io.OutputStream) throws java.io.IOException
-meth public void output(org.jdom.ProcessingInstruction,java.io.Writer) throws java.io.IOException
-meth public void output(org.jdom.Text,java.io.OutputStream) throws java.io.IOException
-meth public void output(org.jdom.Text,java.io.Writer) throws java.io.IOException
-meth public void outputElementContent(org.jdom.Element,java.io.OutputStream) throws java.io.IOException
-meth public void outputElementContent(org.jdom.Element,java.io.Writer) throws java.io.IOException
-meth public void setFormat(org.jdom.output.Format)
+meth public org.jdom2.output.Format getFormat()
+meth public org.jdom2.output.XMLOutputter clone()
+meth public org.jdom2.output.support.XMLOutputProcessor getXMLOutputProcessor()
+meth public void output(org.jdom2.EntityRef,java.io.OutputStream) throws java.io.IOException
+meth public void setFormat(org.jdom2.output.Format)
+meth public void setXMLOutputProcessor(org.jdom2.output.support.XMLOutputProcessor)
 supr java.lang.Object
-hfds CVS_ID,escapeOutput,userFormat
+hfds DEFAULTPROCESSOR,myFormat,myProcessor
+hcls DefaultXMLProcessor
 
-CLSS protected org.jdom.output.XMLOutputter$NamespaceStack
- outer org.jdom.output.XMLOutputter
-cons protected init(org.jdom.output.XMLOutputter)
-meth public int size()
-meth public java.lang.String getURI(java.lang.String)
-meth public java.lang.String pop()
-meth public java.lang.String toString()
-meth public void push(org.jdom.Namespace)
+CLSS public abstract interface org.jdom2.util.IteratorIterable<%0 extends java.lang.Object>
+intf java.lang.Iterable<{org.jdom2.util.IteratorIterable%0}>
+intf java.util.Iterator<{org.jdom2.util.IteratorIterable%0}>
+
+CLSS public final org.jdom2.util.JDOMNamespaceContext
+cons public init(org.jdom2.Namespace[])
+intf javax.xml.namespace.NamespaceContext
+meth public java.lang.String getNamespaceURI(java.lang.String)
+meth public java.lang.String getPrefix(java.lang.String)
+meth public java.util.Iterator getPrefixes(java.lang.String)
 supr java.lang.Object
-hfds this$0
+hfds namespacearray
+
+CLSS public final org.jdom2.util.NamespaceStack
+cons public init()
+cons public init(org.jdom2.Namespace[])
+intf java.lang.Iterable<org.jdom2.Namespace>
+meth public !varargs void push(org.jdom2.Namespace[])
+meth public boolean isInScope(org.jdom2.Namespace)
+meth public java.lang.Iterable<org.jdom2.Namespace> addedForward()
+meth public java.lang.Iterable<org.jdom2.Namespace> addedReverse()
+meth public java.util.Iterator<org.jdom2.Namespace> iterator()
+meth public org.jdom2.Namespace getFirstNamespaceForURI(java.lang.String)
+meth public org.jdom2.Namespace getNamespaceForPrefix(java.lang.String)
+meth public org.jdom2.Namespace getRebound(java.lang.String)
+meth public org.jdom2.Namespace[] getAllNamespacesForURI(java.lang.String)
+meth public org.jdom2.Namespace[] getScope()
+meth public void pop()
+meth public void push(java.lang.Iterable<org.jdom2.Namespace>)
+meth public void push(org.jdom2.Attribute)
+meth public void push(org.jdom2.Element)
+supr java.lang.Object
+hfds DEFAULTSEED,EMPTY,EMPTYITER,EMPTYLIST,NSCOMP,added,depth,scope
+hcls BackwardWalker,EmptyIterable,ForwardWalker,NamespaceIterable
 
 CLSS public abstract interface org.netbeans.modules.maven.embedder.ArtifactFixer
 meth public abstract java.io.File resolve(org.eclipse.aether.artifact.Artifact)
@@ -12627,9 +13267,11 @@ meth public static java.util.List<org.netbeans.modules.maven.embedder.MavenEmbed
 meth public static java.util.Set<java.lang.String> getAllProjectProfiles(org.apache.maven.project.MavenProject)
 meth public static void normalizePaths(org.apache.maven.project.MavenProject)
 meth public void resolve(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
+ anno 0 java.lang.Deprecated()
+meth public void resolveArtifact(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
 meth public void setUpLegacySupport()
 supr java.lang.Object
-hfds LOG,embedderConfiguration,lastLocalRepository,lastLocalRepositoryLock,maven,plexus,populator,projectBuilder,repositorySystem,settings,settingsBuilder,settingsDecrypter,settingsTimestamp,testSettings
+hfds LOG,embedderConfiguration,lastLocalRepository,lastLocalRepositoryLock,maven,plexus,populator,projectBuilder,repositorySystem,settings,settingsBuilder,settingsDecrypter,settingsTimestamp,testSettings,thisRepositorySession
 
 CLSS public abstract interface static org.netbeans.modules.maven.embedder.MavenEmbedder$ModelDescription
  outer org.netbeans.modules.maven.embedder.MavenEmbedder
@@ -13138,19 +13780,5 @@ meth public void startElement(java.lang.String,java.lang.String,java.lang.String
 meth public void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
-supr java.lang.Object
-
-CLSS public org.xml.sax.helpers.LocatorImpl
-cons public init()
-cons public init(org.xml.sax.Locator)
-intf org.xml.sax.Locator
-meth public int getColumnNumber()
-meth public int getLineNumber()
-meth public java.lang.String getPublicId()
-meth public java.lang.String getSystemId()
-meth public void setColumnNumber(int)
-meth public void setLineNumber(int)
-meth public void setPublicId(java.lang.String)
-meth public void setSystemId(java.lang.String)
 supr java.lang.Object
 

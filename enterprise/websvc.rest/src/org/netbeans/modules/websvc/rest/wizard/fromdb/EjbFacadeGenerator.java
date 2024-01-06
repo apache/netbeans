@@ -50,6 +50,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
 
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
@@ -92,6 +93,9 @@ public class EjbFacadeGenerator implements FacadeGenerator {
     private static final String EJB_LOCAL = "javax.ejb.Local"; //NOI18N
     private static final String EJB_REMOTE = "javax.ejb.Remote"; //NOI18N
     private static final String EJB_STATELESS = "javax.ejb.Stateless"; //NOI18N
+    private static final String EJB_LOCAL_JAKARTA = "jakarta.ejb.Local"; //NOI18N
+    private static final String EJB_REMOTE_JAKARTA = "jakarta.ejb.Remote"; //NOI18N
+    private static final String EJB_STATELESS_JAKARTA = "jakarta.ejb.Stateless"; //NOI18N
     
     private EntityResourceBeanModel model;
     
@@ -126,6 +130,16 @@ public class EjbFacadeGenerator implements FacadeGenerator {
             final boolean hasLocal,
             boolean overrideExisting) throws IOException {
 
+        ClassPath cp = ClassPath.getClassPath(targetFolder, ClassPath.COMPILE);
+
+        final boolean javaxPersistenceAvailable = cp != null &&
+                cp.findResource("javax/persistence/EntityManager.class") != null;
+
+        final boolean jakartaPersistenceAvailable = cp != null &&
+                cp.findResource("jakarta/persistence/EntityManager.class") != null;
+
+        final boolean jakartaNamespace = jakartaPersistenceAvailable || (!javaxPersistenceAvailable);
+
         final Set<FileObject> createdFiles = new HashSet<FileObject>();
         final String entitySimpleName = JavaIdentifiers.unqualify(entityFQN);
         final String variableName = entitySimpleName.toLowerCase().charAt(0) + 
@@ -157,7 +171,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                     String genericsTypeName = "T";      //NOI18N
                     List<GenerationOptions> methodOptions = 
                         getAbstractFacadeMethodOptions(entityNames, 
-                                genericsTypeName, "entity"); //NOI18N
+                                genericsTypeName, "entity", jakartaNamespace); //NOI18N
                     List<Tree> members = new ArrayList<>();
                     String entityClassVar = "entityClass";                                              //NOI18N
                     Tree classObjectTree = genUtils.createType("java.lang.Class<" + 
@@ -250,16 +264,22 @@ public class EjbFacadeGenerator implements FacadeGenerator {
             getUniqueClassName(entitySimpleName + FACADE_REMOTE_SUFFIX, targetFolder);
 
         List<GenerationOptions> intfOptions = getAbstractFacadeMethodOptions(
-                entityNames, entityFQN, variableName);
+                entityNames, entityFQN, variableName, jakartaNamespace);
         if (hasLocal) {
-            FileObject local = createInterface(JavaIdentifiers.unqualify(localInterfaceFQN), 
-                    EJB_LOCAL, targetFolder);
+            FileObject local = createInterface(
+                    JavaIdentifiers.unqualify(localInterfaceFQN),
+                    jakartaNamespace ? EJB_LOCAL_JAKARTA : EJB_LOCAL,
+                    targetFolder
+            );
             addMethodToInterface(intfOptions, local);
             createdFiles.add(local);
         }
         if (hasRemote) {
-            FileObject remote = createInterface(JavaIdentifiers.unqualify(remoteInterfaceFQN), 
-                    EJB_REMOTE, targetFolder);
+            FileObject remote = createInterface(
+                    JavaIdentifiers.unqualify(remoteInterfaceFQN),
+                    jakartaNamespace ? EJB_REMOTE_JAKARTA : EJB_REMOTE,
+                    targetFolder
+            );
             addMethodToInterface(intfOptions, remote);
             createdFiles.add(remote);
         }
@@ -303,7 +323,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                 members.add(constructor);
 
                 List<RestGenerationOptions> restGenerationOptions = 
-                    getRestFacadeMethodOptions(entityFQN, idClass);
+                    getRestFacadeMethodOptions(entityFQN, idClass, jakartaNamespace);
 
                 ModifiersTree publicModifiers = genUtils.createModifiers(
                         Modifier.PUBLIC);
@@ -314,7 +334,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                     ModifiersTree modifiersTree =
                             maker.addModifiersAnnotation(publicModifiers, 
                                     genUtils.createAnnotation(
-                                            option.getRestMethod().getMethod()));
+                                            option.getRestMethod().getMethod(jakartaNamespace)));
 
                      // add @Path annotation
                     String uriPath = option.getRestMethod().getUriPath();
@@ -322,9 +342,10 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                         ExpressionTree annArgument = maker.Literal(uriPath);
                         modifiersTree =
                                 maker.addModifiersAnnotation(modifiersTree,
-                                genUtils.createAnnotation(RestConstants.PATH, 
-                                        Collections.<ExpressionTree>singletonList(
-                                                annArgument)));
+                                genUtils.createAnnotation(
+                                        jakartaNamespace ? RestConstants.PATH_JAKARTA : RestConstants.PATH,
+                                        Collections.<ExpressionTree>singletonList(annArgument))
+                                );
 
                     }
                     
@@ -339,11 +360,11 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                     if (produces != null) {
                         ExpressionTree annArguments;
                         if (produces.length == 1) {
-                            annArguments = mimeTypeTree(maker, produces[0]);
+                            annArguments = mimeTypeTree(maker, produces[0], jakartaNamespace);
                         } else {
                             List<ExpressionTree> mimeTypes = new ArrayList<ExpressionTree>();
                             for (int i=0; i< produces.length; i++) {
-                                mimeTypes.add(mimeTypeTree(maker, produces[i]));
+                                mimeTypes.add(mimeTypeTree(maker, produces[i], jakartaNamespace));
                             }
                             annArguments = maker.NewArray(null,
                                     Collections.<ExpressionTree>emptyList(), 
@@ -352,19 +373,20 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                         modifiersTree =
                                 maker.addModifiersAnnotation(modifiersTree,
                                         genUtils.createAnnotation(
-                                                RestConstants.PRODUCE_MIME, 
-                                                Collections.<ExpressionTree>singletonList(annArguments)));
+                                                jakartaNamespace ? RestConstants.PRODUCE_MIME_JAKARTA : RestConstants.PRODUCE_MIME,
+                                                Collections.<ExpressionTree>singletonList(annArguments))
+                                );
                     }
                     // add @Consumes annotation
                     String[] consumes = option.getConsumes();
                     if (consumes != null) {
                         ExpressionTree annArguments;
                         if (consumes.length == 1) {
-                            annArguments = mimeTypeTree(maker, consumes[0]);
+                            annArguments = mimeTypeTree(maker, consumes[0], jakartaNamespace);
                         } else {
                             List<ExpressionTree> mimeTypes = new ArrayList<ExpressionTree>();
                             for (int i=0; i< consumes.length; i++) {
-                                mimeTypes.add(mimeTypeTree(maker, consumes[i]));
+                                mimeTypes.add(mimeTypeTree(maker, consumes[i], jakartaNamespace));
                             }
                             annArguments = maker.NewArray(null, 
                                     Collections.<ExpressionTree>emptyList(), mimeTypes);
@@ -372,7 +394,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                         modifiersTree =
                                 maker.addModifiersAnnotation(modifiersTree,
                                         genUtils.createAnnotation(
-                                                RestConstants.CONSUME_MIME, 
+                                                jakartaNamespace ? RestConstants.CONSUME_MIME_JAKARTA : RestConstants.CONSUME_MIME,
                                                 Collections.<ExpressionTree>singletonList(annArguments)));
                     }
 
@@ -395,7 +417,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
                                 pathParamTree =
                                     maker.addModifiersAnnotation(paramModifier, 
                                             genUtils.createAnnotation(
-                                                    RestConstants.PATH_PARAM, 
+                                                    jakartaNamespace ? RestConstants.PATH_PARAM_JAKARTA : RestConstants.PATH_PARAM,
                                                     annArguments));
                             }
                             Tree paramTree = genUtils.createType(paramTypes[i], 
@@ -427,16 +449,17 @@ public class EjbFacadeGenerator implements FacadeGenerator {
 
                 }
 
-                ModifiersTree modifiersTree =
-                        maker.addModifiersAnnotation(classTree.getModifiers(), 
-                                genUtils.createAnnotation(EJB_STATELESS));
+                ModifiersTree modifiersTree = maker.addModifiersAnnotation(
+                        classTree.getModifiers(),
+                        genUtils.createAnnotation(jakartaNamespace ? EJB_STATELESS_JAKARTA : EJB_STATELESS)
+                );
 
                 ExpressionTree annArgument = maker.Literal(entityFQN.toLowerCase());
                 modifiersTree =
                         maker.addModifiersAnnotation(modifiersTree, 
-                                genUtils.createAnnotation(RestConstants.PATH, 
-                                        Collections.<ExpressionTree>singletonList(
-                                                annArgument)));
+                                genUtils.createAnnotation(
+                                        jakartaNamespace ? RestConstants.PATH_JAKARTA : RestConstants.PATH,
+                                        Collections.<ExpressionTree>singletonList(annArgument)));
                                
 
                 TypeElement abstractFacadeElement = wc.getElements().getTypeElement(afName);
@@ -487,7 +510,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
         
         // generate methods for the facade
         EntityManagerGenerator generator = new EntityManagerGenerator(facade, entityFQN);
-        List<GenerationOptions> methodOptions = getMethodOptions(entityFQN, variableName);
+        List<GenerationOptions> methodOptions = getMethodOptions(entityFQN, variableName, jakartaNamespace);
         for (GenerationOptions each : methodOptions){
             generator.generate(each, ContainerManagedJTAInjectableInEJB.class);
         }
@@ -496,7 +519,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
         return createdFiles;
     }
 
-    private ExpressionTree mimeTypeTree(TreeMaker maker, String mimeType) {
+    private ExpressionTree mimeTypeTree(TreeMaker maker, String mimeType, boolean jakartaNamespace) {
         String mediaTypeMember = null;
         if (mimeType.equals("application/xml")) { // NOI18N
             mediaTypeMember = "APPLICATION_XML"; // NOI18N
@@ -510,7 +533,8 @@ public class EjbFacadeGenerator implements FacadeGenerator {
             result = maker.Literal(mimeType);
         } else {
             // Use a field of MediaType class if possible
-            ExpressionTree typeTree = maker.QualIdent("javax.ws.rs.core.MediaType"); // NOI18N
+            ExpressionTree typeTree = maker.QualIdent(
+                    jakartaNamespace ? "jakarta.ws.rs.core.MediaType" : "javax.ws.rs.core.MediaType"); // NOI18N
             result = maker.MemberSelect(typeTree, mediaTypeMember);
         }
         return result;
@@ -569,12 +593,17 @@ public class EjbFacadeGenerator implements FacadeGenerator {
     }
 
     private List<GenerationOptions> getAbstractFacadeMethodOptions(Map<String, 
-            String> entityNames, String entityFQN, String variableName)
+            String> entityNames, String entityFQN, String variableName,
+            boolean jakartaNamespace)
     {
 
         GenerationOptions getEMOptions = new GenerationOptions();
         getEMOptions.setMethodName("getEntityManager"); //NOI18N
-        getEMOptions.setReturnType("javax.persistence.EntityManager");//NOI18N
+        if (jakartaNamespace) {
+            getEMOptions.setReturnType("jakarta.persistence.EntityManager");//NOI18N
+        } else {
+            getEMOptions.setReturnType("javax.persistence.EntityManager");//NOI18N
+        }
         getEMOptions.setModifiers(EnumSet.of(Modifier.PROTECTED, Modifier.ABSTRACT));
 
         //implemented methods
@@ -636,13 +665,17 @@ public class EjbFacadeGenerator implements FacadeGenerator {
      * find/remove/findAll.
      */
     private List<GenerationOptions> getMethodOptions(String entityFQN, 
-            String variableName)
+            String variableName, boolean jakartaNamespace)
     {
 
         GenerationOptions getEMOptions = new GenerationOptions();
         getEMOptions.setMethodName("getEntityManager"); //NOI18N
         getEMOptions.setOperation(GenerationOptions.Operation.GET_EM);
-        getEMOptions.setReturnType("javax.persistence.EntityManager");//NOI18N
+        if (jakartaNamespace) {
+            getEMOptions.setReturnType("jakarta.persistence.EntityManager");//NOI18N
+        } else {
+            getEMOptions.setReturnType("javax.persistence.EntityManager");//NOI18N
+        }
         getEMOptions.setModifiers(EnumSet.of(Modifier.PROTECTED));
 
         return Arrays.<GenerationOptions>asList(getEMOptions);
@@ -758,8 +791,15 @@ public class EjbFacadeGenerator implements FacadeGenerator {
     }
     
     private List<RestGenerationOptions> getRestFacadeMethodOptions(
-            String entityFQN, String idClass)
+            String entityFQN, String idClass, boolean jakartaNamespace)
     {
+        final String pathSegmentType;
+        if(jakartaNamespace) {
+            pathSegmentType = "jakarta.ws.rs.core.PathSegment";
+        } else {
+            pathSegmentType = "javax.ws.rs.core.PathSegment";
+        }
+
         String paramArg = "java.lang.Character".equals(idClass) ? 
                 "id.charAt(0)" : "id"; //NOI18N
         String idType = "id".equals(paramArg) ? idClass : "java.lang.String"; //NOI18N
@@ -789,7 +829,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
         editOptions.setParameterNames(new String[]{"id", "entity"}); //NOI18N
         editOptions.setPathParams(new String[]{"id", null}); //NOI18N
         if ( needPathSegment ){
-            editOptions.setParameterTypes(new String[]{"javax.ws.rs.core.PathSegment", entityFQN}); // NOI18N
+            editOptions.setParameterTypes(new String[]{pathSegmentType, entityFQN}); // NOI18N
         }
         else {
             editOptions.setParameterTypes(new String[]{idType, entityFQN}); 
@@ -806,7 +846,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
         destroyOptions.setPathParams(new String[]{"id"}); //NOI18N
         StringBuilder builder = new StringBuilder();
         if ( needPathSegment ){
-            destroyOptions.setParameterTypes(new String[]{"javax.ws.rs.core.PathSegment"}); // NOI18N
+            destroyOptions.setParameterTypes(new String[]{pathSegmentType}); // NOI18N
             builder.append(idType);
             builder.append(" key=getPrimaryKey(id);\n");
             paramArg = "key";
@@ -827,7 +867,7 @@ public class EjbFacadeGenerator implements FacadeGenerator {
         findOptions.setPathParams(new String[]{"id"}); //NOI18N
         findOptions.setParameterNames(new String[]{"id"}); //NOI18N
         if ( needPathSegment ){
-            findOptions.setParameterTypes(new String[]{"javax.ws.rs.core.PathSegment"}); // NOI18N
+            findOptions.setParameterTypes(new String[]{pathSegmentType}); // NOI18N
         }
         else {
             findOptions.setParameterTypes(new String[]{idType});     

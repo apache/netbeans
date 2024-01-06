@@ -573,7 +573,7 @@ non terminal Identifier reserved_non_modifiers_without_class;
 non terminal Identifier semi_reserved_without_class;
 non terminal Identifier identifier_without_class;
 non terminal Identifier identifier;
-non terminal List class_constant_declaration;
+non terminal Pair<Expression, List<ASTNode[]>> class_constant_declaration;
 non terminal List constant_declaration;
 non terminal Integer optional_property_modifiers;
 non terminal Integer constant_modifiers;
@@ -1980,7 +1980,7 @@ constant_modifiers:modifier class_constant_declaration:list T_SEMICOLON:end
 {:
     int constantStart = modifier == null ? listleft : modifierleft;
     modifier = modifier == null ? ASTPHP5Parser.IMPLICIT_PUBLIC : modifier;
-    ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(constantStart, endright, modifier, list, false);
+    ConstantDeclaration classConstantDeclaration = ConstantDeclaration.create(constantStart, endright, modifier, list.first(), list.second(), false);
     RESULT = classConstantDeclaration;
 :}
 
@@ -2937,7 +2937,7 @@ variable_modifiers:modifier optional_class_type_without_static:fieldType class_v
 {:
     int constantStart = modifier == null ? listleft : modifierleft;
     modifier = modifier == null ? ASTPHP5Parser.IMPLICIT_PUBLIC : modifier;
-    ConstantDeclaration classConstantDeclaration = new ConstantDeclaration(constantStart, endright, modifier, list, false);
+    ConstantDeclaration classConstantDeclaration = ConstantDeclaration.create(constantStart, endright, modifier, list.first(), list.second(), false);
     RESULT = classConstantDeclaration;
 :}
 
@@ -2987,6 +2987,11 @@ enum_case_expr ::=
 | T_EQUAL:e expr:expr
 {:
     RESULT = expr;
+:}
+
+| T_EQUAL:e error:expr
+{:
+    RESULT = new ASTErrorExpression(exprleft, exprright);
 :}
 ;
 
@@ -3498,15 +3503,22 @@ constant_declaration:list T_COMMA string_st:constName T_EQUAL static_scalar_valu
 class_constant_declaration ::=
 class_constant_declaration:list T_COMMA identifier_without_class:constName T_EQUAL static_scalar_value:expr
 {:
-    list.add(new ASTNode[] {constName, expr});
+    list.second().add(new ASTNode[] {constName, expr});
     RESULT = list;
 :}
 
 | T_CONST identifier_without_class:constId T_EQUAL static_scalar_value:expr
 {:
-    List list = new LinkedList();
+    List<ASTNode[]> list = new LinkedList<>();
     list.add(new ASTNode[] {constId, expr});
-    RESULT = list;
+    RESULT = Pair.of(null, list);
+:}
+
+| T_CONST type_expr:constType identifier_without_class:constId T_EQUAL static_scalar_value:expr
+{:
+    List<ASTNode[]> list = new LinkedList<>();
+    list.add(new ASTNode[] {constId, expr});
+    RESULT = Pair.of(constType, list);
 :}
 ;
 
@@ -4805,6 +4817,12 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM static_class_constant_array_access:c
     RESULT = new StaticConstantAccess(classNameleft, constantright, className, constant);
 :}
 
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    ReflectionVariable reflectionVariable = new ReflectionVariable(startleft, endright, expr);
+    RESULT = new StaticConstantAccess(classNameleft, endright, className, reflectionVariable, true);
+:}
+
 // GH-4725 PHP 8.2: Fetch properties of enums in const expressions
 // https://wiki.php.net/rfc/fetch_property_in_const_expressions
 // e.g.
@@ -4845,6 +4863,12 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM static_class_constant_array_access:c
 | static_class_constant:constant T_NULLSAFE_OBJECT_OPERATOR T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
 {:
     RESULT = new FieldAccess(constantleft, endright, constant,
+            new ReflectionVariable(startleft, endright, expr), true);
+:}
+
+| static_class_constant:constant T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    RESULT = new StaticConstantAccess(constantleft, endright, constant,
             new ReflectionVariable(startleft, endright, expr), true);
 :}
 ;
@@ -5594,6 +5618,12 @@ variable_without_objects:var
 {:
     RESULT = var;
 :}
+
+| T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    // e.g. Example::{method('foo')}()::{method('bar')}();
+    RESULT = new ReflectionVariable(startleft, endright, expr);
+:}
 ;
 
 object_property ::=
@@ -5944,10 +5974,27 @@ class_name:className T_PAAMAYIM_NEKUDOTAYIM identifier:constant
     RESULT = new StaticConstantAccess(classNameleft, constantright, className, constant);
 :}
 
+| class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    ReflectionVariable reflectionVariable = new ReflectionVariable(startleft, endright, expr);
+    RESULT = new StaticConstantAccess(classNameleft, endright, className, reflectionVariable, true);
+:}
+
+| variable_class_name:className T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    ReflectionVariable reflectionVariable = new ReflectionVariable(startleft, endright, expr);
+    RESULT = new StaticConstantAccess(classNameleft, endright, className, reflectionVariable, true);
+:}
+
 | enum_constant:enumConst T_PAAMAYIM_NEKUDOTAYIM identifier:constant
 {:
     // Name::ENUM_CASE::CONSTANT;
     RESULT = new StaticConstantAccess(enumConstleft, constantright, enumConst, constant);
+:}
+| enum_constant:enumConst T_PAAMAYIM_NEKUDOTAYIM T_CURLY_OPEN:start expr:expr T_CURLY_CLOSE:end
+{:
+    ReflectionVariable reflectionVariable = new ReflectionVariable(startleft, endright, expr);
+    RESULT = new StaticConstantAccess(enumConstleft, endright, enumConst, reflectionVariable, true);
 :}
 ;
 

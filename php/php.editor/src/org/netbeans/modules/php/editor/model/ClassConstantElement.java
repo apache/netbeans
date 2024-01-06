@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.model;
 
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -30,5 +29,14 @@ public interface ClassConstantElement extends ClassMemberElement, ConstantElemen
     @CheckForNull
     @Override
     String getValue();
-    
+
+    /**
+     * Get the declared type.
+     *
+     * @return the declared type, if there is no type, {@code null}
+     * @since 2.31.0
+     */
+    @CheckForNull
+    String getDeclaredType();
+
 }

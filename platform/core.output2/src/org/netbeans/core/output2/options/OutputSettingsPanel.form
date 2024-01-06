@@ -37,32 +37,29 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="previewPanel" alignment="1" max="32767" attributes="0"/>
-                  <Component id="jPanel2" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnRestore" min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
+          <Component id="jPanel2" max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="btnRestore" min="-2" max="-2" attributes="0"/>
           </Group>
+          <Component id="previewPanel" alignment="1" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblTitle" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnRestore" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="btnRestore" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="previewPanel" pref="51" max="32767" attributes="0"/>
+              <Component id="previewPanel" pref="57" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -82,19 +79,18 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lblErrorColor" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblStandardColor" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblLinkColor" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="lblFontFamily" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblBackgroundColor" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblFontSize" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblLinkStyle" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblInputColor" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblFontSize" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblBackgroundColor" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblStandardColor" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblErrorColor" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblInputColor" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblLinkColor" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblLinkStyle" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="fldFontFamily" max="32767" attributes="0"/>
@@ -103,17 +99,17 @@
                       </Group>
                       <Component id="lblUnwrappedOnly" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="cmbLinkStyle" alignment="0" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="cmbLinkStyle" alignment="0" pref="113" max="32767" attributes="0"/>
                               <Component id="cmbImportantLinkColor" alignment="0" max="32767" attributes="0"/>
                               <Component id="cmbLinkColor" alignment="0" max="32767" attributes="0"/>
                               <Component id="cmbInputColor" alignment="0" max="32767" attributes="0"/>
                               <Component id="cmbErrorColor" alignment="0" max="32767" attributes="0"/>
                               <Component id="cmbStandardColor" alignment="0" max="32767" attributes="0"/>
                               <Component id="spnFontSize" alignment="0" min="-2" pref="71" max="-2" attributes="0"/>
-                              <Component id="cmbBackgroundColor" linkSize="1" alignment="0" max="32767" attributes="0"/>
+                              <Component id="cmbBackgroundColor" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
@@ -121,13 +117,12 @@
                               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="cmbFailureColor" alignment="0" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="cmbFailureColor" alignment="0" pref="114" max="32767" attributes="0"/>
                               <Component id="cmbWarningColor" alignment="0" max="32767" attributes="0"/>
-                              <Component id="cmbDebugColor" linkSize="1" alignment="1" pref="238" max="32767" attributes="0"/>
+                              <Component id="cmbDebugColor" alignment="1" max="32767" attributes="0"/>
                               <Component id="cmbSuccessColor" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>

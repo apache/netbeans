@@ -55,7 +55,7 @@
                   <Group type="102" attributes="0">
                       <Component id="nameLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="nameField" pref="684" max="32767" attributes="0"/>
+                      <Component id="nameField" max="32767" attributes="0"/>
                   </Group>
                   <Component id="directoryKindRadio" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="adHocKindRadio" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -66,7 +66,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="directoryLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="directoryField" pref="554" max="32767" attributes="0"/>
+                              <Component id="directoryField" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="directoryButton" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -76,7 +76,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="masterProjectLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="masterProjectField" pref="495" max="32767" attributes="0"/>
+                                      <Component id="masterProjectField" max="32767" attributes="0"/>
                                   </Group>
                                   <Component id="subprojectsKindLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -109,7 +109,7 @@
               <Component id="useOpenCheckbox" min="-2" pref="23" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="autoSynchCheckbox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="subprojectsKindRadio" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="subprojectsKindLabel" min="-2" max="-2" attributes="0"/>
@@ -119,7 +119,7 @@
                   <Component id="masterProjectButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="masterProjectField" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="directoryKindRadio" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="directoryKindLabel" min="-2" max="-2" attributes="0"/>

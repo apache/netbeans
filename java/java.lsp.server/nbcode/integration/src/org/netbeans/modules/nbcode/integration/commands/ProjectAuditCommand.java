@@ -24,15 +24,12 @@ import com.google.gson.JsonPrimitive;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.eclipse.lsp4j.CodeAction;
-import org.eclipse.lsp4j.CodeActionParams;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
@@ -42,10 +39,8 @@ import org.netbeans.modules.cloud.oracle.OCIProfile;
 import org.netbeans.modules.cloud.oracle.adm.AuditOptions;
 import org.netbeans.modules.cloud.oracle.adm.AuditResult;
 import org.netbeans.modules.cloud.oracle.adm.ProjectVulnerability;
-import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.UIContext;
-import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
@@ -57,8 +52,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author sdedic
  */
-@ServiceProvider(service = CodeActionsProvider.class)
-public class ProjectAuditCommand extends CodeActionsProvider {
+@ServiceProvider(service = CommandProvider.class)
+public class ProjectAuditCommand implements CommandProvider {
     private static final Logger LOG = Logger.getLogger(ProjectAuditCommand.class.getName());
     
     /**
@@ -86,24 +81,43 @@ public class ProjectAuditCommand extends CodeActionsProvider {
             COMMAND_LOAD_AUDIT_OLD
     ));
     
-    @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        return Collections.emptyList();
-    }
-    
     private final Gson gson;
 
     public ProjectAuditCommand() {
         gson = new Gson();
     }
 
+    /**
+     * Implements commands {@code nbls.projectAudit.execute} and {@code nbls.projectAudit.display}. The command accepts parameters
+     * <ol>
+     * <li>URI that identifies the project or a file within a project. If the file is not a part of a project, an exception is thrown
+     * <li>knowledgebase OCID. It must not be empty and the knowledgebase must exist.
+     * <li>options structure, optional.
+     * </ol>
+     * If the project does not support vulnerability audits, an exception is thrown. The following options are supported:
+     * <ul>
+     * <li><b>profile</b> : string - OCI profile to use for communication (default: null = default profile)
+     * <li><b>force</b> : boolean - forces audit execution in OCI, bypasses local caches and older audit results (default: false).
+     * <li><b>compute</b> : boolean - for .display, computes the audit, if there are no results in OCI (default: true)
+     * <li><b>disableCache</b> : boolean - do not load from local cache (default: false)
+     * <li><b>suppressErrors</b> : boolean - suppresses displaying errors by NBLS, only fails the Future with an exception (default: false)
+     * <li><b>configPath</b> : string - custom OCI config path (default: null)
+     * <li><b>returnData</b> : boolean - if true, summary data is returned from the command. If false, the command just indicates success, returns audit OCID (default: false).
+     * <li><b>displaySummary</b> : boolean - if true, NBLS displays audit summary at completion of the command (default: true)
+     * </ul>
+     * The .execute command defaults to {@code force = true}.
+     * @param client the LSP client to communicate with
+     * @param command the command name
+     * @param arguments arguments to the command
+     * @return Future that contains audit ID or response structure {@link AuditResult}.
+     */
     @NbBundle.Messages({
         "# {0} - project name",
         "# {1} - cause message",
         "ERR_KnowledgeBaseSearchFailed=Could not search for knowledge base of project {0}: {1}"
     })
     @Override
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+    public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         if (arguments.size() < 3) {
             throw new IllegalArgumentException("Expected 3 parameters: resource, compartment, knowledgebase");
         }
@@ -131,7 +145,7 @@ public class ProjectAuditCommand extends CodeActionsProvider {
         }
         
         String knowledgeBase = ((JsonPrimitive) arguments.get(1)).getAsString();
-        Object o = arguments.get(2);
+        Object o = arguments.size() > 2 ? arguments.get(2) : new JsonObject();
         if (!(o instanceof JsonObject)) {
             throw new IllegalArgumentException("Expected structure, got  " + o);
         }
@@ -142,6 +156,8 @@ public class ProjectAuditCommand extends CodeActionsProvider {
         LOG.log(Level.FINE, "Running audit command with context: {0}", ctx);
         
         boolean forceAudit = options.has("force") && options.get("force").getAsBoolean();
+        boolean executeIfNotExists = forceAudit || !options.has("compute") ||  options.get("compute").getAsBoolean();
+        boolean disableCache = forceAudit || (options.has("disableCache") && options.get("disableCache").getAsBoolean());
         String preferredName = options.has("auditName") ? options.get("auditName").getAsString() : null;
         
         final OCIProfile auditWithProfile;
@@ -210,7 +226,11 @@ public class ProjectAuditCommand extends CodeActionsProvider {
                     break;
                 case COMMAND_LOAD_AUDIT:
                 case COMMAND_LOAD_AUDIT_OLD: {
-                    exec = v.runProjectAudit(kb, auditOpts.setRunIfNotExists(forceAudit).setAuditName(preferredName));
+                    exec = v.runProjectAudit(kb, 
+                            auditOpts.
+                                    setRunIfNotExists(executeIfNotExists).
+                                    setForceAuditExecution(forceAudit).
+                                    setDisableCache(disableCache));
                     break;
                 }
                 default:

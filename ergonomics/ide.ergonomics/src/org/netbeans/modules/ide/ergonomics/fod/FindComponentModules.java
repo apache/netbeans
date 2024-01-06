@@ -261,7 +261,6 @@ public final class FindComponentModules extends Task {
     }
     
     private void findComponentModules () {
-        long start = System.currentTimeMillis();
         Collection<UpdateUnit> units = null;
         Collection<UpdateElement> elementsForInstall = null;
         buildCodebaseIndex();

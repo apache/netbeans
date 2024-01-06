@@ -1,0 +1,8 @@
+Name: __toString
+public function __toString(): string {
+return "TestMagicMethodToString[name=" . $this->name
+. ", age=" . $this->age
+. ", phoneNumber=" . $this->phoneNumber
+. ", emailAddress=" . $this->emailAddress
+. "]";${cursor}
+}

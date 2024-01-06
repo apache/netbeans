@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.dbgp.packets;
 
 import org.netbeans.modules.php.dbgp.DebugSession;
+import org.netbeans.modules.php.dbgp.breakpoints.BreakpointModel;
 import org.w3c.dom.Node;
 
 /**
@@ -28,6 +29,7 @@ import org.w3c.dom.Node;
 public class FeatureSetResponse extends DbgpResponse {
     private static final String SUCCESS = "success"; // NOI18N
     private static final String FEATURE_NAME = "feature_name"; // NOI18N
+    private static final String ERROR = "error"; // NOI18N
 
     FeatureSetResponse(Node node) {
         super(node);
@@ -43,6 +45,23 @@ public class FeatureSetResponse extends DbgpResponse {
 
     @Override
     public void process(DebugSession session, DbgpCommand command) {
+        if (command instanceof FeatureSetCommand) {
+            String feature = ((FeatureSetCommand) command).getFeature();
+            if (feature.equals(FeatureGetCommand.Feature.BREAKPOINT_DETAILS.toString())) {
+                Node error = getChild(getNode(), ERROR);
+                setSearchCurrentBreakpointById(session, error == null);
+            }
+        }
+    }
+
+    private void setSearchCurrentBreakpointById(DebugSession session, boolean value) {
+        DebugSession.IDESessionBridge bridge = session.getBridge();
+        if (bridge != null) {
+            BreakpointModel breakpointModel = bridge.getBreakpointModel();
+            if (breakpointModel != null) {
+                breakpointModel.setSearchCurrentBreakpointById(value);
+            }
+        }
     }
 
 }

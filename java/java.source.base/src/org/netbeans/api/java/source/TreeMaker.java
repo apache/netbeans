@@ -3916,4 +3916,17 @@ public final class TreeMaker {
     public LambdaExpressionTree setLambdaBody(LambdaExpressionTree method, Tree newBody) {
         return delegate.setLambdaBody(method, newBody);
     }
+
+    /**Creates a new string template expression from the given parameters.
+     *
+     * @param processor the processor of the string template
+     * @param fragments the template fragments
+     * @param expressions the template expressions
+     * @return the string template instance
+     * @since 2.65
+     */
+    public StringTemplateTree StringTemplate(ExpressionTree processor, List<String> fragments, List<? extends ExpressionTree> expressions) {
+        return delegate.StringTemplate(processor, fragments, expressions);
+    }
+
 }

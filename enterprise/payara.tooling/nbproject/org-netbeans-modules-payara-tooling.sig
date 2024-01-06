@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.16
+#Version 2.17
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1325,7 +1325,7 @@ supr java.lang.Object
 hfds artifactId,groupId,version
 
 CLSS public org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion
-fld public final static java.lang.String DEFAULT_REPOSITORY_URL = "https://repo1.maven.org/maven2/"
+fld public final static java.lang.String DEFAULT_REPOSITORY_URL = "https://repo.maven.apache.org/maven2/"
 fld public final static org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI EMPTY
 intf java.lang.Comparable<org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI>
 intf org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI

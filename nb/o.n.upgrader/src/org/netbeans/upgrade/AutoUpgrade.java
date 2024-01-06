@@ -23,14 +23,11 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -64,11 +61,7 @@ public final class AutoUpgrade {
         }
         
         // try new place
-        File sourceFolder = checkPreviousOnOsSpecificPlace (NEWER_VERSION_TO_CHECK);
-        if (sourceFolder == null) {
-            // try former place
-            sourceFolder = checkPrevious (VERSION_TO_CHECK);
-        }
+        File sourceFolder = checkPreviousOnOsSpecificPlace (APACHE_VERSION_TO_CHECK);
         if (sourceFolder != null) {
             if (!showUpgradeDialog (sourceFolder, noteChangedDefaults)) {
                 throw new org.openide.util.UserCancelException ();
@@ -79,34 +72,10 @@ public final class AutoUpgrade {
         }
     }
 
-    //#75324 NBplatform settings are not imported
-    private static void upgradeBuildProperties(final File sourceFolder, final String[] version) throws IOException {
-        File userdir = new File(System.getProperty("netbeans.user", ""));//NOI18N
-        String[] regexForSelection = new String[]{
-            "^nbplatform[.](?!default[.]netbeans[.]dest[.]dir).+[.].+=.+$", //NOI18N
-            // #161616
-            "^var[.].*"  //NOI18N
-        };
-        Copy.appendSelectedLines(new File(sourceFolder, "build.properties"), //NOI18N
-                userdir, regexForSelection);
-    }
-
-    // the order of VERSION_TO_CHECK here defines the precedence of imports
-    // the first one will be choosen for import
-    private static final List<String> VERSION_TO_CHECK = 
-            Arrays.asList ( ".netbeans/7.1.2",  ".netbeans/7.1.1", ".netbeans/7.1", ".netbeans/7.0", ".netbeans/6.9" );//NOI18N
-    
-    // userdir on OS specific root of userdir (see issue 196075)
-    static final List<String> PRE_APACHE_NEWER_VERSION_TO_CHECK =
-            Arrays.asList ("8.2", "8.1", "8.0.2", "8.0.1", "8.0", "7.4", "7.3.1", "7.3", "7.2.1", "7.2"); //NOI18N
-     // XXX: copy to autoupgrade.pluginimporter
-    
     static final Comparator<String> APACHE_VERSION_COMPARATOR = (v1, v2) -> new SpecificationVersion(v1).compareTo(new SpecificationVersion(v2));
     
     static final List<String> APACHE_VERSION_TO_CHECK = Arrays.asList(NbBundle.getMessage(AutoUpgrade.class, "apachenetbeanspreviousversion").split(",")).stream().sorted(APACHE_VERSION_COMPARATOR.reversed()).collect(Collectors.toList());
     
-    static final List<String> NEWER_VERSION_TO_CHECK = Stream.concat(APACHE_VERSION_TO_CHECK.stream(), PRE_APACHE_NEWER_VERSION_TO_CHECK.stream()).collect(Collectors.toList());
-                
     private static File checkPreviousOnOsSpecificPlace (final List<String> versionsToCheck) {
         String defaultUserdirRoot = System.getProperty ("netbeans.default_userdir_root"); // NOI18N
         File sourceFolder;
@@ -120,29 +89,6 @@ public final class AutoUpgrade {
             }
         }
         return null;
-    }
-
-    private static File checkPrevious (final List<String> versionsToCheck) {        
-        String userHome = System.getProperty ("user.home"); // NOI18N
-        File sourceFolder = null;
-        
-        if (userHome != null) {
-            File userHomeFile = new File (userHome);
-            Iterator<String> it = versionsToCheck.iterator ();
-            String ver;
-            while (it.hasNext () && sourceFolder == null) {
-                ver = it.next ();
-                sourceFolder = new File (userHomeFile.getAbsolutePath (), ver);
-                
-                if (sourceFolder.isDirectory ()) {
-                    break;
-                }
-                sourceFolder = null;
-            }
-            return sourceFolder;
-        } else {
-            return null;
-        }
     }
     
     private static boolean madeObsoleteMessagesLog() {
@@ -191,7 +137,7 @@ public final class AutoUpgrade {
         JDialog d = Util.createJOptionProgressDialog(p, NbBundle.getMessage (AutoUpgrade.class, "MSG_Confirmation_Title"), source, progressBar);
         d.setVisible (true);
 
-        return new Integer (JOptionPane.YES_OPTION).equals (p.getValue ());
+        return Integer.valueOf(JOptionPane.YES_OPTION).equals (p.getValue ());
     }
 
     private static void showNoteDialog (String note) {
@@ -206,12 +152,11 @@ public final class AutoUpgrade {
         File userdir = new File(System.getProperty ("netbeans.user", "")); // NOI18N
 
         java.util.Set<?> includeExclude;
-        try {
-            Reader r = new InputStreamReader (
+        try (Reader r = new InputStreamReader (
                     AutoUpgrade.class.getResourceAsStream ("copy" + oldVersion), // NOI18N
                     "utf-8"); // NOI18N
+                ) {
             includeExclude = IncludeExclude.create (r);
-            r.close ();
         } catch (IOException ex) {
             throw new IOException("Cannot import from version: " + oldVersion, ex);
         }
@@ -242,37 +187,6 @@ public final class AutoUpgrade {
         
     }
     
-    /* copy-pasted method doUpgrade and slightly modified to copy files relative
-     * to userdir.
-     */
-    private static void doNonStandardUpgrade (File source,String oldVersion) 
-            throws IOException, PropertyVetoException {
-        File userdir = new File(System.getProperty("netbeans.user", "")); // NOI18N        
-        java.util.Set<?> includeExclude;
-        try {
-            InputStream is = AutoUpgrade.class.getResourceAsStream("nonstandard" + oldVersion); // NOI18N
-            if (is == null) {
-                return;
-            }
-            Reader r = new InputStreamReader(is, "utf-8"); // NOI18N
-            includeExclude = IncludeExclude.create(r);
-            r.close();
-        } catch (IOException ex) {
-            throw new IOException("Cannot import from version: " +  oldVersion + "nonstandard", ex);
-        }        
-        ErrorManager.getDefault ().log (ErrorManager.USER, "Import: Old version: " // NOI18N
-            + oldVersion + "nonstandard"  + ". Importing from " + source + " to " + userdir // NOI18N
-        );        
-        
-        LocalFileSystem  old = new LocalFileSystem();
-        old.setRootDirectory(source);
-        
-        LocalFileSystem nfs = new LocalFileSystem();
-        nfs.setRootDirectory(userdir);                
-        Copy.copyDeep(old.getRoot(), nfs.getRoot(), includeExclude, PathTransformation.getInstance(oldVersion));
-    }    
-    
-
     static MultiFileSystem createLayeredSystem(final LocalFileSystem lfs, final XMLFileSystem xmlfs) {
         MultiFileSystem old;
         

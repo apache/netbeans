@@ -283,7 +283,7 @@ class OccurenceBuilder {
     }
 
     void prepare(StaticConstantAccess staticConstantAccess, Scope scope) {
-        if (canBePrepared(staticConstantAccess, scope)) {
+        if (!staticConstantAccess.isDynamicName() && canBePrepared(staticConstantAccess, scope)) {
             ASTNodeInfo<StaticConstantAccess> node = ASTNodeInfo.create(staticConstantAccess);
             staticConstantInvocations.put(node, scope);
         }
@@ -336,7 +336,6 @@ class OccurenceBuilder {
     void prepare(Kind kind, Expression node, Scope scope) {
         ASTNodeInfo<Expression> nodeInfo = null;
         if (node instanceof Identifier) {
-
             nodeInfo = ASTNodeInfo.create(kind, (Identifier) node);
         } else if (node instanceof NamespaceName) {
             nodeInfo = ASTNodeInfo.create(kind, (NamespaceName) node);
@@ -426,7 +425,7 @@ class OccurenceBuilder {
                     prepare(Kind.CLASS, classDeclaration.getSuperClass(), scope);
                 }
             }
-            List<Expression> interfaes = classDeclaration.getInterfaes();
+            List<Expression> interfaes = classDeclaration.getInterfaces();
             for (Expression iface : interfaes) {
                 QualifiedName ifaceName = QualifiedName.create(iface);
                 if (ifaceName != null && VariousUtils.isAlias(ifaceName, classDeclaration.getStartOffset(), scope)) {
@@ -442,7 +441,7 @@ class OccurenceBuilder {
         if (canBePrepared(interfaceDeclaration, scope)) {
             InterfaceDeclarationInfo node = InterfaceDeclarationInfo.create(interfaceDeclaration);
             ifaceDeclarations.put(node, scope);
-            List<Expression> interfaes = interfaceDeclaration.getInterfaes();
+            List<Expression> interfaes = interfaceDeclaration.getInterfaces();
             for (Expression iface : interfaes) {
                 prepare(Kind.IFACE, iface, scope);
             }
@@ -460,7 +459,7 @@ class OccurenceBuilder {
         if (canBePrepared(enumDeclaration, scope)) {
             EnumDeclarationInfo node = EnumDeclarationInfo.create(enumDeclaration);
             enumDeclarations.put(node, scope);
-            List<Expression> interfaes = enumDeclaration.getInterfaes();
+            List<Expression> interfaes = enumDeclaration.getInterfaces();
             for (Expression iface : interfaes) {
                 QualifiedName ifaceName = QualifiedName.create(iface);
                 if (ifaceName != null && VariousUtils.isAlias(ifaceName, enumDeclaration.getStartOffset(), scope)) {
@@ -2460,7 +2459,11 @@ class OccurenceBuilder {
                     }
                     ASTNodeInfo<Variable> nodeInfo = entry.getKey();
                     boolean addOccurence = false;
-                    if (NameKind.exact(nodeInfo.getName()).matchesName(PhpElementKind.VARIABLE, nodeName)) {
+                    String name = nodeInfo.getName();
+                    if (!StringUtils.hasText(name)) {
+                        continue;
+                    }
+                    if (NameKind.exact(name).matchesName(PhpElementKind.VARIABLE, nodeName)) {
                         if (!var.isGloballyVisible()) {
                             Scope nextScope = entry.getValue();
                             if (var.representsThis() && nextScope.getInScope() instanceof TypeScope) {

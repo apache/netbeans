@@ -316,6 +316,9 @@ public class PrintASTVisitor implements Visitor {
         if (node.isAttributed()) {
             printNode.addChildrenGroup("Attributes", node.getAttributes());
         }
+        if (node.getConstType() != null) {
+            printNode.addChild("ConstType", node.getConstType());
+        }
         printNode.addChildrenGroup("Names", node.getNames());
         printNode.addChildrenGroup("Initializers", node.getInitializers());
         printNode.print(this);
@@ -337,7 +340,7 @@ public class PrintASTVisitor implements Visitor {
         }
         printNode.addChildrenGroup("ClassName", new ASTNode[]{classDeclaration.getName()});
         printNode.addChildrenGroup("SuperClassName", new ASTNode[]{classDeclaration.getSuperClass()});
-        printNode.addChildrenGroup("Interfaces", classDeclaration.getInterfaes());
+        printNode.addChildrenGroup("Interfaces", classDeclaration.getInterfaces());
         printNode.addChild(classDeclaration.getBody());
         printNode.print(this);
     }
@@ -447,7 +450,7 @@ public class PrintASTVisitor implements Visitor {
         }
         printNode.addChildrenGroup("EnumName", new ASTNode[]{enumDeclaration.getName()});
         printNode.addChildrenGroup("BackingType", new ASTNode[]{enumDeclaration.getBackingType()});
-        printNode.addChildrenGroup("Interfaces", enumDeclaration.getInterfaes());
+        printNode.addChildrenGroup("Interfaces", enumDeclaration.getInterfaces());
         printNode.addChild(enumDeclaration.getBody());
         printNode.print(this);
     }
@@ -853,7 +856,8 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(StaticConstantAccess node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "StaticConstantAccess");
+        XMLPrintNode printNode = new XMLPrintNode(node, "StaticConstantAccess",
+                new String[]{"isDynamicName", (node.isDynamicName() ? "true" : "false")});
         printNode.addChild(node.getDispatcher());
         printNode.addChild("Constant", node.getConstant());
         printNode.addChild("Member", node.getMember());

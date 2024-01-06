@@ -34,6 +34,7 @@ import org.netbeans.modules.php.editor.model.nodes.CaseDeclarationInfo;
 import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.openide.util.Parameters;
 import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 
 public final class CaseElementImpl extends PhpElementImpl implements EnumCaseElement {
 
@@ -41,6 +42,7 @@ public final class CaseElementImpl extends PhpElementImpl implements EnumCaseEle
     private final TypeElement enclosingType;
     private final String value;
     private final PhpModifiers modifiers;
+    private final boolean isBacked;
 
     private CaseElementImpl(
             final TypeElement enclosingType,
@@ -50,12 +52,14 @@ public final class CaseElementImpl extends PhpElementImpl implements EnumCaseEle
             final int flags,
             final String fileUrl,
             final ElementQuery elementQuery,
-            final boolean isDeprecated
+            final boolean isDeprecated,
+            final boolean isBacked
     ) {
         super(caseName, enclosingType.getName(), fileUrl, offset, elementQuery, isDeprecated);
         this.enclosingType = enclosingType;
         this.value = value;
         this.modifiers = PhpModifiers.fromBitMask(flags);
+        this.isBacked = isBacked;
     }
 
     public static Set<EnumCaseElement> fromSignature(
@@ -96,7 +100,8 @@ public final class CaseElementImpl extends PhpElementImpl implements EnumCaseEle
                     signParser.getFlags(),
                     signParser.getFileUrl(),
                     indexScopeQuery,
-                    signParser.isDeprecated()
+                    signParser.isDeprecated(),
+                    signParser.isBacked()
             );
         }
         return retval;
@@ -107,6 +112,11 @@ public final class CaseElementImpl extends PhpElementImpl implements EnumCaseEle
         Parameters.notNull("node", node); // NOI18N
         Parameters.notNull("fileQuery", fileQuery); // NOI18N
         CaseDeclarationInfo info = CaseDeclarationInfo.create(node);
+        boolean isBacked = false;
+        if (type instanceof EnumElement) {
+            EnumElement enumElement = (EnumElement) type;
+            isBacked = enumElement.getBackingType() != null;
+        }
         return new CaseElementImpl(
                 type,
                 info.getName(),
@@ -115,7 +125,8 @@ public final class CaseElementImpl extends PhpElementImpl implements EnumCaseEle
                 info.getAccessModifiers().toFlags(),
                 fileQuery.getURL().toExternalForm(),
                 fileQuery,
-                VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node)
+                VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node),
+                isBacked
         );
     }
 
@@ -135,6 +146,7 @@ public final class CaseElementImpl extends PhpElementImpl implements EnumCaseEle
         sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON); // 4: deprecated
         sb.append(getFilenameUrl()).append(Separator.SEMICOLON); // 5: filename url
         sb.append(getPhpModifiers().toFlags()).append(Separator.SEMICOLON); // 6: modifiers
+        sb.append(isBacked() ? 1 : 0).append(Separator.SEMICOLON); // 6: isBacked
         checkSignature(sb);
         return sb.toString();
     }
@@ -152,6 +164,11 @@ public final class CaseElementImpl extends PhpElementImpl implements EnumCaseEle
     @Override
     public TypeElement getType() {
         return enclosingType;
+    }
+
+    @Override
+    public boolean isBacked() {
+        return isBacked;
     }
 
     private void checkSignature(StringBuilder sb) {
@@ -209,7 +226,9 @@ public final class CaseElementImpl extends PhpElementImpl implements EnumCaseEle
         VALUE(3),
         DEPRECATED(4),
         FILENAME_URL(5),
-        MODIFIERS(6);
+        MODIFIERS(6),
+        BACKED(7),
+        ;
         private final int index;
 
         private SigElement(int index) {
@@ -251,6 +270,10 @@ public final class CaseElementImpl extends PhpElementImpl implements EnumCaseEle
 
         int getFlags() {
             return signature.integer(SigElement.MODIFIERS.getIndex());
+        }
+
+        boolean isBacked() {
+            return signature.integer(SigElement.BACKED.getIndex()) == 1;
         }
 
     }

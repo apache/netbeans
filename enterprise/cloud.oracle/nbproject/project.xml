@@ -83,6 +83,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>com.google.gson</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>2.8.9</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.db</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -236,8 +244,8 @@
             </test-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-identity-3.9.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-identity-3.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-identity-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-identity-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/resilience4j-circuitbreaker-1.7.1.jar</runtime-relative-path>
@@ -248,28 +256,28 @@
                 <binary-origin>external/resilience4j-core-1.7.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-common-3.9.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-common-3.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-common-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-common-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-devops-3.9.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-devops-3.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-devops-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-devops-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-adm-3.9.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-adm-3.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-adm-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-adm-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-common-httpclient-3.9.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-common-httpclient-3.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-common-httpclient-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-common-httpclient-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-common-httpclient-jersey-3.9.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-common-httpclient-jersey-3.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-common-httpclient-jersey-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-common-httpclient-jersey-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-addons-apache-configurator-jersey-3.9.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-addons-apache-configurator-jersey-3.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-addons-apache-configurator-jersey-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-addons-apache-configurator-jersey-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/httpclient-4.5.13.jar</runtime-relative-path>
@@ -288,20 +296,28 @@
                 <binary-origin>external/vavr-0.10.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-database-3.9.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-database-3.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-database-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-database-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-circuitbreaker-3.9.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-circuitbreaker-3.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-vault-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-vault-3.25.3.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/oci-java-sdk-keymanagement-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-keymanagement-3.25.3.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/oci-java-sdk-circuitbreaker-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-circuitbreaker-3.25.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/vavr-match-0.10.2.jar</runtime-relative-path>
                 <binary-origin>external/vavr-match-0.10.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/oci-java-sdk-workrequests-3.9.0.jar</runtime-relative-path>
-                <binary-origin>external/oci-java-sdk-workrequests-3.9.0.jar</binary-origin>
+                <runtime-relative-path>ext/oci-java-sdk-workrequests-3.25.3.jar</runtime-relative-path>
+                <binary-origin>external/oci-java-sdk-workrequests-3.25.3.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

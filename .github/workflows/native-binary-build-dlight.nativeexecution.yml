@@ -42,9 +42,13 @@ name: NetBeans Native Execution Libraries
 
 
 on:
-  # Triggers the workflow on push or pull request events but only for
-  # relevant paths
   push:
+    branches:
+      - 'master'
+      - 'delivery'
+      - 'release*'
+    # Triggers the workflow on push or pull request events but only for
+    # relevant paths
     paths:
       - .github/workflows/native-binary-build-dlight.nativeexecution.y*
       - ide/dlight.nativeexecution/**
@@ -240,6 +244,8 @@ jobs:
 
     - name: Tidy up and display artifacts
       run: |
+        cp myfiles/nativeexecution-external-sources/LICENSE myfiles/LICENSE
+        cp myfiles/nativeexecution-external-sources/NOTICE myfiles/NOTICE
         rm -rf myfiles/*sources*
         ls -l -R
 

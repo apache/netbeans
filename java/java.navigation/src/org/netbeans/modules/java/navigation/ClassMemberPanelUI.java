@@ -785,21 +785,18 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
+            final Node[] oldNodes = (Node[]) evt.getOldValue();
+            final Node[] newNodes = (Node[]) evt.getNewValue();
+            for (Node n : oldNodes) {
+                selectedNodes.remove(n);
+            }
+            for (Node n : newNodes) {
+                selectedNodes.add(n);
+            }
             final boolean javadocDone = ignoreJavaDoc.get() == Boolean.TRUE;
-            RP.execute(new Runnable() {
-                @Override
-                public void run() {
-                    final Node[] oldNodes = (Node[]) evt.getOldValue();
-                    final Node[] newNodes = (Node[]) evt.getNewValue();
-                    for (Node n : oldNodes) {
-                        selectedNodes.remove(n);
-                    }
-                    for (Node n : newNodes) {
-                        selectedNodes.add(n);
-                    }
-                    if (newNodes.length > 0 && !javadocDone && JavadocTopComponent.shouldUpdate()) {
-                        scheduleJavadocRefresh(JDOC_TIME);
-                    }
+            RP.execute(() -> {
+                if (newNodes.length > 0 && !javadocDone && JavadocTopComponent.shouldUpdate()) {
+                    scheduleJavadocRefresh(JDOC_TIME);
                 }
             });
         } else if (TapPanel.EXPANDED_PROPERTY.equals(evt.getPropertyName())) {

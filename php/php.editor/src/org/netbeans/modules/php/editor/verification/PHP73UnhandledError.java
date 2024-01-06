@@ -161,7 +161,7 @@ public class PHP73UnhandledError extends UnhandledErrorRule {
         }
 
         private void checkFunctionCallTrailingCommas(TokenSequence<PHPTokenId> ts) {
-            nodes.forEach((node) -> {
+            for (ASTNode node: nodes) {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }
@@ -183,7 +183,7 @@ public class PHP73UnhandledError extends UnhandledErrorRule {
                 if (!parameters.isEmpty()) {
                     createError(parameters.get(parameters.size() - 1));
                 }
-            });
+            }
         }
 
         @CheckForNull

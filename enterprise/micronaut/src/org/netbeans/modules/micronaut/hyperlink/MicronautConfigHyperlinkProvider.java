@@ -19,28 +19,18 @@
 package org.netbeans.modules.micronaut.hyperlink;
 
 import java.awt.Toolkit;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.util.ElementFilter;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.api.progress.BaseProgressUtils;
@@ -128,7 +118,7 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
                 ClasspathInfo cpInfo = ClasspathInfo.create(doc);
                 for (ConfigurationMetadataSource source : sources) {
                     if (property == null || source.getProperties().get(property.getId()) == property) {
-                        ElementHandle handle = getElementHandle(cpInfo, source.getType(), property != null ? property.getName() : null, cancel);
+                        ElementHandle handle = MicronautConfigUtilities.getElementHandle(cpInfo, source.getType(), property != null ? property.getName() : null, cancel);
                         if (handle != null && ElementOpen.open(cpInfo, handle)) {
                             return;
                         }
@@ -152,53 +142,6 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
             return sb.toString();
         }
         return null;
-    }
-
-    private static ElementHandle getElementHandle(ClasspathInfo cpInfo, String typeName, String propertyName, AtomicBoolean cancel) {
-        ElementHandle[] handle = new ElementHandle[1];
-        if (typeName != null) {
-            handle[0] = ElementHandle.createTypeElementHandle(ElementKind.CLASS, typeName);
-            if (cpInfo != null && propertyName != null) {
-                try {
-                    JavaSource.create(cpInfo).runUserActionTask(controller -> {
-                        if (cancel != null && cancel.get()) {
-                            return;
-                        }
-                        controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        TypeElement te = (TypeElement) handle[0].resolve(controller);
-                        if (te != null) {
-                            ElementHandle found = null;
-                            String name = "set" + propertyName.replace("-", "");
-                            for (ExecutableElement executableElement : ElementFilter.methodsIn(te.getEnclosedElements())) {
-                                if (name.equalsIgnoreCase(executableElement.getSimpleName().toString())) {
-                                    found = ElementHandle.create(executableElement);
-                                    break;
-                                }
-                            }
-                            if (found == null) {
-                                TypeElement typeElement = controller.getElements().getTypeElement("io.micronaut.context.annotation.Property");
-                                for (VariableElement variableElement : ElementFilter.fieldsIn(te.getEnclosedElements())) {
-                                    for (AnnotationMirror annotationMirror : variableElement.getAnnotationMirrors()) {
-                                        if (typeElement == annotationMirror.getAnnotationType().asElement()) {
-                                            for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
-                                                if ("name".contentEquals(entry.getKey().getSimpleName()) && propertyName.equals(entry.getValue().getValue())) {
-                                                    found = ElementHandle.create(variableElement);
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (found != null) {
-                                handle[0] = found;
-                            }
-                        }
-                    }, true);
-                } catch (IOException ex) {}
-            }
-        }
-        return handle[0];
     }
 
     public static final class Task extends IndexingAwareParserResultTask<Parser.Result> {
@@ -279,7 +222,7 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
                 for (ConfigurationMetadataSource source : sources) {
                     if (property == null || source.getProperties().get(property.getId()) == property) {
                         String typeName = source.getType();
-                        ElementHandle handle = getElementHandle(cpInfo, typeName, property != null ? property.getName() : null, cancel);
+                        ElementHandle handle = MicronautConfigUtilities.getElementHandle(cpInfo, typeName, property != null ? property.getName() : null, cancel);
                         if (handle != null) {
                             CompletableFuture<ElementOpen.Location> future = ElementOpen.getLocation(cpInfo, handle, typeName.replace('.', '/') + ".class");
                             return future.thenApply(location -> {

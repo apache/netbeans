@@ -2,12 +2,12 @@
 
 Document 0
 Searchable Keys:
-  base : arrowfunctiondeclaration:1205;ArrowFunctionDeclaration:1205;1205;$param:int|float:1::1:0:0:1:0:0;string|false;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;
-  base : arrowfunctiondeclaration:1262;ArrowFunctionDeclaration:1262;1262;$param:int|float:1::1:0:0:1:0:0;\Test1\Foo|\Test2\Bar|string;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;
-  base : lambdafunctiondeclaration:1030;LambdaFunctionDeclaration:1030;1030;$number:int|float|null:1::1:0:0:1:0:0;Foo|Bar;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;
-  base : lambdafunctiondeclaration:1112;LambdaFunctionDeclaration:1112;1112;$number:int|float|null:1::1:0:0:1:0:0;\Test1\Foo|\Test2\Bar;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;
-  base : union_types;union_types;824;$number:int|float:1::1:0:0:1:0:0,$param:Foo|Bar|null:1::1:0:0:1:0:0;int|float|\Foo;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;
-  base : union_types;union_types;919;$number:int|float:1::1:0:0:1:0:0,$param:\Test1|Foo|Bar|null:1::1:0:0:1:0:0;int|float|\Test1\Foo;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;
+  base : arrowfunctiondeclaration:1205;ArrowFunctionDeclaration:1205;1205;$param:int|float:1::1:0:0:1:0:0:int|float:;string|false;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;string|false;
+  base : arrowfunctiondeclaration:1262;ArrowFunctionDeclaration:1262;1262;$param:int|float:1::1:0:0:1:0:0:int|float:;\Test1\Foo|\Test2\Bar|string;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;\Test1\Foo|\Test2\Bar|string;
+  base : lambdafunctiondeclaration:1030;LambdaFunctionDeclaration:1030;1030;$number:int|float|null:1::1:0:0:1:0:0:int|float|null:;Foo|Bar;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;Foo|Bar;
+  base : lambdafunctiondeclaration:1112;LambdaFunctionDeclaration:1112;1112;$number:int|float|null:1::1:0:0:1:0:0:int|float|null:;\Test1\Foo|\Test2\Bar;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;\Test1\Foo|\Test2\Bar;
+  base : union_types;union_types;824;$number:int|float:1::1:0:0:1:0:0:int|float:,$param:Foo|Bar|null:1::1:0:0:1:0:0:Foo|Bar|null:;int|float|\Foo;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;int|float|Foo;
+  base : union_types;union_types;919;$number:int|float:1::1:0:0:1:0:0:int|float:,$param:\Test1|Foo|Bar|null:1::1:0:0:1:0:0:\Test1|Foo|Bar|null:;int|float|\Test1\Foo;;0;<TESTURL>/testPHP80UnionTypesFunctions.php;1;0;int|float|\Test1\Foo;
   top : $arrow
   top : $arrow2
   top : $closure

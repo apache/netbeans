@@ -20,6 +20,8 @@
 package org.netbeans.modules.php.editor.parser;
 
 import java.util.ArrayList;
+import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocNode;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocStaticAccessType;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTag;
@@ -56,15 +58,19 @@ public class PHPVarCommentParser {
             }
             int startDocNode;
             int endPosition = 0;
-            String[] parts = definition.split("[ \t]+"); //NOI18N
+            String[] parts = CodeUtils.WHITE_SPACES_PATTERN.split(definition);
             if (isExpectedPartsLength(isPHPDoc, parts)
                     && parts[variableIndex].charAt(0) == '$') { //NOI18N
                 //counting types
-                String[] types = parts[typeIndex].split("[|]"); //NOI18N
-                int typePosition = startOffset + comment.indexOf(parts[typeIndex]);
+                String typePart = parts[typeIndex];
+                String[] types = Type.splitTypes(typePart);
+                int typePosition = startOffset + comment.indexOf(typePart);
                 ArrayList<PHPDocTypeNode> typeNodes = new ArrayList<>();
+                int fromEndIndexOfLastType = 0;
                 for (String type: types) {
-                    startDocNode = typePosition + parts[typeIndex].indexOf(type);
+                    int indexOfType = typePart.indexOf(type, fromEndIndexOfLastType);
+                    startDocNode = typePosition + indexOfType;
+                    fromEndIndexOfLastType = indexOfType + type.length();
                     index = type.indexOf("::"); //NOI18N
                     boolean isArray = (type.indexOf('[') > 0  && type.indexOf(']') > 0);
                     if (isArray) {

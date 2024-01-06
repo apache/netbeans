@@ -168,7 +168,7 @@ public class AdminFactoryTest extends CommandTest {
     }
     
     /**
-     * Test factory functionality for GlassFish v. 7.0.6
+     * Test factory functionality for GlassFish v. 7.0.11
      * <p/>
      * Factory should initialize REST {@code Runner} and point it to
      * provided {@code Command} instance.
@@ -176,7 +176,7 @@ public class AdminFactoryTest extends CommandTest {
     @Test
     public void testGetInstanceforVersionGF7() {
         GlassFishServerEntity srv = new GlassFishServerEntity();
-        srv.setVersion(GlassFishVersion.GF_7_0_6);
+        srv.setVersion(GlassFishVersion.GF_7_0_11);
         AdminFactory af = AdminFactory.getInstance(srv.getVersion());
         assertTrue(af instanceof AdminFactoryRest);
         Command cmd = new CommandVersion();

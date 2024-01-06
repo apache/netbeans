@@ -304,7 +304,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>2.87</specification-version>
+                        <specification-version>2.95</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

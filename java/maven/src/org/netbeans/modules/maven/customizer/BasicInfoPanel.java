@@ -28,6 +28,7 @@ import javax.swing.event.DocumentListener;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingException;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.api.customizer.support.ReflectionTextComponentUpdater;
 import org.netbeans.modules.maven.api.customizer.support.TextComponentUpdater;
@@ -66,6 +67,9 @@ public class BasicInfoPanel extends javax.swing.JPanel implements DocumentListen
             NbMavenProjectImpl nbi = prj.getLookup().lookup(NbMavenProjectImpl.class);
             assert nbi != null;
             project = nbi.loadParentOf(EmbedderFactory.getProjectEmbedder(), handle.getProject());      
+            if (project != null && NbMavenProject.isErrorPlaceholder(project)) {
+                project = null;
+            }
         } catch (ProjectBuildingException ex) {
             project = null;
         }

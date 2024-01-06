@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.php.editor.api.elements;
 
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -26,8 +25,20 @@ import org.netbeans.modules.php.editor.api.PhpElementKind;
  * @author Radek Matous
  */
 public interface TypeConstantElement extends TypeMemberElement {
+
     PhpElementKind KIND = PhpElementKind.TYPE_CONSTANT;
+
     @CheckForNull
     String getValue();
+
     boolean isMagic();
+
+    /**
+     * Get the declared type.
+     *
+     * @return the declared type, if there is no type, {@code null}
+     * @since 2.31.0
+     */
+    @CheckForNull
+    String getDeclaredType();
 }

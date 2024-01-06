@@ -155,7 +155,7 @@ public class ExceptionCompletionItem implements CompletionItem {
 
     @Override
     public CharSequence getSortText() {
-        return getName();
+        return element.getName();
     }
 
     @Override
@@ -164,7 +164,7 @@ public class ExceptionCompletionItem implements CompletionItem {
     }
 
     public String getName() {
-        return element.getName();
+        return element.getNamespaceName().append(element.getName()).toString();
     }
 
     public static class Builtin extends ExceptionCompletionItem {
@@ -199,6 +199,11 @@ public class ExceptionCompletionItem implements CompletionItem {
         @Override
         public int getSortPriority() {
             return -1;
+        }
+
+        @Override
+        public CharSequence getSortText() {
+            return this.element;
         }
 
         @Override

@@ -39,7 +39,7 @@
                 <pathelement location="${cluster}/tasks.jar"></pathelement>
             </classpath>
         </taskdef>
-        <echo file="build/binaries-list">DC6EA1875F4D64FBC85E1691C95B96A3D8569C90 org.ow2.asm:asm:9.5</echo>
+        <echo file="build/binaries-list">AA205CF0A06DBD8E04ECE91C0B37C3F5D567546A org.ow2.asm:asm:9.6</echo>
         <TestDownload>
             <manifest dir="build">
                 <include name="binaries-list"/>

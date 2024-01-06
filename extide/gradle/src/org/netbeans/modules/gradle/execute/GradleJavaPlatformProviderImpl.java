@@ -44,7 +44,7 @@ public final class GradleJavaPlatformProviderImpl implements GradleJavaPlatformP
     public File getJavaHome() throws FileNotFoundException {
         JavaRuntime rt = RunUtils.getActiveRuntime(project);
         if (rt.isBroken()) {
-            throw new FileNotFoundException("Could not found runtime for: " + rt.getId());
+            throw new FileNotFoundException("Could not find runtime for: " + rt.getId());
         }
         return rt.getJavaHome();
     }

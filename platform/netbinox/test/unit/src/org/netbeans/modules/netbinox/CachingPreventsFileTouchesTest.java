@@ -238,7 +238,8 @@ public class CachingPreventsFileTouchesTest extends NbTestCase {
         final File[] arr = recursiveFiles(cacheDir, new ArrayList<File>());
         Collections.shuffle(Arrays.asList(arr));
         for (File f : arr) {
-            if (!f.isDirectory()) {
+            // Same as in o.n.core.startup.layers.CachingPreventsFileTouchesTest
+            if (!f.isDirectory() && !f.getName().equals("all-checksum.txt")) {
                 cnt++;
                 assertFileDoesNotContain(f, install);
             }

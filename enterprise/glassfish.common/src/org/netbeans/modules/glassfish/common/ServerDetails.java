@@ -24,24 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.netbeans.modules.glassfish.common.parser.TreeParser;
 import org.netbeans.modules.glassfish.common.wizards.ServerWizardIterator;
-import org.netbeans.modules.glassfish.spi.ServerUtilities;
-import org.netbeans.modules.glassfish.spi.Utils;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3_0_1;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3_1;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3_1_1;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3_1_2;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3_1_2_2;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3_1_2_3;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3_1_2_4;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_3_1_2_5;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_4;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_4_0_1;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_5;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_5_0_1;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_6;
-import static org.netbeans.modules.glassfish.tooling.data.GlassFishVersion.GF_6_1_0;
 import org.netbeans.modules.glassfish.tooling.utils.ServerUtils;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle;
@@ -58,8 +41,8 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 3.0/3.0.x
      */
     GLASSFISH_SERVER_3(NbBundle.getMessage(ServerDetails.class,"STR_3_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6", // NOI18N
-        300,
+        GlassfishInstanceProvider.EE6_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_3,
         "https://download.oracle.com/glassfish/v3/release/glassfish-v3.zip", // NOI18N
         "https://download.oracle.com/glassfish/v3/release/glassfish-v3.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
@@ -68,8 +51,8 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 3.0/3.0.x
      */
     GLASSFISH_SERVER_3_0_1(NbBundle.getMessage(ServerDetails.class,"STR_301_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6", // NOI18N
-        301,
+        GlassfishInstanceProvider.EE6_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_3_0_1,
         "https://download.oracle.com/glassfish/3.0.1/release/glassfish-3.0.1-ml.zip", // NOI18N
         "https://download.oracle.com/glassfish/3.0.1/release/glassfish-3.0.1-ml.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
@@ -78,8 +61,8 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 3.1
      */
     GLASSFISH_SERVER_3_1(NbBundle.getMessage(ServerDetails.class, "STR_31_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6wc", // NOI18N
-        310,
+        GlassfishInstanceProvider.EE6WC_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_3_1,
         "https://download.oracle.com/glassfish/3.1/release/glassfish-3.1-ml.zip", // NOI18N
         "https://download.oracle.com/glassfish/3.1/release/glassfish-3.1-ml.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
@@ -88,8 +71,8 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 3.1.1
      */
     GLASSFISH_SERVER_3_1_1(NbBundle.getMessage(ServerDetails.class, "STR_311_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6wc", // NOI18N
-        311,
+        GlassfishInstanceProvider.EE6WC_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_3_1_1,
         "https://download.oracle.com/glassfish/3.1.1/release/glassfish-3.1.1-ml.zip", // NOI18N
         "https://download.oracle.com/glassfish/3.1.1/release/glassfish-3.1.1-ml.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
@@ -98,10 +81,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 3.1.2
      */
     GLASSFISH_SERVER_3_1_2(NbBundle.getMessage(ServerDetails.class, "STR_312_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6wc", // NOI18N
-        312,
-        "https://download.oracle.com/glassfish/3.1.2/release/glassfish-3.1.2-ml.zip", // NOI18N
-        "https://download.oracle.com/glassfish/3.1.2/release/glassfish-3.1.2-ml.zip", // NOI18N
+        GlassfishInstanceProvider.EE6WC_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_3_1_2,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/3.1.2/glassfish-3.1.2.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/3.1.2/glassfish-3.1.2.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
@@ -109,10 +92,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 3.1.2.2
      */
     GLASSFISH_SERVER_3_1_2_2(NbBundle.getMessage(ServerDetails.class, "STR_3122_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv3ee6wc", // NOI18N
-        312,
-        "https://download.oracle.com/glassfish/3.1.2.2/release/glassfish-3.1.2.2-ml.zip", // NOI18N
-        "https://download.oracle.com/glassfish/3.1.2.2/release/glassfish-3.1.2.2-ml.zip", // NOI18N
+        GlassfishInstanceProvider.EE6WC_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_3_1_2_2,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/3.1.2.2/glassfish-3.1.2.2.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/3.1.2.2/glassfish-3.1.2.2.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
@@ -120,19 +103,25 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 4.0.0
      */
     GLASSFISH_SERVER_4_0(NbBundle.getMessage(ServerDetails.class, "STR_40_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv4ee7", // NOI18N
-        400,
-        "https://download.oracle.com/glassfish/4.0/release/glassfish-4.0-ml.zip", // NOI18N
-        "https://download.oracle.com/glassfish/4.0/release/glassfish-4.0-ml.zip", // NOI18N
+        GlassfishInstanceProvider.EE7_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_4,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/4.0/glassfish-4.0.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/4.0/glassfish-4.0.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
-    /**
-     * details for an instance of GlassFish Server 4.0.1
+    /** 
+     * Neither repos have this release:
+     * <pre>
+     * -{@code https://download.oracle.com/glassfish}
+     * -{@code https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/}
+     * 
+     * Details for an instance of GlassFish Server 4.0.1
+     * </pre>
      */
     GLASSFISH_SERVER_4_0_1(NbBundle.getMessage(ServerDetails.class, "STR_401_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv4ee7", // NOI18N
-        401,
+        GlassfishInstanceProvider.EE7_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_4_0_1,
         "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip", // NOI18N
         "https://download.oracle.com/glassfish/4.0.1/release/glassfish-4.0.1-ml.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N"
@@ -142,10 +131,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 4.1
      */
     GLASSFISH_SERVER_4_1(NbBundle.getMessage(ServerDetails.class, "STR_41_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv4ee7", // NOI18N
-        410,
-        "https://download.oracle.com/glassfish/4.1/release/glassfish-4.1.zip", // NOI18N
-        "https://download.oracle.com/glassfish/4.1/release/glassfish-4.1.zip", // NOI18N
+        GlassfishInstanceProvider.EE7_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_4_1,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/4.1/glassfish-4.1.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/4.1/glassfish-4.1.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
@@ -153,10 +142,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 4.1.1
      */
     GLASSFISH_SERVER_4_1_1(NbBundle.getMessage(ServerDetails.class, "STR_411_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv4ee7", // NOI18N
-        411,
-        "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip", // NOI18N
-        "https://download.oracle.com/glassfish/4.1.1/release/glassfish-4.1.1.zip", // NOI18N
+        GlassfishInstanceProvider.EE7_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_4_1_1,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/4.1.1/glassfish-4.1.1.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/4.1.1/glassfish-4.1.1.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
@@ -164,10 +153,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 4.1.2
      */
     GLASSFISH_SERVER_4_1_2(NbBundle.getMessage(ServerDetails.class, "STR_412_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv4ee7", // NOI18N
-        412,
-        "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip", // NOI18N
-        "https://download.oracle.com/glassfish/4.1.2/release/glassfish-4.1.2.zip", // NOI18N
+        GlassfishInstanceProvider.EE7_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_4_1_2,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/4.1.2/glassfish-4.1.2.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/4.1.2/glassfish-4.1.2.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
@@ -175,10 +164,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 5
      */
     GLASSFISH_SERVER_5_0(NbBundle.getMessage(ServerDetails.class, "STR_50_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv5ee8", // NOI18N
-        500,
-        "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip", // NOI18N
-        "https://download.oracle.com/glassfish/5.0/release/glassfish-5.0.zip", // NOI18N
+        GlassfishInstanceProvider.EE8_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_5,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/5.0/glassfish-5.0.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/5.0/glassfish-5.0.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
@@ -186,10 +175,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 5.0.1
      */
     GLASSFISH_SERVER_5_0_1(NbBundle.getMessage(ServerDetails.class, "STR_501_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv5ee8", // NOI18N
-        501,
-        "https://download.oracle.com/glassfish/5.0.1/release/glassfish-5.0.1.zip", // NOI18N
-        "https://download.oracle.com/glassfish/5.0.1/release/glassfish-5.0.1.zip", // NOI18N
+        GlassfishInstanceProvider.EE8_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_5_0_1,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/5.0.1/glassfish-5.0.1.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/5.0.1/glassfish-5.0.1.zip", // NOI18N
         "https://javaee.github.io/glassfish/LICENSE" //NOI18N
     ),
 
@@ -197,10 +186,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 5.1.0
      */
     GLASSFISH_SERVER_5_1_0(NbBundle.getMessage(ServerDetails.class, "STR_510_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv510ee8", // NOI18N
-        510,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE8_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_5_1_0,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/5.1.0/glassfish-5.1.0.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
 
@@ -208,10 +197,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 6.0.0
      */
     GLASSFISH_SERVER_6(NbBundle.getMessage(ServerDetails.class, "STR_6_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv6ee9", // NOI18N
-        600,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0/glassfish-6.0.0.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0/glassfish-6.0.0.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE9_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_6,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0/glassfish-6.0.0.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.0.0/glassfish-6.0.0.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
 
@@ -219,10 +208,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 6.1.0
      */
     GLASSFISH_SERVER_6_1_0(NbBundle.getMessage(ServerDetails.class, "STR_610_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv610ee9", // NOI18N
-        610,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.1.0/glassfish-6.1.0.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.1.0/glassfish-6.1.0.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE91_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_6_1_0,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.1.0/glassfish-6.1.0.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.1.0/glassfish-6.1.0.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
 
@@ -230,10 +219,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 6.2.0
      */
     GLASSFISH_SERVER_6_2_0(NbBundle.getMessage(ServerDetails.class, "STR_620_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv610ee9", // NOI18N
-        620,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.0/glassfish-6.2.0.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.0/glassfish-6.2.0.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE91_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_6_2_0,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.0/glassfish-6.2.0.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.0/glassfish-6.2.0.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
     
@@ -241,10 +230,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 6.2.1
      */
     GLASSFISH_SERVER_6_2_1(NbBundle.getMessage(ServerDetails.class, "STR_621_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv610ee9", // NOI18N
-        621,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.1/glassfish-6.2.1.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.1/glassfish-6.2.1.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE91_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_6_2_1,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.1/glassfish-6.2.1.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.1/glassfish-6.2.1.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
     
@@ -252,10 +241,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 6.2.2
      */
     GLASSFISH_SERVER_6_2_2(NbBundle.getMessage(ServerDetails.class, "STR_622_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv610ee9", // NOI18N
-        622,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.2/glassfish-6.2.2.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.2/glassfish-6.2.2.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE91_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_6_2_2,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.2/glassfish-6.2.2.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.2/glassfish-6.2.2.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
     
@@ -263,10 +252,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 6.2.3
      */
     GLASSFISH_SERVER_6_2_3(NbBundle.getMessage(ServerDetails.class, "STR_623_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv610ee9", // NOI18N
-        623,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.3/glassfish-6.2.3.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.3/glassfish-6.2.3.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE91_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_6_2_3,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.3/glassfish-6.2.3.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.3/glassfish-6.2.3.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
     
@@ -274,10 +263,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 6.2.4
      */
     GLASSFISH_SERVER_6_2_4(NbBundle.getMessage(ServerDetails.class, "STR_624_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv610ee9", // NOI18N
-        624,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.4/glassfish-6.2.4.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.4/glassfish-6.2.4.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE91_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_6_2_4,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.4/glassfish-6.2.4.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.4/glassfish-6.2.4.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
     
@@ -285,10 +274,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 6.2.5
      */
     GLASSFISH_SERVER_6_2_5(NbBundle.getMessage(ServerDetails.class, "STR_625_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv610ee9", // NOI18N
-        625,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.5/glassfish-6.2.5.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/6.2.5/glassfish-6.2.5.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE91_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_6_2_5,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.5/glassfish-6.2.5.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/6.2.5/glassfish-6.2.5.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
     
@@ -296,10 +285,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 7.0.0
      */
     GLASSFISH_SERVER_7_0_0(NbBundle.getMessage(ServerDetails.class, "STR_700_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv700ee10", // NOI18N
-        700,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.0/glassfish-7.0.0.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.0/glassfish-7.0.0.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_0,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.0/glassfish-7.0.0.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.0/glassfish-7.0.0.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
     
@@ -307,10 +296,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 7.0.1
      */
     GLASSFISH_SERVER_7_0_1(NbBundle.getMessage(ServerDetails.class, "STR_701_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv700ee10", // NOI18N
-        701,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.1/glassfish-7.0.1.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.1/glassfish-7.0.1.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_1,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.1/glassfish-7.0.1.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.1/glassfish-7.0.1.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
     
@@ -318,10 +307,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 7.0.2
      */
     GLASSFISH_SERVER_7_0_2(NbBundle.getMessage(ServerDetails.class, "STR_702_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv700ee10", // NOI18N
-        702,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.2/glassfish-7.0.2.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.2/glassfish-7.0.2.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_2,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.2/glassfish-7.0.2.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.2/glassfish-7.0.2.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
 
@@ -329,10 +318,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 7.0.3
      */
     GLASSFISH_SERVER_7_0_3(NbBundle.getMessage(ServerDetails.class, "STR_703_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv700ee10", // NOI18N
-        703,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.3/glassfish-7.0.3.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.3/glassfish-7.0.3.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_3,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.3/glassfish-7.0.3.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.3/glassfish-7.0.3.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
 
@@ -340,10 +329,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 7.0.4
      */
     GLASSFISH_SERVER_7_0_4(NbBundle.getMessage(ServerDetails.class, "STR_704_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv700ee10", // NOI18N
-        704,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.4/glassfish-7.0.4.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.4/glassfish-7.0.4.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_4,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.4/glassfish-7.0.4.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.4/glassfish-7.0.4.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
 
@@ -351,10 +340,10 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 7.0.5
      */
     GLASSFISH_SERVER_7_0_5(NbBundle.getMessage(ServerDetails.class, "STR_705_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv700ee10", // NOI18N
-        705,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.5/glassfish-7.0.5.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.5/glassfish-7.0.5.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_5,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.5/glassfish-7.0.5.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.5/glassfish-7.0.5.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     ),
 
@@ -362,12 +351,72 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 7.0.6
      */
     GLASSFISH_SERVER_7_0_6(NbBundle.getMessage(ServerDetails.class, "STR_706_SERVER_NAME", new Object[]{}), // NOI18N
-        "deployer:gfv700ee10", // NOI18N
-        706,
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.6/glassfish-7.0.6.zip", // NOI18N
-        "https://repo1.maven.org/maven2/org/glassfish/main/distributions/glassfish/7.0.6/glassfish-7.0.6.zip", // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_6,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.6/glassfish-7.0.6.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.6/glassfish-7.0.6.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 7.0.7
+     */
+    GLASSFISH_SERVER_7_0_7(NbBundle.getMessage(ServerDetails.class, "STR_707_SERVER_NAME", new Object[]{}), // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_7,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.7/glassfish-7.0.7.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.7/glassfish-7.0.7.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 7.0.8
+     */
+    GLASSFISH_SERVER_7_0_8(NbBundle.getMessage(ServerDetails.class, "STR_708_SERVER_NAME", new Object[]{}), // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_8,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.8/glassfish-7.0.8.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.8/glassfish-7.0.8.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 7.0.9
+     */
+    GLASSFISH_SERVER_7_0_9(NbBundle.getMessage(ServerDetails.class, "STR_709_SERVER_NAME", new Object[]{}), // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_9,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.9/glassfish-7.0.9.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.9/glassfish-7.0.9.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 7.0.10
+     */
+    GLASSFISH_SERVER_7_0_10(NbBundle.getMessage(ServerDetails.class, "STR_7010_SERVER_NAME", new Object[]{}), // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_10,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.10/glassfish-7.0.10.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.10/glassfish-7.0.10.zip", // NOI18N
+        "http://www.eclipse.org/legal/epl-2.0" //NOI18N
+    ),
+    
+    /**
+     * details for an instance of GlassFish Server 7.0.11
+     */
+    GLASSFISH_SERVER_7_0_11(NbBundle.getMessage(ServerDetails.class, "STR_7011_SERVER_NAME", new Object[]{}), // NOI18N
+        GlassfishInstanceProvider.JAKARTAEE10_DEPLOYER_FRAGMENT,
+        GlassFishVersion.GF_7_0_11,
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.11/glassfish-7.0.11.zip", // NOI18N
+        "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/7.0.11/glassfish-7.0.11.zip", // NOI18N
         "http://www.eclipse.org/legal/epl-2.0" //NOI18N
     );
+    
+    /**
+     * Array with all GlassFish {@code ServerDetails} versions.
+     */
+    private static final ServerDetails[] serverDetails = ServerDetails.values();
 
     /**
      * Creates an iterator for a wizard to instantiate server objects.
@@ -377,60 +426,7 @@ public enum ServerDetails {
      */
     public static WizardDescriptor.InstantiatingIterator
             getInstantiatingIterator() {
-        return new ServerWizardIterator(new ServerDetails[]{
-                    GLASSFISH_SERVER_7_0_6,
-                    GLASSFISH_SERVER_7_0_5,
-                    GLASSFISH_SERVER_7_0_4,
-                    GLASSFISH_SERVER_7_0_3,
-                    GLASSFISH_SERVER_7_0_2,
-                    GLASSFISH_SERVER_7_0_1,
-                    GLASSFISH_SERVER_7_0_0,
-                    GLASSFISH_SERVER_6_2_5,
-                    GLASSFISH_SERVER_6_2_4,
-                    GLASSFISH_SERVER_6_2_3,
-                    GLASSFISH_SERVER_6_2_2,
-                    GLASSFISH_SERVER_6_2_1,
-                    GLASSFISH_SERVER_6_2_0,
-                    GLASSFISH_SERVER_6_1_0,
-                    GLASSFISH_SERVER_6,
-                    GLASSFISH_SERVER_5_1_0,
-                    GLASSFISH_SERVER_5_0_1,
-                    GLASSFISH_SERVER_5_0,
-                    GLASSFISH_SERVER_4_1_2,
-                    GLASSFISH_SERVER_4_1_1,
-                    GLASSFISH_SERVER_4_1,
-                    GLASSFISH_SERVER_4_0_1,
-                    GLASSFISH_SERVER_4_0,
-                    GLASSFISH_SERVER_3_1_2_2,
-                    GLASSFISH_SERVER_3_1_2,
-                    GLASSFISH_SERVER_3_1_1,
-                    GLASSFISH_SERVER_3_1,
-                    GLASSFISH_SERVER_3_0_1,
-                    GLASSFISH_SERVER_3},
-                new ServerDetails[]{
-                    GLASSFISH_SERVER_7_0_6,
-                    GLASSFISH_SERVER_7_0_5,
-                    GLASSFISH_SERVER_7_0_4,
-                    GLASSFISH_SERVER_7_0_3,
-                    GLASSFISH_SERVER_7_0_2,
-                    GLASSFISH_SERVER_7_0_1,
-                    GLASSFISH_SERVER_7_0_0,
-                    GLASSFISH_SERVER_6_2_5,
-                    GLASSFISH_SERVER_6_2_4,
-                    GLASSFISH_SERVER_6_2_3,
-                    GLASSFISH_SERVER_6_2_2,
-                    GLASSFISH_SERVER_6_2_1,
-                    GLASSFISH_SERVER_6_2_0,
-                    GLASSFISH_SERVER_6_1_0,
-                    GLASSFISH_SERVER_6,
-                    GLASSFISH_SERVER_5_1_0,
-                    GLASSFISH_SERVER_5_0_1,
-                    GLASSFISH_SERVER_5_0,
-                    GLASSFISH_SERVER_4_1_2,
-                    GLASSFISH_SERVER_4_1_1,
-                    GLASSFISH_SERVER_4_1,
-                    GLASSFISH_SERVER_4_0,
-                    GLASSFISH_SERVER_3_1_2_2});
+        return new ServerWizardIterator(serverDetails, serverDetails);
     }
 
     /**
@@ -445,45 +441,10 @@ public enum ServerDetails {
 
         GlassFishVersion version
                 = ServerUtils.getServerVersion(glassfishDir.getAbsolutePath());
-        ServerDetails sd = null;
         if (version != null) {
-            switch(version) {
-                case GF_3:       return GLASSFISH_SERVER_3.getVersion();
-                case GF_3_0_1:   return GLASSFISH_SERVER_3_0_1.getVersion();
-                case GF_3_1:     return GLASSFISH_SERVER_3_1.getVersion();
-                case GF_3_1_1:   return GLASSFISH_SERVER_3_1_1.getVersion();
-                case GF_3_1_2:   return GLASSFISH_SERVER_3_1_2.getVersion();
-                case GF_3_1_2_2:
-                case GF_3_1_2_3:
-                case GF_3_1_2_4:
-                case GF_3_1_2_5: return GLASSFISH_SERVER_3_1_2_2.getVersion();
-                case GF_4:       return GLASSFISH_SERVER_4_0.getVersion();
-                case GF_4_0_1:   return GLASSFISH_SERVER_4_0_1.getVersion();
-                case GF_4_1:     return GLASSFISH_SERVER_4_1.getVersion();
-                case GF_4_1_1:   return GLASSFISH_SERVER_4_1_1.getVersion();
-                case GF_4_1_2:   return GLASSFISH_SERVER_4_1_2.getVersion();
-                case GF_5:       return GLASSFISH_SERVER_5_0.getVersion();
-                case GF_5_0_1:   return GLASSFISH_SERVER_5_0_1.getVersion();
-                case GF_5_1_0:   return GLASSFISH_SERVER_5_1_0.getVersion();
-                case GF_6:       return GLASSFISH_SERVER_6.getVersion();
-                case GF_6_1_0:   return GLASSFISH_SERVER_6_1_0.getVersion();
-                case GF_6_2_0:   return GLASSFISH_SERVER_6_2_0.getVersion();
-                case GF_6_2_1:   return GLASSFISH_SERVER_6_2_1.getVersion();
-                case GF_6_2_2:   return GLASSFISH_SERVER_6_2_2.getVersion();
-                case GF_6_2_3:   return GLASSFISH_SERVER_6_2_3.getVersion();
-                case GF_6_2_4:   return GLASSFISH_SERVER_6_2_4.getVersion();
-                case GF_6_2_5:   return GLASSFISH_SERVER_6_2_5.getVersion();
-                case GF_7_0_0:   return GLASSFISH_SERVER_7_0_0.getVersion();
-                case GF_7_0_1:   return GLASSFISH_SERVER_7_0_1.getVersion();
-                case GF_7_0_2:   return GLASSFISH_SERVER_7_0_2.getVersion();
-                case GF_7_0_3:   return GLASSFISH_SERVER_7_0_3.getVersion();
-                case GF_7_0_4:   return GLASSFISH_SERVER_7_0_4.getVersion();
-                case GF_7_0_5:   return GLASSFISH_SERVER_7_0_5.getVersion();
-                case GF_7_0_6:   return GLASSFISH_SERVER_7_0_6.getVersion();
-                default:         return -1;
-            }
+            return version.toFullInteger();
         }
-        return  null==sd?-1:sd.getVersion();
+        return -1;
     }
 
     /**
@@ -508,22 +469,22 @@ public enum ServerDetails {
         TreeParser.readXml(domainXml, paths);
         return dp.hasDefaultConfig();
     }
+    
+    private final String displayName;
+    private final String uriFragment;
+    private final String indirectUrl;
+    private final String directUrl;
+    private final String licenseUrl;
+    private final GlassFishVersion glassFishVersion;
 
-    private String displayName;
-    private String uriFragment;
-    private String indirectUrl;
-    private String directUrl;
-    private String licenseUrl;
-    private int versionInt;
-
-
-    ServerDetails(String displayName, String uriFragment, int versionInt,
+    
+    ServerDetails(String displayName, String uriFragment, GlassFishVersion glassFishVersion,
             String directUrl, String indirectUrl, String licenseUrl) {
             this.displayName = displayName;
             this.uriFragment = uriFragment;
             this.indirectUrl = indirectUrl;
             this.directUrl = directUrl;
-            this.versionInt = versionInt;
+            this.glassFishVersion = glassFishVersion;
             this.licenseUrl = licenseUrl;
     }
 
@@ -537,7 +498,7 @@ public enum ServerDetails {
     }
 
     public int getVersion() {
-        return versionInt;
+        return glassFishVersion.toFullInteger();
     }
 
     /**

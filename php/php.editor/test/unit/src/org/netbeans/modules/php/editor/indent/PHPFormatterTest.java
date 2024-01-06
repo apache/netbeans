@@ -1099,4 +1099,44 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/php82/readonlyClasses_01b.php", options);
     }
+
+    public void testDNFTypes_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php82/dnfTypes_01.php", options);
+    }
+
+    public void testDynamicClassConstantFetch_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_SCOPE_RESOLUTION_OPS, false);
+        reformatFileContents("testfiles/formatting/php83/dynamicClassConstantFetch_01.php", options, false, true);
+    }
+
+    public void testDynamicClassConstantFetch_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_SCOPE_RESOLUTION_OPS, true);
+        reformatFileContents("testfiles/formatting/php83/dynamicClassConstantFetch_01.php", options, false, true);
+    }
+
+    public void testDynamicClassConstantFetch_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_SCOPE_RESOLUTION_OPS, false);
+        reformatFileContents("testfiles/formatting/php83/dynamicClassConstantFetch_02.php", options, false, true);
+    }
+
+    public void testDynamicClassConstantFetch_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_AROUND_SCOPE_RESOLUTION_OPS, true);
+        reformatFileContents("testfiles/formatting/php83/dynamicClassConstantFetch_02.php", options, false, true);
+    }
+
+    public void testTypedClassConstants_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php83/typedClassConstants_01.php", options, false, true);
+    }
+
+    public void testTypedClassConstants_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php83/typedClassConstants_02.php", options, false, true);
+    }
+
 }

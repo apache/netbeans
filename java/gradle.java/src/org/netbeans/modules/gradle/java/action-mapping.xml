@@ -88,7 +88,7 @@
             <actions>
                 <apply-for plugins="java">
                     <action name="run.single">
-                        <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} runSingle --continuous ${javaExec.jvmArgs} ${javaExec.args}</args>
+                        <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} run --continuous ${javaExec.jvmArgs} ${javaExec.args}</args>
                     </action>
                     <action name="test.single">
                         <args>"${cleanTestTaskName}" "${testTaskName}" --tests "${selectedClass}" --continuous</args>

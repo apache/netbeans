@@ -20,20 +20,22 @@ package org.netbeans.modules.php.editor.codegen;
 
 import java.util.Collection;
 import java.util.Comparator;
+import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement.PrintAs;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.TreeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
+import org.netbeans.modules.php.editor.elements.TypeNameResolverImpl;
 
 public final class MethodProperty extends Property {
 
     private final MethodElement method;
     private final TreeElement<TypeElement> enclosingType;
 
-    public MethodProperty(MethodElement method, TreeElement<TypeElement> enclosingType) {
-        super(formatName(method), method.getPhpModifiers().toFlags());
+    public MethodProperty(MethodElement method, TreeElement<TypeElement> enclosingType, PhpVersion phpVersion) {
+        super(formatName(method, phpVersion), method.getPhpModifiers().toFlags());
 
         this.method = method;
         this.enclosingType = enclosingType;
@@ -44,36 +46,33 @@ public final class MethodProperty extends Property {
     }
 
     public static Comparator<MethodProperty> getComparator() {
-        return new Comparator<MethodProperty>() {
-            @Override
-            public int compare(MethodProperty o1, MethodProperty o2) {
-                int retval = Boolean.valueOf(o2.getMethod().isConstructor()).compareTo(o1.getMethod().isConstructor());
-                if (retval == 0) {
-                    retval = Boolean.valueOf(o2.isSelected()).compareTo(o1.isSelected());
-                }
-                if (retval == 0) {
-                    retval = Boolean.valueOf(o1.getMethod().isMagic()).compareTo(o2.getMethod().isMagic());
-                }
-                if (retval == 0) {
-                    retval = o1.getMethod().getType().getName().compareTo(o2.getMethod().getType().getName());
-                }
-                if (retval == 0) {
-                    retval = o1.getMethod().getName().compareTo(o2.getMethod().getName());
-                }
-                return retval;
+        return (MethodProperty o1, MethodProperty o2) -> {
+            int retval = Boolean.valueOf(o2.getMethod().isConstructor()).compareTo(o1.getMethod().isConstructor());
+            if (retval == 0) {
+                retval = Boolean.valueOf(o2.isSelected()).compareTo(o1.isSelected());
             }
+            if (retval == 0) {
+                retval = Boolean.valueOf(o1.getMethod().isMagic()).compareTo(o2.getMethod().isMagic());
+            }
+            if (retval == 0) {
+                retval = o1.getMethod().getType().getName().compareTo(o2.getMethod().getType().getName());
+            }
+            if (retval == 0) {
+                retval = o1.getMethod().getName().compareTo(o2.getMethod().getName());
+            }
+            return retval;
         };
     }
 
-    private static String formatName(final MethodElement method) {
+    private static String formatName(final MethodElement method, PhpVersion phpVersion) {
         Collection<TypeResolver> returnTypes = method.getReturnTypes();
-        final String nameAndParams = method.asString(PrintAs.NameAndParamsDeclaration);
-        final String returntypes = method.asString(PrintAs.ReturnTypes);
+        final String nameAndParams = method.asString(PrintAs.NameAndParamsDeclaration, TypeNameResolverImpl.forNull(), phpVersion);
+        final String returnTypeString = method.asString(PrintAs.ReturnTypes, TypeNameResolverImpl.forNull(), phpVersion);
         final String[] split = nameAndParams.split("\\(");
-        if (returnTypes.isEmpty()) {
+        if (returnTypes.isEmpty() || returnTypeString.isEmpty()) {
             return String.format("<html><b>%s</b>(%s</html>", split[0], split[1]); // NOI18N
         }
-        return String.format("<html><b>%s</b>(%s : %s</html>", split[0], split[1], returntypes); // NOI18N
+        return String.format("<html><b>%s</b>(%s : %s</html>", split[0], split[1], returnTypeString); // NOI18N
     }
 
     public MethodElement getMethod() {

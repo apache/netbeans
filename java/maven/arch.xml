@@ -257,6 +257,11 @@
           to control (usually to disable with <code>DEFAULT_UPDATE_FREQ=3</code>)
           the default behavior automatic maven index downloading.
       </api> 
+      <api category="devel" group="layer" name="Project.org-netbeans-modules-maven.RunGoals" type="export">
+          A executable-like plugin goals, that may serve in place of exec:exec may be registered here. The core implementation
+          will recognize such goals as exec's and will not disable app amd VM parameter configuration UI.
+          For an example, see <a href="@TOP@/org/netbeans/modules/maven/spi/actions/MavenActionsProvider.html#declare-run-goals">MavenActionProvider</a>.
+      </api>
   </p>
   
  </answer>

@@ -24,22 +24,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import org.eclipse.lsp4j.CodeAction;
-import org.eclipse.lsp4j.CodeActionParams;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.modules.java.lsp.server.LspServerState;
-import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.project.dependency.ProjectArtifactsQuery;
 import org.netbeans.modules.project.dependency.ProjectArtifactsQuery.ArtifactsResult;
+import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
@@ -49,8 +44,8 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author sdedic
  */
-@ServiceProvider(service = CodeActionsProvider.class)
-public class ProjectMetadataCommand extends CodeActionsProvider {
+@ServiceProvider(service = CommandProvider.class)
+public class ProjectMetadataCommand implements CommandProvider {
     private static final String COMMAND_ARTIFACTS = "nbls.project.artifacts"; // NOI18N
     /**
      * @deprecated will be removed in NB 19
@@ -74,17 +69,12 @@ public class ProjectMetadataCommand extends CodeActionsProvider {
     }
     
     @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        return Collections.emptyList();
-    }
-
-    @Override
     public Set<String> getCommands() {
         return COMMANDS;
     }
-    
+
     @Override
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+    public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         if (arguments.size() < 1) {
             throw new IllegalArgumentException("Expected at least project URI/path");
         }

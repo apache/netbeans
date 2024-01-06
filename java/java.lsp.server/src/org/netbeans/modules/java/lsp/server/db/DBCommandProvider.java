@@ -18,19 +18,18 @@
  */
 package org.netbeans.modules.java.lsp.server.db;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import org.eclipse.lsp4j.CodeAction;
-import org.eclipse.lsp4j.CodeActionParams;
+
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.modules.java.lsp.server.explorer.TreeNodeRegistry;
-import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
@@ -39,17 +38,16 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author sdedic
  */
-@ServiceProvider(service = CodeActionsProvider.class)
-public class DBCommandProvider extends CodeActionsProvider {
-    private static final String  COMMAND_GET_PREFERRED_CONNECTION = "java.db.preferred.connection";
+@ServiceProvider(service = CommandProvider.class)
+public class DBCommandProvider implements CommandProvider{
+    private static final String  COMMAND_GET_PREFERRED_CONNECTION = "nbls.db.preferred.connection";
     
-    @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        return Collections.emptyList();
-    }
+    private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
+        COMMAND_GET_PREFERRED_CONNECTION
+    ));
 
     @Override
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+    public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         TreeNodeRegistry r = Lookup.getDefault().lookup(TreeNodeRegistry.class);
         DatabaseConnection conn = ConnectionManager.getDefault().getPreferredConnection(true);
         if (conn == null || r == null) {

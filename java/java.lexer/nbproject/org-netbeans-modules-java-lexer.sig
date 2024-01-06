@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.56
+#Version 1.58
 
 CLSS public abstract interface java.io.Serializable
 
@@ -48,6 +48,7 @@ fld public final static org.netbeans.api.java.lexer.JavaStringTokenId OCTAL_ESCA
 fld public final static org.netbeans.api.java.lexer.JavaStringTokenId OCTAL_ESCAPE_INVALID
 fld public final static org.netbeans.api.java.lexer.JavaStringTokenId SINGLE_QUOTE
 fld public final static org.netbeans.api.java.lexer.JavaStringTokenId TAB
+fld public final static org.netbeans.api.java.lexer.JavaStringTokenId TEMPLATE_START
 fld public final static org.netbeans.api.java.lexer.JavaStringTokenId TEXT
 fld public final static org.netbeans.api.java.lexer.JavaStringTokenId UNICODE_ESCAPE
 fld public final static org.netbeans.api.java.lexer.JavaStringTokenId UNICODE_ESCAPE_INVALID

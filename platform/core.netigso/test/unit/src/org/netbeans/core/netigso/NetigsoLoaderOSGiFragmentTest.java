@@ -44,6 +44,14 @@ public class NetigsoLoaderOSGiFragmentTest extends NetigsoHid {
             + "Export-Package: org.bar\n"
             + "\n\n";
 
+    private static final String FRAGMENT_MANIFEST_VERSIONED = ""
+            + "Fragment-Host: org.foo;bundle-version=\"[1.1.0,1.2.0)\"\n"
+            + "Bundle-SymbolicName: org.bar\n"
+            + "Bundle-Version: 1.1.0\n"
+            + "Bundle-ManifestVersion: 2\n"
+            + "Export-Package: org.bar\n"
+            + "\n\n";
+
     public NetigsoLoaderOSGiFragmentTest(String name) {
         super(name);
     }
@@ -59,6 +67,34 @@ public class NetigsoLoaderOSGiFragmentTest extends NetigsoHid {
         try {
             File hostFile = changeManifest(new File(jars, "simple-module.jar"), HOST_MANIFEST);
             File fragmentFile = changeManifest(new File(jars, "depends-on-simple-module.jar"), FRAGMENT_MANIFEST);
+            Module hostModule = mgr.create(hostFile, null, false, false, false);
+            Module fragmentModule = mgr.create(fragmentFile, null, false, false, false);
+            modules.addAll(Arrays.asList(hostModule, fragmentModule));
+            mgr.enable(modules);
+
+            NetigsoLoader hostLoader = getNetigsoLoaderForModule(hostModule);
+            NetigsoLoader fragmentLoader = getNetigsoLoaderForModule(fragmentModule);
+
+            assertEquals("NetigsoLoader in fragment module should use the host bundle",
+                    hostLoader.getBundle(), fragmentLoader.getBundle());
+
+        } finally {
+            mgr.disable(modules);
+            mgr.mutexPrivileged().exitWriteAccess();
+        }
+    }
+
+    public void testNetigsoLoaderOSGiFragmentBundleSubstitutionVersioned() throws Exception {
+
+        MockModuleInstaller installer = new MockModuleInstaller();
+        MockEvents ev = new MockEvents();
+        ModuleManager mgr = new ModuleManager(installer, ev);
+        mgr.mutexPrivileged().enterWriteAccess();
+        Set<Module> modules = new HashSet<Module>();
+
+        try {
+            File hostFile = changeManifest(new File(jars, "simple-module.jar"), HOST_MANIFEST);
+            File fragmentFile = changeManifest(new File(jars, "depends-on-simple-module.jar"), FRAGMENT_MANIFEST_VERSIONED);
             Module hostModule = mgr.create(hostFile, null, false, false, false);
             Module fragmentModule = mgr.create(fragmentFile, null, false, false, false);
             modules.addAll(Arrays.asList(hostModule, fragmentModule));

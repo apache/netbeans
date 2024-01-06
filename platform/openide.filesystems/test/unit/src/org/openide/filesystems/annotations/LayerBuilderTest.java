@@ -322,7 +322,7 @@ public class LayerBuilderTest extends NbTestCase {
         boolean status = AnnotationProcessorTestUtils.runJavac(src, null, dest, new File[] {j, BaseUtilities.toFile(LayerBuilderTest.class.getProtectionDomain().getCodeSource().getLocation().toURI())}, err);
         String msgs = err.toString();
         assertTrue(msgs, status);
-        assertTrue(msgs, msgs.contains("r1=x1") ^ AnnotationProcessorTestUtils.searchClasspathBroken());
+        assertTrue(msgs, msgs.contains("r1=x1"));
         assertTrue(msgs, msgs.contains("r2=x2"));
         FileObject f = new XMLFileSystem(BaseUtilities.toURI(new File(dest, "META-INF/generated-layer.xml")).toURL()).findResource("f");
         assertNotNull(f);
@@ -339,13 +339,13 @@ public class LayerBuilderTest extends NbTestCase {
         String msgs = err.toString();
         assertFalse(msgs, status);
         assertTrue(msgs, msgs.contains("resourcez"));
-        assertTrue(msgs, msgs.contains("r1=x1") ^ AnnotationProcessorTestUtils.searchClasspathBroken());
+        assertTrue(msgs, msgs.contains("r1=x1"));
         AnnotationProcessorTestUtils.makeSource(src, "p.C", "@" + V.class.getCanonicalName() + "(r1=\"othr/x1\", r2=\"resources/x2\") public class C {}");
         err = new ByteArrayOutputStream();
         status = AnnotationProcessorTestUtils.runJavac(src, null, dest, new File[] {j, BaseUtilities.toFile(LayerBuilderTest.class.getProtectionDomain().getCodeSource().getLocation().toURI())}, err);
         msgs = err.toString();
-        assertFalse(msgs, status ^ AnnotationProcessorTestUtils.searchClasspathBroken());
-        assertTrue(msgs, msgs.contains("othr") ^ AnnotationProcessorTestUtils.searchClasspathBroken());
+        assertFalse(msgs, status);
+        assertTrue(msgs, msgs.contains("othr"));
     }
 
     // XXX verify that CLASS_OUTPUT may be used as well

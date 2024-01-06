@@ -252,6 +252,10 @@ public class ClipboardHandler {
                 SourcePositions[] sps = new SourcePositions[1];
 
                 OUTER: for (Entry<String, String> e : simple2FQNs.entrySet()) {
+                    // skip default static imports
+                    if ("java.lang.StringTemplate.STR".equals(e.getValue())) {
+                        continue;
+                    }
                     Element el = fqn2element(cc.getElements(), e.getValue());
                     if (el == null) {
                         continue;

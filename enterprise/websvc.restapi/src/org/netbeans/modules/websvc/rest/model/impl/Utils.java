@@ -37,6 +37,7 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
+import org.netbeans.modules.websvc.rest.model.api.RestApplication;
 import org.netbeans.modules.websvc.rest.spi.RestSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -50,15 +51,27 @@ public class Utils {
     private static final String VALUE = "value";        //NOI18N
 
     public static String getUriTemplate(Element element) {
-        return getAnnotationValue(element, RestConstants.PATH, VALUE);
+        if (hasAnnotationType(element, RestConstants.PATH_JAKARTA)) {
+            return getAnnotationValue(element, RestConstants.PATH_JAKARTA, VALUE);
+        } else {
+            return getAnnotationValue(element, RestConstants.PATH, VALUE);
+        }
     }
 
     public static String getConsumeMime(Element element) {
-        return getAnnotationValue(element, RestConstants.CONSUME_MIME, VALUE);
+        if (hasAnnotationType(element, RestConstants.CONSUME_MIME_JAKARTA)) {
+            return getAnnotationValue(element, RestConstants.CONSUME_MIME_JAKARTA, VALUE);
+        } else {
+            return getAnnotationValue(element, RestConstants.CONSUME_MIME, VALUE);
+        }
     }
 
     public static String getProduceMime(Element element) {
-        return getAnnotationValue(element, RestConstants.PRODUCE_MIME, VALUE);
+        if (hasAnnotationType(element, RestConstants.PRODUCE_MIME_JAKARTA)) {
+            return getAnnotationValue(element, RestConstants.PRODUCE_MIME_JAKARTA, VALUE);
+        } else {
+            return getAnnotationValue(element, RestConstants.PRODUCE_MIME, VALUE);
+        }
     }
     
     static void fillQueryParams( Map<String, String> queryParams,
@@ -71,13 +84,19 @@ public class Utils {
         List<? extends VariableElement> parameters = method.getParameters();
         for (VariableElement variableElement : parameters) {
             String paramName = null;
-            if ( hasAnnotationType(variableElement, RestConstants.QUERY_PARAM)){
+            if ( hasAnnotationType(variableElement, RestConstants.QUERY_PARAM_JAKARTA)){
                 paramName = getAnnotationValue(variableElement, 
+                        RestConstants.QUERY_PARAM_JAKARTA, VALUE);
+            } else if ( hasAnnotationType(variableElement, RestConstants.QUERY_PARAM)){
+                paramName = getAnnotationValue(variableElement,
                         RestConstants.QUERY_PARAM, VALUE);
             }
             String defaultValue = null;
-            if ( hasAnnotationType(variableElement, RestConstants.DEFAULT_VALUE)){
+            if ( hasAnnotationType(variableElement, RestConstants.DEFAULT_VALUE_JAKARTA)){
                 defaultValue = getAnnotationValue(variableElement, 
+                        RestConstants.DEFAULT_VALUE_JAKARTA, VALUE);
+            } else if ( hasAnnotationType(variableElement, RestConstants.DEFAULT_VALUE)){
+                defaultValue = getAnnotationValue(variableElement,
                         RestConstants.DEFAULT_VALUE, VALUE);
             }
             if ( paramName != null ){
@@ -87,40 +106,57 @@ public class Utils {
     }
 
     public static String getApplicationPath(Element element) {
-        return getAnnotationValue(element, RestConstants.APPLICATION_PATH , VALUE);
+        if(hasAnnotationType(element, RestConstants.APPLICATION_PATH_JAKARTA)) {
+            return getAnnotationValue(element, RestConstants.APPLICATION_PATH_JAKARTA, VALUE);
+        } else {
+            return getAnnotationValue(element, RestConstants.APPLICATION_PATH , VALUE);
+        }
     }
 
     public static String getHttpMethod(Element element) {
-        if (hasAnnotationType(element, RestConstants.GET)) {
+        if (hasAnnotationType(element, RestConstants.GET_JAKARTA)
+                || hasAnnotationType(element, RestConstants.GET)) {
             return RestConstants.GET_ANNOTATION;
-        } else if (hasAnnotationType(element, RestConstants.POST)) {
+        } else if (hasAnnotationType(element, RestConstants.POST_JAKARTA)
+                || hasAnnotationType(element, RestConstants.POST)) {
             return RestConstants.POST_ANNOTATION;
-        } else if (hasAnnotationType(element, RestConstants.PUT)) {
+        } else if (hasAnnotationType(element, RestConstants.PUT_JAKARTA)
+                || hasAnnotationType(element, RestConstants.PUT)) {
             return RestConstants.PUT_ANNOTATION;
-        } else if (hasAnnotationType(element, RestConstants.DELETE)) {
+        } else if (hasAnnotationType(element, RestConstants.DELETE_JAKARTA)
+                || hasAnnotationType(element, RestConstants.DELETE)) {
             return RestConstants.DELETE_ANNOTATION;
         }
         return null;
     }
 
     public static boolean hasUriTemplate(Element element) {
-        return hasAnnotationType(element, RestConstants.PATH);
+        return hasAnnotationType(element, RestConstants.PATH_JAKARTA)
+                || hasAnnotationType(element, RestConstants.PATH);
     }
     
     public static boolean hasHttpMethod(Element element) {
-        return element.getKind() == ElementKind.METHOD && 
-              (hasAnnotationType(element, RestConstants.GET) ||
-               hasAnnotationType(element, RestConstants.POST) ||
-               hasAnnotationType(element, RestConstants.PUT) ||
-               hasAnnotationType(element, RestConstants.DELETE));
+        return element.getKind() == ElementKind.METHOD
+                && (
+                hasAnnotationType(element, RestConstants.GET_JAKARTA)
+                || hasAnnotationType(element, RestConstants.GET)
+                || hasAnnotationType(element, RestConstants.POST_JAKARTA)
+                || hasAnnotationType(element, RestConstants.POST)
+                || hasAnnotationType(element, RestConstants.PUT_JAKARTA)
+                || hasAnnotationType(element, RestConstants.PUT)
+                || hasAnnotationType(element, RestConstants.DELETE_JAKARTA)
+                || hasAnnotationType(element, RestConstants.DELETE)
+                );
     }
     
     public static boolean hasConsumeMime(Element element) {
-        return hasAnnotationType(element, RestConstants.CONSUME_MIME);
+        return hasAnnotationType(element, RestConstants.CONSUME_MIME_JAKARTA)
+                || hasAnnotationType(element, RestConstants.CONSUME_MIME);
     }
     
     public static boolean hasProduceMime(Element element) {
-        return hasAnnotationType(element, RestConstants.PRODUCE_MIME);
+        return hasAnnotationType(element, RestConstants.PRODUCE_MIME_JAKARTA)
+                || hasAnnotationType(element, RestConstants.PRODUCE_MIME);
     }
 
     private static String getAnnotationValue(Element element, String annotationType, String paramName) {
@@ -190,10 +226,9 @@ public class Utils {
     static boolean isRest(TypeElement type, AnnotationModelHelper helper) {
         boolean isRest = false;
         if (type.getKind() != ElementKind.INTERFACE) { // don't consider interfaces
-         
             if (!type.getModifiers().contains(Modifier.ABSTRACT)) {
-                if (helper.hasAnnotation(type.getAnnotationMirrors(),
-                        RestConstants.PATH)) { // NOI18N
+                if (helper.hasAnnotation(type.getAnnotationMirrors(), RestConstants.PATH_JAKARTA)
+                        || helper.hasAnnotation(type.getAnnotationMirrors(), RestConstants.PATH)) {
                     isRest = true;
                 } else {
                     for (Element element : type.getEnclosedElements()) {
@@ -210,8 +245,8 @@ public class Utils {
     
     static boolean isProvider(TypeElement type, AnnotationModelHelper helper) {
         if (type.getKind() != ElementKind.INTERFACE) { // don't consider interfaces
-            if (helper.hasAnnotation(type.getAnnotationMirrors(),
-                    RestConstants.PROVIDER_ANNOTATION)) { // NOI18N
+            if (helper.hasAnnotation(type.getAnnotationMirrors(), RestConstants.PROVIDER_ANNOTATION_JAKARTA)
+                    || helper.hasAnnotation(type.getAnnotationMirrors(), RestConstants.PROVIDER_ANNOTATION)) {
                 return true;
             }
         }
@@ -221,7 +256,8 @@ public class Utils {
     static boolean isRestApplication(TypeElement type, AnnotationModelHelper helper) {
         boolean isRest = false;
         if (type != null && type.getKind() != ElementKind.INTERFACE) { // don't consider interfaces
-            if (helper.hasAnnotation(type.getAnnotationMirrors(), RestConstants.APPLICATION_PATH)) { // NOI18N
+            if (helper.hasAnnotation(type.getAnnotationMirrors(), RestConstants.APPLICATION_PATH_JAKARTA)
+                    || helper.hasAnnotation(type.getAnnotationMirrors(), RestConstants.APPLICATION_PATH)) {
                 isRest = true;
             }
         }

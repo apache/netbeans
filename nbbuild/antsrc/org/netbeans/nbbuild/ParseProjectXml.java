@@ -1283,7 +1283,7 @@ public final class ParseProjectXml extends Task {
                } else {
                    builder.append("\nYou need to download and install org-netbeans-libs-junit4.nbm into the platform to run tests.");
                    builder.append("\nIf you have Maven and agree to http://www.opensource.org/licenses/cpl1.0.txt it suffices to run:");
-                   builder.append("\nmvn dependency:get -Dartifact=junit:junit:4.13.2 -DrepoUrl=https://repo1.maven.org/maven2/");
+                   builder.append("\nmvn dependency:get -Dartifact=junit:junit:4.13.2 -DrepoUrl=https://repo.maven.apache.org/maven2/");
                }
            }
            if (!missingEntries.isEmpty()) {

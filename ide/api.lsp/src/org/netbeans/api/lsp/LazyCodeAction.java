@@ -52,6 +52,20 @@ public final class LazyCodeAction extends CodeAction {
         this.lazyEdit = lazyEdit;
     }
 
+    /**
+     * Constructs the {@code LazyCodeAction}.
+     *
+     * @param title the name of the action
+     * @param kind optional kind of the action
+     * @param command the command that should be invoked
+     * @param lazyEdit the lazily computed {@code WorkspaceEdit} that should be performed
+     * @since 1.23
+     */
+    public LazyCodeAction(String title, String kind, Command command, Supplier<WorkspaceEdit> lazyEdit) {
+        super(title, kind, command, null);
+        this.lazyEdit = lazyEdit;
+    }
+
     @Override
     public WorkspaceEdit getEdit() {
         try {

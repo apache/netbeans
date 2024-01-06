@@ -38,6 +38,8 @@ import org.openide.util.Lookup;
  * <p>
  * The {@link #getLookup() lookup} can be used to search for project-specific services that
  * can provide further info on the artifacts or dependencies.
+ * 
+ * PENDING: move to SPI, make API delegating wrapper.
  * @author sdedic
  */
 public interface DependencyResult extends Lookup.Provider {
@@ -119,7 +121,7 @@ public interface DependencyResult extends Lookup.Provider {
     /**
      * A special part that locates a location appropriate for the surrounding
      * container. For example {@code dependencies} element in Maven or {@code dependencies}
-     * block in a gradle script. Use project root as the dependency
+     * block in a gradle script. Use project root or {@code null} as the dependency
      */
     public static final String PART_CONTAINER = "container"; // NOI18N
 
@@ -131,4 +133,10 @@ public interface DependencyResult extends Lookup.Provider {
      * source location can not be determined.
      */
     public @CheckForNull SourceLocation getDeclarationRange(@NonNull Dependency d, String part) throws IOException;
+    
+    /**
+     * Returns description of project scopes.
+     * @return project scopes.
+     */
+    public ProjectScopes getScopes();
 }

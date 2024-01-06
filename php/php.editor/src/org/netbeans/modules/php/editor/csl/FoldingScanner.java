@@ -179,7 +179,7 @@ public final class FoldingScanner {
             program.accept(new FoldingVisitor(folds));
             Source source = phpParseResult.getSnapshot().getSource();
             assert source != null : "source was null";
-            Document doc = source.getDocument(false);
+            Document doc = source.getDocument(true);
             if (FOLD_PHPTAG) {
                 processPHPTags(folds, doc);
             }

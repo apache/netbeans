@@ -81,7 +81,7 @@ under the License.
             </fileset>
         </classpath>
         <javadocs> 
-            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.0-m05-2/jersey-documentation-2.0-m05-2-docbook.zip"/>
+            <link url="https://repo.maven.apache.org/maven2/org/glassfish/jersey/jersey-documentation/2.0-m05-2/jersey-documentation-2.0-m05-2-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>

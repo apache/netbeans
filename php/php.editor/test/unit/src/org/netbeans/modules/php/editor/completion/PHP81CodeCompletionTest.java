@@ -1117,6 +1117,18 @@ public class PHP81CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("enumsUnionAndBackedMembers", "Union::^cases();");
     }
 
+    public void testEnumCasesTyping01() throws Exception {
+        checkCompletion("enumCasesTyping01", "    case CASE_C = self::^");
+    }
+
+    public void testEnumCasesTyping02() throws Exception {
+        checkCompletion("enumCasesTyping02", "    case CASE_C = self::CASE_A^");
+    }
+
+    public void testEnumCasesTyping03() throws Exception {
+        checkCompletion("enumCasesTyping03", "    case CASE_C = self::^;");
+    }
+
     // GH-5100
     public void testEnumsSpecialVariablesWithinInstanceContextGH5100_01() throws Exception {
         checkCompletion("enumsSpecialVariablesWithinInstanceContextGH5100", "        $this->^publicEnumMethod();");

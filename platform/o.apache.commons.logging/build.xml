@@ -22,13 +22,13 @@
 <project name="platform/o.apache.commons.logging" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar" depends="-define-FileCRC32Calculator">
-        <FileCRC32Calculator file="external/commons-logging-1.2.jar" property="o.apache.commons.logging.crc32" />
+        <FileCRC32Calculator file="external/commons-logging-1.3.0.jar" property="o.apache.commons.logging.crc32" />
         <jar jarfile="${cluster}/${module.jar}">
-            <zipfileset src="external/commons-logging-1.2.jar"/>
+            <zipfileset src="external/commons-logging-1.3.0.jar"/>
             <manifest>
                 <attribute name="Bundle-SymbolicName" value="org.apache.commons.logging"/>
-                <attribute name="Bundle-Version" value="1.2"/>
-                <attribute name="Export-Package" value="org.apache.commons.logging;version=&quot;1.2&quot;,org.apache.commons.logging.impl;version=&quot;1.2&quot;"/>
+                <attribute name="Bundle-Version" value="1.3.0"/>
+                <attribute name="Export-Package" value="org.apache.commons.logging;version=&quot;1.3.0&quot;,org.apache.commons.logging.impl;version=&quot;1.3.0&quot;"/>
                 <attribute name="NB-Original-CRC" value="${o.apache.commons.logging.crc32}"/>
             </manifest>
         </jar>

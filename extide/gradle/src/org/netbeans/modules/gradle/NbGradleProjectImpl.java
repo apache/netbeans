@@ -134,7 +134,8 @@ public final class NbGradleProjectImpl implements Project {
 
         public abstract void passivate(NbGradleProject watcher);
 
-        public abstract GradleReport createReport(String errorClass, String location, int line, String message, GradleReport causedBy);
+        public abstract GradleReport createReport(GradleReport.Severity severity, String errorClass, String location, int line, String message, 
+                GradleReport causedBy, String[] traceLines);
 
         public abstract void setProblems(GradleBaseProject baseProject, Set<GradleReport> problems);
     }

@@ -59,6 +59,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 import javax.swing.Icon;
@@ -78,6 +79,7 @@ import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
+import org.eclipse.lsp4j.CompletionItemLabelDetails;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.ConfigurationParams;
@@ -162,6 +164,7 @@ import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Result;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Trigger;
 import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -222,6 +225,20 @@ public class ServerTest extends NbTestCase {
     private final Gson gson = new Gson();
     private Socket client;
     private Thread serverThread;
+    private Function<CompletionItem, String> completionItemToString = ci -> {
+        StringBuilder sb = new StringBuilder();
+        sb.append(ci.getKind()).append(':').append(ci.getLabel());
+        if (ci.getLabelDetails() != null) {
+            CompletionItemLabelDetails labelDetails = ci.getLabelDetails();
+            if (labelDetails.getDetail() != null) {
+                sb.append(labelDetails.getDetail());
+            }
+            if (labelDetails.getDescription() != null) {
+                sb.append(" : ").append(labelDetails.getDescription());
+            }
+        }
+        return sb.toString();
+    };
 
     public ServerTest(String name) {
         super(name);
@@ -241,7 +258,7 @@ public class ServerTest extends NbTestCase {
         }
         
         @Override
-        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
             return Collections.emptyList();
         }
 
@@ -262,6 +279,7 @@ public class ServerTest extends NbTestCase {
     protected void setUp() throws Exception {
         System.setProperty("java.awt.headless", Boolean.TRUE.toString());
         ParameterNameProviderImpl.DISABLE_PARAMETER_NAMES_LOADING = true;
+        SourceUtilsTestUtil2.disableMultiFileSourceRoots();
         super.setUp();
         clearWorkDir();
         ServerSocket srv = new ServerSocket(0, 1, InetAddress.getLoopbackAddress());
@@ -383,7 +401,7 @@ public class ServerTest extends NbTestCase {
         int hashCodeStart = code.indexOf("hashCode");
         Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, hashCodeStart + 2))).get();
         assertTrue(completion.isRight());
-        List<String> actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
+        List<String> actualItems = completion.getRight().getItems().stream().map(completionItemToString).collect(Collectors.toList());
         assertEquals(Arrays.asList("Method:hashCode() : int"), actualItems);
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
         id.setUri(toURI(src));
@@ -391,14 +409,14 @@ public class ServerTest extends NbTestCase {
         assertDiags(diags, "Error:0:38-0:41");//errors
         assertDiags(diags, "Error:0:38-0:41");//hints
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, hashCodeStart + 2))).get();
-        actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
+        actualItems = completion.getRight().getItems().stream().map(completionItemToString).collect(Collectors.toList());
         if (jdk9Plus()) {
             assertEquals(Arrays.asList("Method:equals(Object anObject) : boolean", "Method:equalsIgnoreCase(String anotherString) : boolean"), actualItems);
         }
         int testStart = code.indexOf("test") + "equ".length() - "hashCode".length();
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, testStart + 3))).get();
         List<CompletionItem> actualCompletionItem = completion.getRight().getItems();
-        actualItems = actualCompletionItem.stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
+        actualItems = actualCompletionItem.stream().map(completionItemToString).collect(Collectors.toList());
         assertEquals(Arrays.asList("Method:test() : void"), actualItems);
         assertEquals(null, actualCompletionItem.get(0).getDocumentation());
         CompletionItem resolvedItem = server.getTextDocumentService().resolveCompletionItem(actualCompletionItem.get(0)).get();
@@ -412,7 +430,7 @@ public class ServerTest extends NbTestCase {
                      "\n",
                      resolvedItem.getDocumentation().getRight().getValue());
         completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, 0))).get();
-        actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
+        actualItems = completion.getRight().getItems().stream().map(completionItemToString).collect(Collectors.toList());
         assertTrue(actualItems.contains("Keyword:interface"));
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, hashCodeStart), new Position(0, hashCodeStart + "equ".length())), "equ".length(), "hashCode"))));
         int closingBrace = code.lastIndexOf("}");
@@ -1514,11 +1532,11 @@ public class ServerTest extends NbTestCase {
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "s.".length()))).get();
             assertTrue(completion.isRight());
-            Optional<CompletionItem> lengthItem = completion.getRight().getItems().stream().filter(ci -> "length() : int".equals(ci.getLabel())).findAny();
+            Optional<CompletionItem> lengthItem = completion.getRight().getItems().stream().filter(ci -> "length".equals(ci.getLabel())).findAny();
             assertTrue("Expecting length field: " + completion.getRight().getItems(), lengthItem.isPresent());
             assertEquals(InsertTextFormat.PlainText, lengthItem.get().getInsertTextFormat());
             assertEquals("length()", lengthItem.get().getInsertText());
-            Optional<CompletionItem> substringItem = completion.getRight().getItems().stream().filter(ci -> ci.getLabel().startsWith("substring(") && ci.getLabel().contains(",")).findAny();
+            Optional<CompletionItem> substringItem = completion.getRight().getItems().stream().filter(ci -> "substring".equals(ci.getLabel()) && ci.getLabelDetails().getDetail().contains(",")).findAny();
             assertTrue(substringItem.isPresent());
             assertEquals(InsertTextFormat.Snippet, substringItem.get().getInsertTextFormat());
             if ("1.8".equals(javaVersion)) {
@@ -1550,9 +1568,9 @@ public class ServerTest extends NbTestCase {
                 Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), afterJavaLangAnnotation)).get();
                 assertTrue(completion.isRight());
                 completion.getRight().getItems().stream().forEach(ci -> System.err.println(ci.getLabel()));
-                Optional<CompletionItem> targetItem = completion.getRight().getItems().stream().filter(ci -> "Target (java.lang.annotation)".equals(ci.getLabel())).findAny();
+                Optional<CompletionItem> targetItem = completion.getRight().getItems().stream().filter(ci -> "Target".equals(ci.getLabel())).findAny();
                 assertTrue(targetItem.isPresent());
-                assertEquals("Target (java.lang.annotation)", targetItem.get().getLabel()); //TODO: insert text '('!
+                assertEquals("Target", targetItem.get().getLabel()); //TODO: insert text '('!
                 assertEquals(CompletionItemKind.Interface, targetItem.get().getKind());
             }
 
@@ -1652,7 +1670,7 @@ public class ServerTest extends NbTestCase {
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(2, 8 + "ArrayL".length()))).get();
             assertTrue(completion.isRight());
-            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList (java.util)".equals(ci.getLabel())).findAny();
+            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList".equals(ci.getLabel())).findAny();
             assertTrue(arrayListItem.isPresent());
             assertNull(arrayListItem.get().getAdditionalTextEdits());
             CompletableFuture<CompletionItem> resolvedItem = server.getTextDocumentService().resolveCompletionItem(arrayListItem.get());
@@ -1669,7 +1687,7 @@ public class ServerTest extends NbTestCase {
 
             Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(3, 8 + "ArrayL".length()))).get();
             assertTrue(completion.isRight());
-            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList (java.util)".equals(ci.getLabel())).findAny();
+            Optional<CompletionItem> arrayListItem = completion.getRight().getItems().stream().filter(ci -> "ArrayList".equals(ci.getLabel())).findAny();
             assertTrue(arrayListItem.isPresent());
             assertNull(arrayListItem.get().getAdditionalTextEdits());
             CompletableFuture<CompletionItem> resolvedItem = server.getTextDocumentService().resolveCompletionItem(arrayListItem.get());
@@ -2623,7 +2641,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(3).getNewText());
         Command command = introduceVariable.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -2726,7 +2744,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(2).getNewText());
         Command command = introduceConstant.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -2829,7 +2847,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(2).getNewText());
         Command command = introduceField.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -2935,7 +2953,7 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(2).getNewText());
         Command command = introduceMethod.get().getCommand();
         assertNotNull(command);
-        assertEquals("java.rename.element.at", command.getCommand());
+        assertEquals("nbls.rename.element.at", command.getCommand());
         List<Object> arguments = command.getArguments();
         assertNotNull(arguments);
         assertEquals(1, arguments.size());
@@ -5014,8 +5032,8 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, 15))).get();
         assertTrue(completion.isRight());
-        List<String> actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
-        assertEquals(Arrays.asList("Interface:SuppressWarnings (java.lang)"), actualItems);
+        List<String> actualItems = completion.getRight().getItems().stream().map(completionItemToString).collect(Collectors.toList());
+        assertEquals(Arrays.asList("Interface:SuppressWarnings : java.lang"), actualItems);
         VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(1);
         id.setUri(toURI(src));
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 1), new Position(0, 15)), 14, "SuppressWarnings(v"))));
@@ -5459,7 +5477,7 @@ public class ServerTest extends NbTestCase {
         }
         
         @Override
-        public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
             return Collections.emptyList();
         }
         
@@ -5500,7 +5518,7 @@ public class ServerTest extends NbTestCase {
 
         @Override
         public Set<String> getCommands() {
-            return Collections.singleton("_progressCommand");
+            return Collections.singleton("test._progressCommand");
         }
 
 
@@ -5570,7 +5588,7 @@ public class ServerTest extends NbTestCase {
         
         // now invoke the build
         ExecuteCommandParams ecp = new ExecuteCommandParams();
-        ecp.setCommand("_progressCommand");
+        ecp.setCommand("test._progressCommand");
         CompletableFuture<Object> buildF = server.getWorkspaceService().executeCommand(ecp);
         
         // the progress must be received at the client w/ the token, we need the token to issue cancel
@@ -5660,7 +5678,7 @@ public class ServerTest extends NbTestCase {
         server.getTextDocumentService().didChange(new DidChangeTextDocumentParams(id, Arrays.asList(new TextDocumentContentChangeEvent(new Range(new Position(0, 11), new Position(0, 11)), 0, " :: $1 instanceof java.lang.String"))));
         Either<List<CompletionItem>, CompletionList> completion = server.getTextDocumentService().completion(new CompletionParams(new TextDocumentIdentifier(toURI(src)), new Position(0, 5))).get();
         assertTrue(completion.isRight());
-        List<String> actualItems = completion.getRight().getItems().stream().map(ci -> ci.getKind() + ":" + ci.getLabel()).collect(Collectors.toList());
+        List<String> actualItems = completion.getRight().getItems().stream().map(completionItemToString).collect(Collectors.toList());
         assertEquals(Arrays.asList("Method:length() : int"), actualItems);
     }
 

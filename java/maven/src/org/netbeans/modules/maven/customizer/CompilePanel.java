@@ -21,14 +21,9 @@ package org.netbeans.modules.maven.customizer;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,8 +62,6 @@ import org.netbeans.modules.maven.options.MavenVersionSettings;
 import org.netbeans.spi.project.AuxiliaryProperties;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.awt.HtmlBrowser;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -511,33 +504,33 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
 
         @Override
         public void performOperation(POMModel model) {
-        Plugin old = null;
-        Plugin plugin;
-        Build bld = model.getProject().getBuild();
-        if (bld != null) {
-            old = bld.findPluginById(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
-        } else {
-            bld = model.getFactory().createBuild();
-            model.getProject().setBuild(bld);
+            Plugin old = null;
+            Plugin plugin;
+            Build bld = model.getProject().getBuild();
+            if (bld != null) {
+                old = bld.findPluginById(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER);
+            } else {
+                bld = model.getFactory().createBuild();
+                model.getProject().setBuild(bld);
+            }
+            if (old != null) {
+                plugin = old;
+            } else {
+                plugin = model.getFactory().createPlugin();
+                plugin.setGroupId(Constants.GROUP_APACHE_PLUGINS);
+                plugin.setArtifactId(Constants.PLUGIN_COMPILER);
+                plugin.setVersion(MavenVersionSettings.getDefault().getVersion(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER));
+                bld.addPlugin(plugin);
+            }
+            Configuration config = plugin.getConfiguration();
+            if (config == null) {
+                config = model.getFactory().createConfiguration();
+                plugin.setConfiguration(config);
+            }
+            config.setSimpleParameter(param, value);
         }
-        if (old != null) {
-            plugin = old;
-        } else {
-            plugin = model.getFactory().createPlugin();
-            plugin.setGroupId(Constants.GROUP_APACHE_PLUGINS);
-            plugin.setArtifactId(Constants.PLUGIN_COMPILER);
-            plugin.setVersion(MavenVersionSettings.getDefault().getVersion(MavenVersionSettings.VERSION_COMPILER));
-            bld.addPlugin(plugin);
-        }
-        Configuration config = plugin.getConfiguration();
-        if (config == null) {
-            config = model.getFactory().createConfiguration();
-            plugin.setConfiguration(config);
-        }
-        config.setSimpleParameter(param, value);
-    }
 
-                    }
+    }
 
     String getCompilerParam(ModelHandle2 handle, String param) {
         CompilerParamOperation oper = operations.get(param);

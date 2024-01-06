@@ -21,33 +21,32 @@ package org.netbeans.modules.gradle.options;
 
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.io.File;
 import javax.swing.JFileChooser;
 import org.netbeans.spi.options.OptionsPanelController;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
 import javax.swing.ButtonModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import javax.swing.SwingWorker;
-import javax.swing.UIManager;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.UIResource;
 import org.netbeans.api.annotations.common.StaticResource;
-import org.netbeans.modules.gradle.api.execute.GradleDistributionManager;
-import org.netbeans.modules.gradle.api.execute.GradleDistributionManager.GradleDistribution;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager;
+import org.netbeans.modules.gradle.spi.execute.JavaRuntimeManager.JavaRuntime;
 import org.openide.LifecycleManager;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.WeakListeners;
 
 
 /**
@@ -62,20 +61,38 @@ public class SettingsPanel extends javax.swing.JPanel {
 
     private static final String[] CARDS = {"Execution", "Appearance", "Dependencies", "Maven", "Experimental"}; //NOI18N
 
-    private GradleDistributionManager gdm = GradleDistributionManager.get();
+    private final JavaRuntimeManager runtimeManager;
+    private final ChangeListener runtimeChangeListener = (evt) -> managedRuntimeSetup();
 
     /**
      * Creates new form SettingsPanel
      */
+    @Messages({
+        "NO_RUNTIME_SUPPORT_HINT=Runtime Change is not Supported",
+        "NO_RUNTIME_MANAGEMENT_HINT=Runtime Management is not Supported",
+    })
     public SettingsPanel() {
         initComponents();
-        cbGradleVersion.setRenderer(new VersionCellRenderer(cbGradleVersion.getRenderer()));
         lstCategories.setSelectedIndex(0);
+
+        runtimeManager = Lookup.getDefault().lookup(JavaRuntimeManager.class);
+        if (runtimeManager == null) {
+            cbJavaRuntime.setToolTipText(Bundle.NO_RUNTIME_SUPPORT_HINT());
+            btManageRuntimes.setToolTipText(Bundle.NO_RUNTIME_SUPPORT_HINT());
+        } else {
+            runtimeManager.addChangeListener(WeakListeners.change(runtimeChangeListener, runtimeManager));
+            managedRuntimeSetup();
+            if (!runtimeManager.manageRuntimesAction().isPresent()) {
+                btManageRuntimes.setToolTipText(Bundle.NO_RUNTIME_MANAGEMENT_HINT());
+            }
+        }
+        cbJavaRuntime.setRenderer(new RuntimeRenderer());
 
         cbDownloadLibs.setModel(new DefaultComboBoxModel<>(GradleSettings.DownloadLibsRule.values()));
         cbDownloadSources.setModel(new DefaultComboBoxModel<>(GradleSettings.DownloadMiscRule.values()));
         cbDownloadJavadoc.setModel(new DefaultComboBoxModel<>(GradleSettings.DownloadMiscRule.values()));
         cbAllowExecution.setModel(new DefaultComboBoxModel<>(GradleSettings.GradleExecutionRule.values()));
+        
         
         DefaultComboBoxModel mdl = new DefaultComboBoxModel<>(NetworkProxySettings.values());
         if (!NetworkProxySettings.allowProxyOverride()) {
@@ -99,31 +116,29 @@ public class SettingsPanel extends javax.swing.JPanel {
         lstCategories = new javax.swing.JList<>();
         pnlCards = new javax.swing.JPanel();
         pnlExecution = new javax.swing.JPanel();
-        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
+        javax.swing.JPanel distributionPanel = new javax.swing.JPanel();
         lblGradleUserHome = new javax.swing.JLabel();
         tfGradleUserHome = new javax.swing.JTextField();
         btGradleUserHome = new javax.swing.JButton();
         lblGradleDistribution = new javax.swing.JLabel();
-        cbGradleVersion = new javax.swing.JComboBox<>();
-        rbUseStandardGradle = new javax.swing.JRadioButton();
+        rbPreferWrapper = new javax.swing.JRadioButton();
         rbUseCustomGradle = new javax.swing.JRadioButton();
         tfUseCustomGradle = new javax.swing.JTextField();
         btUseCustomGradle = new javax.swing.JButton();
-        cbStartDaemonOnStart = new javax.swing.JCheckBox();
-        cbPreferWrapper = new javax.swing.JCheckBox();
         lbVersionInfo = new javax.swing.JLabel();
-        cbSilentInstall = new javax.swing.JCheckBox();
         btDefaultHome = new javax.swing.JButton();
-        javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
+        javax.swing.JPanel executionPanel = new javax.swing.JPanel();
         cbOffline = new javax.swing.JCheckBox();
-        cbSkipTest = new javax.swing.JCheckBox();
-        cbSkipCheck = new javax.swing.JCheckBox();
-        cbUseConfigCache = new javax.swing.JCheckBox();
         cbConfigureOnDemand = new javax.swing.JCheckBox();
-        cbNoRebuild = new javax.swing.JCheckBox();
+        cbUseConfigCache = new javax.swing.JCheckBox();
+        cbSkipCheck = new javax.swing.JCheckBox();
+        cbSkipTest = new javax.swing.JCheckBox();
+        lbJavaRuntime = new javax.swing.JLabel();
+        cbJavaRuntime = new javax.swing.JComboBox<>();
         lbAllowExecution = new javax.swing.JLabel();
         cbAllowExecution = new javax.swing.JComboBox<>();
         lbNetworkProxy = new javax.swing.JLabel();
+        btManageRuntimes = new javax.swing.JButton();
         cbNetworkProxy = new javax.swing.JComboBox<>();
         pnlAppearance = new javax.swing.JPanel();
         javax.swing.JPanel jPanel4 = new javax.swing.JPanel();
@@ -184,7 +199,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(lblCategories)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lstCategories, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
+                .addComponent(lstCategories, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -195,7 +210,7 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         pnlExecution.setPreferredSize(new java.awt.Dimension(800, 415));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jPanel1.border.title"))); // NOI18N
+        distributionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.distributionPanel.border.title"))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lblGradleUserHome, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lblGradleUserHome.text")); // NOI18N
 
@@ -210,19 +225,8 @@ public class SettingsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(lblGradleDistribution, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lblGradleDistribution.text")); // NOI18N
 
-        cbGradleVersion.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbGradleVersionItemStateChanged(evt);
-            }
-        });
-
-        bgUsedDistribution.add(rbUseStandardGradle);
-        org.openide.awt.Mnemonics.setLocalizedText(rbUseStandardGradle, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.rbUseStandardGradle.text")); // NOI18N
-        rbUseStandardGradle.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                rbUseStandardGradleStateChanged(evt);
-            }
-        });
+        bgUsedDistribution.add(rbPreferWrapper);
+        org.openide.awt.Mnemonics.setLocalizedText(rbPreferWrapper, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.rbPreferWrapper.text")); // NOI18N
 
         bgUsedDistribution.add(rbUseCustomGradle);
         org.openide.awt.Mnemonics.setLocalizedText(rbUseCustomGradle, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.rbUseCustomGradle.text")); // NOI18N
@@ -242,14 +246,8 @@ public class SettingsPanel extends javax.swing.JPanel {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbStartDaemonOnStart, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbStartDaemonOnStart.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbPreferWrapper, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbPreferWrapper.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(lbVersionInfo, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lbVersionInfo.text")); // NOI18N
         lbVersionInfo.setEnabled(false);
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbSilentInstall, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbSilentInstall.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(btDefaultHome, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.btDefaultHome.text")); // NOI18N
         btDefaultHome.addActionListener(new java.awt.event.ActionListener() {
@@ -258,41 +256,34 @@ public class SettingsPanel extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout distributionPanelLayout = new javax.swing.GroupLayout(distributionPanel);
+        distributionPanel.setLayout(distributionPanelLayout);
+        distributionPanelLayout.setHorizontalGroup(
+            distributionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(distributionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(distributionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(distributionPanelLayout.createSequentialGroup()
                         .addComponent(lblGradleDistribution)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(rbUseStandardGradle)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbGradleVersion, 0, 107, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(distributionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(distributionPanelLayout.createSequentialGroup()
                                 .addComponent(rbUseCustomGradle)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfUseCustomGradle)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btUseCustomGradle, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbSilentInstall)
-                            .addComponent(cbStartDaemonOnStart)
-                            .addComponent(cbPreferWrapper))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(tfUseCustomGradle)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btUseCustomGradle, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
+                            .addGroup(distributionPanelLayout.createSequentialGroup()
+                                .addComponent(rbPreferWrapper)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(distributionPanelLayout.createSequentialGroup()
                         .addComponent(lblGradleUserHome)
                         .addGap(9, 9, 9)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(distributionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(distributionPanelLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(lbVersionInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(distributionPanelLayout.createSequentialGroup()
                                 .addComponent(tfGradleUserHome)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btGradleUserHome, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -301,13 +292,13 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addGap(2, 2, 2))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btGradleUserHome, btUseCustomGradle});
+        distributionPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btGradleUserHome, btUseCustomGradle});
 
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        distributionPanelLayout.setVerticalGroup(
+            distributionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(distributionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(distributionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblGradleUserHome)
                     .addComponent(tfGradleUserHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btGradleUserHome)
@@ -315,118 +306,129 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbVersionInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(distributionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblGradleDistribution)
-                    .addComponent(cbGradleVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rbUseStandardGradle))
+                    .addComponent(rbPreferWrapper))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(distributionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbUseCustomGradle)
                     .addComponent(tfUseCustomGradle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btUseCustomGradle))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbPreferWrapper)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbStartDaemonOnStart)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbSilentInstall))
+                .addContainerGap())
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jPanel2.border.title"))); // NOI18N
+        executionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.executionPanel.border.title"))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbOffline, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbOffline.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbSkipTest, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbSkipTest.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbSkipCheck, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbSkipCheck.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbConfigureOnDemand, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbConfigureOnDemand.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbUseConfigCache, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbUseConfigCache.text")); // NOI18N
         cbUseConfigCache.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbUseConfigCache.toolTipText")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbConfigureOnDemand, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbConfigureOnDemand.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbSkipCheck, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbSkipCheck.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbNoRebuild, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbNoRebuild.text")); // NOI18N
-        cbNoRebuild.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbNoRebuild.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbSkipTest, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.cbSkipTest.text")); // NOI18N
+
+        lbJavaRuntime.setLabelFor(cbJavaRuntime);
+        org.openide.awt.Mnemonics.setLocalizedText(lbJavaRuntime, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lbJavaRuntime.text")); // NOI18N
 
         lbAllowExecution.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        lbAllowExecution.setLabelFor(cbAllowExecution);
         org.openide.awt.Mnemonics.setLocalizedText(lbAllowExecution, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lbAllowExecution.text")); // NOI18N
 
+        lbNetworkProxy.setLabelFor(cbNetworkProxy);
         org.openide.awt.Mnemonics.setLocalizedText(lbNetworkProxy, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lbNetworkProxy.text")); // NOI18N
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        org.openide.awt.Mnemonics.setLocalizedText(btManageRuntimes, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.btManageRuntimes.text")); // NOI18N
+        btManageRuntimes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btManageRuntimesActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout executionPanelLayout = new javax.swing.GroupLayout(executionPanel);
+        executionPanel.setLayout(executionPanelLayout);
+        executionPanelLayout.setHorizontalGroup(
+            executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(executionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbOffline)
-                            .addComponent(cbConfigureOnDemand)
-                            .addComponent(cbNoRebuild, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbUseConfigCache)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(cbSkipCheck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cbSkipTest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(executionPanelLayout.createSequentialGroup()
+                        .addGroup(executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(cbConfigureOnDemand, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbOffline, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbUseConfigCache, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbSkipCheck)
+                            .addComponent(cbSkipTest))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(executionPanelLayout.createSequentialGroup()
+                        .addGroup(executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbAllowExecution, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbJavaRuntime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lbNetworkProxy, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cbAllowExecution, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbJavaRuntime, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbNetworkProxy, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbNetworkProxy, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbAllowExecution, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(btManageRuntimes)))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+
+        executionPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {lbAllowExecution, lbJavaRuntime, lbNetworkProxy});
+
+        executionPanelLayout.setVerticalGroup(
+            executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(executionPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbOffline)
                     .addComponent(cbSkipCheck))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbSkipTest)
-                    .addComponent(cbNoRebuild, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbConfigureOnDemand))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbConfigureOnDemand)
-                    .addComponent(cbUseConfigCache))
+                .addComponent(cbUseConfigCache)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbAllowExecution, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbAllowExecution))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbNetworkProxy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbNetworkProxy))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbJavaRuntime)
+                    .addComponent(cbJavaRuntime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btManageRuntimes))
+                .addGap(6, 6, 6)
+                .addGroup(executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbAllowExecution)
+                    .addComponent(cbAllowExecution, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addGroup(executionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbNetworkProxy)
+                    .addComponent(cbNetworkProxy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnlExecutionLayout = new javax.swing.GroupLayout(pnlExecution);
         pnlExecution.setLayout(pnlExecutionLayout);
         pnlExecutionLayout.setHorizontalGroup(
             pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlExecutionLayout.createSequentialGroup()
+            .addGroup(pnlExecutionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(distributionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(executionPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnlExecutionLayout.setVerticalGroup(
             pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlExecutionLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(distributionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addComponent(executionPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlExecution, "Execution");
@@ -477,7 +479,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbReuseEditorOnStackTrace, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
+                    .addComponent(cbReuseEditorOnStackTrace, javax.swing.GroupLayout.DEFAULT_SIZE, 525, Short.MAX_VALUE)
                     .addComponent(cbReuseOutputTabs, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cbAlwaysShowOutput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -511,7 +513,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(216, Short.MAX_VALUE))
+                .addContainerGap(214, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlAppearance, "Appearance");
@@ -547,7 +549,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(lbDownloadLibs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbDownloadSources, 0, 238, Short.MAX_VALUE)
+                    .addComponent(cbDownloadSources, 0, 195, Short.MAX_VALUE)
                     .addComponent(cbDownloadLibs, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cbDownloadJavadoc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -584,7 +586,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(pnlDependenciesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(294, Short.MAX_VALUE))
+                .addContainerGap(295, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlDependencies, "Dependencies");
@@ -600,7 +602,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cbPreferMaven)
-                .addContainerGap(231, Short.MAX_VALUE))
+                .addContainerGap(185, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -624,7 +626,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(pnlMavenLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(354, Short.MAX_VALUE))
+                .addContainerGap(357, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlMaven, "Maven");
@@ -650,7 +652,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(cbOpenLazy)
                     .addComponent(cbEnableCache)
                     .addComponent(cbBundledLoading))
-                .addContainerGap(289, Short.MAX_VALUE))
+                .addContainerGap(254, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -678,7 +680,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(pnlExperimentalLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(300, Short.MAX_VALUE))
+                .addContainerGap(301, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlExperimental, "Experimental");
@@ -716,25 +718,6 @@ public class SettingsPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_lstCategoriesValueChanged
 
-    @Messages("LBL_IncompatibleGradle=This version does not work with NetBeans!")
-    private void cbGradleVersionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbGradleVersionItemStateChanged
-        if (evt.getItem() instanceof GradleDistribution) {
-            GradleDistribution v = (GradleDistribution) evt.getItem();
-            if ((v != null) && (evt.getStateChange() == ItemEvent.SELECTED)) {
-                if (v.isBlackListed()) {
-                    lbVersionInfo.setText(Bundle.LBL_IncompatibleGradle());
-                } else {
-                    lbVersionInfo.setText(null);
-                }
-            }
-        }
-    }//GEN-LAST:event_cbGradleVersionItemStateChanged
-
-    private void rbUseStandardGradleStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rbUseStandardGradleStateChanged
-        boolean selected = rbUseStandardGradle.isSelected();
-        cbGradleVersion.setEnabled(selected);
-    }//GEN-LAST:event_rbUseStandardGradleStateChanged
-
     private void rbUseCustomGradleStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rbUseCustomGradleStateChanged
         boolean selected = rbUseCustomGradle.isSelected();
         tfUseCustomGradle.setEnabled(selected);
@@ -761,14 +744,18 @@ public class SettingsPanel extends javax.swing.JPanel {
         if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(this)) {
             File home = chooser.getSelectedFile();
             tfGradleUserHome.setText(home.getAbsolutePath());
-            gdm = GradleDistributionManager.get(home);
-            cbGradleVersion.repaint();
         }
     }//GEN-LAST:event_btGradleUserHomeActionPerformed
 
     private void btDefaultHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDefaultHomeActionPerformed
         tfGradleUserHome.setText(getDefaultGradleUserHome());
     }//GEN-LAST:event_btDefaultHomeActionPerformed
+
+    private void btManageRuntimesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btManageRuntimesActionPerformed
+        if (runtimeManager != null) {
+            runtimeManager.manageRuntimesAction().ifPresent(action -> action.run());
+        }
+    }//GEN-LAST:event_btManageRuntimesActionPerformed
 
     public void setValues() {
         GradleSettings settings = GradleSettings.getDefault();
@@ -777,17 +764,13 @@ public class SettingsPanel extends javax.swing.JPanel {
         tfGradleUserHome.setText(settings.getGradleUserHome().getAbsolutePath());
 
         tfUseCustomGradle.setText(settings.getDistributionHome());
-        cbPreferWrapper.setSelected(settings.isWrapperPreferred());
+        rbPreferWrapper.setSelected(settings.isWrapperPreferred());
 
         ButtonModel bm = settings.useCustomGradle()
-                ? rbUseCustomGradle.getModel() : rbUseStandardGradle.getModel();
+                ? rbUseCustomGradle.getModel() : rbPreferWrapper.getModel();
         bgUsedDistribution.setSelected(bm, true);
 
-        cbStartDaemonOnStart.setSelected(settings.isStartDaemonOnStart());
-        cbSilentInstall.setSelected(settings.isSilentInstall());
-
         cbOffline.setSelected(settings.isOffline());
-        cbNoRebuild.setSelected(settings.getNoRebuild());
         cbConfigureOnDemand.setSelected(settings.isConfigureOnDemand());
         cbUseConfigCache.setSelected(settings.getUseConfigCache());
 
@@ -810,35 +793,10 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbDownloadSources.setSelectedItem(settings.getDownloadSources());
         cbDownloadJavadoc.setSelectedItem(settings.getDownloadJavadoc());
 
+        cbJavaRuntime.setSelectedItem(experimental.getDefaultJavaRuntime());
         cbAllowExecution.setSelectedItem(settings.getGradleExecutionRule());
         
         cbNetworkProxy.setSelectedItem(experimental.getNetworkProxy());
-
-        new SwingWorker<List<GradleDistribution>, Void>() {
-
-            @Override
-            protected List<GradleDistribution> doInBackground() throws Exception {
-                try {
-                    return gdm.availableDistributions(true);
-                } catch (IOException ex) {
-                    return gdm.availableLocalDistributions();
-                }
-            }
-
-            @Override
-            protected void done() {
-                GradleDistribution[] items = new GradleDistribution[0];
-                try {
-                    items = get().toArray(new GradleDistribution[0]);
-                } catch (InterruptedException | ExecutionException ex) {
-                    // Something happened, let's have the combo list box empty;
-                }
-                ComboBoxModel<GradleDistribution> model = new DefaultComboBoxModel<>(items);
-                cbGradleVersion.setModel(model);
-                model.setSelectedItem(gdm.distributionFromVersion(settings.getGradleVersion()));
-            }
-
-        }.execute();
     }
 
     @Messages({
@@ -854,20 +812,12 @@ public class SettingsPanel extends javax.swing.JPanel {
         } else {
             settings.setGradleUserHome(new File(tfGradleUserHome.getText()));
         }
-        GradleDistribution distVersion = (GradleDistribution) cbGradleVersion.getSelectedItem();
-        if (distVersion != null) {
-            settings.setGradleVersion(distVersion.getVersion());
-        }
         settings.setDistributionHome(tfUseCustomGradle.getText());
-        settings.setWrapperPreferred(cbPreferWrapper.isSelected());
+        settings.setWrapperPreferred(rbPreferWrapper.isSelected());
         boolean useCustomGradle = bgUsedDistribution.getSelection() == rbUseCustomGradle.getModel();
         settings.setUseCustomGradle(useCustomGradle);
 
-        settings.setStartDaemonOnStart(cbStartDaemonOnStart.isSelected());
-        settings.setSilentInstall(cbSilentInstall.isSelected());
-
         settings.setOffline(cbOffline.isSelected());
-        settings.setNoRebuild(cbNoRebuild.isSelected());
         settings.setConfigureOnDemand(cbConfigureOnDemand.isSelected());
         settings.setUseConfigCache(cbUseConfigCache.isSelected());
         settings.setSkipCheck(cbSkipCheck.isSelected());
@@ -886,6 +836,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         settings.setDownloadSources((GradleSettings.DownloadMiscRule) cbDownloadSources.getSelectedItem());
         settings.setDownloadJavadoc((GradleSettings.DownloadMiscRule) cbDownloadJavadoc.getSelectedItem());
 
+        experimental.setDefaultJavaRuntime((JavaRuntime) cbJavaRuntime.getSelectedItem());
         settings.setGradleExecutionRule((GradleSettings.GradleExecutionRule) cbAllowExecution.getSelectedItem());
 
         if (settings.isPreferMaven() != cbPreferMaven.isSelected()) {
@@ -905,14 +856,10 @@ public class SettingsPanel extends javax.swing.JPanel {
         GradleSettings settings = GradleSettings.getDefault();
         GradleExperimentalSettings experimental = GradleExperimentalSettings.getDefault();
         boolean isChanged = !settings.getDistributionHome().equals(tfUseCustomGradle.getText());
-        isChanged |= settings.isWrapperPreferred() != cbPreferWrapper.isSelected();
-        isChanged |= !settings.getGradleVersion().equals(String.valueOf(cbGradleVersion.getSelectedItem()));
+        isChanged |= settings.isWrapperPreferred() != rbPreferWrapper.isSelected();
 
         boolean useCustomGradle = bgUsedDistribution.getSelection() == rbUseCustomGradle.getModel();
         isChanged |= settings.useCustomGradle() != useCustomGradle;
-
-        isChanged |= settings.isStartDaemonOnStart() != cbStartDaemonOnStart.isSelected();
-        isChanged |= settings.isSilentInstall() != cbSilentInstall.isSelected();
 
         isChanged |= settings.isOffline() != cbOffline.isSelected();
         isChanged |= settings.isConfigureOnDemand() != cbConfigureOnDemand.isSelected();
@@ -937,6 +884,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         isChanged |= settings.getDownloadSources() != cbDownloadSources.getSelectedItem();
         isChanged |= settings.getDownloadJavadoc() != cbDownloadJavadoc.getSelectedItem();
 
+        isChanged |= experimental.getDefaultJavaRuntime() != cbJavaRuntime.getSelectedItem();
         isChanged |= settings.getGradleExecutionRule() != cbAllowExecution.getSelectedItem();
         
         isChanged |= experimental.getNetworkProxy() != cbNetworkProxy.getSelectedItem();
@@ -944,54 +892,77 @@ public class SettingsPanel extends javax.swing.JPanel {
         return isChanged;
     }
 
-    private class VersionCellRenderer extends DefaultListCellRenderer {
-        final Color blackListColor = UIManager.getColor("nb.errorForeground");         //NOI18N
-        final Color unavailableColor = UIManager.getColor("Label.disabledForeground"); //NOI18N
-        @SuppressWarnings("rawtypes")
-        final ListCellRenderer delegate;
-        @SuppressWarnings("rawtypes")
-        public VersionCellRenderer(ListCellRenderer delegate) {
-            this.delegate = delegate;
-        }
-
-        @Override
-        @NbBundle.Messages (value = {
-            "NbGradleVersion.autoInstall_TXT=<html>This version is not available on this system<br/>It is going to be installed automatically.",
-            "NbGradleVersion.blacklist_TXT=<html>This version is known to have issues with NetBeans, hence usage is not recommended."
-        })
-        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            @SuppressWarnings("unchecked")
-            Component cmp = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (cmp instanceof JLabel) {
-                JLabel label = (JLabel) cmp;
-                label.setHorizontalAlignment(RIGHT);
-                if (value instanceof GradleDistribution) {
-                    GradleDistribution dist = (GradleDistribution) value;
-                    label.setText(dist.getVersion());
-                    if (!dist.isAvailable()) {
-                        label.setToolTipText(Bundle.NbGradleVersion_autoInstall_TXT());
-                        label.setForeground(unavailableColor);
-                    }
-                    if (dist.isBlackListed()) {
-                        label.setToolTipText(Bundle.NbGradleVersion_blacklist_TXT());
-                        label.setForeground(blackListColor);
-                    }
-                }
-            }
-            return cmp;
-        }
-
-    }
-
     private static String getDefaultGradleUserHome() {
         String dir = System.getenv("GRADLE_USER_HOME"); //NOI18N
         return dir != null ? dir : new File(System.getProperty("user.home"), ".gradle").getAbsolutePath(); //NOI18N
+    }
+    
+    private void selectRuntime(JavaRuntime selected) {
+        ComboBoxModel<JavaRuntime> model = cbJavaRuntime.getModel();
+        if (selected == null || selected.isBroken()) {
+            model.setSelectedItem(selected);
+        } else {
+            for (int i = 0; i < model.getSize(); i++) {
+                JavaRuntime rt = model.getElementAt(i);
+                if (rt.equals(selected)) {
+                    model.setSelectedItem(model.getElementAt(i));
+                    break;
+                }
+            }
+        }
+    }
+    
+    private void managedRuntimeSetup() {
+        int selected = cbJavaRuntime.getSelectedIndex();
+        JavaRuntime runtime = selected != -1 ? cbJavaRuntime.getModel().getElementAt(selected) : null;
+        Map<String, JavaRuntime> availabeRuntimes = runtimeManager != null ? runtimeManager.getAvailableRuntimes() : Collections.emptyMap();
+
+        JavaRuntime[] runtimes = availabeRuntimes.values().toArray(new JavaRuntime[0]);
+        Arrays.sort(runtimes);
+        
+        DefaultComboBoxModel<JavaRuntime> model = new DefaultComboBoxModel<>(runtimes);
+        cbJavaRuntime.setModel(model);
+        selectRuntime(runtime);
+    }
+
+    private static class RuntimeRenderer extends JLabel implements ListCellRenderer, UIResource {
+
+        @Override
+        @NbBundle.Messages({
+            "# {0} - runtimeId", 
+            "LBL_MissingRuntime=Missing Runtime: {0}"
+        })
+        public Component getListCellRendererComponent(JList list, Object value,
+                int index, boolean isSelected,
+                boolean cellHasFocus) {
+            setOpaque(true);
+            if (value instanceof JavaRuntimeManager.JavaRuntime) {
+                JavaRuntimeManager.JavaRuntime rt = (JavaRuntimeManager.JavaRuntime)value;
+                setText(rt.getDisplayName());
+                if ( isSelected ) {
+                    setBackground(list.getSelectionBackground());
+                    setForeground(list.getSelectionForeground());
+                } else {
+                    setBackground(list.getBackground());
+                    setForeground(list.getForeground());
+                }
+                if (rt.isBroken()) {
+                    setText(Bundle.LBL_MissingRuntime(value));
+                }
+            } else {
+                if (value == null) {
+                    setText("");
+                }
+            }
+            return this;
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgUsedDistribution;
     private javax.swing.JButton btDefaultHome;
     private javax.swing.JButton btGradleUserHome;
+    private javax.swing.JButton btManageRuntimes;
     private javax.swing.JButton btUseCustomGradle;
     private javax.swing.JComboBox<GradleSettings.GradleExecutionRule> cbAllowExecution;
     private javax.swing.JCheckBox cbAlwaysShowOutput;
@@ -1002,25 +973,22 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox<GradleSettings.DownloadLibsRule> cbDownloadLibs;
     private javax.swing.JComboBox<GradleSettings.DownloadMiscRule> cbDownloadSources;
     private javax.swing.JCheckBox cbEnableCache;
-    private javax.swing.JComboBox<GradleDistribution> cbGradleVersion;
     private javax.swing.JCheckBox cbHideEmptyConfig;
+    private javax.swing.JComboBox<JavaRuntime> cbJavaRuntime;
     private javax.swing.JComboBox<NetworkProxySettings> cbNetworkProxy;
-    private javax.swing.JCheckBox cbNoRebuild;
     private javax.swing.JCheckBox cbOffline;
     private javax.swing.JCheckBox cbOpenLazy;
     private javax.swing.JCheckBox cbPreferMaven;
-    private javax.swing.JCheckBox cbPreferWrapper;
     private javax.swing.JCheckBox cbReuseEditorOnStackTrace;
     private javax.swing.JCheckBox cbReuseOutputTabs;
-    private javax.swing.JCheckBox cbSilentInstall;
     private javax.swing.JCheckBox cbSkipCheck;
     private javax.swing.JCheckBox cbSkipTest;
-    private javax.swing.JCheckBox cbStartDaemonOnStart;
     private javax.swing.JCheckBox cbUseConfigCache;
     private javax.swing.JLabel lbAllowExecution;
     private javax.swing.JLabel lbDownloadJavadoc;
     private javax.swing.JLabel lbDownloadLibs;
     private javax.swing.JLabel lbDownloadSources;
+    private javax.swing.JLabel lbJavaRuntime;
     private javax.swing.JLabel lbNetworkProxy;
     private javax.swing.JLabel lbVersionInfo;
     private javax.swing.JLabel lblCategories;
@@ -1034,8 +1002,8 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JPanel pnlExecution;
     private javax.swing.JPanel pnlExperimental;
     private javax.swing.JPanel pnlMaven;
+    private javax.swing.JRadioButton rbPreferWrapper;
     private javax.swing.JRadioButton rbUseCustomGradle;
-    private javax.swing.JRadioButton rbUseStandardGradle;
     private javax.swing.JTextField tfGradleUserHome;
     private javax.swing.JTextField tfUseCustomGradle;
     // End of variables declaration//GEN-END:variables

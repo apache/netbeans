@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.hints.bugs;
 
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 
 /**
@@ -146,37 +145,6 @@ public class UnbalancedTest extends NbTestCase {
                 .assertWarnings();
     }
 
-    @RandomlyFails
-    /* ergonomics # 3604: noone holds javac:
-private static final java.util.Map org.netbeans.modules.java.hints.bugs.Unbalanced.seen->
-java.util.WeakHashMap@4ba0561d-table->
-[Ljava.util.WeakHashMap$Entry;@4dfbbcea-[5]->
-java.util.WeakHashMap$Entry@14a61465-value->
-java.util.HashMap@2a234e7e-table->
-[Ljava.util.HashMap$Entry;@6081ad10-[4]->
-java.util.HashMap$Entry@519cef33-key->
-com.sun.tools.javac.code.Symbol$VarSymbol@7756c69c-type->
-com.sun.tools.javac.code.Type$ArrayType@452719a0-elemtype->
-com.sun.tools.javac.code.Type@4bf0c8d4-tsym->
-com.sun.tools.javac.code.Symbol$ClassSymbol@1a78d426-owner->
-com.sun.tools.javac.code.Symbol$PackageSymbol@29c50e17-completer->
-org.netbeans.lib.nbjavac.services.NBClassReader@3b907285-sourceCompleter->
-com.sun.tools.javac.main.JavaCompiler@5e45ffbf-flow->
-com.sun.tools.javac.comp.Flow@576cceda-attrEnv->
-com.sun.tools.javac.comp.Env@f7e5307-toplevel->
-com.sun.tools.javac.tree.JCTree$JCCompilationUnit@40d0726d
-	at org.netbeans.junit.NbTestCase$4.run(NbTestCase.java:1390)
-	at org.netbeans.junit.internal.NbModuleLogHandler.whileIgnoringOOME(NbModuleLogHandler.java:170)
-	at org.netbeans.junit.NbTestCase.assertGC(NbTestCase.java:1348)
-	at org.netbeans.junit.NbTestCase.assertGC(NbTestCase.java:1324)
-	at org.netbeans.modules.java.hints.test.api.HintTest.run(HintTest.java:487)
-	at org.netbeans.modules.java.hints.bugs.UnbalancedTest.testNegForeach209850(UnbalancedTest.java:155)
-	at org.netbeans.junit.NbTestCase.access$200(NbTestCase.java:95)
-	at org.netbeans.junit.NbTestCase$2.doSomething(NbTestCase.java:403)
-	at org.netbeans.junit.NbTestCase$1Guard.run(NbTestCase.java:329)
-	at java.lang.Thread.run(Thread.java:662)
-     * 
-     */
     public void testNegForeach209850() throws Exception {
         HintTest
                 .create()
@@ -385,52 +353,7 @@ com.sun.tools.javac.tree.JCTree$JCCompilationUnit@40d0726d
                 .run(Unbalanced.Collection.class)
                 .assertWarnings();
     }
-    @RandomlyFails
-    /* local run #2: noone holds javac:
-private static final java.util.Map org.netbeans.modules.java.hints.bugs.Unbalanced.seen->
-java.util.WeakHashMap@4163e1-table->
-[Ljava.util.WeakHashMap$Entry;@713bd2-[8]->
-java.util.WeakHashMap$Entry@dfe4-value->
-java.util.HashMap@f8ae75-table->
-[Ljava.util.HashMap$Entry;@188b5b2-[9]->
-java.util.HashMap$Entry@2569ee-key->
-com.sun.tools.javac.code.Symbol$VarSymbol@13dff89-owner->
-com.sun.tools.javac.code.Symbol$ClassSymbol@5d529e-owner->
-com.sun.tools.javac.code.Symbol$PackageSymbol@76b9d0-owner->
-com.sun.tools.javac.code.Symbol$PackageSymbol@ec179-completer->
-org.netbeans.lib.nbjavac.services.NBClassReader@1ab1d4a-sourceCompleter->
-com.sun.tools.javac.main.JavaCompiler@9cb9f3-flow->
-com.sun.tools.javac.comp.Flow@1ebb3a4-attrEnv->
-com.sun.tools.javac.comp.Env@ade1b6-toplevel->
-com.sun.tools.javac.tree.JCTree$JCCompilationUnit@128ea3f
-junit.framework.AssertionFailedError: noone holds javac:
-private static final java.util.Map org.netbeans.modules.java.hints.bugs.Unbalanced.seen->
-java.util.WeakHashMap@4163e1-table->
-[Ljava.util.WeakHashMap$Entry;@713bd2-[8]->
-java.util.WeakHashMap$Entry@dfe4-value->
-java.util.HashMap@f8ae75-table->
-[Ljava.util.HashMap$Entry;@188b5b2-[9]->
-java.util.HashMap$Entry@2569ee-key->
-com.sun.tools.javac.code.Symbol$VarSymbol@13dff89-owner->
-com.sun.tools.javac.code.Symbol$ClassSymbol@5d529e-owner->
-com.sun.tools.javac.code.Symbol$PackageSymbol@76b9d0-owner->
-com.sun.tools.javac.code.Symbol$PackageSymbol@ec179-completer->
-org.netbeans.lib.nbjavac.services.NBClassReader@1ab1d4a-sourceCompleter->
-com.sun.tools.javac.main.JavaCompiler@9cb9f3-flow->
-com.sun.tools.javac.comp.Flow@1ebb3a4-attrEnv->
-com.sun.tools.javac.comp.Env@ade1b6-toplevel->
-com.sun.tools.javac.tree.JCTree$JCCompilationUnit@128ea3f
-	at org.netbeans.junit.NbTestCase$4.run(NbTestCase.java:1390)
-	at org.netbeans.junit.internal.NbModuleLogHandler.whileIgnoringOOME(NbModuleLogHandler.java:170)
-	at org.netbeans.junit.NbTestCase.assertGC(NbTestCase.java:1348)
-	at org.netbeans.junit.NbTestCase.assertGC(NbTestCase.java:1324)
-	at org.netbeans.modules.java.hints.test.api.HintTest.run(HintTest.java:487)
-	at org.netbeans.modules.java.hints.bugs.UnbalancedTest.testCollectionNeg4(UnbalancedTest.java:383)
-	at org.netbeans.junit.NbTestCase.access$200(NbTestCase.java:95)
-	at org.netbeans.junit.NbTestCase$2.doSomething(NbTestCase.java:403)
-	at org.netbeans.junit.NbTestCase$1Guard.run(NbTestCase.java:329)
-	at java.lang.Thread.run(Thread.java:662)
-    */
+
     public void testCollectionNeg4() throws Exception {
         HintTest
                 .create()
@@ -478,44 +401,6 @@ com.sun.tools.javac.tree.JCTree$JCCompilationUnit@128ea3f
                 .assertWarnings();
     }
 
-    @RandomlyFails
-    /** Local run #1: noone holds javac:
-private static final java.util.Map org.netbeans.modules.java.hints.bugs.Unbalanced.seen->
-java.util.WeakHashMap@1a8422e-table->
-[Ljava.util.WeakHashMap$Entry;@1ce7242-[11]->
-java.util.WeakHashMap$Entry@67ec7f-value->
-java.util.HashMap@99a269-table->
-[Ljava.util.HashMap$Entry;@d42d02-[15]->
-java.util.HashMap$Entry@56619-key->
-com.sun.tools.javac.code.Symbol$VarSymbol@ed15c7-owner->
-com.sun.tools.javac.code.Symbol$MethodSymbol@1c94b8f-owner->
-com.sun.tools.javac.code.Symbol$ClassSymbol@1c5cdac-owner->
-com.sun.tools.javac.code.Symbol$PackageSymbol@15deba3-owner->
-com.sun.tools.javac.code.Symbol$PackageSymbol@191a832-completer->
-org.netbeans.lib.nbjavac.services.NBClassReader@1e41d53-sourceCompleter->
-com.sun.tools.javac.main.JavaCompiler@9d85e0-flow->
-com.sun.tools.javac.comp.Flow@1e9150a-attrEnv->
-com.sun.tools.javac.comp.Env@7fcd7e-toplevel->
-com.sun.tools.javac.tree.JCTree$JCCompilationUnit@1b5a415
-junit.framework.AssertionFailedError: noone holds javac:
-private static final java.util.Map org.netbeans.modules.java.hints.bugs.Unbalanced.seen->
-java.util.WeakHashMap@1a8422e-table->
-[Ljava.util.WeakHashMap$Entry;@1ce7242-[11]->
-java.util.WeakHashMap$Entry@67ec7f-value->
-java.util.HashMap@99a269-table->
-[Ljava.util.HashMap$Entry;@d42d02-[15]->
-java.util.HashMap$Entry@56619-key->
-com.sun.tools.javac.code.Symbol$VarSymbol@ed15c7-owner->
-com.sun.tools.javac.code.Symbol$MethodSymbol@1c94b8f-owner->
-com.sun.tools.javac.code.Symbol$ClassSymbol@1c5cdac-owner->
-com.sun.tools.javac.code.Symbol$PackageSymbol@15deba3-owner->
-com.sun.tools.javac.code.Symbol$PackageSymbol@191a832-completer->
-org.netbeans.lib.nbjavac.services.NBClassReader@1e41d53-sourceCompleter->
-com.sun.tools.javac.main.JavaCompiler@9d85e0-flow->
-com.sun.tools.javac.comp.Flow@1e9150a-attrEnv->
-com.sun.tools.javac.comp.Env@7fcd7e-toplevel->
-com.sun.tools.javac.tree.JCTree$JCCompilationUnit@1b5a415
-*/
     public void testCollectionNegEnhForLoop() throws Exception {
         HintTest
                 .create()
@@ -526,5 +411,54 @@ com.sun.tools.javac.tree.JCTree$JCCompilationUnit@1b5a415
                        "}\n")
                 .run(Unbalanced.Collection.class)
                 .assertWarnings();
+    }
+
+    public void testListForEach() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void t() {\n" +
+                       "        java.util.List<String> coll = new java.util.ArrayList<String>();\n" +
+                       "        coll.add(\"\");\n" +
+                       "        coll.forEach(e -> {});\n" +
+                       "    }\n" +
+                       "}\n")
+                .run(Unbalanced.Collection.class)
+                .assertWarnings();
+    }
+
+    public void testSequencedCollection1() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void t() {\n" +
+                       "        java.util.List<String> coll = new java.util.ArrayList<String>();\n" +
+                       "        coll.addFirst(\"\");\n" +
+                       "        coll.addLast(\"\");\n" +
+                       "    }\n" +
+                       "}\n", false)
+                .run(Unbalanced.Collection.class)
+                .assertWarnings("3:31-3:35:verifier:ERR_UnbalancedCollectionWRITE coll");
+    }
+
+    public void testSequencedCollection2() throws Exception {
+        HintTest
+                .create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void t() {\n" +
+                       "        java.util.List<String> coll = new java.util.ArrayList<String>();\n" +
+                       "        Object sink;\n" +
+                       "        sink = coll.reversed();\n" +
+                       "        sink = coll.getFirst();\n" +
+                       "        sink = coll.getLast();\n" +
+                       "        sink = coll.removeFirst();\n" +
+                       "        sink = coll.removeLast();\n" +
+                       "    }\n" +
+                       "}\n", false)
+                .run(Unbalanced.Collection.class)
+                .assertWarnings("3:31-3:35:verifier:ERR_UnbalancedCollectionREAD coll");
     }
 }

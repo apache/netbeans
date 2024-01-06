@@ -51,9 +51,13 @@ name: NetBeans Profiler Libraries
 
 
 on:
-  # Triggers the workflow on push or pull request events but only for
-  # relevant paths
   push:
+    branches:
+      - 'master'
+      - 'delivery'
+      - 'release*'
+    # Triggers the workflow on push or pull request events but only for
+    # relevant paths
     paths:
       - .github/workflows/native-binary-build-lib.profiler.y*
       - profiler/lib.profiler/**
@@ -110,7 +114,6 @@ jobs:
           SOURCES="profiler/lib.profiler/build/sources"
           mkdir -p ${SOURCES}/profiler/lib.profiler
           cp -r profiler/lib.profiler/native/ ${SOURCES}/profiler/lib.profiler/
-          find profiler/lib.profiler/release/lib/deployed -type d -exec mkdir -p "${SOURCES}/{}" \; -exec touch "${SOURCES}/{}/PLACEHOLDER" \;
           cp LICENSE ${SOURCES}/LICENSE
           cp NOTICE ${SOURCES}/NOTICE
           ls -l -R ${SOURCES}
@@ -316,6 +319,8 @@ jobs:
         
     - name: Tidy up and display artifacts
       run: |
+        cp myfiles/lib/deployed/jdk16/profiler-external-sources-ASF/LICENSE myfiles/LICENSE
+        cp myfiles/lib/deployed/jdk16/profiler-external-sources-ASF/NOTICE myfiles/NOTICE
         rm -rf myfiles/lib/deployed/jdk16/*sources*
         ls -l -R
 

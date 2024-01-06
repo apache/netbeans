@@ -93,7 +93,7 @@ public final class ProblemReporterImpl implements ProblemReporter, Comparator<Pr
     private final RequestProcessor.Task reloadTask = RP.create(new Runnable() {
         @Override public void run() {
             LOG.log(Level.FINE, "actually reloading {0}", projectPOMFile);
-            nbproject.fireProjectReload();
+            nbproject.fireProjectReload(true);
         }
     });
     private final FileChangeListener fcl = new FileChangeAdapter() {

@@ -31,7 +31,7 @@
             </trigger-dependency>
             <implies>
                 <result>
-                    <module-dependency codenamebase="org.apache.commons.commons_io" spec="2.13.0"/>
+                    <module-dependency codenamebase="org.apache.commons.commons_io" spec="2.15.0"/>
                 </result>
             </implies>
         </transformation>

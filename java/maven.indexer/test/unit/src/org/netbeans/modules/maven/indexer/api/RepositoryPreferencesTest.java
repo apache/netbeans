@@ -127,16 +127,16 @@ public class RepositoryPreferencesTest extends NbTestCase {
             assertEquals("[eclipselink]", m.getMirroredRepositories().toString());
 
             //add central now.. should have 2 mirrored repositories..
-            rp.addTransientRepository(1, "central", "central", "https://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(1, "central", "central", "https://repo.maven.apache.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
             assertEquals("[local, mirror]", rp.getRepositoryInfos().toString());
             m = rp.getRepositoryInfoById("mirror");
             assertTrue(m.isMirror());
             assertEquals("[eclipselink, central]", m.getMirroredRepositories().toString());
 
             //add central AGAIN and AGAIN.. should have still just 2 mirrored repositories..
-            rp.addTransientRepository(2, "central", "central", "https://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
-            rp.addTransientRepository(3, "central", "central", "https://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
-            rp.addTransientRepository(4, "central", "central", "https://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(2, "central", "central", "https://repo.maven.apache.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(3, "central", "central", "https://repo.maven.apache.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(4, "central", "central", "https://repo.maven.apache.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
 
             assertEquals("[local, mirror]", rp.getRepositoryInfos().toString());
             m = rp.getRepositoryInfoById("mirror");
@@ -144,8 +144,8 @@ public class RepositoryPreferencesTest extends NbTestCase {
             assertEquals("[eclipselink, central]", m.getMirroredRepositories().toString());
 
             //try adding slightly modified transient repositories..
-            rp.addTransientRepository(3, "central", "central", "https://repo1.maven.org/maven2/", RepositoryInfo.MirrorStrategy.ALL);
-            rp.addTransientRepository(2, "central", "central rep", "https://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(3, "central", "central", "https://repo.maven.apache.org/maven2/", RepositoryInfo.MirrorStrategy.ALL);
+            rp.addTransientRepository(2, "central", "central rep", "https://repo.maven.apache.org/maven2", RepositoryInfo.MirrorStrategy.ALL);
             rp.addTransientRepository(2, "eclipselink", "Repository for library Library", "http://ftp.ing.umu.se/mirror/eclipse/rt/eclipselink/maven.repo", RepositoryInfo.MirrorStrategy.ALL);
 
             assertEquals("[local, mirror]", rp.getRepositoryInfos().toString());

@@ -88,7 +88,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.TemplateWizard;
-import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 
 /**
@@ -105,6 +104,7 @@ public class MicronautEntity extends RelatedCMPWizard {
 
     @NbBundle.Messages({
         "MSG_NoDbConn=No database connection found",
+        "MSG_NoDdSupport=No database support libraries found for {0}",
         "MSG_NoProject=No project found for {0}",
         "MSG_NoSourceGroup=No source group found for {0}",
         "MSG_SelectTables=Select Database Tables",
@@ -135,6 +135,10 @@ public class MicronautEntity extends RelatedCMPWizard {
                     SourceGroup sourceGroup = SourceGroups.getFolderSourceGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), folder);
                     if (sourceGroup == null) {
                         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoSourceGroup(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
+                        return Collections.emptyList();
+                    }
+                    if (!Utils.isDBSupported(sourceGroup) && !Utils.isJPASupported(sourceGroup)) {
+                        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(Bundle.MSG_NoDdSupport(folder.getPath()), NotifyDescriptor.ERROR_MESSAGE));
                         return Collections.emptyList();
                     }
                     DatabaseConnection connection = ConnectionManager.getDefault().getPreferredConnection(true);
@@ -460,6 +464,7 @@ public class MicronautEntity extends RelatedCMPWizard {
 
             protected final boolean generateJPA;
             protected final boolean generateValidationConstraints;
+            protected final boolean generateSerdeable;
 
             private ClassGenerator(WorkingCopy copy, EntityClass entityClass, boolean jpaSupported, boolean beanValidationSupported) throws IOException {
                 copy.toPhase(JavaSource.Phase.RESOLVED);
@@ -482,6 +487,7 @@ public class MicronautEntity extends RelatedCMPWizard {
                 genUtils = GenerationUtils.newInstance(copy);
                 generateJPA = jpaSupported;
                 generateValidationConstraints = beanValidationSupported;
+                generateSerdeable = copy.getElements().getTypeElement("io.micronaut.serde.annotation.Serdeable") != null;
             }
 
             protected String createFieldName(String capitalizedFieldName) {
@@ -529,7 +535,7 @@ public class MicronautEntity extends RelatedCMPWizard {
 
                 List<ExpressionTree> columnAnnArguments = new ArrayList<>();
                 String memberName = m.getMemberName();
-                String memberType = getMemberType(m);
+                String memberType = m.getMemberType();
 
                 String columnName = dbMappings.getCMPFieldMapping().get(memberName);
                 if (!memberName.equalsIgnoreCase(columnName)){
@@ -566,19 +572,7 @@ public class MicronautEntity extends RelatedCMPWizard {
             }
 
             protected VariableTree createVariable(EntityMember m) {
-                return genUtils.createVariable(typeElement, m.getMemberName(), getMemberType(m));
-            }
-
-            String getMemberType(EntityMember m) {
-                String memberType = m.getMemberType();
-                if ("java.sql.Date".equals(memberType)) { //NOI18N
-                    memberType = "java.util.Date";
-                } else if ("java.sql.Time".equals(memberType)) { //NOI18N
-                    memberType = "java.util.Date";
-                } else if ("java.sql.Timestamp".equals(memberType)) { //NOI18N
-                    memberType = "java.util.Date";
-                }
-                return memberType;
+                return genUtils.createVariable(typeElement, m.getMemberName(), m.getMemberType());
             }
 
             private boolean isCharacterType(String type) {
@@ -734,6 +728,9 @@ public class MicronautEntity extends RelatedCMPWizard {
                             pkFieldName);
                     properties.add(pkProperty);
                 }
+                if (generateSerdeable) {
+                    newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("io.micronaut.serde.annotation.Serdeable")); //NOI18N
+                }
                 if (generateJPA) {
                     newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("javax.persistence.Entity")); //NOI18N
                     if (dbMappings.getTableName() != null && !entityClassName.equalsIgnoreCase(dbMappings.getTableName())) {
@@ -779,9 +776,12 @@ public class MicronautEntity extends RelatedCMPWizard {
             protected void generateRelationship(RelationshipRole role) throws IOException {
                 String memberName = role.getFieldName();
                 if (role.isMany() && !role.isToMany()) {
-                    String pkMemberName = getPkMemberName(beanMap.get(role.getParent().getRoleB().getEntityName()));
-                    if (pkMemberName != null) {
-                        memberName = pkMemberName;
+                    String roleName = role.getRoleName();
+                    if (roleName.endsWith("Id")) {
+                        roleName = roleName.substring(0, roleName.length() - 2);
+                    }
+                    if (!roleName.isEmpty()) {
+                        memberName = Character.toLowerCase(roleName.charAt(0)) + roleName.substring(1);
                     }
                 }
                 String typeName = getRelationshipFieldType(role, entityClass.getPackage());
@@ -965,6 +965,9 @@ public class MicronautEntity extends RelatedCMPWizard {
             @Override
             protected void initialize() throws IOException {
                 newClassTree = genUtils.ensureNoArgConstructor(newClassTree);
+                if (generateSerdeable) {
+                    newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("io.micronaut.serde.annotation.Serdeable")); //NOI18N
+                }
                 newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation(generateJPA ? "javax.persistence.Embeddable" : "io.micronaut.data.annotation.Embeddable")); // NOI18N
             }
 

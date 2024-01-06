@@ -1,0 +1,9 @@
+Code completion result for source line:
+public const (A&|B)|C DNF = C;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      A                               [PUBLIC]   typedClassConstants.php
+CLASS      B                               [PUBLIC]   typedClassConstants.php
+CLASS      C                               [PUBLIC]   typedClassConstants.php
+CLASS      TestClass                       [PUBLIC]   typedClassConstants.php
+CLASS      TestEnum                        [PUBLIC]   typedClassConstants.php
+CLASS      TestInterface                   [PUBLIC]   typedClassConstants.php

@@ -86,6 +86,18 @@ ${cursor}]]>
         </code>
     </codetemplate>
 
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.const" abbreviation="con" contexts="php-code">
+        <code>
+<![CDATA[const ${CONST_NAME} = ${ConstValue};${cursor}]]>
+        </code>
+    </codetemplate>
+
+    <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.typed.const" abbreviation="cons" contexts="php-code">
+        <code>
+<![CDATA[const ${TypeName} ${CONST_NAME} = ${ConstValue};${cursor}]]>
+        </code>
+    </codetemplate>
+
     <codetemplate uuid="org.netbeans.modules.php.editor.codetemplate.echo" abbreviation="eco" contexts="php-code">
         <code>
 <![CDATA[echo "${cursor}";]]>

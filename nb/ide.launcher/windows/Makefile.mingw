@@ -1,0 +1,40 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+TMPFLD = ./build/
+OFLD = ./build/
+
+all: prepfolder netbeans64.exe netbeans.exe
+
+prepfolder:
+	mkdir -p $(TMPFLD)
+	mkdir -p $(OFLD)
+
+clean:
+	rm -f *.res *.exe
+
+netbeans64.res: netbeans.rc netbeans64.exe.manifest
+	x86_64-w64-mingw32-windres -o$(TMPFLD)netbeans64.res -Ocoff -DMANIFEST_FILE=netbeans64.exe.manifest netbeans.rc
+
+netbeans64.exe: netbeans.cpp  nblauncher.cpp netbeans64.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp
+	x86_64-w64-mingw32-gcc -s -DNBEXEC_DLL='"/lib/nbexec64.dll"' -DARCHITECTURE=64 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -mwindows netbeans.cpp nblauncher.cpp $(TMPFLD)netbeans64.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp -I ../../../platform/o.n.bootstrap/launcher/windows/ -o$(OFLD)netbeans64.exe -static -lstdc++ -static-libstdc++ -static-libgcc
+
+netbeans.res: netbeans.rc netbeans.exe.manifest
+	i686-w64-mingw32-windres -o$(TMPFLD)netbeans.res -Ocoff  -DMANIFEST_FILE=netbeans.exe.manifest netbeans.rc
+
+netbeans.exe: netbeans.cpp  nblauncher.cpp netbeans.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp
+	i686-w64-mingw32-gcc -s -DNBEXEC_DLL='"/lib/nbexec.dll"' -DARCHITECTURE=32 -Wl,--nxcompat -Wl,--dynamicbase -Wl,--no-seh -mwindows netbeans.cpp nblauncher.cpp $(TMPFLD)netbeans.res ../../../platform/o.n.bootstrap/launcher/windows/utilsfuncs.cpp -I ../../../platform/o.n.bootstrap/launcher/windows/ -o$(OFLD)netbeans.exe -static -lstdc++ -static-libstdc++ -static-libgcc

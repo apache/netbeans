@@ -29,6 +29,7 @@ import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.elements.PhpElementImpl.Separator;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.openide.util.Pair;
 
@@ -47,8 +48,7 @@ public final class TypeResolverImpl implements TypeResolver {
         // avoid being changed type order(e.g. int|float|Foo|Bar) when an override method is generated
         Set<TypeResolver> retval = new LinkedHashSet<>();
         if (typeSignature != null && typeSignature.length() > 0) {
-            final String regexp = "[|&]"; // NOI18N
-            for (String type : typeSignature.split(regexp)) {
+            for (String type : Type.splitTypes(typeSignature)) {
                 String typeName = type;
                 boolean isNullableType = CodeUtils.isNullableType(typeName);
                 if (isNullableType) {

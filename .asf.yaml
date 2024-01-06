@@ -38,6 +38,7 @@ github:
     master: {}
   collaborators:
     - asbachb
+    - troizet
 
 notifications:
     commits:      commits@netbeans.apache.org

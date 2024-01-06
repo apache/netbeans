@@ -109,7 +109,7 @@ import org.netbeans.spi.java.hints.HintContext;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
-import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
+import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.netbeans.spi.lexer.MutableTextInput;
 import org.openide.LifecycleManager;
 import org.openide.cookies.EditorCookie;
@@ -718,12 +718,29 @@ public class HintTest {
 
     }
 
-    private class TestSourceLevelQueryImplementation implements SourceLevelQueryImplementation {
+    private class TestSourceLevelQueryImplementation implements SourceLevelQueryImplementation2 {
 
-        public String getSourceLevel(FileObject javaFile) {
-            return sourceLevel;
+        private final Result result = new ResultImpl();
+
+        @Override
+        public Result getSourceLevel(FileObject javaFile) {
+            return result;
         }
 
+        private class ResultImpl implements Result {
+
+            @Override
+            public String getSourceLevel() {
+                return sourceLevel;
+            }
+
+            @Override
+            public void addChangeListener(ChangeListener l) {}
+
+            @Override
+            public void removeChangeListener(ChangeListener l) {}
+
+        }
     }
 
     private class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
@@ -1262,6 +1279,12 @@ public class HintTest {
     static {
         System.setProperty("org.openide.util.Lookup", TestLookup.class.getName());
         assertEquals(TestLookup.class, Lookup.getDefault().getClass());
+        try {
+            Class multiSourceRootProvider = Class.forName("org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider");
+            multiSourceRootProvider.getField("DISABLE_MULTI_SOURCE_ROOT").set(null, true);
+        } catch (Exception ex) {
+            //ignore
+        }
     }
 
     //workdir computation (copied from NbTestCase):

@@ -406,7 +406,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             typeInfo = new TypeDeclarationTypeInfo(cldec);
             scan(cldec.getAttributes());
             scan(cldec.getSuperClass());
-            scan(cldec.getInterfaes());
+            scan(cldec.getInterfaces());
             Identifier name = cldec.getName();
             addColoringForNode(name, createTypeNameColoring(name));
             needToScan.put(typeInfo, new ArrayList<>());
@@ -655,7 +655,7 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             }
             addToPath(node);
             scan(node.getAttributes());
-            scan(node.getInterfaes());
+            scan(node.getInterfaces());
             typeInfo = new TypeDeclarationTypeInfo(node);
             Identifier name = node.getName();
             addColoringForNode(name, createTypeNameColoring(name));
@@ -906,13 +906,15 @@ public class SemanticAnalysis extends SemanticAnalyzer {
             if (isCancelled()) {
                 return;
             }
-            Identifier constant = node.getConstantName();
-            if (constant != null) {
-                ASTNodeColoring item = privateUnusedConstants.remove(new UnusedIdentifier(constant.getName(), typeInfo));
-                if (item != null) {
-                    addColoringForNode(item.identifier, item.coloring);
+            if (!node.isDynamicName()) {
+                Identifier constant = node.getConstantName();
+                if (constant != null) {
+                    ASTNodeColoring item = privateUnusedConstants.remove(new UnusedIdentifier(constant.getName(), typeInfo));
+                    if (item != null) {
+                        addColoringForNode(item.identifier, item.coloring);
+                    }
+                    addColoringForNode(constant, ColoringAttributes.STATIC_FIELD_SET);
                 }
-                addColoringForNode(constant, ColoringAttributes.STATIC_FIELD_SET);
             }
             super.visit(node);
         }

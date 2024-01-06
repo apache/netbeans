@@ -79,7 +79,7 @@
             </fileset>
         </classpath>
         <javadocs> 
-            <link url="https://repo1.maven.org/maven2/com/sun/jersey/glassfish/v32/jersey-gfv3-docs-and-samples/1.13/jersey-gfv3-docs-and-samples-1.13-project.zip"/>
+            <link url="https://repo.maven.apache.org/maven2/com/sun/jersey/glassfish/v32/jersey-gfv3-docs-and-samples/1.13/jersey-gfv3-docs-and-samples-1.13-project.zip"/>
         </javadocs>
         <sources>
         </sources>

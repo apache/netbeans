@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.api.PhpVersion;
@@ -124,11 +125,15 @@ public class PHP55UnhandledError extends UnhandledErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            Identifier constant = node.getConstantName();
-            if (constant != null) {
-                String constantName = constant.getName();
-                if ("class".equals(constantName.toLowerCase())) { //NOI18N
-                    createError(constant);
+            if (node.isDynamicName()) {
+                super.visit(node);
+            } else {
+                Identifier constant = node.getConstantName();
+                if (constant != null) {
+                    String constantName = constant.getName();
+                    if ("class".equals(constantName.toLowerCase(Locale.ROOT))) { //NOI18N
+                        createError(constant);
+                    }
                 }
             }
         }

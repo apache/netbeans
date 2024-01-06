@@ -55,7 +55,7 @@ public abstract class CompletionAccessor {
         DEFAULT = accessor;
     }
 
-    public abstract Completion createCompletion(String label, Completion.Kind kind, List<Completion.Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
+    public abstract Completion createCompletion(String label, String labelDetail, String labelDescription, Completion.Kind kind, List<Completion.Tag> tags, CompletableFuture<String> detail, CompletableFuture<String> documentation,
             boolean preselect, String sortText, String filterText, String insertText, Completion.TextFormat insertTextFormat,
             TextEdit textEdit, Command command, CompletableFuture<List<TextEdit>> additionalTextEdits, List<Character> commitCharacters);
 }

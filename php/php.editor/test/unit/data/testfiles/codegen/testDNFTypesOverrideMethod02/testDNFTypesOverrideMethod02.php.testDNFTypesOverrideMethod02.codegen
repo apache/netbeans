@@ -1,0 +1,3 @@
+public function testMethod((Foo&Bar)|Baz $param1, Baz|(Foo&Bar) $param2, (Foo&Bar)|(Bar&Baz) $param3, Foo|(Bar&Baz)|null $param4): Baz|(Foo&Bar){
+return parent::testMethod($param1, $param2, $param3, $param4);
+}

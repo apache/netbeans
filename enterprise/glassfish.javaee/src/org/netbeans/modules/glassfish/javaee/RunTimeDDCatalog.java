@@ -150,6 +150,8 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
         "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application_9.xsd"              , "application_9",
         "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application-client_10.xsd"       , "application-client_10",
         "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application_10.xsd"              , "application_10",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application-client_11.xsd"       , "application-client_11",
+        "SCHEMA:https://jakarta.ee/xml/ns/jakartaee/application_11.xsd"              , "application_11",
         "SCHEMA:http://java.sun.com/xml/ns/j2ee/jax-rpc-ri-config.xsd"              , "jax-rpc-ri-config",
         "SCHEMA:http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd"                  , "connector_1_5",
         "SCHEMA:http://java.sun.com/xml/ns/javaee/connector_1_6.xsd"                , "connector_1_6",
@@ -178,11 +180,13 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
         "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd"                         , "orm_2_2",
         "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"                       , "orm_3_0",
         "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm/orm_3_1.xsd"                       , "orm_3_1",
+        "SCHEMA:https://jakarta.ee/xml/ns/persistence/orm/orm_3_2.xsd"                       , "orm_3_2",
         "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"                  , "persistence_1_0",
         "SCHEMA:http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"                  , "persistence_2_0",
         "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"                 , "persistence_2_1",
         "SCHEMA:http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"                 , "persistence_2_2",
         "SCHEMA:https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"                   , "persistence_3_0",
+        "SCHEMA:https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"                   , "persistence_3_2",
     };
     
     private static final String JavaEE6SchemaToURLMap[] = {
@@ -501,6 +505,10 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String APP_10= JAKARTAEE_NS+"/"+APP_10_XSD; // NOI18N
     public static final String APP_10_ID = "SCHEMA:"+APP_10; // NOI18N
     
+    private static final String APP_11_XSD="application_11.xsd"; // NOI18N
+    private static final String APP_11= JAKARTAEE_NS+"/"+APP_11_XSD; // NOI18N
+    public static final String APP_11_ID = "SCHEMA:"+APP_11; // NOI18N
+    
     private static final String APPCLIENT_TAG="application-client"; //NOI18N
     private static final String APPCLIENT_1_4_XSD="application-client_1_4.xsd"; // NOI18N
     private static final String APPCLIENT_1_4= J2EE_NS+"/"+APPCLIENT_1_4_XSD; // NOI18N
@@ -529,6 +537,10 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String APPCLIENT_10_XSD="application-client_10.xsd"; // NOI18N
     private static final String APPCLIENT_10= JAKARTAEE_NS+"/"+APPCLIENT_10_XSD; // NOI18N
     public static final String APPCLIENT_10_ID = "SCHEMA:"+APPCLIENT_10; // NOI18N
+    
+    private static final String APPCLIENT_11_XSD="application-client_11.xsd"; // NOI18N
+    private static final String APPCLIENT_11= JAKARTAEE_NS+"/"+APPCLIENT_11_XSD; // NOI18N
+    public static final String APPCLIENT_11_ID = "SCHEMA:"+APPCLIENT_11; // NOI18N
 
     private static final String WEBSERVICES_TAG="webservices"; //NOI18N
     private static final String WEBSERVICES_1_1_XSD="j2ee_web_services_1_1.xsd"; // NOI18N
@@ -635,6 +647,18 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String WEBFRAGMENT_6_0_XSD="web-fragment_6_0.xsd"; // NOI18N
     private static final String WEBFRAGMENT_6_0 = JAKARTAEE_NS+"/"+WEBFRAGMENT_6_0_XSD; // NOI18N
     public static final String WEBFRAGMENT_6_0_ID = "SCHEMA:"+WEBFRAGMENT_6_0; // NOI18N
+    
+    private static final String WEBAPP_6_1_XSD="web-app_6_1.xsd"; // NOI18N
+    private static final String WEBAPP_6_1 = JAKARTAEE_NS+"/"+WEBAPP_6_1_XSD; // NOI18N
+    public static final String WEBAPP_6_1_ID = "SCHEMA:"+WEBAPP_6_1; // NOI18N
+    
+    private static final String WEBCOMMON_6_1_XSD="web-common_6_1.xsd"; // NOI18N
+    private static final String WEBCOMMON_6_1 = JAKARTAEE_NS+"/"+WEBCOMMON_6_1_XSD; // NOI18N
+    public static final String WEBCOMMON_6_1_ID = "SCHEMA:"+WEBCOMMON_6_1; // NOI18N
+    
+    private static final String WEBFRAGMENT_6_1_XSD="web-fragment_6_1.xsd"; // NOI18N
+    private static final String WEBFRAGMENT_6_1 = JAKARTAEE_NS+"/"+WEBFRAGMENT_6_1_XSD; // NOI18N
+    public static final String WEBFRAGMENT_6_1_ID = "SCHEMA:"+WEBFRAGMENT_6_1; // NOI18N
 
     public static final String PERSISTENCE_NS = "http://java.sun.com/xml/ns/persistence"; // NOI18N
     public static final String NEW_PERSISTENCE_NS = "http://xmlns.jcp.org/xml/ns/persistence"; // NOI18N
@@ -666,6 +690,10 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String PERSISTENCE_3_1 = JAKARTA_PERSISTENCE_NS+"/"+PERSISTENCE_3_1_XSD; // NOI18N
     public static final String PERSISTENCE_3_1_ID = "SCHEMA:"+PERSISTENCE_3_1; // NOI18N 
     
+    private static final String PERSISTENCE_3_2_XSD="persistence_3_2.xsd"; // NOI18N
+    private static final String PERSISTENCE_3_2 = JAKARTA_PERSISTENCE_NS+"/"+PERSISTENCE_3_2_XSD; // NOI18N
+    public static final String PERSISTENCE_3_2_ID = "SCHEMA:"+PERSISTENCE_3_2; // NOI18N 
+    
     public static final String PERSISTENCEORM_NS = "http://java.sun.com/xml/ns/persistence/orm"; // NOI18N
     public static final String NEW_PERSISTENCEORM_NS = "http://xmlns.jcp.org/xml/ns/persistence/orm"; // NOI18N
     public static final String JAKARTA_PERSISTENCEORM_NS = "https://jakarta.ee/xml/ns/persistence/orm"; // NOI18N
@@ -695,6 +723,10 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
     private static final String PERSISTENCEORM_3_1_XSD="orm_3_1.xsd"; // NOI18N
     private static final String PERSISTENCEORM_3_1 = JAKARTA_PERSISTENCEORM_NS+"/"+PERSISTENCEORM_3_1_XSD; // NOI18N  yes not ORM NS!!!
     public static final String PERSISTENCEORM_3_1_ID = "SCHEMA:"+PERSISTENCEORM_3_1; // NOI18N
+    
+    private static final String PERSISTENCEORM_3_2_XSD="orm_3_2.xsd"; // NOI18N
+    private static final String PERSISTENCEORM_3_2 = JAKARTA_PERSISTENCEORM_NS+"/"+PERSISTENCEORM_3_2_XSD; // NOI18N  yes not ORM NS!!!
+    public static final String PERSISTENCEORM_3_2_ID = "SCHEMA:"+PERSISTENCEORM_3_2; // NOI18N
     
     public String getFullURLFromSystemId(String systemId){
         return null;
@@ -776,6 +808,10 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                 return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_10_XSD);
             } else if ( systemId.endsWith(APPCLIENT_10_XSD)) {
                 return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_10_XSD);
+            } else if ( systemId.endsWith(APP_11_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+APP_11_XSD);
+            } else if ( systemId.endsWith(APPCLIENT_11_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+APPCLIENT_11_XSD);
             }
             //web-app, web-common & web-fragment
             else if ( systemId.endsWith(WEBAPP_2_5_XSD)) {
@@ -810,6 +846,12 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                 return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_6_0_XSD);
             } else if ( systemId.endsWith(WEBCOMMON_6_0_XSD)) {
                 return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_6_0_XSD);
+            } else if ( systemId.endsWith(WEBAPP_6_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBAPP_6_1_XSD);
+            } else if ( systemId.endsWith(WEBFRAGMENT_6_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBFRAGMENT_6_1_XSD);
+            } else if ( systemId.endsWith(WEBCOMMON_6_1_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+WEBCOMMON_6_1_XSD);
             }
             //persistence & orm
             else if ( systemId.endsWith(PERSISTENCEORM_XSD)) {
@@ -834,6 +876,12 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                 return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_3_1_XSD);
             } else if ( systemId.endsWith(PERSISTENCE_3_0_XSD)) {
                 return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCE_3_0_XSD);
+            } else if ( systemId.endsWith(PERSISTENCEORM_3_2_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_3_2_XSD);
+            } else if ( systemId.endsWith(PERSISTENCEORM_3_2_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCEORM_3_2_XSD);
+            } else if ( systemId.endsWith(PERSISTENCE_3_2_XSD)) {
+                return new org.xml.sax.InputSource(SCHEMASLOCATION+PERSISTENCE_3_2_XSD);
             }
             //webservice & webservice-client
             else if ( systemId.endsWith(WEBSERVICES_1_1_XSD)) {
@@ -961,6 +1009,12 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                         case "text/x-dd-ejbjar2.1":  // NOI18N
                             inputSource = resolver.resolveEntity(EJBJAR_2_1_ID, "");
                             break;
+                        case "text/x-dd-application11.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APP_11_ID, "");
+                            break;
+                        case "text/x-dd-application10.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APP_10_ID, "");
+                            break;
                         case "text/x-dd-application9.0":  // NOI18N
                             inputSource = resolver.resolveEntity(APP_9_ID, "");
                             break;
@@ -978,6 +1032,12 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                             break;
                         case "text/x-dd-application1.4":  // NOI18N
                             inputSource = resolver.resolveEntity(APP_1_4_ID, "");
+                            break;
+                        case "text/x-dd-client11.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APPCLIENT_11_ID, "");
+                            break;
+                        case "text/x-dd-client10.0":  // NOI18N
+                            inputSource = resolver.resolveEntity(APPCLIENT_10_ID, "");
                             break;
                         case "text/x-dd-client9.0":  // NOI18N
                             inputSource = resolver.resolveEntity(APPCLIENT_9_ID, "");
@@ -997,6 +1057,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                         case "text/x-dd-client1.4":  // NOI18N
                             inputSource = resolver.resolveEntity(APPCLIENT_1_4_ID, "");
                             break;
+                        case "text/x-dd-servlet6.1":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBAPP_6_1_ID, "");
+                            break;
                         case "text/x-dd-servlet6.0":  // NOI18N
                             inputSource = resolver.resolveEntity(WEBAPP_6_0_ID, "");
                             break;
@@ -1015,6 +1078,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                         case "text/x-dd-servlet2.5":  // NOI18N
                             inputSource = resolver.resolveEntity(WEBAPP_2_5_ID, "");
                             break;
+                        case "text/x-dd-servlet-fragment6.1":  // NOI18N
+                            inputSource = resolver.resolveEntity(WEBFRAGMENT_6_1_ID, "");
+                            break;
                         case "text/x-dd-servlet-fragment6.0":  // NOI18N
                             inputSource = resolver.resolveEntity(WEBFRAGMENT_6_0_ID, "");
                             break;
@@ -1029,6 +1095,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                             break;
                         case "text/x-dd-servlet-fragment3.0":  // NOI18N
                             inputSource = resolver.resolveEntity(WEBFRAGMENT_3_0_ID, "");
+                            break;
+                        case "text/x-persistence3.2":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCE_3_2_ID, "");
                             break;
                         case "text/x-persistence3.1":  // NOI18N
                             inputSource = resolver.resolveEntity(PERSISTENCE_3_1_ID, "");
@@ -1047,6 +1116,9 @@ public class RunTimeDDCatalog extends GrammarQueryManager implements CatalogRead
                             break;
                         case "text/x-persistence1.0":  // NOI18N
                             inputSource = resolver.resolveEntity(PERSISTENCE_ID, "");
+                            break;
+                        case "text/x-orm3.2":  // NOI18N
+                            inputSource = resolver.resolveEntity(PERSISTENCEORM_3_2_ID, "");
                             break;
                         case "text/x-orm3.1":  // NOI18N
                             inputSource = resolver.resolveEntity(PERSISTENCEORM_3_1_ID, "");

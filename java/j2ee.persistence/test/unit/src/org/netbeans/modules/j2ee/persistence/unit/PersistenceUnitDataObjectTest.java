@@ -42,7 +42,9 @@ public class PersistenceUnitDataObjectTest extends PersistenceEditorTestBase{
         String version=dataObject.getPersistence().getVersion();
         PersistenceUnit persistenceUnit = null;
         
-        if(Persistence.VERSION_3_1.equals(version)) {
+        if(Persistence.VERSION_3_2.equals(version)) {
+            persistenceUnit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
+        } else if(Persistence.VERSION_3_1.equals(version)) {
             persistenceUnit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
         } else if(Persistence.VERSION_3_0.equals(version)) {
             persistenceUnit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();

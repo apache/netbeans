@@ -20,7 +20,6 @@
 package org.netbeans.modules.javaee.project.api;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +71,7 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
             return findPersistenceProviders(null);
         }
     }
-
+    
     private List<Provider> findPersistenceProviders(J2eePlatform platform) {
         final List<Provider> providers = new ArrayList<Provider>();
         boolean lessEE7 = true;//we may not know platform
@@ -80,13 +79,13 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
             final Map<String, JpaProvider> jpaProviderMap = createProviderMap(platform);
 
             boolean defaultFound = false; // see issue #225071
-
-            lessEE7 = !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_10_WEB) && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_10_FULL)
-                    && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_1_WEB) && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_1_FULL)
-                    && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_WEB) && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_FULL)
-                    && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_8_WEB) && !platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_8_FULL) 
-                    && !platform.getSupportedProfiles().contains(Profile.JAVA_EE_8_WEB) && !platform.getSupportedProfiles().contains(Profile.JAVA_EE_8_FULL) 
-                    && !platform.getSupportedProfiles().contains(Profile.JAVA_EE_7_WEB) && !platform.getSupportedProfiles().contains(Profile.JAVA_EE_7_FULL);//we know gf4 do not support old providers, #233726
+            for (Profile profile: platform.getSupportedProfiles()) {
+                if (profile.isAtLeast(Profile.JAVA_EE_7_WEB)) {
+                    lessEE7 = false; //we know gf4 do not support old providers, #233726
+                    break;
+                }
+            }
+            
             // Here we are mapping the JpaProvider to the correct Provider
             for (Provider provider : ProviderUtil.getAllProviders()) {
 
@@ -95,6 +94,7 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
                 if (jpa != null) {
                     String version = ProviderUtil.getVersion(provider);
                     if (version == null
+                            || (version.equals(Persistence.VERSION_3_2) && jpa.isJpa32Supported())
                             || (version.equals(Persistence.VERSION_3_1) && jpa.isJpa31Supported())
                             || (version.equals(Persistence.VERSION_3_0) && jpa.isJpa30Supported())
                             || (version.equals(Persistence.VERSION_2_2) && jpa.isJpa22Supported())
@@ -123,11 +123,13 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
             }
             if (!found){
                 String version = ProviderUtil.getVersion(each);
+                // we know gf4 do not support old providers, #233726, todo, we need to get supported from gf plugin instead
                 if(lessEE7 || version == null 
                         || version.equals(Persistence.VERSION_2_1) 
                         || version.equals(Persistence.VERSION_2_2) 
                         || version.equals(Persistence.VERSION_3_0) 
-                        || version.equals(Persistence.VERSION_3_1)) {//we know gf4 do not support old providers, #233726, todo, we need to get supported from gf plugin instead
+                        || version.equals(Persistence.VERSION_3_1)
+                        || version.equals(Persistence.VERSION_3_2)) {
                     providers.add(each);
                 }
             }

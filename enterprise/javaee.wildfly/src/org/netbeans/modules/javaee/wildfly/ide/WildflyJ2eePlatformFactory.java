@@ -118,6 +118,7 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
             JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_9_FULL);
             JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_9_1_FULL);
             JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_10_FULL);
+            JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_11_FULL);
         }
         private static final Set<Profile> EAP6_PROFILES = new HashSet<>(4);
 
@@ -136,6 +137,7 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
             WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_9_WEB);
             WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_9_1_WEB);
             WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_10_WEB);
+            WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_11_WEB);
         }
 
         private static final Set<Profile> JAKARTAEE_WEB_PROFILES = new HashSet<>(8);
@@ -144,6 +146,7 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
             JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_9_WEB);
             JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_9_1_WEB);
             JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_10_WEB);
+            JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_11_WEB);
         }
         private LibraryImplementation[] libraries;
 

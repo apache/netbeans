@@ -54,9 +54,10 @@ public class MavenJsfReferenceImplementationProvider implements JsfReferenceImpl
         map.put(JsfVersion.JSF_2_0, "com.sun.faces:jsf-impl:2.0.11");
         map.put(JsfVersion.JSF_2_1, "com.sun.faces:jsf-impl:2.1.29");
         map.put(JsfVersion.JSF_2_2, "com.sun.faces:jsf-impl:2.2.20");
-        map.put(JsfVersion.JSF_2_3, "org.glassfish:jakarta.faces:2.3.19");
-        map.put(JsfVersion.JSF_3_0, "org.glassfish:jakarta.faces:3.0.4");
-        map.put(JsfVersion.JSF_4_0, "org.glassfish:jakarta.faces:4.0.2");
+        map.put(JsfVersion.JSF_2_3, "org.glassfish:jakarta.faces:2.3.21");
+        map.put(JsfVersion.JSF_3_0, "org.glassfish:jakarta.faces:3.0.5");
+        map.put(JsfVersion.JSF_4_0, "org.glassfish:jakarta.faces:4.0.5");
+        map.put(JsfVersion.JSF_4_1, "org.glassfish:jakarta.faces:4.1.0-M1");
         JSF_VERSION_MAVEN_COORDINATES_MAPPING = Collections.unmodifiableMap(map);
     }
 

@@ -83,9 +83,10 @@ public final class PersistentTimerInEjbLite {
         final List<ErrorDescription> problems = new ArrayList<>();
         final EJBProblemContext ctx = HintsUtils.getOrCacheContext(hintContext);
         if (ctx != null && ctx.getEjb() instanceof Session) {
-            boolean ee9lite = ctx.getEjbModule().getJ2eeProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB);
-            boolean ee7lite = ctx.getEjbModule().getJ2eeProfile().isAtLeast(Profile.JAVA_EE_7_WEB);
-            boolean ee6lite = ctx.getEjbModule().getJ2eeProfile() == Profile.JAVA_EE_6_WEB;
+            final Profile profile = ctx.getEjbModule().getJ2eeProfile();
+            boolean ee9lite = profile.isAtLeast(Profile.JAKARTA_EE_9_WEB);
+            boolean ee7lite = profile.isAtLeast(Profile.JAVA_EE_7_WEB);
+            boolean ee6lite = (profile == Profile.JAVA_EE_6_WEB);
             J2eePlatform platform = ProjectUtil.getPlatform(ctx.getProject());
             if ((ee6lite || ee7lite || ee9lite) && nonEeFullServer(platform)) {
                 for (Element element : ctx.getClazz().getEnclosedElements()) {
@@ -114,23 +115,13 @@ public final class PersistentTimerInEjbLite {
         if (platform == null) {
             return true;
         }
-        if(platform.getSupportedProfiles().contains(Profile.JAVA_EE_6_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAVA_EE_7_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAVA_EE_8_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_8_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_9_1_FULL)) {
-            return false;
-        } else if(platform.getSupportedProfiles().contains(Profile.JAKARTA_EE_10_FULL)) {
-            return false;
-        } else {
-            return true;
+        
+        for (Profile profile: platform.getSupportedProfiles()) {
+            if (profile.isFullProfile() && profile.isAtLeast(Profile.JAVA_EE_6_FULL)) {
+                return false;
+            }
         }
+        return true;
     }
 
     private static boolean isTimerPersistent(Map<? extends ExecutableElement, ? extends AnnotationValue> values) {

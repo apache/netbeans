@@ -42,17 +42,20 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
     public static final String WARN_SET_JDK_7 = "warnSetJdk7"; // NOI18N
     public static final String WARN_SET_JDK_8 = "warnSetJdk8"; // NOI18N
     public static final String WARN_SET_JDK_11 = "warnSetJdk11"; // NOI18N
+    public static final String WARN_SET_JDK_21 = "warnSetJdk21"; // NOI18N
 
     public static final String WARN_SET_SOURCE_LEVEL_15 = "warnSetSourceLevel15"; // NOI18N
     public static final String WARN_SET_SOURCE_LEVEL_6 = "warnSetSourceLevel6"; // NOI18N
     public static final String WARN_SET_SOURCE_LEVEL_7 = "warnSetSourceLevel7"; // NOI18N
     public static final String WARN_SET_SOURCE_LEVEL_8 = "warnSetSourceLevel8"; // NOI18N
     public static final String WARN_SET_SOURCE_LEVEL_11 = "warnSetSourceLevel11"; // NOI18N
+    public static final String WARN_SET_SOURCE_LEVEL_21 = "warnSetSourceLevel21"; // NOI18N
 
     public static final String WARN_JDK_6_REQUIRED = "warnJdk6Required"; // NOI18N
     public static final String WARN_JDK_7_REQUIRED = "warnJdk7Required"; // NOI18N
     public static final String WARN_JDK_8_REQUIRED = "warnJdk8Required"; // NOI18N
     public static final String WARN_JDK_11_REQUIRED = "warnJdk11Required"; // NOI18N
+    public static final String WARN_JDK_21_REQUIRED = "warnJdk21Required"; // NOI18N
 
     private String warningType;
 
@@ -85,6 +88,9 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                 case WARN_SET_JDK_11:
                     labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk11");
                     break;
+                case WARN_SET_JDK_21:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetJdk21");
+                    break;
                 case WARN_SET_SOURCE_LEVEL_15:
                     labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel15");
                     break;
@@ -100,6 +106,9 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                 case WARN_SET_SOURCE_LEVEL_11:
                     labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel11");
                     break;
+                case WARN_SET_SOURCE_LEVEL_21:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationSetSourceLevel21");
+                    break;
                 case WARN_JDK_6_REQUIRED:
                     labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationJDK6");
                     break;
@@ -111,6 +120,9 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                     break;
                 case WARN_JDK_11_REQUIRED:
                     labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationJDK11");
+                    break;
+                case WARN_JDK_21_REQUIRED:
+                    labelText = NbBundle.getMessage(J2eeVersionWarningPanel.class, "MSG_RecommendationJDK21");
                     break;
                 default:
                     break;
@@ -145,6 +157,10 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                     JavaPlatform[] javaPlatforms = getJavaPlatforms("11");
                     return getPreferredPlatform(javaPlatforms).getDisplayName();
                 }
+                case WARN_SET_JDK_21: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("21");
+                    return getPreferredPlatform(javaPlatforms).getDisplayName();
+                }
                 default:
                     return JavaPlatform.getDefault().getDisplayName();
             }
@@ -175,6 +191,10 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                 }
                 case WARN_SET_JDK_11: {
                     JavaPlatform[] javaPlatforms = getJavaPlatforms("11");
+                    return getPreferredPlatform(javaPlatforms).getSpecification();
+                }
+                case WARN_SET_JDK_21: {
+                    JavaPlatform[] javaPlatforms = getJavaPlatforms("21");
                     return getPreferredPlatform(javaPlatforms).getSpecification();
                 }
                 default:
@@ -241,6 +261,12 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
             return null;
         }
         
+        // no warning if 21 is the default for jakartaee11
+        if ((j2eeProfile == Profile.JAKARTA_EE_11_FULL || j2eeProfile == Profile.JAKARTA_EE_11_WEB) &&
+                isAcceptableSourceLevel("21", sourceLevel, acceptableSourceLevels)) { // NOI18N
+            return null;
+        }
+        
         if (j2eeProfile == Profile.JAVA_EE_5) {
             JavaPlatform[] java15Platforms = getJavaPlatforms("1.5"); //NOI18N
             if (java15Platforms.length > 0) {
@@ -293,6 +319,17 @@ final class J2eeVersionWarningPanel extends javax.swing.JPanel {
                     return WARN_SET_SOURCE_LEVEL_11;
                 } else {
                     return WARN_JDK_11_REQUIRED;
+                }
+            }
+        } else if (j2eeProfile == Profile.JAKARTA_EE_11_FULL || j2eeProfile == Profile.JAKARTA_EE_11_WEB) {
+            JavaPlatform[] java21Platforms = getJavaPlatforms("21"); //NOI18N
+            if (java21Platforms.length > 0) {
+                return WARN_SET_JDK_21;
+            } else {
+                if (canSetSourceLevel("21")) {
+                    return WARN_SET_SOURCE_LEVEL_21;
+                } else {
+                    return WARN_JDK_21_REQUIRED;
                 }
             }
         } else {

@@ -36,6 +36,8 @@ public interface JpaProviderImplementation {
 
     boolean isJpa31Supported();
     
+    boolean isJpa32Supported();
+    
     boolean isDefault();
     
     String getClassName();

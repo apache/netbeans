@@ -95,12 +95,17 @@ abstract class BaseJ2eeArchetypeProvider {
         Archetype jakartaEE9_1Archetype = createArchetype(
                 NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JakartaEE9_1"),
                 NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE9_1"),
-               NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE9_1"));
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE9_1"));
 
         Archetype jakartaEE10_0Archetype = createArchetype(
                 NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JakartaEE10_0"),
                 NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE10_0"),
-               NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE10_0"));
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE10_0"));
+        
+        Archetype jakartaEE11_0Archetype = createArchetype(
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeGroupId.JakartaEE11_0"),
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeVersion.JakartaEE11_0"),
+                NbBundle.getMessage(BaseJ2eeArchetypeProvider.class,"mvn.archetypeArtifactId.JakartaEE11_0"));
 
         map.put(Profile.JAVA_EE_8_FULL, javaEE8Archetype);
         map.put(Profile.JAVA_EE_8_WEB, javaEE8Archetype);
@@ -112,6 +117,8 @@ abstract class BaseJ2eeArchetypeProvider {
         map.put(Profile.JAKARTA_EE_9_1_WEB, jakartaEE9_1Archetype);
         map.put(Profile.JAKARTA_EE_10_FULL, jakartaEE10_0Archetype);
         map.put(Profile.JAKARTA_EE_10_WEB, jakartaEE10_0Archetype);
+        map.put(Profile.JAKARTA_EE_11_FULL, jakartaEE11_0Archetype);
+        map.put(Profile.JAKARTA_EE_11_WEB, jakartaEE11_0Archetype);
     }
 
     private Archetype createMojoArchetype(String version, String artifactId) {

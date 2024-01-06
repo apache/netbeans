@@ -67,6 +67,9 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
     
     /** GlassFish V7 JakartaEE platform lookup key. */
     private static final String V7_LOOKUP_KEY = "J2EE/DeploymentPlugins/gfv700ee10/Lookup";
+    
+    /** GlassFish V8 JakartaEE platform lookup key. */
+    private static final String V8_LOOKUP_KEY = "J2EE/DeploymentPlugins/gfv800ee11/Lookup";
 
     /** GlassFish JavaEE platform factory singleton object. */
     private static volatile Hk2JavaEEPlatformFactory instance;
@@ -94,15 +97,18 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
     }
 
     /**
-     * Get GlassFish JavaEE platform name from bundle properties for given
-     * GlassFish server version.
+     * Get GlassFish Java/Jakarta EE platform name from bundle properties 
+     * for given GlassFish server version.
      * <p/>
      * @param version GlassFish server version used to pick up display name.
      * @return GlassFish JavaEE platform name related to given server version.
      */
     private static String getDisplayName(final GlassFishVersion version) {
         final int ord = version.ordinal();
-        if(ord >= GlassFishVersion.GF_7_0_0.ordinal()) {
+        if(ord >= GlassFishVersion.GF_8_0_0.ordinal()) {
+            return NbBundle.getMessage(
+                    Hk2JavaEEPlatformFactory.class, "MSG_V800ServerPlatform");
+        } else if(ord >= GlassFishVersion.GF_7_0_0.ordinal()) {
             return NbBundle.getMessage(
                     Hk2JavaEEPlatformFactory.class, "MSG_V700ServerPlatform");
         } else if(ord >= GlassFishVersion.GF_6_2_0.ordinal()) {
@@ -137,15 +143,18 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
     }
 
     /**
-     * Get GlassFish JavaEE library name from bundle properties for given
-     * GlassFish server version.
+     * Get GlassFish Java/Jakarta EE library name from bundle properties
+     * for given GlassFish server version.
      * <p/>
      * @param version GlassFish server version used to pick up display name.
      * @return GlassFish JavaEE library name related to given server version.
      */
     private static String getLibraryName(final GlassFishVersion version) {
         final int ord = version.ordinal();
-        if (ord >= GlassFishVersion.GF_7_0_0.ordinal()) {
+        if (ord >= GlassFishVersion.GF_8_0_0.ordinal()) {
+            return NbBundle.getMessage(
+                    Hk2JavaEEPlatformFactory.class, "LBL_V800ServerLibraries");
+        } else if (ord >= GlassFishVersion.GF_7_0_0.ordinal()) {
             return NbBundle.getMessage(
                     Hk2JavaEEPlatformFactory.class, "LBL_V700ServerLibraries");
         } else if (ord >= GlassFishVersion.GF_6_2_0.ordinal()) {
@@ -180,7 +189,7 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
     }
 
     /**
-     * Get GlassFish JavaEE platform lookup key for given GlassFish
+     * Get GlassFish Java/Jakarta EE platform lookup key for given GlassFish
      * server version.
      * <p/>
      * @param version GlassFish server version used to pick up lookup key.
@@ -188,7 +197,9 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      */
     private static String getLookupKey(final GlassFishVersion version) {
         final int ord = version.ordinal();
-        if (ord >= GlassFishVersion.GF_7_0_0.ordinal()){
+        if (ord >= GlassFishVersion.GF_8_0_0.ordinal()){
+            return V8_LOOKUP_KEY;
+        } else if (ord >= GlassFishVersion.GF_7_0_0.ordinal()){
             return V7_LOOKUP_KEY;
         } else if (ord >= GlassFishVersion.GF_6_1_0.ordinal()){
             return V610_LOOKUP_KEY;

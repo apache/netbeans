@@ -89,7 +89,8 @@ public class Util {
         Persistence.VERSION_2_1,
         Persistence.VERSION_2_2,
         Persistence.VERSION_3_0,
-        Persistence.VERSION_3_1
+        Persistence.VERSION_3_1,
+        Persistence.VERSION_3_2
     };
     
     /*
@@ -188,7 +189,7 @@ public class Util {
             return true;
         }
         if (JPAModuleInfo.ModuleType.WEB == moduleInfo.getType()
-                && asList("2.5", "3.1", "3.0", "4.0", "5.0", "6.0").contains(moduleInfo.getVersion())) {
+                && asList("2.5", "3.1", "3.0", "4.0", "5.0", "6.0", "6.1").contains(moduleInfo.getVersion())) {
             return true;
         }
         return false;
@@ -242,7 +243,8 @@ public class Util {
                     || Util.isJPAVersionSupported(project, Persistence.VERSION_2_1)
                     || Util.isJPAVersionSupported(project, Persistence.VERSION_2_2)
                     || Util.isJPAVersionSupported(project, Persistence.VERSION_3_0)
-                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_1)) 
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_1)
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_2)) 
                     && (defProviderVersion == null || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 3.1 is supported by default (or first) is jpa1.0 or udefined version provider
             if(specialCase){
                 for (int i = 1; i<providers.size() ; i++){
@@ -361,7 +363,9 @@ public class Util {
         String version = (lib != null && libIsAdded) ? PersistenceUtils.getJPAVersion(lib) : PersistenceUtils.getJPAVersion(project);//use library if possible it will provide better result, TODO: may be usage of project should be removed and use 1.0 is no library was found
         if (result == createPUButton) {
             PersistenceUnit punit = null;
-            if (Persistence.VERSION_3_1.equals(version)) {
+            if (Persistence.VERSION_3_2.equals(version)) {
+                punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
+            } else if (Persistence.VERSION_3_1.equals(version)) {
                 punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
             } else if (Persistence.VERSION_3_0.equals(version)) {
                 punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
@@ -478,7 +482,9 @@ public class Util {
             }
         }
         PersistenceUnit punit = null;
-        if (Persistence.VERSION_3_1.equals(version)) {
+        if (Persistence.VERSION_3_2.equals(version)) {
+            punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
+        } else if (Persistence.VERSION_3_1.equals(version)) {
             punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
         } else if (Persistence.VERSION_3_0.equals(version)) {
             punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
@@ -595,7 +601,9 @@ public class Util {
             return false;
         }
         String version = Persistence.VERSION_1_0;
-        if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
+        if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {
+            version = Persistence.VERSION_3_2;
+        } else if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
             version = Persistence.VERSION_3_1;
         } else if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {
             version = Persistence.VERSION_3_0;
@@ -736,7 +744,8 @@ public class Util {
     public static void addPersistenceUnitToProject(Project project) {
         if(PersistenceUtils.getJPAVersion(project) == null){
             Library lib;
-            if(isJPAVersionSupported(project, Persistence.VERSION_3_1)
+            if(isJPAVersionSupported(project, Persistence.VERSION_3_2)
+                    || isJPAVersionSupported(project, Persistence.VERSION_3_1)
                     || isJPAVersionSupported(project, Persistence.VERSION_3_0)
                     || isJPAVersionSupported(project, Persistence.VERSION_2_2)
                     || isJPAVersionSupported(project, Persistence.VERSION_2_1)

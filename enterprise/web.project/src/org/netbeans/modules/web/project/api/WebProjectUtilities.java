@@ -835,11 +835,8 @@ public class WebProjectUtilities {
     }
 
     public static void upgradeJ2EEProfile(WebProject project){
-        if (Profile.JAVA_EE_6_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
-                Profile.JAVA_EE_7_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
-                Profile.JAVA_EE_8_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
-                Profile.JAKARTA_EE_8_WEB.equals(project.getAPIEjbJar().getJ2eeProfile()) ||
-                Profile.JAKARTA_EE_9_WEB.equals(project.getAPIEjbJar().getJ2eeProfile())){
+        Profile profile = project.getAPIEjbJar().getJ2eeProfile();
+        if (profile.isWebProfile() && profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
             //check the J2EE 6/7 Full profile specific functionality
             Boolean isFullRequired = Boolean.FALSE;
             try{
@@ -871,7 +868,7 @@ public class WebProjectUtilities {
             //change profile if required
             if (isFullRequired){
                 boolean ee7 = false;
-                if (Profile.JAVA_EE_7_WEB.equals(project.getAPIEjbJar().getJ2eeProfile())) {
+                if (Profile.JAVA_EE_7_WEB.equals(profile)) {
                     ee7 = true;
                 }
                 if ((ee7 && ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL)) ||

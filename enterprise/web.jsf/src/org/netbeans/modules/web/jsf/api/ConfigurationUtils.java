@@ -103,7 +103,8 @@ public class ConfigurationUtils {
             WebApp webApp = DDProvider.getDefault().getDDRoot(deploymentDescriptor);
             // Try to find according the servlet class name. The javax.faces.webapp.FacesServlet is final, so
             // it can not be extended.
-            if (WebApp.VERSION_6_0.equals(webApp.getVersion()) || WebApp.VERSION_5_0.equals(webApp.getVersion())) {
+            if (WebApp.VERSION_6_1.equals(webApp.getVersion()) || WebApp.VERSION_6_0.equals(webApp.getVersion()) || 
+                    WebApp.VERSION_5_0.equals(webApp.getVersion())) {
                 return (Servlet) webApp
                     .findBeanByName("Servlet", "ServletClass", "jakarta.faces.webapp.FacesServlet"); //NOI18N;
             } else {

@@ -42,6 +42,7 @@ public class JsfVersionTest {
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_2_3));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_3_0));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_0));
+        assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_1));
     }
 
     @Test
@@ -57,6 +58,7 @@ public class JsfVersionTest {
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_2_3));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_3_0));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_0));
+        assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_1));
     }
 
     @Test
@@ -72,6 +74,7 @@ public class JsfVersionTest {
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_2_3));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_3_0));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_0));
+        assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_1));
     }
 
     @Test
@@ -87,6 +90,7 @@ public class JsfVersionTest {
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_2_3));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_3_0));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_0));
+        assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_1));
     }
 
     @Test
@@ -102,6 +106,7 @@ public class JsfVersionTest {
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_2_3));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_3_0));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_0));
+        assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_1));
     }
 
     @Test
@@ -117,6 +122,7 @@ public class JsfVersionTest {
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_2_3));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_3_0));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_0));
+        assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_1));
     }
 
     @Test
@@ -132,6 +138,7 @@ public class JsfVersionTest {
         assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_2_3));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_3_0));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_0));
+        assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_1));
     }
 
     @Test
@@ -147,6 +154,7 @@ public class JsfVersionTest {
         assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_2_3));
         assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_3_0));
         assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_0));
+        assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_1));
     }
 
     @Test
@@ -162,6 +170,23 @@ public class JsfVersionTest {
         assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_2_3));
         assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_3_0));
         assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_4_0));
+        assertFalse(jsfVersion.isAtLeast(JsfVersion.JSF_4_1));
+    }
+    
+    @Test
+    public void testVersionComparison_JSF_4_1() {
+        JsfVersion jsfVersion = JsfVersion.JSF_4_1;
+
+        assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_1_0));
+        assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_1_1));
+        assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_1_2));
+        assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_2_0));
+        assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_2_1));
+        assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_2_2));
+        assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_2_3));
+        assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_3_0));
+        assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_4_0));
+        assertTrue(jsfVersion.isAtLeast(JsfVersion.JSF_4_1));
     }
 
     @Test
@@ -175,10 +200,11 @@ public class JsfVersionTest {
         assertEquals("JSF 2.3", JsfVersion.JSF_2_3.getShortName());
         assertEquals("JSF 3.0", JsfVersion.JSF_3_0.getShortName());
         assertEquals("Faces 4.0", JsfVersion.JSF_4_0.getShortName());
+        assertEquals("Faces 4.1", JsfVersion.JSF_4_1.getShortName());
     }
 
     @Test
     public void testLatest() {
-        assertEquals(JsfVersion.JSF_4_0, JsfVersion.latest());
+        assertEquals(JsfVersion.JSF_4_1, JsfVersion.latest());
     }
 }

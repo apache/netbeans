@@ -34,6 +34,7 @@ enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_7/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_8/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_9/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_10/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_11/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_1_4/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_5_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_6_0/*
@@ -41,6 +42,7 @@ enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_7_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_8_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_9_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_10_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_11_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_2_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_1/*
@@ -53,11 +55,13 @@ enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_4_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_5_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_6_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_6_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_0_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_1_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_4_0_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_5_0_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_6_0_frag/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_6_1_frag/*
 extide/gradle/netbeans-gradle-tooling/.gradle/**
 profiler/lib.profiler/release/BUILDINFO.txt
 webcommon/javascript2.jquery/external/jquery-api.xml

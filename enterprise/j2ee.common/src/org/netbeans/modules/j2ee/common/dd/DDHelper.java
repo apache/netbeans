@@ -66,7 +66,9 @@ public class DDHelper {
      */
     public static FileObject createWebXml(Profile j2eeProfile, boolean webXmlRequired, FileObject dir) throws IOException {
         String template = null;
-        if ((Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) && webXmlRequired) {
+        if ((Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) && webXmlRequired) {
+            template = "web-6.1.xml"; //NOI18N
+        } else if ((Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) && webXmlRequired) {
             template = "web-6.0.xml"; //NOI18N
         } else if ((Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile ||
                 Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) && webXmlRequired) {
@@ -105,7 +107,9 @@ public class DDHelper {
      */
     public static FileObject createWebFragmentXml(Profile j2eeProfile, FileObject dir) throws IOException {
         String template = null;
-        if (Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) {
+        if (Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) {
+            template = "web-fragment-6.1.xml"; //NOI18N
+        } else if (Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) {
             template = "web-fragment-6.0.xml"; //NOI18N
         } else if (Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile ||
                 Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) {
@@ -152,7 +156,9 @@ public class DDHelper {
      */
     public static FileObject createBeansXml(Profile j2eeProfile, FileObject dir, String name) throws IOException {
         String template = null;       
-        if (Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) {
+        if (Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) {
+            template = "beans-4.1.xml"; //NOI18N
+        } else if (Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) {
             template = "beans-4.0.xml"; //NOI18N
         } else if (Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile ||
                 Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) {
@@ -211,6 +217,8 @@ public class DDHelper {
                 || Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile
                 || Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) {
             template = "validation-3.0.xml"; //NOI18N
+        } else if (Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) {
+            template = "validation-3.1.xml"; //NOI18N
         }
         if (template == null)
             return null;
@@ -257,6 +265,8 @@ public class DDHelper {
                 || Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile
                 || Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) {
             template = "constraint-3.0.xml"; //NOI18N
+        } else if (Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) {
+            template = "constraint-3.1.xml"; //NOI18N
         }
         if (template == null)
             return null;
@@ -285,7 +295,9 @@ public class DDHelper {
             boolean forceCreation) throws IOException {
         String template = null;
         
-        if (profile != null && profile.equals(Profile.JAKARTA_EE_10_FULL) && forceCreation) {
+        if (profile != null && profile.equals(Profile.JAKARTA_EE_11_FULL) && forceCreation) {
+            template = "ear-11.xml"; // NOI18N
+        } else if (profile != null && profile.equals(Profile.JAKARTA_EE_10_FULL) && forceCreation) {
             template = "ear-10.xml"; // NOI18N
         } else if (profile != null && (profile.equals(Profile.JAKARTA_EE_9_FULL) || profile.equals(Profile.JAKARTA_EE_9_1_FULL)) && forceCreation) {
             template = "ear-9.xml"; // NOI18N

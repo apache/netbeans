@@ -81,6 +81,13 @@ public final class ServletVersion extends J2EEBaseVersion {
         "6.0", 6000,	// NOI18N
         "10.0", 10000	// NOI18N
         );
+    
+    /** Represents servlet version 6.1
+     */
+    public static final ServletVersion SERVLET_6_1 = new ServletVersion(
+        "6.1", 6100,	// NOI18N
+        "11.0", 11000	// NOI18N
+        );
 
     /** -----------------------------------------------------------------------
      *  Implementation

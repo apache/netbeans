@@ -91,7 +91,13 @@ public class JSFConfigModelImpl extends AbstractDocumentModel<JSFConfigComponent
     public JsfVersion getVersion() {
         String namespaceURI = getRootComponent().getPeer().getNamespaceURI();
         JsfVersion version = JsfVersion.JSF_1_1;
-        if (JSFConfigQNames.JSF_4_0_NS.equals(namespaceURI)
+        if (JSFConfigQNames.JSF_4_1_NS.equals(namespaceURI)
+                && (getRootComponent().getVersion().equals("4.1") //NOI18N
+                || checkSchemaLocation(
+                    getRootComponent().getPeer(),
+                    "https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_1.xsd"))) { //NOI18N
+            version = JsfVersion.JSF_4_1;
+        } else if (JSFConfigQNames.JSF_4_0_NS.equals(namespaceURI)
                 && (getRootComponent().getVersion().equals("4.0") //NOI18N
                 || checkSchemaLocation(
                     getRootComponent().getPeer(),

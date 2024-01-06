@@ -104,6 +104,7 @@ ide/db.metadata.model/external/mysql-connector-j-8.0.31.jar ide/db.mysql/externa
 
 # Jakarta EE API doc is repackaged to align with old NetBeans format, embedded indexes are thus identically and can be ignored.
 enterprise/jakartaee10.platform/external/generated-jakarta.jakartaee-api-10.0.0-javadoc.jar enterprise/jakartaee10.platform/external/jakarta.jakartaee-api-10.0.0-javadoc.jar
+enterprise/jakartaee11.platform/external/generated-jakarta.jakartaee-api-11.0.0-javadoc.jar enterprise/jakartaee11.platform/external/jakarta.jakartaee-api-11.0.0-javadoc.jar
 
 # Jakarta Servlet API is used by both servletjspapi and websvc.restlib
 enterprise/servletjspapi/external/jakarta.servlet-api-4.0.4.jar enterprise/websvc.restlib/external/jakarta.servlet-api-4.0.4.jar

@@ -211,7 +211,9 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
     }
     private void initCache(){
         String caching = "";
-        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
+        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {
+            caching = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) persistenceUnit).getSharedCacheMode();
+        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
             caching = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) persistenceUnit).getSharedCacheMode();
         } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {
             caching = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) persistenceUnit).getSharedCacheMode();
@@ -249,7 +251,9 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
     
     private void initValidation(){
         String validation = "";
-        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
+        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {
+            validation = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) persistenceUnit).getValidationMode();
+        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
             validation = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) persistenceUnit).getValidationMode();
         } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {
             validation = ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) persistenceUnit).getValidationMode();
@@ -532,7 +536,9 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
                 vMode = validationModes[2];
             }
             if(!"".equals(cType)) {
-                if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
+                if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {
+                    ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) persistenceUnit).setSharedCacheMode(cType);
+                } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
                     ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) persistenceUnit).setSharedCacheMode(cType);
                 } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {
                     ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) persistenceUnit).setSharedCacheMode(cType);
@@ -544,7 +550,9 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
                     ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) persistenceUnit).setSharedCacheMode(cType);
                 }
             } else if(!"".equals(vMode)) {
-                if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
+                if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {
+                    ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) persistenceUnit).setValidationMode(vMode);
+                } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
                     ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) persistenceUnit).setValidationMode(vMode);
                 } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {
                     ((org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) persistenceUnit).setValidationMode(vMode);

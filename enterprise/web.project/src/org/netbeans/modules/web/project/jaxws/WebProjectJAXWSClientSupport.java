@@ -110,36 +110,35 @@ public class WebProjectJAXWSClientSupport extends ProjectJAXWSClientSupport /*im
     protected String getProjectJavaEEVersion() {
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
-            if (Profile.JAVA_EE_6_WEB.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_16;
-            } else if (Profile.JAVA_EE_6_FULL.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_16;
-            } else if (Profile.JAVA_EE_7_WEB.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_17;
-            } else if (Profile.JAVA_EE_7_FULL.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_17;
-            } else if (Profile.JAVA_EE_8_WEB.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_18;
-            } else if (Profile.JAVA_EE_8_FULL.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_18;
-            } else if (Profile.JAKARTA_EE_8_WEB.equals(webModule.getJ2eeProfile())) {
-                return JAKARTA_EE_VERSION_8;
-            } else if (Profile.JAKARTA_EE_8_FULL.equals(webModule.getJ2eeProfile())) {
-                return JAKARTA_EE_VERSION_8;
-            } else if (Profile.JAKARTA_EE_9_WEB.equals(webModule.getJ2eeProfile())) {
-                return JAKARTA_EE_VERSION_9;
-            } else if (Profile.JAKARTA_EE_9_FULL.equals(webModule.getJ2eeProfile())) {
-                return JAKARTA_EE_VERSION_9;
-            } else if (Profile.JAKARTA_EE_9_1_WEB.equals(webModule.getJ2eeProfile())) {
-                return JAKARTA_EE_VERSION_91;
-            } else if (Profile.JAKARTA_EE_9_1_FULL.equals(webModule.getJ2eeProfile())) {
-                return JAKARTA_EE_VERSION_91;
-            } else if (Profile.JAKARTA_EE_10_WEB.equals(webModule.getJ2eeProfile())) {
-                return JAKARTA_EE_VERSION_10;
-            } else if (Profile.JAKARTA_EE_10_FULL.equals(webModule.getJ2eeProfile())) {
-                return JAKARTA_EE_VERSION_10;
-            } else if (Profile.JAVA_EE_5.equals(webModule.getJ2eeProfile())) {
-                return JAVA_EE_VERSION_15;
+            switch (webModule.getJ2eeProfile()) {
+                case JAVA_EE_6_WEB:
+                case JAVA_EE_6_FULL:
+                    return JAVA_EE_VERSION_16;
+                case JAVA_EE_7_WEB:
+                case JAVA_EE_7_FULL:
+                    return JAVA_EE_VERSION_17;
+                case JAVA_EE_8_WEB:
+                case JAVA_EE_8_FULL:
+                    return JAVA_EE_VERSION_18;
+                case JAKARTA_EE_8_WEB:
+                case JAKARTA_EE_8_FULL:
+                    return JAKARTA_EE_VERSION_8;
+                case JAKARTA_EE_9_WEB:
+                case JAKARTA_EE_9_FULL:
+                    return JAKARTA_EE_VERSION_9;
+                case JAKARTA_EE_9_1_WEB:
+                case JAKARTA_EE_9_1_FULL:
+                    return JAKARTA_EE_VERSION_91;
+                case JAKARTA_EE_10_WEB:
+                case JAKARTA_EE_10_FULL:
+                    return JAKARTA_EE_VERSION_10;
+                case JAKARTA_EE_11_WEB:
+                case JAKARTA_EE_11_FULL:
+                    return JAKARTA_EE_VERSION_11;
+                case JAVA_EE_5:
+                    return JAVA_EE_VERSION_15;
+                default:
+                    break;
             }
         }
         return JAVA_EE_VERSION_NONE;

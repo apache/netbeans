@@ -198,6 +198,10 @@ public class PersistenceCfgProperties {
         //EclipseLink JPA 3.1 (initially just copy of 3.0)
         possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER3_1, new HashMap<>());
         possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER3_1).putAll(possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER3_0));
+        
+        //EclipseLink JPA 3.2 (initially just copy of 3.0)
+        possiblePropertyValues.put(ProviderUtil.ECLIPSELINK_PROVIDER3_2, new HashMap<>());
+        possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER3_2).putAll(possiblePropertyValues.get(ProviderUtil.ECLIPSELINK_PROVIDER3_0));
 
         //Hibernate JPA 1.0
         possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER1_0, new HashMap<String, String[]>());
@@ -243,6 +247,10 @@ public class PersistenceCfgProperties {
         //Hibernate JPA 3.1 (initially just copy of 3.0)
         possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER3_1, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER3_1).putAll(possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER3_0));
+        
+        //Hibernate JPA 3.2 (initially just copy of 3.0)
+        possiblePropertyValues.put(ProviderUtil.HIBERNATE_PROVIDER3_2, new HashMap<String, String[]>());
+        possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER3_2).putAll(possiblePropertyValues.get(ProviderUtil.HIBERNATE_PROVIDER3_0));
         
         //OpenJPA JPA 1.0
         possiblePropertyValues.put(ProviderUtil.OPENJPA_PROVIDER1_0, new HashMap<String, String[]>());
@@ -600,6 +608,10 @@ public class PersistenceCfgProperties {
         //DataNucleus JPA 3.1 (initially just copy of 3.0)
         possiblePropertyValues.put(ProviderUtil.DATANUCLEUS_PROVIDER3_1, new HashMap<String, String[]>());
         possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER3_1).putAll(possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER3_0));
+        
+        //DataNucleus JPA 3.2 (initially just copy of 3.0)
+        possiblePropertyValues.put(ProviderUtil.DATANUCLEUS_PROVIDER3_2, new HashMap<String, String[]>());
+        possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER3_2).putAll(possiblePropertyValues.get(ProviderUtil.DATANUCLEUS_PROVIDER3_0));
         
         //toplink 1.0
         possiblePropertyValues.put(ProviderUtil.TOPLINK_PROVIDER1_0, new HashMap<String, String[]>());

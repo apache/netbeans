@@ -27,13 +27,14 @@ import org.openide.loaders.MultiDataObject;
  * A data loader for web-fragment.xml version 6.0. Required for providing
  * a different action context than for older versions - see #85570.
  * 
- * @author pepness
+ * @author Jose Contreras
  */
 public class DDWebFragment60DataLoader extends DDDataLoader {
 
     private static final long serialVersionUID = 1L;
 
     public static final String REQUIRED_MIME_60 = "text/x-dd-servlet-fragment6.0"; // NOI18N
+    public static final String REQUIRED_MIME_61 = "text/x-dd-servlet-fragment6.1"; // NOI18N
 
     public DDWebFragment60DataLoader() {
         super("org.netbeans.modules.j2ee.ddloaders.web.DDFragmentDataObject");  // NOI18N
@@ -46,7 +47,7 @@ public class DDWebFragment60DataLoader extends DDDataLoader {
 
     @Override
     protected String[] getSupportedMimeTypes() {
-        return new String[]{REQUIRED_MIME_60};
+        return new String[]{REQUIRED_MIME_60, REQUIRED_MIME_61};
     }
 
     @Override

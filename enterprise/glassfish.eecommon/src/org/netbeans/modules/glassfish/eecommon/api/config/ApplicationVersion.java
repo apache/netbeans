@@ -81,6 +81,13 @@ public final class ApplicationVersion extends J2EEBaseVersion {
         "10.0", 10000,	// NOI18N
         "10.0", 10000	// NOI18N
         );
+    
+    /** Represents application version 11.0
+     */
+    public static final ApplicationVersion APPLICATION_11_0 = new ApplicationVersion(
+        "11.0", 11000,	// NOI18N
+        "11.0", 11000	// NOI18N
+        );
 
     /** -----------------------------------------------------------------------
      *  Implementation

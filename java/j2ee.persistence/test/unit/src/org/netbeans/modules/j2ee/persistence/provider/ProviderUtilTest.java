@@ -41,6 +41,9 @@ public class ProviderUtilTest extends NbTestCase {
     private PersistenceUnit persistenceUnit2;
     private PersistenceUnit persistenceUnit3;
     private PersistenceUnit persistenceUnit4;
+    private PersistenceUnit persistenceUnit5;
+    private PersistenceUnit persistenceUnit6;
+    private PersistenceUnit persistenceUnit7;
     
     public ProviderUtilTest(String testName) {
         super(testName);
@@ -52,6 +55,9 @@ public class ProviderUtilTest extends NbTestCase {
         this.persistenceUnit2 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
         this.persistenceUnit3 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
         this.persistenceUnit4 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
+        this.persistenceUnit5 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
+        this.persistenceUnit6 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+        this.persistenceUnit7 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
     }
     
     @Override
@@ -236,6 +242,48 @@ public class ProviderUtilTest extends NbTestCase {
         assertPropertyExists(persistenceUnit4, provider.getJdbcDriver());
         assertPropertyExists(persistenceUnit4, provider.getJdbcUrl());
         assertPropertyExists(persistenceUnit4, provider.getJdbcUsername());
+    }
+    
+    public void testGetProvider5() {
+        persistenceUnit5.setProvider(ProviderUtil.DATANUCLEUS_PROVIDER3_0.getProviderClass());
+        assertEquals(ProviderUtil.ECLIPSELINK_PROVIDER2_2, ProviderUtil.getProvider(persistenceUnit5));
+    }
+    
+    public void testSetProvider5(){
+        Provider provider = ProviderUtil.DATANUCLEUS_PROVIDER3_0;
+        ProviderUtil.setProvider(persistenceUnit5, provider, getConnection(), Provider.TABLE_GENERATTION_UNKOWN);
+        assertEquals(provider.getProviderClass(), persistenceUnit5.getProvider());
+        assertPropertyExists(persistenceUnit5, provider.getJdbcDriver());
+        assertPropertyExists(persistenceUnit5, provider.getJdbcUrl());
+        assertPropertyExists(persistenceUnit5, provider.getJdbcUsername());
+    }
+    
+    public void testGetProvider6() {
+        persistenceUnit6.setProvider(ProviderUtil.ECLIPSELINK_PROVIDER3_1.getProviderClass());
+        assertEquals(ProviderUtil.ECLIPSELINK_PROVIDER3_1, ProviderUtil.getProvider(persistenceUnit4));
+    }
+    
+    public void testSetProvider6(){
+        Provider provider = ProviderUtil.ECLIPSELINK_PROVIDER3_1;
+        ProviderUtil.setProvider(persistenceUnit6, provider, getConnection(), Provider.TABLE_GENERATTION_UNKOWN);
+        assertEquals(provider.getProviderClass(), persistenceUnit6.getProvider());
+        assertPropertyExists(persistenceUnit6, provider.getJdbcDriver());
+        assertPropertyExists(persistenceUnit6, provider.getJdbcUrl());
+        assertPropertyExists(persistenceUnit6, provider.getJdbcUsername());
+    }
+    
+    public void testGetProvider7() {
+        persistenceUnit7.setProvider(ProviderUtil.ECLIPSELINK_PROVIDER3_2.getProviderClass());
+        assertEquals(ProviderUtil.ECLIPSELINK_PROVIDER3_2, ProviderUtil.getProvider(persistenceUnit7));
+    }
+    
+    public void testSetProvider7(){
+        Provider provider = ProviderUtil.ECLIPSELINK_PROVIDER3_2;
+        ProviderUtil.setProvider(persistenceUnit7, provider, getConnection(), Provider.TABLE_GENERATTION_UNKOWN);
+        assertEquals(provider.getProviderClass(), persistenceUnit7.getProvider());
+        assertPropertyExists(persistenceUnit7, provider.getJdbcDriver());
+        assertPropertyExists(persistenceUnit7, provider.getJdbcUrl());
+        assertPropertyExists(persistenceUnit7, provider.getJdbcUsername());
     }
 
     /**

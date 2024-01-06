@@ -34,7 +34,8 @@ public enum JsfVersion {
     JSF_2_2("2.2"),
     JSF_2_3("2.3"),
     JSF_3_0("3.0"),
-    JSF_4_0("4.0");
+    JSF_4_0("4.0"),
+    JSF_4_1("4.1");
 
     private final String version;
 
@@ -49,8 +50,26 @@ public enum JsfVersion {
         return "JSF " + version;
     }
 
+    /**
+     * Find out if the version of the JsfVersion is equal or higher to given 
+     * JsfVersion.
+     * @param jsfVersion
+     * @return true if this JsfVersion is equal or higher to given one,
+     *         false otherwise
+     */
     public boolean isAtLeast(@NonNull JsfVersion jsfVersion) {
         return this.ordinal() >= jsfVersion.ordinal();
+    }
+    
+    /**
+     * Find out if the version of the JsfVersion is equal or lower to given 
+     * JsfVersion.
+     * @param jsfVersion
+     * @return true if this JsfVersion is equal or lower to given one,
+     *         false otherwise
+     */
+    public boolean isAtMost(@NonNull JsfVersion jsfVersion) {
+        return this.ordinal() <= jsfVersion.ordinal();
     }
 
     public static JsfVersion latest() {

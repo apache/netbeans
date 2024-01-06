@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<#if isJSF40??>
+<#if isJSF40?? || isJSF41??>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html">
 <#elseif isJSF22?? || isJSF30??>
@@ -12,7 +12,7 @@
 <#else>
 <html xmlns="http://www.w3.org/1999/xhtml">
 </#if>
-<#if isJSF20?? || isJSF22?? || isJSF30?? || isJSF40??>
+<#if isJSF20?? || isJSF22?? || isJSF30?? || isJSF40?? || isJSF41??>
     <h:head>
         <title>Facelet Title</title>
     </h:head>

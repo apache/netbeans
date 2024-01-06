@@ -125,16 +125,24 @@
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application_10.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_10.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_10.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application_11.mdd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application_11.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_11.mdd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/application-client_11.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/connector_2_0.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/connector_2_1.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_4_0.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_4_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/jakartaee_9.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/jakartaee_10.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/jakartaee_11.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/jakartaee_web_services_2_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/jakartaee_web_services_client_2_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/jsp_3_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/jsp_3_1.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/jsp_4_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/permissions_9.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/permissions_10.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_5_0.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_5_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-common_5_0.xsd</file>
@@ -145,6 +153,11 @@
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-common_6_0.xsd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_6_0.mdd</file>
         <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_6_0.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_6_1.mdd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-app_6_1.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-common_6_1.xsd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_6_1.mdd</file>
+        <file>src/org/netbeans/modules/j2ee/dd/impl/resources/web-fragment_6_1.xsd</file>
         <license ref="EPL-v20" />
         <comment type="CATEGORY_B" />
     </fileset>

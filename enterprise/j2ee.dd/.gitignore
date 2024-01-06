@@ -6,6 +6,7 @@ src/org/netbeans/modules/j2ee/dd/impl/application/model_7/*
 src/org/netbeans/modules/j2ee/dd/impl/application/model_8/*
 src/org/netbeans/modules/j2ee/dd/impl/application/model_9/*
 src/org/netbeans/modules/j2ee/dd/impl/application/model_10/*
+src/org/netbeans/modules/j2ee/dd/impl/application/model_11/*
 src/org/netbeans/modules/j2ee/dd/impl/client/model_1_4/*
 src/org/netbeans/modules/j2ee/dd/impl/client/model_5_0/*
 src/org/netbeans/modules/j2ee/dd/impl/client/model_6_0/*
@@ -13,6 +14,7 @@ src/org/netbeans/modules/j2ee/dd/impl/client/model_7_0/*
 src/org/netbeans/modules/j2ee/dd/impl/client/model_8_0/*
 src/org/netbeans/modules/j2ee/dd/impl/client/model_9_0/*
 src/org/netbeans/modules/j2ee/dd/impl/client/model_10_0/*
+src/org/netbeans/modules/j2ee/dd/impl/client/model_11_0/*
 src/org/netbeans/modules/j2ee/dd/impl/ejb/model_2_1/*
 src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_0/*
 src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_1/*
@@ -30,3 +32,5 @@ src/org/netbeans/modules/j2ee/dd/impl/web/model_5_0/*
 src/org/netbeans/modules/j2ee/dd/impl/web/model_5_0_frag/*
 src/org/netbeans/modules/j2ee/dd/impl/web/model_6_0/*
 src/org/netbeans/modules/j2ee/dd/impl/web/model_6_0_frag/*
+src/org/netbeans/modules/j2ee/dd/impl/web/model_6_1/*
+src/org/netbeans/modules/j2ee/dd/impl/web/model_6_1_frag/*

@@ -737,6 +737,8 @@ public class TomcatProperties {
                     String eeDocs;
                     switch (tm.getTomcatVersion()) {
                         case TOMCAT_110:
+                           eeDocs = "docs/jakartaee11-doc-api.jar";
+                           break;
                         case TOMCAT_101:
                            eeDocs = "docs/jakartaee10-doc-api.jar";
                            break;

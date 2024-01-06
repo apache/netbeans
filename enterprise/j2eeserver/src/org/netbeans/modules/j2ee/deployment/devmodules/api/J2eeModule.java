@@ -170,10 +170,10 @@ public class J2eeModule {
     }
 
     /** 
-     * Returns a Java EE module specification version, version of a web application 
+     * Returns a Java/Jakarta EE module specification version, version of a web application 
      * for example.
      * <p>
-     * Do not confuse with the Java EE platform specification version.
+     * Do not confuse with the Java/Jakarta EE platform specification version.
      *
      * @return module specification version.
      */

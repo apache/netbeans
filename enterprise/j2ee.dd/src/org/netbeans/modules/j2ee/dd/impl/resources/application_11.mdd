@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
+
+This program and the accompanying materials are made available under the
+terms of the Eclipse Public License v. 2.0, which is available at
+http://www.eclipse.org/legal/epl-2.0.
+
+This Source Code may also be made available under the following Secondary
+Licenses when the conditions for such availability set forth in the
+Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+version 2 with the GNU Classpath Exception, which is available at
+https://www.gnu.org/software/classpath/license.html.
+
+SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+-->
+<metaDD>
+    <meta-element>
+        <dtd-name>application</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Application</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.application.Application</implements>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.ComponentBeanMultiple</extends>
+        <user-code>
+            public org.xml.sax.SAXParseException getError() {
+                return null;
+            }
+            public int getStatus() {
+                return STATE_VALID;
+            }
+            public void setVersion(java.math.BigDecimal value) {
+                setAttributeValue(VERSION, value.toString());
+            }
+            public java.math.BigDecimal getVersion() {
+                return new java.math.BigDecimal(getAttributeValue(VERSION));
+            }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>moduleType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Module</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.application.Module</implements>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends> 
+    </meta-element>
+    <meta-element>
+        <dtd-name>security-roleType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>SecurityRole</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.common.SecurityRole</implements>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.DescriptionBeanMultiple</extends>
+    </meta-element>
+    <meta-element>
+        <dtd-name>pathType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Path</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>descriptionType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Description</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>xsdStringType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>XsdString</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>role-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>RoleName</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>webType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Web</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.application.Web</implements>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends> 
+        <user-code>
+            public String getWebUriId() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.application.Application.VERSION_11);
+            }
+            public void setWebUriId(String value) throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException {
+                throw new org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException(org.netbeans.modules.j2ee.dd.api.application.Application.VERSION_11);
+            }
+        </user-code>
+    </meta-element>
+    <meta-element>
+        <dtd-name>string</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>String</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>display-nameType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>DisplayName</bean-name>
+        <wrapper-class>java.lang.String</wrapper-class>
+    </meta-element>
+    <meta-element>
+        <dtd-name>iconType</dtd-name>
+        <namespace>https://jakarta.ee/xml/ns/jakartaee</namespace>
+        <bean-name>Icon</bean-name>
+        <implements>org.netbeans.modules.j2ee.dd.api.common.Icon</implements>
+        <extends>org.netbeans.modules.j2ee.dd.impl.common.EnclosingBean</extends> 
+    </meta-element>
+</metaDD>

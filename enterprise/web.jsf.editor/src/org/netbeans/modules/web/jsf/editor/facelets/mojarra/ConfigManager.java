@@ -973,6 +973,7 @@ public class ConfigManager {
         private static final Map<String, String> VERSION_FACES_SCHEMA_FACES_MAPPING;
         static {
             Map<String, String> map = new HashMap<>();
+            map.put("4.1", "com/sun/faces/web-facesconfig_4_1.xsd");
             map.put("4.0", "com/sun/faces/web-facesconfig_4_0.xsd");
             map.put("3.0", "com/sun/faces/web-facesconfig_3_0.xsd");
             map.put("2.3", "com/sun/faces/web-facesconfig_2_3.xsd");
@@ -986,6 +987,7 @@ public class ConfigManager {
         private static final Map<String, String> VERSION_FACES_SCHEMA_FACELET_TAGLIB_MAPPING;
         static {
             Map<String, String> map = new HashMap<>();
+            map.put("4.1", "com/sun/faces/web-facelettaglibrary_4_1.xsd");
             map.put("4.0", "com/sun/faces/web-facelettaglibrary_4_0.xsd");
             map.put("3.0", "com/sun/faces/web-facelettaglibrary_3_0.xsd");
             map.put("2.3", "com/sun/faces/web-facelettaglibrary_2_3.xsd");

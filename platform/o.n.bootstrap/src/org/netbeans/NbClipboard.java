@@ -424,20 +424,25 @@ implements LookupListener, FlavorListener, AWTEventListener
                 // that is used because accessing the clipboard can block
                 // indefinitely. Running the access loop here is deemed similar
                 // in nature.
-                final int MAX_TRIES = 50;
+
+                /* The loop will actually stop before getting to 10 iterations, per the delay
+                formula and conditional throw. But keep the MAX_TRIES just as a fail-safe. */
+                final int MAX_TRIES = 10;
                 final long start = System.currentTimeMillis();
+                int delay = 20;
                 for (int i = 0; i < MAX_TRIES; i++) {
                     try {
                         transferable = systemClipboard.getContents(this);
                         break;
                     } catch (IllegalStateException ex) {
                         // Throw exception if retries failed
-                        if (i == (MAX_TRIES - 1) || (System.currentTimeMillis() - start) > 980L) {
+                        if (i == (MAX_TRIES - 1) || (System.currentTimeMillis() + delay - start) > 1000L) {
                             throw ex;
                         } else {
-                            log.log(Level.INFO, "systemClipboard#getContents threw IllegalStateException (try: {0})", i + 1); // NOI18N
+                            log.log(Level.INFO, "systemClipboard#getContents ISE, attempt {0}", i + 1); // NOI18N
                         }
-                        Thread.sleep(20); // Give system time to settle
+                        Thread.sleep(delay); // Give system time to settle
+                        delay *= 2;
                     }
                 }
                 superSetContents(transferable, null);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.13.0
+#Version 2.14
 
 CLSS public java.io.BufferedReader
 cons public init(java.io.Reader)
@@ -431,6 +431,10 @@ meth public abstract java.nio.file.FileVisitResult preVisitDirectory({java.nio.f
 meth public abstract java.nio.file.FileVisitResult visitFile({java.nio.file.FileVisitor%0},java.nio.file.attribute.BasicFileAttributes) throws java.io.IOException
 meth public abstract java.nio.file.FileVisitResult visitFileFailed({java.nio.file.FileVisitor%0},java.io.IOException) throws java.io.IOException
 
+CLSS public abstract interface java.nio.file.PathMatcher
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract boolean matches(java.nio.file.Path)
+
 CLSS public java.nio.file.SimpleFileVisitor<%0 extends java.lang.Object>
 cons protected init()
 intf java.nio.file.FileVisitor<{java.nio.file.SimpleFileVisitor%0}>
@@ -624,6 +628,8 @@ meth public void track(java.io.File,java.lang.Object)
 meth public void track(java.io.File,java.lang.Object,org.apache.commons.io.FileDeleteStrategy)
 meth public void track(java.lang.String,java.lang.Object)
 meth public void track(java.lang.String,java.lang.Object,org.apache.commons.io.FileDeleteStrategy)
+meth public void track(java.nio.file.Path,java.lang.Object)
+meth public void track(java.nio.file.Path,java.lang.Object,org.apache.commons.io.FileDeleteStrategy)
 supr java.lang.Object
 hfds deleteFailures,exitWhenFinished,q,reaper,trackers
 hcls Reaper,Tracker
@@ -1062,6 +1068,7 @@ meth public static long copyLarge(java.io.Reader,java.io.Writer,char[]) throws j
 meth public static long copyLarge(java.io.Reader,java.io.Writer,long,long) throws java.io.IOException
 meth public static long copyLarge(java.io.Reader,java.io.Writer,long,long,char[]) throws java.io.IOException
 meth public static long skip(java.io.InputStream,long) throws java.io.IOException
+meth public static long skip(java.io.InputStream,long,java.util.function.Supplier<byte[]>) throws java.io.IOException
 meth public static long skip(java.io.Reader,long) throws java.io.IOException
 meth public static long skip(java.nio.channels.ReadableByteChannel,long) throws java.io.IOException
 meth public static org.apache.commons.io.LineIterator lineIterator(java.io.InputStream,java.lang.String)
@@ -1096,6 +1103,7 @@ meth public static void readFully(java.io.Reader,char[]) throws java.io.IOExcept
 meth public static void readFully(java.io.Reader,char[],int,int) throws java.io.IOException
 meth public static void readFully(java.nio.channels.ReadableByteChannel,java.nio.ByteBuffer) throws java.io.IOException
 meth public static void skipFully(java.io.InputStream,long) throws java.io.IOException
+meth public static void skipFully(java.io.InputStream,long,java.util.function.Supplier<byte[]>) throws java.io.IOException
 meth public static void skipFully(java.io.Reader,long) throws java.io.IOException
 meth public static void skipFully(java.nio.channels.ReadableByteChannel,long) throws java.io.IOException
 meth public static void write(byte[],java.io.OutputStream) throws java.io.IOException
@@ -1165,7 +1173,9 @@ hfds mode
 
 CLSS public org.apache.commons.io.RandomAccessFiles
 cons public init()
+meth public static boolean contentEquals(java.io.RandomAccessFile,java.io.RandomAccessFile) throws java.io.IOException
 meth public static byte[] read(java.io.RandomAccessFile,long,int) throws java.io.IOException
+meth public static java.io.RandomAccessFile reset(java.io.RandomAccessFile) throws java.io.IOException
 supr java.lang.Object
 
 CLSS public final !enum org.apache.commons.io.StandardLineSeparator
@@ -1178,6 +1188,16 @@ meth public static org.apache.commons.io.StandardLineSeparator valueOf(java.lang
 meth public static org.apache.commons.io.StandardLineSeparator[] values()
 supr java.lang.Enum<org.apache.commons.io.StandardLineSeparator>
 hfds lineSeparator
+
+CLSS public final org.apache.commons.io.StreamIterator<%0 extends java.lang.Object>
+intf java.lang.AutoCloseable
+intf java.util.Iterator<{org.apache.commons.io.StreamIterator%0}>
+meth public boolean hasNext()
+meth public static <%0 extends java.lang.Object> org.apache.commons.io.StreamIterator<{%%0}> iterator(java.util.stream.Stream<{%%0}>)
+meth public void close()
+meth public {org.apache.commons.io.StreamIterator%0} next()
+supr java.lang.Object
+hfds closed,iterator,stream
 
 CLSS public org.apache.commons.io.TaggedIOException
 cons public init(java.io.IOException,java.io.Serializable)
@@ -1340,10 +1360,12 @@ meth public !varargs {org.apache.commons.io.build.AbstractStreamBuilder%1} setOp
 meth public java.nio.charset.Charset getCharset()
 meth public {org.apache.commons.io.build.AbstractStreamBuilder%1} setBufferSize(int)
 meth public {org.apache.commons.io.build.AbstractStreamBuilder%1} setBufferSize(java.lang.Integer)
+meth public {org.apache.commons.io.build.AbstractStreamBuilder%1} setBufferSizeChecker(java.util.function.IntUnaryOperator)
+meth public {org.apache.commons.io.build.AbstractStreamBuilder%1} setBufferSizeMax(int)
 meth public {org.apache.commons.io.build.AbstractStreamBuilder%1} setCharset(java.lang.String)
 meth public {org.apache.commons.io.build.AbstractStreamBuilder%1} setCharset(java.nio.charset.Charset)
 supr org.apache.commons.io.build.AbstractOriginSupplier<{org.apache.commons.io.build.AbstractStreamBuilder%0},{org.apache.commons.io.build.AbstractStreamBuilder%1}>
-hfds DEFAULT_OPEN_OPTIONS,bufferSize,bufferSizeDefault,charset,charsetDefault,openOptions
+hfds DEFAULT_MAX_VALUE,DEFAULT_OPEN_OPTIONS,bufferSize,bufferSizeChecker,bufferSizeDefault,bufferSizeMax,charset,charsetDefault,defaultSizeChecker,openOptions
 
 CLSS public abstract org.apache.commons.io.build.AbstractSupplier<%0 extends java.lang.Object, %1 extends org.apache.commons.io.build.AbstractSupplier<{org.apache.commons.io.build.AbstractSupplier%0},{org.apache.commons.io.build.AbstractSupplier%1}>>
 cons public init()
@@ -1631,6 +1653,7 @@ meth public !varargs static java.nio.file.attribute.FileTime getLastModifiedTime
 meth public !varargs static java.nio.file.attribute.UserPrincipal getOwner(java.nio.file.Path,java.nio.file.LinkOption[])
 meth public !varargs static java.util.Map<java.lang.String,java.lang.Object> readAttributes(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[])
 meth public !varargs static java.util.Set<java.nio.file.attribute.PosixFilePermission> getPosixFilePermissions(java.nio.file.Path,java.nio.file.LinkOption[])
+meth public !varargs static java.util.stream.Stream<java.nio.file.Path> find(java.nio.file.Path,int,java.util.function.BiPredicate<java.nio.file.Path,java.nio.file.attribute.BasicFileAttributes>,java.nio.file.FileVisitOption[])
 meth public !varargs static java.util.stream.Stream<java.nio.file.Path> walk(java.nio.file.Path,int,java.nio.file.FileVisitOption[])
 meth public !varargs static java.util.stream.Stream<java.nio.file.Path> walk(java.nio.file.Path,java.nio.file.FileVisitOption[])
 meth public !varargs static long copy(java.io.InputStream,java.nio.file.Path,java.nio.file.CopyOption[])
@@ -1746,7 +1769,6 @@ meth public static java.nio.file.Path current()
 meth public static java.nio.file.Path getTempDirectory()
 meth public static java.nio.file.Path touch(java.nio.file.Path) throws java.io.IOException
 meth public static java.nio.file.attribute.BasicFileAttributes readBasicFileAttributes(java.nio.file.Path) throws java.io.IOException
- anno 0 java.lang.Deprecated()
 meth public static java.nio.file.attribute.BasicFileAttributes readBasicFileAttributesUnchecked(java.nio.file.Path)
  anno 0 java.lang.Deprecated()
 meth public static java.nio.file.attribute.FileTime getLastModifiedFileTime(java.io.File) throws java.io.IOException
@@ -1916,7 +1938,7 @@ meth public boolean accept(java.io.File)
 meth public boolean accept(java.io.File,java.lang.String)
 meth public java.lang.String toString()
 supr org.apache.commons.io.filefilter.AbstractFileFilter
-hfds fileFilter,filenameFilter,serialVersionUID
+hfds fileFilter,fileNameFilter,serialVersionUID
 
 CLSS public org.apache.commons.io.filefilter.DirectoryFileFilter
 cons protected init()
@@ -2034,9 +2056,11 @@ CLSS public abstract interface org.apache.commons.io.filefilter.IOFileFilter
 fld public final static java.lang.String[] EMPTY_STRING_ARRAY
 intf java.io.FileFilter
 intf java.io.FilenameFilter
+intf java.nio.file.PathMatcher
 intf org.apache.commons.io.file.PathFilter
 meth public abstract boolean accept(java.io.File)
 meth public abstract boolean accept(java.io.File,java.lang.String)
+meth public boolean matches(java.nio.file.Path)
 meth public java.nio.file.FileVisitResult accept(java.nio.file.Path,java.nio.file.attribute.BasicFileAttributes)
 meth public org.apache.commons.io.filefilter.IOFileFilter and(org.apache.commons.io.filefilter.IOFileFilter)
 meth public org.apache.commons.io.filefilter.IOFileFilter negate()
@@ -2104,6 +2128,13 @@ meth public boolean accept(java.io.File)
 meth public java.nio.file.FileVisitResult accept(java.nio.file.Path,java.nio.file.attribute.BasicFileAttributes)
 supr org.apache.commons.io.filefilter.AbstractFileFilter
 hfds path
+
+CLSS public org.apache.commons.io.filefilter.PathMatcherFileFilter
+cons public init(java.nio.file.PathMatcher)
+meth public boolean accept(java.io.File)
+meth public boolean matches(java.nio.file.Path)
+supr org.apache.commons.io.filefilter.AbstractFileFilter
+hfds pathMatcher
 
 CLSS public org.apache.commons.io.filefilter.PathVisitorFileFilter
 cons public init(org.apache.commons.io.file.PathVisitor)
@@ -2309,6 +2340,11 @@ meth public org.apache.commons.io.function.IOSupplier<{org.apache.commons.io.fun
 meth public org.apache.commons.io.function.IOSupplier<{org.apache.commons.io.function.IOFunction%1}> compose(org.apache.commons.io.function.IOSupplier<? extends {org.apache.commons.io.function.IOFunction%0}>)
 meth public static <%0 extends java.lang.Object> org.apache.commons.io.function.IOFunction<{%%0},{%%0}> identity()
 
+CLSS public abstract interface org.apache.commons.io.function.IOIntSupplier
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract int getAsInt() throws java.io.IOException
+meth public java.util.function.IntSupplier asIntSupplier()
+
 CLSS public abstract interface org.apache.commons.io.function.IOIterator<%0 extends java.lang.Object>
 meth public abstract boolean hasNext() throws java.io.IOException
 meth public abstract java.util.Iterator<{org.apache.commons.io.function.IOIterator%0}> unwrap()
@@ -2317,6 +2353,11 @@ meth public java.util.Iterator<{org.apache.commons.io.function.IOIterator%0}> as
 meth public static <%0 extends java.lang.Object> org.apache.commons.io.function.IOIterator<{%%0}> adapt(java.util.Iterator<{%%0}>)
 meth public void forEachRemaining(org.apache.commons.io.function.IOConsumer<? super {org.apache.commons.io.function.IOIterator%0}>) throws java.io.IOException
 meth public void remove() throws java.io.IOException
+
+CLSS public abstract interface org.apache.commons.io.function.IOLongSupplier
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract long getAsLong() throws java.io.IOException
+meth public java.util.function.LongSupplier asSupplier()
 
 CLSS public abstract interface org.apache.commons.io.function.IOPredicate<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
@@ -2429,7 +2470,13 @@ meth public static <%0 extends java.lang.Object> boolean test(org.apache.commons
 meth public static <%0 extends java.lang.Object> int compare(org.apache.commons.io.function.IOComparator<{%%0}>,{%%0},{%%0})
 meth public static <%0 extends java.lang.Object> void accept(org.apache.commons.io.function.IOConsumer<{%%0}>,{%%0})
 meth public static <%0 extends java.lang.Object> {%%0} get(org.apache.commons.io.function.IOSupplier<{%%0}>)
+meth public static <%0 extends java.lang.Object> {%%0} get(org.apache.commons.io.function.IOSupplier<{%%0}>,java.util.function.Supplier<java.lang.String>)
+meth public static int getAsInt(org.apache.commons.io.function.IOIntSupplier)
+meth public static int getAsInt(org.apache.commons.io.function.IOIntSupplier,java.util.function.Supplier<java.lang.String>)
+meth public static long getAsLong(org.apache.commons.io.function.IOLongSupplier)
+meth public static long getAsLong(org.apache.commons.io.function.IOLongSupplier,java.util.function.Supplier<java.lang.String>)
 meth public static void run(org.apache.commons.io.function.IORunnable)
+meth public static void run(org.apache.commons.io.function.IORunnable,java.util.function.Supplier<java.lang.String>)
 supr java.lang.Object
 
 CLSS abstract interface org.apache.commons.io.function.package-info
@@ -2727,6 +2774,7 @@ meth public org.apache.commons.io.input.MemoryMappedFileInputStream get() throws
 supr org.apache.commons.io.build.AbstractStreamBuilder<org.apache.commons.io.input.MemoryMappedFileInputStream,org.apache.commons.io.input.MemoryMappedFileInputStream$Builder>
 
 CLSS public org.apache.commons.io.input.MessageDigestCalculatingInputStream
+ anno 0 java.lang.Deprecated()
 cons public init(java.io.InputStream) throws java.security.NoSuchAlgorithmException
  anno 0 java.lang.Deprecated()
 cons public init(java.io.InputStream,java.lang.String) throws java.security.NoSuchAlgorithmException
@@ -2751,6 +2799,31 @@ hfds messageDigest
 
 CLSS public static org.apache.commons.io.input.MessageDigestCalculatingInputStream$MessageDigestMaintainingObserver
  outer org.apache.commons.io.input.MessageDigestCalculatingInputStream
+cons public init(java.security.MessageDigest)
+meth public void data(byte[],int,int) throws java.io.IOException
+meth public void data(int) throws java.io.IOException
+supr org.apache.commons.io.input.ObservableInputStream$Observer
+hfds messageDigest
+
+CLSS public final org.apache.commons.io.input.MessageDigestInputStream
+innr public static Builder
+innr public static MessageDigestMaintainingObserver
+meth public java.security.MessageDigest getMessageDigest()
+meth public static org.apache.commons.io.input.MessageDigestInputStream$Builder builder()
+supr org.apache.commons.io.input.ObservableInputStream
+hfds messageDigest
+
+CLSS public static org.apache.commons.io.input.MessageDigestInputStream$Builder
+ outer org.apache.commons.io.input.MessageDigestInputStream
+cons public init()
+meth public org.apache.commons.io.input.MessageDigestInputStream get() throws java.io.IOException
+meth public org.apache.commons.io.input.MessageDigestInputStream$Builder setMessageDigest(java.lang.String) throws java.security.NoSuchAlgorithmException
+meth public org.apache.commons.io.input.MessageDigestInputStream$Builder setMessageDigest(java.security.MessageDigest)
+supr org.apache.commons.io.build.AbstractStreamBuilder<org.apache.commons.io.input.MessageDigestInputStream,org.apache.commons.io.input.MessageDigestInputStream$Builder>
+hfds messageDigest
+
+CLSS public static org.apache.commons.io.input.MessageDigestInputStream$MessageDigestMaintainingObserver
+ outer org.apache.commons.io.input.MessageDigestInputStream
 cons public init(java.security.MessageDigest)
 meth public void data(byte[],int,int) throws java.io.IOException
 meth public void data(int) throws java.io.IOException
@@ -3678,6 +3751,7 @@ meth public boolean isInMemory()
 meth public byte[] getData()
 meth public java.io.File getFile()
 meth public java.io.InputStream toInputStream() throws java.io.IOException
+meth public java.nio.file.Path getPath()
 meth public static org.apache.commons.io.output.DeferredFileOutputStream$Builder builder()
 meth public void close() throws java.io.IOException
 meth public void writeTo(java.io.OutputStream) throws java.io.IOException
@@ -3689,7 +3763,9 @@ CLSS public static org.apache.commons.io.output.DeferredFileOutputStream$Builder
 cons public init()
 meth public org.apache.commons.io.output.DeferredFileOutputStream get()
 meth public org.apache.commons.io.output.DeferredFileOutputStream$Builder setDirectory(java.io.File)
+meth public org.apache.commons.io.output.DeferredFileOutputStream$Builder setDirectory(java.nio.file.Path)
 meth public org.apache.commons.io.output.DeferredFileOutputStream$Builder setOutputFile(java.io.File)
+meth public org.apache.commons.io.output.DeferredFileOutputStream$Builder setOutputFile(java.nio.file.Path)
 meth public org.apache.commons.io.output.DeferredFileOutputStream$Builder setPrefix(java.lang.String)
 meth public org.apache.commons.io.output.DeferredFileOutputStream$Builder setSuffix(java.lang.String)
 meth public org.apache.commons.io.output.DeferredFileOutputStream$Builder setThreshold(int)
@@ -3954,7 +4030,9 @@ supr org.apache.commons.io.output.ProxyCollectionWriter
 CLSS public org.apache.commons.io.output.ThresholdingOutputStream
 cons public init(int)
 cons public init(int,org.apache.commons.io.function.IOConsumer<org.apache.commons.io.output.ThresholdingOutputStream>,org.apache.commons.io.function.IOFunction<org.apache.commons.io.output.ThresholdingOutputStream,java.io.OutputStream>)
+meth protected java.io.OutputStream getOutputStream() throws java.io.IOException
 meth protected java.io.OutputStream getStream() throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth protected void checkThreshold(int) throws java.io.IOException
 meth protected void resetByteCount()
 meth protected void setByteCount(long)

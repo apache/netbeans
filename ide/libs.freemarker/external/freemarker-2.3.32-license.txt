@@ -1,11 +1,8 @@
-Name: Apache Commons IO
-Description: Assist with developing IO functionality
+Name: Apache FreeMarker
+Version: 2.3.32
 Origin: Apache Software Foundation
-Version: 2.13.0
-License: Apache-2.0
-URL: https://commons.apache.org/proper/commons-io/
-
-
+License: Apache-2.0-freemarker
+Description: Template engine
 
                                  Apache License
                            Version 2.0, January 2004
@@ -209,3 +206,23 @@ URL: https://commons.apache.org/proper/commons-io/
    See the License for the specific language governing permissions and
    limitations under the License.
 
+=========================================================================
+
+The source code contains the following binaries,
+which were created at the Apache FreeMarker project, and hence are
+covered by the same license as the other source files of it:
+
+  src/main/misc/overloadedNumberRules/prices.ods
+  src/manual/en_US/docgen-originals/figures/overview.odg
+  src/manual/en_US/docgen-originals/figures/model2sketch_with_alpha.png
+  src/manual/en_US/docgen-originals/figures/tree_with_alpha.png
+  src/manual/en_US/favicon.png
+  src/manual/en_US/figures/model2sketch.png
+  src/manual/en_US/figures/overview.png
+  src/manual/en_US/figures/tree.png
+  src/manual/en_US/logo.png
+  src/manual/zh_CN/favicon.png
+  src/manual/zh_CN/figures/model2sketch.png
+  src/manual/zh_CN/figures/overview.png
+  src/manual/zh_CN/figures/tree.png
+  src/manual/zh_CN/logo.png

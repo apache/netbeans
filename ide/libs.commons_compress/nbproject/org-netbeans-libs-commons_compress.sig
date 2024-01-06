@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.28.0
+#Version 0.29.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -289,12 +289,12 @@ cons public init(java.lang.String,java.lang.Exception)
 supr java.lang.Exception
 hfds serialVersionUID
 
-CLSS public abstract org.apache.commons.compress.archivers.ArchiveInputStream
+CLSS public abstract org.apache.commons.compress.archivers.ArchiveInputStream<%0 extends org.apache.commons.compress.archivers.ArchiveEntry>
 cons public init()
 meth protected void count(int)
 meth protected void count(long)
 meth protected void pushedBackBytes(long)
-meth public abstract org.apache.commons.compress.archivers.ArchiveEntry getNextEntry() throws java.io.IOException
+meth public abstract {org.apache.commons.compress.archivers.ArchiveInputStream%0} getNextEntry() throws java.io.IOException
 meth public boolean canReadEntryData(org.apache.commons.compress.archivers.ArchiveEntry)
 meth public int getCount()
  anno 0 java.lang.Deprecated()
@@ -303,15 +303,15 @@ meth public long getBytesRead()
 supr java.io.InputStream
 hfds BYTE_MASK,bytesRead,single
 
-CLSS public abstract org.apache.commons.compress.archivers.ArchiveOutputStream
+CLSS public abstract org.apache.commons.compress.archivers.ArchiveOutputStream<%0 extends org.apache.commons.compress.archivers.ArchiveEntry>
 cons public init()
 meth protected void count(int)
 meth protected void count(long)
-meth public !varargs org.apache.commons.compress.archivers.ArchiveEntry createArchiveEntry(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[]) throws java.io.IOException
-meth public abstract org.apache.commons.compress.archivers.ArchiveEntry createArchiveEntry(java.io.File,java.lang.String) throws java.io.IOException
+meth public !varargs {org.apache.commons.compress.archivers.ArchiveOutputStream%0} createArchiveEntry(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[]) throws java.io.IOException
 meth public abstract void closeArchiveEntry() throws java.io.IOException
 meth public abstract void finish() throws java.io.IOException
-meth public abstract void putArchiveEntry(org.apache.commons.compress.archivers.ArchiveEntry) throws java.io.IOException
+meth public abstract void putArchiveEntry({org.apache.commons.compress.archivers.ArchiveOutputStream%0}) throws java.io.IOException
+meth public abstract {org.apache.commons.compress.archivers.ArchiveOutputStream%0} createArchiveEntry(java.io.File,java.lang.String) throws java.io.IOException
 meth public boolean canWriteEntryData(org.apache.commons.compress.archivers.ArchiveEntry)
 meth public int getCount()
  anno 0 java.lang.Deprecated()
@@ -337,16 +337,16 @@ fld public final static java.lang.String XAPK = "xapk"
 fld public final static java.lang.String ZIP = "zip"
 fld public final static org.apache.commons.compress.archivers.ArchiveStreamFactory DEFAULT
 intf org.apache.commons.compress.archivers.ArchiveStreamProvider
+meth public <%0 extends org.apache.commons.compress.archivers.ArchiveInputStream<? extends org.apache.commons.compress.archivers.ArchiveEntry>> {%%0} createArchiveInputStream(java.io.InputStream) throws org.apache.commons.compress.archivers.ArchiveException
+meth public <%0 extends org.apache.commons.compress.archivers.ArchiveInputStream<? extends org.apache.commons.compress.archivers.ArchiveEntry>> {%%0} createArchiveInputStream(java.lang.String,java.io.InputStream) throws org.apache.commons.compress.archivers.ArchiveException
+meth public <%0 extends org.apache.commons.compress.archivers.ArchiveInputStream<? extends org.apache.commons.compress.archivers.ArchiveEntry>> {%%0} createArchiveInputStream(java.lang.String,java.io.InputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
+meth public <%0 extends org.apache.commons.compress.archivers.ArchiveOutputStream<? extends org.apache.commons.compress.archivers.ArchiveEntry>> {%%0} createArchiveOutputStream(java.lang.String,java.io.OutputStream) throws org.apache.commons.compress.archivers.ArchiveException
+meth public <%0 extends org.apache.commons.compress.archivers.ArchiveOutputStream<? extends org.apache.commons.compress.archivers.ArchiveEntry>> {%%0} createArchiveOutputStream(java.lang.String,java.io.OutputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
 meth public java.lang.String getEntryEncoding()
 meth public java.util.Set<java.lang.String> getInputStreamArchiveNames()
 meth public java.util.Set<java.lang.String> getOutputStreamArchiveNames()
 meth public java.util.SortedMap<java.lang.String,org.apache.commons.compress.archivers.ArchiveStreamProvider> getArchiveInputStreamProviders()
 meth public java.util.SortedMap<java.lang.String,org.apache.commons.compress.archivers.ArchiveStreamProvider> getArchiveOutputStreamProviders()
-meth public org.apache.commons.compress.archivers.ArchiveInputStream createArchiveInputStream(java.io.InputStream) throws org.apache.commons.compress.archivers.ArchiveException
-meth public org.apache.commons.compress.archivers.ArchiveInputStream createArchiveInputStream(java.lang.String,java.io.InputStream) throws org.apache.commons.compress.archivers.ArchiveException
-meth public org.apache.commons.compress.archivers.ArchiveInputStream createArchiveInputStream(java.lang.String,java.io.InputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
-meth public org.apache.commons.compress.archivers.ArchiveOutputStream createArchiveOutputStream(java.lang.String,java.io.OutputStream) throws org.apache.commons.compress.archivers.ArchiveException
-meth public org.apache.commons.compress.archivers.ArchiveOutputStream createArchiveOutputStream(java.lang.String,java.io.OutputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
 meth public static java.lang.String detect(java.io.InputStream) throws org.apache.commons.compress.archivers.ArchiveException
 meth public static java.util.SortedMap<java.lang.String,org.apache.commons.compress.archivers.ArchiveStreamProvider> findAvailableArchiveInputStreamProviders()
 meth public static java.util.SortedMap<java.lang.String,org.apache.commons.compress.archivers.ArchiveStreamProvider> findAvailableArchiveOutputStreamProviders()
@@ -356,10 +356,10 @@ supr java.lang.Object
 hfds DUMP_SIGNATURE_SIZE,SIGNATURE_SIZE,TAR_HEADER_SIZE,archiveInputStreamProviders,archiveOutputStreamProviders,encoding,entryEncoding
 
 CLSS public abstract interface org.apache.commons.compress.archivers.ArchiveStreamProvider
+meth public abstract <%0 extends org.apache.commons.compress.archivers.ArchiveInputStream<? extends org.apache.commons.compress.archivers.ArchiveEntry>> {%%0} createArchiveInputStream(java.lang.String,java.io.InputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
+meth public abstract <%0 extends org.apache.commons.compress.archivers.ArchiveOutputStream<? extends org.apache.commons.compress.archivers.ArchiveEntry>> {%%0} createArchiveOutputStream(java.lang.String,java.io.OutputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
 meth public abstract java.util.Set<java.lang.String> getInputStreamArchiveNames()
 meth public abstract java.util.Set<java.lang.String> getOutputStreamArchiveNames()
-meth public abstract org.apache.commons.compress.archivers.ArchiveInputStream createArchiveInputStream(java.lang.String,java.io.InputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
-meth public abstract org.apache.commons.compress.archivers.ArchiveOutputStream createArchiveOutputStream(java.lang.String,java.io.OutputStream,java.lang.String) throws org.apache.commons.compress.archivers.ArchiveException
 
 CLSS public abstract interface org.apache.commons.compress.archivers.EntryStreamOffsets
 fld public final static long OFFSET_UNKNOWN = -1
@@ -511,14 +511,15 @@ meth public int available() throws java.io.IOException
 meth public int getRecordSize()
 meth public int read(byte[],int,int) throws java.io.IOException
 meth public long skip(long) throws java.io.IOException
-meth public org.apache.commons.compress.archivers.ArchiveEntry getNextEntry() throws java.io.IOException
 meth public org.apache.commons.compress.archivers.tar.TarArchiveEntry getCurrentEntry()
+meth public org.apache.commons.compress.archivers.tar.TarArchiveEntry getNextEntry() throws java.io.IOException
 meth public org.apache.commons.compress.archivers.tar.TarArchiveEntry getNextTarEntry() throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public static boolean matches(byte[],int)
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset()
-supr org.apache.commons.compress.archivers.ArchiveInputStream
+supr org.apache.commons.compress.archivers.ArchiveInputStream<org.apache.commons.compress.archivers.tar.TarArchiveEntry>
 hfds SMALL_BUFFER_SIZE,blockSize,currEntry,currentSparseInputStreamIndex,encoding,entryOffset,entrySize,globalPaxHeaders,globalSparseHeaders,hasHitEOF,inputStream,lenient,recordBuffer,recordSize,smallBuf,sparseInputStreams,zipEncoding
 
 CLSS public org.apache.commons.compress.archivers.tar.TarArchiveOutputStream
@@ -537,23 +538,23 @@ fld public final static int LONGFILE_ERROR = 0
 fld public final static int LONGFILE_GNU = 2
 fld public final static int LONGFILE_POSIX = 3
 fld public final static int LONGFILE_TRUNCATE = 1
-meth public !varargs org.apache.commons.compress.archivers.ArchiveEntry createArchiveEntry(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[]) throws java.io.IOException
+meth public !varargs org.apache.commons.compress.archivers.tar.TarArchiveEntry createArchiveEntry(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[]) throws java.io.IOException
 meth public int getCount()
  anno 0 java.lang.Deprecated()
 meth public int getRecordSize()
  anno 0 java.lang.Deprecated()
 meth public long getBytesWritten()
-meth public org.apache.commons.compress.archivers.ArchiveEntry createArchiveEntry(java.io.File,java.lang.String) throws java.io.IOException
+meth public org.apache.commons.compress.archivers.tar.TarArchiveEntry createArchiveEntry(java.io.File,java.lang.String) throws java.io.IOException
 meth public void close() throws java.io.IOException
 meth public void closeArchiveEntry() throws java.io.IOException
 meth public void finish() throws java.io.IOException
 meth public void flush() throws java.io.IOException
-meth public void putArchiveEntry(org.apache.commons.compress.archivers.ArchiveEntry) throws java.io.IOException
+meth public void putArchiveEntry(org.apache.commons.compress.archivers.tar.TarArchiveEntry) throws java.io.IOException
 meth public void setAddPaxHeadersForNonAsciiNames(boolean)
 meth public void setBigNumberMode(int)
 meth public void setLongFileMode(int)
 meth public void write(byte[],int,int) throws java.io.IOException
-supr org.apache.commons.compress.archivers.ArchiveOutputStream
+supr org.apache.commons.compress.archivers.ArchiveOutputStream<org.apache.commons.compress.archivers.tar.TarArchiveEntry>
 hfds ASCII,BLOCK_SIZE_UNSPECIFIED,RECORD_SIZE,addPaxHeadersForNonAsciiNames,bigNumberMode,closed,countingOut,currBytes,currName,currSize,encoding,finished,haveUnclosedEntry,longFileMode,out,recordBuf,recordsPerBlock,recordsWritten,zipEncoding
 
 CLSS public org.apache.commons.compress.archivers.tar.TarArchiveSparseEntry
@@ -1402,11 +1403,12 @@ meth public int read(byte[],int,int) throws java.io.IOException
 meth public long getCompressedCount()
 meth public long getUncompressedCount()
 meth public long skip(long) throws java.io.IOException
-meth public org.apache.commons.compress.archivers.ArchiveEntry getNextEntry() throws java.io.IOException
+meth public org.apache.commons.compress.archivers.zip.ZipArchiveEntry getNextEntry() throws java.io.IOException
 meth public org.apache.commons.compress.archivers.zip.ZipArchiveEntry getNextZipEntry() throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public static boolean matches(byte[],int)
 meth public void close() throws java.io.IOException
-supr org.apache.commons.compress.archivers.ArchiveInputStream
+supr org.apache.commons.compress.archivers.ArchiveInputStream<org.apache.commons.compress.archivers.zip.ZipArchiveEntry>
 hfds APK_SIGNING_BLOCK_MAGIC,CFH,CFH_LEN,DD,LFH,LFH_LEN,LONG_MAX,TWO_EXP_32,USE_ZIPFILE_INSTEAD_OF_STREAM_DISCLAIMER,allowStoredEntriesWithDataDescriptor,buf,closed,current,encoding,entriesRead,hitCentralDirectory,inf,inputStream,lastStoredEntry,lfhBuf,shortBuf,skipBuf,skipSplitSig,twoDwordBuf,uncompressedCount,useUnicodeExtraFields,wordBuf,zipEncoding
 hcls BoundedInputStream,CurrentEntry
 
@@ -1433,18 +1435,18 @@ meth protected void writeCentralFileHeader(org.apache.commons.compress.archivers
 meth protected void writeDataDescriptor(org.apache.commons.compress.archivers.zip.ZipArchiveEntry) throws java.io.IOException
 meth protected void writeLocalFileHeader(org.apache.commons.compress.archivers.zip.ZipArchiveEntry) throws java.io.IOException
 meth protected void writeZip64CentralDirectory() throws java.io.IOException
-meth public !varargs org.apache.commons.compress.archivers.ArchiveEntry createArchiveEntry(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[]) throws java.io.IOException
+meth public !varargs org.apache.commons.compress.archivers.zip.ZipArchiveEntry createArchiveEntry(java.nio.file.Path,java.lang.String,java.nio.file.LinkOption[]) throws java.io.IOException
 meth public boolean canWriteEntryData(org.apache.commons.compress.archivers.ArchiveEntry)
 meth public boolean isSeekable()
 meth public java.lang.String getEncoding()
 meth public long getBytesWritten()
-meth public org.apache.commons.compress.archivers.ArchiveEntry createArchiveEntry(java.io.File,java.lang.String) throws java.io.IOException
+meth public org.apache.commons.compress.archivers.zip.ZipArchiveEntry createArchiveEntry(java.io.File,java.lang.String) throws java.io.IOException
 meth public void addRawArchiveEntry(org.apache.commons.compress.archivers.zip.ZipArchiveEntry,java.io.InputStream) throws java.io.IOException
 meth public void close() throws java.io.IOException
 meth public void closeArchiveEntry() throws java.io.IOException
 meth public void finish() throws java.io.IOException
 meth public void flush() throws java.io.IOException
-meth public void putArchiveEntry(org.apache.commons.compress.archivers.ArchiveEntry) throws java.io.IOException
+meth public void putArchiveEntry(org.apache.commons.compress.archivers.zip.ZipArchiveEntry) throws java.io.IOException
 meth public void setComment(java.lang.String)
 meth public void setCreateUnicodeExtraFields(org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream$UnicodeExtraFieldPolicy)
 meth public void setEncoding(java.lang.String)
@@ -1456,7 +1458,7 @@ meth public void setUseZip64(org.apache.commons.compress.archivers.zip.Zip64Mode
 meth public void write(byte[],int,int) throws java.io.IOException
 meth public void writePreamble(byte[]) throws java.io.IOException
 meth public void writePreamble(byte[],int,int) throws java.io.IOException
-supr org.apache.commons.compress.archivers.ArchiveOutputStream
+supr org.apache.commons.compress.archivers.ArchiveOutputStream<org.apache.commons.compress.archivers.zip.ZipArchiveEntry>
 hfds BUFFER_SIZE,CFH_COMMENT_LENGTH_OFFSET,CFH_COMPRESSED_SIZE_OFFSET,CFH_CRC_OFFSET,CFH_DISK_NUMBER_OFFSET,CFH_EXTERNAL_ATTRIBUTES_OFFSET,CFH_EXTRA_LENGTH_OFFSET,CFH_FILENAME_LENGTH_OFFSET,CFH_FILENAME_OFFSET,CFH_GPB_OFFSET,CFH_INTERNAL_ATTRIBUTES_OFFSET,CFH_LFH_OFFSET,CFH_METHOD_OFFSET,CFH_ORIGINAL_SIZE_OFFSET,CFH_SIG,CFH_SIG_OFFSET,CFH_TIME_OFFSET,CFH_VERSION_MADE_BY_OFFSET,CFH_VERSION_NEEDED_OFFSET,DD_SIG,DEFAULT_ENCODING,EOCD_SIG,LFH_COMPRESSED_SIZE_OFFSET,LFH_CRC_OFFSET,LFH_EXTRA_LENGTH_OFFSET,LFH_FILENAME_LENGTH_OFFSET,LFH_FILENAME_OFFSET,LFH_GPB_OFFSET,LFH_METHOD_OFFSET,LFH_ORIGINAL_SIZE_OFFSET,LFH_SIG,LFH_SIG_OFFSET,LFH_TIME_OFFSET,LFH_VERSION_NEEDED_OFFSET,LZERO,ONE,ZERO,ZIP64_EOCD_LOC_SIG,ZIP64_EOCD_SIG,cdDiskNumberStart,cdLength,cdOffset,channel,comment,copyBuffer,createUnicodeExtraFields,encoding,entries,entry,eocdLength,fallbackToUTF8,hasCompressionLevelChanged,hasUsedZip64,isSplitZip,level,metaData,method,numberOfCDInDiskData,outputStream,streamCompressor,useUTF8Flag,zip64Mode,zipEncoding
 hcls CurrentEntry,EntryMetaData
 
@@ -1500,7 +1502,7 @@ CLSS public abstract org.apache.commons.compress.archivers.zip.ZipEncodingHelper
 cons public init()
 meth public static org.apache.commons.compress.archivers.zip.ZipEncoding getZipEncoding(java.lang.String)
 supr java.lang.Object
-hfds UTF8,UTF8_ZIP_ENCODING
+hfds ZIP_ENCODING_UTF_8
 
 CLSS public abstract interface org.apache.commons.compress.archivers.zip.ZipExtraField
 fld public final static int EXTRAFIELD_HEADER_SIZE = 4

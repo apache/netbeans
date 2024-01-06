@@ -21,8 +21,11 @@
  */
 package org.netbeans.libs.freemarker;
 
-import javax.script.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import org.openide.filesystems.MIMEResolver;
 
 @MIMEResolver.Registration(displayName="#ResolverName", position=60378, resource="FreemarkerResolver.xml")
@@ -35,7 +38,7 @@ public class FreemarkerFactory implements ScriptEngineFactory {
 
     @Override
     public String getEngineVersion() {
-        return "2.3.30";
+        return "2.3.32";
     }
 
     @Override
@@ -50,7 +53,7 @@ public class FreemarkerFactory implements ScriptEngineFactory {
 
     @Override
     public String getLanguageVersion() {
-        return "2.3.30";
+        return "2.3.32";
     }
 
     @Override
@@ -144,15 +147,15 @@ public class FreemarkerFactory implements ScriptEngineFactory {
     private static final List<String> extensions;
     private static final List<String> mimeTypes;
     static {
-        ArrayList<String> n = new ArrayList<String>(2);
+        ArrayList<String> n = new ArrayList<>(2);
         n.add("FreeMarker");
         n.add("freemarker");
         names = Collections.unmodifiableList(n);
-        ArrayList<String> e = new ArrayList<String>(2);
+        ArrayList<String> e = new ArrayList<>(2);
         e.add("fm");
         e.add("ftl");
         extensions = Collections.unmodifiableList(e);
-        ArrayList<String> m = new ArrayList<String>(0);
+        ArrayList<String> m = new ArrayList<>(1);
         m.add("text/x-freemarker");
         mimeTypes = Collections.unmodifiableList(m);
     }

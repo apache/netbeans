@@ -36,6 +36,7 @@ public class FeatureGetCommand extends DbgpCommand {
         DATA_ENCODING,
         BREAKPOINT_LANGUAGES,
         BREAKPOINT_TYPES,
+        BREAKPOINT_DETAILS,
         MULTIPLE_SESSIONS,
         MAX_CHILDREN,
         MAX_DATA,
@@ -86,6 +87,10 @@ public class FeatureGetCommand extends DbgpCommand {
 
     public void setFeature(String name) {
         myName = name;
+    }
+
+    public String getFeature() {
+        return myName;
     }
 
     @Override

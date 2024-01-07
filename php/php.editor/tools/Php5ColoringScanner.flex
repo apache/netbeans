@@ -79,6 +79,7 @@ import org.netbeans.modules.web.common.api.ByteStack;
     private int parenBalanceInScripting = 0; // for named arguments [NETBEANS-4443] PHP 8.0
     private int parenBalanceInConst = 0; // for context sensitive lexer
     private int bracketBalanceInConst = 0; // for context sensitive lexer
+    private int braceBalanceInConst = 0; // for context sensitive lexer
     private boolean aspTagsAllowed;
     private boolean shortTagsAllowed;
     private boolean isInConst;
@@ -116,14 +117,21 @@ import org.netbeans.modules.web.common.api.ByteStack;
         /* remember the heredoc */
         final String heredoc;
         final int parenBalanceInScripting;
+        final int parenBalanceInConst;
+        final int bracketBalanceInConst;
+        final int braceBalanceInConst;
         final Deque<String> heredocStack;
 
-        LexerState(ByteStack stack, int zzState, int zzLexicalState, String heredoc, int parenBalanceInScripting, Deque<String> heredocStack) {
+        LexerState(ByteStack stack, int zzState, int zzLexicalState, String heredoc, int parenBalanceInScripting, Deque<String> heredocStack,
+                    int parenBalanceInConst, int bracketBalanceInConst, int braceBalanceInConst) {
             this.stack = stack;
             this.zzState = zzState;
             this.zzLexicalState = zzLexicalState;
             this.heredoc = heredoc;
             this.parenBalanceInScripting = parenBalanceInScripting;
+            this.parenBalanceInConst = parenBalanceInConst;
+            this.bracketBalanceInConst = bracketBalanceInConst;
+            this.braceBalanceInConst = braceBalanceInConst;
             this.heredocStack = heredocStack;
         }
 
@@ -143,24 +151,31 @@ import org.netbeans.modules.web.common.api.ByteStack;
                 && (this.zzLexicalState == state.zzLexicalState)
                 && ((this.heredoc == null && state.heredoc == null) || (this.heredoc != null && state.heredoc != null && this.heredoc.equals(state.heredoc))))
                 && (this.parenBalanceInScripting == state.parenBalanceInScripting)
+                && (this.parenBalanceInConst == state.parenBalanceInConst)
+                && (this.bracketBalanceInConst == state.bracketBalanceInConst)
+                && (this.braceBalanceInConst == state.braceBalanceInConst)
                 && (this.heredocStack.equals(state.heredocStack));
         }
 
         @Override
         public int hashCode() {
             int hash = 7;
-            hash = 29 * hash + Objects.hashCode(this.stack);
-            hash = 29 * hash + this.zzState;
-            hash = 29 * hash + this.zzLexicalState;
-            hash = 29 * hash + Objects.hashCode(this.heredoc);
-            hash = 29 * hash + this.parenBalanceInScripting;
-            hash = 29 * hash + Objects.hashCode(this.heredocStack);
+            hash = 73 * hash + Objects.hashCode(this.stack);
+            hash = 73 * hash + this.zzState;
+            hash = 73 * hash + this.zzLexicalState;
+            hash = 73 * hash + Objects.hashCode(this.heredoc);
+            hash = 73 * hash + this.parenBalanceInScripting;
+            hash = 73 * hash + this.parenBalanceInConst;
+            hash = 73 * hash + this.bracketBalanceInConst;
+            hash = 73 * hash + this.braceBalanceInConst;
+            hash = 73 * hash + Objects.hashCode(this.heredocStack);
             return hash;
         }
     }
 
     public LexerState getState() {
-        return new LexerState(stack.copyOf(), zzState, zzLexicalState, heredoc, parenBalanceInScripting, new ArrayDeque<>(heredocStack));
+        return new LexerState(stack.copyOf(), zzState, zzLexicalState, heredoc, parenBalanceInScripting, new ArrayDeque<>(heredocStack),
+                parenBalanceInConst, bracketBalanceInConst, braceBalanceInConst);
     }
 
     public void setState(LexerState state) {
@@ -169,6 +184,9 @@ import org.netbeans.modules.web.common.api.ByteStack;
         this.zzLexicalState = state.zzLexicalState;
         this.heredoc = state.heredoc;
         this.parenBalanceInScripting = state.parenBalanceInScripting;
+        this.parenBalanceInConst = state.parenBalanceInConst;
+        this.bracketBalanceInConst = state.bracketBalanceInConst;
+        this.braceBalanceInConst = state.braceBalanceInConst;
         this.heredocStack.clear();
         this.heredocStack.addAll(state.heredocStack);
     }
@@ -454,6 +472,7 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
     isInConst = true;
     parenBalanceInConst = 0;
     bracketBalanceInConst = 0;
+    braceBalanceInConst = 0;
     pushState(ST_PHP_LOOKING_FOR_CONSTANT_NAME);
     return PHPTokenId.PHP_CONST;
 }
@@ -478,15 +497,12 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
 }
 
 <ST_PHP_LOOKING_FOR_CONSTANT_NAME>{ANY_CHAR} {
-    if(parenBalanceInConst == 0 && bracketBalanceInConst == 0) {
-        isInConst = false;
-    }
     yypushback(1);
     popState();
 }
 
 <ST_PHP_IN_SCRIPTING>"," {
-    if (isInConst) {
+    if (isInConst && parenBalanceInConst == 0 && bracketBalanceInConst == 0 && braceBalanceInConst == 0) {
         pushState(ST_PHP_LOOKING_FOR_CONSTANT_NAME);
     } else if (parenBalanceInScripting > 0) {
         // [NETBEANS-4443] PHP 8.0 Named Arguments
@@ -732,6 +748,9 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
 }
 
 <ST_PHP_IN_SCRIPTING,ST_PHP_LOOKING_FOR_PROPERTY>{WHITESPACE}+ {
+    if (isInConst && parenBalanceInConst == 0 && bracketBalanceInConst == 0 && braceBalanceInConst == 0) {
+        pushState(ST_PHP_LOOKING_FOR_CONSTANT_NAME);
+    }
     return PHPTokenId.WHITESPACE;
 }
 
@@ -1002,11 +1021,15 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
         isInConst = false;
         parenBalanceInConst = 0;
         bracketBalanceInConst = 0;
+        braceBalanceInConst = 0;
     }
     return PHPTokenId.PHP_SEMICOLON;
 }
 
 <ST_PHP_IN_SCRIPTING>"{" {
+    if (isInConst) {
+        braceBalanceInConst++;
+    }
     return PHPTokenId.PHP_CURLY_OPEN;
 }
 
@@ -1020,6 +1043,9 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
     if (lastState != ST_PHP_IN_SCRIPTING && lastState != YYINITIAL) {
         // probably in some sub state -> "{$" or "${"
         popState();
+    }
+    if (isInConst) {
+        braceBalanceInConst--;
     }
     return PHPTokenId.PHP_CURLY_CLOSE;
 }
@@ -1553,6 +1579,9 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
 <ST_PHP_DOUBLE_QUOTES,ST_PHP_BACKQUOTE,ST_PHP_HEREDOC,ST_PHP_QUOTES_AFTER_VARIABLE>"{$" {
     yypushback(1);
     pushState(ST_PHP_IN_SCRIPTING);
+    if (isInConst) {
+        braceBalanceInConst++;
+    }
     return PHPTokenId.PHP_CURLY_OPEN;
 }
 

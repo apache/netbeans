@@ -75,7 +75,7 @@ public class Editor extends javax.swing.JFrame {
     private boolean safeSave;
 
     private int fileCounter = -1;
-    Map com2text = new HashMap();
+    private Map<Component, JTextComponent> com2text = new HashMap<>();
     
     private Impl impl = new Impl("org.netbeans.editor.Bundle"); // NOI18N
     
@@ -258,7 +258,7 @@ public class Editor extends javax.swing.JFrame {
     private boolean saveFile( Component comp, File file, boolean checkOverwrite ) {
         if( comp == null ) return false;
         tabPane.setSelectedComponent( comp );
-        JTextComponent edit = (JTextComponent)com2text.get( comp );
+        JTextComponent edit = com2text.get( comp );
         Document doc = edit.getDocument();
         
         if( checkOverwrite && file.exists() ) {
@@ -326,7 +326,7 @@ public class Editor extends javax.swing.JFrame {
     
     private boolean saveFile( Component comp ) {
         if( comp == null ) return false;
-        JTextComponent edit = (JTextComponent)com2text.get( comp );
+        JTextComponent edit = com2text.get( comp );
         Document doc = edit.getDocument();
         File file = (File)doc.getProperty( FILE );
         boolean created = ((Boolean)doc.getProperty( CREATED )).booleanValue();
@@ -336,7 +336,7 @@ public class Editor extends javax.swing.JFrame {
     
     private boolean saveAs( Component comp ) {
         if( comp == null ) return false;
-        JTextComponent edit = (JTextComponent)com2text.get( comp );
+        JTextComponent edit = com2text.get( comp );
         File file = (File)edit.getDocument().getProperty( FILE );
         
         fileChooser.setCurrentDirectory( file.getParentFile() );
@@ -399,7 +399,7 @@ public class Editor extends javax.swing.JFrame {
     }
 
     private void doCloseEditor(Component editor) {
-        JTextComponent editorPane = (JTextComponent ) com2text.get(editor);
+        JTextComponent editorPane = com2text.get(editor);
         if (editorPane != null) {
             File file = (File) editorPane.getDocument().getProperty(FILE);
 
@@ -412,7 +412,7 @@ public class Editor extends javax.swing.JFrame {
 
     private boolean checkClose( Component comp ) {
         if( comp == null ) return false;
-        JTextComponent edit = (JTextComponent)com2text.get( comp );
+        JTextComponent edit = com2text.get( comp );
         Document doc = edit.getDocument();
         
         Object mod = doc.getProperty( MODIFIED );
@@ -523,14 +523,14 @@ public class Editor extends javax.swing.JFrame {
     private int        separatorIndex;
     
     private String[] getOpenedFiles() {
-        ArrayList opened = new ArrayList();
+        List<String> opened = new ArrayList<>();
 
         int components = tabPane.getComponentCount();
 
         for (int cntr = 0; cntr < components; cntr++) {
             Component editorComponent = tabPane.getComponentAt( cntr );
 
-            JTextComponent editor = (JTextComponent) com2text.get(editorComponent);
+            JTextComponent editor = com2text.get(editorComponent);
 	    
 	    if (editor == null) {
 	        continue;
@@ -544,7 +544,7 @@ public class Editor extends javax.swing.JFrame {
             }
         }
 	
-        return (String []) opened.toArray(new String[opened.size()]);
+        return opened.toArray(new String[opened.size()]);
     }
     
     private int findInRecent(String fileToFind) {

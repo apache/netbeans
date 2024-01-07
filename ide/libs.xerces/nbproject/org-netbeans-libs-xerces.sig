@@ -1,3 +1,3 @@
 #Signature file v4.1
-#Version 1.59.0
+#Version 1.60.0
 

@@ -1,0 +1,51 @@
+bitCount(int i) : int
+byteValue() : byte
+compare(int x, int y) : int
+compareTo(Integer anotherInteger) : int
+compareUnsigned(int x, int y) : int
+decode(String nm) : Integer
+describeConstable() : Optional<Integer>
+divideUnsigned(int dividend, int divisor) : int
+doubleValue() : double
+equals(Object obj) : boolean
+floatValue() : float
+getInteger(String nm) : Integer
+getInteger(String nm, Integer val) : Integer
+getInteger(String nm, int val) : Integer
+hashCode() : int
+hashCode(int value) : int
+highestOneBit(int i) : int
+intValue() : int
+longValue() : long
+lowestOneBit(int i) : int
+max(int a, int b) : int
+min(int a, int b) : int
+numberOfLeadingZeros(int i) : int
+numberOfTrailingZeros(int i) : int
+parseInt(String s) : int
+parseInt(String s, int radix) : int
+parseInt(CharSequence s, int beginIndex, int endIndex, int radix) : int
+parseUnsignedInt(String s) : int
+parseUnsignedInt(String s, int radix) : int
+parseUnsignedInt(CharSequence s, int beginIndex, int endIndex, int radix) : int
+remainderUnsigned(int dividend, int divisor) : int
+resolveConstantDesc(Lookup lookup) : Integer
+reverse(int i) : int
+reverseBytes(int i) : int
+rotateLeft(int i, int distance) : int
+rotateRight(int i, int distance) : int
+shortValue() : short
+signum(int i) : int
+sum(int a, int b) : int
+toBinaryString(int i) : String
+toHexString(int i) : String
+toOctalString(int i) : String
+toString() : String
+toString(int i) : String
+toString(int i, int radix) : String
+toUnsignedLong(int x) : long
+toUnsignedString(int i) : String
+toUnsignedString(int i, int radix) : String
+valueOf(String s) : Integer
+valueOf(int i) : Integer
+valueOf(String s, int radix) : Integer

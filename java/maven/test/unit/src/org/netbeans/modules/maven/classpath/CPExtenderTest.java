@@ -61,8 +61,8 @@ public class CPExtenderTest extends NbTestCase {
 
     @RandomlyFails // frequently fails in NB-Core-Build; [CPExtender] checkLibraryForPoms on Library[Stuff] -> true and [Utilities] WORKDIR/o.n.m.m.c.C/testAddRemovePomLib/pom.xml@1:2: CHILD_REMOVED:org.netbeans.modules.maven.model.pom.impl.ProjectImpl$PList@4 yet [Utilities] no changes in org.openide.loaders.XMLDataObject@c[WORKDIR/o.n.m.m.c.C/testAddRemovePomLib/pom.xml@1:2] where modified=true
     public void testAddRemovePomLib() throws Exception {
-        Library lib = LibraryManager.getDefault().createLibrary("j2se", "Stuff", Collections.singletonMap("maven-pom", Collections.singletonList(new URL("https://repo1.maven.org/maven2/grp/stuff/1.0/stuff-1.0.pom"))));
-        Library lib2 = LibraryManager.getDefault().createLibrary("j2se", "Stuff2", Collections.singletonMap("maven-pom", Collections.singletonList(new URL("https://repo1.maven.org/maven2/grp/stuff/2.0/stuff-2.0.pom"))));
+        Library lib = LibraryManager.getDefault().createLibrary("j2se", "Stuff", Collections.singletonMap("maven-pom", Collections.singletonList(new URL("https://repo.maven.apache.org/maven2/grp/stuff/1.0/stuff-1.0.pom"))));
+        Library lib2 = LibraryManager.getDefault().createLibrary("j2se", "Stuff2", Collections.singletonMap("maven-pom", Collections.singletonList(new URL("https://repo.maven.apache.org/maven2/grp/stuff/2.0/stuff-2.0.pom"))));
         FileObject d = FileUtil.toFileObject(getWorkDir());
         TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
                 + "<groupId>test</groupId><artifactId>prj</artifactId>"

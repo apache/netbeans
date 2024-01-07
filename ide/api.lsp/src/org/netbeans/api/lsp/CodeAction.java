@@ -19,13 +19,14 @@
 package org.netbeans.api.lsp;
 
 /**
- *An action over the code.
+ * An action over the code.
  *
  * @since 1.3
  */
 public class CodeAction {
 
     private final String title;
+    private final String kind;
     private final Command command;
     private final WorkspaceEdit edit;
 
@@ -57,7 +58,21 @@ public class CodeAction {
      * @param edit the {@code WorkspaceEdit} that should be performed
      */
     public CodeAction(String title, Command command, WorkspaceEdit edit) {
+        this(title, null, command, edit);
+    }
+
+    /**
+     * Construct the {@code CodeAction}.
+     *
+     * @param title the name of the action
+     * @param kind optional kind of the action
+     * @param command the command that should be invoked
+     * @param edit the {@code WorkspaceEdit} that should be performed
+     * @since 1.23
+     */
+    public CodeAction(String title, String kind, Command command, WorkspaceEdit edit) {
         this.title = title;
+        this.kind = kind;
         this.command = command;
         this.edit = edit;
     }
@@ -69,6 +84,16 @@ public class CodeAction {
      */
     public String getTitle() {
         return title;
+    }
+
+    /**
+     * Return the kind of the action.
+     *
+     * @return the kind of the action
+     * @since 1.23
+     */
+    public String getKind() {
+        return kind;
     }
 
     /**

@@ -45,7 +45,7 @@ public class MirrorGenerator extends AbstractGenerator<SettingsModel> {
         
         @Override
         public List<? extends CodeGenerator> create(Lookup context) {
-            ArrayList<CodeGenerator> toRet = new ArrayList<CodeGenerator>();
+            ArrayList<CodeGenerator> toRet = new ArrayList<>();
             SettingsModel model = context.lookup(SettingsModel.class);
             JTextComponent component = context.lookup(JTextComponent.class);
             if (model != null) {

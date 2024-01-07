@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.php.editor.model.impl;
 
+import static org.junit.Assert.assertArrayEquals;
+
 /**
  *
  * @author Ondrej Brejla <obrejla@netbeans.org>
@@ -42,4 +44,203 @@ public class TypeTest extends ModelTestBase {
         assertFalse(Type.isArray("\\Foo\\Bar"));
     }
 
+    public void testSplitTypes_01() throws Exception {
+        String declaredTypes = "Foo";
+        assertArrayEquals(new String[]{"Foo"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypes_02() throws Exception {
+        String declaredTypes = "\\Foo";
+        assertArrayEquals(new String[]{"\\Foo"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypes_03() throws Exception {
+        String declaredTypes = "  \\Foo\\Bar  ";
+        assertArrayEquals(new String[]{"\\Foo\\Bar"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesNullableType_01() throws Exception {
+        String declaredTypes = "?Foo";
+        assertArrayEquals(new String[]{"?Foo"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesNullableType_02() throws Exception {
+        String declaredTypes = "?\\Foo\\Bar";
+        assertArrayEquals(new String[]{"?\\Foo\\Bar"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesUnionType_01() throws Exception {
+        String declaredTypes = "string|int|null";
+        assertArrayEquals(new String[]{"string", "int", "null"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesUnionType_02() throws Exception {
+        String declaredTypes = "\\Foo\\Bar|\\Baz|null";
+        assertArrayEquals(new String[]{"\\Foo\\Bar", "\\Baz", "null"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesUnionType_03() throws Exception {
+        String declaredTypes = "\\Foo\\Bar   |  \\Baz | null";
+        assertArrayEquals(new String[]{"\\Foo\\Bar", "\\Baz", "null"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesIntersectionType_01() throws Exception {
+        String declaredTypes = "string&int&null";
+        assertArrayEquals(new String[]{"string", "int", "null"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesIntersectionType_02() throws Exception {
+        String declaredTypes = "\\Foo\\Bar&\\Baz&null";
+        assertArrayEquals(new String[]{"\\Foo\\Bar", "\\Baz", "null"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesIntersectionType_03() throws Exception {
+        String declaredTypes = "\\Foo\\Bar   &  \\Baz & null";
+        assertArrayEquals(new String[]{"\\Foo\\Bar", "\\Baz", "null"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesDNFType_01() throws Exception {
+        String declaredTypes = "(X&Y)|Z";
+        assertArrayEquals(new String[]{"X", "Y", "Z"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesDNFType_02() throws Exception {
+        String declaredTypes = "X|(Y&Z)";
+        assertArrayEquals(new String[]{"X", "Y", "Z"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesDNFType_03() throws Exception {
+        String declaredTypes = "(X&Y)|(Y&Z)";
+        assertArrayEquals(new String[]{"X", "Y", "Y", "Z"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesDNFType_04() throws Exception {
+        String declaredTypes = "X|(Y&Z)|Z";
+        assertArrayEquals(new String[]{"X", "Y", "Z", "Z"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesDNFType_05() throws Exception {
+        String declaredTypes = "(\\NS1\\Test1&\\NS2\\Test2)|\\Test3";
+        assertArrayEquals(new String[]{"\\NS1\\Test1", "\\NS2\\Test2", "\\Test3"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesDNFType_06() throws Exception {
+        String declaredTypes = "\\NS3\\Test3  |  (\\NS1\\Test1&\\NS2\\Test2)";
+        assertArrayEquals(new String[]{"\\NS3\\Test3","\\NS1\\Test1", "\\NS2\\Test2"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesDNFType_07() throws Exception {
+        String declaredTypes = "(\\NS3\\Test3&Test1)  |  (\\NS1\\Test1&\\NS2\\Test2)";
+        assertArrayEquals(new String[]{"\\NS3\\Test3", "Test1", "\\NS1\\Test1", "\\NS2\\Test2"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesDNFType_08() throws Exception {
+        String declaredTypes = "(\\NS3\\Test3&Test1)|(\\NS1\\Test1&\\NS2\\Test2)";
+        assertArrayEquals(new String[]{"\\NS3\\Test3", "Test1", "\\NS1\\Test1", "\\NS2\\Test2"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testSplitTypesDNFType_09() throws Exception {
+        String declaredTypes = "  (\\NS3\\Test3&Test1)|(\\NS1\\Test1&\\NS2\\Test2)  ";
+        assertArrayEquals(new String[]{"\\NS3\\Test3", "Test1", "\\NS1\\Test1", "\\NS2\\Test2"}, Type.splitTypes(declaredTypes));
+    }
+
+    public void testToTypeTemplate_01() throws Exception {
+        String declaredTypes = "Foo";
+        assertEquals("%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplate_02() throws Exception {
+        String declaredTypes = "\\Foo";
+        assertEquals("%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplate_03() throws Exception {
+        String declaredTypes = "  \\Foo\\Bar  ";
+        assertEquals("%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateNullableType_01() throws Exception {
+        String declaredTypes = "?Foo";
+        assertEquals("?%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateNullableType_02() throws Exception {
+        String declaredTypes = "?\\Foo\\Bar";
+        assertEquals("?%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateUnionType_01() throws Exception {
+        String declaredTypes = "string|int|null";
+        assertEquals("%s|%s|%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateUnionType_02() throws Exception {
+        String declaredTypes = "\\Foo\\Bar|\\Baz|null";
+        assertEquals("%s|%s|%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateUnionType_03() throws Exception {
+        String declaredTypes = "\\Foo\\Bar   |  \\Baz | null";
+        assertEquals("%s|%s|%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateIntersectionType_01() throws Exception {
+        String declaredTypes = "string&int&null";
+        assertEquals("%s&%s&%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateIntersectionType_02() throws Exception {
+        String declaredTypes = "\\Foo\\Bar&\\Baz&null";
+        assertEquals("%s&%s&%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateIntersectionType_03() throws Exception {
+        String declaredTypes = "\\Foo\\Bar   &  \\Baz & null";
+        assertEquals("%s&%s&%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateDNFType_01() throws Exception {
+        String declaredTypes = "(X&Y)|Z";
+        assertEquals("(%s&%s)|%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateDNFType_02() throws Exception {
+        String declaredTypes = "X|(Y&Z)";
+        assertEquals("%s|(%s&%s)", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateDNFType_03() throws Exception {
+        String declaredTypes = "(X&Y)|(Y&Z)";
+        assertEquals("(%s&%s)|(%s&%s)", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateDNFType_04() throws Exception {
+        String declaredTypes = "X|(Y&Z)|Z";
+        assertEquals("%s|(%s&%s)|%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateDNFType_05() throws Exception {
+        String declaredTypes = "(\\NS1\\Test1&\\NS2\\Test2)|\\Test3";
+        assertEquals("(%s&%s)|%s", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateDNFType_06() throws Exception {
+        String declaredTypes = "\\NS3\\Test3  |  (\\NS1\\Test1&\\NS2\\Test2)";
+        assertEquals("%s|(%s&%s)", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateDNFType_07() throws Exception {
+        String declaredTypes = "(\\NS3\\Test3&Test1)  |  (\\NS1\\Test1&\\NS2\\Test2)";
+        assertEquals("(%s&%s)|(%s&%s)", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateDNFType_08() throws Exception {
+        String declaredTypes = "(\\NS3\\Test3&Test1)|(\\NS1\\Test1&\\NS2\\Test2)";
+        assertEquals("(%s&%s)|(%s&%s)", Type.toTypeTemplate(declaredTypes));
+    }
+
+    public void testToTypeTemplateDNFType_09() throws Exception {
+        String declaredTypes = "  (\\NS3\\Test3&Test1)|(\\NS1\\Test1&\\NS2\\Test2)  ";
+        assertEquals("(%s&%s)|(%s&%s)", Type.toTypeTemplate(declaredTypes));
+    }
 }

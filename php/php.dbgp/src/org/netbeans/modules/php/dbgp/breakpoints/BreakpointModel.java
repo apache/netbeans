@@ -49,10 +49,12 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
     public static final String CURRENT_LINE_CONDITIONAL_BREAKPOINT = "org/netbeans/modules/debugger/resources/breakpointsView/ConditionalBreakpointHit"; // NOI18N
     public static final String DISABLED_LINE_CONDITIONAL_BREAKPOINT = "org/netbeans/modules/debugger/resources/breakpointsView/DisabledConditionalBreakpoint"; // NOI18N
     public static final String BROKEN_LINE_BREAKPOINT = "org/netbeans/modules/debugger/resources/breakpointsView/Breakpoint_broken"; // NOI18N
+    public static final String BROKEN_BREAKPOINT = "org/netbeans/modules/debugger/resources/breakpointsView/NonLineBreakpoint_broken"; // NOI18N
     private static final String METHOD = "TXT_Method"; // NOI18N
     private static final String EXCEPTION = "TXT_Exception"; // NOI18N
     private static final String PARENS = "()"; // NOI18N
     private final Map<DebugSession, AbstractBreakpoint> myCurrentBreakpoints;
+    private volatile boolean searchCurrentBreakpointById = false;
 
     public BreakpointModel() {
         myCurrentBreakpoints = new WeakHashMap<>();
@@ -99,8 +101,7 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
             if (!breakpoint.isEnabled()) {
                 return DISABLED_LINE_BREAKPOINT;
             } else {
-                VALIDITY validity = breakpoint.getValidity();
-                if (validity.equals(VALIDITY.VALID) || validity.equals(VALIDITY.UNKNOWN)) {
+                if (Utils.isValid(breakpoint)) {
                     return LINE_BREAKPOINT;
                 } else {
                     return BROKEN_LINE_BREAKPOINT;
@@ -110,8 +111,13 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
             AbstractBreakpoint breakpoint = (AbstractBreakpoint) node;
             if (!breakpoint.isEnabled()) {
                 return DISABLED_BREAKPOINT;
+            } else {
+                if (Utils.isValid(breakpoint)) {
+                    return BREAKPOINT;
+                } else {
+                    return BROKEN_BREAKPOINT;
+                }
             }
-            return BREAKPOINT;
         }
         throw new UnknownTypeException(node);
     }
@@ -174,19 +180,53 @@ public class BreakpointModel extends ViewModelSupport implements NodeModel {
                 continue;
             }
             if (acceptor.accept(breakpoint)) {
-                AbstractBreakpoint abpnt = (AbstractBreakpoint) breakpoint;
-                synchronized (myCurrentBreakpoints) {
-                    AbstractBreakpoint bpnt = myCurrentBreakpoints.get(session);
-                    myCurrentBreakpoints.put(session, abpnt);
-                    fireChangeEvents(new ModelEvent[]{
-                        new ModelEvent.NodeChanged(this, bpnt),
-                        new ModelEvent.NodeChanged(this, abpnt)
-                    });
-                }
+                updateCurrentBreakpoint(session, breakpoint);
                 return true;
             }
         }
         return false;
+    }
+
+    public void setCurrentBreakpoint(DebugSession session, String id) {
+        Breakpoint[] breakpoints = DebuggerManager.getDebuggerManager().getBreakpoints();
+        for (Breakpoint breakpoint : breakpoints) {
+            if (canSetCurrentBreakPoint(session, breakpoint, id)) {
+                updateCurrentBreakpoint(session, breakpoint);
+                break;
+            }
+        }
+    }
+
+    private boolean canSetCurrentBreakPoint(DebugSession session, Breakpoint breakpoint, String id) {
+        if (Utils.isValid(breakpoint) && breakpoint instanceof AbstractBreakpoint) {
+            AbstractBreakpoint abstractBreakpoint = (AbstractBreakpoint) breakpoint;
+            if (abstractBreakpoint.isSessionRelated(session)
+                    && abstractBreakpoint.isEnabled()
+                    && abstractBreakpoint.getBreakpointId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void updateCurrentBreakpoint(DebugSession session, Breakpoint breakpoint) {
+        AbstractBreakpoint abpnt = (AbstractBreakpoint) breakpoint;
+        synchronized (myCurrentBreakpoints) {
+            AbstractBreakpoint bpnt = myCurrentBreakpoints.get(session);
+            myCurrentBreakpoints.put(session, abpnt);
+            fireChangeEvents(new ModelEvent[]{
+                new ModelEvent.NodeChanged(this, bpnt),
+                new ModelEvent.NodeChanged(this, abpnt)
+            });
+        }
+    }
+
+    public void setSearchCurrentBreakpointById(boolean flag) {
+        searchCurrentBreakpointById = flag;
+    }
+
+    public boolean isSearchCurrentBreakpointById() {
+        return searchCurrentBreakpointById;
     }
 
     private interface Acceptor {

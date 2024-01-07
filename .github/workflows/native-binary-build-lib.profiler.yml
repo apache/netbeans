@@ -51,9 +51,13 @@ name: NetBeans Profiler Libraries
 
 
 on:
-  # Triggers the workflow on push or pull request events but only for
-  # relevant paths
   push:
+    branches:
+      - 'master'
+      - 'delivery'
+      - 'release*'
+    # Triggers the workflow on push or pull request events but only for
+    # relevant paths
     paths:
       - .github/workflows/native-binary-build-lib.profiler.y*
       - profiler/lib.profiler/**

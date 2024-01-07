@@ -19,10 +19,15 @@
 package org.openide;
 
 import java.awt.GraphicsEnvironment;
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.netbeans.junit.*;
+import org.openide.NotifyDescriptor.InputLine;
 
 /** Testing issue 56878.
  * @author  Jiri Rechtacek
@@ -91,5 +96,42 @@ public class NotifyDescriptorTest extends NbTestCase {
 
         dd.setNoDefaultClose( false );
         assertEquals( JDialog.DISPOSE_ON_CLOSE, dlg.getDefaultCloseOperation() );
-}
+    }
+
+    public void testInputLineInputEvents() throws BadLocationException {
+        JTextField input = new JTextField();
+        InputLine il = new InputLine("test", "test") {
+            @Override
+            JTextField createTextField() {
+                return input;
+            }
+        };
+        List<PropertyChangeEvent> events = new ArrayList<>();
+
+        il.addPropertyChangeListener(evt -> events.add(evt));
+
+        il.setInputText("new text 1");
+        input.getDocument().insertString(0, "a", null);
+        input.getDocument().remove(0, 1);
+
+        assertEquals(events.toString(), 0, events.size());
+
+        il.setInputTextEventEnabled(true);
+        il.setInputText("new text 2");
+
+        assertEquals(events.toString(), 1, events.size());
+
+        events.clear();
+
+        input.getDocument().insertString(0, "a", null);
+
+        assertEquals(events.toString(), 1, events.size());
+
+        events.clear();
+        input.getDocument().remove(0, 1);
+
+        assertEquals(events.toString(), 1, events.size());
+
+        events.clear();
+    }
 }

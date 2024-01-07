@@ -716,7 +716,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     annotations.add(genUtils.createAnnotation(enterprisePrefix + ".persistence.Basic", basicAnnArguments)); //NOI18N
                     //Add @NotNull constraint
                     if (generateValidationConstraints && !m.isAutoIncrement()) {   //NOI18N
-                        annotations.add(genUtils.createAnnotation("javax.validation.constraints.NotNull")); //NOI18N
+                        annotations.add(genUtils.createAnnotation(enterprisePrefix + ".validation.constraints.NotNull")); //NOI18N
                     }
                 }
 
@@ -765,7 +765,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                             sizeAnnArguments.add(genUtils.createAnnotationArgument("min", 1));  //NOI18N
                         }
                         sizeAnnArguments.add(genUtils.createAnnotationArgument("max", length)); //NOI18N
-                        annotations.add(genUtils.createAnnotation("javax.validation.constraints.Size", sizeAnnArguments));   //NOI18N
+                        annotations.add(genUtils.createAnnotation(enterprisePrefix + ".validation.constraints.Size", sizeAnnArguments));   //NOI18N
                     }
                 }
                 if (isDecimalType(memberType) && !decimalCommentExist) {
@@ -954,7 +954,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     }
                     if (xmlTransient) {
                         AnnotationTree xmlTransientAn = genUtils.createAnnotation(
-                                "javax.xml.bind.annotation.XmlTransient"); //NOI18N
+                                enterprisePrefix + ".xml.bind.annotation.XmlTransient"); //NOI18N
                         TypeElement jsonIgnore = moduleElement != null
                                 ? copy.getElements().getTypeElement(
                                         moduleElement,
@@ -1124,7 +1124,7 @@ public class JavaPersistenceGenerator implements PersistenceGenerator {
                     }
 
                     if (generateJAXBAnnotations) {
-                        newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation("javax.xml.bind.annotation.XmlRootElement"));//NOI18N
+                        newClassTree = genUtils.addAnnotation(newClassTree, genUtils.createAnnotation(enterprisePrefix + ".xml.bind.annotation.XmlRootElement"));//NOI18N
                         /**
                          * see #228733
                          * if(jaxbOrder) {

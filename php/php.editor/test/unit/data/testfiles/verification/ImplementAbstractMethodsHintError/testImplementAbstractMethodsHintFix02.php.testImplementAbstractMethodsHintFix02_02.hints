@@ -1,5 +1,4 @@
 $a = new class implements Iface {
-     
+         -----
 HINT:Anonymous class is not abstract and does not override abstract method  test1() in \Iface
 FIX:Implement All Abstract Methods
-};

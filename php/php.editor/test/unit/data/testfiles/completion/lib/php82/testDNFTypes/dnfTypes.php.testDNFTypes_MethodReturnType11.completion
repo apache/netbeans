@@ -1,0 +1,9 @@
+Code completion result for source line:
+$this->methodTag()->|publicXMethod(); // ClassX|(ClassX&ClassZ)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticXMethod()           [STATIC]   ClassX
+METHOD     publicStaticZMethod()           [STATIC]   ClassZ
+METHOD     publicXMethod()                 [PUBLIC]   ClassX
+METHOD     publicZMethod()                 [PUBLIC]   ClassZ
+VARIABLE   (ClassY&ClassZ)|ClassX publicX  [PUBLIC]   ClassX
+VARIABLE   (ClassY&ClassZ)|ClassX publicZ  [PUBLIC]   ClassZ

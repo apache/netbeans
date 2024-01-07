@@ -41,6 +41,9 @@ import javax.lang.model.util.Elements;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.queries.UnitTestForSourceQuery;
 import org.netbeans.api.java.source.CancellableTask;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -48,8 +51,10 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods;
 import org.netbeans.modules.java.testrunner.ui.spi.ComputeTestMethods.Factory;
+import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -209,6 +214,35 @@ public final class TestClassInfoTask implements CancellableTask<CompilationContr
             public List<TestMethod> computeTestMethods(CompilationInfo info) {
                 return TestClassInfoTask.computeTestMethods(info, cancel, -1);
             }
+        }
+
+    }
+
+    @MimeRegistration(mimeType="text/x-java", service=org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods.class)
+    public static final class TestNGComputeTestMethodsImpl implements org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods {
+
+        @Override
+        public List<TestMethod> computeTestMethods(Parser.Result parserResult, AtomicBoolean cancel) {
+            try {
+                CompilationController cc = CompilationController.get(parserResult);
+                if (isTestSource(cc.getFileObject()) && cc.toPhase(Phase.ELEMENTS_RESOLVED).compareTo(Phase.ELEMENTS_RESOLVED) >= 0) {
+                    return TestClassInfoTask.computeTestMethods(cc, cancel, -1);
+                }
+            } catch (Exception ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            return Collections.emptyList();
+        }
+
+        private static boolean isTestSource(FileObject fo) {
+            ClassPath cp = ClassPath.getClassPath(fo, ClassPath.SOURCE);
+            if (cp != null) {
+                FileObject root = cp.findOwnerRoot(fo);
+                if (root != null) {
+                    return UnitTestForSourceQuery.findSources(root).length > 0;
+                }
+            }
+            return false;
         }
 
     }

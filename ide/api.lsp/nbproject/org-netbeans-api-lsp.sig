@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.18
+#Version 1.20
 
 CLSS public abstract interface java.io.Serializable
 
@@ -317,6 +317,55 @@ meth public java.lang.String getNewFile()
 supr org.netbeans.api.lsp.ResourceOperation
 hfds newFile
 
+CLSS public final org.netbeans.api.lsp.SignatureInformation
+innr public final static !enum TriggerKind
+innr public final static Context
+innr public final static ParameterInformation
+meth public boolean isActive()
+meth public java.lang.String getDocumentation()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.lang.String getLabel()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.List<org.netbeans.api.lsp.SignatureInformation$ParameterInformation> getParameters()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public static void collect(javax.swing.text.Document,int,org.netbeans.api.lsp.SignatureInformation$Context,java.util.function.Consumer<org.netbeans.api.lsp.SignatureInformation>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds documentation,isActive,label,params
+
+CLSS public final static org.netbeans.api.lsp.SignatureInformation$Context
+ outer org.netbeans.api.lsp.SignatureInformation
+cons public init(org.netbeans.api.lsp.SignatureInformation$TriggerKind,java.lang.Character)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+meth public java.lang.Character getTriggerCharacter()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public org.netbeans.api.lsp.SignatureInformation$TriggerKind getTriggerKind()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds triggerCharacter,triggerKind
+
+CLSS public final static org.netbeans.api.lsp.SignatureInformation$ParameterInformation
+ outer org.netbeans.api.lsp.SignatureInformation
+meth public boolean isActive()
+meth public java.lang.String getDocumentation()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.lang.String getLabel()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds documentation,isActive,label
+
+CLSS public final static !enum org.netbeans.api.lsp.SignatureInformation$TriggerKind
+ outer org.netbeans.api.lsp.SignatureInformation
+fld public final static org.netbeans.api.lsp.SignatureInformation$TriggerKind ContentChange
+fld public final static org.netbeans.api.lsp.SignatureInformation$TriggerKind Invoked
+fld public final static org.netbeans.api.lsp.SignatureInformation$TriggerKind TriggerCharacter
+meth public static org.netbeans.api.lsp.SignatureInformation$TriggerKind valueOf(java.lang.String)
+meth public static org.netbeans.api.lsp.SignatureInformation$TriggerKind[] values()
+supr java.lang.Enum<org.netbeans.api.lsp.SignatureInformation$TriggerKind>
+
 CLSS public final org.netbeans.api.lsp.StructureElement
 innr public final static !enum Kind
 innr public final static !enum Tag
@@ -539,6 +588,30 @@ CLSS public abstract interface org.netbeans.spi.lsp.HyperlinkTypeDefLocationProv
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="HyperlinkTypeDefLocationProviders")
 meth public abstract java.util.concurrent.CompletableFuture<org.netbeans.api.lsp.HyperlinkLocation> getHyperlinkTypeDefLocation(javax.swing.text.Document,int)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface org.netbeans.spi.lsp.SignatureInformationCollector
+ anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="SignatureHelpProviders")
+innr public final static Builder
+meth public abstract void collectSignatureInformation(javax.swing.text.Document,int,org.netbeans.api.lsp.SignatureInformation$Context,java.util.function.Consumer<org.netbeans.api.lsp.SignatureInformation>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.spi.lsp.SignatureInformationCollector$Builder newBuilder(java.lang.String,boolean)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public final static org.netbeans.spi.lsp.SignatureInformationCollector$Builder
+ outer org.netbeans.spi.lsp.SignatureInformationCollector
+meth public org.netbeans.api.lsp.SignatureInformation build()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.SignatureInformationCollector$Builder addParameter(java.lang.String,boolean,java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+meth public org.netbeans.spi.lsp.SignatureInformationCollector$Builder documentation(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds documentation,isActive,label,params
 
 CLSS public abstract interface org.netbeans.spi.lsp.StructureProvider
 innr public final static Builder

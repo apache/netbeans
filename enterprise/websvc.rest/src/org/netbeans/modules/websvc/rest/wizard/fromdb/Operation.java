@@ -22,13 +22,13 @@ import org.netbeans.modules.websvc.rest.codegen.RestMethod;
 
 public enum Operation implements RestMethod {
 
-    CREATE("javax.ws.rs.POST", "create", true ),
-    EDIT("javax.ws.rs.PUT", "edit", "{id}" ),
-    REMOVE("javax.ws.rs.DELETE", "remove", "{id}"),
-    FIND("javax.ws.rs.GET", "find", "{id}"),
-    FIND_ALL("javax.ws.rs.GET", "findAll", true),
-    FIND_RANGE("javax.ws.rs.GET", "findRange", "{from}/{to}"),
-    COUNT("javax.ws.rs.GET", "countREST", "count");
+    CREATE(".ws.rs.POST", "create", true ),
+    EDIT(".ws.rs.PUT", "edit", "{id}" ),
+    REMOVE(".ws.rs.DELETE", "remove", "{id}"),
+    FIND(".ws.rs.GET", "find", "{id}"),
+    FIND_ALL(".ws.rs.GET", "findAll", true),
+    FIND_RANGE(".ws.rs.GET", "findRange", "{from}/{to}"),
+    COUNT(".ws.rs.GET", "countREST", "count");
 
     private String method, methodName, uriPath;
     private boolean override;
@@ -50,8 +50,13 @@ public enum Operation implements RestMethod {
         this.uriPath = uriPath;
     }
     
-    public String getMethod() {
-        return method;
+    public String getMethod(Boolean jakartaVariant) {
+        if(jakartaVariant == null || jakartaVariant) {
+            return "jakarta" + method;
+        } else {
+            return "javax" + method;
+        }
+        
     }
 
     public String getMethodName() {

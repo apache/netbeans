@@ -53,8 +53,7 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
     public void apply(Project project) {
         project.afterEvaluate(p -> {
             if (project.getPlugins().hasPlugin("java") 
-                    && (project.getTasks().findByPath(RUN_SINGLE_TASK) == null)
-                    && project.hasProperty(RUN_SINGLE_MAIN)) {
+                    && project.getTasks().findByPath(RUN_SINGLE_TASK) == null) {
                 Set<Task> runTasks = p.getTasksByName("run", false);
                 Task r = runTasks.isEmpty() ? null : runTasks.iterator().next();
                 p.getTasks().withType(JavaExec.class).configureEach(je -> configureJavaExec(project, je));
@@ -64,12 +63,14 @@ class NetBeansRunSinglePlugin implements Plugin<Project> {
     }
     
     private void configureJavaExec(Project project, JavaExec je) {
-        String mainClass = project.property(RUN_SINGLE_MAIN).toString();
-        if (GRADLE_VERSION.compareTo(GradleVersion.version("6.4")) < 0) {
-            // Using setMain to keep the backward compatibility before Gradle 6.4
-            je.setMain(mainClass);
-        } else {
-            je.getMainClass().set(mainClass);
+        if (project.hasProperty(RUN_SINGLE_MAIN)) {
+            String mainClass = project.property(RUN_SINGLE_MAIN).toString();
+            if (GRADLE_VERSION.compareTo(GradleVersion.version("6.4")) < 0) {
+                // Using setMain to keep the backward compatibility before Gradle 6.4
+                je.setMain(mainClass);
+            } else {
+                je.getMainClass().set(mainClass);
+            }
         }
         if (project.hasProperty(RUN_SINGLE_ARGS)) {
             je.setArgs(asList(project.property(RUN_SINGLE_ARGS).toString().split(" ")));

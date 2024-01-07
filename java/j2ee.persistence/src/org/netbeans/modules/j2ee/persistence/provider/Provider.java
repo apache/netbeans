@@ -84,7 +84,7 @@ public abstract class Provider {
         if(ret && version != null)
         {
             if(Persistence.VERSION_3_1.equals(version)){
-                ret &= cp.findResource("jakarta/persistence/spi/TransformerException.class.class") != null;
+                ret &= cp.findResource("jakarta/persistence/spi/TransformerException.class") != null;
             } else if(Persistence.VERSION_3_0.equals(version)){
                 ret &= cp.findResource("jakarta/persistence/Entity.class") != null;
             } else if (Persistence.VERSION_2_2.equals(version)) {

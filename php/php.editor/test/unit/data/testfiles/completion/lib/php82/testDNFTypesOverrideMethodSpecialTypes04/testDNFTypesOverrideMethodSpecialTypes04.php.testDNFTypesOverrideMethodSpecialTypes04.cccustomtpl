@@ -1,0 +1,9 @@
+Name: testParent
+public function testParent(\ParentClass $parent): \ParentClass {
+${cursor}return parent::testParent($parent);
+}
+
+Name: testUniontypes
+public function testUniontypes((\Foo&\Bar)|\Child $self, \ParentClass|(\Foo&\Bar) $parent): (\Foo&\Bar)|\ParentClass|\Child|null {
+${cursor}return parent::testUniontypes($self, $parent);
+}

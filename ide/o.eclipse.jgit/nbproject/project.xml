@@ -52,7 +52,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>org-eclipse-jgit.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit-6.7.0.202309050840-r.jar</binary-origin>
+                <binary-origin>external/org.eclipse.jgit-6.8.0.202311291450-r.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

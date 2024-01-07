@@ -2999,7 +2999,11 @@ public class Reformatter implements ReformatTask {
                         if (stat.getKind() == Tree.Kind.BLOCK) {
                             indent = lastIndent;
                         }
-                        wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
+                        if (stat.getKind() == Tree.Kind.TRY) {
+                            wrapTree(cs.wrapCaseStatements(), -1, 1, stat);
+                        } else {
+                            wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
+                        }
                     } else {
                         newline();
                         scan(stat, p);
@@ -3549,6 +3553,18 @@ public class Reformatter implements ReformatTask {
             lastBlankLines = -1;
             lastBlankLinesTokenIndex = -1;
             lastBlankLinesDiff = null;
+            return true;
+        }
+
+        @Override
+        public Boolean visitStringTemplate(StringTemplateTree node, Void p) {
+            scan(node.getProcessor(), p);
+            accept(DOT);
+            for (ExpressionTree expression : node.getExpressions()) {
+                accept(STRING_LITERAL);
+                scan(expression, p);
+            }
+            accept(STRING_LITERAL);
             return true;
         }
 

@@ -1,0 +1,94 @@
+Code completion result for source line:
+Test::{|};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      EnumTest                        [PUBLIC]   dynamicClassConstantFetchTyping.php
+CLASS      Test                            [PUBLIC]   dynamicClassConstantFetchTyping.php
+METHOD     test()                          [PUBLIC]   dynamicClassConstantFetchTyping.php
+METHOD     test(string $param = "test")    [PUBLIC]   dynamicClassConstantFetchTyping.php
+VARIABLE   string $e                       [PUBLIC]   dynamicClassConstantFetchTyping.php
+VARIABLE   string $test                    [PUBLIC]   dynamicClassConstantFetchTyping.php
+VARIABLE   string $variable                [PUBLIC]   dynamicClassConstantFetchTyping.php
+------------------------------------
+VARIABLE   $GLOBALS                                   PHP Platform
+VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform
+VARIABLE   $_COOKIE                                   PHP Platform
+VARIABLE   $_ENV                                      PHP Platform
+VARIABLE   $_FILES                                    PHP Platform
+VARIABLE   $_GET                                      PHP Platform
+VARIABLE   $_POST                                     PHP Platform
+VARIABLE   $_REQUEST                                  PHP Platform
+VARIABLE   $_SERVER                                   PHP Platform
+VARIABLE   $_SESSION                                  PHP Platform
+VARIABLE   $argc                                      PHP Platform
+VARIABLE   $argv                                      PHP Platform
+VARIABLE   $http_response_header                      PHP Platform
+VARIABLE   $php_errormsg                              PHP Platform
+KEYWORD    abstract                                   null
+KEYWORD    and                                        null
+KEYWORD    array                                      null
+KEYWORD    as                                         null
+KEYWORD    break                                      null
+KEYWORD    case                                       null
+KEYWORD    catch                                      null
+KEYWORD    class                                      null
+KEYWORD    clone                                      null
+KEYWORD    const                                      null
+KEYWORD    continue                                   null
+KEYWORD    declare                                    null
+KEYWORD    default                                    null
+KEYWORD    die()                                      Language Construct
+KEYWORD    do                                         null
+KEYWORD    echo '';                                   Language Construct
+KEYWORD    else                                       null
+KEYWORD    elseif                                     null
+KEYWORD    empty()                                    Language Construct
+KEYWORD    enddeclare                                 null
+KEYWORD    endfor                                     null
+KEYWORD    endforeach                                 null
+KEYWORD    endif                                      null
+KEYWORD    endswitch                                  null
+KEYWORD    endwhile                                   null
+KEYWORD    enum                                       null
+KEYWORD    eval()                                     Language Construct
+KEYWORD    exit()                                     Language Construct
+KEYWORD    extends                                    null
+KEYWORD    final                                      null
+KEYWORD    finally                                    null
+KEYWORD    fn                                         null
+KEYWORD    for                                        null
+KEYWORD    foreach                                    null
+KEYWORD    function                                   null
+KEYWORD    global                                     null
+KEYWORD    goto                                       null
+KEYWORD    if                                         null
+KEYWORD    implements                                 null
+KEYWORD    include '';                                Language Construct
+KEYWORD    include_once '';                           Language Construct
+KEYWORD    instanceof                                 null
+KEYWORD    interface                                  null
+KEYWORD    isset()                                    Language Construct
+KEYWORD    list()                                     Language Construct
+KEYWORD    match                                      null
+KEYWORD    namespace                                  null
+KEYWORD    new                                        null
+KEYWORD    or                                         null
+KEYWORD    print '';                                  Language Construct
+KEYWORD    private                                    null
+KEYWORD    protected                                  null
+KEYWORD    public                                     null
+KEYWORD    readonly                                   null
+KEYWORD    require '';                                Language Construct
+KEYWORD    require_once '';                           Language Construct
+KEYWORD    return ;                                   Language Construct
+KEYWORD    static                                     null
+KEYWORD    switch                                     null
+KEYWORD    throw                                      null
+KEYWORD    trait                                      null
+KEYWORD    try                                        null
+KEYWORD    unset()                                    Language Construct
+KEYWORD    use                                        null
+KEYWORD    var                                        null
+KEYWORD    while                                      null
+KEYWORD    xor                                        null
+KEYWORD    yield                                      null
+KEYWORD    yield from                                 null

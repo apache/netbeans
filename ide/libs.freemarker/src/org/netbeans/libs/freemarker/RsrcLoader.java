@@ -25,7 +25,6 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -58,9 +57,9 @@ import org.openide.util.Utilities;
 final class RsrcLoader extends Configuration 
 implements TemplateLoader, TemplateExceptionHandler {
     private static final Logger LOG = Logger.getLogger(FreemarkerEngine.class.getName());
-    private FileObject fo;
-    private ScriptContext map;
-    private Bindings engineScope;
+    private final FileObject fo;
+    private final ScriptContext map;
+    private final Bindings engineScope;
 
     RsrcLoader(FileObject fo, ScriptContext map) {
         this.fo = fo;
@@ -71,6 +70,7 @@ implements TemplateLoader, TemplateExceptionHandler {
         Logger.getLogger("freemarker.runtime").setLevel(Level.OFF);
     }
 
+    @Override
     public void handleTemplateException(TemplateException ex, Environment env, Writer w) throws TemplateException {
         try {
             w.append(ex.getLocalizedMessage());
@@ -106,15 +106,18 @@ implements TemplateLoader, TemplateExceptionHandler {
         return FileUtil.getConfigRoot();
     }
 
+    @Override
     public Object findTemplateSource(String string) throws IOException {
         FileObject tmp = getFile(string);
         return tmp == null ? null : new Wrap(tmp);
     }
 
+    @Override
     public long getLastModified(Object object) {
         return ((Wrap)object).fo.lastModified().getTime();
     }
 
+    @Override
     public Reader getReader(Object object, String encoding) throws IOException {
         Wrap w = (Wrap)object;
         if (w.reader == null) {
@@ -124,6 +127,7 @@ implements TemplateLoader, TemplateExceptionHandler {
         return w.reader;
     }
 
+    @Override
     public void closeTemplateSource(Object object) throws IOException {
         Wrap w = (Wrap)object;
         if (w.reader != null) {
@@ -155,7 +159,7 @@ implements TemplateLoader, TemplateExceptionHandler {
 
     @Override
     public Set getSharedVariableNames() {
-        LinkedHashSet<String> keys = new LinkedHashSet<String>();
+        LinkedHashSet<String> keys = new LinkedHashSet<>();
 
         if (map != null) {
             keys.addAll(map.getBindings(map.ENGINE_SCOPE).keySet());

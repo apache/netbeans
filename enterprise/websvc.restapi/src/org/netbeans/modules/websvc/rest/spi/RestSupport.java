@@ -304,6 +304,7 @@ public abstract class RestSupport {
     }
 
     private static ClassPath extendClassPathWithJaxRsApisIfNecessary(ClassPath classPath) {
+        // @todo: should we also add the jakarta variants?
         if (classPath.findResource("javax/ws/rs/core/Application.class") != null) {
             return classPath;
         }
@@ -643,7 +644,8 @@ public abstract class RestSupport {
     }
 
     public boolean hasJaxRsOnClasspath(boolean checkServerClasspath) {
-        if (MiscPrivateUtilities.hasResource(getProject(), "javax/ws/rs/core/Application.class")) {
+        if (MiscPrivateUtilities.hasResource(getProject(), "jakarta/ws/rs/core/Application.class")
+                || MiscPrivateUtilities.hasResource(getProject(), "javax/ws/rs/core/Application.class")) {
             return true;
         }
         if (checkServerClasspath) {

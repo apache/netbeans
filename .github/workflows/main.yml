@@ -19,9 +19,18 @@ name: NetBeans
 
 on:
   push:
+    branches:
+      - 'master'
+      - 'delivery'
+      - 'release*'
+
   pull_request:
     # unlocked event is used as super secret restart button
     types: [opened, synchronize, unlocked]
+
+  # Allows you to run this workflow manually from the Actions tab in GitHub UI
+  # keep in mind this will have ALL tests enabled
+  workflow_dispatch:
 
 # cancel other PR workflow run in the same head-base group if it exists (e.g. during PR syncs)
 # if this is not a PR run (no github.head_ref and github.base_ref defined), use an UID as group
@@ -123,13 +132,6 @@ jobs:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-
-
-      - name: Setup Gradle Daemon to run on JDK 11
-        if: ${{ matrix.java == '21' }}
-        run: |
-          mkdir -p ~/.gradle
-          #uses a preinstalled JDK 11 from the runner
-          echo "org.gradle.java.home=$JAVA_HOME_11_X64" >> ~/.gradle/gradle.properties
 
       - name: Build NetBeans
         run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG build-nozip
@@ -656,8 +658,8 @@ jobs:
       - name: ide/libs.freemarker
         run: ant $OPTS -f ide/libs.freemarker test
 
-#      - name: ide/libs.git
-#        run: ant $OPTS -f ide/libs.git test
+      - name: ide/libs.git
+        run: ant $OPTS -f ide/libs.git test
 
       - name: ide/libs.graalsdk
         run: ant $OPTS -f ide/libs.graalsdk test
@@ -816,7 +818,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '21' ]
+        java: [ '11', '17', '21' ]
       fail-fast: false
     steps:
 
@@ -856,6 +858,9 @@ jobs:
 
       - name: java/maven.indexer
         run: ant $OPTS -f java/maven.indexer test
+
+      - name: java/maven.refactoring
+        run: ant $OPTS -f java/maven.refactoring test
 
       - name: java/maven.junit
         run: ant $OPTS -f java/maven.junit test
@@ -910,6 +915,9 @@ jobs:
 
       - name: extide/gradle
         run: ant $OPTS -f extide/gradle test
+
+      - name: java/gradle.dependencies
+        run: ant $OPTS -f java/gradle.dependencies test
 
       - name: extide/o.apache.tools.ant.module
         run: ant $OPTS -f extide/o.apache.tools.ant.module test
@@ -2651,7 +2659,7 @@ jobs:
       - name: test-vscode-ext
         run: |
           cd java/java.lsp.server
-          ant $OPTS test-vscode-ext
+          env "netbeans.extra.options=-J-Dnetbeans.logger.console=true" ant $OPTS test-vscode-ext
  
 
 # last job depends on everything so that it is forced to run last even if a long job fails early

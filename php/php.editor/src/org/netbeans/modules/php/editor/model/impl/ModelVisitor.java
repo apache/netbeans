@@ -311,7 +311,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                         }
                     }
                 }
-            } else if (expression instanceof Scalar) {
+            } else if (expression instanceof Scalar || expression instanceof ArrayCreation) {
                 typeName = VariousUtils.extractVariableTypeFromExpression(expression, null);
             }
             if (!StringUtils.isEmpty(typeName)) {
@@ -428,11 +428,27 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             occurencesBuilder.prepare(Kind.FUNCTION, namespaceName, fileScope);
         } else if (parent instanceof Program
                 || parent instanceof Block
-                || parent instanceof FieldsDeclaration
                 || isReturnType) {
             // return type
             Kind[] kinds = {Kind.CLASS, Kind.IFACE};
             occurencesBuilder.prepare(kinds, namespaceName, modelBuilder.getCurrentScope());
+        } else if (parent instanceof ConstantDeclaration
+                || parent instanceof FieldsDeclaration) {
+            if (!isDeclaredType(parent, namespaceName)) {
+                // e.g.
+                // const C = "example";
+                // class C {}
+                // class Example {
+                //     const string|C CONSTANNT = C;
+                //                  ^type         ^const
+                //     private string|C $field = C;
+                //                    ^type      ^const
+                // }
+                occurencesBuilder.prepare(Kind.CONSTANT, namespaceName, fileScope);
+                // don't invoke the following to avoid being marked as a type name
+                // occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
+                return;
+            }
         } else if (parent instanceof ClassInstanceCreation) {
             if (((ClassInstanceCreation) parent).isAnonymous()) {
                 // superclass, ifaces
@@ -445,7 +461,27 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 && !(parent instanceof TraitMethodAliasDeclaration) && !(parent instanceof IntersectionType)) {
             occurencesBuilder.prepare(Kind.CONSTANT, namespaceName, fileScope);
         }
-        occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
+        if (!(parent instanceof FunctionName)) {
+            occurencesBuilder.prepare(namespaceName, modelBuilder.getCurrentScope());
+        }
+    }
+
+    private boolean isDeclaredType(ASTNode node, NamespaceName namespaceName) {
+        boolean isDeclaredType = false;
+        Expression declaredType = null;
+        if (node instanceof ConstantDeclaration) {
+            ConstantDeclaration constantDeclaration = (ConstantDeclaration) node;
+            declaredType = constantDeclaration.getConstType();
+        } else if (node instanceof FieldsDeclaration) {
+            FieldsDeclaration fieldsDeclaration = (FieldsDeclaration) node;
+            declaredType = fieldsDeclaration.getFieldType();
+        }
+        if (declaredType != null
+                && declaredType.getStartOffset() <= namespaceName.getStartOffset()
+                && namespaceName.getStartOffset() <= declaredType.getEndOffset()) {
+            isDeclaredType = true;
+        }
+        return isDeclaredType;
     }
 
     @Override
@@ -737,6 +773,10 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 scan(access1.getDimension());
                 name = access1.getExpression();
             }
+        } else if (constant instanceof ReflectionVariable) {
+            // PHP 8.3: Dynamic class constant fetch
+            // e.g. Example::{$example};
+            scan(constant);
         }
     }
 
@@ -750,12 +790,14 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     public void visit(ConstantDeclaration node) {
         Scope scope = modelBuilder.getCurrentScope();
         if (scope instanceof NamespaceScope) {
+            // global constants
             List<? extends ConstantDeclarationInfo> constantDeclarationInfos = ConstantDeclarationInfo.create(node);
             for (ConstantDeclarationInfo nodeInfo : constantDeclarationInfos) {
                 ConstantElementImpl createElement = modelBuilder.getCurrentNameSpace().createElement(nodeInfo);
                 occurencesBuilder.prepare(nodeInfo, createElement);
             }
         } else {
+            // class constants
             modelBuilder.build(node, occurencesBuilder);
         }
         super.visit(node);
@@ -1266,7 +1308,16 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         } else {
             occurencesBuilder.prepare(node, scope);
             if (functionName instanceof NamespaceName) {
-                occurencesBuilder.prepare((NamespaceName) functionName, scope);
+                NamespaceName namespaceName = (NamespaceName) functionName;
+                QualifiedName qualifiedName = QualifiedName.create(CodeUtils.extractQualifiedName(namespaceName));
+                if (!VariousUtils.isSpecialClassName(qualifiedName.toString())
+                        && VariousUtils.isAliased(qualifiedName, namespaceName.getStartOffset(), scope)) {
+                    // avoid adding normal function names to classIds, and so on
+                    // e.g. avoid highlighting both "Test"(class name) and "test"(function name) in the following case
+                    // class Test {}
+                    // test();
+                    occurencesBuilder.prepare(namespaceName, scope);
+                }
             }
         }
         ASTNodeInfo<FunctionInvocation> nodeInfo = ASTNodeInfo.create(node);
@@ -1354,26 +1405,20 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     @Override
     public void visit(PHPDocVarTypeTag node) {
         Scope currentScope = modelBuilder.getCurrentScope();
-        StringBuilder sb = new StringBuilder();
-        StringBuilder fqNames = new StringBuilder();
+        String defaultType = null;
+        String fqType = null;
+        if (isPropertyTag(node)) {
+            defaultType = getDefaultType(node);
+            if (defaultType != null) {
+                fqType = getFqName(defaultType, node, currentScope);
+            }
+        }
         List<? extends PhpDocTypeTagInfo> tagInfos = PhpDocTypeTagInfo.create(node, currentScope);
         for (Iterator<? extends PhpDocTypeTagInfo> it = tagInfos.iterator(); it.hasNext();) {
             PhpDocTypeTagInfo phpDocTypeTagInfo = it.next();
             if (phpDocTypeTagInfo.getKind().equals(Kind.FIELD) && !phpDocTypeTagInfo.getName().isEmpty()) {
-                String typeName = phpDocTypeTagInfo.getTypeName();
-                if (typeName != null) {
-                    if (sb.length() > 0) {
-                        sb.append(SEPARATOR);
-                    }
-                    if (fqNames.length() > 0) {
-                        fqNames.append(SEPARATOR);
-                    }
-                    String qualifiedTypeNames = VariousUtils.qualifyTypeNames(typeName, node.getStartOffset(), currentScope);
-                    fqNames.append(qualifiedTypeNames);
-                    sb.append(typeName);
-                }
                 if ((currentScope instanceof ClassScope || currentScope instanceof TraitScope) && !it.hasNext()) {
-                    new FieldElementImpl(currentScope, sb.length() > 0 ? sb.toString() : null, fqNames.length() > 0 ? fqNames.toString() : null, phpDocTypeTagInfo, true);
+                    new FieldElementImpl(currentScope, defaultType, fqType, phpDocTypeTagInfo, true);
                 }
             } else if (node.getKind().equals(PHPDocTag.Type.GLOBAL) && phpDocTypeTagInfo.getKind().equals(Kind.VARIABLE)) {
                 final String typeName = phpDocTypeTagInfo.getTypeName();
@@ -1396,6 +1441,57 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
 
         occurencesBuilder.prepare(node, currentScope);
         super.visit(node);
+    }
+
+    private static boolean isPropertyTag(PHPDocVarTypeTag node) {
+        return node.getKind() == PHPDocTag.Type.PROPERTY
+                || node.getKind() == PHPDocTag.Type.PROPERTY_READ
+                || node.getKind() == PHPDocTag.Type.PROPERTY_WRITE
+                || node.getKind() == PHPDocTag.Type.PARAM;
+    }
+
+    private String getDefaultType(PHPDocVarTypeTag node) {
+        // e.g. @property (X&Y)|Z $prop description
+        String[] values = node.getValue().trim().split(" ", 2); // NOI18N
+        if (values[0].startsWith("$") || values.length < 2) { // NOI18N
+            return null;
+        }
+        // e.g. string[]
+        String defaultType = values[0].replace("[]", ""); // NOI18N
+        return defaultType;
+    }
+
+    private String getFqName(String defaultType, PHPDocVarTypeTag node, Scope currentScope) {
+        int typeStart = 0;
+        String fqType = null;
+        StringBuilder fqNames = new StringBuilder();
+        for (int i = 0; i < defaultType.length(); i++) {
+            switch (defaultType.charAt(i)) {
+                case '(': // no break
+                case ')': // no break
+                case '|': // no break
+                case '&': // no break
+                case '?':
+                    String type = defaultType.substring(typeStart, i);
+                    if (!type.isEmpty()) {
+                        fqNames.append(VariousUtils.qualifyTypeNames(type, node.getStartOffset(), currentScope));
+                    }
+                    fqNames.append(defaultType.charAt(i));
+                    typeStart = i + 1;
+                    break;
+                default:
+                    // noop
+                    break;
+            }
+            if (i == defaultType.length() - 1) {
+                String type = defaultType.substring(typeStart, defaultType.length());
+                if (!type.isEmpty()) {
+                    fqNames.append(VariousUtils.qualifyTypeNames(type, node.getStartOffset(), currentScope));
+                }
+                fqType = fqNames.length() > 0 ? fqNames.toString() : null;
+            }
+        }
+        return fqType;
     }
 
     public FileScope getFileScope() {

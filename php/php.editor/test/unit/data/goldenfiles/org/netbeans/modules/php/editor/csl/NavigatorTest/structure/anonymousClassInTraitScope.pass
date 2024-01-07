@@ -5,7 +5,7 @@
 |--test1 [162, 1091] : ESCAPED{test1}ESCAPED{(}ESCAPED{)}
 |--test2 [1113, 1288] : ESCAPED{test2}ESCAPED{(}ESCAPED{)}
 |--test3 [1310, 1542] : ESCAPED{test3}ESCAPED{(}ESCAPED{)}
-|-#anon#anonymousClassInTraitScope_php#1 [187, 1084] : ESCAPED{{}}<font color="#999999">::ESCAPED{TraitScopeTest}</font><font color="#999999">:ESCAPED{TraitScopeTestInterface}</font><font color="#999999">#ESCAPED{TraitScopeTestTrait}</font>
+|-#anon#anonymousClassInTraitScope_php#1 [191, 1084] : ESCAPED{{}}<font color="#999999">::ESCAPED{TraitScopeTest}</font><font color="#999999">:ESCAPED{TraitScopeTestInterface}</font><font color="#999999">#ESCAPED{TraitScopeTestTrait}</font>
 |--CONSTANT [320, 328] : ESCAPED{CONSTANT}ESCAPED{ }<font color="#999999">ESCAPED{"CONSTANT"}</font>
 |--$publicField [363, 374] : ESCAPED{$publicField}
 |--$privateField [397, 409] : ESCAPED{$privateField}
@@ -20,9 +20,9 @@
 |--publicStaticMethod [884, 920] : ESCAPED{publicStaticMethod}ESCAPED{(}ESCAPED{)}
 |--privateStaticMethod [958, 995] : ESCAPED{privateStaticMethod}ESCAPED{(}ESCAPED{)}
 |--protectedStaticMethod [1035, 1074] : ESCAPED{protectedStaticMethod}ESCAPED{(}ESCAPED{)}
-|-#anon#anonymousClassInTraitScope_php#2 [1138, 1281] : ESCAPED{{}}
+|-#anon#anonymousClassInTraitScope_php#2 [1142, 1281] : ESCAPED{{}}
 |--publicMethod [1241, 1271] : ESCAPED{publicMethod}ESCAPED{(}ESCAPED{)}
-|-#anon#anonymousClassInTraitScope_php#4 [1340, 1535] : ESCAPED{{}}
+|-#anon#anonymousClassInTraitScope_php#4 [1344, 1535] : ESCAPED{{}}
 |--test [1380, 1525] : ESCAPED{test}ESCAPED{(}ESCAPED{)}
-|-#anon#anonymousClassInTraitScope_php#3 [1412, 1510] : ESCAPED{{}}
+|-#anon#anonymousClassInTraitScope_php#3 [1416, 1510] : ESCAPED{{}}
 |--nested [1460, 1492] : ESCAPED{nested}ESCAPED{(}ESCAPED{)}

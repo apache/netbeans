@@ -341,6 +341,7 @@
                     <attr name="position" intvalue="100"/>
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.php.editor.verification.Bundle"/>
                     <file name="org-netbeans-modules-php-editor-verification-AccidentalAssignmentHint.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-AddOverrideAttributeHint.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-AmbiguousComparisonHint.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-ArrayDimensionSyntaxSuggestionHint.instance"/>
                     <folder name="braces">
@@ -432,6 +433,7 @@
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectMixedGroupUseHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectNamedArgumentsHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectNonAbstractMethodHintError.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-IncorrectStaticContextHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-LoopOnlyKeywordsUnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-MethodRedeclarationHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-ModifiersCheckHintError.instance"/>
@@ -447,6 +449,7 @@
                     <file name="org-netbeans-modules-php-editor-verification-PHP80UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-PHP81UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-PHP82UnhandledError.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-PHP83UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-ReturnTypeHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-TypeRedeclarationHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-UnusableTypesHintError.instance"/>

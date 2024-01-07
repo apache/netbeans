@@ -57,7 +57,7 @@
         </Comments>
         <Statements>
             <ExpressionStatement start='7' end='39'>
-                <StaticConstantAccess start='7' end='38'>
+                <StaticConstantAccess start='7' end='38' isDynamicName='false'>
                     <MethodInvocation start='7' end='33' isNullsafe='false'>
                         <FieldAccess start='7' end='26' isNullsafe='false'>
                             <ArrayAccess start='7' end='18' type='VARIABLE_ARRAY' isDollared='false'>

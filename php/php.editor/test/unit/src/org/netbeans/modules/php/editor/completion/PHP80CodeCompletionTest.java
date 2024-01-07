@@ -1137,6 +1137,52 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath("namedArgumentsStaticMethod06"), "self::test(^)", false);
     }
 
+    public void testNamedArgumentsConstructor01() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor01"), "$instance = new NamedArguments(^);", false);
+    }
+
+    public void testNamedArgumentsConstructor02_a() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor02"), "$instance = new NamedArguments(arr^);", false);
+    }
+
+    public void testNamedArgumentsConstructor02_b() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor02"), "$instance = new NamedArguments(^)", false);
+    }
+
+    public void testNamedArgumentsConstructor03() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor03"), "$instance = new NamedArguments(1, ^);", false);
+    }
+
+    public void testNamedArgumentsConstructor04() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor04"), "$instance = new NamedArguments(1, defa^);", false);
+    }
+
+    public void testNamedArgumentsConstructor05_a() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor05"), "$instance = new NamedArguments(param1: 1,^ default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsConstructor05_b() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor05"), "$instance = new NamedArguments(param1: 1, ^default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsConstructor05_c() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor05"), "$instance = new NamedArguments(param1: 1, arr^default: \"test\");", false);
+    }
+
+    public void testNamedArgumentsConstructor05_Template01() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("namedArgumentsConstructor05"), "$instance = new NamedArguments(param1: 1, arr^default: \"test\");",
+                new DefaultFilter("array"), true);
+    }
+
+    public void testNamedArgumentsConstructor05_Template02() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("namedArgumentsConstructor05"), "$instance = new NamedArguments(param1: 1,^ default: \"test\");",
+                new DefaultFilter("array"), true);
+    }
+
+    public void testNamedArgumentsConstructor06() throws Exception {
+        checkCompletion(getTestPath("namedArgumentsConstructor06"), "$instance = new NamedArguments(^);", false);
+    }
+
     public void testStaticReturnTypeOverrideMethod01() throws Exception {
         checkCompletionCustomTemplateResult(getTestPath("testStaticReturnTypeOverrideMethod01"), "    test^",
                 new DefaultFilter(PhpVersion.PHP_80, "test"), true);

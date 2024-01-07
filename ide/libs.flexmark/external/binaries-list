@@ -14,20 +14,20 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-D859A65013F6DF2D46868BDCEC643DA9792F30CA com.vladsch.flexmark:flexmark:0.64.6
-13CDCA9006615B7F4E919C2701F48B4D5790483D com.vladsch.flexmark:flexmark-ext-anchorlink:0.64.6
-D28358DEDD8154F5233D2DB9F7F31EDFFD35025E com.vladsch.flexmark:flexmark-ext-emoji:0.64.6
-79A451ACA1271DDC865BD9125A49CEA52DA938E8 com.vladsch.flexmark:flexmark-ext-tables:0.64.6
-2D106E0C0CF1C055C7384DF5D5E05C2478DCA75B com.vladsch.flexmark:flexmark-html2md-converter:0.64.6
-03148BE3402AC4A7691C386784823C7F3494C20B com.vladsch.flexmark:flexmark-util-ast:0.64.6
-85292A943917A46A2BDFDCB5656C1CB91F4CEF06 com.vladsch.flexmark:flexmark-util-builder:0.64.6
-C06F05AAFAB1C83F2B49F6C5E58FBB9A8AAD433F com.vladsch.flexmark:flexmark-util-collection:0.64.6
-A99B69BEED9359D384FFF9A9475C485CBF37956C com.vladsch.flexmark:flexmark-util-data:0.64.6
-138054FE981C705F02ABD1D8D948EB5582FBC5EA com.vladsch.flexmark:flexmark-util-dependency:0.64.6
-16B4975A85269E3E4639E0E5F0CB8A15CC142E7E com.vladsch.flexmark:flexmark-util-format:0.64.6
-415C79BD96ACE0C58DA30045F8DC73073B070482 com.vladsch.flexmark:flexmark-util-html:0.64.6
-A84B340693CE22D812455390DCDAC9DCD958238C com.vladsch.flexmark:flexmark-util-misc:0.64.6
-1AE2CD22728557C2740812AEAE799CCC8D50FABC com.vladsch.flexmark:flexmark-util-sequence:0.64.6
-D2CD1AF4AB5B654CA8C588900390C1611FFC8C4D com.vladsch.flexmark:flexmark-util-visitor:0.64.6
-96153A10AC31402534853CD2CF6B90A363BD8C3B com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.64.6
+E82621EBED3A6CFA31C52900AAF9A9B6DD3C859D com.vladsch.flexmark:flexmark:0.64.8
+FCF1B569EE80397114628BE098B20259D9C15BE4 com.vladsch.flexmark:flexmark-ext-anchorlink:0.64.8
+EEFBF6A1FB644FA14C3FB74017CF9C97A4879A7C com.vladsch.flexmark:flexmark-ext-emoji:0.64.8
+018E37D2E67A346C7C2694DD91944EEFD5028608 com.vladsch.flexmark:flexmark-ext-tables:0.64.8
+A4B9DC984710931E98FDF62479784F789C0F5E6D com.vladsch.flexmark:flexmark-html2md-converter:0.64.8
+9904D6C8E7C9E2EC63B77E9313E518918758DD84 com.vladsch.flexmark:flexmark-util-ast:0.64.8
+79F4593CE00D99B786425CABB12CC13BF785374B com.vladsch.flexmark:flexmark-util-builder:0.64.8
+40E82AD00BB159EE878557FA8312ED7D95F4B297 com.vladsch.flexmark:flexmark-util-collection:0.64.8
+A3F92ABD0ACBB4D1F12DFD3D6128F73D245D6BA9 com.vladsch.flexmark:flexmark-util-data:0.64.8
+392BC415728AEE6FDB9ADED0004B0BF6C15E80AC com.vladsch.flexmark:flexmark-util-dependency:0.64.8
+12BB34F8D1D3D3678B540CB75726414EB910E327 com.vladsch.flexmark:flexmark-util-format:0.64.8
+1ED09F6B6A57BE2797AEE9C9DFCBEAB06AFA120B com.vladsch.flexmark:flexmark-util-html:0.64.8
+6D0B133FAEE38C41368EE3C67F0DF4498FFE3C25 com.vladsch.flexmark:flexmark-util-misc:0.64.8
+985913246DF64FE7E768EB0664B45DEDEA7536CF com.vladsch.flexmark:flexmark-util-sequence:0.64.8
+A8178BA6DFD7A958353A60B3A51FE7EDB1578B49 com.vladsch.flexmark:flexmark-util-visitor:0.64.8
+4ADC75ADA3D870908BDBFFB76650D19305250D3C com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.64.8
 CD56EB47DCD4590EF6451F87E5EC33BDDD1A9A51 org.jsoup:jsoup:1.15.4

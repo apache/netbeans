@@ -83,6 +83,19 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="gradle-report-severity">
+            <api name="general"/>
+            <summary>Gradle project problems have severity and stacktraces</summary>
+            <version major="2" minor="38"/>
+            <date day="13" month="11" year="2023"/>
+            <author login="sdedic"/>
+            <compatibility semantic="compatible"/>
+            <description>
+                <p>
+                    Reports from the NB tooling gradle plugin are now annotated by severity.
+                </p>
+            </description>
+        </change>
         <change id="gradle-setting-deprecation">
             <api name="general"/>
             <summary>Some Gradle Settings Removed from Use</summary>

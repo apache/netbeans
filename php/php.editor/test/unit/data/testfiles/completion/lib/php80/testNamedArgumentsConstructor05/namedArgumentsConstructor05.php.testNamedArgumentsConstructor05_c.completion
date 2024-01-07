@@ -1,0 +1,6 @@
+Code completion result for source line:
+$instance = new NamedArguments(param1: 1, arr|default: "test");
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PARAMETER  array:                                     Parameter Name
+------------------------------------
+KEYWORD    array                                      null

@@ -59,6 +59,7 @@ import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -315,8 +316,7 @@ public final class TemplateOperation implements Runnable {
 
                 pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
             } catch (GradleConnectionException | IllegalStateException ex) {
-                // Well for some reason we were  not able to load Gradle.
-                // Ignoring that for now
+                Exceptions.printStackTrace(ex);
             }
             gconn.disconnect();
             return Collections.singleton(FileUtil.toFileObject(target));

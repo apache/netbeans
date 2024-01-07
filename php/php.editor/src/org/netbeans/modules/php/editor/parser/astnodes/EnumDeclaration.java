@@ -80,7 +80,7 @@ public class EnumDeclaration extends TypeDeclaration {
                 declaration.getEndOffset(),
                 declaration.getName(),
                 declaration.getBackingType(),
-                declaration.getInterfaes(),
+                declaration.getInterfaces(),
                 declaration.getBody(),
                 attributes
         );
@@ -101,7 +101,7 @@ public class EnumDeclaration extends TypeDeclaration {
         StringBuilder sbAttributes = new StringBuilder();
         getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
         StringBuilder sb = new StringBuilder();
-        for (Expression expression : getInterfaes()) {
+        for (Expression expression : getInterfaces()) {
             sb.append(expression).append(","); // NOI18N
         }
         return sbAttributes.toString() + "enum " + getName() + backingType == null ? "" : ": " + backingType + " implements " + sb + getBody(); // NOI18N

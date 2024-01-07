@@ -1,0 +1,10 @@
+Code completion result for source line:
+public const (A&B)|(A&C) CONST_NAME = |
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      A                               [PUBLIC]   typedClassConstantsTypingInterface10.php
+CLASS      B                               [PUBLIC]   typedClassConstantsTypingInterface10.php
+CLASS      C                               [PUBLIC]   typedClassConstantsTypingInterface10.php
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+------------------------------------
+KEYWORD    array                                      null

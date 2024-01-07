@@ -1,0 +1,4 @@
+Code completion result for source line:
+protected const A|&B INTERSECTION = B; // trait
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      A                               [PUBLIC]   typedClassConstants.php

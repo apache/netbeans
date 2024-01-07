@@ -67,7 +67,7 @@ public class BasicInfoPanel extends javax.swing.JPanel implements DocumentListen
             NbMavenProjectImpl nbi = prj.getLookup().lookup(NbMavenProjectImpl.class);
             assert nbi != null;
             project = nbi.loadParentOf(EmbedderFactory.getProjectEmbedder(), handle.getProject());      
-            if (NbMavenProject.isErrorPlaceholder(project)) {
+            if (project != null && NbMavenProject.isErrorPlaceholder(project)) {
                 project = null;
             }
         } catch (ProjectBuildingException ex) {

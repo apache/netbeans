@@ -21,27 +21,4 @@
 -->
 <project name="ide/libs.freemarker" default="build" basedir=".">
   <import file="../../nbbuild/templates/projectized.xml"/>
-  
-  <property name="freemarker.jar" location="${basedir}/external/freemarker.jar"/>
-  <property name="freemarkerTrimm.jar" location="${basedir}/external/freemarkerTrimm.jar"/>
-  
-  <!-- this makes the freemarker-2.3.8.jar smaller by 300Kb -->
-  <target name="trimm">
-    <jar destfile="${freemarkerTrimm.jar}" compress="true">
-      <zipfileset src="${freemarker.jar}">
-        <include name="**/*"/>
-        <exclude name="freemarker/ext/*"/>
-        <exclude name="freemarker/ext/dom/*"/>
-        <exclude name="freemarker/ext/jdom/*"/>
-        <exclude name="freemarker/ext/rhino/*"/>
-        <exclude name="freemarker/ext/jsp/*"/>
-        <exclude name="freemarker/ext/servlet/*"/>
-        <exclude name="freemarker/ext/xml/*"/>
-        <exclude name="freemarker/log/**/Log4J*"/>
-        <exclude name="freemarker/log/**/Avalon*"/>
-        <exclude name="freemarker/**/*Jython*"/>
-        <exclude name="freemarker/cache/WebappTemplateLoader*"/>
-      </zipfileset>
-    </jar>
-  </target>
 </project>

@@ -50,7 +50,7 @@ public class ClassFileCache {
     //~ Instance fields ----------------------------------------------------------------------------------------------------------
 
     private ClassPath classPath; // Used to quickly obtain an open JAR file for a given name
-    private Hashtable vmSuppliedClassCache;
+    private Hashtable<String, byte[]> vmSuppliedClassCache;
     private byte[][] classFileBytes;
     private String[] classNameAndLocation;
     private long[] lastTimeUsed;
@@ -58,8 +58,8 @@ public class ClassFileCache {
     private int size;
     private int sizeLimit;
     private long timeCounter;
-    private List preloadNames;
-    private List preloadLoaderIds;
+    private List<String> preloadNames;
+    private List<Integer> preloadLoaderIds;
 
     //~ Constructors -------------------------------------------------------------------------------------------------------------
 
@@ -72,9 +72,9 @@ public class ClassFileCache {
         classFileBytes = new byte[capacity][];
         lastTimeUsed = new long[capacity];
 
-        vmSuppliedClassCache = new Hashtable();
-        preloadNames = new ArrayList();
-        preloadLoaderIds = new ArrayList();
+        vmSuppliedClassCache = new Hashtable<>();
+        preloadNames = new ArrayList<>();
+        preloadLoaderIds = new ArrayList<>();
     }
 
     //~ Methods ------------------------------------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ public class ClassFileCache {
         byte[] res;
 
         if (location.startsWith(ClassRepository.LOCATION_VMSUPPLIED)) {
-            res = (byte[]) vmSuppliedClassCache.get(nameAndLocation);
+            res = vmSuppliedClassCache.get(nameAndLocation);
             if (res != null && res.length == 0) {
                 try {
                     // known class without bytecode; get it from TA
@@ -104,10 +104,10 @@ public class ClassFileCache {
                     if (!preloadNames.contains(name)) {
                         preloadBytecode(name, location);
                     }
-                    String names[] = (String[]) preloadNames.toArray(new String[0]);
+                    String names[] = preloadNames.toArray(new String[0]);
                     int loadersId[] = new int[preloadLoaderIds.size()];
                     for (int i=0; i<loadersId.length; i++) {
-                        loadersId[i] = ((Integer)preloadLoaderIds.get(i)).intValue();
+                        loadersId[i] = preloadLoaderIds.get(i);
                     }
                     //System.out.println("Caching "+names.length+" classes");
                     byte[][] bytes = client.getCachedClassFileBytes(names, loadersId);
@@ -119,9 +119,9 @@ public class ClassFileCache {
                             vmSuppliedClassCache.put(getNameAndLocation(names[i],loadersId[i]), res);
                         }
                     }
-                    preloadNames = new ArrayList();
-                    preloadLoaderIds = new ArrayList();
-                    res = (byte[]) vmSuppliedClassCache.get(nameAndLocation);
+                    preloadNames = new ArrayList<>();
+                    preloadLoaderIds = new ArrayList<>();
+                    res = vmSuppliedClassCache.get(nameAndLocation);
                     if (res.length == 0) {
                         throw new IOException("Get class file for " + name + " not found in TA");
                     }

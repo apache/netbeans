@@ -87,11 +87,11 @@ enum CorrectMethods {
 }
 
 enum CorrectBackingTypeString: string {
-    case CASE_NAME;
+    case CASE_NAME; // string
 }
 
 enum CorrectBackingTypeInt: int {
-    case CASE_NAME;
+    case CASE_NAME; // int
 }
 
 class IncorrectEnumCase {

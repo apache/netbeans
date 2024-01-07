@@ -2,17 +2,18 @@ Code completion result for source line:
 public function |setFld($fld) {
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-METHOD     __call($name, $arguments) - ge  [PUBLIC]   Magic Method
-METHOD     __callStatic($name, $arguments  [STATIC]   Magic Method
+METHOD     __call(string $name, array $ar  [PUBLIC]   Magic Method
+METHOD     __callStatic(string $name, arr  [STATIC]   Magic Method
 METHOD     __clone() - generate            [PUBLIC]   Magic Method
-METHOD     __get($name) - generate         [PUBLIC]   Magic Method
+METHOD     __debugInfo() - generate        [PUBLIC]   Magic Method
+METHOD     __get(string $name) - generate  [PUBLIC]   Magic Method
 METHOD     __invoke() - generate           [PUBLIC]   Magic Method
-METHOD     __isset($name) - generate       [PUBLIC]   Magic Method
+METHOD     __isset(string $name) - genera  [PUBLIC]   Magic Method
 METHOD     __serialize() - generate        [PUBLIC]   Magic Method
-METHOD     __set($name, $value) - generat  [PUBLIC]   Magic Method
-METHOD     __set_state($array) - generate  [STATIC]   Magic Method
+METHOD     __set(string $name, mixed $val  [PUBLIC]   Magic Method
+METHOD     __set_state(array $properties)  [STATIC]   Magic Method
 METHOD     __sleep() - generate            [PUBLIC]   Magic Method
 METHOD     __toString() - generate         [PUBLIC]   Magic Method
 METHOD     __unserialize(array $data) - g  [PUBLIC]   Magic Method
-METHOD     __unset($name) - generate       [PUBLIC]   Magic Method
+METHOD     __unset(string $name) - genera  [PUBLIC]   Magic Method
 METHOD     __wakeup() - generate           [PUBLIC]   Magic Method

@@ -18,21 +18,16 @@
  */
 package org.netbeans.modules.cloud.oracle.actions;
 
-import java.awt.event.ActionEvent;
-import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
-import org.netbeans.modules.cloud.oracle.vault.KeyItem;
-import org.netbeans.modules.cloud.oracle.vault.VaultItem;
 
 /**
  *
- * @author honza
+ * @author jhorvath
  */
 public class AddDbConnectionToVaultTest {
     
@@ -56,7 +51,7 @@ public class AddDbConnectionToVaultTest {
     }
 
     /**
-     * Test of actionPerformed method, of class AddDbConnectionToVault.
+     * Test of extractDatasourceName method, of class AddDbConnectionToVault.
      */
     @Test
     public void datasourceName() {
@@ -64,7 +59,79 @@ public class AddDbConnectionToVaultTest {
         String ds = AddDbConnectionToVault.extractDatasourceName(input);
         assertEquals("DEFAULT", ds);
         
+        input = "DATASOURCES_DEF3_USERNAME";
+        ds = AddDbConnectionToVault.extractDatasourceName(input);
+        assertEquals("DEF3", ds);
     }
-
     
+    @Test
+    public void testConfigMap() {
+        String cm = "apiVersion: v1\n" +
+            "kind: ConfigMap\n" +
+            "metadata:\n" +
+            "  name: demo-adb-vault\n" +
+            "data:\n" +
+            "  bootstrap-oraclecloud.properties: |\n" +
+            "    oci.config.instance-principal.enabled=false\n" +
+            "    micronaut.config-client.enabled=fase\n" +
+            "    oci.vault.config.enabled=false\n" +
+            "    oci.vault.vaults[0].ocid=xxxx\n" +
+            "    oci.vault.vaults[0].compartment-ocid=xxx\n" +
+            "  application-oraclecloud.properties: |\n" +
+            "    a=b";
+        String expected = "apiVersion: v1\n" +
+            "kind: ConfigMap\n" +
+            "metadata:\n" +
+            "  name: demo-adb-vault\n" +
+            "data:\n" +
+            "  bootstrap-oraclecloud.properties: |\n" +
+            "    oci.config.instance-principal.enabled=true\n" +
+            "    micronaut.config-client.enabled=true\n" +
+            "    oci.vault.config.enabled=true\n" +
+            "    oci.vault.vaults[0].ocid=cde\n" +
+            "    oci.vault.vaults[0].compartment-ocid=abc\n" +
+            "  application-oraclecloud.properties: |\n" +
+            "    a=b\n" +
+            "    datasources.default.dialect=ORACLE\n" +
+            "    datasources.default.ocid=${DATASOURCES_DEFAULT_OCID}\n" +
+            "    datasources.default.walletPassword=${DATASOURCES_DEFAULT_WALLET_PASSWORD}\n" +
+            "    datasources.default.username=${DATASOURCES_DEFAULT_USERNAME}\n" +
+            "    datasources.default.password=${DATASOURCES_DEFAULT_PASSWORD}\n";
+        String result = AddDbConnectionToVault.updateProperties(cm, "abc", "cde", "DEFAULT");
+        assertEquals(expected, result);
+    }
+    
+    @Test
+    public void testConfigMap1() {
+        String cm = "apiVersion: v1\n" +
+            "kind: ConfigMap\n" +
+            "metadata:\n" +
+            "  name: demo-adb-vault\n" +
+            "data:\n" +
+            "  bootstrap-oraclecloud.properties: |\n" +
+            "    # placeholder\n" +
+            "  application-oraclecloud.properties: |\n" +
+            "    a=b";
+        String expected = "apiVersion: v1\n" +
+            "kind: ConfigMap\n" +
+            "metadata:\n" +
+            "  name: demo-adb-vault\n" +
+            "data:\n" +
+            "  bootstrap-oraclecloud.properties: |\n" +
+            "    # placeholder\n" +
+            "    oci.config.instance-principal.enabled=true\n" +
+            "    micronaut.config-client.enabled=true\n" +
+            "    oci.vault.config.enabled=true\n" +
+            "    oci.vault.vaults[0].ocid=cde\n" +
+            "    oci.vault.vaults[0].compartment-ocid=abc\n" +
+            "  application-oraclecloud.properties: |\n" +
+            "    a=b\n" +
+            "    datasources.default.dialect=ORACLE\n" +
+            "    datasources.default.ocid=${DATASOURCES_ABC_OCID}\n" +
+            "    datasources.default.walletPassword=${DATASOURCES_ABC_WALLET_PASSWORD}\n" +
+            "    datasources.default.username=${DATASOURCES_ABC_USERNAME}\n" +
+            "    datasources.default.password=${DATASOURCES_ABC_PASSWORD}\n";
+        String result = AddDbConnectionToVault.updateProperties(cm, "abc", "cde", "ABC");
+        assertEquals(expected, result);
+    }
 }

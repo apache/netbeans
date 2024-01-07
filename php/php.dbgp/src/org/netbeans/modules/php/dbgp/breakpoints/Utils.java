@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.debugger.Breakpoint;
+import org.netbeans.api.debugger.Breakpoint.VALIDITY;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.php.dbgp.DebugSession;
@@ -238,4 +239,8 @@ public final class Utils {
         return mimeTypesOnLine.contains(MIME_TYPE);
     }
 
+    public static boolean isValid(Breakpoint breakpoint) {
+        VALIDITY validity = breakpoint.getValidity();
+        return validity == VALIDITY.VALID || validity == VALIDITY.UNKNOWN;
+    }
 }

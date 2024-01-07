@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
@@ -59,7 +58,6 @@ import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.LocalFileSystem;
@@ -182,6 +180,7 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         SourceUtilsTestUtil.class.getClassLoader().setDefaultAssertionStatus(true);
         System.setProperty("org.openide.util.Lookup", SourceUtilsTestUtil.class.getName());
         Assert.assertEquals(SourceUtilsTestUtil.class, Lookup.getDefault().getClass());
+        SourceUtilsTestUtil2.disableMultiFileSourceRoots();
     }
     
     public static void prepareTest(FileObject sourceRoot, FileObject buildRoot, FileObject cache) throws Exception {

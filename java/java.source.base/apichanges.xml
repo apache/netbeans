@@ -25,6 +25,18 @@
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="TreeMaker.StringTemplate">
+        <api name="javasource_base" />
+        <summary>Adding TreeMaker.StringTemplate</summary>
+        <version major="1" minor="2.65.0"/>
+        <date day="3" month="11" year="2023"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Adding TreeMaker.StringTemplate
+        </description>
+        <class name="TreeMaker" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="SourceUtils.getFile">
         <api name="javasource_base" />
         <summary>Source file name for Element</summary>

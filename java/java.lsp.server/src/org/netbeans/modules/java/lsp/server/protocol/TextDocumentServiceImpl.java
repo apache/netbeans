@@ -94,6 +94,7 @@ import org.eclipse.lsp4j.CodeLensParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
+import org.eclipse.lsp4j.CompletionItemLabelDetails;
 import org.eclipse.lsp4j.CompletionItemTag;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
@@ -246,6 +247,7 @@ import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
+import org.openide.loaders.DataObject;
 import org.openide.text.NbDocument;
 import org.openide.text.PositionBounds;
 import org.openide.util.BaseUtilities;
@@ -257,6 +259,7 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.Union2;
 import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -315,7 +318,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 delegates = this.delegates.toArray(new TextDocumentServiceImpl[this.delegates.size()]);
             }
             for (TextDocumentServiceImpl delegate : delegates) {
-                delegate.reRunDiagnostics();
+                //augmenting the lookup with NbCodeLanguageClient, so that the
+                //correct javac configuration is used for project-less files
+                //note this lookup does not contain other services usually present
+                //while processing a request, like OperationContext:
+                ProxyLookup augmentedLookup = new ProxyLookup(Lookups.fixed(delegate.client), Lookup.getDefault());
+                Lookups.executeWith(augmentedLookup, () -> {
+                    delegate.reRunDiagnostics();
+                });
             }
         }
     }
@@ -363,6 +373,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     prefs.put("classMemberInsertionPoint", CodeStyle.InsertionPoint.CARET_LOCATION.name());
                     boolean isComplete = Completion.collect(doc, caret, context, completion -> {
                         CompletionItem item = new CompletionItem(completion.getLabel());
+                        if (completion.getLabelDetail() != null || completion.getLabelDescription() != null) {
+                            CompletionItemLabelDetails labelDetails = new CompletionItemLabelDetails();
+                            labelDetails.setDetail(completion.getLabelDetail());
+                            labelDetails.setDescription(completion.getLabelDescription());
+                            item.setLabelDetails(labelDetails);
+                        }
                         if (completion.getKind() != null) {
                             item.setKind(CompletionItemKind.valueOf(completion.getKind().name()));
                         }
@@ -506,40 +522,51 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 if (file != null) {
                     CompletableFuture<CompletionItem> result = new CompletableFuture<>();
                     WORKER.post(() -> {
-                        if (completion.getDetail() != null) {
-                            try {
-                                String detail = completion.getDetail().get();
-                                if (detail != null) {
-                                    ci.setDetail(detail);
+                        Preferences prefs = CodeStylePreferences.get(file, "text/x-java").getPreferences();
+                        String point = prefs.get("classMemberInsertionPoint", null);
+                        try {
+                            prefs.put("classMemberInsertionPoint", CodeStyle.InsertionPoint.CARET_LOCATION.name());
+                            if (completion.getDetail() != null) {
+                                try {
+                                    String detail = completion.getDetail().get();
+                                    if (detail != null) {
+                                        ci.setDetail(detail);
+                                    }
+                                } catch (Exception ex) {
                                 }
-                            } catch (Exception ex) {
                             }
-                        }
-                        if (completion.getAdditionalTextEdits() != null) {
-                            try {
-                                List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().get();
-                                if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
-                                    ci.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
-                                        return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
-                                    }).collect(Collectors.toList()));
+                            if (completion.getAdditionalTextEdits() != null) {
+                                try {
+                                    List<org.netbeans.api.lsp.TextEdit> additionalTextEdits = completion.getAdditionalTextEdits().get();
+                                    if (additionalTextEdits != null && !additionalTextEdits.isEmpty()) {
+                                        ci.setAdditionalTextEdits(additionalTextEdits.stream().map(ed -> {
+                                            return new TextEdit(new Range(Utils.createPosition(file, ed.getStartOffset()), Utils.createPosition(file, ed.getEndOffset())), ed.getNewText());
+                                        }).collect(Collectors.toList()));
+                                    }
+                                } catch (Exception ex) {
                                 }
-                            } catch (Exception ex) {
                             }
-                        }
-                        if (completion.getDocumentation() != null) {
-                            try {
-                                int timeout = javadocTimeout.get();
-                                String documentation = timeout < 0
-                                        ? completion.getDocumentation().get()
-                                        : timeout == 0 ? completion.getDocumentation().getNow(null)
-                                        : completion.getDocumentation().get(timeout, TimeUnit.MILLISECONDS);
-                                if (documentation != null) {
-                                    MarkupContent markup = new MarkupContent();
-                                    markup.setKind("markdown");
-                                    markup.setValue(html2MD(documentation));
-                                    ci.setDocumentation(markup);
+                            if (completion.getDocumentation() != null) {
+                                try {
+                                    int timeout = javadocTimeout.get();
+                                    String documentation = timeout < 0
+                                            ? completion.getDocumentation().get()
+                                            : timeout == 0 ? completion.getDocumentation().getNow(null)
+                                            : completion.getDocumentation().get(timeout, TimeUnit.MILLISECONDS);
+                                    if (documentation != null) {
+                                        MarkupContent markup = new MarkupContent();
+                                        markup.setKind("markdown");
+                                        markup.setValue(html2MD(documentation));
+                                        ci.setDocumentation(markup);
+                                    }
+                                } catch (Exception ex) {
                                 }
-                            } catch (Exception ex) {
+                            }
+                        } finally {
+                            if (point != null) {
+                                prefs.put("classMemberInsertionPoint", point);
+                            } else {
+                                prefs.remove("classMemberInsertionPoint");
                             }
                         }
                         result.complete(ci);
@@ -1017,35 +1044,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 data.put(INDEX, index.getAndIncrement());
                                 action.setData(data);
                             } else if (inputAction.getEdit() != null) {
-                                org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getEdit();
-                                List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                                for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
-                                    if (parts.hasFirst()) {
-                                        String docUri = parts.first().getDocument();
-                                        try {
-                                            FileObject file = Utils.fromUri(docUri);
-                                            if (file == null) {
-                                                file = Utils.fromUri(params.getTextDocument().getUri());
-                                            }
-                                            FileObject fo = file;
-                                            if (fo != null) {
-                                                List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
-                                                TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
-                                                documentChanges.add(Either.forLeft(tde));
-                                            }
-                                        } catch (Exception ex) {
-                                            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                                        }
-                                    } else {
-                                        if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
-                                            documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
-                                        } else {
-                                            throw new IllegalStateException(String.valueOf(parts.second()));
-                                        }
-                                    }
-                                }
-
-                                action.setEdit(new WorkspaceEdit(documentChanges));
+                                action.setEdit(fromAPI(inputAction.getEdit(), uri, client));
                             }
                             result.add(Either.forRight(action));
                         }
@@ -1133,51 +1132,39 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<CodeAction> resolveCodeAction(CodeAction unresolved) {
-        JsonObject data = (JsonObject) unresolved.getData();
-        if (data.has(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS)) {
-            String providerClass = ((JsonObject) data).getAsJsonPrimitive(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS).getAsString();
-            for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
-                try {
-                    if (codeGenerator.getClass().getName().equals(providerClass)) {
-                        return codeGenerator.resolve(client, unresolved, ((JsonObject) data).get(CodeActionsProvider.DATA));
+        CompletableFuture<CodeAction> future = new CompletableFuture<>();
+        BACKGROUND_TASKS.post(() -> {
+            JsonObject data = (JsonObject) unresolved.getData();
+            if (data != null) {
+                if (data.has(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS)) {
+                    String providerClass = data.getAsJsonPrimitive(CodeActionsProvider.CODE_ACTIONS_PROVIDER_CLASS).getAsString();
+                    for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                        if (codeGenerator.getClass().getName().equals(providerClass)) {
+                            try {
+                                codeGenerator.resolve(client, unresolved, data.get(CodeActionsProvider.DATA)).thenAccept(action -> {
+                                    future.complete(action);
+                                });
+                            } catch (Exception e) {
+                                future.completeExceptionally(e);
+                            }
+                            return;
+                        }
                     }
-                } catch (Exception ex) {
-                }
-            }
-        } else if (data.has(URL) && data.has(INDEX)) {
-            LazyCodeAction inputAction = lastCodeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt());
-            if (inputAction != null) {
-                org.netbeans.api.lsp.WorkspaceEdit edit = inputAction.getLazyEdit().get();
-                List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-                for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
-                    if (parts.hasFirst()) {
-                        String docUri = parts.first().getDocument();
+                } else if (data.has(URL) && data.has(INDEX)) {
+                    LazyCodeAction inputAction = lastCodeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt());
+                    if (inputAction != null) {
                         try {
-                            FileObject file = Utils.fromUri(docUri);
-                            if (file == null) {
-                                file = Utils.fromUri(data.getAsJsonPrimitive(URL).getAsString());
-                            }
-                            FileObject fo = file;
-                            if (fo != null) {
-                                List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
-                                TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
-                                documentChanges.add(Either.forLeft(tde));
-                            }
-                        } catch (Exception ex) {
-                            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                        }
-                    } else {
-                        if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
-                            documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
-                        } else {
-                            throw new IllegalStateException(String.valueOf(parts.second()));
+                            unresolved.setEdit(fromAPI(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));
+                        } catch (Exception e) {
+                            future.completeExceptionally(e);
+                            return;
                         }
                     }
                 }
-                unresolved.setEdit(new WorkspaceEdit(documentChanges));
             }
-        }
-        return CompletableFuture.completedFuture(unresolved);
+            future.complete(unresolved);
+        });
+        return future;
     }
 
     @NbBundle.Messages({"# {0} - method name", "LBL_Run=Run {0}",
@@ -1262,7 +1249,10 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                         int start = (int) cc.getTrees().getSourcePositions().getStartPosition(cc.getCompilationUnit(), tree);
                                         int end = (int) cc.getTrees().getSourcePositions().getEndPosition(cc.getCompilationUnit(), tree);
                                         org.netbeans.api.lsp.Range range = new org.netbeans.api.lsp.Range(start, end);
-                                        List<Object> arguments = Collections.singletonList(uri);
+                                        List<Object> arguments = new ArrayList<>();
+                                        arguments.add(uri);
+                                        arguments.add(null);
+                                        arguments.add("");
                                         String method = el.getSimpleName().toString();
                                         lens.add(new org.netbeans.api.lsp.CodeLens(range,
                                                               new org.netbeans.api.lsp.Command(Bundle.LBL_Run(method), COMMAND_RUN_SINGLE, arguments),
@@ -1647,6 +1637,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public void didOpen(DidOpenTextDocumentParams params) {
+        LOG.log(Level.FINER, "didOpen: {0}", params);
         try {
             FileObject file = fromURI(params.getTextDocument().getUri(), true);
             if (file == null) {
@@ -1661,10 +1652,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 if (doc == null) {
                     doc = ec.openDocument();
                 }
-                if (!text.contentEquals(doc.getText(0, doc.getLength()))) {
-                    doc.remove(0, doc.getLength());
-                    doc.insertString(0, text, null);
-                }
+                updateDocumentIfNeeded(text, doc);
             } catch (BadLocationException ex) {
                 Exceptions.printStackTrace(ex);
                 //TODO: include stack trace:
@@ -1683,8 +1671,45 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
+    static void updateDocumentIfNeeded(String text, Document doc) throws BadLocationException {
+        String docText = doc.getText(0, doc.getLength());
+
+        if (text.contentEquals(docText)) {
+            //the texts are the same, no need to change the Document content:
+            return ;
+        }
+
+        //normalize line endings:
+        StringBuilder newText = new StringBuilder(text.length());
+        int len = text.length();
+        boolean modified = false;
+
+        for (int i = 0; i < len; i++) {
+            char c = text.charAt(i);
+            if (c == '\r') {
+                if (i + 1 < len && text.charAt(i + 1) == '\n') {
+                    i++;
+                }
+                c = '\n';
+                modified = true;
+            }
+            newText.append(c);
+        }
+
+        String newTextString = newText.toString();
+
+        if (modified && docText.equals(newTextString)) {
+            //only change in line endings, no need to change the Document content:
+            return ;
+        }
+
+        doc.remove(0, doc.getLength());
+        doc.insertString(0, newTextString, null);
+    }
+
     @Override
     public void didChange(DidChangeTextDocumentParams params) {
+        LOG.log(Level.FINER, "didChange: {0}", params);
         String uri = params.getTextDocument().getUri();
         Document rawDoc = server.getOpenedDocuments().getDocument(uri);
         if (rawDoc != null) {
@@ -1711,17 +1736,23 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
+        LOG.log(Level.FINER, "didClose: {0}", params);
         try {
             String uri = params.getTextDocument().getUri();
             // the order here is important ! As the file may cease to exist, it's
             // important that the doucment is already gone form the client.
-            server.getOpenedDocuments().notifyClosed(uri);
+            Document doc = server.getOpenedDocuments().notifyClosed(uri);
             FileObject file = fromURI(uri, true);
-            if (file == null) {
-                return;
+            EditorCookie ec = file != null ? file.getLookup().lookup(EditorCookie.class) : null;
+            if (ec == null && doc != null) {
+                DataObject dObj = (DataObject) doc.getProperty(Document.StreamDescriptionProperty);
+                if (dObj != null) {
+                    ec = dObj.getLookup().lookup(EditorCookie.class);
+                }
             }
-            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-            ec.close();
+            if (ec != null) {
+                ec.close();
+            }
         } finally {
             reportNotificationDone("didClose", params);
         }
@@ -1729,6 +1760,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<List<TextEdit>> willSaveWaitUntil(WillSaveTextDocumentParams params) {
+        LOG.log(Level.FINER, "willSaveWaitUntil: {0}", params);
         String uri = params.getTextDocument().getUri();
         JavaSource js = getJavaSource(uri);
         if (js == null) {
@@ -1756,6 +1788,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public void didSave(DidSaveTextDocumentParams arg0) {
         //TODO: nothing for now?
+        LOG.log(Level.FINER, "didSave: {0}", arg0);
     }
 
     CompletableFuture<List<? extends Location>> superImplementations(String uri, Position position) {
@@ -1877,6 +1910,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 SourceAccessor.getINSTANCE().invalidate(Source.create(originalDoc), true);
             }
         }
+        if (Lookup.getDefault().lookup(NbCodeLanguageClient.class) == null) {
+            new Exception("no NbCodeLanguageClient!").printStackTrace();
+        }
 
         diagnosticTasks.computeIfAbsent(uri, u -> {
             return BACKGROUND_TASKS.create(() -> {
@@ -1896,9 +1932,44 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             });
         }).schedule(DELAY);
     }
+    
+    CompletableFuture<List<Diagnostic>> computeDiagnostics(String uri, EnumSet<ErrorProvider.Kind> types) {
+        CompletableFuture<List<Diagnostic>> r = new CompletableFuture<>();
+        BACKGROUND_TASKS.post(() -> {
+            try {
+                Document originalDoc = server.getOpenedDocuments().getDocument(uri);
+                long originalVersion = documentVersion(originalDoc);
+                List<Diagnostic> result = Collections.emptyList();
+                if (types.contains(ErrorProvider.Kind.ERRORS)) {
+                    result = computeDiags(uri, -1, ErrorProvider.Kind.ERRORS, originalVersion);
+                }
+                if (types.contains(ErrorProvider.Kind.HINTS)) {
+                    result = computeDiags(uri, -1, ErrorProvider.Kind.HINTS, originalVersion);
+                }
+                r.complete(result);
+            } catch (ThreadDeath td) {
+                throw td;
+            } catch (Throwable t) {
+                r.completeExceptionally(t);
+            }
+        });
+        return r;
+    }
 
     private static final int DELAY = 500;
 
+    
+    /**
+     * Recomputes a specific kinds of diagnostics for the file, and returns a complete set diagnostics for that
+     * file. If the document changes during the computation, the computation aborts and returns an empty list. 
+     * It is possible to provide the reference version of the document, any change beyond that is detected.
+     * 
+     * @param uri the file that should be processed.
+     * @param offset offset to compute diagnostics for.
+     * @param errorKind the kind of diagnostics to recompute/update
+     * @param orgV version of the document. or -1 to obtain the current version.
+     * @return complete list of diagnostics for the file.
+     */
     private List<Diagnostic> computeDiags(String uri, int offset, ErrorProvider.Kind errorKind, long orgV) {
         List<Diagnostic> result = new ArrayList<>();
         FileObject file = fromURI(uri);
@@ -2136,7 +2207,37 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         }
     }
 
-    public static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {//TODO: is this still used?
+    static WorkspaceEdit fromAPI(org.netbeans.api.lsp.WorkspaceEdit edit, String uri, NbCodeLanguageClient client) {
+        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
+        for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
+            if (parts.hasFirst()) {
+                String docUri = parts.first().getDocument();
+                try {
+                    FileObject file = Utils.fromUri(docUri);
+                    if (file == null) {
+                        file = Utils.fromUri(uri);
+                    }
+                    FileObject fo = file;
+                    if (fo != null) {
+                        List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
+                        TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
+                        documentChanges.add(Either.forLeft(tde));
+                    }
+                } catch (Exception ex) {
+                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
+                }
+            } else {
+                if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
+                    documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
+                } else {
+                    throw new IllegalStateException(String.valueOf(parts.second()));
+                }
+            }
+        }
+        return new WorkspaceEdit(documentChanges);
+    }
+
+    static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {//TODO: is this still used?
         FileObject[] file = new FileObject[1];
         LineMap[] lm = new LineMap[1];
         ModificationResult changes = js.runModificationTask(wc -> {

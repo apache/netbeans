@@ -605,6 +605,9 @@
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.api.maven</code-name-base>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <friend-packages>

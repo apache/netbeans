@@ -23,14 +23,14 @@ import { assertNever, isObject, isRecord, isString, IsType } from '../typesUtil'
 import { makeHtmlForProperties } from './propertiesHtmlBuilder';
 import { TreeViewService, TreeNodeListener, Visualizer } from '../explorer';
 import { NodeChangeType } from '../protocol';
+import { COMMAND_PREFIX } from '../extension';
 
 function isVisualizer(node : any) : node is Visualizer {
 	return node?.id && node?.rootId;
 }
 export class PropertiesView {
-	private static readonly COMMAND_PREFIX = "java.";
-	private static readonly COMMAND_GET_NODE_PROPERTIES = PropertiesView.COMMAND_PREFIX + "node.properties.get";      // NOI18N
-	private static readonly COMMAND_SET_NODE_PROPERTIES = PropertiesView.COMMAND_PREFIX + "node.properties.set";      // NOI18N
+	private readonly COMMAND_GET_NODE_PROPERTIES = COMMAND_PREFIX + ".node.properties.get";      // NOI18N
+	private readonly COMMAND_SET_NODE_PROPERTIES = COMMAND_PREFIX + ".node.properties.set";      // NOI18N
 
 	private static extensionUri: vscode.Uri;
 	private static scriptPath: vscode.Uri;
@@ -148,7 +148,7 @@ export class PropertiesView {
 	}
 
 	private async get(): Promise<Map<String, Properties>> {
-		const resp = await vscode.commands.executeCommand(PropertiesView.COMMAND_GET_NODE_PROPERTIES, this.id);
+		const resp = await vscode.commands.executeCommand(this.COMMAND_GET_NODE_PROPERTIES, this.id);
 		if (!isObject(resp)) {
 			// TODO - possibly report protocol error ?
 			return new Map<String, Properties>();
@@ -165,7 +165,7 @@ export class PropertiesView {
 		const msg: Record<string, Properties> = {};
 		msg[this.properties.name] = this.properties;
 
-		vscode.commands.executeCommand(PropertiesView.COMMAND_SET_NODE_PROPERTIES, this.id, msg)
+		vscode.commands.executeCommand(this.COMMAND_SET_NODE_PROPERTIES, this.id, msg)
 			.then(done => {
 				if (isRecord(isRecord.bind(null, isString) as IsType<Record<string, string>>, done)) {
 					this.processSaveError(done);

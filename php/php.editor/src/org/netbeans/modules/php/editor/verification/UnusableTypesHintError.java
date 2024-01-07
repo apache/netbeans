@@ -40,6 +40,7 @@ import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
@@ -128,7 +129,19 @@ public class UnusableTypesHintError extends HintErrorRule {
             }
             Expression fieldType = node.getFieldType();
             if (fieldType != null) {
-                checkFieldType(fieldType, false);
+                checkFieldAndConstType(fieldType, false);
+            }
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(ConstantDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            Expression constType = node.getConstType();
+            if (constType != null) {
+                checkFieldAndConstType(constType, false);
             }
             super.visit(node);
         }
@@ -239,11 +252,11 @@ public class UnusableTypesHintError extends HintErrorRule {
             super.visit(nullableType);
         }
 
-        private void checkFieldType(@NullAllowed Expression fieldType, boolean isInUnionType) {
+        private void checkFieldAndConstType(@NullAllowed Expression declaredType, boolean isInUnionType) {
             // unusable types: void and callable PHP 7.4
-            Expression type = fieldType;
-            if (fieldType instanceof NullableType) {
-                type = ((NullableType) fieldType).getType();
+            Expression type = declaredType;
+            if (declaredType instanceof NullableType) {
+                type = ((NullableType) declaredType).getType();
             }
             if (type == null) {
                 return;
@@ -262,7 +275,7 @@ public class UnusableTypesHintError extends HintErrorRule {
                     checkTrueAndFalseAndNullTypes((NamespaceName) type);
                 }
             } else if (type instanceof UnionType) {
-                ((UnionType) type).getTypes().forEach(unionType -> checkFieldType(unionType, true));
+                ((UnionType) type).getTypes().forEach(unionType -> checkFieldAndConstType(unionType, true));
             }
         }
 

@@ -577,7 +577,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <StaticConstantAccess start='944' end='960'>
+                        <StaticConstantAccess start='944' end='960' isDynamicName='false'>
                             <Variable start='944' end='953' isDollared='true'>
                                 <Identifier start='945' end='953' name='stdClass'/>
                             </Variable>
@@ -611,7 +611,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <StaticConstantAccess start='997' end='1014'>
+                        <StaticConstantAccess start='997' end='1014' isDynamicName='false'>
                             <Variable start='997' end='1007' isDollared='true'>
                                 <Identifier start='998' end='1007' name='reference'/>
                             </Variable>
@@ -633,7 +633,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <StaticConstantAccess start='1026' end='1047'>
+                        <StaticConstantAccess start='1026' end='1047' isDynamicName='false'>
                             <AnonymousObjectVariable start='1026' end='1040'>
                                 <ClassInstanceCreation start='1027' end='1039' anonymous='false'>
                                     <ClassName start='1031' end='1039'>
@@ -663,7 +663,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <StaticConstantAccess start='1059' end='1084'>
+                        <StaticConstantAccess start='1059' end='1084' isDynamicName='false'>
                             <AnonymousObjectVariable start='1059' end='1077'>
                                 <CloneExpression start='1060' end='1076'>
                                     <ClassInstanceCreation start='1066' end='1076' anonymous='false'>
@@ -716,7 +716,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <StaticConstantAccess start='1155' end='1168'>
+                        <StaticConstantAccess start='1155' end='1168' isDynamicName='false'>
                             <FunctionInvocation start='1155' end='1161'>
                                 <FucntionName start='1155' end='1159'>
                                     <NamespaceName start='1155' end='1159' isCurrent='false' isGlobal='false'>
@@ -791,7 +791,7 @@
                                             </NamespaceName>
                                         </FucntionName>
                                         <Parameters>
-                                            <StaticConstantAccess start='1363' end='1375'>
+                                            <StaticConstantAccess start='1363' end='1375' isDynamicName='false'>
                                                 <Variable start='1363' end='1368' isDollared='true'>
                                                     <Identifier start='1364' end='1368' name='this'/>
                                                 </Variable>
@@ -873,7 +873,7 @@
                                 </NamespaceName>
                             </FucntionName>
                             <Parameters>
-                                <StaticConstantAccess start='1426' end='1455'>
+                                <StaticConstantAccess start='1426' end='1455' isDynamicName='false'>
                                     <MethodInvocation start='1426' end='1448' isNullsafe='false'>
                                         <Variable start='1426' end='1431' isDollared='true'>
                                             <Identifier start='1427' end='1431' name='test'/>
@@ -910,7 +910,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <StaticConstantAccess start='1548' end='1575'>
+                        <StaticConstantAccess start='1548' end='1575' isDynamicName='false'>
                             <MethodInvocation start='1548' end='1568' isNullsafe='false'>
                                 <Variable start='1548' end='1553' isDollared='true'>
                                     <Identifier start='1549' end='1553' name='test'/>
@@ -970,7 +970,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <StaticConstantAccess start='1612' end='1628'>
+                        <StaticConstantAccess start='1612' end='1628' isDynamicName='false'>
                             <ArrayAccess start='1612' end='1621' type='VARIABLE_ARRAY' isDollared='false'>
                                 <ArrayDimension start='1618' end='1621'>
                                     <Index>

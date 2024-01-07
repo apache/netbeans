@@ -318,11 +318,20 @@ final class ShortcutAndMenuKeyEventProcessor implements KeyEventDispatcher, KeyE
                 || mev.isConsumed()) {
             return;
         }
+        int button = mev.getButton();
+        if (Utilities.getOperatingSystem() == Utilities.OS_LINUX) {
+            // the JDK drops buttons for vertical scroll
+            // drop buttons for horizontal scroll here.
+            button -= 2;
+            if (button <= 3) {
+                return;
+            }
+        }
         //ignore when the IDE is shutting down
         if (NbLifecycleManager.isExiting()) {
             return;
         }
-        int keycode = Utilities.mouseButtonKeyCode(mev.getButton());
+        int keycode = Utilities.mouseButtonKeyCode(button);
         if (keycode == KeyEvent.VK_UNDEFINED) {
             return;
         }

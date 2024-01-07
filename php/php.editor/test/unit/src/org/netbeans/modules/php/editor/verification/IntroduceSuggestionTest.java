@@ -25,6 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import org.netbeans.modules.php.api.PhpVersion;
+import org.openide.filesystems.FileObject;
 
 public class IntroduceSuggestionTest extends PHPHintsTestBase {
 
@@ -152,7 +154,7 @@ public class IntroduceSuggestionTest extends PHPHintsTestBase {
 
     public void testTrait_Constant() throws Exception {
         // don't show the hint because a trait can't have constants
-        checkHints("TraitA::CONSTANT^");
+        checkHints("TraitA::CONSTANT^", PhpVersion.PHP_81);
     }
 
     public void testTrait_StaticMethod_01() throws Exception {
@@ -357,8 +359,108 @@ public class IntroduceSuggestionTest extends PHPHintsTestBase {
         applyHint("$test->fiel^d;", "Create Field");
     }
 
+    public void testConstantsInTraits01_PHP81() throws Exception {
+        checkHints("        echo self::CONST^ANT;", PhpVersion.PHP_81);
+    }
+
+    public void testConstantsInTraits01_PHP82() throws Exception {
+        checkHints("        echo self::CONST^ANT;", PhpVersion.PHP_82);
+    }
+
+    public void testConstantsInTraits02_PHP82() throws Exception {
+        checkHints("        echo self::CONST^ANT;", PhpVersion.PHP_82);
+    }
+
+    public void testConstantsInTraits03_PHP82() throws Exception {
+        checkHints("        echo self::CONST^ANT;", PhpVersion.PHP_82);
+    }
+
+    public void testConstantsInTraits01_PHP82Fix() throws Exception {
+        applyHint("        echo self::CONST^ANT;", "Create Constant", PhpVersion.PHP_82);
+    }
+
+    public void testDynamicClassConstantFetch_01() throws Exception {
+        checkHints("    public const A = self::{'B^AR'};");
+    }
+
+    public void testDynamicClassConstantFetch_02() throws Exception {
+        checkHints("    public const B = self::{self::{'B^A'} . 'R'};");
+    }
+
+    public void testDynamicClassConstantFetch_03() throws Exception {
+        checkHints("    public const C = self::{self::BA . self::^R};");
+    }
+
+    public void testDynamicClassConstantFetch_03Fix() throws Exception {
+        applyHint("    public const C = self::{self::BA . self::^R};", "Create Constant");
+    }
+
+    public void testDynamicClassConstantFetch_04() throws Exception {
+        checkHints("Test::{\"BA^R\"};");
+    }
+
+    public void testDynamicClassConstantFetch_05() throws Exception {
+        checkHints("$test::{\"BA^R\"};");
+    }
+
+    public void testDynamicClassConstantFetch_06() throws Exception {
+        checkHints("Test::{test()}::{tes^t($bar)};");
+    }
+
+    public void testDynamicClassConstantFetch_07() throws Exception {
+        checkHints("Test::{test('foo')}::FO^O;");
+    }
+
+    public void testDynamicClassConstantFetch_Trait01() throws Exception {
+        checkHints("    public const TRAIT_B = self::{self::{'B^A'} . 'R'};");
+    }
+
+    public void testDynamicClassConstantFetch_Trait02() throws Exception {
+        checkHints("    public const TRAIT_C = self::{self::TRAIT_BA . self::TRA^IT_R};");
+    }
+
+    public void testDynamicClassConstantFetch_Trait02Fix() throws Exception {
+        applyHint("    public const TRAIT_C = self::{self::TRAIT_BA . self::TRAI^T_R};", "Create Constant");
+    }
+
+    public void testDynamicClassConstantFetch_EnumCase01() throws Exception {
+        checkHints("    case A = self::{'BA^R'};");
+    }
+
+    public void testDynamicClassConstantFetch_EnumCase02() throws Exception {
+        checkHints("    case B = self::{self::{'B^A'} . 'R'};");
+    }
+
+    public void testDynamicClassConstantFetch_EnumCase03() throws Exception {
+        checkHints("    case C = self::{self::BA . self::^R};");
+    }
+
+    public void testDynamicClassConstantFetch_EnumCase03aFix() throws Exception {
+        applyHint("    case C = self::{self::BA . self::^R};", "Create Constant");
+    }
+
+    public void testDynamicClassConstantFetch_EnumCase03bFix() throws Exception {
+        applyHint("    case C = self::{self::BA . self::^R};", "Create Enum Case");
+    }
+
+    public void testDynamicClassConstantFetch_EnumCase04() throws Exception {
+        checkHints("EnumTest::{\"BA^R\"};");
+    }
+
+    public void testDynamicClassConstantFetch_EnumCase05() throws Exception {
+        checkHints("EnumTest::{test()}::{tes^t($bar)};");
+    }
+
+    public void testDynamicClassConstantFetch_EnumCase06() throws Exception {
+        checkHints("EnumTest::{tes^t('foo')}::FOO;");
+    }
+
     private void checkHints(String caretLine) throws Exception {
         checkHints(new IntroduceSuggestion(), getTestFileName(), caretLine);
+    }
+
+    private void checkHints(String caretLine, PhpVersion phpVersion) throws Exception {
+        checkHints(new IntroduceSuggestionStub(phpVersion), getTestFileName(), caretLine);
     }
 
     private void checkHints(String fileName, String caretLine) throws Exception {
@@ -367,6 +469,10 @@ public class IntroduceSuggestionTest extends PHPHintsTestBase {
 
     private void applyHint(String caretLine, String fixDesc) throws Exception {
         applyHint(new IntroduceSuggestion(), getTestFileName(), caretLine, fixDesc);
+    }
+
+    private void applyHint(String caretLine, String fixDesc, PhpVersion phpVersion) throws Exception {
+        applyHint(new IntroduceSuggestionStub(phpVersion), getTestFileName(), caretLine, fixDesc);
     }
 
     private void applyHint(String fileName, String caretLine, String fixDesc) throws Exception {
@@ -379,6 +485,20 @@ public class IntroduceSuggestionTest extends PHPHintsTestBase {
         String content = new String(Files.readAllBytes(path), charset);
         content = content.replace("%SEP%", File.separator);
         Files.write(path, content.getBytes(charset));
+    }
+
+    private static class IntroduceSuggestionStub extends IntroduceSuggestion {
+
+        private final PhpVersion phpVersion;
+
+        public IntroduceSuggestionStub(PhpVersion phpVersion) {
+            this.phpVersion = phpVersion;
+        }
+
+        @Override
+        protected PhpVersion getPhpVersion(FileObject fileObject) {
+            return phpVersion;
+        }
     }
 
 }

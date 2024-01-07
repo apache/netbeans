@@ -1,0 +1,2 @@
+    public static (Foo&Bar)|Bar $|>MARK_OCCURRENCES:stat^icFieldBaz<|;
+        $this->fieldClass::$|>MARK_OCCURRENCES:staticFieldBaz<|;

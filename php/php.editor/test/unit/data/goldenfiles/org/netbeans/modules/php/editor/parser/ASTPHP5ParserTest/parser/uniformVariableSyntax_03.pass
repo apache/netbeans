@@ -48,7 +48,7 @@
         </Comments>
         <Statements>
             <ExpressionStatement start='7' end='29'>
-                <StaticConstantAccess start='7' end='28'>
+                <StaticConstantAccess start='7' end='28' isDynamicName='false'>
                     <StaticFieldAccess start='7' end='23'>
                         <FunctionInvocation start='7' end='17'>
                             <FucntionName start='7' end='15'>

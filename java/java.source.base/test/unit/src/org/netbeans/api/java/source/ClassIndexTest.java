@@ -41,6 +41,7 @@ import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.junit.RandomlyFails;
+import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.netbeans.modules.java.source.usages.ClassIndexManagerEvent;
@@ -667,6 +668,10 @@ public class ClassIndexTest extends NbTestCase {
         }
     }
        
+
+    static {
+        MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT = true;
+    }
 
     public static class ClassPathProviderImpl implements ClassPathProvider {
 

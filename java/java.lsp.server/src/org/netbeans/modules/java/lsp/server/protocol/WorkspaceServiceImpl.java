@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -123,7 +124,7 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachConfigurations;
 import org.netbeans.modules.java.lsp.server.debugging.attach.AttachNativeConfigurations;
 import org.netbeans.modules.java.lsp.server.project.LspProjectInfo;
-import org.netbeans.modules.java.lsp.server.singlesourcefile.CompilerOptionsQueryImpl;
+import org.netbeans.modules.java.lsp.server.singlesourcefile.SingleFileOptionsQueryImpl;
 import org.netbeans.modules.java.source.ElementHandleAccessor;
 import org.netbeans.modules.java.source.ui.JavaSymbolProvider;
 import org.netbeans.modules.java.source.ui.JavaTypeProvider;
@@ -131,6 +132,7 @@ import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.parsing.lucene.support.Queries;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.jumpto.type.SearchType;
+import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -141,7 +143,9 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -166,10 +170,42 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     private final LspServerState server;
     private NbCodeLanguageClient client;
 
+    /**
+     * List of workspace folders as reported by the client. Initialized in `initialize` request,
+     * and then updated by didChangeWorkspaceFolder notifications.
+     */
+    private volatile List<FileObject> clientWorkspaceFolders = Collections.emptyList();
+
     WorkspaceServiceImpl(LspServerState server) {
         this.server = server;
     }
 
+    /**
+     * Returns the set of workspace folders reported by the client. If a folder from the list is recognized
+     * as a project, it will be also present in {@link #openedProjects()} including all its subprojects.
+     * The list of client workspace folders contains just toplevel items in client's workspace, as defined in
+     * LSP protocol.
+     * @return list of workspace folders
+     */
+    public List<FileObject> getClientWorkspaceFolders() {
+        return new ArrayList<>(clientWorkspaceFolders);
+    }
+
+    public void setClientWorkspaceFolders(List<WorkspaceFolder> clientWorkspaceFolders) {
+        if (clientWorkspaceFolders == null) {
+            return;
+        }
+        List<FileObject> newWorkspaceFolders = new ArrayList<>(this.clientWorkspaceFolders);
+        try {
+            for (WorkspaceFolder clientWorkspaceFolder : clientWorkspaceFolders) {
+                newWorkspaceFolders.add(Utils.fromUri(clientWorkspaceFolder.getUri()));
+            }
+            this.clientWorkspaceFolders = newWorkspaceFolders;
+        } catch (MalformedURLException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+    
     @Override
     public CompletableFuture<Object> executeCommand(ExecuteCommandParams params) {
         String command = Utils.decodeCommand(params.getCommand(), client.getNbCodeCapabilities());
@@ -220,6 +256,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 return server.asyncOpenSelectedProjects(targets, false).thenCompose((Project[] owners) -> {
                     Map<Project, List<FileObject>> items = new LinkedHashMap<>();
                     for (int i = 0; i < owners.length; i++) {
+                        if (owners[i] == null) {
+                            continue;
+                        }
                         items.computeIfAbsent(owners[i], (p) -> new ArrayList<>()).add(targets.get(i));
                     }
                     final CommandProgress progressOfCompilation = new CommandProgress();
@@ -722,6 +761,32 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
                 return CompletableFuture.completedFuture(result);
             }
+            case Server.NBLS_GET_DIAGNOSTICS: {
+                    List<Object> arguments = params.getArguments();
+                    String source = ((JsonPrimitive) arguments.get(0)).getAsString();
+                    EnumSet<ErrorProvider.Kind> s;
+                    if (arguments.size() > 1 && arguments.get(1) instanceof JsonArray) {
+                        s = EnumSet.noneOf(ErrorProvider.Kind.class);
+                        for (JsonElement jse : ((JsonArray)arguments.get(1))) {
+                            if (jse instanceof JsonPrimitive) {
+                                ErrorProvider.Kind k = ErrorProvider.Kind.valueOf(jse.getAsString());
+                                s.add(k);
+                            }
+                        }
+                    } else {
+                        s = EnumSet.allOf(ErrorProvider.Kind.class);
+                    }
+                    return (CompletableFuture<Object>)(CompletableFuture)((TextDocumentServiceImpl)server.getTextDocumentService()).computeDiagnostics(source, s);
+            }
+            case Server.NBLS_GET_SERVER_DIRECTORIES: {
+                JsonObject o = new JsonObject();
+                o.addProperty("userdir", Places.getUserDirectory().toString());
+                o.addProperty("dirs", System.getProperty("netbeans.dirs"));
+                o.addProperty("extra.dirs", System.getProperty("netbeans.extra.dirs"));
+                o.addProperty("cache", Places.getCacheDirectory().toString());
+                o.addProperty("config", FileUtil.toFile(FileUtil.getConfigRoot()).toString());
+                return CompletableFuture.completedFuture(o);
+            }
             default:
                 for (CodeActionsProvider codeActionsProvider : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
                     if (codeActionsProvider.getCommands().contains(command)) {
@@ -760,6 +825,9 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         }
         
         LspProjectInfo fillProjectInfo(Project p) {
+            if (p == null) {
+                return null;
+            }
             LspProjectInfo info = infos.get(p.getProjectDirectory());
             if (info != null) {
                 return info;
@@ -1269,7 +1337,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             }
         });
         String fullAltConfigPrefix = client.getNbCodeCapabilities().getAltConfigurationPrefix();
-        String altConfigPrefix = fullConfigPrefix.substring(0, fullAltConfigPrefix.length() - 1);
+        String altConfigPrefix = fullAltConfigPrefix.substring(0, fullAltConfigPrefix.length() - 1);
         boolean modified = false;
         String newVMOptions = "";
         JsonObject javaPlus = ((JsonObject) params.getSettings()).getAsJsonObject(altConfigPrefix);
@@ -1279,7 +1347,7 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 newVMOptions = runConfig.getAsJsonPrimitive("vmOptions").getAsString();
             }
         }
-        for (CompilerOptionsQueryImpl query : Lookup.getDefault().lookupAll(CompilerOptionsQueryImpl.class)) {
+        for (SingleFileOptionsQueryImpl query : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImpl.class)) {
             modified |= query.setConfiguration(client, newVMOptions);
         }
         if (modified) {
@@ -1339,6 +1407,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     })
     @Override
     public void didChangeWorkspaceFolders(DidChangeWorkspaceFoldersParams params) {
+        // the client > server notification stream is sequential
+        List<FileObject> newWorkspaceFolders = new ArrayList<>(this.clientWorkspaceFolders);
         List<FileObject> refreshProjectFolders = new ArrayList<>();
         for (WorkspaceFolder wkspFolder : params.getEvent().getAdded()) {
             String uri = wkspFolder.getUri();
@@ -1346,32 +1416,56 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 FileObject f = Utils.fromUri(uri);
                 if (f != null) {
                     refreshProjectFolders.add(f);
+                    // avoid duplicates
+                    if (!newWorkspaceFolders.contains(f)) {
+                        LOG.log(Level.FINE, "Adding client workspace folder {0}", f);
+                        newWorkspaceFolders.add(f);
+                    }
                 }
             } catch (MalformedURLException ex) {
                 // expected, perhaps some client-specific URL scheme ?
                 LOG.fine("Workspace folder URI could not be converted into fileobject: {0}");
             }
         }
+        
+        if (params.getEvent().getRemoved() != null) {
+            for (WorkspaceFolder wsf : params.getEvent().getRemoved()) {
+                String uri = wsf.getUri();
+                try {
+                    FileObject f = Utils.fromUri(uri);
+                    if (f != null) {
+                        LOG.log(Level.FINE, "Removing client workspace folder {0}", f);
+                        newWorkspaceFolders.remove(f);
+                    }
+                } catch (MalformedURLException ex) {
+                    // was never added 
+                }
+            }
+        }
+        // the client > server notification stream is sequential; no need to sync
+        this.clientWorkspaceFolders = newWorkspaceFolders;
+        
         if (!refreshProjectFolders.isEmpty()) {
             server.asyncOpenSelectedProjects(refreshProjectFolders, true).thenAccept((projects) -> {
                 // report initialization of a project / projects
                 String msg;
-                if (projects.length == 0) {
+                Project[] opened = Arrays.asList(projects).stream().filter(Objects::nonNull).toArray(Project[]::new);
+                if (opened.length == 0) {
                     // this should happen immediately
                     return;
                 } 
-                ProjectInformation pi = ProjectUtils.getInformation(projects[0]);
+                ProjectInformation pi = ProjectUtils.getInformation(opened[0]);
                 String n = pi.getDisplayName();
                 if (n == null) {
                     n = pi.getName();
                 }
                 if (n == null) {
-                    n = projects[0].getProjectDirectory().getName();
+                    n = opened[0].getProjectDirectory().getName();
                 }
-                if (projects.length == 1) {
+                if (opened.length == 1) {
                     msg = Bundle.MSG_ProjectFolderInitializationComplete(n);
                 } else {
-                    msg = Bundle.MSG_ProjectFolderInitializationComplete2(n, projects.length);
+                    msg = Bundle.MSG_ProjectFolderInitializationComplete2(n, opened.length);
                 }
                 StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
             });

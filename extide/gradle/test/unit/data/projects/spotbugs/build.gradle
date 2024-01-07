@@ -1,0 +1,46 @@
+plugins {
+    id("com.github.spotbugs") version "6.0.0-beta.4"
+    id("application")
+    id("java")
+}
+
+description = "Test for a bug"
+group = "com.example"
+version = "1.0.0-2023.10.12"
+
+def artifactName = "testforbug"
+def moduleName = "com.example.gradlespotbugs"
+
+def versionAsm      = "9.5"
+def versionJcip     = "1.0-1"
+def versionSpotBugs = "4.7.3"
+def versionSlf4j    = "2.0.9"
+
+dependencies {
+    // SpotBugs + plugins
+    spotbugs(group: "com.github.spotbugs", name: "spotbugs", version: versionSpotBugs)
+    spotbugs(group: "org.slf4j", name: "slf4j-api", version: versionSlf4j)
+    spotbugs(group: "org.slf4j", name: "slf4j-simple", version: versionSlf4j)
+    spotbugs(group: "org.ow2.asm", name: "asm", version: versionAsm)
+    compileOnly(group: "com.github.spotbugs", name: "spotbugs-annotations", version: versionSpotBugs)
+    compileOnly(group: "com.github.stephenc.jcip", name: "jcip-annotations", version: versionJcip)
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+application {
+    mainClass = "com.example.gradlespotbugs.Hello"
+}
+
+var recursiveObject = new HashMap();
+var intermediateMap = new HashMap();
+
+recursiveObject.put("key1", recursiveObject);
+recursiveObject.put("key2", intermediateMap);
+intermediateMap.put("key3", recursiveObject);
+
+project.ext.set("recursiveProperty", recursiveObject);
+

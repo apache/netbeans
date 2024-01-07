@@ -8,10 +8,10 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz.const : implicit_public2;IMPLICIT_PUBLIC2;1312;'implicit public';0;<TESTURL>/testPHP82ConstantsInTraits.php;32;
-  clz.const : private2;PRIVATE2;1480;'private';0;<TESTURL>/testPHP82ConstantsInTraits.php;2;
-  clz.const : protected2;PROTECTED2;1407;'protected';0;<TESTURL>/testPHP82ConstantsInTraits.php;4;
-  clz.const : public2;PUBLIC2;1367;'public';0;<TESTURL>/testPHP82ConstantsInTraits.php;1;
+  clz.const : implicit_public2;IMPLICIT_PUBLIC2;1312;'implicit public';0;<TESTURL>/testPHP82ConstantsInTraits.php;32;;
+  clz.const : private2;PRIVATE2;1480;'private';0;<TESTURL>/testPHP82ConstantsInTraits.php;2;;
+  clz.const : protected2;PROTECTED2;1407;'protected';0;<TESTURL>/testPHP82ConstantsInTraits.php;4;;
+  clz.const : public2;PUBLIC2;1367;'public';0;<TESTURL>/testPHP82ConstantsInTraits.php;1;;
   top : exampletrait2
   trait : exampletrait2;ExampleTrait2;1228;;ExampleTrait;0;<TESTURL>/testPHP82ConstantsInTraits.php;
   usedtrait : exampletrait;ExampleTrait;
@@ -21,11 +21,11 @@ Not Searchable Keys:
 
 Document 2
 Searchable Keys:
-  clz.const : implicit_public;IMPLICIT_PUBLIC;846;'implicit public';0;<TESTURL>/testPHP82ConstantsInTraits.php;32;
-  clz.const : private;PRIVATE;982;'private';0;<TESTURL>/testPHP82ConstantsInTraits.php;2;
-  clz.const : protected;PROTECTED;939;'protected';0;<TESTURL>/testPHP82ConstantsInTraits.php;4;
-  clz.const : public;PUBLIC;900;'public';0;<TESTURL>/testPHP82ConstantsInTraits.php;1;
-  method : method;method;1024;;void;1;0;<TESTURL>/testPHP82ConstantsInTraits.php;0;0;
+  clz.const : implicit_public;IMPLICIT_PUBLIC;846;'implicit public';0;<TESTURL>/testPHP82ConstantsInTraits.php;32;;
+  clz.const : private;PRIVATE;982;'private';0;<TESTURL>/testPHP82ConstantsInTraits.php;2;;
+  clz.const : protected;PROTECTED;939;'protected';0;<TESTURL>/testPHP82ConstantsInTraits.php;4;;
+  clz.const : public;PUBLIC;900;'public';0;<TESTURL>/testPHP82ConstantsInTraits.php;1;;
+  method : method;method;1024;;void;1;0;<TESTURL>/testPHP82ConstantsInTraits.php;0;0;void;
   top : exampletrait
   trait : exampletrait;ExampleTrait;820;;;0;<TESTURL>/testPHP82ConstantsInTraits.php;
 

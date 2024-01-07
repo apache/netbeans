@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.php.api.editor.PhpClass;
 import org.netbeans.modules.php.editor.CodeUtils;
@@ -47,8 +48,10 @@ import org.openide.util.Parameters;
  * @author Radek Matous
  */
 public final class ClassElementImpl extends TypeElementImpl implements ClassElement {
+
     public static final String IDX_FIELD = PHPIndexer.FIELD_CLASS;
 
+    @NullAllowed
     private final QualifiedName superClass;
     private final Collection<QualifiedName> possibleFQSuperClassNames;
     private final Collection<QualifiedName> fqMixinClassNames;
@@ -72,6 +75,28 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         this.possibleFQSuperClassNames = possibleFQSuperClassNames;
         this.usedTraits = usedTraits;
         this.fqMixinClassNames = fqMixinClassNames;
+        checkTypeNames();
+    }
+
+    private void checkTypeNames() {
+        // GH-6634
+        // avoid getting types from the index with an empty string
+        boolean checkEnabled = false;
+        assert checkEnabled = true;
+        if (checkEnabled) {
+            if (superClass != null) {
+                assert !superClass.getName().isEmpty();
+            }
+            for (QualifiedName name : possibleFQSuperClassNames) {
+                assert !name.getName().isEmpty();
+            }
+            for (QualifiedName usedTrait : usedTraits) {
+                assert !usedTrait.getName().isEmpty();
+            }
+            for (QualifiedName className : fqMixinClassNames) {
+                assert !className.getName().isEmpty();
+            }
+        }
     }
 
     public static Set<ClassElement> fromSignature(final IndexQueryImpl indexScopeQuery, final IndexResult indexResult) {
@@ -81,7 +106,7 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
     public static Set<ClassElement> fromSignature(final NameKind query,
             final IndexQueryImpl indexScopeQuery, final IndexResult indexResult) {
         String[] values = indexResult.getValues(IDX_FIELD);
-        Set<ClassElement> retval = values.length > 0 ? new HashSet<ClassElement>() : Collections.<ClassElement>emptySet();
+        Set<ClassElement> retval = values.length > 0 ? new HashSet<>() : Collections.<ClassElement>emptySet();
         for (String val : values) {
             final ClassElement clz = fromSignature(query, indexScopeQuery, Signature.get(val));
             if (clz != null) {
@@ -142,6 +167,7 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         return KIND;
     }
 
+    @CheckForNull
     @Override
     public QualifiedName getSuperClassName() {
         return superClass;
@@ -149,7 +175,7 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
 
     @Override
     public Collection<QualifiedName> getPossibleFQSuperClassNames() {
-        return this.possibleFQSuperClassNames;
+        return Collections.unmodifiableCollection(possibleFQSuperClassNames);
     }
 
     @Override
@@ -293,7 +319,7 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
 
     @Override
     public Collection<QualifiedName> getUsedTraits() {
-        return usedTraits;
+        return Collections.unmodifiableCollection(usedTraits);
     }
 
     private static class ClassSignatureParser {
@@ -382,9 +408,13 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         public Collection<QualifiedName> getUsedTraits() {
             Collection<QualifiedName> retval = new HashSet<>();
             String traits = signature.string(7);
-            final String[] traitNames = traits.split(Separator.COMMA.toString());
+            final String[] traitNames = CodeUtils.COMMA_PATTERN.split(traits);
             for (String trait : traitNames) {
-                retval.add(QualifiedName.create(trait));
+                if (!trait.isEmpty()) {
+                    // GH-6634
+                    // avoid getting traits from the index with an empty string
+                    retval.add(QualifiedName.create(trait));
+                }
             }
             return retval;
         }
@@ -400,9 +430,13 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         public Collection<QualifiedName> getFQMixinClassNames() {
             Collection<QualifiedName> retval = new HashSet<>();
             String mixins = signature.string(10);
-            final String[] mixinNames = mixins.split(Separator.COMMA.toString());
+            final String[] mixinNames = CodeUtils.COMMA_PATTERN.split(mixins);
             for (String mixinName : mixinNames) {
-                retval.add(QualifiedName.create(mixinName));
+                if (!mixinName.isEmpty()) {
+                    // GH-6634
+                    // avoid getting mixins from the index with an empty string
+                    retval.add(QualifiedName.create(mixinName));
+                }
             }
             return retval;
         }

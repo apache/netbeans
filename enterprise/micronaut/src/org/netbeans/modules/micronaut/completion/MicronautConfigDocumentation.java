@@ -32,7 +32,7 @@ public class MicronautConfigDocumentation implements CompletionDocumentation {
 
     private final ConfigurationMetadataProperty element;
 
-    MicronautConfigDocumentation(ConfigurationMetadataProperty element) {
+    public MicronautConfigDocumentation(ConfigurationMetadataProperty element) {
         this.element = element;
     }
 

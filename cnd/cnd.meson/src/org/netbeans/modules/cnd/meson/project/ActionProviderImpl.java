@@ -18,7 +18,12 @@
  */
 package org.netbeans.modules.cnd.meson.project;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +33,6 @@ import javax.swing.Action;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.project.ProjectUtils;
-import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.openide.LifecycleManager;
@@ -94,7 +98,7 @@ public class ActionProviderImpl implements ActionProvider {
                 File runDir = FileUtil.toFile(project.getProjectDirectory());
                 File buildDir = Paths.get(project.getProjectDirectory().getPath(), cfg.getBuildDirectory()).toFile();
 
-                if (!buildDir.exists() && !action.equals(COMMAND_SETUP)) {
+                if (!buildDirectoryIsValid(buildDir) && !action.equals(COMMAND_SETUP)) {
                     commandsToExecute.add(getMesonCommandLineFor(COMMAND_SETUP));
                 }
 
@@ -225,5 +229,22 @@ public class ActionProviderImpl implements ActionProvider {
                 COMMAND_SETUP,
                 NbBundle.getMessage(ActionProviderImpl.class, "LBL_MesonSetupCommand"),
                 MesonProject.getIcon());
+    }
+
+    private static final class MesonInfo {
+        boolean error;
+    };
+
+    private static boolean buildDirectoryIsValid(File buildDirectory) {
+        if (buildDirectory.exists()) {
+            try {
+                MesonInfo info = new Gson().fromJson(new FileReader(Paths.get(buildDirectory.toString(), MesonProject.MESON_INFO_JSON).toFile()), new TypeToken<MesonInfo>(){}.getType());
+                return (info != null) && !info.error;
+            }
+            catch (FileNotFoundException ignored) {
+            }
+        }
+
+        return false;
     }
 }

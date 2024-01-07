@@ -44,6 +44,7 @@ public class MesonProject implements Project {
     public static final String OPEN_ICON = ICON;
     public static final String INFO_DIRECTORY = "meson-info";
     public static final String COMPILERS_JSON = Paths.get(INFO_DIRECTORY, "intro-compilers.json").toString();
+    public static final String MESON_INFO_JSON = Paths.get(INFO_DIRECTORY, "meson-info.json").toString();
 
     private static final String C_LANGUAGE = "c";
     private static final String CPP_LANGUAGE = "cpp";

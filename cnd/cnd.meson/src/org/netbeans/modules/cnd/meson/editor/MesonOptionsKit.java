@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.cnd.meson.editor;
 
+import org.netbeans.modules.cnd.meson.editor.file.MIMETypes;
+
 public class MesonOptionsKit extends MesonKit {
     @Override
     public String getContentType() {

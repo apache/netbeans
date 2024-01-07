@@ -13,6 +13,14 @@
                         <specification-version>2.8.9</specification-version>
                     </run-dependency>
                 </dependency>
+		<dependency>
+                    <code-name-base>org.netbeans.api.templates</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.30</specification-version>
+                    </run-dependency>
+		</dependency>
                 <dependency>
                     <code-name-base>org.netbeans.core.multiview</code-name-base>
                     <build-prerequisite/>

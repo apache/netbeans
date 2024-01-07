@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cnd.meson.editor;
+package org.netbeans.modules.cnd.meson.editor.file;
 
 import java.io.IOException;
 
@@ -109,6 +109,7 @@ import org.openide.windows.TopComponent;
 })
 public class MesonBuildDataObject extends MultiDataObject {
     public static final String ICON = "org/netbeans/modules/cnd/meson/resources/file_icon.png";
+    @SuppressWarnings("this-escape")
     public MesonBuildDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
         registerEditor(MIMETypes.MESON_BUILD, true);

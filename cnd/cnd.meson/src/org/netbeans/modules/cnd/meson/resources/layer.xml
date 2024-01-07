@@ -173,4 +173,11 @@
             </folder>
         </folder>
     </folder>
+
+    <folder name="Templates">
+        <folder name="meson">
+            <attr name="position" intvalue="1350"/>
+            <attr name="displayName" bundlevalue="org.netbeans.modules.cnd.meson.editor.Bundle#Templates_meson" />
+        </folder>
+    </folder>
 </filesystem>

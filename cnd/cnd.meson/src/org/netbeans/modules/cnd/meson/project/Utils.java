@@ -19,6 +19,7 @@
 package org.netbeans.modules.cnd.meson.project;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,25 @@ public class Utils {
 
     public static boolean isEmpty(String s) {
         return s == null || s.isEmpty();
+    }
+
+    public static String[] concatenate(String[] a1, String[] a2) {
+        String[] combined = null;
+
+        if (a1 != null) {
+            combined = Arrays.copyOf(a1, a1.length + ((a2 != null) ? a2.length : 0));
+        }
+
+        if (a2 != null) {
+            if (combined != null) {
+                System.arraycopy(a2, 0, combined, a1.length, a2.length);
+            }
+            else {
+                combined = Arrays.copyOf(a2, a2.length);
+            }
+        }
+
+        return combined;
     }
 
     private static String escape(String s) {

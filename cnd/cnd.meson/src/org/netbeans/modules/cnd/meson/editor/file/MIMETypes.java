@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.netbeans.modules.cnd.meson.editor;
+package org.netbeans.modules.cnd.meson.editor.file;
 
 import org.openide.filesystems.MIMEResolver;
 import org.openide.util.NbBundle;
@@ -28,7 +28,7 @@ import org.openide.util.NbBundle;
 @MIMEResolver.Registration(
     displayName = "#LBL_MESON_BUILD_MIME_RESOLVER",
     position = 139, // anything > 140 causes meson_options.txt to not be recognized
-    resource = "../resources/mime_resolver.xml"
+    resource = "../../resources/mime_resolver.xml"
 )
 public class MIMETypes {
     public static final String MESON_BUILD = "text/x-meson-build"; //NOI18N

@@ -20,7 +20,7 @@ package org.netbeans.modules.cnd.meson.lexer;
 
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenId;
-import org.netbeans.modules.cnd.meson.editor.MIMETypes;
+import org.netbeans.modules.cnd.meson.editor.file.MIMETypes;
 
 /**
  * Meson build script tokens.

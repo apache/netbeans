@@ -28,6 +28,7 @@ import javax.swing.Action;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.spi.project.ui.support.DefaultProjectOperations;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ui.support.ProjectSensitiveActions;
 import org.openide.LifecycleManager;
@@ -78,7 +79,11 @@ public class ActionProviderImpl implements ActionProvider {
                 .frontWindowOnError(true)
                 .controllable(true)
                 .errConvertorFactory(new LineConvertorFactoryImpl())
-                .outConvertorFactory(new LineConvertorFactoryImpl());
+                .outConvertorFactory(new LineConvertorFactoryImpl())
+                .postExecution(
+                    () -> {
+                        FileUtil.refreshFor(Paths.get(project.getProjectDirectory().getPath(), project.getActiveConfiguration().getBuildDirectory(), MesonProject.INFO_DIRECTORY).toFile());
+                    });
 
         ExecutionService.newService(
             () -> {

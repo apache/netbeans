@@ -92,6 +92,8 @@ public class ConfigurationPanel extends javax.swing.JPanel
         runDirectoryTextField = new javax.swing.JTextField();
 
         buildDirectoryTextField.setText(org.openide.util.NbBundle.getMessage(ConfigurationPanel.class, "ConfigurationPanel.buildDirectoryTextField.text")); // NOI18N
+        buildDirectoryTextField.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        buildDirectoryTextField.setPreferredSize(new java.awt.Dimension(160, 34));
 
         org.openide.awt.Mnemonics.setLocalizedText(buildDirectoryLabel, org.openide.util.NbBundle.getMessage(ConfigurationPanel.class, "ConfigurationPanel.buildDirectoryLabel.text")); // NOI18N
 
@@ -108,14 +110,19 @@ public class ConfigurationPanel extends javax.swing.JPanel
 
         buildTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "plain", "debug", "debugoptimized", "release", "minsize", "custom" }));
         buildTypeComboBox.setSelectedIndex(1);
+        buildTypeComboBox.setMinimumSize(new java.awt.Dimension(80, 34));
+        buildTypeComboBox.setPreferredSize(new java.awt.Dimension(160, 34));
 
         org.openide.awt.Mnemonics.setLocalizedText(wrapModeLabel, org.openide.util.NbBundle.getMessage(ConfigurationPanel.class, "ConfigurationPanel.wrapModeLabel.text")); // NOI18N
 
         wrapModeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "default", "nofallback", "nodownload", "forcefallback", "nopromote" }));
+        wrapModeComboBox.setMinimumSize(new java.awt.Dimension(80, 34));
 
         org.openide.awt.Mnemonics.setLocalizedText(backendLabel, org.openide.util.NbBundle.getMessage(ConfigurationPanel.class, "ConfigurationPanel.backendLabel.text")); // NOI18N
 
         backendComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ninja", "vs", "vs2010", "vs2012", "vs2013", "vs2015", "vs2017", "vs2019", "vs2022", "xcode", "none" }));
+        backendComboBox.setMinimumSize(new java.awt.Dimension(80, 34));
+        backendComboBox.setPreferredSize(new java.awt.Dimension(160, 34));
 
         org.openide.awt.Mnemonics.setLocalizedText(configurationLabel, org.openide.util.NbBundle.getMessage(ConfigurationPanel.class, "ConfigurationPanel.configurationLabel.text")); // NOI18N
 
@@ -243,9 +250,6 @@ public class ConfigurationPanel extends javax.swing.JPanel
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(runExecutableBrowseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(runDirectoryBrowseButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jSeparator2)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
@@ -257,23 +261,24 @@ public class ConfigurationPanel extends javax.swing.JPanel
                             .addComponent(wrapModeLabel))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(buildTypeComboBox, 0, 542, Short.MAX_VALUE)
-                                    .addComponent(buildDirectoryTextField)
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(buildDirectoryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(buildTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(backendComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(wrapModeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addComponent(buildDirectoryBrowseButton))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(26, 26, 26)
-                                .addComponent(configurationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(configurationComboBox, 0, 190, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addComponent(newConfigurationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(renameConfigurationButton)
                                 .addGap(18, 18, 18)
-                                .addComponent(deleteConfigurationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(deleteConfigurationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jSeparator1))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(

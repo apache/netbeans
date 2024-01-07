@@ -1093,11 +1093,14 @@ public abstract class TreeView extends JScrollPane {
             return null;
         }
 
-        Point p = new Point(rect.x, rect.y);
+        Point p = new Point(
+            rect.x + Math.min(350, 10 + rect.width),
+            rect.y - 15);
 
         // bugfix #36984, convert point by TreeView.this
         p = SwingUtilities.convertPoint(tree, p, TreeView.this);
 
+        p.x = Math.min(p.x, TreeView.this.getWidth());
         return p;
     }
 

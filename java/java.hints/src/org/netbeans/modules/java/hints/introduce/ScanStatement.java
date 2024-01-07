@@ -244,7 +244,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
 
     @Override
     public Void visitReturn(ReturnTree node, Void p) {
-        if (isMethodCode() && phase == PHASE_INSIDE_SELECTION) {
+        if ((isMethodCode() || isLambda) && phase == PHASE_INSIDE_SELECTION) {
             selectionExits.add(getCurrentPath());
             hasReturns = true;
         }

@@ -1158,7 +1158,7 @@
                                 <ArrayElement start='874' end='905'>
                                     <Key>
                                         <FieldAccess start='874' end='891' isNullsafe='false'>
-                                            <StaticConstantAccess start='874' end='884'>
+                                            <StaticConstantAccess start='874' end='884' isDynamicName='false'>
                                                 <NamespaceName start='874' end='878' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='874' end='878' name='self'/>
                                                 </NamespaceName>
@@ -1177,7 +1177,7 @@
                                         </FieldAccess>
                                     </Key>
                                     <Value>
-                                        <StaticConstantAccess start='895' end='905'>
+                                        <StaticConstantAccess start='895' end='905' isDynamicName='false'>
                                             <NamespaceName start='895' end='899' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='895' end='899' name='self'/>
                                             </NamespaceName>
@@ -1202,7 +1202,7 @@
                                 <ArrayElement start='924' end='956'>
                                     <Key>
                                         <FieldAccess start='924' end='942' isNullsafe='true'>
-                                            <StaticConstantAccess start='924' end='934'>
+                                            <StaticConstantAccess start='924' end='934' isDynamicName='false'>
                                                 <NamespaceName start='924' end='928' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='924' end='928' name='self'/>
                                                 </NamespaceName>
@@ -1221,7 +1221,7 @@
                                         </FieldAccess>
                                     </Key>
                                     <Value>
-                                        <StaticConstantAccess start='946' end='956'>
+                                        <StaticConstantAccess start='946' end='956' isDynamicName='false'>
                                             <NamespaceName start='946' end='950' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='946' end='950' name='self'/>
                                             </NamespaceName>
@@ -1245,7 +1245,7 @@
                 </Names>
                 <Initializers>
                     <FieldAccess start='991' end='1004' isNullsafe='false'>
-                        <StaticConstantAccess start='991' end='998'>
+                        <StaticConstantAccess start='991' end='998' isDynamicName='false'>
                             <NamespaceName start='991' end='992' isCurrent='false' isGlobal='false'>
                                 <Identifier start='991' end='992' name='E'/>
                             </NamespaceName>
@@ -1270,7 +1270,7 @@
                 </Names>
                 <Initializers>
                     <FieldAccess start='1020' end='1034' isNullsafe='false'>
-                        <StaticConstantAccess start='1020' end='1027'>
+                        <StaticConstantAccess start='1020' end='1027' isDynamicName='false'>
                             <NamespaceName start='1020' end='1021' isCurrent='false' isGlobal='false'>
                                 <Identifier start='1020' end='1021' name='E'/>
                             </NamespaceName>
@@ -1295,7 +1295,7 @@
                 </Names>
                 <Initializers>
                     <FieldAccess start='1058' end='1072' isNullsafe='true'>
-                        <StaticConstantAccess start='1058' end='1065'>
+                        <StaticConstantAccess start='1058' end='1065' isDynamicName='false'>
                             <NamespaceName start='1058' end='1059' isCurrent='false' isGlobal='false'>
                                 <Identifier start='1058' end='1059' name='E'/>
                             </NamespaceName>
@@ -1320,7 +1320,7 @@
                 </Names>
                 <Initializers>
                     <FieldAccess start='1097' end='1112' isNullsafe='true'>
-                        <StaticConstantAccess start='1097' end='1104'>
+                        <StaticConstantAccess start='1097' end='1104' isDynamicName='false'>
                             <NamespaceName start='1097' end='1098' isCurrent='false' isGlobal='false'>
                                 <Identifier start='1097' end='1098' name='E'/>
                             </NamespaceName>
@@ -1351,7 +1351,7 @@
                                 </AttributeName>
                                 <AttributeParameters>
                                     <FieldAccess start='1131' end='1144' isNullsafe='false'>
-                                        <StaticConstantAccess start='1131' end='1138'>
+                                        <StaticConstantAccess start='1131' end='1138' isDynamicName='false'>
                                             <NamespaceName start='1131' end='1132' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='1131' end='1132' name='E'/>
                                             </NamespaceName>
@@ -1382,7 +1382,7 @@
                                 </AttributeName>
                                 <AttributeParameters>
                                     <FieldAccess start='1154' end='1168' isNullsafe='true'>
-                                        <StaticConstantAccess start='1154' end='1161'>
+                                        <StaticConstantAccess start='1154' end='1161' isDynamicName='false'>
                                             <NamespaceName start='1154' end='1155' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='1154' end='1155' name='E'/>
                                             </NamespaceName>
@@ -1418,7 +1418,7 @@
                         </Names>
                         <Initializers>
                             <FieldAccess start='1209' end='1222' isNullsafe='false'>
-                                <StaticConstantAccess start='1209' end='1216'>
+                                <StaticConstantAccess start='1209' end='1216' isDynamicName='false'>
                                     <NamespaceName start='1209' end='1210' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1209' end='1210' name='E'/>
                                     </NamespaceName>
@@ -1443,7 +1443,7 @@
                         </Names>
                         <Initializers>
                             <FieldAccess start='1242' end='1256' isNullsafe='false'>
-                                <StaticConstantAccess start='1242' end='1249'>
+                                <StaticConstantAccess start='1242' end='1249' isDynamicName='false'>
                                     <NamespaceName start='1242' end='1243' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1242' end='1243' name='E'/>
                                     </NamespaceName>
@@ -1468,7 +1468,7 @@
                         </Names>
                         <Initializers>
                             <FieldAccess start='1284' end='1298' isNullsafe='true'>
-                                <StaticConstantAccess start='1284' end='1291'>
+                                <StaticConstantAccess start='1284' end='1291' isDynamicName='false'>
                                     <NamespaceName start='1284' end='1285' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1284' end='1285' name='E'/>
                                     </NamespaceName>
@@ -1493,7 +1493,7 @@
                         </Names>
                         <Initializers>
                             <FieldAccess start='1327' end='1342' isNullsafe='true'>
-                                <StaticConstantAccess start='1327' end='1334'>
+                                <StaticConstantAccess start='1327' end='1334' isDynamicName='false'>
                                     <NamespaceName start='1327' end='1328' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1327' end='1328' name='E'/>
                                     </NamespaceName>
@@ -1525,7 +1525,7 @@
                         </VariableNames>
                         <InitialValues>
                             <FieldAccess start='1371' end='1384' isNullsafe='false'>
-                                <StaticConstantAccess start='1371' end='1378'>
+                                <StaticConstantAccess start='1371' end='1378' isDynamicName='false'>
                                     <NamespaceName start='1371' end='1372' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1371' end='1372' name='E'/>
                                     </NamespaceName>
@@ -1557,7 +1557,7 @@
                         </VariableNames>
                         <InitialValues>
                             <FieldAccess start='1413' end='1427' isNullsafe='false'>
-                                <StaticConstantAccess start='1413' end='1420'>
+                                <StaticConstantAccess start='1413' end='1420' isDynamicName='false'>
                                     <NamespaceName start='1413' end='1414' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1413' end='1414' name='E'/>
                                     </NamespaceName>
@@ -1589,7 +1589,7 @@
                         </VariableNames>
                         <InitialValues>
                             <FieldAccess start='1463' end='1477' isNullsafe='true'>
-                                <StaticConstantAccess start='1463' end='1470'>
+                                <StaticConstantAccess start='1463' end='1470' isDynamicName='false'>
                                     <NamespaceName start='1463' end='1464' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1463' end='1464' name='E'/>
                                     </NamespaceName>
@@ -1621,7 +1621,7 @@
                         </VariableNames>
                         <InitialValues>
                             <FieldAccess start='1514' end='1529' isNullsafe='true'>
-                                <StaticConstantAccess start='1514' end='1521'>
+                                <StaticConstantAccess start='1514' end='1521' isDynamicName='false'>
                                     <NamespaceName start='1514' end='1515' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1514' end='1515' name='E'/>
                                     </NamespaceName>
@@ -1653,7 +1653,7 @@
                         </VariableNames>
                         <InitialValues>
                             <FieldAccess start='1571' end='1584' isNullsafe='false'>
-                                <StaticConstantAccess start='1571' end='1578'>
+                                <StaticConstantAccess start='1571' end='1578' isDynamicName='false'>
                                     <NamespaceName start='1571' end='1572' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1571' end='1572' name='E'/>
                                     </NamespaceName>
@@ -1685,7 +1685,7 @@
                         </VariableNames>
                         <InitialValues>
                             <FieldAccess start='1626' end='1640' isNullsafe='false'>
-                                <StaticConstantAccess start='1626' end='1633'>
+                                <StaticConstantAccess start='1626' end='1633' isDynamicName='false'>
                                     <NamespaceName start='1626' end='1627' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1626' end='1627' name='E'/>
                                     </NamespaceName>
@@ -1717,7 +1717,7 @@
                         </VariableNames>
                         <InitialValues>
                             <FieldAccess start='1689' end='1703' isNullsafe='true'>
-                                <StaticConstantAccess start='1689' end='1696'>
+                                <StaticConstantAccess start='1689' end='1696' isDynamicName='false'>
                                     <NamespaceName start='1689' end='1690' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1689' end='1690' name='E'/>
                                     </NamespaceName>
@@ -1749,7 +1749,7 @@
                         </VariableNames>
                         <InitialValues>
                             <FieldAccess start='1753' end='1768' isNullsafe='true'>
-                                <StaticConstantAccess start='1753' end='1760'>
+                                <StaticConstantAccess start='1753' end='1760' isDynamicName='false'>
                                     <NamespaceName start='1753' end='1754' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1753' end='1754' name='E'/>
                                     </NamespaceName>
@@ -1783,7 +1783,7 @@
                         </ParametrName>
                         <DefaultValue>
                             <FieldAccess start='1834' end='1847' isNullsafe='false'>
-                                <StaticConstantAccess start='1834' end='1841'>
+                                <StaticConstantAccess start='1834' end='1841' isDynamicName='false'>
                                     <NamespaceName start='1834' end='1835' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1834' end='1835' name='E'/>
                                     </NamespaceName>
@@ -1812,7 +1812,7 @@
                         </ParametrName>
                         <DefaultValue>
                             <FieldAccess start='1862' end='1876' isNullsafe='false'>
-                                <StaticConstantAccess start='1862' end='1869'>
+                                <StaticConstantAccess start='1862' end='1869' isDynamicName='false'>
                                     <NamespaceName start='1862' end='1863' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1862' end='1863' name='E'/>
                                     </NamespaceName>
@@ -1841,7 +1841,7 @@
                         </ParametrName>
                         <DefaultValue>
                             <FieldAccess start='1898' end='1912' isNullsafe='true'>
-                                <StaticConstantAccess start='1898' end='1905'>
+                                <StaticConstantAccess start='1898' end='1905' isDynamicName='false'>
                                     <NamespaceName start='1898' end='1899' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1898' end='1899' name='E'/>
                                     </NamespaceName>
@@ -1870,7 +1870,7 @@
                         </ParametrName>
                         <DefaultValue>
                             <FieldAccess start='1935' end='1950' isNullsafe='true'>
-                                <StaticConstantAccess start='1935' end='1942'>
+                                <StaticConstantAccess start='1935' end='1942' isDynamicName='false'>
                                     <NamespaceName start='1935' end='1936' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1935' end='1936' name='E'/>
                                     </NamespaceName>
@@ -1903,7 +1903,7 @@
                                     <Identifier start='1991' end='2001' name='staticName'/>
                                 </Variable>
                                 <FieldAccess start='2004' end='2017' isNullsafe='false'>
-                                    <StaticConstantAccess start='2004' end='2011'>
+                                    <StaticConstantAccess start='2004' end='2011' isDynamicName='false'>
                                         <NamespaceName start='2004' end='2005' isCurrent='false' isGlobal='false'>
                                             <Identifier start='2004' end='2005' name='E'/>
                                         </NamespaceName>
@@ -1935,7 +1935,7 @@
                                     <Identifier start='2031' end='2042' name='staticValue'/>
                                 </Variable>
                                 <FieldAccess start='2045' end='2059' isNullsafe='false'>
-                                    <StaticConstantAccess start='2045' end='2052'>
+                                    <StaticConstantAccess start='2045' end='2052' isDynamicName='false'>
                                         <NamespaceName start='2045' end='2046' isCurrent='false' isGlobal='false'>
                                             <Identifier start='2045' end='2046' name='E'/>
                                         </NamespaceName>
@@ -1967,7 +1967,7 @@
                                     <Identifier start='2073' end='2091' name='staticNameNullsafe'/>
                                 </Variable>
                                 <FieldAccess start='2094' end='2108' isNullsafe='true'>
-                                    <StaticConstantAccess start='2094' end='2101'>
+                                    <StaticConstantAccess start='2094' end='2101' isDynamicName='false'>
                                         <NamespaceName start='2094' end='2095' isCurrent='false' isGlobal='false'>
                                             <Identifier start='2094' end='2095' name='E'/>
                                         </NamespaceName>
@@ -1999,7 +1999,7 @@
                                     <Identifier start='2122' end='2141' name='staticValueNullsafe'/>
                                 </Variable>
                                 <FieldAccess start='2144' end='2159' isNullsafe='true'>
-                                    <StaticConstantAccess start='2144' end='2151'>
+                                    <StaticConstantAccess start='2144' end='2151' isDynamicName='false'>
                                         <NamespaceName start='2144' end='2145' isCurrent='false' isGlobal='false'>
                                             <Identifier start='2144' end='2145' name='E'/>
                                         </NamespaceName>
@@ -2038,7 +2038,7 @@
                             <Identifier start='2200' end='2204' name='NAME'/>
                         </CaseName>
                         <FieldAccess start='2207' end='2220' isNullsafe='false'>
-                            <StaticConstantAccess start='2207' end='2214'>
+                            <StaticConstantAccess start='2207' end='2214' isDynamicName='false'>
                                 <NamespaceName start='2207' end='2208' isCurrent='false' isGlobal='false'>
                                     <Identifier start='2207' end='2208' name='E'/>
                                 </NamespaceName>
@@ -2061,7 +2061,7 @@
                             <Identifier start='2231' end='2236' name='VALUE'/>
                         </CaseName>
                         <FieldAccess start='2239' end='2253' isNullsafe='false'>
-                            <StaticConstantAccess start='2239' end='2246'>
+                            <StaticConstantAccess start='2239' end='2246' isDynamicName='false'>
                                 <NamespaceName start='2239' end='2240' isCurrent='false' isGlobal='false'>
                                     <Identifier start='2239' end='2240' name='E'/>
                                 </NamespaceName>
@@ -2084,7 +2084,7 @@
                             <Identifier start='2264' end='2277' name='NULLSAFE_NAME'/>
                         </CaseName>
                         <FieldAccess start='2280' end='2294' isNullsafe='true'>
-                            <StaticConstantAccess start='2280' end='2287'>
+                            <StaticConstantAccess start='2280' end='2287' isDynamicName='false'>
                                 <NamespaceName start='2280' end='2281' isCurrent='false' isGlobal='false'>
                                     <Identifier start='2280' end='2281' name='E'/>
                                 </NamespaceName>
@@ -2107,7 +2107,7 @@
                             <Identifier start='2305' end='2319' name='NULLSAFE_VALUE'/>
                         </CaseName>
                         <FieldAccess start='2322' end='2337' isNullsafe='true'>
-                            <StaticConstantAccess start='2322' end='2329'>
+                            <StaticConstantAccess start='2322' end='2329' isDynamicName='false'>
                                 <NamespaceName start='2322' end='2323' isCurrent='false' isGlobal='false'>
                                     <Identifier start='2322' end='2323' name='E'/>
                                 </NamespaceName>
@@ -2129,7 +2129,7 @@
                         <CaseName>
                             <Identifier start='2348' end='2353' name='TEST1'/>
                         </CaseName>
-                        <StaticConstantAccess start='2356' end='2363'>
+                        <StaticConstantAccess start='2356' end='2363' isDynamicName='false'>
                             <NamespaceName start='2356' end='2357' isCurrent='false' isGlobal='false'>
                                 <Identifier start='2356' end='2357' name='E'/>
                             </NamespaceName>
@@ -2183,7 +2183,7 @@
                         </Names>
                         <Initializers>
                             <FieldAccess start='2467' end='2483' isNullsafe='false'>
-                                <StaticConstantAccess start='2467' end='2474'>
+                                <StaticConstantAccess start='2467' end='2474' isDynamicName='false'>
                                     <NamespaceName start='2467' end='2468' isCurrent='false' isGlobal='false'>
                                         <Identifier start='2467' end='2468' name='E'/>
                                     </NamespaceName>

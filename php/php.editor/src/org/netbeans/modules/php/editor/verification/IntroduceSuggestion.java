@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
@@ -41,6 +42,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.UiUtils;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
+import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.completion.PHPCompletionItem;
@@ -78,6 +80,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.NamespaceName;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
@@ -118,6 +121,10 @@ public class IntroduceSuggestion extends SuggestionRule {
         return Bundle.IntroduceHintDispName();
     }
 
+    protected PhpVersion getPhpVersion(@NullAllowed FileObject fileObject) {
+        return fileObject == null ? PhpVersion.getDefault() : CodeUtils.getPhpVersion(fileObject);
+    }
+
     @Override
     public void invoke(PHPRuleContext context, List<Hint> hints) {
         PHPParseResult phpParseResult = (PHPParseResult) context.parserResult;
@@ -136,7 +143,7 @@ public class IntroduceSuggestion extends SuggestionRule {
         OffsetRange lineBounds = VerificationUtils.createLineBounds(caretOffset, doc);
         if (lineBounds.containsInclusive(caretOffset)) {
             final Model model = phpParseResult.getModel();
-            IntroduceFixVisitor introduceFixVisitor = new IntroduceFixVisitor(model, lineBounds);
+            IntroduceFixVisitor introduceFixVisitor = new IntroduceFixVisitor(model, lineBounds, getPhpVersion(fileObject));
             phpParseResult.getProgram().accept(introduceFixVisitor);
             List<IntroduceFix> variableFixes = introduceFixVisitor.getIntroduceFixes();
             if (!variableFixes.isEmpty()) {
@@ -153,13 +160,21 @@ public class IntroduceSuggestion extends SuggestionRule {
     }
 
     private static class IntroduceFixVisitor extends DefaultTreePathVisitor {
+
         private final Model model;
         private final OffsetRange lineBounds;
         private final List<IntroduceFix> fixes = new ArrayList<>();
+        private final PhpVersion phpVersion;
 
-        IntroduceFixVisitor(Model model, OffsetRange lineBounds) {
+        IntroduceFixVisitor(Model model, OffsetRange lineBounds, PhpVersion phpVersion) {
             this.lineBounds = lineBounds;
             this.model = model;
+            this.phpVersion = phpVersion;
+        }
+
+        private boolean hasConstants(TypeScope typeScope) {
+            return phpVersion.hasConstantsInTraits()
+                    || !(typeScope instanceof TraitScope);
         }
 
         @Override
@@ -335,7 +350,9 @@ public class IntroduceSuggestion extends SuggestionRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (lineBounds.containsInclusive(staticConstantAccess.getStartOffset())) {
+            if (!staticConstantAccess.isDynamicName()
+                    && (staticConstantAccess.getDispatcher() instanceof NamespaceName) // e.g. ClassName::CONSTANT, self::CONSTANT
+                    && lineBounds.containsInclusive(staticConstantAccess.getStartOffset())) {
                 String constName = staticConstantAccess.getConstantName().getName();
                 String clzName = CodeUtils.extractUnqualifiedClassName(staticConstantAccess);
 
@@ -343,8 +360,8 @@ public class IntroduceSuggestion extends SuggestionRule {
                     Collection<? extends TypeScope> allTypes = ModelUtils.resolveType(model, staticConstantAccess);
                     if (allTypes.size() == 1) {
                         TypeScope type = ModelUtils.getFirst(allTypes);
-                        // trait can't have constants
-                        if (!(type instanceof TraitScope)) {
+                        // trait can have constants since PHP 8.2
+                        if (hasConstants(type)) {
                             ElementQuery.Index index = model.getIndexScope().getIndex();
                             Set<TypeConstantElement> allConstants = ElementFilter.forName(NameKind.exact(constName)).filter(index.getAllTypeConstants(type));
                             Set<EnumCaseElement> allEnumCases = type instanceof EnumScope
@@ -1038,7 +1055,7 @@ public class IntroduceSuggestion extends SuggestionRule {
 
     private static PHPCompletionItem.MethodDeclarationItem createMethodDeclarationItem(final TypeScope typeScope, final MethodInvocation node) {
         final String methodName = CodeUtils.extractFunctionName(node.getMethod());
-        final MethodElement method = MethodElementImpl.createMagicMethod(typeScope,
+        final MethodElement method = MethodElementImpl.forIntroduceHint(typeScope,
                 methodName, 0, getParameters(node.getMethod().getParameters()));
         return typeScope.isInterface()
                 ? PHPCompletionItem.MethodDeclarationItem.forIntroduceInterfaceHint(method, null)
@@ -1047,7 +1064,7 @@ public class IntroduceSuggestion extends SuggestionRule {
 
     private static PHPCompletionItem.MethodDeclarationItem createMethodDeclarationItem(final TypeScope typeScope, final StaticMethodInvocation node) {
         final String methodName = CodeUtils.extractFunctionName(node.getMethod());
-        final MethodElement method = MethodElementImpl.createMagicMethod(typeScope, methodName,
+        final MethodElement method = MethodElementImpl.forIntroduceHint(typeScope, methodName,
                 Modifier.STATIC, getParameters(node.getMethod().getParameters()));
         return PHPCompletionItem.MethodDeclarationItem.forIntroduceHint(method, null);
     }

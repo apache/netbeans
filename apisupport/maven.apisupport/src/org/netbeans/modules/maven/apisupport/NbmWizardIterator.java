@@ -30,7 +30,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
-import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -52,29 +51,26 @@ import org.openide.util.NbBundle.Messages;
 import static org.netbeans.modules.maven.apisupport.Bundle.*;
 import static org.netbeans.modules.maven.apisupport.MavenNbModuleImpl.APACHE_SNAPSHOT_REPO_ID;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
-import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
-import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.maven.model.pom.PluginManagement;
+import org.netbeans.modules.maven.options.MavenVersionSettings;
 import org.netbeans.spi.project.ui.support.CommonProjectActions;
 
 public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiatingIterator<WizardDescriptor> {
 
     public static final String NBM_ARTIFACTID = "nbm_artifactId";
-    
-    static final Archetype NB_MODULE_ARCH, NB_APP_ARCH;
     public static final String SNAPSHOT_VERSION = "dev-SNAPSHOT";
+
+    static final Archetype NB_MODULE_ARCH;
+    static final Archetype NB_APP_ARCH;
     static {
         NB_MODULE_ARCH = new Archetype();
         NB_MODULE_ARCH.setGroupId("org.apache.netbeans.archetypes"); //NOI18N
-        NB_MODULE_ARCH.setVersion("1.18"); //NOI18N
         NB_MODULE_ARCH.setArtifactId("nbm-archetype"); //NOI18N
 
         NB_APP_ARCH = new Archetype();
         NB_APP_ARCH.setGroupId("org.apache.netbeans.archetypes"); //NOI18N
-        NB_APP_ARCH.setVersion("1.23"); //NOI18N
         NB_APP_ARCH.setArtifactId("netbeans-platform-app-archetype"); //NOI18N
-
     }
 
     static final String OSGIDEPENDENCIES = "osgi.dependencies";
@@ -120,20 +116,9 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
     }
 
     // non blocking
-    private static void updateToLatestKnownArchetypeVersion(Archetype archetype) {
-        RepositoryQueries.Result<NBVersionInfo> versionsResult = RepositoryQueries.getVersionsResult(archetype.getGroupId(), archetype.getArtifactId(), null);
-
-        // Versions are sorted in descending order
-        List<NBVersionInfo> results = versionsResult.getResults();
-        for (NBVersionInfo result : results) {
-            String betterVersion = result.getVersion();
-            if (!betterVersion.contains("SNAPSHOT")) { // skip snapshots
-                if (new ComparableVersion(betterVersion).compareTo(new ComparableVersion(archetype.getVersion())) > 0) {
-                    archetype.setVersion(betterVersion);
-                }
-                return;
-            }
-        }
+    private static void updateToLatestKnownArchetypeVersion(Archetype arch) {
+        MavenVersionSettings prefs = MavenVersionSettings.getDefault();
+        arch.setVersion(prefs.getVersion(arch.getGroupId(), arch.getArtifactId()));
     }
 
     @Override
@@ -151,7 +136,6 @@ public class NbmWizardIterator implements WizardDescriptor.BackgroundInstantiati
             if (archetype == NB_MODULE_ARCH) {
                 updateToLatestKnownArchetypeVersion(NB_MODULE_ARCH);
                 NBMNativeMWI.instantiate(vi, projFile, version, Boolean.TRUE.equals(wiz.getProperty(OSGIDEPENDENCIES)), null);
-
             } else {
                 updateToLatestKnownArchetypeVersion(NB_APP_ARCH);
                 ArchetypeWizards.createFromArchetype(projFile, vi, archetype, additional, true);

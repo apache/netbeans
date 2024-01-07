@@ -20,8 +20,6 @@
 package org.netbeans.modules.maven.customizer;
 
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -150,7 +148,7 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
             plugin = fact.createPlugin();
             plugin.setGroupId(Constants.GROUP_APACHE_PLUGINS);
             plugin.setArtifactId(Constants.PLUGIN_COMPILER);
-            plugin.setVersion(MavenVersionSettings.getDefault().getVersion(MavenVersionSettings.VERSION_COMPILER));
+            plugin.setVersion(MavenVersionSettings.getDefault().getVersion(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER));
             bld.addPlugin(plugin);
         }
         if (plugin != null) {
@@ -169,7 +167,7 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
             plugin2 = fact.createPlugin();
             plugin2.setGroupId(Constants.GROUP_APACHE_PLUGINS);
             plugin2.setArtifactId(Constants.PLUGIN_RESOURCES);
-            plugin2.setVersion(MavenVersionSettings.getDefault().getVersion(MavenVersionSettings.VERSION_RESOURCES));
+            plugin2.setVersion(MavenVersionSettings.getDefault().getVersion(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_RESOURCES));
             bld.addPlugin(plugin2);
         }
         if (plugin2 != null) {
@@ -225,20 +223,10 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
         
         comEncoding.setModel(ProjectCustomizer.encodingModel(oldEncoding));
         comEncoding.setRenderer(ProjectCustomizer.encodingRenderer());
-        
-        comSourceLevel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleSourceLevelChange();
-            }
-        });
-        
-        comEncoding.addActionListener(new ActionListener () {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleEncodingChange();
-            }            
-        });
+
+        comSourceLevel.addActionListener(e -> handleSourceLevelChange());
+        comEncoding.addActionListener(e -> handleEncodingChange());
+
         txtSrc.setText(handle.getProject().getBuild().getSourceDirectory());
         txtTestSrc.setText(handle.getProject().getBuild().getTestSourceDirectory());
     }
@@ -502,7 +490,7 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
                         current = incJavaSpecVersion(current);
                     }
                 }
-                sourceLevelCache = sourceLevels.toArray(new String[sourceLevels.size()]);
+                sourceLevelCache = sourceLevels.toArray(String[]::new);
             }
             return sourceLevelCache;
         }

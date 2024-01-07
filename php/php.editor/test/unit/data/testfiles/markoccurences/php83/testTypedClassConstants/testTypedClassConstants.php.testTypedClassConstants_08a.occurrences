@@ -1,0 +1,2 @@
+    public const ?A |>MARK_OCCURRENCES:NULLA^BLE<| = null;
+var_dump(ClassTest::|>MARK_OCCURRENCES:NULLABLE<|);

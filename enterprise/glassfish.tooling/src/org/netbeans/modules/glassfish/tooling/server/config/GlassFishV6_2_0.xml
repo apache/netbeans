@@ -72,7 +72,7 @@
             </fileset>
         </classpath>
         <javadocs>
-            <link url="https://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/3.0.1/jersey-documentation-3.0.1-docbook.zip"/>
+            <link url="https://repo.maven.apache.org/maven2/org/glassfish/jersey/jersey-documentation/3.0.1/jersey-documentation-3.0.1-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>

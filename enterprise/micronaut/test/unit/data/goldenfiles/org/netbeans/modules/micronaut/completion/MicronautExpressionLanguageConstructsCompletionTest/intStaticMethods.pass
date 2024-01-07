@@ -1,0 +1,39 @@
+bitCount(int i) : int
+compare(int x, int y) : int
+compareUnsigned(int x, int y) : int
+decode(String nm) : Integer
+divideUnsigned(int dividend, int divisor) : int
+getInteger(String nm) : Integer
+getInteger(String nm, Integer val) : Integer
+getInteger(String nm, int val) : Integer
+hashCode(int value) : int
+highestOneBit(int i) : int
+lowestOneBit(int i) : int
+max(int a, int b) : int
+min(int a, int b) : int
+numberOfLeadingZeros(int i) : int
+numberOfTrailingZeros(int i) : int
+parseInt(String s) : int
+parseInt(String s, int radix) : int
+parseInt(CharSequence s, int beginIndex, int endIndex, int radix) : int
+parseUnsignedInt(String s) : int
+parseUnsignedInt(String s, int radix) : int
+parseUnsignedInt(CharSequence s, int beginIndex, int endIndex, int radix) : int
+remainderUnsigned(int dividend, int divisor) : int
+reverse(int i) : int
+reverseBytes(int i) : int
+rotateLeft(int i, int distance) : int
+rotateRight(int i, int distance) : int
+signum(int i) : int
+sum(int a, int b) : int
+toBinaryString(int i) : String
+toHexString(int i) : String
+toOctalString(int i) : String
+toString(int i) : String
+toString(int i, int radix) : String
+toUnsignedLong(int x) : long
+toUnsignedString(int i) : String
+toUnsignedString(int i, int radix) : String
+valueOf(String s) : Integer
+valueOf(int i) : Integer
+valueOf(String s, int radix) : Integer

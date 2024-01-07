@@ -41,6 +41,7 @@ public class TextDependencyScanner {
     
     private final Map<GradleDependency, String> origins = new HashMap<>();
     private final Map<GradleDependency, Map<String, SourceLocation>> locations = new HashMap<>();
+    private final boolean matchScopes;
     
     private List<DependencyText> dependencies = new ArrayList<>();
     
@@ -93,7 +94,10 @@ public class TextDependencyScanner {
      * read.
      */
     int newLinePos;
-    
+
+    public TextDependencyScanner(boolean matchScopes) {
+        this.matchScopes = matchScopes;
+    }
     
     /**
      * End of the last item in the group
@@ -522,6 +526,7 @@ public class TextDependencyScanner {
         while ((c = nextToken()) != '}') {
             if ((!onlyAfterNewline || wasEndOfLine()) && (tokenType == Token.IDENTIFIER)) {
                 if (configurationNames.contains(tokenText)) {
+                    String saveToken = tokenText;
                     groupStartPos = tokenStart;
                     groupItemCount = 0;
                     scanDepdendencyContainer(tokenText);
@@ -532,6 +537,15 @@ public class TextDependencyScanner {
                         if (groupItemsEnd != -1) {
                             last.endPos = groupItemsEnd;
                         }
+                    } else {
+                        DependencyText.Part containerPart = new DependencyText.Part();
+                        containerPart.partId = saveToken;
+                        containerPart.startPos = groupStartPos;
+                        containerPart.endPos = groupItemsEnd;
+                        containerPart.quoted = 0;
+                        List<DependencyText> items = new ArrayList<>(dependencies.subList(dependencies.size() - groupItemCount, dependencies.size()));
+                        DependencyText.Container nc = new DependencyText.Container(items, containerPart);
+                        items.forEach(i -> i.container = nc);
                     }
                     onlyAfterNewline = false;
                     continue;
@@ -559,6 +573,7 @@ public class TextDependencyScanner {
         try {
             findDependencyBlock();
             buildDependencies();
+            dependencyBlockEnd = pos;
             computeGAV();
         } catch (EndInputException ex) {
             // no op, just terminate processing
@@ -583,7 +598,7 @@ public class TextDependencyScanner {
         }
     }
     
-    private int dependencyBlockStart;
+    private int dependencyBlockStart = -1;
     private int dependencyBlockEnd;
     
     private void findDependencyBlock() {
@@ -596,7 +611,6 @@ public class TextDependencyScanner {
                     c = skipWhitespace();
                     if (c == '{') {
                         nextChar();
-                        dependencyBlockEnd = pos;
                         return;
                     }
                 }
@@ -638,6 +652,16 @@ public class TextDependencyScanner {
         }
     }
     
+    private boolean scopeMatches(Dependency d, DependencyText t) {
+        if (!matchScopes) {
+            return true;
+        }
+        if (d.getScope() == null || t.configuration == null) {
+            return true;
+        }
+        return d.getScope().name().equals(t.configuration);
+    }
+    
     private DependencyText findDependency(Dependency d) {
         String projectName = null;
         String gav = null;
@@ -661,13 +685,13 @@ public class TextDependencyScanner {
             if (DependencyText.KEYWORD_PROJECT.equals(t.keyword) &&
                 t.contents.equals(projectName)) {
                 return t;
-            } else if (t.keyword == null && t.getContentsOrGav().equals(gav)) {
+            } else if (t.keyword == null && t.getContentsOrGav().equals(gav) && scopeMatches(d, t)) {
                 return t;
             }
         }
         
         for (DependencyText t : dependencies) {
-            if (t.keyword == null && t.contents != null && t.contents.equals(groupAndName)) {
+            if (t.keyword == null && t.contents != null && t.contents.equals(groupAndName) && scopeMatches(d, t)) {
                 return t;
             }
         }
@@ -685,11 +709,17 @@ public class TextDependencyScanner {
             }
         }
         
-        DependencyText.Part containerPart = new DependencyText.Part();
-        containerPart.partId = DependencyResult.PART_CONTAINER;
-        containerPart.startPos = dependencyBlockStart;
-        containerPart.endPos = dependencyBlockEnd;
-        containerPart.value = "";
+        DependencyText.Part containerPart;
+        
+        if (dependencyBlockStart != -1) {
+            containerPart = new DependencyText.Part();
+            containerPart.partId = DependencyResult.PART_CONTAINER;
+            containerPart.startPos = dependencyBlockStart;
+            containerPart.endPos = dependencyBlockEnd;
+            containerPart.value = "";
+        } else {
+            containerPart = null;
+        }
         
         return new DependencyText.Mapping(result, containerPart);
     }

@@ -1,0 +1,1953 @@
+<testresult testFile='typedClassConstants_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='822'>
+            <text>A</text>
+        </token>
+        <token id='T_IMPLEMENTS' start='823' end='833'>
+            <text>implements</text>
+        </token>
+        <token id='T_STRING' start='834' end='844'>
+            <text>Stringable</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='845' end='846'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='851' end='857'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='858' end='866'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='867' end='877'>
+            <text>__toString</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='877' end='878'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='878' end='879'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='880' end='881'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='890' end='896'>
+            <text>return</text>
+        </token>
+        <token id='T_STATIC' start='897' end='903'>
+            <text>static</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='903' end='905'>
+            <text>::</text>
+        </token>
+        <token id='T_CLASS' start='905' end='910'>
+            <text>class</text>
+        </token>
+        <token id='T_SEMICOLON' start='910' end='911'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='916' end='917'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='918' end='919'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='921' end='926'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='927' end='928'>
+            <text>B</text>
+        </token>
+        <token id='T_EXTENDS' start='929' end='936'>
+            <text>extends</text>
+        </token>
+        <token id='T_STRING' start='937' end='938'>
+            <text>A</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='939' end='940'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='940' end='941'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='942' end='947'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='948' end='949'>
+            <text>C</text>
+        </token>
+        <token id='T_EXTENDS' start='950' end='957'>
+            <text>extends</text>
+        </token>
+        <token id='T_STRING' start='958' end='959'>
+            <text>A</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='960' end='961'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='961' end='962'>
+            <text>}</text>
+        </token>
+        <token id='T_CLASS' start='964' end='969'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='970' end='979'>
+            <text>ClassTest</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='980' end='981'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='986' end='992'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='993' end='998'>
+            <text>const</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='999' end='1000'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1000' end='1003'>
+            <text>int</text>
+        </token>
+        <token id='T_STRING' start='1004' end='1012'>
+            <text>NULLABLE</text>
+        </token>
+        <token id='T_EQUAL' start='1013' end='1014'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1015' end='1016'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1016' end='1017'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1022' end='1029'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='1030' end='1035'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1036' end='1037'>
+            <text>A</text>
+        </token>
+        <token id='T_OR' start='1037' end='1038'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1038' end='1039'>
+            <text>B</text>
+        </token>
+        <token id='T_STRING' start='1040' end='1045'>
+            <text>UNION</text>
+        </token>
+        <token id='T_EQUAL' start='1046' end='1047'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1048' end='1051'>
+            <text>D_A</text>
+        </token>
+        <token id='T_SEMICOLON' start='1051' end='1052'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1057' end='1066'>
+            <text>protected</text>
+        </token>
+        <token id='T_CONST' start='1067' end='1072'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1073' end='1074'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1074' end='1075'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1075' end='1076'>
+            <text>B</text>
+        </token>
+        <token id='T_STRING' start='1077' end='1089'>
+            <text>INTERSECTION</text>
+        </token>
+        <token id='T_EQUAL' start='1090' end='1091'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1092' end='1095'>
+            <text>D_B</text>
+        </token>
+        <token id='T_SEMICOLON' start='1095' end='1096'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1101' end='1107'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1108' end='1113'>
+            <text>const</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1114' end='1115'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1115' end='1116'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1116' end='1117'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1117' end='1118'>
+            <text>B</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1118' end='1119'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1119' end='1120'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1120' end='1121'>
+            <text>C</text>
+        </token>
+        <token id='T_STRING' start='1122' end='1125'>
+            <text>DNF</text>
+        </token>
+        <token id='T_EQUAL' start='1126' end='1127'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1128' end='1131'>
+            <text>D_C</text>
+        </token>
+        <token id='T_SEMICOLON' start='1131' end='1132'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1137' end='1143'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1144' end='1149'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1150' end='1156'>
+            <text>string</text>
+        </token>
+        <token id='T_STRING' start='1157' end='1163'>
+            <text>STRING</text>
+        </token>
+        <token id='T_EQUAL' start='1164' end='1165'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1166' end='1169'>
+            <text>&apos;a&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='1169' end='1170'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1175' end='1181'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1182' end='1187'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1188' end='1191'>
+            <text>int</text>
+        </token>
+        <token id='T_STRING' start='1192' end='1195'>
+            <text>INT</text>
+        </token>
+        <token id='T_EQUAL' start='1196' end='1197'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1198' end='1199'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1199' end='1200'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1205' end='1211'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1212' end='1217'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1218' end='1223'>
+            <text>float</text>
+        </token>
+        <token id='T_STRING' start='1224' end='1229'>
+            <text>FLOAT</text>
+        </token>
+        <token id='T_EQUAL' start='1230' end='1231'>
+            <text>=</text>
+        </token>
+        <token id='T_DNUMBER' start='1232' end='1235'>
+            <text>1.5</text>
+        </token>
+        <token id='T_SEMICOLON' start='1235' end='1236'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1241' end='1247'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1248' end='1253'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1254' end='1258'>
+            <text>bool</text>
+        </token>
+        <token id='T_STRING' start='1259' end='1263'>
+            <text>BOOL</text>
+        </token>
+        <token id='T_EQUAL' start='1264' end='1265'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1266' end='1270'>
+            <text>true</text>
+        </token>
+        <token id='T_SEMICOLON' start='1270' end='1271'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1276' end='1282'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1283' end='1288'>
+            <text>const</text>
+        </token>
+        <token id='T_ARRAY' start='1289' end='1294'>
+            <text>array</text>
+        </token>
+        <token id='T_ARRAY' start='1295' end='1300'>
+            <text>ARRAY</text>
+        </token>
+        <token id='T_EQUAL' start='1301' end='1302'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1303' end='1304'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1304' end='1307'>
+            <text>&apos;t&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1307' end='1308'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1309' end='1312'>
+            <text>&apos;e&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1312' end='1313'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1314' end='1317'>
+            <text>&apos;s&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1317' end='1318'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1319' end='1322'>
+            <text>&apos;t&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1322' end='1323'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1323' end='1324'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1329' end='1335'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1336' end='1341'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1342' end='1350'>
+            <text>iterable</text>
+        </token>
+        <token id='T_STRING' start='1351' end='1359'>
+            <text>ITERABLE</text>
+        </token>
+        <token id='T_EQUAL' start='1360' end='1361'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1362' end='1363'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1363' end='1366'>
+            <text>&apos;a&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1366' end='1367'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1368' end='1371'>
+            <text>&apos;b&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1371' end='1372'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1373' end='1376'>
+            <text>&apos;c&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1376' end='1377'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1377' end='1378'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1383' end='1389'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1390' end='1395'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1396' end='1401'>
+            <text>mixed</text>
+        </token>
+        <token id='T_STRING' start='1402' end='1407'>
+            <text>MIXED</text>
+        </token>
+        <token id='T_EQUAL' start='1408' end='1409'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1410' end='1411'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1411' end='1412'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1417' end='1423'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1424' end='1429'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1430' end='1436'>
+            <text>object</text>
+        </token>
+        <token id='T_STRING' start='1437' end='1443'>
+            <text>OBJECT</text>
+        </token>
+        <token id='T_EQUAL' start='1444' end='1445'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1446' end='1449'>
+            <text>D_A</text>
+        </token>
+        <token id='T_SEMICOLON' start='1449' end='1450'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1455' end='1461'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1462' end='1467'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1468' end='1474'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='1474' end='1475'>
+            <text>|</text>
+        </token>
+        <token id='T_ARRAY' start='1475' end='1480'>
+            <text>array</text>
+        </token>
+        <token id='T_STRING' start='1481' end='1487'>
+            <text>UNION2</text>
+        </token>
+        <token id='T_EQUAL' start='1488' end='1489'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1490' end='1493'>
+            <text>&apos;a&apos;</text>
+        </token>
+        <token id='T_COMMA' start='1493' end='1494'>
+            <text>,</text>
+        </token>
+        <token id='T_STRING' start='1495' end='1501'>
+            <text>UNION3</text>
+        </token>
+        <token id='T_EQUAL' start='1502' end='1503'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1504' end='1505'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1505' end='1508'>
+            <text>&apos;a&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1508' end='1509'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='1509' end='1510'>
+            <text>;</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='1515' end='1517'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='1517' end='1521'>
+            <text>Attr</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1521' end='1522'>
+            <text>]</text>
+        </token>
+        <token id='T_PUBLIC' start='1527' end='1533'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1534' end='1539'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1540' end='1543'>
+            <text>int</text>
+        </token>
+        <token id='T_OR' start='1543' end='1544'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1544' end='1548'>
+            <text>null</text>
+        </token>
+        <token id='T_STRING' start='1549' end='1555'>
+            <text>UNION4</text>
+        </token>
+        <token id='T_EQUAL' start='1556' end='1557'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1558' end='1562'>
+            <text>null</text>
+        </token>
+        <token id='T_SEMICOLON' start='1562' end='1563'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1564' end='1565'>
+            <text>}</text>
+        </token>
+        <token id='T_INTERFACE' start='1567' end='1576'>
+            <text>interface</text>
+        </token>
+        <token id='T_STRING' start='1577' end='1590'>
+            <text>InterfaceTest</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1591' end='1592'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='1597' end='1602'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1603' end='1609'>
+            <text>string</text>
+        </token>
+        <token id='T_STRING' start='1610' end='1616'>
+            <text>STRING</text>
+        </token>
+        <token id='T_EQUAL' start='1617' end='1618'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1619' end='1627'>
+            <text>"string"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1627' end='1628'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1633' end='1639'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1640' end='1645'>
+            <text>const</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1646' end='1647'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1647' end='1650'>
+            <text>int</text>
+        </token>
+        <token id='T_STRING' start='1651' end='1659'>
+            <text>NULLABLE</text>
+        </token>
+        <token id='T_EQUAL' start='1660' end='1661'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1662' end='1663'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1663' end='1664'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1669' end='1675'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1676' end='1681'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1682' end='1683'>
+            <text>A</text>
+        </token>
+        <token id='T_OR' start='1683' end='1684'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1684' end='1685'>
+            <text>B</text>
+        </token>
+        <token id='T_STRING' start='1686' end='1691'>
+            <text>UNION</text>
+        </token>
+        <token id='T_EQUAL' start='1692' end='1693'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1694' end='1697'>
+            <text>D_A</text>
+        </token>
+        <token id='T_SEMICOLON' start='1697' end='1698'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1703' end='1709'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1710' end='1715'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1716' end='1717'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1717' end='1718'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1718' end='1719'>
+            <text>B</text>
+        </token>
+        <token id='T_STRING' start='1720' end='1732'>
+            <text>INTERSECTION</text>
+        </token>
+        <token id='T_EQUAL' start='1733' end='1734'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1735' end='1738'>
+            <text>D_B</text>
+        </token>
+        <token id='T_SEMICOLON' start='1738' end='1739'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1744' end='1750'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1751' end='1756'>
+            <text>const</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1757' end='1758'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1758' end='1759'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1759' end='1760'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1760' end='1761'>
+            <text>B</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1761' end='1762'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1762' end='1763'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1763' end='1764'>
+            <text>C</text>
+        </token>
+        <token id='T_STRING' start='1765' end='1768'>
+            <text>DNF</text>
+        </token>
+        <token id='T_EQUAL' start='1769' end='1770'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1771' end='1774'>
+            <text>D_C</text>
+        </token>
+        <token id='T_SEMICOLON' start='1774' end='1775'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1776' end='1777'>
+            <text>}</text>
+        </token>
+        <token id='T_TRAIT' start='1779' end='1784'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='1785' end='1794'>
+            <text>TraitTest</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1795' end='1796'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='1801' end='1806'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1807' end='1813'>
+            <text>string</text>
+        </token>
+        <token id='T_STRING' start='1814' end='1820'>
+            <text>STRING</text>
+        </token>
+        <token id='T_EQUAL' start='1821' end='1822'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1823' end='1831'>
+            <text>"string"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1831' end='1832'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1837' end='1843'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1844' end='1849'>
+            <text>const</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1850' end='1851'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1851' end='1854'>
+            <text>int</text>
+        </token>
+        <token id='T_STRING' start='1855' end='1863'>
+            <text>NULLABLE</text>
+        </token>
+        <token id='T_EQUAL' start='1864' end='1865'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1866' end='1867'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1867' end='1868'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1873' end='1880'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='1881' end='1886'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1887' end='1888'>
+            <text>A</text>
+        </token>
+        <token id='T_OR' start='1888' end='1889'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1889' end='1890'>
+            <text>B</text>
+        </token>
+        <token id='T_STRING' start='1891' end='1896'>
+            <text>UNION</text>
+        </token>
+        <token id='T_EQUAL' start='1897' end='1898'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1899' end='1902'>
+            <text>D_A</text>
+        </token>
+        <token id='T_SEMICOLON' start='1902' end='1903'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1908' end='1917'>
+            <text>protected</text>
+        </token>
+        <token id='T_CONST' start='1918' end='1923'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='1924' end='1925'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1925' end='1926'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1926' end='1927'>
+            <text>B</text>
+        </token>
+        <token id='T_STRING' start='1928' end='1940'>
+            <text>INTERSECTION</text>
+        </token>
+        <token id='T_EQUAL' start='1941' end='1942'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1943' end='1946'>
+            <text>D_B</text>
+        </token>
+        <token id='T_SEMICOLON' start='1946' end='1947'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1952' end='1958'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='1959' end='1964'>
+            <text>const</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1965' end='1966'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1966' end='1967'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='1967' end='1968'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='1968' end='1969'>
+            <text>B</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1969' end='1970'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='1970' end='1971'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='1971' end='1972'>
+            <text>C</text>
+        </token>
+        <token id='T_STRING' start='1973' end='1976'>
+            <text>DNF</text>
+        </token>
+        <token id='T_EQUAL' start='1977' end='1978'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1979' end='1982'>
+            <text>D_C</text>
+        </token>
+        <token id='T_SEMICOLON' start='1982' end='1983'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1984' end='1985'>
+            <text>}</text>
+        </token>
+        <token id='T_ENUM' start='1987' end='1991'>
+            <text>enum</text>
+        </token>
+        <token id='T_STRING' start='1992' end='2000'>
+            <text>EnumTest</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2001' end='2002'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='2007' end='2012'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='2013' end='2019'>
+            <text>string</text>
+        </token>
+        <token id='T_STRING' start='2020' end='2026'>
+            <text>STRING</text>
+        </token>
+        <token id='T_EQUAL' start='2027' end='2028'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2029' end='2037'>
+            <text>"string"</text>
+        </token>
+        <token id='T_SEMICOLON' start='2037' end='2038'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2043' end='2049'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='2050' end='2055'>
+            <text>const</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='2056' end='2057'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='2057' end='2060'>
+            <text>int</text>
+        </token>
+        <token id='T_STRING' start='2061' end='2069'>
+            <text>NULLABLE</text>
+        </token>
+        <token id='T_EQUAL' start='2070' end='2071'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='2072' end='2073'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='2073' end='2074'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='2079' end='2086'>
+            <text>private</text>
+        </token>
+        <token id='T_CONST' start='2087' end='2092'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='2093' end='2094'>
+            <text>A</text>
+        </token>
+        <token id='T_OR' start='2094' end='2095'>
+            <text>|</text>
+        </token>
+        <token id='T_STRING' start='2095' end='2096'>
+            <text>B</text>
+        </token>
+        <token id='T_STRING' start='2097' end='2102'>
+            <text>UNION</text>
+        </token>
+        <token id='T_EQUAL' start='2103' end='2104'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2105' end='2108'>
+            <text>D_A</text>
+        </token>
+        <token id='T_SEMICOLON' start='2108' end='2109'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='2114' end='2123'>
+            <text>protected</text>
+        </token>
+        <token id='T_CONST' start='2124' end='2129'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='2130' end='2131'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='2131' end='2132'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='2132' end='2133'>
+            <text>B</text>
+        </token>
+        <token id='T_STRING' start='2134' end='2146'>
+            <text>INTERSECTION</text>
+        </token>
+        <token id='T_EQUAL' start='2147' end='2148'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2149' end='2152'>
+            <text>D_B</text>
+        </token>
+        <token id='T_SEMICOLON' start='2152' end='2153'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2158' end='2164'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='2165' end='2170'>
+            <text>const</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2171' end='2172'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2172' end='2173'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='2173' end='2174'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='2174' end='2175'>
+            <text>B</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2175' end='2176'>
+            <text>)</text>
+        </token>
+        <token id='T_OR' start='2176' end='2177'>
+            <text>|</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2177' end='2178'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2178' end='2179'>
+            <text>A</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='2179' end='2180'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='2180' end='2181'>
+            <text>C</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2181' end='2182'>
+            <text>)</text>
+        </token>
+        <token id='T_STRING' start='2183' end='2186'>
+            <text>DNF</text>
+        </token>
+        <token id='T_EQUAL' start='2187' end='2188'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2189' end='2192'>
+            <text>D_C</text>
+        </token>
+        <token id='T_SEMICOLON' start='2192' end='2193'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2198' end='2204'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='2205' end='2210'>
+            <text>const</text>
+        </token>
+        <token id='T_STATIC' start='2211' end='2217'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='2218' end='2219'>
+            <text>A</text>
+        </token>
+        <token id='T_EQUAL' start='2220' end='2221'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='2222' end='2230'>
+            <text>EnumTest</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2230' end='2232'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='2232' end='2236'>
+            <text>Test</text>
+        </token>
+        <token id='T_SEMICOLON' start='2236' end='2237'>
+            <text>;</text>
+        </token>
+        <token id='T_CASE' start='2243' end='2247'>
+            <text>case</text>
+        </token>
+        <token id='T_STRING' start='2248' end='2252'>
+            <text>Test</text>
+        </token>
+        <token id='T_SEMICOLON' start='2252' end='2253'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2254' end='2255'>
+            <text>}</text>
+        </token>
+        <token id='T_DEFINE' start='2257' end='2263'>
+            <text>define</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2263' end='2264'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2264' end='2269'>
+            <text>"D_A"</text>
+        </token>
+        <token id='T_COMMA' start='2269' end='2270'>
+            <text>,</text>
+        </token>
+        <token id='T_NEW' start='2271' end='2274'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='2275' end='2276'>
+            <text>A</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2276' end='2277'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2277' end='2278'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2278' end='2279'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='2279' end='2280'>
+            <text>;</text>
+        </token>
+        <token id='T_DEFINE' start='2281' end='2287'>
+            <text>define</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2287' end='2288'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2288' end='2293'>
+            <text>"D_B"</text>
+        </token>
+        <token id='T_COMMA' start='2293' end='2294'>
+            <text>,</text>
+        </token>
+        <token id='T_NEW' start='2295' end='2298'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='2299' end='2300'>
+            <text>B</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2300' end='2301'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2301' end='2302'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2302' end='2303'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='2303' end='2304'>
+            <text>;</text>
+        </token>
+        <token id='T_DEFINE' start='2305' end='2311'>
+            <text>define</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2311' end='2312'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2312' end='2317'>
+            <text>"D_C"</text>
+        </token>
+        <token id='T_COMMA' start='2317' end='2318'>
+            <text>,</text>
+        </token>
+        <token id='T_NEW' start='2319' end='2322'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='2323' end='2324'>
+            <text>C</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2324' end='2325'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2325' end='2326'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2326' end='2327'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='2327' end='2328'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='2330' end='2334'>
+            <text>echo</text>
+        </token>
+        <token id='T_STRING' start='2335' end='2344'>
+            <text>ClassTest</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2344' end='2346'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='2346' end='2349'>
+            <text>DNF</text>
+        </token>
+        <token id='T_NEKUDA' start='2350' end='2351'>
+            <text>.</text>
+        </token>
+        <token id='T_STRING' start='2352' end='2359'>
+            <text>PHP_EOL</text>
+        </token>
+        <token id='T_SEMICOLON' start='2359' end='2360'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='2361' end='2369'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2369' end='2370'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='2370' end='2379'>
+            <text>ClassTest</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='2379' end='2381'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='2381' end='2384'>
+            <text>DNF</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2384' end='2385'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='2385' end='2386'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='2387' end='2387'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='2387'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='919' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='822' name='A'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                    <NamespaceName start='834' end='844' isCurrent='false' isGlobal='false'>
+                        <Identifier start='834' end='844' name='Stringable'/>
+                    </NamespaceName>
+                </Interfaces>
+                <Block start='845' end='919' isCurly='true'>
+                    <MethodDeclaration start='851' end='917' modifiers='public'>
+                        <FunctionDeclaration start='858' end='917' isReference='false'>
+                            <Identifier start='867' end='877' name='__toString'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <Block start='880' end='917' isCurly='true'>
+                                <ReturnStatement start='890' end='911'>
+                                    <StaticConstantAccess start='897' end='910' isDynamicName='false'>
+                                        <Identifier start='897' end='903' name='static'/>
+                                        <Constant>
+                                            <Identifier start='905' end='910' name='class'/>
+                                        </Constant>
+                                        <Member>
+                                            <Identifier start='905' end='910' name='class'/>
+                                        </Member>
+                                    </StaticConstantAccess>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='921' end='941' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='927' end='928' name='B'/>
+                </ClassName>
+                <SuperClassName>
+                    <NamespaceName start='937' end='938' isCurrent='false' isGlobal='false'>
+                        <Identifier start='937' end='938' name='A'/>
+                    </NamespaceName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='939' end='941' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='942' end='962' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='948' end='949' name='C'/>
+                </ClassName>
+                <SuperClassName>
+                    <NamespaceName start='958' end='959' isCurrent='false' isGlobal='false'>
+                        <Identifier start='958' end='959' name='A'/>
+                    </NamespaceName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='960' end='962' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+            <ClassDeclaration start='964' end='1565' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='970' end='979' name='ClassTest'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='980' end='1565' isCurly='true'>
+                    <ClassConstantDeclaration start='986' end='1017' modifier='public'>
+                        <ConstType>
+                            <NullableType start='999' end='1003'>
+                                <NamespaceName start='1000' end='1003' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1000' end='1003' name='int'/>
+                                </NamespaceName>
+                            </NullableType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1004' end='1012' name='NULLABLE'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1015' end='1016' type='INT' value='1'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1022' end='1052' modifier='private'>
+                        <ConstType>
+                            <UnionType start='1036' end='1039'>
+                                <NamespaceName start='1036' end='1037' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1036' end='1037' name='A'/>
+                                </NamespaceName>
+                                <NamespaceName start='1038' end='1039' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1038' end='1039' name='B'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1040' end='1045' name='UNION'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='1048' end='1051' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1048' end='1051' name='D_A'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1057' end='1096' modifier='protected'>
+                        <ConstType>
+                            <IntersectionType start='1073' end='1076'>
+                                <NamespaceName start='1073' end='1074' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1073' end='1074' name='A'/>
+                                </NamespaceName>
+                                <NamespaceName start='1075' end='1076' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1075' end='1076' name='B'/>
+                                </NamespaceName>
+                            </IntersectionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1077' end='1089' name='INTERSECTION'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='1092' end='1095' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1092' end='1095' name='D_B'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1101' end='1132' modifier='public'>
+                        <ConstType>
+                            <UnionType start='1114' end='1121'>
+                                <IntersectionType start='1115' end='1118'>
+                                    <NamespaceName start='1115' end='1116' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1115' end='1116' name='A'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1117' end='1118' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1117' end='1118' name='B'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <NamespaceName start='1120' end='1121' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1120' end='1121' name='C'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1122' end='1125' name='DNF'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='1128' end='1131' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1128' end='1131' name='D_C'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1137' end='1170' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='1150' end='1156' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1150' end='1156' name='string'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1157' end='1163' name='STRING'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1166' end='1169' type='STRING' value='&apos;a&apos;'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1175' end='1200' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='1188' end='1191' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1188' end='1191' name='int'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1192' end='1195' name='INT'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1198' end='1199' type='INT' value='1'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1205' end='1236' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='1218' end='1223' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1218' end='1223' name='float'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1224' end='1229' name='FLOAT'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1232' end='1235' type='REAL' value='1.5'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1241' end='1271' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='1254' end='1258' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1254' end='1258' name='bool'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1259' end='1263' name='BOOL'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1266' end='1270' type='STRING' value='true'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1276' end='1324' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='1289' end='1294' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1289' end='1294' name='array'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1295' end='1300' name='ARRAY'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='1303' end='1323' type='NEW'>
+                                <ArrayElement start='1304' end='1307'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1304' end='1307' type='STRING' value='&apos;t&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='1309' end='1312'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1309' end='1312' type='STRING' value='&apos;e&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='1314' end='1317'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1314' end='1317' type='STRING' value='&apos;s&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='1319' end='1322'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1319' end='1322' type='STRING' value='&apos;t&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1329' end='1378' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='1342' end='1350' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1342' end='1350' name='iterable'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1351' end='1359' name='ITERABLE'/>
+                        </Names>
+                        <Initializers>
+                            <ArrayCreation start='1362' end='1377' type='NEW'>
+                                <ArrayElement start='1363' end='1366'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1363' end='1366' type='STRING' value='&apos;a&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='1368' end='1371'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1368' end='1371' type='STRING' value='&apos;b&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                                <ArrayElement start='1373' end='1376'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1373' end='1376' type='STRING' value='&apos;c&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1383' end='1412' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='1396' end='1401' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1396' end='1401' name='mixed'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1402' end='1407' name='MIXED'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1410' end='1411' type='INT' value='1'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1417' end='1450' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='1430' end='1436' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1430' end='1436' name='object'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1437' end='1443' name='OBJECT'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='1446' end='1449' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1446' end='1449' name='D_A'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1455' end='1510' modifier='public'>
+                        <ConstType>
+                            <UnionType start='1468' end='1480'>
+                                <NamespaceName start='1468' end='1474' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1468' end='1474' name='string'/>
+                                </NamespaceName>
+                                <NamespaceName start='1475' end='1480' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1475' end='1480' name='array'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1481' end='1487' name='UNION2'/>
+                            <Identifier start='1495' end='1501' name='UNION3'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1490' end='1493' type='STRING' value='&apos;a&apos;'/>
+                            <ArrayCreation start='1504' end='1509' type='NEW'>
+                                <ArrayElement start='1505' end='1508'>
+                                    <Key>
+                                    </Key>
+                                    <Value>
+                                        <Scalar start='1505' end='1508' type='STRING' value='&apos;a&apos;'/>
+                                    </Value>
+                                </ArrayElement>
+                            </ArrayCreation>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1515' end='1563' modifier='public'>
+                        <Attributes>
+                            <Attribute start='1515' end='1522'>
+                                <AttributeDeclarations>
+                                    <AttributeDeclaration start='1517' end='1521'>
+                                        <AttributeName>
+                                            <NamespaceName start='1517' end='1521' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='1517' end='1521' name='Attr'/>
+                                            </NamespaceName>
+                                        </AttributeName>
+                                    </AttributeDeclaration>
+                                </AttributeDeclarations>
+                            </Attribute>
+                        </Attributes>
+                        <ConstType>
+                            <UnionType start='1540' end='1548'>
+                                <NamespaceName start='1540' end='1543' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1540' end='1543' name='int'/>
+                                </NamespaceName>
+                                <NamespaceName start='1544' end='1548' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1544' end='1548' name='null'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1549' end='1555' name='UNION4'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1558' end='1562' type='STRING' value='null'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <InterfaceDeclaration start='1567' end='1777'>
+                <Name>
+                    <Identifier start='1577' end='1590' name='InterfaceTest'/>
+                </Name>
+                <Block start='1591' end='1777' isCurly='true'>
+                    <ClassConstantDeclaration start='1597' end='1628' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='1603' end='1609' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1603' end='1609' name='string'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1610' end='1616' name='STRING'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1619' end='1627' type='STRING' value='"string"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1633' end='1664' modifier='public'>
+                        <ConstType>
+                            <NullableType start='1646' end='1650'>
+                                <NamespaceName start='1647' end='1650' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1647' end='1650' name='int'/>
+                                </NamespaceName>
+                            </NullableType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1651' end='1659' name='NULLABLE'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1662' end='1663' type='INT' value='1'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1669' end='1698' modifier='public'>
+                        <ConstType>
+                            <UnionType start='1682' end='1685'>
+                                <NamespaceName start='1682' end='1683' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1682' end='1683' name='A'/>
+                                </NamespaceName>
+                                <NamespaceName start='1684' end='1685' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1684' end='1685' name='B'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1686' end='1691' name='UNION'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='1694' end='1697' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1694' end='1697' name='D_A'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1703' end='1739' modifier='public'>
+                        <ConstType>
+                            <IntersectionType start='1716' end='1719'>
+                                <NamespaceName start='1716' end='1717' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1716' end='1717' name='A'/>
+                                </NamespaceName>
+                                <NamespaceName start='1718' end='1719' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1718' end='1719' name='B'/>
+                                </NamespaceName>
+                            </IntersectionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1720' end='1732' name='INTERSECTION'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='1735' end='1738' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1735' end='1738' name='D_B'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1744' end='1775' modifier='public'>
+                        <ConstType>
+                            <UnionType start='1757' end='1764'>
+                                <IntersectionType start='1758' end='1761'>
+                                    <NamespaceName start='1758' end='1759' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1758' end='1759' name='A'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1760' end='1761' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1760' end='1761' name='B'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <NamespaceName start='1763' end='1764' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1763' end='1764' name='C'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1765' end='1768' name='DNF'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='1771' end='1774' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1771' end='1774' name='D_C'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </InterfaceDeclaration>
+            <TraitDeclaration start='1779' end='1985'>
+                <TraitName>
+                    <Identifier start='1785' end='1794' name='TraitTest'/>
+                </TraitName>
+                <Block start='1795' end='1985' isCurly='true'>
+                    <ClassConstantDeclaration start='1801' end='1832' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='1807' end='1813' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1807' end='1813' name='string'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1814' end='1820' name='STRING'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1823' end='1831' type='STRING' value='"string"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1837' end='1868' modifier='public'>
+                        <ConstType>
+                            <NullableType start='1850' end='1854'>
+                                <NamespaceName start='1851' end='1854' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1851' end='1854' name='int'/>
+                                </NamespaceName>
+                            </NullableType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1855' end='1863' name='NULLABLE'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='1866' end='1867' type='INT' value='1'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1873' end='1903' modifier='private'>
+                        <ConstType>
+                            <UnionType start='1887' end='1890'>
+                                <NamespaceName start='1887' end='1888' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1887' end='1888' name='A'/>
+                                </NamespaceName>
+                                <NamespaceName start='1889' end='1890' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1889' end='1890' name='B'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1891' end='1896' name='UNION'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='1899' end='1902' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1899' end='1902' name='D_A'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1908' end='1947' modifier='protected'>
+                        <ConstType>
+                            <IntersectionType start='1924' end='1927'>
+                                <NamespaceName start='1924' end='1925' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1924' end='1925' name='A'/>
+                                </NamespaceName>
+                                <NamespaceName start='1926' end='1927' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1926' end='1927' name='B'/>
+                                </NamespaceName>
+                            </IntersectionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1928' end='1940' name='INTERSECTION'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='1943' end='1946' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1943' end='1946' name='D_B'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='1952' end='1983' modifier='public'>
+                        <ConstType>
+                            <UnionType start='1965' end='1972'>
+                                <IntersectionType start='1966' end='1969'>
+                                    <NamespaceName start='1966' end='1967' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1966' end='1967' name='A'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='1968' end='1969' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='1968' end='1969' name='B'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <NamespaceName start='1971' end='1972' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1971' end='1972' name='C'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='1973' end='1976' name='DNF'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='1979' end='1982' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1979' end='1982' name='D_C'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </TraitDeclaration>
+            <EnumDeclaration start='1987' end='2255'>
+                <EnumName>
+                    <Identifier start='1992' end='2000' name='EnumTest'/>
+                </EnumName>
+                <BackingType>
+                </BackingType>
+                <Interfaces>
+                </Interfaces>
+                <Block start='2001' end='2255' isCurly='true'>
+                    <ClassConstantDeclaration start='2007' end='2038' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='2013' end='2019' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2013' end='2019' name='string'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='2020' end='2026' name='STRING'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='2029' end='2037' type='STRING' value='"string"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='2043' end='2074' modifier='public'>
+                        <ConstType>
+                            <NullableType start='2056' end='2060'>
+                                <NamespaceName start='2057' end='2060' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2057' end='2060' name='int'/>
+                                </NamespaceName>
+                            </NullableType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='2061' end='2069' name='NULLABLE'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='2072' end='2073' type='INT' value='1'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='2079' end='2109' modifier='private'>
+                        <ConstType>
+                            <UnionType start='2093' end='2096'>
+                                <NamespaceName start='2093' end='2094' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2093' end='2094' name='A'/>
+                                </NamespaceName>
+                                <NamespaceName start='2095' end='2096' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2095' end='2096' name='B'/>
+                                </NamespaceName>
+                            </UnionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='2097' end='2102' name='UNION'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='2105' end='2108' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2105' end='2108' name='D_A'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='2114' end='2153' modifier='protected'>
+                        <ConstType>
+                            <IntersectionType start='2130' end='2133'>
+                                <NamespaceName start='2130' end='2131' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2130' end='2131' name='A'/>
+                                </NamespaceName>
+                                <NamespaceName start='2132' end='2133' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2132' end='2133' name='B'/>
+                                </NamespaceName>
+                            </IntersectionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='2134' end='2146' name='INTERSECTION'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='2149' end='2152' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2149' end='2152' name='D_B'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='2158' end='2193' modifier='public'>
+                        <ConstType>
+                            <UnionType start='2171' end='2182'>
+                                <IntersectionType start='2172' end='2175'>
+                                    <NamespaceName start='2172' end='2173' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2172' end='2173' name='A'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='2174' end='2175' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2174' end='2175' name='B'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                                <IntersectionType start='2178' end='2181'>
+                                    <NamespaceName start='2178' end='2179' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2178' end='2179' name='A'/>
+                                    </NamespaceName>
+                                    <NamespaceName start='2180' end='2181' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='2180' end='2181' name='C'/>
+                                    </NamespaceName>
+                                </IntersectionType>
+                            </UnionType>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='2183' end='2186' name='DNF'/>
+                        </Names>
+                        <Initializers>
+                            <NamespaceName start='2189' end='2192' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2189' end='2192' name='D_C'/>
+                            </NamespaceName>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <ClassConstantDeclaration start='2198' end='2237' modifier='public'>
+                        <ConstType>
+                            <Identifier start='2211' end='2217' name='static'/>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='2218' end='2219' name='A'/>
+                        </Names>
+                        <Initializers>
+                            <StaticConstantAccess start='2222' end='2236' isDynamicName='false'>
+                                <NamespaceName start='2222' end='2230' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2222' end='2230' name='EnumTest'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <Identifier start='2232' end='2236' name='Test'/>
+                                </Constant>
+                                <Member>
+                                    <Identifier start='2232' end='2236' name='Test'/>
+                                </Member>
+                            </StaticConstantAccess>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <CaseDeclaration start='2243' end='2253'>
+                        <CaseName>
+                            <Identifier start='2248' end='2252' name='Test'/>
+                        </CaseName>
+                    </CaseDeclaration>
+                </Block>
+            </EnumDeclaration>
+            <ExpressionStatement start='2257' end='2280'>
+                <FunctionInvocation start='2257' end='2279'>
+                    <FucntionName start='2257' end='2263'>
+                        <NamespaceName start='2257' end='2263' isCurrent='false' isGlobal='false'>
+                            <Identifier start='2257' end='2263' name='define'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='2264' end='2269' type='STRING' value='"D_A"'/>
+                        <ClassInstanceCreation start='2271' end='2278' anonymous='false'>
+                            <ClassName start='2275' end='2276'>
+                                <NamespaceName start='2275' end='2276' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2275' end='2276' name='A'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='2281' end='2304'>
+                <FunctionInvocation start='2281' end='2303'>
+                    <FucntionName start='2281' end='2287'>
+                        <NamespaceName start='2281' end='2287' isCurrent='false' isGlobal='false'>
+                            <Identifier start='2281' end='2287' name='define'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='2288' end='2293' type='STRING' value='"D_B"'/>
+                        <ClassInstanceCreation start='2295' end='2302' anonymous='false'>
+                            <ClassName start='2299' end='2300'>
+                                <NamespaceName start='2299' end='2300' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2299' end='2300' name='B'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='2305' end='2328'>
+                <FunctionInvocation start='2305' end='2327'>
+                    <FucntionName start='2305' end='2311'>
+                        <NamespaceName start='2305' end='2311' isCurrent='false' isGlobal='false'>
+                            <Identifier start='2305' end='2311' name='define'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <Scalar start='2312' end='2317' type='STRING' value='"D_C"'/>
+                        <ClassInstanceCreation start='2319' end='2326' anonymous='false'>
+                            <ClassName start='2323' end='2324'>
+                                <NamespaceName start='2323' end='2324' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='2323' end='2324' name='C'/>
+                                </NamespaceName>
+                            </ClassName>
+                            <Parameters>
+                            </Parameters>
+                        </ClassInstanceCreation>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EchoStatement start='2330' end='2360'>
+                <InfixExpression start='2335' end='2359' operator='CONCAT'>
+                    <StaticConstantAccess start='2335' end='2349' isDynamicName='false'>
+                        <NamespaceName start='2335' end='2344' isCurrent='false' isGlobal='false'>
+                            <Identifier start='2335' end='2344' name='ClassTest'/>
+                        </NamespaceName>
+                        <Constant>
+                            <Identifier start='2346' end='2349' name='DNF'/>
+                        </Constant>
+                        <Member>
+                            <Identifier start='2346' end='2349' name='DNF'/>
+                        </Member>
+                    </StaticConstantAccess>
+                    <NamespaceName start='2352' end='2359' isCurrent='false' isGlobal='false'>
+                        <Identifier start='2352' end='2359' name='PHP_EOL'/>
+                    </NamespaceName>
+                </InfixExpression>
+            </EchoStatement>
+            <ExpressionStatement start='2361' end='2386'>
+                <FunctionInvocation start='2361' end='2385'>
+                    <FucntionName start='2361' end='2369'>
+                        <NamespaceName start='2361' end='2369' isCurrent='false' isGlobal='false'>
+                            <Identifier start='2361' end='2369' name='var_dump'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='2370' end='2384' isDynamicName='false'>
+                            <NamespaceName start='2370' end='2379' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2370' end='2379' name='ClassTest'/>
+                            </NamespaceName>
+                            <Constant>
+                                <Identifier start='2381' end='2384' name='DNF'/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='2381' end='2384' name='DNF'/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

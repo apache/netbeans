@@ -71,7 +71,9 @@ public enum JavaSEPlatform {
     /** JavaSE 21. */
     v21,
     /** JavaSE 22. */
-    v22;
+    v22,
+    /** JavaSE 23. */
+    v23;
 
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //

@@ -169,7 +169,7 @@ class PushWizard  implements ChangeListener {
                 Collection<PushMapping> mappings = pushBranchesStep.getSelectedMappings();
                 Map<String, String> remoteBranches = new LinkedHashMap<String, String>(mappings.size());
                 for (PushMapping mapping : mappings) {
-                    if (!mapping.isDeletion() && mapping instanceof PushMapping.PushBranchMapping) {
+                    if ((!mapping.isDestructive() || mapping.getLocalName() != null) && mapping instanceof PushMapping.PushBranchMapping) {
                         PushBranchMapping pushMapping = (PushMapping.PushBranchMapping) mapping;
                         remoteBranches.put(pushMapping.getRemoteRepositoryBranchName(), pushMapping.getLocalRepositoryBranchHeadId());
                     }

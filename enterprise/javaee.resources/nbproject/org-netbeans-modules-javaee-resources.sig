@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.31
+#Version 1.32
 
 CLSS public abstract interface java.io.Serializable
 
@@ -73,6 +73,8 @@ fld public final static java.lang.String ANN_DATA_SOURCE = "javax.annotation.sql
 fld public final static java.lang.String ANN_JMS_CONNECTION_FACTORY = "javax.jms.JMSConnectionFactoryDefinition"
 fld public final static java.lang.String ANN_JMS_DESTINATION = "javax.jms.JMSDestinationDefinition"
 fld public final static java.lang.String ANN_JMS_DESTINATIONS = "javax.jms.JMSDestinationDefinitions"
+fld public final static java.lang.String ANN_JMS_DESTINATIONS_JAKARTA = "jakarta.jms.JMSDestinationDefinitions"
+fld public final static java.lang.String ANN_JMS_DESTINATION_JAKARTA = "jakarta.jms.JMSDestinationDefinition"
 supr java.lang.Object
 
 CLSS public abstract org.netbeans.modules.javaee.resources.api.model.JndiResourcesAbstractModel

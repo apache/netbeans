@@ -28,6 +28,8 @@ import javax.swing.border.Border;
 import org.netbeans.lib.terminalemulator.LineDiscipline;
 import org.netbeans.lib.terminalemulator.Term;
 
+// TODO seems to be the older copy of ide/terminal.nb/src/org/netbeans/modules/terminal/nb/TermOptionsPanel.java
+// public via friend dependencies.
 public final class TermOptionsPanel extends javax.swing.JPanel {
 
     private TermOptions termOptions;

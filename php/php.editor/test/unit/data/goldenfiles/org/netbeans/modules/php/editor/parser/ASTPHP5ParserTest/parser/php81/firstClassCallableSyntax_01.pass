@@ -942,7 +942,7 @@
                                     <Key>
                                     </Key>
                                     <Value>
-                                        <StaticConstantAccess start='1187' end='1198'>
+                                        <StaticConstantAccess start='1187' end='1198' isDynamicName='false'>
                                             <NamespaceName start='1187' end='1191' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='1187' end='1191' name='Test'/>
                                             </NamespaceName>

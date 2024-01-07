@@ -26,7 +26,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -214,14 +216,23 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     LOG.finer(String.format("    %-20s:%s", s, o));
                 }
             }
+            List<Report> errorReports = info.getReports().stream().filter(r -> r.getSeverity() == Report.Severity.ERROR).collect(Collectors.toList());
             if (!info.getProblems().isEmpty()) {
                 errors.openNotification(
                         TIT_LOAD_ISSUES(base.getProjectDir().getName()),
                         TIT_LOAD_ISSUES(base.getProjectDir().getName()),
                         GradleProjectErrorNotifications.bulletedList(info.getProblems()));
             }
+            if (!info.getReports().isEmpty()) {
+                errors.openNotification(
+                        TIT_LOAD_ISSUES(base.getProjectDir().getName()),
+                        TIT_LOAD_ISSUES(base.getProjectDir().getName()),
+                        GradleProjectErrorNotifications.bulletedList(
+                                info.getReports().stream().map(r -> r.getMessage()).collect(Collectors.toList())
+                        ));
+            }
             if (!info.hasException()) {
-                if (!info.getProblems().isEmpty() || !info.getReports().isEmpty()) {
+                if (!info.getProblems().isEmpty() || !errorReports.isEmpty()) {
                     if (LOG.isLoggable(Level.FINE)) {
                         // If we do not have exception, but seen some problems the we mark the quality as SIMPLE
                         Object o = new ArrayList<String>(info.getReports().stream().
@@ -247,7 +258,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     quality = onlineResult.get() ? Quality.FULL_ONLINE : Quality.FULL;
                 }
             } else {
-                if (info.getProblems().isEmpty() && info.getReports().isEmpty()) {
+                if (info.getProblems().isEmpty() && errorReports.isEmpty()) {
                     String problem = info.getGradleException();
                     String[] lines = problem.split("\n");
                     LOG.log(INFO, "Failed to retrieve project information for: {0}\nReason: {1}", new Object[] {base.getProjectDir(), problem}); //NOI18N
@@ -317,9 +328,27 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                 loc = m.group(1);
             }
         }
+        GradleReport.Severity s;
+        if (orig.getSeverity() == null) {
+            s = GradleReport.Severity.ERROR;
+        } else switch (orig.getSeverity()) {
+            case INFO:
+                s = GradleReport.Severity.INFO;
+                break;
+            case WARNING:
+                s = GradleReport.Severity.WARNING;
+                break;
+            case EXCEPTION:
+                s = GradleReport.Severity.EXCEPTION;
+                break;
+            default:
+                s = GradleReport.Severity.ERROR;
+                break;
+        }
         
-        return GradleProject.createGradleReport(orig.getErrorClass(), loc, orig.getLineNumber(), orig.getMessage(),
-                orig.getCause() == null ? null : copyReport(orig.getCause()));
+        String[] lines = orig.getDetail() == null ? null : orig.getDetail().split("\n");
+        return GradleProject.createGradleReport(s, orig.getErrorClass(), loc, orig.getLineNumber(), orig.getMessage(),
+                orig.getCause() == null ? null : copyReport(orig.getCause()), lines);
     }
     
     private static List<GradleReport> causesToProblems(Throwable ex) {
@@ -359,7 +388,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         if (!(t instanceof GradleConnectionException)) {
             return causesToProblems(t);
         }
-        return Collections.singletonList(createReport(t.getCause()));
+        return Collections.singletonList(createReport(script, t.getCause(), new boolean[1]));
     }
     
     private static String getLocation(Throwable locationAwareEx) {
@@ -399,7 +428,11 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
      * @param e the throwable
      * @return head of {@link GradleRepor} chain.
      */
-    private static GradleReport createReport(Throwable e) {
+    private static GradleReport createReport(File p, Throwable e, boolean[] user) {
+        return createReport(p, e, true, user);
+    }
+    
+    private static GradleReport createReport(File p, Throwable e, boolean top, boolean[] user) {
         if (e == null) {
             return null;
         }
@@ -410,6 +443,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         GradleReport nested = null;
         
         if (e.getClass().getName().endsWith("LocationAwareException")) { // NOI18N
+            user[0] = true;
             String rawLoc = getLocation(e);
             if (rawLoc != null) {
                 Matcher m = FILE_PATH_FROM_LOCATION.matcher(rawLoc);
@@ -420,10 +454,30 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
         } else {
             reported = e;
         }
-        if (reported.getCause() != null && reported.getCause() != reported) {
-            nested = createReport(reported.getCause());
+        String cn = e.getClass().getName();
+        if (cn.contains("GradleScriptException") || cn.contains("ResolutionException")) {
+            user[0] = true;
         }
-        return GradleProject.createGradleReport(reported.getClass().getName(), loc, line, reported.getMessage(), nested);
+        if (reported.getCause() != null && reported.getCause() != reported) {
+            nested = createReport(p, reported.getCause(), false, user);
+        }
+        String m = reported.getMessage();
+        if (m == null) {
+            m = reported.getClass().getSimpleName();
+        }
+        String[] traceLines = null;
+        if (top) {
+            LOG.log(Level.WARNING, "Loading of script {0} threw an exception {2}", new Object[] { p, reported.getClass().getName() } );
+            // need to log the exception at severity INFO so it does not appear as a red problem in Notifications.
+            LOG.log(Level.INFO, "Stacktrace from gradle daemon:", reported);
+            StringWriter sw = new StringWriter();
+            try (PrintWriter pw = new PrintWriter(sw)) {
+                reported.printStackTrace(pw);
+            }
+            String[] l = sw.toString().split("\n");
+            traceLines = Arrays.copyOf(l, Math.min(l.length, 100));
+        }
+        return GradleProject.createGradleReport(GradleReport.Severity.ERROR, reported.getClass().getName(), loc, line, m, nested, user[0] ? null : traceLines);
     }
 
     private static BuildActionExecuter<NbProjectInfo> createInfoAction(ProjectConnection pconn, GradleCommandLine cmd, CancellationToken token, ProgressListener pl) {

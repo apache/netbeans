@@ -522,7 +522,7 @@ public class PHPBracesMatcherTest extends PHPTestBase {
                 + "    #[Class1(5)]\n"
                 + "    public function method~(#[Class1(6)] $param1, #[Class1('foo', 'bar', 7)] int $pram2@)^ {}\n"
                 + "\n"
-                + "@}^"
+                + "}"
         );
         matchesForward(""
                 + "#[Class1(1)]\n"
@@ -534,7 +534,7 @@ public class PHPBracesMatcherTest extends PHPTestBase {
                 + "    #[Class1(5)]\n"
                 + "    public function method@^(#[Class1(6)] $param1, #[Class1('foo', 'bar', 7)] int $pram2~) {}\n"
                 + "\n"
-                + "~}"
+                + "}"
         );
     }
 
@@ -549,7 +549,7 @@ public class PHPBracesMatcherTest extends PHPTestBase {
                 + "    #[Class1(5)]\n"
                 + "    public function method(#[Class1(6)] $param1, ~#[Class1('foo', 'bar', 7)@]^ int $pram2) {}\n"
                 + "\n"
-                + "@}^"
+                + "}"
         );
         matchesForward(""
                 + "#[Class1(1)]\n"
@@ -561,7 +561,7 @@ public class PHPBracesMatcherTest extends PHPTestBase {
                 + "    #[Class1(5)]\n"
                 + "    public function method(#[Class1(6)] $param1, @^#[Class1('foo', 'bar', 7)~] int $pram2) {}\n"
                 + "\n"
-                + "~}"
+                + "}"
         );
     }
 
@@ -576,7 +576,7 @@ public class PHPBracesMatcherTest extends PHPTestBase {
                 + "    #[Class1(5)]\n"
                 + "    public function method(#[Class1(6)] $param1, #[Class1~('foo', 'bar', 7@)^] int $pram2) {}\n"
                 + "\n"
-                + "@}^"
+                + "}"
         );
         matchesForward(""
                 + "#[Class1(1)]\n"
@@ -588,7 +588,138 @@ public class PHPBracesMatcherTest extends PHPTestBase {
                 + "    #[Class1(5)]\n"
                 + "    public function method(#[Class1(6)] $param1, #[Class1@^('foo', 'bar', 7~)] int $pram2) {}\n"
                 + "\n"
-                + "~}"
+                + "}"
+        );
+    }
+
+    public void testDynamicClassConstantFetch_01a() throws Exception {
+        matchesBackward(""
+                + "class Test {\n"
+                + "    public const TEST = self::~{self::TES . self::T@}^;\n"
+                + "}"
+        );
+        matchesForward(""
+                + "class Test {\n"
+                + "    public const TEST = self::@^{self::TES . self::T~};\n"
+                + "}"
+        );
+    }
+
+
+    public void testDynamicClassConstantFetch_01b() throws Exception {
+        matchesBackward(""
+                + "class Test {\n"
+                + "    public const TEST = self::@{^self::TES . self::T~};\n"
+                + "}"
+        );
+        matchesForward(""
+                + "class Test {\n"
+                + "    public const TEST = self::~{self::TES . self::T@^};\n"
+                + "}"
+        );
+    }
+
+    public void testDynamicClassConstantFetch_02a() throws Exception {
+        matchesBackward(""
+                + "class Test {\n"
+                + "    public const TEST = self::~{self::{self::TES} . self::T@}^;\n"
+                + "}"
+        );
+        matchesForward(""
+                + "class Test {\n"
+                + "    public const TEST = self::@^{self::{self::TES} . self::T~};\n"
+                + "}"
+        );
+    }
+
+    public void testDynamicClassConstantFetch_02b() throws Exception {
+        matchesBackward(""
+                + "class Test {\n"
+                + "    public const TEST = self::@{^self::{self::TES} . self::T~};\n"
+                + "}"
+        );
+        matchesForward(""
+                + "class Test {\n"
+                + "    public const TEST = self::~{self::{self::TES} . self::T@^};\n"
+                + "}"
+        );
+    }
+
+    public void testDynamicClassConstantFetch_02c() throws Exception {
+        matchesBackward(""
+                + "class Test {\n"
+                + "    public const TEST = self::{self::~{self::TES@}^ . self::T};\n"
+                + "}"
+        );
+        matchesForward(""
+                + "class Test {\n"
+                + "    public const TEST = self::{self::@^{self::TES~} . self::T};\n"
+                + "}"
+        );
+    }
+
+    public void testDynamicClassConstantFetch_02d() throws Exception {
+        matchesBackward(""
+                + "class Test {\n"
+                + "    public const TEST = self::{self::@{^self::TES~} . self::T};\n"
+                + "}"
+        );
+        matchesForward(""
+                + "class Test {\n"
+                + "    public const TEST = self::{self::~{self::TES@^} . self::T};\n"
+                + "}"
+        );
+    }
+
+    public void testDynamicClassConstantFetch_03a() throws Exception {
+        matchesBackward(""
+                + "class Test {\n"
+                + "    public const TEST = self::~{self::{self::TES}@}^;\n"
+                + "}"
+        );
+        matchesForward(""
+                + "class Test {\n"
+                + "    public const TEST = self::@^{self::{self::TES}~};\n"
+                + "}"
+        );
+    }
+
+    public void testDynamicClassConstantFetch_03b() throws Exception {
+        matchesBackward(""
+                + "class Test {\n"
+                + "    public const TEST = self::@{^self::{self::TES}~};\n"
+                + "}"
+        );
+        matchesForward(""
+                + "class Test {\n"
+                + "    public const TEST = self::~{self::{self::TES}@^};\n"
+                + "}"
+        );
+    }
+
+    public void testDynamicClassConstantFetch_03c() throws Exception {
+        matchesBackward(""
+                + "class Test {\n"
+                + "    public const TEST = self::{self::~{self::TES@}^};\n"
+                + "}"
+        );
+        matchesForward(""
+                + "class Test {\n"
+                + "    public const TEST = self::{self::@^{self::TES~}};\n"
+                + "}"
+        );
+    }
+
+    public void testDynamicClassConstantFetch_03d() throws Exception {
+        matchesBackward(""
+                + "class Test {\n"
+                + "    public const TEST = self::{self::@{^self::TES~}};\n"
+                + "}"
+        );
+        matchesForward(""
+                + "class Test {\n"
+                + "    public const TEST = self::{self::~{self::TES@^}};\n"
+                + "}"
         );
     }
 

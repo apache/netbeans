@@ -80,7 +80,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
         } else if (isDeleteUpdateConflict(localObjects.getSelectedBranches())) {
             setValid(false, new Message(NbBundle.getMessage(PushBranchesStep.class, "MSG_PushBranchesPanel.errorMixedSeletion"), false)); //NOI18N
         } else {
-            String msgDeletedBranches = getDeletedBranchesMessage(localObjects.getSelectedBranches());
+            String msgDeletedBranches = getDestructiveActionMessage(localObjects.getSelectedBranches());
             if (msgDeletedBranches != null) {
                 setValid(true, new Message(msgDeletedBranches, true));
             }
@@ -232,10 +232,10 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
         return localObjects.getSelectedBranches();
     }
     
-    public static String getDeletedBranchesMessage (List<PushMapping> selectedObjects) {
+    private static String getDestructiveActionMessage (List<PushMapping> selectedObjects) {
         StringBuilder sb = new StringBuilder(100);
         for (PushMapping m : selectedObjects) {
-            if (m.isDeletion()) {
+            if (m.isDestructive()) {
                 sb.append(m.getInfoMessage()).append("<br>");
             }
         }
@@ -251,7 +251,7 @@ public class PushBranchesStep extends AbstractWizardPanel implements WizardDescr
         Set<String> toDelete = new HashSet<String>(selectedObjects.size());
         Set<String> toUpdate = new HashSet<String>(selectedObjects.size());
         for (PushMapping m : selectedObjects) {
-            if (m.isDeletion()) {
+            if (m.isDestructive() && m.getLocalName() != null) {
                 toDelete.add(m.getRemoteName());
             } else {
                 toUpdate.add(m.getRemoteName());

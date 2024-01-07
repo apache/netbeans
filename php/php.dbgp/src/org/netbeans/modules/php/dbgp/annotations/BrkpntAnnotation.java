@@ -20,6 +20,7 @@ package org.netbeans.modules.php.dbgp.annotations;
 
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.modules.php.dbgp.breakpoints.LineBreakpoint;
+import org.netbeans.modules.php.dbgp.breakpoints.Utils;
 import org.netbeans.spi.debugger.ui.BreakpointAnnotation;
 import org.openide.text.Annotatable;
 import org.openide.util.NbBundle;
@@ -41,8 +42,7 @@ public class BrkpntAnnotation extends BreakpointAnnotation {
 
     @Override
     public String getAnnotationType() {
-        Breakpoint.VALIDITY validity = breakpoint.getValidity();
-        return validity == Breakpoint.VALIDITY.VALID || validity == Breakpoint.VALIDITY.UNKNOWN
+        return Utils.isValid(breakpoint)
                 ? BREAKPOINT_ANNOTATION_TYPE
                 : BREAKPOINT_ANNOTATION_TYPE + "_broken"; //NOI18N
     }

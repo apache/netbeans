@@ -1147,7 +1147,7 @@
                             <Identifier start='469' end='484' name='CLASS_CONSTANT2'/>
                         </Names>
                         <Initializers>
-                            <StaticConstantAccess start='487' end='511'>
+                            <StaticConstantAccess start='487' end='511' isDynamicName='false'>
                                 <NamespaceName start='487' end='491' isCurrent='false' isGlobal='false'>
                                     <Identifier start='487' end='491' name='self'/>
                                 </NamespaceName>
@@ -1259,7 +1259,7 @@
                             <Identifier start='678' end='693' name='CLASS_CONSTANT5'/>
                         </Names>
                         <Initializers>
-                            <StaticConstantAccess start='696' end='736'>
+                            <StaticConstantAccess start='696' end='736' isDynamicName='false'>
                                 <NamespaceName start='696' end='709' isCurrent='false' isGlobal='false'>
                                     <Identifier start='696' end='709' name='ConstantClass'/>
                                 </NamespaceName>
@@ -1315,7 +1315,7 @@
                                     </Assignment>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='796' end='832'>
-                                    <StaticConstantAccess start='796' end='831'>
+                                    <StaticConstantAccess start='796' end='831' isDynamicName='false'>
                                         <NamespaceName start='796' end='800' isCurrent='false' isGlobal='false'>
                                             <Identifier start='796' end='800' name='self'/>
                                         </NamespaceName>
@@ -1356,7 +1356,7 @@
                                     </StaticConstantAccess>
                                 </ExpressionStatement>
                                 <ExpressionStatement start='841' end='871'>
-                                    <StaticConstantAccess start='841' end='870'>
+                                    <StaticConstantAccess start='841' end='870' isDynamicName='false'>
                                         <NamespaceName start='841' end='845' isCurrent='false' isGlobal='false'>
                                             <Identifier start='841' end='845' name='self'/>
                                         </NamespaceName>
@@ -1392,7 +1392,7 @@
                 </Block>
             </ClassDeclaration>
             <ExpressionStatement start='881' end='915'>
-                <StaticConstantAccess start='881' end='914'>
+                <StaticConstantAccess start='881' end='914' isDynamicName='false'>
                     <NamespaceName start='881' end='894' isCurrent='false' isGlobal='false'>
                         <Identifier start='881' end='894' name='ConstantClass'/>
                     </NamespaceName>
@@ -1419,7 +1419,7 @@
                 </StaticConstantAccess>
             </ExpressionStatement>
             <ExpressionStatement start='916' end='955'>
-                <StaticConstantAccess start='916' end='954'>
+                <StaticConstantAccess start='916' end='954' isDynamicName='false'>
                     <NamespaceName start='916' end='929' isCurrent='false' isGlobal='false'>
                         <Identifier start='916' end='929' name='ConstantClass'/>
                     </NamespaceName>
@@ -1450,7 +1450,7 @@
                 </StaticConstantAccess>
             </ExpressionStatement>
             <EchoStatement start='956' end='992'>
-                <StaticConstantAccess start='961' end='991'>
+                <StaticConstantAccess start='961' end='991' isDynamicName='false'>
                     <NamespaceName start='961' end='974' isCurrent='false' isGlobal='false'>
                         <Identifier start='961' end='974' name='ConstantClass'/>
                     </NamespaceName>
@@ -1495,7 +1495,7 @@
                             <Identifier start='1079' end='1098' name='INTERFACE_CONSTANT2'/>
                         </Names>
                         <Initializers>
-                            <StaticConstantAccess start='1101' end='1129'>
+                            <StaticConstantAccess start='1101' end='1129' isDynamicName='false'>
                                 <NamespaceName start='1101' end='1105' isCurrent='false' isGlobal='false'>
                                     <Identifier start='1101' end='1105' name='self'/>
                                 </NamespaceName>

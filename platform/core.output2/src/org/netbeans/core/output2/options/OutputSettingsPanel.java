@@ -20,9 +20,9 @@ package org.netbeans.core.output2.options;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Font;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.io.IOException;
@@ -63,7 +63,7 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
     private OutputOptions outputOptions;
     private InputOutput previewInputOutput = null;
     private final OutputSettingsOptionsPanelController controller;
-    private LinkStyleModel linkStyleModel = new LinkStyleModel();
+    private final LinkStyleModel linkStyleModel = new LinkStyleModel();
 
     OutputSettingsPanel(OutputSettingsOptionsPanelController controller) {
         this.controller = controller;
@@ -247,18 +247,17 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblErrorColor)
-                    .addComponent(lblStandardColor)
-                    .addComponent(lblLinkColor)
                     .addComponent(lblFontFamily)
-                    .addComponent(lblBackgroundColor)
                     .addComponent(lblFontSize)
+                    .addComponent(lblBackgroundColor)
+                    .addComponent(lblStandardColor)
+                    .addComponent(lblErrorColor)
+                    .addComponent(lblInputColor)
+                    .addComponent(lblLinkColor)
                     .addComponent(jLabel1)
-                    .addComponent(lblLinkStyle)
-                    .addComponent(lblInputColor))
-                .addGap(18, 18, 18)
+                    .addComponent(lblLinkStyle))
+                .addGap(24, 24, 24)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(fldFontFamily)
@@ -266,8 +265,8 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
                         .addComponent(btnSelectFont))
                     .addComponent(lblUnwrappedOnly, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(cmbLinkStyle, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cmbLinkStyle, javax.swing.GroupLayout.Alignment.LEADING, 0, 113, Short.MAX_VALUE)
                             .addComponent(cmbImportantLinkColor, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbLinkColor, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbInputColor, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -282,17 +281,13 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
                             .addComponent(jLabel4)
                             .addComponent(jLabel5))
                         .addGap(21, 21, 21)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(cmbFailureColor, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cmbFailureColor, javax.swing.GroupLayout.Alignment.LEADING, 0, 114, Short.MAX_VALUE)
                             .addComponent(cmbWarningColor, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbDebugColor, 0, 238, Short.MAX_VALUE)
-                            .addComponent(cmbSuccessColor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(cmbDebugColor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbSuccessColor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(1, 1, 1))
         );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cmbBackgroundColor, cmbDebugColor});
-
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -361,27 +356,25 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblTitle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRestore))))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(lblTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRestore))
+            .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTitle)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblTitle))
                     .addComponent(btnRestore))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -397,7 +390,9 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
                     "BTN_Defaul_Font");                                 //NOI18N
             dd.setOptions(new Object[]{DialogDescriptor.OK_OPTION,
                         defaultFont, DialogDescriptor.CANCEL_OPTION});  //NOI18N
-            DialogDisplayer.getDefault().createDialog(dd).setVisible(true);
+            Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
+            dialog.setSize(460, 380);
+            dialog.setVisible(true);
             if (dd.getValue() == DialogDescriptor.OK_OPTION) {
                 Font f = (Font) pe.getValue();
                 outputOptions.setFont(f);
@@ -583,27 +578,21 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
         }
         previewInputOutput.getOut().close();
         previewInputOutput.getErr().close();
-        outputOptions.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (!evt.getPropertyName().equals(OutputOptions.PROP_INITIALIZED)
-                        && outputOptions.isInitialized()) {
-                    controller.changed(outputOptions.isChanged());
-                }
-                updateControlsByModel();
+        outputOptions.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (!evt.getPropertyName().equals(OutputOptions.PROP_INITIALIZED)
+                    && outputOptions.isInitialized()) {
+                controller.changed(outputOptions.isChanged());
             }
+            updateControlsByModel();
         });
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Component component = previewPanel.getComponent(0);
-                if (component instanceof AbstractOutputTab) {
-                    ((AbstractOutputTab) component).inputSent("Input from keyboard");
-                }
-                try {
-                    in.close();
-                } catch (IOException ex) {}
+        SwingUtilities.invokeLater(() -> {
+            Component component1 = previewPanel.getComponent(0);
+            if (component1 instanceof AbstractOutputTab) {
+                ((AbstractOutputTab) component1).inputSent("Input from keyboard");
             }
+            try {
+                in.close();
+            } catch (IOException ex) {}
         });
     }
 

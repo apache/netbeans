@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.30
+#Version 9.31
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -1280,11 +1280,15 @@ meth public static boolean isLargeFrameIcons()
  anno 0 java.lang.Deprecated()
 meth public static boolean isMac()
 meth public static boolean isModalDialogOpen()
+meth public static boolean isMouseKeyCode(int)
 meth public static boolean isUnix()
 meth public static boolean isWindows()
 meth public static int arrayHashCode(java.lang.Object[])
  anno 0 java.lang.Deprecated()
 meth public static int getOperatingSystem()
+meth public static int mouseButtonKeyCode(int)
+meth public static int mouseWheelDownKeyCode()
+meth public static int mouseWheelUpKeyCode()
 meth public static int showJFileChooser(javax.swing.JFileChooser,java.awt.Component,java.lang.String)
  anno 0 java.lang.Deprecated()
 meth public static java.awt.Component findDialogParent()

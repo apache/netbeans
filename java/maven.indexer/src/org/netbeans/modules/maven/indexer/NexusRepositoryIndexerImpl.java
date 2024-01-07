@@ -72,11 +72,11 @@ import org.apache.maven.index.updater.IndexUpdateRequest;
 import org.apache.maven.index.updater.IndexUpdateResult;
 import org.apache.maven.index.updater.IndexUpdater;
 import org.apache.maven.index.updater.ResourceFetcher;
-import org.apache.maven.search.SearchRequest;
+import org.apache.maven.search.api.SearchRequest;
+import org.apache.maven.search.api.request.FieldQuery;
+import org.apache.maven.search.api.request.Paging;
 import org.apache.maven.search.backend.smo.SmoSearchBackend;
 import org.apache.maven.search.backend.smo.SmoSearchBackendFactory;
-import org.apache.maven.search.request.FieldQuery;
-import org.apache.maven.search.request.Paging;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.crypto.DefaultSettingsDecryptionRequest;
@@ -183,7 +183,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
      */
     private static final RequestProcessor RP_REMOTE = new RequestProcessor("maven-remote-indexing");
     
-    private final SmoSearchBackend smo = new SmoSearchBackendFactory().createDefault();
+    private final SmoSearchBackend smo = SmoSearchBackendFactory.createDefault();
 
     @Override
     public boolean handlesRepository(RepositoryInfo repo) {
@@ -569,6 +569,10 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
                         removeGroupCache(repo);
                         fetchUpdateResult = remoteIndexUpdater.fetchAndUpdateIndex(iur);
                         storeGroupCache(repo, indexingContext);
+                        // register indexed repo in services view
+                        if (fetchUpdateResult.isFullUpdate() && fetchUpdateResult.isSuccessful()) {
+                            RepositoryPreferences.getInstance().addOrModifyRepositoryInfo(repo);
+                        }
                     } catch (IOException | AlreadyClosedException | IllegalArgumentException ex) {
                         // AlreadyClosedException can happen in low storage situations when lucene is trying to handle IOEs
                         // IllegalArgumentException signals remote archive format problems
@@ -1220,8 +1224,8 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
 
             SearchRequest request = new SearchRequest(new Paging(128), 
                     FieldQuery.fieldQuery(className.contains(".") ?
-                            org.apache.maven.search.MAVEN.FQ_CLASS_NAME
-                          : org.apache.maven.search.MAVEN.CLASS_NAME, className));
+                            org.apache.maven.search.api.MAVEN.FQ_CLASS_NAME
+                          : org.apache.maven.search.api.MAVEN.CLASS_NAME, className));
 
             return new CompositeResult<>(findVersionsByClass(className, otherRepos), new SMORequestResult(smo, request));
         } else {
@@ -1388,7 +1392,7 @@ public class NexusRepositoryIndexerImpl implements RepositoryIndexerImplementati
             otherRepos.remove(central.get());
 
             SearchRequest request = new SearchRequest(new Paging(8), 
-                    FieldQuery.fieldQuery(org.apache.maven.search.MAVEN.SHA1, sha1));
+                    FieldQuery.fieldQuery(org.apache.maven.search.api.MAVEN.SHA1, sha1));
 
             return new CompositeResult<>(findBySHA1(sha1, otherRepos), new SMORequestResult(smo, request));
         } else {

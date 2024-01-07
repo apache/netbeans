@@ -46,7 +46,7 @@ public abstract class PushMapping extends ItemSelector.Item {
     private static final String COLOR_CONFLICT = GitUtils.getColorString(AnnotationColorProvider.getInstance().CONFLICT_FILE.getActualColor());
     
     protected PushMapping (String localName, String localId, String remoteName, boolean conflict, boolean preselected, boolean updateNeeded) {
-        super(preselected, localName == null);
+        super(preselected, localName == null || conflict);
         this.localName = localName;
         this.remoteName = remoteName == null ? localName : remoteName;
         if (localName == null) {
@@ -125,13 +125,13 @@ public abstract class PushMapping extends ItemSelector.Item {
         }
         if (t instanceof PushMapping) {
             PushMapping other = (PushMapping) t;
-            if (isDeletion() && other.isDeletion()) {
+            if (isDestructive() && other.isDestructive()) {
                 return remoteName.compareTo(other.remoteName);
-            } else if (isDeletion() && !other.isDeletion()) {
-                // deleted branches should be at the bottom
+            } else if (isDestructive() && !other.isDestructive()) {
+                // destructive changes should be at the bottom
                 return 1;
-            } else if (!isDeletion() && other.isDeletion()) {
-                // deleted branches should be at the bottom
+            } else if (!isDestructive() && other.isDestructive()) {
+                // destructive changes should be at the bottom
                 return -1;
             } else {
                 return localName.compareTo(other.localName);
@@ -197,23 +197,33 @@ public abstract class PushMapping extends ItemSelector.Item {
 
         @Override
         public String getRefSpec () {
-            if (isDeletion()) {
+            if (isDestructive() && getLocalName() == null) {
                 return GitUtils.getPushDeletedRefSpec(remoteBranchName);
             } else {
-                return GitUtils.getPushRefSpec(localBranch.getName(), remoteBranchName == null ? localBranch.getName() : remoteBranchName);
+                return GitUtils.getPushRefSpec(
+                        localBranch.getName(),
+                        remoteBranchName == null ? localBranch.getName() : remoteBranchName,
+                        isDestructive()
+                );
             }
         }
         
         @Override
         @NbBundle.Messages({
             "# {0} - branch name",
-            "MSG_PushMapping.toBeDeletedBranch=Branch {0} will be permanently removed from the remote repository."
+            "MSG_PushMapping.toBeDeletedBranch=Branch {0} will be permanently removed from the remote repository.",
+            "# {0} - branch name",
+            "MSG_PushMapping.toBeForcepushedBranch=Branch {0} will be force pushed to the remote repository."
         })
         String getInfoMessage () {
-            if (isDeletion()) {
+            if (isDestructive() &&  getLocalName() == null) {
                 return Bundle.MSG_PushMapping_toBeDeletedBranch(remoteBranchName);
             } else {
-                return super.getInfoMessage();
+                if(isDestructive()) {
+                    return Bundle.MSG_PushMapping_toBeForcepushedBranch(remoteBranchName);
+                } else {
+                    return super.getInfoMessage();
+                }
             }
         }
 
@@ -255,7 +265,7 @@ public abstract class PushMapping extends ItemSelector.Item {
 
         @Override
         public String getRefSpec() {
-            if (isDeletion()) {
+            if (isDestructive() && !isUpdate) {
                 //get command for tag deletion
                 return GitUtils.getPushDeletedTagRefSpec(remoteTagName);
             } else {
@@ -269,7 +279,7 @@ public abstract class PushMapping extends ItemSelector.Item {
             "MSG_PushMapping.toBeDeletedTag=Tag {0} will be permanently removed from the remote repository."
         })
         String getInfoMessage() {
-            if (isDeletion()) {
+            if (isDestructive() && !isUpdate) {
                 return Bundle.MSG_PushMapping_toBeDeletedTag(remoteTagName);
             } else {
                 return super.getInfoMessage();

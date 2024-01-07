@@ -35,7 +35,11 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JSeparator;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.libraries.LibrariesCustomizer;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.provider.DefaultProvider;
@@ -45,6 +49,7 @@ import org.netbeans.modules.j2ee.persistence.spi.provider.PersistenceProviderSup
 import org.netbeans.modules.j2ee.persistence.wizard.Util;
 import org.netbeans.modules.j2ee.persistence.wizard.library.PersistenceLibraryCustomizer;
 import org.netbeans.modules.j2ee.persistence.wizard.library.PersistenceLibrarySupport;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 
@@ -79,7 +84,7 @@ public final class PersistenceProviderComboboxHelper {
         
         if (aProviderSupplier == null){
             // a java se project
-            aProviderSupplier = new DefaultPersistenceProviderSupplier();
+            aProviderSupplier = new DefaultPersistenceProviderSupplier(project);
         }
         this.project = project;
         this.providerSupplier = aProviderSupplier;
@@ -114,8 +119,8 @@ public final class PersistenceProviderComboboxHelper {
         
         providerCombo.addActionListener(new ActionListener() {
             
-            Object currentItem = providerCombo.getSelectedItem();
-            int currentIndex = providerCombo.getSelectedIndex();
+            private Object currentItem = providerCombo.getSelectedItem();
+            private int currentIndex = providerCombo.getSelectedIndex();
             
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -290,20 +295,38 @@ public final class PersistenceProviderComboboxHelper {
      * for instance for Java SE projects).
      */ 
     private static class DefaultPersistenceProviderSupplier implements PersistenceProviderSupplier{
-        
+
+        private final Project project;
+
+        public DefaultPersistenceProviderSupplier(Project project) {
+            this.project = project;
+        }
+
         @Override
         public List<Provider> getSupportedProviders() {
             ArrayList<Provider> providers = new ArrayList<>();
-            for (Provider each : PersistenceLibrarySupport.getProvidersFromLibraries()){
-                boolean found = false;
-                for (int i = 0; i < providers.size(); i++) {
-                    Object elem = providers.get(i);
-                    if (elem instanceof Provider && each.equals(elem)){
-                        found = true;
-                        break;
-                    }
+
+            SourceGroup[] sourceGroups = ProjectUtils
+                    .getSources(project)
+                    .getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+
+            List<ClassPath> classPaths = new ArrayList<>();
+            if (sourceGroups != null) {
+                for (SourceGroup sourceGroup : sourceGroups) {
+                    ClassPath cp = ClassPath.getClassPath(sourceGroup.getRootFolder(), ClassPath.COMPILE);
+                    classPaths.add(cp);
                 }
-                if (!found){
+            }
+            ClassPath cp = ClassPathSupport.createProxyClassPath(classPaths.toArray(ClassPath[]::new));
+
+            for(Provider p: ProviderUtil.getAllProviders()) {
+                if (p.isOnClassPath(cp) && !providers.contains(p)) {
+                    providers.add(p);
+                }
+            }
+
+            for (Provider each : PersistenceLibrarySupport.getProvidersFromLibraries()){
+                if (! providers.contains(each)){
                    providers.add(each);
                 }
             }
@@ -314,5 +337,5 @@ public final class PersistenceProviderComboboxHelper {
         public boolean supportsDefaultProvider() {
             return false;
         }
-}
+    }
 }

@@ -303,7 +303,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <StaticConstantAccess start='967' end='990'>
+                        <StaticConstantAccess start='967' end='990' isDynamicName='false'>
                             <FieldAccess start='967' end='980' isNullsafe='false'>
                                 <Variable start='967' end='973' isDollared='true'>
                                     <Identifier start='968' end='973' name='test1'/>
@@ -332,7 +332,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <StaticConstantAccess start='1056' end='1086'>
+                        <StaticConstantAccess start='1056' end='1086' isDynamicName='false'>
                             <FieldAccess start='1056' end='1069' isNullsafe='false'>
                                 <Variable start='1056' end='1062' isDollared='true'>
                                     <Identifier start='1057' end='1062' name='test1'/>
@@ -379,7 +379,7 @@
                         </NamespaceName>
                     </FucntionName>
                     <Parameters>
-                        <StaticConstantAccess start='1119' end='1157'>
+                        <StaticConstantAccess start='1119' end='1157' isDynamicName='false'>
                             <FieldAccess start='1119' end='1132' isNullsafe='false'>
                                 <Variable start='1119' end='1125' isDollared='true'>
                                     <Identifier start='1120' end='1125' name='test1'/>

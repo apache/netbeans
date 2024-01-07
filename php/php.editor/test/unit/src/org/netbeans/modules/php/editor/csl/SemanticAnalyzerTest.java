@@ -229,4 +229,8 @@ public class SemanticAnalyzerTest extends SemanticAnalysisTestBase {
     public void testGH5551_02() throws Exception {
         checkSemantic("testfiles/semantic/gh5551_02.php");
     }
+
+    public void testDynamicClassConstantFetch_01() throws Exception {
+        checkSemantic("testfiles/semantic/dynamicClassConstantFetch_01.php");
+    }
 }

@@ -20,6 +20,7 @@ package org.netbeans.modules.maven.execute;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
@@ -132,13 +133,17 @@ public class MavenExecutionTestBase extends NbTestCase {
         return input;
     }
     
+    protected InputStream getActionResourceStream() {
+        return getClass().getResourceAsStream("nbactions-template.xml");
+    }
+    
     protected FileObject  createNbActions(
             Map<String, String> runProperties, 
             Map<String, String> debugProperties, 
             Map<String, String> profileProperties) throws IOException, XmlPullParserException {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader rdr = new BufferedReader(new InputStreamReader(
-                getClass().getResourceAsStream("nbactions-template.xml"), StandardCharsets.UTF_8))) {
+                getActionResourceStream(), StandardCharsets.UTF_8))) {
             String l;
             
             while ((l = rdr.readLine()) != null) {
@@ -281,7 +286,7 @@ public class MavenExecutionTestBase extends NbTestCase {
     protected void assertRunArguments(NetbeansActionMapping mapping, String vmArgs, String mainClass, String args) throws Exception {
         final Project project = ProjectManager.getDefault().findProject(pom.getParent());        
         
-        assertMavenRunAction(project, mapping, "run", (List<String> cmdLine) -> {
+        assertMavenRunAction(project, mapping, "run", mainClass, (List<String> cmdLine) -> {
             String argString = mavenExecutorDefines.get(MavenExecuteUtils.RUN_PARAMS);
             int indexOfMainClass = argString.indexOf(mainClass);
             assertTrue(indexOfMainClass >= 0);
@@ -312,10 +317,14 @@ public class MavenExecutionTestBase extends NbTestCase {
     }
     
     protected void assertMavenRunAction(Project project, NetbeansActionMapping mapping, String actionName, Consumer<List<String>> commandLineAcceptor) throws Exception {
+            assertMavenRunAction(project, mapping, actionName, null, commandLineAcceptor);
+    }
+    
+    protected void assertMavenRunAction(Project project, NetbeansActionMapping mapping, String actionName, String mainClassname, Consumer<List<String>> commandLineAcceptor) throws Exception {
         NbPreferences.root().node("org/netbeans/modules/maven").put(EmbedderFactory.PROP_COMMANDLINE_PATH, "mvn");
         ModelRunConfig cfg = new ModelRunConfig(project, mapping, actionName, null, actionLookup, true);
         // prevent displaying dialogs.
-        RunJarPrereqChecker.setMainClass(DEFAULT_MAIN_CLASS_TOKEN);
+        RunJarPrereqChecker.setMainClass(mainClassname == null ? DEFAULT_MAIN_CLASS_TOKEN : mainClassname);
         for (PrerequisitesChecker elem : cfg.getProject().getLookup().lookupAll(PrerequisitesChecker.class)) {
             if (!elem.checkRunConfig(cfg)) {
                 fail("");

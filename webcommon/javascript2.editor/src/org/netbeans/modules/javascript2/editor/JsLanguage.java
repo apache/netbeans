@@ -165,11 +165,13 @@ public class JsLanguage extends DefaultLanguageConfig {
     public boolean isIdentifierChar(char c) {
         return super.isIdentifierChar(c)
                 // due to CC filtering of DOC annotations - see GsfCompletionProvider#getCompletableLanguage()
-                || c == '@'; //NOI18N
-                // see issue #214978 - it goes to the CodeTemplateCompletionProvider#query(), it would probably deserve
-                //  new API in the next release or are we wrongly embedding the jQuery? For now this fix doesn't look to
-                //  make troubles to another areas.
-//                || c == '#' || c == ':' || c == '.'; //NOI18N
+                || c == '@' //NOI18N
+                || c == '#' //NOI18N
+                //// see issue #214978 - it goes to the CodeTemplateCompletionProvider#query(), it would probably deserve
+                ////  new API in the next release or are we wrongly embedding the jQuery? For now this fix doesn't look to
+                ////  make troubles to another areas.
+                // || c == ':' || c == '.'; //NOI18N
+                ;
     }
 
     @Override

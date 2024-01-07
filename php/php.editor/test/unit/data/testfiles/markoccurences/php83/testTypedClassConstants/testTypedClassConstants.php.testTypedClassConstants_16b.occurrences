@@ -1,0 +1,2 @@
+    public const array |>MARK_OCCURRENCES:ARRAY<| = ['t', 'e', 's', 't'];
+var_dump(ClassTest::|>MARK_OCCURRENCES:AR^RAY<|);

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.34
+#Version 2.36
 
 CLSS public abstract interface java.io.Serializable
 
@@ -780,12 +780,14 @@ fld public final static java.lang.String PROP_GRADLE_DISTRIBUTION = "gradleHome"
 fld public final static java.lang.String PROP_GRADLE_EXEC_RULE = "gradleExecutionRule"
 fld public final static java.lang.String PROP_GRADLE_USER_HOME = "gradleUserHome"
 fld public final static java.lang.String PROP_GRADLE_VERSION = "gradleVersion"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_HIDE_EMPTY_CONF = "hideEmptyConfiguration"
 fld public final static java.lang.String PROP_LAZY_OPEN_GROUPS = "lazyOpen"
  anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_LOG_LEVEL = "logLevel"
 fld public final static java.lang.String PROP_OPT_CONFIGURE_ON_DEMAND = "configureOnDemand"
 fld public final static java.lang.String PROP_OPT_NO_REBUILD = "noRebuild"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_OPT_OFFLINE = "offline"
 fld public final static java.lang.String PROP_OPT_USE_CONFIG_CACHE = "useConfigCache"
 fld public final static java.lang.String PROP_PREFER_MAVEN = "preferMaven"
@@ -793,10 +795,12 @@ fld public final static java.lang.String PROP_PREFER_WRAPPER = "preferWrapper"
 fld public final static java.lang.String PROP_REUSE_EDITOR_ON_STACKTRACE = "reuseEditorOnStackTace"
 fld public final static java.lang.String PROP_REUSE_OUTPUT_TABS = "reuseOutputTabs"
 fld public final static java.lang.String PROP_SILENT_INSTALL = "silentInstall"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_SKIP_CHECK = "skipCheck"
 fld public final static java.lang.String PROP_SKIP_TEST = "skipTest"
 fld public final static java.lang.String PROP_STACKTRACE = "stacktrace"
 fld public final static java.lang.String PROP_START_DAEMON_ON_START = "startDaemonOnStart"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String PROP_USE_CUSTOM_GRADLE = "useCustomGradle"
 innr public final static !enum DownloadLibsRule
 innr public final static !enum DownloadMiscRule
@@ -817,7 +821,9 @@ meth public boolean isPreferMaven()
 meth public boolean isReuseEditorOnStackTace()
 meth public boolean isReuseOutputTabs()
 meth public boolean isSilentInstall()
+ anno 0 java.lang.Deprecated()
 meth public boolean isStartDaemonOnStart()
+ anno 0 java.lang.Deprecated()
 meth public boolean isWrapperPreferred()
 meth public boolean skipCheck()
 meth public boolean skipTest()
@@ -825,6 +831,7 @@ meth public boolean useCustomGradle()
 meth public java.io.File getGradleUserHome()
 meth public java.lang.String getDistributionHome()
 meth public java.lang.String getGradleVersion()
+ anno 0 java.lang.Deprecated()
 meth public java.util.prefs.Preferences getPreferences()
 meth public org.netbeans.modules.gradle.api.execute.GradleCommandLine$LogLevel getDefaultLogLevel()
 meth public org.netbeans.modules.gradle.api.execute.GradleCommandLine$StackTrace getDefaultStackTrace()
@@ -847,6 +854,7 @@ meth public void setDownloadSources(org.netbeans.modules.gradle.spi.GradleSettin
 meth public void setGradleExecutionRule(org.netbeans.modules.gradle.spi.GradleSettings$GradleExecutionRule)
 meth public void setGradleUserHome(java.io.File)
 meth public void setGradleVersion(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public void setHideEmptyConfigurations(boolean)
 meth public void setNoRebuild(boolean)
  anno 0 java.lang.Deprecated()
@@ -857,14 +865,16 @@ meth public void setPreferMaven(boolean)
 meth public void setReuseEditorOnStackTrace(boolean)
 meth public void setReuseOutputTabs(boolean)
 meth public void setSilentInstall(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setSkipCheck(boolean)
 meth public void setSkipTest(boolean)
 meth public void setStartDaemonOnStart(boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setUseConfigCache(boolean)
 meth public void setUseCustomGradle(boolean)
 meth public void setWrapperPreferred(boolean)
 supr java.lang.Object
-hfds INSTANCE,preferences
+hfds INSTANCE,LOG,preferences
 
 CLSS public final static !enum org.netbeans.modules.gradle.spi.GradleSettings$DownloadLibsRule
  outer org.netbeans.modules.gradle.spi.GradleSettings

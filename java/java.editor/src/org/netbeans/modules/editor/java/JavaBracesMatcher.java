@@ -88,6 +88,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
     // BracesMatcher implementation
     // -----------------------------------------------------
     
+    @Override
     public int[] findOrigin() throws BadLocationException, InterruptedException {
         ((AbstractDocument) context.getDocument()).readLock();
         try {
@@ -130,6 +131,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
         }
     }
 
+    @Override
     public int[] findMatches() throws InterruptedException, BadLocationException {
         ((AbstractDocument) context.getDocument()).readLock();
         try {
@@ -148,10 +150,16 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                 seq.move(originOffset);
                 if (seq.moveNext()) {
                     Token<?> token = seq.token();
-                    if (token.id() == JavaTokenId.STRING_LITERAL) {
+
+                    if (token.id() == JavaTokenId.STRING_LITERAL ||
+                        token.id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+
                         for(TokenSequenceIterator tsi = new TokenSequenceIterator(list, backward); tsi.hasMore(); ) {
                             TokenSequence<?> sq = tsi.getSequence();
-                            if (sq.token().id() == JavaTokenId.STRING_LITERAL) {
+
+                            if (sq.token().id() == JavaTokenId.STRING_LITERAL ||
+                                sq.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
+
                                 CharSequence text = sq.token().text();
                                 if (backward) {
                                     // check the character at the left from the caret
@@ -325,6 +333,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                             // must use lexer to iterate backwards from block start to 'else' keyword. The keyword position
                             // is not a part of the Tree
                             context.getDocument().render(new Runnable() {
+                                @Override
                                 public void run() {
                                     TokenHierarchy h = TokenHierarchy.get(context.getDocument());
                                     TokenSequence seq = h.tokenSequence();
@@ -504,6 +513,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
     // -----------------------------------------------------
     
     /** */
+    @Override
     public BracesMatcher createMatcher(MatcherContext context) {
         return new JavaBracesMatcher(context);
     }

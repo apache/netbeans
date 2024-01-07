@@ -38,7 +38,16 @@ import org.openide.util.lookup.ServiceProvider;
  * <b>Since 2.149</b> the returned {@link NetbeansActionMapping} can be disabled - checked by
  * {@link ActionToGoalUtils#isDisabledMapping}. Such mapping will override the action that may be even enabled by a farther 
  * {@link MavenActionsProvider}. The {@link ActionProvider} exported from the project will report such action as disabled.
- * 
+ * <p>
+ * <span id="declare-run-goals">
+ * <b>Since 1.161</b>, specific plugin goals can be declaratively marked as 'run' goals; if they are used in actions, NetBeans maven core
+ * recognizes them and allows to configure vm, application arguments and main class name for the goal. It is a responsibility
+ * of action mapping to remap the properties used by exec:exec to goal-specific properties, if it uses different naming. See the
+ * following example:
+ * <div class="nonnormative">
+ * {@snippet file="org/netbeans/modules/maven/runjar/example-rungoals-config.xml" region="register-run-goals"}
+ * </div>
+ * </span>
  * @author  Milos Kleint
  */
 public interface MavenActionsProvider {

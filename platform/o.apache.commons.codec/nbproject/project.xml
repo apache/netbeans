@@ -28,7 +28,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>org-apache-commons-codec.jar</runtime-relative-path>
-                <binary-origin>external/commons-codec-1.15.jar</binary-origin>
+                <binary-origin>external/commons-codec-1.16.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

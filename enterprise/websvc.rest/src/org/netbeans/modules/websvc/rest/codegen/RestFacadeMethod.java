@@ -25,13 +25,13 @@ package org.netbeans.modules.websvc.rest.codegen;
  */
 enum RestFacadeMethod implements RestMethod {
 
-    CREATE("javax.ws.rs.POST", "create"),
-    EDIT("javax.ws.rs.PUT", "edit"),
-    REMOVE("javax.ws.rs.DELETE", "remove", "{id}"),
-    FIND("javax.ws.rs.GET", "find", "{id}"),
-    FIND_ALL("javax.ws.rs.GET", "findAll"),
-    FIND_RANGE("javax.ws.rs.GET", "findRange", "{max}/{first}"),
-    COUNT("javax.ws.rs.GET", "count", "count");
+    CREATE(".ws.rs.POST", "create"),
+    EDIT(".ws.rs.PUT", "edit"),
+    REMOVE(".ws.rs.DELETE", "remove", "{id}"),
+    FIND(".ws.rs.GET", "find", "{id}"),
+    FIND_ALL(".ws.rs.GET", "findAll"),
+    FIND_RANGE(".ws.rs.GET", "findRange", "{max}/{first}"),
+    COUNT(".ws.rs.GET", "count", "count");
 
     private RestFacadeMethod(String method, String methodName) {
         this.method = method;
@@ -44,8 +44,12 @@ enum RestFacadeMethod implements RestMethod {
         this.uriPath = uriPath;
     }
     
-    public String getMethod() {
-        return method;
+    public String getMethod(Boolean jakartaVariant) {
+        if(jakartaVariant == null && jakartaVariant) {
+            return "jakarta" + method;
+        } else {
+            return "javax" + method;
+        }
     }
 
     public String getMethodName() {

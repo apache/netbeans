@@ -28,6 +28,21 @@
 <changes>
     <change>
          <api name="dialogs"/>
+         <summary>InputLine.PROP_INPUT_TEXT</summary>
+         <version major="7" minor="68"/>
+         <date day="30" month="6" year="2023"/>
+         <author login="jlahoda"/>
+         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
+         <description>
+             <p>
+                 Added <code>PROP_INPUT_TEXT</code> event to the <code>InputLine</code>,
+                 that may optionally be fired when the input text changes
+             </p>
+         </description>
+         <class package="org.openide" name="NotifyDescriptor"/>
+    </change>
+    <change>
+         <api name="dialogs"/>
          <summary>NotifyDescriptor.ComposedInput added</summary>
          <version major="7" minor="63"/>
          <date day="7" month="6" year="2022"/>

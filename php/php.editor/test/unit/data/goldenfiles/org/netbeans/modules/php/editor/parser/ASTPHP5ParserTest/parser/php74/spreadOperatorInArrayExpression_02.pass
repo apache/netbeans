@@ -443,7 +443,7 @@
                                     <ArrayCreation start='924' end='943' type='NEW'>
                                         <UnpackableArrayElement start='925' end='942'>
                                             <Value>
-                                                <StaticConstantAccess start='928' end='942'>
+                                                <StaticConstantAccess start='928' end='942' isDynamicName='false'>
                                                     <NamespaceName start='928' end='932' isCurrent='false' isGlobal='false'>
                                                         <Identifier start='928' end='932' name='self'/>
                                                     </NamespaceName>
@@ -467,7 +467,7 @@
                                     <ArrayCreation start='974' end='998' type='NEW'>
                                         <UnpackableArrayElement start='975' end='992'>
                                             <Value>
-                                                <StaticConstantAccess start='978' end='992'>
+                                                <StaticConstantAccess start='978' end='992' isDynamicName='false'>
                                                     <NamespaceName start='978' end='982' isCurrent='false' isGlobal='false'>
                                                         <Identifier start='978' end='982' name='self'/>
                                                     </NamespaceName>
@@ -505,7 +505,7 @@
                                         </ArrayElement>
                                         <UnpackableArrayElement start='1035' end='1052'>
                                             <Value>
-                                                <StaticConstantAccess start='1038' end='1052'>
+                                                <StaticConstantAccess start='1038' end='1052' isDynamicName='false'>
                                                     <NamespaceName start='1038' end='1042' isCurrent='false' isGlobal='false'>
                                                         <Identifier start='1038' end='1042' name='self'/>
                                                     </NamespaceName>
@@ -557,7 +557,7 @@
                                         </ArrayElement>
                                         <UnpackableArrayElement start='1148' end='1167'>
                                             <Value>
-                                                <StaticConstantAccess start='1151' end='1167'>
+                                                <StaticConstantAccess start='1151' end='1167' isDynamicName='false'>
                                                     <NamespaceName start='1151' end='1157' isCurrent='false' isGlobal='false'>
                                                         <Identifier start='1151' end='1157' name='parent'/>
                                                     </NamespaceName>
@@ -611,7 +611,7 @@
                                     <ArrayCreation start='1274' end='1300' type='NEW'>
                                         <UnpackableArrayElement start='1275' end='1299'>
                                             <Value>
-                                                <StaticConstantAccess start='1278' end='1299'>
+                                                <StaticConstantAccess start='1278' end='1299' isDynamicName='false'>
                                                     <NamespaceName start='1278' end='1289' isCurrent='false' isGlobal='false'>
                                                         <Identifier start='1278' end='1289' name='UnpackClass'/>
                                                     </NamespaceName>
@@ -642,7 +642,7 @@
                                         </ArrayElement>
                                         <UnpackableArrayElement start='1333' end='1357'>
                                             <Value>
-                                                <StaticConstantAccess start='1336' end='1357'>
+                                                <StaticConstantAccess start='1336' end='1357' isDynamicName='false'>
                                                     <NamespaceName start='1336' end='1347' isCurrent='false' isGlobal='false'>
                                                         <Identifier start='1336' end='1347' name='UnpackClass'/>
                                                     </NamespaceName>
@@ -673,7 +673,7 @@
                                         </ArrayElement>
                                         <UnpackableArrayElement start='1391' end='1420'>
                                             <Value>
-                                                <StaticConstantAccess start='1394' end='1420'>
+                                                <StaticConstantAccess start='1394' end='1420' isDynamicName='false'>
                                                     <NamespaceName start='1394' end='1410' isCurrent='false' isGlobal='true'>
                                                         <Identifier start='1395' end='1398' name='Foo'/>
                                                         <Identifier start='1399' end='1410' name='UnpackClass'/>

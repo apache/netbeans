@@ -20,8 +20,8 @@
 package org.netbeans.modules.j2ee.persistence.action;
 
 import java.text.MessageFormat;
+import java.util.Comparator;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
@@ -48,49 +48,85 @@ public final class GenerationOptions {
         // here the query attribute represents the name of the entity class
         FIND_ALL(
                 "return {0}.createQuery(\"select object(o) from \" + {5}.getSimpleName() + \" as o\").getResultList();",
-                "javax.persistence.criteria.CriteriaQuery cq = {0}.getCriteriaBuilder().createQuery();cq.select(cq.from({5}));return {0}.createQuery(cq).getResultList();"
+                "javax.persistence.criteria.CriteriaQuery cq = {0}.getCriteriaBuilder().createQuery();cq.select(cq.from({5}));return {0}.createQuery(cq).getResultList();",
+                "jakarta.persistence.criteria.CriteriaQuery cq = {0}.getCriteriaBuilder().createQuery();cq.select(cq.from({5}));return {0}.createQuery(cq).getResultList();"
                 ),
         //querry to get only items starting from {1}[0] up to {1}[1]-1
         FIND_SUBSET(
                 "javax.persistence.Query q = {0}.createQuery(\"select object(o) from \" + {5}.getSimpleName() + \" as o\");\nq.setMaxResults({1}[1]-{1}[0]+1);\nq.setFirstResult({1}[0]);\nreturn q.getResultList();",
-                "javax.persistence.criteria.CriteriaQuery cq = {0}.getCriteriaBuilder().createQuery();cq.select(cq.from({5}));javax.persistence.Query q = {0}.createQuery(cq);q.setMaxResults({1}[1]-{1}[0]+1);q.setFirstResult({1}[0]);return q.getResultList();"),
+                "javax.persistence.criteria.CriteriaQuery cq = {0}.getCriteriaBuilder().createQuery();cq.select(cq.from({5}));javax.persistence.Query q = {0}.createQuery(cq);q.setMaxResults({1}[1]-{1}[0]+1);q.setFirstResult({1}[0]);return q.getResultList();",
+                "jakarta.persistence.criteria.CriteriaQuery cq = {0}.getCriteriaBuilder().createQuery();cq.select(cq.from({5}));jakarta.persistence.Query q = {0}.createQuery(cq);q.setMaxResults({1}[1]-{1}[0]+1);q.setFirstResult({1}[0]);return q.getResultList();"
+        ),
         //qurrry to get count(*) on a table
         COUNT(
                 "return ((Long) {0}.createQuery(\"select count(o) from \" + {5}.getSimpleName() + \" as o\").getSingleResult()).intValue();",
-                "javax.persistence.criteria.CriteriaQuery cq = {0}.getCriteriaBuilder().createQuery();javax.persistence.criteria.Root<{4}> rt = cq.from({5});cq.select({0}.getCriteriaBuilder().count(rt));javax.persistence.Query q = {0}.createQuery(cq);return ((Long) q.getSingleResult()).intValue();"),
+                "javax.persistence.criteria.CriteriaQuery cq = {0}.getCriteriaBuilder().createQuery();javax.persistence.criteria.Root<{4}> rt = cq.from({5});cq.select({0}.getCriteriaBuilder().count(rt));javax.persistence.Query q = {0}.createQuery(cq);return ((Long) q.getSingleResult()).intValue();",
+                "jakarta.persistence.criteria.CriteriaQuery cq = {0}.getCriteriaBuilder().createQuery();jakarta.persistence.criteria.Root<{4}> rt = cq.from({5});cq.select({0}.getCriteriaBuilder().count(rt));jakarta.persistence.Query q = {0}.createQuery(cq);return ((Long) q.getSingleResult()).intValue();"),
         GET_EM("return {0};");
 
-        private String body;
-        private String body2_0;
-        
-        private Operation(String body){
+        private final String body;
+        private final String body2_0;
+        private final String body3_0;
+
+        private Operation(String body) {
             this(body, body);
         }
 
-        private Operation(String body, String body2_0){
-            this.body2_0=body2_0;
+        private Operation(String body, String body2_0) {
+            this(body, body2_0, body2_0);
+        }
+
+        private Operation(String body, String body2_0, String body3_0) {
+            this.body3_0 = body3_0;
+            this.body2_0 = body2_0;
             this.body = body;
         }
 
         /*
          * @return default body (for jpa 1.0)
          */
-        public String getBody(){
+        public String getBody() {
             return getBody(Persistence.VERSION_1_0);
         }
 
         /*
          * @return body for corresponding jpa version, default is 1.0
          */
-        public String getBody(String version){
-            if(version!=null && !Persistence.VERSION_1_0.equals(version))//any version except 1.0 will get this case
-            {
-                return body2_0;
+        public String getBody(String version) {
+            if(version == null) {
+                return body;
             }
-            else {
+            if(JPA_VERSION_COMPARATOR.compare(version, Persistence.VERSION_3_0) >= 0) {
+                return body3_0;
+            } else if(JPA_VERSION_COMPARATOR.compare(version, Persistence.VERSION_2_0) >= 0) {
+                return body2_0;
+            } else {
                 return body;
             }
         }
+
+        private static final Comparator<String> JPA_VERSION_COMPARATOR = (a, b) -> {
+            String[] aComponents = a.split("\\D");
+            String[] bComponents = b.split("\\D");
+            for(int i = 0; i < Math.min(aComponents.length, bComponents.length); i++) {
+                int numA;
+                int numB;
+                try {
+                    numA = Integer.parseInt(aComponents[i]);
+                } catch (NumberFormatException ex) {
+                    numA = 0;
+                }
+                try {
+                    numB = Integer.parseInt(bComponents[i]);
+                } catch (NumberFormatException ex) {
+                    numB = 0;
+                }
+                if (numA != numB) {
+                    return numA - numB;
+                }
+            }
+            return 0;
+        };
     }
     
     private Operation operation;

@@ -842,7 +842,13 @@ public final class Utilities {
      * {@link KeyEvent#VK_UNDEFINED} if not available.
      * <p>
      * Implementation note : only extended mouse buttons in the range BUTTON4 to
-     * BUTTON9 are currently mapped to keycodes.
+     * BUTTON9 are currently mapped to keycodes. The caller may pass in values
+     * that best reflect the desired mouse button rather than the actual value
+     * from the OS or MouseEvent. eg. on Linux, the JDK excludes X button values
+     * for vertical scrolling when generating the range of buttons, and the
+     * default NetBeans window system further excludes the horizontal scroll
+     * button values - button 4 passed in here might be JDK button 6 and X event
+     * button 8.
      *
      * @param button mouse button
      * @return keycode if defined

@@ -1,0 +1,3 @@
+Code completion result for source line:
+GH6909Static::var()->|test;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)

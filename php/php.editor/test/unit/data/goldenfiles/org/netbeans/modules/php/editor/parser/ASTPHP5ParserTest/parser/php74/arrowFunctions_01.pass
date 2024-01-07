@@ -2032,7 +2032,7 @@
                                             <Identifier start='2044' end='2046' name='af'/>
                                         </Variable>
                                         <ArrowFunctionDeclaration start='2049' end='2068' isReference='false' isStatic='false'>
-                                            <StaticConstantAccess start='2057' end='2068'>
+                                            <StaticConstantAccess start='2057' end='2068' isDynamicName='false'>
                                                 <NamespaceName start='2057' end='2061' isCurrent='false' isGlobal='false'>
                                                     <Identifier start='2057' end='2061' name='self'/>
                                                 </NamespaceName>

@@ -1,5 +1,5 @@
 Code completion result for source line:
 $i::CASE|1;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-CONSTANT   CASE1 ?                         [PUBLIC]   \Enum1\Simple
-CONSTANT   CASE2 ?                         [PUBLIC]   \Enum1\Simple
+CONSTANT   CASE1                           [PUBLIC]   \Enum1\Simple
+CONSTANT   CASE2                           [PUBLIC]   \Enum1\Simple

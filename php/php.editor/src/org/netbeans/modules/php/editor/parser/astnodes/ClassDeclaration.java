@@ -109,7 +109,7 @@ public class ClassDeclaration extends TypeDeclaration {
                 declaration.getModifiers(),
                 declaration.getName(),
                 declaration.getSuperClass(),
-                declaration.getInterfaes(),
+                declaration.getInterfaces(),
                 declaration.getBody(),
                 attributes
         );
@@ -152,7 +152,7 @@ public class ClassDeclaration extends TypeDeclaration {
             sbModifiers.append(mod).append(" "); // NOI18N
         }
         StringBuilder sb = new StringBuilder();
-        for (Expression expression : getInterfaes()) {
+        for (Expression expression : getInterfaces()) {
             sb.append(expression).append(","); //NOI18N
         }
         return sbAttributes.toString() + sbModifiers + "class " + getName() + " extends " + getSuperClass() + " implements " + sb + getBody(); //NOI18N

@@ -1,14 +1,21 @@
 Code completion result for source line:
 public const |CONSTANT = "constant";
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Bar                             [PUBLIC]   null
+PACKAGE    Foo                             [PUBLIC]   null
+CLASS      MyClass                         [PUBLIC]   Bar
 ------------------------------------
-KEYWORD    abstract                                   null
-KEYWORD    const                                      null
-KEYWORD    final                                      null
-KEYWORD    function                                   null
-KEYWORD    private                                    null
-KEYWORD    protected                                  null
-KEYWORD    public                                     null
-KEYWORD    readonly                                   null
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    self                                       null
 KEYWORD    static                                     null
-KEYWORD    var                                        null
+KEYWORD    string                                     null
+KEYWORD    true                                       null

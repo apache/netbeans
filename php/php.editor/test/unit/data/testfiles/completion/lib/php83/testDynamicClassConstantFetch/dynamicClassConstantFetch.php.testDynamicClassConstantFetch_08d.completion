@@ -1,0 +1,9 @@
+Code completion result for source line:
+case TEST4 = EnumTest::{self::{self::TE|S} . self::T};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   TES 'TES'                       [PUBLIC]   EnumTest
+CONSTANT   TEST 'test'                     [PUBLIC]   EnumTest
+CONSTANT   TEST1 ?                         [PUBLIC]   EnumTest
+CONSTANT   TEST2 ?                         [PUBLIC]   EnumTest
+CONSTANT   TEST3 ?                         [PUBLIC]   EnumTest
+CONSTANT   TEST4 ?                         [PUBLIC]   EnumTest

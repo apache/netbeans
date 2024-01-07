@@ -26,8 +26,14 @@ import java.util.HashMap;
  */
 public class PHPFormatterAlignmentTest extends PHPFormatterTestBase {
 
+    private static final String TEST_DIRECTORY_PATH = "testfiles/formatting/alignment/";
+
     public PHPFormatterAlignmentTest(String testName) {
         super(testName);
+    }
+
+    private String getTestFilePath(String fileName) {
+        return TEST_DIRECTORY_PATH + fileName;
     }
 
     public void testAlignmentKeywords01() throws Exception {
@@ -213,4 +219,279 @@ public class PHPFormatterAlignmentTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/alignment/issue244566.php", options);
     }
 
+    public void testGH6714WithTab_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        reformatFileContents(getTestFilePath("gh6714_01.php"), options, false, true);
+    }
+
+    public void testGH6714WithTab_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, false);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        reformatFileContents(getTestFilePath("gh6714_01.php"), options, false, true);
+    }
+
+    public void testGH6714WithTab_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, true);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        reformatFileContents(getTestFilePath("gh6714_02.php"), options, false, true);
+    }
+
+    public void testGH6714WithTab_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, false);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        reformatFileContents(getTestFilePath("gh6714_02.php"), options, false, true);
+    }
+
+    public void testGH6714WithSpaces_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, true);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        reformatFileContents(getTestFilePath("gh6714_01.php"), options, false, true);
+    }
+
+    public void testGH6714WithSpaces_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, false);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        reformatFileContents(getTestFilePath("gh6714_01.php"), options, false, true);
+    }
+
+    public void testGH6714WithSpaces_02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, true);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        reformatFileContents(getTestFilePath("gh6714_02.php"), options, false, true);
+    }
+
+    public void testGH6714WithSpaces_02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.ALIGN_MULTILINE_CALL_ARGS, false);
+        options.put(FmtOptions.WRAP_EXTENDS_IMPLEMENTS_LIST, CodeStyle.WrapStyle.WRAP_ALWAYS);
+        options.put(FmtOptions.ALIGN_MULTILINE_IMPLEMENTS, true);
+        options.put(FmtOptions.ALIGN_MULTILINE_METHOD_PARAMS, true);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        reformatFileContents(getTestFilePath("gh6714_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Spaces01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, true);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_01.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Spaces01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, false);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_01.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab01_Size4a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, true);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_01.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab01_Size4b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, false);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_01.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab01_Size8a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 8);
+        options.put(FmtOptions.INDENT_SIZE, 8);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, true);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_01.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab01_Size8b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 8);
+        options.put(FmtOptions.INDENT_SIZE, 8);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, false);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_01.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Spaces02a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, true);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, true);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Spaces02b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, false);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, true);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Spaces02c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, true);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, false);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Spaces02d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, true);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, false);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, false);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab02_Size4a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.INDENT_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, true);
+        options.put(FmtOptions.ITEMS_IN_ARRAY_DECLARATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, true);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab02_Size4b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.INDENT_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, true);
+        options.put(FmtOptions.ITEMS_IN_ARRAY_DECLARATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, false);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab02_Size4c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.INDENT_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, false);
+        options.put(FmtOptions.ITEMS_IN_ARRAY_DECLARATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, true);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab02_Size4d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 4);
+        options.put(FmtOptions.INDENT_SIZE, 4);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, false);
+        options.put(FmtOptions.ITEMS_IN_ARRAY_DECLARATION_INDENT_SIZE, 4);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, false);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab02_Size8a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 8);
+        options.put(FmtOptions.INDENT_SIZE, 8);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, true);
+        options.put(FmtOptions.ITEMS_IN_ARRAY_DECLARATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, true);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab02_Size8b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 8);
+        options.put(FmtOptions.INDENT_SIZE, 8);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, true);
+        options.put(FmtOptions.ITEMS_IN_ARRAY_DECLARATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, false);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab02_Size8c() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 8);
+        options.put(FmtOptions.INDENT_SIZE, 8);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, false);
+        options.put(FmtOptions.ITEMS_IN_ARRAY_DECLARATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, true);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
+
+    public void testGroupAlignmentMatchArmArrow_Tab02_Size8d() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.EXPAND_TAB_TO_SPACES, false);
+        options.put(FmtOptions.TAB_SIZE, 8);
+        options.put(FmtOptions.INDENT_SIZE, 8);
+        options.put(FmtOptions.CONTINUATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.GROUP_ALIGNMENT_MATCH_ARM_ARROW, false);
+        options.put(FmtOptions.ITEMS_IN_ARRAY_DECLARATION_INDENT_SIZE, 8);
+        options.put(FmtOptions.GROUP_ALIGNMENT_ARRAY_INIT, false);
+        reformatFileContents(getTestFilePath("groupAlignmentMatchArmArrow_02.php"), options, false, true);
+    }
 }

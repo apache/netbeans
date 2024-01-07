@@ -20,19 +20,16 @@ package org.netbeans.modules.javaee.wildfly.ide.ui;
 
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -48,7 +45,7 @@ import org.openide.util.NbBundle;
  */
 public class AddServerPropertiesVisualPanel extends JPanel {
 
-    private final Set listeners = ConcurrentHashMap.newKeySet();
+    private final Set<ChangeListener> listeners = ConcurrentHashMap.newKeySet();
 
     private javax.swing.JComboBox  domainField;  // Domain name (list of registered domains) can be edited
     private javax.swing.JTextField domainPathField;  //
@@ -90,14 +87,8 @@ public class AddServerPropertiesVisualPanel extends JPanel {
     }
 
     private void fireChangeEvent() {
-        Iterator it;
-        synchronized (listeners) {
-            it = new HashSet(listeners).iterator();
-        }
         ChangeEvent ev = new ChangeEvent(this);
-        while (it.hasNext()) {
-            ((ChangeListener)it.next()).stateChanged(ev);
-        }
+        new ArrayList<>(listeners).forEach(l -> l.stateChanged(ev));
     }
 
     public boolean isLocalServer(){
@@ -197,12 +188,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         label1 = new JLabel(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "TXT_PROPERTY_TEXT")); //NOI18N
 
         serverType = new JComboBox(new String[]{"Local","Remote"});//NOI18N
-        serverType.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                serverTypeChanged();
-            }
-        });
+        serverType.addActionListener((ActionEvent e) -> serverTypeChanged());
 
 
         domainPathLabel = new JLabel(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_DomainPath"));//NOI18N
@@ -221,11 +207,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         domainField.getAccessibleContext().setAccessibleName(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Domain"));
         domainField.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Domain"));
 
-        domainField.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                domainChanged();
-            }
-        });
+        domainField.addActionListener((ActionEvent e) -> domainChanged());
 
         domainLabel.setLabelFor(domainField);
         org.openide.awt.Mnemonics.setLocalizedText(domainLabel, org.openide.util.NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Domain")); // NOI18N
@@ -465,7 +447,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
     }
 
 
-    class SomeChangesListener implements KeyListener{
+    private class SomeChangesListener implements KeyListener{
 
         @Override
         public void keyTyped(KeyEvent e){}
@@ -475,54 +457,6 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
         @Override
         public void keyReleased(KeyEvent e){ somethingChanged();}
-
-    }
-
-    private String browseDomainLocation(){
-        String insLocation = null;
-        JFileChooser chooser = getJFileChooser();
-        int returnValue = chooser.showDialog(this, NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_ChooseButton")); //NOI18N
-
-        if(returnValue == JFileChooser.APPROVE_OPTION){
-            insLocation = chooser.getSelectedFile().getAbsolutePath();
-        }
-        return insLocation;
-    }
-
-    private JFileChooser getJFileChooser(){
-        JFileChooser chooser = new JFileChooser();
-
-        chooser.setDialogTitle("LBL_Chooser_Name"); //NOI18N
-        chooser.setDialogType(JFileChooser.CUSTOM_DIALOG);
-
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        chooser.setApproveButtonMnemonic("Choose_Button_Mnemonic".charAt(0)); //NOI18N
-        chooser.setMultiSelectionEnabled(false);
-        chooser.addChoosableFileFilter(new dirFilter());
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setApproveButtonToolTipText("LBL_Chooser_Name"); //NOI18N
-
-        chooser.getAccessibleContext().setAccessibleName("LBL_Chooser_Name"); //NOI18N
-        chooser.getAccessibleContext().setAccessibleDescription("LBL_Chooser_Name"); //NOI18N
-
-        return chooser;
-    }
-
-    private static class dirFilter extends javax.swing.filechooser.FileFilter {
-
-        @Override
-        public boolean accept(File f) {
-            if(!f.exists() || !f.canRead() || !f.isDirectory() ) {
-                return false;
-            }else{
-                return true;
-            }
-        }
-
-        @Override
-        public String getDescription() {
-            return NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_DirType"); //NOI18N
-        }
 
     }
 

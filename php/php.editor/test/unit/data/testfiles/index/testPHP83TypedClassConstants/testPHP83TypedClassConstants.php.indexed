@@ -2,7 +2,7 @@
 
 Document 0
 Searchable Keys:
-  clz : a;A;820;;;Stringable|\Stringable;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;
+  clz : a;A;820;;;Stringable|\Stringable;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;0;
   method : __tostring;__toString;866;;@static.constant-type:static.class;1;0;<TESTURL>/testPHP83TypedClassConstants.php;0;0;;
   superiface : stringable;Stringable;
   top : a
@@ -12,7 +12,7 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : b;B;926;A|\A;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;
+  clz : b;B;926;A|\A;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;0;
   superclz : a;A;
   top : b
 
@@ -21,7 +21,7 @@ Not Searchable Keys:
 
 Document 2
 Searchable Keys:
-  clz : c;C;947;A|\A;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;
+  clz : c;C;947;A|\A;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;0;
   superclz : a;A;
   top : c
 
@@ -30,7 +30,7 @@ Not Searchable Keys:
 
 Document 3
 Searchable Keys:
-  clz : classtest;ClassTest;969;;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;
+  clz : classtest;ClassTest;969;;;;1;;0;<TESTURL>/testPHP83TypedClassConstants.php;;0;
   clz.const : array;ARRAY;1329;['t', 'e', 's', 't'];0;<TESTURL>/testPHP83TypedClassConstants.php;1;array;
   clz.const : bool;BOOL;1293;true;0;<TESTURL>/testPHP83TypedClassConstants.php;1;bool;
   clz.const : dnf;DNF;1156;?;0;<TESTURL>/testPHP83TypedClassConstants.php;1;(A&B)|C;

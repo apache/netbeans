@@ -1,0 +1,15 @@
+Code completion result for source line:
+#[Attr2(string: Attr1::CONST_ATTR1, bool: Attr2::CONST_ATTR2)] #[Attr2(Attr1::CONST_ATTR1, |Attr2::CONST_ATTR2)]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      Attr1                           [PUBLIC]   testAttributedFieldParam.php
+CLASS      Attr2                           [PUBLIC]   testAttributedFieldParam.php
+CLASS      ExampleClass                    [PUBLIC]   testAttributedFieldParam.php
+CONSTANT   CONST_DEFINE "define"           [PUBLIC]   testAttributedFieldParam.php
+CONSTANT   CONST_GLOBAL "const"            [PUBLIC]   testAttributedFieldParam.php
+KEYWORD    parent::                                   null
+KEYWORD    self::                                     null
+PARAMETER  bool:                                      Parameter Name
+PARAMETER  string:                                    Parameter Name
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    new                                        null

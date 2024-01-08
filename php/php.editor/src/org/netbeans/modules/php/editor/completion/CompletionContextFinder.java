@@ -239,7 +239,7 @@ final class CompletionContextFinder {
         CLASS_CONTEXT_KEYWORDS, SERVER_ENTRY_CONSTANTS, NONE, NEW_CLASS, GLOBAL, NAMESPACE_KEYWORD,
         GROUP_USE_KEYWORD, GROUP_USE_CONST_KEYWORD, GROUP_USE_FUNCTION_KEYWORD,
         USE_KEYWORD, USE_CONST_KEYWORD, USE_FUNCTION_KEYWORD, DEFAULT_PARAMETER_VALUE, OPEN_TAG, THROW, THROW_NEW, CATCH, CLASS_MEMBER_IN_STRING,
-        INTERFACE_CONTEXT_KEYWORDS, USE_TRAITS
+        INTERFACE_CONTEXT_KEYWORDS, USE_TRAITS, ATTRIBUTE, ATTRIBUTE_EXPRESSION
     };
 
     static enum KeywordCompletionType {
@@ -328,6 +328,15 @@ final class CompletionContextFinder {
             return CompletionContext.GROUP_USE_CONST_KEYWORD;
         } else if (acceptTokenChains(tokenSequence, GROUP_USE_FUNCTION_KEYWORD_TOKENS, moveNextSucces)) {
             return CompletionContext.GROUP_USE_FUNCTION_KEYWORD;
+        } else if (isInAttribute(caretOffset, tokenSequence, true)) {
+            if (isInAttribute(caretOffset, tokenSequence, false)) {
+                return CompletionContext.ATTRIBUTE;
+            }
+            CompletionContext namedArgumentsContext = getNamedArgumentsContext(caretOffset, tokenSequence);
+            if (namedArgumentsContext != null) {
+                return namedArgumentsContext;
+            }
+            return CompletionContext.ATTRIBUTE_EXPRESSION;
         } else if (isInsideInterfaceDeclarationBlock(info, caretOffset, tokenSequence)) {
             CompletionContext paramContext = getParamaterContext(token, caretOffset, tokenSequence);
             if (paramContext != null) {
@@ -719,7 +728,7 @@ final class CompletionContextFinder {
         do {
             if (lastTokenId == PHPTokenId.WHITESPACE) {
                 if (!isTypeSeparator(tokenSequence.token())
-                        || (isRightBracket(tokenSequence.token()) && !isVerticalBar(lastTokenExceptForWS))) {
+                        || (isRightParen(tokenSequence.token()) && !isVerticalBar(lastTokenExceptForWS))) {
                     // check the following case: const string CONST_NAME
                     //                                       ^
                     isConstType = false;
@@ -749,8 +758,8 @@ final class CompletionContextFinder {
     private static boolean isTypeSeparator(Token<PHPTokenId> token) {
         return isVerticalBar(token)
                 || isReference(token)
-                || isLeftBracket(token)
-                || isRightBracket(token);
+                || isLeftParen(token)
+                || isRightParen(token);
     }
 
     private static boolean consumeMultiCatchExceptions(TokenSequence tokenSequence) {
@@ -774,7 +783,7 @@ final class CompletionContextFinder {
                     }
                 }
             }
-            if (isLeftBracket(tokenSequence.token())) {
+            if (isLeftParen(tokenSequence.token())) {
                 hasParenOpen = true;
             }
             if (!tokenSequence.movePrevious()) {
@@ -784,7 +793,7 @@ final class CompletionContextFinder {
                 break;
             }
         } while (isVerticalBar(tokenSequence.token())
-                || isLeftBracket(tokenSequence.token())
+                || isLeftParen(tokenSequence.token())
                 || tokenSequence.token().id() == PHPTokenId.WHITESPACE
                 || consumeNameSpace(tokenSequence));
 
@@ -1118,7 +1127,7 @@ final class CompletionContextFinder {
                             try {
                                 // e.g. function &my_sort5(&^$data) {, function &my_sort5(^&$data) {
                                 Token<? extends PHPTokenId> previous = LexUtilities.findPrevious(tokenSequence, Arrays.asList(PHPTokenId.WHITESPACE, PHPTokenId.PHP_OPERATOR));
-                                if (isComma(previous) || isLeftBracket(previous)) {
+                                if (isComma(previous) || isLeftParen(previous)) {
                                     int offset = cToken.offset(null) + cToken.text().length();
                                     if (carretOffset >= offset) {
                                         testCompletionSeparator = false;
@@ -1155,7 +1164,7 @@ final class CompletionContextFinder {
                             if (carretOffset > offset) {
                                 testCompletionSeparator = false;
                             }
-                        } else if (isReference(cToken) || isRightBracket(cToken) || isVariable(cToken)) {
+                        } else if (isReference(cToken) || isRightParen(cToken) || isVariable(cToken)) {
                             int offset = cToken.offset(null) + cToken.text().length();
                             if (carretOffset >= offset) {
                                 testCompletionSeparator = false;
@@ -1220,14 +1229,24 @@ final class CompletionContextFinder {
                 && TokenUtilities.textEquals(token.text(), "..."); // NOI18N
     }
 
-    static boolean isLeftBracket(Token<? extends PHPTokenId> token) {
+    static boolean isLeftParen(Token<? extends PHPTokenId> token) {
         return token.id().equals(PHPTokenId.PHP_TOKEN)
                 && TokenUtilities.textEquals(token.text(), "("); // NOI18N
     }
 
-    private static boolean isRightBracket(Token<PHPTokenId> token) {
+    private static boolean isRightParen(Token<PHPTokenId> token) {
         return token.id().equals(PHPTokenId.PHP_TOKEN)
                 && TokenUtilities.textEquals(token.text(), ")"); // NOI18N
+    }
+
+    private static boolean isLeftBracket(Token<? extends PHPTokenId> token) {
+        return token.id().equals(PHPTokenId.PHP_TOKEN)
+                && TokenUtilities.textEquals(token.text(), "["); // NOI18N
+    }
+
+    private static boolean isRightBracket(Token<PHPTokenId> token) {
+        return token.id().equals(PHPTokenId.PHP_TOKEN)
+                && TokenUtilities.textEquals(token.text(), "]"); // NOI18N
     }
 
     private static boolean isEqualSign(Token<PHPTokenId> token) {
@@ -1236,7 +1255,7 @@ final class CompletionContextFinder {
     }
 
     private static boolean isParamSeparator(Token<PHPTokenId> token) {
-        return isComma(token) || isLeftBracket(token);
+        return isComma(token) || isLeftParen(token);
     }
 
     private static boolean isReturnTypeSeparator(Token<PHPTokenId> token) {
@@ -1288,7 +1307,7 @@ final class CompletionContextFinder {
 
     private static boolean isAcceptedPrefix(Token<PHPTokenId> token) {
         return isVariable(token) || isReference(token)
-                || isRightBracket(token) || isString(token) || isWhiteSpace(token) || isNamespaceSeparator(token)
+                || isRightParen(token) || isString(token) || isWhiteSpace(token) || isNamespaceSeparator(token)
                 || isType(token);
     }
 
@@ -1584,7 +1603,7 @@ final class CompletionContextFinder {
             }
         }
 
-        if (isLeftBracket(previousToken) && ts.movePrevious()) {
+        if (isLeftParen(previousToken) && ts.movePrevious()) {
             // find a label "label("
             previousToken = LexUtilities.findPrevious(ts, Arrays.asList(PHPTokenId.WHITESPACE));
             if (previousToken == null) {
@@ -1608,7 +1627,8 @@ final class CompletionContextFinder {
                 retval = CompletionContext.CLASS_MEMBER_PARAMETER_NAME;
             } else if (acceptTokenChains(ts, STATIC_CLASS_MEMBER_TOKENCHAINS, true)) {
                 retval = CompletionContext.STATIC_CLASS_MEMBER_PARAMETER_NAME;
-            } else if (acceptTokenChains(ts, CLASS_NAME_TOKENCHAINS, true)) {
+            } else if (acceptTokenChains(ts, CLASS_NAME_TOKENCHAINS, true)
+                    || isInAttribute(caretOffset, ts, true)) {
                 retval = CompletionContext.CONSTRUCTOR_PARAMETER_NAME;
             } else {
                 retval = CompletionContext.FUNCTION_PARAMETER_NAME;
@@ -1637,6 +1657,43 @@ final class CompletionContextFinder {
         }
 
         ts.move(originalOffset);
+        ts.moveNext();
+        return result;
+    }
+
+    static boolean isInAttribute(final int caretOffset, final TokenSequence ts, boolean allowInArgs) {
+        // e.g. #[MyAttr^ibute] ("^": caret)
+        boolean result = false;
+        int bracketBalance = 0;
+        int parenBalance = 0;
+        ts.move(caretOffset);
+        while (ts.movePrevious()) {
+            if (isLeftBracket(ts.token())) {
+                bracketBalance--;
+            } else if (isRightBracket(ts.token())) {
+                bracketBalance++;
+            } else if (isLeftParen(ts.token())) {
+                parenBalance--;
+            } else if (isRightParen(ts.token())) {
+                parenBalance++;
+            }
+            TokenId tokenId = ts.token().id();
+            if (tokenId == PHPTokenId.PHP_ATTRIBUTE) {
+                if (allowInArgs) {
+                    result = bracketBalance == 0;
+                } else {
+                    result = bracketBalance == 0
+                            && parenBalance == 0;
+                }
+                break;
+            }
+            if (tokenId == PHPTokenId.PHP_SEMICOLON
+                    || isFunctionDeclaration(ts.token())
+                    || isVisibilityModifier(ts.token())) {
+                break;
+            }
+        }
+        ts.move(caretOffset);
         ts.moveNext();
         return result;
     }

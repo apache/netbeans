@@ -1,0 +1,5 @@
+Code completion result for source line:
+#[Attr1, Attr1(self::class, parent::|CONST_PARENT)]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONST_PARENT 1                  [PUBLIC]   ParentClass
+CONSTANT   class \ParentClass              [PUBLIC]   Magic Constant

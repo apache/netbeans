@@ -27,6 +27,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo.Kind;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
@@ -122,6 +123,10 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
         final UsedTraitsVisitor visitor = new UsedTraitsVisitor();
         getOriginalNode().getBody().accept(visitor);
         return visitor.getUsedTraits();
+    }
+
+    public List<Attribute> getAttributes() {
+        return getOriginalNode().getAttributes();
     }
 
 }

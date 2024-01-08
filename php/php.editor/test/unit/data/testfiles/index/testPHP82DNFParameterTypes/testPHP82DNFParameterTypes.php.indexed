@@ -18,7 +18,7 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : magickmethods;MagickMethods;2411;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;
+  clz : magickmethods;MagickMethods;2411;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
   method : dnftype1;dnfType1;1674;$param1::0::1:0:0:0:0:0::,$param2:X|Y|Y|Z|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|Z:(X&Y)\u007c(Y&Z)\u007cZ;(\X&\Y)|(\Y&\Z)|(\X&\Z);1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
   method : dnftype2;dnfType2;1750;$param1::0::1:0:0:0:0:0::,$param2:X|Y|Z|Z:1::1:0:0:0:0:0:X|(Y&Z)|Z:X\u007c(Y&Z)\u007cZ;\Y|(\Y&\Z)|\X;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
   method : getdefault;getDefault;2376;;?\Example;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
@@ -37,7 +37,7 @@ Not Searchable Keys:
 
 Document 2
 Searchable Keys:
-  clz : test;Test;853;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;
+  clz : test;Test;853;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
   top : test
 
 Not Searchable Keys:
@@ -45,7 +45,7 @@ Not Searchable Keys:
 
 Document 3
 Searchable Keys:
-  clz : testclass;TestClass;927;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;
+  clz : testclass;TestClass;927;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
   method : parametertype;parameterType;959;$param1:Test|Y|Z|X:1::1:0:0:1:0:0:(Test&Y)|Z|X:,$param2:bool:1::1:0:0:0:0:0:bool:;(\Test&\Y)|\Z|\X;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(Test&Y)|Z|X;
   top : testclass
 
@@ -54,7 +54,7 @@ Not Searchable Keys:
 
 Document 4
 Searchable Keys:
-  clz : x;X;820;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;
+  clz : x;X;820;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
   top : x
 
 Not Searchable Keys:
@@ -62,7 +62,7 @@ Not Searchable Keys:
 
 Document 5
 Searchable Keys:
-  clz : y;Y;831;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;
+  clz : y;Y;831;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
   top : y
 
 Not Searchable Keys:
@@ -70,7 +70,7 @@ Not Searchable Keys:
 
 Document 6
 Searchable Keys:
-  clz : z;Z;842;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;
+  clz : z;Z;842;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
   top : z
 
 Not Searchable Keys:

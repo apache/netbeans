@@ -1,0 +1,4 @@
+Code completion result for source line:
+#[Attr1(strin|)]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PARAMETER  string:                                    Parameter Name

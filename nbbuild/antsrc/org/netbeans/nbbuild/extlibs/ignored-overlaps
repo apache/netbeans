@@ -96,7 +96,10 @@ webcommon/javascript2.extdoc/external/testfiles-jsdoc-1.zip webcommon/javascript
 webcommon/javascript2.jsdoc/external/testfiles-jsdoc-1.zip webcommon/javascript2.sdoc/external/testfiles-jsdoc-1.zip
 
 # not part of the product:
-harness/apisupport.harness/external/launcher-12.5-distribution.zip platform/o.n.bootstrap/external/launcher-12.5-distribution.zip
+harness/apisupport.harness/external/launcher-external-binaries-1-94a19f0.zip platform/o.n.bootstrap/external/launcher-external-binaries-1-94a19f0.zip
+harness/apisupport.harness/external/launcher-external-binaries-1-94a19f0.zip nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip
+nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip platform/o.n.bootstrap/external/launcher-external-binaries-1-94a19f0.zip
+nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip harness/apisupport.harness/external/launcher-external-binaries-1-94a19f0.zip
 
 # only one is part of the product:
 java/libs.javacapi/external/nb-javac-jdk-21u-api.jar java/libs.nbjavacapi/external/nb-javac-jdk-21u-api.jar

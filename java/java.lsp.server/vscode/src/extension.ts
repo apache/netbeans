@@ -61,7 +61,6 @@ import { TLSSocket } from 'tls';
 import { InputStep, MultiStepInput } from './utils';
 import { env } from 'process';
 import { PropertiesView } from './propertiesView/propertiesView';
-import { dumpJava } from './test/suite/testutils';
 
 const API_VERSION : string = "1.0";
 export const COMMAND_PREFIX : string = "nbls";
@@ -291,7 +290,6 @@ function wrapCommandWithProgress(lsCommand : string, title : string, log? : vsco
                         if (res) {
                             resolve(res);
                         } else {
-                            dumpJava();
                             if (log) {
                                 handleLog(log, `Command ${lsCommand} takes too long to start`);
                             }

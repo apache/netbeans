@@ -8,7 +8,7 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : typedpropertiesclass;TypedPropertiesClass;950;;;;1;;0;<TESTURL>/testPHP74TypedPropertiesClass.php;;
+  clz : typedpropertiesclass;TypedPropertiesClass;950;;;;1;;0;<TESTURL>/testPHP74TypedPropertiesClass.php;;0;
   field : a;a;834;1;int;int;0;<TESTURL>/testPHP74TypedPropertiesClass.php;1;
   field : array;array;1125;2;array;array;0;<TESTURL>/testPHP74TypedPropertiesClass.php;0;
   field : b;b;857;1;double;double;0;<TESTURL>/testPHP74TypedPropertiesClass.php;1;

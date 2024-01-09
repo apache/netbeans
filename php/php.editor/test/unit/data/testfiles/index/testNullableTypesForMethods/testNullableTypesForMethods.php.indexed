@@ -8,7 +8,7 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : nullabletypes;NullableTypes;12;;;;1;;0;<TESTURL>/testNullableTypesForMethods.php;;
+  clz : nullabletypes;NullableTypes;12;;;;1;;0;<TESTURL>/testNullableTypesForMethods.php;;0;
   method : parametertype;parameterType;49;$param:?string:1::1:0:0:0:0:0:?string:;;1;0;<TESTURL>/testNullableTypesForMethods.php;0;0;;
   method : parametertypestatic;parameterTypeStatic;115;$param:?string:1::1:0:0:0:0:0:?string:;;9;0;<TESTURL>/testNullableTypesForMethods.php;0;0;;
   method : returntype;returnType;180;$num:int:1::1:0:0:0:0:0:int:;?\Foo;1;0;<TESTURL>/testNullableTypesForMethods.php;0;0;?\Foo;

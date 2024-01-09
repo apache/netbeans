@@ -58,8 +58,8 @@ public class HudsonScanner extends PushTaskScanner implements Runnable {
     private final Map<Project,CacheEntry> cache = new WeakHashMap<Project,CacheEntry>();
 
     @Messages({
-        "HudsonScanner.displayName=Hudson Warnings",
-        "HudsonScanner.description=Warnings and other action items coming from Hudson servers, currently supporting the Static Analysis plugin suite."
+        "HudsonScanner.displayName=Jenkins Warnings",
+        "HudsonScanner.description=Warnings and other action items coming from Jenkins servers, currently supporting the Static Analysis plugin suite."
     })
     public HudsonScanner() {
         super(HudsonScanner_displayName(), HudsonScanner_description(), null);

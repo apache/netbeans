@@ -1914,23 +1914,27 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             new Exception("no NbCodeLanguageClient!").printStackTrace();
         }
 
-        diagnosticTasks.computeIfAbsent(uri, u -> {
-            return BACKGROUND_TASKS.create(() -> {
-                Document originalDoc = server.getOpenedDocuments().getDocument(uri);
-                long originalVersion = documentVersion(originalDoc);
-                List<Diagnostic> errorDiags = computeDiags(u, -1, ErrorProvider.Kind.ERRORS, originalVersion);
-                if (documentVersion(originalDoc) == originalVersion) {
-                    publishDiagnostics(uri, errorDiags);
-                    BACKGROUND_TASKS.create(() -> {
-                        List<Diagnostic> hintDiags = computeDiags(u, -1, ErrorProvider.Kind.HINTS, originalVersion);
-                        Document doc = server.getOpenedDocuments().getDocument(uri);
-                        if (documentVersion(doc) == originalVersion) {
-                            publishDiagnostics(uri, hintDiags);
-                        }
-                    }).schedule(DELAY);
-                }
-            });
-        }).schedule(DELAY);
+        // sync needed - this can be called also from reporterControl, from other that LSP request thread. The factory function just cretaes a stopped
+        // Task that is executed later.
+        synchronized (diagnosticTasks) {
+            diagnosticTasks.computeIfAbsent(uri, u -> {
+                return BACKGROUND_TASKS.create(() -> {
+                    Document originalDoc = server.getOpenedDocuments().getDocument(uri);
+                    long originalVersion = documentVersion(originalDoc);
+                    List<Diagnostic> errorDiags = computeDiags(u, -1, ErrorProvider.Kind.ERRORS, originalVersion);
+                    if (documentVersion(originalDoc) == originalVersion) {
+                        publishDiagnostics(uri, errorDiags);
+                        BACKGROUND_TASKS.create(() -> {
+                            List<Diagnostic> hintDiags = computeDiags(u, -1, ErrorProvider.Kind.HINTS, originalVersion);
+                            Document doc = server.getOpenedDocuments().getDocument(uri);
+                            if (documentVersion(doc) == originalVersion) {
+                                publishDiagnostics(uri, hintDiags);
+                            }
+                        }).schedule(DELAY);
+                    }
+                });
+            }).schedule(DELAY);
+        }
     }
     
     CompletableFuture<List<Diagnostic>> computeDiagnostics(String uri, EnumSet<ErrorProvider.Kind> types) {

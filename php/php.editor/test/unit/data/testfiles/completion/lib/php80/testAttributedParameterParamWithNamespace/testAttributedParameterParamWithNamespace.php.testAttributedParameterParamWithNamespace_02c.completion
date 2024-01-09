@@ -1,0 +1,4 @@
+Code completion result for source line:
+#[Attr2(\CONST_GLOBAL, bool: Attr2::CONST_|ATTR2)] string $string,
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONST_ATTR2 true                [PUBLIC]   \Attributes\Test1\Attr2

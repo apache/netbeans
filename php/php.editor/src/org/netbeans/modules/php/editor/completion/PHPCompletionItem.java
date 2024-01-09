@@ -473,7 +473,8 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
     private boolean isNewClassContext(CompletionContext context) {
         return context.equals(CompletionContext.NEW_CLASS)
-                || context.equals(CompletionContext.THROW_NEW);
+                || context.equals(CompletionContext.THROW_NEW)
+                || context.equals(CompletionContext.ATTRIBUTE);
     }
 
     static class NewClassItem extends MethodElementItem {
@@ -1855,6 +1856,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         @Override
         public ElementKind getKind() {
+            if (request.context == CompletionContext.ATTRIBUTE) {
+                return ElementKind.CONSTRUCTOR;
+            }
             return ElementKind.CLASS;
         }
 

@@ -1,0 +1,4 @@
+Code completion result for source line:
+public function method(#[Attr2(string: CONST_ATTRIBUTE|S_TEST1, bool: Attr2::CONST_ATTR2)] int $int): void {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONST_ATTRIBUTES_TEST1 "const"  [PUBLIC]   Attributes\Test1

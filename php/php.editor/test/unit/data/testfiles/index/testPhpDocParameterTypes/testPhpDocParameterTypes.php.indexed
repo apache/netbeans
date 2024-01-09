@@ -10,7 +10,7 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : testclass;TestClass;975;;;;1;;0;<TESTURL>/testPhpDocParameterTypes.php;;
+  clz : testclass;TestClass;975;;;;1;;0;<TESTURL>/testPhpDocParameterTypes.php;;0;
   method : parametertype;parameterType;1219;$param1:int-mask-of:0::1:0:0:0:0:0::int-mask-of<self\u003a\u003aTest1\u007cself\u003a\u003aTest2\u007cself\u003a\u003aTest3>,$param2::0::1:0:0:0:0:0::(callable(Test\u002cbool)\u003aT)\u007c(callable(Test\u002cbool)\u003aT)\u007cTest<T>;(\Test&\Y)|\Z|\X;1;0;<TESTURL>/testPhpDocParameterTypes.php;1;0;(Test&Y)|Z|X;
   top : testclass
 

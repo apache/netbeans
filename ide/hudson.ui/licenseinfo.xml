@@ -23,8 +23,14 @@
     <fileset>
         <file>src/org/netbeans/modules/hudson/ui/resources/notification.png</file>
         <file>src/org/netbeans/modules/hudson/ui/resources/hudson.png</file>
-        <file>src/org/netbeans/modules/hudson/ui/resources/instance.png</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/hudson/ui/resources/instance.png</file>
+        <license ref="CC-BY-SA-3.0" />
+        <notice>Original image from the Jenkins project (https://jenkins.io/):
+https://github.com/jenkins-infra/jenkins.io/blob/master/content/images/logos/jenkins/jenkins.svg
+(placed on square background, rendered to 16x16px with inkscape)</notice>
     </fileset>
 </licenseinfo>

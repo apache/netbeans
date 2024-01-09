@@ -1,0 +1,14 @@
+Code completion result for source line:
+$closure = #[Attr1] function ($int, #[Attr2(|Attr2::class)] array $array): void {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    Attributes                      [PUBLIC]   null
+CLASS      Attr1                           [PUBLIC]   Attributes\Test1
+CLASS      Attr2                           [PUBLIC]   Attributes\Test1
+CONSTANT   CONST_ATTRIBUTES_TEST1 "const"  [PUBLIC]   Attributes\Test1
+CONSTANT   CONST_DEFINE "define"           [PUBLIC]   testAttributedFunctions.php
+CONSTANT   CONST_GLOBAL "const"            [PUBLIC]   testAttributedFunctions.php
+PARAMETER  bool:                                      Parameter Name
+PARAMETER  string:                                    Parameter Name
+------------------------------------
+PACKAGE    Test1                           [PUBLIC]   Attributes
+PACKAGE    Test2                           [PUBLIC]   Attributes

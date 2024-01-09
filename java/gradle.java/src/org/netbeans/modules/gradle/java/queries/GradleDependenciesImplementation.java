@@ -30,12 +30,14 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
@@ -276,6 +278,7 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
             }
             
             List<Dependency> rootDeps = new ArrayList<>();
+            LOG.log(Level.FINE, "** Computing dependencies for project {0}", project);
             for (Scope s : allScopes) {
                 String cfgName = toGradleConfigName(s);
                 if (cfgName == null) {
@@ -415,7 +418,18 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
             return ret;
         }
         
+        private int level = 0;
+        
         List<Dependency> processLevel(GradleConfiguration c, GradleDependency d, Set<GradleDependency> allParents) {
+            level++;
+            try {
+                return processLevel0(c, d, allParents);
+            } finally {
+                level--;
+            }
+        }
+        
+        List<Dependency> processLevel0(GradleConfiguration c, GradleDependency d, Set<GradleDependency> allParents) {
             if (counter > DEPENDENCIES_MAX_COUNT) {
                 LOG.log(Level.WARNING, "Potential dependency cycle for {0} (parents: {1}), abort!", new Object[] { d, allParents });
                 return Collections.emptyList();
@@ -424,6 +438,14 @@ public class GradleDependenciesImplementation implements ProjectDependenciesImpl
             Collection<GradleDependency> deps = c.getDependenciesOf(d);
             if (deps == null) {
                 return Collections.emptyList();
+            }
+            if (LOG.isLoggable(Level.FINER)) {
+                StringBuilder indent = new StringBuilder();
+                for (int i = 0; i < level; i++) {
+                    indent.append("  ");
+                }
+                String chIds = deps.stream().sequential().filter(Objects::nonNull).map(GradleDependency::getId).collect(Collectors.joining(", "));
+                LOG.log(Level.FINER, "Children: {0} {1} -> {2}", new Object[] { indent, d.getId(), chIds });
             }
             List<Dependency> res = new ArrayList<>();
             if (!allParents.add(d)) {

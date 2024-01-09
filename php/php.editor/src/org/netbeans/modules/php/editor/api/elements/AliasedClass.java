@@ -76,4 +76,9 @@ public final class AliasedClass extends AliasedType implements ClassElement {
     public Collection<QualifiedName> getUsedTraits() {
         return getClassElement().getUsedTraits();
     }
+
+    @Override
+    public boolean isAttribute() {
+        return getClassElement().isAttribute();
+    }
 }

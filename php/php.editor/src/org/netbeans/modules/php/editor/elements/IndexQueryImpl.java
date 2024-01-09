@@ -177,11 +177,16 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     }
 
     private Set<ClassElement> getClassesImpl(final NameKind query) {
+        return getClassesImpl(query, false);
+    }
+
+    private Set<ClassElement> getClassesImpl(final NameKind query, boolean isAttributeClass) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
         final Set<ClassElement> classes = new HashSet<>();
-        final Collection<? extends IndexResult> result = results(ClassElementImpl.IDX_FIELD, query);
+        final String indexField = ClassElementImpl.getIndexField(isAttributeClass);
+        final Collection<? extends IndexResult> result = results(indexField, query);
         for (final IndexResult indexResult : result) {
-            Set<ClassElement> allClasses = ClassElementImpl.fromSignature(query, this, indexResult);
+            Set<ClassElement> allClasses = ClassElementImpl.fromSignature(query, this, indexResult, isAttributeClass);
             if (query.isPrefix() || query.isCaseInsensitivePrefix()) {
                 classes.addAll(allClasses);
             } else {
@@ -417,16 +422,16 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     @Override
     public Set<MethodElement> getConstructors(final ClassElement classElement) {
         final long start = (LOG.isLoggable(Level.FINE)) ? System.currentTimeMillis() : 0;
-        final Set<MethodElement> retval = getConstructorsImpl(classElement, classElement, new LinkedHashSet<ClassElement>());
+        final Set<MethodElement> retval = getConstructorsImpl(classElement, classElement, new LinkedHashSet<>());
         if (LOG.isLoggable(Level.FINE)) {
             logQueryTime("Set<MethodElement> getConstructors", NameKind.exact(classElement.getFullyQualifiedName()), start); //NOI18N
         }
         return retval.isEmpty() ? getDefaultConstructors(classElement) : retval;
     }
 
-    private Set<MethodElement> getConstructorsImpl(NameKind typeQuery) {
+    private Set<MethodElement> getConstructorsImpl(NameKind typeQuery, boolean isAttributeClass) {
         final Set<MethodElement> retval = new HashSet<>();
-        final Set<ClassElement> classes = getClassesImpl(typeQuery);
+        final Set<ClassElement> classes = getClassesImpl(typeQuery, isAttributeClass);
         for (ClassElement classElement : classes) {
             retval.addAll(getConstructors(classElement));
         }
@@ -434,12 +439,18 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     }
 
     private Set<MethodElement> getConstructorsImpl(final ClassElement originalClass, final ClassElement inheritedClass, final Set<ClassElement> check) {
+        return getConstructorsImpl(originalClass, inheritedClass, check, false);
+    }
+
+    private Set<MethodElement> getConstructorsImpl(final ClassElement originalClass, final ClassElement inheritedClass, final Set<ClassElement> check, boolean isAttributeClass) {
         final Set<MethodElement> methods = new HashSet<>();
         if (!check.contains(inheritedClass)) {
             check.add(inheritedClass);
             final Exact typeQuery = NameKind.exact(inheritedClass.getFullyQualifiedName());
-            final Collection<? extends IndexResult> constructorResults = results(ClassElementImpl.IDX_FIELD, typeQuery,
-                    new String[]{ClassElementImpl.IDX_FIELD, MethodElementImpl.IDX_CONSTRUCTOR_FIELD, MethodElementImpl.IDX_FIELD});
+            final Collection<? extends IndexResult> constructorResults;
+            String indexField = ClassElementImpl.getIndexField(isAttributeClass);
+            constructorResults = results(indexField, typeQuery,
+                    new String[]{indexField, MethodElementImpl.IDX_CONSTRUCTOR_FIELD, MethodElementImpl.IDX_FIELD});
             final Set<MethodElement> methodsForResult = new HashSet<>();
             final ElementFilter forEqualTypes = ElementFilter.forEqualTypes(inheritedClass);
             for (final IndexResult indexResult : constructorResults) {
@@ -2062,6 +2073,24 @@ public final class IndexQueryImpl implements ElementQuery.Index {
     }
 
     @Override
+    public Set<ClassElement> getAttributeClasses(NameKind query, Set<AliasedName> aliasedNames, Trait trait) {
+        final Set<ClassElement> retval = new HashSet<>();
+        for (final AliasedName aliasedName : aliasedNames) {
+            for (final NameKind nextQuery : queriesForAlias(query, aliasedName, PhpElementKind.CLASS)) {
+                for (final ClassElement nextClass : getClassesImpl(nextQuery, true)) {
+                    final AliasedClass aliasedClass = new AliasedClass(aliasedName, nextClass);
+                    if (trait != null) {
+                        aliasedClass.setTrait(trait);
+                    }
+                    retval.add(aliasedClass);
+                }
+            }
+        }
+        retval.addAll(getClassesImpl(query, true));
+        return retval;
+    }
+
+    @Override
     public Set<EnumElement> getEnums(final NameKind query, final Set<AliasedName> aliasedNames, final Trait trait) {
         final Set<EnumElement> retval = new HashSet<>();
         for (final AliasedName aliasedName : aliasedNames) {
@@ -2136,23 +2165,31 @@ public final class IndexQueryImpl implements ElementQuery.Index {
 
     @Override
     public Set<MethodElement> getConstructors(final NameKind typeQuery, final Set<AliasedName> aliasedNames, final Trait trait) {
+        return getConstructors(typeQuery, aliasedNames, trait, false);
+    }
+
+    @Override
+    public Set<MethodElement> getAttributeClassConstructors(NameKind typeQuery, Set<AliasedName> aliasedNames, Trait trait) {
+        return getConstructors(typeQuery, aliasedNames, trait, true);
+    }
+
+    private Set<MethodElement> getConstructors(NameKind typeQuery, Set<AliasedName> aliasedNames, Trait trait, boolean isAttributeClass) {
         final Set<MethodElement> retval = new HashSet<>();
         for (final AliasedName aliasedName : aliasedNames) {
             for (final NameKind nextQuery : queriesForAlias(typeQuery, aliasedName, PhpElementKind.CLASS)) {
-                for (ClassElement classElement : getClassesImpl(nextQuery)) {
+                for (ClassElement classElement : getClassesImpl(nextQuery, isAttributeClass)) {
                     final AliasedClass aliasedClass = new AliasedClass(aliasedName, classElement);
                     if (trait != null) {
                         aliasedClass.setTrait(trait);
                     }
-                    final Set<MethodElement> constructorsImpl = getConstructorsImpl(aliasedClass, classElement, new LinkedHashSet<ClassElement>());
+                    final Set<MethodElement> constructorsImpl = getConstructorsImpl(aliasedClass, classElement, new LinkedHashSet<>(), isAttributeClass);
                     retval.addAll(constructorsImpl.isEmpty() ? getDefaultConstructors(aliasedClass) : constructorsImpl);
                 }
             }
         }
-        retval.addAll(getConstructorsImpl(typeQuery));
+        retval.addAll(getConstructorsImpl(typeQuery, isAttributeClass));
         return retval;
     }
-
 
     @Override
     public Set<PhpElement> getTopLevelElements(final NameKind query, final Set<AliasedName> aliasedNames, final Trait trait) {

@@ -26,6 +26,7 @@ import java.util.Set;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
@@ -101,8 +102,11 @@ public class ClassInstanceCreationInfo extends ASTNodeInfo<ClassInstanceCreation
         return visitor.getUsedTraits();
     }
 
-    //~ Inner classes
+    public List<Attribute> getAttributes() {
+        return getOriginalNode().getAttributes();
+    }
 
+    //~ Inner classes
     private static final class UsedTraitsVisitor extends DefaultVisitor {
 
         private final List<UseTraitStatementPart> useParts = new LinkedList<>();

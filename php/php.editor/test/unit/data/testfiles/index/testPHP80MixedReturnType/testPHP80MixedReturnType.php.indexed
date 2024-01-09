@@ -10,7 +10,7 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : mixedtype;MixedType;877;;;;1;;0;<TESTURL>/testPHP80MixedReturnType.php;;
+  clz : mixedtype;MixedType;877;;;;1;;0;<TESTURL>/testPHP80MixedReturnType.php;;0;
   method : mixedreturntype;mixedReturnType;909;;mixed;1;0;<TESTURL>/testPHP80MixedReturnType.php;0;0;mixed;
   top : mixedtype
 

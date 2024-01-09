@@ -18,7 +18,7 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : testclass;TestClass;894;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;
+  clz : testclass;TestClass;894;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;0;
   method : returntype;returnType;926;;(\X&\Y)|\Z|\X;1;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y)|Z|X;
   top : testclass
 
@@ -27,7 +27,7 @@ Not Searchable Keys:
 
 Document 2
 Searchable Keys:
-  clz : x;X;820;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;
+  clz : x;X;820;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;0;
   top : x
 
 Not Searchable Keys:
@@ -35,7 +35,7 @@ Not Searchable Keys:
 
 Document 3
 Searchable Keys:
-  clz : y;Y;831;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;
+  clz : y;Y;831;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;0;
   top : y
 
 Not Searchable Keys:
@@ -43,7 +43,7 @@ Not Searchable Keys:
 
 Document 4
 Searchable Keys:
-  clz : z;Z;842;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;
+  clz : z;Z;842;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;0;
   top : z
 
 Not Searchable Keys:

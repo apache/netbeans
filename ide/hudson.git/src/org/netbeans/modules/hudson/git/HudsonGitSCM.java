@@ -60,8 +60,8 @@ public class HudsonGitSCM implements HudsonSCM {
     private static final Logger LOG = Logger.getLogger(HudsonGitSCM.class.getName());
 
     @Messages({
-        "# {0} - original URL", "# {1} - replacement URL", "ro_replacement=Replacing {0} with {1} in Hudson configuration.",
-        "# {0} - repository location", "warning.local_repo={0} will only be accessible from a Hudson server on the same machine."
+        "# {0} - original URL", "# {1} - replacement URL", "ro_replacement=Replacing {0} with {1} in Jenkins configuration.",
+        "# {0} - repository location", "warning.local_repo={0} will only be accessible from a Jenkins server on the same machine."
     })
     @Override public Configuration forFolder(File folder) {
         if (!new File(folder, ".git").isDirectory()) {

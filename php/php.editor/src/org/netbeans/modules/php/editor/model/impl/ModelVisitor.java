@@ -78,6 +78,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Assignment;
+import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
@@ -176,7 +177,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     private volatile Scope previousScope;
     private volatile List<String> currentLexicalVariables = new LinkedList<>();
     private volatile boolean isReturnType = false;
-    private volatile boolean isLexialVariable = false;
+    private volatile boolean isLexicalVariable = false;
 
     public ModelVisitor(final PHPParseResult info) {
         this.fileScope = new FileScopeImpl(info);
@@ -455,6 +456,20 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
                 Kind[] kinds = {Kind.CLASS, Kind.IFACE};
                 occurencesBuilder.prepare(kinds, namespaceName, fileScope);
             }
+        } else if (parent instanceof AttributeDeclaration) {
+            AttributeDeclaration attributeDeclaration = (AttributeDeclaration) parent;
+            List<Expression> parameters = attributeDeclaration.getParameters();
+            if (attributeDeclaration.getAttributeName() != namespaceName
+                    && parameters != null
+                    && !parameters.isEmpty()) {
+                AttributeParametersVisitor attributeParametersVisitor = new AttributeParametersVisitor();
+                attributeParametersVisitor.scan(parameters);
+                // #[Attr(ClassName::CONSTANT, new ClassName)] these are type names
+                if (attributeParametersVisitor.isGlobalConstant(namespaceName)) {
+                    // e.g. #[Attr(\GLOBAL\CONSTANT)] this is a constant name
+                    occurencesBuilder.prepare(Kind.CONSTANT, namespaceName, fileScope);
+                }
+            }
         } else if (!(parent instanceof ClassDeclaration) && !(parent instanceof EnumDeclaration) && !(parent instanceof InterfaceDeclaration)
                 && !(parent instanceof FormalParameter) && !(parent instanceof InstanceOfExpression)
                 && !(parent instanceof UseTraitStatementPart) && !(parent instanceof TraitConflictResolutionDeclaration)
@@ -595,6 +610,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
             }
             modelBuilder.build(node, occurencesBuilder, this);
             markerBuilder.prepare(node, modelBuilder.getCurrentScope());
+            scan(node.getAttributes());
             scan(node.getFunction().getReturnType());
             checkComments(node);
             // scan all anonymous classes
@@ -1236,6 +1252,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         ScopeImpl scope = modelBuilder.getCurrentScope();
         FunctionScopeImpl fncScope = FunctionScopeImpl.createElement(scope, node);
         modelBuilder.setCurrentScope(fncScope);
+        scan(node.getAttributes());
         scan(node.getFormalParameters());
         isReturnType = true;
         scan(node.getReturnType());
@@ -1248,10 +1265,11 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
     public void visit(LambdaFunctionDeclaration node) {
         ScopeImpl scope = modelBuilder.getCurrentScope();
         FunctionScopeImpl fncScope = FunctionScopeImpl.createElement(scope, node);
+        scan(node.getAttributes());
         List<Expression> lexicalVariables = node.getLexicalVariables();
-        isLexialVariable = true;
+        isLexicalVariable = true;
         scan(lexicalVariables);
-        isLexialVariable = false;
+        isLexicalVariable = false;
         for (Expression expression : lexicalVariables) {
             Expression expr = expression;
             // #269672 also check the reference: &$variable
@@ -1289,6 +1307,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         occurencesBuilder.prepare(node, fncScope);
         markerBuilder.prepare(node, fncScope);
         checkComments(node);
+        scan(node.getAttributes());
         scan(node.getFormalParameters());
         scan(node.getReturnType());
         scan(node.getBody());
@@ -1592,7 +1611,7 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
         if (retval == null) {
             if (ModelUtils.filter(varContainer.getDeclaredVariables(), name).isEmpty()) {
                 retval = varContainer.createElement(node);
-                if (isLexialVariable) {
+                if (isLexicalVariable) {
                     retval.setGloballyVisible(true);
                 }
                 map.put(name, retval);
@@ -1853,4 +1872,32 @@ public final class ModelVisitor extends DefaultTreePathVisitor {
 
     }
 
+    private static final class AttributeParametersVisitor extends DefaultVisitor {
+
+        private final Set<ASTNode> typeNameNodes = new HashSet<>();
+
+        @Override
+        public void visit(ClassInstanceCreation node) {
+            if (!node.isAnonymous()) {
+                typeNameNodes.add(node);
+            }
+            super.visit(node);
+        }
+
+        @Override
+        public void visit(StaticConstantAccess node) {
+            typeNameNodes.add(node);
+            super.visit(node);
+        }
+
+        public boolean isGlobalConstant(NamespaceName namespaceName) {
+            for (ASTNode typeNameNode : typeNameNodes) {
+                if (typeNameNode.getStartOffset() <= namespaceName.getStartOffset()
+                        && namespaceName.getEndOffset() <= typeNameNode.getEndOffset()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
 }

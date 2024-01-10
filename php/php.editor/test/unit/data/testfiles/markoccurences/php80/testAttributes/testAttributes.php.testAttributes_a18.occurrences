@@ -1,0 +1,30 @@
+class |>MARK_OCCURRENCES:AttributeClass1<| {
+use Attributes\|>MARK_OCCURRENCES:AttributeClass1<|;
+#[|>MARK_OCCURRENCES:AttributeClass1<|(1, self::CONSTANT_CLASS)]
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(2, "class const")]
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(3, "class field")]
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(4, "class static field"), AttributeClass2(4, "class static field", new \Attributes\Example)] // group
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(5, "class method")]
+    public function method(#[|>MARK_OCCURRENCES:AttributeClass1<|(5, "class method param")] $param1, #[|>MARK_OCCURRENCES:AttributeClass1<|(5, 'class method param')] int $pram2) {}
+    #[\Attributes\|>MARK_OCCURRENCES:AttributeClass1<|(6, "class static method")]
+    public static function staticMethod(#[\Attributes\|>MARK_OCCURRENCES:AttributeClass1<|(6, "class static method param")] int|string $param1): bool|int {
+#[|>MARK_OCCURRENCES:AttributeClass1<|(1, "class child")]
+#[|>MARK_OCCURRENCES:AttributeClass1<|(1, "trait")]
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(3, "trait field")]
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(4, "trait static field")]
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(5, "trait method")]
+    public function traitMethod(#[|>MARK_OCCURRENCES:AttributeClass1<|(5, "trait method param")] $param1) {}
+    #[|>MARK_OCCURRENCES:Att^ributeClass1<|(6, "trait static method")]
+$anon = new #[|>MARK_OCCURRENCES:AttributeClass1<|(1, "anonymous class")] class () {};
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(int: 7, string: "anonymous class static method")]
+#[|>MARK_OCCURRENCES:AttributeClass1<|(1, "interface")]
+#[\Attributes\AttributeClass3(1, "enum"), |>MARK_OCCURRENCES:AttributeClass1<|]
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(2, "enum const")]
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(3, "enum case")]
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(4, "enum method")] #[AttributeClass3()]
+    #[|>MARK_OCCURRENCES:AttributeClass1<|(int: 5, string: "enum static method")]
+    |>MARK_OCCURRENCES:AttributeClass1<|(1, "function"),
+$labmda1 = #[|>MARK_OCCURRENCES:AttributeClass1<|(1, "closure")] function() {};
+$arrow1 = #[|>MARK_OCCURRENCES:AttributeClass1<|(1, "arrow")] fn() => 100;
+$arrow2 = #[|>MARK_OCCURRENCES:AttributeClass1<|(2, "arrow"), AttributeClass2(2, "arrow")] fn(#[|>MARK_OCCURRENCES:AttributeClass1<|(\Attributes\CONST_1 / 5, "arrow param" . Example::class)] $test): int|string => 100;
+$arrow3 = #[|>MARK_OCCURRENCES:AttributeClass1<|(3, string: Example::CONST_EXAMPLE . "arrow")] static fn(): int|string => 100;

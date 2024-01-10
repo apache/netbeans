@@ -1178,6 +1178,38 @@ public class PHPNewLineIndenterTest extends PHPTestBase {
         testIndentInFile("testfiles/indent/php80/attributeSyntax_08.php");
     }
 
+    public void testAttributeSyntax_09() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_09.php");
+    }
+
+    public void testAttributeSyntax_10() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_10.php");
+    }
+
+    public void testAttributeSyntax_11() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_11.php");
+    }
+
+    public void testAttributeSyntax_12() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_12.php");
+    }
+
+    public void testAttributeSyntax_13() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_13.php");
+    }
+
+    public void testAttributeSyntax_14() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_14.php");
+    }
+
+    public void testAttributeSyntax_15() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_15.php");
+    }
+
+    public void testAttributeSyntax_16() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_16.php");
+    }
+
     public void testConstructorPropertyPromotion_01() throws Exception {
         testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_01.php");
     }

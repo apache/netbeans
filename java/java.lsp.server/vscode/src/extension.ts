@@ -1063,12 +1063,20 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
                 runConfigurationUpdateAll();
             });
             c.onRequest(SaveDocumentsRequest.type, async (request : SaveDocumentRequestParams) => {
-                for (let ed of window.visibleTextEditors) {
-                    if (request.documents.includes(ed.document.uri.toString())) {
-                        await vscode.commands.executeCommand('workbench.action.files.save', ed.document.uri);
+                const uriList = request.documents.map(s => {
+                    let re = /^file:\/(?:\/\/)?([A-Za-z]):\/(.*)$/.exec(s);
+                    if (!re) {
+                        return s;
+                    }
+                    // don't ask why vscode mangles URIs this way; in addition, it uses lowercase drive letter ???
+                    return `file:///${re[1].toLowerCase()}%3A/${re[2]}`;
+                });
+                for (let ed of workspace.textDocuments) {
+                    if (uriList.includes(ed.uri.toString())) {
+                        return ed.save();
                     }
                 }
-                return true;
+                return false;
             });
             c.onRequest(InputBoxRequest.type, async param => {
                 return await window.showInputBox({ title: param.title, prompt: param.prompt, value: param.value, password: param.password });

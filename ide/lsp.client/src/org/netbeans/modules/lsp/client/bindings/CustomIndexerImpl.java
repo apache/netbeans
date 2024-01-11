@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -80,9 +82,9 @@ public class CustomIndexerImpl extends CustomIndexer {
 
         if (index != null) {
             try (InputStream in = index.getInputStream()) {
-                props.load(in);
-            } catch (IOException ex) {
-                //ignore...
+                props.load(in); // can throw IAE when illegal characters are read
+            } catch (IOException | IllegalArgumentException ex) {
+                Logger.getLogger(CustomIndexerImpl.class.getName()).log(Level.WARNING, "can not load '"+FileUtil.toFile(index)+"', resetting", ex);
             }
         }
 

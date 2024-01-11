@@ -57,6 +57,16 @@
 				"language": "jackpot-hint",
 				"scopeName": "source.java",
 				"path": "./syntaxes/java.tmLanguage.json"
+			},
+			{
+				"injectTo": [
+					"source.java"
+				],
+				"scopeName": "inline.java.string.template",
+				"path": "./syntaxes/java-st-injection.json",
+				"embeddedLanguages": {
+					"meta.embedded.java.string.template": "java"
+				}
 			}
 		],
 		"views": {
@@ -869,12 +879,12 @@
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.CreateAutonomousDBAction",
 					"when": "viewItem =~ /class:oracle.compartment.CompartmentItem/",
-                                        "group": "oci@100"
+					"group": "oci@100"
 				},
 				{
 					"command": "nbls.cloud.ocid.copy",
 					"when": "viewItem =~ /class:oracle.items.OCIItem/",
-                                        "group": "oci@1000"
+					"group": "oci@1000"
 				},
 				{
 					"command": "nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddRepository",

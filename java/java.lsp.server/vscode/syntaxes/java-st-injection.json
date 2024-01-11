@@ -1,0 +1,26 @@
+{
+    "injectionSelector": "L:source.java string",
+    "scopeName": "inline.java.string.template",
+    "patterns": [
+        {
+            "begin": "\\\\{",
+            "beginCaptures": {
+                "0": {
+                    "name": "punctuation.definition.string.template.begin"
+                }
+            },
+            "contentName": "meta.embedded.java.string.template",
+            "end": "}",
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.definition.string.templete.end"
+                }
+            },
+            "patterns": [
+                {
+                    "include": "source.java"
+                }
+            ]
+        }
+    ]
+}

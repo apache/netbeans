@@ -1668,4 +1668,8 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath(), "    $annon = new #[Attr1(int: 500, stri^ng: \"anon\")] class() {};", false);
     }
 
+    public void testAttributesPredefined_01() throws Exception {
+        checkCompletion(getTestPath(), "    #[^]", false);
+    }
+
 }

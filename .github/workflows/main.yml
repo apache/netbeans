@@ -1441,8 +1441,8 @@ jobs:
 #      - name: jellytools.java
 #        run: ant $OPTS -f java/jellytools.java test
 
-#      - name: jshell.support
-#        run: ant $OPTS -f java/jshell.support test
+      - name: jshell.support
+        run: ant $OPTS -f java/jshell.support test
 
       - name: junit
         run: ant $OPTS -f java/junit test-unit

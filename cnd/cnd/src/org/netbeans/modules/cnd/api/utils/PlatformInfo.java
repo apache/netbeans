@@ -65,9 +65,6 @@ public final class PlatformInfo {
             switch (hostinfo.getOSFamily()){
                 case SUNOS:
                     switch (hostinfo.getCpuFamily()){
-                        case SPARC:
-                            platform = PlatformTypes.PLATFORM_SOLARIS_SPARC;
-                            break;
                         case X86:
                             platform = PlatformTypes.PLATFORM_SOLARIS_INTEL;
                             break;
@@ -277,7 +274,7 @@ public final class PlatformInfo {
     }
 
     public boolean isUnix() {
-        return platform == PlatformTypes.PLATFORM_SOLARIS_INTEL || platform == PlatformTypes.PLATFORM_SOLARIS_SPARC || platform == PlatformTypes.PLATFORM_LINUX || platform == PlatformTypes.PLATFORM_MACOSX;
+        return platform == PlatformTypes.PLATFORM_SOLARIS_INTEL || platform == PlatformTypes.PLATFORM_LINUX || platform == PlatformTypes.PLATFORM_MACOSX;
     }
 
     public boolean isLinux() {
@@ -289,7 +286,7 @@ public final class PlatformInfo {
     }
 
     public boolean isSolaris() {
-        return platform == PlatformTypes.PLATFORM_SOLARIS_INTEL || platform == PlatformTypes.PLATFORM_SOLARIS_SPARC;
+        return platform == PlatformTypes.PLATFORM_SOLARIS_INTEL;
     }
 
     public boolean isLocalhost() {

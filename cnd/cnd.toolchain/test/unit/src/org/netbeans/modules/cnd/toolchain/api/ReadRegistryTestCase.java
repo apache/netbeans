@@ -364,9 +364,6 @@ public class ReadRegistryTestCase extends NbTestCase {
 
     public void testUnknownService() throws Exception {
         ToolchainDescriptor d;
-        d = ToolchainManagerImpl.getImpl().getToolchain("GNU", PlatformTypes.PLATFORM_SOLARIS_SPARC);
-        assertNotNull(d);
-        assertTrue("GNU".equals(d.getName()));
         d = ToolchainManagerImpl.getImpl().getToolchain("GNU", PlatformTypes.PLATFORM_SOLARIS_INTEL);
         assertNotNull(d);
         assertTrue("GNU".equals(d.getName()));
@@ -387,10 +384,6 @@ public class ReadRegistryTestCase extends NbTestCase {
         assertTrue("GNU".equals(d.getName()));
 
         CompilerFlavor f;
-        f = CompilerFlavor.getUnknown(PlatformTypes.PLATFORM_SOLARIS_SPARC);
-        assertNotNull(f);
-        assertTrue("Unknown".equals(f.getToolchainDescriptor().getName()));
-        assertTrue(f.isGnuCompiler());
         f = CompilerFlavor.getUnknown(PlatformTypes.PLATFORM_SOLARIS_INTEL);
         assertNotNull(f);
         assertTrue("Unknown".equals(f.getToolchainDescriptor().getName()));

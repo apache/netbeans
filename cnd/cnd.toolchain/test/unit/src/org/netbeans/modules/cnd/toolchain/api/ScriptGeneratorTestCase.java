@@ -86,9 +86,7 @@ public class ScriptGeneratorTestCase extends NativeExecutionBaseTestCase {
         assert arr.length > 1;
         String flavor = arr[0];
         int p = -1;
-        if ("PLATFORM_SOLARIS_SPARC".equals(platform)) {
-            p = PlatformTypes.PLATFORM_SOLARIS_SPARC;
-        } else if ("PLATFORM_SOLARIS_INTEL".equals(platform)) {
+        if ("PLATFORM_SOLARIS_INTEL".equals(platform)) {
             p = PlatformTypes.PLATFORM_SOLARIS_INTEL;
         } else if ("PLATFORM_LINUX".equals(platform)) {
             p = PlatformTypes.PLATFORM_LINUX;
@@ -120,11 +118,7 @@ public class ScriptGeneratorTestCase extends NativeExecutionBaseTestCase {
                 p = PlatformTypes.PLATFORM_MACOSX;
                 break;
             case SUNOS:
-                if (host.getCpuFamily() == HostInfo.CpuFamily.SPARC) {
-                    p = PlatformTypes.PLATFORM_SOLARIS_SPARC;
-                } else {
-                    p = PlatformTypes.PLATFORM_SOLARIS_INTEL;
-                }
+                p = PlatformTypes.PLATFORM_SOLARIS_INTEL;
                 break;
             case WINDOWS:
                 p = PlatformTypes.PLATFORM_WINDOWS;

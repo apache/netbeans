@@ -55,13 +55,8 @@ public final class ToolchainScriptGenerator {
                 platformName = "PLATFORM_MACOSX"; //NOI18N
                 break;
             case SUNOS:
-                if (host.getCpuFamily() == HostInfo.CpuFamily.SPARC) {
-                    platform = PlatformTypes.PLATFORM_SOLARIS_SPARC;
-                    platformName = "PLATFORM_SOLARIS_SPARC"; //NOI18N
-                } else {
-                    platform = PlatformTypes.PLATFORM_SOLARIS_INTEL;
-                    platformName = "PLATFORM_SOLARIS_INTEL"; //NOI18N
-                }
+                platform = PlatformTypes.PLATFORM_SOLARIS_INTEL;
+                platformName = "PLATFORM_SOLARIS_INTEL"; //NOI18N
                 break;
             case WINDOWS:
                 platform = PlatformTypes.PLATFORM_WINDOWS;

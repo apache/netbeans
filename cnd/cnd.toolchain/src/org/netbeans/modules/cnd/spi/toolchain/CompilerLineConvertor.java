@@ -127,11 +127,7 @@ public final class CompilerLineConvertor implements LineConvertor, ChangeListene
 	    HostInfo hostInfo = HostInfoUtils.getHostInfo(execEnv);
 	    switch(hostInfo.getOSFamily()){
 		case SUNOS:
-		    if (hostInfo.getCpuFamily() == CpuFamily.SPARC){
-			platform = PlatformTypes.PLATFORM_SOLARIS_SPARC;
-		    } else {
-			platform = PlatformTypes.PLATFORM_SOLARIS_INTEL;
-		    }
+		    platform = PlatformTypes.PLATFORM_SOLARIS_INTEL;
 		    break;
 		case WINDOWS:
 		    platform = PlatformTypes.PLATFORM_WINDOWS;

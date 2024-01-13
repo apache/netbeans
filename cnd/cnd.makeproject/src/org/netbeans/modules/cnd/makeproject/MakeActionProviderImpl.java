@@ -709,7 +709,7 @@ public final class MakeActionProviderImpl implements MakeActionProvider {
                 }
                 runProfile.getEnvironment().putenv("DYLD_LIBRARY_PATH", path.toString()); // NOI18N
             }
-        } else if (platform == PlatformTypes.PLATFORM_SOLARIS_INTEL || platform == PlatformTypes.PLATFORM_SOLARIS_SPARC || platform == PlatformTypes.PLATFORM_LINUX) {
+        } else if (platform == PlatformTypes.PLATFORM_SOLARIS_INTEL || platform == PlatformTypes.PLATFORM_LINUX) {
             // Add paths from -L option
             StringBuilder path = new StringBuilder();
             List<String> list = conf.getLinkerConfiguration().getAdditionalLibs().getValue();
@@ -748,7 +748,7 @@ public final class MakeActionProviderImpl implements MakeActionProvider {
                 runProfile.getEnvironment().putenv("OMP_NUM_THREADS", "2"); // NOI18N
             }
         }
-        if (platform == PlatformTypes.PLATFORM_MACOSX || platform == PlatformTypes.PLATFORM_SOLARIS_INTEL || platform == PlatformTypes.PLATFORM_SOLARIS_SPARC || platform == PlatformTypes.PLATFORM_LINUX) {
+        if (platform == PlatformTypes.PLATFORM_MACOSX || platform == PlatformTypes.PLATFORM_SOLARIS_INTEL || platform == PlatformTypes.PLATFORM_LINUX) {
             // Make sure DISPLAY variable has been set
             if (cancelled.isCanceled()) {
                 return null; // getEnv() might be costly for remote host

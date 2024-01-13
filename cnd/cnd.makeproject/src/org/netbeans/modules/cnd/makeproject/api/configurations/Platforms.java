@@ -25,14 +25,12 @@ import org.netbeans.modules.cnd.makeproject.platform.PlatformLinux;
 import org.netbeans.modules.cnd.makeproject.platform.PlatformMacOSX;
 import org.netbeans.modules.cnd.makeproject.platform.PlatformNone;
 import org.netbeans.modules.cnd.makeproject.platform.PlatformSolarisIntel;
-import org.netbeans.modules.cnd.makeproject.platform.PlatformSolarisSparc;
 import org.netbeans.modules.cnd.makeproject.platform.PlatformWindows;
 
 public final class Platforms {
     private static final ArrayList<Platform> platforms = new ArrayList<>();
 
     static {
-        platforms.add(new PlatformSolarisSparc());
         platforms.add(new PlatformSolarisIntel());
         platforms.add(new PlatformLinux());
         platforms.add(new PlatformWindows());

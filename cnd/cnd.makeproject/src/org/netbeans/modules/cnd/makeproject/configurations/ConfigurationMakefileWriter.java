@@ -562,8 +562,7 @@ public class ConfigurationMakefileWriter {
             // Error processing project file: nbproject/qt-Debug.pro
 
             if (qmakeSpec.length() == 0 &&
-                (conf.getDevelopmentHost().getBuildPlatform() == PlatformTypes.PLATFORM_SOLARIS_INTEL ||
-                 conf.getDevelopmentHost().getBuildPlatform() == PlatformTypes.PLATFORM_SOLARIS_SPARC) &&
+                (conf.getDevelopmentHost().getBuildPlatform() == PlatformTypes.PLATFORM_SOLARIS_INTEL) &&
                 compilerSet.getCompilerFlavor().isSunStudioCompiler()) {
                 qmakeSpec = CppUtils.getQmakeSpec(compilerSet, conf.getDevelopmentHost().getBuildPlatform());
                 if (qmakeSpec == null) {

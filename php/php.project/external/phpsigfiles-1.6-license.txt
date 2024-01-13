@@ -1,5 +1,5 @@
 Name: phpsigfiles
-Version: 1.5
+Version: 1.6
 Description: Signature files for PHP runtime and PHP runtime extensions for use from code completion etc. The file is build from the PHP manual.
 License: CC-BY-3.0
 Origin: http://www.php.net/docs.php

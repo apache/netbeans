@@ -50,6 +50,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeUtilities;
@@ -64,6 +66,7 @@ public class ConvertToLambdaPreconditionChecker {
     private final Scope localScope;
     private final CompilationInfo info;
     private final Types types;
+    private final Elements elements;
     private boolean foundRefToThisOrSuper = false;
     private boolean foundShadowedVariable = false;
     private boolean foundRecursiveCall = false;
@@ -85,6 +88,7 @@ public class ConvertToLambdaPreconditionChecker {
         this.newClassTree = (NewClassTree) pathToNewClassTree.getLeaf();
         this.info = info;
         this.types = info.getTypes();
+        this.elements = info.getElements();
 
         Element el = info.getTrees().getElement(pathToNewClassTree);
         if (el != null && el.getKind() == ElementKind.CONSTRUCTOR) {
@@ -137,7 +141,32 @@ public class ConvertToLambdaPreconditionChecker {
                 candidate = (MethodTree)member;
             }
         }
-        return candidate;
+        // only abstract methods can be implemented as lambda (e.g default methods can't)
+        ExecutableElement candidateElement = (ExecutableElement) info.getTrees().getElement(new TreePath(pathToNewClassTree, candidate));
+        if (overridesAbstractMethod(candidateElement, (TypeElement) baseElement)) {
+            return candidate;
+        }
+        return null;
+    }
+
+    private boolean overridesAbstractMethod(ExecutableElement method, TypeElement superType) {
+        Boolean overrides = overridesAbstractMethodImpl(method, superType);
+        return overrides != null && overrides;
+    }
+
+    private Boolean overridesAbstractMethodImpl(ExecutableElement method, TypeElement superType) {
+        for (ExecutableElement otherMethod : ElementFilter.methodsIn(superType.getEnclosedElements())) {
+            if (elements.overrides(method, otherMethod, superType)) {
+                return otherMethod.getModifiers().contains(Modifier.ABSTRACT);
+            }
+        }
+        for (TypeMirror otherType : superType.getInterfaces()) {
+            Boolean overrides = overridesAbstractMethodImpl(method, (TypeElement) types.asElement(otherType));
+            if (overrides != null) {
+                return overrides;
+            }
+        }
+        return null; // no match here but check the rest of the interface tree
     }
 
     public boolean passesAllPreconditions() {
@@ -716,7 +745,7 @@ public class ConvertToLambdaPreconditionChecker {
     }
 
     private List<TypeMirror> getTypesFromElements(List<? extends VariableElement> elements) {
-        List<TypeMirror> elementTypes = new ArrayList<TypeMirror>();
+        List<TypeMirror> elementTypes = new ArrayList<>(elements.size());
         for (Element e : elements) {
             elementTypes.add(e.asType());
         }

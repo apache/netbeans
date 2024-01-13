@@ -107,12 +107,57 @@ public final class PredefinedSymbols {
                 "__unserialize", // NOI18N PHP 7.4
             })));
 
+    public static final Set<String> ATTRIBUTE_NAMES = Collections.unmodifiableSet(Attributes.ATTRIBUTE_NAMES);
+    public static final Set<String> ATTRIBUTE_FQ_NAMES = Collections.unmodifiableSet(Attributes.ATTRIBUTE_FQ_NAMES);
+
     public static enum VariableKind {
         STANDARD,
         THIS,
         SELF,
         PARENT
     };
+
+    // https://www.php.net/manual/en/reserved.attributes.php
+    public static enum Attributes {
+        ATTRIBUTE("Attribute"), // NOI18N
+        ALLOW_DYNAMIC_PROPERTIES("AllowDynamicProperties"), // NOI18N
+        OVERRIDE("Override"), // NOI18N
+        RETURN_TYPE_WILL_CHANGE("ReturnTypeWillChange"), // NOI18N
+        SENSITIVE_PARAMETER("SensitiveParameter"), // NOI18N
+        ;
+
+        private static final Set<String> ATTRIBUTE_NAMES = new HashSet<>();
+        private static final Set<String> ATTRIBUTE_FQ_NAMES = new HashSet<>();
+
+        private final String name;
+        private final String fqName;
+        private final String asAttributeExpression;
+
+        static {
+            for (Attributes attribute : Attributes.values()) {
+                ATTRIBUTE_NAMES.add(attribute.getName());
+                ATTRIBUTE_FQ_NAMES.add(attribute.getFqName());
+            }
+        }
+
+        private Attributes(String name) {
+            this.name = name;
+            this.fqName = "\\" + name; // NOI18N
+            this.asAttributeExpression = String.format("#[%s]", fqName); // NOI18N
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getFqName() {
+            return fqName;
+        }
+
+        public String asAttributeExpression() {
+            return asAttributeExpression;
+        }
+    }
 
     private static String docURLBase;
 

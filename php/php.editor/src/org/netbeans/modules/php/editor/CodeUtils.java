@@ -89,11 +89,6 @@ public final class CodeUtils {
     public static final String NULLABLE_TYPE_PREFIX = "?"; // NOI18N
     public static final String ELLIPSIS = "..."; // NOI18N
     public static final String VAR_TAG = "@var"; // NOI18N
-    public static final String ATTRIBUTE_ATTRIBUTE_NAME = "Attribute"; // NOI18N
-    public static final String ATTRIBUTE_ATTRIBUTE_FQ_NAME = "\\" + ATTRIBUTE_ATTRIBUTE_NAME; // NOI18N
-    public static final String OVERRIDE_ATTRIBUTE_NAME = "Override"; // NOI18N
-    public static final String OVERRIDE_ATTRIBUTE_FQ_NAME = "\\" + OVERRIDE_ATTRIBUTE_NAME; // NOI18N
-    public static final String OVERRIDE_ATTRIBUTE = "#[" + OVERRIDE_ATTRIBUTE_FQ_NAME + "]"; // NOI18N
     public static final String EMPTY_STRING = ""; // NOI18N
     public static final String NEW_LINE = "\n"; // NOI18N
     public static final String THIS_VARIABLE = "$this"; // NOI18N

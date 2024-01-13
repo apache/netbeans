@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.editor.CodeUtils;
+import static org.netbeans.modules.php.editor.PredefinedSymbols.Attributes.OVERRIDE;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
@@ -81,7 +82,7 @@ public interface SinglePropertyMethodCreator<T extends Property> {
             if (!method.isMagic()
                     && (!method.getType().isTrait() || ElementUtils.isAbstractTraitMethod(method))
                     && cgsInfo.getPhpVersion().hasOverrideAttribute()) {
-                return CodeUtils.OVERRIDE_ATTRIBUTE + CodeUtils.NEW_LINE;
+                return OVERRIDE.asAttributeExpression() + CodeUtils.NEW_LINE;
             }
             return CodeUtils.EMPTY_STRING;
         }

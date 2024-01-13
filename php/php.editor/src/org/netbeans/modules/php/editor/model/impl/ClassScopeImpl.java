@@ -31,6 +31,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.PredefinedSymbols;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
@@ -172,10 +173,8 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     private boolean isAttributeClass(ClassDeclarationInfo nodeInfo, NamespaceScope namespaceScope) {
         String className = nodeInfo.getName();
         int offset = nodeInfo.getOriginalNode().getStartOffset();
-        if (CodeUtils.ATTRIBUTE_ATTRIBUTE_NAME.equals(className)) {
-            if (isAttributeAttribute(className, offset, namespaceScope)) {
-                return true;
-            }
+        if (isPredefinedAttribute(className, offset, namespaceScope)) {
+            return true;
         }
         for (Attribute attribute : nodeInfo.getAttributes()) {
             for (AttributeDeclaration attributeDeclaration : attribute.getAttributeDeclarations()) {
@@ -190,14 +189,22 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     }
 
     private boolean isAttributeAttribute(String attributeName, int offset, NamespaceScope namespaceScope) {
-        if (CodeUtils.ATTRIBUTE_ATTRIBUTE_FQ_NAME.equals(attributeName)) {
+        if (PredefinedSymbols.Attributes.ATTRIBUTE.getFqName().equals(attributeName)) {
             return true;
         }
-        if (CodeUtils.ATTRIBUTE_ATTRIBUTE_NAME.equals(attributeName)) {
+        return PredefinedSymbols.Attributes.ATTRIBUTE.getName().equals(attributeName)
+                && isPredefinedAttribute(attributeName, offset, namespaceScope);
+    }
+
+    private boolean isPredefinedAttribute(String attributeName, int offset, NamespaceScope namespaceScope) {
+        if (PredefinedSymbols.ATTRIBUTE_FQ_NAMES.contains(attributeName)) {
+            return true;
+        }
+        if (PredefinedSymbols.ATTRIBUTE_NAMES.contains(attributeName)) {
             if (namespaceScope != null) {
-                // check FQ name because there may be `use Attribute;`
-                QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(CodeUtils.ATTRIBUTE_ATTRIBUTE_NAME), offset, namespaceScope);
-                if (CodeUtils.ATTRIBUTE_ATTRIBUTE_FQ_NAME.equals(fullyQualifiedName.toString())) {
+                // check FQ name because there may be use statement (e.g. `use Attribute;`)
+                QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(attributeName), offset, namespaceScope);
+                if (PredefinedSymbols.ATTRIBUTE_FQ_NAMES.contains(fullyQualifiedName.toString())) {
                     return true;
                 }
             }

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: false
+OpenIDE-Module: org.netbeans.modules.cnd.meson
+OpenIDE-Module-Layer: org/netbeans/modules/cnd/meson/resources/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/cnd/meson/editor/Bundle.properties

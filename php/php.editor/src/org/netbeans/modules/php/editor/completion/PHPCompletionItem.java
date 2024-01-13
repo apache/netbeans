@@ -102,6 +102,7 @@ import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
 import org.netbeans.modules.php.editor.NavUtils;
+import static org.netbeans.modules.php.editor.PredefinedSymbols.Attributes.OVERRIDE;
 import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
 import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.elements.ElementUtils;
@@ -1283,7 +1284,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 FileObject fileObject = request.result.getSnapshot().getSource().getFileObject();
                 PhpVersion phpVersion = getPhpVersion(fileObject);
                 if (phpVersion.hasOverrideAttribute()) {
-                    return CodeUtils.OVERRIDE_ATTRIBUTE + CodeUtils.NEW_LINE;
+                    return OVERRIDE.asAttributeExpression() + CodeUtils.NEW_LINE;
                 }
             }
             return CodeUtils.EMPTY_STRING;

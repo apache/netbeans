@@ -42,6 +42,7 @@ import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
+import static org.netbeans.modules.php.editor.PredefinedSymbols.Attributes.OVERRIDE;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
@@ -433,10 +434,10 @@ public class AddOverrideAttributeHint extends HintRule {
         }
 
         private boolean isOverrideAttibute(String attributeName, int offset) {
-            if (CodeUtils.OVERRIDE_ATTRIBUTE_FQ_NAME.equals(attributeName)) {
+            if (OVERRIDE.getFqName().equals(attributeName)) {
                 return true;
             }
-            if (CodeUtils.OVERRIDE_ATTRIBUTE_NAME.equals(attributeName)) {
+            if (OVERRIDE.getName().equals(attributeName)) {
                 Collection<? extends NamespaceScope> declaredNamespaces = fileScope.getDeclaredNamespaces();
                 if (isGlobalNamespace()) {
                     return true;
@@ -453,8 +454,8 @@ public class AddOverrideAttributeHint extends HintRule {
                 }
                 if (namespaceScope != null) {
                     // check FQ name because there may be `use \Override;`
-                    QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(CodeUtils.OVERRIDE_ATTRIBUTE_NAME), offset, namespaceScope);
-                    if (CodeUtils.OVERRIDE_ATTRIBUTE_FQ_NAME.equals(fullyQualifiedName.toString())) {
+                    QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(OVERRIDE.getName()), offset, namespaceScope);
+                    if (OVERRIDE.getFqName().equals(fullyQualifiedName.toString())) {
                         return true;
                     }
                 }
@@ -551,7 +552,7 @@ public class AddOverrideAttributeHint extends HintRule {
                 }
             }
             if (attributes.isEmpty()) {
-                edits.replace(offset, 0, CodeUtils.OVERRIDE_ATTRIBUTE + CodeUtils.NEW_LINE + indent, false, 0);
+                edits.replace(offset, 0, OVERRIDE.asAttributeExpression() + CodeUtils.NEW_LINE + indent, false, 0);
             } else {
                 // #[Attr] // comment
                 // #[\Override]
@@ -565,7 +566,7 @@ public class AddOverrideAttributeHint extends HintRule {
                         offset = ts.offset();
                     }
                 }
-                edits.replace(offset, 0, CodeUtils.OVERRIDE_ATTRIBUTE + CodeUtils.NEW_LINE + indent, false, 0);
+                edits.replace(offset, 0, OVERRIDE.asAttributeExpression() + CodeUtils.NEW_LINE + indent, false, 0);
             }
             edits.apply();
         }

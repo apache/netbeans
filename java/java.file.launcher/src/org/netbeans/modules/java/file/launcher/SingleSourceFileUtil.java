@@ -34,6 +34,7 @@ import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImpleme
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation.Result;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
@@ -74,13 +75,21 @@ public final class SingleSourceFileUtil {
     }
 
     public static boolean isSingleSourceFile(FileObject fObj) {
-        Project p = FileOwnerQuery.getOwner(fObj);
-        if (p != null || !fObj.getExt().equalsIgnoreCase("java")) { //NOI18N
+        if (!isSupportedFile(fObj) || !fObj.getExt().equalsIgnoreCase("java")) { //NOI18N
             return false;
         }
         return true;
     }
 
+    public static boolean isSupportedFile(FileObject file) {
+        try {
+            return !MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT &&
+                   FileOwnerQuery.getOwner(file) == null &&
+                   !file.getFileSystem().isReadOnly();
+        } catch (FileStateInvalidException ex) {
+            return false;
+        }
+    }
     public static Process compileJavaSource(FileObject fileObject) {
         FileObject javac = JavaPlatformManager.getDefault().getDefaultPlatform().findTool("javac"); //NOI18N
         File javacFile = FileUtil.toFile(javac);

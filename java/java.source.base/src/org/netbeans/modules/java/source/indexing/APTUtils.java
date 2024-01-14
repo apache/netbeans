@@ -135,7 +135,9 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
         this.root = root;
         bootPath = ClassPath.getClassPath(root, ClassPath.BOOT);
         compilePath = ClassPath.getClassPath(root, ClassPath.COMPILE);
-        compilePath.addPropertyChangeListener(this);
+        if (compilePath != null) {
+            compilePath.addPropertyChangeListener(this);
+        }
         processorPath = new AtomicReference<>(ClassPath.getClassPath(root, JavaClassPathConstants.PROCESSOR_PATH));
         processorModulePath = new AtomicReference<>(ClassPath.getClassPath(root, JavaClassPathConstants.MODULE_PROCESSOR_PATH));
         aptOptions = AnnotationProcessingQuery.getAnnotationProcessingOptions(root);
@@ -360,7 +362,9 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
                     compilePath.removePropertyChangeListener(this);
                 }
                 compilePath = ClassPath.getClassPath(root, ClassPath.COMPILE);
-                compilePath.addPropertyChangeListener(this);
+                if (compilePath != null) {
+                    compilePath.addPropertyChangeListener(this);
+                }
                 listenOnProcessorPath(pp, this);
                 classLoaderCache = null;
             }

@@ -18,16 +18,13 @@
  */
 package org.netbeans.modules.java.file.launcher;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.java.file.launcher.api.SourceLauncher;
 import org.openide.filesystems.FileAttributeEvent;
@@ -36,8 +33,6 @@ import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.modules.SpecificationVersion;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -108,10 +103,7 @@ public class SharedRootData {
         }
         String joinedCommandLine = SourceLauncher.joinCommandLines(options.values());
         try {
-            if (
-                    !root.getFileSystem().isReadOnly() // Skip read-only FSes (like JarFileSystem)
-                    && !joinedCommandLine.equals(root.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS))
-            ) {
+            if (!joinedCommandLine.equals(root.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS))) {
                 root.setAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS, joinedCommandLine);
             }
         } catch (IOException ex) {

@@ -19,8 +19,6 @@
 package org.netbeans.modules.java.file.launcher;
 
 import javax.swing.event.ChangeListener;
-import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
 import org.openide.filesystems.FileAttributeEvent;
@@ -38,9 +36,7 @@ public class AttributeBasedSingleFileOptions implements SingleFileOptionsQueryIm
 
     @Override
     public Result optionsFor(FileObject file) {
-        Project p = FileOwnerQuery.getOwner(file);
-
-        if (p != null) {
+        if (!SingleSourceFileUtil.isSupportedFile(file)) {
             return null;
         }
 

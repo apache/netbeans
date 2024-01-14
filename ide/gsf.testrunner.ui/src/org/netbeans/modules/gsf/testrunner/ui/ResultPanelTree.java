@@ -72,7 +72,7 @@ final class ResultPanelTree extends JPanel implements ExplorerManager.Provider, 
     private final ResultDisplayHandler displayHandler;
 
     private final ResultBar resultBar = new ResultBar();
-    private StatisticsPanel statPanel;
+    private final StatisticsPanel statPanel;
 
     ResultPanelTree(ResultDisplayHandler displayHandler, StatisticsPanel statPanel) {
         super(new BorderLayout());
@@ -248,6 +248,7 @@ final class ResultPanelTree extends JPanel implements ExplorerManager.Provider, 
 
     /**
      */
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
         if (ExplorerManager.PROP_SELECTED_NODES.equals(
                         e.getPropertyName())) {
@@ -339,7 +340,7 @@ final class ResultPanelTree extends JPanel implements ExplorerManager.Provider, 
     }
 
     private List<TestMethodNode> getFailedTestMethodNodes() {
-        List<TestMethodNode> result = new ArrayList<TestMethodNode>();
+        List<TestMethodNode> result = new ArrayList<>();
         for (Node each : explorerManager.getRootContext().getChildren().getNodes()) {
             if (each instanceof TestsuiteNode) {
                 TestsuiteNode suite = (TestsuiteNode) each;
@@ -362,8 +363,8 @@ final class ResultPanelTree extends JPanel implements ExplorerManager.Provider, 
     }
 
     private List<TestsuiteNode> getFailedSuiteNodes(TestsuiteNode selected) {
-        List<TestsuiteNode> before = new ArrayList<TestsuiteNode>();
-        List<TestsuiteNode> after = new ArrayList<TestsuiteNode>();
+        List<TestsuiteNode> before = new ArrayList<>();
+        List<TestsuiteNode> after = new ArrayList<>();
         boolean selectedEncountered = false;
         for (Node each : explorerManager.getRootContext().getChildren().getNodes()) {
             if (each instanceof TestsuiteNode) {
@@ -511,6 +512,7 @@ final class ResultPanelTree extends JPanel implements ExplorerManager.Provider, 
     }
     /**
      */
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
     }

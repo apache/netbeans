@@ -24,7 +24,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
@@ -48,21 +47,18 @@ import org.openide.awt.GraphicsUtils;
  * I was initially using a JProgressBar, with the BasicProgressBarUI associated with it
  * (to get red/green colors set correctly even on OSX), but it was pretty plain
  * and ugly looking - no nice gradients etc. Hence this component.
- * @todo Add a getBaseline
  *
  * @author Tor Norbye
  */
-public final class ResultBar extends JComponent implements ActionListener{
-    private static final Color NOT_COVERED_LIGHT = new Color(255, 160, 160);
-    private static final Color NOT_COVERED_DARK = new Color(180, 50, 50);
-    private static final Color COVERED_LIGHT = new Color(160, 255, 160);
-    private static final Color COVERED_DARK = new Color(30, 180, 30);
-    private static final Color NO_TESTS_LIGHT = new Color(200, 200, 200);
-    private static final Color NO_TESTS_DARK = new Color(110, 110, 110);
-    private static final Color ABORTED_TESTS_LIGHT = new Color(246, 232, 206);
-    private static final Color ABORTED_TESTS_DARK = new Color(214, 157, 41);
-    private boolean emphasize;
-    private boolean selected;
+public final class ResultBar extends JComponent implements ActionListener {
+
+    private static final Color NOT_COVERED_COLOR = new Color(180, 50, 50);
+    private static final Color COVERED_COLOR = new Color(30, 180, 30);
+    private static final Color NO_TESTS_COLOR = new Color(110, 110, 110);
+    private static final Color ABORTED_TESTS_COLOR = new Color(214, 157, 41);
+    private static final Color TEXT_COLOR = new Color(255, 255, 255);
+    private static final Color ANIMATION_COLOR = new Color(190, 190, 190);
+
     /** Passed tests percentage:  0.0f <= x <= 100f */
     private float passedPercentage = 0.0f;
     /** Skipped tests percentage:  0.0f <= x <= 100f */
@@ -70,8 +66,8 @@ public final class ResultBar extends JComponent implements ActionListener{
     /** Aborted tests percentage:  0.0f <= x <= 100f */
     private float abortedPercentage = 0.0f;
 
-    private Timer timer = new Timer(100, this);
-    private int phase = 1;
+    private final Timer timer = new Timer(100, this);
+    private final long startTime;
     private boolean passedReported = false;
     private boolean skippedReported = false;
     private boolean abortedReported = false;
@@ -79,14 +75,16 @@ public final class ResultBar extends JComponent implements ActionListener{
     public ResultBar() {
         updateUI();
         timer.start();
+        startTime = System.currentTimeMillis();
     }
 
     public void stop(){
         timer.stop();
+        repaint();
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
-        phase = (phase < getHeight()-1) ? phase + 1 : 1;
         repaint();
     }
 
@@ -95,46 +93,21 @@ public final class ResultBar extends JComponent implements ActionListener{
     }
 
     public void setPassedPercentage(float passedPercentage) {
-        if(Float.isNaN(passedPercentage)) { // #167230
-            passedPercentage = 0.0f;
-        }
-        this.passedPercentage = passedPercentage;
+        this.passedPercentage = Float.isNaN(passedPercentage) ? 0.0f : passedPercentage; // #167230
         this.passedReported = true;
         repaint();
     }
 
     public void setSkippedPercentage(float skippedPercentage) {
-        if(Float.isNaN(skippedPercentage)) { // #167230
-            skippedPercentage = 0.0f;
-        }
-        this.skippedPercentage = skippedPercentage;
+        this.skippedPercentage = Float.isNaN(skippedPercentage) ? 0.0f : skippedPercentage; // #167230
         this.skippedReported = true;
         repaint();
     }
 
     public void setAbortedPercentage(float abortedPercentage) {
-        if(Float.isNaN(abortedPercentage)) { // #167230
-            abortedPercentage = 0.0f;
-        }
-        this.abortedPercentage = abortedPercentage;
+        this.abortedPercentage = Float.isNaN(abortedPercentage) ? 0.0f : abortedPercentage; // #167230
         this.abortedReported = true;
         repaint();
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
-
-    public boolean isEmphasize() {
-        return emphasize;
-    }
-
-    public void setEmphasize(boolean emphasize) {
-        this.emphasize = emphasize;
     }
 
     private String getString() {
@@ -169,74 +142,43 @@ public final class ResultBar extends JComponent implements ActionListener{
         GraphicsUtils.configureDefaultRenderingHints(g);
 
         int width = getWidth();
-        int barRectWidth = width;
         int height = getHeight();
-        int barRectHeight = height;
 
-        if (barRectWidth <= 0 || barRectHeight <= 0) {
+        if (width <= 0 || height <= 0) {
             return;
         }
 
-        int amountFull = (int) (barRectWidth * passedPercentage / 100.0f);
-        int amountSkip = (int) (barRectWidth * skippedPercentage / 100.0f);
-        int amountAbort = (int) (barRectWidth * abortedPercentage / 100.0f);
-        int amountFail = Math.abs(barRectWidth - amountFull - amountSkip - amountAbort);
-        if(amountFail <= 1) {
-            amountFail = 0;
-        }
-
-        Color notCoveredLight = NOT_COVERED_LIGHT;
-        Color notCoveredDark = NOT_COVERED_DARK;
-        Color coveredLight = COVERED_LIGHT;
-        Color coveredDark = COVERED_DARK;
-        Color noTestsLight = NO_TESTS_LIGHT;
-        Color noTestsDark = NO_TESTS_DARK;
-        Color abortedTestsLight = ABORTED_TESTS_LIGHT;
-        Color abortedTestsDark = ABORTED_TESTS_DARK;
-        if (emphasize) {
-            coveredDark = coveredDark.darker();
-            notCoveredDark = notCoveredDark.darker();
-            noTestsDark = noTestsDark.darker();
-            abortedTestsDark = abortedTestsDark.darker();
-        } else if (selected) {
-            coveredLight = coveredLight.brighter();
-            coveredDark = coveredDark.darker();
-            notCoveredLight = notCoveredLight.brighter();
-            notCoveredDark = notCoveredDark.darker();
-            noTestsLight = noTestsLight.brighter();
-            noTestsDark = noTestsDark.darker();
-            abortedTestsLight = abortedTestsLight.brighter();
-            abortedTestsDark = abortedTestsDark.darker();
-        }
         Graphics2D g2 = (Graphics2D) g;
         // running with no results yet -> gray
-        Color light = noTestsLight;
-        Color dark = noTestsDark;
+        Color fillColor = NO_TESTS_COLOR;
 
         if (abortedReported || skippedReported || passedReported) {
             // running with at least one result or finished
             if (passedPercentage == 100.0) {
                 // contains only successful tests -> green
-                light = coveredLight;
-                dark = coveredDark;
+                fillColor = COVERED_COLOR;
             } else if (abortedPercentage > 0.0) {
                 // contains aborted tests -> abort color
-                light = abortedTestsLight;
-                dark = abortedTestsDark;
+                fillColor = ABORTED_TESTS_COLOR;
             } else if(100.0f - passedPercentage - abortedPercentage - skippedPercentage > 0.0001) {
                 // contains failed tests -> red
-                light = notCoveredLight;
-                dark = notCoveredDark;
+                fillColor = NOT_COVERED_COLOR;
             } else if (skippedPercentage > 0.0) {
                 // contains ignored tests -> gray
-                light = noTestsLight;
-                dark = noTestsDark;
+                fillColor = NO_TESTS_COLOR;
             }
         }
-        g2.setPaint(new GradientPaint(0, phase, light, 0, phase + height / 2, dark, true));
-        g2.fillRect(0, 0, barRectWidth, height);
+        g2.setPaint(fillColor);
+        g2.fillRect(0, 0, width-1, height-1);
 
-        paintText(g2, barRectWidth, barRectHeight);
+        if (timer.isRunning()) {
+            g2.setPaint(ANIMATION_COLOR);
+            float step = (System.currentTimeMillis()-startTime) / 150.0f;
+            g2.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, new float[] {10.0f}, step));
+            g2.drawRect(2, 2, width-6, height-6);
+        }
+
+        paintText(g2, width, height);
     }
 
     @Override
@@ -252,8 +194,7 @@ public final class ResultBar extends JComponent implements ActionListener{
         if (stringWidth > size.width) {
             size.width = stringWidth;
         }
-        int stringHeight = fontSizer.getHeight() +
-                fontSizer.getDescent();
+        int stringHeight = fontSizer.getHeight() + fontSizer.getDescent();
         if (stringHeight > size.height) {
             size.height = stringHeight;
         }
@@ -277,14 +218,14 @@ public final class ResultBar extends JComponent implements ActionListener{
         return pref;
     }
 
-    //@Override JDK6
+    @Override
     public int getBaseline(int w, int h) {
         FontMetrics fm = getFontMetrics(getFont());
         return h - fm.getDescent() - ((h - fm.getHeight()) / 2);
     }
 
     /**
-     * Renders the text with a slightly contrasted outline.
+     * Renders the text.
      */
     private void paintText(Graphics2D g, int w, int h) {
         // Similar to org.openide.actions.HeapView.paintText.
@@ -295,13 +236,10 @@ public final class ResultBar extends JComponent implements ActionListener{
         Shape outline = gv.getOutline();
         Rectangle2D bounds = outline.getBounds2D();
         double x = Math.max(0, (w - bounds.getWidth()) / 2.0);
-        double y = h / 2.0 + fm.getAscent() / 2.0 - 1;
+        double y = h / 2.0 + fm.getAscent() / 2.0 - 2;
         AffineTransform oldTransform = g.getTransform();
         g.translate(x, y);
-        g.setColor(new Color(0, 0, 0, 100));
-        g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g.draw(outline);
-        g.setColor(Color.WHITE);
+        g.setColor(TEXT_COLOR);
         g.fill(outline);
         g.setTransform(oldTransform);
     }

@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.maven.output;
 
-import java.awt.Color;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,7 +49,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.windows.IOColors;
-import org.openide.windows.InputOutput;
 import org.openide.windows.OutputEvent;
 import org.openide.windows.OutputListener;
 
@@ -60,7 +58,6 @@ import org.openide.windows.OutputListener;
  */
 public class GlobalOutputProcessor implements OutputProcessor {
     private static final String SECTION_SESSION = "session-execute"; //NOI18N
-    private static final String SECTION_PROJECT = "project-execute"; //NOI18N
     private static final Pattern LOW_MVN = Pattern.compile("(.*)Error resolving version for (.*): Plugin requires Maven version (.*)"); //NOI18N
     private static final Pattern HELP = Pattern.compile("(?:\\[ERROR\\] )?\\[Help \\d+\\] (https?://.+)"); // NOI18N
     /**
@@ -88,16 +85,22 @@ public class GlobalOutputProcessor implements OutputProcessor {
 
     @Messages("TXT_ChangeSettings=NetBeans: Click here to change your settings.")
     @Override public void processLine(String line, OutputVisitor visitor) {
+
         //silly prepend of  [INFO} to reuse the same regexp
         if (CommandLineOutputHandler.startPatternM3.matcher("[INFO] " + line).matches() || CommandLineOutputHandler.startPatternM2.matcher("[INFO] " + line).matches()) {
             visitor.setOutputType(IOColors.OutputType.LOG_DEBUG);
             return;
-        } 
-        if (line.startsWith("BUILD SUCCESS")) { //NOI18N 3.0.4 has build success, some older versions have build successful
-            visitor.setOutputType(IOColors.OutputType.LOG_SUCCESS);
-            return;
         }
-        
+        if (line.startsWith("BUILD ")) {
+            if (line.startsWith("BUILD SUCCESS")) {
+                visitor.setOutputType(IOColors.OutputType.LOG_SUCCESS);
+                return;
+            } else if (line.startsWith("BUILD FAILURE"))  {
+                visitor.setOutputType(IOColors.OutputType.LOG_FAILURE);
+                return; 
+            }
+        }
+
         //reactor summary processing ---- 
         if (line.startsWith("Reactor Summary:")) {
             processReactorSummary = true;
@@ -121,16 +124,9 @@ public class GlobalOutputProcessor implements OutputProcessor {
                         @Override
                         public void outputLineSelected(OutputEvent ev) {
                         }
-
-                        @Override
+                        @Override 
                         public void outputLineAction(OutputEvent ev) {
-                            RequestProcessor.getDefault().post(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    next.getEndOffset().scrollTo();
-                                }
-                            });
+                            RequestProcessor.getDefault().post(next.getEndOffset()::scrollTo);
                         }
 
                         @Override

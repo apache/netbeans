@@ -30,6 +30,7 @@ import java.util.Objects;
 import java.util.Properties;
 import javax.swing.UIManager;
 import org.netbeans.api.actions.Editable;
+import org.netbeans.api.actions.Openable;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.LifecycleManager;
 import org.openide.awt.Notification;
@@ -299,7 +300,13 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
                 }
                 DataObject dob = DataObject.find(customProp);
                 Editable editable = dob.getLookup().lookup(Editable.class);
-                editable.edit();
+                if (editable != null) {
+                  editable.edit();
+                } else {
+                  // fallback to openable for platform apps without editor modules
+                  Openable openable = dob.getLookup().lookup(Openable.class);
+                  openable.open();
+                }
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }

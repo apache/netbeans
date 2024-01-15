@@ -31,6 +31,7 @@ public final class ModuleDeactivator extends Object {
 
     public static final String TO_UNINSTALL = "to_uninstall.txt"; // NOI18N
     public static final String TO_DISABLE = "to_disable.txt"; // NOI18N
+    public static final String TO_ENABLE = "to_enable.txt"; // NOI18N
     
     public static final String CONFIG = "config"; // NOI18N
     public static final String MODULES = "Modules"; // NOI18N
@@ -60,19 +61,22 @@ public final class ModuleDeactivator extends Object {
         }
     }
     
-    public void disable () {
+    public void enableDisable(boolean enable) {
         assert ! SwingUtilities.isEventDispatchThread () : "Cannot run in EQ";
-        context.setLabel (Localization.getBrandedString ("CTL_DisablingFiles"));
+        context.setLabel (enable ? Localization.getBrandedString ("CTL_EnablingFiles")
+                                 : Localization.getBrandedString ("CTL_DisablingFiles"));
         Collection<File> allControlFiles = new HashSet<File> ();
         for (File cluster : UpdateTracking.clusters (true)) {
-            allControlFiles.addAll (readFilesMarkedForDisableInCluster (cluster));
-            doDelete (getControlFileForMarkedForDisable (cluster));
-            doDelete (getDeactivateLater (cluster));
+            allControlFiles.addAll (readFilesMarkedForEnableDisableInCluster(cluster, enable));
+            doDelete (getControlFileForMarkedForEnableDisable(cluster, enable));
+            if (!enable) {
+                doDelete (getDeactivateLater (cluster));
+            }
         }
         context.setProgressRange (0, allControlFiles.size ());
         int i = 0;
         for (File f : allControlFiles) {
-            doDisable (f);
+            doEnableDisable(f, enable);
             context.setProgressValue (i ++);
         }
     }
@@ -87,6 +91,11 @@ public final class ModuleDeactivator extends Object {
         return deactivateDir.exists () && deactivateDir.isDirectory () && Arrays.asList (deactivateDir.list ()).contains (TO_DISABLE);
     }
     
+    public static boolean hasModulesForEnable (File updateDir) {
+        File deactivateDir = new File (updateDir, UpdaterDispatcher.DEACTIVATE_DIR);
+        return deactivateDir.exists () && deactivateDir.isDirectory () && Arrays.asList (deactivateDir.list ()).contains (TO_ENABLE);
+    }
+
     public static File getDeactivateLater (File cluster) {
         File file = new File (cluster,
                 UpdaterDispatcher.UPDATE_DIR + // update
@@ -103,11 +112,13 @@ public final class ModuleDeactivator extends Object {
         return file;
     }
 
-    public static File getControlFileForMarkedForDisable (File cluster) {
+    public static File getControlFileForMarkedForEnableDisable (File cluster, boolean enable) {
+        String fileName = enable ? ModuleDeactivator.TO_ENABLE    // to_enable.txt
+                                 : ModuleDeactivator.TO_DISABLE;  // to_disable.txt
         File file = new File (cluster,
                 UpdaterDispatcher.UPDATE_DIR + // update
                 UpdateTracking.FILE_SEPARATOR + UpdaterDispatcher.DEACTIVATE_DIR + // update/deactivate
-                UpdateTracking.FILE_SEPARATOR + ModuleDeactivator.TO_DISABLE); // to_disable.txt
+                UpdateTracking.FILE_SEPARATOR + fileName);
         return file;
     }
 
@@ -219,9 +230,9 @@ public final class ModuleDeactivator extends Object {
         return toDelete;
     }
 
-    private static Set<File> readFilesMarkedForDisableInCluster (File cluster) {
+    private static Set<File> readFilesMarkedForEnableDisableInCluster (File cluster, boolean enable) {
         
-        File mark4disableFile = getControlFileForMarkedForDisable (cluster);
+        File mark4disableFile = getControlFileForMarkedForEnableDisable(cluster, enable);
         if (! mark4disableFile.exists ()) {
             return Collections.emptySet ();
         }
@@ -244,18 +255,24 @@ public final class ModuleDeactivator extends Object {
     private static String ENABLE_TAG = "<param name=\"enabled\">true</param>";
     private static String DISABLE_TAG = "<param name=\"enabled\">false</param>";
     
-    private static void doDisable (File f) {
+    private static void doEnableDisable (File f, boolean enable) {
+        String expected = enable ? DISABLE_TAG : ENABLE_TAG;
+        String target = enable ? ENABLE_TAG : DISABLE_TAG;
+
         String content = readStringFromFile (f);
-        int pos = content.indexOf (ENABLE_TAG);
-        assert pos != -1 : ENABLE_TAG + " must be contained in " + content;
-        int shift = ENABLE_TAG.length ();
-        String pre = content.substring (0, pos);
-        String post = content.substring (pos + shift);
-        String res = pre + DISABLE_TAG + post;
+        if (!content.contains(target)) {
+            int pos = content.indexOf(expected);
+            assert pos != -1 : expected + " must be contained in " + content;
+            int shift = expected.length ();
+            String pre = content.substring (0, pos);
+            String post = content.substring (pos + shift);
+
+            content = pre + target + post;
+        }
         File configDir = new File (new File (UpdateTracking.getUserDir (), CONFIG), MODULES);
         configDir.mkdirs ();
         File dest = new File (configDir, f.getName());
-        writeStringToFile (res, dest);
+        writeStringToFile (content, dest);
     }
 
 }

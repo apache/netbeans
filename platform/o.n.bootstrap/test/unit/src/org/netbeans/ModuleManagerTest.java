@@ -2879,8 +2879,9 @@ public class ModuleManagerTest extends SetupHid {
         mgr.enable(m1);
 
         Module m2 = mgr.create(new File(jars, "fragment-module.jar"), null, false, false, false);
+
         try {
-            mgr.simulateEnable(Collections.singleton(m2));
+            mgr.enable(Collections.singleton(m2));
             fail("Enabling fragment must fail if host is already live");
         } catch (IllegalStateException ex) {
             // ok

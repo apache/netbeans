@@ -291,7 +291,7 @@ look_for_pre_runs() {
         run_updater=yes
     else
         dir="${base}/update/deactivate"
-        if [ -f "${dir}/to_disable.txt" -o -f "${dir}/to_uninstall.txt" ] ; then
+        if [ -f "${dir}/to_disable.txt" -o -f "${dir}/to_uninstall.txt" -o -f "${dir}/to_enable.txt" ] ; then
             run_updater=yes
         fi
     fi
@@ -306,7 +306,7 @@ look_for_post_runs() {
     else
         dir="${base}/update/deactivate"
         if [ \! -f "${dir}/deactivate_later.txt" ] ; then
-            if [ -f "${dir}/to_disable.txt" -o -f "${dir}/to_uninstall.txt" ] ; then
+            if [ -f "${dir}/to_disable.txt" -o -f "${dir}/to_uninstall.txt" -o -f "${dir}/to_enable.txt" ] ; then
                 run_updater=yes
             fi
         fi

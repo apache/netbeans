@@ -511,9 +511,13 @@ public class Utilities {
     }
     
     public static void writeFileMarkedForDisable (Collection<File> files) {
-        writeMarkedFilesToFile (files, ModuleDeactivator.getControlFileForMarkedForDisable (InstallManager.getUserDir ()));
+        writeMarkedFilesToFile (files, ModuleDeactivator.getControlFileForMarkedForEnableDisable(InstallManager.getUserDir (), false));
     }
-    
+
+    public static void writeFileMarkedForEnable (Collection<File> files) {
+        writeMarkedFilesToFile (files, ModuleDeactivator.getControlFileForMarkedForEnableDisable(InstallManager.getUserDir (), true));
+    }
+
     private static void writeMarkedFilesToFile (Collection<File> files, File dest) {
         // don't forget for content written before
         StringBuilder content = new StringBuilder();

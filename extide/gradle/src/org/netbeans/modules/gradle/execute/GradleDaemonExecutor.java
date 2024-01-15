@@ -60,6 +60,7 @@ import org.netbeans.modules.gradle.execute.GradleNetworkProxySupport.ProxyResult
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.execute.GradleDistributionProvider;
 import org.netbeans.modules.gradle.spi.execute.GradleJavaPlatformProvider;
+import org.netbeans.modules.gradle.spi.loaders.GradlePluginProvider;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.execution.ExecutorTask;
@@ -205,7 +206,8 @@ public final class GradleDaemonExecutor extends AbstractGradleExecutor {
 
             if (RunUtils.isAugmentedBuildEnabled(config.getProject())) {
                 augmented = new GradleCommandLine(cmd);
-                augmented.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript());
+                augmented.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, 
+                        GradleDaemon.initScript(GradlePluginProvider.GradleRuntime.fromProject(config.getProject())));
             }
             GradleBaseProject gbp = GradleBaseProject.get(config.getProject());
             augmented.configure(buildLauncher, gbp != null ? gbp.getRootDir() : null);

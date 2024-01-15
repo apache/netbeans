@@ -39,6 +39,7 @@ import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.gradle.spi.GradleFiles;
 import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.netbeans.modules.gradle.spi.ProjectInfoExtractor;
+import org.netbeans.modules.gradle.spi.loaders.GradlePluginProvider.GradleRuntime;
 import org.openide.util.Lookup;
 
 /**
@@ -86,10 +87,10 @@ public abstract class AbstractProjectLoader {
         }
     }
 
-    static GradleCommandLine injectNetBeansTooling(GradleCommandLine cmd) {
+    static GradleCommandLine injectNetBeansTooling(GradleCommandLine cmd, GradleRuntime rt) {
         GradleCommandLine ret = new GradleCommandLine(cmd);
         ret.setFlag(GradleCommandLine.Flag.CONFIGURE_ON_DEMAND, GradleSettings.getDefault().isConfigureOnDemand());
-        ret.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript());
+        ret.addParameter(GradleCommandLine.Parameter.INIT_SCRIPT, GradleDaemon.initScript(rt));
         ret.setStackTrace(GradleCommandLine.StackTrace.SHORT);
         ret.addProjectProperty("nbSerializeCheck", "true");
         return ret;

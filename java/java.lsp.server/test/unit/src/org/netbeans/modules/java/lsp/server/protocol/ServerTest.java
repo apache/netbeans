@@ -5681,7 +5681,24 @@ public class ServerTest extends NbTestCase {
         List<String> actualItems = completion.getRight().getItems().stream().map(completionItemToString).collect(Collectors.toList());
         assertEquals(Arrays.asList("Method:length() : int"), actualItems);
     }
-
+    
+    public void testHintsPrefsFileAbsent() throws Exception {
+        File src = new File(getWorkDir(), "test.hint");
+        src.getParentFile().mkdirs();
+        String code = "$1.length();;";
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new LspClient(), client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeResult result = server.initialize(new InitializeParams()).get();
+        
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "jackpot-hint", 0, code)));
+        assertDiags(diags, "Error:0:0-0:2");//errors
+        assertDiags(diags, "Error:0:0-0:2");//hints
+    }
+    
     /**
      * Checks that the default Lookup contents is present just once in Lookup.getDefault() during server invocation in general,
      * and specifically during command invocation.

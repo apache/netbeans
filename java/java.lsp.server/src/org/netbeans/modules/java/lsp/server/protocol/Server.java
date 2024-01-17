@@ -381,6 +381,7 @@ public final class Server {
 
         private static final String NETBEANS_FORMAT = "format";
         private static final String NETBEANS_JAVA_IMPORTS = "java.imports";
+        private static final String NETBEANS_JAVA_HINTS = "hints";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
         private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
@@ -985,8 +986,18 @@ public final class Server {
 
         private void initializeOptions() {
             getWorkspaceProjects().thenAccept(projects -> {
+                ConfigurationItem item = new ConfigurationItem();
+                item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_HINTS);
+                client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                    if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
+                        textDocumentService.updateJavaHintPreferences((JsonObject) c.get(0));
+                    }
+                    else {
+                        textDocumentService.hintsSettingsRead = true;
+                        textDocumentService.reRunDiagnostics();
+                    }
+                });
                 if (projects != null && projects.length > 0) {
-                    ConfigurationItem item = new ConfigurationItem();
                     FileObject fo = projects[0].getProjectDirectory();
                     item.setScopeUri(Utils.toUri(fo));
                     item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_FORMAT);

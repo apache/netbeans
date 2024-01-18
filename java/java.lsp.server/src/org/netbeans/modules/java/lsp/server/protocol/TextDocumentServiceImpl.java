@@ -2055,7 +2055,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     case Information: diag.setSeverity(DiagnosticSeverity.Information); break;
                     default: throw new IllegalStateException("Unknown severity: " + err.getSeverity());
                 }
-                diag.setCode(id2Error.getKey());
+                // TODO: currently Diagnostic.getCode() is misused to provide an unique ID for the diagnostic. This should be changed somehow
+                // at SPI level between ErrorProvider and LSP core. For now, report just part of the (mangled) diagnostics code.
+                String realCode = id2Error.getKey();
+                int idPart = realCode == null ?  -1 : realCode.indexOf("~~"); // NOI18N
+                if (idPart != -1) {
+                    realCode = realCode.substring(0, idPart);
+                }
+                diag.setCode(realCode);
                 result.add(diag);
             }
             if (offset >= 0) {

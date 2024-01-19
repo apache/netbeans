@@ -18,9 +18,13 @@
  */
 package org.netbeans.modules.java.file.launcher;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
@@ -50,5 +54,32 @@ public class SingleSourceFileUtilTest {
         assertNotNull("class created", clazz);
 
         assertTrue("Sibling found", SingleSourceFileUtil.hasClassSibling(java));
+    }
+
+    @Test
+    public void testIsSupportedFile() throws IOException {
+        File vcsDemoDir = null;
+        File supportedFile = null;
+        File unsupportedFile = null;
+        try {
+            vcsDemoDir = Files.createTempDirectory("vcs-dummy").toFile();
+            supportedFile = Files.createTempFile("dummy", ".java").toFile();
+            unsupportedFile = new File(vcsDemoDir, "dummy.java");
+            FileUtil.createData(unsupportedFile);
+
+            assertTrue(SingleSourceFileUtil.isSupportedFile(FileUtil.createData(supportedFile)));
+            assertFalse(SingleSourceFileUtil.isSupportedFile(FileUtil.createData(unsupportedFile)));
+
+        } finally {
+            if(supportedFile != null && supportedFile.exists()) {
+                supportedFile.delete();
+            }
+            if(unsupportedFile != null && unsupportedFile.exists()) {
+                unsupportedFile.delete();
+            }
+            if(vcsDemoDir != null && vcsDemoDir.exists()) {
+                vcsDemoDir.delete();
+            }
+        }
     }
 }

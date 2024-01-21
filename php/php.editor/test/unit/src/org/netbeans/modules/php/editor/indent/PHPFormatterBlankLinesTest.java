@@ -2035,4 +2035,40 @@ public class PHPFormatterBlankLinesTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/blankLines/AfterUseTrait_01.php", options, false, true);
     }
 
+    public void testGH6980_NSWithBlock01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_USE, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH6980_NSWithBlock01.php", options, false, true);
+    }
+
+    public void testGH6980_NSWithBlock02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_USE, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH6980_NSWithBlock02.php", options, false, true);
+    }
+
+    public void testGH6980_NSWithBlock03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_USE, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH6980_NSWithBlock03.php", options, false, true);
+    }
+
+    public void testGH6980_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_USE, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH6980_01.php", options, false, true);
+    }
+
+    public void testGH6980_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_USE, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH6980_02.php", options, false, true);
+    }
+
+    public void testGH6980_03() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.BLANK_LINES_AFTER_USE, 1);
+        reformatFileContents("testfiles/formatting/blankLines/issueGH6980_03.php", options, false, true);
+    }
+
 }

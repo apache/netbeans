@@ -1770,6 +1770,14 @@ public class TokenFormatter {
                                         countSpaces = ws.spaces;
                                         break;
                                     case WHITESPACE_INDENT:
+                                        if (formatTokens.get(index - 1).getId() == FormatToken.Kind.WHITESPACE_AFTER_USE) {
+                                            // GH-6980
+                                            // namespace {
+                                            //     use Vendor\Package\ExampleClass;
+                                            //     $variable = 1; // add indent spaces here
+                                            // }
+                                            countSpaces = indent;
+                                        }
                                         indentLine = true;
                                         break;
                                     case INDENT:

@@ -33,6 +33,7 @@ import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.VariableInfo;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.NbEditorUtilities;
@@ -63,6 +64,7 @@ public abstract class JSPProcessor {
     private static final WeakHashMap<FileObject, ParserData> PARSER_DATA_CACHE = new WeakHashMap<FileObject, ParserData>();
 
     private ParserData parserData;
+    private boolean jakartaVariant = false;
 
     private static class ParserData {
         private JspParserAPI.ParseResult parserResult;
@@ -268,6 +270,9 @@ public abstract class JSPProcessor {
             return;
         }
 
+        ClassPath cp = ClassPath.getClassPath(fobj, ClassPath.COMPILE);
+        jakartaVariant = cp != null && cp.findResource("jakarta/servlet/http/HttpServlet.class") != null;
+
         //workaround for issue #120195 - Deadlock in jspparser while reformatting JSP
         //
         //we MAY be called here this way:
@@ -366,10 +371,20 @@ public abstract class JSPProcessor {
         PageInfo pi = getPageInfo();
         if (pi == null) {
             //we need at least some basic imports
-            return new String[]{"javax.servlet.*", "javax.servlet.http.*", "javax.servlet.jsp.*"};
+            if(jakartaVariant) {
+                return new String[]{"jakarta.servlet.*", "jakarta.servlet.http.*", "jakarta.servlet.jsp.*"};
+            } else {
+                return new String[]{"javax.servlet.*", "javax.servlet.http.*", "javax.servlet.jsp.*"};
+            }
         }
         List<String> imports = pi.getImports();
-        return imports == null ? null : imports.toArray(new String[0]);
+        if(imports == null) {
+            return null;
+        }
+        return imports
+                .stream()
+                .map(i -> jakartaVariant ? i.replaceFirst("^javax\\.", "jakarta.") : i)
+                .toArray(i -> new String[i]);
     }
 
     protected abstract Collection<String> processedIncludes();

@@ -158,22 +158,6 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
             }
     }
 
-    public String[] getImports(){
-        JspParserAPI.ParseResult pre = getParseResult();
-        if (pre != null){
-            PageInfo pi = pre.getPageInfo();
-            if(pi == null) {
-                //report error but do not break the entire CC
-                err.log(Level.WARNING, null, new NullPointerException("PageInfo obtained from JspParserAPI.ParseResult is null"));
-                return null;
-            }
-            List<String> imports = pi.getImports();
-            return imports.toArray(new String[0]);
-        }
-
-        return null;
-    }
-
     public boolean isXmlSyntax(){
         JspContextInfo jspCO = JspContextInfo.getContextInfo(fobj);
         if(jspCO == null) {

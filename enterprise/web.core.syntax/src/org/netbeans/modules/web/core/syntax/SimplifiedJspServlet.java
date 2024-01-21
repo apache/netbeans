@@ -413,7 +413,9 @@ public class SimplifiedJspServlet extends JSPProcessor {
     private boolean isServletAPIOnClasspath() {
         ClassPath cp = ClassPath.getClassPath(fobj, ClassPath.COMPILE);
 
-        if (cp != null && cp.findResource("javax/servlet/http/HttpServlet.class") != null) { //NOI18N
+        if (cp != null
+                && (cp.findResource("javax/servlet/http/HttpServlet.class") != null //NOI18N
+                || cp.findResource("jakarta/servlet/http/HttpServlet.class") != null)) { //NOI18N
             return true;
         }
 

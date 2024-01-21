@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
@@ -38,7 +39,9 @@ import org.netbeans.modules.web.el.spi.ELPlugin;
 import org.netbeans.modules.web.el.spi.Function;
 import org.netbeans.modules.web.el.spi.ImplicitObject;
 import org.netbeans.modules.web.el.spi.ImplicitObjectType;
+
 import static org.netbeans.modules.web.el.spi.ImplicitObjectType.*;
+
 import org.netbeans.modules.web.el.spi.ResolverContext;
 import org.netbeans.modules.web.el.spi.ResourceBundle;
 import org.netbeans.modules.web.jsf.api.editor.JSFResourceBundlesProvider;
@@ -59,6 +62,7 @@ public class FaceletsELPlugin extends ELPlugin {
     private static final String PLUGIN_NAME = "JSF Facelets EL Plugin"; //NOI18N
 
     private Collection<ImplicitObject> IMPL_OBJECTS;
+    private Collection<ImplicitObject> IMPL_OBJECTS_JAKARTA;
 
     @Override
     public String getName() {
@@ -81,25 +85,51 @@ public class FaceletsELPlugin extends ELPlugin {
 
             IMPL_OBJECTS.addAll(getScopeObjects());
 
-            IMPL_OBJECTS.add( new FacesContextObject());
-            IMPL_OBJECTS.add( new ApplicationObject());
-            IMPL_OBJECTS.add( new ComponentObject());
-            IMPL_OBJECTS.add( new FlashObject());
-            IMPL_OBJECTS.add( new ResourceObject());
-            IMPL_OBJECTS.add( new SessionObject());
-            IMPL_OBJECTS.add( new ViewObject() );
-            IMPL_OBJECTS.add( new JsfImplicitObject("cookie", "java.util.Map", MAP_TYPE) ); //NOI18N
-            IMPL_OBJECTS.add( new JsfImplicitObject("cc", "javax.faces.component.UIComponent", RAW) ); //NOI18N
-            IMPL_OBJECTS.add( new JsfImplicitObject("request", "javax.servlet.http.HttpServletRequest", OBJECT_TYPE) ); //NOI18N
-            IMPL_OBJECTS.add( new JsfImplicitObject("header", "java.util.Map", MAP_TYPE) ); //NOI18N
-            IMPL_OBJECTS.add( new JsfImplicitObject("headerValues", "java.util.Map", MAP_TYPE) ); //NOI18N
-            IMPL_OBJECTS.add( new JsfImplicitObject("initParam", "java.util.Map", MAP_TYPE) ); //NOI18N
-            IMPL_OBJECTS.add( new JsfImplicitObject("param", "java.util.Map", MAP_TYPE) ); //NOI18N
-            IMPL_OBJECTS.add( new JsfImplicitObject("paramValues", "java.util.Map", MAP_TYPE) ); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("facesContext", "javax.faces.context.FacesContext", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("application",  "javax.servlet.ServletContext", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("component", "javax.faces.component.UIComponent", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("flash", "javax.faces.context.Flash", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("resource", "javax.faces.application.ResourceHandler", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("session", "javax.servlet.http.HttpSession", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("view", "javax.faces.component.UIViewRoot", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("cookie", "java.util.Map", MAP_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("cc", "javax.faces.component.UIComponent", RAW)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("request", "javax.servlet.http.HttpServletRequest", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("header", "java.util.Map", MAP_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("headerValues", "java.util.Map", MAP_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("initParam", "java.util.Map", MAP_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("param", "java.util.Map", MAP_TYPE)); //NOI18N
+            IMPL_OBJECTS.add(new JsfImplicitObject("paramValues", "java.util.Map", MAP_TYPE)); //NOI18N
+
+
+            IMPL_OBJECTS_JAKARTA = new ArrayList<>(9);
+
+            IMPL_OBJECTS_JAKARTA.addAll(getScopeObjects());
+
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("facesContext", "jakarta.faces.context.FacesContext", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("application",  "jakarta.servlet.ServletContext", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("component", "jakarta.faces.component.UIComponent", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("flash", "jakarta.faces.context.Flash", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("resource", "jakarta.faces.application.ResourceHandler", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("session", "jakarta.servlet.http.HttpSession", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("view", "jakarta.faces.component.UIViewRoot", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("cookie", "java.util.Map", MAP_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("cc", "jakarta.faces.component.UIComponent", RAW)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("request", "jakarta.servlet.http.HttpServletRequest", OBJECT_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("header", "java.util.Map", MAP_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("headerValues", "java.util.Map", MAP_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("initParam", "java.util.Map", MAP_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("param", "java.util.Map", MAP_TYPE)); //NOI18N
+            IMPL_OBJECTS_JAKARTA.add(new JsfImplicitObject("paramValues", "java.util.Map", MAP_TYPE)); //NOI18N
         }
 
-
-        return IMPL_OBJECTS;
+        ClassPath cp = ClassPath.getClassPath(file, ClassPath.COMPILE);
+        boolean jakartaVariant = cp != null && cp.findResource("jakarta/servlet/http/HttpServlet.class") != null;
+        if(jakartaVariant) {
+            return IMPL_OBJECTS_JAKARTA;
+        } else {
+            return IMPL_OBJECTS;
+        }
     }
 
     @Override
@@ -193,49 +223,6 @@ public class FaceletsELPlugin extends ELPlugin {
     private static String getSimpleNameForType(String fqn) {
         return fqn.substring(fqn.lastIndexOf(".") + 1); //NOI18N
     }
-
-    static class FacesContextObject extends JsfImplicitObject {
-        public FacesContextObject(){
-            super("facesContext", "javax.faces.context.FacesContext", OBJECT_TYPE); //NOI18N
-        }
-    }
-
-    static class ApplicationObject extends JsfImplicitObject {
-        public ApplicationObject(){
-            super("application",  "javax.servlet.ServletContext", OBJECT_TYPE); //NOI18N
-        }
-    }
-
-    static class ComponentObject extends JsfImplicitObject {
-        public ComponentObject(){
-            super("component", "javax.faces.component.UIComponent", OBJECT_TYPE); //NOI18N
-        }
-    }
-
-    static class FlashObject extends JsfImplicitObject {
-        public FlashObject(){
-            super("flash", "javax.faces.context.Flash", OBJECT_TYPE); //NOI18N
-        }
-    }
-
-    static class ResourceObject extends JsfImplicitObject {
-        public ResourceObject(){
-            super("resource", "javax.faces.application.ResourceHandler", OBJECT_TYPE); //NOI18N
-        }
-    }
-
-    static class SessionObject extends JsfImplicitObject {
-        public SessionObject(){
-            super("session", "javax.servlet.http.HttpSession", OBJECT_TYPE); //NOI18N
-        }
-    }
-
-    static class ViewObject extends JsfImplicitObject {
-        public ViewObject(){
-            super("view", "javax.faces.component.UIViewRoot", OBJECT_TYPE); //NOI18N
-        }
-    }
-
 
     private static class JsfImplicitObject implements ImplicitObject {
 

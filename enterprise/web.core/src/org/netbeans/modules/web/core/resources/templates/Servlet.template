@@ -9,6 +9,18 @@ package ${package};
 
 import java.io.IOException;
 import java.io.PrintWriter;
+<#if jakartaPackages>
+import jakarta.servlet.ServletException;
+<#if classAnnotation??>
+import jakarta.servlet.annotation.WebServlet;
+</#if>
+<#if includeInitParams??>
+import jakarta.servlet.annotation.WebInitParam;
+</#if>
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+<#else>
 import javax.servlet.ServletException;
 <#if classAnnotation??>
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +31,7 @@ import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+</#if>
 
 /**
  *

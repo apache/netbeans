@@ -32,6 +32,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.modules.editor.indent.api.Indent;
 import org.netbeans.api.java.source.CompilationController;
@@ -50,7 +51,6 @@ import org.openide.util.Exceptions;
  *
  * @author Libor Kotouc
  */
-// @todo: Support JakartaEE
 public final class JspPaletteUtilities {
 
     public static final String CARET = "&CARET&";// NOI18N
@@ -141,6 +141,15 @@ public final class JspPaletteUtilities {
             }
         }
         return null;
+    }
+
+    public static boolean isJakartaVariant(JTextComponent target) {
+        FileObject fobj = getFileObject(target);
+        if(fobj != null) {
+            ClassPath cp = ClassPath.getClassPath(fobj, ClassPath.COMPILE);
+            return cp != null && cp.findResource("jakarta/servlet/http/HttpServletRequest.class") != null;
+        }
+        return false;
     }
 
     public static boolean idExists(String id, PageInfo.BeanData[] beanData) {

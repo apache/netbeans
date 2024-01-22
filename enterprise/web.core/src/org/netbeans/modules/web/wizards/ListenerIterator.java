@@ -104,13 +104,23 @@ public class ListenerIterator implements TemplateWizard.AsynchronousInstantiatin
        
         FileObject folder = Templates.getTargetFolder(wiz);
         DataFolder targetFolder = DataFolder.findFolder(folder);
-        
+
+
         ClassPath classPath = ClassPath.getClassPath(folder,ClassPath.SOURCE);
         String listenerName = wiz.getTargetName();
         DataObject result = null;
         
         if (classPath != null) {
-            Map<String, String> templateParameters = new HashMap<String, String>();
+            boolean jakartaVariant;
+            Map<String, Object> templateParameters = new HashMap<>();
+            ClassPath cp = ClassPath.getClassPath(folder, ClassPath.COMPILE);
+            if (cp != null && cp.findResource("jakarta/servlet/http/HttpServlet.class") != null) {
+                templateParameters.put("jakartaPackages", true);
+                jakartaVariant = true;
+            } else {
+                templateParameters.put("jakartaPackages", false);
+                jakartaVariant = false;
+            }
             if (!panel.createElementInDD() && Utilities.isJavaEE6Plus(wiz)) {
                 templateParameters.put("classAnnotation", AnnotationGenerator.webListener());
             }

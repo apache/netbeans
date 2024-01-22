@@ -25,11 +25,13 @@ import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.modules.web.core.Util;
 import org.openide.filesystems.FileObject;
@@ -97,10 +99,18 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
         // More advanced wizards can create multiple objects from template
         // (return them all in the result of this method), populate file
         // contents on the fly, etc.
-       
+
         org.openide.filesystems.FileObject dir = Templates.getTargetFolder( wiz );
         DataFolder df = DataFolder.findFolder( dir );
-        
+
+        HashMap<String, Object> templateParameters = new HashMap<>();
+        ClassPath cp = ClassPath.getClassPath(dir, ClassPath.COMPILE);
+        if(cp != null && cp.findResource("jakarta/servlet/http/HttpServlet.class") != null) {
+            templateParameters.put("jakartaPackages", true);
+        } else {
+            templateParameters.put("jakartaPackages", false);
+        }
+
         FileObject template = Templates.getTemplate( wiz );
         
         if (((TagHandlerSelection)tagHandlerSelectionPanel).isBodyTagSupport()) {
@@ -108,7 +118,7 @@ public class TagHandlerIterator implements TemplateWizard.AsynchronousInstantiat
             template = templateParent.getFileObject("BodyTagHandler","java"); //NOI18N
         }
         DataObject dTemplate = DataObject.find( template );                
-        DataObject dobj = dTemplate.createFromTemplate( df, Templates.getTargetName( wiz )  );
+        DataObject dobj = dTemplate.createFromTemplate(df, Templates.getTargetName(wiz), templateParameters);
         // writing to TLD File
         TagInfoPanel tldPanel = (TagInfoPanel)tagInfoPanel;
         Object[][] attrs = tldPanel.getAttributes();

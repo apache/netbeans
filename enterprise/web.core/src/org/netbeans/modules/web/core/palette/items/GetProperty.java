@@ -33,7 +33,6 @@ import org.openide.text.ActiveEditorDrop;
  *
  * @author Libor Kotouc
  */
-// @todo: Support JakartaEE
 public class GetProperty implements ActiveEditorDrop {
 
     public static final String[] implicitBeans = new String[] {  // NOI18N
@@ -58,6 +57,17 @@ public class GetProperty implements ActiveEditorDrop {
         "javax.servlet.ServletConfig",
         "java.lang.Object",
         "java.lang.Throwable" 
+    };
+    public static final String[] implicitTypesJakarta = new String[] { // NOI18N
+        "jakarta.servlet.http.HttpServletRequest",
+        "jakarta.servlet.http.HttpServletResponse",
+        "jakarta.servlet.jsp.PageContext",
+        "jakarta.servlet.http.HttpSession",
+        "jakarta.servlet.ServletContext",
+        "jakarta.servlet.jsp.JspWriter",
+        "jakarta.servlet.ServletConfig",
+        "java.lang.Object",
+        "java.lang.Throwable"
     };
     protected List<BeanDescr> allBeans = new ArrayList<BeanDescr>();
     private int beanIndex = BEAN_DEFAULT;
@@ -122,10 +132,17 @@ public class GetProperty implements ActiveEditorDrop {
     }
 
     protected List<BeanDescr> initAllBeans(JTextComponent targetComponent) {
-       ArrayList<BeanDescr> res = new ArrayList<BeanDescr>();
+        String[] types;
+        if(JspPaletteUtilities.isJakartaVariant(targetComponent)) {
+            types = implicitTypesJakarta;
+        } else {
+            types = implicitTypes;
+        }
+
+        ArrayList<BeanDescr> res = new ArrayList<BeanDescr>();
         for (int i = 0; i < implicitBeans.length; i++) {
             String id = implicitBeans[i];
-            String fqcn = implicitTypes[i];
+            String fqcn = types[i];
             res.add(new BeanDescr(id, fqcn));
         }
         PageInfo.BeanData[] bd = JspPaletteUtilities.getAllBeans(targetComponent);

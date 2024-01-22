@@ -43,7 +43,6 @@ import org.netbeans.modules.web.api.webmodule.WebModule;
  *
  * @author  Milan Kuchtiak
  */
-// @todo: Support JakartaEE
 public class ListenerPanel implements WizardDescriptor.Panel {
     
     /** The visual component that displays this panel.
@@ -53,12 +52,12 @@ public class ListenerPanel implements WizardDescriptor.Panel {
     private ListenerVisualPanel component;
     private transient TemplateWizard wizard;
 
-    private static final String SERVLET_CONTEXT_LISTENER = "javax.servlet.ServletContextListener";    //NOI18N
-    private static final String SERVLET_CONTEXT_ATTRIBUTE_LISTENER = "javax.servlet.ServletContextAttributeListener";    //NOI18N
-    private static final String HTTP_SESSION_LISTENER = "javax.servlet.http.HttpSessionListener";    //NOI18N
-    private static final String HTTP_SESSION_ATTRIBUTE_LISTENER = "javax.servlet.http.HttpSessionAttributeListener";    //NOI18N
-    private static final String SERVLET_REQUEST_LISTENER = "javax.servlet.ServletRequestListener";    //NOI18N
-    private static final String SERVLET_REQUEST_ATTRIBUTE_LISTENER = "javax.servlet.ServletRequestAttributeListener";    //NOI18N
+    static final String SERVLET_CONTEXT_LISTENER = ".servlet.ServletContextListener";    //NOI18N
+    static final String SERVLET_CONTEXT_ATTRIBUTE_LISTENER = ".servlet.ServletContextAttributeListener";    //NOI18N
+    static final String HTTP_SESSION_LISTENER = ".servlet.http.HttpSessionListener";    //NOI18N
+    static final String HTTP_SESSION_ATTRIBUTE_LISTENER = ".servlet.http.HttpSessionAttributeListener";    //NOI18N
+    static final String SERVLET_REQUEST_LISTENER = ".servlet.ServletRequestListener";    //NOI18N
+    static final String SERVLET_REQUEST_ATTRIBUTE_LISTENER = ".servlet.ServletRequestAttributeListener";    //NOI18N
 
     /** Create the wizard panel descriptor. */
     public ListenerPanel(TemplateWizard wizard) {
@@ -119,14 +118,18 @@ public class ListenerPanel implements WizardDescriptor.Panel {
                 resource = SERVLET_REQUEST_ATTRIBUTE_LISTENER;
             }
         }
-        if (cp != null && resource != null && cp.findResource(resource.replace('.', '/')+".class")==null) {  //NOI18N
-            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,org.openide.util.NbBundle.getMessage(ListenerPanel.class, "MSG_noResourceInClassPath", resource));
+
+        if (cp != null && resource != null 
+                && cp.findResource("jakarta" + resource.replace('.', '/') + ".class") == null //NOI18N
+                && cp.findResource("javax" + resource.replace('.', '/') + ".class") == null //NOI18N
+        ) {
+            wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE,org.openide.util.NbBundle.getMessage(ListenerPanel.class, "MSG_noResourceInClassPath", "jakarta." + resource,  "javax." + resource));
             return false;
         }
 
         WebModule module = WebModule.getWebModule(project.getProjectDirectory());
         if (createElementInDD() && (module == null || module.getWebInf() == null)) {
-            wizard.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE,org.openide.util.NbBundle.getMessage(ListenerPanel.class, "MSG_noWebInfDirectory", resource)); //NOI18N
+            wizard.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE,org.openide.util.NbBundle.getMessage(ListenerPanel.class, "MSG_noWebInfDirectory")); //NOI18N
             return true;
         }
 

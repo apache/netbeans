@@ -26,7 +26,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.StyledEditorKit;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.project.ProjectUtils;
@@ -181,6 +181,7 @@ public class ServletIterator implements TemplateWizard.AsynchronousInstantiating
         FileObject dir = Templates.getTargetFolder(wizard);
         DataFolder df = DataFolder.findFolder(dir);
 
+
         FileObject template = Templates.getTemplate(wizard);
         if (FileType.FILTER.equals(fileType) && ((WrapperSelection)customPanel).isWrapper()) {
             template = Templates.getTemplate(wizard);
@@ -189,6 +190,12 @@ public class ServletIterator implements TemplateWizard.AsynchronousInstantiating
         }
         
         HashMap<String, Object> templateParameters = new HashMap<String, Object>();
+        ClassPath cp = ClassPath.getClassPath(dir, ClassPath.COMPILE);
+        if (cp != null && cp.findResource("jakarta/servlet/http/HttpServlet.class") != null) {
+            templateParameters.put("jakartaPackages", true);
+        } else {
+            templateParameters.put("jakartaPackages", false);
+        }
         templateParameters.put("servletEditorFold", NbBundle.getMessage(ServletIterator.class, "MSG_ServletEditorFold")); //NOI18N
         templateParameters.put("java17style", isJava17orLater(df.getPrimaryFile())); //NOI18N
 

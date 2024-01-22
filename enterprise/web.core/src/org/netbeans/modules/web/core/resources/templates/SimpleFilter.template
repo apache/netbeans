@@ -11,6 +11,23 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+<#if jakartaPackages>
+<#if includeDispatcher??>
+import jakarta.servlet.DispatcherType;
+</#if>
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+<#if classAnnotation??>
+import jakarta.servlet.annotation.WebFilter;
+</#if>
+<#if includeInitParams??>
+import jakarta.servlet.annotation.WebInitParam;
+</#if>
+<#else>
 <#if includeDispatcher??>
 import javax.servlet.DispatcherType;
 </#if>
@@ -26,7 +43,7 @@ import javax.servlet.annotation.WebFilter;
 <#if includeInitParams??>
 import javax.servlet.annotation.WebInitParam;
 </#if>
-
+</#if>
 /**
  *
  * @author ${user}

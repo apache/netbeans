@@ -16,6 +16,27 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+<#if jakartaPackages>
+<#if includeDispatcher??>
+import jakarta.servlet.DispatcherType;
+</#if>
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+<#if classAnnotation??>
+import jakarta.servlet.annotation.WebFilter;
+</#if>
+<#if includeInitParams??>
+import jakarta.servlet.annotation.WebInitParam;
+</#if>
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
+<#else>
 <#if includeDispatcher??>
 import javax.servlet.DispatcherType;
 </#if>
@@ -35,6 +56,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+</#if>
 
 /**
  *

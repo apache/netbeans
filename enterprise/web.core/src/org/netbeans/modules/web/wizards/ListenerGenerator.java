@@ -56,16 +56,25 @@ import static org.netbeans.modules.web.wizards.ListenerPanel.SERVLET_REQUEST_LIS
  */
 public class ListenerGenerator {
 
-    boolean isContext;
-    boolean isContextAttr;
-    boolean isSession;
-    boolean isSessionAttr;
-    boolean isRequest;
-    boolean isRequestAttr;
+    private final boolean isContext;
+    private final boolean isContextAttr;
+    private final boolean isSession;
+    private final boolean isSessionAttr;
+    private final boolean isRequest;
+    private final boolean isRequestAttr;
 
     private GenerationUtils gu;
 
-    /** Creates a new instance of ListenerGenerator */
+    /**
+     * Creates a new instance of ListenerGenerator
+     *
+     * @param isContext
+     * @param isContextAttr
+     * @param isSession
+     * @param isSessionAttr
+     * @param isRequest
+     * @param isRequestAttr
+     */
     public ListenerGenerator(boolean isContext, boolean isContextAttr, boolean isSession, boolean isSessionAttr, boolean isRequest, boolean isRequestAttr) {
         this.isContext = isContext;
         this.isContextAttr = isContextAttr;
@@ -76,20 +85,18 @@ public class ListenerGenerator {
     }
 
     public void generate(JavaSource clazz) throws IOException {
-        Task<WorkingCopy> task = new Task<WorkingCopy>() {
-            public void run(WorkingCopy workingCopy) throws Exception {
-                workingCopy.toPhase(Phase.RESOLVED);
-                CompilationUnitTree cut = workingCopy.getCompilationUnit();
+        Task<WorkingCopy> task = (WorkingCopy workingCopy) -> {
+            workingCopy.toPhase(Phase.RESOLVED);
+            CompilationUnitTree cut = workingCopy.getCompilationUnit();
 
-                gu = GenerationUtils.newInstance(workingCopy);
-                for (Tree typeDecl : cut.getTypeDecls()) {
-                    if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDecl.getKind())) {
-                        Element e = workingCopy.getTrees().getElement(new TreePath(new TreePath(workingCopy.getCompilationUnit()), typeDecl));
-                        if (e != null && e.getKind().isClass()) {
-                            TypeElement te = (TypeElement) e;
-                            ClassTree ct = (ClassTree) typeDecl;
-                            workingCopy.rewrite(ct, generateInterfaces(workingCopy, te, ct, gu, clazz));
-                        }
+            gu = GenerationUtils.newInstance(workingCopy);
+            for (Tree typeDecl : cut.getTypeDecls()) {
+                if (TreeUtilities.CLASS_TREE_KINDS.contains(typeDecl.getKind())) {
+                    Element e = workingCopy.getTrees().getElement(new TreePath(new TreePath(workingCopy.getCompilationUnit()), typeDecl));
+                    if (e != null && e.getKind().isClass()) {
+                        TypeElement te = (TypeElement) e;
+                        ClassTree ct = (ClassTree) typeDecl;
+                        workingCopy.rewrite(ct, generateInterfaces(workingCopy, te, ct, gu, clazz));
                     }
                 }
             }
@@ -108,8 +115,8 @@ public class ListenerGenerator {
     private ClassTree generateInterfaces(WorkingCopy wc, TypeElement te, ClassTree ct, GenerationUtils gu, JavaSource clazz) {
         ClassTree newClassTree = ct;
 
-        List<String> ifList = new ArrayList<String>();
-        List<ExecutableElement> methods = new ArrayList<ExecutableElement>();
+        List<String> ifList = new ArrayList<>();
+        List<ExecutableElement> methods = new ArrayList<>();
 
         FileObject jakartaServletRequestListenerFo = clazz.getClasspathInfo()
                 .getClassPath(ClasspathInfo.PathKind.COMPILE)

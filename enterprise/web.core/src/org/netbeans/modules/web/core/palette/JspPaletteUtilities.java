@@ -58,7 +58,7 @@ public final class JspPaletteUtilities {
     private static final String JSTL_URI = "http://java.sun.com/jsp/jstl/core";  //NOI18N
     private static final String SQL_PREFIX = "sql";  //NOI18N
     private static final String SQL_URI = "http://java.sun.com/jsp/jstl/sql";  //NOI18N
-    
+
     public static void insert(String s, JTextComponent target) throws BadLocationException {
         insert(s, target, true);
     }
@@ -169,11 +169,8 @@ public final class JspPaletteUtilities {
     public static boolean typeExists(JTextComponent target, final String fqcn) {
         final boolean[] result = {false};
         if (fqcn != null) {
-            runUserActionTask(target, new Task<CompilationController>() {
-
-                public void run(CompilationController parameter) throws Exception {
-                    result[0] = parameter.getElements().getTypeElement(fqcn) != null;
-                }
+            runUserActionTask(target, (CompilationController parameter) -> {
+                result[0] = parameter.getElements().getTypeElement(fqcn) != null;
             });
         }
         return result[0];
@@ -194,10 +191,11 @@ public final class JspPaletteUtilities {
     }
 
     public static List<String> getTypeProperties(JTextComponent target, final String fqcn, final String[] prefix) {
-        final List<String> result = new ArrayList<String>();
+        final List<String> result = new ArrayList<>();
         if (prefix != null) {
             runUserActionTask(target, new Task<CompilationController>() {
 
+                @Override
                 public void run(CompilationController parameter) throws Exception {
                     TypeElement te = parameter.getElements().getTypeElement(fqcn);
                     if (te != null) {
@@ -245,7 +243,7 @@ public final class JspPaletteUtilities {
         }
         return result;
     }
-    
+
     /**************************************************************************/
     public static String getTagLibPrefix(JTextComponent target, String tagLibUri) {
         FileObject fobj = getFileObject(target);
@@ -260,7 +258,7 @@ public final class JspPaletteUtilities {
         }
         return null;
     }
-    
+
     /**************************************************************************/
     public static String findJstlPrefix(JTextComponent target) {
         String res = getTagLibPrefix(target, JSTL_URI);
@@ -307,5 +305,5 @@ public final class JspPaletteUtilities {
             });
         }
     }
-    
+
 }

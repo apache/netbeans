@@ -41,8 +41,8 @@ import javax.servlet.http.HttpServletResponse;
 ${classAnnotation}
 </#if>
 public class ${name} extends HttpServlet {
-   
-    /** 
+
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -62,7 +62,7 @@ public class ${name} extends HttpServlet {
             out.println("${doctype?j_string}");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ${name}</title>");  
+            out.println("<title>Servlet ${name}</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet ${name} at " + request.getContextPath () + "</h1>");
@@ -73,10 +73,10 @@ public class ${name} extends HttpServlet {
             out.close();
 </#if>
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="${servletEditorFold}">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -89,9 +89,9 @@ public class ${name} extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -106,7 +106,7 @@ public class ${name} extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */

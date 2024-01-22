@@ -82,10 +82,18 @@ public final class SingleSourceFileUtil {
     }
 
     public static boolean isSupportedFile(FileObject file) {
+        if (file == null) {
+            return false;
+        }
         try {
-            return !MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT &&
-                   FileOwnerQuery.getOwner(file) == null &&
-                   !file.getFileSystem().isReadOnly();
+            FileObject dir = file.getParent();
+            File dirFile = dir != null ? FileUtil.toFile(dir) : null;
+            return !MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT
+                    && FileOwnerQuery.getOwner(file) == null
+                    && !file.getFileSystem().isReadOnly()
+                    && !(dirFile != null
+                    && dirFile.getName().startsWith("vcs-")
+                    && dirFile.getAbsolutePath().startsWith(System.getProperty("java.io.tmpdir")));
         } catch (FileStateInvalidException ex) {
             return false;
         }

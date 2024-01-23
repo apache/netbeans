@@ -112,7 +112,6 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     private static final String RESOURCE_URL_FACELETS_TAGLIB_DTD_10 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_DTD_10; // NOI18N
 
 
-    /** Creates a new instance of StrutsCatalog */
     public JSFCatalog() {
     }
 

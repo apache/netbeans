@@ -26,7 +26,7 @@ import org.openide.loaders.UniFileLoader;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 
-/** StrutsConfig loader bean info.
+/**
  *
  * @author Petr Pisl
  */

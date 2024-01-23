@@ -2216,10 +2216,6 @@ jobs:
 #      - name: web.project
 #        run: ant $OPTS -f enterprise/web.project test
 
-# Fails
-#      - name: web.struts
-#        run: ant $OPTS -f enterprise/web.struts test
-
       - name: websvc.clientapi
         run: ant $OPTS -f enterprise/websvc.clientapi test
 

@@ -72,7 +72,7 @@ public class MultiSourceRootProvider implements ClassPathProvider {
 
     private static final Logger LOG = Logger.getLogger(MultiSourceRootProvider.class.getName());
 
-    public static boolean DISABLE_MULTI_SOURCE_ROOT = false;
+    public static boolean DISABLE_MULTI_SOURCE_ROOT = Boolean.getBoolean("java.disable.multi.source.root");
 
     //TODO: the cache will probably be never cleared, as the ClassPath/value refers to the key(?)
     private Map<FileObject, ClassPath> file2SourceCP = new WeakHashMap<>();

@@ -1,2 +1,0 @@
-Spring Framework 3.2.18.RELEASE
-Copyright (c) 2002-2016 Pivotal, Inc.

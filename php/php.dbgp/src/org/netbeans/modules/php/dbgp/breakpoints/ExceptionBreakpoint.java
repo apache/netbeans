@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.php.dbgp.breakpoints;
 
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.dbgp.DebugSession;
 
 /**
@@ -26,7 +29,13 @@ import org.netbeans.modules.php.dbgp.DebugSession;
  *
  */
 public class ExceptionBreakpoint extends AbstractBreakpoint {
+    private static final String FONT_GRAY_COLOR = "<font color=\"#999999\">"; //NOI18N
+    private static final String CLOSE_FONT = "</font>"; //NOI18N
     private final String exceptionName;
+    @NullAllowed
+    private volatile String message;
+    @NullAllowed
+    private volatile String code;
 
     public ExceptionBreakpoint(String exceptionName) {
         this.exceptionName = exceptionName;
@@ -34,6 +43,37 @@ public class ExceptionBreakpoint extends AbstractBreakpoint {
 
     public String getException() {
         return exceptionName;
+    }
+
+    public void setExceptionMessage(String message) {
+        this.message = message;
+    }
+
+    @CheckForNull
+    public String getExceptionMessage() {
+        return buildText(message);
+    }
+
+    public void setExceptionCode(String code) {
+        this.code = code;
+    }
+
+    @CheckForNull
+    public String getExceptionCode() {
+        return buildText(code);
+    }
+
+    @CheckForNull
+    private String buildText(String text) {
+        if (!StringUtils.isEmpty(text)) {
+            StringBuilder builder = new StringBuilder()
+                .append(FONT_GRAY_COLOR)
+                .append(text)
+                .append(CLOSE_FONT);
+            return builder.toString();
+        }
+
+        return null;
     }
 
     @Override

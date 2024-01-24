@@ -102,7 +102,8 @@ is the proper place.
                     </li>
                 </ul>
             </description>
-            <class package="org.netbeans.libs.git.jgit.commands" name="PushCommand"/>
+             <!-- PushCommand is not in apidoc -->
+            <class package="org.netbeans.libs.git.jgit.commands" name="PushCommand" link="no"/>
         </change>
         <change>
             <api name="gitlibrary_api"/>

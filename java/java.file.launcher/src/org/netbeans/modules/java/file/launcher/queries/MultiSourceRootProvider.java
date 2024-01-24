@@ -21,8 +21,6 @@ package org.netbeans.modules.java.file.launcher.queries;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +33,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -50,7 +50,9 @@ import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
+
 import static org.netbeans.spi.java.classpath.ClassPathImplementation.PROP_RESOURCES;
+
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.FilteringPathResourceImplementation;
 import org.netbeans.spi.java.classpath.PathResourceImplementation;
@@ -58,7 +60,6 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
@@ -69,7 +70,9 @@ import org.openide.util.lookup.ServiceProviders;
 })
 public class MultiSourceRootProvider implements ClassPathProvider {
 
-    public static boolean DISABLE_MULTI_SOURCE_ROOT = false;
+    private static final Logger LOG = Logger.getLogger(MultiSourceRootProvider.class.getName());
+
+    public static boolean DISABLE_MULTI_SOURCE_ROOT = Boolean.getBoolean("java.disable.multi.source.root");
 
     //TODO: the cache will probably be never cleared, as the ClassPath/value refers to the key(?)
     private Map<FileObject, ClassPath> file2SourceCP = new WeakHashMap<>();
@@ -130,7 +133,7 @@ public class MultiSourceRootProvider implements ClassPathProvider {
                             return srcCP;
                         });
                     } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
+                        LOG.log(Level.FINE, "Failed to read sourcefile " + file, ex);
                     }
                     return null;
                 });

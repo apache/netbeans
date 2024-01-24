@@ -1050,7 +1050,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 data.put(INDEX, index.getAndIncrement());
                                 action.setData(data);
                             } else if (inputAction.getEdit() != null) {
-                                action.setEdit(fromAPI(inputAction.getEdit(), uri, client));
+                                action.setEdit(Utils.workspaceEditFromApi(inputAction.getEdit(), uri, client));
                             }
                             result.add(Either.forRight(action));
                         }
@@ -1160,7 +1160,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     LazyCodeAction inputAction = lastCodeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt());
                     if (inputAction != null) {
                         try {
-                            unresolved.setEdit(fromAPI(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));
+                            unresolved.setEdit(Utils.workspaceEditFromApi(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));
                         } catch (Exception e) {
                             future.completeExceptionally(e);
                             return;
@@ -2238,36 +2238,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         } else {
             return Source.create(doc);
         }
-    }
-
-    static WorkspaceEdit fromAPI(org.netbeans.api.lsp.WorkspaceEdit edit, String uri, NbCodeLanguageClient client) {
-        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
-        for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
-            if (parts.hasFirst()) {
-                String docUri = parts.first().getDocument();
-                try {
-                    FileObject file = Utils.fromUri(docUri);
-                    if (file == null) {
-                        file = Utils.fromUri(uri);
-                    }
-                    FileObject fo = file;
-                    if (fo != null) {
-                        List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
-                        TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
-                        documentChanges.add(Either.forLeft(tde));
-                    }
-                } catch (Exception ex) {
-                    client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-                }
-            } else {
-                if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
-                    documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
-                } else {
-                    throw new IllegalStateException(String.valueOf(parts.second()));
-                }
-            }
-        }
-        return new WorkspaceEdit(documentChanges);
     }
 
     static List<TextEdit> modify2TextEdits(JavaSource js, Task<WorkingCopy> task) throws IOException {//TODO: is this still used?

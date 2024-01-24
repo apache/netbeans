@@ -21,6 +21,7 @@ package org.netbeans.modules.java.lsp.server.protocol;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileWriter;
@@ -3018,7 +3019,13 @@ public class ServerTest extends NbTestCase {
         assertTrue(generateGetterSetter.isPresent());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateGetterSetter.get()).get();
         assertNotNull(resolvedCodeAction);
-        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        Command command = resolvedCodeAction.getCommand();
+        assertNotNull(command);
+        assertEquals("nbls.generate.code", command.getCommand());
+        List<Object> args = command.getArguments();
+        assertEquals(2, args.size());
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(((JsonPrimitive) args.get(0)).getAsString(), Collections.singletonList(args.get(1)))).get();
+        WorkspaceEdit edit = gson.fromJson(gson.toJsonTree(ret), WorkspaceEdit.class);
         assertNotNull(edit);
         assertEquals(1, edit.getChanges().size());
         List<TextEdit> fileChanges = edit.getChanges().get(uri);
@@ -3048,7 +3055,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        AtomicReference<Object> data = new AtomicReference<>();
+        AtomicReference<JsonObject> data = new AtomicReference<>();
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
@@ -3058,7 +3065,7 @@ public class ServerTest extends NbTestCase {
             @Override
             public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
                 Map<String, Either<List<QuickPickItem>, String>> map = new HashMap<>();
-                List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject)data.get()).getAsJsonObject("data").get("fields"), QuickPickItem[].class));
+                List<QuickPickItem> fields = Arrays.asList(gson.fromJson(data.get().get("fields"), QuickPickItem[].class));
                 map.put("fields", Either.forLeft(fields.stream().filter(item -> item.isPicked()).collect(Collectors.toList())));
                 return CompletableFuture.completedFuture(map);
             }
@@ -3077,10 +3084,16 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateConstructor().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateConstructor.isPresent());
-        data.set(generateConstructor.get().getData());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateConstructor.get()).get();
         assertNotNull(resolvedCodeAction);
-        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        Command command = resolvedCodeAction.getCommand();
+        assertNotNull(command);
+        assertEquals("nbls.generate.code", command.getCommand());
+        List<Object> args = command.getArguments();
+        assertEquals(2, args.size());
+        data.set((JsonObject) args.get(1));
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(((JsonPrimitive) args.get(0)).getAsString(), Collections.singletonList(args.get(1)))).get();
+        WorkspaceEdit edit = gson.fromJson(gson.toJsonTree(ret), WorkspaceEdit.class);
         assertNotNull(edit);
         assertEquals(1, edit.getChanges().size());
         List<TextEdit> fileChanges = edit.getChanges().get(uri);
@@ -3151,7 +3164,13 @@ public class ServerTest extends NbTestCase {
         assertTrue(generateGetterSetter.isPresent());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateGetterSetter.get()).get();
         assertNotNull(resolvedCodeAction);
-        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        Command command = resolvedCodeAction.getCommand();
+        assertNotNull(command);
+        assertEquals("nbls.generate.code", command.getCommand());
+        List<Object> args = command.getArguments();
+        assertEquals(2, args.size());
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(((JsonPrimitive) args.get(0)).getAsString(), Collections.singletonList(args.get(1)))).get();
+        WorkspaceEdit edit = gson.fromJson(gson.toJsonTree(ret), WorkspaceEdit.class);
         assertNotNull(edit);
         assertEquals(1, edit.getChanges().size());
         List<TextEdit> fileChanges = edit.getChanges().get(uri);
@@ -3180,7 +3199,13 @@ public class ServerTest extends NbTestCase {
         assertTrue(generateGetter.isPresent());
         resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateGetter.get()).get();
         assertNotNull(resolvedCodeAction);
-        edit = resolvedCodeAction.getEdit();
+        command = resolvedCodeAction.getCommand();
+        assertNotNull(command);
+        assertEquals("nbls.generate.code", command.getCommand());
+        args = command.getArguments();
+        assertEquals(2, args.size());
+        ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(((JsonPrimitive) args.get(0)).getAsString(), Collections.singletonList(args.get(1)))).get();
+        edit = gson.fromJson(gson.toJsonTree(ret), WorkspaceEdit.class);
         assertNotNull(edit);
         assertEquals(1, edit.getChanges().size());
         fileChanges = edit.getChanges().get(uri);
@@ -3206,7 +3231,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        AtomicReference<Object> data = new AtomicReference<>();
+        AtomicReference<JsonObject> data = new AtomicReference<>();
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
@@ -3216,9 +3241,9 @@ public class ServerTest extends NbTestCase {
             @Override
             public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
                 Map<String, Either<List<QuickPickItem>, String>> map = new HashMap<>();
-                List<QuickPickItem> constructors = Arrays.asList(gson.fromJson(((JsonObject)data.get()).getAsJsonObject("data").get("constructors"), QuickPickItem[].class));
+                List<QuickPickItem> constructors = Arrays.asList(gson.fromJson(data.get().get("constructors"), QuickPickItem[].class));
                 map.put("constructors", Either.forLeft(constructors.subList(0, 2)));
-                List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject)data.get()).getAsJsonObject("data").get("fields"), QuickPickItem[].class));
+                List<QuickPickItem> fields = Arrays.asList(gson.fromJson(data.get().get("fields"), QuickPickItem[].class));
                 map.put("fields", Either.forLeft(fields));
                 return CompletableFuture.completedFuture(map);
             }
@@ -3237,10 +3262,16 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateConstructor().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateConstructor.isPresent());
-        data.set(generateConstructor.get().getData());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateConstructor.get()).get();
         assertNotNull(resolvedCodeAction);
-        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        Command command = resolvedCodeAction.getCommand();
+        assertNotNull(command);
+        assertEquals("nbls.generate.code", command.getCommand());
+        List<Object> args = command.getArguments();
+        assertEquals(2, args.size());
+        data.set((JsonObject) args.get(1));
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(((JsonPrimitive) args.get(0)).getAsString(), Collections.singletonList(args.get(1)))).get();
+        WorkspaceEdit edit = gson.fromJson(gson.toJsonTree(ret), WorkspaceEdit.class);
         assertNotNull(edit);
         assertEquals(1, edit.getChanges().size());
         List<TextEdit> fileChanges = edit.getChanges().get(uri);
@@ -3317,7 +3348,13 @@ public class ServerTest extends NbTestCase {
         assertTrue(generateEquals.isPresent());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateEquals.get()).get();
         assertNotNull(resolvedCodeAction);
-        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        Command command = resolvedCodeAction.getCommand();
+        assertNotNull(command);
+        assertEquals("nbls.generate.code", command.getCommand());
+        List<Object> args = command.getArguments();
+        assertEquals(2, args.size());
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(((JsonPrimitive) args.get(0)).getAsString(), Collections.singletonList(args.get(1)))).get();
+        WorkspaceEdit edit = gson.fromJson(gson.toJsonTree(ret), WorkspaceEdit.class);
         assertNotNull(edit);
         assertEquals(1, edit.getChanges().size());
         List<TextEdit> fileChanges = edit.getChanges().get(uri);
@@ -3384,7 +3421,13 @@ public class ServerTest extends NbTestCase {
         assertTrue(generateToString.isPresent());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateToString.get()).get();
         assertNotNull(resolvedCodeAction);
-        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        Command command = resolvedCodeAction.getCommand();
+        assertNotNull(command);
+        assertEquals("nbls.generate.code", command.getCommand());
+        List<Object> args = command.getArguments();
+        assertEquals(2, args.size());
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(((JsonPrimitive) args.get(0)).getAsString(), Collections.singletonList(args.get(1)))).get();
+        WorkspaceEdit edit = gson.fromJson(gson.toJsonTree(ret), WorkspaceEdit.class);
         assertNotNull(edit);
         assertEquals(1, edit.getChanges().size());
         List<TextEdit> fileChanges = edit.getChanges().get(uri);
@@ -3414,7 +3457,7 @@ public class ServerTest extends NbTestCase {
         try (Writer w = new FileWriter(src)) {
             w.write(code);
         }
-        AtomicReference<Object> data = new AtomicReference<>();
+        AtomicReference<JsonObject> data = new AtomicReference<>();
         Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
             @Override
             public CompletableFuture<ApplyWorkspaceEditResponse> applyEdit(ApplyWorkspaceEditParams params) {
@@ -3434,7 +3477,7 @@ public class ServerTest extends NbTestCase {
             @Override
             public CompletableFuture<Map<String, Either<List<QuickPickItem>, String>>> showMultiStepInput(ShowMutliStepInputParams params) {
                 Map<String, Either<List<QuickPickItem>, String>> map = new HashMap<>();
-                List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject)data.get()).getAsJsonObject("data").get("fields"), QuickPickItem[].class));
+                List<QuickPickItem> fields = Arrays.asList(gson.fromJson(data.get().get("fields"), QuickPickItem[].class));
                 map.put("methods", Either.forLeft(Arrays.asList(new QuickPickItem[] {
                     new QuickPickItem("s.chars(): IntStream", null, null, false, new CodeActionsProvider.ElementData(ElementHandleAccessor.getInstance().create(ElementKind.METHOD, new String[] {
                         "java.lang.CharSequence",
@@ -3464,10 +3507,16 @@ public class ServerTest extends NbTestCase {
                            .filter(a -> Bundle.DN_GenerateDelegateMethod().equals(a.getTitle()))
                            .findAny();
         assertTrue(generateDelegateMethod.isPresent());
-        data.set(generateDelegateMethod.get().getData());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateDelegateMethod.get()).get();
         assertNotNull(resolvedCodeAction);
-        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        Command command = resolvedCodeAction.getCommand();
+        assertNotNull(command);
+        assertEquals("nbls.generate.code", command.getCommand());
+        List<Object> args = command.getArguments();
+        assertEquals(2, args.size());
+        data.set((JsonObject) args.get(1));
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(((JsonPrimitive) args.get(0)).getAsString(), Collections.singletonList(args.get(1)))).get();
+        WorkspaceEdit edit = gson.fromJson(gson.toJsonTree(ret), WorkspaceEdit.class);
         assertNotNull(edit);
         assertEquals(1, edit.getChanges().size());
         List<TextEdit> fileChanges = edit.getChanges().get(uri);
@@ -3529,7 +3578,13 @@ public class ServerTest extends NbTestCase {
         assertTrue(generateOverrideMethod.isPresent());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateOverrideMethod.get()).get();
         assertNotNull(resolvedCodeAction);
-        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        Command command = resolvedCodeAction.getCommand();
+        assertNotNull(command);
+        assertEquals("nbls.generate.code", command.getCommand());
+        List<Object> args = command.getArguments();
+        assertEquals(2, args.size());
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(((JsonPrimitive) args.get(0)).getAsString(), Collections.singletonList(args.get(1)))).get();
+        WorkspaceEdit edit = gson.fromJson(gson.toJsonTree(ret), WorkspaceEdit.class);
         assertNotNull(edit);
         assertEquals(1, edit.getChanges().size());
         List<TextEdit> fileChanges = edit.getChanges().get(uri);
@@ -3593,7 +3648,13 @@ public class ServerTest extends NbTestCase {
         assertTrue(generateLogger.isPresent());
         CodeAction resolvedCodeAction = server.getTextDocumentService().resolveCodeAction(generateLogger.get()).get();
         assertNotNull(resolvedCodeAction);
-        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        Command command = resolvedCodeAction.getCommand();
+        assertNotNull(command);
+        assertEquals("nbls.generate.code", command.getCommand());
+        List<Object> args = command.getArguments();
+        assertEquals(2, args.size());
+        Object ret = server.getWorkspaceService().executeCommand(new ExecuteCommandParams(((JsonPrimitive) args.get(0)).getAsString(), Collections.singletonList(args.get(1)))).get();
+        WorkspaceEdit edit = gson.fromJson(gson.toJsonTree(ret), WorkspaceEdit.class);
         assertNotNull(edit);
         assertEquals(1, edit.getChanges().size());
         List<TextEdit> fileChanges = edit.getChanges().get(uri);

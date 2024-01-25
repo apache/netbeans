@@ -305,7 +305,7 @@
                 <runtime-relative-path>../maven/lib/commons-lang3-3.12.0.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>../maven/lib/failureaccess-1.0.1.jar</runtime-relative-path>
+                <runtime-relative-path>../maven/lib/failureaccess-1.0.2.jar</runtime-relative-path>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>../maven/lib/guava-32.0.1-jre.jar</runtime-relative-path>

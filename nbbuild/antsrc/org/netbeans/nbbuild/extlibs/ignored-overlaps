@@ -26,7 +26,7 @@ ide/db.sql.visualeditor/external/javacc-7.0.10.jar java/performance/external/jav
 java/maven.embedder/external/apache-maven-3.9.6-bin.zip ide/slf4j.api/external/slf4j-api-1.7.36.jar
 java/maven.embedder/external/apache-maven-3.9.6-bin.zip platform/o.apache.commons.lang3/external/commons-lang3-3.12.0.jar
 java/maven.embedder/external/apache-maven-3.9.6-bin.zip platform/o.apache.commons.codec/external/commons-codec-1.16.0.jar
-java/maven.embedder/external/apache-maven-3.9.6-bin.zip ide/c.google.guava.failureaccess/external/failureaccess-1.0.1.jar
+java/maven.embedder/external/failureaccess-1.0.2.jar ide/c.google.guava.failureaccess/external/failureaccess-1.0.2.jar
 
 # Used to parse data during build, but need to as a lib for ide cluster
 nbbuild/external/json-simple-1.1.1.jar ide/libs.json_simple/external/json-simple-1.1.1.jar

@@ -25,7 +25,9 @@
         <mkdir dir="${cluster}/maven"/>
         <unzip src="external/${bundled.maven}-bin.zip" dest="${cluster}/maven">
             <mapper type="glob" from="${bundled.maven}/*" to="*"/>
-        </unzip>                
+        </unzip>
+        <delete file="${cluster}/maven/lib/failureaccess-1.0.1.jar" />
+        <copy file="external/failureaccess-1.0.2.jar" todir="${cluster}/maven/lib/" />
     </target>
     <target name="check-binariesembedded-list">
         <taskdef name="checkjarssha1" classname="org.netbeans.nbbuild.extlibs.CheckEmbeddedBinaries" classpath="${nbantext.jar}"/>

@@ -31,6 +31,10 @@ under the License.
         <platform version="15"/>
         <platform version="16"/>
         <platform version="17"/>
+        <platform version="18"/>
+        <platform version="19"/>
+        <platform version="20"/>
+        <platform version="21"/>
     </java>
     <javaee version="10.0.0">
         <profile version="9.0.0" type="web"/>

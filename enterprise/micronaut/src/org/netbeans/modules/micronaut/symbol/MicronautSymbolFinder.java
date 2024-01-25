@@ -93,10 +93,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
         if (initialize(cc)) {
             try {
                 if (cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED).compareTo(JavaSource.Phase.ELEMENTS_RESOLVED) >= 0) {
-                    List<SymbolLocation> symbols = scan(cc);
-                    if (!symbols.isEmpty()) {
-                        store(context.getIndexFolder(), indexable.getURL(), indexable.getRelativePath(), symbols);
-                    }
+                    store(context.getIndexFolder(), indexable.getURL(), indexable.getRelativePath(), scan(cc));
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);

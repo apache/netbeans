@@ -5,26 +5,17 @@ PACKAGE    Bar                             [PUBLIC]   null
 PACKAGE    Foo                             [PUBLIC]   null
 CLASS      MyClass                         [PUBLIC]   Bar
 ------------------------------------
-KEYWORD    abstract                                   null
 KEYWORD    array                                      null
 KEYWORD    bool                                       null
-KEYWORD    const                                      null
 KEYWORD    false                                      null
-KEYWORD    final                                      null
 KEYWORD    float                                      null
-KEYWORD    function                                   null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null
 KEYWORD    mixed                                      null
 KEYWORD    null                                       null
 KEYWORD    object                                     null
 KEYWORD    parent                                     null
-KEYWORD    private                                    null
-KEYWORD    protected                                  null
-KEYWORD    public                                     null
 KEYWORD    readonly                                   null
 KEYWORD    self                                       null
-KEYWORD    static                                     null
 KEYWORD    string                                     null
 KEYWORD    true                                       null
-KEYWORD    var                                        null

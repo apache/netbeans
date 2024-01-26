@@ -88,6 +88,12 @@ public class MicronautExpressionLanguageCompletionTestBase extends NbTestCase {
                         || item.getLabel().equals("nbjavac")   //ignoring 'nbjavac' package from nbjavac
                         || item.getLabel().equals("oracle"))) { //ignoring 'oracle' package present in some JDK builds
                     out.write(item.getLabel());
+                    if (item.getLabelDetail() != null) {
+                        out.write(item.getLabelDetail());
+                    }
+                    if (item.getLabelDescription() != null) {
+                        out.write(" : " + item.getLabelDescription());
+                    }
                     out.write("\n");
                 }
             }

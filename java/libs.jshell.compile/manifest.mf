@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-OpenIDE-Module: org.netbeans.libs.jshell.compile
-AutoUpdate-Show-In-Client: false
-OpenIDE-Module-Implementation-Version: 1
-OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/jshell/Bundle.properties
-OpenIDE-Module-Requires: org.openide.modules.ModuleFormat2

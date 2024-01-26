@@ -1049,7 +1049,10 @@ public class Util {
             }
             String entityName = null;
             TypeElement annotationElement = controller.getElements()
-                    .getTypeElement(Constants.PERSISTENCE_TABLE);
+                    .getTypeElement(Constants.PERSISTENCE_TABLE_JAKARTA);
+            if(annotationElement == null) {
+                annotationElement = controller.getElements().getTypeElement(Constants.PERSISTENCE_TABLE);
+            }
             if (annotationElement == null) {
                 isIncomplete = true;
             }
@@ -1059,7 +1062,11 @@ public class Util {
             }
             if (entityName == null) {
                 annotationElement = controller.getElements().getTypeElement(
-                        Constants.PERSISTENCE_ENTITY);
+                        Constants.PERSISTENCE_ENTITY_JAKARTA);
+                if (annotationElement == null) {
+                    annotationElement = controller.getElements().getTypeElement(
+                            Constants.PERSISTENCE_ENTITY);
+                }
                 if (annotationElement == null) {
                     isIncomplete = true;
                     return;

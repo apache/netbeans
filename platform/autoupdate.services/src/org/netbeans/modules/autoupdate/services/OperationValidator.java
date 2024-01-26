@@ -218,13 +218,13 @@ abstract class OperationValidator {
             case KIT_MODULE :
             case MODULE :
                 Module m =  Utilities.toModule (((ModuleUpdateElementImpl) impl).getModuleInfo ());
-                res = ModuleDeleterImpl.getInstance ().canDelete (m);
+                res = ModuleEnableDisableDeleteHelper.getInstance ().canDelete (m);
                 break;
             case STANDALONE_MODULE :
             case FEATURE :
                 for (ModuleInfo info : ((FeatureUpdateElementImpl) impl).getModuleInfos ()) {
                     Module module = Utilities.toModule (info);
-                    res |= ModuleDeleterImpl.getInstance ().canDelete (module);
+                    res |= ModuleEnableDisableDeleteHelper.getInstance ().canDelete (module);
                 }
                 break;
             case CUSTOM_HANDLED_COMPONENT :
@@ -261,7 +261,7 @@ abstract class OperationValidator {
                     if (Utilities.isEssentialModule (module)) {
                         LOGGER.log (Level.WARNING, "Essential module cannot be planned for uninstall but " + module);
                         continue;
-                    } else if (! ModuleDeleterImpl.getInstance ().canDelete (module)) {
+                    } else if (! ModuleEnableDisableDeleteHelper.getInstance ().canDelete (module)) {
                         LOGGER.log (Level.WARNING, "The module " + module + " cannot be planned for uninstall because is read-only.");
                         continue;
                     }

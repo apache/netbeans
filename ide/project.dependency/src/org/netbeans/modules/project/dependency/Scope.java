@@ -28,41 +28,16 @@ import java.util.Objects;
  * Scopes are identified by its {@link #name name}; two scopes with the same name are equal.
  * Project implementations may provide their own scopes with standard names since they
  * may use different include/imply hierarchy.
- * 
+ * <p/>
+ * Scope instances created by the build system 
  * @author sdedic
  */
-public abstract class Scope {
+public class Scope {
     private final String name;
 
     protected Scope(String name) {
         this.name = name;
     }
-    
-    /**
-     * Checks if this scope includes the other one. If yes, then queries that executed for this scope
-     * should return all results from the included scope.
-     * 
-     * @param s scope to test
-     * @return true, if data for scope "s" are included by this scope; false otherwise (i.e. unrelated scopes)
-     */
-    public abstract boolean includes(Scope s);
-    
-    /**
-     * Checks if this scope exports the other scope. A scope may {@link #includes include} other
-     * scope, but can choose not to propagate its contents further.
-     * @param s the scope to test
-     * @return true, if data for scope "s" are exported by this scope; false otherwise (i.e. unrelated scopes)
-     */
-    public abstract boolean exports(Scope s);
-    
-    /**
-     * Determines if artifacts in this scope apply to the other one. This is the reverse of {@link includes} and
-     * allows injection to existing scopes.
-     * 
-     * @param s the scope to test.
-     * @return true, if the scope 's' is implied (includes) this one.
-     */
-    public abstract boolean implies(Scope s);
     
     /**
      * @return name / identifier for the scope. Not subject to L10N.
@@ -86,10 +61,28 @@ public abstract class Scope {
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (!(obj instanceof Scope)) {
             return false;
         }
         final Scope other = (Scope) obj;
         return Objects.equals(this.name, other.name);
+    }
+
+    // this behaviour is used in tests, change (in subclasses) carefully.
+    @Override
+    public String toString() {
+        return name();
+    }
+    
+    /**
+     * Creates a named scope. Callers should strongly prefer either abstract scopes
+     * declared in {@link Scopes}, or get supported scopes from the project / build system.
+     * Instances created by this method can only serve as handles / identifiers.
+     * 
+     * @param id scope Id
+     * @return scope
+     */
+    public static Scope named(String id) {
+        return new Scope(id);
     }
 }

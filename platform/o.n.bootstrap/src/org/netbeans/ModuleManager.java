@@ -1109,19 +1109,21 @@ public final class ModuleManager extends Modules {
     }
     
     /**
-     * Attaches a fragment to an existing module. The hosting module must NOT
-     * be already enabled, otherwise an exception will be thrown. Enabled module
-     * may have some classes already loaded, and they cannot be patched.
+     * Finds the host module for a given fragment.
      * 
+     * If assertNotEnabled, the hosting module must NOT be already enabled,
+     * otherwise an exception will be thrown. Enabled module may have some
+     * classes already loaded, and they cannot be patched.
+     *
      * @param m module to attach if it is a fragment
      */
-    private Module attachModuleFragment(Module m) {
+    private Module findHostModule(Module m, boolean assertNotEnabled) {
         String codeNameBase = m.getFragmentHostCodeName();
         if (codeNameBase == null) {
             return null;
         }
         Module host = modulesByName.get(codeNameBase);
-        if (host != null && host.isEnabled() && host.getClassLoader() != null) {
+        if (assertNotEnabled && host != null && host.isEnabled() && host.getClassLoader() != null) {
             throw new IllegalStateException("Host module " + host + " was enabled before, will not accept fragment " + m);
         }
         return host;
@@ -1294,7 +1296,7 @@ public final class ModuleManager extends Modules {
      * @param m module to check
      * @return true, if the module is/will enable.
      */
-    boolean isOrWillEnable(Module m) {
+    public boolean isOrWillEnable(Module m) {
         if (m.isEnabled()) {
             return true;
         }
@@ -1331,9 +1333,11 @@ public final class ModuleManager extends Modules {
                 throw new IllegalModuleException(IllegalModuleException.Reason.ENABLE_MISSING, errors);
             }
             for (Module m : testing) {
+                //lookup host here, to ensure enablement fails in the host is already enabled:
+                Module maybeHost =  findHostModule(m, true);
+
                 if (!modules.contains(m) && !m.isAutoload() && !m.isEager()) {
                     // it is acceptable if the module is a non-autoload host fragment, and its host enabled (thus enabled the fragment):
-                    Module maybeHost =  attachModuleFragment(m);
                     if (maybeHost == null && !testing.contains(maybeHost)) {
                         throw new IllegalModuleException(IllegalModuleException.Reason.ENABLE_TESTING, m);
                     }
@@ -1798,7 +1802,7 @@ public final class ModuleManager extends Modules {
             addedBecauseOfDependent = m;
             // need to register fragments eagerly, so they are available during
             // dependency sort
-            Module host = attachModuleFragment(m);
+            Module host = findHostModule(m, false);
             if (host != null && !host.isEnabled()) {
                 maybeAddToEnableList(willEnable, mightEnable, host, okToFail, "Fragment host");
             }

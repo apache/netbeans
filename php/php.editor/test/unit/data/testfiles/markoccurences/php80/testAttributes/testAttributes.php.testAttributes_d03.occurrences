@@ -1,0 +1,6 @@
+const |>MARK_OCCURRENCES:CONST_1<| = 1;
+use const Attributes\|>MARK_OCCURRENCES:CONST_1<|;
+    AttributeClass3(int: |>MARK_OCCURRENCES:CONST_^1<|, string: "function" . Example::class)
+function func2(#[AttributeClass2(1 + \Attributes\|>MARK_OCCURRENCES:CONST_1<| + 1, Example::CONST_EXAMPLE . "function param")] int|string $param): void {}
+$labmda2 = #[AttributeClass2(2, "closure")] #[AttributeClass3(2, "closurr")] function(#[AttributeClass2(int: 2 * \Attributes\|>MARK_OCCURRENCES:CONST_1<|, string: "closure param" . Example::CONST_EXAMPLE)] $test): void {};
+$arrow2 = #[AttributeClass1(2, "arrow"), AttributeClass2(2, "arrow")] fn(#[AttributeClass1(\Attributes\|>MARK_OCCURRENCES:CONST_1<| / 5, "arrow param" . Example::class)] $test): int|string => 100;

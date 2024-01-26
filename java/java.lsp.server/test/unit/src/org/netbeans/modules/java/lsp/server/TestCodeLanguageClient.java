@@ -43,6 +43,7 @@ import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationPara
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.protocol.SaveDocumentRequestParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
 import org.netbeans.modules.java.lsp.server.protocol.TestProgressParams;
 import org.netbeans.modules.java.lsp.server.protocol.UpdateConfigParams;
@@ -155,4 +156,8 @@ public abstract class TestCodeLanguageClient implements NbCodeLanguageClient {
         throw new UnsupportedOperationException();
     }
     
+    @Override
+    public CompletableFuture<Boolean> requestDocumentSave(SaveDocumentRequestParams documentUris) {
+        return CompletableFuture.completedFuture(false);
+    }
 }

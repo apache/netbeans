@@ -40,9 +40,7 @@ import org.netbeans.modules.web.browser.api.WebBrowser;
 import org.netbeans.modules.web.browser.api.WebBrowsers;
 import org.netbeans.modules.web.clientproject.api.network.NetworkSupport;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.MIMEResolver;
 
-@MIMEResolver.Registration(displayName = "karma.conf.js", resource = "../resources/karmaconf-resolver.xml", position = 126)
 public final class KarmaUtils {
 
     private static final Logger LOGGER = Logger.getLogger(KarmaUtils.class.getName());

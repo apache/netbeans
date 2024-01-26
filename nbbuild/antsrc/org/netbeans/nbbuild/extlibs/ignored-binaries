@@ -63,7 +63,7 @@ extide/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
 extide/gradle/release/modules/gradle/netbeans-gradle-tooling.jar
 
 # ide.launcher is a special semi-module, does not have nbproject/project.xml, so is not recognized:
-nb/ide.launcher/external/launcher-12.5-distribution.zip
+nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip
 
 # webcommon/libs.oracle.jsparser builds a test-only binaries into build/webcommon. Not distributed.
 contrib/libs.oracle.jsparser/build/webcommon/**

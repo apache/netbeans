@@ -51,6 +51,7 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.lib.nbjavac.services.NBAttr;
+import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.hints.spiimpl.batch.BatchSearch.BatchResult;
 import org.netbeans.modules.java.hints.spiimpl.batch.BatchSearch.Folder;
 import org.netbeans.modules.java.hints.spiimpl.batch.BatchSearch.Resource;
@@ -95,6 +96,7 @@ public class BatchSearchTest extends NbTestCase {
     protected void setUp() throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
         Main.initializeURLFactory();
+        MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT = true;
         org.netbeans.api.project.ui.OpenProjects.getDefault().getOpenProjects();
         prepareTest();
         MimeTypes.setAllMimeTypes(Collections.singleton("text/x-java"));

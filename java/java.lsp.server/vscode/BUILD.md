@@ -131,6 +131,11 @@ and specify suitable debug arguments to start _standalone NBLS_ instance:
 vscode$ npm run nbcode -- --jdkhome /jdk -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
 ```
 
+To add extra modules while debugging the NetBeans part
+```bash
+vscode$ npm run nbcode -- -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 -J-Dnetbeans.extra.dirs=/path/to/extension
+```
+
 Connect to the process with Java debugger, setup all breakpoints. Then launch
 the VS Code extension (which connects to the already running _standalone NBLS_ Java process):
 

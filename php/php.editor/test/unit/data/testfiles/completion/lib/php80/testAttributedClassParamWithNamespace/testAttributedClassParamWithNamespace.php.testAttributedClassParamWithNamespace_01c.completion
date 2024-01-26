@@ -1,0 +1,4 @@
+Code completion result for source line:
+#[\Attributes\Test1\Attr1(int: \Attributes\Test1\CONST_ATTRIBUTES_TEST1, strin|g: \Attributes\Test1\Attr1::CONST_ATTR1)]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PARAMETER  string:                                    Parameter Name

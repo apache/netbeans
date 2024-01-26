@@ -49,6 +49,11 @@ public class AliasedFunction extends AliasedElement implements FunctionElement {
     }
 
     @Override
+    public String getDeclaredReturnType() {
+        return getRealFunction().getDeclaredReturnType();
+    }
+
+    @Override
     public boolean isReturnUnionType() {
         return getRealFunction().isReturnUnionType();
     }

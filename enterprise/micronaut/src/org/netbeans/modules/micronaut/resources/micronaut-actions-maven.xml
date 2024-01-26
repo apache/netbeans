@@ -54,6 +54,8 @@
                         <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                         <exec.appArgs></exec.appArgs>
                         <exec.mainClass>${packageClassName}</exec.mainClass>
+                        <mn.appArgs>${exec.appArgs}</mn.appArgs>
+                        <mn.jvmArgs>${exec.vmArgs}</mn.jvmArgs>
                     </properties>
                 </action>
                 <action>
@@ -69,6 +71,8 @@
                         <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                         <exec.mainClass>${packageClassName}</exec.mainClass>
                         <exec.classpathScope>${classPathScope}</exec.classpathScope>
+                        <mn.appArgs>${exec.appArgs}</mn.appArgs>
+                        <mn.jvmArgs>${exec.vmArgs}</mn.jvmArgs>
                     </properties>
                 </action>
 

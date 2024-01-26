@@ -1947,7 +1947,7 @@
                                 <Identifier start='1009' end='1014' name='isset'/>
                             </FucntionName>
                             <Parameters>
-                                <StaticConstantAccess start='1015' end='1036'>
+                                <StaticConstantAccess start='1015' end='1036' isDynamicName='false'>
                                     <Variable start='1015' end='1023' isDollared='true'>
                                         <Identifier start='1016' end='1023' name='myClass'/>
                                     </Variable>
@@ -1990,7 +1990,7 @@
                                 <Identifier start='1049' end='1054' name='isset'/>
                             </FucntionName>
                             <Parameters>
-                                <StaticConstantAccess start='1055' end='1077'>
+                                <StaticConstantAccess start='1055' end='1077' isDynamicName='false'>
                                     <Variable start='1055' end='1063' isDollared='true'>
                                         <Identifier start='1056' end='1063' name='myClass'/>
                                     </Variable>
@@ -2037,7 +2037,7 @@
                                 <Identifier start='1090' end='1095' name='isset'/>
                             </FucntionName>
                             <Parameters>
-                                <StaticConstantAccess start='1096' end='1121'>
+                                <StaticConstantAccess start='1096' end='1121' isDynamicName='false'>
                                     <Variable start='1096' end='1104' isDollared='true'>
                                         <Identifier start='1097' end='1104' name='myClass'/>
                                     </Variable>
@@ -2102,7 +2102,7 @@
                                 <Identifier start='1134' end='1139' name='isset'/>
                             </FucntionName>
                             <Parameters>
-                                <StaticConstantAccess start='1140' end='1165'>
+                                <StaticConstantAccess start='1140' end='1165' isDynamicName='false'>
                                     <Variable start='1140' end='1148' isDollared='true'>
                                         <Identifier start='1141' end='1148' name='myClass'/>
                                     </Variable>
@@ -2163,7 +2163,7 @@
                                 <Identifier start='1178' end='1183' name='isset'/>
                             </FucntionName>
                             <Parameters>
-                                <StaticConstantAccess start='1184' end='1204'>
+                                <StaticConstantAccess start='1184' end='1204' isDynamicName='false'>
                                     <NamespaceName start='1184' end='1191' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1184' end='1191' name='MyClass'/>
                                     </NamespaceName>
@@ -2206,7 +2206,7 @@
                                 <Identifier start='1217' end='1222' name='isset'/>
                             </FucntionName>
                             <Parameters>
-                                <StaticConstantAccess start='1223' end='1244'>
+                                <StaticConstantAccess start='1223' end='1244' isDynamicName='false'>
                                     <NamespaceName start='1223' end='1230' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1223' end='1230' name='MyClass'/>
                                     </NamespaceName>
@@ -2253,7 +2253,7 @@
                                 <Identifier start='1257' end='1262' name='isset'/>
                             </FucntionName>
                             <Parameters>
-                                <StaticConstantAccess start='1263' end='1287'>
+                                <StaticConstantAccess start='1263' end='1287' isDynamicName='false'>
                                     <NamespaceName start='1263' end='1270' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1263' end='1270' name='MyClass'/>
                                     </NamespaceName>
@@ -2318,7 +2318,7 @@
                                 <Identifier start='1300' end='1305' name='isset'/>
                             </FucntionName>
                             <Parameters>
-                                <StaticConstantAccess start='1306' end='1330'>
+                                <StaticConstantAccess start='1306' end='1330' isDynamicName='false'>
                                     <NamespaceName start='1306' end='1313' isCurrent='false' isGlobal='false'>
                                         <Identifier start='1306' end='1313' name='MyClass'/>
                                     </NamespaceName>

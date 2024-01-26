@@ -85,28 +85,28 @@
                 <package>com.fasterxml.jackson.module.jaxb.ser</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-annotations-2.13.5.jar</runtime-relative-path>
-                <binary-origin>external/jackson-annotations-2.13.5.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-annotations-2.16.1.jar</runtime-relative-path>
+                <binary-origin>external/jackson-annotations-2.16.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-core-2.13.5.jar</runtime-relative-path>
-                <binary-origin>external/jackson-core-2.13.5.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-core-2.16.1.jar</runtime-relative-path>
+                <binary-origin>external/jackson-core-2.16.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-databind-2.13.5.jar</runtime-relative-path>
-                <binary-origin>external/jackson-databind-2.13.5.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-databind-2.16.1.jar</runtime-relative-path>
+                <binary-origin>external/jackson-databind-2.16.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-dataformat-cbor-2.13.5.jar</runtime-relative-path>
-                <binary-origin>external/jackson-dataformat-cbor-2.13.5.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-dataformat-cbor-2.16.1.jar</runtime-relative-path>
+                <binary-origin>external/jackson-dataformat-cbor-2.16.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-datatype-jsr310-2.13.5.jar</runtime-relative-path>
-                <binary-origin>external/jackson-datatype-jsr310-2.13.5.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-datatype-jsr310-2.16.1.jar</runtime-relative-path>
+                <binary-origin>external/jackson-datatype-jsr310-2.16.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-module-jaxb-annotations-2.13.5.jar</runtime-relative-path>
-                <binary-origin>external/jackson-module-jaxb-annotations-2.13.5.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-module-jaxb-annotations-2.16.1.jar</runtime-relative-path>
+                <binary-origin>external/jackson-module-jaxb-annotations-2.16.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

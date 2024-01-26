@@ -1101,6 +1101,70 @@ public class ConvertToLambdaTest extends NbTestCase {
 
     }
 
+    // default methods don't qualify for functional interfaces
+    public void testThatDefaultMethodsAreIgnored1() throws Exception {
+        HintTest.create()
+                .sourceLevel("1.8")
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private interface NotFunctional {\n" +
+                       "        public default void a(int i) {};\n" +
+                       "    }\n" +
+                       "    NotFunctional nf = new NotFunctional() {\n" +
+                       "        @Override public void a(int i) { System.err.println(i); }\n" +
+                       "    };\n" +
+                       "}\n")
+                .run(ConvertToLambda.class)
+                .assertWarnings();
+    }
+
+    public void testThatDefaultMethodsAreIgnored2() throws Exception {
+        HintTest.create()
+                .sourceLevel("1.8")
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private interface DefaultRunnableNotFunctional1 extends Runnable {\n" +
+                       "        @Override public default void run() {};\n" +
+                       "    }\n" +
+                       "    private interface DefaultRunnableNotFunctional2 extends DefaultRunnableNotFunctional1 {}\n" +
+                       "    DefaultRunnableNotFunctional2 nf = new DefaultRunnableNotFunctional2() {\n" +
+                       "        @Override public void run() { System.err.println(); }\n" +
+                       "    };\n" +
+                       "}\n")
+                .run(ConvertToLambda.class)
+                .assertWarnings();
+    }
+
+    public void testThatDefaultMethodsAreIgnored3() throws Exception {
+        HintTest.create()
+                .sourceLevel("1.8")
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private interface DefaultRunnableFunctional1 extends Runnable {\n" +
+                       "        public void walk();\n" +
+                       "        @Override public default void run() {};\n" +
+                       "    }\n" +
+                       "    private interface DefaultRunnableFunctional2 extends DefaultRunnableFunctional1 {}\n" +
+                       "    DefaultRunnableFunctional2 f = new DefaultRunnableFunctional2() {\n" +
+                       "        @Override public void walk() { System.err.println(5); }\n" +
+                       "    };\n" +
+                       "}\n")
+                .run(ConvertToLambda.class)
+                .findWarning("7:39-7:65:" + lambdaConvWarning)
+                .applyFix()
+                .assertOutput("package test;\n" +
+                       "public class Test {\n" +
+                       "    private interface DefaultRunnableFunctional1 extends Runnable {\n" +
+                       "        public void walk();\n" +
+                       "        @Override public default void run() {};\n" +
+                       "    }\n" +
+                       "    private interface DefaultRunnableFunctional2 extends DefaultRunnableFunctional1 {}\n" +
+                       "    DefaultRunnableFunctional2 f = () -> {\n" +
+                       "        System.err.println(5);\n" +
+                       "    };\n" +
+                       "}\n");
+    }
+
     static {
         TestCompilerSettings.commandLine = "-XDfind=lambda";
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;

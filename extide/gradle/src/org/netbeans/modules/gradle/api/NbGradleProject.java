@@ -184,8 +184,9 @@ public final class NbGradleProject {
         }
 
         @Override
-        public GradleReport createReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
-            return new GradleReport(errorClass, location, line, message, causedBy);
+        public GradleReport createReport(GradleReport.Severity severity, String errorClass, String location, int line, String message, 
+                GradleReport causedBy, String[] traceLines) {
+            return new GradleReport(severity, errorClass, location, line, message, causedBy, traceLines);
         }
 
         @Override

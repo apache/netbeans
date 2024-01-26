@@ -51,6 +51,63 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="ErrorProvider.Context.getHintsConfigFile">
+        <api name="LSP_API"/>
+        <summary>Adding ErrorProvider.Context.getHintsConfigFile() method</summary>
+        <version major="1" minor="25"/>
+        <date day="14" month="12" year="2023"/>
+        <author login="Achal1607"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no" />
+        <description>
+            An <code>ErrorProvider.Context.getHintsConfigFile()</code> method introduced that allows to
+            get hints preference file config.
+        </description>
+        <class package="org.netbeans.spi.lsp" name="ErrorProvider"/>
+    </change>
+    <change id="Completion_getLabelDetail">
+        <api name="LSP_API"/>
+        <summary>Added Completion.getLabelDetail() and Completion.getLabelDescription() methods.</summary>
+        <version major="1" minor="24"/>
+        <date day="2" month="1" year="2024"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getLabelDetail--">Completion.getLabelDetail()</a>
+            to get an optional string describing function signatures or type annotations.
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getLabelDescription--">Completion.getLabelDescription()</a>
+            to get an optional string describing fully qualified names or file path.
+        </description>
+        <class package="org.netbeans.api.lsp" name="Completion"/>
+        <class package="org.netbeans.spi.lsp" name="CompletionCollector"/>
+    </change>
+    <change id="CodeActionProvider">
+        <api name="LSP_API"/>
+        <summary>Added CodeActionProvider interface</summary>
+        <version major="1" minor="23"/>
+        <date day="1" month="12" year="2023"/>
+        <author login="dbalek"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/spi/lsp/CodeActionProvider.html">CodeActionProvider</a>
+            has been added to allow server provide arbitrary code actions for a given document and range.
+        </description>
+        <class package="org.netbeans.api.lsp" name="CodeAction"/>
+        <class package="org.netbeans.api.lsp" name="LazyCodeAction"/>
+        <class package="org.netbeans.spi.lsp" name="CodeActionProvider"/>
+    </change>
+    <change id="CommandProvider">
+        <api name="LSP_API"/>
+        <summary>Added CommandProvider interface</summary>
+        <version major="1" minor="22"/>
+        <date day="30" month="11" year="2023"/>
+        <author login="jlahoda"/>
+        <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
+        <description>
+            <a href="@TOP@/org/netbeans/spi/lsp/CommandProvider.html">CommandProvider</a>
+            has been added to allow server provide arbitrary commands runnable from a client.
+        </description>
+        <class package="org.netbeans.spi.lsp" name="CommandProvider"/>
+    </change>
     <change id="SignatureInformation">
         <api name="LSP_API"/>
         <summary>Added SignatureInformation and SignatureInformationCollector</summary>
@@ -80,13 +137,13 @@
     </change>
     <change id="Completion_getCommand">
         <api name="LSP_API"/>
-        <summary>Added URL to diagnostic code description</summary>
+        <summary>Added Completion.getCommand() to get an optional command</summary>
         <version major="1" minor="17"/>
         <date day="23" month="5" year="2023"/>
         <author login="dbalek"/>
         <compatibility binary="compatible" source="compatible" addition="yes" deletion="no"/>
         <description>
-            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getCommand--">Completion.getCommand</a> to get an optional command
+            <a href="@TOP@/org/netbeans/api/lsp/Completion.html#getCommand--">Completion.getCommand()</a> to get an optional command
             that is executed after inserting the completion.
         </description>
         <class package="org.netbeans.api.lsp" name="Completion"/>

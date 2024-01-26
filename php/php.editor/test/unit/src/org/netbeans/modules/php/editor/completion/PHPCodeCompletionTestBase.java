@@ -63,12 +63,20 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
     }
 
     protected @Override Map<String, ClassPath> createClassPathsForTest() {
+        FileObject[] sourceDirectories = createSourceClassPathsForTest();
+        if (sourceDirectories == null) {
+            sourceDirectories = new FileObject[] {
+                FileUtil.toFileObject(new File(getDataDir(), "testfiles/completion/lib"))
+            };
+        }
         return Collections.singletonMap(
             PhpSourcePath.SOURCE_CP,
-            ClassPathSupport.createClassPath(new FileObject[] {
-                FileUtil.toFileObject(new File(getDataDir(), "testfiles/completion/lib"))
-            })
+            ClassPathSupport.createClassPath(sourceDirectories)
         );
+    }
+
+    protected FileObject[] createSourceClassPathsForTest() {
+        return null;
     }
 
     protected void checkCompletionCustomTemplateResult(final String file, final String caretLine, CompletionProposalFilter filter, boolean checkAllItems) throws Exception {
@@ -213,6 +221,11 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
             this.prefix = prefix;
         }
 
+        public DefaultFilter(String prefix) {
+            this.phpVersion = PhpVersion.getDefault();
+            this.prefix = prefix;
+        }
+
         @Override
         public boolean accept(CompletionProposal proposal) {
             if (proposal instanceof PHPCompletionItem.MethodDeclarationItem) {
@@ -222,6 +235,14 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
                     item.setPhpVersion(phpVersion);
                     return true;
                 }
+            }
+            if (proposal instanceof PHPCompletionItem.KeywordItem) {
+                // ignore KeywordItem because it invokes EditorRegistry.lastFocusedComponent().getDocument() (NPE)
+                return false;
+            }
+            if (proposal != null) {
+                String name = proposal.getName();
+                return name.startsWith(prefix);
             }
             return false;
         }

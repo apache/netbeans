@@ -1,7 +1,7 @@
 Code completion result for source line:
 Union::|cases();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-CONSTANT   TEST1 1                         [PUBLIC]   Union
+CONSTANT   TEST1                           [PUBLIC]   Union
 CONSTANT   class \Union                    [PUBLIC]   Magic Constant
 ------------------------------------
 METHOD     cases()                         [STATIC,   UnitEnum

@@ -90,7 +90,7 @@ public final class JPDASupport implements DebuggerManagerListener {
     
     public static Test createTestSuite(Class<? extends TestCase> clazz) {
         Configuration suiteConfiguration = NbModuleSuite.createConfiguration(clazz);
-        suiteConfiguration = suiteConfiguration.clusters(".*").enableModules(".*java.source.*").gui(false);
+        suiteConfiguration = suiteConfiguration.clusters(".*").enableModules(".*java.source.*").enableModules(".*libs.nbjavacapi.*").gui(false);
         if (!(ClassLoader.getSystemClassLoader() instanceof URLClassLoader)) {
             //when running on JDK 9+, to make the com.sun.jdi package dependency work, we need to make getPackage("com.sun.jdi") work
             //for system CL's parent (which otherwise happily loads the VirtualMachineManager class,

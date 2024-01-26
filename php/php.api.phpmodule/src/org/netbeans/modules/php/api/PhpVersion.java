@@ -39,6 +39,7 @@ import org.openide.util.NbBundle;
     "PhpVersion.PHP_80=PHP 8.0",
     "PhpVersion.PHP_81=PHP 8.1",
     "PhpVersion.PHP_82=PHP 8.2",
+    "PhpVersion.PHP_83=PHP 8.3",
 })
 public enum PhpVersion {
 
@@ -103,6 +104,11 @@ public enum PhpVersion {
      * @since 2.87
      */
     PHP_82(Bundle.PhpVersion_PHP_82()),
+    /**
+     * PHP 8.3.
+     * @since 2.93
+     */
+    PHP_83(Bundle.PhpVersion_PHP_83()),
     ;
 
     private final String displayName;
@@ -195,6 +201,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports an object type.
+     *
+     * @return {@code true} if this version supports an object type,
+     * {@code false} otherwise
+     * @since 2.95
+     */
+    public boolean hasObjectType() {
+        return this.compareTo(PhpVersion.PHP_72) >= 0;
+    }
+
+    /**
      * Check whether this version supports typed properties.
      *
      * @return {@code true} if this version supports typed properties,
@@ -239,6 +256,28 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports constants in traits.
+     *
+     * @return {@code true} if this version supports constants in traits,
+     * {@code false} otherwise
+     * @since 2.92
+     */
+    public boolean hasConstantsInTraits() {
+        return this.compareTo(PhpVersion.PHP_82) >= 0;
+    }
+
+    /**
+     * Check whether this version supports [#\Override] attribute.
+     *
+     * @return {@code true} if this version supports [#\Override] attribute,
+     * {@code false} otherwise
+     * @since 2.94
+     */
+    public boolean hasOverrideAttribute() {
+        return this.compareTo(PhpVersion.PHP_83) >= 0;
+    }
+
+    /**
      * Check whether this is supported version yet by PHP official.
      *
      * @return {@code true} if this is supported version, {@code false}
@@ -273,6 +312,7 @@ public enum PhpVersion {
         PHP_80(LocalDate.of(2020, 11, 26), LocalDate.of(2022, 11, 26), LocalDate.of(2023, 11, 26)),
         PHP_81(LocalDate.of(2021, 11, 25), LocalDate.of(2023, 11, 25), LocalDate.of(2024, 11, 25)),
         PHP_82(LocalDate.of(2022, 12, 8), LocalDate.of(2024, 12, 8), LocalDate.of(2025, 12, 8)),
+        PHP_83(LocalDate.of(2023, 11, 23), LocalDate.of(2025, 11, 23), LocalDate.of(2026, 11, 23)),
         ;
 
         private final LocalDate initialRelease;

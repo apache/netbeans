@@ -1,0 +1,4 @@
+Code completion result for source line:
+Test::{Test::met|hod()}::{test($variable)};
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     method()                        [STATIC]   Test

@@ -135,6 +135,9 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
         this.root = root;
         bootPath = ClassPath.getClassPath(root, ClassPath.BOOT);
         compilePath = ClassPath.getClassPath(root, ClassPath.COMPILE);
+        if (compilePath != null) {
+            compilePath.addPropertyChangeListener(this);
+        }
         processorPath = new AtomicReference<>(ClassPath.getClassPath(root, JavaClassPathConstants.PROCESSOR_PATH));
         processorModulePath = new AtomicReference<>(ClassPath.getClassPath(root, JavaClassPathConstants.MODULE_PROCESSOR_PATH));
         aptOptions = AnnotationProcessingQuery.getAnnotationProcessingOptions(root);
@@ -309,12 +312,16 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (ClassPath.PROP_ROOTS.equals(evt.getPropertyName())) {
-            classLoaderCache = null;
-            ROOT_CHANGE_RP.execute(()-> {
-                if (verifyProcessorPath(root, usedRoots, PROCESSOR_MODULE_PATH) || verifyProcessorPath(root, usedRoots, PROCESSOR_PATH)) {
-                    slidingRefresh.schedule(SLIDING_WINDOW);
-                }
-            });
+            if (evt.getSource() == compilePath) {
+                stateChanged(null);
+            } else {
+                classLoaderCache = null;
+                ROOT_CHANGE_RP.execute(()-> {
+                    if (verifyProcessorPath(root, usedRoots, PROCESSOR_MODULE_PATH) || verifyProcessorPath(root, usedRoots, PROCESSOR_PATH)) {
+                        slidingRefresh.schedule(SLIDING_WINDOW);
+                    }
+                });
+            }
         }
     }
 
@@ -351,7 +358,13 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
             pp = ClassPath.getClassPath(root, JavaClassPathConstants.PROCESSOR_PATH);
             if (pp != null && processorPath.compareAndSet(null, pp)) {
                 bootPath = ClassPath.getClassPath(root, ClassPath.BOOT);
+                if (compilePath != null) {
+                    compilePath.removePropertyChangeListener(this);
+                }
                 compilePath = ClassPath.getClassPath(root, ClassPath.COMPILE);
+                if (compilePath != null) {
+                    compilePath.addPropertyChangeListener(this);
+                }
                 listenOnProcessorPath(pp, this);
                 classLoaderCache = null;
             }

@@ -37,4 +37,8 @@ public class ConstantRedeclarationHintTest extends PHPHintsTestBase {
         checkHints(new ConstantRedeclarationHintError(), "testEnumCases.php");
     }
 
+    public void testTraits() throws Exception {
+        checkHints(new ConstantRedeclarationHintError(), "testTraits.php");
+    }
+
 }

@@ -53,7 +53,6 @@ import org.openide.util.NbBundle;
 public class Imports {
   
     private static final String DEFAULT_PACKAGE = "java.lang"; // NOI18N
-    private String IMPORTS_ID = "Imports_"; // NOI18N
     
 
     @Hint(displayName = "#DN_Imports_STAR", description = "#DESC_Imports_STAR", category="imports", id="Imports_STAR", enabled=false, options=Options.QUERY, suppressWarnings={"", "OnDemandImport"})
@@ -114,11 +113,11 @@ public class Imports {
         if (violatingImports.size() > 1) {
             allFix = new ImportsFix(violatingImports, kind).toEditorFix();
         }
-        List<ErrorDescription> result = new ArrayList<ErrorDescription>(violatingImports.size());
+        List<ErrorDescription> result = new ArrayList<>(violatingImports.size());
         for (TreePathHandle it : violatingImports) {
             TreePath resolvedIt = it.resolve(ctx.getInfo());
             if (resolvedIt == null) continue; //#204580
-            List<Fix> fixes = new ArrayList<Fix>();
+            List<Fix> fixes = new ArrayList<>();
             fixes.add(new ImportsFix(Collections.singletonList(it), kind).toEditorFix());
             if (allFix != null) {
                 fixes.add(allFix);
@@ -155,19 +154,25 @@ public class Imports {
 
         CompilationUnitTree cut = ci.getCompilationUnit();
         TreePath topLevel = new TreePath(cut);
-        List<TreePathHandle> result = new ArrayList<TreePathHandle>(3);
+        List<TreePathHandle> result = new ArrayList<>(3);
 
         List<? extends ImportTree> imports = cut.getImports();
         for (ImportTree it : imports) {
-            if (it.isStatic()) {
-                continue; // XXX
-            }
             if (it.getQualifiedIdentifier() instanceof MemberSelectTree) {
                 MemberSelectTree ms = (MemberSelectTree) it.getQualifiedIdentifier();
                 if (kind == ImportHintKind.DEFAULT_PACKAGE) {
-                    if (ms.getExpression().toString().equals(DEFAULT_PACKAGE)) {
-                        result.add(TreePathHandle.create(new TreePath(topLevel, it), ci));
+                    if (it.isStatic()) {
+                        if (ms.getExpression().toString().equals("java.lang.StringTemplate") && ms.getIdentifier().toString().equals("STR")) {
+                            result.add(TreePathHandle.create(new TreePath(topLevel, it), ci));
+                        }
+                    } else {
+                        if ((ms.getExpression().toString().equals(DEFAULT_PACKAGE))) {
+                            result.add(TreePathHandle.create(new TreePath(topLevel, it), ci));
+                        }
                     }
+                }
+                if (it.isStatic()) {
+                    continue; // XXX
                 }
                 if (kind == ImportHintKind.SAME_PACKAGE) {
                     ExpressionTree packageName = cut.getPackageName();
@@ -219,6 +224,7 @@ public class Imports {
             this.ihk = ihk;
         }
         
+        @Override
         public String getText() {
             if ( tphList.size() == 1 ) {
                 return NbBundle.getMessage(Imports.class, "LBL_Imports_Fix_One_" + ihk.toString()); // NOI18N

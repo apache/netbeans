@@ -87,6 +87,26 @@ is the proper place.
         
         <change>
             <api name="gitlibrary_api"/>
+            <summary>Enable forced pushing for branches</summary>
+            <version major="1" minor="58"/>
+            <date day="11" month="11" year="2023"/>
+            <author login="matthiasblaesing"/>
+            <compatibility modification="yes"/>
+            <description>
+                <ul>
+                    <li>
+                        PushCommand prevented forced pushes by overriding the
+                        force flag in the specification. This overriding
+                        behavior is removed and clients are now responsible to
+                        not specify a forced push if they don't intent one.
+                    </li>
+                </ul>
+            </description>
+             <!-- PushCommand is not in apidoc -->
+            <class package="org.netbeans.libs.git.jgit.commands" name="PushCommand" link="no"/>
+        </change>
+        <change>
+            <api name="gitlibrary_api"/>
             <summary>API for git stash support.</summary>
             <version major="1" minor="31"/>
             <date day="19" month="12" year="2014"/>

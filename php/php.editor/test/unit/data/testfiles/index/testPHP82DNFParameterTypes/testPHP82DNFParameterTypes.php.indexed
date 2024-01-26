@@ -1,0 +1,281 @@
+
+
+Document 0
+Searchable Keys:
+  base : arrowfunctiondeclaration:1449;ArrowFunctionDeclaration:1449;1449;$test:X|Y|Y|Z|X|Z:1::1:0:0:1:0:0:(X&Y)|(Y&Z)|(X&Z):;(X&Y)|(Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(X&Y)|(Y&Z)|(X&Z);
+  base : lambdafunctiondeclaration:1390;LambdaFunctionDeclaration:1390;1390;$test:X|Y|Z|X|Z:1::1:0:0:1:0:0:(X&Y&Z)|(X&Z):;(X&Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(X&Y&Z)|(X&Z);
+  base : parametertype;parameterType;871;$param:X|Y|Test|X|Z:1::1:0:0:1:0:0:(X&Y&Test)|(X&Z):;void;;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;void;
+  top : $arrow
+  top : $closure
+  top : arrowfunctiondeclaration:1449
+  top : lambdafunctiondeclaration:1390
+  top : parametertype
+  var : $arrow;$arrow;;1441;0;<TESTURL>/testPHP82DNFParameterTypes.php;
+  var : $closure;$closure;;1380;0;<TESTURL>/testPHP82DNFParameterTypes.php;
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : magickmethods;MagickMethods;2411;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
+  method : dnftype1;dnfType1;1674;$param1::0::1:0:0:0:0:0::,$param2:X|Y|Y|Z|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|Z:(X&Y)\u007c(Y&Z)\u007cZ;(\X&\Y)|(\Y&\Z)|(\X&\Z);1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : dnftype2;dnfType2;1750;$param1::0::1:0:0:0:0:0::,$param2:X|Y|Z|Z:1::1:0:0:0:0:0:X|(Y&Z)|Z:X\u007c(Y&Z)\u007cZ;\Y|(\Y&\Z)|\X;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : getdefault;getDefault;2376;;?\Example;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : staticdnftype1;staticDnfType1;1994;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)\u007c(Y&Z)\u007c(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;(\X&\Y)|(\Y&\Z)|(\X&\Z);9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : staticdnftype2;staticDnfType2;2091;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)\u007c(Y&Z)\u007c(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;\X|(\Y&\Z)|\Z;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : staticdnftype3;staticDnfType3;2186;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)\u007c(Y&Z)\u007c(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;\X|(\Y&\Z);9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : statictestnullable;staticTestNullable;2278;$param:?string:1::1:0:0:0:0:0:?string:?string,$param2:X|Y|Y|X|Z:1::1:0:0:0:0:0:(X&Y)|Y|(X&Z):(X&Y)\u007cY\u007c(X&Z);?int;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : statictesttype;staticTestType;1889;$param1:X|Y|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y)|(Y&Z)|(X&Z):(X&Y)\u007c(Y&Z)\u007c(X&Z),$param2:int:1::1:0:0:0:0:0:int:int;int;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : statictestvoid;staticTestVoid;1819;$test:Test|Y|Z|X:1::1:0:0:0:0:0:(Test&Y)|Z|X:(Test&Y)\u007cZ\u007cX;void;9;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : testtype;testType;1603;$test:X|X|Y|Z|Z:1::1:0:0:0:0:0:X|(X&Y&Z)|Z:X\u007c(X&Y&Z)\u007cZ;int;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  method : testvoid;testVoid;1544;$test:X|Y|Z|X|Z:1::1:0:0:0:0:0:(X&Y&Z)|(X&Z):(X&Y&Z)\u007c(X&Z);void;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  top : magickmethods
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  clz : test;Test;853;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
+  top : test
+
+Not Searchable Keys:
+
+
+Document 3
+Searchable Keys:
+  clz : testclass;TestClass;927;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
+  method : parametertype;parameterType;959;$param1:Test|Y|Z|X:1::1:0:0:1:0:0:(Test&Y)|Z|X:,$param2:bool:1::1:0:0:0:0:0:bool:;(\Test&\Y)|\Z|\X;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(Test&Y)|Z|X;
+  top : testclass
+
+Not Searchable Keys:
+
+
+Document 4
+Searchable Keys:
+  clz : x;X;820;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
+  top : x
+
+Not Searchable Keys:
+
+
+Document 5
+Searchable Keys:
+  clz : y;Y;831;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
+  top : y
+
+Not Searchable Keys:
+
+
+Document 6
+Searchable Keys:
+  clz : z;Z;842;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;;0;
+  top : z
+
+Not Searchable Keys:
+
+
+Document 7
+Searchable Keys:
+  enum : testenum;TestEnum;1273;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;
+  enum.case : case1;Case1;1293;?;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;
+  method : parametertype;parameterType;1320;$param1:X&Y:1::1:0:0:0:0:1:X&Y:,$param2:X|Y|Z:1::1:0:0:1:0:0:(X&Y)|Z:;(\X&\Y)|\Z;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(X&Y)|Z;
+  top : testenum
+
+Not Searchable Keys:
+
+
+Document 8
+Searchable Keys:
+  identifier_used : ?example;
+  identifier_used : ?int;
+  identifier_used : ?string;
+  identifier_used : arrow;
+  identifier_used : bool;
+  identifier_used : case1;
+  identifier_used : closure;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : int;
+  identifier_used : magickmethods;
+  identifier_used : param1;
+  identifier_used : param1;
+  identifier_used : param2;
+  identifier_used : param2;
+  identifier_used : param;
+  identifier_used : param;
+  identifier_used : param;
+  identifier_used : parametertype;
+  identifier_used : parametertype;
+  identifier_used : parametertype;
+  identifier_used : parametertype;
+  identifier_used : parametertype;
+  identifier_used : self;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : testclass;
+  identifier_used : testenum;
+  identifier_used : testinterfase;
+  identifier_used : testtrait;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : void;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+
+Not Searchable Keys:
+
+
+Document 9
+Searchable Keys:
+  iface : testinterfase;TestInterfase;1194;;;0;<TESTURL>/testPHP82DNFParameterTypes.php;
+  method : parametertype;parameterType;1230;$param:X|X|Y|Z|Z:1::1:0:0:1:0:0:X|(X&Y&Z)|Z:;;1025;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;;
+  top : testinterfase
+
+Not Searchable Keys:
+
+
+Document 10
+Searchable Keys:
+  method : parametertype;parameterType;1100;$param:X|Y|Y|Z|Test:1::1:0:0:1:0:0:(X&Y)|(Y&Z&Test):;\self;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;0;0;self;
+  top : testtrait
+  trait : testtrait;TestTrait;1068;;;0;<TESTURL>/testPHP82DNFParameterTypes.php;
+
+Not Searchable Keys:

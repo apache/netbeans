@@ -356,6 +356,121 @@ public class TinyTest extends NbTestCase {
         }
     }
 
+    public void testVarUsageWithoutExplicitType() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test() {\n" +
+                       "        var v = new java.util.ArrayList<>();\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("11")
+                .run(Tiny.class)
+                .assertWarnings("3:8-3:44:verifier:ERR_varTypeDiamondOperator");
+    }
+    
+    public void testVarUsageWithoutExplicitType2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test() {\n" +
+                       "        var v = new java.util.HashSet<>();\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("11")
+                .run(Tiny.class)
+                .assertWarnings("3:8-3:42:verifier:ERR_varTypeDiamondOperator");
+    }
+    
+    public void testVarUsageWithoutExplicitType3() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test() {\n" +
+                       "        var v = new java.util.HashMap<>();\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("11")
+                .run(Tiny.class)
+                .assertWarnings("3:8-3:42:verifier:ERR_varTypeDiamondOperator");
+    }
+    
+    public void testVarUsageWithExplicitType() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test() {\n" +
+                       "        var v = new java.util.ArrayList<Integer>();\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("11")
+                .run(Tiny.class)
+                .assertWarnings();
+    }
+
+    public void testVarUsageWithExplicitType2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test() {\n" +
+                       "        var v = new String[2];\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("11")
+                .run(Tiny.class)
+                .assertWarnings();
+    }
+    
+    public void testWithoutVarUsageWithExplicitType() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test() {\n" +
+                       "        java.util.List<Integer> v = new java.util.ArrayList<Integer>();\n" +
+                       "    }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .assertWarnings();
+    }
+    
+    public void testWithoutVarUsageWithExplicitType2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test() {\n" +
+                       "        java.util.List<Integer> v = new java.util.ArrayList<>();\n" +
+                       "    }\n" +
+                       "}\n")
+                .run(Tiny.class)
+                .assertWarnings();
+    }
+    
+    public void testVarUsageSensibleTypeInferred1() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test(java.util.Set<String> input) {\n" +
+                       "        var v = new java.util.HashSet<>(input);\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("11")
+                .run(Tiny.class)
+                .assertWarnings();
+    }
+
+    public void testVarUsageSensibleTypeInferred2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    public void test(java.util.Map<String, String> input) {\n" +
+                       "        var v = new java.util.HashMap<>(input);\n" +
+                       "    }\n" +
+                       "}\n")
+                .sourceLevel("11")
+                .run(Tiny.class)
+                .assertWarnings();
+    }
+
     private static Map<String, String> alterSettings(String... settings) throws Exception {
         //XXX: hack, need to initialize the HintTest's lookup before setting the
         //formatting preferences

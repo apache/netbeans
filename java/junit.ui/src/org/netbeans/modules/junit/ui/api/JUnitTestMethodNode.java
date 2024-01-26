@@ -52,6 +52,7 @@ public class JUnitTestMethodNode extends TestMethodNode {
         return new JumpAction(this, null, projectType, testingFramework);
     }
 
+    @Override
     public JUnitTestcase getTestcase() {
         return (JUnitTestcase) testcase;
     }

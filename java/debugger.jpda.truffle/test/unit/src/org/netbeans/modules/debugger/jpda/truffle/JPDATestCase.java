@@ -47,6 +47,7 @@ public abstract class JPDATestCase extends NbTestCase {
                 failOnException(Level.INFO).
                 enableClasspathModules(false). 
                 clusters(".*").
+                enableModules("org.netbeans.libs.nbjavacapi").
                 suite();
     }
 

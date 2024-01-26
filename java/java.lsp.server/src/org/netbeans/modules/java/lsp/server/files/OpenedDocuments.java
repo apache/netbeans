@@ -70,8 +70,8 @@ public final class OpenedDocuments {
     /**
      * Notify that a document was closed.
      */
-    public void notifyClosed(String uri) {
-        openedDocuments.remove(uri);
+    public Document notifyClosed(String uri) {
+        return openedDocuments.remove(uri);
     }
 
     /**

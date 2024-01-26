@@ -24,7 +24,6 @@ package org.netbeans.modules.maven.api;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -121,7 +120,7 @@ public final class ModelUtils {
                 }
             }
         };
-        Utilities.performPOMModelOperations(pom, Collections.singletonList(operation));
+        Utilities.performPOMModelOperations(pom, List.of(operation));
     }
 
     public static Dependency checkModelDependency(POMModel pom, String groupId, String artifactId, boolean add) {
@@ -331,7 +330,7 @@ public final class ModelUtils {
             plugin = mdl.getFactory().createPlugin();
             plugin.setGroupId(Constants.GROUP_APACHE_PLUGINS);
             plugin.setArtifactId(Constants.PLUGIN_COMPILER);
-            plugin.setVersion(MavenVersionSettings.getDefault().getVersion(MavenVersionSettings.VERSION_COMPILER));
+            plugin.setVersion(MavenVersionSettings.getDefault().getVersion(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER));
             mdl.getProject().getBuild().addPlugin(plugin);
         }
         Configuration conf = plugin.getConfiguration();
@@ -435,8 +434,8 @@ public final class ModelUtils {
     }
     //for tests
     static Descriptor checkLibraries(Map<String, String> properties) {
-        List<LibraryDescriptor> libs = new ArrayList<LibraryDescriptor>();
-        List<RepositoryDescriptor> reps = new ArrayList<RepositoryDescriptor>();
+        List<LibraryDescriptor> libs = new ArrayList<>();
+        List<RepositoryDescriptor> reps = new ArrayList<>();
                 
         String dependencies = properties.get(LIBRARY_PROP_DEPENDENCIES);
         if (dependencies != null) {

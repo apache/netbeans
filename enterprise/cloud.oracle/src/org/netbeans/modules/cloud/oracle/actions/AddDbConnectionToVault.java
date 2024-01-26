@@ -18,6 +18,19 @@
  */
 package org.netbeans.modules.cloud.oracle.actions;
 
+import com.oracle.bmc.devops.DevopsClient;
+import com.oracle.bmc.devops.model.DeployArtifactSource;
+import com.oracle.bmc.devops.model.DeployArtifactSummary;
+import com.oracle.bmc.devops.model.InlineDeployArtifactSource;
+import com.oracle.bmc.devops.model.ProjectSummary;
+import com.oracle.bmc.devops.model.UpdateDeployArtifactDetails;
+import com.oracle.bmc.devops.requests.GetDeployArtifactRequest;
+import com.oracle.bmc.devops.requests.ListDeployArtifactsRequest;
+import com.oracle.bmc.devops.requests.ListProjectsRequest;
+import com.oracle.bmc.devops.requests.UpdateDeployArtifactRequest;
+import com.oracle.bmc.devops.responses.GetDeployArtifactResponse;
+import com.oracle.bmc.devops.responses.ListDeployArtifactsResponse;
+import com.oracle.bmc.devops.responses.ListProjectsResponse;
 import com.oracle.bmc.identity.Identity;
 import com.oracle.bmc.identity.IdentityClient;
 import com.oracle.bmc.identity.model.Compartment;
@@ -35,17 +48,18 @@ import com.oracle.bmc.vault.model.UpdateSecretDetails;
 import com.oracle.bmc.vault.requests.CreateSecretRequest;
 import com.oracle.bmc.vault.requests.ListSecretsRequest;
 import com.oracle.bmc.vault.requests.UpdateSecretRequest;
-import com.oracle.bmc.vault.responses.CreateSecretResponse;
 import com.oracle.bmc.vault.responses.ListSecretsResponse;
 import com.oracle.bmc.vault.responses.UpdateSecretResponse;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +70,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -67,6 +82,8 @@ import static org.netbeans.modules.cloud.oracle.OCIManager.getDefault;
 import org.netbeans.modules.cloud.oracle.OCIProfile;
 import org.netbeans.modules.cloud.oracle.OCISessionInitiator;
 import org.netbeans.modules.cloud.oracle.compartment.CompartmentItem;
+import org.netbeans.modules.cloud.oracle.devops.DevopsProjectItem;
+import org.netbeans.modules.cloud.oracle.devops.DevopsProjectService;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.netbeans.modules.cloud.oracle.items.TenancyItem;
@@ -114,7 +131,16 @@ import org.openide.util.Pair;
     "SecretExists=Secrets with name {0} already exists",
     "NoProfile=There is not any OCI profile in the config",
     "NoCompartment=There are no compartments in the Tenancy",
-    "Password=Enter password for Database user {0}"
+    "Password=Enter password for Database user {0}",
+    "NoConfigMap=No ConfigMap found in the Devops project {0}",
+    "SelectDevopsProject=Select Devops Project",
+    "NoDevopsProjects=There are no Devops Projects in selected Compartment",
+    "ConfigmapUpdateFailed=Failed to update ConfigMap",
+    "CreatingSecret=Creating secret {0}",
+    "UpdatingSecret=Updating secret {0}",
+    "UpdatingVault=Updating {0} Vault",
+    "ReadingSecrets=Reading existing Secrets",
+    "DatasourceEmpty=Datasource name cannot be empty"
 })
 public class AddDbConnectionToVault implements ActionListener {
 
@@ -182,10 +208,11 @@ public class AddDbConnectionToVault implements ActionListener {
             return this;
         }
 
-        public void setValue(String selected) {
+        public void setValue(String value) {
             for (OCIProfile profile : profiles) {
-                if (profile.getId().equals(selected)) {
+                if (profile.getId().equals(value)) {
                     profile.getTenancy().ifPresent(t -> this.selected.set(t));
+                    OCIManager.getDefault().setActiveProfile(profile);
                     break;
                 }
             }
@@ -286,7 +313,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public Step getNext() {
-            return new KeyStep().prepare(selected);
+            return new KeyStep().prepare(getValue());
         }
 
         @Override
@@ -297,7 +324,7 @@ public class AddDbConnectionToVault implements ActionListener {
         @Override
         public VaultItem getValue() {
             if (onlyOneChoice()) {
-                vaults.values().iterator().next();
+                selected = vaults.values().iterator().next();
             }
             return selected;
         }
@@ -411,6 +438,9 @@ public class AddDbConnectionToVault implements ActionListener {
         @Override
         public Step<Result, Result> prepare(Result result) {
             this.result = result;
+            if (result.datasourceName == null || result.datasourceName.isEmpty()) {
+                return this;
+            }
             List<SecretItem> secrets = SecretNode.getSecrets().apply(result.vault);
             this.dsNames = secrets.stream()
                     .map(s -> extractDatasourceName(s.getName()))
@@ -421,6 +451,9 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public NotifyDescriptor createInput() {
+            if (result.datasourceName == null || result.datasourceName.isEmpty()) {
+                return new NotifyDescriptor.QuickPick("", Bundle.DatasourceEmpty(), Collections.emptyList(), false);
+            }
             List<Item> yesNo = new ArrayList();
             yesNo.add(new Item(Bundle.AddVersion(), ""));
             yesNo.add(new Item(Bundle.Cancel(), ""));
@@ -448,11 +481,11 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public boolean onlyOneChoice() {
-            return !dsNames.contains(result.datasourceName);
+            return dsNames != null && !dsNames.contains(result.datasourceName);
         }
 
     }
-    
+
     class PasswordStep implements Step<Result, Result> {
 
         private Result item;
@@ -468,7 +501,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public NotifyDescriptor createInput() {
-            return new NotifyDescriptor.InputLine("DEFAULT", Bundle.Password(context.getUser())); //NOI18N
+            return new NotifyDescriptor.PasswordLine("DEFAULT", Bundle.Password(context.getUser())); //NOI18N
         }
 
         @Override
@@ -478,7 +511,7 @@ public class AddDbConnectionToVault implements ActionListener {
 
         @Override
         public Step getNext() {
-            return null;
+            return new DevopsStep().prepare(item);
         }
 
         @Override
@@ -491,12 +524,80 @@ public class AddDbConnectionToVault implements ActionListener {
             return item;
         }
     }
-    
+
+    class DevopsStep implements Step<Result, Result> {
+
+        private Result item;
+        private Map<String, DevopsProjectItem> devopsProjects;
+
+        @Override
+        public Step<Result, Result> prepare(Result item) {
+            this.item = item;
+            ProgressHandle h = ProgressHandle.createHandle(Bundle.MSG_CollectingItems());
+            h.start();
+            h.progress(Bundle.MSG_CollectingItems_Text());
+            try {
+                List<String> devops = DevopsProjectService.getDevopsProjectOcid();
+                
+                Map<String, DevopsProjectItem> allProjectsInCompartment = getDevopsProjects(item.vault.getCompartmentId());
+                Map<String, DevopsProjectItem> filtered = allProjectsInCompartment.entrySet()
+                        .stream()
+                        .filter(e -> devops.contains(e.getValue().getKey().getValue()))
+                        .collect(Collectors
+                                .toMap(Entry::getKey, Entry::getValue));
+                if (filtered.size() > 0) {
+                    devopsProjects = filtered;
+                } else {
+                    devopsProjects = allProjectsInCompartment;
+                }
+                if (devopsProjects.size() == 1) {
+                    item.project = devopsProjects.values().iterator().next();
+                }
+                
+            } finally {
+                h.finish();
+            }
+            return this;
+        }
+
+        @Override
+        public NotifyDescriptor createInput() {
+            if (devopsProjects.size() > 1) {
+                return createQuickPick(devopsProjects, Bundle.SelectDevopsProject());
+            }
+            if (devopsProjects.isEmpty()) {
+                return new NotifyDescriptor.QuickPick("", Bundle.NoDevopsProjects(), Collections.emptyList(), false);
+            }
+            throw new IllegalStateException("No data to create input"); // NOI18N
+        }
+
+        @Override
+        public boolean onlyOneChoice() {
+            return devopsProjects.size() == 1;
+        }
+
+        @Override
+        public Step getNext() {
+            return null;
+        }
+
+        @Override
+        public void setValue(String projectName) {
+            item.project = devopsProjects.get(projectName);
+        }
+
+        @Override
+        public Result getValue() {
+            return item;
+        }
+    }
+
     static class Result {
         VaultItem vault;
         KeyItem key;
         String datasourceName;
         String password;
+        DevopsProjectItem project;
         private boolean update;
     }
 
@@ -510,8 +611,9 @@ public class AddDbConnectionToVault implements ActionListener {
 
         NotifyDescriptor.ComposedInput.Callback createInput() {
             return new NotifyDescriptor.ComposedInput.Callback() {
+                private int lastNumber = 0;
 
-                private void showInput(Step step, NotifyDescriptor desc) {
+                private void readValue(Step step, NotifyDescriptor desc) {
                     String selected = null;
                     if (!step.onlyOneChoice()) {
                         if (desc instanceof NotifyDescriptor.QuickPick) {
@@ -528,31 +630,34 @@ public class AddDbConnectionToVault implements ActionListener {
                     }
                 }
 
-                NotifyDescriptor prepareInput(NotifyDescriptor.ComposedInput input, int number) {
-                    if (number == 1) {
-                        steps.get(0).prepare(null);
-                        return steps.get(0).createInput();
-                    }
-                    if (steps.size() > number) {
-                        steps.removeLast();
-                        return steps.getLast().createInput();
-                    }
-                    showInput(steps.getLast(), input.getInputs()[number - 2]);
-                    Step currentStep = steps.getLast().getNext();
-                    if (currentStep == null) {
-                        return null;
-                    }
-
-                    steps.add(currentStep);
-                    if (currentStep.onlyOneChoice()) {
-                        return prepareInput(input, number);
-                    }
-                    return currentStep.createInput();
-                }
-
                 @Override
                 public NotifyDescriptor createInput(NotifyDescriptor.ComposedInput input, int number) {
-                    return prepareInput(input, number);
+                    if (number == 1) {
+                        while (steps.size() > 1) {
+                            steps.removeLast();
+                        }
+                        steps.getLast().prepare(null);
+                    } else if (lastNumber > number) {
+                        steps.removeLast();
+                        while(steps.getLast().onlyOneChoice() && steps.size() > 1) {
+                            steps.removeLast();
+                        }
+                        lastNumber = number;
+                        return steps.getLast().createInput();
+                    } else {
+                        readValue(steps.getLast(), input.getInputs()[number - 2]);
+                        steps.add(steps.getLast().getNext());
+                    }
+                    lastNumber = number;
+                    
+                    while(steps.getLast() != null && steps.getLast().onlyOneChoice()) {
+                        steps.add(steps.getLast().getNext());
+                    }
+                    if (steps.getLast() == null) {
+                        steps.removeLast();
+                        return null;
+                    }
+                    return steps.getLast().createInput();
                 }
             };
         }
@@ -566,39 +671,49 @@ public class AddDbConnectionToVault implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Multistep multistep = new Multistep(new TenancyStep());
 
-        NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADB(), 3, multistep.createInput());
+        NotifyDescriptor.ComposedInput ci = new NotifyDescriptor.ComposedInput(Bundle.AddADBToVault(), 3, multistep.createInput());
         if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(ci)) {
             if (multistep.getResult() != null) {
-                addDbConnectionToVault((Result) multistep.getResult());
+                Result result = (Result) multistep.getResult();
+                if (result.datasourceName == null || result.datasourceName.isEmpty()) {
+                    NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.DatasourceEmpty());
+                    DialogDisplayer.getDefault().notify(msg);
+                    return;
+                }
+                addDbConnectionToVault(result);
             }
         }
 
     }
 
     private void addDbConnectionToVault(Result item) {
-        VaultsClient client = VaultsClient.builder().build(getDefault().getActiveProfile().getConfigProvider());
+        ProgressHandle h = ProgressHandle.createHandle(Bundle.UpdatingVault(item.vault.getName()));
+        h.start();
+        h.progress(Bundle.ReadingSecrets());
+           
+        try {
+            VaultsClient client = VaultsClient.builder().build(getDefault().getActiveProfile().getConfigProvider());
 
-        ListSecretsRequest listSecretsRequest = ListSecretsRequest.builder()
-                .compartmentId(item.vault.getCompartmentId())
-                .vaultId(item.vault.getKey().getValue())
-                .limit(88)
-                .build();
+            ListSecretsRequest listSecretsRequest = ListSecretsRequest.builder()
+                    .compartmentId(item.vault.getCompartmentId())
+                    .vaultId(item.vault.getKey().getValue())
+                    .limit(88)
+                    .build();
 
-        ListSecretsResponse secrets = client.listSecrets(listSecretsRequest);
+            ListSecretsResponse secrets = client.listSecrets(listSecretsRequest);
 
         Map<String, String> existingSecrets = secrets.getItems().stream()
                 .collect(Collectors.toMap(s -> s.getSecretName(), s -> s.getId()));
 
-        Map<String, String> values = new HashMap<String, String>() {
-            {
-                put("Username", context.getUser()); //NOI18N
-                put("Password", item.password); //NOI18N
-                put("OCID", (String) context.getConnectionProperties().get("OCID")); //NOI18N
-                put("wallet_Password", UUID.randomUUID().toString()); //NOI18N
-            }
-        };
+            Map<String, String> values = new HashMap<String, String>() {
+                {
+                    put("Username", context.getUser()); //NOI18N
+                    put("Password", item.password); //NOI18N
+                    put("OCID", (String) context.getConnectionProperties().get("OCID")); //NOI18N
+                    put("wallet_Password", UUID.randomUUID().toString()); //NOI18N
+                }
+            };
 
-        try {
             for (Entry<String, String> entry : values.entrySet()) {
                 String secretName = "DATASOURCES_" + item.datasourceName + "_" + entry.getKey().toUpperCase(); //NOI18N
                 String base64Content = Base64.getEncoder().encodeToString(entry.getValue().getBytes(StandardCharsets.UTF_8));
@@ -607,6 +722,7 @@ public class AddDbConnectionToVault implements ActionListener {
                         .content(base64Content)
                         .stage(SecretContentDetails.Stage.Current).build();
                 if (existingSecrets.containsKey(secretName)) {
+                    h.progress(Bundle.UpdatingSecret(secretName));
                     UpdateSecretDetails updateSecretDetails = UpdateSecretDetails.builder()
                             .secretContent(contentDetails)
                             .build();
@@ -614,8 +730,14 @@ public class AddDbConnectionToVault implements ActionListener {
                             .secretId(existingSecrets.get(secretName))
                             .updateSecretDetails(updateSecretDetails)
                             .build();
-                    UpdateSecretResponse response = client.updateSecret(request);
+                    try { 
+                        UpdateSecretResponse response = client.updateSecret(request);
+                    } catch (BmcException ex) {
+                        // Update fails if the new value is same as the current one. It is safe to ignore
+                        LOG.log(Level.WARNING, "Update of secret failed", ex);
+                    }
                 } else {
+                    h.progress(Bundle.CreatingSecret(secretName));
                     CreateSecretDetails createDetails = CreateSecretDetails.builder()
                             .secretName(secretName)
                             .secretContent(contentDetails)
@@ -629,17 +751,152 @@ public class AddDbConnectionToVault implements ActionListener {
                             .builder()
                             .createSecretDetails(createDetails)
                             .build();
-                    CreateSecretResponse response = client.createSecret(request);
+                    client.createSecret(request);
                 }
             }
 
-        } catch (BmcException e) {
-            NotifyDescriptor.Message msg = new NotifyDescriptor.Message(e.getMessage());
+            // Add Vault to the ConfigMap artifact
+            DevopsClient devopsClient = DevopsClient.builder().build(OCIManager.getDefault().getActiveProfile().getConfigProvider());
+            ListDeployArtifactsRequest request = ListDeployArtifactsRequest.builder()
+                    .projectId(item.project.getKey().getValue()).build();
+            ListDeployArtifactsResponse response = devopsClient.listDeployArtifacts(request);
+            List<DeployArtifactSummary> artifacts = response.getDeployArtifactCollection().getItems();
+            boolean found = false;
+            for (DeployArtifactSummary artifact : artifacts) {
+                if ((item.project.getName() + "_oke_configmap").equals(artifact.getDisplayName())) { //NOI18N
+                    h.progress("updating  " + item.project.getName() + "_oke_configmap"); //NOI18N
+                    found = true;
+                    GetDeployArtifactRequest artRequest = GetDeployArtifactRequest.builder().deployArtifactId(artifact.getId()).build();
+                    GetDeployArtifactResponse artResponse = devopsClient.getDeployArtifact(artRequest);
+                    DeployArtifactSource source = artResponse.getDeployArtifact().getDeployArtifactSource();
+                    if (source instanceof InlineDeployArtifactSource) {
+                        byte[] content = ((InlineDeployArtifactSource) source).getBase64EncodedContent();
+                        String srcString = updateProperties(new String(content, StandardCharsets.UTF_8),
+                                item.vault.getCompartmentId(), item.vault.getKey().getValue(), item.datasourceName);
+                        byte[] base64Content = Base64.getEncoder().encode(srcString.getBytes(StandardCharsets.UTF_8));
+                        DeployArtifactSource updatedSource = InlineDeployArtifactSource.builder()
+                                .base64EncodedContent(base64Content).build();
+                        UpdateDeployArtifactDetails updateArtifactDetails = UpdateDeployArtifactDetails.builder()
+                                .deployArtifactSource(updatedSource)
+                                .build();
+                        UpdateDeployArtifactRequest updateArtifactRequest = UpdateDeployArtifactRequest.builder()
+                                .updateDeployArtifactDetails(updateArtifactDetails)
+                                .deployArtifactId(artifact.getId())
+                                .build();
+                        devopsClient.updateDeployArtifact(updateArtifactRequest);
+                    }
+                }
+            }
+            if (!found) {
+                NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.NoConfigMap(item.project.getName()), NotifyDescriptor.WARNING_MESSAGE);
+                DialogDisplayer.getDefault().notify(msg);
+            }
+            NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.SecretsCreated());
             DialogDisplayer.getDefault().notify(msg);
-            throw new RuntimeException(e);
+        } catch(ThreadDeath e) {
+            throw e;
+        } catch (Throwable e) {
+            h.finish();
+            NotifyDescriptor.Message msg = new NotifyDescriptor.Message(e.getMessage(), NotifyDescriptor.WARNING_MESSAGE);
+            DialogDisplayer.getDefault().notify(msg);
+        } finally {
+            h.finish();
         }
-        NotifyDescriptor.Message msg = new NotifyDescriptor.Message(Bundle.SecretsCreated());
-        DialogDisplayer.getDefault().notify(msg);
+    }
+
+    protected static String updateProperties(String configmap, String compartmentOcid, String vaultOcid, String datasourceName) {
+        StringWriter output = new StringWriter();
+        String[] lines = configmap.split("\n");
+        int previousIndent = 0;
+        Map<Integer, String> path = new LinkedHashMap<>();
+        String propertiesName = null;
+        Map<String, String> properties = new LinkedHashMap<>();
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            if (line.trim().startsWith("#") || line.isEmpty()) {
+                output.append(line);
+                output.append("\n");
+                continue;
+            }
+            int indent = 0;
+            while (line.charAt(indent) == ' ') {
+                indent++;
+            }
+            if (previousIndent > indent || (propertiesName != null && !line.contains("="))) {
+                final int f = indent;
+                path.entrySet().removeIf(entry -> entry.getKey() >= f);
+                if (propertiesName != null) {
+                    int propIndent = previousIndent;
+                    if (properties.size() == 0) {
+                        propIndent = indent + 2;
+                    }
+                    output.append(
+                            formatProperties(propertiesName, properties, propIndent, compartmentOcid, vaultOcid, datasourceName));
+
+                    properties.clear();
+                }
+                propertiesName = null;
+                if (line.trim().equals("---")) { //NOI18N
+                    output.append(line);
+                    output.append("\n");
+                    continue;
+                }
+            }
+            if (propertiesName == null) {
+                if (line.indexOf(':') < 0) {
+                    throw new IllegalStateException("Invalid ConfigMap format"); //NOI18N
+                }
+                String k = line.substring(0, line.indexOf(':')).trim();
+                String v = line.substring(line.indexOf(':') + 1).trim();
+                if (k == null) {
+                    throw new IllegalStateException();
+                }
+
+                path.put(indent, k);
+                output.append(line);
+                output.append("\n");
+                if (v.trim().equals("|")) {
+                    propertiesName = k;
+                    continue;
+                }
+            }
+            if (propertiesName != null && line.contains("=")) {
+                properties.put(line.substring(0, line.indexOf('=')).trim(),
+                        line.substring(line.indexOf('=') + 1).trim());
+            }
+
+            previousIndent = indent;
+        }
+        output.append(
+                formatProperties(propertiesName, properties, previousIndent, compartmentOcid, vaultOcid, datasourceName));
+
+        return output.toString();
+    }
+
+    private static String formatProperties(String proprtiesName, Map<String, String> prop, int indent, String compartmentId, String vaultId, String datasourceName) {
+        StringBuilder output = new StringBuilder();
+        if (proprtiesName.startsWith("bootstrap")) { // NOI18N
+            prop.entrySet().removeIf(entry -> ((String) entry.getKey()).startsWith("oci.vault.vaults")); // NOI18N
+            prop.put("oci.config.instance-principal.enabled", "true"); // NOI18N
+            prop.put("micronaut.config-client.enabled", "true"); // NOI18N
+            prop.put("oci.vault.config.enabled", "true"); // NOI18N
+            prop.put("oci.vault.vaults[0].ocid", vaultId); // NOI18N
+            prop.put("oci.vault.vaults[0].compartment-ocid", compartmentId); // NOI18N
+        } else if (proprtiesName.startsWith("application")) { // NOI18N
+            prop.put("datasources.default.dialect", "ORACLE"); // NOI18N
+            prop.put("datasources.default.ocid", "${DATASOURCES_" + datasourceName + "_OCID}"); // NOI18N
+            prop.put("datasources.default.walletPassword", "${DATASOURCES_" + datasourceName + "_WALLET_PASSWORD}"); // NOI18N
+            prop.put("datasources.default.username", "${DATASOURCES_" + datasourceName + "_USERNAME}"); // NOI18N
+            prop.put("datasources.default.password", "${DATASOURCES_" + datasourceName + "_PASSWORD}"); // NOI18N
+        }
+        for (Entry<String, String> entry : prop.entrySet()) {
+            output.append(new String(new char[indent]).replace('\0', ' '));
+            output.append(entry.getKey());
+            output.append("=");
+            output.append(entry.getValue());
+            output.append("\n");
+        }
+        return output.toString();
     }
 
     private static <T extends OCIItem> NotifyDescriptor.QuickPick createQuickPick(Map<String, T> ociItems, String title) {
@@ -722,6 +979,23 @@ public class AddDbConnectionToVault implements ActionListener {
         abstract FlatCompartmentItem getItem(OCID compId);
     }
 
+    protected static Map<String, DevopsProjectItem> getDevopsProjects(String compartmentId) {
+        try (DevopsClient client = new DevopsClient(OCIManager.getDefault().getConfigProvider());) {
+            ListProjectsRequest request = ListProjectsRequest.builder().compartmentId(compartmentId).build();
+            ListProjectsResponse response = client.listProjects(request);
+
+            List<ProjectSummary> projects = response.getProjectCollection().getItems();
+            for (ProjectSummary project : projects) {
+                project.getNotificationConfig().getTopicId();
+
+            }
+            return projects.stream()
+                    .map(p -> new DevopsProjectItem(OCID.of(p.getId(), "DevopsProject"), // NOI18N
+                    p.getName()))
+                    .collect(Collectors.toMap(DevopsProjectItem::getName, Function.identity()));
+        }
+    }
+
     protected static Map<String, VaultItem> getVaults(OCIItem parent) {
         Map<String, VaultItem> items = new HashMap<>();
         try {
@@ -738,15 +1012,15 @@ public class AddDbConnectionToVault implements ActionListener {
         Map<String, KeyItem> items = new HashMap<>();
         try {
             if (parent instanceof VaultItem) {
-                KeyNode.getKeys().apply((VaultItem) parent).forEach((db) -> items.put(db.getName(), db));
+                KeyNode.getKeys().apply((VaultItem) parent).forEach(key -> items.put(key.getName(), key));
             }
         } catch (BmcException e) {
-            LOG.log(Level.SEVERE, "Unable to load vault list", e); //NOI18N
+            LOG.log(Level.SEVERE, "Unable to load key list", e); //NOI18N
         }
         return items;
     }
 
-    static Pattern p = Pattern.compile("[A-Z]*_([A-Z]*)_[A-Z]*"); //NOI18N
+    static Pattern p = Pattern.compile("[A-Z]*_([a-zA-Z0-9]*)_[A-Z]*"); //NOI18N
 
     protected static String extractDatasourceName(String value) {
         Matcher m = p.matcher(value);

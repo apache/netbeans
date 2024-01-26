@@ -44,7 +44,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.micronaut.MicronautConfigProperties;
-import static org.netbeans.modules.micronaut.completion.MicronautDataCompletionTask.startsWith;
+import org.netbeans.modules.micronaut.db.Utils;
 import org.netbeans.modules.micronaut.expression.EvaluationContext;
 import org.netbeans.modules.micronaut.expression.ExpressionTree;
 import org.netbeans.modules.micronaut.expression.MicronautExpressionLanguageParser;
@@ -114,11 +114,11 @@ public class MicronautExpressionLanguageCompletion {
                                 }
                             }
                         }
-                        TypeMirror treeType = lastTree.getType(ctx);
+                        TypeMirror treeType = lastTree.getTypeMirror(ctx);
                         switch (treeType.getKind()) {
                             case BOOLEAN:
                                 TypeMirror rtm = lastTree instanceof ExpressionTree.BinaryExpression
-                                        ? ((ExpressionTree.BinaryExpression) lastTree).getRightOperand().getType(ctx)
+                                        ? ((ExpressionTree.BinaryExpression) lastTree).getRightOperand().getTypeMirror(ctx)
                                         : info.getTypes().getNoType(TypeKind.NONE);
                                 switch (rtm.getKind()) {
                                     case INT:
@@ -207,7 +207,7 @@ public class MicronautExpressionLanguageCompletion {
                         case MATCHES:
                             ExpressionTree.BinaryExpression binary = (ExpressionTree.BinaryExpression) path.getLeaf();
                             if (nextNonWSTokenCategory(prefix, binary.getRightOperand().getStartPosition()).startsWith("keyword.operator")) {
-                                lastTreeType = binary.getLeftOperand().getType(ctx);
+                                lastTreeType = binary.getLeftOperand().getTypeMirror(ctx);
                             } else {
                                 if (ctx.getScope().getEnclosingMethod() != null) {
                                     kws = Arrays.asList("this");
@@ -220,7 +220,7 @@ public class MicronautExpressionLanguageCompletion {
                         case NOT_EQUAL_TO:
                             binary = (ExpressionTree.BinaryExpression) path.getLeaf();
                             if (nextNonWSTokenCategory(prefix, binary.getRightOperand().getStartPosition()).startsWith("keyword.operator")) {
-                                lastTreeType = binary.getLeftOperand().getType(ctx);
+                                lastTreeType = binary.getLeftOperand().getTypeMirror(ctx);
                             } else {
                                 kws = ctx.getScope().getEnclosingMethod() != null ? Arrays.asList("null", "this"): Arrays.asList("null");
                                 builtins = Arrays.asList("T", "()", "ctx", "[]", "env", "[]");
@@ -231,7 +231,7 @@ public class MicronautExpressionLanguageCompletion {
                         case OR:
                             binary = (ExpressionTree.BinaryExpression) path.getLeaf();
                             if (nextNonWSTokenCategory(prefix, binary.getRightOperand().getStartPosition()).startsWith("keyword.operator")) {
-                                lastTreeType = binary.getLeftOperand().getType(ctx);
+                                lastTreeType = binary.getLeftOperand().getTypeMirror(ctx);
                                 break;
                             }
                         case NOT:
@@ -246,7 +246,7 @@ public class MicronautExpressionLanguageCompletion {
                         case INSTANCE_OF:
                             ExpressionTree.InstanceOf instanceOf = (ExpressionTree.InstanceOf) path.getLeaf();
                             if (nextNonWSTokenCategory(prefix, instanceOf.getType().getStartPosition()).startsWith("keyword.operator")) {
-                                lastTreeType = instanceOf.getExpression().getType(ctx);
+                                lastTreeType = instanceOf.getExpression().getTypeMirror(ctx);
                             } else {
                                 builtins = Arrays.asList("T", "()");
                             }
@@ -255,7 +255,7 @@ public class MicronautExpressionLanguageCompletion {
                             ExpressionTree.TernaryExpression ternary = (ExpressionTree.TernaryExpression) path.getLeaf();
                             String next = nextNonWSTokenCategory(prefix, ternary.getTrueExpression().getStartPosition());
                             if ("keyword.control.ternary.qmark.mexp".equals(next)) {
-                                lastTreeType = ternary.getCondition().getType(ctx);
+                                lastTreeType = ternary.getCondition().getTypeMirror(ctx);
                             } else {
                                 String prev = prevNonWSTokenText(prefix);
                                 if ("?". equals(prev) || ":".equals(prev)) {
@@ -271,7 +271,7 @@ public class MicronautExpressionLanguageCompletion {
                                 ExpressionTree.PropertyAccess pa = (ExpressionTree.PropertyAccess) path.getLeaf();
                                 ExpressionTree callee = pa.getCallee();
                                 if (callee != null) {
-                                    TypeMirror pacTM = callee.getType(ctx);
+                                    TypeMirror pacTM = callee.getTypeMirror(ctx);
                                     if (pacTM.getKind() == TypeKind.DECLARED) {
                                         elements = ElementFilter.methodsIn(((DeclaredType) pacTM).asElement().getEnclosedElements()).stream()
                                                 .filter(ee -> callee.getKind() != ExpressionTree.Kind.TYPE_REFERENCE || ee.getModifiers().contains(Modifier.STATIC))
@@ -288,7 +288,7 @@ public class MicronautExpressionLanguageCompletion {
                                 ExpressionTree.MethodCall methCall = (ExpressionTree.MethodCall) path.getLeaf();
                                 ExpressionTree callee = methCall.getCallee();
                                 if (callee != null) {
-                                    TypeMirror methTM = callee.getType(ctx);
+                                    TypeMirror methTM = callee.getTypeMirror(ctx);
                                     if (methTM.getKind() == TypeKind.DECLARED) {
                                         elements = ElementFilter.methodsIn(((DeclaredType) methTM).asElement().getEnclosedElements()).stream()
                                                 .filter(ee -> callee.getKind() != ExpressionTree.Kind.TYPE_REFERENCE || ee.getModifiers().contains(Modifier.STATIC))
@@ -311,7 +311,7 @@ public class MicronautExpressionLanguageCompletion {
                                 if (path.getLeaf().getKind() == ExpressionTree.Kind.TERNARY) {
                                     ExpressionTree.TernaryExpression ternary = (ExpressionTree.TernaryExpression) path.getLeaf();
                                     if (ternary.getCondition() instanceof ExpressionTree.BinaryExpression) {
-                                        rtm = ((ExpressionTree.BinaryExpression) ternary.getCondition()).getRightOperand().getType(ctx);
+                                        rtm = ((ExpressionTree.BinaryExpression) ternary.getCondition()).getRightOperand().getTypeMirror(ctx);
                                     }
                                 }
                                 switch (rtm.getKind()) {
@@ -331,7 +331,7 @@ public class MicronautExpressionLanguageCompletion {
                             case DOUBLE:
                                 ExpressionTree.Path parentPath = path.getParentPath();
                                 TypeMirror ptm = parentPath != null && parentPath.getLeaf() instanceof ExpressionTree.BinaryExpression
-                                        ? parentPath.getLeaf().getType(ctx)
+                                        ? parentPath.getLeaf().getTypeMirror(ctx)
                                         : info.getTypes().getNoType(TypeKind.NONE);
                                 if (ptm.getKind() == TypeKind.BOOLEAN) {
                                     kws = Arrays.asList("and", "or", "div", "mod", "instanceof");
@@ -353,14 +353,14 @@ public class MicronautExpressionLanguageCompletion {
             }
             if (kws != null) {
                 for (String kw : kws) {
-                    if (startsWith(kw, prefix)) {
+                    if (Utils.startsWith(kw, prefix)) {
                         items.add(factory.createKeywordItem(kw, anchorOffset));
                     }
                 }
             }
             if (builtins != null) {
                 for (int j = 0; j < builtins.size(); j += 2) {
-                    if (startsWith(builtins.get(j), prefix)) {
+                    if (Utils.startsWith(builtins.get(j), prefix)) {
                         items.add(factory.createBuiltInItem(builtins.get(j), builtins.get(j + 1), anchorOffset));
                     }
                 }
@@ -371,17 +371,17 @@ public class MicronautExpressionLanguageCompletion {
                     if (element.getKind() == ElementKind.METHOD) {
                         TypeMirror enclType = element.getEnclosingElement().asType();
                         if (enclType.getKind() == TypeKind.DECLARED) {
-                            if (startsWith(name, prefix) && info.getTrees().isAccessible(ctx.getScope(), element, (DeclaredType) enclType)) {
+                            if (Utils.startsWith(name, prefix) && info.getTrees().isAccessible(ctx.getScope(), element, (DeclaredType) enclType)) {
                                 items.add(factory.createJavaElementItem(info, element, anchorOffset));
                             }
                             String propertyName = element.getKind() == ElementKind.METHOD ? ExpressionTree.getPropertyName((ExecutableElement) element) : null;
-                            if (startsWith(propertyName, prefix) && info.getTrees().isAccessible(ctx.getScope(), element, (DeclaredType) enclType)) {
+                            if (Utils.startsWith(propertyName, prefix) && info.getTrees().isAccessible(ctx.getScope(), element, (DeclaredType) enclType)) {
                                 String returnType = MicronautDataCompletionTask.getTypeName(info, ((ExecutableElement)element).getReturnType(), false, false).toString();
                                 items.add(factory.createBeanPropertyItem(propertyName, returnType, anchorOffset));
                             }
                         }
                     } else {
-                        if (startsWith(name, prefix) && info.getTrees().isAccessible(ctx.getScope(), (TypeElement) element)) {
+                        if (Utils.startsWith(name, prefix) && info.getTrees().isAccessible(ctx.getScope(), (TypeElement) element)) {
                             items.add(factory.createJavaElementItem(info, element, anchorOffset));
                         }
                     }
@@ -389,7 +389,7 @@ public class MicronautExpressionLanguageCompletion {
             }
             if (properties != null) {
                 for (ConfigurationMetadataProperty property : properties) {
-                    if (startsWith(property.getId(), prefix)) {
+                    if (Utils.startsWith(property.getId(), prefix)) {
                         items.add(factory.createEnvPropertyItem(wrapProperties ? "'" + property.getId() + "'" : property.getId(), new MicronautConfigDocumentation(property).getText(), anchorOffset, startOffset + offset));
                     }
                 }
@@ -397,7 +397,7 @@ public class MicronautExpressionLanguageCompletion {
             if (pkgPrefix != null) {
                 Set<String> seenPkgs = new HashSet<>();
                 for (String pkgName : info.getClasspathInfo().getClassIndex().getPackageNames(pkgPrefix, false, EnumSet.allOf(ClassIndex.SearchScope.class))) {
-                    if (startsWith(pkgName, pkgPrefix + prefix)) {
+                    if (Utils.startsWith(pkgName, pkgPrefix + prefix)) {
                         String name = pkgName.substring(pkgPrefix.length());
                         int idx = name.indexOf('.');
                         if (idx > 0) {

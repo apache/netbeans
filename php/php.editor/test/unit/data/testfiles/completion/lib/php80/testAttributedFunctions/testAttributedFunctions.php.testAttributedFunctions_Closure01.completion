@@ -1,0 +1,7 @@
+Code completion result for source line:
+$closure = #[Attr1|] function ($int, #[Attr2(Attr2::class)] array $array): void {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Attr1                           [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1()                         [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1(int $int = 1)             [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1(int $int = 1, string $st  [PUBLIC]   Attributes\Test1

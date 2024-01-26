@@ -4,8 +4,8 @@ Simple::|publicStaticEnumMethod();
 METHOD     publicStaticEnumMethod()        [STATIC]   \Enum1\Simple
 METHOD     publicStaticTraitMethod()       [STATIC]   \Enum1\TestTrait
 METHOD     testStaticEnum()                [STATIC]   \Enum1\Simple
-CONSTANT   CASE1 ?                         [PUBLIC]   \Enum1\Simple
-CONSTANT   CASE2 ?                         [PUBLIC]   \Enum1\Simple
+CONSTANT   CASE1                           [PUBLIC]   \Enum1\Simple
+CONSTANT   CASE2                           [PUBLIC]   \Enum1\Simple
 CONSTANT   CONSTANT1 "CONSTANT1"           [PUBLIC]   \Enum1\Simple
 CONSTANT   CONSTANT2 ?                     [PUBLIC]   \Enum1\Simple
 CONSTANT   PUBLIC_CONST "public"           [PUBLIC]   \Enum1\Simple

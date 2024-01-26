@@ -281,7 +281,7 @@ public final class TestClassInfoTask implements Task<CompilationController> {
     }
 
     @MimeRegistration(mimeType="text/x-java", service=org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods.class)
-    public static final class GenericComputeTestMethodsImpl implements org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods {
+    public static final class JUnitComputeTestMethodsImpl implements org.netbeans.modules.gsf.testrunner.ui.spi.ComputeTestMethods {
 
         @Override
         public List<TestMethod> computeTestMethods(Parser.Result parserResult, AtomicBoolean cancel) {

@@ -1,0 +1,22 @@
+private static function testAbstractPrivateStaticTraitMethod(): int{
+}
+private function testAbstractPrivateTraitMethod(): string{
+}
+protected static function testAbstractProtectedStaticTraitMethod(): int{
+}
+protected function testAbstractProtectedTraitMethod(): string{
+}
+public static function testAbstractPublicStaticTraitMethod(): int{
+}
+public function testAbstractPublicTraitMethod(): void{
+}
+public function testInterfaceMethod(): void{
+}
+public function testTraitMethod(): void{
+}
+public function __call(string $name, array $arguments): mixed{
+}
+public static function __callStatic(string $name, array $arguments): mixed{
+}
+public function __invoke(): mixed{
+}

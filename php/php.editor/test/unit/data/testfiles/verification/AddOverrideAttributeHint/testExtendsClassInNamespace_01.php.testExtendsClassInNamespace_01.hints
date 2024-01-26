@@ -1,0 +1,20 @@
+    public function parentMethod2(): void {} // hints
+                    -------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+    public function parentMethod3(): void {} // hints
+                    -------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+    public function parentMethod5(): void {} // hints
+                    -------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+    public static function parentPublicStaticMethod1(): void {} // hints
+                           -------------------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute
+    protected function parentProtectedMethod1(): void { // hints
+                       ----------------------
+HINT:Add "#[\Override]" Attribute
+FIX:Add "#[\Override]" Attribute

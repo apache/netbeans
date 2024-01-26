@@ -96,6 +96,7 @@ public final class PHPIndexer extends EmbeddingIndexer {
     public static final String FIELD_TRAIT_METHOD_ALIAS = "traitmeth"; //NOI18N
     public static final String FIELD_ENUM = "enum"; //NOI18N
     public static final String FIELD_ENUM_CASE = "enum.case"; //NOI18N
+    public static final String FIELD_ATTRIBUTE_CLASS = "attribute.clz"; //NOI18N
 
     public static final String FIELD_VAR = "var"; //NOI18N
     /** This field is for fast access top level elemnts. */
@@ -124,6 +125,7 @@ public final class PHPIndexer extends EmbeddingIndexer {
                     FIELD_TRAIT_METHOD_ALIAS,
                     FIELD_ENUM,
                     FIELD_ENUM_CASE,
+                    FIELD_ATTRIBUTE_CLASS,
                 }
             )
     );
@@ -220,7 +222,7 @@ public final class PHPIndexer extends EmbeddingIndexer {
     public static final class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "php"; // NOI18N
-        public static final int VERSION = 34;
+        public static final int VERSION = 39;
 
         @Override
         public EmbeddingIndexer createIndexer(final Indexable indexable, final Snapshot snapshot) {

@@ -43,12 +43,15 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.DeferredCompletionFailureHandler;
+import com.sun.tools.javac.code.DeferredCompletionFailureHandler.Handler;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Kinds.Kind;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.code.Source.Feature;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.RecordComponent;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -85,11 +88,11 @@ import com.sun.tools.javac.tree.JCTree.JCSwitchExpression;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import com.sun.tools.javac.tree.TreeMaker;
-import org.netbeans.lib.nbjavac.services.CancelAbort;
 import org.netbeans.lib.nbjavac.services.CancelService;
 import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Pair;
 import java.io.File;
 import java.io.IOException;
@@ -133,11 +136,11 @@ import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.java.source.parsing.OutputFileManager;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ExecutableFilesIndex;
+import org.netbeans.modules.java.source.util.AbortChecker;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.SuspendStatus;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
@@ -149,6 +152,7 @@ import org.openide.util.Exceptions;
 final class VanillaCompileWorker extends CompileWorker {
 
     @Override
+    @SuppressWarnings("UseSpecificCatch")
     protected ParsingOutput compile(
             final ParsingOutput previous,
             final Context context,
@@ -163,8 +167,8 @@ final class VanillaCompileWorker extends CompileWorker {
         final Set<javax.tools.FileObject> aptGenerated = previous != null ? previous.aptGenerated : new HashSet<>();
 
         final DiagnosticListenerImpl dc = new DiagnosticListenerImpl();
-        final LinkedList<CompilationUnitTree> trees = new LinkedList<CompilationUnitTree>();
-        Map<CompilationUnitTree, CompileTuple> units = new IdentityHashMap<CompilationUnitTree, CompileTuple>();
+        final LinkedList<CompilationUnitTree> trees = new LinkedList<>();
+        Map<CompilationUnitTree, CompileTuple> units = new IdentityHashMap<>();
         JavacTaskImpl jt = null;
 
         boolean nop = true;
@@ -172,7 +176,6 @@ final class VanillaCompileWorker extends CompileWorker {
         final SourcePrefetcher sourcePrefetcher = SourcePrefetcher.create(files, suspendStatus);
         Map<JavaFileObject, CompileTuple> fileObjects = new IdentityHashMap<>();
         try {
-            final boolean flm[] = {true};
             while (sourcePrefetcher.hasNext())  {
                 final CompileTuple tuple = sourcePrefetcher.next();
                 try {
@@ -219,32 +222,33 @@ final class VanillaCompileWorker extends CompileWorker {
                 units.put(cut, tuple);
                 computeFQNs(file2FQNs, cut, tuple);
             }
-//            Log.instance(jt.getContext()).nerrors = 0;
-        } catch (CancelAbort ca) {
-            if (context.isCancelled() && JavaIndex.LOG.isLoggable(Level.FINEST)) {
-                JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
-            }
         } catch (Throwable t) {
-            if (JavaIndex.LOG.isLoggable(Level.WARNING)) {
-                final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
-                final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
-                final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-                final String message = String.format("VanillaCompileWorker caused an exception\nFile: %s\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
-                            fileObjects.values().iterator().next().indexable.getURL().toString(),
-                            FileUtil.getFileDisplayName(context.getRoot()),
-                            bootPath == null   ? null : bootPath.toString(),
-                            classPath == null  ? null : classPath.toString(),
-                            sourcePath == null ? null : sourcePath.toString()
-                            );
-                JavaIndex.LOG.log(Level.WARNING, message, t);  //NOI18N
-            }
-            if (t instanceof ThreadDeath) {
-                throw (ThreadDeath) t;
+            if (AbortChecker.isCancelAbort(t)) {
+                if (context.isCancelled() && JavaIndex.LOG.isLoggable(Level.FINEST)) {
+                    JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), t);  //NOI18N
+                }
             } else {
-                jt = null;
-                units = null;
-                dc.cleanDiagnostics();
-                freeMemory(false);
+                if (JavaIndex.LOG.isLoggable(Level.WARNING)) {
+                    final ClassPath bootPath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
+                    final ClassPath classPath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
+                    final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
+                    final String message = String.format("VanillaCompileWorker caused an exception\nFile: %s\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
+                            fileObjects.values().iterator().next().indexable.getURL(),
+                            FileUtil.getFileDisplayName(context.getRoot()),
+                            bootPath == null ? null : bootPath.toString(),
+                            classPath == null ? null : classPath.toString(),
+                            sourcePath == null ? null : sourcePath.toString()
+                    );
+                    JavaIndex.LOG.log(Level.WARNING, message, t);  //NOI18N
+                }
+                if (t instanceof ThreadDeath) {
+                    throw (ThreadDeath) t;
+                } else {
+                    jt = null;
+                    units = null;
+                    dc.cleanDiagnostics();
+                    freeMemory(false);
+                }
             }
         }
         if (jt == null || units == null || JavaCustomIndexer.NO_ONE_PASS_COMPILE_WORKER) {
@@ -269,7 +273,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 fallbackCopyExistingClassFiles(context, javaContext, files);
                 return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
             }
-            final Map<Element, CompileTuple> clazz2Tuple = new IdentityHashMap<Element, CompileTuple>();
+            final Map<Element, CompileTuple> clazz2Tuple = new IdentityHashMap<>();
             Enter enter = Enter.instance(jt.getContext());
             for (Element type : types) {
                 if (type.getKind().isClass() || type.getKind().isInterface() || type.getKind() == ElementKind.MODULE) {
@@ -353,43 +357,40 @@ final class VanillaCompileWorker extends CompileWorker {
                 dropMethodsAndErrors(jtFin.getContext(), env.toplevel, dc);
                 log.nerrors = 0;
             });
-            final Future<Void> done = FileManagerTransaction.runConcurrent(new FileSystem.AtomicAction() {
-                @Override
-                public void run() throws IOException {
-                    Modules modules = Modules.instance(jtFin.getContext());
-                    compiler.shouldStopPolicyIfError = CompileState.FLOW; 
-                    for (Element type : types) {
-                        if (isErroneousClass(type)) {
-                            //likely a duplicate of another class, don't touch:
-                            continue;
-                        }
-                        TreePath tp = Trees.instance(jtFin).getPath(type);
-                        assert tp != null;
-                        log.nerrors = 0;
-                        Iterable<? extends JavaFileObject> generatedFiles = jtFin.generate(Collections.singletonList(type));
-                        CompileTuple unit = clazz2Tuple.get(type);
-                        if (unit == null || !unit.virtual) {
-                            for (JavaFileObject generated : generatedFiles) {
-                                if (generated instanceof FileObjects.FileBase) {
-                                    createdFiles.add(((FileObjects.FileBase) generated).getFile());
-                                } else {
-                                    // presumably should not happen
-                                }
+            final Future<Void> done = FileManagerTransaction.runConcurrent(() -> {
+                Modules modules = Modules.instance(jtFin.getContext());
+                compiler.shouldStopPolicyIfError = CompileState.FLOW;
+                for (Element type : types) {
+                    if (isErroneousClass(type)) {
+                        //likely a duplicate of another class, don't touch:
+                        continue;
+                    }
+                    TreePath tp = Trees.instance(jtFin).getPath(type);
+                    assert tp != null;
+                    log.nerrors = 0;
+                    Iterable<? extends JavaFileObject> generatedFiles = jtFin.generate(Collections.singletonList(type));
+                    CompileTuple unit = clazz2Tuple.get(type);
+                    if (unit == null || !unit.virtual) {
+                        for (JavaFileObject generated : generatedFiles) {
+                            if (generated instanceof FileObjects.FileBase) {
+                                createdFiles.add(((FileObjects.FileBase) generated).getFile());
+                            } else {
+                                // presumably should not happen
                             }
                         }
                     }
-                    if (!moduleName.assigned) {
-                        ModuleElement module = !trees.isEmpty() ?
+                }
+                if (!moduleName.assigned) {
+                    ModuleElement module = !trees.isEmpty() ?
                             ((JCTree.JCCompilationUnit)trees.getFirst()).modle :
                             null;
-                        if (module == null) {
-                            module = modules.getDefaultModule();
-                        }
-                        moduleName.name = module == null || module.isUnnamed() ?
+                    if (module == null) {
+                        module = modules.getDefaultModule();
+                    }
+                    moduleName.name = module == null || module.isUnnamed() ?
                             null :
                             module.getQualifiedName().toString();
-                        moduleName.assigned = true;
-                    }
+                    moduleName.assigned = true;
                 }
             });
             for (Entry<CompilationUnitTree, CompileTuple> unit : units.entrySet()) {
@@ -411,30 +412,32 @@ final class VanillaCompileWorker extends CompileWorker {
                             );
                 JavaIndex.LOG.log(Level.FINEST, message, isp);
             }
-        } catch (CancelAbort ca) {
-            if (isLowMemory(new boolean[] {true})) {
-                fallbackCopyExistingClassFiles(context, javaContext, files);
-                return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
-            } else if (JavaIndex.LOG.isLoggable(Level.FINEST)) {
-                JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), ca);  //NOI18N
-            }
         } catch (Throwable t) {
-            Exceptions.printStackTrace(t);
-             if (t instanceof ThreadDeath) {
-                throw (ThreadDeath) t;
+            if (AbortChecker.isCancelAbort(t)) {
+                if (isLowMemory(new boolean[]{true})) {
+                    fallbackCopyExistingClassFiles(context, javaContext, files);
+                    return ParsingOutput.lowMemory(moduleName.name, file2FQNs, addedTypes, addedModules, createdFiles, finished, modifiedTypes, aptGenerated);
+                } else if (JavaIndex.LOG.isLoggable(Level.FINEST)) {
+                    JavaIndex.LOG.log(Level.FINEST, "VanillaCompileWorker was canceled in root: " + FileUtil.getFileDisplayName(context.getRoot()), t);  //NOI18N
+                }
             } else {
-                Level level = t instanceof FatalError ? Level.FINEST : Level.WARNING;
-                if (JavaIndex.LOG.isLoggable(level)) {
-                    final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
-                    final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
-                    final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
-                    final String message = String.format("VanillaCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
-                                FileUtil.getFileDisplayName(context.getRoot()),
-                                bootPath == null   ? null : bootPath.toString(),
-                                classPath == null  ? null : classPath.toString(),
-                                sourcePath == null ? null : sourcePath.toString()
-                                );
-                    JavaIndex.LOG.log(level, message, t);  //NOI18N
+                Exceptions.printStackTrace(t);
+                if (t instanceof ThreadDeath) {
+                    throw (ThreadDeath) t;
+                } else {
+                    Level level = t instanceof FatalError ? Level.FINEST : Level.WARNING;
+                    if (JavaIndex.LOG.isLoggable(level)) {
+                        final ClassPath bootPath   = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.BOOT);
+                        final ClassPath classPath  = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
+                        final ClassPath sourcePath = javaContext.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
+                        final String message = String.format("VanillaCompileWorker caused an exception\nRoot: %s\nBootpath: %s\nClasspath: %s\nSourcepath: %s", //NOI18N
+                                    FileUtil.getFileDisplayName(context.getRoot()),
+                                    bootPath == null   ? null : bootPath.toString(),
+                                    classPath == null  ? null : classPath.toString(),
+                                    sourcePath == null ? null : sourcePath.toString()
+                                    );
+                        JavaIndex.LOG.log(level, message, t);  //NOI18N
+                    }
                 }
             }
         }
@@ -525,22 +528,25 @@ final class VanillaCompileWorker extends CompileWorker {
         }
     }
 
-    public static class HandledUnits {
+    private static class HandledUnits {
         public final List<CompilationUnitTree> handled = new ArrayList<>();
     }
 
-    public static BiConsumer<JavaFileObject, CompilationUnitTree> fixedListener = (file, cut) -> {};
+    @SuppressWarnings("PackageVisibleField") // Unittests
+    static BiConsumer<JavaFileObject, CompilationUnitTree> fixedListener = (file, cut) -> {};
 
     private void dropMethodsAndErrors(com.sun.tools.javac.util.Context ctx, CompilationUnitTree cut, DiagnosticListenerImpl dc) {
         HandledUnits hu = ctx.get(HandledUnits.class);
         if (hu == null) {
-            ctx.put(HandledUnits.class, hu = new HandledUnits());
+            hu = new HandledUnits();
+            ctx.put(HandledUnits.class, hu);
         }
         if (hu.handled.contains(cut)) {
             //already seen
             return ;
         }
         hu.handled.add(cut);
+        Names names = Names.instance(ctx);
         Symtab syms = Symtab.instance(ctx);
         Trees trees = Trees.instance(BasicJavacTask.instance(ctx));
         Types types = Types.instance(ctx);
@@ -548,6 +554,7 @@ final class VanillaCompileWorker extends CompileWorker {
         Elements el = JavacElements.instance(ctx);
         Source source = Source.instance(ctx);
         boolean hasMatchException = el.getTypeElement("java.lang.MatchException") != null;
+        DeferredCompletionFailureHandler dcfh = DeferredCompletionFailureHandler.instance(ctx);
         //TODO: should preserve error types!!!
         new TreePathScanner<Void, Void>() {
             private Set<JCNewClass> anonymousClasses = Collections.newSetFromMap(new LinkedHashMap<>());
@@ -673,8 +680,14 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             private JCStatement throwTree(SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> diags) {
-                String message = diags.isEmpty() ? "Uncompilable code"
-                                                 : "Uncompilable code - " + DIAGNOSTIC_TO_TEXT.apply(diags.values().iterator().next().get(0));
+                String message = diags.isEmpty() ? null
+                                                 : DIAGNOSTIC_TO_TEXT.apply(diags.values().iterator().next().get(0));
+                return throwTree(message);
+            }
+
+            private JCStatement throwTree(String message) {
+                message = message == null ? "Uncompilable code"
+                                          : "Uncompilable code - " + message;
                 JCNewClass nct =
                         make.NewClass(null,
                                       com.sun.tools.javac.util.List.nil(),
@@ -732,6 +745,13 @@ final class VanillaCompileWorker extends CompileWorker {
                 for (RecordComponent rc : clazz.sym.getRecordComponents()) {
                     rc.type = error2Object(rc.type);
                     scan(rc.accessorMeth, p);
+                    if (rc.accessor == null) {
+                        //the accessor is not created when the component type matches
+                        //a non-arg j.l.Object method (which is a compile-time error)
+                        //but the missing accessor will break Lower.
+                        //initialize the field:
+                        rc.accessor = new MethodSymbol(0, names.empty, new MethodType(com.sun.tools.javac.util.List.nil(), syms.errType, com.sun.tools.javac.util.List.nil(), syms.methodClass), clazz.sym);
+                    }
                 }
                 for (JCTree def : clazz.defs) {
                     boolean errorClass = isErroneousClass(def);
@@ -745,6 +765,7 @@ final class VanillaCompileWorker extends CompileWorker {
                         clazz.defs = com.sun.tools.javac.util.List.filter(clazz.defs, def);
                     }
                 }
+                fixRecordMethods(clazz);
                 super.visitClass(node, p);
                 //remove anonymous classes that remained in the tree from anonymousClasses:
                 new TreeScanner<Void, Void>() {
@@ -776,6 +797,32 @@ final class VanillaCompileWorker extends CompileWorker {
                     anonymousClasses = oldAnonymousClasses;
                 }
                 return null;
+            }
+
+            private final Set<String> RECORD_METHODS = new HashSet<>(Arrays.asList("toString", "hashCode", "equals"));
+
+            private void fixRecordMethods(JCClassDecl clazz) {
+                if ((clazz.sym.flags() & Flags.RECORD) == 0) {
+                    return ;
+                }
+                Handler prevHandler = dcfh.setHandler(dcfh.speculativeCodeHandler);
+                try {
+                    try {
+                        syms.objectMethodsType.tsym.flags();
+                    } catch (CompletionFailure cf) {
+                        //ignore
+                    }
+                    if (!syms.objectMethodsType.tsym.type.isErroneous()) {
+                        //ObjectMethods exist:
+                        return ;
+                    }
+                } finally {
+                    dcfh.setHandler(prevHandler);
+                }
+                for (Symbol s : clazz.sym.members().getSymbols(s -> (s.flags() & Flags.RECORD) != 0 && s.kind == Kind.MTH && RECORD_METHODS.contains(s.name.toString()))) {
+                    clazz.defs = clazz.defs.prepend(make.MethodDef((MethodSymbol) s, make.Block(0, com.sun.tools.javac.util.List.of(throwTree("java.lang.runtime.ObjectMethods does not exist!")))));
+                    s.flags_field &= ~Flags.RECORD;
+                }
             }
 
             private JCStatement clearAndWrapAnonymous(JCNewClass nc) {
@@ -984,10 +1031,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     }
                     return false;
                 } else if (annotation instanceof Attribute.Class) {
-                    if (isErroneous(((Attribute.Class) annotation).classType)) {
-                        return true;
-                    }
-                    return false;
+                    return isErroneous(((Attribute.Class) annotation).classType);
                 } else if (annotation instanceof Attribute.Compound) {
                     for (Pair<MethodSymbol, Attribute> p : ((Attribute.Compound) annotation).values) {
                         if (isAnnotationErroneous(p.snd)) {
@@ -1012,7 +1056,7 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             private boolean errorFound;
-            private Map<Type, Boolean> seen = new IdentityHashMap<>();
+            private final Map<Type, Boolean> seen = new IdentityHashMap<>();
 
             private Type error2Object(Type t) {
                 if (t == null)
@@ -1124,5 +1168,6 @@ final class VanillaCompileWorker extends CompileWorker {
         return el instanceof ClassSymbol && (((ClassSymbol) el).asType() == null || ((ClassSymbol) el).asType().getKind() == TypeKind.OTHER);
     }
 
-    public static Function<Diagnostic<?>, String> DIAGNOSTIC_TO_TEXT = d -> d.getMessage(null);
+    @SuppressWarnings("PackageVisibleField") // Unittests
+    static Function<Diagnostic<?>, String> DIAGNOSTIC_TO_TEXT = d -> d.getMessage(null);
 }

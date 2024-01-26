@@ -265,12 +265,10 @@ public class TestPerformer {
 
             @Override
             public void addChangeListener(ChangeListener listener) {
-                throw new UnsupportedOperationException("Not implemented.");
             }
 
             @Override
             public void removeChangeListener(ChangeListener listener) {
-                throw new UnsupportedOperationException("Not implemented.");
             }
         }
         

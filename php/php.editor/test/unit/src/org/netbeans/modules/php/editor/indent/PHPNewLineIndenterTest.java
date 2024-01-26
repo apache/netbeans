@@ -1178,6 +1178,38 @@ public class PHPNewLineIndenterTest extends PHPTestBase {
         testIndentInFile("testfiles/indent/php80/attributeSyntax_08.php");
     }
 
+    public void testAttributeSyntax_09() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_09.php");
+    }
+
+    public void testAttributeSyntax_10() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_10.php");
+    }
+
+    public void testAttributeSyntax_11() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_11.php");
+    }
+
+    public void testAttributeSyntax_12() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_12.php");
+    }
+
+    public void testAttributeSyntax_13() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_13.php");
+    }
+
+    public void testAttributeSyntax_14() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_14.php");
+    }
+
+    public void testAttributeSyntax_15() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_15.php");
+    }
+
+    public void testAttributeSyntax_16() throws Exception {
+        testIndentInFile("testfiles/indent/php80/attributeSyntax_16.php");
+    }
+
     public void testConstructorPropertyPromotion_01() throws Exception {
         testIndentInFile("testfiles/indent/php80/constructorPropertyPromotion_01.php");
     }
@@ -1232,6 +1264,34 @@ public class PHPNewLineIndenterTest extends PHPTestBase {
 
     public void testEnumerationsWithBackingType_03() throws Exception {
         testIndentInFile("testfiles/indent/php81/enumerationsWithBackingType_03.php");
+    }
+
+    public void testGH6731_01() throws Exception {
+        testIndentInFile("testfiles/indent/gh6731_01.php");
+    }
+
+    public void testGH6731_02() throws Exception {
+        testIndentInFile("testfiles/indent/gh6731_02.php");
+    }
+
+    public void testGH6731_03() throws Exception {
+        testIndentInFile("testfiles/indent/gh6731_03.php");
+    }
+
+    public void testGH6731_04() throws Exception {
+        testIndentInFile("testfiles/indent/gh6731_04.php");
+    }
+
+    public void testGH6731_05() throws Exception {
+        testIndentInFile("testfiles/indent/gh6731_05.php");
+    }
+
+    public void testGH6731_06() throws Exception {
+        testIndentInFile("testfiles/indent/gh6731_06.php");
+    }
+
+    public void testGH6731_07() throws Exception {
+        testIndentInFile("testfiles/indent/gh6731_07.php");
     }
 
     @Override

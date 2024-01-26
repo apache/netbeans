@@ -23,8 +23,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 import org.junit.Test;
@@ -40,6 +42,7 @@ import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.NameKind.Exact;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QuerySupportFactory;
+import org.netbeans.modules.php.editor.api.elements.AliasedElement;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
 import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
@@ -752,6 +755,47 @@ public class PHPIndexTest extends PHPNavTestBase {
         checkIndexer(getTestPath());
     }
 
+    public void testPHP80AttributeClasses() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testGetAttributeClasses_all() throws Exception {
+        Collection<String> classNames = Arrays.asList(new String[]{
+            "AttrGlobal1",
+            "AttrGlobal2",
+            "AttrA1",
+            "AttrA2",
+            "AttrB1",
+            "AttrB2",
+            "AttrB3",
+        });
+        Collection<TypeElement> allTypes = new ArrayList<>(index.getAttributeClasses(NameKind.empty(), Collections.emptySet(), AliasedElement.Trait.ALIAS));
+        assertEquals(classNames.size(), allTypes.size());
+        for (TypeElement indexedClass : allTypes) {
+            assertTrue(classNames.contains(indexedClass.getName()));
+            assertEquals(PhpElementKind.CLASS, indexedClass.getPhpElementKind());
+        }
+    }
+
+    public void testGetAttributeClasses_prefix() throws Exception {
+        HashMap<String, List<String>> map = new HashMap<>();
+        map.put("Global", Arrays.asList("AttrGlobal1", "AttrGlobal2"));
+        map.put("A", Arrays.asList("AttrA1", "AttrA2"));
+        map.put("B", Arrays.asList("AttrB1", "AttrB2", "AttrB3"));
+        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+            String key = entry.getKey();
+            List<String> values = entry.getValue();
+            Collection<TypeElement> types = new ArrayList<>(index.getAttributeClasses(NameKind.prefix("Attr" + key), Collections.emptySet(), AliasedElement.Trait.ALIAS));
+            assertEquals(values.size(), types.size());
+            for (TypeElement type : types) {
+                assertTrue(values.contains(type.getName()));
+                assertEquals(PhpElementKind.CLASS, type.getPhpElementKind());
+            }
+        }
+        Collection<TypeElement> types = new ArrayList<>(index.getAttributeClasses(NameKind.prefix("NotAttr"), Collections.emptySet(), AliasedElement.Trait.ALIAS));
+        assertTrue(types.isEmpty());
+    }
+
     public void testPHP81PureIntersectionTypes() throws Exception {
         checkIndexer(getTestPath());
     }
@@ -761,6 +805,22 @@ public class PHPIndexTest extends PHPNavTestBase {
     }
 
     public void testPHP82ConstantsInTraits() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP82DNFReturnTypes() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP82DNFParameterTypes() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPhpDocParameterTypes() throws Exception {
+        checkIndexer(getTestPath());
+    }
+
+    public void testPHP83TypedClassConstants() throws Exception {
         checkIndexer(getTestPath());
     }
 

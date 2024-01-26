@@ -26,6 +26,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
+import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo.Kind;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayElement;
@@ -91,6 +92,11 @@ public class ClassConstantDeclarationInfo extends ASTNodeInfo<Identifier> {
 
     public String getValue() {
         return value;
+    }
+
+    @CheckForNull
+    public String getDeclaredType() {
+        return VariousUtils.getDeclaredType(constantDeclaration.getConstType());
     }
 
     public PhpModifiers getAccessModifiers() {

@@ -24,12 +24,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
+import org.netbeans.modules.php.editor.PredefinedSymbols;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
@@ -58,6 +60,8 @@ import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.VariableName;
 import org.netbeans.modules.php.editor.model.nodes.ClassDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.ClassInstanceCreationInfo;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
+import org.netbeans.modules.php.editor.parser.astnodes.AttributeDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -75,6 +79,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     private final Set<? super TypeScope> superRecursionDetection = new HashSet<>();
     private final Set<? super TypeScope> subRecursionDetection = new HashSet<>();
     private final Union2<String, List<ClassScopeImpl>> superClass;
+    private final boolean isAttributeClass;
 
     @Override
     void addElement(ModelElementImpl element) {
@@ -96,8 +101,9 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     ClassScopeImpl(Scope inScope, ClassDeclarationInfo nodeInfo, boolean isDeprecated) {
         super(inScope, nodeInfo, isDeprecated);
         Expression superId = nodeInfo.getSuperClass();
+        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(inScope);
+        isAttributeClass = isAttributeClass(nodeInfo, namespaceScope);
         if (superId != null) {
-            NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(inScope);
             QualifiedName superClassName = QualifiedName.create(superId);
             if (namespaceScope == null) {
                 this.possibleFQSuperClassNames = Collections.emptyList();
@@ -114,15 +120,20 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             this.superClass = Union2.<String, List<ClassScopeImpl>>createFirst(null);
         }
         for (QualifiedName usedTrait : nodeInfo.getUsedTraits()) {
-            usedTraits.add(VariousUtils.getFullyQualifiedName(usedTrait, nodeInfo.getOriginalNode().getStartOffset(), inScope));
+            if (!usedTrait.getName().isEmpty()) {
+                // GH-6634
+                // avoid getting traits from the index with an empty string
+                usedTraits.add(VariousUtils.getFullyQualifiedName(usedTrait, nodeInfo.getOriginalNode().getStartOffset(), inScope));
+            }
         }
     }
 
     ClassScopeImpl(Scope inScope, ClassInstanceCreationInfo nodeInfo, boolean isDeprecated) {
         super(inScope, nodeInfo, isDeprecated);
         Expression superId = nodeInfo.getSuperClass();
+        NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(inScope);
+        isAttributeClass = false; // ignore anonymous classes
         if (superId != null) {
-            NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(inScope);
             QualifiedName superClassName = QualifiedName.create(superId);
             if (namespaceScope == null) {
                 this.possibleFQSuperClassNames = Collections.emptyList();
@@ -139,7 +150,12 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             this.superClass = Union2.<String, List<ClassScopeImpl>>createFirst(null);
         }
         for (QualifiedName usedTrait : nodeInfo.getUsedTraits()) {
-            usedTraits.add(VariousUtils.getFullyQualifiedName(usedTrait, nodeInfo.getOriginalNode().getStartOffset(), inScope));
+            QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(usedTrait, nodeInfo.getOriginalNode().getStartOffset(), inScope);
+            if (!fullyQualifiedName.getName().isEmpty()) {
+                // GH-6634
+                // avoid getting traits from the index with an empty string
+                usedTraits.add(fullyQualifiedName);
+            }
         }
     }
 
@@ -150,8 +166,51 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
         this.possibleFQSuperClassNames = indexedClass.getPossibleFQSuperClassNames();
         usedTraits.addAll(indexedClass.getUsedTraits());
         this.mixinClassNames.addAll(indexedClass.getFQMixinClassNames());
+        isAttributeClass = indexedClass.isAttribute();
     }
     //old contructors
+
+    private boolean isAttributeClass(ClassDeclarationInfo nodeInfo, NamespaceScope namespaceScope) {
+        String className = nodeInfo.getName();
+        int offset = nodeInfo.getOriginalNode().getStartOffset();
+        if (isPredefinedAttribute(className, offset, namespaceScope)) {
+            return true;
+        }
+        for (Attribute attribute : nodeInfo.getAttributes()) {
+            for (AttributeDeclaration attributeDeclaration : attribute.getAttributeDeclarations()) {
+                Expression attributeNameExpression = attributeDeclaration.getAttributeName();
+                String attributeName = CodeUtils.extractQualifiedName(attributeNameExpression);
+                if (isAttributeAttribute(attributeName, attributeNameExpression.getStartOffset(), namespaceScope)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isAttributeAttribute(String attributeName, int offset, NamespaceScope namespaceScope) {
+        if (PredefinedSymbols.Attributes.ATTRIBUTE.getFqName().equals(attributeName)) {
+            return true;
+        }
+        return PredefinedSymbols.Attributes.ATTRIBUTE.getName().equals(attributeName)
+                && isPredefinedAttribute(attributeName, offset, namespaceScope);
+    }
+
+    private boolean isPredefinedAttribute(String attributeName, int offset, NamespaceScope namespaceScope) {
+        if (PredefinedSymbols.ATTRIBUTE_FQ_NAMES.contains(attributeName)) {
+            return true;
+        }
+        if (PredefinedSymbols.ATTRIBUTE_NAMES.contains(attributeName)) {
+            if (namespaceScope != null) {
+                // check FQ name because there may be use statement (e.g. `use Attribute;`)
+                QualifiedName fullyQualifiedName = VariousUtils.getFullyQualifiedName(QualifiedName.create(attributeName), offset, namespaceScope);
+                if (PredefinedSymbols.ATTRIBUTE_FQ_NAMES.contains(fullyQualifiedName.toString())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * This method returns possible FGNames of the super class that are counted
@@ -161,7 +220,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
      */
     @Override
     public Collection<QualifiedName> getPossibleFQSuperClassNames() {
-        return this.possibleFQSuperClassNames;
+        return Collections.unmodifiableCollection(this.possibleFQSuperClassNames);
     }
 
     /**
@@ -188,7 +247,7 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
 
         assert superClass.hasFirst();
         String superClasName = superClass.first();
-        if (possibleFQSuperClassNames != null && possibleFQSuperClassNames.size() > 0) {
+        if (possibleFQSuperClassNames != null && !possibleFQSuperClassNames.isEmpty()) {
             retval = new ArrayList<>();
             for (QualifiedName qualifiedName : possibleFQSuperClassNames) {
                 retval.addAll(IndexScopeImpl.getClasses(qualifiedName, this));
@@ -428,6 +487,9 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     @Override
     public void addSelfToIndex(IndexDocument indexDocument) {
         indexDocument.addPair(PHPIndexer.FIELD_CLASS, getIndexSignature(), true, true);
+        if (isAttributeClass) {
+            indexDocument.addPair(PHPIndexer.FIELD_ATTRIBUTE_CLASS, getIndexSignature(), true, true);
+        }
         final NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(this);
         QualifiedName superClassName = getSuperClassName();
         if (superClassName != null) {
@@ -479,11 +541,11 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     @Override
     public String getIndexSignature() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getName().toLowerCase()).append(Signature.ITEM_DELIMITER);
-        sb.append(getName()).append(Signature.ITEM_DELIMITER);
-        sb.append(getOffset()).append(Signature.ITEM_DELIMITER);
+        sb.append(getName().toLowerCase(Locale.ROOT)).append(Signature.ITEM_DELIMITER); // 0: lowercase class name
+        sb.append(getName()).append(Signature.ITEM_DELIMITER); // 1. class name
+        sb.append(getOffset()).append(Signature.ITEM_DELIMITER); // 2. offset
         final QualifiedName superClassName = getSuperClassName();
-        if (superClassName != null) {
+        if (superClassName != null) { // 3. super class name
             sb.append(superClassName.toString());
             sb.append(Type.SEPARATOR);
             boolean first = true;
@@ -493,14 +555,15 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
                 } else {
                     first = true;
                 }
+                assert !qualifiedName.getName().isEmpty();
                 sb.append(qualifiedName.toString());
             }
         }
         sb.append(Signature.ITEM_DELIMITER);
         NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(this);
         QualifiedName qualifiedName = namespaceScope != null ? namespaceScope.getQualifiedName() : QualifiedName.create("");
-        sb.append(qualifiedName.toString()).append(Signature.ITEM_DELIMITER);
-        List<? extends String> superInterfaceNames = getSuperInterfaceNames();
+        sb.append(qualifiedName.toString()).append(Signature.ITEM_DELIMITER); // 4. qualified name
+        List<? extends String> superInterfaceNames = getSuperInterfaceNames(); // 5. fully qualified super class names
         StringBuilder ifaceSb = new StringBuilder();
         for (String iface : superInterfaceNames) {
             if (ifaceSb.length() > 0) {
@@ -522,29 +585,33 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             sb.append(fqIfaceSb);
         }
         sb.append(Signature.ITEM_DELIMITER);
-        sb.append(getPhpModifiers().toFlags()).append(Signature.ITEM_DELIMITER);
-        if (!usedTraits.isEmpty()) {
+        sb.append(getPhpModifiers().toFlags()).append(Signature.ITEM_DELIMITER); // 6. flags
+        if (!usedTraits.isEmpty()) { // 7. used traits
             StringBuilder traitSb = new StringBuilder();
             for (QualifiedName usedTrait : usedTraits) {
                 if (traitSb.length() > 0) {
                     traitSb.append(","); //NOI18N
                 }
+                assert !usedTrait.getName().isEmpty();
                 traitSb.append(usedTrait.toString());
             }
             sb.append(traitSb);
         }
         sb.append(Signature.ITEM_DELIMITER);
-        sb.append(isDeprecated() ? 1 : 0).append(Signature.ITEM_DELIMITER);
-        sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER);
+        sb.append(isDeprecated() ? 1 : 0).append(Signature.ITEM_DELIMITER); // 8. isDeprecated
+        sb.append(getFilenameUrl()).append(Signature.ITEM_DELIMITER); // 9. filename url
         // mixin
         StringBuilder mixinSb = new StringBuilder();
-        for (QualifiedName mixinClassName : mixinClassNames) {
+        for (QualifiedName mixinClassName : mixinClassNames) { // 10. mixin class names
             if (mixinSb.length() > 0) {
                 mixinSb.append(","); // NOI18N
             }
+            assert !mixinClassName.getName().isEmpty();
             mixinSb.append(mixinClassName.toString());
         }
         sb.append(mixinSb);
+        sb.append(Signature.ITEM_DELIMITER);
+        sb.append(isAttributeClass ? 1 : 0); // 11. isAttributeClass
         sb.append(Signature.ITEM_DELIMITER);
         return sb.toString();
     }
@@ -591,13 +658,13 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
 
     @Override
     public Collection<? extends String> getSuperClassNames() {
-        List<String> retval =  new ArrayList<>();
+        List<String> retval = new ArrayList<>();
         if (superClass != null) {
             String supeClsName = superClass.hasFirst() ? superClass.first() : null;
             if (supeClsName != null) {
                 return Collections.singletonList(supeClsName);
             }
-            List<ClassScopeImpl> supeClasses =  Collections.emptyList();
+            List<ClassScopeImpl> supeClasses = Collections.emptyList();
             if (superClass.hasSecond()) {
                 supeClasses = superClass.second();
             }
@@ -653,8 +720,13 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
     }
 
     @Override
+    public boolean isAttribute() {
+        return isAttributeClass;
+    }
+
+    @Override
     public Collection<QualifiedName> getUsedTraits() {
-        return usedTraits;
+        return Collections.unmodifiableCollection(usedTraits);
     }
 
     @Override
@@ -748,14 +820,14 @@ class ClassScopeImpl extends TypeScopeImpl implements ClassScope, VariableNameFa
             sb.append(" extends ").append(extClass.getName()); //NOI18N
         }
         List<? extends InterfaceScope> implementedInterfaces = getSuperInterfaceScopes();
-        if (implementedInterfaces.size() > 0) {
+        if (!implementedInterfaces.isEmpty()) {
             sb.append(" implements "); //NOI18N
             for (InterfaceScope interfaceScope : implementedInterfaces) {
                 sb.append(interfaceScope.getName()).append(" ");
             }
         }
         Collection<? extends TraitScope> traits = getTraits();
-        if (traits.size() > 0) {
+        if (!traits.isEmpty()) {
             sb.append(" uses "); //NOI18N
             for (TraitScope traitScope : traits) {
                 sb.append(traitScope.getName()).append(" ");

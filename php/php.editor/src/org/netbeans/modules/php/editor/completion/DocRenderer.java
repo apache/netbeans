@@ -64,6 +64,7 @@ import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.ConstantElement;
 import org.netbeans.modules.php.editor.api.elements.ElementFilter;
+import org.netbeans.modules.php.editor.api.elements.EnumCaseElement;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
@@ -91,7 +92,6 @@ import org.netbeans.modules.php.editor.parser.astnodes.PHPDocBlock;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocMethodTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocNode;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTag;
-import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeNode;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocVarTypeTag;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
@@ -301,6 +301,11 @@ final class DocRenderer {
                 } else if (indexedElement instanceof TypeConstantElement) {
                     TypeConstantElement constant = (TypeConstantElement) indexedElement;
                     value = constant.getValue();
+                } else if (indexedElement instanceof EnumCaseElement) {
+                    EnumCaseElement enumCase = (EnumCaseElement) indexedElement;
+                    if (enumCase.isBacked()) {
+                        value = enumCase.getValue();
+                    }
                 }
                 if (value != null) {
                     header.appendText(" = "); //NOI18N
@@ -366,7 +371,12 @@ final class DocRenderer {
                 } else {
                     if (node instanceof PHPDocVarTypeTag) {
                         PHPDocVarTypeTag varTypeTag = (PHPDocVarTypeTag) node;
-                        String type = composeType(varTypeTag.getTypes(), getTypeKind(varTypeTag));
+                        // e.g. @property (A&B)|C $property something
+                        String[] values = CodeUtils.WHITE_SPACES_PATTERN.split(varTypeTag.getValue().trim(), 2);
+                        String type = ""; // NOI18N
+                        if (!values[0].startsWith("$")) { // NOI18N
+                            type = putTypeSeparatorBetweenWhitespaces(values[0]);
+                        }
                         phpDoc.append(processPhpDoc(String.format("%s<br /><table><tr><th align=\"left\">Type:</th><td>%s</td></tr></table>", // NOI18N
                                 varTypeTag.getDocumentation(),
                                 type)));
@@ -388,14 +398,12 @@ final class DocRenderer {
                 description = processPhpDoc(description);
             }
 
-            if (methodTag.getParameters() != null && methodTag.getParameters().size() > 0) {
+            if (methodTag.getParameters() != null && !methodTag.getParameters().isEmpty()) {
                 for (PHPDocVarTypeTag tag : methodTag.getParameters()) {
                     params.append(composeParameterLine(tag));
                 }
             }
-
-            returnValue.append(composeTypesAndDescription(methodTag.getTypes(), null, methodTag));
-
+            returnValue.append(composeTypesAndDescription(putTypeSeparatorBetweenWhitespaces(methodTag.getReturnType()), null));
             phpDoc.append(composeFunctionDoc(description, params.toString(), returnValue.toString(), null));
         }
 
@@ -422,7 +430,7 @@ final class DocRenderer {
                     returns.add(returnTag);
                 } else if (kind.equals(PHPDocTag.Type.VAR)) {
                     PHPDocTypeTag typeTag = (PHPDocTypeTag) tag;
-                    others.append(composeTypesAndDescription(typeTag.getTypes(), typeTag.getDocumentation(), typeTag));
+                    others.append(composeTypesAndDescription(getType(typeTag), typeTag.getDocumentation()));
                 } else if (kind.equals(PHPDocTag.Type.DEPRECATED)) {
                     String oline = String.format("<tr><th align=\"left\">%s</th><td>%s</td></tr>%n", //NOI18N
                             processPhpDoc(tag.getKind().getName()), processPhpDoc(tag.getDocumentation(), "")); //NOI18N
@@ -443,8 +451,8 @@ final class DocRenderer {
             if ((phpDocBlock == null || !tagInTagsList(tags, PHPDocTag.Type.VAR))
                     && indexedElement instanceof FieldElement) {
                 FieldElement fieldElement = (FieldElement) indexedElement;
-                Set<TypeResolver> types = fieldElement.getInstanceTypes();
-                others.append(composeTypesAndDescription(composeType(types, getTypeKind(fieldElement)), "")); // NOI18N
+                String declaredType = putTypeSeparatorBetweenWhitespaces(fieldElement.getDeclaredType());
+                others.append(composeTypesAndDescription(declaredType, "")); // NOI18N
             }
 
             phpDoc.append(composeFunctionDoc(processDescription(
@@ -452,6 +460,12 @@ final class DocRenderer {
                     composeParamTags(params, inheritedComments),
                     composeReturnTags(returns, inheritedComments),
                     others.toString()));
+        }
+
+        private String getType(PHPDocTypeTag typeTag) {
+            // e.g. @var (A&B)|C description
+            String[] split = CodeUtils.WHITE_SPACES_PATTERN.split(typeTag.getValue().trim(), 2);
+            return putTypeSeparatorBetweenWhitespaces(split[0]);
         }
 
         private boolean tagInTagsList(List<PHPDocTag> tags, AnnotationParsedLine tagKind) {
@@ -535,22 +549,19 @@ final class DocRenderer {
         }
 
         private String composeParameterLine(PHPDocVarTypeTag param, String documentation) {
-            return composeParameterLine(composeType(param.getTypes(), getTypeKind(param)), param.getVariable().getValue(), documentation);
+            return composeParameterLine(composeParamType(param), param.getVariable().getValue(), documentation);
         }
 
-        private String composeParameterLine(String type, String variableValue, String documentation) {
+        private String composeParameterLine(@NullAllowed String type, String variableValue, String documentation) {
+            String typeString = type == null ? "" : putTypeSeparatorBetweenWhitespaces(type); // NOI18N
             String pline = String.format("<tr><td>&nbsp;</td><td valign=\"top\" %s><nobr>%s</nobr></td><td valign=\"top\" %s><nobr><b>%s</b></nobr></td><td valign=\"top\" %s>%s</td></tr>%n", //NOI18N
                     TD_STYLE,
-                    type,
+                    typeString,
                     TD_STYLE,
                     variableValue,
                     TD_STYLE_MAX_WIDTH,
                     documentation == null ? "&nbsp" : processPhpDoc(documentation)); // NOI18N
             return pline;
-        }
-
-        private String composeTypesAndDescription(List<PHPDocTypeNode> types, String description, PHPDocTypeTag tag) {
-            return composeTypesAndDescription(composeType(types, getTypeKind(tag)), description);
         }
 
         @NbBundle.Messages({
@@ -569,31 +580,6 @@ final class DocRenderer {
                         Bundle.Description(), processPhpDoc(description)));
             }
             return returnValue.toString();
-        }
-
-        /**
-         * Create a string from the list of types.
-         *
-         * @param types types
-         * @param typeKind type kind
-         * @return types separated with "|" or "&"
-         */
-        private String composeType(List<PHPDocTypeNode> types, Type.Kind typeKind) {
-            StringBuilder type = new StringBuilder();
-            if (types != null) {
-                for (PHPDocTypeNode typeNode : types) {
-                    if (type.length() > 0
-                            && (typeKind == Type.Kind.UNION
-                            || typeKind == Type.Kind.INTERSECTION)) {
-                        type.append(" ").append(typeKind.getSign()).append(" "); //NOI18N
-                    }
-                    type.append(typeNode.getValue());
-                    if (typeNode.isArray()) {
-                        type.append("[]"); //NOI18N
-                    }
-                }
-            }
-            return type.toString();
         }
 
         /**
@@ -632,6 +618,15 @@ final class DocRenderer {
                 }
             }
             return sb.toString();
+        }
+
+        private String composeParamType(PHPDocVarTypeTag param) {
+            // (X&Y)|Z $param
+            String[] split = CodeUtils.WHITE_SPACES_PATTERN.split(param.getValue().trim(), 2);
+            if (!split[0].startsWith("$")) { // NOI18N
+                return split[0];
+            }
+            return ""; // NOI18N
         }
 
         // because of unit tests
@@ -725,8 +720,7 @@ final class DocRenderer {
                         params.append(paramLine);
                     } else {
                         // use actual parameter types
-                        Set<TypeResolver> types = parameter.getTypes();
-                        String paramLine = composeParameterLine(composeType(types, getTypeKind(parameter)), name, ""); // NOI18N
+                        String paramLine = composeParameterLine(parameter.getDeclaredType(), name, ""); // NOI18N
                         params.append(paramLine);
                     }
                 }
@@ -789,7 +783,7 @@ final class DocRenderer {
                 }
             }
             for (PHPDocTypeTag fallback : fallbacks) {
-                returnValue.append(composeTypesAndDescription(fallback.getTypes(), fallback.getDocumentation(), fallback));
+                returnValue.append(composeTypesAndDescription(getType(fallback), fallback.getDocumentation()));
             }
 
             if (fallbacks.isEmpty()) {
@@ -797,7 +791,13 @@ final class DocRenderer {
                 if (indexedElement instanceof BaseFunctionElement) {
                     BaseFunctionElement functionElement = (BaseFunctionElement) indexedElement;
                     // currently, fully qualified type names are shown
-                    returnValue.append(composeTypesAndDescription(composeType(functionElement.getReturnTypes(), getTypeKind(functionElement)), "")); // NOI18N
+                    String returnType = putTypeSeparatorBetweenWhitespaces(functionElement.getDeclaredReturnType());
+                    if (StringUtils.hasText(returnType)) {
+                        returnValue.append(composeTypesAndDescription(returnType, "")); // NOI18N
+                    } else {
+                        // GH-5355
+                        returnValue.append(composeTypesAndDescription(composeType(functionElement.getReturnTypes(), getTypeKind(functionElement)), "")); // NOI18N
+                    }
                 }
             }
             return returnValue.toString();
@@ -811,35 +811,6 @@ final class DocRenderer {
                 kind = Type.Kind.UNION;
             }
             return kind;
-        }
-
-        private Type.Kind getTypeKind(ParameterElement element) {
-            Type.Kind kind = Type.Kind.NORMAL;
-            if (element.isIntersectionType()) {
-                kind = Type.Kind.INTERSECTION;
-            } else if (element.isUnionType()) {
-                kind = Type.Kind.UNION;
-            }
-            return kind;
-        }
-
-        private Type.Kind getTypeKind(FieldElement element) {
-            Type.Kind kind = Type.Kind.NORMAL;
-            if (element.isIntersectionType()) {
-                kind = Type.Kind.INTERSECTION;
-            } else if (element.isUnionType()) {
-                kind = Type.Kind.UNION;
-            }
-            return kind;
-        }
-
-        private Type.Kind getTypeKind(PHPDocTypeTag tag) {
-            String value = tag.getValue().trim();
-            String[] values = value.split(" "); // NOI18N
-            if (values.length > 0) {
-                return Type.Kind.fromTypes(values[0]);
-            }
-            return Type.Kind.NORMAL;
         }
 
         private List<PhpElement> getInheritedElements() {
@@ -1125,6 +1096,13 @@ final class DocRenderer {
                 }
             }
             return null;
+        }
+
+        private static String putTypeSeparatorBetweenWhitespaces(@NullAllowed String type) {
+            if (type == null) {
+                return null;
+            }
+            return type.replace("&", " & ").replace("|", " | "); // NOI18N
         }
     }
 

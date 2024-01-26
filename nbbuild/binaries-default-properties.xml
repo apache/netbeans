@@ -22,5 +22,6 @@
 <project name="binaries-default-properties" default="netbeans" basedir=".">
   <property name="binaries.cache" location="${user.home}/.hgexternalcache"/>
   <property name="binaries.server" value="https://netbeans.osuosl.org/binaries/"/>
-  <property name="binaries.repos" value="https://repo1.maven.org/maven2/"/>
+  <!-- space separated list; add temp staging repos here when testing -->
+  <property name="binaries.repos" value="https://repo.maven.apache.org/maven2/"/>
 </project>

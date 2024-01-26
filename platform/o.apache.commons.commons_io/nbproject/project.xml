@@ -58,8 +58,8 @@
                 <package>org.apache.commons.io.serialization</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/commons-io-2.13.0.jar</runtime-relative-path>
-                <binary-origin>external/commons-io-2.13.0.jar</binary-origin>
+                <runtime-relative-path>ext/commons-io-2.15.1.jar</runtime-relative-path>
+                <binary-origin>external/commons-io-2.15.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

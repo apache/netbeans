@@ -47,6 +47,7 @@ public class FormatToken {
         WHITESPACE_AFTER_USE,
         WHITESPACE_BEFORE_CLASS_LEFT_BRACE,
         WHITESPACE_BEFORE_ANONYMOUS_CLASS_LEFT_BRACE,
+        WHITESPACE_AROUND_SCOPE_RESOLUTION_OP, // ::
         WHITESPACE_AROUND_OBJECT_OP,
         WHITESPACE_AROUND_NULLSAFE_OBJECT_OP,
         WHITESPACE_AROUND_DECLARE_EQUAL,
@@ -125,6 +126,8 @@ public class FormatToken {
         WHITESPACE_WITHIN_ATTRIBUTE_BRACKETS,
         WHITESPACE_WITHIN_ATTRIBUTE_DECL_PARENS,
         WHITESPACE_WITHIN_TYPE_CAST_PARENS,
+        WHITESPACE_WITHIN_DNF_TYPE_PARENS, // (A&B)|C
+        WHITESPACE_WITHIN_DYNAMIC_NAME_BRACES, // {$example}
         WHITESPACE_BEFORE_COMMA,
         WHITESPACE_AFTER_COMMA,
         WHITESPACE_BEFORE_SEMI,
@@ -294,6 +297,12 @@ public class FormatToken {
      */
     public static class AssignmentAnchorToken extends FormatToken {
 
+        public enum Type {
+            ASSIGNMENT, // "="
+            ARRAY, // "=>"
+            MATCH_ARM, // "=>"
+        }
+
         /**
          * length of the identifier that is before the aligned operator
          */
@@ -312,22 +321,28 @@ public class FormatToken {
          */
         private AssignmentAnchorToken previous;
         private final boolean multilined;
+        private final Type type;
 
         public AssignmentAnchorToken(int offset, boolean multilined) {
+            this(offset, multilined, Type.ASSIGNMENT);
+        }
+
+        public AssignmentAnchorToken(int offset, boolean multilined, Type type) {
             super(Kind.ASSIGNMENT_ANCHOR, offset);
             length = -1;
             maxLength = -1;
             previous = null;
             isInGroup = false;
             this.multilined = multilined;
+            this.type = type;
         }
 
-        public int getLenght() {
+        public int getLength() {
             return length;
         }
 
-        public void setLenght(int lenght) {
-            this.length = lenght;
+        public void setLength(int length) {
+            this.length = length;
         }
 
         public int getMaxLength() {
@@ -358,6 +373,9 @@ public class FormatToken {
             return multilined;
         }
 
+        public Type getType() {
+            return type;
+        }
     }
 
     public static class UnbreakableSequenceToken extends FormatToken {

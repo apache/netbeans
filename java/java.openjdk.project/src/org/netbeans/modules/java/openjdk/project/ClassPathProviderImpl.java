@@ -203,7 +203,7 @@ public class ClassPathProviderImpl implements ClassPathProvider {
     @Override
     public ClassPath findClassPath(FileObject file, String type) {
         if (sourceCP.findOwnerRoot(file) != null) {
-            if (!repository.isAnyProjectOpened()) {
+            if (repository != null && !repository.isAnyProjectOpened()) {
                 //if no project is open, java.base may not be indexed. Fallback on default queries:
                 return null;
             }

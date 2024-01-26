@@ -65,8 +65,8 @@ public class ItemsPanel extends javax.swing.JPanel {
         btnSelectAll.setToolTipText(org.openide.util.NbBundle.getMessage(ItemsPanel.class, "ItemsPanel.btnSelectAll.TTtext")); // NOI18N
         btnSelectAll.setEnabled(false);
 
-        org.openide.awt.Mnemonics.setLocalizedText(btnAllowDeletes, org.openide.util.NbBundle.getMessage(ItemsPanel.class, "ItemsPanel.btnAllowDeletes.text")); // NOI18N
-        btnAllowDeletes.setToolTipText(org.openide.util.NbBundle.getMessage(ItemsPanel.class, "ItemsPanel.btnAllowDeletes.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(btnAllowDestructiveActions, org.openide.util.NbBundle.getMessage(ItemsPanel.class, "ItemsPanel.btnAllowDestructiveActions.text")); // NOI18N
+        btnAllowDestructiveActions.setToolTipText(org.openide.util.NbBundle.getMessage(ItemsPanel.class, "ItemsPanel.btnAllowDestructiveActions.description")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -75,7 +75,7 @@ public class ItemsPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(titleLabel)
@@ -84,7 +84,7 @@ public class ItemsPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnSelectNone)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnAllowDeletes)))
+                                .addComponent(btnAllowDestructiveActions)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -99,13 +99,13 @@ public class ItemsPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnSelectNone)
-                        .addComponent(btnAllowDeletes))
+                        .addComponent(btnAllowDestructiveActions))
                     .addComponent(btnSelectAll))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    final javax.swing.JButton btnAllowDeletes = new javax.swing.JButton();
+    final javax.swing.JButton btnAllowDestructiveActions = new javax.swing.JButton();
     javax.swing.JButton btnSelectAll;
     javax.swing.JButton btnSelectNone;
     private javax.swing.JScrollPane jScrollPane1;

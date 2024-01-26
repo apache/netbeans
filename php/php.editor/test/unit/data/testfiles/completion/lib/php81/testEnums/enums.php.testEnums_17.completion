@@ -1,4 +1,4 @@
 Code completion result for source line:
 self::CASE1|::protectedStaticEnumMethod();
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-CONSTANT   CASE1 ?                         [PUBLIC]   \Enum1\Simple
+CONSTANT   CASE1                           [PUBLIC]   \Enum1\Simple

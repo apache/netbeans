@@ -61,7 +61,7 @@ public class HudsonMercurialSCM implements HudsonSCM {
 
     @Messages({
         "# {0} - repository location",
-        "warning.local_repo={0} will only be accessible from a Hudson server on the same machine.",
+        "warning.local_repo={0} will only be accessible from a Jenkins server on the same machine.",
         "error.repo.in.parent=Cannot find repository metadata in the project folder. Please configure the build manually."
     })
     public Configuration forFolder(File folder) {

@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -49,6 +50,8 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle;
 import javax.swing.UIManager;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
 
@@ -1033,9 +1036,20 @@ public class NotifyDescriptor extends Object {
     */
     public static class InputLine extends NotifyDescriptor {
         /**
+         * Property whose value is the input text, an event is fired
+         * when the input text's value changes,
+         * if enabled using {@link #setInputTextEventsEnabled(boolean) }.
+         *
+         * @since 7.70
+         */
+        public static final String PROP_INPUT_TEXT = "inputText"; // NOI18N
+
+        /**
         * The text field used to enter the input.
         */
         protected JTextField textField;
+        private final AtomicBoolean inputTextEventSuppressed = new AtomicBoolean();
+        private final AtomicBoolean inputTextEventEnabled = new AtomicBoolean();
 
         /** Construct dialog with the specified title and label text.
         * @param text label text
@@ -1070,8 +1084,28 @@ public class NotifyDescriptor extends Object {
         * @param text the new text
         */
         public void setInputText(final String text) {
-            textField.setText(text);
-            textField.selectAll();
+            inputTextEventSuppressed.set(true);
+            try {
+                textField.setText(text);
+                textField.selectAll();
+                if (inputTextEventEnabled.get()) {
+                    firePropertyChange(PROP_INPUT_TEXT, null, null);
+                }
+            } finally {
+                inputTextEventSuppressed.set(false);
+            }
+        }
+
+        /**
+         * Enable the {@link #PROP_INPUT_TEXT} when the input text is changed.
+         *
+         * @param value {@code true} if the {@code PROP_INPUT_TEXT} even should be fired
+         *              when the input text is modified, {@code false} otherwise.
+         *
+         * @since 7.70
+         */
+        public void setInputTextEventEnabled(boolean value) {
+            inputTextEventEnabled.set(value);
         }
 
         /** Make a component representing the input line.
@@ -1087,6 +1121,24 @@ public class NotifyDescriptor extends Object {
 
             boolean longText = text.length () > 80;
             textField = createTextField(); 
+            textField.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    if (inputTextEventEnabled.get() && !inputTextEventSuppressed.get()) {
+                        firePropertyChange(PROP_INPUT_TEXT, null, null);
+                    }
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    if (inputTextEventEnabled.get() && !inputTextEventSuppressed.get()) {
+                        firePropertyChange(PROP_INPUT_TEXT, null, null);
+                    }
+                }
+
+                @Override
+                public void changedUpdate(DocumentEvent e) {}
+            });
             textLabel.setLabelFor(textField);
             
             textField.requestFocus();
@@ -1162,7 +1214,7 @@ public class NotifyDescriptor extends Object {
             
             return panel;
         }
-        
+
         JTextField createTextField() {
             return new JTextField(25);
         }

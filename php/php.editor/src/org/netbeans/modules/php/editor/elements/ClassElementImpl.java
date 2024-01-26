@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.php.api.editor.PhpClass;
 import org.netbeans.modules.php.editor.CodeUtils;
@@ -47,41 +48,61 @@ import org.openide.util.Parameters;
  * @author Radek Matous
  */
 public final class ClassElementImpl extends TypeElementImpl implements ClassElement {
-    public static final String IDX_FIELD = PHPIndexer.FIELD_CLASS;
 
+    public static final String IDX_FIELD = PHPIndexer.FIELD_CLASS;
+    public static final String IDX_ATTRIBUTE_CLASS_FIELD = PHPIndexer.FIELD_ATTRIBUTE_CLASS;
+
+    @NullAllowed
     private final QualifiedName superClass;
     private final Collection<QualifiedName> possibleFQSuperClassNames;
     private final Collection<QualifiedName> fqMixinClassNames;
     private final Collection<QualifiedName> usedTraits;
+    private final boolean isAttributeClass;
 
-    private ClassElementImpl(
-            final QualifiedName qualifiedName,
-            final int offset,
-            final QualifiedName superClsName,
-            final Collection<QualifiedName> possibleFQSuperClassNames,
-            final Set<QualifiedName> ifaceNames,
-            final Collection<QualifiedName> fqSuperInterfaces,
-            final int flags,
-            final Collection<QualifiedName> usedTraits,
-            final String fileUrl,
-            final ElementQuery elementQuery,
-            final boolean isDeprecated,
-            final Collection<QualifiedName> fqMixinClassNames) {
-        super(qualifiedName, offset, ifaceNames, fqSuperInterfaces, flags, fileUrl, elementQuery, isDeprecated);
-        this.superClass = superClsName;
-        this.possibleFQSuperClassNames = possibleFQSuperClassNames;
-        this.usedTraits = usedTraits;
-        this.fqMixinClassNames = fqMixinClassNames;
+    private ClassElementImpl(Builder builder) {
+        super(builder.qualifiedName, builder.offset, builder.interfaceNames, builder.fqSuperInterfaces, builder.flags, builder.fileUrl, builder.elementQuery, builder.isDeprecated);
+        this.superClass = builder.superClassName;
+        this.possibleFQSuperClassNames = builder.possibleFQSuperClassNames;
+        this.usedTraits = builder.usedTraits;
+        this.fqMixinClassNames = builder.fqMixinClassNames;
+        this.isAttributeClass = builder.isAttributeClass;
+        checkTypeNames();
+    }
+
+    private void checkTypeNames() {
+        // GH-6634
+        // avoid getting types from the index with an empty string
+        boolean checkEnabled = false;
+        assert checkEnabled = true;
+        if (checkEnabled) {
+            if (superClass != null) {
+                assert !superClass.getName().isEmpty();
+            }
+            for (QualifiedName name : possibleFQSuperClassNames) {
+                assert !name.getName().isEmpty();
+            }
+            for (QualifiedName usedTrait : usedTraits) {
+                assert !usedTrait.getName().isEmpty();
+            }
+            for (QualifiedName className : fqMixinClassNames) {
+                assert !className.getName().isEmpty();
+            }
+        }
     }
 
     public static Set<ClassElement> fromSignature(final IndexQueryImpl indexScopeQuery, final IndexResult indexResult) {
-        return fromSignature(NameKind.empty(), indexScopeQuery, indexResult);
+        return fromSignature(NameKind.empty(), indexScopeQuery, indexResult, false);
     }
 
     public static Set<ClassElement> fromSignature(final NameKind query,
             final IndexQueryImpl indexScopeQuery, final IndexResult indexResult) {
-        String[] values = indexResult.getValues(IDX_FIELD);
-        Set<ClassElement> retval = values.length > 0 ? new HashSet<ClassElement>() : Collections.<ClassElement>emptySet();
+        return fromSignature(query, indexScopeQuery, indexResult, false);
+    }
+
+    public static Set<ClassElement> fromSignature(final NameKind query,
+            final IndexQueryImpl indexScopeQuery, final IndexResult indexResult, boolean isAttributeClass) {
+        String[] values = indexResult.getValues(getIndexField(isAttributeClass));
+        Set<ClassElement> retval = values.length > 0 ? new HashSet<>() : Collections.<ClassElement>emptySet();
         for (String val : values) {
             final ClassElement clz = fromSignature(query, indexScopeQuery, Signature.get(val));
             if (clz != null) {
@@ -97,11 +118,19 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         ClassSignatureParser signParser = new ClassSignatureParser(clsSignature);
         ClassElement retval = null;
         if (matchesQuery(query, signParser)) {
-            retval = new ClassElementImpl(signParser.getQualifiedName(), signParser.getOffset(),
-                    signParser.getSuperClassName(), signParser.getPossibleFQSuperClassName(),
-                    signParser.getSuperInterfaces(), signParser.getFQSuperInterfaces(), signParser.getFlags(),
-                    signParser.getUsedTraits(), signParser.getFileUrl(), indexScopeQuery,
-                    signParser.isDeprecated(), signParser.getFQMixinClassNames());
+            retval = new ClassElementImpl.Builder(signParser.getQualifiedName(), signParser.getOffset())
+                    .superClassName(signParser.getSuperClassName())
+                    .possibleFQSuperClassNames(signParser.getPossibleFQSuperClassName())
+                    .interfaceNames(signParser.getSuperInterfaces())
+                    .fqSuperInterfaces(signParser.getFQSuperInterfaces())
+                    .flags(signParser.getFlags())
+                    .usedTraits(signParser.getUsedTraits())
+                    .fileUrl(signParser.getFileUrl())
+                    .elementQuery(indexScopeQuery)
+                    .isDeprecated(signParser.isDeprecated())
+                    .fqMixinClassNames(signParser.getFQMixinClassNames())
+                    .isAttribute(signParser.isAttribute())
+                    .build();
         }
         return retval;
     }
@@ -112,22 +141,23 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         ClassDeclarationInfo info = ClassDeclarationInfo.create(node);
         final QualifiedName fullyQualifiedName = namespace != null ? namespace.getFullyQualifiedName() : QualifiedName.createForDefaultNamespaceName();
         // XXX mixin
-        return new ClassElementImpl(
-                fullyQualifiedName.append(info.getName()), info.getRange().getStart(),
-                info.getSuperClassName(), Collections.<QualifiedName>emptySet(), info.getInterfaceNames(),
-                Collections.<QualifiedName>emptySet(), info.getAccessModifiers().toFlags(), info.getUsedTraits(),
-                fileQuery.getURL().toExternalForm(), fileQuery, VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node),
-                Collections.<QualifiedName>emptySet());
+        return new ClassElementImpl.Builder(fullyQualifiedName.append(info.getName()), info.getRange().getStart())
+                .superClassName(info.getSuperClassName())
+                .interfaceNames(info.getInterfaceNames())
+                .flags(info.getAccessModifiers().toFlags())
+                .usedTraits(info.getUsedTraits())
+                .fileUrl(fileQuery.getURL().toExternalForm())
+                .elementQuery(fileQuery)
+                .isDeprecated(VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node))
+                .build();
     }
 
     public static ClassElement fromFrameworks(final PhpClass clz, final ElementQuery elementQuery) {
         Parameters.notNull("clz", clz);
         Parameters.notNull("elementQuery", elementQuery);
         String fullyQualifiedName = clz.getFullyQualifiedName();
-        ClassElementImpl retval = new ClassElementImpl(QualifiedName.create(fullyQualifiedName == null ? clz.getName() : fullyQualifiedName),
-                clz.getOffset(), null, Collections.<QualifiedName>emptySet(), Collections.<QualifiedName>emptySet(),
-                Collections.<QualifiedName>emptySet(), PhpModifiers.NO_FLAGS, Collections.<QualifiedName>emptySet(), null, elementQuery, false,
-                Collections.<QualifiedName>emptySet());
+        QualifiedName fqName = QualifiedName.create(fullyQualifiedName == null ? clz.getName() : fullyQualifiedName);
+        ClassElementImpl retval = new ClassElementImpl.Builder(fqName, clz.getOffset()).build();
         retval.setFileObject(clz.getFile());
         return retval;
     }
@@ -137,11 +167,16 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         return (query instanceof NameKind.Empty) || query.matchesName(ClassElement.KIND, signParser.getQualifiedName());
     }
 
+    public static String getIndexField(boolean isAttribute) {
+        return isAttribute ? IDX_ATTRIBUTE_CLASS_FIELD : IDX_FIELD;
+    }
+
     @Override
     public PhpElementKind getPhpElementKind() {
         return KIND;
     }
 
+    @CheckForNull
     @Override
     public QualifiedName getSuperClassName() {
         return superClass;
@@ -149,7 +184,7 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
 
     @Override
     public Collection<QualifiedName> getPossibleFQSuperClassNames() {
-        return this.possibleFQSuperClassNames;
+        return Collections.unmodifiableCollection(possibleFQSuperClassNames);
     }
 
     @Override
@@ -212,6 +247,7 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         });
         sb.append(mixinSb.toString());
         sb.append(Separator.SEMICOLON);
+        sb.append(isAttribute() ? 1 : 0).append(Separator.SEMICOLON);
         checkClassSignature(sb);
         return sb.toString();
     }
@@ -292,8 +328,95 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
     }
 
     @Override
+    public boolean isAttribute() {
+        return isAttributeClass;
+    }
+
+    @Override
     public Collection<QualifiedName> getUsedTraits() {
-        return usedTraits;
+        return Collections.unmodifiableCollection(usedTraits);
+    }
+
+    //~ Inner classes
+    private static class Builder {
+
+        final private QualifiedName qualifiedName;
+        final private int offset;
+        private QualifiedName superClassName;
+        private Collection<QualifiedName> possibleFQSuperClassNames = Collections.<QualifiedName>emptySet();
+        private Set<QualifiedName> interfaceNames = Collections.<QualifiedName>emptySet();
+        private Collection<QualifiedName> fqSuperInterfaces = Collections.<QualifiedName>emptySet();
+        private int flags = PhpModifiers.NO_FLAGS;
+        private Collection<QualifiedName> usedTraits = Collections.<QualifiedName>emptySet();
+        private String fileUrl = null;
+        private ElementQuery elementQuery = null;
+        private boolean isDeprecated = false;
+        private Collection<QualifiedName> fqMixinClassNames = Collections.<QualifiedName>emptySet();
+        private boolean isAttributeClass = false;
+
+        public Builder(QualifiedName qualifiedName, int offset) {
+            this.qualifiedName = qualifiedName;
+            this.offset = offset;
+        }
+
+        public Builder superClassName(QualifiedName superClsName) {
+            this.superClassName = superClsName;
+            return this;
+        }
+
+        public Builder possibleFQSuperClassNames(Collection<QualifiedName> possibleFQSuperClassNames) {
+            this.possibleFQSuperClassNames = new ArrayList<>(possibleFQSuperClassNames);
+            return this;
+        }
+
+        public Builder interfaceNames(Set<QualifiedName> ifaceNames) {
+            this.interfaceNames = new HashSet<>(ifaceNames);
+            return this;
+        }
+
+        public Builder fqSuperInterfaces(Collection<QualifiedName> fqSuperInterfaces) {
+            this.fqSuperInterfaces = new ArrayList<>(fqSuperInterfaces);
+            return this;
+        }
+
+        public Builder flags(int flags) {
+            this.flags = flags;
+            return this;
+        }
+
+        public Builder usedTraits(Collection<QualifiedName> usedTraits) {
+            this.usedTraits = new ArrayList<>(usedTraits);
+            return this;
+        }
+
+        public Builder fileUrl(String fileUrl) {
+            this.fileUrl = fileUrl;
+            return this;
+        }
+
+        public Builder elementQuery(ElementQuery elementQuery) {
+            this.elementQuery = elementQuery;
+            return this;
+        }
+
+        public Builder isDeprecated(boolean isDeprecated) {
+            this.isDeprecated = isDeprecated;
+            return this;
+        }
+
+        public Builder fqMixinClassNames(Collection<QualifiedName> fqMixinClassNames) {
+            this.fqMixinClassNames = new ArrayList<>(fqMixinClassNames);
+            return this;
+        }
+
+        public Builder isAttribute(boolean isAttribute) {
+            this.isAttributeClass = isAttribute;
+            return this;
+        }
+
+        public ClassElementImpl build() {
+            return new ClassElementImpl(this);
+        }
     }
 
     private static class ClassSignatureParser {
@@ -382,9 +505,13 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         public Collection<QualifiedName> getUsedTraits() {
             Collection<QualifiedName> retval = new HashSet<>();
             String traits = signature.string(7);
-            final String[] traitNames = traits.split(Separator.COMMA.toString());
+            final String[] traitNames = CodeUtils.COMMA_PATTERN.split(traits);
             for (String trait : traitNames) {
-                retval.add(QualifiedName.create(trait));
+                if (!trait.isEmpty()) {
+                    // GH-6634
+                    // avoid getting traits from the index with an empty string
+                    retval.add(QualifiedName.create(trait));
+                }
             }
             return retval;
         }
@@ -400,11 +527,19 @@ public final class ClassElementImpl extends TypeElementImpl implements ClassElem
         public Collection<QualifiedName> getFQMixinClassNames() {
             Collection<QualifiedName> retval = new HashSet<>();
             String mixins = signature.string(10);
-            final String[] mixinNames = mixins.split(Separator.COMMA.toString());
+            final String[] mixinNames = CodeUtils.COMMA_PATTERN.split(mixins);
             for (String mixinName : mixinNames) {
-                retval.add(QualifiedName.create(mixinName));
+                if (!mixinName.isEmpty()) {
+                    // GH-6634
+                    // avoid getting mixins from the index with an empty string
+                    retval.add(QualifiedName.create(mixinName));
+                }
             }
             return retval;
+        }
+
+        boolean isAttribute() {
+            return signature.integer(11) == 1;
         }
     }
 }

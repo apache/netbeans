@@ -27,8 +27,8 @@ body:
         Latest releases are always available from https://netbeans.apache.org/download/
       multiple: false
       options:
-        - "Apache NetBeans 19"
-        - "Apache NetBeans 20 release candidate"
+        - "Apache NetBeans 20"
+        - "Apache NetBeans 21 release candidate"
         - "Apache NetBeans latest daily build"
     validations:
       required: true
@@ -38,12 +38,19 @@ body:
       description: Describe what happened, what you expected to happen, and what went wrong.
       placeholder: >
         Please provide the context in which the problem occurred and explain what happened.
-        Explain why you think the behaviour is erroneous. It is extremely helpful if you copy&paste
+        Explain why you think the behaviour is erroneous. It is extremely helpful if you attach the messages.log file or copy&paste
         the fragment of logs showing the exact error messages or wrong behaviour and screenshots for
         UI problems or YouTube link to a video of you demonstrating the problem. You can include files by
         dragging and dropping them here.
     validations:
       required: true
+  - type: input
+    attributes:
+      label: Language / Project Type / NetBeans Component
+      description: >
+        Narrow down the specific area, examples: 'Java Maven Web application project',
+        'PHP project', 'NetBeans Platform Application wizard' or 'NetBeans Windows Installer'.
+      placeholder: "Java Maven Project using Java Modules (JPMS)"
   - type: textarea
     attributes:
       label: How to reproduce
@@ -54,6 +61,8 @@ body:
         Please make sure you provide a reproducible step-by-step case of how to reproduce the problem
         as minimally and precisely as possible. Remember that non-reproducible issues may be closed or
         converted into discussions. If we cannot reproduce an issue we cannot fix it!
+    validations:
+      required: true
   - type: dropdown
     attributes:
       label: Did this work correctly in an earlier version?
@@ -64,13 +73,11 @@ body:
       multiple: false
       options:
         - "No / Don't know"
+        - "Apache NetBeans 20"
         - "Apache NetBeans 19"
         - "Apache NetBeans 18"
         - "Apache NetBeans 17"
-        - "Apache NetBeans 16"
-        - "Apache NetBeans 15"
-        - "Apache NetBeans 14"
-        - "Apache NetBeans 13 or earlier"
+        - "Apache NetBeans 16 or earlier"
     validations:
       required: true
   - type: input

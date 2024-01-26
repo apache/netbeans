@@ -1,0 +1,15 @@
+        self::staticMethod($this); // error
+                           -----
+HINT:Cannot use "$this" in static context.
+                echo $this->field; // error
+                     -----
+HINT:Cannot use "$this" in static context.
+        return $this->test; // error
+               -----
+HINT:Cannot use "$this" in static context.
+                echo $this->field; // error
+                     -----
+HINT:Cannot use "$this" in static context.
+        $this->test; // error
+        -----
+HINT:Cannot use "$this" in static context.

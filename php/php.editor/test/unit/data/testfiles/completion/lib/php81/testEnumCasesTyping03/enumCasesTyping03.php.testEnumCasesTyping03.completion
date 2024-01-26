@@ -1,0 +1,8 @@
+Code completion result for source line:
+case CASE_C = self::|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CASE_A 100                      [PUBLIC]   EnumCaseInt
+CONSTANT   CASE_B 1                        [PUBLIC]   EnumCaseInt
+CONSTANT   CASE_C ?                        [PUBLIC]   EnumCaseInt
+CONSTANT   CASE_D ?                        [PUBLIC]   EnumCaseInt
+CONSTANT   class \EnumCaseInt              [PUBLIC]   Magic Constant

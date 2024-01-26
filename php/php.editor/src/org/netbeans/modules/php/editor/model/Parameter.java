@@ -20,6 +20,7 @@
 package org.netbeans.modules.php.editor.model;
 
 import java.util.List;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 
@@ -31,6 +32,11 @@ public interface Parameter {
 
     String getName();
     String getDefaultValue();
+    @CheckForNull
+    String getDeclaredType();
+    @CheckForNull
+    String getPhpdocType();
+    @CheckForNull
     /**
      * @return false if the type information is taken from PHPDoc
      */

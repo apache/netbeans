@@ -58,11 +58,7 @@
     </target>
 
     <target name="build-tooling-lib" depends="-download.release.files,-copy-gradle-wrapper,-uptodate-tooling" unless="tooling.uptodate">
-        <java fork="true" dir="${tooling}" classpath="${tooling}/gradle/wrapper/gradle-wrapper.jar" classname="org.gradle.wrapper.GradleWrapperMain" failonerror="true">
-            <sysproperty key="org.gradle.appname" value="Gradle"/>
-            <arg line="--offline"/>
-            <arg line="clean build -x check"/>
-        </java>
+        <ant dir="${tooling}" inheritAll="false" target="build" />
         <copy file="${tooling}/build/libs/${tooling}.jar" todir="build/tooling" overwrite="true"/>
         <copy file="${tooling}/src/main/resources/nb-tooling.gradle" todir="build/tooling" overwrite="true"/>
     </target>

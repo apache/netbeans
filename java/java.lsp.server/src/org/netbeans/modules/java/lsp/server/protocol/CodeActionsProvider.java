@@ -69,10 +69,14 @@ public abstract class CodeActionsProvider {
     }
 
     protected CodeAction createCodeAction(NbCodeLanguageClient client, String name, String kind, Object data, String command, Object... commandArgs) {
+        return createCodeAction(client, name, kind, data, command, Arrays.asList(commandArgs));
+    }
+
+    protected CodeAction createCodeAction(NbCodeLanguageClient client, String name, String kind, Object data, String command, List<Object> commandArgs) {
         CodeAction action = new CodeAction(name);
         action.setKind(kind);
         if (command != null) {
-            action.setCommand(new Command(name, Utils.encodeCommand(command, client.getNbCodeCapabilities()), Arrays.asList(commandArgs)));
+            action.setCommand(new Command(name, Utils.encodeCommand(command, client.getNbCodeCapabilities()), commandArgs));
         }
         if (data != null) {
             Map<String, Object> map = new HashMap<>();

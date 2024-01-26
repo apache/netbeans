@@ -1,0 +1,11 @@
+Code completion result for source line:
+function testFunction(#[Att|r1(int: Attr1::CONST_ATTR1, string: CONST_ATTRIBUTES_TEST1)] int $int): void {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Attr1                           [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1()                         [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1(int $int = 1)             [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1(int $int = 1, string $st  [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr2                           [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr2(string $string)           [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr2(string $string, bool $bo  [PUBLIC]   Attributes\Test1
+PACKAGE    Attributes                      [PUBLIC]   null

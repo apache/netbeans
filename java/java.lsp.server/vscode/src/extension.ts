@@ -47,11 +47,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ChildProcess } from 'child_process';
 import * as vscode from 'vscode';
+import * as ls from 'vscode-languageserver-protocol';
 import * as launcher from './nbcode';
 import {NbTestAdapter} from './testAdapter';
 import { asRanges, StatusMessageRequest, ShowStatusMessageParams, QuickPickRequest, InputBoxRequest, MutliStepInputRequest, TestProgressNotification, DebugConnector,
          TextEditorDecorationCreateRequest, TextEditorDecorationSetNotification, TextEditorDecorationDisposeNotification, HtmlPageRequest, HtmlPageParams,
-         ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep
+         ExecInHtmlPageRequest, SetTextEditorDecorationParams, ProjectActionParams, UpdateConfigurationRequest, QuickPickStep, InputBoxStep, SaveDocumentsRequest, SaveDocumentRequestParams
 } from './protocol';
 import * as launchConfigurations from './launchConfigurations';
 import { createTreeViewService, TreeViewService, TreeItemDecorator, Visualizer, CustomizableTreeDataProvider } from './explorer';
@@ -276,22 +277,31 @@ function wrapCommandWithProgress(lsCommand : string, title : string, log? : vsco
                 p.report({ message: title });
                 c.outputChannel.show(true);
                 const start = new Date().getTime();
-                if (log) {
-                    handleLog(log, `starting ${lsCommand}`);
-                }
-                const res = await vscode.commands.executeCommand(lsCommand, ...args);
-                const elapsed = new Date().getTime() - start;
-                if (log) {
-                    handleLog(log, `finished ${lsCommand} in ${elapsed} ms with result ${res}`);
-                }
-                const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
-                setTimeout(() => { // set a timeout so user would still see the message when build time is short
-                    if (res) {
-                        resolve(res);
-                    } else {
-                        reject(res);
+                try {
+                    if (log) {
+                        handleLog(log, `starting ${lsCommand}`);
                     }
-                }, humanVisibleDelay);
+                    const res = await vscode.commands.executeCommand(lsCommand, ...args)
+                    const elapsed = new Date().getTime() - start;
+                    if (log) {
+                        handleLog(log, `finished ${lsCommand} in ${elapsed} ms with result ${res}`);
+                    }
+                    const humanVisibleDelay = elapsed < 1000 ? 1000 : 0;
+                    setTimeout(() => { // set a timeout so user would still see the message when build time is short
+                        if (res) {
+                            resolve(res);
+                        } else {
+                            if (log) {
+                                handleLog(log, `Command ${lsCommand} takes too long to start`);
+                            }
+                            reject(res);
+                        }
+                    }, humanVisibleDelay);
+                } catch (err : any) {
+                    if (log) {
+                        handleLog(log, `command ${lsCommand} executed with error: ${JSON.stringify(err)}`);
+                    }
+                }
             } else {
                 reject(`cannot run ${lsCommand}; client is ${c}`);
             }
@@ -526,21 +536,15 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.surround.with', async (items) => {
         const selected: any = await window.showQuickPick(items, { placeHolder: 'Surround with ...' });
         if (selected) {
-            if (selected.userData.edit && selected.userData.edit.changes) {
-                let edit = new vscode.WorkspaceEdit();
-                Object.keys(selected.userData.edit.changes).forEach(key => {
-                    edit.set(vscode.Uri.parse(key), selected.userData.edit.changes[key].map((change: any) => {
-                        let start = new vscode.Position(change.range.start.line, change.range.start.character);
-                        let end = new vscode.Position(change.range.end.line, change.range.end.character);
-                        return new vscode.TextEdit(new vscode.Range(start, end), change.newText);
-                    }));
-                });
+            if (selected.userData.edit) {
+                const edit = await (await client).protocol2CodeConverter.asWorkspaceEdit(selected.userData.edit as ls.WorkspaceEdit);
                 await workspace.applyEdit(edit);
+                await commands.executeCommand('workbench.action.focusActiveEditorGroup');
             }
             await commands.executeCommand(selected.userData.command.command, ...(selected.userData.command.arguments || []));
         }
     }));
-    context.subscriptions.push(commands.registerCommand('nbls.db.add.all.connection', async () => {
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.db.add.all.connection', async () => {
         const ADD_JDBC = 'Add Database Connection';
         const ADD_ADB = 'Add Oracle Autonomous DB';
         const selected: any = await window.showQuickPick([ADD_JDBC, ADD_ADB], { placeHolder: 'Select type...' });
@@ -550,50 +554,84 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             await commands.executeCommand('nbls:Tools:org.netbeans.modules.cloud.oracle.actions.AddADBAction');
         }
     }));
-    const mergeWithLaunchConfig = (dconfig : vscode.DebugConfiguration) => {
-        const folder = vscode.workspace.workspaceFolders?.[0];
-        const uri = folder?.uri;
-        if (uri) {
-            const launchConfig = workspace.getConfiguration('launch', uri);
-            // retrieve values
-            const configurations = launchConfig.get('configurations') as (any[] | undefined);
-            if (configurations) {
-                for (let config of configurations) {
-                    if (config["type"] == dconfig.type) {
-                        for (let key in config) {
-                            if (!dconfig[key]) {
-                                dconfig[key] = config[key];
-                            }
-                        }
-                        break;
-                    }
-                }
+
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.generate.code', async (command, data) => {
+        const edit: any = await commands.executeCommand(command, data);
+        if (edit) {
+            const wsEdit = await (await client).protocol2CodeConverter.asWorkspaceEdit(edit as ls.WorkspaceEdit);
+            await workspace.applyEdit(wsEdit);
+            await commands.executeCommand('workbench.action.focusActiveEditorGroup');
+        }
+    }));
+
+    async function findRunConfiguration(uri : vscode.Uri) : Promise<vscode.DebugConfiguration|undefined> {
+        // do not invoke debug start with no (java+) configurations, as it would probably create an user prompt
+        let cfg = vscode.workspace.getConfiguration("launch");
+        let c = cfg.get('configurations');
+        if (!Array.isArray(c)) {
+            return undefined;
+        }
+        let f = c.filter((v) => v['type'] === 'java+');
+        if (!f.length) {
+            return undefined;
+        }
+        class P implements vscode.DebugConfigurationProvider {
+            config : vscode.DebugConfiguration | undefined;
+            
+            resolveDebugConfigurationWithSubstitutedVariables(folder: vscode.WorkspaceFolder | undefined, debugConfiguration: vscode.DebugConfiguration, token?: vscode.CancellationToken): vscode.ProviderResult<vscode.DebugConfiguration> {
+                this.config = debugConfiguration;
+                return undefined;
             }
         }
+        let provider = new P();
+        let d = vscode.debug.registerDebugConfigurationProvider('java+', provider);
+        // let vscode to select a debug config
+        return await vscode.commands.executeCommand('workbench.action.debug.start', { config: {
+            type: 'java+',
+            mainClass: uri.toString()
+        }, noDebug: true}).then((v) => {
+            d.dispose();
+            return provider.config;
+        }, (err) => {
+            d.dispose();
+            return undefined;
+        });
     }
 
     const runDebug = async (noDebug: boolean, testRun: boolean, uri: any, methodName?: string, launchConfiguration?: string, project : boolean = false, ) => {
-        const docUri = contextUri(uri);
+    const docUri = contextUri(uri);
         if (docUri) {
-            const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
-            const debugConfig : vscode.DebugConfiguration = {
+            // attempt to find the active configuration in the vsode launch settings; undefined if no config is there.
+            let debugConfig : vscode.DebugConfiguration = await findRunConfiguration(docUri) || {
                 type: "java+",
                 name: "Java Single Debug",
-                request: "launch",
-                methodName,
-                launchConfiguration,
-                testRun
+                request: "launch"
             };
+            if (!methodName) {
+                debugConfig['methodName'] = methodName;
+            }
+            if (launchConfiguration == '') {
+                if (debugConfig['launchConfiguration']) {
+                    delete debugConfig['launchConfiguration'];
+                }
+            } else {
+                debugConfig['launchConfiguration'] = launchConfiguration;
+            }
+            debugConfig['testRun'] = testRun;
+
+            const workspaceFolder = vscode.workspace.getWorkspaceFolder(docUri);
             if (project) {
                 debugConfig['projectFile'] = docUri.toString();
                 debugConfig['project'] = true;
             } else {
                 debugConfig['mainClass'] =  docUri.toString();
             }
-            mergeWithLaunchConfig(debugConfig);
+            
             const debugOptions : vscode.DebugSessionOptions = {
                 noDebug: noDebug,
             }
+            
+            
             const ret = await vscode.debug.startDebugging(workspaceFolder, debugConfig, debugOptions);
             return ret ? new Promise((resolve) => {
                 const listener = vscode.debug.onDidTerminateDebugSession(() => {
@@ -603,6 +641,7 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
             }) : ret;
         }
     };
+    
     context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.run.test', async (uri, methodName?, launchConfiguration?) => {
         await runDebug(true, true, uri, methodName, launchConfiguration);
     }));
@@ -663,6 +702,13 @@ export function activate(context: ExtensionContext): VSNetBeansAPI {
     }));
     context.subscriptions.push(commands.registerCommand('nbls.node.properties.edit',
         async (node) => await PropertiesView.createOrShow(context, node, (await client).findTreeViewService())));
+
+    context.subscriptions.push(commands.registerCommand(COMMAND_PREFIX + '.cloud.ocid.copy',
+        async (node) => {
+            const ocid : string = await commands.executeCommand(COMMAND_PREFIX + '.cloud.ocid.get', node.id);
+            vscode.env.clipboard.writeText(ocid);
+        }
+    ));
 
     const archiveFileProvider = <vscode.TextDocumentContentProvider> {
         provideTextDocumentContent: async (uri: vscode.Uri, token: vscode.CancellationToken): Promise<string> => {
@@ -1019,6 +1065,22 @@ function doActivateWithJDK(specifiedJDK: string | null, context: ExtensionContex
             c.onRequest(UpdateConfigurationRequest.type, async (param) => {
                 await vscode.workspace.getConfiguration(param.section).update(param.key, param.value);
                 runConfigurationUpdateAll();
+            });
+            c.onRequest(SaveDocumentsRequest.type, async (request : SaveDocumentRequestParams) => {
+                const uriList = request.documents.map(s => {
+                    let re = /^file:\/(?:\/\/)?([A-Za-z]):\/(.*)$/.exec(s);
+                    if (!re) {
+                        return s;
+                    }
+                    // don't ask why vscode mangles URIs this way; in addition, it uses lowercase drive letter ???
+                    return `file:///${re[1].toLowerCase()}%3A/${re[2]}`;
+                });
+                for (let ed of workspace.textDocuments) {
+                    if (uriList.includes(ed.uri.toString())) {
+                        return ed.save();
+                    }
+                }
+                return false;
             });
             c.onRequest(InputBoxRequest.type, async param => {
                 return await window.showInputBox({ title: param.title, prompt: param.prompt, value: param.value, password: param.password });

@@ -45,7 +45,7 @@ import org.netbeans.modules.gradle.spi.GradleFiles;
 public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, QualifiedProjectInfo> {
 
     // Increase this number if new info is gathered from the projects.
-    private static final int COMPATIBLE_CACHE_VERSION = 23;
+    private static final int COMPATIBLE_CACHE_VERSION = 24;
     private static final String INFO_CACHE_FILE_NAME = "project-info.ser"; //NOI18N
     private static final Map<GradleFiles, ProjectInfoDiskCache> DISK_CACHES = Collections.synchronizedMap(new WeakHashMap<>());
 
@@ -104,7 +104,7 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
         } else {
             nested = null;
         }
-        return new CacheReport(r.getErrorClass(), r.getScriptLocation(), r.getLineNumber(), r.getMessage(), nested);
+        return new CacheReport(r.getSeverity(), r.getErrorClass(), r.getScriptLocation(), r.getLineNumber(), r.getMessage(), r.getDetail(), nested);
     }
     
     private static Set<Report> makeReports(Collection<Report> reps) {
@@ -120,16 +120,29 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
         private final String location;
         private final int line;
         private final String message;
+        private final String detail;
         private final Report causedBy;
+        private final Severity severity;
 
-        public CacheReport(String errorClass, String location, int line, String message, Report causedBy) {
+        public CacheReport(Severity severity, String errorClass, String location, int line, String message, String detail, Report causedBy) {
+            this.severity = severity;
             this.errorClass = errorClass;
             this.location = location;
             this.line = line;
             this.message = message;
+            this.detail = detail;
             this.causedBy = causedBy;
         }
 
+        public CacheReport(Severity severity, String message, String detail) {
+            this.severity = severity;
+            this.errorClass = null;
+            this.location = null;
+            this.line = -1;
+            this.message = message;
+            this.detail = detail;
+            this.causedBy = null;
+        }
         public String getErrorClass() {
             return errorClass;
         }
@@ -149,6 +162,14 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
 
         public @CheckForNull Report getCause() {
             return causedBy;
+        }
+
+        public Severity getSeverity() {
+            return severity;
+        }
+
+        public String getDetail() {
+            return detail;
         }
 
         @Override
@@ -176,6 +197,9 @@ public final class ProjectInfoDiskCache extends AbstractDiskCache<GradleFiles, Q
                 return false;
             }
             if (!Objects.equals(this.location, other.location)) {
+                return false;
+            }
+            if (!Objects.equals(this.severity, other.severity)) {
                 return false;
             }
             return Objects.equals(this.message, other.message);

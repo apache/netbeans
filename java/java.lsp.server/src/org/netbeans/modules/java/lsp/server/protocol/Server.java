@@ -47,10 +47,12 @@ import com.google.gson.InstanceCreator;
 import com.google.gson.JsonObject;
 import java.util.prefs.Preferences;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import org.eclipse.lsp4j.CallHierarchyRegistrationOptions;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionOptions;
@@ -89,6 +91,7 @@ import org.eclipse.lsp4j.jsonrpc.MessageConsumer;
 import org.eclipse.lsp4j.jsonrpc.MessageIssueException;
 import org.eclipse.lsp4j.jsonrpc.RemoteEndpoint;
 import org.eclipse.lsp4j.jsonrpc.ResponseErrorException;
+import org.eclipse.lsp4j.jsonrpc.json.MessageJsonHandler;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.jsonrpc.messages.Message;
 import org.eclipse.lsp4j.jsonrpc.messages.NotificationMessage;
@@ -172,7 +175,7 @@ public final class Server {
     public static NbLspServer launchServer(Pair<InputStream, OutputStream> io, LspSession session) {
         LanguageServerImpl server = new LanguageServerImpl(session);
         ConsumeWithLookup msgProcessor = new ConsumeWithLookup(server.getSessionLookup());
-        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup);
+        Launcher<NbCodeLanguageClient> serverLauncher = createLauncher(server, io, msgProcessor::attachLookup, msgProcessor::addService);
         NbCodeLanguageClient remote = serverLauncher.getRemoteProxy();
         ((LanguageClientAware) server).connect(remote);
         msgProcessor.attachClient(server.client);
@@ -182,8 +185,17 @@ public final class Server {
     }
     
     private static Launcher<NbCodeLanguageClient> createLauncher(LanguageServerImpl server, Pair<InputStream, OutputStream> io,
-            Function<MessageConsumer, MessageConsumer> processor) {
-        return new LSPLauncher.Builder<NbCodeLanguageClient>()
+            Function<MessageConsumer, MessageConsumer> processor, Consumer<Object> addService) {
+        return new LSPLauncher.Builder<NbCodeLanguageClient>() {
+                @Override
+                protected MessageJsonHandler createJsonHandler() {
+                    MessageJsonHandler h = super.createJsonHandler(); 
+                    if (addService != null) {
+                        addService.accept(h.getGson());
+                    }
+                    return h;
+                }
+            }
             .setLocalService(server)
             .setRemoteInterface(NbCodeLanguageClient.class)
             .setInput(io.first())
@@ -207,7 +219,7 @@ public final class Server {
                 LOG.log(Level.WARNING, "Error occurred during LSP message dispatch", t);
                 if (t instanceof CompletionException) {
                     if (t.getCause() instanceof ResponseErrorException) {
-                        return ((ResponseErrorException)t).getResponseError();
+                        return ((ResponseErrorException)t.getCause()).getResponseError();
                     }
                     Throwable cause = t.getCause();
                     ResponseError error = new ResponseError();
@@ -232,9 +244,14 @@ public final class Server {
         private final Lookup sessionLookup;
         private NbCodeLanguageClient client;
         private OperationContext initialContext;
+        private List<Object> additionalServices = new ArrayList<>();
 
         public ConsumeWithLookup(Lookup sessionLookup) {
             this.sessionLookup = sessionLookup;
+        }
+        
+        public void addService(Object o) {
+            this.additionalServices.add(o);
         }
 
         synchronized void attachClient(NbCodeLanguageClient client) {
@@ -287,6 +304,9 @@ public final class Server {
                     }
                     if (ctx != null) {
                         ic.add(ctx);
+                    }
+                    if (additionalServices != null) {
+                        additionalServices.forEach(ic::add);
                     }
                     final InternalHandle ftoCancel = toCancel;
                     try {
@@ -361,6 +381,7 @@ public final class Server {
 
         private static final String NETBEANS_FORMAT = "format";
         private static final String NETBEANS_JAVA_IMPORTS = "java.imports";
+        private static final String NETBEANS_JAVA_HINTS = "hints";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
         private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
@@ -559,16 +580,22 @@ public final class Server {
             List<Project> projects = new ArrayList<>();
             List<FileObject> nonProjects = new ArrayList<>();
             List<FileObject> haveProjects = new ArrayList<>();
+            
+            Project[] candidateMapping = new Project[projectCandidates.size()];
             try {
+                int index = 0;
                 if (projectCandidates != null) {
                     for (FileObject candidate : projectCandidates) {
                         Project prj = FileOwnerQuery.getOwner(candidate);
+                        LOG.log(Level.FINER, "Opening {0} for candidate {1}, directory is {2}", new Object[] { prj, candidate, prj == null ? null : prj.getProjectDirectory() });
                         if (prj != null) {
+                            candidateMapping[index] = prj;
                             projects.add(prj);
                             haveProjects.add(prj.getProjectDirectory());
                         } else if (validParents && candidate.isFolder()) {
                             nonProjects.add(candidate);
                         }
+                        index++;
                     }
                     
                     synchronized (this) {
@@ -612,13 +639,13 @@ public final class Server {
                     throw new IllegalStateException(ex);
 
                 }
-                asyncOpenSelectedProjects1(f, previouslyOpened, projects, asWorkspaceProjects);
+                asyncOpenSelectedProjects1(f, previouslyOpened, candidateMapping, projects, asWorkspaceProjects);
             } catch (RuntimeException ex) {
                 f.completeExceptionally(ex);
             }
         }
 
-        private void asyncOpenSelectedProjects1(CompletableFuture<Project[]> f, Project[] previouslyOpened, List<Project> projects, boolean addToWorkspace) {
+        private void asyncOpenSelectedProjects1(CompletableFuture<Project[]> f, Project[] previouslyOpened, Project[] candidateMapping, List<Project> projects, boolean addToWorkspace) {
             int id = this.openRequestId.getAndIncrement();
 
             List<CompletableFuture> primingBuilds = new ArrayList<>();
@@ -678,6 +705,7 @@ public final class Server {
                 for (Project prj : projects) {
                     Set<Project> containedProjects = ProjectUtils.getContainedProjects(prj, true);
                     if (containedProjects != null) {
+                        LOG.log(Level.FINE, "Project {0} reports contained projects: {1}", new Object[] { prj, containedProjects });
                         additionalProjects.addAll(containedProjects);
                     }
                 }
@@ -711,6 +739,7 @@ public final class Server {
                         List<Project> current = Arrays.asList(workspaceProjects.getNow(new Project[0]));
                         int s = current.size();
                         ns.addAll(current);
+                        LOG.log(Level.FINER, "Current is: {0}, ns: {1}", new Object[] { current, ns });
                         if (s != ns.size()) {
                             prjs = ns.toArray(new Project[ns.size()]);
                             workspaceProjects = CompletableFuture.completedFuture(prjs);
@@ -721,7 +750,7 @@ public final class Server {
                         openingFileOwners.put(p, f.thenApply(unused -> p));
                     }
                 }
-                f.complete(prjsRequested);
+                f.complete(candidateMapping);
                 LOG.log(Level.INFO, "{0} projects opened in {1}ms", new Object[] { prjsRequested.length, (System.currentTimeMillis() - t) });
             }).exceptionally(e -> {
                 f.completeExceptionally(e);
@@ -887,7 +916,10 @@ public final class Server {
                     //TODO: use getRootPath()?
                 }
             }
-            CompletableFuture<Project[]> prjs = workspaceProjects;
+            CompletableFuture<Project[]> possibleWaitedPrjs = workspaceProjects;
+            // this Future will receive candidates, some of them possibly null. Cannot complete directly the existing `workspaceProjects` wit the returned candidates,
+            // as this could return nulls to clients that do not expect any.
+            CompletableFuture<Project[]> prjs = new CompletableFuture<Project[]>();
             SERVER_INIT_RP.post(() -> {
                 List<FileObject> additionalCandidates = new ArrayList<>();
                 AtomicBoolean cancel = new AtomicBoolean();
@@ -918,9 +950,15 @@ public final class Server {
             });
 
             // chain showIndexingComplete message after initial project open.
-            prjs.thenApply(this::showIndexingCompleted);
+            prjs.thenApply((candidates) -> {
+                Project[] nonNulls = Arrays.asList(candidates).stream().filter(Objects::nonNull).toArray(Project[]::new);
+                possibleWaitedPrjs.complete(nonNulls);
+                return nonNulls;
+            }).thenApply(this::showIndexingCompleted);
 
             initializeOptions();
+
+            workspaceService.setClientWorkspaceFolders(init.getWorkspaceFolders());
 
             // but complete the InitializationRequest independently of the project initialization.
             return CompletableFuture.completedFuture(
@@ -948,8 +986,18 @@ public final class Server {
 
         private void initializeOptions() {
             getWorkspaceProjects().thenAccept(projects -> {
+                ConfigurationItem item = new ConfigurationItem();
+                item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_HINTS);
+                client.configuration(new ConfigurationParams(Collections.singletonList(item))).thenAccept(c -> {
+                    if (c != null && !c.isEmpty() && c.get(0) instanceof JsonObject) {
+                        textDocumentService.updateJavaHintPreferences((JsonObject) c.get(0));
+                    }
+                    else {
+                        textDocumentService.hintsSettingsRead = true;
+                        textDocumentService.reRunDiagnostics();
+                    }
+                });
                 if (projects != null && projects.length > 0) {
-                    ConfigurationItem item = new ConfigurationItem();
                     FileObject fo = projects[0].getProjectDirectory();
                     item.setScopeUri(Utils.toUri(fo));
                     item.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_FORMAT);
@@ -1037,6 +1085,11 @@ public final class Server {
         public void setTrace(SetTraceParams params) {
             // no op: there's already a lot of noise in the log, and the console log
             // can be controlled by a commandline parameter to the NBLS.
+        }
+
+        @Override
+        public List<FileObject> getClientWorkspaceFolders() {
+            return workspaceService.getClientWorkspaceFolders();
         }
     }
 
@@ -1225,6 +1278,12 @@ public final class Server {
         public CompletableFuture<Void> configurationUpdate(UpdateConfigParams params) {
             logWarning(params);
             return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Boolean> requestDocumentSave(SaveDocumentRequestParams documentUris) {
+            logWarning(Arrays.asList(documentUris));
+            return CompletableFuture.completedFuture(false);
         }
     };
 

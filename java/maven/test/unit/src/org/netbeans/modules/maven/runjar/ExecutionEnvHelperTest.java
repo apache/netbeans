@@ -19,10 +19,12 @@
 package org.netbeans.modules.maven.runjar;
 
 import java.io.File;
+import java.io.InputStream;
 import org.netbeans.modules.maven.execute.MavenExecutionTestBase;
 import java.io.StringReader;
 import java.util.Map;
 import junit.framework.Test;
+import org.junit.Assume;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -34,6 +36,7 @@ import org.netbeans.modules.maven.runjar.MavenExecuteUtils.ExecutionEnvHelper;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.netbeans.modules.maven.execute.model.io.xpp3.NetbeansBuildActionXpp3Reader;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 
 /**
@@ -57,6 +60,7 @@ public abstract class ExecutionEnvHelperTest extends MavenExecutionTestBase {
 
     public static Test suite() {
         NbTestSuite suite = new NbTestSuite("ExecutionHelperTest");
+        suite.addTest(new NbTestSuite(SpecialRunConfiguration.class));
         suite.addTest(new NbTestSuite(NetBeansSplitConfig.class));
         suite.addTest(new NbTestSuite(NetBeans123Config.class));
         return suite;
@@ -67,6 +71,72 @@ public abstract class ExecutionEnvHelperTest extends MavenExecutionTestBase {
     protected void assertActionWorkingDir(String workingDir) throws Exception {}
 
     protected void assertActionEnvVariable(String varName, String varValue) throws Exception {}
+    
+    public static class SpecialRunConfiguration extends NetBeansSplitConfig {
+
+        public SpecialRunConfiguration(String name) {
+            super(name);
+        }
+
+        @Override
+        protected void setUp() throws Exception {
+            super.setUp();
+            clearWorkDir();
+            FileObject root = FileUtil.getConfigFile("Projects/org-netbeans-modules-maven/RunGoals");
+            if (root.getFileObject("foobar") == null) {
+                FileObject foobar = root.createData("foobar");
+                foobar.setAttribute("alias", "org.netbeans.test.mojo:test-plugin");
+                FileObject goal = root.createData("org.netbeans.test.mojo:test-plugin");
+                goal.setAttribute("goals", "test-run-goal");
+            }
+        }
+
+        @Override
+        protected void assertRunGoalName() {
+            assertTrue(runMapping.getGoals().toString().contains(":test-run-goal"));
+        }
+
+        @Override
+        protected InputStream getActionResourceStream() {
+            return getClass().getResourceAsStream("custom-test-goals.xml");
+        }
+        
+        /**
+         * Sets up project's split properties - individual parts split to separate
+         * properties (vm args, app args, main class).
+         */
+        @Override
+        protected void initDefaultProperties() {
+            super.initDefaultProperties();
+            runP.put("custom.vmArgs", "${exec.vmArgs}");
+            runP.put("custom.appArgs", "${exec.appArgs}");
+
+            profileP.putAll(runP);
+            debugP.putAll(runP);
+        }
+
+        @Override
+        protected void assertActionCustomVMProperties(String vmArg, String mainClass, String appArg) throws Exception {
+            super.assertActionOverridesArguments(vmArg, mainClass, appArg);
+            
+            // check that the split properties are populated
+            assertEquals(vmArg, mavenExecutorDefines.get("custom.vmArgs"));
+            assertEquals(appArg, mavenExecutorDefines.get("custom.appArgs"));
+            if (mainClass != null) {
+                assertEquals(mainClass, mavenExecutorDefines.get(MavenExecuteUtils.RUN_MAIN_CLASS));
+            }
+        }
+
+        @Override
+        protected String defaultCommandLineArgs() {
+            return MavenExecuteUtils.DEFAULT_EXEC_ARGS_CLASSPATH2;
+        }
+
+        @Override
+        public void test123DefaultActionWithVMAddition() throws Exception {
+            Assume.assumeTrue("Reading from POM is not supported for custom goals yet", false);
+        }
+    }
 
     public static class NetBeans123Config extends ExecutionEnvHelperTest {
 
@@ -288,7 +358,7 @@ public abstract class ExecutionEnvHelperTest extends MavenExecutionTestBase {
     private void assertPOMArguments(NetbeansActionMapping mapp, String actionsDefaultArgs) throws Exception {
         Project project = ProjectManager.getDefault().findProject(pom.getParent());        
         ModelRunConfig cfg = new ModelRunConfig(project, mapp, "run", null, Lookup.EMPTY, true);
-
+        Assume.assumeTrue(runMapping.getGoals().toString().contains(":exec"));
         assertTrue("Must contain POM vm arg", cfg.getProperties().get(MavenExecuteUtils.RUN_PARAMS).contains("-DsomeProperty=blah"));
         assertTrue("Must contain arg " + actionsDefaultArgs, cfg.getProperties().get(MavenExecuteUtils.RUN_PARAMS).contains(actionsDefaultArgs));
     }
@@ -347,6 +417,7 @@ public abstract class ExecutionEnvHelperTest extends MavenExecutionTestBase {
             final Project project = ProjectManager.getDefault().findProject(pom.getParent());
             loadActionMappings(project);
         }
+        Assume.assumeTrue(runMapping.getGoals().toString().contains(":exec"));
         assertRunArguments(runMapping, "-DsomeProperty=blah", DEFAULT_MAIN_CLASS_TOKEN,  null);
     }
     
@@ -608,5 +679,30 @@ public abstract class ExecutionEnvHelperTest extends MavenExecutionTestBase {
         // could be treated as a bug.
         assertRunArguments(runMapping, "", "org.Maven.Test", null);
         assertEquals("", mavenAppArgs);
+    }
+    
+    /**
+     * Checks that the configured goal is the expected one, so that tests test correct behaviour.
+     * Override in subclasses that modify goals.
+     */
+    protected void assertRunGoalName() {
+        assertTrue(runMapping.getGoals().toString().contains(":exec"));
+    }
+    
+    public void testEnvHelperConfigurable() throws Exception {
+        initCustomizedProperties();
+
+        FileObject pom = createPom("", "");
+        createNbActions(runP, debugP, profileP);
+
+        Project project = ProjectManager.getDefault().findProject(pom.getParent());        
+        loadActionMappings(project);
+
+        NbMavenProjectImpl mavenProject = project.getLookup().lookup(NbMavenProjectImpl.class);
+        ExecutionEnvHelper helper = MavenExecuteUtils.createExecutionEnvHelper(mavenProject, runMapping, debugMapping, profileMapping, defaultActionMapping);
+        helper.loadFromProject();
+        
+        assertRunGoalName();
+        assertTrue(helper.isValid());
     }
 }

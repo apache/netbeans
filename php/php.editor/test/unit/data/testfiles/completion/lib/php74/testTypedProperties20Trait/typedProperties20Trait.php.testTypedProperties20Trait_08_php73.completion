@@ -1,14 +1,3 @@
 Code completion result for source line:
 public static |MyClass $staticMyClass;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-KEYWORD    abstract                                   null
-KEYWORD    const                                      null
-KEYWORD    final                                      null
-KEYWORD    function                                   null
-KEYWORD    private                                    null
-KEYWORD    protected                                  null
-KEYWORD    public                                     null
-KEYWORD    readonly                                   null
-KEYWORD    static                                     null
-KEYWORD    var                                        null

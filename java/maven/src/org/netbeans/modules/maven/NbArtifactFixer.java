@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.artifact.DefaultArtifact;
@@ -105,6 +106,10 @@ public class NbArtifactFixer implements ArtifactFixer {
             //instead of workarounds down the road, we set the artifact's file here.
             // some stacktraces to maven/aether do set it after querying our code, but some don't for reasons unknown to me.
             artifact.setFile(f);
+            Set<Artifact> s = CAPTURE_FAKE_ARTIFACTS.get();
+            if (s != null) {
+                s.add(artifact);
+            }
             return f;
         } catch (IOException x) {
             Exceptions.printStackTrace(x);
@@ -149,4 +154,48 @@ public class NbArtifactFixer implements ArtifactFixer {
         return fallbackPOM;
     }
 
+    public interface ExceptionCallable<T, E extends Throwable> {
+        public T call() throws E;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends Throwable> void sneakyThrow(Throwable exception) throws T {
+        throw (T) exception;
+    }        
+    
+    /**
+     * Collects faked artifacts, which would be otherwise hidden in maven infrastructure. The value is only valid during {@link #collectFallbackArtifacts}, which
+     * can be invoked recursively.
+     */
+    private static ThreadLocal<Set<Artifact>> CAPTURE_FAKE_ARTIFACTS = new ThreadLocal<Set<Artifact>>();
+
+    /**
+     * Performs an operation and collects forged artifacts created during that operation. The invocation can be nested; each invocation gets only artifacts from its own 'level',
+     * not those from possible nested invocations. The function passes on all runtime exceptions and checked exception thrown by the operation.
+     * 
+     * @param <T> value produced by the executed operation
+     * @param <E> exception thrown from the operation
+     * @param code the operation to call and monitor
+     * @param collector callback that will get collected artifacts.
+     * @return
+     * @throws E 
+     */
+    public static <T, E extends Throwable> T collectFallbackArtifacts(ExceptionCallable<T, E> code, Consumer<Set<Artifact>> collector) throws E {
+        Set<Artifact> save = CAPTURE_FAKE_ARTIFACTS.get();
+        try {
+            CAPTURE_FAKE_ARTIFACTS.set(new HashSet<>());
+            return code.call();
+        } catch (Error | RuntimeException r) {
+            throw r;
+        } catch (Exception ex) {
+            sneakyThrow(ex);
+            // unreachable
+            throw new Error(); 
+        } finally {
+            if (collector != null) {
+                collector.accept(CAPTURE_FAKE_ARTIFACTS.get());
+            }
+            CAPTURE_FAKE_ARTIFACTS.set(save);
+        }
+    }
 }

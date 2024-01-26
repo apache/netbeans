@@ -21,8 +21,6 @@ package org.netbeans.modules.maven.codegen;
 
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import javax.swing.DefaultComboBoxModel;
@@ -56,10 +54,10 @@ public class NewMirrorPanel extends javax.swing.JPanel {
     private SettingsModel model;
     private NotificationLineSupport nls;
 
-    private static final String ALL = "*"; //2.0.5+ //NOI18N
-    private static final String ALL_NON_LOCAL = "external:*"; //2.0.9+ //NOI18N
-    private static final String ALL_BUT_FOO = "*,!foo"; //2.0.9+ //NOI18N
-    private static final String LIST = "foo,bar"; //2.0.9+ //NOI18N
+    private static final String ALL = "*"; //NOI18N
+    private static final String ALL_NON_LOCAL = "external:*"; //NOI18N
+    private static final String ALL_BUT_FOO = "*,!foo"; //NOI18N
+    private static final String LIST = "foo,bar"; //NOI18N
 
     private final String[] MIRROROFS = new String[] {
         RepositorySystem.DEFAULT_REMOTE_REPO_ID,
@@ -68,7 +66,7 @@ public class NewMirrorPanel extends javax.swing.JPanel {
         ALL_BUT_FOO,
         LIST
     };
-    private DefaultComboBoxModel<String> urlmodel;
+    private final DefaultComboBoxModel<String> urlmodel;
 
 
     public NewMirrorPanel(SettingsModel model) {
@@ -135,18 +133,14 @@ public class NewMirrorPanel extends javax.swing.JPanel {
         comUrl.setModel(urlmodel);
 
         btnLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnLink.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    URL link = new URL("http://maven.apache.org/guides/mini/guide-mirror-settings.html"); //NOI18N
-                    HtmlBrowser.URLDisplayer.getDefault().showURL(link);
-                } catch (MalformedURLException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+        btnLink.addActionListener(e -> {
+            try {
+                URL link = new URL("http://maven.apache.org/guides/mini/guide-mirror-settings.html"); //NOI18N
+                HtmlBrowser.URLDisplayer.getDefault().showURL(link);
+            } catch (MalformedURLException ex) {
+                Exceptions.printStackTrace(ex);
             }
         });
-        checkCentral();
     }
 
     /** For gaining access to DialogDisplayer instance to manage
@@ -163,6 +157,7 @@ public class NewMirrorPanel extends javax.swing.JPanel {
     public void addNotify() {
         super.addNotify();
         assert nls != null : " The notificationLineSupport was not attached to the panel."; //NOI18N
+        checkCentral();
     }
 
     private void checkId() {
@@ -179,20 +174,18 @@ public class NewMirrorPanel extends javax.swing.JPanel {
         String sel = (String)comMirrorOf.getSelectedItem();
         urlmodel.removeAllElements();
         if (RepositorySystem.DEFAULT_REMOTE_REPO_ID.equals(sel)) {
-            //see http://docs.codehaus.org/display/MAVENUSER/Mirrors+Repositories
-            // for a list of central mirrors.
-            //TODO might be worth to externalize somehow.
-            urlmodel.addElement("http://mirrors.ibiblio.org/pub/mirrors/maven2"); //NOI18N
-            urlmodel.addElement("http://www.ibiblio.net/pub/packages/maven2");//NOI18N
-            urlmodel.addElement("http://ftp.cica.es/mirrors/maven2");//NOI18N
-            urlmodel.addElement("http://repo1.sonatype.net/maven2");//NOI18N
-            urlmodel.addElement("http://repo.exist.com/maven2");//NOI18N
-            urlmodel.addElement("http://mirrors.redv.com/maven2");//NOI18N
-            urlmodel.addElement("http://mirrors.dotsrc.org/maven2");//NOI18N
+            // according to devs involved with maven and maven central, these are the only public mirrors left for central at this time
+            // see https://repo.maven.apache.org/maven2/.meta/repository-metadata.xml (which should be kept up2date now - hopefully)
+            urlmodel.addElement("https://maven-central.storage-download.googleapis.com/maven2"); //NOI18N
+            urlmodel.addElement("https://maven-central-eu.storage-download.googleapis.com/maven2"); //NOI18N
+            urlmodel.addElement("https://maven-central-asia.storage-download.googleapis.com/maven2"); //NOI18N
+            if (txtId.getText() == null || txtId.getText().isEmpty()) {
+                txtId.setText(RepositorySystem.DEFAULT_REMOTE_REPO_ID+"-mirror"); //NOI18N
+            }
+        } else if ((RepositorySystem.DEFAULT_REMOTE_REPO_ID+"-mirror").equals(txtId.getText())) {
+            txtId.setText(""); //NOI18N
         }
     }
-
-
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -234,46 +227,42 @@ public class NewMirrorPanel extends javax.swing.JPanel {
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 108, Short.MAX_VALUE)
+                        .addComponent(btnLink, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(Alignment.LEADING)
+                            .addComponent(lblId)
                             .addComponent(lblMirrorOf)
-                            .addComponent(lblId))
+                            .addComponent(lblUrl))
                         .addPreferredGap(ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtId, GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                                .addGap(145, 145, 145))
-                            .addComponent(comMirrorOf, 0, 304, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblUrl)
-                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                        .addComponent(comUrl, 0, 303, Short.MAX_VALUE))
-                    .addComponent(btnLink, GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
+                            .addComponent(comUrl, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtId)
+                            .addComponent(comMirrorOf, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(lblId)
                     .addComponent(txtId, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(ComponentPlacement.RELATED)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(lblMirrorOf)
                     .addComponent(comMirrorOf, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(ComponentPlacement.RELATED)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(lblUrl)
                     .addComponent(comUrl, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btnLink, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

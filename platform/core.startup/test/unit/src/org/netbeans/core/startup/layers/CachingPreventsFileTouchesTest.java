@@ -161,9 +161,18 @@ public class CachingPreventsFileTouchesTest extends NbTestCase {
         Collections.shuffle(Arrays.asList(arr));
         for (File f : arr) {
             if (!f.isDirectory()) {
-                System.err.println("checking " + f);
-                cnt++;
-                assertFileDoesNotContain(f, install);
+                if (f.getName().equals("all-checksum.txt")) {
+                    /* In org.netbeans.Stamps, we intentionally include the full netbeans.home path
+                    on Windows as a workaround for NETBEANS-1914. This is meant to invalidate the
+                    cache on changes to netbeans.home in case, despite the intentions of those who
+                    implemented the cache directory system, an absolute path to netbeas.home did end
+                    up in the cache directory. */
+                    System.err.println("skipping checksum file " + f);
+                } else {
+                    System.err.println("checking " + f);
+                    cnt++;
+                    assertFileDoesNotContain(f, install);
+                }
             }
         }
         assertTrue("Some cache files found", cnt > 4);

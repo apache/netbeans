@@ -19,9 +19,18 @@ name: NetBeans
 
 on:
   push:
+    branches:
+      - 'master'
+      - 'delivery'
+      - 'release*'
+
   pull_request:
     # unlocked event is used as super secret restart button
     types: [opened, synchronize, unlocked]
+
+  # Allows you to run this workflow manually from the Actions tab in GitHub UI
+  # keep in mind this will have ALL tests enabled
+  workflow_dispatch:
 
 # cancel other PR workflow run in the same head-base group if it exists (e.g. during PR syncs)
 # if this is not a PR run (no github.head_ref and github.base_ref defined), use an UID as group
@@ -105,7 +114,7 @@ jobs:
     steps:
         
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -124,13 +133,6 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-
 
-      - name: Setup Gradle Daemon to run on JDK 11
-        if: ${{ matrix.java == '21' }}
-        run: |
-          mkdir -p ~/.gradle
-          #uses a preinstalled JDK 11 from the runner
-          echo "org.gradle.java.home=$JAVA_HOME_11_X64" >> ~/.gradle/gradle.properties
-
       - name: Build NetBeans
         run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG build-nozip
 
@@ -140,10 +142,11 @@ jobs:
 
       - name: Upload Workspace
         if: ${{ (matrix.java == '11') && success() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: /tmp/build.tar.zst
+          compression-level: 0
           retention-days: 2
           if-no-files-found: error
           
@@ -153,10 +156,11 @@ jobs:
 
       - name: Upload Dev Build
         if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dev-build
           path: nbbuild/NetBeans-*.zip
+          compression-level: 0
           retention-days: 7
           if-no-files-found: error
 
@@ -175,7 +179,7 @@ jobs:
           show-progress: false
 
       - name: Set up JDK 11
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
             distribution: ${{ env.default_java_distribution }}
             java-version: 11
@@ -213,7 +217,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -225,7 +229,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -273,7 +277,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -306,7 +310,7 @@ jobs:
 
       - name: Download Build
         if: ${{ needs.base-build.result == 'success' && !cancelled() }}
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -338,13 +342,13 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -371,13 +375,13 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -406,13 +410,13 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -464,7 +468,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.default_java_distribution }}
@@ -475,7 +479,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -816,12 +820,12 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '21' ]
+        java: [ '11', '17', '21' ]
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.default_java_distribution }}
@@ -832,7 +836,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -856,6 +860,9 @@ jobs:
 
       - name: java/maven.indexer
         run: ant $OPTS -f java/maven.indexer test
+
+      - name: java/maven.refactoring
+        run: ant $OPTS -f java/maven.refactoring test
 
       - name: java/maven.junit
         run: ant $OPTS -f java/maven.junit test
@@ -895,7 +902,7 @@ jobs:
 
       - name: Set up JDK 17 for JDK 21 incompatible tests
         if: ${{ matrix.java == '21' }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: ${{ env.default_java_distribution }}
@@ -910,6 +917,9 @@ jobs:
 
       - name: extide/gradle
         run: ant $OPTS -f extide/gradle test
+
+      - name: java/gradle.dependencies
+        run: ant $OPTS -f java/gradle.dependencies test
 
       - name: extide/o.apache.tools.ant.module
         run: ant $OPTS -f extide/o.apache.tools.ant.module test
@@ -934,7 +944,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.default_java_distribution }}
@@ -945,7 +955,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1067,7 +1077,7 @@ jobs:
         run: ant $OPTS -f platform/o.n.swing.tabcontrol test
 
       - name: Set up JDK 8 for incompatibe tests
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 8
           distribution: ${{ env.default_java_distribution }}
@@ -1115,13 +1125,13 @@ jobs:
     steps:
 
       - name: Set up JDK 11
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 11
           distribution: ${{ env.default_java_distribution }}
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.default_java_distribution }}
@@ -1132,7 +1142,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1255,7 +1265,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.default_java_distribution }}
@@ -1266,7 +1276,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1321,7 +1331,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -1332,7 +1342,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1431,8 +1441,8 @@ jobs:
 #      - name: jellytools.java
 #        run: ant $OPTS -f java/jellytools.java test
 
-#      - name: jshell.support
-#        run: ant $OPTS -f java/jshell.support test
+      - name: jshell.support
+        run: ant $OPTS -f java/jshell.support test
 
       - name: junit
         run: ant $OPTS -f java/junit test-unit
@@ -1509,7 +1519,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.default_java_distribution }}
@@ -1520,7 +1530,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1564,7 +1574,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -1575,7 +1585,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1614,7 +1624,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.default_java_distribution }}
@@ -1625,7 +1635,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1671,7 +1681,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.default_java_distribution }}
@@ -1682,7 +1692,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1713,7 +1723,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.default_java_distribution }}
@@ -1724,7 +1734,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1849,7 +1859,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -1860,7 +1870,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1893,7 +1903,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -1904,7 +1914,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1949,7 +1959,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -1960,7 +1970,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -1994,7 +2004,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -2005,7 +2015,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -2211,7 +2221,7 @@ jobs:
         run: ant $OPTS -f enterprise/websvc.wsstackapi test
 
       - name: Set up JDK 8 for incompatible tests
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 8
           distribution: ${{ env.default_java_distribution }}
@@ -2223,7 +2233,7 @@ jobs:
         run: ant $OPTS -f enterprise/j2ee.dd.webservice test
 
       - name: Set up JDK 17 for tests that are not compatible with JDK 11
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: ${{ env.default_java_distribution }}
@@ -2249,7 +2259,7 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -2260,7 +2270,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -2324,7 +2334,7 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -2335,7 +2345,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -2375,7 +2385,7 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -2396,7 +2406,7 @@ jobs:
       # - - -
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -2515,7 +2525,7 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.default_java_distribution }}
@@ -2526,7 +2536,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -2562,7 +2572,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -2620,7 +2630,7 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.default_java_distribution }}
@@ -2636,7 +2646,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -2651,7 +2661,7 @@ jobs:
       - name: test-vscode-ext
         run: |
           cd java/java.lsp.server
-          ant $OPTS test-vscode-ext
+          env "netbeans.extra.options=-J-Dnetbeans.logger.console=true" ant $OPTS test-vscode-ext
  
 
 # last job depends on everything so that it is forced to run last even if a long job fails early

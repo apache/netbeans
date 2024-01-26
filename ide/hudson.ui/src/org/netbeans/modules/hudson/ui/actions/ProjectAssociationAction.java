@@ -60,8 +60,8 @@ public class ProjectAssociationAction extends AbstractAction {
     @Messages({
         "ProjectAssociationAction.open_some_projects=Open some projects to choose from.",
         "ProjectAssociationAction.title_select_project=Select Project",
-        "ProjectAssociationAction.could_not_associate=Failed to record a Hudson job association.",
-        "ProjectAssociationAction.could_not_dissociate=Failed to find the Hudson job association to be removed."
+        "ProjectAssociationAction.could_not_associate=Failed to record a Jenkins job association.",
+        "ProjectAssociationAction.could_not_dissociate=Failed to find the Jenkins job association to be removed."
     })
     @Override public void actionPerformed(ActionEvent e) {
         if (alreadyAssociatedProject == null) {

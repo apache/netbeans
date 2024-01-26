@@ -1,0 +1,136 @@
+
+
+Document 0
+Searchable Keys:
+  base : arrowfunctiondeclaration:1308;ArrowFunctionDeclaration:1308;1308;;(X&Y)|(Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y)|(Y&Z)|(X&Z);
+  base : lambdafunctiondeclaration:1259;LambdaFunctionDeclaration:1259;1259;$test:int:1::1:0:0:0:0:0:int:;(X&Y&Z)|(X&Z);;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y&Z)|(X&Z);
+  base : returntype;returnType;857;;(\X&\Y)|(\X&\Z);;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y)|(X&Z);
+  top : $arrow
+  top : $closure
+  top : arrowfunctiondeclaration:1308
+  top : lambdafunctiondeclaration:1259
+  top : returntype
+  var : $arrow;$arrow;;1300;0;<TESTURL>/testPHP82DNFReturnTypes.php;
+  var : $closure;$closure;;1249;0;<TESTURL>/testPHP82DNFReturnTypes.php;
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : testclass;TestClass;894;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;0;
+  method : returntype;returnType;926;;(\X&\Y)|\Z|\X;1;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y)|Z|X;
+  top : testclass
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  clz : x;X;820;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;0;
+  top : x
+
+Not Searchable Keys:
+
+
+Document 3
+Searchable Keys:
+  clz : y;Y;831;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;0;
+  top : y
+
+Not Searchable Keys:
+
+
+Document 4
+Searchable Keys:
+  clz : z;Z;842;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;;0;
+  top : z
+
+Not Searchable Keys:
+
+
+Document 5
+Searchable Keys:
+  enum : testenum;TestEnum;1173;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;
+  enum.case : case1;Case1;1193;?;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;
+  method : returntype;returnType;1220;;(\X&\Y)|\Z;1;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y)|Z;
+  top : testenum
+
+Not Searchable Keys:
+
+
+Document 6
+Searchable Keys:
+  identifier_used : arrow;
+  identifier_used : case1;
+  identifier_used : closure;
+  identifier_used : int;
+  identifier_used : returntype;
+  identifier_used : returntype;
+  identifier_used : returntype;
+  identifier_used : returntype;
+  identifier_used : returntype;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : test;
+  identifier_used : testclass;
+  identifier_used : testenum;
+  identifier_used : testinterfase;
+  identifier_used : testtrait;
+  identifier_used : this;
+  identifier_used : this;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : x;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : y;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+  identifier_used : z;
+
+Not Searchable Keys:
+
+
+Document 7
+Searchable Keys:
+  iface : testinterfase;TestInterfase;1102;;;0;<TESTURL>/testPHP82DNFReturnTypes.php;
+  method : returntype;returnType;1138;;\X|(\X&\Y&\Z)|\Z;1025;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;X|(X&Y&Z)|Z;
+  top : testinterfase
+
+Not Searchable Keys:
+
+
+Document 8
+Searchable Keys:
+  method : returntype;returnType;1027;;(\X&\Y)|(\Y&\Z);1;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y)|(Y&Z);
+  top : testtrait
+  trait : testtrait;TestTrait;995;;;0;<TESTURL>/testPHP82DNFReturnTypes.php;
+
+Not Searchable Keys:

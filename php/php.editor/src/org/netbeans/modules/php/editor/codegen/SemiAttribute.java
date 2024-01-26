@@ -406,7 +406,7 @@ public class SemiAttribute extends DefaultVisitor {
         ClassElementAttribute ce = (ClassElementAttribute) global.enterWrite(name, Kind.IFACE, node);
 
         node2Element.put(node, ce);
-        List<Expression> interfaes = node.getInterfaes();
+        List<Expression> interfaes = node.getInterfaces();
         for (Expression identifier : interfaes) {
             ClassElementAttribute iface = (ClassElementAttribute) lookup(CodeUtils.extractUnqualifiedName(identifier), Kind.IFACE);
             ce.ifaces.add(iface);
@@ -437,7 +437,7 @@ public class SemiAttribute extends DefaultVisitor {
         if (superClsName != null) {
             ce.superClass = (ClassElementAttribute) lookup(superClsName.getName(), Kind.CLASS);
         }
-        List<Expression> interfaes = node.getInterfaes();
+        List<Expression> interfaes = node.getInterfaces();
         for (Expression identifier : interfaes) {
             ClassElementAttribute iface = (ClassElementAttribute) lookup(CodeUtils.extractUnqualifiedName(identifier), Kind.IFACE);
             ce.ifaces.add(iface);
@@ -797,7 +797,7 @@ public class SemiAttribute extends DefaultVisitor {
                     ce.superClass = (ClassElementAttribute) lookup(superClsName.getName(), Kind.CLASS);
                     node2Element.put(node.getSuperClass(), ce.superClass);
                 }
-                List<Expression> interfaces = node.getInterfaes();
+                List<Expression> interfaces = node.getInterfaces();
                 for (Expression identifier : interfaces) {
                     //TODO: ifaces must be fixed;
                 }

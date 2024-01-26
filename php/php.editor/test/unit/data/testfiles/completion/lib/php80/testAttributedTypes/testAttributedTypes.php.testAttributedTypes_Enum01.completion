@@ -1,0 +1,7 @@
+Code completion result for source line:
+#[Attr1|(int: 500)]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Attr1                           [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1()                         [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1(int $int = 1)             [PUBLIC]   Attributes\Test1
+CONSTRUCTO Attr1(int $int = 1, string $st  [PUBLIC]   Attributes\Test1

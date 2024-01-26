@@ -29,23 +29,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
-import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.RecordComponentElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -55,7 +50,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.db.explorer.ConnectionManager;
-import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -66,7 +60,9 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletion;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionContext;
 import org.netbeans.modules.db.sql.editor.api.completion.SQLCompletionResultSet;
+import org.netbeans.modules.micronaut.db.Utils;
 import org.netbeans.modules.micronaut.expression.EvaluationContext;
+import org.netbeans.modules.micronaut.expression.MicronautExpressionLanguageParser;
 import org.netbeans.modules.parsing.api.ParserManager;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
@@ -75,7 +71,6 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.completion.CompletionItem;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import org.openide.util.WeakListeners;
 
 /**
  *
@@ -86,6 +81,7 @@ public class MicronautDataCompletionTask {
     private static final String JPA_REPOSITORY_ANNOTATION_NAME = "io.micronaut.data.annotation.Repository";
     private static final String JDBC_REPOSITORY_ANNOTATION_NAME = "io.micronaut.data.jdbc.annotation.JdbcRepository";
     private static final String REPOSITORY_TYPE_NAME = "io.micronaut.data.repository.GenericRepository";
+    private static final String CONTROLLER_ANNOTATION_NAME = "io.micronaut.http.annotation.Controller";
     private static final String QUERY_ANNOTATION_TYPE_NAME = "io.micronaut.data.annotation.Query";
     private static final String GET = "get";
     private static final List<String> QUERY_PATTERNS = new ArrayList<>(Arrays.asList("find", "get", "query", "read", "retrieve", "search"));
@@ -100,35 +96,11 @@ public class MicronautDataCompletionTask {
     private static final String COUNT = "count";
     private static final String EXISTS = "exists";
     private static final String EMPTY = "";
-    private static final String COMPLETION_CASE_SENSITIVE = "completion-case-sensitive"; // NOI18N
-    private static final boolean COMPLETION_CASE_SENSITIVE_DEFAULT = true;
-    private static final String JAVA_COMPLETION_SUBWORDS = "javaCompletionSubwords"; //NOI18N
-    private static final boolean JAVA_COMPLETION_SUBWORDS_DEFAULT = false;
-    private static final Pattern MEXP_PATTERN = Pattern.compile("#\\{(.*?)}");
-    private static final PreferenceChangeListener preferencesTracker = new PreferenceChangeListener() {
-        @Override
-        public void preferenceChange(PreferenceChangeEvent evt) {
-            String settingName = evt == null ? null : evt.getKey();
-            if (settingName == null || COMPLETION_CASE_SENSITIVE.equals(settingName)) {
-                caseSensitive = preferences.getBoolean(COMPLETION_CASE_SENSITIVE, COMPLETION_CASE_SENSITIVE_DEFAULT);
-            }
-            if (settingName == null || JAVA_COMPLETION_SUBWORDS.equals(settingName)) {
-                javaCompletionSubwords = preferences.getBoolean(JAVA_COMPLETION_SUBWORDS, JAVA_COMPLETION_SUBWORDS_DEFAULT);
-            }
-        }
-    };
-    private static final AtomicBoolean inited = new AtomicBoolean(false);
-
-    private static Preferences preferences;
-    private static boolean caseSensitive = COMPLETION_CASE_SENSITIVE_DEFAULT;
-    private static boolean javaCompletionSubwords = JAVA_COMPLETION_SUBWORDS_DEFAULT;
-    private static String cachedPrefix = null;
-    private static Pattern cachedCamelCasePattern = null;
-    private static Pattern cachedSubwordsPattern = null;
 
     private int anchorOffset;
 
     public static interface ItemFactory<T> extends MicronautExpressionLanguageCompletion.ItemFactory<T> {
+        T createControllerMethodItem(CompilationInfo info, VariableElement delegateRepository, ExecutableElement delegateMethod, String id, int offset);
         T createFinderMethodItem(String name, String returnType, int offset);
         T createFinderMethodNameItem(String prefix, String name, int offset);
         T createSQLItem(CompletionItem item);
@@ -173,6 +145,7 @@ public class MicronautDataCompletionTask {
                             case CLASS:
                             case INTERFACE:
                                 resolveFinderMethods(cc, path, prefix, true, consumer);
+                                items.addAll(resolveControllerMethods(cc, path, prefix, factory));
                                 break;
                             case METHOD:
                                 Tree returnType = ((MethodTree) path.getLeaf()).getReturnType();
@@ -212,7 +185,7 @@ public class MicronautDataCompletionTask {
     }
 
     private <T> List<T> resolveExpressionLanguage(CompilationInfo info, TreePath path, String prefix, int off, MicronautExpressionLanguageCompletion.ItemFactory<T> factory) {
-        Matcher matcher = MEXP_PATTERN.matcher(prefix);
+        Matcher matcher = MicronautExpressionLanguageParser.MEXP_PATTERN.matcher(prefix);
         while (matcher.find() && matcher.groupCount() == 1) {
             if (off >= matcher.start(1) && off <= matcher.end(1)) {
                 EvaluationContext ctx = EvaluationContext.get(info, path);
@@ -235,7 +208,7 @@ public class MicronautDataCompletionTask {
         if (el instanceof TypeElement) {
             if (QUERY_ANNOTATION_TYPE_NAME.contentEquals(((TypeElement) el).getQualifiedName())) {
                 TreePath clsPath = info.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, path);
-                if (clsPath != null && checkForRepositoryAnnotation(info.getTrees().getElement(clsPath).getAnnotationMirrors(), false, new HashSet<>())) {
+                if (clsPath != null && Utils.getAnnotation(info.getTrees().getElement(clsPath).getAnnotationMirrors(), JDBC_REPOSITORY_ANNOTATION_NAME) != null) {
                     SQLCompletionContext ctx = SQLCompletionContext.empty()
                             .setStatement(prefix)
                             .setOffset(off)
@@ -268,7 +241,25 @@ public class MicronautDataCompletionTask {
         return Collections.emptyList();
     }
 
-    private <T> void resolveFinderMethods(CompilationInfo info, TreePath path, String prefix, boolean full, Consumer consumer) throws IOException {
+    private <T> List<T> resolveControllerMethods(CompilationController cc, TreePath path, String prefix, ItemFactory<T> factory) {
+        List<T> items = new ArrayList<>();
+        TypeElement te = (TypeElement) cc.getTrees().getElement(path);
+        AnnotationMirror controllerAnn = Utils.getAnnotation(te.getAnnotationMirrors(), CONTROLLER_ANNOTATION_NAME);
+        if (controllerAnn != null) {
+            List<VariableElement> repositories = Utils.getRepositoriesFor(cc, te);
+            if (!repositories.isEmpty()) {
+                Utils.collectMissingDataEndpoints(cc, te, prefix, (repository, delegateMethod, id) -> {
+                    T item = factory.createControllerMethodItem(cc, repository, delegateMethod, id, anchorOffset);
+                    if (item != null) {
+                        items.add(item);
+                    }
+                });
+            }
+        }
+        return items;
+    }
+
+    private void resolveFinderMethods(CompilationInfo info, TreePath path, String prefix, boolean full, Consumer consumer) throws IOException {
         TypeUtilities tu = info.getTypeUtilities();
         TypeElement entity = getEntityFor(info, path);
         if (entity != null) {
@@ -301,7 +292,7 @@ public class MicronautDataCompletionTask {
             String name = pattern + BY;
             if (prefix.length() >= name.length() && prefix.startsWith(name)) {
                 addPropertyCriterionCompletions(prop2Types, name, prefix, consumer);
-            } else if (startsWith(name, prefix)) {
+            } else if (Utils.startsWith(name, prefix)) {
                 consumer.accept(EMPTY, name, full ? entity.getSimpleName().toString() : null);
             }
             for (String projection : QUERY_PROJECTIONS) {
@@ -309,7 +300,7 @@ public class MicronautDataCompletionTask {
                     name = pattern + projection + propName + BY;
                     if (prefix.length() >= name.length() && prefix.startsWith(name)) {
                         addPropertyCriterionCompletions(prop2Types, name, prefix, consumer);
-                    } else if (startsWith(name, prefix)) {
+                    } else if (Utils.startsWith(name, prefix)) {
                         consumer.accept(EMPTY, name, full ? prop2Types.get(propName) : null);
                     }
                 }
@@ -320,7 +311,7 @@ public class MicronautDataCompletionTask {
                 String name = pattern + propName + BY;
                 if (prefix.length() >= name.length() && prefix.startsWith(name)) {
                     addPropertyCriterionCompletions(prop2Types, name, prefix, consumer);
-                } else if (startsWith(name, prefix)) {
+                } else if (Utils.startsWith(name, prefix)) {
                     consumer.accept(EMPTY, name, full ? name.startsWith(COUNT) ? "int" : name.startsWith(EXISTS) ? "boolean" : "void" : null);
                 }
             }
@@ -333,7 +324,7 @@ public class MicronautDataCompletionTask {
                 String name = propName + criterion;
                 if (prefix.length() >= namePrefix.length() + name.length() && prefix.startsWith(namePrefix + name)) {
                     addComposeAndOrderCompletions(prop2Types, namePrefix + name, prefix, consumer);
-                } else if (startsWith(namePrefix + name, prefix)) {
+                } else if (Utils.startsWith(namePrefix + name, prefix)) {
                     consumer.accept(namePrefix, name, null);
                 }
             }
@@ -344,13 +335,13 @@ public class MicronautDataCompletionTask {
         for (String name : COMPOSE_EXPRESSIONS) {
             if (prefix.length() >= namePrefix.length() + name.length() && prefix.startsWith(namePrefix + name)) {
                 addPropertyCriterionCompletions(prop2Types, namePrefix + name, prefix, consumer);
-            } else if (startsWith(namePrefix + name, prefix)) {
+            } else if (Utils.startsWith(namePrefix + name, prefix)) {
                 consumer.accept(namePrefix, name, null);
             }
         }
         for (String propName : prop2Types.keySet()) {
             String name = ORDER_BY + propName;
-            if (prefix.length() < namePrefix.length() + name.length() && startsWith(namePrefix + name, prefix)) {
+            if (prefix.length() < namePrefix.length() + name.length() && Utils.startsWith(namePrefix + name, prefix)) {
                 consumer.accept(namePrefix, name, null);
             }
         }
@@ -359,7 +350,7 @@ public class MicronautDataCompletionTask {
     private static TypeElement getEntityFor(CompilationInfo info, TreePath path) {
         TypeElement te = (TypeElement) info.getTrees().getElement(path);
         if (te.getModifiers().contains(Modifier.ABSTRACT)) {
-            if (checkForRepositoryAnnotation(te.getAnnotationMirrors(), true, new HashSet<>())) {
+            if (Utils.getAnnotation(te.getAnnotationMirrors(), JPA_REPOSITORY_ANNOTATION_NAME) != null) {
                 Types types = info.getTypes();
                 TypeMirror repositoryType = types.erasure(info.getElements().getTypeElement(REPOSITORY_TYPE_NAME).asType());
                 for (TypeMirror iface : te.getInterfaces()) {
@@ -376,17 +367,6 @@ public class MicronautDataCompletionTask {
             }
         }
         return null;
-    }
-
-    private static boolean checkForRepositoryAnnotation(List<? extends AnnotationMirror> annotations, boolean jpa, HashSet<TypeElement> checked) {
-        for (AnnotationMirror annotation : annotations) {
-            TypeElement annotationElement = (TypeElement) annotation.getAnnotationType().asElement();
-            String repositoryAnnotationName = jpa ? JPA_REPOSITORY_ANNOTATION_NAME : JDBC_REPOSITORY_ANNOTATION_NAME;
-            if (repositoryAnnotationName.contentEquals(annotationElement.getQualifiedName()) || checked.add(annotationElement) && checkForRepositoryAnnotation(annotationElement.getAnnotationMirrors(), jpa, checked)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private static TokenSequence<JavaTokenId> findLastNonWhitespaceToken(TokenSequence<JavaTokenId> ts, int startPos, int endPos) {
@@ -422,124 +402,6 @@ public class MicronautDataCompletionTask {
             options.add(TypeUtilities.TypeNameOptions.PRINT_AS_VARARG);
         }
         return info.getTypeUtilities().getTypeName(type, options.toArray(new TypeUtilities.TypeNameOptions[0]));
-    }
-
-    static boolean startsWith(String theString, String prefix) {
-        return isCamelCasePrefix(prefix) ? isCaseSensitive()
-                ? startsWithCamelCase(theString, prefix)
-                : startsWithCamelCase(theString, prefix) || startsWithPlain(theString, prefix)
-                : startsWithPlain(theString, prefix);
-    }
-
-    private static boolean isCamelCasePrefix(String prefix) {
-        if (prefix == null || prefix.length() < 2 || prefix.charAt(0) == '"') {
-            return false;
-        }
-        for (int i = 1; i < prefix.length(); i++) {
-            if (Character.isUpperCase(prefix.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static boolean isCaseSensitive() {
-        lazyInit();
-        return caseSensitive;
-    }
-
-    public static boolean isSubwordSensitive() {
-        lazyInit();
-        return javaCompletionSubwords;
-    }
-
-    private static boolean startsWithPlain(String theString, String prefix) {
-        if (theString == null || theString.length() == 0) {
-            return false;
-        }
-        if (prefix == null || prefix.length() == 0) {
-            return true;
-        }
-        if (isSubwordSensitive()) {
-            if (!prefix.equals(cachedPrefix)) {
-                cachedCamelCasePattern = null;
-                cachedSubwordsPattern = null;
-            }
-            if (cachedSubwordsPattern == null) {
-                cachedPrefix = prefix;
-                String patternString = createSubwordsPattern(prefix);
-                cachedSubwordsPattern = patternString != null ? Pattern.compile(patternString) : null;
-            }
-            if (cachedSubwordsPattern != null && cachedSubwordsPattern.matcher(theString).matches()) {
-                return true;
-            }
-        }
-        return isCaseSensitive() ? theString.startsWith(prefix) : theString.toLowerCase(Locale.ENGLISH).startsWith(prefix.toLowerCase(Locale.ENGLISH));
-    }
-
-    private static String createSubwordsPattern(String prefix) {
-        StringBuilder sb = new StringBuilder(3 + 8 * prefix.length());
-        sb.append(".*?");
-        for (int i = 0; i < prefix.length(); i++) {
-            char charAt = prefix.charAt(i);
-            if (!Character.isJavaIdentifierPart(charAt)) {
-                return null;
-            }
-            if (Character.isLowerCase(charAt)) {
-                sb.append("[");
-                sb.append(charAt);
-                sb.append(Character.toUpperCase(charAt));
-                sb.append("]");
-            } else {
-                //keep uppercase characters as beacons
-                // for example: java.lang.System.sIn -> setIn
-                sb.append(charAt);
-            }
-            sb.append(".*?");
-        }
-        return sb.toString();
-    }
-
-    private static boolean startsWithCamelCase(String theString, String prefix) {
-        if (theString == null || theString.length() == 0 || prefix == null || prefix.length() == 0) {
-            return false;
-        }
-        if (!prefix.equals(cachedPrefix)) {
-            cachedCamelCasePattern = null;
-            cachedSubwordsPattern = null;
-        }
-        if (cachedCamelCasePattern == null) {
-            StringBuilder sb = new StringBuilder();
-            int lastIndex = 0;
-            int index;
-            do {
-                index = findNextUpper(prefix, lastIndex + 1);
-                String token = prefix.substring(lastIndex, index == -1 ? prefix.length() : index);
-                sb.append(token);
-                sb.append(index != -1 ? "[\\p{javaLowerCase}\\p{Digit}_\\$]*" : ".*");
-                lastIndex = index;
-            } while (index != -1);
-            cachedPrefix = prefix;
-            cachedCamelCasePattern = Pattern.compile(sb.toString());
-        }
-        return cachedCamelCasePattern.matcher(theString).matches();
-    }
-
-    private static int findNextUpper(String text, int offset) {
-        for (int i = offset; i < text.length(); i++) {
-            if (Character.isUpperCase(text.charAt(i))) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private static void lazyInit() {
-        if (inited.compareAndSet(false, true)) {
-            preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
-            preferences.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, preferencesTracker, preferences));
-            preferencesTracker.preferenceChange(null);
-        }
     }
 
     @FunctionalInterface

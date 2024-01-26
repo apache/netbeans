@@ -8,11 +8,11 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : uniontypesabstractclass;UnionTypesAbstractClass;1150;;;;1025;;0;<TESTURL>/testPHP80UnionTypesTypes.php;;
+  clz : uniontypesabstractclass;UnionTypesAbstractClass;1150;;;;1025;;0;<TESTURL>/testPHP80UnionTypesTypes.php;;0;
   field : property;property;1199;2;int|float;int|float;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
   field : staticproperty;staticProperty;1248;12;string|bool|null;string|bool|null;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
-  method : method;method;1294;$number:int|float:1::1:0:0:1:0:0;\Foo|\Bar|null;1025;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;
-  method : staticmethod;staticMethod;1375;$iterable:iterable|null:1::1:0:0:1:0:0;\Test\Foo|\Bar;1036;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;
+  method : method;method;1294;$number:int|float:1::1:0:0:1:0:0:int|float:;\Foo|\Bar|null;1025;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;Foo|Bar|null;
+  method : staticmethod;staticMethod;1375;$iterable:iterable|null:1::1:0:0:1:0:0:iterable|null:;\Test\Foo|\Bar;1036;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;\Test\Foo|Bar;
   top : uniontypesabstractclass
 
 Not Searchable Keys:
@@ -20,11 +20,11 @@ Not Searchable Keys:
 
 Document 2
 Searchable Keys:
-  clz : uniontypesclass;UnionTypesClass;821;;;;1;;0;<TESTURL>/testPHP80UnionTypesTypes.php;;
+  clz : uniontypesclass;UnionTypesClass;821;;;;1;;0;<TESTURL>/testPHP80UnionTypesTypes.php;;0;
   field : property;property;862;2;int|float;int|float;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
   field : staticproperty;staticProperty;911;12;string|bool|null;string|bool|null;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
-  method : method;method;948;$number:int|float:1::1:0:0:1:0:0;\Foo|\Bar|null;1;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;
-  method : staticmethod;staticMethod;1045;$iterable:iterable|null:1::1:0:0:1:0:0;\Test\Foo|\Bar;9;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;
+  method : method;method;948;$number:int|float:1::1:0:0:1:0:0:int|float:;\Foo|\Bar|null;1;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;Foo|Bar|null;
+  method : staticmethod;staticMethod;1045;$iterable:iterable|null:1::1:0:0:1:0:0:iterable|null:;\Test\Foo|\Bar;9;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;\Test\Foo|Bar;
   top : uniontypesclass
 
 Not Searchable Keys:
@@ -34,8 +34,8 @@ Document 3
 Searchable Keys:
   field : property;property;1657;2;int|float;int|float;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
   field : staticproperty;staticProperty;1706;12;string|bool|null;string|bool|null;0;<TESTURL>/testPHP80UnionTypesTypes.php;0;
-  method : method;method;1743;$number:int|float:1::1:0:0:1:0:0;\Foo|\Bar|null;1;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;
-  method : staticmethod;staticMethod;1840;$iterable:iterable|null:1::1:0:0:1:0:0;\Test\Foo|\Bar;9;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;
+  method : method;method;1743;$number:int|float:1::1:0:0:1:0:0:int|float:;\Foo|\Bar|null;1;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;Foo|Bar|null;
+  method : staticmethod;staticMethod;1840;$iterable:iterable|null:1::1:0:0:1:0:0:iterable|null:;\Test\Foo|\Bar;9;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;\Test\Foo|Bar;
   top : uniontypestrait
   trait : uniontypestrait;UnionTypesTrait;1616;;;0;<TESTURL>/testPHP80UnionTypesTypes.php;
 
@@ -136,8 +136,8 @@ Not Searchable Keys:
 Document 5
 Searchable Keys:
   iface : uniontypesinterface;UnionTypesInterface;1442;;;0;<TESTURL>/testPHP80UnionTypesTypes.php;
-  method : method;method;1484;$number:int|float:1::1:0:0:1:0:0;\Foo|\Bar|null;1025;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;
-  method : staticmethod;staticMethod;1553;$iterable:iterable|null:1::1:0:0:1:0:0;\Test\Foo|\Bar;1033;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;
+  method : method;method;1484;$number:int|float:1::1:0:0:1:0:0:int|float:;\Foo|\Bar|null;1025;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;Foo|Bar|null;
+  method : staticmethod;staticMethod;1553;$iterable:iterable|null:1::1:0:0:1:0:0:iterable|null:;\Test\Foo|\Bar;1033;0;<TESTURL>/testPHP80UnionTypesTypes.php;1;0;\Test\Foo|Bar;
   top : uniontypesinterface
 
 Not Searchable Keys:

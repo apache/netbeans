@@ -8,7 +8,7 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : aaa;AAA;12;;;IAAA|\IAAA;1;;0;<TESTURL>/testGetClasses.php;;
+  clz : aaa;AAA;12;;;IAAA|\IAAA;1;;0;<TESTURL>/testGetClasses.php;;0;
   superiface : iaaa;IAAA;
   top : aaa
 
@@ -17,7 +17,7 @@ Not Searchable Keys:
 
 Document 2
 Searchable Keys:
-  clz : bbb;BBB;40;AAA|\AAA;;IBBB|\IBBB;1;;0;<TESTURL>/testGetClasses.php;;
+  clz : bbb;BBB;40;AAA|\AAA;;IBBB|\IBBB;1;;0;<TESTURL>/testGetClasses.php;;0;
   superclz : aaa;AAA;
   superiface : ibbb;IBBB;
   top : bbb
@@ -27,7 +27,7 @@ Not Searchable Keys:
 
 Document 3
 Searchable Keys:
-  clz : ccc;CCC;80;BBB|\BBB;;ICCC|\ICCC;1;;0;<TESTURL>/testGetClasses.php;;
+  clz : ccc;CCC;80;BBB|\BBB;;ICCC|\ICCC;1;;0;<TESTURL>/testGetClasses.php;;0;
   superclz : bbb;BBB;
   superiface : iccc;ICCC;
   top : ccc

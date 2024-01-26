@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingUtilities;
+import org.apache.maven.repository.RepositorySystem;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
 import org.netbeans.modules.maven.api.MavenValidators;
 import org.netbeans.modules.maven.api.archetype.Archetype;
@@ -38,6 +39,7 @@ import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries.Result;
+import org.netbeans.modules.maven.options.MavenVersionSettings;
 import org.netbeans.validation.api.Problems;
 import org.netbeans.validation.api.Severity;
 import org.netbeans.validation.api.Validator;
@@ -46,6 +48,7 @@ import org.netbeans.validation.api.builtin.stringvalidation.StringValidators;
 import org.netbeans.validation.api.ui.ValidationGroup;
 import org.netbeans.validation.api.ui.swing.SwingValidationGroup;
 import org.openide.WizardDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
@@ -99,10 +102,16 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
             if (info == null || info.contains(null)) {
                 try {
                     //transient remove central, make central transient too
-                    RepositoryPreferences.getInstance().addTransientRepository(key, "central", "central", "https://repo1.maven.org/maven2", RepositoryInfo.MirrorStrategy.NON_WILDCARD);
+                    RepositoryPreferences.getInstance().addTransientRepository(
+                            key,
+                            RepositorySystem.DEFAULT_REMOTE_REPO_ID,
+                            RepositorySystem.DEFAULT_REMOTE_REPO_ID,
+                            RepositorySystem.DEFAULT_REMOTE_REPO_URL,
+                            RepositoryInfo.MirrorStrategy.NON_WILDCARD
+                    );
                     info = MavenNbModuleImpl.netbeansRepo();
                 } catch (URISyntaxException x) {
-                    assert false : x;
+                    Exceptions.printStackTrace(x);
                 }
             }
 
@@ -144,6 +153,9 @@ public class NbmWizardPanelVisual extends javax.swing.JPanel {
                 .filter((v) -> !IGNORE_RELEASES.contains(v))
                 .sorted((v1, v2) -> v2.compareTo(v1))
                 .collect(Collectors.toCollection(ArrayList::new)); // must be mutable
+        if (versions.isEmpty()) {
+            versions.add(MavenVersionSettings.getDefault().getNBVersion()); // add a fallback version
+        }
         versions.add(NbmWizardIterator.SNAPSHOT_VERSION);
         return versions;
     }

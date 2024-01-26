@@ -28,7 +28,6 @@ import org.netbeans.modules.html.editor.hints.HtmlRule;
 import org.netbeans.modules.html.editor.hints.HtmlRuleContext;
 import org.netbeans.modules.html.editor.lib.api.elements.ElementType;
 import org.netbeans.modules.html.editor.lib.api.elements.ElementUtils;
-import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 
 /**
@@ -48,13 +47,6 @@ public class AddMissingAltAttributeRule extends HtmlRule {
 
     @Override
     public boolean appliesTo(RuleContext context) {
-        HtmlParserResult result = (HtmlParserResult) context.parserResult;
-        FileObject file = result.getSnapshot().getSource().getFileObject();
-
-        if (file == null) {
-            return false;
-        }
-
         return true;
     }
 
@@ -72,7 +64,7 @@ public class AddMissingAltAttributeRule extends HtmlRule {
     protected void run(HtmlRuleContext context, List<Hint> result) {
         try {
             HtmlParserResult parserResult = context.getHtmlParserResult();
-            AltAttributeVisitor visitor = new AltAttributeVisitor(this, context, result); // NOI18N
+            AltAttributeVisitor visitor = new AltAttributeVisitor(this, context, result);
 
             ElementUtils.visitChildren(parserResult.root(), visitor, ElementType.OPEN_TAG);
         } catch (IOException ioe) {

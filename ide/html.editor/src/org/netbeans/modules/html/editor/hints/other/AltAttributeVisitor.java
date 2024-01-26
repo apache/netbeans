@@ -51,7 +51,7 @@ public class AltAttributeVisitor implements ElementVisitor {
 
         // We are only interested in img, area, applet elements
         String lowerCaseTag = node.id().toString().toLowerCase();
-        if (!(lowerCaseTag.equals("img") || lowerCaseTag.equals("area") || lowerCaseTag.equals("applet"))) {
+        if (!(lowerCaseTag.equals("img") || lowerCaseTag.equals("area") || lowerCaseTag.equals("applet"))) { // NOI18N
             return;
         }
 

@@ -22,7 +22,10 @@ import java.awt.EventQueue;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -67,14 +70,28 @@ public class AddMissingAltAttributeHint extends Hint {
             EventQueue.invokeLater(() -> {
                 try {
                     Source source = Source.create(context.getFile());
-                    OffsetRange adjustContextRange = HtmlTagContextUtils.adjustContextRange(source.getDocument(false), range.getStart(), range.getEnd(), true);
+                    OffsetRange adjustedRange = HtmlTagContextUtils.adjustContextRange(source.getDocument(false), range.getStart(), range.getEnd(), true);
+                    Document document = source.getDocument(false);
+                    String tagContent = document.getText(adjustedRange.getStart(), adjustedRange.getLength());
 
-                    source.getDocument(false).insertString(adjustContextRange.getEnd(), " alt=\"\"", null); // NOI18N
+                    // Find last self-closing or non self-closing tag
+                    Pattern closingTagPattern = Pattern.compile("(/?>)");
+                    Matcher closingTagMatcher = closingTagPattern.matcher(tagContent);
+
+                    if (closingTagMatcher.find()) {
+                        int altInsertPosition = adjustedRange.getStart() + closingTagMatcher.start(1);
+
+                        // Check whether a space before alt is needed or not
+                        boolean needsSpaceBefore = altInsertPosition == 0 || tagContent.charAt(closingTagMatcher.start(1) - 1) != ' ';
+                        boolean isSelfClosing = closingTagMatcher.group(0).endsWith("/>");
+                        String altAttribute = (needsSpaceBefore ? " " : "") + "alt=\"\"" + (isSelfClosing ? " " : ""); // NOI18N
+
+                        document.insertString(altInsertPosition, altAttribute, null);
+                    }
                 } catch (BadLocationException ex) {
                     LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested());
                 }
             });
-
         }
 
         @Override
@@ -87,5 +104,4 @@ public class AddMissingAltAttributeHint extends Hint {
             return false;
         }
     }
-
 }

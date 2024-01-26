@@ -38,4 +38,15 @@ public class AddMissingAltAttributeRuleTest extends TestBase {
     public void testProvideTextAlternativeHint() throws Exception {
         checkHints(this, createRule(), "testfiles/hints/addMissingAltAttribute1.html", "<img^");
     }
+
+    //~ Fix
+    public void testProvideTextAlternativeHintFix_01() throws Exception {
+        applyHint(
+            this,
+            createRule(),
+            "testfiles/hints/addMissingAltAttribute1.html",
+            "<img^",
+            "Find img/applet/area elements where no alt attribute is provided."
+        );
+    }
 }

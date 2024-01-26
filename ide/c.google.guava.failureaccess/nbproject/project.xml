@@ -28,7 +28,7 @@
            <public-packages/>
            <class-path-extension>
                <runtime-relative-path>com-google-guava-failureaccess.jar</runtime-relative-path>
-               <binary-origin>external/failureaccess-1.0.1.jar</binary-origin>
+               <binary-origin>external/failureaccess-1.0.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

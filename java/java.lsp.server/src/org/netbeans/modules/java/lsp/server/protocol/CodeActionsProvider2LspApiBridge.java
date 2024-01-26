@@ -61,7 +61,12 @@ public class CodeActionsProvider2LspApiBridge extends CodeActionsProvider {
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
         for (CommandProvider cmdProvider : Lookup.getDefault().lookupAll(CommandProvider.class)) {
             if (cmdProvider.getCommands().contains(command)) {
-                return cmdProvider.runCommand(command, arguments);
+                return cmdProvider.runCommand(command, arguments).thenApply(ret -> {
+                    if (ret instanceof WorkspaceEdit) {
+                        return Utils.workspaceEditFromApi((WorkspaceEdit) ret, null, client);
+                    }
+                    return ret;
+                });
             }
         }
         return CompletableFuture.completedFuture(false);
@@ -96,7 +101,7 @@ public class CodeActionsProvider2LspApiBridge extends CodeActionsProvider {
                         }
                         CodeAction codeAction = createCodeAction(client, ca.getTitle(), ca.getKind(), data, command, command != null ? ca.getCommand().getArguments() : null);
                         if (edit != null) {
-                            codeAction.setEdit(TextDocumentServiceImpl.fromAPI(edit, uri, client));
+                            codeAction.setEdit(Utils.workspaceEditFromApi(edit, uri, client));
                         }
                         allActions.add(codeAction);
                     }
@@ -115,7 +120,7 @@ public class CodeActionsProvider2LspApiBridge extends CodeActionsProvider {
             if (obj.has(URL) && obj.has(INDEX)) {
                 LazyCodeAction inputAction = lastCodeActions.get(obj.getAsJsonPrimitive(INDEX).getAsInt());
                 if (inputAction != null) {
-                    codeAction.setEdit(TextDocumentServiceImpl.fromAPI(inputAction.getLazyEdit().get(), obj.getAsJsonPrimitive(URL).getAsString(), client));
+                    codeAction.setEdit(Utils.workspaceEditFromApi(inputAction.getLazyEdit().get(), obj.getAsJsonPrimitive(URL).getAsString(), client));
                 }
             }
         }

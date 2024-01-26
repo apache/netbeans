@@ -549,7 +549,7 @@ public class Utils {
                 String docUri = parts.first().getDocument();
                 try {
                     FileObject file = Utils.fromUri(docUri);
-                    if (file == null) {
+                    if (file == null && uri != null) {
                         file = Utils.fromUri(uri);
                     }
                     FileObject fo = file;

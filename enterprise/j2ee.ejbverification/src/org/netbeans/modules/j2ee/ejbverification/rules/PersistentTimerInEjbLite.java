@@ -90,7 +90,8 @@ public final class PersistentTimerInEjbLite {
             if ((ee6lite || ee7lite || ee9lite) && nonEeFullServer(platform)) {
                 for (Element element : ctx.getClazz().getEnclosedElements()) {
                     for (AnnotationMirror annm : element.getAnnotationMirrors()) {
-                        if (EJBAPIAnnotations.SCHEDULE.equals(annm.getAnnotationType().toString())) {
+                        if (EJBAPIAnnotations.SCHEDULE_JAKARTA.equals(annm.getAnnotationType().toString())
+                                || EJBAPIAnnotations.SCHEDULE.equals(annm.getAnnotationType().toString())) {
                             if (ee6lite) {
                                 problems.add(HintsUtils.createProblem(element, hintContext.getInfo(),
                                         Bundle.PersistentTimerInEjbLite_err_timer_in_ee6lite(), Severity.ERROR));
@@ -179,7 +180,10 @@ public final class PersistentTimerInEjbLite {
         }
 
         public void fixTimerAnnotation(WorkingCopy copy) {
-            TypeElement scheduleAnnotation = copy.getElements().getTypeElement(EJBAPIAnnotations.SCHEDULE);
+            TypeElement scheduleAnnotation = copy.getElements().getTypeElement(EJBAPIAnnotations.SCHEDULE_JAKARTA);
+            if(scheduleAnnotation == null) {
+                scheduleAnnotation = copy.getElements().getTypeElement(EJBAPIAnnotations.SCHEDULE);
+            }
             ModifiersTree modifiers = ((MethodTree) copy.getTrees().getPath(methodElement.resolve(copy)).getLeaf()).getModifiers();
             TreeMaker tm = copy.getTreeMaker();
             for (AnnotationTree at : modifiers.getAnnotations()) {

@@ -61,7 +61,7 @@ final class CreateInterceptorBinding extends CreateAnnotationFix {
      */
     @Override
     protected String getTemplate() {
-        return "Templates/CDI/Interceptor.java";
+        return "Templates/CDI_JakartaEE/Interceptor.java";
     }
 
 }

@@ -63,7 +63,6 @@ import com.sun.source.util.TreePath;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class CreateQualifier implements ErrorRule<Void> {
     
     private static final String INJECT_ANNOTATION = 

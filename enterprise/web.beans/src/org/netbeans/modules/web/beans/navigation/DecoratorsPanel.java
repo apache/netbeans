@@ -40,7 +40,6 @@ import org.openide.util.NbBundle;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class DecoratorsPanel extends BindingsPanel {
 
     private static final long serialVersionUID = -5097678699872215262L;

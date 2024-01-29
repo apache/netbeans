@@ -104,7 +104,6 @@ import com.sun.source.util.TreePath;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class WebBeansActionHelper {
     
     private static final String WAIT_NODE = "LBL_WaitNode";     // NOI18N

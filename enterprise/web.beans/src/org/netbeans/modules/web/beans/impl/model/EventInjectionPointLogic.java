@@ -58,7 +58,6 @@ import org.netbeans.modules.web.beans.impl.model.AbstractAssignabilityChecker.As
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 abstract class EventInjectionPointLogic extends ParameterInjectionPointLogic {
     
     public static final String EVENT_INTERFACE = 

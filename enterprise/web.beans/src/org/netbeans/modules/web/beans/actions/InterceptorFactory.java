@@ -43,7 +43,6 @@ import com.sun.source.util.TreePath;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class InterceptorFactory implements Factory {
     
     static final String INTERCEPTOR_BINDING = "InterceptorBinding";         // NOI18N

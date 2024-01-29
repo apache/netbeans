@@ -61,7 +61,7 @@ final class CreateQualifierFix extends CreateAnnotationFix {
      */
     @Override
     protected String getTemplate() {
-        return "Templates/CDI/Qualifier.java";          // NOI18N
+        return "Templates/CDI_JakartaEE/Qualifier.java";          // NOI18N
     }
 
 }

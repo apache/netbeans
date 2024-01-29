@@ -61,7 +61,6 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.ObjectPro
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class AnnotationObjectProvider implements ObjectProvider<BindingQualifier> {
     
     private static final String SPECILIZES_ANNOTATION = 

@@ -33,7 +33,6 @@ import org.netbeans.modules.web.beans.analysis.analyzer.annotation.TargetVerifie
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 class ScopeChecker extends RuntimeAnnotationChecker {
     
     static String SCOPE = "javax.inject.Scope";                         // NOI18N

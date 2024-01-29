@@ -36,7 +36,6 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public final class AnnotationUtil {
     
     public static final String ANY = "javax.enterprise.inject.Any";                 // NOI18N

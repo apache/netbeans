@@ -67,7 +67,6 @@ import org.netbeans.modules.web.beans.api.model.BeanArchiveType;
 /**
  * @author ads
  */
-// @todo: Support JakartaEE
 abstract class FieldInjectionPointLogic {
 
     static final String PRODUCER_ANNOTATION = 

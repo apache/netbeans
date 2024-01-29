@@ -59,7 +59,6 @@ import org.openide.util.NbBundle;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 class EnableBeansFilter {
 
     static final String DECORATOR = "javax.decorator.Decorator";            // NOI18N

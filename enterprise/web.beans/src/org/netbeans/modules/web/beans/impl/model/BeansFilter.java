@@ -28,7 +28,6 @@ import javax.lang.model.element.TypeElement;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 class BeansFilter extends Filter<TypeElement> {
     
     static BeansFilter get() {

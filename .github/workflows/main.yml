@@ -907,9 +907,7 @@ jobs:
           java-version: 17
           distribution: ${{ env.default_java_distribution }}
 
-      # TODO fix JDK 21 incompatibilites
       - name: java/java.mx.project
-        continue-on-error: ${{ github.event_name != 'pull_request' }}
         run: .github/retry.sh ant $OPTS -f java/java.mx.project test
 
       - name: java/gradle.java

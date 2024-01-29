@@ -67,6 +67,8 @@ class DiffContentPanel extends JPanel implements HighlightsContainer,Lookup.Prov
         add(scrollPane);
         
         linesActions = new LineNumbersActionsBar(this, master.isActionsEnabled());
+        linesActions.addMouseWheelListener(e -> editorPane.dispatchEvent(e)); // delegate mouse scroll events to editor
+
         actionsScrollPane = new JScrollPane(linesActions);
         actionsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         actionsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
@@ -149,6 +151,7 @@ class DiffContentPanel extends JPanel implements HighlightsContainer,Lookup.Prov
 //        revalidate();
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Dimension d = super.getPreferredSize();
         Container parent = getParent();
@@ -164,6 +167,7 @@ class DiffContentPanel extends JPanel implements HighlightsContainer,Lookup.Prov
         return editorPane;
     }
 
+    @Override
     public AccessibleContext getAccessibleContext() {
         return editorPane.getAccessibleContext();
     }
@@ -178,18 +182,21 @@ class DiffContentPanel extends JPanel implements HighlightsContainer,Lookup.Prov
         return this;
     }
 
+    @Override
     public HighlightsSequence getHighlights(int start, int end) {
         return new DiffHighlightsSequence(start, end);
     }
 
-    private final List<HighlightsChangeListener> listeners = new ArrayList<HighlightsChangeListener>(1);
+    private final List<HighlightsChangeListener> listeners = new ArrayList<>(1);
     
+    @Override
     public void addHighlightsChangeListener(HighlightsChangeListener listener) {
         synchronized(listeners) {
             listeners.add(listener);
         }
     }
 
+    @Override
     public void removeHighlightsChangeListener(HighlightsChangeListener listener) {
         synchronized(listeners) {
             listeners.remove(listener);
@@ -229,6 +236,7 @@ class DiffContentPanel extends JPanel implements HighlightsContainer,Lookup.Prov
         c.setFocusTraversalPolicyProvider(true);
     }
 
+    @Override
     public Lookup getLookup() {
         return Lookups.singleton(getActionMap());
     }
@@ -261,30 +269,34 @@ class DiffContentPanel extends JPanel implements HighlightsContainer,Lookup.Prov
         }
 
         private void lookupHilites() {
-            List<DiffViewManager.HighLight> list = new ArrayList<DiffViewManager.HighLight>();
+            List<DiffViewManager.HighLight> list = new ArrayList<>();
             DiffViewManager.HighLight[] allHilites = isFirst ? master.getManager().getFirstHighlights() : master.getManager().getSecondHighlights(); 
             for (DiffViewManager.HighLight hilite : allHilites) {
                 if (hilite.getEndOffset() < startOffset) continue;
                 if (hilite.getStartOffset() > endOffset) break;
                 list.add(hilite);
             }
-            hilites = list.toArray(new DiffViewManager.HighLight[list.size()]);
+            hilites = list.toArray(new DiffViewManager.HighLight[0]);
         }
 
+        @Override
         public boolean moveNext() {
             if (currentHiliteIndex >= hilites.length - 1) return false;
             currentHiliteIndex++;
             return true;
         }
 
+        @Override
         public int getStartOffset() {
             return Math.max(hilites[currentHiliteIndex].getStartOffset(), this.startOffset);
         }
 
+        @Override
         public int getEndOffset() {
             return Math.min(hilites[currentHiliteIndex].getEndOffset(), this.endOffset);
         }
 
+        @Override
         public AttributeSet getAttributes() {
             return hilites[currentHiliteIndex].getAttrs();
         }

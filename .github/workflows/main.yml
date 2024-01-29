@@ -109,7 +109,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '21' ]
+        java: [ '17', '21', '22-ea' ]
       fail-fast: false
     steps:
         
@@ -127,7 +127,7 @@ jobs:
           show-progress: false
 
       - name: Caching dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -137,11 +137,11 @@ jobs:
         run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG build-nozip
 
       - name: Prepare Artifact
-        if: ${{ matrix.java == '11' }}
+        if: ${{ matrix.java == '17' }}
         run: tar -I 'zstd -9 -T0' -cf /tmp/build.tar.zst --exclude ".git" .
 
       - name: Upload Workspace
-        if: ${{ (matrix.java == '11') && success() }}
+        if: ${{ (matrix.java == '17') && success() }}
         uses: actions/upload-artifact@v4
         with:
           name: build
@@ -151,11 +151,11 @@ jobs:
           if-no-files-found: error
           
       - name: Create Dev Build
-        if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
+        if: ${{ matrix.java == '17' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
         run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG zip-cluster-config
 
       - name: Upload Dev Build
-        if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
+        if: ${{ matrix.java == '17' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
         uses: actions/upload-artifact@v4
         with:
           name: dev-build
@@ -178,13 +178,13 @@ jobs:
           submodules: false
           show-progress: false
 
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
             distribution: ${{ env.default_java_distribution }}
-            java-version: 11
+            java-version: 17
       - name: Caching dependencies
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -201,7 +201,7 @@ jobs:
         run: ant $OPTS commit-validation -Dnbjavac.class.path=java/libs.javacapi/external/*.jar
 
 # secondary jobs
-  linux-commit-validation:
+  commit-validation:
     name: CV on ${{ matrix.os }}/JDK ${{ matrix.java }}
     needs: base-build
     runs-on: ${{ matrix.os }} 
@@ -209,7 +209,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        java: [ 11 ]
+        java: [ 17 ]
         include:
           - os: ubuntu-latest
             java: 21
@@ -246,13 +246,20 @@ jobs:
         if: contains(matrix.os, 'macos') && success()
         run: ant $OPTS -f platform/masterfs.macosx test
 
+      - name: Commit Validation tests
+        run: .github/retry.sh ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
+
+      - name: Set up JDK 11 for core.network
+        uses: actions/setup-java@v4
+        if: matrix.java == 17 && success()
+        with:
+          java-version: 11
+          distribution: ${{ env.default_java_distribution }}
+
       # fails on 17+
       - name: platform/core.network
-        if: matrix.java == 11 && success()
+        if: matrix.java == 17 && success()
         run: ant $OPTS -f platform/core.network test
-
-      - name: Commit Validation tests
-        run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 
       - name: Create Test Summary
         uses: test-summary/action@v2
@@ -273,7 +280,7 @@ jobs:
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -338,7 +345,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -371,7 +379,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -405,8 +414,9 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
         config: [ 'platform', 'release' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -424,7 +434,7 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Restoring Cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -446,7 +456,7 @@ jobs:
       # extra round for VSCodeExt which is built with 'release' config
       - name: Set up node
         if: ${{ (matrix.config == 'release') && success() }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
@@ -464,7 +474,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -661,7 +672,7 @@ jobs:
         run: ant $OPTS -f ide/libs.freemarker test
 
       - name: ide/libs.git
-        run: ant $OPTS -f ide/libs.git test
+        run: .github/retry.sh ant $OPTS -f ide/libs.git test
 
       - name: ide/libs.graalsdk
         run: ant $OPTS -f ide/libs.graalsdk test
@@ -676,7 +687,7 @@ jobs:
         run: ant $OPTS -f ide/lsp.client test
 
       - name: ide/notifications
-        run: ant $OPTS -f ide/notifications test
+        run: .github/retry.sh ant $OPTS -f ide/notifications test
 
       - name: ide/o.openidex.util
         run: ant $OPTS -f ide/o.openidex.util test
@@ -812,7 +823,7 @@ jobs:
 
 
   build-tools:
-    name: Build Tools on Linux/JDK ${{ matrix.java }} (some on 17)
+    name: Build-Tools on Linux/JDK ${{ matrix.java }}
     # label triggers: Ant, Gradle, Maven, MX
     if: ${{ contains(github.event.pull_request.labels.*.name, 'Ant') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'MX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
@@ -820,7 +831,9 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '17', '21' ]
+        java: [ '17', '21', '22-ea' ]
+        exclude:
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
     steps:
 
@@ -908,18 +921,23 @@ jobs:
           distribution: ${{ env.default_java_distribution }}
 
       - name: java/java.mx.project
+        if: ${{ matrix.java == '17' }}
         run: .github/retry.sh ant $OPTS -f java/java.mx.project test
 
       - name: java/gradle.java
+        if: ${{ matrix.java == '17' }}
         run: .github/retry.sh ant $OPTS -f java/gradle.java test
 
       - name: extide/gradle
+        if: ${{ matrix.java == '17' }}
         run: ant $OPTS -f extide/gradle test
 
       - name: java/gradle.dependencies
+        if: ${{ matrix.java == '17' }}
         run: ant $OPTS -f java/gradle.dependencies test
 
       - name: extide/o.apache.tools.ant.module
+        if: ${{ matrix.java == '17' }}
         run: ant $OPTS -f extide/o.apache.tools.ant.module test
 
       - name: Create Test Summary
@@ -938,7 +956,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -983,9 +1002,6 @@ jobs:
 
       - name: platform/api.search
         run: ant $OPTS -f platform/api.search test
-
-      - name: platform/api.templates
-        run: ant $OPTS -f platform/api.templates test
 
       - name: platform/api.visual
         run: ant $OPTS -f platform/api.visual test
@@ -1119,14 +1135,9 @@ jobs:
     timeout-minutes: 90
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: 11
-          distribution: ${{ env.default_java_distribution }}
 
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
@@ -1231,9 +1242,6 @@ jobs:
       - name: platform/spi.quicksearch
         run: ant $OPTS -f platform/spi.quicksearch test
 
-      - name: platform/templates
-        run: ant $OPTS -f platform/templates test
-
       - name: platform/templatesui
         run: ant $OPTS -f platform/templatesui test
 
@@ -1242,6 +1250,22 @@ jobs:
 
       - name: platform/o.n.bootstrap
         run: ant $OPTS -f platform/o.n.bootstrap test
+
+      - name: Set up JDK 11 for platform/templates
+        uses: actions/setup-java@v4
+        with:
+          java-version: 11
+          distribution: ${{ env.default_java_distribution }}
+
+      # TODO tests rely on javax.script.ScriptEngine / js which locks this to JDK 11
+      - name: platform/templates
+        run: ant $OPTS -f platform/templates test
+
+      - name: platform/api.templates
+        run: ant $OPTS -f platform/api.templates test
+
+      - name: platform/openide.loaders TemplatesMimeTypeTest
+        run:  ant $OPTS -f platform/openide.loaders test -Dtest.config.default.includes=**/TemplatesMimeTypeTest.class -Dtest.config.default.excludes=""
 
       - name: Create Test Summary
         uses: test-summary/action@v2
@@ -1259,7 +1283,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -1325,7 +1350,8 @@ jobs:
     timeout-minutes: 100
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -1514,6 +1540,7 @@ jobs:
     strategy:
       matrix:
         java: [ '8' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -1566,8 +1593,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17', '21' ]
         config: [ 'batch1', 'batch2' ]
+        exclude:
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
     steps:
 
@@ -1617,7 +1646,9 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '21' ]
+        java: [ '17', '21', '22-ea' ]
+        exclude:
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
     steps:
 
@@ -1676,6 +1707,7 @@ jobs:
     strategy:
       matrix:
         java: [ '11' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -1700,6 +1732,7 @@ jobs:
       - name: profiler
         run: ant $OPTS -f profiler/profiler test-unit
 
+      # TODO OQL requires js script engine which locks this to JDK 11
       - name: profiler.oql
         run: ant $OPTS -f profiler/profiler.oql test
 
@@ -1717,7 +1750,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
@@ -1738,9 +1772,6 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
-
-      - name: webcommon/api.knockout
-        run: ant $OPTS -f webcommon/api.knockout test
 
 #      - name: webcommon/cordova
 #        run: ant $OPTS -f webcommon/cordova test
@@ -1839,6 +1870,16 @@ jobs:
       - name: webcommon/web.inspect
         run: ant $OPTS -f webcommon/web.inspect test
 
+      - name: Set up JDK 11 for webcommon/api.knockout
+        uses: actions/setup-java@v4
+        with:
+          java-version: 11
+          distribution: ${{ env.default_java_distribution }}
+
+      # TODO: requires js script engine
+      - name: webcommon/api.knockout
+        run: ant $OPTS -f webcommon/api.knockout test
+
       - name: Create Test Summary
         uses: test-summary/action@v2
         if: failure()
@@ -1853,7 +1894,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -1898,6 +1940,7 @@ jobs:
     strategy:
       matrix:
         java: [ '8' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -1953,7 +1996,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -1992,13 +2036,14 @@ jobs:
 
 
   enterprise-test:
-    name: Enterprise on Linux/JDK ${{ matrix.java }} (some on 8 and 17)
+    name: Enterprise on Linux/JDK ${{ matrix.java }} (some on 8)
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
@@ -2019,6 +2064,9 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
+
+      - name: micronaut
+        run: .github/retry.sh ant $OPTS -f enterprise/micronaut test
 
       - name: api.web.webmodule
         run: ant $OPTS -f enterprise/api.web.webmodule test
@@ -2230,15 +2278,6 @@ jobs:
       - name: j2ee.dd.webservice
         run: ant $OPTS -f enterprise/j2ee.dd.webservice test
 
-      - name: Set up JDK 17 for tests that are not compatible with JDK 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: ${{ env.default_java_distribution }}
-
-      - name: micronaut
-        run: .github/retry.sh ant $OPTS -f enterprise/micronaut test
-
       - name: Create Test Summary
         uses: test-summary/action@v2
         if: failure()
@@ -2253,7 +2292,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
@@ -2318,7 +2358,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
 
     services:
       mysql:
@@ -2377,7 +2418,7 @@ jobs:
       DISPLAY: ":99.0"
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
         os: [ 'windows-latest', 'ubuntu-latest' ]
       fail-fast: false
     steps:
@@ -2519,7 +2560,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
@@ -2624,7 +2666,8 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11' ]
+        java: [ '17' ]
+      fail-fast: false
 
     steps:
       - name: Set up JDK ${{ matrix.java }}
@@ -2634,7 +2677,7 @@ jobs:
           distribution: ${{ env.default_java_distribution }}
 
       - name: Set up node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
@@ -2667,7 +2710,7 @@ jobs:
     name: Cleanup Workflow Artifacts
     needs:
       - base-build
-      - linux-commit-validation
+      - commit-validation
       - paperwork
       - build-system-test
       - build-nbms

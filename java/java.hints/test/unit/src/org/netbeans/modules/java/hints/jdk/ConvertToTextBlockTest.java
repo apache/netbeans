@@ -41,7 +41,7 @@ public class ConvertToTextBlockTest {
                        "                              \"}\");\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToTextBlock.class)
                 .findWarning("3:30-3:37:verifier:" + Bundle.ERR_ConvertToTextBlock())
                 .applyFix()
@@ -75,7 +75,7 @@ public class ConvertToTextBlockTest {
                        "                              \"}\\n\");\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToTextBlock.class)
                 .findWarning("3:30-3:37:verifier:" + Bundle.ERR_ConvertToTextBlock())
                 .applyFix()
@@ -110,7 +110,7 @@ public class ConvertToTextBlockTest {
                        "                              \"}\\n\\n\");\n" +
                        "    }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToTextBlock.class)
                 .findWarning("3:30-3:37:verifier:" + Bundle.ERR_ConvertToTextBlock())
                 .applyFix()
@@ -144,7 +144,7 @@ public class ConvertToTextBlockTest {
                        "    }\n" +
                        "    private int c() { return 0; }\n" +
                        "}\n")
-                .sourceLevel(SourceVersion.latest().name())
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToTextBlock.class)
                 .assertWarnings();
     }

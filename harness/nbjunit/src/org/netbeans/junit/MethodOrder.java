@@ -43,6 +43,9 @@ final class MethodOrder {
         String orderS = findOrder();
         if (!"natural".equals(orderS)) { // NOI18N
             try {
+                // TODO: ClassLoader fields can not be accessed via reflection on JDK 12+
+                // see jdk.internal.reflect.Reflection#fieldFilterMap
+                // this won't work
                 Field classesF = ClassLoader.class.getDeclaredField("classes"); // NOI18N
                 classesF.setAccessible(true);
                 @SuppressWarnings("unchecked")
@@ -53,6 +56,7 @@ final class MethodOrder {
                     }
                 }
             } catch (Exception x) {
+                System.err.println("WARNING: test method ordering disabled");
                 x.printStackTrace();
             }
         }

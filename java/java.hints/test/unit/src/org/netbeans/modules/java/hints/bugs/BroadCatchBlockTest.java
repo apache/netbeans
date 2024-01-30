@@ -79,10 +79,9 @@ public class BroadCatchBlockTest extends NbTestCase {
     /**
      * Checks that generic exception is reported even though 
      * it corresponds to > 1 subclass. It also checks that common
-     * parents are not reported for neigher 'umbrellas' or normal exceptions.
-     * 
+     * parents are not reported for neither 'umbrellas' or normal exceptions.
      */
-    private static final String twoSubexceptionsGeneric = "14:27-14:46:verifier:The catch(java.lang.RuntimeException) is too broad, it catches the following exception types: java.lang.IllegalArgumentException and java.lang.SecurityException";
+    private static final String twoSubexceptionsGeneric = "19:27-19:46:verifier:The catch(java.lang.RuntimeException) is too broad, it catches the following exception types: java.lang.IllegalArgumentException and java.lang.SecurityException";
     public void testTwoSubexceptionsGeneric() throws Exception {
         final String warnTxt = twoSubexceptionsGeneric;
         createHintTest("TwoExceptions").
@@ -94,10 +93,10 @@ public class BroadCatchBlockTest extends NbTestCase {
             assertOutput(f(), g());
     }
     
-    public void testTwoSubexceptionsGeneric7() throws Exception {
+    public void testTwoSubexceptionsGeneric2() throws Exception {
         final String warnTxt = twoSubexceptionsGeneric;
         createHintTest("TwoExceptions").
-            sourceLevel("1.7").
+            sourceLevel(8).
             run(BroadCatchBlock.class).
             assertWarnings(warnTxt).
             findWarning(warnTxt).
@@ -149,7 +148,7 @@ public class BroadCatchBlockTest extends NbTestCase {
     public void testTwoCommonParentFixMultiCatch() throws Exception {
         createHintTest("TwoExceptionsCommon").
             preference(BroadCatchBlock.OPTION_EXCLUDE_COMMON, false).
-            sourceLevel("1.7").
+            sourceLevel(8).
             run(BroadCatchBlock.class).
             assertWarnings(warn_twoCommonParents).
             findWarning(warn_twoCommonParents[0]).

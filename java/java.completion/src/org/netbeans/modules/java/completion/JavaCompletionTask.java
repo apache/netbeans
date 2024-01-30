@@ -1666,6 +1666,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     env.afterExtends();
                 } else if (TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind()) && ((ClassTree) parent).getImplementsClause().contains(fa)) {
                     kinds = EnumSet.of(INTERFACE);
+                } else if (parent.getKind() == Kind.PACKAGE) {
+                    kinds = EnumSet.noneOf(ElementKind.class);
+                    srcOnly = true;
                 } else if (parent.getKind() == Tree.Kind.IMPORT) {
                     inImport = true;
                     kinds = ((ImportTree) parent).isStatic() ? EnumSet.of(CLASS, ENUM, INTERFACE, ANNOTATION_TYPE, RECORD, FIELD, METHOD, ENUM_CONSTANT, RECORD_COMPONENT) : EnumSet.of(CLASS, ANNOTATION_TYPE, ENUM, INTERFACE, RECORD);

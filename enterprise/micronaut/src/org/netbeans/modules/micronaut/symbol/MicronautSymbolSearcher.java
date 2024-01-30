@@ -71,6 +71,7 @@ public class MicronautSymbolSearcher implements IndexSearcher {
             try {
                 FileObject cacheRoot = getCacheRoot(sg.getRootFolder().toURL());
                 if (cacheRoot != null) {
+                    cacheRoot.refresh();
                     Enumeration<? extends FileObject> children = cacheRoot.getChildren(true);
                     while (children.hasMoreElements()) {
                         FileObject child = children.nextElement();

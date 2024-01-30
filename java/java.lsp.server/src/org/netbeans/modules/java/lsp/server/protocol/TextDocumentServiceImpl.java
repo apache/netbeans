@@ -2351,7 +2351,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                     long column = 0;
                                     int lastLine = 0;
                                     long currentLineStart = 0;
-                                    long nextLineStart = info.getCompilationUnit().getLineMap().getStartPosition(line + 2);
+                                    long nextLineStart = getStartPosition(line + 2);
                                     Map<Token, ColoringAttributes.Coloring> ordered = new TreeMap<>((t1, t2) -> t1.offset(null) - t2.offset(null));
                                     ordered.putAll(colorings);
                                     for (Entry<Token, ColoringAttributes.Coloring> e : ordered.entrySet()) {
@@ -2359,7 +2359,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                         while (nextLineStart < currentOffset) {
                                             line++;
                                             currentLineStart = nextLineStart;
-                                            nextLineStart = info.getCompilationUnit().getLineMap().getStartPosition(line + 2);
+                                            nextLineStart = getStartPosition(line + 2);
                                             column = 0;
                                         }
                                         Optional<Integer> tokenType = e.getValue().stream().map(c -> coloring2TokenType[c.ordinal()]).collect(Collectors.maxBy((v1, v2) -> v1.intValue() - v2.intValue()));
@@ -2379,6 +2379,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                             lastLine = line;
                                             column = currentOffset - currentLineStart;
                                         }
+                                    }
+                                }
+
+                                private long getStartPosition(int line) {
+                                    try {
+                                        return line < 0 ? -1 : info.getCompilationUnit().getLineMap().getStartPosition(line);
+                                    } catch (Exception e) {
+                                        return info.getText().length();
                                     }
                                 }
                             });

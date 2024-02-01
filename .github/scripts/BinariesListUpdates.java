@@ -20,13 +20,13 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.Stream;
-import org.apache.maven.search.api.Record;
 import org.apache.maven.search.api.SearchRequest;
 import org.apache.maven.search.backend.smo.SmoSearchBackend;
 import org.apache.maven.search.backend.smo.SmoSearchBackendFactory;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 
 import static java.util.FormatProcessor.FMT;
 import static org.apache.maven.search.api.MAVEN.ARTIFACT_ID;
@@ -44,6 +44,10 @@ import static org.apache.maven.search.api.request.FieldQuery.fieldQuery;
  * @author mbien
  */
 public class BinariesListUpdates {
+
+    private static final LongAdder updates = new LongAdder();
+    private static final LongAdder checks = new LongAdder();
+    private static final LongAdder skips = new LongAdder();
 
     // java --enable-preview --source 22 --class-path "lib/*" BinariesListUpdates.java /path/to/netbeans/project
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -63,6 +67,8 @@ public class BinariesListUpdates {
                 }
             });
         }
+
+        System.out.println(STR."checked \{checks.sum()} dependencies, found \{updates.sum()} updates, skipped \{skips.sum()}." );
     }
 
     private static void checkDependencies(Path path, SmoSearchBackend backend) throws IOException, InterruptedException {
@@ -91,15 +97,18 @@ public class BinariesListUpdates {
                             latest = queryLatestVersion(backend, gid, aid, classifier.split("@")[0]);
                             gac = String.join(":", gid, aid, classifier);
                         }
-                        if (!version.equals(latest)) {
+                        if (latest != null && !version.equals(latest)) {
                             System.out.println(FMT."    %-50s\{gac} \{version} -> \{latest}");
+                            updates.increment();
                         }
                     } catch (IOException | InterruptedException ex) {
                         throw new RuntimeException(ex);
                     }
                 } else {
                     System.out.println("    skip: '"+l+"'");
+                    skips.increment();
                 }
+                checks.increment();
             });
         }
         System.out.println();
@@ -119,8 +128,13 @@ public class BinariesListUpdates {
     private static String queryLatestVersion(SmoSearchBackend backend, SearchRequest request) throws IOException, InterruptedException {
         requests.acquire();
         try {
-            List<Record> result = backend.search(request).getPage();
-            return !result.isEmpty() ? result.getFirst().getValue(VERSION) : null;
+            return backend.search(request).getPage().stream()
+                    .map(r -> r.getValue(VERSION))
+                    .filter(v -> !v.contains("alpha") && !v.contains("beta"))
+                    .filter(v -> !v.contains("M") && !v.contains("m") && !v.contains("B") && !v.contains("b") && !v.contains("ea"))
+                    .limit(5)
+                    .max((v1, v2) -> new ComparableVersion(v1).compareTo(new ComparableVersion(v2)))
+                    .orElse(null);
         } finally {
             requests.release();
         }

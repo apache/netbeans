@@ -1074,7 +1074,7 @@
                             <Identifier start='1617' end='1626' name='CONSTANT2'/>
                         </Names>
                         <Initializers>
-                            <StaticConstantAccess start='1629' end='1636'>
+                            <StaticConstantAccess start='1629' end='1636' isDynamicName='false'>
                                 <NamespaceName start='1629' end='1633' isCurrent='false' isGlobal='false'>
                                     <Identifier start='1629' end='1633' name='self'/>
                                 </NamespaceName>

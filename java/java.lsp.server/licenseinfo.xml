@@ -24,6 +24,7 @@
         <file>vscode/package-lock.json</file>
         <file>vscode/package.json</file>
         <file>vscode/tsconfig.json</file>
+        <file>vscode/esbuild.js</file>
         <file>vscode/schemas/package.schema.json</file>
         <license ref="Apache-2.0" />
         <comment type="COMMENT_UNSUPPORTED" />

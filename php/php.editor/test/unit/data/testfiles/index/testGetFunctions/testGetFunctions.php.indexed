@@ -2,9 +2,9 @@
 
 Document 0
 Searchable Keys:
-  base : af;af;71;$pClass:ParameterClass:1::1:0:0:0:0:0,$pIface:ParameterIface:1::1:0:0:0:0:0,$pDefault::0:"test":0:0:0:0:0:0,$pConstDefault::0:MY_CONST:0:0:0:0:0:0;;;0;<TESTURL>/testGetFunctions.php;0;0;
-  base : bf;bf;183;;;;0;<TESTURL>/testGetFunctions.php;0;0;
-  base : cf;cf;202;;;;0;<TESTURL>/testGetFunctions.php;0;0;
+  base : af;af;71;$pClass:ParameterClass:1::1:0:0:0:0:0:ParameterClass:,$pIface:ParameterIface:1::1:0:0:0:0:0:ParameterIface:,$pDefault::0:"test":0:0:0:0:0:0::,$pConstDefault::0:MY_CONST:0:0:0:0:0:0::;;;0;<TESTURL>/testGetFunctions.php;0;0;;
+  base : bf;bf;183;;;;0;<TESTURL>/testGetFunctions.php;0;0;;
+  base : cf;cf;202;;;;0;<TESTURL>/testGetFunctions.php;0;0;;
   top : af
   top : bf
   top : cf
@@ -14,7 +14,7 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : parameterclass;ParameterClass;14;;;;1;;0;<TESTURL>/testGetFunctions.php;;
+  clz : parameterclass;ParameterClass;14;;;;1;;0;<TESTURL>/testGetFunctions.php;;0;
   top : parameterclass
 
 Not Searchable Keys:

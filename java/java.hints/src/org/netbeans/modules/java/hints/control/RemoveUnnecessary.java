@@ -145,10 +145,13 @@ public class RemoveUnnecessary {
                 case CASE: {
                     if (tp.getParentPath().getLeaf().getKind() == Kind.SWITCH) {
                         List<? extends CaseTree> cases = ((SwitchTree) tp.getParentPath().getLeaf()).getCases();
-                        List<StatementTree> locStatements = new ArrayList<StatementTree>();
+                        List<StatementTree> locStatements = new ArrayList<>();
 
                         for (int i = cases.indexOf(tp.getLeaf()); i < cases.size(); i++) {
-                            locStatements.addAll(cases.get(i).getStatements());
+                            List<? extends StatementTree> list = cases.get(i).getStatements();
+                            if (list != null) {
+                                locStatements.addAll(list);
+                            }
                         }
 
                         statements = locStatements;

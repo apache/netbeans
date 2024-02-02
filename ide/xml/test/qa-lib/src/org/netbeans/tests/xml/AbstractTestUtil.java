@@ -102,7 +102,7 @@ public abstract class AbstractTestUtil {
         if (bi < 0 || ei < 0) {
             return original;
         } else {
-            return original.substring(0, bi) + replaceTo + original.substring(ei, original.length());
+            return original.substring(0, bi) + replaceTo + original.substring(ei);
         }
     }
     

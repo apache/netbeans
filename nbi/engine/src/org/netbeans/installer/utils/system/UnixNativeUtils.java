@@ -526,9 +526,10 @@ public class UnixNativeUtils extends NativeUtils {
                 name = entryMap.get(Locale.getDefault());
             }
             list.add(entryName + "=" + name);
-            for (Locale locale : entryMap.keySet()) {
-                if (!name.equals(entryMap.get(locale))) {
-                    list.add(entryName + "[" + locale + "]=" + StringUtils.getLocalizedString(entryMap, locale));
+
+            for (Map.Entry<Locale, String> entry : entryMap.entrySet()) {
+                if (!name.equals(entry.getValue())) {
+                    list.add(entryName + "[" + entry.getKey() + "]=" + StringUtils.getLocalizedString(entryMap, entry.getKey()));
                 }
             }
         }
@@ -558,9 +559,7 @@ public class UnixNativeUtils extends NativeUtils {
         list.add("Type=Application");
         list.add("Terminal=0");
         Properties props = shortcut.getAdditionalProperties();
-        for(Object key : props.keySet()) {
-            list.add(key.toString() + "=" + props.get(key));
-        }
+        props.forEach((k, v) -> list.add(k.toString() + "=" + v));
         list.add(SystemUtils.getLineSeparator());
         return list;
     }
@@ -583,9 +582,7 @@ public class UnixNativeUtils extends NativeUtils {
         list.add("Version=1.0");
         list.add("Type=Link");
         Properties props = shortcut.getAdditionalProperties();
-        for(Object key : props.keySet()) {
-            list.add(key.toString() + "=" + props.get(key));
-        }
+        props.forEach((k, v) -> list.add(k.toString() + "=" + v));
         list.add(SystemUtils.getLineSeparator());
         return list;
     }

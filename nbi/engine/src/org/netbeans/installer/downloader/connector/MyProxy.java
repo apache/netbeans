@@ -71,7 +71,7 @@ public class MyProxy implements DomExternalizable {
     public MyProxy(Proxy proxy, MyProxyType type) throws IllegalArgumentException {
         this(proxy);
         
-        if (!proxy.type().equals(type.getType())) {
+        if (proxy.type() != type.getType()) {
             throw new IllegalArgumentException(ResourceUtils.getString(
                     MyProxy.class, 
                     ERROR_TYPES_CONFLICT_KEY, 

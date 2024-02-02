@@ -33,6 +33,7 @@ import org.openide.text.ActiveEditorDrop;
  *
  * @author Libor Kotouc
  */
+// @todo: Support JakartaEE
 public class GetProperty implements ActiveEditorDrop {
 
     public static final String[] implicitBeans = new String[] {  // NOI18N

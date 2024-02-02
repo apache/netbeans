@@ -26,11 +26,6 @@
             <code-name-base>org.eclipse.jgit</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>com.jcraft.jsch</code-name-base>
-                    <compile-dependency/>
-                    <run-dependency/>
-                </dependency>
-                <dependency>
                     <code-name-base>com.googlecode.javaewah.JavaEWAH</code-name-base>
                     <compile-dependency/>
                     <run-dependency>
@@ -53,27 +48,11 @@
                         <specification-version>1.6.0</specification-version>
                     </run-dependency>
                 </dependency>
-                <dependency>
-                    <code-name-base>bcprov</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.63</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>bcpg</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.63</specification-version>
-                    </run-dependency>
-                </dependency>
             </module-dependencies>
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>org-eclipse-jgit.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit-5.7.0.202003110725-r.jar</binary-origin>
+                <binary-origin>external/org.eclipse.jgit-6.8.0.202311291450-r.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

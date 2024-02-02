@@ -23,12 +23,20 @@ class UnusableTypes {
     private int|callable $callable;
     private false $false;
     private null $null;
+    private true $true;
     private bool|false $boolFalse;
+    private true|bool $trueBool;
     private bool|bool $duplicatedBool;
+    private true|false $bothTrueAndFalse;
+    private int|false|true $bothTrueAndFalse2;
     private int|INT $duplicatedInt;
     private iterable|array $iterable1;
     private iterable|Traversable $iterable2;
     private iterable|array|Traversable $iterable3;
+    private null|false $nullFalse; // PHP 8.2: OK
+
+    public function returnFalse(): true {
+    }
 
     public function returnFalse(): false {
     }
@@ -37,6 +45,9 @@ class UnusableTypes {
     }
 
     public function returnDuplicatedType(): UnionType2|UnionType2 {
+    }
+
+    public function parameterTrue(true $true) {
     }
 
     public function parameterFalse(false $false) {

@@ -1,6 +1,8 @@
 --add-modules=jdk.jshell
 --add-opens=jdk.jshell/jdk.jshell=ALL-UNNAMED
+--add-exports=jdk.jshell/jdk.internal.jshell.debug=ALL-UNNAMED
 --add-exports=jdk.jdeps/com.sun.tools.classfile=ALL-UNNAMED
 --add-exports=jdk.jdeps/com.sun.tools.javap=ALL-UNNAMED
 --add-exports=jdk.internal.jvmstat/sun.jvmstat.monitor=ALL-UNNAMED
+--add-exports=jdk.internal.opt/jdk.internal.opt=ALL-UNNAMED
 --add-exports=java.management/sun.management=ALL-UNNAMED

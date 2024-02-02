@@ -92,7 +92,7 @@ public final class GuardedSectionManager {
      * can be used to find the section and if the section is persisted, will be written
      * into the output file. Unline {@link #createSimpleSection}, this method is
      * intended for marking existing text protected/guarded.
-     * <p/>
+     * <p>
      * Use {@link GuardedSection#removeSection()} to remove the protection.
      * 
      * @param start start of the protected text

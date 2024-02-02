@@ -39,6 +39,7 @@ import org.junit.Test;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery;
+import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.classfile.ClassFile;
@@ -74,6 +75,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
     @Override
     public void setUp() throws Exception {
         clearWorkDir();
+        SourceUtilsTestUtil2.disableMultiFileSourceRoots();
         wd = FileUtil.toFileObject(FileUtil.normalizeFile(getWorkDir()));
         root = FileUtil.createFolder(wd, "src");    //NOI18N
         java = createFile(root, "org/nb/A.java","package nb;\n class A {}");    //NOI18N
@@ -87,7 +89,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
         MockLookup.setInstances(new SourceLevelQueryImplementation() {
             @Override
             public String getSourceLevel(FileObject javaFile) {
-                return "1.8";
+                return "11";
             }
         });
         assertNotNull(root);
@@ -163,7 +165,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
         }, new SourceLevelQueryImplementation() {
             @Override
             public String getSourceLevel(FileObject javaFile) {
-                return "1.8";
+                return "11";
             }
         });
 
@@ -179,7 +181,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
                         "import javax.lang.model.element.TypeElement;\n" +
                         "import javax.lang.model.SourceVersion;\n" +
                         "\n" +
-                        "@SupportedAnnotationTypes(\"*\") @SupportedSourceVersion(SourceVersion.RELEASE_8)\n" +
+                        "@SupportedAnnotationTypes(\"*\") @SupportedSourceVersion(SourceVersion.RELEASE_11)\n" +
                         "public class AP extends AbstractProcessor {\n" +
                         "    int round;\n" +
                         "    @Override\n" +
@@ -229,7 +231,7 @@ public class JavaSourceUtilImplTest extends NbTestCase {
         MockLookup.setInstances(new SourceLevelQueryImplementation() {
             @Override
             public String getSourceLevel(FileObject javaFile) {
-                return "1.8";
+                return "11";
             }
         });
         assertNotNull(root);

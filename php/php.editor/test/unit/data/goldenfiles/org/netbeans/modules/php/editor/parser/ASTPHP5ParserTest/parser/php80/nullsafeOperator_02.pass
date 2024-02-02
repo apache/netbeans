@@ -318,7 +318,7 @@
                                     <Key>
                                     </Key>
                                     <Value>
-                                        <StaticConstantAccess start='871' end='891'>
+                                        <StaticConstantAccess start='871' end='891' isDynamicName='false'>
                                             <NamespaceName start='871' end='884' isCurrent='false' isGlobal='false'>
                                                 <Identifier start='871' end='884' name='ClassNameTest'/>
                                             </NamespaceName>

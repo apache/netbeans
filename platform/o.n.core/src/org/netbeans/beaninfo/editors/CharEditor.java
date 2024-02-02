@@ -34,6 +34,7 @@ public class CharEditor extends PropertyEditorSupport implements EnhancedPropert
      * Converts the char to String by either leaving
      * the single char or by creating unicode escape.
      */
+    @Override
     public String getAsText () {
         char value = ((Character)getValue()).charValue();
         final StringBuffer buf = new StringBuffer(6);
@@ -61,6 +62,7 @@ public class CharEditor extends PropertyEditorSupport implements EnhancedPropert
      * Set the property value by parsing given String.
      * @param text  The string to be parsed.
      */
+    @Override
     public void setAsText(String text) throws IllegalArgumentException {
         if (text.length() < 1) {
             // ignore empty value
@@ -78,7 +80,7 @@ public class CharEditor extends PropertyEditorSupport implements EnhancedPropert
                 case 'r': value = '\r'; break;
                 case '\\': value = '\\' ; break;
                 case 'u' :
-                    String num = text.substring(2,text.length());
+                    String num = text.substring(2);
                     if (num.length () > 4) {
                         // ignore longer strings
                         return;
@@ -105,8 +107,9 @@ public class CharEditor extends PropertyEditorSupport implements EnhancedPropert
     /**
      * Accepts Character and String values. If the argument is
      * a String the first character is taken as the new value.
-     * @param v new value
+     * @param newValue new value
      */
+    @Override
     public void setValue(Object newValue) throws IllegalArgumentException {
         if (newValue instanceof Character ) {
             super.setValue(newValue);
@@ -138,6 +141,7 @@ public class CharEditor extends PropertyEditorSupport implements EnhancedPropert
      * @return A fragment of Java code representing an initializer for the
      *   	current value.
      */
+    @Override
     public String getJavaInitializationString() {
         if ( ((Character)getValue()).charValue() == '\'' )
             return "'\\''";                 // NOI18N

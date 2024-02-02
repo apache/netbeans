@@ -569,7 +569,7 @@ public class SelectorsGroupEditor extends javax.swing.JPanel {
             }
         }else if(ruleType.equals(ELEMENT_ID_TYPE)){
             if(!selectElementIdTextField.getText().trim().equals("")){
-                rule = "#" + selectElementIdTextField.getText().trim();;
+                rule = "#" + selectElementIdTextField.getText().trim();
             }
         }
         if((rule != null) && (!selectedRules.contains(rule))){
@@ -607,7 +607,7 @@ public class SelectorsGroupEditor extends javax.swing.JPanel {
             }
         }else if(ruleType.equals(ELEMENT_ID_TYPE)){
             if(!selectElementIdTextField.getText().trim().equals("")){
-                rule = "#" + selectElementIdTextField.getText().trim();;
+                rule = "#" + selectElementIdTextField.getText().trim();
             }
         }
         return rule;

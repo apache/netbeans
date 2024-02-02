@@ -1,0 +1,1 @@
+OpenIDE-Module: o.eclipse.jgit.ssh.jsch

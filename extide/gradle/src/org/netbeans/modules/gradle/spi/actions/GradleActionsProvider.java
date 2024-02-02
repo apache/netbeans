@@ -46,7 +46,7 @@ import org.openide.util.Lookup;
  * <div class="nonnormative">
  * This is an example, how to disable e.g. {@code debug.single} action in a specific configuration the user may activate:
  * {@snippet file="org/netbeans/modules/gradle/actions/declarative-actions2.xml" region="disable-action-xml"}
- * 
+ * </div>
  * @author Laszlo Kishalmi
  * @author Svata Dedic
  */

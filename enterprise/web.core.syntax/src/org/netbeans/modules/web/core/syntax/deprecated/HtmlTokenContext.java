@@ -36,7 +36,7 @@ import org.netbeans.editor.Utilities;
 *
 * @deprecated Use Lexer API instead. See {@link HTMLTokenId}.
 */
-
+@Deprecated
 public class HtmlTokenContext extends TokenContext {
 
     // Numeric-ids for token-ids

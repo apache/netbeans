@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.50.0
+#Version 1.55.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -50,9 +50,12 @@ meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
 
 CLSS public final org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion
+fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_4_0
+fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_4_1
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_5_0
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_5_1
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_6
+fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_7
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion SUN_APPSERVER_10_0
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion SUN_APPSERVER_10_1
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion SUN_APPSERVER_7_0
@@ -149,6 +152,7 @@ meth public org.netbeans.modules.j2ee.sun.dd.api.web.SunWebApp getWebDDRoot(java
 meth public org.netbeans.modules.j2ee.sun.dd.api.web.SunWebApp getWebDDRoot(org.w3c.dom.Document) throws org.netbeans.modules.j2ee.sun.dd.api.DDException
 meth public org.netbeans.modules.j2ee.sun.dd.api.web.SunWebApp getWebDDRoot(org.xml.sax.InputSource) throws java.io.IOException,org.netbeans.modules.j2ee.sun.dd.api.DDException,org.xml.sax.SAXException
 meth public static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getASDDVersion(org.netbeans.modules.j2ee.sun.dd.api.RootInterface)
+ anno 0 java.lang.Deprecated()
 meth public static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion getASDDVersion(org.netbeans.modules.j2ee.sun.dd.api.RootInterface,org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion)
 meth public static org.netbeans.modules.j2ee.sun.dd.api.DDProvider getDefault()
 meth public void merge(org.netbeans.modules.j2ee.sun.dd.api.RootInterface,java.io.Reader)

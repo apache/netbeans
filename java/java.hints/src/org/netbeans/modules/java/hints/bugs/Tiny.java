@@ -32,14 +32,15 @@ import com.sun.source.tree.LineMap;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
-import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,6 +53,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -196,6 +199,42 @@ public class Tiny {
         return ErrorDescriptionFactory.forTree(ctx, ctx.getPath(), displayName, fix);
     }
 
+    @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Tiny.varTypeDiamondOperator", description = "#DESC_org.netbeans.modules.java.hints.bugs.Tiny.varTypeDiamondOperator", category="bugs", suppressWarnings="AllowVarTypeDiamondOperator")
+    @TriggerPatterns({
+        @TriggerPattern(value="$mods$ $varType $name = new $type<>($args$)", constraints=@ConstraintVariableType(variable="$type", type="java.util.Collection")),
+        @TriggerPattern(value="$mods$ $varType $name = new $type<>($args$)", constraints=@ConstraintVariableType(variable="$type", type="java.util.Map"))
+    })
+    public static ErrorDescription varTypeDiamondOperator(HintContext ctx) {
+        TreePath path = ctx.getPath();
+        Boolean isVarUsed = ctx.getInfo().getTreeUtilities().isVarType(path);
+        if(!isVarUsed){
+            return null;
+        }
+
+        VariableTree vt = (VariableTree) ctx.getPath().getLeaf();
+        NewClassTree nct = (NewClassTree) vt.getInitializer();
+        Element constructorCand = ctx.getInfo().getTrees().getElement(new TreePath(ctx.getPath(), nct));
+
+        if (constructorCand.getKind() != ElementKind.CONSTRUCTOR) {
+            return null;
+        }
+
+        ExecutableElement constructor = (ExecutableElement) constructorCand;
+
+        for (VariableElement param : constructor.getParameters()) {
+            if (param.asType().getKind() == TypeKind.DECLARED) {
+                DeclaredType dt = (DeclaredType) param.asType();
+                if (!dt.getTypeArguments().isEmpty()) {
+                    return null;
+                }
+            }
+        }
+
+        String displayName = NbBundle.getMessage(Tiny.class, "ERR_varTypeDiamondOperator");
+
+        return ErrorDescriptionFactory.forTree(ctx, path, displayName);
+    }
+    
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.bugs.Tiny.resultSet", description = "#DESC_org.netbeans.modules.java.hints.bugs.Tiny.resultSet", category="bugs", suppressWarnings="UseOfIndexZeroInJDBCResultSet", options=Options.QUERY)
     @TriggerPattern(value="$set.$method($columnIndex, $other$)",
                     constraints={
@@ -443,8 +482,8 @@ public class Tiny {
                 } 
                 // attempt to resolve a simple-qualified identifier; assuming the user already has an import in the source
                 Element outer = el.getEnclosingElement();
-                if (outer != null && (outer.getKind() == ElementKind.CLASS || outer.getKind() == ElementKind.INTERFACE ||
-                        outer.getKind() == ElementKind.ENUM)) {
+                if (outer != null && (outer.getKind() == ElementKind.CLASS || outer.getKind() == ElementKind.INTERFACE
+                                   || outer.getKind() == ElementKind.RECORD || outer.getKind() == ElementKind.ENUM)) {
                     TypeElement tel = (TypeElement)outer;
                     String x =  tel.getSimpleName() + "." + l.toString();
                     if (tryResolveIdentifier(info, lPath, m, resolved, x)) {

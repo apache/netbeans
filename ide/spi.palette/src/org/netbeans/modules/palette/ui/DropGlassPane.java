@@ -20,14 +20,17 @@ package org.netbeans.modules.palette.ui;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 
 import java.util.HashMap;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JTree;
+import javax.swing.UIManager;
+import org.openide.awt.GraphicsUtils;
 
 
 /**
@@ -39,16 +42,16 @@ import javax.swing.JTree;
  * @see org.openide.explorer.view.TreeViewDropSupport
  */
 final class DropGlassPane extends JPanel {
-    private static HashMap<Integer,DropGlassPane> map = new HashMap<Integer,DropGlassPane>();
+    private static final HashMap<Integer,DropGlassPane> map = new HashMap<>();
     private static final int MIN_X = 0;//5;
     private static final int MIN_Y = 0;//3;
-    private static final int MIN_WIDTH = 0;//10;
+//    private static final int MIN_WIDTH = 0;//10;
     private static final int MIN_HEIGTH = 0;//3;
     private static Component oldPane;
     private static JComponent originalSource;
     private static boolean wasVisible;
-    Line2D line = null;
-    Rectangle prevLineRect = null;
+    private Line2D line = null;
+    private Rectangle prevLineRect = null;
 
     private DropGlassPane() {
     }
@@ -58,7 +61,7 @@ final class DropGlassPane extends JPanel {
      * @param comp
      * @return  */
     public static synchronized DropGlassPane getDefault(JComponent comp) {
-        Integer id = Integer.valueOf(System.identityHashCode(comp));
+        Integer id = System.identityHashCode(comp);
 
         if ((map.get(id)) == null) {
             DropGlassPane dgp = new DropGlassPane();
@@ -103,6 +106,7 @@ final class DropGlassPane extends JPanel {
 
     /** Unset drop line if setVisible to false.
      * @param boolean aFlag new state */
+    @Override
     public void setVisible(boolean aFlag) {
         super.setVisible(aFlag);
 
@@ -167,38 +171,74 @@ final class DropGlassPane extends JPanel {
 
     /** Paint drop line on glass pane.
      * @param Graphics g Obtained graphics */
+    @Override
     public void paint(Graphics g) {
         if (line != null) {
-        
+            g.setColor( UIManager.getColor( "Tree.selectionBackground" ) );
+
             int x1 = (int) line.getX1();
             int x2 = (int) line.getX2();
             int y1 = (int) line.getY1();
             int y2 = (int)line.getY2 ();
-                    
-            if( y1 == y2 ) {
-                // LINE
-                g.drawLine(x1 + 2, y1, x2 - 2, y1);
-                g.drawLine(x1 + 2, y1 + 1, x2 - 2, y1 + 1);
 
-                // RIGHT
-                g.drawLine(x1, y1 - 2, x1, y1 + 3);
-                g.drawLine(x1 + 1, y2 - 1, x1 + 1, y1 + 2);
+            if (g instanceof Graphics2D) {
+                // create drop line shape
+                Path2D shape = new Path2D.Float();
+                if( y1 == y2 ) {
+                    // horizontal line
+                    shape.moveTo(x1, y1 - 3); // left-top edge
+                    shape.lineTo(x1 + 3, y1); // horizontal line left
+                    shape.lineTo(x2 - 3, y1); // horizontal line right
+                    shape.lineTo(x2, y1 - 3); // right-top edge
+                    shape.lineTo(x2, y1 + 5); // right-bottom edge
+                    shape.lineTo(x2 - 3, y1 + 2); // horizontal line right
+                    shape.lineTo(x1 + 3, y1 + 2); // horizontal line left
+                    shape.lineTo(x1, y1 + 5); // left-bottom edge
+                } else {
+                    // vertical line
+                    shape.moveTo(x1 - 3, y1); // left-top edge
+                    shape.lineTo(x1, y1 + 3); // vertical line top
+                    shape.lineTo(x1, y2 - 3); // vertical line bottom
+                    shape.lineTo(x1 - 3, y2); // left-bottom edge
+                    shape.lineTo(x1 + 5, y2); // right-bottom edge
+                    shape.lineTo(x1 + 2, y2 - 3); // vertical line bottom
+                    shape.lineTo(x1 + 2, y1 + 3); // vertical line top
+                    shape.lineTo(x1 + 5, y1); // right-top edge
+                }
+                shape.closePath();
 
-                // LEFT
-                g.drawLine(x2, y1 - 2, x2, y1 + 3);
-                g.drawLine(x2 - 1, y1 - 1, x2 - 1, y1 + 2);
+                // paint drop line shape
+                GraphicsUtils.configureDefaultRenderingHints(g);
+                ((Graphics2D)g).fill(shape);
             } else {
-                // LINE
-                g.drawLine(x1, y1 + 2, x2, y2 - 2);
-                g.drawLine(x1 + 1, y1 + 2, x2 + 1, y2 - 2);
+                // probably no longer used, but keep it for compatibility for the case
+                // that graphics context is not a Graphics2D
 
-                // RIGHT
-                g.drawLine(x1 - 2, y1, x1 + 3, y1);
-                g.drawLine(x1 - 1, y1 + 1, x1 + 2, y1 + 1);
+                if( y1 == y2 ) {
+                    // horizontal line
+                    g.drawLine(x1 + 2, y1, x2 - 2, y1);
+                    g.drawLine(x1 + 2, y1 + 1, x2 - 2, y1 + 1);
 
-                // LEFT
-                g.drawLine(x2 - 2, y2, x2 + 3, y2);
-                g.drawLine(x2 - 1, y2 - 1, x2 + 2, y2 - 1);
+                    // left
+                    g.drawLine(x1, y1 - 2, x1, y1 + 3);
+                    g.drawLine(x1 + 1, y2 - 1, x1 + 1, y1 + 2);
+
+                    // right
+                    g.drawLine(x2, y1 - 2, x2, y1 + 3);
+                    g.drawLine(x2 - 1, y1 - 1, x2 - 1, y1 + 2);
+                } else {
+                    // vertical line
+                    g.drawLine(x1, y1 + 2, x2, y2 - 2);
+                    g.drawLine(x1 + 1, y1 + 2, x2 + 1, y2 - 2);
+
+                    // top
+                    g.drawLine(x1 - 2, y1, x1 + 3, y1);
+                    g.drawLine(x1 - 1, y1 + 1, x1 + 2, y1 + 1);
+
+                    // bottom
+                    g.drawLine(x2 - 2, y2, x2 + 3, y2);
+                    g.drawLine(x2 - 1, y2 - 1, x2 + 2, y2 - 1);
+                }
             }
         }
     }

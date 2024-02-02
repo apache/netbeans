@@ -29,7 +29,7 @@ import org.openide.util.NbPreferences;
 
 /**
  * Shareable search history. Known implementations are explorer search
- * dialog and editor find&replace dialog.
+ * dialog and editor find&amp;replace dialog.
  *
  * Typical use case:
  * Editor registers a listener to listen on lastSelected SearchPattern. If user

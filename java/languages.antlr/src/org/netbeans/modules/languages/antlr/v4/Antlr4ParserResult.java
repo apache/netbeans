@@ -21,17 +21,23 @@ package org.netbeans.modules.languages.antlr.v4;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import org.antlr.parser.antlr4.ANTLRv4Lexer;
 import org.antlr.parser.antlr4.ANTLRv4Parser;
 import org.antlr.parser.antlr4.ANTLRv4ParserBaseListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.csl.spi.DefaultError;
@@ -47,10 +53,19 @@ import org.openide.filesystems.FileObject;
  */
 public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
-    private List<String> imports = new ArrayList<>();
+    private final List<String> imports = new ArrayList<>();
+
+    private static final Logger LOG = Logger.getLogger(Antlr4ParserResult.class.getName());
+
+    public static final Reference HIDDEN = new Reference(ReferenceType.CHANNEL, "HIDDEN", OffsetRange.NONE);
+    public static final Reference DEFAULT_MODE = new Reference(ReferenceType.MODE, "DEFAULT_MODE", OffsetRange.NONE);
+
+    final Set<String> unknownReferences = new HashSet<>();
 
     public Antlr4ParserResult(Snapshot snapshot) {
         super(snapshot);
+        references.put(HIDDEN.name, HIDDEN);
+        references.put(DEFAULT_MODE.name, DEFAULT_MODE);
     }
     
     @Override
@@ -58,27 +73,66 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
         CharStream cs = CharStreams.fromString(String.valueOf(snapshot.getText()));
         ANTLRv4Lexer lexer = new org.antlr.parser.antlr4.ANTLRv4Lexer(cs);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        return new ANTLRv4Parser(tokens);
+        ANTLRv4Parser ret = new ANTLRv4Parser(tokens);
+        ret.removeErrorListener(ConsoleErrorListener.INSTANCE);
+        return ret;
     }
 
     @Override
     protected void evaluateParser(ANTLRv4Parser parser) {
         parser.grammarSpec();
+        checkReferences();
     }
 
+    private void checkReferences() {
+        Map<String, Reference> allRefs = new HashMap<>(references.size() * 2);
+        for (Antlr4ParserResult pr : allImports().values()) {
+            allRefs.putAll(pr.references);
+        }
+        occurrences.forEach((refName, offsets) -> {
+            if (!allRefs.containsKey(refName)) {
+                unknownReferences.add(refName);
+                for (OffsetRange offset : offsets) {
+                    errors.add(new DefaultError(null, "Unknown Reference: " + refName, null, getFileObject(), offset.getStart(), offset.getEnd(), Severity.ERROR));
+                }
+            }
+        });
+    }
+    
+    public List<String> getImports() {
+        return Collections.unmodifiableList(imports);
+    }
+
+    private static Token getIdentifierToken(ANTLRv4Parser.IdentifierContext ctx) {
+        TerminalNode tn = ctx.RULE_REF() != null ? ctx.RULE_REF() : ctx.TOKEN_REF();
+        return tn.getSymbol();
+    }
+    
     @Override
     protected ParseTreeListener createReferenceListener() {
         return new ANTLRv4ParserBaseListener() {
             @Override
+            public void exitGrammarType(ANTLRv4Parser.GrammarTypeContext ctx) {
+                grammarType = GrammarType.MIXED;
+                if (ctx.LEXER() != null)  grammarType = GrammarType.LEXER;
+                if (ctx.PARSER() != null) grammarType = GrammarType.PARSER;                
+            }
+            
+            @Override
             public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
-                Token token = ctx.RULE_REF().getSymbol();
-                addReference(token);
+                if (ctx.RULE_REF() != null) {
+                    Token token = ctx.RULE_REF().getSymbol();
+                    addReference(ReferenceType.RULE, token);
+                }
             }
 
             @Override
             public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
-                Token token = ctx.TOKEN_REF().getSymbol();
-                addReference(token);
+                if (ctx.TOKEN_REF() != null) {
+                    ReferenceType type = ctx.FRAGMENT() != null ? ReferenceType.FRAGMENT : ReferenceType.TOKEN;
+                    Token token = ctx.TOKEN_REF().getSymbol();
+                    addReference(type, token);
+                }
             }
 
             @Override
@@ -86,42 +140,34 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
                 List<ANTLRv4Parser.IdentifierContext> ids = ctx.idList().identifier();
                 for (ANTLRv4Parser.IdentifierContext id : ids) {
                     if (id.TOKEN_REF() != null) {
-                        addReference(id.TOKEN_REF().getSymbol());
+                        addReference(ReferenceType.TOKEN, id.TOKEN_REF().getSymbol());
                     }
                 }
             }
 
-            public void addReference(Token token) {
-                OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
-                String name = token.getText();
-                if(references.containsKey(name)) {
-                    references.get(name).defOffset = range;
-                } else {
-                    Reference ref = new Reference(name, getFileObject(), range);
-                    references.put(ref.name, ref);
+            @Override
+            public void exitChannelsSpec(ANTLRv4Parser.ChannelsSpecContext ctx) {
+                List<ANTLRv4Parser.IdentifierContext> ids = ctx.idList().identifier();
+                for (ANTLRv4Parser.IdentifierContext id : ids) {
+                    addReference(ReferenceType.CHANNEL, getIdentifierToken(id));
                 }
             }
 
+            @Override
+            public void exitModeSpec(ANTLRv4Parser.ModeSpecContext ctx) {
+                if (ctx.identifier() != null) {
+                    addReference(ReferenceType.MODE, getIdentifierToken(ctx.identifier()));
+                }
+            }
+
+            public void addReference(ReferenceType type, Token token) {
+                OffsetRange range = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
+                String name = token.getText();
+                Reference ref = new Reference(type, name, range);
+                references.put(ref.name, ref);
+            }
+
         };
-    }
-
-
-    @Override
-    protected ParseTreeListener createCheckReferences() {
-        final Map<String, Reference> allRefs = new HashMap<>(references);
-        for (String im : imports) {
-            FileObject fo = getFileObject().getParent().getFileObject(im + ".g4");
-            if (fo != null) {
-                AntlrParserResult pr = AntlrParser.getParserResult(fo);
-                allRefs.putAll(pr.references);
-            }
-        }
-        return new ANTLRv4OccuranceListener((token) -> {
-            String name = token.getText();
-            if(!"EOF".equals(name) && (!allRefs.containsKey(name) || (allRefs.get(name).defOffset == null))) {
-                errors.add(new DefaultError(null, "Unknown Reference: " + name, null, getFileObject(), token.getStartIndex(), token.getStopIndex() + 1, Severity.ERROR));
-            }
-        });
     }
 
     @Override
@@ -211,17 +257,22 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
             @Override
             public void exitLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext ctx) {
-                if ((ctx.FRAGMENT() == null) && (ctx.TOKEN_REF() != null)) {
+                boolean fragment = ctx.FRAGMENT() != null;
+                if (ctx.TOKEN_REF() != null) {
                     // Do not represent fragments in the structure
-                    AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.TOKEN_REF().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
-                    lexerStructure.add(rule);
+                    AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.TOKEN_REF().getText(), fragment, getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                    if (fragment) {
+                        structure.add(rule);
+                    } else {
+                        lexerStructure.add(rule);
+                    }
                 }
             }
 
             @Override
             public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext ctx) {
                 if (ctx.RULE_REF() != null) {
-                    AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.RULE_REF().getText(), getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
+                    AntlrStructureItem.RuleStructureItem rule = new AntlrStructureItem.RuleStructureItem(ctx.RULE_REF().getText(), false, getFileObject(), ctx.getStart().getStartIndex(), ctx.getStop().getStopIndex() + 1);
                     structure.add(rule);
                 }
             }
@@ -250,23 +301,46 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
 
     private void addOccurance(Token token) {
         String refName = token.getText();
-        Reference ref = references.get(refName);
-        if (ref == null) {
-            ref = new Reference(refName, getSnapshot().getSource().getFileObject(), null);
-            references.put(ref.name, ref);
-        }
-       ref.occurances.add(new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1));
+        OffsetRange or = new OffsetRange(token.getStartIndex(), token.getStopIndex() + 1);
+        markOccurrence(refName, or);
     }
 
     @Override
     protected ParseTreeListener createOccurancesListener() {
         return new ANTLRv4OccuranceListener(this::addOccurance);
     }
-
-    public List<String> getImports() {
-        return Collections.unmodifiableList(imports);
+    
+    private Optional<Antlr4ParserResult> getParserResult(String grammarName) {
+        Optional<Antlr4ParserResult> ret = Optional.empty();
+        FileObject fo = getFileObject().getParent().getFileObject(grammarName + ".g4");
+        
+        if (fo != null) {
+            ret = Optional.of(fo.equals(getFileObject()) ? this : (Antlr4ParserResult) AntlrParser.getParserResult(fo));
+        }
+        return ret;
     }
 
+    private void addImports(Set<String> visited, String importedGrammar) {
+        if (visited.add(importedGrammar)) {
+            getParserResult(importedGrammar).ifPresent((result) -> {
+                for (String im : result.getImports()) {
+                    addImports(visited, im);
+                }
+            });
+        }
+    }
+    
+
+    public Map<String, Antlr4ParserResult> allImports() {
+        Set<String> visited = new HashSet<>();
+        addImports(visited, getFileObject().getName());
+        Map<String, Antlr4ParserResult> ret = new HashMap<>();
+        for (String im : visited) {
+            getParserResult(im).ifPresent((result) -> ret.put(im, result));
+        }
+        return ret;
+    }
+    
     private static class ANTLRv4OccuranceListener extends ANTLRv4ParserBaseListener {
         private final Consumer<Token> onOccurance;
 
@@ -285,6 +359,22 @@ public final class Antlr4ParserResult extends AntlrParserResult<ANTLRv4Parser> {
         public void exitRuleref(ANTLRv4Parser.RulerefContext ctx) {
             if (ctx.RULE_REF() != null) {
                 onOccurance.accept(ctx.RULE_REF().getSymbol());
+            }
+        }
+
+        @Override
+        public void exitLexerCommandExpr(ANTLRv4Parser.LexerCommandExprContext ctx) {
+            if (ctx.identifier() != null) {
+                onOccurance.accept(getIdentifierToken(ctx.identifier()));
+            }
+        }
+
+        
+        @Override
+        public void exitChannelsSpec(ANTLRv4Parser.ChannelsSpecContext ctx) {
+            List<ANTLRv4Parser.IdentifierContext> ids = ctx.idList().identifier();
+            for (ANTLRv4Parser.IdentifierContext id : ids) {
+                onOccurance.accept(getIdentifierToken(id));
             }
         }
     }

@@ -143,9 +143,9 @@ public class HudsonInstanceNode extends AbstractNode {
     
     @Messages({
         "TXT_Instance_Prop_Name=Name",
-        "DESC_Instance_Prop_Name=Hudson's instance name",
+        "DESC_Instance_Prop_Name=Jenkins's instance name",
         "TXT_Instance_Prop_Url=URL",
-        "DESC_Instance_Prop_Url=Hudson's instance URL",
+        "DESC_Instance_Prop_Url=Jenkins's instance URL",
         "TXT_Instance_Prop_Sync=Autosynchronization time",
         "DESC_Instance_Prop_Sync=Autosynchronization time in minutes (if it's 0 the autosynchronization is off)"
     })

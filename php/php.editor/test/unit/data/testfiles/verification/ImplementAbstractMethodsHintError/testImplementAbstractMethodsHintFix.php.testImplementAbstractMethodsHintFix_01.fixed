@@ -12,7 +12,6 @@ class ExtendingClass1 extends AbstractClass {
     public function abstractFoo() {
         
     }
-
 }
 
 class ExtendingClass2 extends AbstractClass {

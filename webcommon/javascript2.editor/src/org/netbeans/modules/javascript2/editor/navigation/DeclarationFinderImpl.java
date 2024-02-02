@@ -169,14 +169,14 @@ public class DeclarationFinderImpl implements DeclarationFinder {
                     }
                     // build the FQN of the last defined property in the file / model
                     String lastDefinedFQN = parent.getFullyQualifiedName();
-                    List<IndexResult> rItems = new ArrayList();
+                    List<IndexResult> rItems = new ArrayList<>();
                     if (partIndex < fqnParts.length) {
                         // find the next property from FQN in the index for the defined property in the file / model
                         rItems.addAll(findPropertyOfType(jsIndex, lastDefinedFQN.toString(), fqnParts[partIndex]));
                         parent = findPropertyOrParameterInModel(parent, fqnParts[partIndex]);
                         partIndex++;
                         for (int i = partIndex; (!rItems.isEmpty()) && i < fqnParts.length; i++ ) {
-                            List<IndexResult> copy = new ArrayList(rItems);
+                            List<IndexResult> copy = new ArrayList<>(rItems);
                             rItems.clear();
                             // and for the found property find next property from the FQN
                             for (IndexResult indexResult : copy) {
@@ -294,7 +294,7 @@ public class DeclarationFinderImpl implements DeclarationFinder {
     }
 
     private Collection<? extends IndexResult> findPropertyOfType(Index jsIndex, String fqn, String propertyName, int count) {
-        List<IndexResult> items = new ArrayList();
+        List<IndexResult> items = new ArrayList<>();
         if (count > 5) {
             return items;
         }

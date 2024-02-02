@@ -29,7 +29,6 @@ import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.NbBundle.Messages;
@@ -63,22 +62,13 @@ public class ManageGroupsPanel extends javax.swing.JPanel implements PropertyCha
         groupList.setSelectedValue(selectedValue == null? NONE_GOUP : selectedValue, true);
         groupList.setEnabled(model.getSize() > 0);
         groupList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        groupList.addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                firePropertyChange("selection", null, null);
-            }
-        });
+        groupList.addListSelectionListener((ListSelectionEvent e) -> firePropertyChange("selection", null, null));
         groupList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
                 if (evt.getClickCount() == 2) {
-                    RP.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Group.setActiveGroup(getSelectedGroups()[0], false);
-                        }
+                    RP.post(() -> {
+                        Group.setActiveGroup(getSelectedGroups()[0], false);
                     });
                     final Window w = SwingUtilities.getWindowAncestor(ManageGroupsPanel.this);
                     if (w != null) {
@@ -93,27 +83,20 @@ public class ManageGroupsPanel extends javax.swing.JPanel implements PropertyCha
         removeButton.setEnabled(isReady && isAtLeastOneGroupSelected() && !isNoneGroupSelected);
         removeAllButton.setEnabled(isReady && model.getSize() > 1);
         propertiesButton.setEnabled(isReady && isExactlyOneGroupSelected() &&  !isNoneGroupSelected);
-        addPropertyChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals("selection")) {
-                    final boolean isNoneGroupSelected = isNoneGroupSelected();
-                    removeButton.setEnabled(isAtLeastOneGroupSelected() && !isNoneGroupSelected);
-                    removeAllButton.setEnabled(groupList.getModel().getSize() > 1);
-                    propertiesButton.setEnabled(isExactlyOneGroupSelected() && !isNoneGroupSelected);
-                    groupList.setEnabled(groupList.getModel().getSize() > 0);
-                }
+        addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals("selection")) {
+                final boolean isNoneGroupSelected1 = isNoneGroupSelected();
+                removeButton.setEnabled(isAtLeastOneGroupSelected() && !isNoneGroupSelected1);
+                removeAllButton.setEnabled(groupList.getModel().getSize() > 1);
+                propertiesButton.setEnabled(isExactlyOneGroupSelected() && !isNoneGroupSelected1);
+                groupList.setEnabled(groupList.getModel().getSize() > 0);
             }
         });
     }
     
     private boolean isReady() {
         ListModel model = groupList.getModel ();
-        if(model.getSize() != Group.allGroups().size() + 1 ) {
-            return false;
-        }
-        return true;
+        return model.getSize() == Group.allGroups().size() + 1;
     }
     
     private boolean isNoneGroupSelected() {
@@ -154,12 +137,7 @@ public class ManageGroupsPanel extends javax.swing.JPanel implements PropertyCha
         for (final Group groupIter : groups) {
             if(groupIter != null) {
                 model.removeElement(groupIter.getName());
-                RP.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        groupIter.destroy();
-                    }
-                });
+                RP.post(groupIter::destroy);
             }
         }
     }
@@ -182,19 +160,13 @@ public class ManageGroupsPanel extends javax.swing.JPanel implements PropertyCha
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
 
-        setMinimumSize(new java.awt.Dimension(600, 250));
-        setPreferredSize(new java.awt.Dimension(600, 250));
-
         selectionLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         org.openide.awt.Mnemonics.setLocalizedText(selectionLabel, org.openide.util.NbBundle.getMessage(ManageGroupsPanel.class, "ManageGroupsPanel.selectionLabel.text")); // NOI18N
         selectionLabel.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
 
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(300, 130));
         jScrollPane1.setViewportView(groupList);
 
         org.openide.awt.Mnemonics.setLocalizedText(propertiesButton, org.openide.util.NbBundle.getMessage(ManageGroupsPanel.class, "ManageGroupsPanel.propertiesButton.text")); // NOI18N
-        propertiesButton.setMaximumSize(new java.awt.Dimension(105, 29));
-        propertiesButton.setMinimumSize(new java.awt.Dimension(105, 29));
         propertiesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 propertiesButtonActionPerformed(evt);
@@ -202,8 +174,6 @@ public class ManageGroupsPanel extends javax.swing.JPanel implements PropertyCha
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(removeButton, org.openide.util.NbBundle.getMessage(ManageGroupsPanel.class, "ManageGroupsPanel.removeButton.text")); // NOI18N
-        removeButton.setMaximumSize(new java.awt.Dimension(87, 29));
-        removeButton.setMinimumSize(new java.awt.Dimension(87, 29));
         removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeButtonActionPerformed(evt);
@@ -211,8 +181,6 @@ public class ManageGroupsPanel extends javax.swing.JPanel implements PropertyCha
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(removeAllButton, org.openide.util.NbBundle.getMessage(ManageGroupsPanel.class, "ManageGroupsPanel.removeAllButton.text")); // NOI18N
-        removeAllButton.setMaximumSize(new java.awt.Dimension(87, 29));
-        removeAllButton.setMinimumSize(new java.awt.Dimension(87, 29));
         removeAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeAllButtonActionPerformed(evt);
@@ -227,10 +195,10 @@ public class ManageGroupsPanel extends javax.swing.JPanel implements PropertyCha
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(removeAllButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(removeAllButton, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                             .addComponent(propertiesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jSeparator2)
@@ -238,7 +206,7 @@ public class ManageGroupsPanel extends javax.swing.JPanel implements PropertyCha
                         .addComponent(selectionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator1)))
-                .addGap(0, 0, 0))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -250,13 +218,13 @@ public class ManageGroupsPanel extends javax.swing.JPanel implements PropertyCha
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(propertiesButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(propertiesButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(removeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeAllButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(removeAllButton)
                         .addGap(0, 101, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );

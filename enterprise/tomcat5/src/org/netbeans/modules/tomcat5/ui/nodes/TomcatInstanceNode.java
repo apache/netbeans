@@ -69,6 +69,7 @@ public class TomcatInstanceNode extends AbstractNode implements Node.Cookie {
         getCookieSet().add(this);
     }
     
+    @Override
     public String getShortDescription() {
         return NbBundle.getMessage(
                     TomcatInstanceNode.class, 
@@ -76,10 +77,12 @@ public class TomcatInstanceNode extends AbstractNode implements Node.Cookie {
                     String.valueOf(tm.getCurrentServerPort()));
     }
     
+    @Override
     public boolean hasCustomizer() {
         return true;
     }
     
+    @Override
     public Component getCustomizer() {
         return new Customizer(tm);
     }
@@ -89,6 +92,7 @@ public class TomcatInstanceNode extends AbstractNode implements Node.Cookie {
         return tm;
     }
 
+    @Override
     public javax.swing.Action[] getActions(boolean context) {
         java.util.List actions = new LinkedList();
         // terminate does not work on Windows, see issue #63157
@@ -108,7 +112,7 @@ public class TomcatInstanceNode extends AbstractNode implements Node.Cookie {
             actions.add(SystemAction.get(ServerLogAction.class));
         }
         actions.add(SystemAction.get(OpenServerOutputAction.class));
-        return (SystemAction[])actions.toArray(new SystemAction[actions.size()]);
+        return (SystemAction[])actions.toArray(new SystemAction[0]);
     }
         
     private FileObject getTomcatConf() {

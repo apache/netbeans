@@ -40,13 +40,13 @@ public class Program extends ASTNode {
         super(start, end);
         this.statements.addAll(Arrays.asList(statements));
         for (Comment comment : commentsList) {
-            this.comments.add((Comment) comment);
+            this.comments.add(comment);
         }
 
     }
 
     public Program(int start, int end, List<Statement> statements, List<Comment> commentsList) {
-        this(start, end, (Statement[]) statements.toArray(new Statement[statements.size()]), commentsList);
+        this(start, end, statements.toArray(new Statement[statements.size()]), commentsList);
     }
 
     public List<Comment> getComments() {

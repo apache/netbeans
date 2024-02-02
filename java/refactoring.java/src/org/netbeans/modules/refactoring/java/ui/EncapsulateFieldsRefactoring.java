@@ -38,7 +38,7 @@ public final class EncapsulateFieldsRefactoring extends AbstractRefactoring {
     
     private Collection<EncapsulateFieldInfo> refactorFields = Collections.emptyList();
     private Set<Modifier> methodModifiers = Collections.emptySet();
-    private Set<Modifier> fieldModifiers = Collections.emptySet();;
+    private Set<Modifier> fieldModifiers = Collections.emptySet();
     private boolean alwaysUseAccessors;
     private boolean isGeneratePropertyChangeSupport;
     private boolean isGenerateVetoableSupport;

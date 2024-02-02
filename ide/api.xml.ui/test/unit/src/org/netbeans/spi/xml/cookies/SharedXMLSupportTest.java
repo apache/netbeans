@@ -19,11 +19,19 @@
 
 package org.netbeans.spi.xml.cookies;
 
+import java.io.IOException;
 import java.net.URL;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.URIResolver;
 import junit.framework.TestCase;
 import org.netbeans.api.xml.cookies.CookieMessage;
 import org.netbeans.api.xml.cookies.CookieObserver;
+import org.netbeans.api.xml.services.UserCatalog;
+import org.openide.util.test.MockLookup;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Trivial golden type support tests.
@@ -37,6 +45,12 @@ public class SharedXMLSupportTest extends TestCase {
 
     public SharedXMLSupportTest(String testName) {
         super(testName);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        MockLookup.setInstances();
+        super.tearDown();
     }
 
     /** Test of checkXML method, of class org.netbeans.spi.xml.cookies.SharedXMLSupport. */
@@ -94,7 +108,10 @@ public class SharedXMLSupportTest extends TestCase {
         URL wellformedDocument = getClass().getResource("data/WellformedDocument.xml");
         URL validNamespacesDocument = getClass().getResource("data/ValidNamespacesDocument.xml");
         URL conformingNamespacesDocument = getClass().getResource("data/ConformingNamespacesDocument.xml");
-        
+        URL conformingNamespacesDocumentWithKnownSchema = getClass().getResource("data/ConformingNamespacesDocumentWithKnownSchema.xml");
+        String testSchemaNamespace = "test:XMLSchema";
+        URL testSchemaLocation = getClass().getResource("data/XMLSchema.xsd");
+
         SharedXMLSupport support;
         support = new ValidateXMLSupport(new InputSource(dtd.toExternalForm()));
         assertTrue("DTD validation must fail!", support.validateXML(null) == false);
@@ -126,7 +143,51 @@ public class SharedXMLSupportTest extends TestCase {
         support = new ValidateXMLSupport(new InputSource(conformingNamespacesDocument.toExternalForm()));
         assertTrue("Conforming document must pass", support.validateXML(observer));
         assertTrue("Unexpected warnings!", observer.getWarnings() == 0);
-        
+
+
+        // Simulate, that a user registered an Entity Resolver, that has
+        // the Schema registered as public ID. This only makes sense for
+        // cases where the namespace will not change, but it is conceivable
+        class DummyResolver implements EntityResolver, URIResolver {
+
+            @Override
+            public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+                if(testSchemaNamespace.equals(publicId)) {
+                    InputSource is = new InputSource();
+                    is.setSystemId(testSchemaLocation.toString());
+                    return is;
+                } else {
+                    return null;
+                }
+            }
+
+            @Override
+            public Source resolve(String href, String base) throws TransformerException {
+                return null;
+            }
+
+        }
+
+        final DummyResolver dummyResolver = new DummyResolver();
+
+        MockLookup.setInstances(new UserCatalog() {
+
+            @Override
+            public EntityResolver getEntityResolver() {
+                return dummyResolver;
+            }
+
+            @Override
+            public URIResolver getURIResolver() {
+                return dummyResolver;
+            }
+        });
+
+        observer = new Observer();
+        support = new ValidateXMLSupport(new InputSource(conformingNamespacesDocumentWithKnownSchema.toExternalForm()));
+        assertTrue("Conforming with known Schema document must pass", support.validateXML(observer));
+        assertTrue("Unexpected warnings!", observer.getWarnings() == 0);
+   
     }
     
     private static class Observer implements CookieObserver {
@@ -140,5 +201,9 @@ public class SharedXMLSupportTest extends TestCase {
             return warnings;
         }
     };
-        
+
+
+
+
+
 }

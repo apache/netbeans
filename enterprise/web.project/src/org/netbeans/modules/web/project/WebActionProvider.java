@@ -429,7 +429,7 @@ public class WebActionProvider extends BaseActionProvider {
 
                     WebServicesSupport wss = WebServicesSupport.getWebServicesSupport(serverProject.getProjectDirectory());
                     if (wss != null) { //project contains ws
-                        List services = wss.getServices();
+                        List<WsCompileEditorSupport.ServiceSettings> services = wss.getServices();
                         boolean match = false;
                         for (Iterator sIt = services.iterator(); sIt.hasNext();) {
                             WsCompileEditorSupport.ServiceSettings serviceSettings =

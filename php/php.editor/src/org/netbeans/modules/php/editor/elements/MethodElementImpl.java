@@ -19,19 +19,25 @@
 package org.netbeans.modules.php.editor.elements;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.php.api.PhpVersion;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.NameKind.Exact;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement.PrintAs;
+import org.netbeans.modules.php.editor.api.elements.EnumElement;
 import org.netbeans.modules.php.editor.api.elements.MethodElement;
 import org.netbeans.modules.php.editor.api.elements.ParameterElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
@@ -39,10 +45,12 @@ import org.netbeans.modules.php.editor.api.elements.TypeNameResolver;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
+import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.MethodDeclarationInfo;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
+import org.openide.util.Pair;
 import org.openide.util.Parameters;
 
 /**
@@ -78,28 +86,32 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
 
     public static Set<MethodElement> getMagicMethods(final TypeElement type) {
         Set<MethodElement> retval = new HashSet<>();
-        retval.add(createMagicMethod(type, "__callStatic", Modifier.PUBLIC | Modifier.STATIC, "$name", "$arguments")); //NOI18N
-        retval.add(createMagicMethod(type, "__set_state", Modifier.PUBLIC | Modifier.STATIC, "$array")); //NOI18N
-        retval.add(createMagicMethod(type, "__call",  Modifier.PUBLIC, "$name", "$arguments")); //NOI18N
-        retval.add(createMagicMethod(type, "__clone",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__construct",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__destruct",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__invoke",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__get",  Modifier.PUBLIC, "$name")); //NOI18N
-        retval.add(createMagicMethod(type, "__set",  Modifier.PUBLIC, "$name", "$value")); //NOI18N
-        retval.add(createMagicMethod(type, "__isset",  Modifier.PUBLIC, "$name")); //NOI18N
-        retval.add(createMagicMethod(type, "__unset",  Modifier.PUBLIC, "$name")); //NOI18N
-        retval.add(createMagicMethod(type, "__sleep",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__wakeup",  Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__toString",  Modifier.PUBLIC)); //NOI18N
-        // PHP 7.4 New custom object serialization mechanism
-        // https://wiki.php.net/rfc/custom_object_serialization
-        retval.add(createMagicMethod(type, "__serialize", Modifier.PUBLIC)); //NOI18N
-        retval.add(createMagicMethod(type, "__unserialize", Modifier.PUBLIC, "array $data")); //NOI18N
+        retval.add(createMagicMethod(type, "__callStatic", Modifier.PUBLIC | Modifier.STATIC, Arrays.asList(Pair.of(Type.STRING, "$name"), Pair.of(Type.ARRAY, "$arguments")), Type.MIXED)); // NOI18N
+        retval.add(createMagicMethod(type, "__call", Modifier.PUBLIC, Arrays.asList(Pair.of(Type.STRING, "$name"), Pair.of(Type.ARRAY, "$arguments")), Type.MIXED)); // NOI18N
+        retval.add(createMagicMethod(type, "__invoke", Modifier.PUBLIC, Collections.emptyList(), Type.MIXED)); // NOI18N
+        if (!(type instanceof EnumElement)) {
+            // Enum can't contain these
+            retval.add(createMagicMethod(type, "__set_state", Modifier.PUBLIC | Modifier.STATIC, Arrays.asList(Pair.of(Type.ARRAY, "$properties")), Type.OBJECT)); // NOI18N
+            retval.add(createMagicMethod(type, "__clone", Modifier.PUBLIC, Collections.emptyList(), Type.VOID)); // NOI18N
+            retval.add(forIntroduceHint(type, "__construct", Modifier.PUBLIC)); // NOI18N constructor can't declare a return type
+            retval.add(forIntroduceHint(type, "__destruct", Modifier.PUBLIC)); // NOI18N destructor can't delcare a return type
+            retval.add(createMagicMethod(type, "__get", Modifier.PUBLIC, Arrays.asList(Pair.of(Type.STRING, "$name")), Type.MIXED)); // NOI18N
+            retval.add(createMagicMethod(type, "__set", Modifier.PUBLIC, Arrays.asList(Pair.of(Type.STRING, "$name"), Pair.of(Type.MIXED, "$value")), Type.VOID)); // NOI18N
+            retval.add(createMagicMethod(type, "__isset", Modifier.PUBLIC, Arrays.asList(Pair.of(Type.STRING, "$name")), Type.BOOL)); // NOI18N
+            retval.add(createMagicMethod(type, "__unset", Modifier.PUBLIC, Arrays.asList(Pair.of(Type.STRING, "$name")), Type.VOID)); // NOI18N
+            retval.add(createMagicMethod(type, "__sleep", Modifier.PUBLIC, Collections.emptyList(), Type.ARRAY)); // NOI18N
+            retval.add(createMagicMethod(type, "__wakeup", Modifier.PUBLIC, Collections.emptyList(), Type.VOID)); // NOI18N
+            retval.add(createMagicMethod(type, "__toString", Modifier.PUBLIC, Collections.emptyList(), Type.STRING)); // NOI18N
+            retval.add(createMagicMethod(type, "__debugInfo", Modifier.PUBLIC, Collections.emptyList(), Type.ARRAY)); // NOI18N
+            // PHP 7.4 New custom object serialization mechanism
+            // https://wiki.php.net/rfc/custom_object_serialization
+            retval.add(createMagicMethod(type, "__serialize", Modifier.PUBLIC, Collections.emptyList(), Type.ARRAY)); // NOI18N
+            retval.add(createMagicMethod(type, "__unserialize", Modifier.PUBLIC, Arrays.asList(Pair.of(Type.ARRAY, "$data")), Type.VOID)); // NOI18N
+        }
         return retval;
     }
 
-    public static MethodElement createMagicMethod(final TypeElement type, String methodName, int flags, String... arguments) {
+    public static MethodElement forIntroduceHint(final TypeElement type, String methodName, int flags, String... arguments) {
         MethodElement retval = new MethodElementImpl(
                 type,
                 methodName,
@@ -114,10 +126,66 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         return retval;
     }
 
+    public static MethodElement createMagicMethod(final TypeElement type, String methodName, int flags, List<Pair<String, String>> arguments, String returnType) {
+        MethodElement retval = new MethodElementImpl(
+                type,
+                methodName,
+                true,
+                0,
+                flags,
+                type.getFilenameUrl(),
+                null,
+                BaseFunctionElementSupport.ParametersImpl.create(fromParameterNames(arguments)),
+                BaseFunctionElementSupport.ReturnTypesImpl.create(returnType),
+                type.isDeprecated());
+        return retval;
+    }
+
+    static String getValidType(@NullAllowed String declaredType, @NullAllowed PhpVersion phpVersion) {
+        if (declaredType == null) {
+            return CodeUtils.EMPTY_STRING;
+        }
+        String type = declaredType.trim();
+        if (phpVersion == null) {
+            return type;
+        }
+        switch (type) {
+            case Type.MIXED:
+                return phpVersion.hasMixedType() ? type : CodeUtils.EMPTY_STRING;
+            case Type.OBJECT:
+                return phpVersion.hasObjectType() ? type : CodeUtils.EMPTY_STRING;
+            case Type.VOID:
+                return phpVersion.hasVoidReturnType() ? type : CodeUtils.EMPTY_STRING;
+            default:
+                return type;
+        }
+    }
+
     private static List<ParameterElement> fromParameterNames(String... names) {
         List<ParameterElement> retval = new ArrayList<>();
         for (String parameterName : names) {
-            retval.add(new ParameterElementImpl(parameterName, null, 0, Collections.<TypeResolver>emptySet(), true, true, false, false, false, 0, false));
+            ParameterElement parameterElement = new ParameterElementImpl.Builder(parameterName)
+                    .isMagicMethod(false)
+                    .isMandatory(true)
+                    .isRawType(true)
+                    .build();
+            retval.add(parameterElement);
+        }
+        return retval;
+    }
+
+    private static List<ParameterElement> fromParameterNames(List<Pair<String, String>> parameterTypeAndNamePairs) {
+        List<ParameterElement> retval = new ArrayList<>();
+        for (Pair<String, String> parameterTypeAndName : parameterTypeAndNamePairs) {
+            String declaredType = parameterTypeAndName.first();
+            String parameterName = parameterTypeAndName.second();
+            ParameterElement parameterElement = new ParameterElementImpl.Builder(parameterName)
+                    .isMagicMethod(true)
+                    .isMandatory(true)
+                    .isRawType(declaredType != null)
+                    .declaredType(declaredType)
+                    .build();
+            retval.add(parameterElement);
         }
         return retval;
     }
@@ -209,6 +277,11 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
     }
 
     @Override
+    public String getDeclaredReturnType() {
+        return functionSupport.getDeclaredReturnType();
+    }
+
+    @Override
     public boolean isReturnUnionType() {
         return functionSupport.isReturnUnionType();
     }
@@ -259,8 +332,8 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
     @Override
     public String getSignature() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getName().toLowerCase()).append(Separator.SEMICOLON); //NOI18N
-        sb.append(getName()).append(Separator.SEMICOLON); //NOI18N
+        sb.append(getName().toLowerCase(Locale.ROOT)).append(Separator.SEMICOLON); // 0: lower case name
+        sb.append(getName()).append(Separator.SEMICOLON); // 1: name
         sb.append(getSignatureLastPart());
         checkSignature(sb);
         return sb.toString();
@@ -277,26 +350,27 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
 
     private String getSignatureLastPart() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getOffset()).append(Separator.SEMICOLON);
+        sb.append(getOffset()).append(Separator.SEMICOLON); // 2: offset
         List<ParameterElement> parameterList = getParameters();
         for (int idx = 0; idx < parameterList.size(); idx++) {
             ParameterElementImpl parameter = (ParameterElementImpl) parameterList.get(idx);
             if (idx > 0) {
                 sb.append(Separator.COMMA);
             }
-            sb.append(parameter.getSignature());
+            sb.append(parameter.getSignature()); // 3: parameter
         }
         sb.append(Separator.SEMICOLON);
         for (TypeResolver typeResolver : getReturnTypes()) {
             TypeResolverImpl resolverImpl = (TypeResolverImpl) typeResolver;
-            sb.append(resolverImpl.getSignature());
+            sb.append(resolverImpl.getSignature()); // 4: return types
         }
         sb.append(Separator.SEMICOLON);
-        sb.append(getPhpModifiers().toFlags()).append(Separator.SEMICOLON);
-        sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON);
-        sb.append(getFilenameUrl()).append(Separator.SEMICOLON);
-        sb.append(isReturnUnionType()? 1 : 0).append(Separator.SEMICOLON);
-        sb.append(isReturnIntersectionType() ? 1 : 0).append(Separator.SEMICOLON);
+        sb.append(getPhpModifiers().toFlags()).append(Separator.SEMICOLON); // 5: flags
+        sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON); // 6: isDeprecated
+        sb.append(getFilenameUrl()).append(Separator.SEMICOLON); // 7: file name URL
+        sb.append(isReturnUnionType()? 1 : 0).append(Separator.SEMICOLON); // 8: isReturnUnionType
+        sb.append(isReturnIntersectionType() ? 1 : 0).append(Separator.SEMICOLON); // 9: isReturnIntersectionType
+        sb.append(getDeclaredReturnType()).append(Separator.SEMICOLON); // 10: declared return type
         return sb.toString();
     }
 
@@ -378,6 +452,10 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         boolean isIntersectionType() {
             return signature.integer(9) == 1;
         }
+
+        String getDeclaredReturnType() {
+            return signature.string(10);
+        }
     }
 
     private void checkSignature(StringBuilder sb) {
@@ -391,6 +469,7 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
             assert getPhpModifiers().toFlags() == parser.getFlags();
             assert getParameters().size() == parser.getParameters().size();
             assert getReturnTypes().size() == parser.getReturnTypes().size();
+            assert getDeclaredReturnType().equals(parser.getDeclaredReturnType());
         }
     }
 
@@ -431,11 +510,14 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
         private Set<TypeResolver> retrievedReturnTypes = null;
         private final boolean isUnionType;
         private final boolean isIntersectionType;
+        @NullAllowed
+        private final String declaredReturnType;
 
         public ReturnTypesFromSignature(MethodSignatureParser methodSignatureParser) {
             this.methodSignatureParser = methodSignatureParser;
             this.isUnionType = methodSignatureParser.isUnionType();
             this.isIntersectionType = methodSignatureParser.isIntersectionType();
+            this.declaredReturnType = methodSignatureParser.getDeclaredReturnType();
         }
 
         @Override
@@ -456,5 +538,10 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
             return isIntersectionType;
         }
 
+        @CheckForNull
+        @Override
+        public String getDeclaredReturnType() {
+            return declaredReturnType;
+        }
     }
 }

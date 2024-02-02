@@ -22,13 +22,11 @@
 package org.netbeans.modules.maven.indexer.api;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
 import java.util.List;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -93,40 +91,26 @@ public final class RepositoryUtil {
         List<ArtifactRepository> remotes;
         RepositoryInfo repo = RepositoryPreferences.getInstance().getRepositoryInfoById(info.getRepoId());
         if (repo != null && repo.isRemoteDownloadable()) {
-            remotes = Collections.singletonList(online.createRemoteRepository(repo.getRepositoryUrl(), repo.getId()));
+            remotes = List.of(online.createRemoteRepository(repo.getRepositoryUrl(), repo.getId()));
         } else {
-            remotes = Collections.singletonList(online.createRemoteRepository(RepositorySystem.DEFAULT_REMOTE_REPO_URL, RepositorySystem.DEFAULT_REMOTE_REPO_ID));
+            remotes = List.of(online.createRemoteRepository(RepositorySystem.DEFAULT_REMOTE_REPO_URL, RepositorySystem.DEFAULT_REMOTE_REPO_ID));
         }
-        online.resolve(a, remotes, online.getLocalRepository());
+        online.resolveArtifact(a, remotes, online.getLocalRepository());
         return a.getFile();
     }
     
     public static String calculateSHA1Checksum(File file) throws IOException {
-        byte[] buffer = readFile(file);
+        if (!file.exists() || !file.isFile()) {
+            throw new IOException("file '"+file+"' does not exist or is not a valid file");
+        }
         MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException x) {
             throw new IOException(x);
         }
-        digest.update(buffer);
+        digest.update(Files.readAllBytes(file.toPath()));
         return String.format("%040x", new BigInteger(1, digest.digest()));
-    }
-
-    private static byte[] readFile(File file) throws IOException {
-
-        byte[] bytes = new byte[(int) file.length()];
-        try (InputStream is = new FileInputStream(file)) {
-
-            int offset = 0;
-            int numRead = 0;
-
-            while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) != -1) {
-                offset += numRead;
-            }
-        }
-
-        return bytes;
     }
 
 }

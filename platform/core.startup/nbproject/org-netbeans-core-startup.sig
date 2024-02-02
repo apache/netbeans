@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.79.0
+#Version 1.85.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -331,6 +331,7 @@ intf org.netbeans.Stamps$Updater
 meth public java.awt.Component getComponent()
 meth public static java.awt.Image loadContent(boolean)
 meth public static org.netbeans.core.startup.Splash getInstance()
+meth public static void configureDefaultRenderingHints(java.awt.Graphics2D)
 meth public static void showAboutDialog(java.awt.Frame,javax.swing.JComponent)
 meth public void addToMaxSteps(int)
 meth public void cacheReady()

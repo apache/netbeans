@@ -557,6 +557,53 @@ public class JavadocCompletionQueryTest extends JavadocTestSupport {
         performCompletionTest(code, "ClassCircularityError", "ClassFormatError", "ClassCastException", "ClassNotFoundException");
     }
     
+    public void testSnippet1() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@snippet\n" +
+                "     *  System.err.println(1); //@|\n" +
+                "     */\n" +
+                "    Clazz() {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "end:", "highlight:", "link:", "replace:", "start:");
+    }
+
+    public void testSnippet2() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@snippet\n" +
+                "     * //@e|\n" +
+                "     */\n" +
+                "    Clazz() {\n" +
+                "    }\n" +
+                "}\n";
+
+        performCompletionTest(code, "end:");
+    }
+    
+    public void testSummaryCompletionForMethod() throws Exception {
+        String code =
+                "package p;\n" +
+                "class Clazz {\n" +
+                "    /**\n" +
+                "     * {@sum|\n" +
+                "     */\n" +
+                "    void method(int p1, int p2) {\n" +
+                "    }\n" +
+                "    Clazz() {\n" +
+                "    }\n" +
+                "}\n";
+        performCompletionTest(code, "@summary:");
+    }    
+    
+    
+
     private static String stripHTML(String from) {
         StringBuilder result = new StringBuilder();
         boolean inHTMLTag = false;

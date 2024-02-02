@@ -286,7 +286,7 @@ mime-type (mentioned in the layer section here as well).
         </question>
 -->
 <answer id="dep-non-nb">
-    <api group="java" name="JAXP" type="import" category="standard" url="http://java.sun.com/xml/jaxp/dist/1.1/docs/api/"> 
+    <api group="java" name="JAXP" type="import" category="standard" url="https://www.oracle.com/java/technologies/jaxp-introduction.html"> 
     Standard XML APIs (DOM, SAX) - distributed with the IDE (in lib/ext/xml-apis*.jar),
     already part of JDK 1.4 and newer).
     </api>

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.14
+#Version 2.21
 
 CLSS public abstract interface !annotation com.fasterxml.jackson.annotation.JacksonAnnotation
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -191,6 +191,9 @@ fld public final static com.fasterxml.jackson.annotation.JsonFormat$Feature ACCE
 fld public final static com.fasterxml.jackson.annotation.JsonFormat$Feature ACCEPT_CASE_INSENSITIVE_VALUES
 fld public final static com.fasterxml.jackson.annotation.JsonFormat$Feature ACCEPT_SINGLE_VALUE_AS_ARRAY
 fld public final static com.fasterxml.jackson.annotation.JsonFormat$Feature ADJUST_DATES_TO_CONTEXT_TIME_ZONE
+fld public final static com.fasterxml.jackson.annotation.JsonFormat$Feature READ_DATE_TIMESTAMPS_AS_NANOSECONDS
+fld public final static com.fasterxml.jackson.annotation.JsonFormat$Feature READ_UNKNOWN_ENUM_VALUES_AS_NULL
+fld public final static com.fasterxml.jackson.annotation.JsonFormat$Feature READ_UNKNOWN_ENUM_VALUES_USING_DEFAULT_VALUE
 fld public final static com.fasterxml.jackson.annotation.JsonFormat$Feature WRITE_DATES_WITH_ZONE_ID
 fld public final static com.fasterxml.jackson.annotation.JsonFormat$Feature WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS
 fld public final static com.fasterxml.jackson.annotation.JsonFormat$Feature WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED
@@ -568,6 +571,7 @@ CLSS public abstract interface !annotation com.fasterxml.jackson.annotation.Json
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, TYPE, FIELD, METHOD, PARAMETER])
 innr public abstract interface static !annotation Type
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean failOnRepeatedNames()
 meth public abstract com.fasterxml.jackson.annotation.JsonSubTypes$Type[] value()
 
 CLSS public abstract interface static !annotation com.fasterxml.jackson.annotation.JsonSubTypes$Type
@@ -588,9 +592,11 @@ CLSS public abstract interface !annotation com.fasterxml.jackson.annotation.Json
 innr public abstract static None
 innr public final static !enum As
 innr public final static !enum Id
+innr public static Value
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault boolean visible()
 meth public abstract !hasdefault com.fasterxml.jackson.annotation.JsonTypeInfo$As include()
+meth public abstract !hasdefault com.fasterxml.jackson.annotation.OptBoolean requireTypeIdForSubtypes()
 meth public abstract !hasdefault java.lang.Class<?> defaultImpl()
 meth public abstract !hasdefault java.lang.String property()
 meth public abstract com.fasterxml.jackson.annotation.JsonTypeInfo$Id use()
@@ -614,6 +620,7 @@ fld public final static com.fasterxml.jackson.annotation.JsonTypeInfo$Id DEDUCTI
 fld public final static com.fasterxml.jackson.annotation.JsonTypeInfo$Id MINIMAL_CLASS
 fld public final static com.fasterxml.jackson.annotation.JsonTypeInfo$Id NAME
 fld public final static com.fasterxml.jackson.annotation.JsonTypeInfo$Id NONE
+fld public final static com.fasterxml.jackson.annotation.JsonTypeInfo$Id SIMPLE_NAME
 meth public java.lang.String getDefaultPropertyName()
 meth public static com.fasterxml.jackson.annotation.JsonTypeInfo$Id valueOf(java.lang.String)
 meth public static com.fasterxml.jackson.annotation.JsonTypeInfo$Id[] values()
@@ -625,6 +632,40 @@ CLSS public abstract static com.fasterxml.jackson.annotation.JsonTypeInfo$None
  anno 0 java.lang.Deprecated()
 cons public init()
 supr java.lang.Object
+
+CLSS public static com.fasterxml.jackson.annotation.JsonTypeInfo$Value
+ outer com.fasterxml.jackson.annotation.JsonTypeInfo
+cons protected init(com.fasterxml.jackson.annotation.JsonTypeInfo$Id,com.fasterxml.jackson.annotation.JsonTypeInfo$As,java.lang.String,java.lang.Class<?>,boolean,java.lang.Boolean)
+fld protected final boolean _idVisible
+fld protected final com.fasterxml.jackson.annotation.JsonTypeInfo$As _inclusionType
+fld protected final com.fasterxml.jackson.annotation.JsonTypeInfo$Id _idType
+fld protected final java.lang.Boolean _requireTypeIdForSubtypes
+fld protected final java.lang.Class<?> _defaultImpl
+fld protected final java.lang.String _propertyName
+fld protected final static com.fasterxml.jackson.annotation.JsonTypeInfo$Value EMPTY
+intf com.fasterxml.jackson.annotation.JacksonAnnotationValue<com.fasterxml.jackson.annotation.JsonTypeInfo>
+intf java.io.Serializable
+meth public boolean equals(java.lang.Object)
+meth public boolean getIdVisible()
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$As getInclusionType()
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Id getIdType()
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Value withDefaultImpl(java.lang.Class<?>)
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Value withIdType(com.fasterxml.jackson.annotation.JsonTypeInfo$Id)
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Value withIdVisible(boolean)
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Value withInclusionType(com.fasterxml.jackson.annotation.JsonTypeInfo$As)
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Value withPropertyName(java.lang.String)
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Value withRequireTypeIdForSubtypes(java.lang.Boolean)
+meth public int hashCode()
+meth public java.lang.Boolean getRequireTypeIdForSubtypes()
+meth public java.lang.Class<?> getDefaultImpl()
+meth public java.lang.Class<com.fasterxml.jackson.annotation.JsonTypeInfo> valueFor()
+meth public java.lang.String getPropertyName()
+meth public java.lang.String toString()
+meth public static boolean isEnabled(com.fasterxml.jackson.annotation.JsonTypeInfo$Value)
+meth public static com.fasterxml.jackson.annotation.JsonTypeInfo$Value construct(com.fasterxml.jackson.annotation.JsonTypeInfo$Id,com.fasterxml.jackson.annotation.JsonTypeInfo$As,java.lang.String,java.lang.Class<?>,boolean,java.lang.Boolean)
+meth public static com.fasterxml.jackson.annotation.JsonTypeInfo$Value from(com.fasterxml.jackson.annotation.JsonTypeInfo)
+supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public abstract interface !annotation com.fasterxml.jackson.annotation.JsonTypeName
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -801,6 +842,8 @@ meth public java.lang.Object resolveId(com.fasterxml.jackson.annotation.ObjectId
 meth public void bindItem(com.fasterxml.jackson.annotation.ObjectIdGenerator$IdKey,java.lang.Object)
 supr java.lang.Object
 
+CLSS abstract interface com.fasterxml.jackson.annotation.package-info
+
 CLSS public final com.fasterxml.jackson.core.Base64Variant
 cons public init(com.fasterxml.jackson.core.Base64Variant,java.lang.String,boolean,char,int)
 cons public init(com.fasterxml.jackson.core.Base64Variant,java.lang.String,int)
@@ -873,6 +916,31 @@ meth public static com.fasterxml.jackson.core.Base64Variant valueOf(java.lang.St
 supr java.lang.Object
 hfds STD_BASE64_ALPHABET
 
+CLSS public com.fasterxml.jackson.core.ErrorReportConfiguration
+cons protected init(int,int)
+fld protected final int _maxErrorTokenLength
+fld protected final int _maxRawContentLength
+fld public final static int DEFAULT_MAX_ERROR_TOKEN_LENGTH = 256
+fld public final static int DEFAULT_MAX_RAW_CONTENT_LENGTH = 500
+innr public final static Builder
+intf java.io.Serializable
+meth public com.fasterxml.jackson.core.ErrorReportConfiguration$Builder rebuild()
+meth public int getMaxErrorTokenLength()
+meth public int getMaxRawContentLength()
+meth public static com.fasterxml.jackson.core.ErrorReportConfiguration defaults()
+meth public static com.fasterxml.jackson.core.ErrorReportConfiguration$Builder builder()
+meth public static void overrideDefaultErrorReportConfiguration(com.fasterxml.jackson.core.ErrorReportConfiguration)
+supr java.lang.Object
+hfds DEFAULT,serialVersionUID
+
+CLSS public final static com.fasterxml.jackson.core.ErrorReportConfiguration$Builder
+ outer com.fasterxml.jackson.core.ErrorReportConfiguration
+meth public com.fasterxml.jackson.core.ErrorReportConfiguration build()
+meth public com.fasterxml.jackson.core.ErrorReportConfiguration$Builder maxErrorTokenLength(int)
+meth public com.fasterxml.jackson.core.ErrorReportConfiguration$Builder maxRawContentLength(int)
+supr java.lang.Object
+hfds maxErrorTokenLength,maxRawContentLength
+
 CLSS public abstract interface com.fasterxml.jackson.core.FormatFeature
 intf com.fasterxml.jackson.core.util.JacksonFeature
 meth public abstract boolean enabledByDefault()
@@ -912,14 +980,19 @@ cons protected init(com.fasterxml.jackson.core.TSFBuilder<?,?>,boolean)
 cons public init()
 cons public init(com.fasterxml.jackson.core.JsonFactoryBuilder)
 cons public init(com.fasterxml.jackson.core.ObjectCodec)
+fld protected com.fasterxml.jackson.core.ErrorReportConfiguration _errorReportConfiguration
 fld protected com.fasterxml.jackson.core.ObjectCodec _objectCodec
 fld protected com.fasterxml.jackson.core.SerializableString _rootValueSeparator
+fld protected com.fasterxml.jackson.core.StreamReadConstraints _streamReadConstraints
+fld protected com.fasterxml.jackson.core.StreamWriteConstraints _streamWriteConstraints
 fld protected com.fasterxml.jackson.core.io.CharacterEscapes _characterEscapes
 fld protected com.fasterxml.jackson.core.io.InputDecorator _inputDecorator
 fld protected com.fasterxml.jackson.core.io.OutputDecorator _outputDecorator
+fld protected com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> _recyclerPool
 fld protected final char _quoteChar
 fld protected final com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer _byteSymbolCanonicalizer
 fld protected final com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer _rootCharSymbols
+fld protected final java.util.List<com.fasterxml.jackson.core.util.JsonGeneratorDecorator> _generatorDecorators
 fld protected final static int DEFAULT_FACTORY_FEATURE_FLAGS
 fld protected final static int DEFAULT_GENERATOR_FEATURE_FLAGS
 fld protected final static int DEFAULT_PARSER_FEATURE_FLAGS
@@ -935,13 +1008,18 @@ intf com.fasterxml.jackson.core.Versioned
 intf java.io.Serializable
 meth protected com.fasterxml.jackson.core.JsonGenerator _createGenerator(java.io.Writer,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonGenerator _createUTF8Generator(java.io.OutputStream,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonGenerator _decorate(com.fasterxml.jackson.core.JsonGenerator)
 meth protected com.fasterxml.jackson.core.JsonParser _createParser(byte[],int,int,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonParser _createParser(char[],int,int,com.fasterxml.jackson.core.io.IOContext,boolean) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonParser _createParser(java.io.DataInput,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonParser _createParser(java.io.InputStream,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonParser _createParser(java.io.Reader,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.format.MatchStrength hasJSONFormat(com.fasterxml.jackson.core.format.InputAccessor) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.io.ContentReference _createContentReference(java.lang.Object)
+meth protected com.fasterxml.jackson.core.io.ContentReference _createContentReference(java.lang.Object,int,int)
+meth protected com.fasterxml.jackson.core.io.IOContext _createContext(com.fasterxml.jackson.core.io.ContentReference,boolean)
 meth protected com.fasterxml.jackson.core.io.IOContext _createContext(java.lang.Object,boolean)
+ anno 0 java.lang.Deprecated()
 meth protected com.fasterxml.jackson.core.io.IOContext _createNonBlockingContext(java.lang.Object)
 meth protected final java.io.DataInput _decorate(java.io.DataInput,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
 meth protected final java.io.InputStream _decorate(java.io.InputStream,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
@@ -950,6 +1028,7 @@ meth protected final java.io.Reader _decorate(java.io.Reader,com.fasterxml.jacks
 meth protected final java.io.Writer _decorate(java.io.Writer,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
 meth protected java.io.Writer _createWriter(java.io.OutputStream,com.fasterxml.jackson.core.JsonEncoding,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
 meth protected java.lang.Object readResolve()
+meth protected static <%0 extends java.lang.Object> java.util.List<{%%0}> _copy(java.util.List<{%%0}>)
 meth protected void _checkInvalidCopy(java.lang.Class<?>)
 meth public boolean canHandleBinaryNatively()
 meth public boolean canParseAsync()
@@ -968,11 +1047,15 @@ meth public com.fasterxml.jackson.core.JsonFactory enable(com.fasterxml.jackson.
 meth public com.fasterxml.jackson.core.JsonFactory enable(com.fasterxml.jackson.core.JsonParser$Feature)
 meth public com.fasterxml.jackson.core.JsonFactory setCharacterEscapes(com.fasterxml.jackson.core.io.CharacterEscapes)
 meth public com.fasterxml.jackson.core.JsonFactory setCodec(com.fasterxml.jackson.core.ObjectCodec)
+meth public com.fasterxml.jackson.core.JsonFactory setErrorReportConfiguration(com.fasterxml.jackson.core.ErrorReportConfiguration)
 meth public com.fasterxml.jackson.core.JsonFactory setInputDecorator(com.fasterxml.jackson.core.io.InputDecorator)
  anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.core.JsonFactory setOutputDecorator(com.fasterxml.jackson.core.io.OutputDecorator)
  anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.core.JsonFactory setRecyclerPool(com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler>)
 meth public com.fasterxml.jackson.core.JsonFactory setRootValueSeparator(java.lang.String)
+meth public com.fasterxml.jackson.core.JsonFactory setStreamReadConstraints(com.fasterxml.jackson.core.StreamReadConstraints)
+meth public com.fasterxml.jackson.core.JsonFactory setStreamWriteConstraints(com.fasterxml.jackson.core.StreamWriteConstraints)
 meth public com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.DataOutput) throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.DataOutput,com.fasterxml.jackson.core.JsonEncoding) throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.File,com.fasterxml.jackson.core.JsonEncoding) throws java.io.IOException
@@ -1000,6 +1083,7 @@ meth public com.fasterxml.jackson.core.JsonParser createJsonParser(java.lang.Str
 meth public com.fasterxml.jackson.core.JsonParser createJsonParser(java.net.URL) throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.core.JsonParser createNonBlockingByteArrayParser() throws java.io.IOException
+meth public com.fasterxml.jackson.core.JsonParser createNonBlockingByteBufferParser() throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonParser createParser(byte[]) throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonParser createParser(byte[],int,int) throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonParser createParser(char[]) throws java.io.IOException
@@ -1011,6 +1095,8 @@ meth public com.fasterxml.jackson.core.JsonParser createParser(java.io.Reader) t
 meth public com.fasterxml.jackson.core.JsonParser createParser(java.lang.String) throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonParser createParser(java.net.URL) throws java.io.IOException
 meth public com.fasterxml.jackson.core.ObjectCodec getCodec()
+meth public com.fasterxml.jackson.core.StreamReadConstraints streamReadConstraints()
+meth public com.fasterxml.jackson.core.StreamWriteConstraints streamWriteConstraints()
 meth public com.fasterxml.jackson.core.TSFBuilder<?,?> rebuild()
 meth public com.fasterxml.jackson.core.Version version()
 meth public com.fasterxml.jackson.core.format.MatchStrength hasFormat(com.fasterxml.jackson.core.format.InputAccessor) throws java.io.IOException
@@ -1018,6 +1104,7 @@ meth public com.fasterxml.jackson.core.io.CharacterEscapes getCharacterEscapes()
 meth public com.fasterxml.jackson.core.io.InputDecorator getInputDecorator()
 meth public com.fasterxml.jackson.core.io.OutputDecorator getOutputDecorator()
 meth public com.fasterxml.jackson.core.util.BufferRecycler _getBufferRecycler()
+meth public com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> _getRecyclerPool()
 meth public final boolean isEnabled(com.fasterxml.jackson.core.JsonFactory$Feature)
 meth public final boolean isEnabled(com.fasterxml.jackson.core.JsonGenerator$Feature)
 meth public final boolean isEnabled(com.fasterxml.jackson.core.JsonParser$Feature)
@@ -1027,6 +1114,7 @@ meth public final com.fasterxml.jackson.core.JsonFactory configure(com.fasterxml
  anno 0 java.lang.Deprecated()
 meth public final com.fasterxml.jackson.core.JsonFactory configure(com.fasterxml.jackson.core.JsonGenerator$Feature,boolean)
 meth public final com.fasterxml.jackson.core.JsonFactory configure(com.fasterxml.jackson.core.JsonParser$Feature,boolean)
+meth public final int getFactoryFeatures()
 meth public final int getGeneratorFeatures()
 meth public final int getParserFeatures()
 meth public int getFormatGeneratorFeatures()
@@ -1042,6 +1130,7 @@ hfds serialVersionUID
 CLSS public final static !enum com.fasterxml.jackson.core.JsonFactory$Feature
  outer com.fasterxml.jackson.core.JsonFactory
 fld public final static com.fasterxml.jackson.core.JsonFactory$Feature CANONICALIZE_FIELD_NAMES
+fld public final static com.fasterxml.jackson.core.JsonFactory$Feature CHARSET_DETECTION
 fld public final static com.fasterxml.jackson.core.JsonFactory$Feature FAIL_ON_SYMBOL_HASH_OVERFLOW
 fld public final static com.fasterxml.jackson.core.JsonFactory$Feature INTERN_FIELD_NAMES
 fld public final static com.fasterxml.jackson.core.JsonFactory$Feature USE_THREAD_LOCAL_FOR_BUFFER_RECYCLING
@@ -1094,10 +1183,9 @@ cons public init(java.lang.String,java.lang.Throwable,com.fasterxml.jackson.core
 cons public init(java.lang.Throwable)
  anno 0 java.lang.Deprecated()
 cons public init(java.lang.Throwable,com.fasterxml.jackson.core.JsonGenerator)
-fld protected com.fasterxml.jackson.core.JsonGenerator _processor
 meth public com.fasterxml.jackson.core.JsonGenerationException withGenerator(com.fasterxml.jackson.core.JsonGenerator)
 meth public com.fasterxml.jackson.core.JsonGenerator getProcessor()
-supr com.fasterxml.jackson.core.JsonProcessingException
+supr com.fasterxml.jackson.core.exc.StreamWriteException
 hfds serialVersionUID
 
 CLSS public abstract com.fasterxml.jackson.core.JsonGenerator
@@ -1113,6 +1201,10 @@ intf java.io.Flushable
 meth protected final void _throwInternal()
 meth protected final void _verifyOffsets(int,int,int)
 meth protected void _copyCurrentContents(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
+meth protected void _copyCurrentFloatValue(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
+meth protected void _copyCurrentFloatValueExact(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
+meth protected void _copyCurrentIntValue(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
+meth protected void _copyCurrentStringValue(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
 meth protected void _reportError(java.lang.String) throws com.fasterxml.jackson.core.JsonGenerationException
 meth protected void _reportUnsupportedOperation()
 meth protected void _writeSimpleObject(java.lang.Object) throws java.io.IOException
@@ -1176,6 +1268,7 @@ meth public com.fasterxml.jackson.core.JsonGenerator setHighestNonEscapedChar(in
 meth public com.fasterxml.jackson.core.JsonGenerator setPrettyPrinter(com.fasterxml.jackson.core.PrettyPrinter)
 meth public com.fasterxml.jackson.core.JsonGenerator setRootValueSeparator(com.fasterxml.jackson.core.SerializableString)
 meth public com.fasterxml.jackson.core.PrettyPrinter getPrettyPrinter()
+meth public com.fasterxml.jackson.core.StreamWriteConstraints streamWriteConstraints()
 meth public com.fasterxml.jackson.core.io.CharacterEscapes getCharacterEscapes()
 meth public com.fasterxml.jackson.core.type.WritableTypeId writeTypePrefix(com.fasterxml.jackson.core.type.WritableTypeId) throws java.io.IOException
 meth public com.fasterxml.jackson.core.type.WritableTypeId writeTypeSuffix(com.fasterxml.jackson.core.type.WritableTypeId) throws java.io.IOException
@@ -1185,9 +1278,12 @@ meth public int getFormatFeatures()
 meth public int getHighestEscapedChar()
 meth public int getOutputBuffered()
 meth public int writeBinary(java.io.InputStream,int) throws java.io.IOException
+meth public java.lang.Object currentValue()
 meth public java.lang.Object getCurrentValue()
 meth public java.lang.Object getOutputTarget()
+meth public void assignCurrentValue(java.lang.Object)
 meth public void copyCurrentEvent(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
+meth public void copyCurrentEventExact(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
 meth public void copyCurrentStructure(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
 meth public void setCurrentValue(java.lang.Object)
 meth public void setSchema(com.fasterxml.jackson.core.FormatSchema)
@@ -1217,6 +1313,8 @@ meth public void writeObjectFieldStart(java.lang.String) throws java.io.IOExcept
 meth public void writeObjectId(java.lang.Object) throws java.io.IOException
 meth public void writeObjectRef(java.lang.Object) throws java.io.IOException
 meth public void writeOmittedField(java.lang.String) throws java.io.IOException
+meth public void writePOJO(java.lang.Object) throws java.io.IOException
+meth public void writePOJOField(java.lang.String,java.lang.Object) throws java.io.IOException
 meth public void writeRaw(com.fasterxml.jackson.core.SerializableString) throws java.io.IOException
 meth public void writeRawValue(com.fasterxml.jackson.core.SerializableString) throws java.io.IOException
 meth public void writeStartArray(int) throws java.io.IOException
@@ -1243,7 +1341,11 @@ fld public final static com.fasterxml.jackson.core.JsonGenerator$Feature QUOTE_F
 fld public final static com.fasterxml.jackson.core.JsonGenerator$Feature QUOTE_NON_NUMERIC_NUMBERS
  anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.core.JsonGenerator$Feature STRICT_DUPLICATE_DETECTION
+fld public final static com.fasterxml.jackson.core.JsonGenerator$Feature USE_FAST_DOUBLE_WRITER
+ anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.core.JsonGenerator$Feature WRITE_BIGDECIMAL_AS_PLAIN
+fld public final static com.fasterxml.jackson.core.JsonGenerator$Feature WRITE_HEX_UPPER_CASE
+ anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.core.JsonGenerator$Feature WRITE_NUMBERS_AS_STRINGS
  anno 0 java.lang.Deprecated()
 meth public boolean enabledByDefault()
@@ -1256,33 +1358,45 @@ supr java.lang.Enum<com.fasterxml.jackson.core.JsonGenerator$Feature>
 hfds _defaultState,_mask
 
 CLSS public com.fasterxml.jackson.core.JsonLocation
+cons public init(com.fasterxml.jackson.core.io.ContentReference,long,int,int)
+cons public init(com.fasterxml.jackson.core.io.ContentReference,long,long,int,int)
 cons public init(java.lang.Object,long,int,int)
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Object,long,long,int,int)
+ anno 0 java.lang.Deprecated()
+fld protected final com.fasterxml.jackson.core.io.ContentReference _contentReference
 fld protected final int _columnNr
 fld protected final int _lineNr
 fld protected final long _totalBytes
 fld protected final long _totalChars
+fld protected java.lang.String _sourceDescription
 fld public final static com.fasterxml.jackson.core.JsonLocation NA
 fld public final static int MAX_CONTENT_SNIPPET = 500
+ anno 0 java.lang.Deprecated()
 intf java.io.Serializable
-meth protected java.lang.StringBuilder _appendSourceDesc(java.lang.StringBuilder)
+meth protected static com.fasterxml.jackson.core.io.ContentReference _wrap(java.lang.Object)
 meth public boolean equals(java.lang.Object)
+meth public com.fasterxml.jackson.core.io.ContentReference contentReference()
 meth public int getColumnNr()
 meth public int getLineNr()
 meth public int hashCode()
 meth public java.lang.Object getSourceRef()
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String offsetDescription()
 meth public java.lang.String sourceDescription()
 meth public java.lang.String toString()
+meth public java.lang.StringBuilder appendOffsetDescription(java.lang.StringBuilder)
 meth public long getByteOffset()
 meth public long getCharOffset()
 supr java.lang.Object
-hfds _sourceRef,serialVersionUID
+hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.core.JsonParseException
 cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String)
 cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String,com.fasterxml.jackson.core.JsonLocation)
 cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String,com.fasterxml.jackson.core.JsonLocation,java.lang.Throwable)
 cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String,java.lang.Throwable)
+cons public init(java.lang.String)
 cons public init(java.lang.String,com.fasterxml.jackson.core.JsonLocation)
  anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,com.fasterxml.jackson.core.JsonLocation,java.lang.Throwable)
@@ -1307,6 +1421,11 @@ innr public final static !enum NumberType
 intf com.fasterxml.jackson.core.Versioned
 intf java.io.Closeable
 meth protected com.fasterxml.jackson.core.JsonParseException _constructError(java.lang.String)
+meth protected com.fasterxml.jackson.core.JsonParseException _constructReadException(java.lang.String)
+meth protected com.fasterxml.jackson.core.JsonParseException _constructReadException(java.lang.String,java.lang.Object)
+meth protected com.fasterxml.jackson.core.JsonParseException _constructReadException(java.lang.String,java.lang.Object,java.lang.Object)
+meth protected com.fasterxml.jackson.core.JsonParseException _constructReadException(java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
+meth protected com.fasterxml.jackson.core.JsonParseException _constructReadException(java.lang.String,java.lang.Throwable)
 meth protected com.fasterxml.jackson.core.ObjectCodec _codec()
 meth protected void _reportUnsupportedOperation()
 meth public <%0 extends com.fasterxml.jackson.core.TreeNode> {%%0} readValueAsTree() throws java.io.IOException
@@ -1368,6 +1487,8 @@ meth public boolean requiresCustomCodec()
 meth public byte getByteValue() throws java.io.IOException
 meth public byte[] getBinaryValue() throws java.io.IOException
 meth public com.fasterxml.jackson.core.FormatSchema getSchema()
+meth public com.fasterxml.jackson.core.JsonLocation currentLocation()
+meth public com.fasterxml.jackson.core.JsonLocation currentTokenLocation()
 meth public com.fasterxml.jackson.core.JsonParser configure(com.fasterxml.jackson.core.JsonParser$Feature,boolean)
 meth public com.fasterxml.jackson.core.JsonParser disable(com.fasterxml.jackson.core.JsonParser$Feature)
 meth public com.fasterxml.jackson.core.JsonParser enable(com.fasterxml.jackson.core.JsonParser$Feature)
@@ -1376,6 +1497,7 @@ meth public com.fasterxml.jackson.core.JsonParser overrideStdFeatures(int,int)
 meth public com.fasterxml.jackson.core.JsonParser setFeatureMask(int)
  anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.core.JsonToken currentToken()
+meth public com.fasterxml.jackson.core.StreamReadConstraints streamReadConstraints()
 meth public com.fasterxml.jackson.core.async.NonBlockingInputFeeder getNonBlockingInputFeeder()
 meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamReadCapability> getReadCapabilities()
 meth public double getValueAsDouble() throws java.io.IOException
@@ -1393,9 +1515,11 @@ meth public int releaseBuffered(java.io.OutputStream) throws java.io.IOException
 meth public int releaseBuffered(java.io.Writer) throws java.io.IOException
 meth public java.lang.Boolean nextBooleanValue() throws java.io.IOException
 meth public java.lang.Number getNumberValueExact() throws java.io.IOException
+meth public java.lang.Object currentValue()
 meth public java.lang.Object getCurrentValue()
 meth public java.lang.Object getEmbeddedObject() throws java.io.IOException
 meth public java.lang.Object getInputSource()
+meth public java.lang.Object getNumberValueDeferred() throws java.io.IOException
 meth public java.lang.Object getObjectId() throws java.io.IOException
 meth public java.lang.Object getTypeId() throws java.io.IOException
 meth public java.lang.String currentName() throws java.io.IOException
@@ -1406,6 +1530,7 @@ meth public long getValueAsLong() throws java.io.IOException
 meth public long getValueAsLong(long) throws java.io.IOException
 meth public long nextLongValue(long) throws java.io.IOException
 meth public short getShortValue() throws java.io.IOException
+meth public void assignCurrentValue(java.lang.Object)
 meth public void finishToken() throws java.io.IOException
 meth public void setCurrentValue(java.lang.Object)
 meth public void setRequestPayloadOnError(byte[],java.lang.String)
@@ -1422,6 +1547,8 @@ fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_BACK
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_COMMENTS
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_LEADING_DECIMAL_POINT_FOR_NUMBERS
  anno 0 java.lang.Deprecated()
+fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_LEADING_PLUS_SIGN_FOR_NUMBERS
+ anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_MISSING_VALUES
  anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_NON_NUMERIC_NUMBERS
@@ -1431,6 +1558,8 @@ fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_NUME
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_SINGLE_QUOTES
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_TRAILING_COMMA
  anno 0 java.lang.Deprecated()
+fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_TRAILING_DECIMAL_POINT_FOR_NUMBERS
+ anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_UNQUOTED_CONTROL_CHARS
  anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature ALLOW_UNQUOTED_FIELD_NAMES
@@ -1439,6 +1568,8 @@ fld public final static com.fasterxml.jackson.core.JsonParser$Feature AUTO_CLOSE
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature IGNORE_UNDEFINED
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature INCLUDE_SOURCE_IN_LOCATION
 fld public final static com.fasterxml.jackson.core.JsonParser$Feature STRICT_DUPLICATE_DETECTION
+fld public final static com.fasterxml.jackson.core.JsonParser$Feature USE_FAST_BIG_NUMBER_PARSER
+fld public final static com.fasterxml.jackson.core.JsonParser$Feature USE_FAST_DOUBLE_PARSER
 meth public boolean enabledByDefault()
 meth public boolean enabledIn(int)
 meth public int getMask()
@@ -1462,19 +1593,22 @@ supr java.lang.Enum<com.fasterxml.jackson.core.JsonParser$NumberType>
 
 CLSS public com.fasterxml.jackson.core.JsonPointer
 cons protected init()
-cons protected init(java.lang.String,java.lang.String,com.fasterxml.jackson.core.JsonPointer)
-cons protected init(java.lang.String,java.lang.String,int,com.fasterxml.jackson.core.JsonPointer)
+cons protected init(java.lang.String,int,java.lang.String,com.fasterxml.jackson.core.JsonPointer)
+cons protected init(java.lang.String,int,java.lang.String,int,com.fasterxml.jackson.core.JsonPointer)
 fld protected final com.fasterxml.jackson.core.JsonPointer _nextSegment
+fld protected final int _asStringOffset
 fld protected final int _matchingElementIndex
 fld protected final java.lang.String _asString
 fld protected final java.lang.String _matchingPropertyName
 fld protected final static com.fasterxml.jackson.core.JsonPointer EMPTY
+fld protected int _hashCode
 fld protected volatile com.fasterxml.jackson.core.JsonPointer _head
 fld public final static char SEPARATOR = '/'
+intf java.io.Serializable
 meth protected com.fasterxml.jackson.core.JsonPointer _constructHead()
 meth protected com.fasterxml.jackson.core.JsonPointer _constructHead(int,com.fasterxml.jackson.core.JsonPointer)
-meth protected static com.fasterxml.jackson.core.JsonPointer _parseQuotedTail(java.lang.String,int)
 meth protected static com.fasterxml.jackson.core.JsonPointer _parseTail(java.lang.String)
+meth protected static int _extractEscapedSegment(java.lang.String,int,int,java.lang.StringBuilder)
 meth public boolean equals(java.lang.Object)
 meth public boolean matches()
 meth public boolean matchesElement(int)
@@ -1482,6 +1616,8 @@ meth public boolean matchesProperty(java.lang.String)
 meth public boolean mayMatchElement()
 meth public boolean mayMatchProperty()
 meth public com.fasterxml.jackson.core.JsonPointer append(com.fasterxml.jackson.core.JsonPointer)
+meth public com.fasterxml.jackson.core.JsonPointer appendIndex(int)
+meth public com.fasterxml.jackson.core.JsonPointer appendProperty(java.lang.String)
 meth public com.fasterxml.jackson.core.JsonPointer head()
 meth public com.fasterxml.jackson.core.JsonPointer last()
 meth public com.fasterxml.jackson.core.JsonPointer matchElement(int)
@@ -1489,6 +1625,7 @@ meth public com.fasterxml.jackson.core.JsonPointer matchProperty(java.lang.Strin
 meth public com.fasterxml.jackson.core.JsonPointer tail()
 meth public int getMatchingIndex()
 meth public int hashCode()
+meth public int length()
 meth public java.lang.String getMatchingProperty()
 meth public java.lang.String toString()
 meth public static com.fasterxml.jackson.core.JsonPointer compile(java.lang.String)
@@ -1496,6 +1633,8 @@ meth public static com.fasterxml.jackson.core.JsonPointer empty()
 meth public static com.fasterxml.jackson.core.JsonPointer forPath(com.fasterxml.jackson.core.JsonStreamContext,boolean)
 meth public static com.fasterxml.jackson.core.JsonPointer valueOf(java.lang.String)
 supr java.lang.Object
+hfds serialVersionUID
+hcls PointerParent,PointerSegment,Serialization
 
 CLSS public com.fasterxml.jackson.core.JsonProcessingException
 cons protected init(java.lang.String)
@@ -1519,6 +1658,7 @@ cons protected init()
 cons protected init(com.fasterxml.jackson.core.JsonStreamContext)
 cons protected init(int,int)
 fld protected int _index
+fld protected int _nestingDepth
 fld protected int _type
 fld public final static int TYPE_ARRAY = 1
 fld public final static int TYPE_OBJECT = 2
@@ -1529,6 +1669,8 @@ meth public boolean hasCurrentIndex()
 meth public boolean hasCurrentName()
 meth public boolean hasPathSegment()
 meth public com.fasterxml.jackson.core.JsonLocation getStartLocation(java.lang.Object)
+ anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.core.JsonLocation startLocation(com.fasterxml.jackson.core.io.ContentReference)
 meth public com.fasterxml.jackson.core.JsonPointer pathAsPointer()
 meth public com.fasterxml.jackson.core.JsonPointer pathAsPointer(boolean)
 meth public final boolean inArray()
@@ -1536,6 +1678,7 @@ meth public final boolean inObject()
 meth public final boolean inRoot()
 meth public final int getCurrentIndex()
 meth public final int getEntryCount()
+meth public final int getNestingDepth()
 meth public final java.lang.String getTypeDesc()
  anno 0 java.lang.Deprecated()
 meth public java.lang.Object getCurrentValue()
@@ -1569,6 +1712,7 @@ meth public final int id()
 meth public final java.lang.String asString()
 meth public static com.fasterxml.jackson.core.JsonToken valueOf(java.lang.String)
 meth public static com.fasterxml.jackson.core.JsonToken[] values()
+meth public static java.lang.String valueDescFor(com.fasterxml.jackson.core.JsonToken)
 supr java.lang.Enum<com.fasterxml.jackson.core.JsonToken>
 hfds _id,_isBoolean,_isNumber,_isScalar,_isStructEnd,_isStructStart,_serialized,_serializedBytes,_serializedChars
 
@@ -1649,6 +1793,7 @@ meth public abstract java.lang.String getValue()
 
 CLSS public final !enum com.fasterxml.jackson.core.StreamReadCapability
 fld public final static com.fasterxml.jackson.core.StreamReadCapability DUPLICATE_PROPERTIES
+fld public final static com.fasterxml.jackson.core.StreamReadCapability EXACT_FLOATS
 fld public final static com.fasterxml.jackson.core.StreamReadCapability SCALARS_AS_OBJECTS
 fld public final static com.fasterxml.jackson.core.StreamReadCapability UNTYPED_SCALARS
 intf com.fasterxml.jackson.core.util.JacksonFeature
@@ -1660,11 +1805,62 @@ meth public static com.fasterxml.jackson.core.StreamReadCapability[] values()
 supr java.lang.Enum<com.fasterxml.jackson.core.StreamReadCapability>
 hfds _defaultState,_mask
 
+CLSS public com.fasterxml.jackson.core.StreamReadConstraints
+cons protected init(int,long,int,int)
+ anno 0 java.lang.Deprecated()
+cons protected init(int,long,int,int,int)
+fld protected final int _maxNameLen
+fld protected final int _maxNestingDepth
+fld protected final int _maxNumLen
+fld protected final int _maxStringLen
+fld protected final long _maxDocLen
+fld public final static int DEFAULT_MAX_DEPTH = 1000
+fld public final static int DEFAULT_MAX_NAME_LEN = 50000
+fld public final static int DEFAULT_MAX_NUM_LEN = 1000
+fld public final static int DEFAULT_MAX_STRING_LEN = 20000000
+fld public final static long DEFAULT_MAX_DOC_LEN = -1
+innr public final static Builder
+intf java.io.Serializable
+meth protected !varargs com.fasterxml.jackson.core.exc.StreamConstraintsException _constructException(java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth protected java.lang.String _constrainRef(java.lang.String)
+meth public boolean hasMaxDocumentLength()
+meth public com.fasterxml.jackson.core.StreamReadConstraints$Builder rebuild()
+meth public int getMaxNameLength()
+meth public int getMaxNestingDepth()
+meth public int getMaxNumberLength()
+meth public int getMaxStringLength()
+meth public long getMaxDocumentLength()
+meth public static com.fasterxml.jackson.core.StreamReadConstraints defaults()
+meth public static com.fasterxml.jackson.core.StreamReadConstraints$Builder builder()
+meth public static void overrideDefaultStreamReadConstraints(com.fasterxml.jackson.core.StreamReadConstraints)
+meth public void validateBigIntegerScale(int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth public void validateDocumentLength(long) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth public void validateFPLength(int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth public void validateIntegerLength(int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth public void validateNameLength(int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth public void validateNestingDepth(int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth public void validateStringLength(int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+supr java.lang.Object
+hfds DEFAULT,MAX_BIGINT_SCALE_MAGNITUDE,serialVersionUID
+
+CLSS public final static com.fasterxml.jackson.core.StreamReadConstraints$Builder
+ outer com.fasterxml.jackson.core.StreamReadConstraints
+meth public com.fasterxml.jackson.core.StreamReadConstraints build()
+meth public com.fasterxml.jackson.core.StreamReadConstraints$Builder maxDocumentLength(long)
+meth public com.fasterxml.jackson.core.StreamReadConstraints$Builder maxNameLength(int)
+meth public com.fasterxml.jackson.core.StreamReadConstraints$Builder maxNestingDepth(int)
+meth public com.fasterxml.jackson.core.StreamReadConstraints$Builder maxNumberLength(int)
+meth public com.fasterxml.jackson.core.StreamReadConstraints$Builder maxStringLength(int)
+supr java.lang.Object
+hfds maxDocLen,maxNameLen,maxNestingDepth,maxNumLen,maxStringLen
+
 CLSS public final !enum com.fasterxml.jackson.core.StreamReadFeature
 fld public final static com.fasterxml.jackson.core.StreamReadFeature AUTO_CLOSE_SOURCE
 fld public final static com.fasterxml.jackson.core.StreamReadFeature IGNORE_UNDEFINED
 fld public final static com.fasterxml.jackson.core.StreamReadFeature INCLUDE_SOURCE_IN_LOCATION
 fld public final static com.fasterxml.jackson.core.StreamReadFeature STRICT_DUPLICATE_DETECTION
+fld public final static com.fasterxml.jackson.core.StreamReadFeature USE_FAST_BIG_NUMBER_PARSER
+fld public final static com.fasterxml.jackson.core.StreamReadFeature USE_FAST_DOUBLE_PARSER
 intf com.fasterxml.jackson.core.util.JacksonFeature
 meth public boolean enabledByDefault()
 meth public boolean enabledIn(int)
@@ -1688,12 +1884,37 @@ meth public static com.fasterxml.jackson.core.StreamWriteCapability[] values()
 supr java.lang.Enum<com.fasterxml.jackson.core.StreamWriteCapability>
 hfds _defaultState,_mask
 
+CLSS public com.fasterxml.jackson.core.StreamWriteConstraints
+cons protected init(int)
+fld protected final int _maxNestingDepth
+fld public final static int DEFAULT_MAX_DEPTH = 1000
+innr public final static Builder
+intf java.io.Serializable
+meth protected !varargs com.fasterxml.jackson.core.exc.StreamConstraintsException _constructException(java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth protected java.lang.String _constrainRef(java.lang.String)
+meth public com.fasterxml.jackson.core.StreamWriteConstraints$Builder rebuild()
+meth public int getMaxNestingDepth()
+meth public static com.fasterxml.jackson.core.StreamWriteConstraints defaults()
+meth public static com.fasterxml.jackson.core.StreamWriteConstraints$Builder builder()
+meth public static void overrideDefaultStreamWriteConstraints(com.fasterxml.jackson.core.StreamWriteConstraints)
+meth public void validateNestingDepth(int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+supr java.lang.Object
+hfds DEFAULT,serialVersionUID
+
+CLSS public final static com.fasterxml.jackson.core.StreamWriteConstraints$Builder
+ outer com.fasterxml.jackson.core.StreamWriteConstraints
+meth public com.fasterxml.jackson.core.StreamWriteConstraints build()
+meth public com.fasterxml.jackson.core.StreamWriteConstraints$Builder maxNestingDepth(int)
+supr java.lang.Object
+hfds maxNestingDepth
+
 CLSS public final !enum com.fasterxml.jackson.core.StreamWriteFeature
 fld public final static com.fasterxml.jackson.core.StreamWriteFeature AUTO_CLOSE_CONTENT
 fld public final static com.fasterxml.jackson.core.StreamWriteFeature AUTO_CLOSE_TARGET
 fld public final static com.fasterxml.jackson.core.StreamWriteFeature FLUSH_PASSED_TO_STREAM
 fld public final static com.fasterxml.jackson.core.StreamWriteFeature IGNORE_UNKNOWN
 fld public final static com.fasterxml.jackson.core.StreamWriteFeature STRICT_DUPLICATE_DETECTION
+fld public final static com.fasterxml.jackson.core.StreamWriteFeature USE_FAST_DOUBLE_WRITER
 fld public final static com.fasterxml.jackson.core.StreamWriteFeature WRITE_BIGDECIMAL_AS_PLAIN
 intf com.fasterxml.jackson.core.util.JacksonFeature
 meth public boolean enabledByDefault()
@@ -1710,15 +1931,21 @@ CLSS public abstract com.fasterxml.jackson.core.TSFBuilder<%0 extends com.faster
 cons protected init()
 cons protected init(com.fasterxml.jackson.core.JsonFactory)
 cons protected init(int,int,int)
+fld protected com.fasterxml.jackson.core.ErrorReportConfiguration _errorReportConfiguration
+fld protected com.fasterxml.jackson.core.StreamReadConstraints _streamReadConstraints
+fld protected com.fasterxml.jackson.core.StreamWriteConstraints _streamWriteConstraints
 fld protected com.fasterxml.jackson.core.io.InputDecorator _inputDecorator
 fld protected com.fasterxml.jackson.core.io.OutputDecorator _outputDecorator
+fld protected com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> _recyclerPool
 fld protected final static int DEFAULT_FACTORY_FEATURE_FLAGS
 fld protected final static int DEFAULT_GENERATOR_FEATURE_FLAGS
 fld protected final static int DEFAULT_PARSER_FEATURE_FLAGS
 fld protected int _factoryFeatures
 fld protected int _streamReadFeatures
 fld protected int _streamWriteFeatures
+fld protected java.util.List<com.fasterxml.jackson.core.util.JsonGeneratorDecorator> _generatorDecorators
 meth protected final {com.fasterxml.jackson.core.TSFBuilder%1} _this()
+meth protected static <%0 extends java.lang.Object> java.util.List<{%%0}> _copy(java.util.List<{%%0}>)
 meth protected void _legacyDisable(com.fasterxml.jackson.core.JsonGenerator$Feature)
 meth protected void _legacyDisable(com.fasterxml.jackson.core.JsonParser$Feature)
 meth protected void _legacyEnable(com.fasterxml.jackson.core.JsonGenerator$Feature)
@@ -1734,9 +1961,11 @@ meth public !varargs {com.fasterxml.jackson.core.TSFBuilder%1} enable(com.faster
 meth public abstract {com.fasterxml.jackson.core.TSFBuilder%0} build()
 meth public com.fasterxml.jackson.core.io.InputDecorator inputDecorator()
 meth public com.fasterxml.jackson.core.io.OutputDecorator outputDecorator()
+meth public com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> recyclerPool()
 meth public int factoryFeaturesMask()
 meth public int streamReadFeatures()
 meth public int streamWriteFeatures()
+meth public {com.fasterxml.jackson.core.TSFBuilder%1} addDecorator(com.fasterxml.jackson.core.util.JsonGeneratorDecorator)
 meth public {com.fasterxml.jackson.core.TSFBuilder%1} configure(com.fasterxml.jackson.core.JsonFactory$Feature,boolean)
 meth public {com.fasterxml.jackson.core.TSFBuilder%1} configure(com.fasterxml.jackson.core.StreamReadFeature,boolean)
 meth public {com.fasterxml.jackson.core.TSFBuilder%1} configure(com.fasterxml.jackson.core.StreamWriteFeature,boolean)
@@ -1752,21 +1981,33 @@ meth public {com.fasterxml.jackson.core.TSFBuilder%1} enable(com.fasterxml.jacks
 meth public {com.fasterxml.jackson.core.TSFBuilder%1} enable(com.fasterxml.jackson.core.StreamWriteFeature)
 meth public {com.fasterxml.jackson.core.TSFBuilder%1} enable(com.fasterxml.jackson.core.json.JsonReadFeature)
 meth public {com.fasterxml.jackson.core.TSFBuilder%1} enable(com.fasterxml.jackson.core.json.JsonWriteFeature)
+meth public {com.fasterxml.jackson.core.TSFBuilder%1} errorReportConfiguration(com.fasterxml.jackson.core.ErrorReportConfiguration)
 meth public {com.fasterxml.jackson.core.TSFBuilder%1} inputDecorator(com.fasterxml.jackson.core.io.InputDecorator)
 meth public {com.fasterxml.jackson.core.TSFBuilder%1} outputDecorator(com.fasterxml.jackson.core.io.OutputDecorator)
+meth public {com.fasterxml.jackson.core.TSFBuilder%1} recyclerPool(com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler>)
+meth public {com.fasterxml.jackson.core.TSFBuilder%1} streamReadConstraints(com.fasterxml.jackson.core.StreamReadConstraints)
+meth public {com.fasterxml.jackson.core.TSFBuilder%1} streamWriteConstraints(com.fasterxml.jackson.core.StreamWriteConstraints)
 supr java.lang.Object
 
 CLSS public abstract com.fasterxml.jackson.core.TokenStreamFactory
 cons public init()
 intf com.fasterxml.jackson.core.Versioned
 intf java.io.Serializable
+meth protected <%0 extends java.lang.Object> {%%0} _reportRangeError(java.lang.String)
+meth protected java.io.InputStream _fileInputStream(java.io.File) throws java.io.IOException
 meth protected java.io.InputStream _optimizedStreamFromURL(java.net.URL) throws java.io.IOException
 meth protected java.io.OutputStream _createDataOutputWrapper(java.io.DataOutput)
+meth protected java.io.OutputStream _fileOutputStream(java.io.File) throws java.io.IOException
+meth protected void _checkRangeBoundsForByteArray(byte[],int,int)
+meth protected void _checkRangeBoundsForCharArray(char[],int,int) throws java.io.IOException
 meth public abstract boolean canHandleBinaryNatively()
 meth public abstract boolean canParseAsync()
 meth public abstract boolean canUseSchema(com.fasterxml.jackson.core.FormatSchema)
+meth public abstract boolean isEnabled(com.fasterxml.jackson.core.JsonFactory$Feature)
 meth public abstract boolean isEnabled(com.fasterxml.jackson.core.JsonGenerator$Feature)
 meth public abstract boolean isEnabled(com.fasterxml.jackson.core.JsonParser$Feature)
+meth public abstract boolean isEnabled(com.fasterxml.jackson.core.StreamReadFeature)
+meth public abstract boolean isEnabled(com.fasterxml.jackson.core.StreamWriteFeature)
 meth public abstract boolean requiresPropertyOrdering()
 meth public abstract com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.DataOutput) throws java.io.IOException
 meth public abstract com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.DataOutput,com.fasterxml.jackson.core.JsonEncoding) throws java.io.IOException
@@ -1775,6 +2016,7 @@ meth public abstract com.fasterxml.jackson.core.JsonGenerator createGenerator(ja
 meth public abstract com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.OutputStream,com.fasterxml.jackson.core.JsonEncoding) throws java.io.IOException
 meth public abstract com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.Writer) throws java.io.IOException
 meth public abstract com.fasterxml.jackson.core.JsonParser createNonBlockingByteArrayParser() throws java.io.IOException
+meth public abstract com.fasterxml.jackson.core.JsonParser createNonBlockingByteBufferParser() throws java.io.IOException
 meth public abstract com.fasterxml.jackson.core.JsonParser createParser(byte[]) throws java.io.IOException
 meth public abstract com.fasterxml.jackson.core.JsonParser createParser(byte[],int,int) throws java.io.IOException
 meth public abstract com.fasterxml.jackson.core.JsonParser createParser(char[]) throws java.io.IOException
@@ -1785,6 +2027,9 @@ meth public abstract com.fasterxml.jackson.core.JsonParser createParser(java.io.
 meth public abstract com.fasterxml.jackson.core.JsonParser createParser(java.io.Reader) throws java.io.IOException
 meth public abstract com.fasterxml.jackson.core.JsonParser createParser(java.lang.String) throws java.io.IOException
 meth public abstract com.fasterxml.jackson.core.JsonParser createParser(java.net.URL) throws java.io.IOException
+meth public abstract com.fasterxml.jackson.core.StreamReadConstraints streamReadConstraints()
+meth public abstract com.fasterxml.jackson.core.StreamWriteConstraints streamWriteConstraints()
+meth public abstract int getFactoryFeatures()
 meth public abstract int getFormatGeneratorFeatures()
 meth public abstract int getFormatParserFeatures()
 meth public abstract int getGeneratorFeatures()
@@ -1870,13 +2115,20 @@ CLSS public abstract interface com.fasterxml.jackson.core.async.NonBlockingInput
 meth public abstract boolean needMoreInput()
 meth public abstract void endOfInput()
 
+CLSS abstract interface com.fasterxml.jackson.core.async.package-info
+
 CLSS public abstract com.fasterxml.jackson.core.base.GeneratorBase
 cons protected init(int,com.fasterxml.jackson.core.ObjectCodec)
+ anno 0 java.lang.Deprecated()
+cons protected init(int,com.fasterxml.jackson.core.ObjectCodec,com.fasterxml.jackson.core.io.IOContext)
+cons protected init(int,com.fasterxml.jackson.core.ObjectCodec,com.fasterxml.jackson.core.io.IOContext,com.fasterxml.jackson.core.json.JsonWriteContext)
 cons protected init(int,com.fasterxml.jackson.core.ObjectCodec,com.fasterxml.jackson.core.json.JsonWriteContext)
+ anno 0 java.lang.Deprecated()
 fld protected boolean _cfgNumbersAsStrings
 fld protected boolean _closed
 fld protected com.fasterxml.jackson.core.ObjectCodec _objectCodec
 fld protected com.fasterxml.jackson.core.json.JsonWriteContext _writeContext
+fld protected final com.fasterxml.jackson.core.io.IOContext _ioContext
 fld protected final static int DERIVED_FEATURES_MASK
 fld protected final static int MAX_BIG_DECIMAL_SCALE = 9999
 fld protected final static java.lang.String WRITE_BINARY = "write a binary value"
@@ -1895,6 +2147,9 @@ meth protected abstract void _verifyValueWrite(java.lang.String) throws java.io.
 meth protected com.fasterxml.jackson.core.PrettyPrinter _constructDefaultPrettyPrinter()
 meth protected final int _decodeSurrogate(int,int) throws java.io.IOException
 meth protected java.lang.String _asString(java.math.BigDecimal) throws java.io.IOException
+meth protected void _checkRangeBoundsForByteArray(byte[],int,int) throws java.io.IOException
+meth protected void _checkRangeBoundsForCharArray(char[],int,int) throws java.io.IOException
+meth protected void _checkRangeBoundsForString(java.lang.String,int,int) throws java.io.IOException
 meth protected void _checkStdFeatureChanges(int,int)
 meth public abstract void flush() throws java.io.IOException
 meth public boolean isClosed()
@@ -1936,9 +2191,11 @@ fld protected com.fasterxml.jackson.core.JsonToken _nextToken
 fld protected com.fasterxml.jackson.core.json.JsonReadContext _parsingContext
 fld protected com.fasterxml.jackson.core.util.ByteArrayBuilder _byteArrayBuilder
 fld protected double _numberDouble
+fld protected final com.fasterxml.jackson.core.StreamReadConstraints _streamReadConstraints
 fld protected final com.fasterxml.jackson.core.io.IOContext _ioContext
 fld protected final com.fasterxml.jackson.core.util.TextBuffer _textBuffer
 fld protected final static com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamReadCapability> JSON_READ_CAPABILITIES
+fld protected float _numberFloat
 fld protected int _currInputRow
 fld protected int _currInputRowStart
 fld protected int _expLength
@@ -1950,6 +2207,7 @@ fld protected int _numTypesValid
 fld protected int _numberInt
 fld protected int _tokenInputCol
 fld protected int _tokenInputRow
+fld protected java.lang.String _numberString
 fld protected java.math.BigDecimal _numberBigDecimal
 fld protected java.math.BigInteger _numberBigInt
 fld protected long _currInputProcessed
@@ -1960,19 +2218,28 @@ meth protected boolean loadMore() throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth protected char _decodeEscaped() throws java.io.IOException
 meth protected char _handleUnrecognizedCharacterEscape(char) throws com.fasterxml.jackson.core.JsonProcessingException
-meth protected final com.fasterxml.jackson.core.JsonToken reset(boolean,int,int,int)
-meth protected final com.fasterxml.jackson.core.JsonToken resetAsNaN(java.lang.String,double)
-meth protected final com.fasterxml.jackson.core.JsonToken resetFloat(boolean,int,int,int)
-meth protected final com.fasterxml.jackson.core.JsonToken resetInt(boolean,int)
+meth protected com.fasterxml.jackson.core.io.ContentReference _contentReference()
+meth protected com.fasterxml.jackson.core.io.ContentReference _contentReferenceRedacted()
+meth protected double _getNumberDouble() throws com.fasterxml.jackson.core.JsonParseException
+meth protected final com.fasterxml.jackson.core.JsonToken reset(boolean,int,int,int) throws java.io.IOException
+meth protected final com.fasterxml.jackson.core.JsonToken resetAsNaN(java.lang.String,double) throws java.io.IOException
+meth protected final com.fasterxml.jackson.core.JsonToken resetFloat(boolean,int,int,int) throws java.io.IOException
+meth protected final com.fasterxml.jackson.core.JsonToken resetInt(boolean,int) throws java.io.IOException
 meth protected final int _decodeBase64Escape(com.fasterxml.jackson.core.Base64Variant,char,int) throws java.io.IOException
 meth protected final int _decodeBase64Escape(com.fasterxml.jackson.core.Base64Variant,int,int) throws java.io.IOException
 meth protected final int _eofAsNextChar() throws com.fasterxml.jackson.core.JsonParseException
+meth protected float _getNumberFloat() throws com.fasterxml.jackson.core.JsonParseException
 meth protected int _parseIntValue() throws java.io.IOException
+meth protected int[] _growNameDecodeBuffer(int[],int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
 meth protected java.lang.IllegalArgumentException reportInvalidBase64Char(com.fasterxml.jackson.core.Base64Variant,int,int)
 meth protected java.lang.IllegalArgumentException reportInvalidBase64Char(com.fasterxml.jackson.core.Base64Variant,int,int,java.lang.String)
 meth protected java.lang.Object _getSourceReference()
+ anno 0 java.lang.Deprecated()
 meth protected java.lang.String _validJsonTokenList() throws java.io.IOException
 meth protected java.lang.String _validJsonValueList() throws java.io.IOException
+meth protected java.math.BigDecimal _getBigDecimal() throws com.fasterxml.jackson.core.JsonParseException
+meth protected java.math.BigInteger _convertBigDecimalToBigInteger(java.math.BigDecimal) throws java.io.IOException
+meth protected java.math.BigInteger _getBigInteger() throws com.fasterxml.jackson.core.JsonParseException
 meth protected static int[] growArrayBy(int[],int)
 meth protected void _checkStdFeatureChanges(int,int)
 meth protected void _finishString() throws java.io.IOException
@@ -1986,13 +2253,16 @@ meth protected void _throwUnquotedSpace(int,java.lang.String) throws com.fasterx
 meth protected void convertNumberToBigDecimal() throws java.io.IOException
 meth protected void convertNumberToBigInteger() throws java.io.IOException
 meth protected void convertNumberToDouble() throws java.io.IOException
+meth protected void convertNumberToFloat() throws java.io.IOException
 meth protected void convertNumberToInt() throws java.io.IOException
 meth protected void convertNumberToLong() throws java.io.IOException
+meth protected void createChildArrayContext(int,int) throws java.io.IOException
+meth protected void createChildObjectContext(int,int) throws java.io.IOException
 meth protected void loadMoreGuaranteed() throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth public boolean hasTextCharacters()
 meth public boolean isClosed()
-meth public boolean isNaN()
+meth public boolean isNaN() throws java.io.IOException
 meth public byte[] getBinaryValue(com.fasterxml.jackson.core.Base64Variant) throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonLocation getCurrentLocation()
 meth public com.fasterxml.jackson.core.JsonLocation getTokenLocation()
@@ -2002,6 +2272,7 @@ meth public com.fasterxml.jackson.core.JsonParser overrideStdFeatures(int,int)
 meth public com.fasterxml.jackson.core.JsonParser setFeatureMask(int)
  anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.core.JsonParser$NumberType getNumberType() throws java.io.IOException
+meth public com.fasterxml.jackson.core.StreamReadConstraints streamReadConstraints()
 meth public com.fasterxml.jackson.core.Version version()
 meth public com.fasterxml.jackson.core.json.JsonReadContext getParsingContext()
 meth public com.fasterxml.jackson.core.util.ByteArrayBuilder _getByteArrayBuilder()
@@ -2013,6 +2284,7 @@ meth public int getTokenLineNr()
 meth public java.lang.Number getNumberValue() throws java.io.IOException
 meth public java.lang.Number getNumberValueExact() throws java.io.IOException
 meth public java.lang.Object getCurrentValue()
+meth public java.lang.Object getNumberValueDeferred() throws java.io.IOException
 meth public java.lang.String getCurrentName() throws java.io.IOException
 meth public java.math.BigDecimal getDecimalValue() throws java.io.IOException
 meth public java.math.BigInteger getBigIntegerValue() throws java.io.IOException
@@ -2058,6 +2330,7 @@ fld protected final static int INT_SPACE = 32
 fld protected final static int INT_TAB = 9
 fld protected final static int INT_e = 101
 fld protected final static int MAX_ERROR_TOKEN_LENGTH = 256
+ anno 0 java.lang.Deprecated()
 fld protected final static int NR_BIGDECIMAL = 16
 fld protected final static int NR_BIGINT = 4
 fld protected final static int NR_DOUBLE = 8
@@ -2076,6 +2349,7 @@ fld protected final static java.math.BigInteger BI_MIN_INT
 fld protected final static java.math.BigInteger BI_MIN_LONG
 fld protected final static long MAX_INT_L = 2147483647
 fld protected final static long MIN_INT_L = -2147483648
+meth protected <%0 extends java.lang.Object> {%%0} _reportUnexpectedNumberChar(int,java.lang.String) throws com.fasterxml.jackson.core.JsonParseException
 meth protected abstract void _handleEOF() throws com.fasterxml.jackson.core.JsonParseException
 meth protected boolean _hasTextualNull(java.lang.String)
 meth protected final com.fasterxml.jackson.core.JsonParseException _constructError(java.lang.String,java.lang.Throwable)
@@ -2111,6 +2385,7 @@ meth protected void reportOverflowLong() throws java.io.IOException
 meth protected void reportOverflowLong(java.lang.String) throws java.io.IOException
 meth protected void reportOverflowLong(java.lang.String,com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
 meth protected void reportUnexpectedNumberChar(int,java.lang.String) throws com.fasterxml.jackson.core.JsonParseException
+ anno 0 java.lang.Deprecated()
 meth public abstract boolean hasTextCharacters()
 meth public abstract boolean isClosed()
 meth public abstract byte[] getBinaryValue(com.fasterxml.jackson.core.Base64Variant) throws java.io.IOException
@@ -2148,6 +2423,8 @@ meth public long getValueAsLong(long) throws java.io.IOException
 meth public void clearCurrentToken()
 supr com.fasterxml.jackson.core.JsonParser
 
+CLSS abstract interface com.fasterxml.jackson.core.base.package-info
+
 CLSS public com.fasterxml.jackson.core.exc.InputCoercionException
 cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String,com.fasterxml.jackson.core.JsonToken,java.lang.Class<?>)
 fld protected final com.fasterxml.jackson.core.JsonToken _inputType
@@ -2159,11 +2436,19 @@ meth public java.lang.Class<?> getTargetType()
 supr com.fasterxml.jackson.core.exc.StreamReadException
 hfds serialVersionUID
 
+CLSS public com.fasterxml.jackson.core.exc.StreamConstraintsException
+cons public init(java.lang.String)
+cons public init(java.lang.String,com.fasterxml.jackson.core.JsonLocation)
+supr com.fasterxml.jackson.core.JsonProcessingException
+hfds serialVersionUID
+
 CLSS public abstract com.fasterxml.jackson.core.exc.StreamReadException
+cons protected init(com.fasterxml.jackson.core.JsonParser,java.lang.String)
+cons protected init(com.fasterxml.jackson.core.JsonParser,java.lang.String,com.fasterxml.jackson.core.JsonLocation)
+cons protected init(com.fasterxml.jackson.core.JsonParser,java.lang.String,com.fasterxml.jackson.core.JsonLocation,java.lang.Throwable)
+cons protected init(com.fasterxml.jackson.core.JsonParser,java.lang.String,java.lang.Throwable)
+cons protected init(java.lang.String)
 cons protected init(java.lang.String,com.fasterxml.jackson.core.JsonLocation,java.lang.Throwable)
-cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String)
-cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String,com.fasterxml.jackson.core.JsonLocation)
-cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String,java.lang.Throwable)
 fld protected com.fasterxml.jackson.core.JsonParser _processor
 fld protected com.fasterxml.jackson.core.util.RequestPayload _requestPayload
 meth public abstract com.fasterxml.jackson.core.exc.StreamReadException withParser(com.fasterxml.jackson.core.JsonParser)
@@ -2174,6 +2459,18 @@ meth public java.lang.String getMessage()
 meth public java.lang.String getRequestPayloadAsString()
 supr com.fasterxml.jackson.core.JsonProcessingException
 hfds serialVersionUID
+
+CLSS public abstract com.fasterxml.jackson.core.exc.StreamWriteException
+cons protected init(java.lang.String,com.fasterxml.jackson.core.JsonGenerator)
+cons protected init(java.lang.String,java.lang.Throwable,com.fasterxml.jackson.core.JsonGenerator)
+cons protected init(java.lang.Throwable,com.fasterxml.jackson.core.JsonGenerator)
+fld protected com.fasterxml.jackson.core.JsonGenerator _processor
+meth public abstract com.fasterxml.jackson.core.exc.StreamWriteException withGenerator(com.fasterxml.jackson.core.JsonGenerator)
+meth public com.fasterxml.jackson.core.JsonGenerator getProcessor()
+supr com.fasterxml.jackson.core.JsonProcessingException
+hfds serialVersionUID
+
+CLSS abstract interface com.fasterxml.jackson.core.exc.package-info
 
 CLSS public com.fasterxml.jackson.core.filter.FilteringGeneratorDelegate
 cons public init(com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.core.filter.TokenFilter,boolean,boolean)
@@ -2294,6 +2591,7 @@ meth public int getValueAsInt(int) throws java.io.IOException
 meth public int readBinaryValue(com.fasterxml.jackson.core.Base64Variant,java.io.OutputStream) throws java.io.IOException
 meth public java.lang.Number getNumberValue() throws java.io.IOException
 meth public java.lang.Object getEmbeddedObject() throws java.io.IOException
+meth public java.lang.String currentName() throws java.io.IOException
 meth public java.lang.String getCurrentName() throws java.io.IOException
 meth public java.lang.String getText() throws java.io.IOException
 meth public java.lang.String getValueAsString() throws java.io.IOException
@@ -2310,9 +2608,12 @@ supr com.fasterxml.jackson.core.util.JsonParserDelegate
 
 CLSS public com.fasterxml.jackson.core.filter.JsonPointerBasedFilter
 cons public init(com.fasterxml.jackson.core.JsonPointer)
+cons public init(com.fasterxml.jackson.core.JsonPointer,boolean)
 cons public init(java.lang.String)
+fld protected final boolean _includeAllElements
 fld protected final com.fasterxml.jackson.core.JsonPointer _pathToMatch
 meth protected boolean _includeScalar()
+meth protected com.fasterxml.jackson.core.filter.JsonPointerBasedFilter construct(com.fasterxml.jackson.core.JsonPointer,boolean)
 meth public com.fasterxml.jackson.core.filter.TokenFilter filterStartArray()
 meth public com.fasterxml.jackson.core.filter.TokenFilter filterStartObject()
 meth public com.fasterxml.jackson.core.filter.TokenFilter includeElement(int)
@@ -2328,6 +2629,8 @@ meth protected boolean _includeScalar()
 meth public boolean includeBinary()
 meth public boolean includeBoolean(boolean)
 meth public boolean includeEmbeddedValue(java.lang.Object)
+meth public boolean includeEmptyArray(boolean)
+meth public boolean includeEmptyObject(boolean)
 meth public boolean includeNull()
 meth public boolean includeNumber(double)
 meth public boolean includeNumber(float)
@@ -2456,10 +2759,28 @@ meth public static com.fasterxml.jackson.core.format.MatchStrength valueOf(java.
 meth public static com.fasterxml.jackson.core.format.MatchStrength[] values()
 supr java.lang.Enum<com.fasterxml.jackson.core.format.MatchStrength>
 
+CLSS abstract interface com.fasterxml.jackson.core.format.package-info
+
+CLSS public final com.fasterxml.jackson.core.io.BigDecimalParser
+meth public static java.math.BigDecimal parse(char[])
+meth public static java.math.BigDecimal parse(char[],int,int)
+meth public static java.math.BigDecimal parse(java.lang.String)
+meth public static java.math.BigDecimal parseWithFastParser(char[],int,int)
+meth public static java.math.BigDecimal parseWithFastParser(java.lang.String)
+supr java.lang.Object
+hfds MAX_CHARS_TO_REPORT
+
+CLSS public final com.fasterxml.jackson.core.io.BigIntegerParser
+meth public static java.math.BigInteger parseWithFastParser(java.lang.String)
+meth public static java.math.BigInteger parseWithFastParser(java.lang.String,int)
+supr java.lang.Object
+
 CLSS public final com.fasterxml.jackson.core.io.CharTypes
 cons public init()
 fld protected final static byte[] HB
+fld protected final static byte[] HBlower
 fld protected final static char[] HC
+fld protected final static char[] HClower
 fld protected final static int[] sHexValues
 fld protected final static int[] sInputCodes
 fld protected final static int[] sInputCodesComment
@@ -2469,7 +2790,12 @@ fld protected final static int[] sInputCodesUtf8JsNames
 fld protected final static int[] sInputCodesWS
 fld protected final static int[] sOutputEscapes128
 meth public static byte[] copyHexBytes()
+ anno 0 java.lang.Deprecated()
+meth public static byte[] copyHexBytes(boolean)
+meth public static char hexToChar(int)
 meth public static char[] copyHexChars()
+ anno 0 java.lang.Deprecated()
+meth public static char[] copyHexChars(boolean)
 meth public static int charToHex(int)
 meth public static int[] get7BitOutputEscapes()
 meth public static int[] get7BitOutputEscapes(int)
@@ -2494,6 +2820,52 @@ meth public abstract int[] getEscapeCodesForAscii()
 meth public static int[] standardAsciiEscapesForJSON()
 supr java.lang.Object
 
+CLSS public com.fasterxml.jackson.core.io.ContentReference
+cons protected init(boolean,java.lang.Object)
+ anno 0 java.lang.Deprecated()
+cons protected init(boolean,java.lang.Object,com.fasterxml.jackson.core.ErrorReportConfiguration)
+cons protected init(boolean,java.lang.Object,int,int)
+ anno 0 java.lang.Deprecated()
+cons protected init(boolean,java.lang.Object,int,int,com.fasterxml.jackson.core.ErrorReportConfiguration)
+fld protected final boolean _isContentTextual
+fld protected final int _length
+fld protected final int _maxRawContentLength
+fld protected final int _offset
+fld protected final java.lang.Object _rawContent
+fld protected final static com.fasterxml.jackson.core.io.ContentReference REDACTED_CONTENT
+fld protected final static com.fasterxml.jackson.core.io.ContentReference UNKNOWN_CONTENT
+fld public final static int DEFAULT_MAX_CONTENT_SNIPPET = 500
+ anno 0 java.lang.Deprecated()
+intf java.io.Serializable
+meth protected boolean _appendEscaped(java.lang.StringBuilder,int)
+meth protected int _append(java.lang.StringBuilder,java.lang.String)
+meth protected int maxRawContentLength()
+meth protected java.lang.Object readResolve()
+meth protected java.lang.String _truncate(byte[],int[],int)
+meth protected java.lang.String _truncate(char[],int[],int)
+meth protected java.lang.String _truncate(java.lang.CharSequence,int[],int)
+meth protected void _truncateOffsets(int[],int)
+meth public boolean equals(java.lang.Object)
+meth public boolean hasTextualContent()
+meth public int contentLength()
+meth public int contentOffset()
+meth public int hashCode()
+meth public java.lang.Object getRawContent()
+meth public java.lang.String buildSourceDescription()
+meth public java.lang.StringBuilder appendSourceDescription(java.lang.StringBuilder)
+meth public static com.fasterxml.jackson.core.io.ContentReference construct(boolean,java.lang.Object)
+ anno 0 java.lang.Deprecated()
+meth public static com.fasterxml.jackson.core.io.ContentReference construct(boolean,java.lang.Object,com.fasterxml.jackson.core.ErrorReportConfiguration)
+meth public static com.fasterxml.jackson.core.io.ContentReference construct(boolean,java.lang.Object,int,int)
+ anno 0 java.lang.Deprecated()
+meth public static com.fasterxml.jackson.core.io.ContentReference construct(boolean,java.lang.Object,int,int,com.fasterxml.jackson.core.ErrorReportConfiguration)
+meth public static com.fasterxml.jackson.core.io.ContentReference rawReference(boolean,java.lang.Object)
+meth public static com.fasterxml.jackson.core.io.ContentReference rawReference(java.lang.Object)
+meth public static com.fasterxml.jackson.core.io.ContentReference redacted()
+meth public static com.fasterxml.jackson.core.io.ContentReference unknown()
+supr java.lang.Object
+hfds serialVersionUID
+
 CLSS public com.fasterxml.jackson.core.io.DataOutputAsStream
 cons public init(java.io.DataOutput)
 fld protected final java.io.DataOutput _output
@@ -2503,7 +2875,13 @@ meth public void write(int) throws java.io.IOException
 supr java.io.OutputStream
 
 CLSS public com.fasterxml.jackson.core.io.IOContext
+cons public init(com.fasterxml.jackson.core.StreamReadConstraints,com.fasterxml.jackson.core.StreamWriteConstraints,com.fasterxml.jackson.core.ErrorReportConfiguration,com.fasterxml.jackson.core.util.BufferRecycler,com.fasterxml.jackson.core.io.ContentReference,boolean)
+cons public init(com.fasterxml.jackson.core.StreamReadConstraints,com.fasterxml.jackson.core.util.BufferRecycler,com.fasterxml.jackson.core.io.ContentReference,boolean)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.core.util.BufferRecycler,com.fasterxml.jackson.core.io.ContentReference,boolean)
+ anno 0 java.lang.Deprecated()
 cons public init(com.fasterxml.jackson.core.util.BufferRecycler,java.lang.Object,boolean)
+ anno 0 java.lang.Deprecated()
 fld protected byte[] _base64Buffer
 fld protected byte[] _readIOBuffer
 fld protected byte[] _writeEncodingBuffer
@@ -2512,8 +2890,14 @@ fld protected char[] _nameCopyBuffer
 fld protected char[] _tokenCBuffer
 fld protected com.fasterxml.jackson.core.JsonEncoding _encoding
 fld protected final boolean _managedResource
+fld protected final com.fasterxml.jackson.core.ErrorReportConfiguration _errorReportConfiguration
+fld protected final com.fasterxml.jackson.core.StreamReadConstraints _streamReadConstraints
+fld protected final com.fasterxml.jackson.core.StreamWriteConstraints _streamWriteConstraints
+fld protected final com.fasterxml.jackson.core.io.ContentReference _contentReference
 fld protected final com.fasterxml.jackson.core.util.BufferRecycler _bufferRecycler
 fld protected final java.lang.Object _sourceRef
+ anno 0 java.lang.Deprecated()
+intf java.lang.AutoCloseable
 meth protected final void _verifyAlloc(java.lang.Object)
 meth protected final void _verifyRelease(byte[],byte[])
 meth protected final void _verifyRelease(char[],char[])
@@ -2528,10 +2912,17 @@ meth public char[] allocConcatBuffer()
 meth public char[] allocNameCopyBuffer(int)
 meth public char[] allocTokenBuffer()
 meth public char[] allocTokenBuffer(int)
+meth public com.fasterxml.jackson.core.ErrorReportConfiguration errorReportConfiguration()
 meth public com.fasterxml.jackson.core.JsonEncoding getEncoding()
+meth public com.fasterxml.jackson.core.StreamReadConstraints streamReadConstraints()
+meth public com.fasterxml.jackson.core.StreamWriteConstraints streamWriteConstraints()
+meth public com.fasterxml.jackson.core.io.ContentReference contentReference()
 meth public com.fasterxml.jackson.core.io.IOContext withEncoding(com.fasterxml.jackson.core.JsonEncoding)
+meth public com.fasterxml.jackson.core.util.TextBuffer constructReadConstrainedTextBuffer()
 meth public com.fasterxml.jackson.core.util.TextBuffer constructTextBuffer()
 meth public java.lang.Object getSourceReference()
+ anno 0 java.lang.Deprecated()
+meth public void close()
 meth public void releaseBase64Buffer(byte[])
 meth public void releaseConcatBuffer(char[])
 meth public void releaseNameCopyBuffer(char[])
@@ -2540,6 +2931,7 @@ meth public void releaseTokenBuffer(char[])
 meth public void releaseWriteEncodingBuffer(byte[])
 meth public void setEncoding(com.fasterxml.jackson.core.JsonEncoding)
 supr java.lang.Object
+hfds _closed
 
 CLSS public abstract com.fasterxml.jackson.core.io.InputDecorator
 cons public init()
@@ -2568,7 +2960,7 @@ meth public char[] quoteAsString(java.lang.String)
 meth public static com.fasterxml.jackson.core.io.JsonStringEncoder getInstance()
 meth public void quoteAsString(java.lang.CharSequence,java.lang.StringBuilder)
 supr java.lang.Object
-hfds HB,HC,INITIAL_BYTE_BUFFER_SIZE,INITIAL_CHAR_BUFFER_SIZE,SURR1_FIRST,SURR1_LAST,SURR2_FIRST,SURR2_LAST,instance
+hfds HB,HC,MAX_BYTE_BUFFER_SIZE,MAX_CHAR_BUFFER_SIZE,MIN_BYTE_BUFFER_SIZE,MIN_CHAR_BUFFER_SIZE,SURR1_FIRST,SURR1_LAST,SURR2_FIRST,SURR2_LAST,instance
 
 CLSS public final com.fasterxml.jackson.core.io.MergedStream
 cons public init(com.fasterxml.jackson.core.io.IOContext,java.io.InputStream,byte[],int,int)
@@ -2587,19 +2979,31 @@ hfds _b,_ctxt,_end,_in,_ptr
 CLSS public final com.fasterxml.jackson.core.io.NumberInput
 cons public init()
 fld public final static java.lang.String NASTY_SMALL_DOUBLE = "2.2250738585072012e-308"
+ anno 0 java.lang.Deprecated()
 meth public static boolean inLongRange(char[],int,int,boolean)
 meth public static boolean inLongRange(java.lang.String,boolean)
 meth public static double parseAsDouble(java.lang.String,double)
+meth public static double parseAsDouble(java.lang.String,double,boolean)
 meth public static double parseDouble(java.lang.String)
+meth public static double parseDouble(java.lang.String,boolean)
+meth public static float parseFloat(java.lang.String)
+meth public static float parseFloat(java.lang.String,boolean)
 meth public static int parseAsInt(java.lang.String,int)
 meth public static int parseInt(char[],int,int)
 meth public static int parseInt(java.lang.String)
 meth public static java.math.BigDecimal parseBigDecimal(char[])
+meth public static java.math.BigDecimal parseBigDecimal(char[],boolean)
 meth public static java.math.BigDecimal parseBigDecimal(char[],int,int)
+meth public static java.math.BigDecimal parseBigDecimal(char[],int,int,boolean)
 meth public static java.math.BigDecimal parseBigDecimal(java.lang.String)
+meth public static java.math.BigDecimal parseBigDecimal(java.lang.String,boolean)
+meth public static java.math.BigInteger parseBigInteger(java.lang.String)
+meth public static java.math.BigInteger parseBigInteger(java.lang.String,boolean)
+meth public static java.math.BigInteger parseBigIntegerWithRadix(java.lang.String,int,boolean)
 meth public static long parseAsLong(java.lang.String,long)
 meth public static long parseLong(char[],int,int)
 meth public static long parseLong(java.lang.String)
+meth public static long parseLong19(char[],int,boolean)
 supr java.lang.Object
 hfds L_BILLION,MAX_LONG_STR,MIN_LONG_STR_NO_SIGN
 
@@ -2612,7 +3016,9 @@ meth public static int outputInt(int,char[],int)
 meth public static int outputLong(long,byte[],int)
 meth public static int outputLong(long,char[],int)
 meth public static java.lang.String toString(double)
+meth public static java.lang.String toString(double,boolean)
 meth public static java.lang.String toString(float)
+meth public static java.lang.String toString(float,boolean)
 meth public static java.lang.String toString(int)
 meth public static java.lang.String toString(long)
 supr java.lang.Object
@@ -2627,17 +3033,17 @@ supr java.lang.Object
 
 CLSS public final com.fasterxml.jackson.core.io.SegmentedStringWriter
 cons public init(com.fasterxml.jackson.core.util.BufferRecycler)
-meth public java.io.Writer append(char)
-meth public java.io.Writer append(java.lang.CharSequence)
-meth public java.io.Writer append(java.lang.CharSequence,int,int)
-meth public java.lang.String getAndClear()
+meth public java.io.Writer append(char) throws java.io.IOException
+meth public java.io.Writer append(java.lang.CharSequence) throws java.io.IOException
+meth public java.io.Writer append(java.lang.CharSequence,int,int) throws java.io.IOException
+meth public java.lang.String getAndClear() throws java.io.IOException
 meth public void close()
 meth public void flush()
-meth public void write(char[])
-meth public void write(char[],int,int)
-meth public void write(int)
-meth public void write(java.lang.String)
-meth public void write(java.lang.String,int,int)
+meth public void write(char[]) throws java.io.IOException
+meth public void write(char[],int,int) throws java.io.IOException
+meth public void write(int) throws java.io.IOException
+meth public void write(java.lang.String) throws java.io.IOException
+meth public void write(java.lang.String,int,int) throws java.io.IOException
 supr java.io.Writer
 hfds _buffer
 
@@ -2719,7 +3125,7 @@ meth public java.io.Reader constructReader() throws java.io.IOException
 meth public static com.fasterxml.jackson.core.format.MatchStrength hasJSONFormat(com.fasterxml.jackson.core.format.InputAccessor) throws java.io.IOException
 meth public static int skipUTF8BOM(java.io.DataInput) throws java.io.IOException
 supr java.lang.Object
-hfds _bigEndian,_bufferRecyclable,_bytesPerChar,_context,_in,_inputBuffer,_inputEnd,_inputPtr
+hfds STRING_READER_BYTE_ARRAY_LENGTH_LIMIT,_bigEndian,_bufferRecyclable,_bytesPerChar,_context,_in,_inputBuffer,_inputEnd,_inputPtr
 
 CLSS public com.fasterxml.jackson.core.json.DupDetector
 fld protected final java.lang.Object _source
@@ -2738,9 +3144,10 @@ supr java.lang.Object
 CLSS public abstract com.fasterxml.jackson.core.json.JsonGeneratorImpl
 cons public init(com.fasterxml.jackson.core.io.IOContext,int,com.fasterxml.jackson.core.ObjectCodec)
 fld protected boolean _cfgUnqNames
+fld protected boolean _cfgWriteHexUppercase
 fld protected com.fasterxml.jackson.core.SerializableString _rootValueSeparator
 fld protected com.fasterxml.jackson.core.io.CharacterEscapes _characterEscapes
-fld protected final com.fasterxml.jackson.core.io.IOContext _ioContext
+fld protected final com.fasterxml.jackson.core.StreamWriteConstraints _streamWriteConstraints
 fld protected final static com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamWriteCapability> JSON_WRITE_CAPABILITIES
 fld protected final static int[] sOutputEscapes
 fld protected int _maximumNonEscapedChar
@@ -2753,14 +3160,18 @@ meth public com.fasterxml.jackson.core.JsonGenerator enable(com.fasterxml.jackso
 meth public com.fasterxml.jackson.core.JsonGenerator setCharacterEscapes(com.fasterxml.jackson.core.io.CharacterEscapes)
 meth public com.fasterxml.jackson.core.JsonGenerator setHighestNonEscapedChar(int)
 meth public com.fasterxml.jackson.core.JsonGenerator setRootValueSeparator(com.fasterxml.jackson.core.SerializableString)
+meth public com.fasterxml.jackson.core.StreamWriteConstraints streamWriteConstraints()
 meth public com.fasterxml.jackson.core.Version version()
 meth public com.fasterxml.jackson.core.io.CharacterEscapes getCharacterEscapes()
+meth public com.fasterxml.jackson.core.io.IOContext ioContext()
 meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamWriteCapability> getWriteCapabilities()
 meth public int getHighestEscapedChar()
 supr com.fasterxml.jackson.core.base.GeneratorBase
 
 CLSS public final com.fasterxml.jackson.core.json.JsonReadContext
 cons public init(com.fasterxml.jackson.core.json.JsonReadContext,com.fasterxml.jackson.core.json.DupDetector,int,int,int)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.core.json.JsonReadContext,int,com.fasterxml.jackson.core.json.DupDetector,int,int,int)
 fld protected com.fasterxml.jackson.core.json.DupDetector _dups
 fld protected com.fasterxml.jackson.core.json.JsonReadContext _child
 fld protected final com.fasterxml.jackson.core.json.JsonReadContext _parent
@@ -2771,6 +3182,8 @@ fld protected java.lang.String _currentName
 meth public boolean expectComma()
 meth public boolean hasCurrentName()
 meth public com.fasterxml.jackson.core.JsonLocation getStartLocation(java.lang.Object)
+ anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.core.JsonLocation startLocation(com.fasterxml.jackson.core.io.ContentReference)
 meth public com.fasterxml.jackson.core.json.DupDetector getDupDetector()
 meth public com.fasterxml.jackson.core.json.JsonReadContext clearAndGetParent()
 meth public com.fasterxml.jackson.core.json.JsonReadContext createChildArrayContext(int,int)
@@ -2790,11 +3203,13 @@ CLSS public final !enum com.fasterxml.jackson.core.json.JsonReadFeature
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_JAVA_COMMENTS
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_LEADING_DECIMAL_POINT_FOR_NUMBERS
+fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_LEADING_PLUS_SIGN_FOR_NUMBERS
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_LEADING_ZEROS_FOR_NUMBERS
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_MISSING_VALUES
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_NON_NUMERIC_NUMBERS
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_SINGLE_QUOTES
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_TRAILING_COMMA
+fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_TRAILING_DECIMAL_POINT_FOR_NUMBERS
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_UNESCAPED_CONTROL_CHARS
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_UNQUOTED_FIELD_NAMES
 fld public final static com.fasterxml.jackson.core.json.JsonReadFeature ALLOW_YAML_COMMENTS
@@ -2848,6 +3263,7 @@ supr com.fasterxml.jackson.core.JsonStreamContext
 CLSS public final !enum com.fasterxml.jackson.core.json.JsonWriteFeature
 fld public final static com.fasterxml.jackson.core.json.JsonWriteFeature ESCAPE_NON_ASCII
 fld public final static com.fasterxml.jackson.core.json.JsonWriteFeature QUOTE_FIELD_NAMES
+fld public final static com.fasterxml.jackson.core.json.JsonWriteFeature WRITE_HEX_UPPER_CASE
 fld public final static com.fasterxml.jackson.core.json.JsonWriteFeature WRITE_NAN_AS_STRINGS
 fld public final static com.fasterxml.jackson.core.json.JsonWriteFeature WRITE_NUMBERS_AS_STRINGS
 intf com.fasterxml.jackson.core.FormatFeature
@@ -2891,11 +3307,13 @@ meth protected char getNextChar(java.lang.String) throws java.io.IOException
 meth protected char getNextChar(java.lang.String,com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonToken _handleApos() throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonToken _handleInvalidNumberStart(int,boolean) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _handleInvalidNumberStart(int,boolean,boolean) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonToken _handleOddValue(int) throws java.io.IOException
 meth protected final com.fasterxml.jackson.core.JsonToken _parseFloatThatStartsWithPeriod() throws java.io.IOException
-meth protected final com.fasterxml.jackson.core.JsonToken _parseNegNumber() throws java.io.IOException
-meth protected final com.fasterxml.jackson.core.JsonToken _parsePosNumber(int) throws java.io.IOException
-meth protected final java.lang.String _getText2(com.fasterxml.jackson.core.JsonToken)
+ anno 0 java.lang.Deprecated()
+meth protected final com.fasterxml.jackson.core.JsonToken _parseFloatThatStartsWithPeriod(boolean) throws java.io.IOException
+meth protected final com.fasterxml.jackson.core.JsonToken _parseUnsignedNumber(int) throws java.io.IOException
+meth protected final java.lang.String _getText2(com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
 meth protected final java.lang.String _parseName() throws java.io.IOException
 meth protected final void _finishString() throws java.io.IOException
 meth protected final void _matchToken(java.lang.String,int) throws java.io.IOException
@@ -2949,12 +3367,16 @@ fld protected java.io.DataInput _inputData
 meth protected char _decodeEscaped() throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonToken _handleApos() throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonToken _handleInvalidNumberStart(int,boolean) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _handleInvalidNumberStart(int,boolean,boolean) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonToken _handleUnexpectedValue(int) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _parseNegNumber() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _parsePosNumber(int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _parseUnsignedNumber(int) throws java.io.IOException
 meth protected final byte[] _decodeBase64(com.fasterxml.jackson.core.Base64Variant) throws java.io.IOException
 meth protected final com.fasterxml.jackson.core.JsonToken _parseFloatThatStartsWithPeriod() throws java.io.IOException
-meth protected final java.lang.String _getText2(com.fasterxml.jackson.core.JsonToken)
+ anno 0 java.lang.Deprecated()
+meth protected final com.fasterxml.jackson.core.JsonToken _parseFloatThatStartsWithPeriod(boolean,boolean) throws java.io.IOException
+meth protected final com.fasterxml.jackson.core.JsonToken _parseNegNumber() throws java.io.IOException
+meth protected final com.fasterxml.jackson.core.JsonToken _parsePosNumber() throws java.io.IOException
+meth protected final java.lang.String _getText2(com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
 meth protected final java.lang.String _parseName(int) throws java.io.IOException
 meth protected final java.lang.String parseEscapedName(int[],int,int,int,int) throws java.io.IOException
 meth protected final void _matchToken(java.lang.String,int) throws java.io.IOException
@@ -2996,7 +3418,7 @@ meth public long nextLongValue(long) throws java.io.IOException
 meth public void finishToken() throws java.io.IOException
 meth public void setCodec(com.fasterxml.jackson.core.ObjectCodec)
 supr com.fasterxml.jackson.core.base.ParserBase
-hfds BYTE_LF,FEAT_MASK_ALLOW_JAVA_COMMENTS,FEAT_MASK_ALLOW_MISSING,FEAT_MASK_ALLOW_SINGLE_QUOTES,FEAT_MASK_ALLOW_UNQUOTED_NAMES,FEAT_MASK_ALLOW_YAML_COMMENTS,FEAT_MASK_LEADING_ZEROS,FEAT_MASK_NON_NUM_NUMBERS,FEAT_MASK_TRAILING_COMMA,_icUTF8,_quad1
+hfds FEAT_MASK_ALLOW_JAVA_COMMENTS,FEAT_MASK_ALLOW_MISSING,FEAT_MASK_ALLOW_SINGLE_QUOTES,FEAT_MASK_ALLOW_UNQUOTED_NAMES,FEAT_MASK_ALLOW_YAML_COMMENTS,FEAT_MASK_LEADING_ZEROS,FEAT_MASK_NON_NUM_NUMBERS,FEAT_MASK_TRAILING_COMMA,_icUTF8,_quad1
 
 CLSS public com.fasterxml.jackson.core.json.UTF8JsonGenerator
 cons public init(com.fasterxml.jackson.core.io.IOContext,int,com.fasterxml.jackson.core.ObjectCodec,java.io.OutputStream)
@@ -3058,12 +3480,13 @@ meth public void writeRawUTF8String(byte[],int,int) throws java.io.IOException
 meth public void writeRawValue(com.fasterxml.jackson.core.SerializableString) throws java.io.IOException
 meth public void writeStartArray(java.lang.Object,int) throws java.io.IOException
 meth public void writeStartObject(java.lang.Object) throws java.io.IOException
+meth public void writeStartObject(java.lang.Object,int) throws java.io.IOException
 meth public void writeString(char[],int,int) throws java.io.IOException
 meth public void writeString(java.io.Reader,int) throws java.io.IOException
 meth public void writeString(java.lang.String) throws java.io.IOException
 meth public void writeUTF8String(byte[],int,int) throws java.io.IOException
 supr com.fasterxml.jackson.core.json.JsonGeneratorImpl
-hfds BYTE_0,BYTE_BACKSLASH,BYTE_COLON,BYTE_COMMA,BYTE_LBRACKET,BYTE_LCURLY,BYTE_RBRACKET,BYTE_RCURLY,BYTE_u,FALSE_BYTES,HEX_CHARS,MAX_BYTES_TO_BUFFER,NULL_BYTES,TRUE_BYTES
+hfds BYTE_0,BYTE_BACKSLASH,BYTE_COLON,BYTE_COMMA,BYTE_LBRACKET,BYTE_LCURLY,BYTE_RBRACKET,BYTE_RCURLY,BYTE_u,FALSE_BYTES,HEX_BYTES_LOWER,HEX_BYTES_UPPER,MAX_BYTES_TO_BUFFER,NULL_BYTES,TRUE_BYTES
 
 CLSS public com.fasterxml.jackson.core.json.UTF8StreamJsonParser
 cons public init(com.fasterxml.jackson.core.io.IOContext,int,java.io.InputStream,com.fasterxml.jackson.core.ObjectCodec,com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer,byte[],int,int,boolean)
@@ -3083,13 +3506,15 @@ fld protected java.io.InputStream _inputStream
 meth protected char _decodeEscaped() throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonToken _handleApos() throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonToken _handleInvalidNumberStart(int,boolean) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _handleInvalidNumberStart(int,boolean,boolean) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonToken _handleUnexpectedValue(int) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _parseNegNumber() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _parsePosNumber(int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _parseUnsignedNumber(int) throws java.io.IOException
 meth protected final boolean _loadMore() throws java.io.IOException
 meth protected final byte[] _decodeBase64(com.fasterxml.jackson.core.Base64Variant) throws java.io.IOException
 meth protected final com.fasterxml.jackson.core.JsonToken _parseFloatThatStartsWithPeriod() throws java.io.IOException
-meth protected final java.lang.String _getText2(com.fasterxml.jackson.core.JsonToken)
+ anno 0 java.lang.Deprecated()
+meth protected final com.fasterxml.jackson.core.JsonToken _parseFloatThatStartsWithPeriod(boolean,boolean) throws java.io.IOException
+meth protected final java.lang.String _getText2(com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
 meth protected final java.lang.String _parseName(int) throws java.io.IOException
 meth protected final java.lang.String parseEscapedName(int[],int,int,int,int) throws java.io.IOException
 meth protected final java.lang.String parseLongName(int,int,int) throws java.io.IOException
@@ -3157,7 +3582,8 @@ fld protected char[] _entityBuffer
 fld protected char[] _outputBuffer
 fld protected com.fasterxml.jackson.core.SerializableString _currentEscape
 fld protected final java.io.Writer _writer
-fld protected final static char[] HEX_CHARS
+fld protected final static char[] HEX_CHARS_LOWER
+fld protected final static char[] HEX_CHARS_UPPER
 fld protected final static int SHORT_WRITE = 32
 fld protected int _outputEnd
 fld protected int _outputHead
@@ -3205,6 +3631,7 @@ meth public void writeStartArray(java.lang.Object) throws java.io.IOException
 meth public void writeStartArray(java.lang.Object,int) throws java.io.IOException
 meth public void writeStartObject() throws java.io.IOException
 meth public void writeStartObject(java.lang.Object) throws java.io.IOException
+meth public void writeStartObject(java.lang.Object,int) throws java.io.IOException
 meth public void writeString(char[],int,int) throws java.io.IOException
 meth public void writeString(com.fasterxml.jackson.core.SerializableString) throws java.io.IOException
 meth public void writeString(java.io.Reader,int) throws java.io.IOException
@@ -3212,48 +3639,29 @@ meth public void writeString(java.lang.String) throws java.io.IOException
 meth public void writeUTF8String(byte[],int,int) throws java.io.IOException
 supr com.fasterxml.jackson.core.json.JsonGeneratorImpl
 
+CLSS public com.fasterxml.jackson.core.json.async.NonBlockingByteBufferJsonParser
+cons public init(com.fasterxml.jackson.core.io.IOContext,int,com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer)
+intf com.fasterxml.jackson.core.async.ByteBufferFeeder
+meth protected byte getByteFromBuffer(int)
+meth protected byte getNextSignedByteFromBuffer()
+meth protected int getNextUnsignedByteFromBuffer()
+meth public com.fasterxml.jackson.core.async.NonBlockingInputFeeder getNonBlockingInputFeeder()
+meth public int releaseBuffered(java.io.OutputStream) throws java.io.IOException
+meth public void feedInput(java.nio.ByteBuffer) throws java.io.IOException
+supr com.fasterxml.jackson.core.json.async.NonBlockingUtf8JsonParserBase
+hfds _inputBuffer
+
 CLSS public com.fasterxml.jackson.core.json.async.NonBlockingJsonParser
 cons public init(com.fasterxml.jackson.core.io.IOContext,int,com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer)
-fld protected byte[] _inputBuffer
-fld protected final static int[] _icLatin1
-fld protected int _origBufferLen
 intf com.fasterxml.jackson.core.async.ByteArrayFeeder
-meth protected char _decodeEscaped() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishErrorToken() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishErrorTokenWithEOF() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishFloatExponent(boolean,int) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishFloatFraction() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishKeywordToken(java.lang.String,int,com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishKeywordTokenWithEOF(java.lang.String,int,com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishNonStdToken(int,int) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishNonStdTokenWithEOF(int,int) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishNumberIntegralPart(char[],int) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishNumberLeadingNegZeroes() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishNumberLeadingZeroes() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _finishNumberMinus(int) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _reportErrorToken(java.lang.String) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startAposString() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startFalseToken() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startFloat(char[],int,int) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startFloatThatStartsWithPeriod() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startNegativeNumber() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startNullToken() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startNumberLeadingZero() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startPositiveNumber(int) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startString() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startTrueToken() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _startUnexpectedValue(boolean,int) throws java.io.IOException
-meth protected final com.fasterxml.jackson.core.JsonToken _finishFieldWithEscape() throws java.io.IOException
-meth protected final com.fasterxml.jackson.core.JsonToken _finishToken() throws java.io.IOException
-meth protected final com.fasterxml.jackson.core.JsonToken _finishTokenWithEOF() throws java.io.IOException
-meth public com.fasterxml.jackson.core.JsonToken nextToken() throws java.io.IOException
+meth protected byte getByteFromBuffer(int)
+meth protected byte getNextSignedByteFromBuffer()
+meth protected int getNextUnsignedByteFromBuffer()
 meth public com.fasterxml.jackson.core.async.ByteArrayFeeder getNonBlockingInputFeeder()
-meth public final boolean needMoreInput()
 meth public int releaseBuffered(java.io.OutputStream) throws java.io.IOException
-meth public void endOfInput()
 meth public void feedInput(byte[],int,int) throws java.io.IOException
-supr com.fasterxml.jackson.core.json.async.NonBlockingJsonParserBase
-hfds FEAT_MASK_ALLOW_JAVA_COMMENTS,FEAT_MASK_ALLOW_MISSING,FEAT_MASK_ALLOW_SINGLE_QUOTES,FEAT_MASK_ALLOW_UNQUOTED_NAMES,FEAT_MASK_ALLOW_YAML_COMMENTS,FEAT_MASK_LEADING_ZEROS,FEAT_MASK_TRAILING_COMMA,_icUTF8
+supr com.fasterxml.jackson.core.json.async.NonBlockingUtf8JsonParserBase
+hfds _inputBuffer
 
 CLSS public abstract com.fasterxml.jackson.core.json.async.NonBlockingJsonParserBase
 cons public init(com.fasterxml.jackson.core.io.IOContext,int,com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer)
@@ -3285,6 +3693,7 @@ fld protected final static int MINOR_NUMBER_FRACTION_DIGITS = 30
 fld protected final static int MINOR_NUMBER_INTEGER_DIGITS = 26
 fld protected final static int MINOR_NUMBER_MINUS = 23
 fld protected final static int MINOR_NUMBER_MINUSZERO = 25
+fld protected final static int MINOR_NUMBER_PLUS = 22
 fld protected final static int MINOR_NUMBER_ZERO = 24
 fld protected final static int MINOR_ROOT_BOM = 1
 fld protected final static int MINOR_ROOT_GOT_SEPARATOR = 3
@@ -3333,11 +3742,11 @@ meth protected final com.fasterxml.jackson.core.JsonToken _startObjectScope() th
 meth protected final com.fasterxml.jackson.core.JsonToken _valueComplete(com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
 meth protected final com.fasterxml.jackson.core.JsonToken _valueCompleteInt(int,java.lang.String) throws java.io.IOException
 meth protected final com.fasterxml.jackson.core.JsonToken _valueNonStdNumberComplete(int) throws java.io.IOException
-meth protected final java.lang.String _addName(int[],int,int) throws com.fasterxml.jackson.core.JsonParseException
-meth protected final java.lang.String _findName(int,int) throws com.fasterxml.jackson.core.JsonParseException
-meth protected final java.lang.String _findName(int,int,int) throws com.fasterxml.jackson.core.JsonParseException
-meth protected final java.lang.String _findName(int,int,int,int) throws com.fasterxml.jackson.core.JsonParseException
-meth protected final java.lang.String _getText2(com.fasterxml.jackson.core.JsonToken)
+meth protected final java.lang.String _addName(int[],int,int) throws com.fasterxml.jackson.core.JsonParseException,com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth protected final java.lang.String _findName(int,int) throws com.fasterxml.jackson.core.JsonParseException,com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth protected final java.lang.String _findName(int,int,int) throws com.fasterxml.jackson.core.JsonParseException,com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth protected final java.lang.String _findName(int,int,int,int) throws com.fasterxml.jackson.core.JsonParseException,com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth protected final java.lang.String _getText2(com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
 meth protected final java.lang.String _nonStdToken(int)
 meth protected final static int _padLastQuad(int,int)
 meth protected final void _updateTokenLocation()
@@ -3368,13 +3777,66 @@ meth public java.lang.String getValueAsString(java.lang.String) throws java.io.I
 meth public void setCodec(com.fasterxml.jackson.core.ObjectCodec)
 supr com.fasterxml.jackson.core.base.ParserBase
 
+CLSS public abstract com.fasterxml.jackson.core.json.async.NonBlockingUtf8JsonParserBase
+cons protected init(com.fasterxml.jackson.core.io.IOContext,int,com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer)
+fld protected final static int[] _icLatin1
+fld protected int _origBufferLen
+meth protected abstract byte getByteFromBuffer(int)
+meth protected abstract byte getNextSignedByteFromBuffer()
+meth protected abstract int getNextUnsignedByteFromBuffer()
+meth protected char _decodeEscaped() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishErrorToken() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishErrorTokenWithEOF() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishFloatExponent(boolean,int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishFloatFraction() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishKeywordToken(java.lang.String,int,com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishKeywordTokenWithEOF(java.lang.String,int,com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishNonStdToken(int,int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishNonStdTokenWithEOF(int,int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishNumberIntegralPart(char[],int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishNumberLeadingNegZeroes() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishNumberLeadingPosNegZeroes(boolean) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishNumberLeadingPosZeroes() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishNumberLeadingZeroes() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishNumberMinus(int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishNumberPlus(int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _finishNumberPlusMinus(int,boolean) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _reportErrorToken(java.lang.String) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startAposString() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startFalseToken() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startFloat(char[],int,int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startFloatThatStartsWithPeriod() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startNegativeNumber() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startNullToken() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startNumberLeadingZero() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startPositiveNumber() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startPositiveNumber(int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startString() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startTrueToken() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _startUnexpectedValue(boolean,int) throws java.io.IOException
+meth protected final com.fasterxml.jackson.core.JsonToken _finishFieldWithEscape() throws java.io.IOException
+meth protected final com.fasterxml.jackson.core.JsonToken _finishToken() throws java.io.IOException
+meth protected final com.fasterxml.jackson.core.JsonToken _finishTokenWithEOF() throws java.io.IOException
+meth public com.fasterxml.jackson.core.JsonToken nextToken() throws java.io.IOException
+meth public final boolean needMoreInput()
+meth public void endOfInput()
+supr com.fasterxml.jackson.core.json.async.NonBlockingJsonParserBase
+hfds FEAT_MASK_ALLOW_JAVA_COMMENTS,FEAT_MASK_ALLOW_MISSING,FEAT_MASK_ALLOW_SINGLE_QUOTES,FEAT_MASK_ALLOW_UNQUOTED_NAMES,FEAT_MASK_ALLOW_YAML_COMMENTS,FEAT_MASK_LEADING_ZEROS,FEAT_MASK_TRAILING_COMMA,_icUTF8
+
+CLSS abstract interface com.fasterxml.jackson.core.json.async.package-info
+
+CLSS abstract interface com.fasterxml.jackson.core.json.package-info
+
+CLSS abstract interface com.fasterxml.jackson.core.package-info
+
 CLSS public final com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer
 fld protected boolean _hashShared
-fld protected boolean _intern
 fld protected final boolean _failOnDoS
 fld protected final com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer _parent
+fld protected final com.fasterxml.jackson.core.util.InternCache _interner
 fld protected final int _seed
 fld protected final java.util.concurrent.atomic.AtomicReference<com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer$TableInfo> _tableInfo
+fld protected final static int MAX_ENTRIES_FOR_REUSE = 6000
 fld protected int _count
 fld protected int _hashSize
 fld protected int _longNameOffset
@@ -3385,9 +3847,11 @@ fld protected int _tertiaryStart
 fld protected int[] _hashArea
 fld protected java.lang.String[] _names
 meth protected static com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer createRoot(int)
-meth protected void _reportTooManyCollisions()
+meth protected void _reportTooManyCollisions() throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth public boolean isCanonicalizing()
 meth public boolean maybeDirty()
 meth public com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer makeChild(int)
+meth public com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer makeChildOrPlaceholder(int)
 meth public int bucketCount()
 meth public int calcHash(int)
 meth public int calcHash(int,int)
@@ -3400,10 +3864,10 @@ meth public int size()
 meth public int spilloverCount()
 meth public int tertiaryCount()
 meth public int totalCount()
-meth public java.lang.String addName(java.lang.String,int)
-meth public java.lang.String addName(java.lang.String,int,int)
-meth public java.lang.String addName(java.lang.String,int,int,int)
-meth public java.lang.String addName(java.lang.String,int[],int)
+meth public java.lang.String addName(java.lang.String,int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth public java.lang.String addName(java.lang.String,int,int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth public java.lang.String addName(java.lang.String,int,int,int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+meth public java.lang.String addName(java.lang.String,int[],int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
 meth public java.lang.String findName(int)
 meth public java.lang.String findName(int,int)
 meth public java.lang.String findName(int,int,int)
@@ -3412,14 +3876,15 @@ meth public java.lang.String toString()
 meth public static com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer createRoot()
 meth public void release()
 supr java.lang.Object
-hfds DEFAULT_T_SIZE,MAX_ENTRIES_FOR_REUSE,MAX_T_SIZE,MIN_HASH_SIZE,MULT,MULT2,MULT3
+hfds DEFAULT_T_SIZE,MAX_T_SIZE,MIN_HASH_SIZE,MULT,MULT2,MULT3
 hcls TableInfo
 
 CLSS public final com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer
 fld protected boolean _canonicalize
 fld protected boolean _hashShared
+fld protected final com.fasterxml.jackson.core.StreamReadConstraints _streamReadConstraints
 fld protected final com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer _parent
-fld protected final int _flags
+fld protected final int _factoryFeatures
 fld protected final int _seed
 fld protected final java.util.concurrent.atomic.AtomicReference<com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer$TableInfo> _tableInfo
 fld protected int _indexMask
@@ -3430,11 +3895,12 @@ fld protected java.lang.Object _buckets
 fld protected java.lang.String[] _symbols
 fld protected java.util.BitSet _overflows
 fld public final static int HASH_MULT = 33
-meth protected static com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer createRoot(int)
-meth protected void reportTooManyCollisions(int)
+meth protected void _reportTooManyCollisions(int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
 meth protected void verifyInternalConsistency()
 meth public boolean maybeDirty()
+meth public com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer makeChild()
 meth public com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer makeChild(int)
+ anno 0 java.lang.Deprecated()
 meth public int _hashToIndex(int)
 meth public int bucketCount()
 meth public int calcHash(char[],int,int)
@@ -3443,8 +3909,13 @@ meth public int collisionCount()
 meth public int hashSeed()
 meth public int maxCollisionLength()
 meth public int size()
-meth public java.lang.String findSymbol(char[],int,int,int)
+meth public java.lang.String findSymbol(char[],int,int,int) throws java.io.IOException
 meth public static com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer createRoot()
+ anno 0 java.lang.Deprecated()
+meth public static com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer createRoot(com.fasterxml.jackson.core.TokenStreamFactory)
+meth public static com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer createRoot(com.fasterxml.jackson.core.TokenStreamFactory,int)
+meth public static com.fasterxml.jackson.core.sym.CharsToNameCanonicalizer createRoot(int)
+ anno 0 java.lang.Deprecated()
 meth public void release()
 supr java.lang.Object
 hfds DEFAULT_T_SIZE,MAX_COLL_CHAIN_LENGTH,MAX_ENTRIES_FOR_REUSE,MAX_T_SIZE
@@ -3497,6 +3968,8 @@ meth public boolean equals(int[],int)
 meth public static com.fasterxml.jackson.core.sym.NameN construct(java.lang.String,int,int[],int)
 supr com.fasterxml.jackson.core.sym.Name
 hfds q,q1,q2,q3,q4,qlen
+
+CLSS abstract interface com.fasterxml.jackson.core.sym.package-info
 
 CLSS public abstract com.fasterxml.jackson.core.type.ResolvedType
 cons public init()
@@ -3562,6 +4035,8 @@ meth public static com.fasterxml.jackson.core.type.WritableTypeId$Inclusion valu
 meth public static com.fasterxml.jackson.core.type.WritableTypeId$Inclusion[] values()
 supr java.lang.Enum<com.fasterxml.jackson.core.type.WritableTypeId$Inclusion>
 
+CLSS abstract interface com.fasterxml.jackson.core.type.package-info
+
 CLSS public com.fasterxml.jackson.core.util.BufferRecycler
 cons protected init(int,int)
 cons public init()
@@ -3575,25 +4050,40 @@ fld public final static int CHAR_CONCAT_BUFFER = 1
 fld public final static int CHAR_NAME_COPY_BUFFER = 3
 fld public final static int CHAR_TEXT_BUFFER = 2
 fld public final static int CHAR_TOKEN_BUFFER = 0
+intf com.fasterxml.jackson.core.util.RecyclerPool$WithPool<com.fasterxml.jackson.core.util.BufferRecycler>
 meth protected byte[] balloc(int)
 meth protected char[] calloc(int)
 meth protected int byteBufferLength(int)
 meth protected int charBufferLength(int)
 meth public byte[] allocByteBuffer(int,int)
 meth public char[] allocCharBuffer(int,int)
+meth public com.fasterxml.jackson.core.util.BufferRecycler withPool(com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler>)
 meth public final byte[] allocByteBuffer(int)
 meth public final char[] allocCharBuffer(int)
 meth public void releaseByteBuffer(int,byte[])
 meth public void releaseCharBuffer(int,char[])
+meth public void releaseToPool()
 supr java.lang.Object
-hfds BYTE_BUFFER_LENGTHS,CHAR_BUFFER_LENGTHS
+hfds BYTE_BUFFER_LENGTHS,CHAR_BUFFER_LENGTHS,_pool
 
 CLSS public com.fasterxml.jackson.core.util.BufferRecyclers
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld protected final static java.lang.ThreadLocal<java.lang.ref.SoftReference<com.fasterxml.jackson.core.util.BufferRecycler>> _recyclerRef
 fld public final static java.lang.String SYSTEM_PROPERTY_TRACK_REUSABLE_BUFFERS = "com.fasterxml.jackson.core.util.BufferRecyclers.trackReusableBuffers"
+meth public static byte[] encodeAsUTF8(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public static byte[] quoteAsJsonUTF8(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public static char[] quoteAsJsonText(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public static com.fasterxml.jackson.core.io.JsonStringEncoder getJsonStringEncoder()
+ anno 0 java.lang.Deprecated()
 meth public static com.fasterxml.jackson.core.util.BufferRecycler getBufferRecycler()
+ anno 0 java.lang.Deprecated()
 meth public static int releaseBuffers()
+meth public static void quoteAsJsonText(java.lang.CharSequence,java.lang.StringBuilder)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds _bufferRecyclerTracker
 
@@ -3643,17 +4133,25 @@ hfds INDENT_LEVELS,charsPerLevel,eol,indents,serialVersionUID
 CLSS public com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 cons public init()
 cons public init(com.fasterxml.jackson.core.SerializableString)
+ anno 0 java.lang.Deprecated()
 cons public init(com.fasterxml.jackson.core.util.DefaultPrettyPrinter)
 cons public init(com.fasterxml.jackson.core.util.DefaultPrettyPrinter,com.fasterxml.jackson.core.SerializableString)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.core.util.Separators)
 cons public init(java.lang.String)
+ anno 0 java.lang.Deprecated()
 fld protected boolean _spacesInObjectEntries
+ anno 0 java.lang.Deprecated()
+fld protected com.fasterxml.jackson.core.SerializableString _rootSeparator
 fld protected com.fasterxml.jackson.core.util.DefaultPrettyPrinter$Indenter _arrayIndenter
 fld protected com.fasterxml.jackson.core.util.DefaultPrettyPrinter$Indenter _objectIndenter
 fld protected com.fasterxml.jackson.core.util.Separators _separators
-fld protected final com.fasterxml.jackson.core.SerializableString _rootSeparator
 fld protected int _nesting
+fld protected java.lang.String _arrayValueSeparator
+fld protected java.lang.String _objectEntrySeparator
 fld protected java.lang.String _objectFieldValueSeparatorWithSpaces
 fld public final static com.fasterxml.jackson.core.io.SerializedString DEFAULT_ROOT_VALUE_SEPARATOR
+ anno 0 java.lang.Deprecated()
 innr public abstract interface static Indenter
 innr public static FixedSpaceIndenter
 innr public static NopIndenter
@@ -3665,10 +4163,14 @@ meth public com.fasterxml.jackson.core.util.DefaultPrettyPrinter createInstance(
 meth public com.fasterxml.jackson.core.util.DefaultPrettyPrinter withArrayIndenter(com.fasterxml.jackson.core.util.DefaultPrettyPrinter$Indenter)
 meth public com.fasterxml.jackson.core.util.DefaultPrettyPrinter withObjectIndenter(com.fasterxml.jackson.core.util.DefaultPrettyPrinter$Indenter)
 meth public com.fasterxml.jackson.core.util.DefaultPrettyPrinter withRootSeparator(com.fasterxml.jackson.core.SerializableString)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.core.util.DefaultPrettyPrinter withRootSeparator(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.core.util.DefaultPrettyPrinter withSeparators(com.fasterxml.jackson.core.util.Separators)
 meth public com.fasterxml.jackson.core.util.DefaultPrettyPrinter withSpacesInObjectEntries()
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.core.util.DefaultPrettyPrinter withoutSpacesInObjectEntries()
+ anno 0 java.lang.Deprecated()
 meth public void beforeArrayValues(com.fasterxml.jackson.core.JsonGenerator) throws java.io.IOException
 meth public void beforeObjectEntries(com.fasterxml.jackson.core.JsonGenerator) throws java.io.IOException
 meth public void indentArraysWith(com.fasterxml.jackson.core.util.DefaultPrettyPrinter$Indenter)
@@ -3711,6 +4213,8 @@ CLSS public abstract interface com.fasterxml.jackson.core.util.Instantiatable<%0
 meth public abstract {com.fasterxml.jackson.core.util.Instantiatable%0} createInstance()
 
 CLSS public final com.fasterxml.jackson.core.util.InternCache
+cons public init()
+cons public init(int,float,int)
 fld public final static com.fasterxml.jackson.core.util.InternCache instance
 meth public java.lang.String intern(java.lang.String)
 supr java.util.concurrent.ConcurrentHashMap<java.lang.String,java.lang.String>
@@ -3724,6 +4228,7 @@ meth public abstract int getMask()
 CLSS public final com.fasterxml.jackson.core.util.JacksonFeatureSet<%0 extends com.fasterxml.jackson.core.util.JacksonFeature>
 cons protected init(int)
 fld protected int _enabled
+intf java.io.Serializable
 meth public boolean isEnabled({com.fasterxml.jackson.core.util.JacksonFeatureSet%0})
 meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<{com.fasterxml.jackson.core.util.JacksonFeatureSet%0}> with({com.fasterxml.jackson.core.util.JacksonFeatureSet%0})
 meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<{com.fasterxml.jackson.core.util.JacksonFeatureSet%0}> without({com.fasterxml.jackson.core.util.JacksonFeatureSet%0})
@@ -3731,6 +4236,10 @@ meth public int asBitmask()
 meth public static <%0 extends com.fasterxml.jackson.core.util.JacksonFeature> com.fasterxml.jackson.core.util.JacksonFeatureSet<{%%0}> fromBitmask(int)
 meth public static <%0 extends com.fasterxml.jackson.core.util.JacksonFeature> com.fasterxml.jackson.core.util.JacksonFeatureSet<{%%0}> fromDefaults({%%0}[])
 supr java.lang.Object
+hfds serialVersionUID
+
+CLSS public abstract interface com.fasterxml.jackson.core.util.JsonGeneratorDecorator
+meth public abstract com.fasterxml.jackson.core.JsonGenerator decorate(com.fasterxml.jackson.core.JsonFactory,com.fasterxml.jackson.core.JsonGenerator)
 
 CLSS public com.fasterxml.jackson.core.util.JsonGeneratorDelegate
 cons public init(com.fasterxml.jackson.core.JsonGenerator)
@@ -3764,6 +4273,7 @@ meth public com.fasterxml.jackson.core.JsonGenerator useDefaultPrettyPrinter()
 meth public com.fasterxml.jackson.core.JsonStreamContext getOutputContext()
 meth public com.fasterxml.jackson.core.ObjectCodec getCodec()
 meth public com.fasterxml.jackson.core.PrettyPrinter getPrettyPrinter()
+meth public com.fasterxml.jackson.core.StreamWriteConstraints streamWriteConstraints()
 meth public com.fasterxml.jackson.core.Version version()
 meth public com.fasterxml.jackson.core.io.CharacterEscapes getCharacterEscapes()
 meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamWriteCapability> getWriteCapabilities()
@@ -3771,8 +4281,10 @@ meth public int getFeatureMask()
 meth public int getHighestEscapedChar()
 meth public int getOutputBuffered()
 meth public int writeBinary(com.fasterxml.jackson.core.Base64Variant,java.io.InputStream,int) throws java.io.IOException
+meth public java.lang.Object currentValue()
 meth public java.lang.Object getCurrentValue()
 meth public java.lang.Object getOutputTarget()
+meth public void assignCurrentValue(java.lang.Object)
 meth public void close() throws java.io.IOException
 meth public void copyCurrentEvent(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
 meth public void copyCurrentStructure(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
@@ -3805,6 +4317,7 @@ meth public void writeObject(java.lang.Object) throws java.io.IOException
 meth public void writeObjectId(java.lang.Object) throws java.io.IOException
 meth public void writeObjectRef(java.lang.Object) throws java.io.IOException
 meth public void writeOmittedField(java.lang.String) throws java.io.IOException
+meth public void writePOJO(java.lang.Object) throws java.io.IOException
 meth public void writeRaw(char) throws java.io.IOException
 meth public void writeRaw(char[],int,int) throws java.io.IOException
 meth public void writeRaw(com.fasterxml.jackson.core.SerializableString) throws java.io.IOException
@@ -3833,6 +4346,7 @@ supr com.fasterxml.jackson.core.JsonGenerator
 CLSS public com.fasterxml.jackson.core.util.JsonParserDelegate
 cons public init(com.fasterxml.jackson.core.JsonParser)
 fld protected com.fasterxml.jackson.core.JsonParser delegate
+meth public boolean canParseAsync()
 meth public boolean canReadObjectId()
 meth public boolean canReadTypeId()
 meth public boolean canUseSchema(com.fasterxml.jackson.core.FormatSchema)
@@ -3854,6 +4368,8 @@ meth public byte getByteValue() throws java.io.IOException
 meth public byte[] getBinaryValue(com.fasterxml.jackson.core.Base64Variant) throws java.io.IOException
 meth public char[] getTextCharacters() throws java.io.IOException
 meth public com.fasterxml.jackson.core.FormatSchema getSchema()
+meth public com.fasterxml.jackson.core.JsonLocation currentLocation()
+meth public com.fasterxml.jackson.core.JsonLocation currentTokenLocation()
 meth public com.fasterxml.jackson.core.JsonLocation getCurrentLocation()
 meth public com.fasterxml.jackson.core.JsonLocation getTokenLocation()
 meth public com.fasterxml.jackson.core.JsonParser delegate()
@@ -3872,7 +4388,9 @@ meth public com.fasterxml.jackson.core.JsonToken getLastClearedToken()
 meth public com.fasterxml.jackson.core.JsonToken nextToken() throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonToken nextValue() throws java.io.IOException
 meth public com.fasterxml.jackson.core.ObjectCodec getCodec()
+meth public com.fasterxml.jackson.core.StreamReadConstraints streamReadConstraints()
 meth public com.fasterxml.jackson.core.Version version()
+meth public com.fasterxml.jackson.core.async.NonBlockingInputFeeder getNonBlockingInputFeeder()
 meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamReadCapability> getReadCapabilities()
 meth public double getDoubleValue() throws java.io.IOException
 meth public double getValueAsDouble() throws java.io.IOException
@@ -3891,11 +4409,14 @@ meth public int getValueAsInt(int) throws java.io.IOException
 meth public int readBinaryValue(com.fasterxml.jackson.core.Base64Variant,java.io.OutputStream) throws java.io.IOException
 meth public java.lang.Number getNumberValue() throws java.io.IOException
 meth public java.lang.Number getNumberValueExact() throws java.io.IOException
+meth public java.lang.Object currentValue()
 meth public java.lang.Object getCurrentValue()
 meth public java.lang.Object getEmbeddedObject() throws java.io.IOException
 meth public java.lang.Object getInputSource()
+meth public java.lang.Object getNumberValueDeferred() throws java.io.IOException
 meth public java.lang.Object getObjectId() throws java.io.IOException
 meth public java.lang.Object getTypeId() throws java.io.IOException
+meth public java.lang.String currentName() throws java.io.IOException
 meth public java.lang.String getCurrentName() throws java.io.IOException
 meth public java.lang.String getText() throws java.io.IOException
 meth public java.lang.String getValueAsString() throws java.io.IOException
@@ -3906,6 +4427,7 @@ meth public long getLongValue() throws java.io.IOException
 meth public long getValueAsLong() throws java.io.IOException
 meth public long getValueAsLong(long) throws java.io.IOException
 meth public short getShortValue() throws java.io.IOException
+meth public void assignCurrentValue(java.lang.Object)
 meth public void clearCurrentToken()
 meth public void close() throws java.io.IOException
 meth public void finishToken() throws java.io.IOException
@@ -3935,6 +4457,71 @@ meth public static com.fasterxml.jackson.core.util.JsonParserSequence createFlat
 meth public void close() throws java.io.IOException
 supr com.fasterxml.jackson.core.util.JsonParserDelegate
 
+CLSS public final com.fasterxml.jackson.core.util.JsonRecyclerPools
+cons public init()
+innr public static BoundedPool
+innr public static ConcurrentDequePool
+innr public static LockFreePool
+innr public static NonRecyclingPool
+innr public static ThreadLocalPool
+meth public static com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> defaultPool()
+meth public static com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> newBoundedPool(int)
+meth public static com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> newConcurrentDequePool()
+meth public static com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> newLockFreePool()
+meth public static com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> nonRecyclingPool()
+meth public static com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> sharedBoundedPool()
+meth public static com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> sharedConcurrentDequePool()
+meth public static com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> sharedLockFreePool()
+meth public static com.fasterxml.jackson.core.util.RecyclerPool<com.fasterxml.jackson.core.util.BufferRecycler> threadLocalPool()
+supr java.lang.Object
+
+CLSS public static com.fasterxml.jackson.core.util.JsonRecyclerPools$BoundedPool
+ outer com.fasterxml.jackson.core.util.JsonRecyclerPools
+cons protected init(int)
+fld protected final static com.fasterxml.jackson.core.util.JsonRecyclerPools$BoundedPool GLOBAL
+meth protected java.lang.Object readResolve()
+meth public com.fasterxml.jackson.core.util.BufferRecycler createPooled()
+meth public static com.fasterxml.jackson.core.util.JsonRecyclerPools$BoundedPool construct(int)
+supr com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase<com.fasterxml.jackson.core.util.BufferRecycler>
+hfds serialVersionUID
+
+CLSS public static com.fasterxml.jackson.core.util.JsonRecyclerPools$ConcurrentDequePool
+ outer com.fasterxml.jackson.core.util.JsonRecyclerPools
+cons protected init(int)
+fld protected final static com.fasterxml.jackson.core.util.JsonRecyclerPools$ConcurrentDequePool GLOBAL
+meth protected java.lang.Object readResolve()
+meth public com.fasterxml.jackson.core.util.BufferRecycler createPooled()
+meth public static com.fasterxml.jackson.core.util.JsonRecyclerPools$ConcurrentDequePool construct()
+supr com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase<com.fasterxml.jackson.core.util.BufferRecycler>
+hfds serialVersionUID
+
+CLSS public static com.fasterxml.jackson.core.util.JsonRecyclerPools$LockFreePool
+ outer com.fasterxml.jackson.core.util.JsonRecyclerPools
+cons protected init(int)
+fld protected final static com.fasterxml.jackson.core.util.JsonRecyclerPools$LockFreePool GLOBAL
+meth protected java.lang.Object readResolve()
+meth public com.fasterxml.jackson.core.util.BufferRecycler createPooled()
+meth public static com.fasterxml.jackson.core.util.JsonRecyclerPools$LockFreePool construct()
+supr com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase<com.fasterxml.jackson.core.util.BufferRecycler>
+hfds serialVersionUID
+
+CLSS public static com.fasterxml.jackson.core.util.JsonRecyclerPools$NonRecyclingPool
+ outer com.fasterxml.jackson.core.util.JsonRecyclerPools
+cons protected init()
+fld protected final static com.fasterxml.jackson.core.util.JsonRecyclerPools$NonRecyclingPool GLOBAL
+meth protected java.lang.Object readResolve()
+meth public com.fasterxml.jackson.core.util.BufferRecycler acquirePooled()
+supr com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase<com.fasterxml.jackson.core.util.BufferRecycler>
+hfds serialVersionUID
+
+CLSS public static com.fasterxml.jackson.core.util.JsonRecyclerPools$ThreadLocalPool
+ outer com.fasterxml.jackson.core.util.JsonRecyclerPools
+fld protected final static com.fasterxml.jackson.core.util.JsonRecyclerPools$ThreadLocalPool GLOBAL
+meth protected java.lang.Object readResolve()
+meth public com.fasterxml.jackson.core.util.BufferRecycler acquirePooled()
+supr com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase<com.fasterxml.jackson.core.util.BufferRecycler>
+hfds serialVersionUID
+
 CLSS public com.fasterxml.jackson.core.util.MinimalPrettyPrinter
 cons public init()
 cons public init(java.lang.String)
@@ -3957,6 +4544,95 @@ meth public void writeStartObject(com.fasterxml.jackson.core.JsonGenerator) thro
 supr java.lang.Object
 hfds serialVersionUID
 
+CLSS public final com.fasterxml.jackson.core.util.ReadConstrainedTextBuffer
+cons public init(com.fasterxml.jackson.core.StreamReadConstraints,com.fasterxml.jackson.core.util.BufferRecycler)
+meth protected void validateStringLength(int) throws com.fasterxml.jackson.core.exc.StreamConstraintsException
+supr com.fasterxml.jackson.core.util.TextBuffer
+hfds _streamReadConstraints
+
+CLSS public abstract interface com.fasterxml.jackson.core.util.RecyclerPool<%0 extends com.fasterxml.jackson.core.util.RecyclerPool$WithPool<{com.fasterxml.jackson.core.util.RecyclerPool%0}>>
+innr public abstract interface static WithPool
+innr public abstract static BoundedPoolBase
+innr public abstract static ConcurrentDequePoolBase
+innr public abstract static LockFreePoolBase
+innr public abstract static NonRecyclingPoolBase
+innr public abstract static StatefulImplBase
+innr public abstract static ThreadLocalPoolBase
+intf java.io.Serializable
+meth public abstract void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool%0})
+meth public abstract {com.fasterxml.jackson.core.util.RecyclerPool%0} acquirePooled()
+meth public {com.fasterxml.jackson.core.util.RecyclerPool%0} acquireAndLinkPooled()
+
+CLSS public abstract static com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase<%0 extends com.fasterxml.jackson.core.util.RecyclerPool$WithPool<{com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase%0}>>
+ outer com.fasterxml.jackson.core.util.RecyclerPool
+cons protected init(int)
+fld public final static int DEFAULT_CAPACITY = 100
+meth public int capacity()
+meth public void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase%0})
+meth public {com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase%0} acquirePooled()
+supr com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase<{com.fasterxml.jackson.core.util.RecyclerPool$BoundedPoolBase%0}>
+hfds capacity,pool,serialVersionUID
+
+CLSS public abstract static com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase<%0 extends com.fasterxml.jackson.core.util.RecyclerPool$WithPool<{com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase%0}>>
+ outer com.fasterxml.jackson.core.util.RecyclerPool
+cons protected init(int)
+fld protected final java.util.Deque<{com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase%0}> pool
+meth public void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase%0})
+meth public {com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase%0} acquirePooled()
+supr com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase<{com.fasterxml.jackson.core.util.RecyclerPool$ConcurrentDequePoolBase%0}>
+hfds serialVersionUID
+
+CLSS public abstract static com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase<%0 extends com.fasterxml.jackson.core.util.RecyclerPool$WithPool<{com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase%0}>>
+ outer com.fasterxml.jackson.core.util.RecyclerPool
+cons protected init(int)
+innr protected static Node
+meth public void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase%0})
+meth public {com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase%0} acquirePooled()
+supr com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase<{com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase%0}>
+hfds head,serialVersionUID
+
+CLSS protected static com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase$Node<%0 extends java.lang.Object>
+ outer com.fasterxml.jackson.core.util.RecyclerPool$LockFreePoolBase
+supr java.lang.Object
+hfds next,value
+
+CLSS public abstract static com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase<%0 extends com.fasterxml.jackson.core.util.RecyclerPool$WithPool<{com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase%0}>>
+ outer com.fasterxml.jackson.core.util.RecyclerPool
+cons public init()
+intf com.fasterxml.jackson.core.util.RecyclerPool<{com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase%0}>
+meth public abstract {com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase%0} acquirePooled()
+meth public void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase%0})
+meth public {com.fasterxml.jackson.core.util.RecyclerPool$NonRecyclingPoolBase%0} acquireAndLinkPooled()
+supr java.lang.Object
+hfds serialVersionUID
+
+CLSS public abstract static com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase<%0 extends com.fasterxml.jackson.core.util.RecyclerPool$WithPool<{com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase%0}>>
+ outer com.fasterxml.jackson.core.util.RecyclerPool
+cons protected init(int)
+fld protected final int _serialization
+fld public final static int SERIALIZATION_NON_SHARED = 1
+fld public final static int SERIALIZATION_SHARED = -1
+intf com.fasterxml.jackson.core.util.RecyclerPool<{com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase%0}>
+meth protected java.util.Optional<com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase<{com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase%0}>> _resolveToShared(com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase<{com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase%0}>)
+meth public abstract {com.fasterxml.jackson.core.util.RecyclerPool$StatefulImplBase%0} createPooled()
+supr java.lang.Object
+hfds serialVersionUID
+
+CLSS public abstract static com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase<%0 extends com.fasterxml.jackson.core.util.RecyclerPool$WithPool<{com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase%0}>>
+ outer com.fasterxml.jackson.core.util.RecyclerPool
+cons protected init()
+intf com.fasterxml.jackson.core.util.RecyclerPool<{com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase%0}>
+meth public abstract {com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase%0} acquirePooled()
+meth public void releasePooled({com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase%0})
+meth public {com.fasterxml.jackson.core.util.RecyclerPool$ThreadLocalPoolBase%0} acquireAndLinkPooled()
+supr java.lang.Object
+hfds serialVersionUID
+
+CLSS public abstract interface static com.fasterxml.jackson.core.util.RecyclerPool$WithPool<%0 extends com.fasterxml.jackson.core.util.RecyclerPool$WithPool<{com.fasterxml.jackson.core.util.RecyclerPool$WithPool%0}>>
+ outer com.fasterxml.jackson.core.util.RecyclerPool
+meth public abstract void releaseToPool()
+meth public abstract {com.fasterxml.jackson.core.util.RecyclerPool$WithPool%0} withPool(com.fasterxml.jackson.core.util.RecyclerPool<{com.fasterxml.jackson.core.util.RecyclerPool$WithPool%0}>)
+
 CLSS public com.fasterxml.jackson.core.util.RequestPayload
 cons public init(byte[],java.lang.String)
 cons public init(java.lang.CharSequence)
@@ -3972,52 +4648,86 @@ hfds serialVersionUID
 CLSS public com.fasterxml.jackson.core.util.Separators
 cons public init()
 cons public init(char,char,char)
+cons public init(java.lang.String,char,com.fasterxml.jackson.core.util.Separators$Spacing,char,com.fasterxml.jackson.core.util.Separators$Spacing,char,com.fasterxml.jackson.core.util.Separators$Spacing)
+fld public final static java.lang.String DEFAULT_ROOT_VALUE_SEPARATOR = " "
+innr public final static !enum Spacing
 intf java.io.Serializable
 meth public char getArrayValueSeparator()
 meth public char getObjectEntrySeparator()
 meth public char getObjectFieldValueSeparator()
 meth public com.fasterxml.jackson.core.util.Separators withArrayValueSeparator(char)
+meth public com.fasterxml.jackson.core.util.Separators withArrayValueSpacing(com.fasterxml.jackson.core.util.Separators$Spacing)
 meth public com.fasterxml.jackson.core.util.Separators withObjectEntrySeparator(char)
+meth public com.fasterxml.jackson.core.util.Separators withObjectEntrySpacing(com.fasterxml.jackson.core.util.Separators$Spacing)
 meth public com.fasterxml.jackson.core.util.Separators withObjectFieldValueSeparator(char)
+meth public com.fasterxml.jackson.core.util.Separators withObjectFieldValueSpacing(com.fasterxml.jackson.core.util.Separators$Spacing)
+meth public com.fasterxml.jackson.core.util.Separators withRootSeparator(java.lang.String)
+meth public com.fasterxml.jackson.core.util.Separators$Spacing getArrayValueSpacing()
+meth public com.fasterxml.jackson.core.util.Separators$Spacing getObjectEntrySpacing()
+meth public com.fasterxml.jackson.core.util.Separators$Spacing getObjectFieldValueSpacing()
+meth public java.lang.String getRootSeparator()
 meth public static com.fasterxml.jackson.core.util.Separators createDefaultInstance()
 supr java.lang.Object
-hfds arrayValueSeparator,objectEntrySeparator,objectFieldValueSeparator,serialVersionUID
+hfds arrayValueSeparator,arrayValueSpacing,objectEntrySeparator,objectEntrySpacing,objectFieldValueSeparator,objectFieldValueSpacing,rootSeparator,serialVersionUID
 
-CLSS public final com.fasterxml.jackson.core.util.TextBuffer
+CLSS public final static !enum com.fasterxml.jackson.core.util.Separators$Spacing
+ outer com.fasterxml.jackson.core.util.Separators
+fld public final static com.fasterxml.jackson.core.util.Separators$Spacing AFTER
+fld public final static com.fasterxml.jackson.core.util.Separators$Spacing BEFORE
+fld public final static com.fasterxml.jackson.core.util.Separators$Spacing BOTH
+fld public final static com.fasterxml.jackson.core.util.Separators$Spacing NONE
+meth public java.lang.String apply(char)
+meth public java.lang.String spacesAfter()
+meth public java.lang.String spacesBefore()
+meth public static com.fasterxml.jackson.core.util.Separators$Spacing valueOf(java.lang.String)
+meth public static com.fasterxml.jackson.core.util.Separators$Spacing[] values()
+supr java.lang.Enum<com.fasterxml.jackson.core.util.Separators$Spacing>
+hfds spacesAfter,spacesBefore
+
+CLSS public com.fasterxml.jackson.core.util.TextBuffer
 cons protected init(com.fasterxml.jackson.core.util.BufferRecycler,char[])
 cons public init(com.fasterxml.jackson.core.util.BufferRecycler)
+meth protected void _reportBufferOverflow(int,int)
+meth protected void validateStringLength(int) throws java.io.IOException
 meth public boolean hasTextAsCharacters()
-meth public char[] contentsAsArray()
+meth public char[] contentsAsArray() throws java.io.IOException
 meth public char[] emptyAndGetCurrentSegment()
 meth public char[] expandCurrentSegment()
 meth public char[] expandCurrentSegment(int)
-meth public char[] finishCurrentSegment()
+meth public char[] finishCurrentSegment() throws java.io.IOException
 meth public char[] getBufferWithoutReset()
 meth public char[] getCurrentSegment()
-meth public char[] getTextBuffer()
+meth public char[] getTextBuffer() throws java.io.IOException
 meth public double contentsAsDouble()
+ anno 0 java.lang.Deprecated()
+meth public double contentsAsDouble(boolean)
+meth public float contentsAsFloat()
+ anno 0 java.lang.Deprecated()
+meth public float contentsAsFloat(boolean)
 meth public int contentsAsInt(boolean)
 meth public int contentsToWriter(java.io.Writer) throws java.io.IOException
 meth public int getCurrentSegmentSize()
 meth public int getTextOffset()
 meth public int size()
-meth public java.lang.String contentsAsString()
-meth public java.lang.String setCurrentAndReturn(int)
+meth public java.lang.String contentsAsString() throws java.io.IOException
+meth public java.lang.String finishAndReturn(int,boolean) throws java.io.IOException
+meth public java.lang.String setCurrentAndReturn(int) throws java.io.IOException
 meth public java.lang.String toString()
 meth public java.math.BigDecimal contentsAsDecimal()
+ anno 0 java.lang.Deprecated()
 meth public long contentsAsLong(boolean)
 meth public static com.fasterxml.jackson.core.util.TextBuffer fromInitial(char[])
-meth public void append(char)
-meth public void append(char[],int,int)
-meth public void append(java.lang.String,int,int)
+meth public void append(char) throws java.io.IOException
+meth public void append(char[],int,int) throws java.io.IOException
+meth public void append(java.lang.String,int,int) throws java.io.IOException
 meth public void ensureNotShared()
 meth public void releaseBuffers()
 meth public void resetWith(char)
-meth public void resetWithCopy(char[],int,int)
-meth public void resetWithCopy(java.lang.String,int,int)
+meth public void resetWithCopy(char[],int,int) throws java.io.IOException
+meth public void resetWithCopy(java.lang.String,int,int) throws java.io.IOException
 meth public void resetWithEmpty()
 meth public void resetWithShared(char[],int,int)
-meth public void resetWithString(java.lang.String)
+meth public void resetWithString(java.lang.String) throws java.io.IOException
 meth public void setCurrentLength(int)
 supr java.lang.Object
 hfds MAX_SEGMENT_LEN,MIN_SEGMENT_LEN,NO_CHARS,_allocator,_currentSegment,_currentSize,_hasSegments,_inputBuffer,_inputLen,_inputStart,_resultArray,_resultString,_segmentSize,_segments
@@ -4027,14 +4737,18 @@ cons protected init()
 meth protected static int parseVersionPart(java.lang.String)
 meth public com.fasterxml.jackson.core.Version version()
  anno 0 java.lang.Deprecated()
+meth public final static <%0 extends java.lang.Object> {%%0} throwInternalReturnAny()
 meth public final static void throwInternal()
 meth public static com.fasterxml.jackson.core.Version mavenVersionFor(java.lang.ClassLoader,java.lang.String,java.lang.String)
  anno 0 java.lang.Deprecated()
 meth public static com.fasterxml.jackson.core.Version packageVersionFor(java.lang.Class<?>)
+ anno 0 java.lang.Deprecated()
 meth public static com.fasterxml.jackson.core.Version parseVersion(java.lang.String,java.lang.String,java.lang.String)
 meth public static com.fasterxml.jackson.core.Version versionFor(java.lang.Class<?>)
 supr java.lang.Object
 hfds V_SEP
+
+CLSS abstract interface com.fasterxml.jackson.core.util.package-info
 
 CLSS public abstract com.fasterxml.jackson.databind.AbstractTypeResolver
 cons public init()
@@ -4046,6 +4760,7 @@ supr java.lang.Object
 
 CLSS public abstract com.fasterxml.jackson.databind.AnnotationIntrospector
 cons public init()
+innr public abstract interface static XmlExtensions
 innr public static ReferenceProperty
 intf com.fasterxml.jackson.core.Versioned
 intf java.io.Serializable
@@ -4071,14 +4786,11 @@ meth public com.fasterxml.jackson.annotation.JsonFormat$Value findFormat(com.fas
 meth public com.fasterxml.jackson.annotation.JsonIgnoreProperties$Value findPropertyIgnoralByName(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.annotation.JsonIgnoreProperties$Value findPropertyIgnorals(com.fasterxml.jackson.databind.introspect.Annotated)
  anno 0 java.lang.Deprecated()
-meth public com.fasterxml.jackson.annotation.JsonInclude$Include findSerializationInclusion(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.annotation.JsonInclude$Include)
- anno 0 java.lang.Deprecated()
-meth public com.fasterxml.jackson.annotation.JsonInclude$Include findSerializationInclusionForContent(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.annotation.JsonInclude$Include)
- anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.annotation.JsonInclude$Value findPropertyInclusion(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.annotation.JsonIncludeProperties$Value findPropertyInclusionByName(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.annotation.JsonProperty$Access findPropertyAccess(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.annotation.JsonSetter$Value findSetterInfo(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Value findPolymorphicTypeInfo(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.databind.AnnotationIntrospector$ReferenceProperty findReferenceType(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 meth public com.fasterxml.jackson.databind.JavaType refineDeserializationType(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JavaType refineSerializationType(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -4108,27 +4820,18 @@ meth public java.lang.Boolean hasAsValue(com.fasterxml.jackson.databind.introspe
 meth public java.lang.Boolean hasRequiredMarker(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 meth public java.lang.Boolean isIgnorableType(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public java.lang.Boolean isTypeId(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
-meth public java.lang.Class<?> findDeserializationContentType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findDeserializationKeyType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findDeserializationType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
 meth public java.lang.Class<?> findPOJOBuilder(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
-meth public java.lang.Class<?> findSerializationContentType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findSerializationKeyType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findSerializationType(com.fasterxml.jackson.databind.introspect.Annotated)
- anno 0 java.lang.Deprecated()
 meth public java.lang.Class<?>[] findViews(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Enum<?> findDefaultEnumValue(com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[])
 meth public java.lang.Enum<?> findDefaultEnumValue(java.lang.Class<java.lang.Enum<?>>)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.Integer findPropertyIndex(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findContentDeserializer(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findContentSerializer(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findDeserializationContentConverter(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 meth public java.lang.Object findDeserializationConverter(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findDeserializer(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Object findEnumNamingStrategy(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public java.lang.Object findFilterId(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findInjectableValueId(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
  anno 0 java.lang.Deprecated()
@@ -4147,7 +4850,9 @@ meth public java.lang.String findImplicitPropertyName(com.fasterxml.jackson.data
 meth public java.lang.String findPropertyDefaultValue(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.String findPropertyDescription(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.String findTypeName(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
+meth public java.lang.String[] findEnumValues(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[],java.lang.String[])
 meth public java.lang.String[] findEnumValues(java.lang.Class<?>,java.lang.Enum<?>[],java.lang.String[])
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String[] findPropertiesToIgnore(com.fasterxml.jackson.databind.introspect.Annotated,boolean)
  anno 0 java.lang.Deprecated()
 meth public java.lang.String[] findSerializationPropertyOrder(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
@@ -4158,7 +4863,9 @@ meth public java.util.List<com.fasterxml.jackson.databind.jsontype.NamedType> fi
 meth public static com.fasterxml.jackson.databind.AnnotationIntrospector nopInstance()
 meth public static com.fasterxml.jackson.databind.AnnotationIntrospector pair(com.fasterxml.jackson.databind.AnnotationIntrospector,com.fasterxml.jackson.databind.AnnotationIntrospector)
 meth public void findAndAddVirtualProperties(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter>)
+meth public void findEnumAliases(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[],java.lang.String[][])
 meth public void findEnumAliases(java.lang.Class<?>,java.lang.Enum<?>[],java.lang.String[][])
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 
 CLSS public static com.fasterxml.jackson.databind.AnnotationIntrospector$ReferenceProperty
@@ -4182,11 +4889,20 @@ meth public static com.fasterxml.jackson.databind.AnnotationIntrospector$Referen
 meth public static com.fasterxml.jackson.databind.AnnotationIntrospector$ReferenceProperty$Type[] values()
 supr java.lang.Enum<com.fasterxml.jackson.databind.AnnotationIntrospector$ReferenceProperty$Type>
 
+CLSS public abstract interface static com.fasterxml.jackson.databind.AnnotationIntrospector$XmlExtensions
+ outer com.fasterxml.jackson.databind.AnnotationIntrospector
+meth public abstract java.lang.Boolean isOutputAsAttribute(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
+meth public abstract java.lang.Boolean isOutputAsCData(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
+meth public abstract java.lang.Boolean isOutputAsText(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
+meth public abstract java.lang.String findNamespace(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
+
 CLSS public abstract com.fasterxml.jackson.databind.BeanDescription
 cons protected init(com.fasterxml.jackson.databind.JavaType)
 fld protected final com.fasterxml.jackson.databind.JavaType _type
 meth public abstract !varargs java.lang.reflect.Constructor<?> findSingleArgConstructor(java.lang.Class<?>[])
+ anno 0 java.lang.Deprecated()
 meth public abstract !varargs java.lang.reflect.Method findFactoryMethod(java.lang.Class<?>[])
+ anno 0 java.lang.Deprecated()
 meth public abstract boolean hasKnownClassAnnotations()
 meth public abstract com.fasterxml.jackson.annotation.JsonFormat$Value findExpectedFormat(com.fasterxml.jackson.annotation.JsonFormat$Value)
 meth public abstract com.fasterxml.jackson.annotation.JsonInclude$Value findPropertyInclusion(com.fasterxml.jackson.annotation.JsonInclude$Value)
@@ -4210,6 +4926,8 @@ meth public abstract com.fasterxml.jackson.databind.util.Converter<java.lang.Obj
 meth public abstract java.lang.Class<?> findPOJOBuilder()
 meth public abstract java.lang.Class<?>[] findDefaultViews()
 meth public abstract java.lang.Object instantiateBean(boolean)
+meth public abstract java.util.List<com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata<com.fasterxml.jackson.databind.introspect.AnnotatedConstructor,com.fasterxml.jackson.annotation.JsonCreator$Mode>> getConstructorsWithMode()
+meth public abstract java.util.List<com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata<com.fasterxml.jackson.databind.introspect.AnnotatedMethod,com.fasterxml.jackson.annotation.JsonCreator$Mode>> getFactoryMethodsWithMode()
 meth public abstract java.util.List<com.fasterxml.jackson.databind.introspect.AnnotatedConstructor> getConstructors()
 meth public abstract java.util.List<com.fasterxml.jackson.databind.introspect.AnnotatedMethod> getFactoryMethods()
 meth public abstract java.util.List<com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition> findBackReferences()
@@ -4219,6 +4937,7 @@ meth public abstract java.util.Map<java.lang.String,com.fasterxml.jackson.databi
  anno 0 java.lang.Deprecated()
 meth public abstract java.util.Set<java.lang.String> getIgnoredPropertyNames()
 meth public boolean isNonStaticInnerClass()
+meth public boolean isRecordType()
 meth public com.fasterxml.jackson.databind.JavaType getType()
 meth public com.fasterxml.jackson.databind.introspect.AnnotatedMember findAnySetterField()
  anno 0 java.lang.Deprecated()
@@ -4322,10 +5041,12 @@ meth public <%0 extends java.lang.Object> {%%0} reportBadDefinition(java.lang.Cl
 meth public abstract <%0 extends java.lang.Object> {%%0} reportBadDefinition(com.fasterxml.jackson.databind.JavaType,java.lang.String) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public abstract boolean canOverrideAccessModifiers()
 meth public abstract boolean isEnabled(com.fasterxml.jackson.databind.MapperFeature)
+meth public abstract boolean isEnabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public abstract com.fasterxml.jackson.annotation.JsonFormat$Value getDefaultPropertyFormat(java.lang.Class<?>)
 meth public abstract com.fasterxml.jackson.databind.AnnotationIntrospector getAnnotationIntrospector()
 meth public abstract com.fasterxml.jackson.databind.DatabindContext setAttribute(java.lang.Object,java.lang.Object)
 meth public abstract com.fasterxml.jackson.databind.JavaType constructSpecializedType(com.fasterxml.jackson.databind.JavaType,java.lang.Class<?>)
+meth public abstract com.fasterxml.jackson.databind.cfg.DatatypeFeatures getDatatypeFeatures()
 meth public abstract com.fasterxml.jackson.databind.cfg.MapperConfig<?> getConfig()
 meth public abstract com.fasterxml.jackson.databind.type.TypeFactory getTypeFactory()
 meth public abstract java.lang.Class<?> getActiveView()
@@ -4341,15 +5062,22 @@ meth public com.fasterxml.jackson.databind.util.Converter<java.lang.Object,java.
 supr java.lang.Object
 hfds MAX_ERROR_STR_LEN
 
+CLSS public abstract com.fasterxml.jackson.databind.DatabindException
+cons protected init(java.lang.String)
+cons protected init(java.lang.String,com.fasterxml.jackson.core.JsonLocation)
+cons protected init(java.lang.String,com.fasterxml.jackson.core.JsonLocation,java.lang.Throwable)
+cons protected init(java.lang.String,java.lang.Throwable)
+meth public abstract void prependPath(java.lang.Object,int)
+meth public abstract void prependPath(java.lang.Object,java.lang.String)
+supr com.fasterxml.jackson.core.JsonProcessingException
+hfds serialVersionUID
+
 CLSS public final com.fasterxml.jackson.databind.DeserializationConfig
 cons protected init(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.cfg.ContextAttributes)
+cons protected init(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.cfg.DatatypeFeatures)
 cons protected init(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver)
-cons protected init(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides)
- anno 0 java.lang.Deprecated()
 cons protected init(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.jsontype.SubtypeResolver,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides,com.fasterxml.jackson.databind.cfg.CoercionConfigs)
-cons public init(com.fasterxml.jackson.databind.cfg.BaseSettings,com.fasterxml.jackson.databind.jsontype.SubtypeResolver,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides)
- anno 0 java.lang.Deprecated()
-cons public init(com.fasterxml.jackson.databind.cfg.BaseSettings,com.fasterxml.jackson.databind.jsontype.SubtypeResolver,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides,com.fasterxml.jackson.databind.cfg.CoercionConfigs)
+cons public init(com.fasterxml.jackson.databind.cfg.BaseSettings,com.fasterxml.jackson.databind.jsontype.SubtypeResolver,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides,com.fasterxml.jackson.databind.cfg.CoercionConfigs,com.fasterxml.jackson.databind.cfg.DatatypeFeatures)
 fld protected final com.fasterxml.jackson.databind.cfg.CoercionConfigs _coercionConfigs
 fld protected final com.fasterxml.jackson.databind.cfg.ConstructorDetector _ctorDetector
 fld protected final com.fasterxml.jackson.databind.node.JsonNodeFactory _nodeFactory
@@ -4361,8 +5089,9 @@ fld protected final int _parserFeatures
 fld protected final int _parserFeaturesToChange
 intf java.io.Serializable
 meth protected com.fasterxml.jackson.databind.cfg.BaseSettings getBaseSettings()
+meth protected final com.fasterxml.jackson.databind.DeserializationConfig _with(com.fasterxml.jackson.databind.cfg.DatatypeFeatures)
 meth protected final com.fasterxml.jackson.databind.DeserializationConfig _withBase(com.fasterxml.jackson.databind.cfg.BaseSettings)
-meth protected final com.fasterxml.jackson.databind.DeserializationConfig _withMapperFeatures(int)
+meth protected final com.fasterxml.jackson.databind.DeserializationConfig _withMapperFeatures(long)
 meth public !varargs com.fasterxml.jackson.databind.DeserializationConfig with(com.fasterxml.jackson.databind.DeserializationFeature,com.fasterxml.jackson.databind.DeserializationFeature[])
 meth public !varargs com.fasterxml.jackson.databind.DeserializationConfig withFeatures(com.fasterxml.jackson.core.FormatFeature[])
 meth public !varargs com.fasterxml.jackson.databind.DeserializationConfig withFeatures(com.fasterxml.jackson.core.JsonParser$Feature[])
@@ -4402,6 +5131,7 @@ meth public final boolean hasDeserializationFeatures(int)
 meth public final boolean hasSomeOfFeatures(int)
 meth public final boolean isEnabled(com.fasterxml.jackson.core.JsonParser$Feature,com.fasterxml.jackson.core.JsonFactory)
 meth public final boolean isEnabled(com.fasterxml.jackson.databind.DeserializationFeature)
+meth public final boolean isEnabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public final boolean requiresFullValue()
 meth public final com.fasterxml.jackson.databind.node.JsonNodeFactory getNodeFactory()
 meth public final int getDeserializationFeatures()
@@ -4412,8 +5142,8 @@ CLSS public abstract com.fasterxml.jackson.databind.DeserializationContext
 cons protected init(com.fasterxml.jackson.databind.DeserializationContext)
 cons protected init(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.DeserializationConfig)
 cons protected init(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.InjectableValues)
+cons protected init(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.DeserializerCache)
 cons protected init(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.DeserializerFactory)
-cons protected init(com.fasterxml.jackson.databind.deser.DeserializerFactory)
 cons protected init(com.fasterxml.jackson.databind.deser.DeserializerFactory,com.fasterxml.jackson.databind.deser.DeserializerCache)
 fld protected com.fasterxml.jackson.core.JsonParser _parser
 fld protected com.fasterxml.jackson.databind.cfg.ContextAttributes _attributes
@@ -4432,8 +5162,6 @@ intf java.io.Serializable
 meth protected boolean _isCompatible(java.lang.Class<?>,java.lang.Object)
 meth protected java.lang.String _shapeForToken(com.fasterxml.jackson.core.JsonToken)
 meth protected java.text.DateFormat _getDateFormat()
-meth protected java.text.DateFormat getDateFormat()
- anno 0 java.lang.Deprecated()
 meth public !varargs <%0 extends java.lang.Object> {%%0} reportBadCoercion(com.fasterxml.jackson.databind.JsonDeserializer<?>,java.lang.Class<?>,java.lang.Object,java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public !varargs <%0 extends java.lang.Object> {%%0} reportBadPropertyDefinition(com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition,java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public !varargs <%0 extends java.lang.Object> {%%0} reportBadTypeDefinition(com.fasterxml.jackson.databind.BeanDescription,java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -4443,30 +5171,22 @@ meth public !varargs <%0 extends java.lang.Object> {%%0} reportInputMismatch(com
 meth public !varargs <%0 extends java.lang.Object> {%%0} reportInputMismatch(java.lang.Class<?>,java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public !varargs <%0 extends java.lang.Object> {%%0} reportPropertyInputMismatch(com.fasterxml.jackson.databind.JavaType,java.lang.String,java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public !varargs <%0 extends java.lang.Object> {%%0} reportPropertyInputMismatch(java.lang.Class<?>,java.lang.String,java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
-meth public !varargs com.fasterxml.jackson.databind.JsonMappingException mappingException(java.lang.String,java.lang.Object[])
- anno 0 java.lang.Deprecated()
 meth public !varargs java.lang.Object handleMissingInstantiator(java.lang.Class<?>,com.fasterxml.jackson.databind.deser.ValueInstantiator,com.fasterxml.jackson.core.JsonParser,java.lang.String,java.lang.Object[]) throws java.io.IOException
 meth public !varargs java.lang.Object handleUnexpectedToken(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.core.JsonToken,com.fasterxml.jackson.core.JsonParser,java.lang.String,java.lang.Object[]) throws java.io.IOException
 meth public !varargs java.lang.Object handleUnexpectedToken(java.lang.Class<?>,com.fasterxml.jackson.core.JsonToken,com.fasterxml.jackson.core.JsonParser,java.lang.String,java.lang.Object[]) throws java.io.IOException
 meth public !varargs java.lang.Object handleWeirdKey(java.lang.Class<?>,java.lang.String,java.lang.String,java.lang.Object[]) throws java.io.IOException
 meth public !varargs java.lang.Object handleWeirdNumberValue(java.lang.Class<?>,java.lang.Number,java.lang.String,java.lang.Object[]) throws java.io.IOException
 meth public !varargs java.lang.Object handleWeirdStringValue(java.lang.Class<?>,java.lang.String,java.lang.String,java.lang.Object[]) throws java.io.IOException
-meth public !varargs void reportMappingException(java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
- anno 0 java.lang.Deprecated()
-meth public !varargs void reportMissingContent(java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
- anno 0 java.lang.Deprecated()
-meth public !varargs void reportWrongTokenException(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.core.JsonToken,java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
- anno 0 java.lang.Deprecated()
 meth public !varargs void reportWrongTokenException(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.core.JsonToken,java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public !varargs void reportWrongTokenException(com.fasterxml.jackson.databind.JsonDeserializer<?>,com.fasterxml.jackson.core.JsonToken,java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public !varargs void reportWrongTokenException(java.lang.Class<?>,com.fasterxml.jackson.core.JsonToken,java.lang.String,java.lang.Object[]) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public <%0 extends java.lang.Object> {%%0} readPropertyValue(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.JavaType) throws java.io.IOException
 meth public <%0 extends java.lang.Object> {%%0} readPropertyValue(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.BeanProperty,java.lang.Class<{%%0}>) throws java.io.IOException
+meth public <%0 extends java.lang.Object> {%%0} readTreeAsValue(com.fasterxml.jackson.databind.JsonNode,com.fasterxml.jackson.databind.JavaType) throws java.io.IOException
+meth public <%0 extends java.lang.Object> {%%0} readTreeAsValue(com.fasterxml.jackson.databind.JsonNode,java.lang.Class<{%%0}>) throws java.io.IOException
 meth public <%0 extends java.lang.Object> {%%0} readValue(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.JavaType) throws java.io.IOException
 meth public <%0 extends java.lang.Object> {%%0} readValue(com.fasterxml.jackson.core.JsonParser,java.lang.Class<{%%0}>) throws java.io.IOException
 meth public <%0 extends java.lang.Object> {%%0} reportBadDefinition(com.fasterxml.jackson.databind.JavaType,java.lang.String) throws com.fasterxml.jackson.databind.JsonMappingException
-meth public <%0 extends java.lang.Object> {%%0} reportBadMerge(com.fasterxml.jackson.databind.JsonDeserializer<?>) throws com.fasterxml.jackson.databind.JsonMappingException
- anno 0 java.lang.Deprecated()
 meth public <%0 extends java.lang.Object> {%%0} reportTrailingTokens(java.lang.Class<?>,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.core.JsonToken) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public <%0 extends java.lang.Object> {%%0} reportUnresolvedObjectId(com.fasterxml.jackson.databind.deser.impl.ObjectIdReader,java.lang.Object) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public abstract com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> deserializerInstance(com.fasterxml.jackson.databind.introspect.Annotated,java.lang.Object) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -4483,38 +5203,29 @@ meth public com.fasterxml.jackson.databind.JavaType handleMissingTypeId(com.fast
 meth public com.fasterxml.jackson.databind.JavaType handleUnknownTypeId(com.fasterxml.jackson.databind.JavaType,java.lang.String,com.fasterxml.jackson.databind.jsontype.TypeIdResolver,java.lang.String) throws java.io.IOException
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> handlePrimaryContextualization(com.fasterxml.jackson.databind.JsonDeserializer<?>,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> handleSecondaryContextualization(com.fasterxml.jackson.databind.JsonDeserializer<?>,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
-meth public com.fasterxml.jackson.databind.JsonMappingException endOfInputException(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonMappingException instantiationException(java.lang.Class<?>,java.lang.String)
 meth public com.fasterxml.jackson.databind.JsonMappingException instantiationException(java.lang.Class<?>,java.lang.Throwable)
 meth public com.fasterxml.jackson.databind.JsonMappingException invalidTypeIdException(com.fasterxml.jackson.databind.JavaType,java.lang.String,java.lang.String)
-meth public com.fasterxml.jackson.databind.JsonMappingException mappingException(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
-meth public com.fasterxml.jackson.databind.JsonMappingException mappingException(java.lang.Class<?>,com.fasterxml.jackson.core.JsonToken)
- anno 0 java.lang.Deprecated()
-meth public com.fasterxml.jackson.databind.JsonMappingException mappingException(java.lang.String)
- anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonMappingException missingTypeIdException(com.fasterxml.jackson.databind.JavaType,java.lang.String)
-meth public com.fasterxml.jackson.databind.JsonMappingException unknownTypeException(com.fasterxml.jackson.databind.JavaType,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonMappingException weirdKeyException(java.lang.Class<?>,java.lang.String,java.lang.String)
 meth public com.fasterxml.jackson.databind.JsonMappingException weirdNativeValueException(java.lang.Object,java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.JsonMappingException weirdNumberException(java.lang.Number,java.lang.Class<?>,java.lang.String)
 meth public com.fasterxml.jackson.databind.JsonMappingException weirdStringException(java.lang.String,java.lang.Class<?>,java.lang.String)
-meth public com.fasterxml.jackson.databind.JsonMappingException wrongTokenException(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.core.JsonToken,java.lang.String)
- anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonMappingException wrongTokenException(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.core.JsonToken,java.lang.String)
 meth public com.fasterxml.jackson.databind.JsonMappingException wrongTokenException(com.fasterxml.jackson.core.JsonParser,java.lang.Class<?>,com.fasterxml.jackson.core.JsonToken,java.lang.String)
 meth public com.fasterxml.jackson.databind.JsonNode readTree(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
 meth public com.fasterxml.jackson.databind.cfg.CoercionAction findCoercionAction(com.fasterxml.jackson.databind.type.LogicalType,java.lang.Class<?>,com.fasterxml.jackson.databind.cfg.CoercionInputShape)
 meth public com.fasterxml.jackson.databind.cfg.CoercionAction findCoercionFromBlankString(com.fasterxml.jackson.databind.type.LogicalType,java.lang.Class<?>,com.fasterxml.jackson.databind.cfg.CoercionAction)
 meth public com.fasterxml.jackson.databind.deser.DeserializerFactory getFactory()
+meth public com.fasterxml.jackson.databind.util.TokenBuffer bufferAsCopyOfValue(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
+meth public com.fasterxml.jackson.databind.util.TokenBuffer bufferForInputBuffering(com.fasterxml.jackson.core.JsonParser)
 meth public final boolean canOverrideAccessModifiers()
 meth public final boolean hasDeserializationFeatures(int)
 meth public final boolean hasSomeOfFeatures(int)
 meth public final boolean isEnabled(com.fasterxml.jackson.core.StreamReadCapability)
 meth public final boolean isEnabled(com.fasterxml.jackson.databind.DeserializationFeature)
 meth public final boolean isEnabled(com.fasterxml.jackson.databind.MapperFeature)
+meth public final boolean isEnabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public final com.fasterxml.jackson.annotation.JsonFormat$Value getDefaultPropertyFormat(java.lang.Class<?>)
 meth public final com.fasterxml.jackson.core.Base64Variant getBase64Variant()
 meth public final com.fasterxml.jackson.core.JsonParser getParser()
@@ -4524,10 +5235,12 @@ meth public final com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Obje
 meth public final com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> findNonContextualValueDeserializer(com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public final com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> findRootValueDeserializer(com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public final com.fasterxml.jackson.databind.KeyDeserializer findKeyDeserializer(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public final com.fasterxml.jackson.databind.cfg.DatatypeFeatures getDatatypeFeatures()
 meth public final com.fasterxml.jackson.databind.node.JsonNodeFactory getNodeFactory()
 meth public final com.fasterxml.jackson.databind.type.TypeFactory getTypeFactory()
 meth public final com.fasterxml.jackson.databind.util.ArrayBuilders getArrayBuilders()
 meth public final com.fasterxml.jackson.databind.util.ObjectBuffer leaseObjectBuffer()
+meth public final com.fasterxml.jackson.databind.util.TokenBuffer bufferForInputBuffering()
 meth public final int getDeserializationFeatures()
 meth public final java.lang.Class<?> getActiveView()
 meth public final java.lang.Object findInjectableValue(java.lang.Object,com.fasterxml.jackson.databind.BeanProperty,java.lang.Object) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -4544,8 +5257,6 @@ meth public java.util.Date parseDate(java.lang.String)
 meth public java.util.Locale getLocale()
 meth public java.util.TimeZone getTimeZone()
 meth public void handleBadMerge(com.fasterxml.jackson.databind.JsonDeserializer<?>) throws com.fasterxml.jackson.databind.JsonMappingException
-meth public void reportUnknownProperty(java.lang.Object,java.lang.String,com.fasterxml.jackson.databind.JsonDeserializer<?>) throws com.fasterxml.jackson.databind.JsonMappingException
- anno 0 java.lang.Deprecated()
 supr com.fasterxml.jackson.databind.DatabindContext
 hfds serialVersionUID
 
@@ -4587,6 +5298,21 @@ meth public static com.fasterxml.jackson.databind.DeserializationFeature[] value
 supr java.lang.Enum<com.fasterxml.jackson.databind.DeserializationFeature>
 hfds _defaultState,_mask
 
+CLSS public com.fasterxml.jackson.databind.EnumNamingStrategies
+innr public static CamelCaseStrategy
+supr java.lang.Object
+
+CLSS public static com.fasterxml.jackson.databind.EnumNamingStrategies$CamelCaseStrategy
+ outer com.fasterxml.jackson.databind.EnumNamingStrategies
+cons public init()
+fld public final static com.fasterxml.jackson.databind.EnumNamingStrategies$CamelCaseStrategy INSTANCE
+intf com.fasterxml.jackson.databind.EnumNamingStrategy
+meth public java.lang.String convertEnumToExternalName(java.lang.String)
+supr java.lang.Object
+
+CLSS public abstract interface com.fasterxml.jackson.databind.EnumNamingStrategy
+meth public abstract java.lang.String convertEnumToExternalName(java.lang.String)
+
 CLSS public abstract com.fasterxml.jackson.databind.InjectableValues
 cons public init()
 innr public static Std
@@ -4615,7 +5341,7 @@ fld protected final java.lang.Object _typeHandler
 fld protected final java.lang.Object _valueHandler
 intf java.io.Serializable
 intf java.lang.reflect.Type
-meth protected abstract com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
+meth protected com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
  anno 0 java.lang.Deprecated()
 meth public <%0 extends java.lang.Object> {%%0} getTypeHandler()
 meth public <%0 extends java.lang.Object> {%%0} getValueHandler()
@@ -4648,6 +5374,7 @@ meth public boolean isAbstract()
 meth public boolean isArrayType()
 meth public boolean isCollectionLikeType()
 meth public boolean isConcrete()
+meth public boolean isIterationType()
 meth public boolean isMapLikeType()
 meth public boolean isThrowable()
 meth public com.fasterxml.jackson.databind.JavaType containedTypeOrUnknown(int)
@@ -4668,8 +5395,8 @@ meth public final boolean isRecordType()
 meth public final boolean isTypeOrSubTypeOf(java.lang.Class<?>)
 meth public final boolean isTypeOrSuperTypeOf(java.lang.Class<?>)
 meth public final boolean useStaticType()
-meth public final int hashCode()
 meth public final java.lang.Class<?> getRawClass()
+meth public int hashCode()
 meth public java.lang.Class<?> getParameterSource()
  anno 0 java.lang.Deprecated()
 meth public java.lang.Object getContentTypeHandler()
@@ -4697,6 +5424,7 @@ meth public java.lang.Boolean supportsUpdate(com.fasterxml.jackson.databind.Dese
 meth public java.lang.Class<?> handledType()
 meth public java.lang.Object deserializeWithType(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.jsontype.TypeDeserializer) throws java.io.IOException
 meth public java.lang.Object deserializeWithType(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,{com.fasterxml.jackson.databind.JsonDeserializer%0}) throws java.io.IOException
+meth public java.lang.Object getAbsentValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public java.lang.Object getEmptyValue()
  anno 0 java.lang.Deprecated()
 meth public java.lang.Object getEmptyValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -4728,6 +5456,7 @@ fld protected java.util.LinkedList<com.fasterxml.jackson.databind.JsonMappingExc
 innr public static Reference
 meth protected java.lang.String _buildMessage()
 meth protected void _appendPathDesc(java.lang.StringBuilder)
+meth public com.fasterxml.jackson.databind.JsonMappingException withCause(java.lang.Throwable)
 meth public java.lang.Object getProcessor()
 meth public java.lang.String getLocalizedMessage()
 meth public java.lang.String getMessage()
@@ -4750,7 +5479,7 @@ meth public static com.fasterxml.jackson.databind.JsonMappingException wrapWithP
 meth public void prependPath(com.fasterxml.jackson.databind.JsonMappingException$Reference)
 meth public void prependPath(java.lang.Object,int)
 meth public void prependPath(java.lang.Object,java.lang.String)
-supr com.fasterxml.jackson.core.JsonProcessingException
+supr com.fasterxml.jackson.databind.DatabindException
 hfds MAX_REFS_TO_LIST,serialVersionUID
 
 CLSS public static com.fasterxml.jackson.databind.JsonMappingException$Reference
@@ -4774,6 +5503,7 @@ hfds serialVersionUID
 
 CLSS public abstract com.fasterxml.jackson.databind.JsonNode
 cons protected init()
+innr public final static !enum OverwriteMode
 intf com.fasterxml.jackson.core.TreeNode
 intf java.lang.Iterable<com.fasterxml.jackson.databind.JsonNode>
 meth protected !varargs <%0 extends java.lang.Object> {%%0} _reportRequiredViolation(java.lang.String,java.lang.Object[])
@@ -4782,6 +5512,7 @@ meth protected abstract com.fasterxml.jackson.databind.JsonNode _at(com.fasterxm
 meth public <%0 extends com.fasterxml.jackson.databind.JsonNode> {%%0} require()
 meth public <%0 extends com.fasterxml.jackson.databind.JsonNode> {%%0} requireNonNull()
 meth public <%0 extends com.fasterxml.jackson.databind.JsonNode> {%%0} with(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public <%0 extends com.fasterxml.jackson.databind.JsonNode> {%%0} withArray(java.lang.String)
 meth public abstract <%0 extends com.fasterxml.jackson.databind.JsonNode> {%%0} deepCopy()
 meth public abstract boolean equals(java.lang.Object)
@@ -4826,6 +5557,12 @@ meth public com.fasterxml.jackson.databind.JsonNode get(java.lang.String)
 meth public com.fasterxml.jackson.databind.JsonNode required(int)
 meth public com.fasterxml.jackson.databind.JsonNode required(java.lang.String)
 meth public com.fasterxml.jackson.databind.JsonNode requiredAt(java.lang.String)
+meth public com.fasterxml.jackson.databind.node.ArrayNode withArray(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
+meth public com.fasterxml.jackson.databind.node.ArrayNode withArray(java.lang.String,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
+meth public com.fasterxml.jackson.databind.node.ArrayNode withArrayProperty(java.lang.String)
+meth public com.fasterxml.jackson.databind.node.ObjectNode withObject(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
+meth public com.fasterxml.jackson.databind.node.ObjectNode withObject(java.lang.String)
+meth public com.fasterxml.jackson.databind.node.ObjectNode withObjectProperty(java.lang.String)
 meth public double asDouble()
 meth public double asDouble(double)
 meth public double doubleValue()
@@ -4840,6 +5577,9 @@ meth public final boolean isValueNode()
 meth public final com.fasterxml.jackson.databind.JsonNode at(com.fasterxml.jackson.core.JsonPointer)
 meth public final com.fasterxml.jackson.databind.JsonNode at(java.lang.String)
 meth public final com.fasterxml.jackson.databind.JsonNode requiredAt(com.fasterxml.jackson.core.JsonPointer)
+meth public final com.fasterxml.jackson.databind.node.ArrayNode withArray(com.fasterxml.jackson.core.JsonPointer)
+meth public final com.fasterxml.jackson.databind.node.ObjectNode withObject(com.fasterxml.jackson.core.JsonPointer)
+meth public final com.fasterxml.jackson.databind.node.ObjectNode withObject(java.lang.String,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
 meth public final java.util.Iterator<com.fasterxml.jackson.databind.JsonNode> iterator()
 meth public final java.util.List<com.fasterxml.jackson.databind.JsonNode> findParents(java.lang.String)
 meth public final java.util.List<com.fasterxml.jackson.databind.JsonNode> findValues(java.lang.String)
@@ -4858,11 +5598,22 @@ meth public java.math.BigInteger bigIntegerValue()
 meth public java.util.Iterator<com.fasterxml.jackson.databind.JsonNode> elements()
 meth public java.util.Iterator<java.lang.String> fieldNames()
 meth public java.util.Iterator<java.util.Map$Entry<java.lang.String,com.fasterxml.jackson.databind.JsonNode>> fields()
+meth public java.util.Set<java.util.Map$Entry<java.lang.String,com.fasterxml.jackson.databind.JsonNode>> properties()
 meth public long asLong()
 meth public long asLong(long)
 meth public long longValue()
 meth public short shortValue()
 supr com.fasterxml.jackson.databind.JsonSerializable$Base
+
+CLSS public final static !enum com.fasterxml.jackson.databind.JsonNode$OverwriteMode
+ outer com.fasterxml.jackson.databind.JsonNode
+fld public final static com.fasterxml.jackson.databind.JsonNode$OverwriteMode ALL
+fld public final static com.fasterxml.jackson.databind.JsonNode$OverwriteMode NONE
+fld public final static com.fasterxml.jackson.databind.JsonNode$OverwriteMode NULLS
+fld public final static com.fasterxml.jackson.databind.JsonNode$OverwriteMode SCALARS
+meth public static com.fasterxml.jackson.databind.JsonNode$OverwriteMode valueOf(java.lang.String)
+meth public static com.fasterxml.jackson.databind.JsonNode$OverwriteMode[] values()
+supr java.lang.Enum<com.fasterxml.jackson.databind.JsonNode$OverwriteMode>
 
 CLSS public abstract interface com.fasterxml.jackson.databind.JsonSerializable
 innr public abstract static Base
@@ -4888,6 +5639,7 @@ meth public boolean isUnwrappingSerializer()
 meth public boolean usesObjectId()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getDelegatee()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> withFilterId(java.lang.Object)
+meth public com.fasterxml.jackson.databind.JsonSerializer<?> withIgnoredProperties(java.util.Set<java.lang.String>)
 meth public com.fasterxml.jackson.databind.JsonSerializer<{com.fasterxml.jackson.databind.JsonSerializer%0}> replaceDelegatee(com.fasterxml.jackson.databind.JsonSerializer<?>)
 meth public com.fasterxml.jackson.databind.JsonSerializer<{com.fasterxml.jackson.databind.JsonSerializer%0}> unwrappingSerializer(com.fasterxml.jackson.databind.util.NameTransformer)
 meth public java.lang.Class<{com.fasterxml.jackson.databind.JsonSerializer%0}> handledType()
@@ -4919,7 +5671,9 @@ fld public final static com.fasterxml.jackson.databind.MapperFeature ACCEPT_CASE
 fld public final static com.fasterxml.jackson.databind.MapperFeature ALLOW_COERCION_OF_SCALARS
 fld public final static com.fasterxml.jackson.databind.MapperFeature ALLOW_EXPLICIT_PROPERTY_RENAMING
 fld public final static com.fasterxml.jackson.databind.MapperFeature ALLOW_FINAL_FIELDS_AS_MUTATORS
+fld public final static com.fasterxml.jackson.databind.MapperFeature ALLOW_IS_GETTERS_FOR_NON_BOOLEAN
 fld public final static com.fasterxml.jackson.databind.MapperFeature ALLOW_VOID_VALUED_PROPERTIES
+fld public final static com.fasterxml.jackson.databind.MapperFeature APPLY_DEFAULT_VALUES
 fld public final static com.fasterxml.jackson.databind.MapperFeature AUTO_DETECT_CREATORS
 fld public final static com.fasterxml.jackson.databind.MapperFeature AUTO_DETECT_FIELDS
 fld public final static com.fasterxml.jackson.databind.MapperFeature AUTO_DETECT_GETTERS
@@ -4936,6 +5690,7 @@ fld public final static com.fasterxml.jackson.databind.MapperFeature INFER_PROPE
 fld public final static com.fasterxml.jackson.databind.MapperFeature OVERRIDE_PUBLIC_ACCESS_MODIFIERS
 fld public final static com.fasterxml.jackson.databind.MapperFeature PROPAGATE_TRANSIENT_MARKER
 fld public final static com.fasterxml.jackson.databind.MapperFeature REQUIRE_SETTERS_FOR_GETTERS
+fld public final static com.fasterxml.jackson.databind.MapperFeature REQUIRE_TYPE_ID_FOR_SUBTYPES
 fld public final static com.fasterxml.jackson.databind.MapperFeature SORT_CREATOR_PROPERTIES_FIRST
 fld public final static com.fasterxml.jackson.databind.MapperFeature SORT_PROPERTIES_ALPHABETICALLY
 fld public final static com.fasterxml.jackson.databind.MapperFeature USE_ANNOTATIONS
@@ -4947,9 +5702,14 @@ fld public final static com.fasterxml.jackson.databind.MapperFeature USE_WRAPPER
 intf com.fasterxml.jackson.databind.cfg.ConfigFeature
 meth public boolean enabledByDefault()
 meth public boolean enabledIn(int)
+ anno 0 java.lang.Deprecated()
+meth public boolean enabledIn(long)
 meth public int getMask()
+ anno 0 java.lang.Deprecated()
+meth public long getLongMask()
 meth public static com.fasterxml.jackson.databind.MapperFeature valueOf(java.lang.String)
 meth public static com.fasterxml.jackson.databind.MapperFeature[] values()
+meth public static long collectLongDefaults()
 supr java.lang.Enum<com.fasterxml.jackson.databind.MapperFeature>
 hfds _defaultState,_mask
 
@@ -5044,6 +5804,7 @@ meth public abstract void setNamingStrategy(com.fasterxml.jackson.databind.Prope
 
 CLSS public com.fasterxml.jackson.databind.ObjectMapper
 cons protected init(com.fasterxml.jackson.databind.ObjectMapper)
+cons protected init(com.fasterxml.jackson.databind.ObjectMapper,com.fasterxml.jackson.core.JsonFactory)
 cons public init()
 cons public init(com.fasterxml.jackson.core.JsonFactory)
 cons public init(com.fasterxml.jackson.core.JsonFactory,com.fasterxml.jackson.databind.ser.DefaultSerializerProvider,com.fasterxml.jackson.databind.deser.DefaultDeserializationContext)
@@ -5067,10 +5828,8 @@ innr public final static !enum DefaultTyping
 innr public static DefaultTypeResolverBuilder
 intf com.fasterxml.jackson.core.Versioned
 intf java.io.Serializable
-meth protected com.fasterxml.jackson.core.JsonToken _initForReading(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
- anno 0 java.lang.Deprecated()
 meth protected com.fasterxml.jackson.core.JsonToken _initForReading(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.JavaType) throws java.io.IOException
-meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _findRootDeserializer(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
+meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _findRootDeserializer(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.DatabindException
 meth protected com.fasterxml.jackson.databind.JsonNode _readTreeAndClose(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
 meth protected com.fasterxml.jackson.databind.ObjectReader _newReader(com.fasterxml.jackson.databind.DeserializationConfig)
 meth protected com.fasterxml.jackson.databind.ObjectReader _newReader(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType,java.lang.Object,com.fasterxml.jackson.core.FormatSchema,com.fasterxml.jackson.databind.InjectableValues)
@@ -5095,11 +5854,13 @@ meth public !varargs com.fasterxml.jackson.databind.ObjectMapper disable(com.fas
 meth public !varargs com.fasterxml.jackson.databind.ObjectMapper disable(com.fasterxml.jackson.core.JsonParser$Feature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectMapper disable(com.fasterxml.jackson.databind.DeserializationFeature,com.fasterxml.jackson.databind.DeserializationFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectMapper disable(com.fasterxml.jackson.databind.MapperFeature[])
+ anno 0 java.lang.Deprecated()
 meth public !varargs com.fasterxml.jackson.databind.ObjectMapper disable(com.fasterxml.jackson.databind.SerializationFeature,com.fasterxml.jackson.databind.SerializationFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectMapper enable(com.fasterxml.jackson.core.JsonGenerator$Feature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectMapper enable(com.fasterxml.jackson.core.JsonParser$Feature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectMapper enable(com.fasterxml.jackson.databind.DeserializationFeature,com.fasterxml.jackson.databind.DeserializationFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectMapper enable(com.fasterxml.jackson.databind.MapperFeature[])
+ anno 0 java.lang.Deprecated()
 meth public !varargs com.fasterxml.jackson.databind.ObjectMapper enable(com.fasterxml.jackson.databind.SerializationFeature,com.fasterxml.jackson.databind.SerializationFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectMapper registerModules(com.fasterxml.jackson.databind.Module[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectReader reader(com.fasterxml.jackson.databind.DeserializationFeature,com.fasterxml.jackson.databind.DeserializationFeature[])
@@ -5141,6 +5902,8 @@ meth public <%0 extends java.lang.Object> {%%0} readValue(java.lang.String,java.
 meth public <%0 extends java.lang.Object> {%%0} readValue(java.net.URL,com.fasterxml.jackson.core.type.TypeReference<{%%0}>) throws java.io.IOException
 meth public <%0 extends java.lang.Object> {%%0} readValue(java.net.URL,com.fasterxml.jackson.databind.JavaType) throws java.io.IOException
 meth public <%0 extends java.lang.Object> {%%0} readValue(java.net.URL,java.lang.Class<{%%0}>) throws java.io.IOException
+meth public <%0 extends java.lang.Object> {%%0} treeToValue(com.fasterxml.jackson.core.TreeNode,com.fasterxml.jackson.core.type.TypeReference<{%%0}>) throws com.fasterxml.jackson.core.JsonProcessingException
+meth public <%0 extends java.lang.Object> {%%0} treeToValue(com.fasterxml.jackson.core.TreeNode,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.core.JsonProcessingException
 meth public <%0 extends java.lang.Object> {%%0} treeToValue(com.fasterxml.jackson.core.TreeNode,java.lang.Class<{%%0}>) throws com.fasterxml.jackson.core.JsonProcessingException
 meth public <%0 extends java.lang.Object> {%%0} updateValue({%%0},java.lang.Object) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public boolean canDeserialize(com.fasterxml.jackson.databind.JavaType)
@@ -5157,8 +5920,6 @@ meth public boolean isEnabled(com.fasterxml.jackson.databind.MapperFeature)
 meth public boolean isEnabled(com.fasterxml.jackson.databind.SerializationFeature)
 meth public byte[] writeValueAsBytes(java.lang.Object) throws com.fasterxml.jackson.core.JsonProcessingException
 meth public com.fasterxml.jackson.core.JsonFactory getFactory()
-meth public com.fasterxml.jackson.core.JsonFactory getJsonFactory()
- anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.core.JsonFactory tokenStreamFactory()
 meth public com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.DataOutput) throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.File,com.fasterxml.jackson.core.JsonEncoding) throws java.io.IOException
@@ -5203,8 +5964,11 @@ meth public com.fasterxml.jackson.databind.ObjectMapper configure(com.fasterxml.
 meth public com.fasterxml.jackson.databind.ObjectMapper configure(com.fasterxml.jackson.core.JsonParser$Feature,boolean)
 meth public com.fasterxml.jackson.databind.ObjectMapper configure(com.fasterxml.jackson.databind.DeserializationFeature,boolean)
 meth public com.fasterxml.jackson.databind.ObjectMapper configure(com.fasterxml.jackson.databind.MapperFeature,boolean)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.ObjectMapper configure(com.fasterxml.jackson.databind.SerializationFeature,boolean)
+meth public com.fasterxml.jackson.databind.ObjectMapper configure(com.fasterxml.jackson.databind.cfg.DatatypeFeature,boolean)
 meth public com.fasterxml.jackson.databind.ObjectMapper copy()
+meth public com.fasterxml.jackson.databind.ObjectMapper copyWith(com.fasterxml.jackson.core.JsonFactory)
 meth public com.fasterxml.jackson.databind.ObjectMapper deactivateDefaultTyping()
 meth public com.fasterxml.jackson.databind.ObjectMapper disable(com.fasterxml.jackson.databind.DeserializationFeature)
 meth public com.fasterxml.jackson.databind.ObjectMapper disable(com.fasterxml.jackson.databind.SerializationFeature)
@@ -5227,10 +5991,12 @@ meth public com.fasterxml.jackson.databind.ObjectMapper setAccessorNaming(com.fa
 meth public com.fasterxml.jackson.databind.ObjectMapper setAnnotationIntrospector(com.fasterxml.jackson.databind.AnnotationIntrospector)
 meth public com.fasterxml.jackson.databind.ObjectMapper setAnnotationIntrospectors(com.fasterxml.jackson.databind.AnnotationIntrospector,com.fasterxml.jackson.databind.AnnotationIntrospector)
 meth public com.fasterxml.jackson.databind.ObjectMapper setBase64Variant(com.fasterxml.jackson.core.Base64Variant)
+meth public com.fasterxml.jackson.databind.ObjectMapper setCacheProvider(com.fasterxml.jackson.databind.cfg.CacheProvider)
 meth public com.fasterxml.jackson.databind.ObjectMapper setConfig(com.fasterxml.jackson.databind.DeserializationConfig)
 meth public com.fasterxml.jackson.databind.ObjectMapper setConfig(com.fasterxml.jackson.databind.SerializationConfig)
 meth public com.fasterxml.jackson.databind.ObjectMapper setConstructorDetector(com.fasterxml.jackson.databind.cfg.ConstructorDetector)
 meth public com.fasterxml.jackson.databind.ObjectMapper setDateFormat(java.text.DateFormat)
+meth public com.fasterxml.jackson.databind.ObjectMapper setDefaultAttributes(com.fasterxml.jackson.databind.cfg.ContextAttributes)
 meth public com.fasterxml.jackson.databind.ObjectMapper setDefaultLeniency(java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.ObjectMapper setDefaultMergeable(java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.ObjectMapper setDefaultPrettyPrinter(com.fasterxml.jackson.core.PrettyPrinter)
@@ -5348,6 +6114,7 @@ hfds serialVersionUID
 
 CLSS public static com.fasterxml.jackson.databind.ObjectMapper$DefaultTypeResolverBuilder
  outer com.fasterxml.jackson.databind.ObjectMapper
+cons protected init(com.fasterxml.jackson.databind.ObjectMapper$DefaultTypeResolverBuilder,java.lang.Class<?>)
 cons public init(com.fasterxml.jackson.databind.ObjectMapper$DefaultTyping)
  anno 0 java.lang.Deprecated()
 cons public init(com.fasterxml.jackson.databind.ObjectMapper$DefaultTyping,com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator)
@@ -5355,6 +6122,7 @@ fld protected final com.fasterxml.jackson.databind.ObjectMapper$DefaultTyping _a
 fld protected final com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator _subtypeValidator
 intf java.io.Serializable
 meth public boolean useForType(com.fasterxml.jackson.databind.JavaType)
+meth public com.fasterxml.jackson.databind.ObjectMapper$DefaultTypeResolverBuilder withDefaultImpl(java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator subTypeValidator(com.fasterxml.jackson.databind.cfg.MapperConfig<?>)
 meth public com.fasterxml.jackson.databind.jsontype.TypeDeserializer buildTypeDeserializer(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType,java.util.Collection<com.fasterxml.jackson.databind.jsontype.NamedType>)
 meth public com.fasterxml.jackson.databind.jsontype.TypeSerializer buildTypeSerializer(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.JavaType,java.util.Collection<com.fasterxml.jackson.databind.jsontype.NamedType>)
@@ -5368,6 +6136,7 @@ fld public final static com.fasterxml.jackson.databind.ObjectMapper$DefaultTypin
 fld public final static com.fasterxml.jackson.databind.ObjectMapper$DefaultTyping JAVA_LANG_OBJECT
 fld public final static com.fasterxml.jackson.databind.ObjectMapper$DefaultTyping NON_CONCRETE_AND_ARRAYS
 fld public final static com.fasterxml.jackson.databind.ObjectMapper$DefaultTyping NON_FINAL
+fld public final static com.fasterxml.jackson.databind.ObjectMapper$DefaultTyping NON_FINAL_AND_ENUMS
 fld public final static com.fasterxml.jackson.databind.ObjectMapper$DefaultTyping OBJECT_AND_NON_CONCRETE
 meth public static com.fasterxml.jackson.databind.ObjectMapper$DefaultTyping valueOf(java.lang.String)
 meth public static com.fasterxml.jackson.databind.ObjectMapper$DefaultTyping[] values()
@@ -5399,8 +6168,8 @@ meth protected <%0 extends java.lang.Object> com.fasterxml.jackson.databind.Mapp
 meth protected <%0 extends java.lang.Object> com.fasterxml.jackson.databind.MappingIterator<{%%0}> _newIterator(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.JsonDeserializer<?>,boolean)
 meth protected com.fasterxml.jackson.core.JsonParser _considerFilter(com.fasterxml.jackson.core.JsonParser,boolean)
 meth protected com.fasterxml.jackson.core.JsonToken _initForReading(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
-meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _findRootDeserializer(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
-meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _findTreeDeserializer(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
+meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _findRootDeserializer(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.DatabindException
+meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _findTreeDeserializer(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.DatabindException
 meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _prefetchRootDeserializer(com.fasterxml.jackson.databind.JavaType)
 meth protected com.fasterxml.jackson.databind.JsonNode _detectBindAndCloseAsTree(java.io.InputStream) throws java.io.IOException
 meth protected com.fasterxml.jackson.databind.ObjectReader _new(com.fasterxml.jackson.databind.ObjectReader,com.fasterxml.jackson.core.JsonFactory)
@@ -5422,18 +6191,20 @@ meth protected java.lang.Object _bindAndClose(com.fasterxml.jackson.core.JsonPar
 meth protected java.lang.Object _detectBindAndClose(byte[],int,int) throws java.io.IOException
 meth protected java.lang.Object _detectBindAndClose(com.fasterxml.jackson.databind.deser.DataFormatReaders$Match,boolean) throws java.io.IOException
 meth protected void _initForMultiRead(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
-meth protected void _reportUndetectableSource(java.lang.Object) throws com.fasterxml.jackson.core.JsonParseException
-meth protected void _reportUnkownFormat(com.fasterxml.jackson.databind.deser.DataFormatReaders,com.fasterxml.jackson.databind.deser.DataFormatReaders$Match) throws com.fasterxml.jackson.core.JsonProcessingException
+meth protected void _reportUndetectableSource(java.lang.Object) throws com.fasterxml.jackson.core.exc.StreamReadException
+meth protected void _reportUnkownFormat(com.fasterxml.jackson.databind.deser.DataFormatReaders,com.fasterxml.jackson.databind.deser.DataFormatReaders$Match) throws java.io.IOException
 meth protected void _verifySchemaType(com.fasterxml.jackson.core.FormatSchema)
 meth public !varargs com.fasterxml.jackson.databind.ObjectReader with(com.fasterxml.jackson.databind.DeserializationFeature,com.fasterxml.jackson.databind.DeserializationFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectReader withFeatures(com.fasterxml.jackson.core.FormatFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectReader withFeatures(com.fasterxml.jackson.core.JsonParser$Feature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectReader withFeatures(com.fasterxml.jackson.databind.DeserializationFeature[])
+meth public !varargs com.fasterxml.jackson.databind.ObjectReader withFeatures(com.fasterxml.jackson.databind.cfg.DatatypeFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectReader withFormatDetection(com.fasterxml.jackson.databind.ObjectReader[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectReader without(com.fasterxml.jackson.databind.DeserializationFeature,com.fasterxml.jackson.databind.DeserializationFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectReader withoutFeatures(com.fasterxml.jackson.core.FormatFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectReader withoutFeatures(com.fasterxml.jackson.core.JsonParser$Feature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectReader withoutFeatures(com.fasterxml.jackson.databind.DeserializationFeature[])
+meth public !varargs com.fasterxml.jackson.databind.ObjectReader withoutFeatures(com.fasterxml.jackson.databind.cfg.DatatypeFeature[])
 meth public <%0 extends com.fasterxml.jackson.core.TreeNode> {%%0} readTree(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
 meth public <%0 extends java.lang.Object> com.fasterxml.jackson.databind.MappingIterator<{%%0}> readValues(byte[],int,int) throws java.io.IOException
 meth public <%0 extends java.lang.Object> com.fasterxml.jackson.databind.MappingIterator<{%%0}> readValues(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
@@ -5470,11 +6241,13 @@ meth public <%0 extends java.lang.Object> {%%0} readValue(java.lang.String) thro
 meth public <%0 extends java.lang.Object> {%%0} readValue(java.lang.String,java.lang.Class<{%%0}>) throws java.io.IOException
 meth public <%0 extends java.lang.Object> {%%0} readValue(java.net.URL) throws java.io.IOException
 meth public <%0 extends java.lang.Object> {%%0} readValue(java.net.URL,java.lang.Class<{%%0}>) throws java.io.IOException
+meth public <%0 extends java.lang.Object> {%%0} treeToValue(com.fasterxml.jackson.core.TreeNode,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.core.JsonProcessingException
 meth public <%0 extends java.lang.Object> {%%0} treeToValue(com.fasterxml.jackson.core.TreeNode,java.lang.Class<{%%0}>) throws com.fasterxml.jackson.core.JsonProcessingException
 meth public boolean isEnabled(com.fasterxml.jackson.core.JsonParser$Feature)
 meth public boolean isEnabled(com.fasterxml.jackson.core.StreamReadFeature)
 meth public boolean isEnabled(com.fasterxml.jackson.databind.DeserializationFeature)
 meth public boolean isEnabled(com.fasterxml.jackson.databind.MapperFeature)
+meth public boolean isEnabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public com.fasterxml.jackson.core.JsonFactory getFactory()
 meth public com.fasterxml.jackson.core.JsonParser createNonBlockingByteArrayParser() throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonParser createParser(byte[]) throws java.io.IOException
@@ -5507,6 +6280,7 @@ meth public com.fasterxml.jackson.databind.ObjectReader at(java.lang.String)
 meth public com.fasterxml.jackson.databind.ObjectReader forType(com.fasterxml.jackson.core.type.TypeReference<?>)
 meth public com.fasterxml.jackson.databind.ObjectReader forType(com.fasterxml.jackson.databind.JavaType)
 meth public com.fasterxml.jackson.databind.ObjectReader forType(java.lang.Class<?>)
+meth public com.fasterxml.jackson.databind.ObjectReader forType(java.lang.reflect.Type)
 meth public com.fasterxml.jackson.databind.ObjectReader with(com.fasterxml.jackson.core.Base64Variant)
 meth public com.fasterxml.jackson.databind.ObjectReader with(com.fasterxml.jackson.core.FormatFeature)
 meth public com.fasterxml.jackson.databind.ObjectReader with(com.fasterxml.jackson.core.FormatSchema)
@@ -5517,6 +6291,7 @@ meth public com.fasterxml.jackson.databind.ObjectReader with(com.fasterxml.jacks
 meth public com.fasterxml.jackson.databind.ObjectReader with(com.fasterxml.jackson.databind.DeserializationFeature)
 meth public com.fasterxml.jackson.databind.ObjectReader with(com.fasterxml.jackson.databind.InjectableValues)
 meth public com.fasterxml.jackson.databind.ObjectReader with(com.fasterxml.jackson.databind.cfg.ContextAttributes)
+meth public com.fasterxml.jackson.databind.ObjectReader with(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public com.fasterxml.jackson.databind.ObjectReader with(com.fasterxml.jackson.databind.node.JsonNodeFactory)
 meth public com.fasterxml.jackson.databind.ObjectReader with(java.util.Locale)
 meth public com.fasterxml.jackson.databind.ObjectReader with(java.util.TimeZone)
@@ -5540,6 +6315,7 @@ meth public com.fasterxml.jackson.databind.ObjectReader without(com.fasterxml.ja
 meth public com.fasterxml.jackson.databind.ObjectReader without(com.fasterxml.jackson.core.JsonParser$Feature)
 meth public com.fasterxml.jackson.databind.ObjectReader without(com.fasterxml.jackson.core.StreamReadFeature)
 meth public com.fasterxml.jackson.databind.ObjectReader without(com.fasterxml.jackson.databind.DeserializationFeature)
+meth public com.fasterxml.jackson.databind.ObjectReader without(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public com.fasterxml.jackson.databind.ObjectReader withoutAttribute(java.lang.Object)
 meth public com.fasterxml.jackson.databind.ObjectReader withoutRootName()
 meth public com.fasterxml.jackson.databind.cfg.ContextAttributes getAttributes()
@@ -5581,10 +6357,12 @@ meth public !varargs com.fasterxml.jackson.databind.ObjectWriter with(com.faster
 meth public !varargs com.fasterxml.jackson.databind.ObjectWriter withFeatures(com.fasterxml.jackson.core.FormatFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectWriter withFeatures(com.fasterxml.jackson.core.JsonGenerator$Feature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectWriter withFeatures(com.fasterxml.jackson.databind.SerializationFeature[])
+meth public !varargs com.fasterxml.jackson.databind.ObjectWriter withFeatures(com.fasterxml.jackson.databind.cfg.DatatypeFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectWriter without(com.fasterxml.jackson.databind.SerializationFeature,com.fasterxml.jackson.databind.SerializationFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectWriter withoutFeatures(com.fasterxml.jackson.core.FormatFeature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectWriter withoutFeatures(com.fasterxml.jackson.core.JsonGenerator$Feature[])
 meth public !varargs com.fasterxml.jackson.databind.ObjectWriter withoutFeatures(com.fasterxml.jackson.databind.SerializationFeature[])
+meth public !varargs com.fasterxml.jackson.databind.ObjectWriter withoutFeatures(com.fasterxml.jackson.databind.cfg.DatatypeFeature[])
 meth public boolean canSerialize(java.lang.Class<?>)
 meth public boolean canSerialize(java.lang.Class<?>,java.util.concurrent.atomic.AtomicReference<java.lang.Throwable>)
 meth public boolean hasPrefetchedSerializer()
@@ -5594,6 +6372,7 @@ meth public boolean isEnabled(com.fasterxml.jackson.core.JsonParser$Feature)
 meth public boolean isEnabled(com.fasterxml.jackson.core.StreamWriteFeature)
 meth public boolean isEnabled(com.fasterxml.jackson.databind.MapperFeature)
 meth public boolean isEnabled(com.fasterxml.jackson.databind.SerializationFeature)
+meth public boolean isEnabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public byte[] writeValueAsBytes(java.lang.Object) throws com.fasterxml.jackson.core.JsonProcessingException
 meth public com.fasterxml.jackson.core.JsonFactory getFactory()
 meth public com.fasterxml.jackson.core.JsonGenerator createGenerator(java.io.DataOutput) throws java.io.IOException
@@ -5615,6 +6394,7 @@ meth public com.fasterxml.jackson.databind.ObjectWriter with(com.fasterxml.jacks
 meth public com.fasterxml.jackson.databind.ObjectWriter with(com.fasterxml.jackson.core.io.CharacterEscapes)
 meth public com.fasterxml.jackson.databind.ObjectWriter with(com.fasterxml.jackson.databind.SerializationFeature)
 meth public com.fasterxml.jackson.databind.ObjectWriter with(com.fasterxml.jackson.databind.cfg.ContextAttributes)
+meth public com.fasterxml.jackson.databind.ObjectWriter with(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public com.fasterxml.jackson.databind.ObjectWriter with(com.fasterxml.jackson.databind.ser.FilterProvider)
 meth public com.fasterxml.jackson.databind.ObjectWriter with(java.text.DateFormat)
 meth public com.fasterxml.jackson.databind.ObjectWriter with(java.util.Locale)
@@ -5639,6 +6419,7 @@ meth public com.fasterxml.jackson.databind.ObjectWriter without(com.fasterxml.ja
 meth public com.fasterxml.jackson.databind.ObjectWriter without(com.fasterxml.jackson.core.JsonGenerator$Feature)
 meth public com.fasterxml.jackson.databind.ObjectWriter without(com.fasterxml.jackson.core.StreamWriteFeature)
 meth public com.fasterxml.jackson.databind.ObjectWriter without(com.fasterxml.jackson.databind.SerializationFeature)
+meth public com.fasterxml.jackson.databind.ObjectWriter without(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public com.fasterxml.jackson.databind.ObjectWriter withoutAttribute(java.lang.Object)
 meth public com.fasterxml.jackson.databind.ObjectWriter withoutRootName()
 meth public com.fasterxml.jackson.databind.SequenceWriter writeValues(com.fasterxml.jackson.core.JsonGenerator) throws java.io.IOException
@@ -5778,6 +6559,7 @@ fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy LO
 fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy LOWER_DOT_CASE
 fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy SNAKE_CASE
 fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy UPPER_CAMEL_CASE
+fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy UPPER_SNAKE_CASE
 innr public abstract static NamingBase
 innr public static KebabCaseStrategy
 innr public static LowerCamelCaseStrategy
@@ -5785,6 +6567,7 @@ innr public static LowerCaseStrategy
 innr public static LowerDotCaseStrategy
 innr public static SnakeCaseStrategy
 innr public static UpperCamelCaseStrategy
+innr public static UpperSnakeCaseStrategy
 intf java.io.Serializable
 supr java.lang.Object
 hfds serialVersionUID
@@ -5792,6 +6575,7 @@ hfds serialVersionUID
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategies$KebabCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategies
 cons public init()
+fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategies$KebabCaseStrategy INSTANCE
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategies$NamingBase
 hfds serialVersionUID
@@ -5799,6 +6583,7 @@ hfds serialVersionUID
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategies$LowerCamelCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategies
 cons public init()
+fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategies$LowerCamelCaseStrategy INSTANCE
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategies$NamingBase
 hfds serialVersionUID
@@ -5806,6 +6591,7 @@ hfds serialVersionUID
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategies$LowerCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategies
 cons public init()
+fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategies$LowerCaseStrategy INSTANCE
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategies$NamingBase
 hfds serialVersionUID
@@ -5813,6 +6599,7 @@ hfds serialVersionUID
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategies$LowerDotCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategies
 cons public init()
+fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategies$LowerDotCaseStrategy INSTANCE
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategies$NamingBase
 hfds serialVersionUID
@@ -5832,6 +6619,7 @@ hfds serialVersionUID
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategies$SnakeCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategies
 cons public init()
+fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategies$SnakeCaseStrategy INSTANCE
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategies$NamingBase
 hfds serialVersionUID
@@ -5839,14 +6627,21 @@ hfds serialVersionUID
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategies$UpperCamelCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategies
 cons public init()
+fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategies$UpperCamelCaseStrategy INSTANCE
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategies$NamingBase
 hfds serialVersionUID
 
+CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategies$UpperSnakeCaseStrategy
+ outer com.fasterxml.jackson.databind.PropertyNamingStrategies
+cons public init()
+fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategies$UpperSnakeCaseStrategy INSTANCE
+meth public java.lang.String translate(java.lang.String)
+supr com.fasterxml.jackson.databind.PropertyNamingStrategies$SnakeCaseStrategy
+hfds serialVersionUID
+
 CLSS public com.fasterxml.jackson.databind.PropertyNamingStrategy
 cons public init()
-fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
- anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy KEBAB_CASE
  anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy LOWER_CAMEL_CASE
@@ -5855,8 +6650,6 @@ fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy LO
  anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy LOWER_DOT_CASE
  anno 0 java.lang.Deprecated()
-fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy PASCAL_CASE_TO_CAMEL_CASE
- anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy SNAKE_CASE
  anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy UPPER_CAMEL_CASE
@@ -5864,9 +6657,7 @@ fld public final static com.fasterxml.jackson.databind.PropertyNamingStrategy UP
 innr public abstract static PropertyNamingStrategyBase
 innr public static KebabCaseStrategy
 innr public static LowerCaseStrategy
-innr public static LowerCaseWithUnderscoresStrategy
 innr public static LowerDotCaseStrategy
-innr public static PascalCaseStrategy
 innr public static SnakeCaseStrategy
 innr public static UpperCamelCaseStrategy
 intf java.io.Serializable
@@ -5880,6 +6671,7 @@ hfds serialVersionUID
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategy$KebabCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategy
  anno 0 java.lang.Deprecated()
+cons protected init(boolean)
 cons public init()
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategy$PropertyNamingStrategyBase
@@ -5887,33 +6679,24 @@ supr com.fasterxml.jackson.databind.PropertyNamingStrategy$PropertyNamingStrateg
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategy$LowerCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategy
  anno 0 java.lang.Deprecated()
+cons protected init(boolean)
 cons public init()
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategy$PropertyNamingStrategyBase
-
-CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategy$LowerCaseWithUnderscoresStrategy
- outer com.fasterxml.jackson.databind.PropertyNamingStrategy
- anno 0 java.lang.Deprecated()
-cons public init()
-supr com.fasterxml.jackson.databind.PropertyNamingStrategy$SnakeCaseStrategy
 
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategy$LowerDotCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategy
  anno 0 java.lang.Deprecated()
+cons protected init(boolean)
 cons public init()
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategy$PropertyNamingStrategyBase
 
-CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategy$PascalCaseStrategy
- outer com.fasterxml.jackson.databind.PropertyNamingStrategy
- anno 0 java.lang.Deprecated()
-cons public init()
-supr com.fasterxml.jackson.databind.PropertyNamingStrategy$UpperCamelCaseStrategy
-
 CLSS public abstract static com.fasterxml.jackson.databind.PropertyNamingStrategy$PropertyNamingStrategyBase
  outer com.fasterxml.jackson.databind.PropertyNamingStrategy
  anno 0 java.lang.Deprecated()
-cons public init()
+cons protected init()
+cons protected init(boolean)
 meth protected static java.lang.String translateLowerCaseWithSeparator(java.lang.String,char)
 meth public abstract java.lang.String translate(java.lang.String)
 meth public java.lang.String nameForConstructorParameter(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedParameter,java.lang.String)
@@ -5925,6 +6708,7 @@ supr com.fasterxml.jackson.databind.PropertyNamingStrategy
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategy$SnakeCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategy
  anno 0 java.lang.Deprecated()
+cons protected init(boolean)
 cons public init()
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategy$PropertyNamingStrategyBase
@@ -5932,6 +6716,7 @@ supr com.fasterxml.jackson.databind.PropertyNamingStrategy$PropertyNamingStrateg
 CLSS public static com.fasterxml.jackson.databind.PropertyNamingStrategy$UpperCamelCaseStrategy
  outer com.fasterxml.jackson.databind.PropertyNamingStrategy
  anno 0 java.lang.Deprecated()
+cons protected init(boolean)
 cons public init()
 meth public java.lang.String translate(java.lang.String)
 supr com.fasterxml.jackson.databind.PropertyNamingStrategy$PropertyNamingStrategyBase
@@ -5974,11 +6759,12 @@ supr java.lang.Object
 CLSS public final com.fasterxml.jackson.databind.SerializationConfig
 cons protected init(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.core.PrettyPrinter)
 cons protected init(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.cfg.ContextAttributes)
+cons protected init(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.cfg.DatatypeFeatures)
 cons protected init(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver)
-cons protected init(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides)
- anno 0 java.lang.Deprecated()
 cons protected init(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.jsontype.SubtypeResolver,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides)
 cons public init(com.fasterxml.jackson.databind.cfg.BaseSettings,com.fasterxml.jackson.databind.jsontype.SubtypeResolver,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.databind.cfg.BaseSettings,com.fasterxml.jackson.databind.jsontype.SubtypeResolver,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides,com.fasterxml.jackson.databind.cfg.DatatypeFeatures)
 fld protected final com.fasterxml.jackson.core.PrettyPrinter _defaultPrettyPrinter
 fld protected final com.fasterxml.jackson.databind.ser.FilterProvider _filterProvider
 fld protected final int _formatWriteFeatures
@@ -5988,8 +6774,9 @@ fld protected final int _generatorFeaturesToChange
 fld protected final int _serFeatures
 fld protected final static com.fasterxml.jackson.core.PrettyPrinter DEFAULT_PRETTY_PRINTER
 intf java.io.Serializable
+meth protected final com.fasterxml.jackson.databind.SerializationConfig _with(com.fasterxml.jackson.databind.cfg.DatatypeFeatures)
 meth protected final com.fasterxml.jackson.databind.SerializationConfig _withBase(com.fasterxml.jackson.databind.cfg.BaseSettings)
-meth protected final com.fasterxml.jackson.databind.SerializationConfig _withMapperFeatures(int)
+meth protected final com.fasterxml.jackson.databind.SerializationConfig _withMapperFeatures(long)
 meth public !varargs com.fasterxml.jackson.databind.SerializationConfig with(com.fasterxml.jackson.databind.SerializationFeature,com.fasterxml.jackson.databind.SerializationFeature[])
 meth public !varargs com.fasterxml.jackson.databind.SerializationConfig withFeatures(com.fasterxml.jackson.core.FormatFeature[])
 meth public !varargs com.fasterxml.jackson.databind.SerializationConfig withFeatures(com.fasterxml.jackson.core.JsonGenerator$Feature[])
@@ -6023,6 +6810,7 @@ meth public com.fasterxml.jackson.databind.ser.FilterProvider getFilterProvider(
 meth public final boolean hasSerializationFeatures(int)
 meth public final boolean isEnabled(com.fasterxml.jackson.core.JsonGenerator$Feature,com.fasterxml.jackson.core.JsonFactory)
 meth public final boolean isEnabled(com.fasterxml.jackson.databind.SerializationFeature)
+meth public final boolean isEnabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public final int getSerializationFeatures()
 meth public void initialize(com.fasterxml.jackson.core.JsonGenerator)
 supr com.fasterxml.jackson.databind.cfg.MapperConfigBase<com.fasterxml.jackson.databind.SerializationFeature,com.fasterxml.jackson.databind.SerializationConfig>
@@ -6044,6 +6832,7 @@ fld public final static com.fasterxml.jackson.databind.SerializationFeature WRIT
  anno 0 java.lang.Deprecated()
 fld public final static com.fasterxml.jackson.databind.SerializationFeature WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS
 fld public final static com.fasterxml.jackson.databind.SerializationFeature WRITE_DATES_AS_TIMESTAMPS
+fld public final static com.fasterxml.jackson.databind.SerializationFeature WRITE_DATES_WITH_CONTEXT_TIME_ZONE
 fld public final static com.fasterxml.jackson.databind.SerializationFeature WRITE_DATES_WITH_ZONE_ID
 fld public final static com.fasterxml.jackson.databind.SerializationFeature WRITE_DATE_KEYS_AS_TIMESTAMPS
 fld public final static com.fasterxml.jackson.databind.SerializationFeature WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS
@@ -6069,6 +6858,7 @@ hfds _defaultState,_mask
 CLSS public abstract com.fasterxml.jackson.databind.SerializerProvider
 cons protected init(com.fasterxml.jackson.databind.SerializerProvider)
 cons protected init(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.ser.SerializerFactory)
+cons protected init(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.ser.SerializerCache)
 cons public init()
 fld protected com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> _keySerializer
 fld protected com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> _nullKeySerializer
@@ -6133,19 +6923,21 @@ meth public com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> getD
 meth public com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> getUnknownTypeSerializer(java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.SerializerProvider setAttribute(java.lang.Object,java.lang.Object)
 meth public com.fasterxml.jackson.databind.jsontype.TypeSerializer findTypeSerializer(com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public com.fasterxml.jackson.databind.util.TokenBuffer bufferForValueConversion(com.fasterxml.jackson.core.ObjectCodec)
 meth public final boolean canOverrideAccessModifiers()
 meth public final boolean hasSerializationFeatures(int)
 meth public final boolean isEnabled(com.fasterxml.jackson.databind.MapperFeature)
 meth public final boolean isEnabled(com.fasterxml.jackson.databind.SerializationFeature)
+meth public final boolean isEnabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public final com.fasterxml.jackson.annotation.JsonFormat$Value getDefaultPropertyFormat(java.lang.Class<?>)
 meth public final com.fasterxml.jackson.annotation.JsonInclude$Value getDefaultPropertyInclusion(java.lang.Class<?>)
 meth public final com.fasterxml.jackson.databind.AnnotationIntrospector getAnnotationIntrospector()
 meth public final com.fasterxml.jackson.databind.SerializationConfig getConfig()
+meth public final com.fasterxml.jackson.databind.cfg.DatatypeFeatures getDatatypeFeatures()
 meth public final com.fasterxml.jackson.databind.ser.FilterProvider getFilterProvider()
 meth public final com.fasterxml.jackson.databind.type.TypeFactory getTypeFactory()
+meth public final com.fasterxml.jackson.databind.util.TokenBuffer bufferForValueConversion()
 meth public final java.lang.Class<?> getActiveView()
-meth public final java.lang.Class<?> getSerializationView()
- anno 0 java.lang.Deprecated()
 meth public final void defaultSerializeDateValue(java.util.Date,com.fasterxml.jackson.core.JsonGenerator) throws java.io.IOException
 meth public final void defaultSerializeDateValue(long,com.fasterxml.jackson.core.JsonGenerator) throws java.io.IOException
 meth public final void defaultSerializeField(java.lang.String,java.lang.Object,com.fasterxml.jackson.core.JsonGenerator) throws java.io.IOException
@@ -6160,6 +6952,12 @@ meth public void setDefaultKeySerializer(com.fasterxml.jackson.databind.JsonSeri
 meth public void setNullKeySerializer(com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>)
 meth public void setNullValueSerializer(com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>)
 supr com.fasterxml.jackson.databind.DatabindContext
+
+CLSS public abstract interface !annotation com.fasterxml.jackson.databind.annotation.EnumNaming
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.Class<? extends com.fasterxml.jackson.databind.EnumNamingStrategy> value()
 
 CLSS public abstract interface !annotation com.fasterxml.jackson.databind.annotation.JacksonStdImpl
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -6294,13 +7092,18 @@ meth public abstract java.lang.Class<? extends com.fasterxml.jackson.databind.de
 CLSS public final com.fasterxml.jackson.databind.annotation.NoClass
 supr java.lang.Object
 
+CLSS abstract interface com.fasterxml.jackson.databind.annotation.package-info
+
 CLSS public final com.fasterxml.jackson.databind.cfg.BaseSettings
 cons public init(com.fasterxml.jackson.databind.introspect.ClassIntrospector,com.fasterxml.jackson.databind.AnnotationIntrospector,com.fasterxml.jackson.databind.PropertyNamingStrategy,com.fasterxml.jackson.databind.type.TypeFactory,com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?>,java.text.DateFormat,com.fasterxml.jackson.databind.cfg.HandlerInstantiator,java.util.Locale,java.util.TimeZone,com.fasterxml.jackson.core.Base64Variant,com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator)
  anno 0 java.lang.Deprecated()
 cons public init(com.fasterxml.jackson.databind.introspect.ClassIntrospector,com.fasterxml.jackson.databind.AnnotationIntrospector,com.fasterxml.jackson.databind.PropertyNamingStrategy,com.fasterxml.jackson.databind.type.TypeFactory,com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?>,java.text.DateFormat,com.fasterxml.jackson.databind.cfg.HandlerInstantiator,java.util.Locale,java.util.TimeZone,com.fasterxml.jackson.core.Base64Variant,com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator,com.fasterxml.jackson.databind.introspect.AccessorNamingStrategy$Provider)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.databind.introspect.ClassIntrospector,com.fasterxml.jackson.databind.AnnotationIntrospector,com.fasterxml.jackson.databind.PropertyNamingStrategy,com.fasterxml.jackson.databind.type.TypeFactory,com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?>,java.text.DateFormat,com.fasterxml.jackson.databind.cfg.HandlerInstantiator,java.util.Locale,java.util.TimeZone,com.fasterxml.jackson.core.Base64Variant,com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator,com.fasterxml.jackson.databind.introspect.AccessorNamingStrategy$Provider,com.fasterxml.jackson.databind.cfg.CacheProvider)
 fld protected final com.fasterxml.jackson.core.Base64Variant _defaultBase64
 fld protected final com.fasterxml.jackson.databind.AnnotationIntrospector _annotationIntrospector
 fld protected final com.fasterxml.jackson.databind.PropertyNamingStrategy _propertyNamingStrategy
+fld protected final com.fasterxml.jackson.databind.cfg.CacheProvider _cacheProvider
 fld protected final com.fasterxml.jackson.databind.cfg.HandlerInstantiator _handlerInstantiator
 fld protected final com.fasterxml.jackson.databind.introspect.AccessorNamingStrategy$Provider _accessorNaming
 fld protected final com.fasterxml.jackson.databind.introspect.ClassIntrospector _classIntrospector
@@ -6317,6 +7120,7 @@ meth public com.fasterxml.jackson.databind.AnnotationIntrospector getAnnotationI
 meth public com.fasterxml.jackson.databind.PropertyNamingStrategy getPropertyNamingStrategy()
 meth public com.fasterxml.jackson.databind.cfg.BaseSettings copy()
 meth public com.fasterxml.jackson.databind.cfg.BaseSettings with(com.fasterxml.jackson.core.Base64Variant)
+meth public com.fasterxml.jackson.databind.cfg.BaseSettings with(com.fasterxml.jackson.databind.cfg.CacheProvider)
 meth public com.fasterxml.jackson.databind.cfg.BaseSettings with(com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator)
 meth public com.fasterxml.jackson.databind.cfg.BaseSettings with(java.util.Locale)
 meth public com.fasterxml.jackson.databind.cfg.BaseSettings with(java.util.TimeZone)
@@ -6330,6 +7134,7 @@ meth public com.fasterxml.jackson.databind.cfg.BaseSettings withInsertedAnnotati
 meth public com.fasterxml.jackson.databind.cfg.BaseSettings withPropertyNamingStrategy(com.fasterxml.jackson.databind.PropertyNamingStrategy)
 meth public com.fasterxml.jackson.databind.cfg.BaseSettings withTypeFactory(com.fasterxml.jackson.databind.type.TypeFactory)
 meth public com.fasterxml.jackson.databind.cfg.BaseSettings withTypeResolverBuilder(com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?>)
+meth public com.fasterxml.jackson.databind.cfg.CacheProvider getCacheProvider()
 meth public com.fasterxml.jackson.databind.cfg.HandlerInstantiator getHandlerInstantiator()
 meth public com.fasterxml.jackson.databind.introspect.AccessorNamingStrategy$Provider getAccessorNaming()
 meth public com.fasterxml.jackson.databind.introspect.ClassIntrospector getClassIntrospector()
@@ -6341,6 +7146,12 @@ meth public java.util.Locale getLocale()
 meth public java.util.TimeZone getTimeZone()
 supr java.lang.Object
 hfds DEFAULT_TIMEZONE,serialVersionUID
+
+CLSS public abstract interface com.fasterxml.jackson.databind.cfg.CacheProvider
+intf java.io.Serializable
+meth public abstract com.fasterxml.jackson.databind.util.LookupCache<com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>> forDeserializerCache(com.fasterxml.jackson.databind.DeserializationConfig)
+meth public abstract com.fasterxml.jackson.databind.util.LookupCache<com.fasterxml.jackson.databind.util.TypeKey,com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>> forSerializerCache(com.fasterxml.jackson.databind.SerializationConfig)
+meth public abstract com.fasterxml.jackson.databind.util.LookupCache<java.lang.Object,com.fasterxml.jackson.databind.JavaType> forTypeFactory()
 
 CLSS public final !enum com.fasterxml.jackson.databind.cfg.CoercionAction
 fld public final static com.fasterxml.jackson.databind.cfg.CoercionAction AsEmpty
@@ -6370,6 +7181,7 @@ fld protected com.fasterxml.jackson.databind.cfg.MutableCoercionConfig[] _perTyp
 fld protected final com.fasterxml.jackson.databind.cfg.MutableCoercionConfig _defaultCoercions
 fld protected java.util.Map<java.lang.Class<?>,com.fasterxml.jackson.databind.cfg.MutableCoercionConfig> _perClassCoercions
 intf java.io.Serializable
+meth protected boolean _isScalarType(com.fasterxml.jackson.databind.type.LogicalType)
 meth public com.fasterxml.jackson.databind.cfg.CoercionAction findCoercion(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.type.LogicalType,java.lang.Class<?>,com.fasterxml.jackson.databind.cfg.CoercionInputShape)
 meth public com.fasterxml.jackson.databind.cfg.CoercionAction findCoercionFromBlankString(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.type.LogicalType,java.lang.Class<?>,com.fasterxml.jackson.databind.cfg.CoercionAction)
 meth public com.fasterxml.jackson.databind.cfg.CoercionConfigs copy()
@@ -6516,6 +7328,54 @@ meth public static com.fasterxml.jackson.databind.cfg.ContextAttributes getEmpty
 supr com.fasterxml.jackson.databind.cfg.ContextAttributes
 hfds serialVersionUID
 
+CLSS public abstract interface com.fasterxml.jackson.databind.cfg.DatatypeFeature
+intf com.fasterxml.jackson.core.util.JacksonFeature
+meth public abstract int featureIndex()
+
+CLSS public com.fasterxml.jackson.databind.cfg.DatatypeFeatures
+cons protected init(int,int,int,int)
+fld protected final static int FEATURE_INDEX_ENUM = 0
+fld protected final static int FEATURE_INDEX_JSON_NODE = 1
+intf java.io.Serializable
+meth public !varargs com.fasterxml.jackson.databind.cfg.DatatypeFeatures withFeatures(com.fasterxml.jackson.databind.cfg.DatatypeFeature[])
+meth public !varargs com.fasterxml.jackson.databind.cfg.DatatypeFeatures withoutFeatures(com.fasterxml.jackson.databind.cfg.DatatypeFeature[])
+meth public boolean isEnabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
+meth public boolean isExplicitlyDisabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
+meth public boolean isExplicitlyEnabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
+meth public boolean isExplicitlySet(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
+meth public com.fasterxml.jackson.databind.cfg.DatatypeFeatures with(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
+meth public com.fasterxml.jackson.databind.cfg.DatatypeFeatures without(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
+meth public java.lang.Boolean getExplicitState(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
+meth public static com.fasterxml.jackson.databind.cfg.DatatypeFeatures defaultFeatures()
+supr java.lang.Object
+hfds _enabledFor1,_enabledFor2,_explicitFor1,_explicitFor2,serialVersionUID
+hcls DefaultHolder
+
+CLSS public com.fasterxml.jackson.databind.cfg.DefaultCacheProvider
+cons protected init(int,int,int)
+fld protected final int _maxDeserializerCacheSize
+fld protected final int _maxSerializerCacheSize
+fld protected final int _maxTypeFactoryCacheSize
+innr public static Builder
+intf com.fasterxml.jackson.databind.cfg.CacheProvider
+meth protected <%0 extends java.lang.Object, %1 extends java.lang.Object> com.fasterxml.jackson.databind.util.LookupCache<{%%0},{%%1}> _buildCache(int)
+meth public com.fasterxml.jackson.databind.util.LookupCache<com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>> forDeserializerCache(com.fasterxml.jackson.databind.DeserializationConfig)
+meth public com.fasterxml.jackson.databind.util.LookupCache<com.fasterxml.jackson.databind.util.TypeKey,com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>> forSerializerCache(com.fasterxml.jackson.databind.SerializationConfig)
+meth public com.fasterxml.jackson.databind.util.LookupCache<java.lang.Object,com.fasterxml.jackson.databind.JavaType> forTypeFactory()
+meth public static com.fasterxml.jackson.databind.cfg.CacheProvider defaultInstance()
+meth public static com.fasterxml.jackson.databind.cfg.DefaultCacheProvider$Builder builder()
+supr java.lang.Object
+hfds DEFAULT,serialVersionUID
+
+CLSS public static com.fasterxml.jackson.databind.cfg.DefaultCacheProvider$Builder
+ outer com.fasterxml.jackson.databind.cfg.DefaultCacheProvider
+meth public com.fasterxml.jackson.databind.cfg.DefaultCacheProvider build()
+meth public com.fasterxml.jackson.databind.cfg.DefaultCacheProvider$Builder maxDeserializerCacheSize(int)
+meth public com.fasterxml.jackson.databind.cfg.DefaultCacheProvider$Builder maxSerializerCacheSize(int)
+meth public com.fasterxml.jackson.databind.cfg.DefaultCacheProvider$Builder maxTypeFactoryCacheSize(int)
+supr java.lang.Object
+hfds _maxDeserializerCacheSize,_maxSerializerCacheSize,_maxTypeFactoryCacheSize
+
 CLSS public com.fasterxml.jackson.databind.cfg.DeserializerFactoryConfig
 cons protected init(com.fasterxml.jackson.databind.deser.Deserializers[],com.fasterxml.jackson.databind.deser.KeyDeserializers[],com.fasterxml.jackson.databind.deser.BeanDeserializerModifier[],com.fasterxml.jackson.databind.AbstractTypeResolver[],com.fasterxml.jackson.databind.deser.ValueInstantiators[])
 cons public init()
@@ -6548,6 +7408,19 @@ meth public java.lang.Iterable<com.fasterxml.jackson.databind.deser.ValueInstant
 supr java.lang.Object
 hfds serialVersionUID
 
+CLSS public final !enum com.fasterxml.jackson.databind.cfg.EnumFeature
+fld public final static com.fasterxml.jackson.databind.cfg.EnumFeature READ_ENUM_KEYS_USING_INDEX
+fld public final static com.fasterxml.jackson.databind.cfg.EnumFeature WRITE_ENUMS_TO_LOWERCASE
+intf com.fasterxml.jackson.databind.cfg.DatatypeFeature
+meth public boolean enabledByDefault()
+meth public boolean enabledIn(int)
+meth public int featureIndex()
+meth public int getMask()
+meth public static com.fasterxml.jackson.databind.cfg.EnumFeature valueOf(java.lang.String)
+meth public static com.fasterxml.jackson.databind.cfg.EnumFeature[] values()
+supr java.lang.Enum<com.fasterxml.jackson.databind.cfg.EnumFeature>
+hfds FEATURE_INDEX,_enabledByDefault,_mask
+
 CLSS public abstract com.fasterxml.jackson.databind.cfg.HandlerInstantiator
 cons public init()
 meth public abstract com.fasterxml.jackson.databind.JsonDeserializer<?> deserializerInstance(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.introspect.Annotated,java.lang.Class<?>)
@@ -6564,6 +7437,21 @@ meth public com.fasterxml.jackson.databind.util.Converter<?,?> converterInstance
 meth public java.lang.Object includeFilterInstance(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition,java.lang.Class<?>)
 supr java.lang.Object
 
+CLSS public final !enum com.fasterxml.jackson.databind.cfg.JsonNodeFeature
+fld public final static com.fasterxml.jackson.databind.cfg.JsonNodeFeature READ_NULL_PROPERTIES
+fld public final static com.fasterxml.jackson.databind.cfg.JsonNodeFeature STRIP_TRAILING_BIGDECIMAL_ZEROES
+fld public final static com.fasterxml.jackson.databind.cfg.JsonNodeFeature WRITE_NULL_PROPERTIES
+fld public final static com.fasterxml.jackson.databind.cfg.JsonNodeFeature WRITE_PROPERTIES_SORTED
+intf com.fasterxml.jackson.databind.cfg.DatatypeFeature
+meth public boolean enabledByDefault()
+meth public boolean enabledIn(int)
+meth public int featureIndex()
+meth public int getMask()
+meth public static com.fasterxml.jackson.databind.cfg.JsonNodeFeature valueOf(java.lang.String)
+meth public static com.fasterxml.jackson.databind.cfg.JsonNodeFeature[] values()
+supr java.lang.Enum<com.fasterxml.jackson.databind.cfg.JsonNodeFeature>
+hfds FEATURE_INDEX,_enabledByDefault,_mask
+
 CLSS public abstract com.fasterxml.jackson.databind.cfg.MapperBuilder<%0 extends com.fasterxml.jackson.databind.ObjectMapper, %1 extends com.fasterxml.jackson.databind.cfg.MapperBuilder<{com.fasterxml.jackson.databind.cfg.MapperBuilder%0},{com.fasterxml.jackson.databind.cfg.MapperBuilder%1}>>
 cons protected init({com.fasterxml.jackson.databind.cfg.MapperBuilder%0})
 fld protected final {com.fasterxml.jackson.databind.cfg.MapperBuilder%0} _mapper
@@ -6576,6 +7464,7 @@ meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} disabl
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} disable(com.fasterxml.jackson.databind.DeserializationFeature[])
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} disable(com.fasterxml.jackson.databind.MapperFeature[])
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} disable(com.fasterxml.jackson.databind.SerializationFeature[])
+meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} disable(com.fasterxml.jackson.databind.cfg.DatatypeFeature[])
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} enable(com.fasterxml.jackson.core.JsonGenerator$Feature[])
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} enable(com.fasterxml.jackson.core.JsonParser$Feature[])
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} enable(com.fasterxml.jackson.core.StreamReadFeature[])
@@ -6583,6 +7472,7 @@ meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} enable
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} enable(com.fasterxml.jackson.databind.DeserializationFeature[])
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} enable(com.fasterxml.jackson.databind.MapperFeature[])
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} enable(com.fasterxml.jackson.databind.SerializationFeature[])
+meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} enable(com.fasterxml.jackson.databind.cfg.DatatypeFeature[])
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} registerSubtypes(com.fasterxml.jackson.databind.jsontype.NamedType[])
 meth public !varargs {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} registerSubtypes(java.lang.Class<?>[])
 meth public boolean isEnabled(com.fasterxml.jackson.core.JsonGenerator$Feature)
@@ -6604,6 +7494,7 @@ meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} addMixIn(java.l
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} addModule(com.fasterxml.jackson.databind.Module)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} addModules(java.lang.Iterable<? extends com.fasterxml.jackson.databind.Module>)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} annotationIntrospector(com.fasterxml.jackson.databind.AnnotationIntrospector)
+meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} cacheProvider(com.fasterxml.jackson.databind.cfg.CacheProvider)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} clearProblemHandlers()
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} configure(com.fasterxml.jackson.core.JsonGenerator$Feature,boolean)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} configure(com.fasterxml.jackson.core.JsonParser$Feature,boolean)
@@ -6612,8 +7503,10 @@ meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} configure(com.f
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} configure(com.fasterxml.jackson.databind.DeserializationFeature,boolean)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} configure(com.fasterxml.jackson.databind.MapperFeature,boolean)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} configure(com.fasterxml.jackson.databind.SerializationFeature,boolean)
+meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} configure(com.fasterxml.jackson.databind.cfg.DatatypeFeature,boolean)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} constructorDetector(com.fasterxml.jackson.databind.cfg.ConstructorDetector)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} deactivateDefaultTyping()
+meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} defaultAttributes(com.fasterxml.jackson.databind.cfg.ContextAttributes)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} defaultBase64Variant(com.fasterxml.jackson.core.Base64Variant)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} defaultDateFormat(java.text.DateFormat)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} defaultLeniency(java.lang.Boolean)
@@ -6631,6 +7524,7 @@ meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} nodeFactory(com
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} polymorphicTypeValidator(com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} propertyNamingStrategy(com.fasterxml.jackson.databind.PropertyNamingStrategy)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} registerSubtypes(java.util.Collection<java.lang.Class<?>>)
+meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} removeMixIn(java.lang.Class<?>)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} serializationInclusion(com.fasterxml.jackson.annotation.JsonInclude$Include)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} serializerFactory(com.fasterxml.jackson.databind.ser.SerializerFactory)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} setDefaultTyping(com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?>)
@@ -6638,21 +7532,26 @@ meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} subtypeResolver
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} typeFactory(com.fasterxml.jackson.databind.type.TypeFactory)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} visibility(com.fasterxml.jackson.annotation.PropertyAccessor,com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility)
 meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} visibility(com.fasterxml.jackson.databind.introspect.VisibilityChecker<?>)
+meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} withCoercionConfig(com.fasterxml.jackson.databind.type.LogicalType,java.util.function.Consumer<com.fasterxml.jackson.databind.cfg.MutableCoercionConfig>)
+meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} withCoercionConfig(java.lang.Class<?>,java.util.function.Consumer<com.fasterxml.jackson.databind.cfg.MutableCoercionConfig>)
+meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} withCoercionConfigDefaults(java.util.function.Consumer<com.fasterxml.jackson.databind.cfg.MutableCoercionConfig>)
+meth public {com.fasterxml.jackson.databind.cfg.MapperBuilder%1} withConfigOverride(java.lang.Class<?>,java.util.function.Consumer<com.fasterxml.jackson.databind.cfg.MutableConfigOverride>)
 supr java.lang.Object
 
 CLSS public abstract com.fasterxml.jackson.databind.cfg.MapperConfig<%0 extends com.fasterxml.jackson.databind.cfg.MapperConfig<{com.fasterxml.jackson.databind.cfg.MapperConfig%0}>>
-cons protected init(com.fasterxml.jackson.databind.cfg.BaseSettings,int)
+cons protected init(com.fasterxml.jackson.databind.cfg.BaseSettings,long)
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfig<{com.fasterxml.jackson.databind.cfg.MapperConfig%0}>)
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfig<{com.fasterxml.jackson.databind.cfg.MapperConfig%0}>,com.fasterxml.jackson.databind.cfg.BaseSettings)
-cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfig<{com.fasterxml.jackson.databind.cfg.MapperConfig%0}>,int)
+cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfig<{com.fasterxml.jackson.databind.cfg.MapperConfig%0}>,long)
 fld protected final com.fasterxml.jackson.databind.cfg.BaseSettings _base
-fld protected final int _mapperFeatures
+fld protected final long _mapperFeatures
 fld protected final static com.fasterxml.jackson.annotation.JsonFormat$Value EMPTY_FORMAT
 fld protected final static com.fasterxml.jackson.annotation.JsonInclude$Value EMPTY_INCLUDE
 intf com.fasterxml.jackson.databind.introspect.ClassIntrospector$MixInResolver
 intf java.io.Serializable
 meth public abstract !varargs {com.fasterxml.jackson.databind.cfg.MapperConfig%0} with(com.fasterxml.jackson.databind.MapperFeature[])
 meth public abstract !varargs {com.fasterxml.jackson.databind.cfg.MapperConfig%0} without(com.fasterxml.jackson.databind.MapperFeature[])
+meth public abstract boolean isEnabled(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public abstract boolean useRootWrapping()
 meth public abstract com.fasterxml.jackson.annotation.JsonFormat$Value getDefaultPropertyFormat(java.lang.Class<?>)
 meth public abstract com.fasterxml.jackson.annotation.JsonIgnoreProperties$Value getDefaultPropertyIgnorals(java.lang.Class<?>)
@@ -6667,6 +7566,7 @@ meth public abstract com.fasterxml.jackson.databind.PropertyName findRootName(ja
 meth public abstract com.fasterxml.jackson.databind.cfg.ConfigOverride findConfigOverride(java.lang.Class<?>)
 meth public abstract com.fasterxml.jackson.databind.cfg.ConfigOverride getConfigOverride(java.lang.Class<?>)
 meth public abstract com.fasterxml.jackson.databind.cfg.ContextAttributes getAttributes()
+meth public abstract com.fasterxml.jackson.databind.cfg.DatatypeFeatures getDatatypeFeatures()
 meth public abstract com.fasterxml.jackson.databind.introspect.VisibilityChecker<?> getDefaultVisibilityChecker()
 meth public abstract com.fasterxml.jackson.databind.introspect.VisibilityChecker<?> getDefaultVisibilityChecker(java.lang.Class<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public abstract com.fasterxml.jackson.databind.jsontype.SubtypeResolver getSubtypeResolver()
@@ -6684,12 +7584,14 @@ meth public com.fasterxml.jackson.databind.BeanDescription introspectClassAnnota
 meth public com.fasterxml.jackson.databind.BeanDescription introspectClassAnnotations(java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.BeanDescription introspectDirectClassAnnotations(java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.JavaType constructSpecializedType(com.fasterxml.jackson.databind.JavaType,java.lang.Class<?>)
+meth public com.fasterxml.jackson.databind.cfg.CacheProvider getCacheProvider()
 meth public com.fasterxml.jackson.databind.introspect.ClassIntrospector getClassIntrospector()
 meth public com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator getPolymorphicTypeValidator()
 meth public com.fasterxml.jackson.databind.jsontype.TypeIdResolver typeIdResolverInstance(com.fasterxml.jackson.databind.introspect.Annotated,java.lang.Class<? extends com.fasterxml.jackson.databind.jsontype.TypeIdResolver>)
 meth public com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?> typeResolverBuilderInstance(com.fasterxml.jackson.databind.introspect.Annotated,java.lang.Class<? extends com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?>>)
 meth public final boolean canOverrideAccessModifiers()
 meth public final boolean hasMapperFeatures(int)
+ anno 0 java.lang.Deprecated()
 meth public final boolean isAnnotationProcessingEnabled()
 meth public final boolean isEnabled(com.fasterxml.jackson.databind.MapperFeature)
 meth public final boolean shouldSortPropertiesAlphabetically()
@@ -6709,29 +7611,35 @@ supr java.lang.Object
 hfds serialVersionUID
 
 CLSS public abstract com.fasterxml.jackson.databind.cfg.MapperConfigBase<%0 extends com.fasterxml.jackson.databind.cfg.ConfigFeature, %1 extends com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>>
-cons protected init(com.fasterxml.jackson.databind.cfg.BaseSettings,com.fasterxml.jackson.databind.jsontype.SubtypeResolver,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides)
+cons protected init(com.fasterxml.jackson.databind.cfg.BaseSettings,com.fasterxml.jackson.databind.jsontype.SubtypeResolver,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides,com.fasterxml.jackson.databind.cfg.DatatypeFeatures)
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>)
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>,com.fasterxml.jackson.databind.PropertyName)
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>,com.fasterxml.jackson.databind.cfg.BaseSettings)
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>,com.fasterxml.jackson.databind.cfg.ContextAttributes)
+cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>,com.fasterxml.jackson.databind.cfg.DatatypeFeatures)
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver)
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>,com.fasterxml.jackson.databind.jsontype.SubtypeResolver)
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>,com.fasterxml.jackson.databind.jsontype.SubtypeResolver,com.fasterxml.jackson.databind.introspect.SimpleMixInResolver,com.fasterxml.jackson.databind.util.RootNameLookup,com.fasterxml.jackson.databind.cfg.ConfigOverrides)
-cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>,int)
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>,java.lang.Class<?>)
+cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfigBase<{com.fasterxml.jackson.databind.cfg.MapperConfigBase%0},{com.fasterxml.jackson.databind.cfg.MapperConfigBase%1}>,long)
 fld protected final com.fasterxml.jackson.databind.PropertyName _rootName
 fld protected final com.fasterxml.jackson.databind.cfg.ConfigOverrides _configOverrides
 fld protected final com.fasterxml.jackson.databind.cfg.ContextAttributes _attributes
+fld protected final com.fasterxml.jackson.databind.cfg.DatatypeFeatures _datatypeFeatures
 fld protected final com.fasterxml.jackson.databind.introspect.SimpleMixInResolver _mixIns
 fld protected final com.fasterxml.jackson.databind.jsontype.SubtypeResolver _subtypeResolver
 fld protected final com.fasterxml.jackson.databind.util.RootNameLookup _rootNames
 fld protected final java.lang.Class<?> _view
 fld protected final static com.fasterxml.jackson.databind.cfg.ConfigOverride EMPTY_OVERRIDE
 intf java.io.Serializable
+meth protected abstract {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} _with(com.fasterxml.jackson.databind.cfg.DatatypeFeatures)
 meth protected abstract {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} _withBase(com.fasterxml.jackson.databind.cfg.BaseSettings)
-meth protected abstract {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} _withMapperFeatures(int)
+meth protected abstract {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} _withMapperFeatures(long)
+meth protected com.fasterxml.jackson.databind.cfg.DatatypeFeatures _datatypeFeatures()
 meth public !varargs final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.MapperFeature[])
+meth public !varargs final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} withFeatures(com.fasterxml.jackson.databind.cfg.DatatypeFeature[])
 meth public !varargs final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} without(com.fasterxml.jackson.databind.MapperFeature[])
+meth public !varargs final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} withoutFeatures(com.fasterxml.jackson.databind.cfg.DatatypeFeature[])
 meth public abstract {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.cfg.ContextAttributes)
 meth public abstract {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.jsontype.SubtypeResolver)
 meth public abstract {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} withRootName(com.fasterxml.jackson.databind.PropertyName)
@@ -6751,6 +7659,7 @@ meth public final com.fasterxml.jackson.databind.PropertyName getFullRootName()
 meth public final com.fasterxml.jackson.databind.cfg.ConfigOverride findConfigOverride(java.lang.Class<?>)
 meth public final com.fasterxml.jackson.databind.cfg.ConfigOverride getConfigOverride(java.lang.Class<?>)
 meth public final com.fasterxml.jackson.databind.cfg.ContextAttributes getAttributes()
+meth public final com.fasterxml.jackson.databind.cfg.DatatypeFeatures getDatatypeFeatures()
 meth public final com.fasterxml.jackson.databind.introspect.VisibilityChecker<?> getDefaultVisibilityChecker()
 meth public final com.fasterxml.jackson.databind.introspect.VisibilityChecker<?> getDefaultVisibilityChecker(java.lang.Class<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public final com.fasterxml.jackson.databind.jsontype.SubtypeResolver getSubtypeResolver()
@@ -6763,6 +7672,8 @@ meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(c
 meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.AnnotationIntrospector)
 meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.MapperFeature,boolean)
 meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.PropertyNamingStrategy)
+meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
+meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.cfg.DatatypeFeature,boolean)
 meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.cfg.HandlerInstantiator)
 meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.introspect.AccessorNamingStrategy$Provider)
 meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.introspect.ClassIntrospector)
@@ -6772,8 +7683,10 @@ meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(j
 meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(java.util.TimeZone)
 meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} withAppendedAnnotationIntrospector(com.fasterxml.jackson.databind.AnnotationIntrospector)
 meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} withInsertedAnnotationIntrospector(com.fasterxml.jackson.databind.AnnotationIntrospector)
+meth public final {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} without(com.fasterxml.jackson.databind.cfg.DatatypeFeature)
 meth public java.lang.Boolean getDefaultMergeable()
 meth public java.lang.Boolean getDefaultMergeable(java.lang.Class<?>)
+meth public {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(com.fasterxml.jackson.databind.cfg.CacheProvider)
 meth public {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} with(java.text.DateFormat)
 meth public {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} withAttribute(java.lang.Object,java.lang.Object)
 meth public {com.fasterxml.jackson.databind.cfg.MapperConfigBase%1} withAttributes(java.util.Map<?,?>)
@@ -6835,6 +7748,8 @@ meth public java.lang.Iterable<com.fasterxml.jackson.databind.ser.Serializers> k
 meth public java.lang.Iterable<com.fasterxml.jackson.databind.ser.Serializers> serializers()
 supr java.lang.Object
 hfds serialVersionUID
+
+CLSS abstract interface com.fasterxml.jackson.databind.cfg.package-info
 
 CLSS public com.fasterxml.jackson.databind.deser.AbstractDeserializer
 cons protected init(com.fasterxml.jackson.databind.BeanDescription)
@@ -6903,7 +7818,10 @@ meth protected com.fasterxml.jackson.databind.introspect.AnnotatedMethod _findJs
  anno 0 java.lang.Deprecated()
 meth protected com.fasterxml.jackson.databind.type.CollectionType _mapAbstractCollectionType(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.DeserializationConfig)
 meth protected com.fasterxml.jackson.databind.type.MapType _mapAbstractMapType(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.DeserializationConfig)
-meth protected com.fasterxml.jackson.databind.util.EnumResolver constructEnumResolver(java.lang.Class<?>,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth protected com.fasterxml.jackson.databind.util.EnumResolver constructEnumNamingStrategyResolver(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
+meth protected com.fasterxml.jackson.databind.util.EnumResolver constructEnumNamingStrategyResolver(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
+ anno 0 java.lang.Deprecated()
+meth protected com.fasterxml.jackson.databind.util.EnumResolver constructEnumResolver(java.lang.Class<?>,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.BeanDescription)
 meth protected java.util.Map<com.fasterxml.jackson.databind.introspect.AnnotatedWithParams,com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition[]> _findCreatorsFromProperties(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanDescription) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected void _addExplicitAnyCreator(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.deser.impl.CreatorCollector,com.fasterxml.jackson.databind.deser.impl.CreatorCandidate) throws com.fasterxml.jackson.databind.JsonMappingException
  anno 0 java.lang.Deprecated()
@@ -6915,7 +7833,9 @@ meth protected void _addExplicitPropertyCreator(com.fasterxml.jackson.databind.D
 meth protected void _addImplicitConstructorCreators(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.BasicDeserializerFactory$CreatorCollectionState,java.util.List<com.fasterxml.jackson.databind.deser.impl.CreatorCandidate>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected void _addImplicitFactoryCreators(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.BasicDeserializerFactory$CreatorCollectionState,java.util.List<com.fasterxml.jackson.databind.deser.impl.CreatorCandidate>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected void _addRecordConstructor(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.BasicDeserializerFactory$CreatorCollectionState,com.fasterxml.jackson.databind.introspect.AnnotatedConstructor,java.util.List<java.lang.String>) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 meth protected void _reportUnwrappedCreatorProperty(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.introspect.AnnotatedParameter) throws com.fasterxml.jackson.databind.JsonMappingException
+meth protected void _validateNamedPropertyParameter(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.deser.impl.CreatorCandidate,int,com.fasterxml.jackson.databind.PropertyName,com.fasterxml.jackson.annotation.JacksonInject$Value) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public boolean hasExplicitDeserializerFor(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.JavaType mapAbstractType(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> createArrayDeserializer(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.type.ArrayType,com.fasterxml.jackson.databind.BeanDescription) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -6993,8 +7913,7 @@ meth protected final java.lang.Object deserializeWithView(com.fasterxml.jackson.
 meth protected java.lang.Exception _creatorReturnedNullException()
 meth protected java.lang.Object _deserializeFromArray(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected java.lang.Object _deserializeUsingPropertyBased(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
-meth protected java.lang.Object _missingToken(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+meth protected java.lang.Object _deserializeWithExternalTypeId(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object,com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler) throws java.io.IOException
 meth protected java.lang.Object deserializeFromNull(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected java.lang.Object deserializeUsingPropertyBasedWithExternalTypeId(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected java.lang.Object deserializeUsingPropertyBasedWithUnwrapped(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
@@ -7053,6 +7972,7 @@ meth protected abstract com.fasterxml.jackson.databind.deser.BeanDeserializerBas
 meth protected abstract java.lang.Object _deserializeUsingPropertyBased(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _findSubclassDeserializer(com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object,com.fasterxml.jackson.databind.util.TokenBuffer) throws java.io.IOException
 meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> findConvertingDeserializer(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.SettableBeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
+meth protected com.fasterxml.jackson.databind.PropertyMetadata _getSetterInfo(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType)
 meth protected com.fasterxml.jackson.databind.deser.BeanDeserializerBase _handleByNameInclusion(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.AnnotationIntrospector,com.fasterxml.jackson.databind.deser.BeanDeserializerBase,com.fasterxml.jackson.databind.introspect.AnnotatedMember) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected com.fasterxml.jackson.databind.deser.SettableBeanProperty _resolveInnerClassValuedProperty(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.SettableBeanProperty)
 meth protected com.fasterxml.jackson.databind.deser.SettableBeanProperty _resolveManagedReferenceProperty(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.SettableBeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -7065,7 +7985,9 @@ meth protected java.lang.Object _handleTypedObjectId(com.fasterxml.jackson.core.
 meth protected java.lang.Object deserializeFromObjectId(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected java.lang.Object deserializeFromObjectUsingNonDefault(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected java.lang.Object deserializeWithObjectId(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth protected java.lang.Object handlePolymorphic(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.core.StreamReadConstraints,java.lang.Object,com.fasterxml.jackson.databind.util.TokenBuffer) throws java.io.IOException
 meth protected java.lang.Object handlePolymorphic(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object,com.fasterxml.jackson.databind.util.TokenBuffer) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth protected java.lang.Object handleUnknownProperties(com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object,com.fasterxml.jackson.databind.util.TokenBuffer) throws java.io.IOException
 meth protected java.lang.Object wrapInstantiationProblem(java.lang.Throwable,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected void _replaceProperty(com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap,com.fasterxml.jackson.databind.deser.SettableBeanProperty[],com.fasterxml.jackson.databind.deser.SettableBeanProperty,com.fasterxml.jackson.databind.deser.SettableBeanProperty)
@@ -7139,10 +8061,11 @@ fld protected java.util.List<com.fasterxml.jackson.databind.deser.impl.ValueInje
 meth protected boolean _findCaseInsensitivity()
 meth protected com.fasterxml.jackson.databind.JsonDeserializer<?> createBuilderBasedDeserializer(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap,boolean)
 meth protected java.util.Map<java.lang.String,java.util.List<com.fasterxml.jackson.databind.PropertyName>> _collectAliases(java.util.Collection<com.fasterxml.jackson.databind.deser.SettableBeanProperty>)
-meth protected void _fixAccess(java.util.Collection<com.fasterxml.jackson.databind.deser.SettableBeanProperty>)
+meth protected void _fixAccess(java.util.Collection<com.fasterxml.jackson.databind.deser.SettableBeanProperty>) throws com.fasterxml.jackson.databind.JsonMappingException
+meth protected void _handleBadAccess(java.lang.IllegalArgumentException) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public boolean hasIgnorable(java.lang.String)
 meth public boolean hasProperty(com.fasterxml.jackson.databind.PropertyName)
-meth public com.fasterxml.jackson.databind.JsonDeserializer<?> build()
+meth public com.fasterxml.jackson.databind.JsonDeserializer<?> build() throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> buildBuilderBased(com.fasterxml.jackson.databind.JavaType,java.lang.String) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder$Value getBuilderConfig()
 meth public com.fasterxml.jackson.databind.deser.AbstractDeserializer buildAbstract()
@@ -7154,11 +8077,11 @@ meth public com.fasterxml.jackson.databind.deser.impl.ObjectIdReader getObjectId
 meth public com.fasterxml.jackson.databind.introspect.AnnotatedMethod getBuildMethod()
 meth public java.util.Iterator<com.fasterxml.jackson.databind.deser.SettableBeanProperty> getProperties()
 meth public java.util.List<com.fasterxml.jackson.databind.deser.impl.ValueInjector> getInjectables()
-meth public void addBackReferenceProperty(java.lang.String,com.fasterxml.jackson.databind.deser.SettableBeanProperty)
+meth public void addBackReferenceProperty(java.lang.String,com.fasterxml.jackson.databind.deser.SettableBeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void addCreatorProperty(com.fasterxml.jackson.databind.deser.SettableBeanProperty)
 meth public void addIgnorable(java.lang.String)
 meth public void addIncludable(java.lang.String)
-meth public void addInjectable(com.fasterxml.jackson.databind.PropertyName,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.util.Annotations,com.fasterxml.jackson.databind.introspect.AnnotatedMember,java.lang.Object)
+meth public void addInjectable(com.fasterxml.jackson.databind.PropertyName,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.util.Annotations,com.fasterxml.jackson.databind.introspect.AnnotatedMember,java.lang.Object) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void addOrReplaceProperty(com.fasterxml.jackson.databind.deser.SettableBeanProperty,boolean)
 meth public void addProperty(com.fasterxml.jackson.databind.deser.SettableBeanProperty)
 meth public void setAnySetter(com.fasterxml.jackson.databind.deser.SettableAnyProperty)
@@ -7347,6 +8270,7 @@ CLSS public abstract com.fasterxml.jackson.databind.deser.DefaultDeserialization
 cons protected init(com.fasterxml.jackson.databind.deser.DefaultDeserializationContext)
 cons protected init(com.fasterxml.jackson.databind.deser.DefaultDeserializationContext,com.fasterxml.jackson.databind.DeserializationConfig)
 cons protected init(com.fasterxml.jackson.databind.deser.DefaultDeserializationContext,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.InjectableValues)
+cons protected init(com.fasterxml.jackson.databind.deser.DefaultDeserializationContext,com.fasterxml.jackson.databind.cfg.CacheProvider)
 cons protected init(com.fasterxml.jackson.databind.deser.DefaultDeserializationContext,com.fasterxml.jackson.databind.deser.DeserializerFactory)
 cons protected init(com.fasterxml.jackson.databind.deser.DeserializerFactory,com.fasterxml.jackson.databind.deser.DeserializerCache)
 fld protected java.util.LinkedHashMap<com.fasterxml.jackson.annotation.ObjectIdGenerator$IdKey,com.fasterxml.jackson.databind.deser.impl.ReadableObjectId> _objectIds
@@ -7358,6 +8282,7 @@ meth protected java.lang.Object _unwrapAndDeserialize(com.fasterxml.jackson.core
 meth public abstract com.fasterxml.jackson.databind.deser.DefaultDeserializationContext createDummyInstance(com.fasterxml.jackson.databind.DeserializationConfig)
 meth public abstract com.fasterxml.jackson.databind.deser.DefaultDeserializationContext createInstance(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.InjectableValues)
 meth public abstract com.fasterxml.jackson.databind.deser.DefaultDeserializationContext with(com.fasterxml.jackson.databind.deser.DeserializerFactory)
+meth public abstract com.fasterxml.jackson.databind.deser.DefaultDeserializationContext withCaches(com.fasterxml.jackson.databind.cfg.CacheProvider)
 meth public com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> deserializerInstance(com.fasterxml.jackson.databind.introspect.Annotated,java.lang.Object) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.deser.DefaultDeserializationContext copy()
 meth public com.fasterxml.jackson.databind.deser.impl.ReadableObjectId findObjectId(java.lang.Object,com.fasterxml.jackson.annotation.ObjectIdGenerator<?>,com.fasterxml.jackson.annotation.ObjectIdResolver)
@@ -7374,6 +8299,7 @@ meth public com.fasterxml.jackson.databind.deser.DefaultDeserializationContext c
 meth public com.fasterxml.jackson.databind.deser.DefaultDeserializationContext createDummyInstance(com.fasterxml.jackson.databind.DeserializationConfig)
 meth public com.fasterxml.jackson.databind.deser.DefaultDeserializationContext createInstance(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.InjectableValues)
 meth public com.fasterxml.jackson.databind.deser.DefaultDeserializationContext with(com.fasterxml.jackson.databind.deser.DeserializerFactory)
+meth public com.fasterxml.jackson.databind.deser.DefaultDeserializationContext withCaches(com.fasterxml.jackson.databind.cfg.CacheProvider)
 supr com.fasterxml.jackson.databind.deser.DefaultDeserializationContext
 hfds serialVersionUID
 
@@ -7398,9 +8324,11 @@ supr java.lang.Object
 
 CLSS public final com.fasterxml.jackson.databind.deser.DeserializerCache
 cons public init()
+cons public init(com.fasterxml.jackson.databind.util.LookupCache<com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>>)
 cons public init(int)
-fld protected final com.fasterxml.jackson.databind.util.LRUMap<com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>> _cachedDeserializers
+fld protected final com.fasterxml.jackson.databind.util.LookupCache<com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>> _cachedDeserializers
 fld protected final java.util.HashMap<com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>> _incompleteDeserializers
+fld public final static int DEFAULT_MAX_CACHE_SIZE = 2000
 intf java.io.Serializable
 meth protected com.fasterxml.jackson.databind.JsonDeserializer<?> _createDeserializer2(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.DeserializerFactory,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.BeanDescription) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _createAndCache2(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.DeserializerFactory,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -7415,6 +8343,7 @@ meth protected com.fasterxml.jackson.databind.util.Converter<java.lang.Object,ja
 meth public boolean hasValueDeserializerFor(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.DeserializerFactory,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> findValueDeserializer(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.DeserializerFactory,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.KeyDeserializer findKeyDeserializer(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.DeserializerFactory,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public com.fasterxml.jackson.databind.deser.DeserializerCache emptyCopy()
 meth public int cachedDeserializersCount()
 meth public void flushCachedDeserializers()
 supr java.lang.Object
@@ -7456,12 +8385,12 @@ meth public abstract com.fasterxml.jackson.databind.JsonDeserializer<?> findMapD
 meth public abstract com.fasterxml.jackson.databind.JsonDeserializer<?> findMapLikeDeserializer(com.fasterxml.jackson.databind.type.MapLikeType,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<?>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public abstract com.fasterxml.jackson.databind.JsonDeserializer<?> findReferenceDeserializer(com.fasterxml.jackson.databind.type.ReferenceType,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<?>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public abstract com.fasterxml.jackson.databind.JsonDeserializer<?> findTreeNodeDeserializer(java.lang.Class<? extends com.fasterxml.jackson.databind.JsonNode>,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.BeanDescription) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public boolean hasDeserializerFor(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>)
 
 CLSS public abstract static com.fasterxml.jackson.databind.deser.Deserializers$Base
  outer com.fasterxml.jackson.databind.deser.Deserializers
 cons public init()
 intf com.fasterxml.jackson.databind.deser.Deserializers
-meth public boolean hasDeserializerFor(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> findArrayDeserializer(com.fasterxml.jackson.databind.type.ArrayType,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<?>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> findBeanDeserializer(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.BeanDescription) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> findCollectionDeserializer(com.fasterxml.jackson.databind.type.CollectionType,com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<?>) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -7479,34 +8408,75 @@ meth public abstract com.fasterxml.jackson.databind.KeyDeserializer findKeyDeser
 CLSS public abstract interface com.fasterxml.jackson.databind.deser.NullValueProvider
 meth public abstract com.fasterxml.jackson.databind.util.AccessPattern getNullAccessPattern()
 meth public abstract java.lang.Object getNullValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public java.lang.Object getAbsentValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 
 CLSS public abstract interface com.fasterxml.jackson.databind.deser.ResolvableDeserializer
 meth public abstract void resolve(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 
-CLSS public com.fasterxml.jackson.databind.deser.SettableAnyProperty
-cons public init(com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer)
- anno 0 java.lang.Deprecated()
+CLSS public abstract com.fasterxml.jackson.databind.deser.SettableAnyProperty
 cons public init(com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer)
 fld protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _valueDeserializer
+fld protected final boolean _setterIsField
 fld protected final com.fasterxml.jackson.databind.BeanProperty _property
 fld protected final com.fasterxml.jackson.databind.JavaType _type
 fld protected final com.fasterxml.jackson.databind.KeyDeserializer _keyDeserializer
 fld protected final com.fasterxml.jackson.databind.introspect.AnnotatedMember _setter
 fld protected final com.fasterxml.jackson.databind.jsontype.TypeDeserializer _valueTypeDeserializer
+innr protected static JsonNodeFieldAnyProperty
+innr protected static MapFieldAnyProperty
+innr protected static MethodAnyProperty
 intf java.io.Serializable
+meth protected abstract void _set(java.lang.Object,java.lang.Object,java.lang.Object) throws java.lang.Exception
 meth protected void _throwAsIOE(java.lang.Exception,java.lang.Object,java.lang.Object) throws java.io.IOException
+meth public abstract com.fasterxml.jackson.databind.deser.SettableAnyProperty withValueDeserializer(com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>)
 meth public boolean hasValueDeserializer()
 meth public com.fasterxml.jackson.databind.BeanProperty getProperty()
 meth public com.fasterxml.jackson.databind.JavaType getType()
-meth public com.fasterxml.jackson.databind.deser.SettableAnyProperty withValueDeserializer(com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>)
-meth public final void deserializeAndSet(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object,java.lang.String) throws java.io.IOException
 meth public java.lang.Object deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth public java.lang.String getPropertyName()
 meth public java.lang.String toString()
+meth public static com.fasterxml.jackson.databind.deser.SettableAnyProperty constructForJsonNodeField(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>)
+meth public static com.fasterxml.jackson.databind.deser.SettableAnyProperty constructForMapField(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer)
+meth public static com.fasterxml.jackson.databind.deser.SettableAnyProperty constructForMethod(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer)
+meth public void deserializeAndSet(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object,java.lang.String) throws java.io.IOException
 meth public void fixAccess(com.fasterxml.jackson.databind.DeserializationConfig)
 meth public void set(java.lang.Object,java.lang.Object,java.lang.Object) throws java.io.IOException
 supr java.lang.Object
-hfds _setterIsField,serialVersionUID
+hfds serialVersionUID
 hcls AnySetterReferring
+
+CLSS protected static com.fasterxml.jackson.databind.deser.SettableAnyProperty$JsonNodeFieldAnyProperty
+ outer com.fasterxml.jackson.databind.deser.SettableAnyProperty
+cons public init(com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.node.JsonNodeFactory)
+fld protected final com.fasterxml.jackson.databind.node.JsonNodeFactory _nodeFactory
+intf java.io.Serializable
+meth protected void _set(java.lang.Object,java.lang.Object,java.lang.Object) throws java.lang.Exception
+meth protected void setProperty(java.lang.Object,java.lang.String,com.fasterxml.jackson.databind.JsonNode) throws java.io.IOException
+meth public com.fasterxml.jackson.databind.deser.SettableAnyProperty withValueDeserializer(com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>)
+meth public java.lang.Object deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth public void deserializeAndSet(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object,java.lang.String) throws java.io.IOException
+supr com.fasterxml.jackson.databind.deser.SettableAnyProperty
+hfds serialVersionUID
+
+CLSS protected static com.fasterxml.jackson.databind.deser.SettableAnyProperty$MapFieldAnyProperty
+ outer com.fasterxml.jackson.databind.deser.SettableAnyProperty
+cons public init(com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.deser.ValueInstantiator)
+fld protected final com.fasterxml.jackson.databind.deser.ValueInstantiator _valueInstantiator
+intf java.io.Serializable
+meth protected java.util.Map<java.lang.Object,java.lang.Object> _createAndSetMap(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.introspect.AnnotatedField,java.lang.Object,java.lang.Object) throws java.io.IOException
+meth protected void _set(java.lang.Object,java.lang.Object,java.lang.Object) throws java.lang.Exception
+meth public com.fasterxml.jackson.databind.deser.SettableAnyProperty withValueDeserializer(com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>)
+supr com.fasterxml.jackson.databind.deser.SettableAnyProperty
+hfds serialVersionUID
+
+CLSS protected static com.fasterxml.jackson.databind.deser.SettableAnyProperty$MethodAnyProperty
+ outer com.fasterxml.jackson.databind.deser.SettableAnyProperty
+cons public init(com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer)
+intf java.io.Serializable
+meth protected void _set(java.lang.Object,java.lang.Object,java.lang.Object) throws java.lang.Exception
+meth public com.fasterxml.jackson.databind.deser.SettableAnyProperty withValueDeserializer(com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>)
+supr com.fasterxml.jackson.databind.deser.SettableAnyProperty
+hfds serialVersionUID
 
 CLSS public abstract com.fasterxml.jackson.databind.deser.SettableBeanProperty
 cons protected init(com.fasterxml.jackson.databind.PropertyName,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.PropertyMetadata,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>)
@@ -7612,10 +8582,8 @@ supr com.fasterxml.jackson.databind.deser.SettableBeanProperty
 CLSS public com.fasterxml.jackson.databind.deser.UnresolvedForwardReference
 cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String)
 cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String,com.fasterxml.jackson.core.JsonLocation,com.fasterxml.jackson.databind.deser.impl.ReadableObjectId)
-cons public init(java.lang.String)
- anno 0 java.lang.Deprecated()
-cons public init(java.lang.String,com.fasterxml.jackson.core.JsonLocation,com.fasterxml.jackson.databind.deser.impl.ReadableObjectId)
- anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.databind.deser.UnresolvedForwardReference fillInStackTrace()
+meth public com.fasterxml.jackson.databind.deser.UnresolvedForwardReference withStackTrace()
 meth public com.fasterxml.jackson.databind.deser.impl.ReadableObjectId getRoid()
 meth public java.lang.Object getUnresolvedId()
 meth public java.lang.String getMessage()
@@ -7672,6 +8640,7 @@ meth public java.lang.Object createFromObjectWith(com.fasterxml.jackson.databind
 meth public java.lang.Object createFromString(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth public java.lang.Object createUsingArrayDelegate(com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object) throws java.io.IOException
 meth public java.lang.Object createUsingDefault(com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth public java.lang.Object createUsingDefaultOrWithoutArguments(com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth public java.lang.Object createUsingDelegate(com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object) throws java.io.IOException
 meth public java.lang.String getValueTypeDesc()
 supr java.lang.Object
@@ -7905,6 +8874,7 @@ cons protected init(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackso
 cons protected init(com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler)
 innr public static Builder
 meth protected final java.lang.Object _deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,int,java.lang.String) throws java.io.IOException
+meth protected final java.lang.Object _deserializeMissingToken(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,int,java.lang.String) throws java.io.IOException
 meth protected final void _deserializeAndSet(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object,int,java.lang.String) throws java.io.IOException
 meth public boolean handlePropertyValue(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String,java.lang.Object) throws java.io.IOException
 meth public boolean handleTypePropertyValue(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String,java.lang.Object) throws java.io.IOException
@@ -7972,11 +8942,11 @@ hcls ArrayListInstantiator,ConstantValueInstantiator,HashMapInstantiator,LinkedH
 
 CLSS public abstract com.fasterxml.jackson.databind.deser.impl.JavaUtilCollectionsDeserializers
 cons public init()
-fld public final static int TYPE_AS_LIST = 7
+fld public final static int TYPE_AS_LIST = 11
 meth public static com.fasterxml.jackson.databind.JsonDeserializer<?> findForCollection(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public static com.fasterxml.jackson.databind.JsonDeserializer<?> findForMap(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 supr java.lang.Object
-hfds CLASS_AS_ARRAYS_LIST,CLASS_SINGLETON_LIST,CLASS_SINGLETON_MAP,CLASS_SINGLETON_SET,CLASS_UNMODIFIABLE_LIST,CLASS_UNMODIFIABLE_LIST_ALIAS,CLASS_UNMODIFIABLE_MAP,CLASS_UNMODIFIABLE_SET,TYPE_SINGLETON_LIST,TYPE_SINGLETON_MAP,TYPE_SINGLETON_SET,TYPE_UNMODIFIABLE_LIST,TYPE_UNMODIFIABLE_MAP,TYPE_UNMODIFIABLE_SET
+hfds PREFIX_JAVA_UTIL_ARRAYS,PREFIX_JAVA_UTIL_COLLECTIONS,PREFIX_JAVA_UTIL_IMMUTABLE_COLL,TYPE_SINGLETON_LIST,TYPE_SINGLETON_MAP,TYPE_SINGLETON_SET,TYPE_SYNC_COLLECTION,TYPE_SYNC_LIST,TYPE_SYNC_MAP,TYPE_SYNC_SET,TYPE_UNMODIFIABLE_LIST,TYPE_UNMODIFIABLE_MAP,TYPE_UNMODIFIABLE_SET
 hcls JavaUtilCollectionsConverter
 
 CLSS public final com.fasterxml.jackson.databind.deser.impl.ManagedReferenceProperty
@@ -8283,6 +9253,10 @@ meth public void inject(com.fasterxml.jackson.databind.DeserializationContext,ja
 supr com.fasterxml.jackson.databind.BeanProperty$Std
 hfds serialVersionUID
 
+CLSS abstract interface com.fasterxml.jackson.databind.deser.impl.package-info
+
+CLSS abstract interface com.fasterxml.jackson.databind.deser.package-info
+
 CLSS public com.fasterxml.jackson.databind.deser.std.ArrayBlockingQueueDeserializer
 cons protected init(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.deser.ValueInstantiator,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.deser.NullValueProvider,java.lang.Boolean)
 cons protected init(com.fasterxml.jackson.databind.deser.std.ArrayBlockingQueueDeserializer)
@@ -8322,6 +9296,7 @@ CLSS public com.fasterxml.jackson.databind.deser.std.AtomicReferenceDeserializer
 cons public init(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.deser.ValueInstantiator,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<?>)
 meth public com.fasterxml.jackson.databind.deser.std.AtomicReferenceDeserializer withResolved(com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<?>)
 meth public java.lang.Boolean supportsUpdate(com.fasterxml.jackson.databind.DeserializationConfig)
+meth public java.lang.Object getAbsentValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public java.lang.Object getEmptyValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public java.lang.Object getReferenced(java.util.concurrent.atomic.AtomicReference<java.lang.Object>)
 meth public java.util.concurrent.atomic.AtomicReference<java.lang.Object> getNullValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -8385,7 +9360,9 @@ fld protected final com.fasterxml.jackson.databind.JavaType _containerType
 fld protected final com.fasterxml.jackson.databind.deser.NullValueProvider _nullProvider
 fld protected final java.lang.Boolean _unwrapSingle
 intf com.fasterxml.jackson.databind.deser.ValueInstantiator$Gettable
+meth protected <%0 extends java.lang.Object> {%%0} wrapAndThrow(com.fasterxml.jackson.databind.DeserializationContext,java.lang.Throwable,java.lang.Object,java.lang.String) throws java.io.IOException
 meth protected <%0 extends java.lang.Object> {%%0} wrapAndThrow(java.lang.Throwable,java.lang.Object,java.lang.String) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public abstract com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> getContentDeserializer()
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JavaType getValueType()
@@ -8469,14 +9446,17 @@ meth public boolean isCachable()
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> createContextual(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> getDelegatee()
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> replaceDelegatee(com.fasterxml.jackson.databind.JsonDeserializer<?>)
+meth public com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> unwrappingDeserializer(com.fasterxml.jackson.databind.util.NameTransformer)
 meth public com.fasterxml.jackson.databind.deser.SettableBeanProperty findBackReference(java.lang.String)
 meth public com.fasterxml.jackson.databind.deser.impl.ObjectIdReader getObjectIdReader()
 meth public com.fasterxml.jackson.databind.type.LogicalType logicalType()
+meth public com.fasterxml.jackson.databind.util.AccessPattern getEmptyAccessPattern()
 meth public com.fasterxml.jackson.databind.util.AccessPattern getNullAccessPattern()
 meth public java.lang.Boolean supportsUpdate(com.fasterxml.jackson.databind.DeserializationConfig)
 meth public java.lang.Object deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth public java.lang.Object deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object) throws java.io.IOException
 meth public java.lang.Object deserializeWithType(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.jsontype.TypeDeserializer) throws java.io.IOException
+meth public java.lang.Object getAbsentValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public java.lang.Object getEmptyValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public java.lang.Object getNullValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public java.util.Collection<java.lang.Object> getKnownPropertyNames()
@@ -8486,15 +9466,26 @@ hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.databind.deser.std.EnumDeserializer
 cons protected init(com.fasterxml.jackson.databind.deser.std.EnumDeserializer,java.lang.Boolean)
+ anno 0 java.lang.Deprecated()
+cons protected init(com.fasterxml.jackson.databind.deser.std.EnumDeserializer,java.lang.Boolean,java.lang.Boolean,java.lang.Boolean)
 cons public init(com.fasterxml.jackson.databind.util.EnumResolver)
  anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.databind.util.EnumResolver,boolean,com.fasterxml.jackson.databind.util.EnumResolver)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.databind.util.EnumResolver,boolean,com.fasterxml.jackson.databind.util.EnumResolver,com.fasterxml.jackson.databind.util.EnumResolver)
 cons public init(com.fasterxml.jackson.databind.util.EnumResolver,java.lang.Boolean)
-fld protected com.fasterxml.jackson.databind.util.CompactStringObjectMap _lookupByToString
+ anno 0 java.lang.Deprecated()
+fld protected final boolean _isFromIntValue
+fld protected final com.fasterxml.jackson.databind.util.CompactStringObjectMap _lookupByEnumNaming
 fld protected final com.fasterxml.jackson.databind.util.CompactStringObjectMap _lookupByName
 fld protected final java.lang.Boolean _caseInsensitive
 fld protected java.lang.Object[] _enumsByIndex
+fld protected volatile com.fasterxml.jackson.databind.util.CompactStringObjectMap _lookupByToString
 intf com.fasterxml.jackson.databind.deser.ContextualDeserializer
+meth protected boolean useDefaultValueForUnknownEnum(com.fasterxml.jackson.databind.DeserializationContext)
+meth protected boolean useNullForUnknownEnum(com.fasterxml.jackson.databind.DeserializationContext)
 meth protected com.fasterxml.jackson.databind.util.CompactStringObjectMap _getToStringLookup(com.fasterxml.jackson.databind.DeserializationContext)
+ anno 0 java.lang.Deprecated()
 meth protected java.lang.Class<?> _enumClass()
 meth protected java.lang.Object _deserializeOther(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected java.lang.Object _fromInteger(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,int) throws java.io.IOException
@@ -8502,6 +9493,8 @@ meth protected java.lang.Object _fromString(com.fasterxml.jackson.core.JsonParse
 meth public boolean isCachable()
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> createContextual(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.deser.std.EnumDeserializer withResolved(java.lang.Boolean)
+ anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.databind.deser.std.EnumDeserializer withResolved(java.lang.Boolean,java.lang.Boolean,java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.type.LogicalType logicalType()
 meth public java.lang.Object deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth public java.lang.Object getEmptyValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -8510,7 +9503,7 @@ meth public static com.fasterxml.jackson.databind.JsonDeserializer<?> deserializ
 meth public static com.fasterxml.jackson.databind.JsonDeserializer<?> deserializerForCreator(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>,com.fasterxml.jackson.databind.introspect.AnnotatedMethod,com.fasterxml.jackson.databind.deser.ValueInstantiator,com.fasterxml.jackson.databind.deser.SettableBeanProperty[])
 meth public static com.fasterxml.jackson.databind.JsonDeserializer<?> deserializerForNoArgsCreator(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>,com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
 supr com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer<java.lang.Object>
-hfds _enumDefaultValue,serialVersionUID
+hfds _enumDefaultValue,_useDefaultValueForUnknownEnum,_useNullForUnknownEnum,serialVersionUID
 
 CLSS public com.fasterxml.jackson.databind.deser.std.EnumMapDeserializer
 cons protected init(com.fasterxml.jackson.databind.deser.std.EnumMapDeserializer,com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<?>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.deser.NullValueProvider)
@@ -8575,6 +9568,7 @@ CLSS public abstract com.fasterxml.jackson.databind.deser.std.FromStringDeserial
 cons protected init(java.lang.Class<?>)
 innr public static Std
 meth protected abstract {com.fasterxml.jackson.databind.deser.std.FromStringDeserializer%0} _deserialize(java.lang.String,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth protected boolean _shouldTrim()
 meth protected final {com.fasterxml.jackson.databind.deser.std.FromStringDeserializer%0} _deserializeFromEmptyString() throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth protected java.lang.Object _deserializeFromEmptyString(com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
@@ -8586,12 +9580,13 @@ meth public static com.fasterxml.jackson.databind.deser.std.FromStringDeserializ
 meth public static java.lang.Class<?>[] types()
 meth public {com.fasterxml.jackson.databind.deser.std.FromStringDeserializer%0} deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 supr com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer<{com.fasterxml.jackson.databind.deser.std.FromStringDeserializer%0}>
-hcls StringBuilderDeserializer
+hcls StringBufferDeserializer,StringBuilderDeserializer
 
 CLSS public static com.fasterxml.jackson.databind.deser.std.FromStringDeserializer$Std
  outer com.fasterxml.jackson.databind.deser.std.FromStringDeserializer
 cons protected init(java.lang.Class<?>,int)
 fld protected final int _kind
+fld protected final static java.lang.String LOCALE_EXT_MARKER = "_#"
 fld public final static int STD_CHARSET = 9
 fld public final static int STD_CLASS = 4
 fld public final static int STD_CURRENCY = 6
@@ -8604,6 +9599,7 @@ fld public final static int STD_PATTERN = 7
 fld public final static int STD_TIME_ZONE = 10
 fld public final static int STD_URI = 3
 fld public final static int STD_URL = 2
+meth protected boolean _shouldTrim()
 meth protected int _firstHyphenOrUnderscore(java.lang.String)
 meth protected java.lang.Object _deserialize(java.lang.String,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected java.lang.Object _deserializeFromEmptyStringDefault(com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
@@ -8614,7 +9610,9 @@ hfds serialVersionUID
 CLSS public com.fasterxml.jackson.databind.deser.std.JdkDeserializers
 cons public init()
 meth public static boolean hasDeserializerFor(java.lang.Class<?>)
-meth public static com.fasterxml.jackson.databind.JsonDeserializer<?> find(java.lang.Class<?>,java.lang.String)
+meth public static com.fasterxml.jackson.databind.JsonDeserializer<?> find(com.fasterxml.jackson.databind.DeserializationContext,java.lang.Class<?>,java.lang.String) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public static com.fasterxml.jackson.databind.JsonDeserializer<?> find(java.lang.Class<?>,java.lang.String) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds _classNames
 
@@ -8628,23 +9626,31 @@ hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer
 cons protected init()
+cons protected init(com.fasterxml.jackson.databind.deser.std.JsonNodeDeserializer,boolean,boolean)
+fld protected final boolean _mergeArrays
+fld protected final boolean _mergeObjects
 fld protected final java.lang.Boolean _supportsUpdates
-meth protected final com.fasterxml.jackson.databind.JsonNode _fromEmbedded(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory) throws java.io.IOException
+intf com.fasterxml.jackson.databind.deser.ContextualDeserializer
+meth protected com.fasterxml.jackson.databind.JsonDeserializer<?> _createWithMerge(boolean,boolean)
+meth protected final com.fasterxml.jackson.databind.JsonNode _deserializeAnyScalar(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth protected final com.fasterxml.jackson.databind.JsonNode _deserializeRareScalar(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth protected final com.fasterxml.jackson.databind.JsonNode _fromBigDecimal(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory,java.math.BigDecimal)
+meth protected final com.fasterxml.jackson.databind.JsonNode _fromEmbedded(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected final com.fasterxml.jackson.databind.JsonNode _fromFloat(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory) throws java.io.IOException
 meth protected final com.fasterxml.jackson.databind.JsonNode _fromInt(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory) throws java.io.IOException
-meth protected final com.fasterxml.jackson.databind.JsonNode deserializeAny(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory) throws java.io.IOException
-meth protected final com.fasterxml.jackson.databind.JsonNode updateArray(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.ArrayNode) throws java.io.IOException
-meth protected final com.fasterxml.jackson.databind.JsonNode updateObject(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.ObjectNode) throws java.io.IOException
-meth protected final com.fasterxml.jackson.databind.node.ArrayNode deserializeArray(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory) throws java.io.IOException
-meth protected final com.fasterxml.jackson.databind.node.ObjectNode deserializeObject(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory) throws java.io.IOException
-meth protected final com.fasterxml.jackson.databind.node.ObjectNode deserializeObjectAtName(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory) throws java.io.IOException
-meth protected void _handleDuplicateField(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory,java.lang.String,com.fasterxml.jackson.databind.node.ObjectNode,com.fasterxml.jackson.databind.JsonNode,com.fasterxml.jackson.databind.JsonNode) throws com.fasterxml.jackson.core.JsonProcessingException
+meth protected final com.fasterxml.jackson.databind.JsonNode _fromInt(com.fasterxml.jackson.core.JsonParser,int,com.fasterxml.jackson.databind.node.JsonNodeFactory) throws java.io.IOException
+meth protected final com.fasterxml.jackson.databind.JsonNode updateObject(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.ObjectNode,com.fasterxml.jackson.databind.deser.std.BaseNodeDeserializer$ContainerStack) throws java.io.IOException
+meth protected final com.fasterxml.jackson.databind.node.ContainerNode<?> _deserializeContainerNoRecursion(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory,com.fasterxml.jackson.databind.deser.std.BaseNodeDeserializer$ContainerStack,com.fasterxml.jackson.databind.node.ContainerNode<?>) throws java.io.IOException
+meth protected final com.fasterxml.jackson.databind.node.ObjectNode _deserializeObjectAtName(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory,com.fasterxml.jackson.databind.deser.std.BaseNodeDeserializer$ContainerStack) throws java.io.IOException
+meth protected void _handleDuplicateField(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.node.JsonNodeFactory,java.lang.String,com.fasterxml.jackson.databind.node.ObjectNode,com.fasterxml.jackson.databind.JsonNode,com.fasterxml.jackson.databind.JsonNode) throws java.io.IOException
 meth public boolean isCachable()
+meth public com.fasterxml.jackson.databind.JsonDeserializer<?> createContextual(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonNode deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth public com.fasterxml.jackson.databind.JsonNode getNullValue(com.fasterxml.jackson.databind.DeserializationContext)
 meth public com.fasterxml.jackson.databind.type.LogicalType logicalType()
 meth public java.lang.Boolean supportsUpdate(com.fasterxml.jackson.databind.DeserializationConfig)
 meth public java.lang.Object deserializeWithType(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.jsontype.TypeDeserializer) throws java.io.IOException
+meth public java.lang.Object getAbsentValue(com.fasterxml.jackson.databind.DeserializationContext)
 meth public static com.fasterxml.jackson.databind.JsonDeserializer<? extends com.fasterxml.jackson.databind.JsonNode> getDeserializer(java.lang.Class<?>)
 supr com.fasterxml.jackson.databind.deser.std.StdDeserializer<com.fasterxml.jackson.databind.JsonNode>
 hfds instance
@@ -8655,6 +9661,7 @@ cons protected init(com.fasterxml.jackson.databind.deser.std.MapDeserializer)
 cons protected init(com.fasterxml.jackson.databind.deser.std.MapDeserializer,com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.deser.NullValueProvider,java.util.Set<java.lang.String>)
 cons protected init(com.fasterxml.jackson.databind.deser.std.MapDeserializer,com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.deser.NullValueProvider,java.util.Set<java.lang.String>,java.util.Set<java.lang.String>)
 cons public init(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.deser.ValueInstantiator,com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object>,com.fasterxml.jackson.databind.jsontype.TypeDeserializer)
+fld protected boolean _checkDupSquash
 fld protected boolean _standardStringKey
 fld protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> _delegateDeserializer
 fld protected com.fasterxml.jackson.databind.deser.impl.PropertyBasedCreator _propertyBasedCreator
@@ -8671,10 +9678,11 @@ intf com.fasterxml.jackson.databind.deser.ResolvableDeserializer
 meth protected com.fasterxml.jackson.databind.deser.std.MapDeserializer withResolved(com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<?>,com.fasterxml.jackson.databind.deser.NullValueProvider,java.util.Set<java.lang.String>)
 meth protected com.fasterxml.jackson.databind.deser.std.MapDeserializer withResolved(com.fasterxml.jackson.databind.KeyDeserializer,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,com.fasterxml.jackson.databind.JsonDeserializer<?>,com.fasterxml.jackson.databind.deser.NullValueProvider,java.util.Set<java.lang.String>,java.util.Set<java.lang.String>)
 meth protected final boolean _isStdKeyDeser(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.KeyDeserializer)
-meth protected final void _readAndBind(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.util.Map<java.lang.Object,java.lang.Object>) throws java.io.IOException
-meth protected final void _readAndBindStringKeyMap(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.util.Map<java.lang.Object,java.lang.Object>) throws java.io.IOException
+meth protected final java.util.Map<java.lang.Object,java.lang.Object> _readAndBind(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.util.Map<java.lang.Object,java.lang.Object>) throws java.io.IOException
+meth protected final java.util.Map<java.lang.Object,java.lang.Object> _readAndBindStringKeyMap(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.util.Map<java.lang.Object,java.lang.Object>) throws java.io.IOException
 meth protected final void _readAndUpdate(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.util.Map<java.lang.Object,java.lang.Object>) throws java.io.IOException
 meth protected final void _readAndUpdateStringKeyMap(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.util.Map<java.lang.Object,java.lang.Object>) throws java.io.IOException
+meth protected void _squashDups(com.fasterxml.jackson.databind.DeserializationContext,java.util.Map<java.lang.Object,java.lang.Object>,java.lang.Object,java.lang.Object,java.lang.Object)
 meth public boolean isCachable()
 meth public com.fasterxml.jackson.databind.JavaType getValueType()
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> createContextual(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -8927,13 +9935,34 @@ supr com.fasterxml.jackson.databind.deser.std.StdDeserializer<{com.fasterxml.jac
 hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.databind.deser.std.StackTraceElementDeserializer
+cons protected init(com.fasterxml.jackson.databind.JsonDeserializer<?>)
 cons public init()
+ anno 0 java.lang.Deprecated()
+fld protected final com.fasterxml.jackson.databind.JsonDeserializer<?> _adapterDeserializer
+innr public final static Adapter
+meth protected java.lang.StackTraceElement constructValue(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.std.StackTraceElementDeserializer$Adapter)
 meth protected java.lang.StackTraceElement constructValue(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String)
  anno 0 java.lang.Deprecated()
 meth protected java.lang.StackTraceElement constructValue(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String)
 meth public java.lang.StackTraceElement deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth public static com.fasterxml.jackson.databind.JsonDeserializer<?> construct(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 supr com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer<java.lang.StackTraceElement>
 hfds serialVersionUID
+
+CLSS public final static com.fasterxml.jackson.databind.deser.std.StackTraceElementDeserializer$Adapter
+ outer com.fasterxml.jackson.databind.deser.std.StackTraceElementDeserializer
+cons public init()
+fld public boolean nativeMethod
+fld public int lineNumber
+fld public java.lang.String classLoaderName
+fld public java.lang.String className
+fld public java.lang.String declaringClass
+fld public java.lang.String fileName
+fld public java.lang.String format
+fld public java.lang.String methodName
+fld public java.lang.String moduleName
+fld public java.lang.String moduleVersion
+supr java.lang.Object
 
 CLSS public com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer<%0 extends java.lang.Object>
 cons protected init(com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer<{com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0}>)
@@ -8946,16 +9975,27 @@ intf com.fasterxml.jackson.databind.deser.ContextualDeserializer
 intf com.fasterxml.jackson.databind.deser.ResolvableDeserializer
 meth protected com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer<{com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0}> withDelegate(com.fasterxml.jackson.databind.util.Converter<java.lang.Object,{com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0}>,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<?>)
 meth protected java.lang.Object _handleIncompatibleUpdateValue(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object) throws java.io.IOException
+meth protected {com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0} _convertIfNonNull(java.lang.Object)
 meth protected {com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0} convertValue(java.lang.Object)
+meth public boolean isCachable()
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> createContextual(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonDeserializer<?> getDelegatee()
+meth public com.fasterxml.jackson.databind.JsonDeserializer<{com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0}> replaceDelegatee(com.fasterxml.jackson.databind.JsonDeserializer<?>)
+meth public com.fasterxml.jackson.databind.JsonDeserializer<{com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0}> unwrappingDeserializer(com.fasterxml.jackson.databind.util.NameTransformer)
 meth public com.fasterxml.jackson.databind.type.LogicalType logicalType()
+meth public com.fasterxml.jackson.databind.util.AccessPattern getEmptyAccessPattern()
+meth public com.fasterxml.jackson.databind.util.AccessPattern getNullAccessPattern()
 meth public java.lang.Boolean supportsUpdate(com.fasterxml.jackson.databind.DeserializationConfig)
 meth public java.lang.Class<?> handledType()
 meth public java.lang.Object deserializeWithType(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.jsontype.TypeDeserializer) throws java.io.IOException
+meth public java.lang.Object deserializeWithType(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.jsontype.TypeDeserializer,{com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0}) throws java.io.IOException
+meth public java.lang.Object getAbsentValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public java.lang.Object getEmptyValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public java.util.Collection<java.lang.Object> getKnownPropertyNames()
 meth public void resolve(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public {com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0} deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth public {com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0} deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object) throws java.io.IOException
+meth public {com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0} getNullValue(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 supr com.fasterxml.jackson.databind.deser.std.StdDeserializer<{com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer%0}>
 hfds serialVersionUID
 
@@ -8984,10 +10024,15 @@ meth protected com.fasterxml.jackson.annotation.JsonFormat$Value findFormatOverr
 meth protected com.fasterxml.jackson.annotation.Nulls findContentNullStyle(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected com.fasterxml.jackson.databind.JsonDeserializer<?> findConvertingContentDeserializer(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.JsonDeserializer<?>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> findDeserializer(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
+meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _checkBooleanToStringCoercion(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Class<?>) throws java.io.IOException
 meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _checkCoercionFail(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.cfg.CoercionAction,java.lang.Class<?>,java.lang.Object,java.lang.String) throws java.io.IOException
 meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _checkFloatToIntCoercion(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Class<?>) throws java.io.IOException
+meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _checkFloatToStringCoercion(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Class<?>) throws java.io.IOException
 meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _checkFromStringCoercion(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _checkFromStringCoercion(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String,com.fasterxml.jackson.databind.type.LogicalType,java.lang.Class<?>) throws java.io.IOException
+meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _checkIntToFloatCoercion(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Class<?>) throws java.io.IOException
+meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _checkIntToStringCoercion(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Class<?>) throws java.io.IOException
+meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _checkToStringCoercion(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Class<?>,java.lang.Object,com.fasterxml.jackson.databind.cfg.CoercionInputShape) throws java.io.IOException
 meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _findCoercionFromBlankString(com.fasterxml.jackson.databind.DeserializationContext)
 meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _findCoercionFromEmptyArray(com.fasterxml.jackson.databind.DeserializationContext)
 meth protected com.fasterxml.jackson.databind.cfg.CoercionAction _findCoercionFromEmptyString(com.fasterxml.jackson.databind.DeserializationContext)
@@ -9006,21 +10051,28 @@ meth protected final byte _parseBytePrimitive(com.fasterxml.jackson.core.JsonPar
 meth protected final com.fasterxml.jackson.databind.deser.NullValueProvider _findNullProvider(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.annotation.Nulls,com.fasterxml.jackson.databind.JsonDeserializer<?>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected final com.fasterxml.jackson.databind.deser.NullValueProvider findValueNullProvider(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.SettableBeanProperty,com.fasterxml.jackson.databind.PropertyMetadata) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected final double _parseDoublePrimitive(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth protected final double _parseDoublePrimitive(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth protected final double _parseDoublePrimitive(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth protected final float _parseFloatPrimitive(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth protected final float _parseFloatPrimitive(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth protected final float _parseFloatPrimitive(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth protected final int _parseIntPrimitive(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected final int _parseIntPrimitive(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth protected final java.lang.Boolean _parseBoolean(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Class<?>) throws java.io.IOException
 meth protected final java.lang.Integer _parseInteger(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Class<?>) throws java.io.IOException
+meth protected final java.lang.Integer _parseInteger(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth protected final java.lang.Long _parseLong(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.Class<?>) throws java.io.IOException
+meth protected final java.lang.Long _parseLong(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth protected final java.lang.String _parseString(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
+meth protected final java.lang.String _parseString(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.NullValueProvider) throws java.io.IOException
 meth protected final long _parseLongPrimitive(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected final long _parseLongPrimitive(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth protected final short _parseShortPrimitive(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected final static boolean _isBlank(java.lang.String)
 meth protected final static boolean _neitherNull(java.lang.Object,java.lang.Object)
 meth protected final static double _parseDouble(java.lang.String)
+meth protected final static double _parseDouble(java.lang.String,boolean)
 meth protected final void _verifyNullForPrimitive(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected final void _verifyNullForPrimitiveCoercion(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected final void _verifyNullForScalarCoercion(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -9038,7 +10090,9 @@ meth protected java.lang.Object _coerceNullToken(com.fasterxml.jackson.databind.
 meth protected java.lang.Object _coerceTextualNull(com.fasterxml.jackson.databind.DeserializationContext,boolean) throws com.fasterxml.jackson.databind.JsonMappingException
  anno 0 java.lang.Deprecated()
 meth protected java.lang.Object _deserializeFromEmptyString(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.cfg.CoercionAction,java.lang.Class<?>,java.lang.String) throws java.io.IOException
+meth protected java.lang.Object handleNestedArrayForSingle(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected java.lang.String _coercedTypeDesc()
+meth protected java.lang.String _coercedTypeDesc(java.lang.Class<?>)
 meth protected java.util.Date _parseDate(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected java.util.Date _parseDate(java.lang.String,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected java.util.Date _parseDateFromArray(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
@@ -9111,7 +10165,9 @@ meth public com.fasterxml.jackson.databind.KeyDeserializer findKeyDeserializer(c
 meth public static com.fasterxml.jackson.databind.KeyDeserializer constructDelegatingKeyDeserializer(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JsonDeserializer<?>)
 meth public static com.fasterxml.jackson.databind.KeyDeserializer constructEnumKeyDeserializer(com.fasterxml.jackson.databind.util.EnumResolver)
 meth public static com.fasterxml.jackson.databind.KeyDeserializer constructEnumKeyDeserializer(com.fasterxml.jackson.databind.util.EnumResolver,com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
-meth public static com.fasterxml.jackson.databind.KeyDeserializer findStringBasedKeyDeserializer(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType)
+meth public static com.fasterxml.jackson.databind.KeyDeserializer constructEnumKeyDeserializer(com.fasterxml.jackson.databind.util.EnumResolver,com.fasterxml.jackson.databind.introspect.AnnotatedMethod,com.fasterxml.jackson.databind.util.EnumResolver,com.fasterxml.jackson.databind.util.EnumResolver,com.fasterxml.jackson.databind.util.EnumResolver)
+meth public static com.fasterxml.jackson.databind.KeyDeserializer constructEnumKeyDeserializer(com.fasterxml.jackson.databind.util.EnumResolver,com.fasterxml.jackson.databind.util.EnumResolver,com.fasterxml.jackson.databind.util.EnumResolver,com.fasterxml.jackson.databind.util.EnumResolver)
+meth public static com.fasterxml.jackson.databind.KeyDeserializer findStringBasedKeyDeserializer(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 supr java.lang.Object
 hfds serialVersionUID
 
@@ -9124,7 +10180,9 @@ intf com.fasterxml.jackson.databind.deser.ResolvableDeserializer
 meth public abstract {com.fasterxml.jackson.databind.deser.std.StdNodeBasedDeserializer%0} convert(com.fasterxml.jackson.databind.JsonNode,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth public java.lang.Object deserializeWithType(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.jsontype.TypeDeserializer) throws java.io.IOException
 meth public void resolve(com.fasterxml.jackson.databind.DeserializationContext) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public {com.fasterxml.jackson.databind.deser.std.StdNodeBasedDeserializer%0} convert(com.fasterxml.jackson.databind.JsonNode,com.fasterxml.jackson.databind.DeserializationContext,{com.fasterxml.jackson.databind.deser.std.StdNodeBasedDeserializer%0}) throws java.io.IOException
 meth public {com.fasterxml.jackson.databind.deser.std.StdNodeBasedDeserializer%0} deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth public {com.fasterxml.jackson.databind.deser.std.StdNodeBasedDeserializer%0} deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,{com.fasterxml.jackson.databind.deser.std.StdNodeBasedDeserializer%0}) throws java.io.IOException
 supr com.fasterxml.jackson.databind.deser.std.StdDeserializer<{com.fasterxml.jackson.databind.deser.std.StdNodeBasedDeserializer%0}>
 hfds serialVersionUID
 
@@ -9201,6 +10259,7 @@ meth public java.lang.Object createFromObjectWith(com.fasterxml.jackson.databind
 meth public java.lang.Object createFromString(com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth public java.lang.Object createUsingArrayDelegate(com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object) throws java.io.IOException
 meth public java.lang.Object createUsingDefault(com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth public java.lang.Object createUsingDefaultOrWithoutArguments(com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth public java.lang.Object createUsingDelegate(com.fasterxml.jackson.databind.DeserializationContext,java.lang.Object) throws java.io.IOException
 meth public java.lang.String getValueTypeDesc()
 meth public void configureFromArraySettings(com.fasterxml.jackson.databind.introspect.AnnotatedWithParams,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.deser.SettableBeanProperty[])
@@ -9269,15 +10328,18 @@ hfds serialVersionUID
 CLSS public com.fasterxml.jackson.databind.deser.std.ThrowableDeserializer
 cons protected init(com.fasterxml.jackson.databind.deser.BeanDeserializer,com.fasterxml.jackson.databind.util.NameTransformer)
 cons public init(com.fasterxml.jackson.databind.deser.BeanDeserializer)
+ anno 0 java.lang.Deprecated()
+fld protected final static java.lang.String PROP_NAME_LOCALIZED_MESSAGE = "localizedMessage"
 fld protected final static java.lang.String PROP_NAME_MESSAGE = "message"
+fld protected final static java.lang.String PROP_NAME_SUPPRESSED = "suppressed"
 meth public com.fasterxml.jackson.databind.JsonDeserializer<java.lang.Object> unwrappingDeserializer(com.fasterxml.jackson.databind.util.NameTransformer)
 meth public java.lang.Object deserializeFromObject(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+meth public static com.fasterxml.jackson.databind.deser.std.ThrowableDeserializer construct(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.deser.BeanDeserializer)
 supr com.fasterxml.jackson.databind.deser.BeanDeserializer
 hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.databind.deser.std.TokenBufferDeserializer
 cons public init()
-meth protected com.fasterxml.jackson.databind.util.TokenBuffer createBufferInstance(com.fasterxml.jackson.core.JsonParser)
 meth public com.fasterxml.jackson.databind.type.LogicalType logicalType()
 meth public com.fasterxml.jackson.databind.util.TokenBuffer deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 supr com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer<com.fasterxml.jackson.databind.util.TokenBuffer>
@@ -9329,6 +10391,7 @@ hfds serialVersionUID
 
 CLSS public static com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer$Vanilla
  outer com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer
+ anno 0 java.lang.Deprecated()
 cons protected init(boolean)
 cons public init()
 fld protected final boolean _nonMerging
@@ -9345,6 +10408,8 @@ meth public java.lang.Object deserializeWithType(com.fasterxml.jackson.core.Json
 meth public static com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer$Vanilla instance(boolean)
 supr com.fasterxml.jackson.databind.deser.std.StdDeserializer<java.lang.Object>
 hfds serialVersionUID
+
+CLSS abstract interface com.fasterxml.jackson.databind.deser.std.package-info
 
 CLSS public com.fasterxml.jackson.databind.exc.IgnoredPropertyException
 cons public init(com.fasterxml.jackson.core.JsonParser,java.lang.String,com.fasterxml.jackson.core.JsonLocation,java.lang.Class<?>,java.lang.String,java.util.Collection<java.lang.Object>)
@@ -9515,8 +10580,9 @@ hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.databind.ext.DOMSerializer
 cons public init()
-fld protected final org.w3c.dom.ls.DOMImplementationLS _domImpl
+fld protected final javax.xml.transform.TransformerFactory transformerFactory
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(org.w3c.dom.Node,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdSerializer<org.w3c.dom.Node>
@@ -9587,6 +10653,8 @@ meth public void serialize(java.sql.Blob,com.fasterxml.jackson.core.JsonGenerato
 meth public void serializeWithType(java.sql.Blob,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<java.sql.Blob>
 
+CLSS abstract interface com.fasterxml.jackson.databind.ext.package-info
+
 CLSS public abstract com.fasterxml.jackson.databind.introspect.AccessorNamingStrategy
 cons public init()
 innr public abstract static Provider
@@ -9634,6 +10702,13 @@ meth public abstract java.lang.String getName()
 meth public abstract java.lang.String toString()
 meth public abstract java.lang.reflect.AnnotatedElement getAnnotated()
 meth public boolean isPublic()
+supr java.lang.Object
+
+CLSS public com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata<%0 extends com.fasterxml.jackson.databind.introspect.Annotated, %1 extends java.lang.Object>
+cons public init({com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata%0},{com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata%1})
+fld public final {com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata%0} annotated
+fld public final {com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata%1} metadata
+meth public static <%0 extends com.fasterxml.jackson.databind.introspect.Annotated, %1 extends java.lang.Object> com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata<{%%0},{%%1}> of({%%0},{%%1})
 supr java.lang.Object
 
 CLSS public final com.fasterxml.jackson.databind.introspect.AnnotatedClass
@@ -9991,14 +11066,11 @@ meth public com.fasterxml.jackson.annotation.JsonFormat$Value findFormat(com.fas
 meth public com.fasterxml.jackson.annotation.JsonIgnoreProperties$Value findPropertyIgnoralByName(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.annotation.JsonIgnoreProperties$Value findPropertyIgnorals(com.fasterxml.jackson.databind.introspect.Annotated)
  anno 0 java.lang.Deprecated()
-meth public com.fasterxml.jackson.annotation.JsonInclude$Include findSerializationInclusion(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.annotation.JsonInclude$Include)
- anno 0 java.lang.Deprecated()
-meth public com.fasterxml.jackson.annotation.JsonInclude$Include findSerializationInclusionForContent(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.annotation.JsonInclude$Include)
- anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.annotation.JsonInclude$Value findPropertyInclusion(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.annotation.JsonIncludeProperties$Value findPropertyInclusionByName(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.annotation.JsonProperty$Access findPropertyAccess(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.annotation.JsonSetter$Value findSetterInfo(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Value findPolymorphicTypeInfo(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.core.Version version()
 meth public com.fasterxml.jackson.databind.AnnotationIntrospector$ReferenceProperty findReferenceType(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 meth public com.fasterxml.jackson.databind.JavaType refineDeserializationType(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -10024,31 +11096,23 @@ meth public java.lang.Boolean findMergeInfo(com.fasterxml.jackson.databind.intro
 meth public java.lang.Boolean findSerializationSortAlphabetically(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Boolean hasAnyGetter(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Boolean hasAnySetter(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Boolean hasAsKey(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Boolean hasAsValue(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Boolean hasRequiredMarker(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 meth public java.lang.Boolean isIgnorableType(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public java.lang.Boolean isTypeId(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
-meth public java.lang.Class<?> findDeserializationContentType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findDeserializationKeyType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findDeserializationType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
 meth public java.lang.Class<?> findPOJOBuilder(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
-meth public java.lang.Class<?> findSerializationContentType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findSerializationKeyType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findSerializationType(com.fasterxml.jackson.databind.introspect.Annotated)
- anno 0 java.lang.Deprecated()
 meth public java.lang.Class<?>[] findViews(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Enum<?> findDefaultEnumValue(com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[])
 meth public java.lang.Enum<?> findDefaultEnumValue(java.lang.Class<java.lang.Enum<?>>)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.Integer findPropertyIndex(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findContentDeserializer(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findContentSerializer(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findDeserializationContentConverter(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 meth public java.lang.Object findDeserializationConverter(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findDeserializer(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Object findEnumNamingStrategy(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public java.lang.Object findFilterId(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findInjectableValueId(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
  anno 0 java.lang.Deprecated()
@@ -10067,7 +11131,9 @@ meth public java.lang.String findImplicitPropertyName(com.fasterxml.jackson.data
 meth public java.lang.String findPropertyDefaultValue(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.String findPropertyDescription(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.String findTypeName(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
+meth public java.lang.String[] findEnumValues(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[],java.lang.String[])
 meth public java.lang.String[] findEnumValues(java.lang.Class<?>,java.lang.Enum<?>[],java.lang.String[])
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String[] findPropertiesToIgnore(com.fasterxml.jackson.databind.introspect.Annotated,boolean)
  anno 0 java.lang.Deprecated()
 meth public java.lang.String[] findSerializationPropertyOrder(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
@@ -10077,7 +11143,9 @@ meth public java.util.List<com.fasterxml.jackson.databind.PropertyName> findProp
 meth public java.util.List<com.fasterxml.jackson.databind.jsontype.NamedType> findSubtypes(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public static com.fasterxml.jackson.databind.AnnotationIntrospector create(com.fasterxml.jackson.databind.AnnotationIntrospector,com.fasterxml.jackson.databind.AnnotationIntrospector)
 meth public void findAndAddVirtualProperties(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter>)
+meth public void findEnumAliases(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[],java.lang.String[][])
 meth public void findEnumAliases(java.lang.Class<?>,java.lang.Enum<?>[],java.lang.String[][])
+ anno 0 java.lang.Deprecated()
 supr com.fasterxml.jackson.databind.AnnotationIntrospector
 hfds serialVersionUID
 
@@ -10113,10 +11181,13 @@ fld protected java.util.List<com.fasterxml.jackson.databind.introspect.BeanPrope
 meth protected boolean isFactoryMethod(com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
 meth protected com.fasterxml.jackson.databind.PropertyName _findCreatorPropertyName(com.fasterxml.jackson.databind.introspect.AnnotatedParameter)
  anno 0 java.lang.Deprecated()
+meth protected com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata<com.fasterxml.jackson.databind.introspect.AnnotatedMethod,com.fasterxml.jackson.annotation.JsonCreator$Mode> findFactoryMethodMetadata(com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
 meth protected com.fasterxml.jackson.databind.util.Converter<java.lang.Object,java.lang.Object> _createConverter(java.lang.Object)
 meth protected java.util.List<com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition> _properties()
 meth public !varargs java.lang.reflect.Constructor<?> findSingleArgConstructor(java.lang.Class<?>[])
+ anno 0 java.lang.Deprecated()
 meth public !varargs java.lang.reflect.Method findFactoryMethod(java.lang.Class<?>[])
+ anno 0 java.lang.Deprecated()
 meth public boolean addProperty(com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition)
 meth public boolean hasKnownClassAnnotations()
 meth public boolean hasProperty(com.fasterxml.jackson.databind.PropertyName)
@@ -10148,6 +11219,8 @@ meth public java.lang.Object instantiateBean(boolean)
 meth public java.lang.String findClassDescription()
 meth public java.util.LinkedHashMap<java.lang.String,com.fasterxml.jackson.databind.introspect.AnnotatedField> _findPropertyFields(java.util.Collection<java.lang.String>,boolean)
  anno 0 java.lang.Deprecated()
+meth public java.util.List<com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata<com.fasterxml.jackson.databind.introspect.AnnotatedConstructor,com.fasterxml.jackson.annotation.JsonCreator$Mode>> getConstructorsWithMode()
+meth public java.util.List<com.fasterxml.jackson.databind.introspect.AnnotatedAndMetadata<com.fasterxml.jackson.databind.introspect.AnnotatedMethod,com.fasterxml.jackson.annotation.JsonCreator$Mode>> getFactoryMethodsWithMode()
 meth public java.util.List<com.fasterxml.jackson.databind.introspect.AnnotatedConstructor> getConstructors()
 meth public java.util.List<com.fasterxml.jackson.databind.introspect.AnnotatedMethod> getFactoryMethods()
 meth public java.util.List<com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition> findBackReferences()
@@ -10176,8 +11249,14 @@ meth protected com.fasterxml.jackson.databind.introspect.AnnotatedClass _resolve
 meth protected com.fasterxml.jackson.databind.introspect.BasicBeanDescription _findStdJdkCollectionDesc(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType)
 meth protected com.fasterxml.jackson.databind.introspect.BasicBeanDescription _findStdTypeDesc(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType)
 meth protected com.fasterxml.jackson.databind.introspect.POJOPropertiesCollector collectProperties(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.introspect.ClassIntrospector$MixInResolver,boolean)
+meth protected com.fasterxml.jackson.databind.introspect.POJOPropertiesCollector collectProperties(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.introspect.ClassIntrospector$MixInResolver,boolean,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth protected com.fasterxml.jackson.databind.introspect.POJOPropertiesCollector collectPropertiesWithBuilder(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.introspect.ClassIntrospector$MixInResolver,boolean)
+ anno 0 java.lang.Deprecated()
 meth protected com.fasterxml.jackson.databind.introspect.POJOPropertiesCollector collectPropertiesWithBuilder(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.introspect.ClassIntrospector$MixInResolver,com.fasterxml.jackson.databind.BeanDescription,boolean)
 meth protected com.fasterxml.jackson.databind.introspect.POJOPropertiesCollector constructPropertyCollector(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,com.fasterxml.jackson.databind.JavaType,boolean,com.fasterxml.jackson.databind.introspect.AccessorNamingStrategy)
+meth protected com.fasterxml.jackson.databind.introspect.POJOPropertiesCollector constructPropertyCollector(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,com.fasterxml.jackson.databind.JavaType,boolean,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.introspect.BasicBeanDescription forClassAnnotations(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.introspect.ClassIntrospector$MixInResolver)
 meth public com.fasterxml.jackson.databind.introspect.BasicBeanDescription forCreation(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.introspect.ClassIntrospector$MixInResolver)
 meth public com.fasterxml.jackson.databind.introspect.BasicBeanDescription forDeserialization(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.introspect.ClassIntrospector$MixInResolver)
@@ -10269,6 +11348,7 @@ hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.databind.introspect.DefaultAccessorNamingStrategy
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.String,java.lang.String,java.lang.String,com.fasterxml.jackson.databind.introspect.DefaultAccessorNamingStrategy$BaseNameValidator)
+fld protected final boolean _isGettersNonBoolean
 fld protected final boolean _stdBeanNaming
 fld protected final com.fasterxml.jackson.databind.cfg.MapperConfig<?> _config
 fld protected final com.fasterxml.jackson.databind.introspect.AnnotatedClass _forClass
@@ -10334,14 +11414,19 @@ fld protected final java.util.Set<java.lang.String> _fieldNames
 meth public java.lang.String findNameForRegularGetter(com.fasterxml.jackson.databind.introspect.AnnotatedMethod,java.lang.String)
 supr com.fasterxml.jackson.databind.introspect.DefaultAccessorNamingStrategy
 
+CLSS public com.fasterxml.jackson.databind.introspect.EnumNamingStrategyFactory
+meth public static com.fasterxml.jackson.databind.EnumNamingStrategy createEnumNamingStrategyInstance(java.lang.Object,boolean)
+supr java.lang.Object
+
 CLSS public com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector
 cons public init()
 fld protected boolean _cfgConstructorPropertiesImpliesCreator
-fld protected com.fasterxml.jackson.databind.util.LRUMap<java.lang.Class<?>,java.lang.Boolean> _annotationsInside
+fld protected com.fasterxml.jackson.databind.util.LRUMap<java.lang.String,java.lang.Boolean> _annotationsInside
 intf java.io.Serializable
 meth protected boolean _isIgnorable(com.fasterxml.jackson.databind.introspect.Annotated)
 meth protected com.fasterxml.jackson.databind.PropertyName _findConstructorName(com.fasterxml.jackson.databind.introspect.Annotated)
 meth protected com.fasterxml.jackson.databind.PropertyName _propertyName(java.lang.String,java.lang.String)
+meth protected com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?> _constructStdTypeResolverBuilder(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.annotation.JsonTypeInfo$Value,com.fasterxml.jackson.databind.JavaType)
 meth protected com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?> _findTypeResolver(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
 meth protected com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder _constructNoTypeResolverBuilder()
 meth protected com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder _constructStdTypeResolverBuilder()
@@ -10372,6 +11457,7 @@ meth public com.fasterxml.jackson.annotation.JsonInclude$Value findPropertyInclu
 meth public com.fasterxml.jackson.annotation.JsonIncludeProperties$Value findPropertyInclusionByName(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.annotation.JsonProperty$Access findPropertyAccess(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.annotation.JsonSetter$Value findSetterInfo(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Value findPolymorphicTypeInfo(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
 meth public com.fasterxml.jackson.core.Version version()
 meth public com.fasterxml.jackson.databind.AnnotationIntrospector$ReferenceProperty findReferenceType(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 meth public com.fasterxml.jackson.databind.JavaType refineDeserializationType(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -10400,27 +11486,18 @@ meth public java.lang.Boolean hasAsValue(com.fasterxml.jackson.databind.introspe
 meth public java.lang.Boolean hasRequiredMarker(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 meth public java.lang.Boolean isIgnorableType(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public java.lang.Boolean isTypeId(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
-meth public java.lang.Class<?> findDeserializationContentType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findDeserializationKeyType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findDeserializationType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
 meth public java.lang.Class<?> findPOJOBuilder(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
-meth public java.lang.Class<?> findSerializationContentType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findSerializationKeyType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
- anno 0 java.lang.Deprecated()
-meth public java.lang.Class<?> findSerializationType(com.fasterxml.jackson.databind.introspect.Annotated)
- anno 0 java.lang.Deprecated()
 meth public java.lang.Class<?>[] findViews(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Enum<?> findDefaultEnumValue(com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[])
 meth public java.lang.Enum<?> findDefaultEnumValue(java.lang.Class<java.lang.Enum<?>>)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.Integer findPropertyIndex(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findContentDeserializer(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findContentSerializer(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findDeserializationContentConverter(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 meth public java.lang.Object findDeserializationConverter(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findDeserializer(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Object findEnumNamingStrategy(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public java.lang.Object findFilterId(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.Object findInjectableValueId(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
  anno 0 java.lang.Deprecated()
@@ -10439,12 +11516,16 @@ meth public java.lang.String findImplicitPropertyName(com.fasterxml.jackson.data
 meth public java.lang.String findPropertyDefaultValue(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.String findPropertyDescription(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.lang.String findTypeName(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
+meth public java.lang.String[] findEnumValues(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[],java.lang.String[])
 meth public java.lang.String[] findEnumValues(java.lang.Class<?>,java.lang.Enum<?>[],java.lang.String[])
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String[] findSerializationPropertyOrder(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public java.util.List<com.fasterxml.jackson.databind.PropertyName> findPropertyAliases(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public java.util.List<com.fasterxml.jackson.databind.jsontype.NamedType> findSubtypes(com.fasterxml.jackson.databind.introspect.Annotated)
 meth public void findAndAddVirtualProperties(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter>)
+meth public void findEnumAliases(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[],java.lang.String[][])
 meth public void findEnumAliases(java.lang.Class<?>,java.lang.Enum<?>[],java.lang.String[][])
+ anno 0 java.lang.Deprecated()
 supr com.fasterxml.jackson.databind.AnnotationIntrospector
 hfds ANNOTATIONS_TO_INFER_DESER,ANNOTATIONS_TO_INFER_SER,_java7Helper,serialVersionUID
 
@@ -10490,8 +11571,13 @@ hfds EMPTY
 
 CLSS public com.fasterxml.jackson.databind.introspect.POJOPropertiesCollector
 cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,boolean,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.introspect.AnnotatedClass,com.fasterxml.jackson.databind.introspect.AccessorNamingStrategy)
+cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,boolean,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.String)
+ anno 0 java.lang.Deprecated()
 fld protected boolean _collected
 fld protected final boolean _forSerialization
+fld protected final boolean _isRecordType
+fld protected final boolean _stdBeanNaming
+ anno 0 java.lang.Deprecated()
 fld protected final boolean _useAnnotations
 fld protected final com.fasterxml.jackson.databind.AnnotationIntrospector _annotationIntrospector
 fld protected final com.fasterxml.jackson.databind.JavaType _type
@@ -10499,6 +11585,8 @@ fld protected final com.fasterxml.jackson.databind.cfg.MapperConfig<?> _config
 fld protected final com.fasterxml.jackson.databind.introspect.AccessorNamingStrategy _accessorNaming
 fld protected final com.fasterxml.jackson.databind.introspect.AnnotatedClass _classDef
 fld protected final com.fasterxml.jackson.databind.introspect.VisibilityChecker<?> _visibilityChecker
+fld protected java.lang.String _mutatorPrefix
+ anno 0 java.lang.Deprecated()
 fld protected java.util.HashSet<java.lang.String> _ignoredPropertyNames
 fld protected java.util.LinkedHashMap<java.lang.Object,com.fasterxml.jackson.databind.introspect.AnnotatedMember> _injectables
 fld protected java.util.LinkedHashMap<java.lang.String,com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder> _properties
@@ -10511,7 +11599,8 @@ fld protected java.util.LinkedList<com.fasterxml.jackson.databind.introspect.Ann
 fld protected java.util.LinkedList<com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder> _creatorProperties
 fld protected java.util.Map<com.fasterxml.jackson.databind.PropertyName,com.fasterxml.jackson.databind.PropertyName> _fieldRenameMappings
 meth protected !varargs void reportProblem(java.lang.String,java.lang.Object[])
-meth protected boolean _updateCreatorProperty(com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder,java.util.List<com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder>)
+meth protected boolean _replaceCreatorProperty(com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder,java.util.List<com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder>)
+meth protected boolean _resolveFieldVsGetter(java.util.List<com.fasterxml.jackson.databind.introspect.AnnotatedMember>)
 meth protected com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder _property(java.util.Map<java.lang.String,com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder>,com.fasterxml.jackson.databind.PropertyName)
 meth protected com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder _property(java.util.Map<java.lang.String,com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder>,java.lang.String)
 meth protected java.util.Map<java.lang.String,com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder> getPropertyMap()
@@ -10530,7 +11619,10 @@ meth protected void _renameProperties(java.util.Map<java.lang.String,com.fasterx
 meth protected void _renameUsing(java.util.Map<java.lang.String,com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder>,com.fasterxml.jackson.databind.PropertyNamingStrategy)
 meth protected void _renameWithWrappers(java.util.Map<java.lang.String,com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder>)
 meth protected void _sortProperties(java.util.Map<java.lang.String,com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder>)
+meth protected void _updateCreatorProperty(com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder,java.util.List<com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder>)
+ anno 0 java.lang.Deprecated()
 meth protected void collectAll()
+meth public boolean isRecordType()
 meth public com.fasterxml.jackson.databind.AnnotationIntrospector getAnnotationIntrospector()
 meth public com.fasterxml.jackson.databind.JavaType getType()
 meth public com.fasterxml.jackson.databind.cfg.MapperConfig<?> getConfig()
@@ -10574,10 +11666,16 @@ intf java.lang.Comparable<com.fasterxml.jackson.databind.introspect.POJOProperty
 meth protected <%0 extends java.lang.Object> {%%0} fromMemberAnnotations(com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder$WithMember<{%%0}>)
 meth protected <%0 extends java.lang.Object> {%%0} fromMemberAnnotationsExcept(com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder$WithMember<{%%0}>,{%%0})
 meth protected com.fasterxml.jackson.databind.PropertyMetadata _getSetterInfo(com.fasterxml.jackson.databind.PropertyMetadata,com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth protected com.fasterxml.jackson.databind.introspect.AnnotatedField getFieldUnchecked()
 meth protected com.fasterxml.jackson.databind.introspect.AnnotatedMember getPrimaryMemberUnchecked()
+meth protected com.fasterxml.jackson.databind.introspect.AnnotatedMethod _selectSetter(com.fasterxml.jackson.databind.introspect.AnnotatedMethod,com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
+meth protected com.fasterxml.jackson.databind.introspect.AnnotatedMethod _selectSetterFromMultiple(com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder$Linked<com.fasterxml.jackson.databind.introspect.AnnotatedMethod>,com.fasterxml.jackson.databind.introspect.POJOPropertyBuilder$Linked<com.fasterxml.jackson.databind.introspect.AnnotatedMethod>)
+meth protected com.fasterxml.jackson.databind.introspect.AnnotatedMethod getGetterUnchecked()
+meth protected com.fasterxml.jackson.databind.introspect.AnnotatedMethod getSetterUnchecked()
 meth protected int _getterPriority(com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
 meth protected int _setterPriority(com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
 meth protected java.lang.Class<?> _rawTypeOf(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth public boolean anyExplicitsWithoutIgnoral()
 meth public boolean anyIgnorals()
 meth public boolean anyVisible()
 meth public boolean couldDeserialize()
@@ -10753,6 +11851,7 @@ fld protected final com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility _
 fld protected final com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility _getterMinLevel
 fld protected final com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility _isGetterMinLevel
 fld protected final com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility _setterMinLevel
+fld protected final static com.fasterxml.jackson.databind.introspect.VisibilityChecker$Std ALL_PUBLIC
 fld protected final static com.fasterxml.jackson.databind.introspect.VisibilityChecker$Std DEFAULT
 intf com.fasterxml.jackson.databind.introspect.VisibilityChecker<com.fasterxml.jackson.databind.introspect.VisibilityChecker$Std>
 intf java.io.Serializable
@@ -10777,6 +11876,7 @@ meth public com.fasterxml.jackson.databind.introspect.VisibilityChecker$Std with
 meth public com.fasterxml.jackson.databind.introspect.VisibilityChecker$Std withSetterVisibility(com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility)
 meth public com.fasterxml.jackson.databind.introspect.VisibilityChecker$Std withVisibility(com.fasterxml.jackson.annotation.PropertyAccessor,com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility)
 meth public java.lang.String toString()
+meth public static com.fasterxml.jackson.databind.introspect.VisibilityChecker$Std allPublicInstance()
 meth public static com.fasterxml.jackson.databind.introspect.VisibilityChecker$Std construct(com.fasterxml.jackson.annotation.JsonAutoDetect$Value)
 meth public static com.fasterxml.jackson.databind.introspect.VisibilityChecker$Std defaultInstance()
 supr java.lang.Object
@@ -10785,12 +11885,17 @@ hfds serialVersionUID
 CLSS public abstract interface com.fasterxml.jackson.databind.introspect.WithMember<%0 extends java.lang.Object>
 meth public abstract {com.fasterxml.jackson.databind.introspect.WithMember%0} withMember(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 
+CLSS abstract interface com.fasterxml.jackson.databind.introspect.package-info
+
 CLSS public com.fasterxml.jackson.databind.jdk14.JDK14Util
 cons public init()
 meth public static com.fasterxml.jackson.databind.introspect.AnnotatedConstructor findRecordConstructor(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanDescription,java.util.List<java.lang.String>)
+meth public static com.fasterxml.jackson.databind.introspect.AnnotatedConstructor findRecordConstructor(com.fasterxml.jackson.databind.introspect.AnnotatedClass,com.fasterxml.jackson.databind.AnnotationIntrospector,com.fasterxml.jackson.databind.cfg.MapperConfig<?>,java.util.List<java.lang.String>)
 meth public static java.lang.String[] getRecordFieldNames(java.lang.Class<?>)
 supr java.lang.Object
 hcls CreatorLocator,RawTypeName,RecordAccessor
+
+CLSS abstract interface com.fasterxml.jackson.databind.jdk14.package-info
 
 CLSS public com.fasterxml.jackson.databind.json.JsonMapper
 cons protected init(com.fasterxml.jackson.databind.json.JsonMapper)
@@ -11028,6 +12133,8 @@ meth public void enumTypes(java.util.Set<java.lang.String>)
 meth public void format(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat)
 supr java.lang.Object
 
+CLSS abstract interface com.fasterxml.jackson.databind.jsonFormatVisitors.package-info
+
 CLSS public com.fasterxml.jackson.databind.jsonschema.JsonSchema
  anno 0 java.lang.Deprecated()
 cons public init(com.fasterxml.jackson.databind.node.ObjectNode)
@@ -11040,6 +12147,7 @@ supr java.lang.Object
 hfds schema
 
 CLSS public abstract interface !annotation com.fasterxml.jackson.databind.jsonschema.JsonSerializableSchema
+ anno 0 java.lang.Deprecated()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
 fld public final static java.lang.String NO_VALUE = "##irrelevant"
@@ -11052,8 +12160,11 @@ meth public abstract !hasdefault java.lang.String schemaObjectPropertiesDefiniti
 meth public abstract !hasdefault java.lang.String schemaType()
 
 CLSS public abstract interface com.fasterxml.jackson.databind.jsonschema.SchemaAware
+ anno 0 java.lang.Deprecated()
 meth public abstract com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public abstract com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type,boolean) throws com.fasterxml.jackson.databind.JsonMappingException
+
+CLSS abstract interface com.fasterxml.jackson.databind.jsonschema.package-info
 
 CLSS public com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
 cons protected init(java.util.Set<java.lang.Class<?>>,com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator$TypeMatcher[],com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator$NameMatcher[],com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator$TypeMatcher[])
@@ -11216,6 +12327,9 @@ meth public abstract {com.fasterxml.jackson.databind.jsontype.TypeResolverBuilde
 meth public abstract {com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder%0} init(com.fasterxml.jackson.annotation.JsonTypeInfo$Id,com.fasterxml.jackson.databind.jsontype.TypeIdResolver)
 meth public abstract {com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder%0} typeIdVisibility(boolean)
 meth public abstract {com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder%0} typeProperty(java.lang.String)
+meth public {com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder%0} init(com.fasterxml.jackson.annotation.JsonTypeInfo$Value,com.fasterxml.jackson.databind.jsontype.TypeIdResolver)
+meth public {com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder%0} withDefaultImpl(java.lang.Class<?>)
+meth public {com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder%0} withSettings(com.fasterxml.jackson.annotation.JsonTypeInfo$Value)
 
 CLSS public abstract com.fasterxml.jackson.databind.jsontype.TypeSerializer
 cons public init()
@@ -11287,11 +12401,20 @@ CLSS public com.fasterxml.jackson.databind.jsontype.impl.AsDeductionTypeDeserial
 cons public init(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.jsontype.TypeIdResolver,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.DeserializationConfig,java.util.Collection<com.fasterxml.jackson.databind.jsontype.NamedType>)
 cons public init(com.fasterxml.jackson.databind.jsontype.impl.AsDeductionTypeDeserializer,com.fasterxml.jackson.databind.BeanProperty)
 meth protected java.util.Map<java.util.BitSet,java.lang.String> buildFingerprints(com.fasterxml.jackson.databind.DeserializationConfig,java.util.Collection<com.fasterxml.jackson.databind.jsontype.NamedType>)
-meth public com.fasterxml.jackson.annotation.JsonTypeInfo$As getTypeInclusion()
 meth public com.fasterxml.jackson.databind.jsontype.TypeDeserializer forProperty(com.fasterxml.jackson.databind.BeanProperty)
 meth public java.lang.Object deserializeTypedFromObject(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 supr com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer
-hfds fieldBitIndex,serialVersionUID,subtypeFingerprints
+hfds EMPTY_CLASS_FINGERPRINT,fieldBitIndex,serialVersionUID,subtypeFingerprints
+
+CLSS public com.fasterxml.jackson.databind.jsontype.impl.AsDeductionTypeSerializer
+cons protected init()
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$As getTypeInclusion()
+meth public com.fasterxml.jackson.core.type.WritableTypeId writeTypePrefix(com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.core.type.WritableTypeId) throws java.io.IOException
+meth public com.fasterxml.jackson.core.type.WritableTypeId writeTypeSuffix(com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.core.type.WritableTypeId) throws java.io.IOException
+meth public com.fasterxml.jackson.databind.jsontype.impl.AsDeductionTypeSerializer forProperty(com.fasterxml.jackson.databind.BeanProperty)
+meth public static com.fasterxml.jackson.databind.jsontype.impl.AsDeductionTypeSerializer instance()
+supr com.fasterxml.jackson.databind.jsontype.impl.TypeSerializerBase
+hfds INSTANCE
 
 CLSS public com.fasterxml.jackson.databind.jsontype.impl.AsExistingPropertyTypeSerializer
 cons public init(com.fasterxml.jackson.databind.jsontype.TypeIdResolver,com.fasterxml.jackson.databind.BeanProperty,java.lang.String)
@@ -11324,11 +12447,18 @@ supr com.fasterxml.jackson.databind.jsontype.impl.TypeSerializerBase
 
 CLSS public com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer
 cons public init(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.jsontype.TypeIdResolver,java.lang.String,boolean,com.fasterxml.jackson.databind.JavaType)
+ anno 0 java.lang.Deprecated()
 cons public init(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.jsontype.TypeIdResolver,java.lang.String,boolean,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.annotation.JsonTypeInfo$As)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.jsontype.TypeIdResolver,java.lang.String,boolean,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.annotation.JsonTypeInfo$As,boolean)
 cons public init(com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer,com.fasterxml.jackson.databind.BeanProperty)
+fld protected final boolean _strictTypeIdHandling
 fld protected final com.fasterxml.jackson.annotation.JsonTypeInfo$As _inclusion
+fld protected final java.lang.String _msgForMissingId
 meth protected java.lang.Object _deserializeTypedForId(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.util.TokenBuffer,java.lang.String) throws java.io.IOException
 meth protected java.lang.Object _deserializeTypedUsingDefaultImpl(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.util.TokenBuffer) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
+meth protected java.lang.Object _deserializeTypedUsingDefaultImpl(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.util.TokenBuffer,java.lang.String) throws java.io.IOException
 meth public com.fasterxml.jackson.annotation.JsonTypeInfo$As getTypeInclusion()
 meth public com.fasterxml.jackson.databind.jsontype.TypeDeserializer forProperty(com.fasterxml.jackson.databind.BeanProperty)
 meth public java.lang.Object deserializeTypedFromAny(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
@@ -11402,6 +12532,24 @@ meth public java.lang.String idFromValue(java.lang.Object)
 meth public static com.fasterxml.jackson.databind.jsontype.impl.MinimalClassNameIdResolver construct(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator)
 supr com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver
 
+CLSS public com.fasterxml.jackson.databind.jsontype.impl.SimpleNameIdResolver
+cons protected init(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType,java.util.concurrent.ConcurrentHashMap<java.lang.String,java.lang.String>,java.util.HashMap<java.lang.String,com.fasterxml.jackson.databind.JavaType>)
+fld protected final boolean _caseInsensitive
+fld protected final com.fasterxml.jackson.databind.cfg.MapperConfig<?> _config
+fld protected final java.util.Map<java.lang.String,com.fasterxml.jackson.databind.JavaType> _idToType
+fld protected final java.util.concurrent.ConcurrentHashMap<java.lang.String,java.lang.String> _typeToId
+meth protected com.fasterxml.jackson.databind.JavaType _typeFromId(java.lang.String)
+meth protected java.lang.String idFromClass(java.lang.Class<?>)
+meth protected static java.lang.String _defaultTypeId(java.lang.Class<?>)
+meth public com.fasterxml.jackson.annotation.JsonTypeInfo$Id getMechanism()
+meth public com.fasterxml.jackson.databind.JavaType typeFromId(com.fasterxml.jackson.databind.DatabindContext,java.lang.String)
+meth public java.lang.String getDescForKnownTypeIds()
+meth public java.lang.String idFromValue(java.lang.Object)
+meth public java.lang.String idFromValueAndType(java.lang.Object,java.lang.Class<?>)
+meth public java.lang.String toString()
+meth public static com.fasterxml.jackson.databind.jsontype.impl.SimpleNameIdResolver construct(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType,java.util.Collection<com.fasterxml.jackson.databind.jsontype.NamedType>,boolean,boolean)
+supr com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase
+
 CLSS public com.fasterxml.jackson.databind.jsontype.impl.StdSubtypeResolver
 cons protected init(com.fasterxml.jackson.databind.jsontype.impl.StdSubtypeResolver)
 cons public init()
@@ -11423,19 +12571,25 @@ hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder
 cons protected init(com.fasterxml.jackson.annotation.JsonTypeInfo$Id,com.fasterxml.jackson.annotation.JsonTypeInfo$As,java.lang.String)
+cons protected init(com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder,java.lang.Class<?>)
 cons public init()
+cons public init(com.fasterxml.jackson.annotation.JsonTypeInfo$Value)
 fld protected boolean _typeIdVisible
 fld protected com.fasterxml.jackson.annotation.JsonTypeInfo$As _includeAs
 fld protected com.fasterxml.jackson.annotation.JsonTypeInfo$Id _idType
 fld protected com.fasterxml.jackson.databind.jsontype.TypeIdResolver _customIdResolver
+fld protected java.lang.Boolean _requireTypeIdForSubtypes
 fld protected java.lang.Class<?> _defaultImpl
 fld protected java.lang.String _typeProperty
 intf com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder>
+meth protected boolean _hasTypeResolver(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType)
+meth protected boolean _strictTypeIdHandling(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType)
 meth protected boolean allowPrimitiveTypes(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType)
 meth protected com.fasterxml.jackson.databind.JavaType defineDefaultImpl(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType)
 meth protected com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator reportInvalidBaseType(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator)
 meth protected com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator verifyBaseTypeValidity(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType)
 meth protected com.fasterxml.jackson.databind.jsontype.TypeIdResolver idResolver(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator,java.util.Collection<com.fasterxml.jackson.databind.jsontype.NamedType>,boolean,boolean)
+meth protected static java.lang.String _propName(java.lang.String,com.fasterxml.jackson.annotation.JsonTypeInfo$Id)
 meth public boolean isTypeIdVisible()
 meth public com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator subTypeValidator(com.fasterxml.jackson.databind.cfg.MapperConfig<?>)
 meth public com.fasterxml.jackson.databind.jsontype.TypeDeserializer buildTypeDeserializer(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.JavaType,java.util.Collection<com.fasterxml.jackson.databind.jsontype.NamedType>)
@@ -11443,8 +12597,11 @@ meth public com.fasterxml.jackson.databind.jsontype.TypeSerializer buildTypeSeri
 meth public com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder defaultImpl(java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder inclusion(com.fasterxml.jackson.annotation.JsonTypeInfo$As)
 meth public com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder init(com.fasterxml.jackson.annotation.JsonTypeInfo$Id,com.fasterxml.jackson.databind.jsontype.TypeIdResolver)
+meth public com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder init(com.fasterxml.jackson.annotation.JsonTypeInfo$Value,com.fasterxml.jackson.databind.jsontype.TypeIdResolver)
 meth public com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder typeIdVisibility(boolean)
 meth public com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder typeProperty(java.lang.String)
+meth public com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder withDefaultImpl(java.lang.Class<?>)
+meth public com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder withSettings(com.fasterxml.jackson.annotation.JsonTypeInfo$Value)
 meth public java.lang.Class<?> getDefaultImpl()
 meth public java.lang.String getTypeProperty()
 meth public static com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder noTypeInfoBuilder()
@@ -11537,6 +12694,10 @@ meth public com.fasterxml.jackson.databind.jsontype.TypeIdResolver getTypeIdReso
 meth public java.lang.String getPropertyName()
 supr com.fasterxml.jackson.databind.jsontype.TypeSerializer
 
+CLSS abstract interface com.fasterxml.jackson.databind.jsontype.impl.package-info
+
+CLSS abstract interface com.fasterxml.jackson.databind.jsontype.package-info
+
 CLSS public com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver
 cons public init()
 fld protected final java.util.HashMap<com.fasterxml.jackson.databind.type.ClassKey,java.lang.Class<?>> _mappings
@@ -11597,6 +12758,7 @@ fld protected com.fasterxml.jackson.databind.module.SimpleSerializers _keySerial
 fld protected com.fasterxml.jackson.databind.module.SimpleSerializers _serializers
 fld protected com.fasterxml.jackson.databind.module.SimpleValueInstantiators _valueInstantiators
 fld protected com.fasterxml.jackson.databind.ser.BeanSerializerModifier _serializerModifier
+fld protected final boolean _hasExplicitName
 fld protected final com.fasterxml.jackson.core.Version _version
 fld protected final java.lang.String _name
 fld protected java.util.HashMap<java.lang.Class<?>,java.lang.Class<?>> _mixins
@@ -11628,7 +12790,7 @@ meth public void setSerializers(com.fasterxml.jackson.databind.module.SimpleSeri
 meth public void setValueInstantiators(com.fasterxml.jackson.databind.module.SimpleValueInstantiators)
 meth public void setupModule(com.fasterxml.jackson.databind.Module$SetupContext)
 supr com.fasterxml.jackson.databind.Module
-hfds serialVersionUID
+hfds MODULE_ID_SEQ,serialVersionUID
 
 CLSS public com.fasterxml.jackson.databind.module.SimpleSerializers
 cons public init()
@@ -11660,6 +12822,8 @@ meth public com.fasterxml.jackson.databind.module.SimpleValueInstantiators addVa
 supr com.fasterxml.jackson.databind.deser.ValueInstantiators$Base
 hfds serialVersionUID
 
+CLSS abstract interface com.fasterxml.jackson.databind.module.package-info
+
 CLSS public com.fasterxml.jackson.databind.node.ArrayNode
 cons public init(com.fasterxml.jackson.databind.node.JsonNodeFactory)
 cons public init(com.fasterxml.jackson.databind.node.JsonNodeFactory,int)
@@ -11669,6 +12833,12 @@ meth protected boolean _childrenEqual(com.fasterxml.jackson.databind.node.ArrayN
 meth protected com.fasterxml.jackson.databind.JsonNode _at(com.fasterxml.jackson.core.JsonPointer)
 meth protected com.fasterxml.jackson.databind.node.ArrayNode _add(com.fasterxml.jackson.databind.JsonNode)
 meth protected com.fasterxml.jackson.databind.node.ArrayNode _insert(int,com.fasterxml.jackson.databind.JsonNode)
+meth protected com.fasterxml.jackson.databind.node.ArrayNode _set(int,com.fasterxml.jackson.databind.JsonNode)
+meth protected com.fasterxml.jackson.databind.node.ArrayNode _withArray(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
+meth protected com.fasterxml.jackson.databind.node.ArrayNode _withArrayAddTailElement(com.fasterxml.jackson.core.JsonPointer,boolean)
+meth protected com.fasterxml.jackson.databind.node.ObjectNode _withObject(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
+meth protected com.fasterxml.jackson.databind.node.ObjectNode _withObjectAddTailElement(com.fasterxml.jackson.core.JsonPointer,boolean)
+meth protected void _withXxxSetArrayElement(int,com.fasterxml.jackson.databind.JsonNode)
 meth public boolean equals(java.lang.Object)
 meth public boolean equals(java.util.Comparator<com.fasterxml.jackson.databind.JsonNode>,com.fasterxml.jackson.databind.JsonNode)
 meth public boolean isArray()
@@ -11694,10 +12864,12 @@ meth public com.fasterxml.jackson.databind.node.ArrayNode add(java.lang.Double)
 meth public com.fasterxml.jackson.databind.node.ArrayNode add(java.lang.Float)
 meth public com.fasterxml.jackson.databind.node.ArrayNode add(java.lang.Integer)
 meth public com.fasterxml.jackson.databind.node.ArrayNode add(java.lang.Long)
+meth public com.fasterxml.jackson.databind.node.ArrayNode add(java.lang.Short)
 meth public com.fasterxml.jackson.databind.node.ArrayNode add(java.lang.String)
 meth public com.fasterxml.jackson.databind.node.ArrayNode add(java.math.BigDecimal)
 meth public com.fasterxml.jackson.databind.node.ArrayNode add(java.math.BigInteger)
 meth public com.fasterxml.jackson.databind.node.ArrayNode add(long)
+meth public com.fasterxml.jackson.databind.node.ArrayNode add(short)
 meth public com.fasterxml.jackson.databind.node.ArrayNode addAll(com.fasterxml.jackson.databind.node.ArrayNode)
 meth public com.fasterxml.jackson.databind.node.ArrayNode addAll(java.util.Collection<? extends com.fasterxml.jackson.databind.JsonNode>)
 meth public com.fasterxml.jackson.databind.node.ArrayNode addArray()
@@ -11716,18 +12888,43 @@ meth public com.fasterxml.jackson.databind.node.ArrayNode insert(int,java.lang.D
 meth public com.fasterxml.jackson.databind.node.ArrayNode insert(int,java.lang.Float)
 meth public com.fasterxml.jackson.databind.node.ArrayNode insert(int,java.lang.Integer)
 meth public com.fasterxml.jackson.databind.node.ArrayNode insert(int,java.lang.Long)
+meth public com.fasterxml.jackson.databind.node.ArrayNode insert(int,java.lang.Short)
 meth public com.fasterxml.jackson.databind.node.ArrayNode insert(int,java.lang.String)
 meth public com.fasterxml.jackson.databind.node.ArrayNode insert(int,java.math.BigDecimal)
 meth public com.fasterxml.jackson.databind.node.ArrayNode insert(int,java.math.BigInteger)
 meth public com.fasterxml.jackson.databind.node.ArrayNode insert(int,long)
+meth public com.fasterxml.jackson.databind.node.ArrayNode insert(int,short)
 meth public com.fasterxml.jackson.databind.node.ArrayNode insertArray(int)
 meth public com.fasterxml.jackson.databind.node.ArrayNode insertNull(int)
 meth public com.fasterxml.jackson.databind.node.ArrayNode insertPOJO(int,java.lang.Object)
+meth public com.fasterxml.jackson.databind.node.ArrayNode insertRawValue(int,com.fasterxml.jackson.databind.util.RawValue)
 meth public com.fasterxml.jackson.databind.node.ArrayNode removeAll()
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,boolean)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,byte[])
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,double)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,float)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,int)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,java.lang.Boolean)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,java.lang.Double)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,java.lang.Float)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,java.lang.Integer)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,java.lang.Long)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,java.lang.Short)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,java.lang.String)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,java.math.BigDecimal)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,java.math.BigInteger)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,long)
+meth public com.fasterxml.jackson.databind.node.ArrayNode set(int,short)
+meth public com.fasterxml.jackson.databind.node.ArrayNode setNull(int)
+meth public com.fasterxml.jackson.databind.node.ArrayNode setPOJO(int,java.lang.Object)
+meth public com.fasterxml.jackson.databind.node.ArrayNode setRawValue(int,com.fasterxml.jackson.databind.util.RawValue)
+meth public com.fasterxml.jackson.databind.node.ArrayNode withArray(java.lang.String)
 meth public com.fasterxml.jackson.databind.node.JsonNodeType getNodeType()
 meth public com.fasterxml.jackson.databind.node.ObjectNode addObject()
 meth public com.fasterxml.jackson.databind.node.ObjectNode findParent(java.lang.String)
 meth public com.fasterxml.jackson.databind.node.ObjectNode insertObject(int)
+meth public com.fasterxml.jackson.databind.node.ObjectNode with(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public int hashCode()
 meth public int size()
 meth public java.util.Iterator<com.fasterxml.jackson.databind.JsonNode> elements()
@@ -11742,6 +12939,14 @@ hfds _children,serialVersionUID
 CLSS public abstract com.fasterxml.jackson.databind.node.BaseJsonNode
 cons protected init()
 intf java.io.Serializable
+meth protected !varargs <%0 extends java.lang.Object> {%%0} _reportWrongNodeOperation(java.lang.String,java.lang.Object[])
+meth protected !varargs <%0 extends java.lang.Object> {%%0} _reportWrongNodeType(java.lang.String,java.lang.Object[])
+meth protected boolean _withXxxMayReplace(com.fasterxml.jackson.databind.JsonNode,com.fasterxml.jackson.databind.JsonNode$OverwriteMode)
+meth protected com.fasterxml.jackson.core.JsonPointer _jsonPointerIfValid(java.lang.String)
+meth protected com.fasterxml.jackson.databind.node.ArrayNode _withArray(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
+meth protected com.fasterxml.jackson.databind.node.ObjectNode _withObject(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
+meth protected java.math.BigInteger _bigIntFromBigDec(java.math.BigDecimal)
+meth protected void _withXxxVerifyReplace(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean,com.fasterxml.jackson.databind.JsonNode)
 meth public abstract com.fasterxml.jackson.core.JsonToken asToken()
 meth public abstract int hashCode()
 meth public abstract void serialize(com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
@@ -11751,6 +12956,8 @@ meth public com.fasterxml.jackson.core.JsonParser traverse(com.fasterxml.jackson
 meth public com.fasterxml.jackson.core.JsonParser$NumberType numberType()
 meth public com.fasterxml.jackson.databind.JsonNode required(int)
 meth public com.fasterxml.jackson.databind.JsonNode required(java.lang.String)
+meth public com.fasterxml.jackson.databind.node.ArrayNode withArray(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
+meth public com.fasterxml.jackson.databind.node.ObjectNode withObject(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
 meth public final com.fasterxml.jackson.databind.JsonNode findPath(java.lang.String)
 meth public java.lang.String toPrettyString()
 meth public java.lang.String toString()
@@ -11827,6 +13034,7 @@ cons protected init()
 cons protected init(com.fasterxml.jackson.databind.node.JsonNodeFactory)
 fld protected final com.fasterxml.jackson.databind.node.JsonNodeFactory _nodeFactory
 intf com.fasterxml.jackson.databind.node.JsonNodeCreator
+meth protected abstract com.fasterxml.jackson.databind.node.ObjectNode _withObject(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
 meth public abstract com.fasterxml.jackson.core.JsonToken asToken()
 meth public abstract com.fasterxml.jackson.databind.JsonNode get(int)
 meth public abstract com.fasterxml.jackson.databind.JsonNode get(java.lang.String)
@@ -11995,10 +13203,12 @@ meth public abstract com.fasterxml.jackson.databind.node.ValueNode textNode(java
 CLSS public com.fasterxml.jackson.databind.node.JsonNodeFactory
 cons protected init()
 cons public init(boolean)
+fld protected final static int MAX_ELEMENT_INDEX_FOR_INSERT = 9999
 fld public final static com.fasterxml.jackson.databind.node.JsonNodeFactory instance
 intf com.fasterxml.jackson.databind.node.JsonNodeCreator
 intf java.io.Serializable
 meth protected boolean _inIntRange(long)
+meth public boolean willStripTrailingBigDecimalZeroes()
 meth public com.fasterxml.jackson.databind.JsonNode missingNode()
 meth public com.fasterxml.jackson.databind.node.ArrayNode arrayNode()
 meth public com.fasterxml.jackson.databind.node.ArrayNode arrayNode(int)
@@ -12024,9 +13234,11 @@ meth public com.fasterxml.jackson.databind.node.ValueNode numberNode(java.math.B
 meth public com.fasterxml.jackson.databind.node.ValueNode numberNode(java.math.BigInteger)
 meth public com.fasterxml.jackson.databind.node.ValueNode pojoNode(java.lang.Object)
 meth public com.fasterxml.jackson.databind.node.ValueNode rawValueNode(com.fasterxml.jackson.databind.util.RawValue)
+meth public int getMaxElementIndexForInsert()
 meth public static com.fasterxml.jackson.databind.node.JsonNodeFactory withExactBigDecimals(boolean)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds _cfgBigDecimalExact,decimalsAsIs,decimalsNormalized,serialVersionUID
+hfds _cfgBigDecimalExact,serialVersionUID
 
 CLSS public final !enum com.fasterxml.jackson.databind.node.JsonNodeType
 fld public final static com.fasterxml.jackson.databind.node.JsonNodeType ARRAY
@@ -12134,7 +13346,13 @@ fld protected final java.util.Map<java.lang.String,com.fasterxml.jackson.databin
 intf java.io.Serializable
 meth protected boolean _childrenEqual(com.fasterxml.jackson.databind.node.ObjectNode)
 meth protected com.fasterxml.jackson.databind.JsonNode _at(com.fasterxml.jackson.core.JsonPointer)
+meth protected com.fasterxml.jackson.databind.node.ArrayNode _withArray(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
+meth protected com.fasterxml.jackson.databind.node.ArrayNode _withArrayAddTailProperty(com.fasterxml.jackson.core.JsonPointer,boolean)
 meth protected com.fasterxml.jackson.databind.node.ObjectNode _put(java.lang.String,com.fasterxml.jackson.databind.JsonNode)
+meth protected com.fasterxml.jackson.databind.node.ObjectNode _withObject(com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.core.JsonPointer,com.fasterxml.jackson.databind.JsonNode$OverwriteMode,boolean)
+meth protected com.fasterxml.jackson.databind.node.ObjectNode _withObjectAddTailProperty(com.fasterxml.jackson.core.JsonPointer,boolean)
+meth protected java.util.Map<java.lang.String,com.fasterxml.jackson.databind.JsonNode> _contentsToSerialize(com.fasterxml.jackson.databind.SerializerProvider)
+meth protected void serializeFilteredContents(com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,boolean,boolean) throws java.io.IOException
 meth public !varargs com.fasterxml.jackson.databind.node.ObjectNode retain(java.lang.String[])
 meth public <%0 extends com.fasterxml.jackson.databind.JsonNode> {%%0} set(java.lang.String,com.fasterxml.jackson.databind.JsonNode)
 meth public <%0 extends com.fasterxml.jackson.databind.JsonNode> {%%0} setAll(com.fasterxml.jackson.databind.node.ObjectNode)
@@ -12157,11 +13375,13 @@ meth public com.fasterxml.jackson.databind.JsonNode putAll(com.fasterxml.jackson
  anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonNode putAll(java.util.Map<java.lang.String,? extends com.fasterxml.jackson.databind.JsonNode>)
  anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.databind.JsonNode putIfAbsent(java.lang.String,com.fasterxml.jackson.databind.JsonNode)
 meth public com.fasterxml.jackson.databind.JsonNode remove(java.lang.String)
 meth public com.fasterxml.jackson.databind.JsonNode replace(java.lang.String,com.fasterxml.jackson.databind.JsonNode)
 meth public com.fasterxml.jackson.databind.JsonNode required(java.lang.String)
 meth public com.fasterxml.jackson.databind.node.ArrayNode putArray(java.lang.String)
 meth public com.fasterxml.jackson.databind.node.ArrayNode withArray(java.lang.String)
+meth public com.fasterxml.jackson.databind.node.ArrayNode withArrayProperty(java.lang.String)
 meth public com.fasterxml.jackson.databind.node.JsonNodeType getNodeType()
 meth public com.fasterxml.jackson.databind.node.ObjectNode deepCopy()
 meth public com.fasterxml.jackson.databind.node.ObjectNode findParent(java.lang.String)
@@ -12189,6 +13409,9 @@ meth public com.fasterxml.jackson.databind.node.ObjectNode remove(java.util.Coll
 meth public com.fasterxml.jackson.databind.node.ObjectNode removeAll()
 meth public com.fasterxml.jackson.databind.node.ObjectNode retain(java.util.Collection<java.lang.String>)
 meth public com.fasterxml.jackson.databind.node.ObjectNode with(java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.databind.node.ObjectNode withObject(java.lang.String)
+meth public com.fasterxml.jackson.databind.node.ObjectNode withObjectProperty(java.lang.String)
 meth public final boolean isObject()
 meth public int hashCode()
 meth public int size()
@@ -12198,6 +13421,7 @@ meth public java.util.Iterator<java.util.Map$Entry<java.lang.String,com.fasterxm
 meth public java.util.List<com.fasterxml.jackson.databind.JsonNode> findParents(java.lang.String,java.util.List<com.fasterxml.jackson.databind.JsonNode>)
 meth public java.util.List<com.fasterxml.jackson.databind.JsonNode> findValues(java.lang.String,java.util.List<com.fasterxml.jackson.databind.JsonNode>)
 meth public java.util.List<java.lang.String> findValuesAsText(java.lang.String,java.util.List<java.lang.String>)
+meth public java.util.Set<java.util.Map$Entry<java.lang.String,com.fasterxml.jackson.databind.JsonNode>> properties()
 meth public void serialize(com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public void serializeWithType(com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
 supr com.fasterxml.jackson.databind.node.ContainerNode<com.fasterxml.jackson.databind.node.ObjectNode>
@@ -12278,8 +13502,8 @@ fld protected boolean _closed
 fld protected com.fasterxml.jackson.core.JsonStreamContext _nodeCursor
 fld protected com.fasterxml.jackson.core.ObjectCodec _objectCodec
 meth protected com.fasterxml.jackson.databind.JsonNode currentNode()
-meth protected com.fasterxml.jackson.databind.JsonNode currentNumericNode() throws com.fasterxml.jackson.core.JsonParseException
-meth protected void _handleEOF() throws com.fasterxml.jackson.core.JsonParseException
+meth protected com.fasterxml.jackson.databind.JsonNode currentNumericNode() throws com.fasterxml.jackson.core.JacksonException
+meth protected void _handleEOF()
 meth public boolean hasTextCharacters()
 meth public boolean isClosed()
 meth public boolean isNaN()
@@ -12335,6 +13559,10 @@ meth public void serializeWithType(com.fasterxml.jackson.core.JsonGenerator,com.
 supr com.fasterxml.jackson.databind.node.BaseJsonNode
 hfds serialVersionUID
 
+CLSS abstract interface com.fasterxml.jackson.databind.node.package-info
+
+CLSS abstract interface com.fasterxml.jackson.databind.package-info
+
 CLSS public com.fasterxml.jackson.databind.ser.AnyGetterWriter
 cons public init(com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JsonSerializer<?>)
 fld protected com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> _serializer
@@ -12355,7 +13583,7 @@ fld protected final static java.util.HashMap<java.lang.String,java.lang.Class<? 
 intf java.io.Serializable
 meth protected abstract java.lang.Iterable<com.fasterxml.jackson.databind.ser.Serializers> customSerializers()
 meth protected boolean isIndexedList(java.lang.Class<?>)
-meth protected boolean usesStaticTyping(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.jsontype.TypeSerializer)
+meth protected boolean usesStaticTyping(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.BeanDescription)
 meth protected com.fasterxml.jackson.annotation.JsonInclude$Value _findInclusionWithContent(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.JavaType,java.lang.Class<?>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected com.fasterxml.jackson.databind.JsonSerializer<?> buildArraySerializer(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.type.ArrayType,com.fasterxml.jackson.databind.BeanDescription,boolean,com.fasterxml.jackson.databind.jsontype.TypeSerializer,com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected com.fasterxml.jackson.databind.JsonSerializer<?> buildAtomicReferenceSerializer(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.type.ReferenceType,com.fasterxml.jackson.databind.BeanDescription,boolean,com.fasterxml.jackson.databind.jsontype.TypeSerializer,com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -12487,6 +13715,7 @@ cons public init(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.d
 meth protected com.fasterxml.jackson.databind.ser.std.BeanSerializerBase asArraySerializer()
 meth protected com.fasterxml.jackson.databind.ser.std.BeanSerializerBase withByNameInclusion(java.util.Set<java.lang.String>,java.util.Set<java.lang.String>)
 meth protected com.fasterxml.jackson.databind.ser.std.BeanSerializerBase withProperties(com.fasterxml.jackson.databind.ser.BeanPropertyWriter[],com.fasterxml.jackson.databind.ser.BeanPropertyWriter[])
+meth public com.fasterxml.jackson.databind.JsonSerializer<?> withIgnoredProperties(java.util.Set<java.lang.String>)
 meth public com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> unwrappingSerializer(com.fasterxml.jackson.databind.util.NameTransformer)
 meth public com.fasterxml.jackson.databind.ser.std.BeanSerializerBase withFilterId(java.lang.Object)
 meth public com.fasterxml.jackson.databind.ser.std.BeanSerializerBase withObjectIdWriter(com.fasterxml.jackson.databind.ser.impl.ObjectIdWriter)
@@ -12534,6 +13763,7 @@ CLSS public com.fasterxml.jackson.databind.ser.BeanSerializerFactory
 cons protected init(com.fasterxml.jackson.databind.cfg.SerializerFactoryConfig)
 fld public final static com.fasterxml.jackson.databind.ser.BeanSerializerFactory instance
 intf java.io.Serializable
+meth protected boolean _isUnserializableJacksonType(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.JavaType)
 meth protected boolean isPotentialBeanType(java.lang.Class<?>)
 meth protected com.fasterxml.jackson.databind.JsonSerializer<?> _createSerializer2(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.BeanDescription,boolean) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected com.fasterxml.jackson.databind.JsonSerializer<?> _findUnsupportedTypeSerializer(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.BeanDescription) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -12547,6 +13777,7 @@ meth protected com.fasterxml.jackson.databind.ser.PropertyBuilder constructPrope
 meth protected com.fasterxml.jackson.databind.ser.impl.ObjectIdWriter constructObjectIdHandler(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanDescription,java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected java.lang.Iterable<com.fasterxml.jackson.databind.ser.Serializers> customSerializers()
 meth protected java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter> filterBeanProperties(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.BeanDescription,java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter>)
+meth protected java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter> filterUnwantedJDKProperties(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.BeanDescription,java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter>)
 meth protected java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter> findBeanProperties(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.ser.BeanSerializerBuilder) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter> removeOverlappingTypeIds(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanDescription,com.fasterxml.jackson.databind.ser.BeanSerializerBuilder,java.util.List<com.fasterxml.jackson.databind.ser.BeanPropertyWriter>)
 meth protected void processViews(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.ser.BeanSerializerBuilder)
@@ -12598,6 +13829,7 @@ CLSS public abstract com.fasterxml.jackson.databind.ser.DefaultSerializerProvide
 cons protected init()
 cons protected init(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.ser.SerializerFactory)
 cons protected init(com.fasterxml.jackson.databind.ser.DefaultSerializerProvider)
+cons protected init(com.fasterxml.jackson.databind.ser.DefaultSerializerProvider,com.fasterxml.jackson.databind.cfg.CacheProvider)
 fld protected com.fasterxml.jackson.core.JsonGenerator _generator
 fld protected java.util.ArrayList<com.fasterxml.jackson.annotation.ObjectIdGenerator<?>> _objectIdGenerators
 fld protected java.util.Map<java.lang.Object,com.fasterxml.jackson.databind.ser.impl.WritableObjectId> _seenObjectIds
@@ -12606,6 +13838,7 @@ intf java.io.Serializable
 meth protected java.util.Map<java.lang.Object,com.fasterxml.jackson.databind.ser.impl.WritableObjectId> _createObjectIdMap()
 meth protected void _serializeNull(com.fasterxml.jackson.core.JsonGenerator) throws java.io.IOException
 meth public abstract com.fasterxml.jackson.databind.ser.DefaultSerializerProvider createInstance(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.ser.SerializerFactory)
+meth public abstract com.fasterxml.jackson.databind.ser.DefaultSerializerProvider withCaches(com.fasterxml.jackson.databind.cfg.CacheProvider)
 meth public boolean hasSerializerFor(java.lang.Class<?>,java.util.concurrent.atomic.AtomicReference<java.lang.Throwable>)
 meth public boolean includeFilterSuppressNulls(java.lang.Object) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.core.JsonGenerator getGenerator()
@@ -12628,9 +13861,11 @@ hfds serialVersionUID
 CLSS public final static com.fasterxml.jackson.databind.ser.DefaultSerializerProvider$Impl
  outer com.fasterxml.jackson.databind.ser.DefaultSerializerProvider
 cons protected init(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.ser.SerializerFactory)
+cons protected init(com.fasterxml.jackson.databind.ser.DefaultSerializerProvider$Impl,com.fasterxml.jackson.databind.cfg.CacheProvider)
 cons public init()
 cons public init(com.fasterxml.jackson.databind.ser.DefaultSerializerProvider$Impl)
 meth public com.fasterxml.jackson.databind.ser.DefaultSerializerProvider copy()
+meth public com.fasterxml.jackson.databind.ser.DefaultSerializerProvider withCaches(com.fasterxml.jackson.databind.cfg.CacheProvider)
 meth public com.fasterxml.jackson.databind.ser.DefaultSerializerProvider$Impl createInstance(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.ser.SerializerFactory)
 supr com.fasterxml.jackson.databind.ser.DefaultSerializerProvider
 hfds serialVersionUID
@@ -12695,6 +13930,11 @@ meth public abstract void resolve(com.fasterxml.jackson.databind.SerializerProvi
 
 CLSS public final com.fasterxml.jackson.databind.ser.SerializerCache
 cons public init()
+cons public init(com.fasterxml.jackson.databind.util.LookupCache<com.fasterxml.jackson.databind.util.TypeKey,com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>>)
+cons public init(int)
+fld public final static int DEFAULT_MAX_CACHED = 4000
+ anno 0 java.lang.Deprecated()
+fld public final static int DEFAULT_MAX_CACHE_SIZE = 4000
 meth public com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> typedValueSerializer(com.fasterxml.jackson.databind.JavaType)
 meth public com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> typedValueSerializer(java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> untypedValueSerializer(com.fasterxml.jackson.databind.JavaType)
@@ -12931,13 +14171,13 @@ fld public final com.fasterxml.jackson.databind.ser.impl.PropertySerializerMap m
 supr java.lang.Object
 
 CLSS public final com.fasterxml.jackson.databind.ser.impl.ReadOnlyClassToSerializerMap
-cons public init(java.util.Map<com.fasterxml.jackson.databind.util.TypeKey,com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>>)
+cons public init(com.fasterxml.jackson.databind.util.LookupCache<com.fasterxml.jackson.databind.util.TypeKey,com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>>)
 meth public com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> typedValueSerializer(com.fasterxml.jackson.databind.JavaType)
 meth public com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> typedValueSerializer(java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> untypedValueSerializer(com.fasterxml.jackson.databind.JavaType)
 meth public com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> untypedValueSerializer(java.lang.Class<?>)
 meth public int size()
-meth public static com.fasterxml.jackson.databind.ser.impl.ReadOnlyClassToSerializerMap from(java.util.HashMap<com.fasterxml.jackson.databind.util.TypeKey,com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>>)
+meth public static com.fasterxml.jackson.databind.ser.impl.ReadOnlyClassToSerializerMap from(com.fasterxml.jackson.databind.util.LookupCache<com.fasterxml.jackson.databind.util.TypeKey,com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object>>)
 supr java.lang.Object
 hfds _buckets,_mask,_size
 hcls Bucket
@@ -12954,6 +14194,7 @@ meth protected boolean includeElement(java.lang.Object)
 meth public !varargs static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter filterOutAllExcept(java.lang.String[])
 meth public !varargs static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter serializeAllExcept(java.lang.String[])
 meth public static com.fasterxml.jackson.databind.ser.PropertyFilter from(com.fasterxml.jackson.databind.ser.BeanPropertyFilter)
+meth public static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter filterOutAll()
 meth public static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter filterOutAllExcept(java.util.Set<java.lang.String>)
 meth public static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter serializeAll()
 meth public static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter serializeAll(java.util.Set<java.lang.String>)
@@ -12980,7 +14221,7 @@ intf java.io.Serializable
 meth protected boolean include(com.fasterxml.jackson.databind.ser.BeanPropertyWriter)
 meth protected boolean include(com.fasterxml.jackson.databind.ser.PropertyWriter)
 supr com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter
-hfds serialVersionUID
+hfds EXCLUDE_ALL,serialVersionUID
 
 CLSS public static com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter$SerializeExceptFilter
  outer com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter
@@ -13027,6 +14268,7 @@ meth public boolean hasSingleElement(java.lang.String[])
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,java.lang.String[])
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> _withResolved(com.fasterxml.jackson.databind.BeanProperty,java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getContentSerializer()
@@ -13065,12 +14307,9 @@ CLSS public com.fasterxml.jackson.databind.ser.impl.UnknownSerializer
 cons public init()
 cons public init(java.lang.Class<?>)
 meth protected void failForEmpty(com.fasterxml.jackson.databind.SerializerProvider,java.lang.Object) throws com.fasterxml.jackson.databind.JsonMappingException
-meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,java.lang.Object)
-meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
-meth public final void serializeWithType(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
-meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
-supr com.fasterxml.jackson.databind.ser.std.StdSerializer<java.lang.Object>
+meth public void serializeWithType(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
+supr com.fasterxml.jackson.databind.ser.std.ToEmptyObjectSerializer
 
 CLSS public com.fasterxml.jackson.databind.ser.impl.UnsupportedTypeSerializer
 cons public init(com.fasterxml.jackson.databind.JavaType,java.lang.String)
@@ -13128,6 +14367,10 @@ meth public java.lang.Object generateId(java.lang.Object)
 meth public void writeAsField(com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.ser.impl.ObjectIdWriter) throws java.io.IOException
 supr java.lang.Object
 
+CLSS abstract interface com.fasterxml.jackson.databind.ser.impl.package-info
+
+CLSS abstract interface com.fasterxml.jackson.databind.ser.package-info
+
 CLSS public abstract com.fasterxml.jackson.databind.ser.std.ArraySerializerBase<%0 extends java.lang.Object>
 cons protected init(com.fasterxml.jackson.databind.ser.std.ArraySerializerBase<?>)
 cons protected init(com.fasterxml.jackson.databind.ser.std.ArraySerializerBase<?>,com.fasterxml.jackson.databind.BeanProperty)
@@ -13169,6 +14412,7 @@ meth protected final com.fasterxml.jackson.databind.JsonSerializer<java.lang.Obj
 meth public abstract com.fasterxml.jackson.databind.ser.std.AsArraySerializerBase<{com.fasterxml.jackson.databind.ser.std.AsArraySerializerBase%0}> withResolved(com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.jsontype.TypeSerializer,com.fasterxml.jackson.databind.JsonSerializer<?>,java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getContentSerializer()
 meth public final com.fasterxml.jackson.databind.ser.std.AsArraySerializerBase<{com.fasterxml.jackson.databind.ser.std.AsArraySerializerBase%0}> withResolved(com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.jsontype.TypeSerializer,com.fasterxml.jackson.databind.JsonSerializer<?>)
@@ -13212,7 +14456,6 @@ fld protected final java.lang.Object _propertyFilterId
 fld protected final static com.fasterxml.jackson.databind.PropertyName NAME_FOR_OBJECT_REF
 fld protected final static com.fasterxml.jackson.databind.ser.BeanPropertyWriter[] NO_PROPS
 intf com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable
-intf com.fasterxml.jackson.databind.jsonschema.SchemaAware
 intf com.fasterxml.jackson.databind.ser.ContextualSerializer
 intf com.fasterxml.jackson.databind.ser.ResolvableSerializer
 meth protected abstract com.fasterxml.jackson.databind.ser.std.BeanSerializerBase asArraySerializer()
@@ -13249,6 +14492,7 @@ cons public init(boolean)
 fld protected final boolean _forPrimitive
 intf com.fasterxml.jackson.databind.ser.ContextualSerializer
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public final void serializeWithType(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -13261,6 +14505,7 @@ CLSS public com.fasterxml.jackson.databind.ser.std.ByteArraySerializer
 cons public init()
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,byte[])
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(byte[],com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public void serializeWithType(byte[],com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
@@ -13285,6 +14530,7 @@ supr com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase<java.util.Cal
 CLSS public com.fasterxml.jackson.databind.ser.std.ClassSerializer
 cons public init()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.lang.Class<?>,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<java.lang.Class<?>>
@@ -13327,18 +14573,27 @@ meth public abstract com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBa
 meth public abstract void serialize({com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase%0},com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,{com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase%0})
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<{com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase%0}>
 
 CLSS public com.fasterxml.jackson.databind.ser.std.EnumSerializer
 cons public init(com.fasterxml.jackson.databind.util.EnumValues,java.lang.Boolean)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.databind.util.EnumValues,java.lang.Boolean,com.fasterxml.jackson.databind.util.EnumValues)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.databind.util.EnumValues,java.lang.Boolean,com.fasterxml.jackson.databind.util.EnumValues,com.fasterxml.jackson.databind.util.EnumValues)
 fld protected final com.fasterxml.jackson.databind.util.EnumValues _values
+fld protected final com.fasterxml.jackson.databind.util.EnumValues _valuesByEnumNaming
+fld protected final com.fasterxml.jackson.databind.util.EnumValues _valuesByToString
 fld protected final java.lang.Boolean _serializeAsIndex
 intf com.fasterxml.jackson.databind.ser.ContextualSerializer
 meth protected final boolean _serializeAsIndex(com.fasterxml.jackson.databind.SerializerProvider)
+meth protected static com.fasterxml.jackson.databind.util.EnumValues constructEnumNamingStrategyValues(com.fasterxml.jackson.databind.SerializationConfig,java.lang.Class<java.lang.Enum<?>>,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth protected static java.lang.Boolean _isShapeWrittenUsingIndex(java.lang.Class<?>,com.fasterxml.jackson.annotation.JsonFormat$Value,boolean,java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.util.EnumValues getEnumValues()
 meth public final void serialize(java.lang.Enum<?>,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
@@ -13361,6 +14616,7 @@ supr com.fasterxml.jackson.databind.ser.std.AsArraySerializerBase<java.util.Enum
 CLSS public com.fasterxml.jackson.databind.ser.std.FileSerializer
 cons public init()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.io.File,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<java.io.File>
@@ -13396,6 +14652,8 @@ CLSS public com.fasterxml.jackson.databind.ser.std.JsonValueSerializer
 cons public init(com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JsonSerializer<?>)
  anno 0 java.lang.Deprecated()
 cons public init(com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.jsontype.TypeSerializer,com.fasterxml.jackson.databind.JsonSerializer<?>)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.jsontype.TypeSerializer,com.fasterxml.jackson.databind.JsonSerializer<?>,java.util.Set<java.lang.String>)
 cons public init(com.fasterxml.jackson.databind.ser.std.JsonValueSerializer,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.jsontype.TypeSerializer,com.fasterxml.jackson.databind.JsonSerializer<?>,boolean)
 fld protected com.fasterxml.jackson.databind.ser.impl.PropertySerializerMap _dynamicSerializers
 fld protected final boolean _forceTypeInformation
@@ -13404,17 +14662,20 @@ fld protected final com.fasterxml.jackson.databind.JavaType _valueType
 fld protected final com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> _valueSerializer
 fld protected final com.fasterxml.jackson.databind.introspect.AnnotatedMember _accessor
 fld protected final com.fasterxml.jackson.databind.jsontype.TypeSerializer _valueTypeSerializer
+fld protected final java.util.Set<java.lang.String> _ignoredProperties
 intf com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable
-intf com.fasterxml.jackson.databind.jsonschema.SchemaAware
 intf com.fasterxml.jackson.databind.ser.ContextualSerializer
 meth protected boolean _acceptJsonFormatVisitorForEnum(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType,java.lang.Class<?>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected boolean isNaturalTypeWithStdHandling(java.lang.Class<?>,com.fasterxml.jackson.databind.JsonSerializer<?>)
 meth protected com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> _findDynamicSerializer(com.fasterxml.jackson.databind.SerializerProvider,java.lang.Class<?>) throws com.fasterxml.jackson.databind.JsonMappingException
 meth protected com.fasterxml.jackson.databind.ser.std.JsonValueSerializer withResolved(com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.databind.jsontype.TypeSerializer,com.fasterxml.jackson.databind.JsonSerializer<?>,boolean)
+meth protected static com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> _withIgnoreProperties(com.fasterxml.jackson.databind.JsonSerializer<?>,java.util.Set<java.lang.String>)
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,java.lang.Object)
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public java.lang.String toString()
+meth public static com.fasterxml.jackson.databind.ser.std.JsonValueSerializer construct(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.jsontype.TypeSerializer,com.fasterxml.jackson.databind.JsonSerializer<?>)
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public void serializeWithType(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
@@ -13492,6 +14753,7 @@ meth public boolean hasSingleElement(java.util.Map<?,?>)
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,java.util.Map<?,?>)
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getContentSerializer()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getKeySerializer()
@@ -13529,6 +14791,7 @@ supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<{com.fasterxml.j
 CLSS public com.fasterxml.jackson.databind.ser.std.NullSerializer
 fld public final static com.fasterxml.jackson.databind.ser.std.NullSerializer instance
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public void serializeWithType(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
@@ -13541,6 +14804,7 @@ fld protected final static int MAX_BIG_DECIMAL_SCALE = 9999
 fld public final static com.fasterxml.jackson.databind.ser.std.NumberSerializer instance
 intf com.fasterxml.jackson.databind.ser.ContextualSerializer
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public static com.fasterxml.jackson.databind.JsonSerializer<?> bigDecimalAsStringSerializer()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -13568,6 +14832,7 @@ fld protected final com.fasterxml.jackson.core.JsonParser$NumberType _numberType
 fld protected final java.lang.String _schemaType
 intf com.fasterxml.jackson.databind.ser.ContextualSerializer
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<{com.fasterxml.jackson.databind.ser.std.NumberSerializers$Base%0}>
@@ -13576,6 +14841,7 @@ CLSS public static com.fasterxml.jackson.databind.ser.std.NumberSerializers$Doub
  outer com.fasterxml.jackson.databind.ser.std.NumberSerializers
 cons public init(java.lang.Class<?>)
 meth public static boolean notFinite(double)
+ anno 0 java.lang.Deprecated()
 meth public void serialize(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public void serializeWithType(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.NumberSerializers$Base<java.lang.Object>
@@ -13644,6 +14910,7 @@ supr com.fasterxml.jackson.databind.ser.std.ArraySerializerBase<java.lang.Object
 CLSS public com.fasterxml.jackson.databind.ser.std.RawSerializer<%0 extends java.lang.Object>
 cons public init(java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize({com.fasterxml.jackson.databind.ser.std.RawSerializer%0},com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public void serializeWithType({com.fasterxml.jackson.databind.ser.std.RawSerializer%0},com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
@@ -13699,6 +14966,7 @@ supr com.fasterxml.jackson.databind.ser.std.DateTimeSerializerBase<java.sql.Date
 CLSS public com.fasterxml.jackson.databind.ser.std.SqlTimeSerializer
 cons public init()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.sql.Time,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<java.sql.Time>
@@ -13714,6 +14982,7 @@ meth public abstract com.fasterxml.jackson.databind.JsonSerializer<?> _withResol
 meth public abstract void serializeWithType({com.fasterxml.jackson.databind.ser.std.StaticListSerializerBase%0},com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,{com.fasterxml.jackson.databind.ser.std.StaticListSerializerBase%0})
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 supr com.fasterxml.jackson.databind.ser.std.StdSerializer<{com.fasterxml.jackson.databind.ser.std.StaticListSerializerBase%0}>
@@ -13740,6 +15009,7 @@ meth public boolean hasSingleElement(boolean[])
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,boolean[])
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> _withResolved(com.fasterxml.jackson.databind.BeanProperty,java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getContentSerializer()
 meth public com.fasterxml.jackson.databind.ser.ContainerSerializer<?> _withValueTypeSerializer(com.fasterxml.jackson.databind.jsontype.TypeSerializer)
@@ -13754,6 +15024,7 @@ CLSS public static com.fasterxml.jackson.databind.ser.std.StdArraySerializers$Ch
 cons public init()
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,char[])
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(char[],com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public void serializeWithType(char[],com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
@@ -13767,6 +15038,7 @@ meth public boolean hasSingleElement(double[])
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,double[])
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> _withResolved(com.fasterxml.jackson.databind.BeanProperty,java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getContentSerializer()
 meth public com.fasterxml.jackson.databind.ser.ContainerSerializer<?> _withValueTypeSerializer(com.fasterxml.jackson.databind.jsontype.TypeSerializer)
@@ -13784,6 +15056,7 @@ meth public boolean hasSingleElement(float[])
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,float[])
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> _withResolved(com.fasterxml.jackson.databind.BeanProperty,java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getContentSerializer()
 meth public final void serialize(float[],com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
@@ -13800,6 +15073,7 @@ meth public boolean hasSingleElement(int[])
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,int[])
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> _withResolved(com.fasterxml.jackson.databind.BeanProperty,java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getContentSerializer()
 meth public com.fasterxml.jackson.databind.ser.ContainerSerializer<?> _withValueTypeSerializer(com.fasterxml.jackson.databind.jsontype.TypeSerializer)
@@ -13817,6 +15091,7 @@ meth public boolean hasSingleElement(long[])
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,long[])
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> _withResolved(com.fasterxml.jackson.databind.BeanProperty,java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getContentSerializer()
 meth public final void serialize(long[],com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
@@ -13833,6 +15108,7 @@ meth public boolean hasSingleElement(short[])
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,short[])
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> _withResolved(com.fasterxml.jackson.databind.BeanProperty,java.lang.Boolean)
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getContentSerializer()
 meth public final void serialize(short[],com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
@@ -13856,7 +15132,6 @@ fld protected final com.fasterxml.jackson.databind.JavaType _delegateType
 fld protected final com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> _delegateSerializer
 fld protected final com.fasterxml.jackson.databind.util.Converter<java.lang.Object,?> _converter
 intf com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable
-intf com.fasterxml.jackson.databind.jsonschema.SchemaAware
 intf com.fasterxml.jackson.databind.ser.ContextualSerializer
 intf com.fasterxml.jackson.databind.ser.ResolvableSerializer
 meth protected com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> _findSerializer(java.lang.Object,com.fasterxml.jackson.databind.SerializerProvider) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -13865,7 +15140,9 @@ meth protected com.fasterxml.jackson.databind.util.Converter<java.lang.Object,?>
 meth protected java.lang.Object convertValue(java.lang.Object)
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,java.lang.Object)
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type,boolean) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> createContextual(com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public com.fasterxml.jackson.databind.JsonSerializer<?> getDelegatee()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -13886,6 +15163,7 @@ CLSS public static com.fasterxml.jackson.databind.ser.std.StdJdkSerializers$Atom
  outer com.fasterxml.jackson.databind.ser.std.StdJdkSerializers
 cons public init()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.util.concurrent.atomic.AtomicBoolean,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<java.util.concurrent.atomic.AtomicBoolean>
@@ -13894,6 +15172,7 @@ CLSS public static com.fasterxml.jackson.databind.ser.std.StdJdkSerializers$Atom
  outer com.fasterxml.jackson.databind.ser.std.StdJdkSerializers
 cons public init()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.util.concurrent.atomic.AtomicInteger,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<java.util.concurrent.atomic.AtomicInteger>
@@ -13902,6 +15181,7 @@ CLSS public static com.fasterxml.jackson.databind.ser.std.StdJdkSerializers$Atom
  outer com.fasterxml.jackson.databind.ser.std.StdJdkSerializers
 cons public init()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.util.concurrent.atomic.AtomicLong,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<java.util.concurrent.atomic.AtomicLong>
@@ -13922,7 +15202,7 @@ innr public static EnumKeySerializer
 innr public static StringKeySerializer
 meth public static com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> getDefault()
  anno 0 java.lang.Deprecated()
-meth public static com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> getFallbackKeySerializer(com.fasterxml.jackson.databind.SerializationConfig,java.lang.Class<?>)
+meth public static com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> getFallbackKeySerializer(com.fasterxml.jackson.databind.SerializationConfig,java.lang.Class<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public static com.fasterxml.jackson.databind.JsonSerializer<java.lang.Object> getStdKeySerializer(com.fasterxml.jackson.databind.SerializationConfig,java.lang.Class<?>,boolean)
 supr java.lang.Object
 
@@ -13946,8 +15226,11 @@ supr com.fasterxml.jackson.databind.ser.std.StdSerializer<java.lang.Object>
 CLSS public static com.fasterxml.jackson.databind.ser.std.StdKeySerializers$EnumKeySerializer
  outer com.fasterxml.jackson.databind.ser.std.StdKeySerializers
 cons protected init(java.lang.Class<?>,com.fasterxml.jackson.databind.util.EnumValues)
+cons protected init(java.lang.Class<?>,com.fasterxml.jackson.databind.util.EnumValues,com.fasterxml.jackson.databind.util.EnumValues)
 fld protected final com.fasterxml.jackson.databind.util.EnumValues _values
+fld protected final com.fasterxml.jackson.databind.util.EnumValues _valuesByEnumNaming
 meth public static com.fasterxml.jackson.databind.ser.std.StdKeySerializers$EnumKeySerializer construct(java.lang.Class<?>,com.fasterxml.jackson.databind.util.EnumValues)
+meth public static com.fasterxml.jackson.databind.ser.std.StdKeySerializers$EnumKeySerializer construct(java.lang.Class<?>,com.fasterxml.jackson.databind.util.EnumValues,com.fasterxml.jackson.databind.util.EnumValues)
 meth public void serialize(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdSerializer<java.lang.Object>
 
@@ -13962,6 +15245,7 @@ cons protected init(com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<?
 cons protected init(java.lang.Class<?>,boolean)
 cons protected init(java.lang.Class<{com.fasterxml.jackson.databind.ser.std.StdScalarSerializer%0}>)
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serializeWithType({com.fasterxml.jackson.databind.ser.std.StdScalarSerializer%0},com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdSerializer<{com.fasterxml.jackson.databind.ser.std.StdScalarSerializer%0}>
@@ -13997,7 +15281,9 @@ meth protected void visitStringFormat(com.fasterxml.jackson.databind.jsonFormatV
 meth protected void visitStringFormat(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public abstract void serialize({com.fasterxml.jackson.databind.ser.std.StdSerializer%0},com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type,boolean) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 meth public java.lang.Class<{com.fasterxml.jackson.databind.ser.std.StdSerializer%0}> handledType()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void wrapAndThrow(com.fasterxml.jackson.databind.SerializerProvider,java.lang.Throwable,java.lang.Object,int) throws java.io.IOException
@@ -14009,6 +15295,7 @@ CLSS public final com.fasterxml.jackson.databind.ser.std.StringSerializer
 cons public init()
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,java.lang.Object)
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public final void serializeWithType(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
@@ -14020,6 +15307,17 @@ cons public init()
 meth public void serialize(java.util.TimeZone,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public void serializeWithType(java.util.TimeZone,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
 supr com.fasterxml.jackson.databind.ser.std.StdScalarSerializer<java.util.TimeZone>
+
+CLSS public com.fasterxml.jackson.databind.ser.std.ToEmptyObjectSerializer
+cons protected init(java.lang.Class<?>)
+cons public init(com.fasterxml.jackson.databind.JavaType)
+meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,java.lang.Object)
+meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
+meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public void serialize(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
+meth public void serializeWithType(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
+supr com.fasterxml.jackson.databind.ser.std.StdSerializer<java.lang.Object>
 
 CLSS public com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 cons public init()
@@ -14033,6 +15331,7 @@ cons public init(java.lang.Class<?>)
 meth public abstract java.lang.String valueToString(java.lang.Object)
 meth public boolean isEmpty(com.fasterxml.jackson.databind.SerializerProvider,java.lang.Object)
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
+ anno 0 java.lang.Deprecated()
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
 meth public void serializeWithType(java.lang.Object,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
@@ -14041,6 +15340,7 @@ supr com.fasterxml.jackson.databind.ser.std.StdSerializer<java.lang.Object>
 CLSS public com.fasterxml.jackson.databind.ser.std.TokenBufferSerializer
 cons public init()
 meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
 meth public final void serializeWithType(com.fasterxml.jackson.databind.util.TokenBuffer,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider,com.fasterxml.jackson.databind.jsontype.TypeSerializer) throws java.io.IOException
 meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
 meth public void serialize(com.fasterxml.jackson.databind.util.TokenBuffer,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
@@ -14063,8 +15363,6 @@ CLSS public final com.fasterxml.jackson.databind.type.ArrayType
 cons protected init(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.type.TypeBindings,java.lang.Object,java.lang.Object,java.lang.Object,boolean)
 fld protected final com.fasterxml.jackson.databind.JavaType _componentType
 fld protected final java.lang.Object _emptyArray
-meth protected com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
 meth public boolean equals(java.lang.Object)
 meth public boolean hasGenericTypes()
 meth public boolean hasHandlers()
@@ -14120,8 +15418,6 @@ CLSS public com.fasterxml.jackson.databind.type.CollectionLikeType
 cons protected init(com.fasterxml.jackson.databind.type.TypeBase,com.fasterxml.jackson.databind.JavaType)
 cons protected init(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[],com.fasterxml.jackson.databind.JavaType,java.lang.Object,java.lang.Object,boolean)
 fld protected final com.fasterxml.jackson.databind.JavaType _elementType
-meth protected com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
 meth protected java.lang.String buildCanonicalName()
 meth public boolean equals(java.lang.Object)
 meth public boolean hasHandlers()
@@ -14152,8 +15448,6 @@ hfds serialVersionUID
 
 CLSS public final com.fasterxml.jackson.databind.type.CollectionType
 cons protected init(com.fasterxml.jackson.databind.type.TypeBase,com.fasterxml.jackson.databind.JavaType)
-meth protected com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JavaType refine(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[])
 meth public com.fasterxml.jackson.databind.JavaType withContentType(com.fasterxml.jackson.databind.JavaType)
 meth public com.fasterxml.jackson.databind.type.CollectionType withContentTypeHandler(java.lang.Object)
@@ -14166,6 +15460,28 @@ meth public static com.fasterxml.jackson.databind.type.CollectionType construct(
  anno 0 java.lang.Deprecated()
 meth public static com.fasterxml.jackson.databind.type.CollectionType construct(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[],com.fasterxml.jackson.databind.JavaType)
 supr com.fasterxml.jackson.databind.type.CollectionLikeType
+hfds serialVersionUID
+
+CLSS public com.fasterxml.jackson.databind.type.IterationType
+cons protected init(com.fasterxml.jackson.databind.type.TypeBase,com.fasterxml.jackson.databind.JavaType)
+cons protected init(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[],com.fasterxml.jackson.databind.JavaType,java.lang.Object,java.lang.Object,boolean)
+fld protected final com.fasterxml.jackson.databind.JavaType _iteratedType
+meth protected java.lang.String buildCanonicalName()
+meth public boolean hasContentType()
+meth public boolean isIterationType()
+meth public com.fasterxml.jackson.databind.JavaType getContentType()
+meth public com.fasterxml.jackson.databind.JavaType refine(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[])
+meth public com.fasterxml.jackson.databind.JavaType withContentType(com.fasterxml.jackson.databind.JavaType)
+meth public com.fasterxml.jackson.databind.type.IterationType withContentTypeHandler(java.lang.Object)
+meth public com.fasterxml.jackson.databind.type.IterationType withContentValueHandler(java.lang.Object)
+meth public com.fasterxml.jackson.databind.type.IterationType withStaticTyping()
+meth public com.fasterxml.jackson.databind.type.IterationType withTypeHandler(java.lang.Object)
+meth public com.fasterxml.jackson.databind.type.IterationType withValueHandler(java.lang.Object)
+meth public java.lang.StringBuilder getErasedSignature(java.lang.StringBuilder)
+meth public java.lang.StringBuilder getGenericSignature(java.lang.StringBuilder)
+meth public static com.fasterxml.jackson.databind.type.IterationType construct(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[],com.fasterxml.jackson.databind.JavaType)
+meth public static com.fasterxml.jackson.databind.type.IterationType upgradeFrom(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType)
+supr com.fasterxml.jackson.databind.type.SimpleType
 hfds serialVersionUID
 
 CLSS public final !enum com.fasterxml.jackson.databind.type.LogicalType
@@ -14192,8 +15508,6 @@ cons protected init(com.fasterxml.jackson.databind.type.TypeBase,com.fasterxml.j
 cons protected init(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[],com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType,java.lang.Object,java.lang.Object,boolean)
 fld protected final com.fasterxml.jackson.databind.JavaType _keyType
 fld protected final com.fasterxml.jackson.databind.JavaType _valueType
-meth protected com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
 meth protected java.lang.String buildCanonicalName()
 meth public boolean equals(java.lang.Object)
 meth public boolean hasHandlers()
@@ -14227,8 +15541,6 @@ hfds serialVersionUID
 
 CLSS public final com.fasterxml.jackson.databind.type.MapType
 cons protected init(com.fasterxml.jackson.databind.type.TypeBase,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType)
-meth protected com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JavaType refine(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[])
 meth public com.fasterxml.jackson.databind.JavaType withContentType(com.fasterxml.jackson.databind.JavaType)
 meth public com.fasterxml.jackson.databind.type.MapType withContentTypeHandler(java.lang.Object)
@@ -14250,10 +15562,7 @@ CLSS public com.fasterxml.jackson.databind.type.PlaceholderForType
 cons public init(int)
 fld protected com.fasterxml.jackson.databind.JavaType _actualType
 fld protected final int _ordinal
-meth protected com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
 meth protected java.lang.String buildCanonicalName()
-meth public boolean equals(java.lang.Object)
 meth public boolean isContainerType()
 meth public com.fasterxml.jackson.databind.JavaType actualType()
 meth public com.fasterxml.jackson.databind.JavaType refine(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[])
@@ -14263,6 +15572,8 @@ meth public com.fasterxml.jackson.databind.JavaType withContentValueHandler(java
 meth public com.fasterxml.jackson.databind.JavaType withStaticTyping()
 meth public com.fasterxml.jackson.databind.JavaType withTypeHandler(java.lang.Object)
 meth public com.fasterxml.jackson.databind.JavaType withValueHandler(java.lang.Object)
+meth public final boolean equals(java.lang.Object)
+meth public final int hashCode()
 meth public java.lang.String toString()
 meth public java.lang.StringBuilder getErasedSignature(java.lang.StringBuilder)
 meth public java.lang.StringBuilder getGenericSignature(java.lang.StringBuilder)
@@ -14274,15 +15585,16 @@ CLSS public com.fasterxml.jackson.databind.type.ReferenceType
 cons protected init(com.fasterxml.jackson.databind.type.TypeBase,com.fasterxml.jackson.databind.JavaType)
 cons protected init(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[],com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType,java.lang.Object,java.lang.Object,boolean)
 fld protected final com.fasterxml.jackson.databind.JavaType _anchorType
-fld protected final com.fasterxml.jackson.databind.JavaType _referencedType
-meth protected com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
  anno 0 java.lang.Deprecated()
+fld protected final com.fasterxml.jackson.databind.JavaType _referencedType
 meth protected java.lang.String buildCanonicalName()
 meth public boolean equals(java.lang.Object)
 meth public boolean hasContentType()
 meth public boolean isAnchorType()
+ anno 0 java.lang.Deprecated()
 meth public boolean isReferenceType()
 meth public com.fasterxml.jackson.databind.JavaType getAnchorType()
+ anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JavaType getContentType()
 meth public com.fasterxml.jackson.databind.JavaType getReferencedType()
 meth public com.fasterxml.jackson.databind.JavaType refine(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[])
@@ -14305,9 +15617,6 @@ hfds serialVersionUID
 CLSS public com.fasterxml.jackson.databind.type.ResolvedRecursiveType
 cons public init(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings)
 fld protected com.fasterxml.jackson.databind.JavaType _referencedType
-meth protected com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
-meth public boolean equals(java.lang.Object)
 meth public boolean isContainerType()
 meth public com.fasterxml.jackson.databind.JavaType getSelfReferencedType()
 meth public com.fasterxml.jackson.databind.JavaType getSuperClass()
@@ -14319,6 +15628,8 @@ meth public com.fasterxml.jackson.databind.JavaType withStaticTyping()
 meth public com.fasterxml.jackson.databind.JavaType withTypeHandler(java.lang.Object)
 meth public com.fasterxml.jackson.databind.JavaType withValueHandler(java.lang.Object)
 meth public com.fasterxml.jackson.databind.type.TypeBindings getBindings()
+meth public final boolean equals(java.lang.Object)
+meth public final int hashCode()
 meth public java.lang.String toString()
 meth public java.lang.StringBuilder getErasedSignature(java.lang.StringBuilder)
 meth public java.lang.StringBuilder getGenericSignature(java.lang.StringBuilder)
@@ -14332,8 +15643,6 @@ cons protected init(java.lang.Class<?>)
 cons protected init(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[])
 cons protected init(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[],int,java.lang.Object,java.lang.Object,boolean)
 cons protected init(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[],java.lang.Object,java.lang.Object,boolean)
-meth protected com.fasterxml.jackson.databind.JavaType _narrow(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
 meth protected java.lang.String buildCanonicalName()
 meth public boolean equals(java.lang.Object)
 meth public boolean hasContentType()
@@ -14361,6 +15670,7 @@ fld protected final com.fasterxml.jackson.databind.JavaType _superClass
 fld protected final com.fasterxml.jackson.databind.JavaType[] _superInterfaces
 fld protected final com.fasterxml.jackson.databind.type.TypeBindings _bindings
 intf com.fasterxml.jackson.databind.JsonSerializable
+meth protected boolean _hasNTypeParameters(int)
 meth protected java.lang.String buildCanonicalName()
 meth protected static com.fasterxml.jackson.databind.JavaType _bogusSuperClass(java.lang.Class<?>)
 meth protected static java.lang.StringBuilder _classSignature(java.lang.Class<?>,java.lang.StringBuilder,boolean)
@@ -14391,6 +15701,7 @@ meth public boolean isEmpty()
 meth public com.fasterxml.jackson.databind.JavaType findBoundType(java.lang.String)
 meth public com.fasterxml.jackson.databind.JavaType getBoundType(int)
 meth public com.fasterxml.jackson.databind.type.TypeBindings withUnboundVariable(java.lang.String)
+meth public com.fasterxml.jackson.databind.type.TypeBindings withoutVariable(java.lang.String)
 meth public int hashCode()
 meth public int size()
 meth public java.lang.Object asKey(java.lang.Class<?>)
@@ -14410,10 +15721,6 @@ hfds EMPTY,NO_STRINGS,NO_TYPES,_hashCode,_names,_types,_unboundVariables,serialV
 hcls AsKey,TypeParamStash
 
 CLSS public com.fasterxml.jackson.databind.type.TypeFactory
-cons protected init(com.fasterxml.jackson.databind.util.LRUMap<java.lang.Object,com.fasterxml.jackson.databind.JavaType>)
- anno 0 java.lang.Deprecated()
-cons protected init(com.fasterxml.jackson.databind.util.LRUMap<java.lang.Object,com.fasterxml.jackson.databind.JavaType>,com.fasterxml.jackson.databind.type.TypeParser,com.fasterxml.jackson.databind.type.TypeModifier[],java.lang.ClassLoader)
- anno 0 java.lang.Deprecated()
 cons protected init(com.fasterxml.jackson.databind.util.LookupCache<java.lang.Object,com.fasterxml.jackson.databind.JavaType>)
 cons protected init(com.fasterxml.jackson.databind.util.LookupCache<java.lang.Object,com.fasterxml.jackson.databind.JavaType>,com.fasterxml.jackson.databind.type.TypeParser,com.fasterxml.jackson.databind.type.TypeModifier[],java.lang.ClassLoader)
 fld protected final com.fasterxml.jackson.databind.type.TypeModifier[] _modifiers
@@ -14421,8 +15728,8 @@ fld protected final com.fasterxml.jackson.databind.type.TypeParser _parser
 fld protected final com.fasterxml.jackson.databind.util.LookupCache<java.lang.Object,com.fasterxml.jackson.databind.JavaType> _typeCache
 fld protected final java.lang.ClassLoader _classLoader
 fld protected final static com.fasterxml.jackson.databind.type.SimpleType CORE_TYPE_BOOL
-fld protected final static com.fasterxml.jackson.databind.type.SimpleType CORE_TYPE_CLASS
 fld protected final static com.fasterxml.jackson.databind.type.SimpleType CORE_TYPE_COMPARABLE
+fld protected final static com.fasterxml.jackson.databind.type.SimpleType CORE_TYPE_DOUBLE
 fld protected final static com.fasterxml.jackson.databind.type.SimpleType CORE_TYPE_ENUM
 fld protected final static com.fasterxml.jackson.databind.type.SimpleType CORE_TYPE_INT
 fld protected final static com.fasterxml.jackson.databind.type.SimpleType CORE_TYPE_JSON_NODE
@@ -14431,6 +15738,7 @@ fld protected final static com.fasterxml.jackson.databind.type.SimpleType CORE_T
 fld protected final static com.fasterxml.jackson.databind.type.SimpleType CORE_TYPE_STRING
 fld protected final static com.fasterxml.jackson.databind.type.TypeBindings EMPTY_BINDINGS
 fld protected final static com.fasterxml.jackson.databind.type.TypeFactory instance
+fld public final static int DEFAULT_MAX_CACHE_SIZE = 200
 intf java.io.Serializable
 meth protected com.fasterxml.jackson.databind.JavaType _applyModifiers(java.lang.reflect.Type,com.fasterxml.jackson.databind.JavaType)
 meth protected com.fasterxml.jackson.databind.JavaType _constructSimple(java.lang.Class<?>,com.fasterxml.jackson.databind.type.TypeBindings,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType[])
@@ -14473,6 +15781,7 @@ meth public com.fasterxml.jackson.databind.JavaType constructType(java.lang.refl
  anno 0 java.lang.Deprecated()
 meth public com.fasterxml.jackson.databind.JavaType constructType(java.lang.reflect.Type,java.lang.Class<?>)
  anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.databind.JavaType findFirstTypeParameter(com.fasterxml.jackson.databind.JavaType,java.lang.Class<?>)
 meth public com.fasterxml.jackson.databind.JavaType moreSpecificType(com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType)
 meth public com.fasterxml.jackson.databind.JavaType resolveMemberType(java.lang.reflect.Type,com.fasterxml.jackson.databind.type.TypeBindings)
 meth public com.fasterxml.jackson.databind.JavaType uncheckedSimpleType(java.lang.Class<?>)
@@ -14508,7 +15817,7 @@ meth public static com.fasterxml.jackson.databind.type.TypeFactory defaultInstan
 meth public static java.lang.Class<?> rawClass(java.lang.reflect.Type)
 meth public void clearCache()
 supr java.lang.Object
-hfds CLS_BOOL,CLS_CLASS,CLS_COMPARABLE,CLS_ENUM,CLS_INT,CLS_JSON_NODE,CLS_LONG,CLS_OBJECT,CLS_STRING,NO_TYPES,serialVersionUID
+hfds CLS_BOOL,CLS_COMPARABLE,CLS_DOUBLE,CLS_ENUM,CLS_INT,CLS_JSON_NODE,CLS_LONG,CLS_OBJECT,CLS_STRING,NO_TYPES,serialVersionUID
 
 CLSS public abstract com.fasterxml.jackson.databind.type.TypeModifier
 cons public init()
@@ -14518,16 +15827,20 @@ supr java.lang.Object
 CLSS public com.fasterxml.jackson.databind.type.TypeParser
 cons public init(com.fasterxml.jackson.databind.type.TypeFactory)
 fld protected final com.fasterxml.jackson.databind.type.TypeFactory _factory
+fld protected final static int MAX_TYPE_LENGTH = 64000
+fld protected final static int MAX_TYPE_NESTING = 1000
 intf java.io.Serializable
-meth protected com.fasterxml.jackson.databind.JavaType parseType(com.fasterxml.jackson.databind.type.TypeParser$MyTokenizer)
+meth protected com.fasterxml.jackson.databind.JavaType parseType(com.fasterxml.jackson.databind.type.TypeParser$MyTokenizer,int)
 meth protected java.lang.Class<?> findClass(java.lang.String,com.fasterxml.jackson.databind.type.TypeParser$MyTokenizer)
 meth protected java.lang.IllegalArgumentException _problem(com.fasterxml.jackson.databind.type.TypeParser$MyTokenizer,java.lang.String)
-meth protected java.util.List<com.fasterxml.jackson.databind.JavaType> parseTypes(com.fasterxml.jackson.databind.type.TypeParser$MyTokenizer)
+meth protected java.util.List<com.fasterxml.jackson.databind.JavaType> parseTypes(com.fasterxml.jackson.databind.type.TypeParser$MyTokenizer,int)
 meth public com.fasterxml.jackson.databind.JavaType parse(java.lang.String)
 meth public com.fasterxml.jackson.databind.type.TypeParser withFactory(com.fasterxml.jackson.databind.type.TypeFactory)
 supr java.lang.Object
 hfds serialVersionUID
 hcls MyTokenizer
+
+CLSS abstract interface com.fasterxml.jackson.databind.type.package-info
 
 CLSS public final !enum com.fasterxml.jackson.databind.util.AccessPattern
 fld public final static com.fasterxml.jackson.databind.util.AccessPattern ALWAYS_NULL
@@ -14623,6 +15936,7 @@ cons public init()
 meth protected static boolean isCglibGetCallbacks(com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
 meth protected static boolean isGroovyMetaClassGetter(com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
 meth protected static java.lang.String legacyManglePropertyName(java.lang.String,int)
+meth public static boolean isJava8OptionalClass(java.lang.Class<?>)
 meth public static boolean isJava8TimeClass(java.lang.Class<?>)
 meth public static boolean isJodaTimeClass(java.lang.Class<?>)
 meth public static java.lang.Object getDefaultValue(com.fasterxml.jackson.databind.JavaType)
@@ -14673,6 +15987,7 @@ meth public static boolean isCollectionMapOrArray(java.lang.Class<?>)
 meth public static boolean isConcrete(java.lang.Class<?>)
 meth public static boolean isConcrete(java.lang.reflect.Member)
 meth public static boolean isEnumType(java.lang.Class<?>)
+meth public static boolean isJDK17OrAbove()
 meth public static boolean isJDKClass(java.lang.Class<?>)
 meth public static boolean isJacksonStdImpl(java.lang.Class<?>)
 meth public static boolean isJacksonStdImpl(java.lang.Object)
@@ -14681,6 +15996,7 @@ meth public static boolean isObjectOrPrimitive(java.lang.Class<?>)
 meth public static boolean isProxyType(java.lang.Class<?>)
 meth public static boolean isRecordType(java.lang.Class<?>)
 meth public static com.fasterxml.jackson.databind.util.ClassUtil$Ctor[] getConstructors(java.lang.Class<?>)
+meth public static int getJDKMajorVersion()
 meth public static java.lang.Class<? extends java.lang.Enum<?>> findEnumType(java.lang.Class<?>)
 meth public static java.lang.Class<? extends java.lang.Enum<?>> findEnumType(java.lang.Enum<?>)
 meth public static java.lang.Class<? extends java.lang.Enum<?>> findEnumType(java.util.EnumMap<?,?>)
@@ -14778,9 +16094,8 @@ intf com.fasterxml.jackson.databind.util.Converter<java.lang.Object,java.lang.Ob
 supr java.lang.Object
 
 CLSS public com.fasterxml.jackson.databind.util.EnumResolver
-cons protected init(java.lang.Class<java.lang.Enum<?>>,java.lang.Enum<?>[],java.util.HashMap<java.lang.String,java.lang.Enum<?>>,java.lang.Enum<?>)
- anno 0 java.lang.Deprecated()
-cons protected init(java.lang.Class<java.lang.Enum<?>>,java.lang.Enum<?>[],java.util.HashMap<java.lang.String,java.lang.Enum<?>>,java.lang.Enum<?>,boolean)
+cons protected init(java.lang.Class<java.lang.Enum<?>>,java.lang.Enum<?>[],java.util.HashMap<java.lang.String,java.lang.Enum<?>>,java.lang.Enum<?>,boolean,boolean)
+fld protected final boolean _isFromIntValue
 fld protected final boolean _isIgnoreCase
 fld protected final java.lang.Class<java.lang.Enum<?>> _enumClass
 fld protected final java.lang.Enum<?> _defaultValue
@@ -14788,12 +16103,13 @@ fld protected final java.lang.Enum<?>[] _enums
 fld protected final java.util.HashMap<java.lang.String,java.lang.Enum<?>> _enumsById
 intf java.io.Serializable
 meth protected java.lang.Enum<?> _findEnumCaseInsensitive(java.lang.String)
-meth protected static com.fasterxml.jackson.databind.util.EnumResolver _constructFor(java.lang.Class<?>,com.fasterxml.jackson.databind.AnnotationIntrospector,boolean)
-meth protected static com.fasterxml.jackson.databind.util.EnumResolver _constructUsingMethod(java.lang.Class<?>,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.AnnotationIntrospector,boolean)
-meth protected static com.fasterxml.jackson.databind.util.EnumResolver _constructUsingToString(java.lang.Class<?>,com.fasterxml.jackson.databind.AnnotationIntrospector,boolean)
+meth protected static boolean _isIntType(java.lang.Class<?>)
 meth protected static java.lang.Class<java.lang.Enum<?>> _enumClass(java.lang.Class<?>)
+meth protected static java.lang.Enum<?> _enumDefault(com.fasterxml.jackson.databind.AnnotationIntrospector,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[])
 meth protected static java.lang.Enum<?> _enumDefault(com.fasterxml.jackson.databind.AnnotationIntrospector,java.lang.Class<?>)
+ anno 0 java.lang.Deprecated()
 meth protected static java.lang.Enum<?>[] _enumConstants(java.lang.Class<?>)
+meth public boolean isFromIntValue()
 meth public com.fasterxml.jackson.databind.util.CompactStringObjectMap constructLookup()
 meth public int lastValidIndex()
 meth public java.lang.Class<java.lang.Enum<?>> getEnumClass()
@@ -14803,40 +16119,52 @@ meth public java.lang.Enum<?> getEnum(int)
 meth public java.lang.Enum<?>[] getRawEnums()
 meth public java.util.Collection<java.lang.String> getEnumIds()
 meth public java.util.List<java.lang.Enum<?>> getEnums()
+meth public static com.fasterxml.jackson.databind.util.EnumResolver constructFor(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public static com.fasterxml.jackson.databind.util.EnumResolver constructFor(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>)
-meth public static com.fasterxml.jackson.databind.util.EnumResolver constructFor(java.lang.Class<java.lang.Enum<?>>,com.fasterxml.jackson.databind.AnnotationIntrospector)
  anno 0 java.lang.Deprecated()
-meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUnsafe(java.lang.Class<?>,com.fasterxml.jackson.databind.AnnotationIntrospector)
+meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingEnumNamingStrategy(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.introspect.AnnotatedClass,com.fasterxml.jackson.databind.EnumNamingStrategy)
+meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingEnumNamingStrategy(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>,com.fasterxml.jackson.databind.EnumNamingStrategy)
  anno 0 java.lang.Deprecated()
-meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUnsafeUsingMethod(java.lang.Class<?>,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.AnnotationIntrospector)
+meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingIndex(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
+meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingIndex(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<java.lang.Enum<?>>)
  anno 0 java.lang.Deprecated()
-meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUnsafeUsingToString(java.lang.Class<?>,com.fasterxml.jackson.databind.AnnotationIntrospector)
- anno 0 java.lang.Deprecated()
+meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingMethod(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.introspect.AnnotatedClass,com.fasterxml.jackson.databind.introspect.AnnotatedMember)
 meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingMethod(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>,com.fasterxml.jackson.databind.introspect.AnnotatedMember)
-meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingMethod(java.lang.Class<java.lang.Enum<?>>,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.AnnotationIntrospector)
  anno 0 java.lang.Deprecated()
+meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingToString(com.fasterxml.jackson.databind.DeserializationConfig,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingToString(com.fasterxml.jackson.databind.DeserializationConfig,java.lang.Class<?>)
-meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingToString(java.lang.Class<java.lang.Enum<?>>)
- anno 0 java.lang.Deprecated()
-meth public static com.fasterxml.jackson.databind.util.EnumResolver constructUsingToString(java.lang.Class<java.lang.Enum<?>>,com.fasterxml.jackson.databind.AnnotationIntrospector)
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds serialVersionUID
 
 CLSS public final com.fasterxml.jackson.databind.util.EnumValues
 intf java.io.Serializable
+meth protected static java.lang.Class<java.lang.Enum<?>> _enumClass(java.lang.Class<?>)
+meth protected static java.lang.Enum<?>[] _enumConstants(java.lang.Class<?>)
 meth public com.fasterxml.jackson.core.SerializableString serializedValueFor(java.lang.Enum<?>)
 meth public java.lang.Class<java.lang.Enum<?>> getEnumClass()
 meth public java.util.Collection<com.fasterxml.jackson.core.SerializableString> values()
 meth public java.util.EnumMap<?,com.fasterxml.jackson.core.SerializableString> internalMap()
 meth public java.util.List<java.lang.Enum<?>> enums()
-meth public static com.fasterxml.jackson.databind.util.EnumValues construct(com.fasterxml.jackson.databind.SerializationConfig,java.lang.Class<java.lang.Enum<?>>)
+meth public static com.fasterxml.jackson.databind.util.EnumValues construct(com.fasterxml.jackson.databind.SerializationConfig,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public static com.fasterxml.jackson.databind.util.EnumValues construct(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,java.lang.Class<java.lang.Enum<?>>,java.util.List<java.lang.String>)
 meth public static com.fasterxml.jackson.databind.util.EnumValues construct(java.lang.Class<java.lang.Enum<?>>,com.fasterxml.jackson.core.SerializableString[])
+meth public static com.fasterxml.jackson.databind.util.EnumValues constructFromName(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public static com.fasterxml.jackson.databind.util.EnumValues constructFromName(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,java.lang.Class<java.lang.Enum<?>>)
+ anno 0 java.lang.Deprecated()
+meth public static com.fasterxml.jackson.databind.util.EnumValues constructFromToString(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass)
 meth public static com.fasterxml.jackson.databind.util.EnumValues constructFromToString(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,java.lang.Class<java.lang.Enum<?>>)
+ anno 0 java.lang.Deprecated()
+meth public static com.fasterxml.jackson.databind.util.EnumValues constructUsingEnumNamingStrategy(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,com.fasterxml.jackson.databind.EnumNamingStrategy)
+meth public static com.fasterxml.jackson.databind.util.EnumValues constructUsingEnumNamingStrategy(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,java.lang.Class<java.lang.Enum<?>>,com.fasterxml.jackson.databind.EnumNamingStrategy)
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds _asMap,_enumClass,_textual,_values,serialVersionUID
+
+CLSS public com.fasterxml.jackson.databind.util.ExceptionUtil
+meth public static <%0 extends java.lang.Object> {%%0} throwSneaky(java.io.IOException)
+meth public static void rethrowIfFatal(java.lang.Throwable)
+supr java.lang.Object
 
 CLSS public com.fasterxml.jackson.databind.util.ISO8601DateFormat
  anno 0 java.lang.Deprecated()
@@ -14909,14 +16237,16 @@ supr java.lang.Object
 
 CLSS public com.fasterxml.jackson.databind.util.LRUMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init(int,int)
+fld protected final com.fasterxml.jackson.databind.util.internal.PrivateMaxEntriesMap<{com.fasterxml.jackson.databind.util.LRUMap%0},{com.fasterxml.jackson.databind.util.LRUMap%1}> _map
+fld protected final int _initialEntries
 fld protected final int _maxEntries
-fld protected final java.util.concurrent.ConcurrentHashMap<{com.fasterxml.jackson.databind.util.LRUMap%0},{com.fasterxml.jackson.databind.util.LRUMap%1}> _map
-fld protected int _jdkSerializeMaxEntries
 intf com.fasterxml.jackson.databind.util.LookupCache<{com.fasterxml.jackson.databind.util.LRUMap%0},{com.fasterxml.jackson.databind.util.LRUMap%1}>
 intf java.io.Serializable
 meth protected java.lang.Object readResolve()
+meth public com.fasterxml.jackson.databind.util.LookupCache<{com.fasterxml.jackson.databind.util.LRUMap%0},{com.fasterxml.jackson.databind.util.LRUMap%1}> emptyCopy()
 meth public int size()
 meth public void clear()
+meth public void contents(java.util.function.BiConsumer<{com.fasterxml.jackson.databind.util.LRUMap%0},{com.fasterxml.jackson.databind.util.LRUMap%1}>)
 meth public {com.fasterxml.jackson.databind.util.LRUMap%1} get(java.lang.Object)
 meth public {com.fasterxml.jackson.databind.util.LRUMap%1} put({com.fasterxml.jackson.databind.util.LRUMap%0},{com.fasterxml.jackson.databind.util.LRUMap%1})
 meth public {com.fasterxml.jackson.databind.util.LRUMap%1} putIfAbsent({com.fasterxml.jackson.databind.util.LRUMap%0},{com.fasterxml.jackson.databind.util.LRUMap%1})
@@ -14938,6 +16268,8 @@ meth public abstract void clear()
 meth public abstract {com.fasterxml.jackson.databind.util.LookupCache%1} get(java.lang.Object)
 meth public abstract {com.fasterxml.jackson.databind.util.LookupCache%1} put({com.fasterxml.jackson.databind.util.LookupCache%0},{com.fasterxml.jackson.databind.util.LookupCache%1})
 meth public abstract {com.fasterxml.jackson.databind.util.LookupCache%1} putIfAbsent({com.fasterxml.jackson.databind.util.LookupCache%0},{com.fasterxml.jackson.databind.util.LookupCache%1})
+meth public com.fasterxml.jackson.databind.util.LookupCache<{com.fasterxml.jackson.databind.util.LookupCache%0},{com.fasterxml.jackson.databind.util.LookupCache%1}> emptyCopy()
+meth public void contents(java.util.function.BiConsumer<{com.fasterxml.jackson.databind.util.LookupCache%0},{com.fasterxml.jackson.databind.util.LookupCache%1}>)
 
 CLSS public abstract com.fasterxml.jackson.databind.util.NameTransformer
 cons protected init()
@@ -14973,6 +16305,14 @@ hfds serialVersionUID
 
 CLSS public abstract interface com.fasterxml.jackson.databind.util.Named
 meth public abstract java.lang.String getName()
+
+CLSS public com.fasterxml.jackson.databind.util.NativeImageUtil
+meth public static boolean isInNativeImage()
+meth public static boolean isInNativeImageAndIsAtRuntime()
+meth public static boolean isUnsupportedFeatureError(java.lang.Throwable)
+meth public static boolean needsReflectionConfiguration(java.lang.Class<?>)
+supr java.lang.Object
+hfds RUNNING_IN_SVM
 
 CLSS public final com.fasterxml.jackson.databind.util.ObjectBuffer
 cons public init()
@@ -15147,6 +16487,7 @@ fld protected boolean _hasNativeTypeIds
 fld protected boolean _mayHaveNativeIds
 fld protected com.fasterxml.jackson.core.JsonStreamContext _parentContext
 fld protected com.fasterxml.jackson.core.ObjectCodec _objectCodec
+fld protected com.fasterxml.jackson.core.StreamReadConstraints _streamReadConstraints
 fld protected com.fasterxml.jackson.core.json.JsonWriteContext _writeContext
 fld protected com.fasterxml.jackson.databind.util.TokenBuffer$Segment _first
 fld protected com.fasterxml.jackson.databind.util.TokenBuffer$Segment _last
@@ -15168,6 +16509,7 @@ meth public boolean canWriteBinaryNatively()
 meth public boolean canWriteObjectId()
 meth public boolean canWriteTypeId()
 meth public boolean isClosed()
+meth public boolean isEmpty()
 meth public boolean isEnabled(com.fasterxml.jackson.core.JsonGenerator$Feature)
 meth public com.fasterxml.jackson.core.JsonGenerator disable(com.fasterxml.jackson.core.JsonGenerator$Feature)
 meth public com.fasterxml.jackson.core.JsonGenerator enable(com.fasterxml.jackson.core.JsonGenerator$Feature)
@@ -15179,6 +16521,7 @@ meth public com.fasterxml.jackson.core.JsonGenerator useDefaultPrettyPrinter()
 meth public com.fasterxml.jackson.core.JsonParser asParser()
 meth public com.fasterxml.jackson.core.JsonParser asParser(com.fasterxml.jackson.core.JsonParser)
 meth public com.fasterxml.jackson.core.JsonParser asParser(com.fasterxml.jackson.core.ObjectCodec)
+meth public com.fasterxml.jackson.core.JsonParser asParser(com.fasterxml.jackson.core.StreamReadConstraints)
 meth public com.fasterxml.jackson.core.JsonParser asParserOnFirstToken() throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonToken firstToken()
 meth public com.fasterxml.jackson.core.ObjectCodec getCodec()
@@ -15198,6 +16541,7 @@ meth public int getFeatureMask()
 meth public int writeBinary(com.fasterxml.jackson.core.Base64Variant,java.io.InputStream,int)
 meth public java.lang.String toString()
 meth public static com.fasterxml.jackson.databind.util.TokenBuffer asCopyOfValue(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
+ anno 0 java.lang.Deprecated()
 meth public void close() throws java.io.IOException
 meth public void copyCurrentEvent(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
 meth public void copyCurrentStructure(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
@@ -15233,6 +16577,7 @@ meth public void writeStartObject(java.lang.Object) throws java.io.IOException
 meth public void writeStartObject(java.lang.Object,int) throws java.io.IOException
 meth public void writeString(char[],int,int) throws java.io.IOException
 meth public void writeString(com.fasterxml.jackson.core.SerializableString) throws java.io.IOException
+meth public void writeString(java.io.Reader,int) throws java.io.IOException
 meth public void writeString(java.lang.String) throws java.io.IOException
 meth public void writeTree(com.fasterxml.jackson.core.TreeNode) throws java.io.IOException
 meth public void writeTypeId(java.lang.Object)
@@ -15244,9 +16589,12 @@ CLSS protected final static com.fasterxml.jackson.databind.util.TokenBuffer$Pars
 cons public init(com.fasterxml.jackson.databind.util.TokenBuffer$Segment,com.fasterxml.jackson.core.ObjectCodec,boolean,boolean)
  anno 0 java.lang.Deprecated()
 cons public init(com.fasterxml.jackson.databind.util.TokenBuffer$Segment,com.fasterxml.jackson.core.ObjectCodec,boolean,boolean,com.fasterxml.jackson.core.JsonStreamContext)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.databind.util.TokenBuffer$Segment,com.fasterxml.jackson.core.ObjectCodec,boolean,boolean,com.fasterxml.jackson.core.JsonStreamContext,com.fasterxml.jackson.core.StreamReadConstraints)
 fld protected boolean _closed
 fld protected com.fasterxml.jackson.core.JsonLocation _location
 fld protected com.fasterxml.jackson.core.ObjectCodec _codec
+fld protected com.fasterxml.jackson.core.StreamReadConstraints _streamReadConstraints
 fld protected com.fasterxml.jackson.core.util.ByteArrayBuilder _byteBuilder
 fld protected com.fasterxml.jackson.databind.util.TokenBuffer$Segment _segment
 fld protected com.fasterxml.jackson.databind.util.TokenBufferReadContext _parsingContext
@@ -15255,10 +16603,10 @@ fld protected final boolean _hasNativeObjectIds
 fld protected final boolean _hasNativeTypeIds
 fld protected int _segmentPtr
 meth protected final java.lang.Object _currentObject()
-meth protected final void _checkIsNumber() throws com.fasterxml.jackson.core.JsonParseException
+meth protected final void _checkIsNumber() throws com.fasterxml.jackson.core.JacksonException
 meth protected int _convertNumberToInt(java.lang.Number) throws java.io.IOException
 meth protected long _convertNumberToLong(java.lang.Number) throws java.io.IOException
-meth protected void _handleEOF() throws com.fasterxml.jackson.core.JsonParseException
+meth protected void _handleEOF()
 meth public boolean canReadObjectId()
 meth public boolean canReadTypeId()
 meth public boolean hasTextCharacters()
@@ -15273,6 +16621,7 @@ meth public com.fasterxml.jackson.core.JsonStreamContext getParsingContext()
 meth public com.fasterxml.jackson.core.JsonToken nextToken() throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonToken peekNextToken() throws java.io.IOException
 meth public com.fasterxml.jackson.core.ObjectCodec getCodec()
+meth public com.fasterxml.jackson.core.StreamReadConstraints streamReadConstraints()
 meth public com.fasterxml.jackson.core.Version version()
 meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamReadCapability> getReadCapabilities()
 meth public double getDoubleValue() throws java.io.IOException
@@ -15283,6 +16632,7 @@ meth public int getTextLength()
 meth public int getTextOffset()
 meth public int readBinaryValue(com.fasterxml.jackson.core.Base64Variant,java.io.OutputStream) throws java.io.IOException
 meth public java.lang.Object getEmbeddedObject()
+meth public java.lang.Object getNumberValueDeferred() throws java.io.IOException
 meth public java.lang.Object getObjectId()
 meth public java.lang.Object getTypeId()
 meth public java.lang.String currentName()
@@ -15321,7 +16671,9 @@ hfds TOKEN_TYPES_BY_INDEX
 CLSS public com.fasterxml.jackson.databind.util.TokenBufferReadContext
 cons protected init()
 cons protected init(com.fasterxml.jackson.core.JsonStreamContext,com.fasterxml.jackson.core.JsonLocation)
+cons protected init(com.fasterxml.jackson.core.JsonStreamContext,com.fasterxml.jackson.core.io.ContentReference)
 cons protected init(com.fasterxml.jackson.core.JsonStreamContext,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 cons protected init(com.fasterxml.jackson.databind.util.TokenBufferReadContext,int,int)
 fld protected final com.fasterxml.jackson.core.JsonLocation _startLocation
 fld protected final com.fasterxml.jackson.core.JsonStreamContext _parent
@@ -15375,6 +16727,8 @@ supr java.lang.Object
 hfds serialVersionUID
 hcls Multi,Single
 
+CLSS abstract interface com.fasterxml.jackson.databind.util.package-info
+
 CLSS public final com.fasterxml.jackson.dataformat.cbor.CBORConstants
 cons public init()
 fld public final static byte BYTE_ARRAY_2_ELEMENTS = -126
@@ -15423,8 +16777,11 @@ fld public final static int TAG_BIGNUM_NEG = 3
 fld public final static int TAG_BIGNUM_POS = 2
 fld public final static int TAG_DECIMAL_FRACTION = 4
 fld public final static int TAG_ID_SELF_DESCRIBE = 55799
+fld public final static int TAG_ID_STRINGREF = 25
+fld public final static int TAG_ID_STRINGREF_NAMESPACE = 256
 fld public final static int[] sUtf8UnitLengths
 meth public static boolean hasMajorType(int,byte)
+meth public static boolean shouldReferenceString(int,int)
 supr java.lang.Object
 
 CLSS public com.fasterxml.jackson.dataformat.cbor.CBORFactory
@@ -15439,7 +16796,7 @@ meth protected <%0 extends java.lang.Object> {%%0} _nonByteSource()
 meth protected <%0 extends java.lang.Object> {%%0} _nonByteTarget()
 meth protected com.fasterxml.jackson.core.JsonParser _createParser(char[],int,int,com.fasterxml.jackson.core.io.IOContext,boolean) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonParser _createParser(java.io.Reader,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.io.IOContext _createContext(java.lang.Object,boolean)
+meth protected com.fasterxml.jackson.core.io.IOContext _createContext(com.fasterxml.jackson.core.io.ContentReference,boolean)
 meth protected com.fasterxml.jackson.dataformat.cbor.CBORGenerator _createGenerator(java.io.Writer,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
 meth protected com.fasterxml.jackson.dataformat.cbor.CBORGenerator _createUTF8Generator(java.io.OutputStream,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
 meth protected com.fasterxml.jackson.dataformat.cbor.CBORParser _createParser(byte[],int,int,com.fasterxml.jackson.core.io.IOContext) throws java.io.IOException
@@ -15500,37 +16857,41 @@ CLSS public com.fasterxml.jackson.dataformat.cbor.CBORGenerator
 cons public init(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.OutputStream)
 cons public init(com.fasterxml.jackson.core.io.IOContext,int,int,com.fasterxml.jackson.core.ObjectCodec,java.io.OutputStream,byte[],int,boolean)
 fld protected boolean _bufferRecyclable
+fld protected boolean _cfgMinimalDoubles
 fld protected boolean _cfgMinimalInts
 fld protected byte[] _outputBuffer
 fld protected char[] _charBuffer
-fld protected com.fasterxml.jackson.dataformat.cbor.CBORWriteContext _cborContext
-fld protected final com.fasterxml.jackson.core.io.IOContext _ioContext
+fld protected com.fasterxml.jackson.dataformat.cbor.CBORWriteContext _streamWriteContext
+fld protected final com.fasterxml.jackson.core.StreamWriteConstraints _streamWriteConstraints
 fld protected final int _charBufferLength
 fld protected final int _outputEnd
 fld protected final java.io.OutputStream _out
+fld protected final static int BYTE_BUFFER_FOR_OUTPUT = 16000
+fld protected final static int REPLACEMENT_CHAR = 65533
 fld protected int _bytesWritten
 fld protected int _currentRemainingElements
 fld protected int _elementCountsPtr
 fld protected int _formatFeatures
 fld protected int _outputTail
 fld protected int[] _elementCounts
+fld protected java.util.HashMap<java.lang.Object,java.lang.Integer> _stringRefs
 innr public final static !enum Feature
+meth protected final int _writeString(char[],int,int) throws java.io.IOException
 meth protected final void _ensureSpace(int) throws java.io.IOException
 meth protected final void _flushBuffer() throws java.io.IOException
 meth protected final void _verifyValueWrite(java.lang.String) throws java.io.IOException
 meth protected final void _writeChunkedString(char[],int,int) throws java.io.IOException
-meth protected final void _writeString(char[],int,int) throws java.io.IOException
 meth protected final void _writeString(java.lang.String) throws java.io.IOException
 meth protected java.lang.UnsupportedOperationException _notSupported()
 meth protected void _releaseBuffers()
 meth protected void _write(java.math.BigInteger) throws java.io.IOException
-meth protected void maybeCopyTag(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
 meth public boolean canWriteBinaryNatively()
 meth public com.fasterxml.jackson.core.JsonGenerator overrideFormatFeatures(int,int)
 meth public com.fasterxml.jackson.core.JsonGenerator overrideStdFeatures(int,int)
 meth public com.fasterxml.jackson.core.JsonGenerator setPrettyPrinter(com.fasterxml.jackson.core.PrettyPrinter)
 meth public com.fasterxml.jackson.core.JsonGenerator useDefaultPrettyPrinter()
 meth public com.fasterxml.jackson.core.JsonStreamContext getOutputContext()
+meth public com.fasterxml.jackson.core.StreamWriteConstraints streamWriteConstraints()
 meth public com.fasterxml.jackson.core.Version version()
 meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamWriteCapability> getWriteCapabilities()
 meth public com.fasterxml.jackson.dataformat.cbor.CBORGenerator configure(com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature,boolean)
@@ -15553,11 +16914,11 @@ meth public int getFormatFeatures()
 meth public int getOutputBuffered()
 meth public int writeBinary(com.fasterxml.jackson.core.Base64Variant,java.io.InputStream,int) throws java.io.IOException
 meth public int writeBinary(java.io.InputStream,int) throws java.io.IOException
+meth public java.lang.Object currentValue()
 meth public java.lang.Object getCurrentValue()
 meth public java.lang.Object getOutputTarget()
+meth public void assignCurrentValue(java.lang.Object)
 meth public void close() throws java.io.IOException
-meth public void copyCurrentEvent(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
-meth public void copyCurrentStructure(com.fasterxml.jackson.core.JsonParser) throws java.io.IOException
 meth public void setCurrentValue(java.lang.Object)
 meth public void writeArray(double[],int,int) throws java.io.IOException
 meth public void writeArray(int[],int,int) throws java.io.IOException
@@ -15586,17 +16947,20 @@ meth public void writeStartArray(int) throws java.io.IOException
  anno 0 java.lang.Deprecated()
 meth public void writeStartArray(java.lang.Object) throws java.io.IOException
 meth public void writeStartArray(java.lang.Object,int) throws java.io.IOException
+meth public void writeStartObject(java.lang.Object,int) throws java.io.IOException
 meth public void writeString(char[],int,int) throws java.io.IOException
 meth public void writeString(java.lang.String) throws java.io.IOException
 meth public void writeTag(int) throws java.io.IOException
 supr com.fasterxml.jackson.core.base.GeneratorBase
-hfds BYTE_BUFFER_FOR_OUTPUT,INDEFINITE_LENGTH,MAX_LONG_STRING_BYTES,MAX_LONG_STRING_CHARS,MAX_MEDIUM_STRING_BYTES,MAX_MEDIUM_STRING_CHARS,MAX_SHORT_STRING_BYTES,MAX_SHORT_STRING_CHARS,MIN_BUFFER_LENGTH,NO_INTS,REPLACEMENT_CHAR
+hfds INDEFINITE_LENGTH,MAX_LONG_STRING_BYTES,MAX_LONG_STRING_CHARS,MAX_MEDIUM_STRING_BYTES,MAX_MEDIUM_STRING_CHARS,MAX_SHORT_STRING_BYTES,MAX_SHORT_STRING_CHARS,MIN_BUFFER_LENGTH,NO_INTS
 
 CLSS public final static !enum com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature
  outer com.fasterxml.jackson.dataformat.cbor.CBORGenerator
 fld protected final boolean _defaultState
 fld protected final int _mask
 fld public final static com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature LENIENT_UTF_ENCODING
+fld public final static com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature STRINGREF
+fld public final static com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature WRITE_MINIMAL_DOUBLES
 fld public final static com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature WRITE_MINIMAL_INTS
 fld public final static com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature WRITE_TYPE_HEADER
 intf com.fasterxml.jackson.core.FormatFeature
@@ -15619,11 +16983,16 @@ fld protected byte[] _inputBuffer
 fld protected char[] _nameCopyBuffer
 fld protected com.fasterxml.jackson.core.ObjectCodec _objectCodec
 fld protected com.fasterxml.jackson.core.util.ByteArrayBuilder _byteArrayBuilder
-fld protected com.fasterxml.jackson.dataformat.cbor.CBORReadContext _parsingContext
+fld protected com.fasterxml.jackson.dataformat.cbor.CBORParser$StringRefListStack _stringRefs
+fld protected com.fasterxml.jackson.dataformat.cbor.CBORParser$TagList _tagValues
+fld protected com.fasterxml.jackson.dataformat.cbor.CBORReadContext _streamReadContext
 fld protected double _numberDouble
+fld protected final boolean _symbolsCanonical
 fld protected final com.fasterxml.jackson.core.io.IOContext _ioContext
 fld protected final com.fasterxml.jackson.core.sym.ByteQuadsCanonicalizer _symbols
 fld protected final com.fasterxml.jackson.core.util.TextBuffer _textBuffer
+fld protected final static com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamReadCapability> CBOR_READ_CAPABILITIES
+fld protected final static int LONGEST_NON_CHUNKED_BINARY = 250000
 fld protected float _numberFloat
 fld protected int _currInputRow
 fld protected int _currInputRowStart
@@ -15634,39 +17003,46 @@ fld protected int _numberInt
 fld protected int _quad1
 fld protected int _quad2
 fld protected int _quad3
-fld protected int _tagValue
 fld protected int _tokenInputCol
 fld protected int _tokenInputRow
 fld protected int _typeByte
 fld protected int[] _quadBuffer
 fld protected java.io.InputStream _inputStream
+fld protected java.lang.String _sharedString
 fld protected java.math.BigDecimal _numberBigDecimal
 fld protected java.math.BigInteger _numberBigInt
 fld protected long _currInputProcessed
 fld protected long _numberLong
 fld protected long _tokenInputTotal
+innr protected final static StringRefList
+innr protected final static StringRefListStack
 innr public final static !enum Feature
+innr public final static TagList
+meth protected boolean loadMore() throws java.io.IOException
 meth protected byte[] _finishBytes(int) throws java.io.IOException
+meth protected byte[] _finishChunkedBytes() throws java.io.IOException
+meth protected byte[] _finishLongContiguousBytes(int) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.JsonToken _decodeUndefinedValue() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _handleCBOREOF() throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _handleTaggedArray(int,int) throws java.io.IOException
-meth protected com.fasterxml.jackson.core.JsonToken _handleTaggedBinary(int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _eofAsNextToken() throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _handleTaggedArray(com.fasterxml.jackson.dataformat.cbor.CBORParser$TagList,int) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _handleTaggedBinary(com.fasterxml.jackson.dataformat.cbor.CBORParser$TagList) throws java.io.IOException
+meth protected com.fasterxml.jackson.core.JsonToken _handleTaggedInt(com.fasterxml.jackson.dataformat.cbor.CBORParser$TagList) throws java.io.IOException
 meth protected com.fasterxml.jackson.core.util.ByteArrayBuilder _getByteArrayBuilder()
 meth protected final boolean _checkNextIsEndArray() throws java.io.IOException
 meth protected final boolean _checkNextIsIntInArray(java.lang.String) throws java.io.IOException
-meth protected final boolean loadMore() throws java.io.IOException
-meth protected final com.fasterxml.jackson.core.JsonToken _decodeFieldName() throws java.io.IOException
-meth protected final void _decodeNonStringName(int) throws java.io.IOException
+meth protected final boolean _tryToLoadToHaveAtLeast(int) throws java.io.IOException
+meth protected final com.fasterxml.jackson.core.JsonToken _decodePropertyName() throws java.io.IOException
+meth protected final void _decodeNonStringName(int,com.fasterxml.jackson.dataformat.cbor.CBORParser$TagList) throws java.io.IOException
 meth protected final void _loadToHaveAtLeast(int) throws java.io.IOException
-meth protected final void loadMoreGuaranteed() throws java.io.IOException
 meth protected java.lang.String _finishTextToken(int) throws java.io.IOException
-meth protected java.lang.String _numberToName(int,boolean) throws java.io.IOException
+meth protected java.lang.String _numberToName(int,boolean,com.fasterxml.jackson.dataformat.cbor.CBORParser$TagList) throws java.io.IOException
 meth protected void _checkNumericValue(int) throws java.io.IOException
 meth protected void _closeInput() throws java.io.IOException
 meth protected void _finishToken() throws java.io.IOException
 meth protected void _handleEOF() throws com.fasterxml.jackson.core.JsonParseException
 meth protected void _invalidToken(int) throws com.fasterxml.jackson.core.JsonParseException
 meth protected void _releaseBuffers() throws java.io.IOException
+meth protected void _reportIncompleteBinaryRead(int,int) throws java.io.IOException
 meth protected void _reportInvalidChar(int) throws com.fasterxml.jackson.core.JsonParseException
 meth protected void _reportInvalidInitial(int) throws com.fasterxml.jackson.core.JsonParseException
 meth protected void _reportInvalidOther(int) throws com.fasterxml.jackson.core.JsonParseException
@@ -15682,6 +17058,7 @@ meth protected void convertNumberToDouble() throws java.io.IOException
 meth protected void convertNumberToFloat() throws java.io.IOException
 meth protected void convertNumberToInt() throws java.io.IOException
 meth protected void convertNumberToLong() throws java.io.IOException
+meth protected void loadMoreGuaranteed() throws java.io.IOException
 meth public boolean hasTextCharacters()
 meth public boolean isClosed()
 meth public boolean isNaN()
@@ -15694,8 +17071,10 @@ meth public com.fasterxml.jackson.core.JsonParser$NumberType getNumberType() thr
 meth public com.fasterxml.jackson.core.JsonToken _decodeSimpleValue(int,int) throws java.io.IOException
 meth public com.fasterxml.jackson.core.JsonToken nextToken() throws java.io.IOException
 meth public com.fasterxml.jackson.core.ObjectCodec getCodec()
+meth public com.fasterxml.jackson.core.StreamReadConstraints streamReadConstraints()
 meth public com.fasterxml.jackson.core.Version version()
 meth public com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.core.StreamReadCapability> getReadCapabilities()
+meth public com.fasterxml.jackson.dataformat.cbor.CBORParser$TagList getCurrentTags()
 meth public com.fasterxml.jackson.dataformat.cbor.CBORReadContext getParsingContext()
 meth public double getDoubleValue() throws java.io.IOException
 meth public final java.lang.Number getNumberValueExact() throws java.io.IOException
@@ -15742,6 +17121,35 @@ meth public static int collectDefaults()
 supr java.lang.Enum<com.fasterxml.jackson.dataformat.cbor.CBORParser$Feature>
 hfds _defaultState,_mask
 
+CLSS protected final static com.fasterxml.jackson.dataformat.cbor.CBORParser$StringRefList
+ outer com.fasterxml.jackson.dataformat.cbor.CBORParser
+cons public init(int)
+fld public int depth
+fld public java.util.ArrayList<java.lang.Object> stringRefs
+supr java.lang.Object
+
+CLSS protected final static com.fasterxml.jackson.dataformat.cbor.CBORParser$StringRefListStack
+ outer com.fasterxml.jackson.dataformat.cbor.CBORParser
+cons protected init()
+meth public boolean empty()
+meth public com.fasterxml.jackson.dataformat.cbor.CBORParser$StringRefList peek()
+meth public void pop()
+meth public void push(boolean)
+supr java.lang.Object
+hfds _nestedDepth,_stringRefs
+
+CLSS public final static com.fasterxml.jackson.dataformat.cbor.CBORParser$TagList
+ outer com.fasterxml.jackson.dataformat.cbor.CBORParser
+cons public init()
+meth public boolean contains(int)
+meth public boolean isEmpty()
+meth public int getFirstTag()
+meth public int size()
+meth public void add(int)
+meth public void clear()
+supr java.lang.Object
+hfds _tagCount,_tags
+
 CLSS public com.fasterxml.jackson.dataformat.cbor.CBORParserBootstrapper
 cons public init(com.fasterxml.jackson.core.io.IOContext,byte[],int,int)
 cons public init(com.fasterxml.jackson.core.io.IOContext,java.io.InputStream)
@@ -15770,10 +17178,13 @@ meth public boolean acceptsBreakMarker()
 meth public boolean expectMoreValues()
 meth public boolean hasExpectedLength()
 meth public com.fasterxml.jackson.core.JsonLocation getStartLocation(java.lang.Object)
+ anno 0 java.lang.Deprecated()
+meth public com.fasterxml.jackson.core.JsonLocation startLocation(com.fasterxml.jackson.core.io.ContentReference)
 meth public com.fasterxml.jackson.dataformat.cbor.CBORReadContext createChildArrayContext(int)
 meth public com.fasterxml.jackson.dataformat.cbor.CBORReadContext createChildObjectContext(int)
 meth public com.fasterxml.jackson.dataformat.cbor.CBORReadContext getParent()
 meth public int getExpectedLength()
+meth public int getRemainingExpectedLength()
 meth public java.lang.Object getCurrentValue()
 meth public java.lang.String getCurrentName()
 meth public java.lang.String toString()
@@ -15839,6 +17250,10 @@ hfds serialVersionUID
 CLSS public static com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper$Builder
  outer com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper
 cons public init(com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper)
+fld protected final com.fasterxml.jackson.dataformat.cbor.CBORFactory _streamFactory
+meth public !varargs com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper$Builder disable(com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature[])
+meth public !varargs com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper$Builder enable(com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature[])
+meth public com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper$Builder configure(com.fasterxml.jackson.dataformat.cbor.CBORGenerator$Feature,boolean)
 supr com.fasterxml.jackson.databind.cfg.MapperBuilder<com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper,com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper$Builder>
 
 CLSS public final com.fasterxml.jackson.datatype.jsr310.DecimalUtils
@@ -15858,12 +17273,26 @@ meth public void setupModule(com.fasterxml.jackson.databind.Module$SetupContext)
 supr com.fasterxml.jackson.databind.module.SimpleModule
 hfds serialVersionUID
 
+CLSS public final !enum com.fasterxml.jackson.datatype.jsr310.JavaTimeFeature
+fld public final static com.fasterxml.jackson.datatype.jsr310.JavaTimeFeature ALWAYS_ALLOW_STRINGIFIED_DATE_TIMESTAMPS
+fld public final static com.fasterxml.jackson.datatype.jsr310.JavaTimeFeature NORMALIZE_DESERIALIZED_ZONE_ID
+intf com.fasterxml.jackson.core.util.JacksonFeature
+meth public boolean enabledByDefault()
+meth public boolean enabledIn(int)
+meth public int getMask()
+meth public static com.fasterxml.jackson.datatype.jsr310.JavaTimeFeature valueOf(java.lang.String)
+meth public static com.fasterxml.jackson.datatype.jsr310.JavaTimeFeature[] values()
+supr java.lang.Enum<com.fasterxml.jackson.datatype.jsr310.JavaTimeFeature>
+hfds _defaultState,_mask
+
 CLSS public final com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 cons public init()
 meth protected !varargs com.fasterxml.jackson.databind.introspect.AnnotatedMethod _findFactory(com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.String,java.lang.Class<?>[])
+meth public com.fasterxml.jackson.datatype.jsr310.JavaTimeModule disable(com.fasterxml.jackson.datatype.jsr310.JavaTimeFeature)
+meth public com.fasterxml.jackson.datatype.jsr310.JavaTimeModule enable(com.fasterxml.jackson.datatype.jsr310.JavaTimeFeature)
 meth public void setupModule(com.fasterxml.jackson.databind.Module$SetupContext)
 supr com.fasterxml.jackson.databind.module.SimpleModule
-hfds serialVersionUID
+hfds _features,serialVersionUID
 
 CLSS public final com.fasterxml.jackson.datatype.jsr310.PackageVersion
 cons public init()
@@ -15875,9 +17304,11 @@ supr java.lang.Object
 CLSS public com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer,com.fasterxml.jackson.datatype.jsr310.util.DurationUnitConverter)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer,java.lang.Boolean)
+cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer,java.lang.Boolean,com.fasterxml.jackson.datatype.jsr310.util.DurationUnitConverter,java.lang.Boolean)
 cons public init()
 fld protected final boolean _isLenient
 fld protected final com.fasterxml.jackson.datatype.jsr310.util.DurationUnitConverter _durationUnitConverter
+fld protected final java.lang.Boolean _readTimestampsAsNanosOverride
 fld public final static com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer INSTANCE
 intf com.fasterxml.jackson.databind.deser.ContextualDeserializer
 meth protected !varargs <%0 extends java.lang.Object> {%%0} _handleUnexpectedToken(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.core.JsonToken[]) throws com.fasterxml.jackson.databind.JsonMappingException
@@ -15887,6 +17318,7 @@ meth protected <%0 extends java.lang.Object> {%%0} _handleDateTimeException(com.
 meth protected <%0 extends java.lang.Object> {%%0} _reportWrongToken(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.core.JsonToken,java.lang.String) throws java.io.IOException
 meth protected boolean _isValidTimestampString(java.lang.String)
 meth protected boolean isLenient()
+meth protected boolean shouldReadTimestampsAsNanoseconds(com.fasterxml.jackson.databind.DeserializationContext)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer withConverter(com.fasterxml.jackson.datatype.jsr310.util.DurationUnitConverter)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer withLeniency(java.lang.Boolean)
 meth protected java.time.DateTimeException _peelDTE(java.time.DateTimeException)
@@ -15902,33 +17334,42 @@ supr com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer<java.time.Du
 hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<%0 extends java.time.temporal.Temporal>
+cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.datatype.jsr310.JavaTimeFeature>)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.lang.Boolean)
+cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape,java.lang.Boolean,java.lang.Boolean)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.time.format.DateTimeFormatter)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.time.format.DateTimeFormatter,java.lang.Boolean)
 cons protected init(java.lang.Class<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.time.format.DateTimeFormatter,java.util.function.Function<java.time.temporal.TemporalAccessor,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.util.function.Function<com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer$FromIntegerArguments,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.util.function.Function<com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer$FromDecimalArguments,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.util.function.BiFunction<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0},java.time.ZoneId,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,boolean)
+ anno 0 java.lang.Deprecated()
+cons protected init(java.lang.Class<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.time.format.DateTimeFormatter,java.util.function.Function<java.time.temporal.TemporalAccessor,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.util.function.Function<com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer$FromIntegerArguments,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.util.function.Function<com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer$FromDecimalArguments,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,java.util.function.BiFunction<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0},java.time.ZoneId,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>,boolean,boolean,boolean)
+fld protected final boolean _alwaysAllowStringifiedDateTimestamps
+fld protected final boolean _normalizeZoneId
 fld protected final boolean replaceZeroOffsetAsZ
 fld protected final java.lang.Boolean _adjustToContextTZOverride
+fld protected final java.lang.Boolean _readTimestampsAsNanosOverride
 fld protected final java.util.function.BiFunction<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0},java.time.ZoneId,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}> adjust
 fld protected final java.util.function.Function<com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer$FromDecimalArguments,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}> fromNanoseconds
 fld protected final java.util.function.Function<com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer$FromIntegerArguments,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}> fromMilliseconds
 fld protected final java.util.function.Function<java.time.temporal.TemporalAccessor,{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}> parsedToValue
+fld protected final static java.util.regex.Pattern ISO8601_COLONLESS_OFFSET_REGEX
 fld public final static com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<java.time.Instant> INSTANT
 fld public final static com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<java.time.OffsetDateTime> OFFSET_DATE_TIME
 fld public final static com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<java.time.ZonedDateTime> ZONED_DATE_TIME
 innr public static FromDecimalArguments
 innr public static FromIntegerArguments
 meth protected boolean shouldAdjustToContextTimezone(com.fasterxml.jackson.databind.DeserializationContext)
+meth protected boolean shouldReadTimestampsAsNanoseconds(com.fasterxml.jackson.databind.DeserializationContext)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}> withDateFormat(java.time.format.DateTimeFormatter)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}> withLeniency(java.lang.Boolean)
-meth protected com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}> withShape(com.fasterxml.jackson.annotation.JsonFormat$Shape)
+meth protected com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<?> _withFormatOverrides(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.annotation.JsonFormat$Value)
 meth protected int _countPeriods(java.lang.String)
 meth protected {com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0} _fromDecimal(com.fasterxml.jackson.databind.DeserializationContext,java.math.BigDecimal)
 meth protected {com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0} _fromLong(com.fasterxml.jackson.databind.DeserializationContext,long)
 meth protected {com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0} _fromString(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
-meth public com.fasterxml.jackson.databind.JsonDeserializer<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}> createContextual(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}> withFeatures(com.fasterxml.jackson.core.util.JacksonFeatureSet<com.fasterxml.jackson.datatype.jsr310.JavaTimeFeature>)
 meth public {com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0} deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 supr com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<{com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer%0}>
-hfds ISO8601_UTC_ZERO_OFFSET_SUFFIX_REGEX,serialVersionUID
+hfds DEFAULT_ALWAYS_ALLOW_STRINGIFIED_DATE_TIMESTAMPS,DEFAULT_NORMALIZE_ZONE_ID,serialVersionUID
 
 CLSS public static com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer$FromDecimalArguments
  outer com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer
@@ -15946,6 +17387,7 @@ supr java.lang.Object
 CLSS public abstract com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<%0 extends java.lang.Object>
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<{com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0}>,com.fasterxml.jackson.annotation.JsonFormat$Shape)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<{com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0}>,java.lang.Boolean)
+cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<{com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0}>,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<{com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0}>,java.time.format.DateTimeFormatter)
 cons protected init(java.lang.Class<{com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0}>,java.time.format.DateTimeFormatter)
 cons public init(java.lang.Class<{com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0}>,java.time.format.DateTimeFormatter,java.lang.Boolean)
@@ -15960,9 +17402,10 @@ meth protected <%0 extends java.lang.Object> {%%0} _handleDateTimeException(com.
 meth protected <%0 extends java.lang.Object> {%%0} _reportWrongToken(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.core.JsonToken,java.lang.String) throws java.io.IOException
 meth protected abstract com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<{com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0}> withDateFormat(java.time.format.DateTimeFormatter)
 meth protected abstract com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<{com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0}> withLeniency(java.lang.Boolean)
-meth protected abstract com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<{com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0}> withShape(com.fasterxml.jackson.annotation.JsonFormat$Shape)
 meth protected boolean _isValidTimestampString(java.lang.String)
 meth protected boolean isLenient()
+meth protected com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<?> _withFormatOverrides(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.annotation.JsonFormat$Value)
+meth protected com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<{com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0}> withShape(com.fasterxml.jackson.annotation.JsonFormat$Shape)
 meth protected java.time.DateTimeException _peelDTE(java.time.DateTimeException)
 meth protected void _throwNoNumericTimestampNeedTimeZone(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 meth protected {com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase%0} _failForNotLenient(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.core.JsonToken) throws java.io.IOException
@@ -16020,24 +17463,32 @@ supr com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<
 hfds DEFAULT_FORMATTER,serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
+cons protected init()
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer,java.lang.Boolean)
+cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape,java.lang.Boolean)
 cons public init(java.time.format.DateTimeFormatter)
+fld protected final java.lang.Boolean _readTimestampsAsNanosOverride
 fld public final static com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer INSTANCE
+meth protected boolean shouldReadTimestampsAsNanoseconds(com.fasterxml.jackson.databind.DeserializationContext)
+meth protected com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<?> _withFormatOverrides(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.annotation.JsonFormat$Value)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer withDateFormat(java.time.format.DateTimeFormatter)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer withLeniency(java.lang.Boolean)
-meth protected com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer withShape(com.fasterxml.jackson.annotation.JsonFormat$Shape)
 meth protected java.time.LocalDateTime _fromString(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth public java.time.LocalDateTime deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 supr com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<java.time.LocalDateTime>
 hfds DEFAULT_FORMATTER,serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer
+cons protected init()
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer,java.lang.Boolean)
+cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape,java.lang.Boolean)
 cons public init(java.time.format.DateTimeFormatter)
+fld protected final java.lang.Boolean _readTimestampsAsNanosOverride
 fld public final static com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer INSTANCE
+meth protected boolean shouldReadTimestampsAsNanoseconds(com.fasterxml.jackson.databind.DeserializationContext)
+meth protected com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<?> _withFormatOverrides(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.annotation.JsonFormat$Value)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer withDateFormat(java.time.format.DateTimeFormatter)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer withLeniency(java.lang.Boolean)
-meth protected com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer withShape(com.fasterxml.jackson.annotation.JsonFormat$Shape)
 meth protected java.time.LocalTime _fromString(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth public java.time.LocalTime deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 supr com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<java.time.LocalTime>
@@ -16045,23 +17496,28 @@ hfds DEFAULT_FORMATTER,serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.deser.MonthDayDeserializer
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.MonthDayDeserializer,java.lang.Boolean)
+cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.MonthDayDeserializer,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape)
+cons public init()
 cons public init(java.time.format.DateTimeFormatter)
 fld public final static com.fasterxml.jackson.datatype.jsr310.deser.MonthDayDeserializer INSTANCE
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.MonthDayDeserializer withDateFormat(java.time.format.DateTimeFormatter)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.MonthDayDeserializer withLeniency(java.lang.Boolean)
-meth protected com.fasterxml.jackson.datatype.jsr310.deser.MonthDayDeserializer withShape(com.fasterxml.jackson.annotation.JsonFormat$Shape)
 meth protected java.time.MonthDay _fromString(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth public java.time.MonthDay deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 supr com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<java.time.MonthDay>
 hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.deser.OffsetTimeDeserializer
+cons protected init()
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.OffsetTimeDeserializer,java.lang.Boolean)
+cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.OffsetTimeDeserializer,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape,java.lang.Boolean)
 cons protected init(java.time.format.DateTimeFormatter)
+fld protected final java.lang.Boolean _readTimestampsAsNanosOverride
 fld public final static com.fasterxml.jackson.datatype.jsr310.deser.OffsetTimeDeserializer INSTANCE
+meth protected boolean shouldReadTimestampsAsNanoseconds(com.fasterxml.jackson.databind.DeserializationContext)
+meth protected com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<?> _withFormatOverrides(com.fasterxml.jackson.databind.DeserializationContext,com.fasterxml.jackson.databind.BeanProperty,com.fasterxml.jackson.annotation.JsonFormat$Value)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.OffsetTimeDeserializer withDateFormat(java.time.format.DateTimeFormatter)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.OffsetTimeDeserializer withLeniency(java.lang.Boolean)
-meth protected com.fasterxml.jackson.datatype.jsr310.deser.OffsetTimeDeserializer withShape(com.fasterxml.jackson.annotation.JsonFormat$Shape)
 meth protected java.time.OffsetTime _fromString(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth public java.time.OffsetTime deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 supr com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<java.time.OffsetTime>
@@ -16069,11 +17525,12 @@ hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.deser.YearDeserializer
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.YearDeserializer,java.lang.Boolean)
+cons public init()
+cons public init(com.fasterxml.jackson.datatype.jsr310.deser.YearDeserializer,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape)
 cons public init(java.time.format.DateTimeFormatter)
 fld public final static com.fasterxml.jackson.datatype.jsr310.deser.YearDeserializer INSTANCE
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.YearDeserializer withDateFormat(java.time.format.DateTimeFormatter)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.YearDeserializer withLeniency(java.lang.Boolean)
-meth protected com.fasterxml.jackson.datatype.jsr310.deser.YearDeserializer withShape(com.fasterxml.jackson.annotation.JsonFormat$Shape)
 meth protected java.time.Year _fromNumber(com.fasterxml.jackson.databind.DeserializationContext,int)
 meth protected java.time.Year _fromString(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth public java.time.Year deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
@@ -16082,11 +17539,12 @@ hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.deser.YearMonthDeserializer
 cons protected init(com.fasterxml.jackson.datatype.jsr310.deser.YearMonthDeserializer,java.lang.Boolean)
+cons public init()
+cons public init(com.fasterxml.jackson.datatype.jsr310.deser.YearMonthDeserializer,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape)
 cons public init(java.time.format.DateTimeFormatter)
 fld public final static com.fasterxml.jackson.datatype.jsr310.deser.YearMonthDeserializer INSTANCE
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.YearMonthDeserializer withDateFormat(java.time.format.DateTimeFormatter)
 meth protected com.fasterxml.jackson.datatype.jsr310.deser.YearMonthDeserializer withLeniency(java.lang.Boolean)
-meth protected com.fasterxml.jackson.datatype.jsr310.deser.YearMonthDeserializer withShape(com.fasterxml.jackson.annotation.JsonFormat$Shape)
 meth protected java.time.YearMonth _fromString(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext,java.lang.String) throws java.io.IOException
 meth public java.time.YearMonth deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
 supr com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase<java.time.YearMonth>
@@ -16200,6 +17658,7 @@ meth public final java.lang.Object deserializeKey(java.lang.String,com.fasterxml
 supr com.fasterxml.jackson.databind.KeyDeserializer
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer
+cons protected init()
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer,com.fasterxml.jackson.datatype.jsr310.util.DurationUnitConverter)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer,java.lang.Boolean,java.lang.Boolean,java.time.format.DateTimeFormatter)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer,java.lang.Boolean,java.time.format.DateTimeFormatter)
@@ -16234,6 +17693,8 @@ CLSS public com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer
 cons protected init()
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer,java.lang.Boolean,java.lang.Boolean,java.time.format.DateTimeFormatter)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer,java.lang.Boolean,java.time.format.DateTimeFormatter)
+ anno 0 java.lang.Deprecated()
+cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape)
 fld public final static com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer INSTANCE
 meth protected com.fasterxml.jackson.datatype.jsr310.ser.JSR310FormattedSerializerBase<?> withFeatures(java.lang.Boolean,java.lang.Boolean)
 meth protected com.fasterxml.jackson.datatype.jsr310.ser.JSR310FormattedSerializerBase<java.time.Instant> withFormat(java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape)
@@ -16242,6 +17703,7 @@ hfds serialVersionUID
 
 CLSS public abstract com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase<%0 extends java.time.temporal.Temporal>
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase<{com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase%0}>,java.lang.Boolean,java.lang.Boolean,java.time.format.DateTimeFormatter)
+cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase<{com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase%0}>,java.lang.Boolean,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase<{com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase%0}>,java.lang.Boolean,java.time.format.DateTimeFormatter)
 cons protected init(java.lang.Class<{com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase%0}>,java.util.function.ToLongFunction<{com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase%0}>,java.util.function.ToLongFunction<{com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase%0}>,java.util.function.ToIntFunction<{com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializerBase%0}>,java.time.format.DateTimeFormatter)
 fld protected final com.fasterxml.jackson.annotation.JsonFormat$Shape _shape
@@ -16303,6 +17765,7 @@ hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 cons protected init()
+cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer,java.lang.Boolean,java.lang.Boolean,java.time.format.DateTimeFormatter)
 cons public init(java.time.format.DateTimeFormatter)
 fld protected final com.fasterxml.jackson.annotation.JsonFormat$Shape _shape
 fld protected final java.lang.Boolean _useNanoseconds
@@ -16364,6 +17827,7 @@ supr com.fasterxml.jackson.datatype.jsr310.ser.JSR310FormattedSerializerBase<jav
 hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.ser.MonthDaySerializer
+cons protected init()
 cons public init(java.time.format.DateTimeFormatter)
 fld protected final com.fasterxml.jackson.annotation.JsonFormat$Shape _shape
 fld protected final java.lang.Boolean _useNanoseconds
@@ -16396,6 +17860,8 @@ CLSS public com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer
 cons protected init()
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer,java.lang.Boolean,java.lang.Boolean,java.time.format.DateTimeFormatter)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer,java.lang.Boolean,java.time.format.DateTimeFormatter)
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape)
 fld public final static com.fasterxml.jackson.datatype.jsr310.ser.OffsetDateTimeSerializer INSTANCE
 meth protected com.fasterxml.jackson.datatype.jsr310.ser.JSR310FormattedSerializerBase<?> withFeatures(java.lang.Boolean,java.lang.Boolean)
 meth protected com.fasterxml.jackson.datatype.jsr310.ser.JSR310FormattedSerializerBase<?> withFormat(java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape)
@@ -16433,6 +17899,7 @@ supr com.fasterxml.jackson.datatype.jsr310.ser.JSR310FormattedSerializerBase<jav
 hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.ser.YearMonthSerializer
+cons protected init()
 cons public init(java.time.format.DateTimeFormatter)
 fld protected final com.fasterxml.jackson.annotation.JsonFormat$Shape _shape
 fld protected final java.lang.Boolean _useNanoseconds
@@ -16500,7 +17967,9 @@ hfds serialVersionUID
 
 CLSS public com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer
 cons protected init()
+cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer,java.lang.Boolean,java.lang.Boolean,java.time.format.DateTimeFormatter,com.fasterxml.jackson.annotation.JsonFormat$Shape,java.lang.Boolean)
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer,java.lang.Boolean,java.lang.Boolean,java.time.format.DateTimeFormatter,java.lang.Boolean)
+ anno 0 java.lang.Deprecated()
 cons protected init(com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer,java.lang.Boolean,java.time.format.DateTimeFormatter,java.lang.Boolean)
 cons public init(java.time.format.DateTimeFormatter)
 fld protected final java.lang.Boolean _writeZoneId
@@ -16551,6 +18020,171 @@ CLSS protected static com.fasterxml.jackson.datatype.jsr310.util.DurationUnitCon
  outer com.fasterxml.jackson.datatype.jsr310.util.DurationUnitConverter
 supr java.lang.Object
 hfds deserializer,serializer
+
+CLSS public com.fasterxml.jackson.module.jaxb.AdapterConverter
+cons public init(javax.xml.bind.annotation.adapters.XmlAdapter<?,?>,com.fasterxml.jackson.databind.JavaType,com.fasterxml.jackson.databind.JavaType,boolean)
+fld protected final boolean _forSerialization
+fld protected final com.fasterxml.jackson.databind.JavaType _inputType
+fld protected final com.fasterxml.jackson.databind.JavaType _targetType
+fld protected final javax.xml.bind.annotation.adapters.XmlAdapter<java.lang.Object,java.lang.Object> _adapter
+meth public com.fasterxml.jackson.databind.JavaType getInputType(com.fasterxml.jackson.databind.type.TypeFactory)
+meth public com.fasterxml.jackson.databind.JavaType getOutputType(com.fasterxml.jackson.databind.type.TypeFactory)
+meth public java.lang.Object convert(java.lang.Object)
+supr com.fasterxml.jackson.databind.util.StdConverter<java.lang.Object,java.lang.Object>
+
+CLSS public com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector
+cons public init()
+ anno 0 java.lang.Deprecated()
+cons public init(com.fasterxml.jackson.databind.cfg.MapperConfig<?>)
+cons public init(com.fasterxml.jackson.databind.type.TypeFactory)
+cons public init(com.fasterxml.jackson.databind.type.TypeFactory,boolean)
+fld protected com.fasterxml.jackson.annotation.JsonInclude$Include _nonNillableInclusion
+fld protected final boolean _ignoreXmlIDREF
+fld protected final com.fasterxml.jackson.databind.JsonDeserializer<?> _dataHandlerDeserializer
+fld protected final com.fasterxml.jackson.databind.JsonSerializer<?> _dataHandlerSerializer
+fld protected final com.fasterxml.jackson.databind.type.TypeFactory _typeFactory
+fld protected final java.lang.String _jaxbPackageName
+fld protected final static boolean DEFAULT_IGNORE_XMLIDREF = false
+fld protected final static com.fasterxml.jackson.annotation.JsonFormat$Value FORMAT_INT
+fld protected final static com.fasterxml.jackson.annotation.JsonFormat$Value FORMAT_STRING
+fld protected final static java.lang.String DEFAULT_NAME_FOR_XML_VALUE = "value"
+fld protected final static java.lang.String MARKER_FOR_DEFAULT = "##default"
+fld protected java.lang.String _xmlValueName
+intf com.fasterxml.jackson.core.Versioned
+intf com.fasterxml.jackson.databind.AnnotationIntrospector$XmlExtensions
+meth protected boolean isJAXBAnnotation(java.lang.annotation.Annotation)
+meth protected com.fasterxml.jackson.databind.JavaType _fullDeserializationType(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth protected com.fasterxml.jackson.databind.JavaType _fullSerializationType(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth protected com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?> _typeResolverFromXmlElements(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth protected com.fasterxml.jackson.databind.util.Converter<java.lang.Object,java.lang.Object> _converter(javax.xml.bind.annotation.adapters.XmlAdapter<?,?>,boolean)
+meth protected final com.fasterxml.jackson.databind.type.TypeFactory getTypeFactory()
+meth protected java.lang.Class<?> _doFindDeserializationType(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType)
+meth protected java.lang.Class<?> _getTypeFromXmlElement(com.fasterxml.jackson.databind.introspect.Annotated)
+meth protected java.lang.Class<?> _rawDeserializationType(com.fasterxml.jackson.databind.introspect.Annotated)
+meth protected java.lang.Class<?> _rawSerializationType(com.fasterxml.jackson.databind.introspect.Annotated)
+meth protected java.lang.String _decapitalize(java.lang.String)
+meth protected java.lang.String _okNameForGetter(com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
+meth protected java.lang.String _okNameForMutator(com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
+meth protected java.lang.String _propertyNameToString(com.fasterxml.jackson.databind.PropertyName)
+meth protected java.lang.String _stdManglePropertyName(java.lang.String,int)
+meth protected javax.xml.bind.annotation.XmlAccessType findAccessType(com.fasterxml.jackson.databind.introspect.Annotated)
+meth protected javax.xml.bind.annotation.adapters.XmlAdapter<?,?> _findContentAdapter(com.fasterxml.jackson.databind.introspect.Annotated,boolean)
+meth public boolean hasAsValueAnnotation(com.fasterxml.jackson.databind.introspect.AnnotatedMethod)
+ anno 0 java.lang.Deprecated()
+meth public boolean hasIgnoreMarker(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth public com.fasterxml.jackson.annotation.JsonFormat$Value findFormat(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public com.fasterxml.jackson.annotation.JsonInclude$Include getNonNillableInclusion()
+meth public com.fasterxml.jackson.annotation.JsonInclude$Value findPropertyInclusion(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public com.fasterxml.jackson.core.Version version()
+meth public com.fasterxml.jackson.databind.JavaType refineDeserializationType(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public com.fasterxml.jackson.databind.JavaType refineSerializationType(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public com.fasterxml.jackson.databind.JsonSerializer<?> findSerializer(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public com.fasterxml.jackson.databind.PropertyName findNameForDeserialization(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public com.fasterxml.jackson.databind.PropertyName findNameForSerialization(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public com.fasterxml.jackson.databind.PropertyName findRootName(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
+meth public com.fasterxml.jackson.databind.PropertyName findWrapperName(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public com.fasterxml.jackson.databind.introspect.ObjectIdInfo findObjectIdInfo(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public com.fasterxml.jackson.databind.introspect.ObjectIdInfo findObjectReferenceInfo(com.fasterxml.jackson.databind.introspect.Annotated,com.fasterxml.jackson.databind.introspect.ObjectIdInfo)
+meth public com.fasterxml.jackson.databind.introspect.VisibilityChecker<?> findAutoDetectVisibility(com.fasterxml.jackson.databind.introspect.AnnotatedClass,com.fasterxml.jackson.databind.introspect.VisibilityChecker<?>)
+meth public com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?> findPropertyContentTypeResolver(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType)
+meth public com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?> findPropertyTypeResolver(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedMember,com.fasterxml.jackson.databind.JavaType)
+meth public com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder<?> findTypeResolver(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,com.fasterxml.jackson.databind.JavaType)
+meth public com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector setNonNillableInclusion(com.fasterxml.jackson.annotation.JsonInclude$Include)
+meth public java.lang.Boolean findSerializationSortAlphabetically(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Boolean hasRequiredMarker(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth public java.lang.Boolean isIgnorableType(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
+meth public java.lang.Boolean isOutputAsAttribute(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Boolean isOutputAsCData(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Boolean isOutputAsText(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Object findContentDeserializer(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Object findContentSerializer(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Object findDeserializationContentConverter(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth public java.lang.Object findDeserializationConverter(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Object findDeserializer(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Object findKeyDeserializer(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.Object findSerializationContentConverter(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth public java.lang.Object findSerializationConverter(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.String findImplicitPropertyName(com.fasterxml.jackson.databind.introspect.AnnotatedMember)
+meth public java.lang.String findNamespace(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.Annotated)
+meth public java.lang.String findTypeName(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
+meth public java.lang.String getNameUsedForXmlValue()
+meth public java.lang.String[] findEnumValues(com.fasterxml.jackson.databind.cfg.MapperConfig<?>,com.fasterxml.jackson.databind.introspect.AnnotatedClass,java.lang.Enum<?>[],java.lang.String[])
+meth public java.lang.String[] findEnumValues(java.lang.Class<?>,java.lang.Enum<?>[],java.lang.String[])
+ anno 0 java.lang.Deprecated()
+meth public java.lang.String[] findSerializationPropertyOrder(com.fasterxml.jackson.databind.introspect.AnnotatedClass)
+meth public java.util.List<com.fasterxml.jackson.databind.jsontype.NamedType> findSubtypes(com.fasterxml.jackson.databind.introspect.Annotated)
+meth public void setNameUsedForXmlValue(java.lang.String)
+supr com.fasterxml.jackson.databind.AnnotationIntrospector
+hfds serialVersionUID
+
+CLSS public com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule
+cons public init()
+cons public init(com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector)
+fld protected com.fasterxml.jackson.annotation.JsonInclude$Include _nonNillableInclusion
+fld protected com.fasterxml.jackson.module.jaxb.JaxbAnnotationIntrospector _introspector
+fld protected com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule$Priority _priority
+fld protected java.lang.String _nameUsedForXmlValue
+innr public final static !enum Priority
+meth public com.fasterxml.jackson.annotation.JsonInclude$Include getNonNillableInclusion()
+meth public com.fasterxml.jackson.core.Version version()
+meth public com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule setNameUsedForXmlValue(java.lang.String)
+meth public com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule setNonNillableInclusion(com.fasterxml.jackson.annotation.JsonInclude$Include)
+meth public com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule setPriority(com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule$Priority)
+meth public com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule$Priority getPriority()
+meth public java.lang.String getModuleName()
+meth public java.lang.String getNameUsedForXmlValue()
+meth public void setupModule(com.fasterxml.jackson.databind.Module$SetupContext)
+supr com.fasterxml.jackson.databind.Module
+
+CLSS public final static !enum com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule$Priority
+ outer com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule
+fld public final static com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule$Priority PRIMARY
+fld public final static com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule$Priority SECONDARY
+meth public static com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule$Priority valueOf(java.lang.String)
+meth public static com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule$Priority[] values()
+supr java.lang.Enum<com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule$Priority>
+
+CLSS public final com.fasterxml.jackson.module.jaxb.PackageVersion
+cons public init()
+fld public final static com.fasterxml.jackson.core.Version VERSION
+intf com.fasterxml.jackson.core.Versioned
+meth public com.fasterxml.jackson.core.Version version()
+supr java.lang.Object
+
+CLSS public com.fasterxml.jackson.module.jaxb.deser.DataHandlerJsonDeserializer
+cons public init()
+meth public javax.activation.DataHandler deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+supr com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer<javax.activation.DataHandler>
+hfds serialVersionUID
+
+CLSS public com.fasterxml.jackson.module.jaxb.deser.DomElementJsonDeserializer
+ anno 0 java.lang.Deprecated()
+cons public init()
+cons public init(javax.xml.parsers.DocumentBuilder)
+meth protected org.w3c.dom.Element fromNode(com.fasterxml.jackson.core.JsonParser,org.w3c.dom.Document,com.fasterxml.jackson.databind.JsonNode) throws java.io.IOException
+meth public org.w3c.dom.Element deserialize(com.fasterxml.jackson.core.JsonParser,com.fasterxml.jackson.databind.DeserializationContext) throws java.io.IOException
+supr com.fasterxml.jackson.databind.deser.std.StdDeserializer<org.w3c.dom.Element>
+hfds builder,serialVersionUID
+
+CLSS abstract interface com.fasterxml.jackson.module.jaxb.package-info
+
+CLSS public com.fasterxml.jackson.module.jaxb.ser.DataHandlerJsonSerializer
+cons public init()
+meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type)
+ anno 0 java.lang.Deprecated()
+meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public void serialize(javax.activation.DataHandler,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
+supr com.fasterxml.jackson.databind.ser.std.StdSerializer<javax.activation.DataHandler>
+hfds serialVersionUID
+
+CLSS public com.fasterxml.jackson.module.jaxb.ser.DomElementJsonSerializer
+ anno 0 java.lang.Deprecated()
+cons public init()
+meth public com.fasterxml.jackson.databind.JsonNode getSchema(com.fasterxml.jackson.databind.SerializerProvider,java.lang.reflect.Type) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public void acceptJsonFormatVisitor(com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper,com.fasterxml.jackson.databind.JavaType) throws com.fasterxml.jackson.databind.JsonMappingException
+meth public void serialize(org.w3c.dom.Element,com.fasterxml.jackson.core.JsonGenerator,com.fasterxml.jackson.databind.SerializerProvider) throws java.io.IOException
+supr com.fasterxml.jackson.databind.ser.std.StdSerializer<org.w3c.dom.Element>
+hfds serialVersionUID
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable

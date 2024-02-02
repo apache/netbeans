@@ -2,12 +2,12 @@
 
 Document 0
 Searchable Keys:
-  base : arrowfunctiondeclaration:1578;ArrowFunctionDeclaration:1578;1578;$test:X&Y:1::1:0:0:0:0:1;;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;
-  base : arrowfunctiondeclaration:1611;ArrowFunctionDeclaration:1611;1611;$test:X&Y:1::1:0:0:0:0:1;X&Y;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;
-  base : lambdafunctiondeclaration:1481;LambdaFunctionDeclaration:1481;1481;$test1:X&Y&Z:1::1:0:0:0:0:1,$test2:Y&Z:1::1:0:0:0:0:1;void;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;
-  base : lambdafunctiondeclaration:1537;LambdaFunctionDeclaration:1537;1537;$test:int:1::1:0:0:0:0:0;X&Y&Z;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;
-  base : paramtype;paramType;857;$test:X&Y:1::1:0:0:0:0:1;void;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;
-  base : returntype;returnType;903;;\X&\Y;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;
+  base : arrowfunctiondeclaration:1578;ArrowFunctionDeclaration:1578;1578;$test:X&Y:1::1:0:0:0:0:1:X&Y:;;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;;
+  base : arrowfunctiondeclaration:1611;ArrowFunctionDeclaration:1611;1611;$test:X&Y:1::1:0:0:0:0:1:X&Y:;X&Y;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;X&Y;
+  base : lambdafunctiondeclaration:1481;LambdaFunctionDeclaration:1481;1481;$test1:X&Y&Z:1::1:0:0:0:0:1:X&Y&Z:,$test2:Y&Z:1::1:0:0:0:0:1:Y&Z:;void;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;void;
+  base : lambdafunctiondeclaration:1537;LambdaFunctionDeclaration:1537;1537;$test:int:1::1:0:0:0:0:0:int:;X&Y&Z;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;X&Y&Z;
+  base : paramtype;paramType;857;$test:X&Y:1::1:0:0:0:0:1:X&Y:;void;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;void;
+  base : returntype;returnType;903;;\X&\Y;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;X&Y;
   top : $arrow
   top : $closure
   top : arrowfunctiondeclaration:1578
@@ -24,10 +24,10 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : testclass;TestClass;937;;;;1;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;;
+  clz : testclass;TestClass;937;;;;1;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;;0;
   field : test;test;966;2;X&Y;\X&\Y;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;
-  method : paramtype;paramType;993;$test:X&Y:1::1:0:0:0:0:1;void;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;
-  method : returntype;returnType;1078;;\X&\Y;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;
+  method : paramtype;paramType;993;$test:X&Y:1::1:0:0:0:0:1:X&Y:;void;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;void;
+  method : returntype;returnType;1078;;\X&\Y;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;X&Y;
   top : testclass
 
 Not Searchable Keys:
@@ -35,7 +35,7 @@ Not Searchable Keys:
 
 Document 2
 Searchable Keys:
-  clz : x;X;820;;;;1;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;;
+  clz : x;X;820;;;;1;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;;0;
   top : x
 
 Not Searchable Keys:
@@ -43,7 +43,7 @@ Not Searchable Keys:
 
 Document 3
 Searchable Keys:
-  clz : y;Y;831;;;;1;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;;
+  clz : y;Y;831;;;;1;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;;0;
   top : y
 
 Not Searchable Keys:
@@ -51,7 +51,7 @@ Not Searchable Keys:
 
 Document 4
 Searchable Keys:
-  clz : z;Z;842;;;;1;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;;
+  clz : z;Z;842;;;;1;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;;0;
   top : z
 
 Not Searchable Keys:
@@ -60,8 +60,8 @@ Not Searchable Keys:
 Document 5
 Searchable Keys:
   field : test;test;1170;2;X&Y;\X&\Y;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;
-  method : paramtype;paramType;1197;$test1:X&Y:1::1:0:0:0:0:1,$test2:X&Y&Z:1::1:0:0:0:0:1;void;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;
-  method : returntype;returnType;1297;;\X&\Y;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;
+  method : paramtype;paramType;1197;$test1:X&Y:1::1:0:0:0:0:1:X&Y:,$test2:X&Y&Z:1::1:0:0:0:0:1:X&Y&Z:;void;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;void;
+  method : returntype;returnType;1297;;\X&\Y;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;X&Y;
   top : testtrait
   trait : testtrait;TestTrait;1141;;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;
 
@@ -163,8 +163,8 @@ Not Searchable Keys:
 Document 7
 Searchable Keys:
   iface : testinterfase;TestInterfase;1364;;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;
-  method : paramtype;paramType;1401;$test:X&Y&Z:1::1:0:0:0:0:1;;1025;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;
-  method : returntype;returnType;1445;;\X&\Y&\Z;1025;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;
+  method : paramtype;paramType;1401;$test:X&Y&Z:1::1:0:0:0:0:1:X&Y&Z:;;1025;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;;
+  method : returntype;returnType;1445;;\X&\Y&\Z;1025;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;X&Y&Z;
   top : testinterfase
 
 Not Searchable Keys:

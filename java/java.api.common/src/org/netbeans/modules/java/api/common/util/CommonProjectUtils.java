@@ -178,8 +178,8 @@ public final class CommonProjectUtils {
     /**
      * Creates a {@link LibraryImplementation3} that can subsequently be used with
      * both Ant and Maven based Java projects.
-     * @param classpath local library classpath for use by Ant
-     * @param src local library sources for use by Ant
+     * @param classPath local library classpath for use by Ant
+     * @param sources local library sources for use by Ant
      * @param javadoc local Javadoc path for use by Ant
      * @param mavendeps list of maven dependencies in the form of groupId:artifactId:version:type,
      *    for example org.eclipse.persistence:eclipselink:2.3.2:jar

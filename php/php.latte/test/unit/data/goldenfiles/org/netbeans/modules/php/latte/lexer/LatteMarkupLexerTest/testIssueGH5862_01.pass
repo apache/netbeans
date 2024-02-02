@@ -1,0 +1,2 @@
+token #0 T_MACRO_START [_]
+token #1 T_STRING ['escase \' quote']

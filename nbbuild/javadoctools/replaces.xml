@@ -27,12 +27,11 @@
    to decide whether such change shall be commited to the repository
    or not
 -->
-<replacefilter token="@org-openide-compat@" value="${javadoc.docs.org-openide-compat}"/>
+
 <replacefilter token="@org-openide-util@" value="${javadoc.docs.org-openide-util}"/>
 <replacefilter token="@org-openide-nodes@" value="${javadoc.docs.org-openide-nodes}"/>
 <replacefilter token="@org-netbeans-modules-nbjunit@" value="${javadoc.docs.org-netbeans-modules-nbjunit}"/>
 <replacefilter token="@org-openide-actions@" value="${javadoc.docs.org-openide-actions}"/>
-<replacefilter token="@org-openide-options@" value="${javadoc.docs.org-openide-options}"/>
 <replacefilter token="@org-openide-awt@" value="${javadoc.docs.org-openide-awt}"/>
 <replacefilter token="@org-openide-dialogs@" value="${javadoc.docs.org-openide-dialogs}"/>
 <replacefilter token="@org-openide-explorer@" value="${javadoc.docs.org-openide-explorer}"/>
@@ -42,7 +41,6 @@
 <replacefilter token="@org-openide-loaders@" value="${javadoc.docs.org-openide-loaders}"/>
 <replacefilter token="@org-openide-io@" value="${javadoc.docs.org-openide-io}"/>
 <replacefilter token="@org-openide-execution@" value="${javadoc.docs.org-openide-execution}"/>
-<replacefilter token="@org-openidex-util@" value="${javadoc.docs.org-openidex-util}"/>
 <replacefilter token="@org-apache-tools-ant-module@" value="${javadoc.docs.org-apache-tools-ant-module}"/>
 <replacefilter token="@org-netbeans-modules-javahelp@" value="${javadoc.docs.org-netbeans-modules-javahelp}"/>
 <replacefilter token="@org-netbeans-modules-settings@" value="${javadoc.docs.org-netbeans-modules-settings}"/>
@@ -238,3 +236,11 @@
 <replacefilter token="@org-netbeans-modules-db-core@" value="${javadoc.docs.org-netbeans-modules-db-core}"/>
 <replacefilter token="@org-netbeans-modules-nativeimage-api@" value="${javadoc.docs.org-netbeans-modules-nativeimage-api}"/>
 <replacefilter token="@org-netbeans-api-lsp@" value="${javadoc.docs.org-netbeans-api-lsp}"/>
+<replacefilter token="@org-netbeans-modules-java-j2seplatform@" value="${javadoc.docs.org-netbeans-modules-java-j2seplatform}"/>
+<replacefilter token="@org-netbeans-modules-xml-wsdl-model@" value="${javadoc.docs.org-netbeans-modules-xml-wsdl-model}"/>
+<!-- deprecated -->
+<replacefilter token="@org-openidex-util@" value="${javadoc.docs.org-openidex-util}"/>
+<!-- deprecated not linked-->
+<!-- replacefilter token="@org-openide-compat@" value="${javadoc.docs.org-openide-compat}"/ -->
+<!-- replacefilter token="@org-openide-options@" value="${javadoc.docs.org-openide-options}"/ -->
+<!-- unsorted filter -->

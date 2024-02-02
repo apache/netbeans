@@ -54,7 +54,7 @@ public abstract class CodeActionsProvider {
     public static final String DATA = "data";
     protected static final String ERROR = "<error>"; //NOI18N
 
-    public abstract List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception;
+    public abstract List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception;
 
     public CompletableFuture<CodeAction> resolve(NbCodeLanguageClient client, CodeAction codeAction, Object data) {
         return CompletableFuture.completedFuture(codeAction);
@@ -68,11 +68,15 @@ public abstract class CodeActionsProvider {
         return CompletableFuture.completedFuture(false);
     }
 
-    protected CodeAction createCodeAction(String name, String kind, Object data, String command, Object... commandArgs) {
+    protected CodeAction createCodeAction(NbCodeLanguageClient client, String name, String kind, Object data, String command, Object... commandArgs) {
+        return createCodeAction(client, name, kind, data, command, Arrays.asList(commandArgs));
+    }
+
+    protected CodeAction createCodeAction(NbCodeLanguageClient client, String name, String kind, Object data, String command, List<Object> commandArgs) {
         CodeAction action = new CodeAction(name);
         action.setKind(kind);
         if (command != null) {
-            action.setCommand(new Command(name, command, Arrays.asList(commandArgs)));
+            action.setCommand(new Command(name, Utils.encodeCommand(command, client.getNbCodeCapabilities()), commandArgs));
         }
         if (data != null) {
             Map<String, Object> map = new HashMap<>();

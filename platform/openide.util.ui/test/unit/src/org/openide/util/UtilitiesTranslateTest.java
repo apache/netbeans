@@ -207,8 +207,8 @@ public class UtilitiesTranslateTest extends NbTestCase {
             super (java.lang.Object.class.getClassLoader());
             this.file = file;
         }
-     
-        
+
+        @Override
         protected Enumeration<java.net.URL> findResources (String res) throws IOException {
             if (file != null) {
                 return Enumerations.singleton (getClass ().getResource (file));

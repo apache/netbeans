@@ -193,7 +193,7 @@ public final class DDProvider {
         if (wr == null) {
             return null;
         }
-        WebAppProxy webApp = (WebAppProxy) wr.get();
+        WebAppProxy webApp = wr.get();
         if (webApp == null) {
             ddMap.remove(fo.toURL());
         }
@@ -205,7 +205,7 @@ public final class DDProvider {
         if (wr == null) {
             return null;
         }        
-        WebApp webApp = (WebApp) wr.get();
+        WebApp webApp = wr.get();
         if (webApp == null) {
             baseBeanMap.remove(fo.toURL());
             errorMap.remove(fo.toURL());

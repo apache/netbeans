@@ -24,16 +24,15 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.modules.java.hints.declarative.DeclarativeHintRegistry;
 import org.netbeans.modules.java.hints.declarative.HintDataObject;
-import org.netbeans.modules.java.hints.spiimpl.refactoring.InspectAndRefactorUI;
 import org.netbeans.modules.java.hints.providers.spi.HintDescription;
 import org.netbeans.modules.java.hints.providers.spi.HintMetadata;
+import org.netbeans.modules.java.hints.spiimpl.Utilities;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -80,9 +79,8 @@ public class HintsActionProvider implements ActionProvider {
             StatusDisplayer.getDefault().setStatusText("No hints specified in " + FileUtil.getFileDisplayName(hdo.getPrimaryFile()));
             return;
         }
-
-        HintMetadata m = hints.entrySet().iterator().next().getKey();
-        InspectAndRefactorUI.openRefactoringUI(Lookups.singleton(new InspectAndRefactorUI.HintWrap(m, DeclarativeHintRegistry.join(hints))));
+        
+        Utilities.openRefactoringUIOrWarn(hints, null);
     }
 
     @Override

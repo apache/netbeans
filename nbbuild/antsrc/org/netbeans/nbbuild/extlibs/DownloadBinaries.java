@@ -61,9 +61,9 @@ import org.apache.tools.ant.util.FileUtils;
  * Motivation: http://wiki.netbeans.org/wiki/view/HgMigration#section-HgMigration-Binaries
  */
 public class DownloadBinaries extends Task {
-    private static final String MAVEN_REPO = "https://repo1.maven.org/maven2/";
+    private static final String MAVEN_REPO = "https://repo.maven.apache.org/maven2/";
 
-    private static final Pattern URL_PATTERN = Pattern.compile("(https?://\\S*[^/\\s]+)\\s+(\\S+)$");
+    private static final Pattern URL_PATTERN = Pattern.compile("((https?://|file:)\\S*[^/\\s]+)\\s+(\\S+)$");
 
     private File cache;
     /**
@@ -167,7 +167,7 @@ public class DownloadBinaries extends Task {
                                 MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
                                 success &= fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
                             } else if (urlMatcher.matches()) {
-                                success &= fillInFile(hashAndFile[0], urlMatcher.group(2), manifest, () -> downloadFromServer(this, new URL(urlMatcher.group(1))));
+                                success &= fillInFile(hashAndFile[0], urlMatcher.group(3), manifest, () -> downloadFromServer(this, new URL(urlMatcher.group(1))));
                             } else {
                                 success &= fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
                             }

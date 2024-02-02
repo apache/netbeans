@@ -38,14 +38,14 @@ public class RunUtilsTest {
     public void testIsCompileOnSaveEnabledByDefault() {
         NbBundle.setBranding(null);
         boolean result = RunUtils.isCompileOnSaveEnabled(new MockPrj());
-        assertTrue("By default use CoS in NetBeans IDE", result);
+        assertFalse("CoS is off by default in the NetBeans IDE", result);
     }
     
     @Test
     public void testIsCompileOnSaveEnabledWithBranding() {
         NbBundle.setBranding("test");
         boolean result = RunUtils.isCompileOnSaveEnabled(new MockPrj());
-        assertFalse("Allow branding to disable CoS", result);
+        assertTrue("Allow branding to enable CoS", result);
     }
 
     private static class MockPrj implements Project {

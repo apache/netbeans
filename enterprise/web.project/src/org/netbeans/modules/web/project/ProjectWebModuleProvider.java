@@ -32,7 +32,7 @@ public class ProjectWebModuleProvider implements WebModuleProvider {
 
     public WebModule findWebModule (FileObject file) {
         Project project = FileOwnerQuery.getOwner (file);
-        if (project != null && project instanceof WebProject) {
+        if (project instanceof WebProject) {
             return ((WebProject) project).getAPIWebModule();
         }
         return null;

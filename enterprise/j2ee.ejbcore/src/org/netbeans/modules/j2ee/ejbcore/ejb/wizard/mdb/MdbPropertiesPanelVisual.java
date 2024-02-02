@@ -40,7 +40,6 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import org.netbeans.modules.j2ee.common.J2eeProjectCapabilities;
 import org.netbeans.modules.j2ee.deployment.common.api.MessageDestination;
-import org.netbeans.modules.j2ee.ejbcore.api.codegeneration.JmsDestinationDefinition;
 import org.netbeans.modules.j2ee.ejbcore.ejb.wizard.mdb.ActivationConfigProperties.AcknowledgeMode;
 import org.netbeans.modules.j2ee.ejbcore.ejb.wizard.mdb.ActivationConfigProperties.ActivationConfigProperty;
 import org.netbeans.modules.j2ee.ejbcore.ejb.wizard.mdb.ActivationConfigProperties.DestinationType;

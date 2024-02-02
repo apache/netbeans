@@ -147,9 +147,13 @@ public final class QualifiedName {
     public static List<QualifiedName> create(UnionType unionType) {
         List<QualifiedName> qualifiedNames = new ArrayList<>();
         for (Expression type : unionType.getTypes()) {
-            QualifiedName qualifiedName = create(type);
-            if (qualifiedName != null) {
-                qualifiedNames.add(qualifiedName);
+            if (type instanceof IntersectionType) {
+                qualifiedNames.addAll(create((IntersectionType) type));
+            } else {
+                QualifiedName qualifiedName = create(type);
+                if (qualifiedName != null) {
+                    qualifiedNames.add(qualifiedName);
+                }
             }
         }
         return qualifiedNames;

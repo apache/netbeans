@@ -183,7 +183,7 @@ public final class UpdateUnitProvider {
     /** Sets the enable flag.
      * 
      * @see #isEnabled
-     * @param state 
+     * @param state new state
      */
     public void setEnable (boolean state) {
         impl.setEnable (state);
@@ -197,7 +197,7 @@ public final class UpdateUnitProvider {
     /** Sets the trusted flag.
      *
      * @see #isTrusted
-     * @param trusted
+     * @param trusted new value of trusted flag
      * @since 1.62
      */
     public void setTrusted (boolean trusted) {

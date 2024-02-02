@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.27
+#Version 1.32
 
 CLSS public com.amazonaws.AbortedException
 cons public init()

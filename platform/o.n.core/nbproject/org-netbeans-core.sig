@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.68
+#Version 3.73
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -869,6 +869,7 @@ intf org.openide.explorer.propertysheet.editors.XMLPropertyEditor
 meth public boolean isPaintable()
 meth public boolean supportsCustomEditor()
 meth public final static boolean gtkShouldAntialias()
+ anno 0 java.lang.Deprecated()
 meth public java.awt.Component getCustomEditor()
 meth public java.lang.Object getValue()
 meth public java.lang.String getAsText()
@@ -1250,6 +1251,7 @@ hfds ATTR_COUNT,ATTR_INDEX,ATTR_VALUE,XML_STRING_ARRAY,XML_STRING_ITEM,editable,
 
 CLSS public org.netbeans.beaninfo.editors.StringCustomEditor
 cons public init(java.lang.String,boolean)
+ anno 0 java.lang.Deprecated()
 intf java.beans.PropertyChangeListener
 meth public void addNotify()
 meth public void propertyChange(java.beans.PropertyChangeEvent)

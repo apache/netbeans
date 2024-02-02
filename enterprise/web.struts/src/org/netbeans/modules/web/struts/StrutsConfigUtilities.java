@@ -111,7 +111,7 @@ public class StrutsConfigUtilities {
                         } catch (DataObjectNotFoundException e){
                             dOb = null;
                         }
-                        if (dOb !=null && dOb instanceof StrutsConfigDataObject){
+                        if (dOb instanceof StrutsConfigDataObject){
                             StrutsConfigDataObject con = (StrutsConfigDataObject)dOb;
                             // the conf file is not in any module (is not declared in the web.xml)
                             try{
@@ -138,7 +138,7 @@ public class StrutsConfigUtilities {
             mappings = sConfig.getActionMappings();
         }
         if (mappings==null) return;
-        Action [] actions = mappings.getAction();
+        Action[] actions = mappings.getAction();
         for (int j = 0; j < actions.length; j++)
             list.add(actions[j]);
     }
@@ -449,7 +449,7 @@ public class StrutsConfigUtilities {
         try {
             while (resource == null && index < files.length){
                 configDO = DataObject.find(files[index]);
-                if (configDO != null && configDO instanceof StrutsConfigDataObject){
+                if (configDO instanceof StrutsConfigDataObject){
                     StrutsConfig strutsConfig = ((StrutsConfigDataObject)configDO).getStrutsConfig();
                     // we need to chech, whether the config is parseable
                     if (strutsConfig != null){

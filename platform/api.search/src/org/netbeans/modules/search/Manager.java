@@ -198,8 +198,8 @@ public final class Manager {
     /**
      * Notifies the result window of a search task's state change.
      *
-     * @param
-     * @param  changeType  constant describing what happened
+     * @param task
+     * @param changeType  constant describing what happened
      *                     - one of the EVENT_xxx constants
      */
     private void notifySearchTaskStateChange(final SearchTask task, final int changeType) {

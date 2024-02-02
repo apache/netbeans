@@ -67,7 +67,8 @@ public class NbProgressBar extends JProgressBar implements ExtractedProgressUIWo
             putClientProperty("JProgressBar.largeHeight", use ? true : null); //NOI18N
         }
     }
-    
+
+    @Override
     public Dimension getPreferredSize() {
         Dimension supers = super.getPreferredSize();
         if (usedInStatusBar) {

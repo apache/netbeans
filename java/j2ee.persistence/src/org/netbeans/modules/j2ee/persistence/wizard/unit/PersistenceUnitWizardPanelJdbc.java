@@ -22,7 +22,6 @@ package org.netbeans.modules.j2ee.persistence.wizard.unit;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.event.ChangeListener;
@@ -68,16 +67,12 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         setTableGeneration(tg);
         libraryCombo.setEnabled(false);
         
-        RP.post(new Runnable() {
-           @Override
-           public void run() {
-                PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
-                comboHelper.connect(libraryCombo);
-                libraryCombo.setEnabled(true);
-                checkValidity();
-           } 
+        RP.post( () -> {
+            PersistenceProviderComboboxHelper comboHelper = new PersistenceProviderComboboxHelper(project);
+            comboHelper.connect(libraryCombo);
+            libraryCombo.setEnabled(true);
+            checkValidity(); 
         });
-
         
         unitNameTextField.setText(Util.getCandidateName(project));
         unitNameTextField.selectAll();
@@ -86,15 +81,11 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         unitNameLabel.setVisible(editName);
         
         DatabaseExplorerUIs.connect(jdbcCombo, ConnectionManager.getDefault());
-        jdbcCombo.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                checkValidity();
-            }
-        });
+        jdbcCombo.addItemListener( (ItemEvent e) -> checkValidity() );
         
         unitNameTextField.getDocument().addDocumentListener(new ValidationListener());
         errorMessage.setForeground(Color.RED);
-                updateWarning();
+        updateWarning();
     }
     
     
@@ -125,10 +116,12 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
     
     
     
+    @Override
     public String getPersistenceUnitName() {
         return unitNameTextField.getText();
     }
     
+    @Override
     public Provider getSelectedProvider(){
         return (Provider) libraryCombo.getSelectedItem();
     }
@@ -137,6 +130,7 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         return (DatabaseConnection) jdbcCombo.getSelectedItem();
     }
     
+    @Override
     public void setPreselectedDB(String db) {
         boolean hasItem = false;
         for (int i = 0; i < jdbcCombo.getItemCount(); i++) {
@@ -152,6 +146,7 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         jdbcCombo.setEnabled(!hasItem);
     }
     
+    @Override
     public String getTableGeneration() {
         if (ddlCreate.isSelected()) {
             return Provider.TABLE_GENERATION_CREATE;
@@ -162,9 +157,10 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         }
     }
     
+    @Override
     public boolean isValidPanel() {
         setErrorMessage("");
-       Sources sources=ProjectUtils.getSources(project);
+        Sources sources=ProjectUtils.getSources(project);
         SourceGroup groups[]=sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
         if(groups == null || groups.length == 0) {
             setErrorMessage(NbBundle.getMessage(PersistenceUnitWizardDescriptor.class,"ERR_JavaSourceGroup")); //NOI18N
@@ -199,6 +195,7 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
         return Strings.isEmpty(getPersistenceUnitName()) ? false : isNameUnique();
     }
     
+    @Override
     public void setErrorMessage(String msg) {
         errorMessage.setText(msg);
         errorMessage.setVisible(msg!=null && msg.length()>0);
@@ -213,8 +210,9 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
                 if(Util.isJPAVersionSupported(project, ver)){
                     String sourceLevel = SourceLevelChecker.getSourceLevel(project);
                     if(sourceLevel !=null ){
-                        if(sourceLevel.matches("1\\.[0-5]([^0-9].*)?"))//1.0-1.5
-                        warning  = NbBundle.getMessage(PersistenceUnitWizard.class, "ERR_WrongSourceLevel", sourceLevel);
+                        if(sourceLevel.matches("1\\.[0-5]([^0-9].*)?")) {//1.0-1.5
+                            warning  = NbBundle.getMessage(PersistenceUnitWizard.class, "ERR_WrongSourceLevel", sourceLevel);
+                        }
                     }
                 } else {
                     warning  = NbBundle.getMessage(PersistenceUnitWizard.class, "ERR_UnsupportedJpaVersion", ver, Util.getJPAVersionSupported(project, ver));
@@ -414,12 +412,15 @@ public class PersistenceUnitWizardPanelJdbc extends PersistenceUnitWizardPanel{
      * changes are made.
      */
     private class ValidationListener implements DocumentListener {
+        @Override
         public void insertUpdate(DocumentEvent e) {
             checkValidity();
         }
+        @Override
         public void removeUpdate(DocumentEvent e) {
             checkValidity();
         }
+        @Override
         public void changedUpdate(DocumentEvent e) {
             checkValidity();
         }

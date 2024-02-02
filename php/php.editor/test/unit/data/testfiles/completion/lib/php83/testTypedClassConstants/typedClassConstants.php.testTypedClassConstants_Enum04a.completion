@@ -1,0 +1,24 @@
+Code completion result for source line:
+private const |A|B UNION = A; // enum
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      A                               [PUBLIC]   typedClassConstants.php
+CLASS      B                               [PUBLIC]   typedClassConstants.php
+CLASS      C                               [PUBLIC]   typedClassConstants.php
+CLASS      TestClass                       [PUBLIC]   typedClassConstants.php
+CLASS      TestEnum                        [PUBLIC]   typedClassConstants.php
+CLASS      TestInterface                   [PUBLIC]   typedClassConstants.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    self                                       null
+KEYWORD    static                                     null
+KEYWORD    string                                     null
+KEYWORD    true                                       null

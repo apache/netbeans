@@ -1,5 +1,11 @@
 #Signature file v4.1
-#Version 1.87
+#Version 1.93
+
+CLSS public abstract interface !annotation java.lang.FunctionalInterface
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public java.lang.Object
 cons public init()
@@ -41,6 +47,10 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.util.concurrent.Callable<%0 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract {java.util.concurrent.Callable%0} call() throws java.lang.Exception
+
 CLSS public org.netbeans.api.project.FileOwnerQuery
 fld public final static int EXTERNAL_ALGORITHM_TRANSIENT = 0
 fld public final static org.netbeans.api.project.Project UNOWNED
@@ -55,6 +65,59 @@ CLSS public abstract interface org.netbeans.api.project.Project
 intf org.openide.util.Lookup$Provider
 meth public abstract org.openide.filesystems.FileObject getProjectDirectory()
 meth public abstract org.openide.util.Lookup getLookup()
+
+CLSS public final org.netbeans.api.project.ProjectActionContext
+innr public abstract interface static ProjectCallback
+innr public final static Builder
+meth public !varargs <%0 extends java.lang.Object, %1 extends java.lang.Exception> {%%0} apply(org.netbeans.api.project.ProjectActionContext$ProjectCallback<{%%0},{%%1}>,org.netbeans.api.project.ProjectActionContext[]) throws {%%1}
+meth public !varargs void apply(java.lang.Runnable,org.netbeans.api.project.ProjectActionContext[])
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getProjectAction()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.util.Map<java.lang.String,java.lang.String> getProperties()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.Set<java.lang.String> getProfiles()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.project.Project getProject()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.project.ProjectActionContext$Builder newDerivedBuilder()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.project.ProjectConfiguration getConfiguration()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public org.openide.util.Lookup getLookup()
+meth public static org.netbeans.api.project.ProjectActionContext find(org.netbeans.api.project.Project)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public static org.netbeans.api.project.ProjectActionContext$Builder newBuilder(org.netbeans.api.project.Project)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds configuration,lookup,profiles,project,projectAction,properties
+
+CLSS public final static org.netbeans.api.project.ProjectActionContext$Builder
+ outer org.netbeans.api.project.ProjectActionContext
+meth public !varargs org.netbeans.api.project.ProjectActionContext$Builder withProfiles(java.lang.String[])
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.project.ProjectActionContext context()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.project.ProjectActionContext$Builder forProjectAction(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.project.ProjectActionContext$Builder useConfiguration(org.netbeans.spi.project.ProjectConfiguration)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.project.ProjectActionContext$Builder withLookup(org.openide.util.Lookup)
+meth public org.netbeans.api.project.ProjectActionContext$Builder withProfiles(java.util.Collection<java.lang.String>)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.project.ProjectActionContext$Builder withProperties(java.util.Map<java.lang.String,java.lang.String>)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.project.ProjectActionContext$Builder withProperty(java.lang.String,java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds ctx
+
+CLSS public abstract interface static org.netbeans.api.project.ProjectActionContext$ProjectCallback<%0 extends java.lang.Object, %1 extends java.lang.Exception>
+ outer org.netbeans.api.project.ProjectActionContext
+ anno 0 java.lang.FunctionalInterface()
+intf java.util.concurrent.Callable<{org.netbeans.api.project.ProjectActionContext$ProjectCallback%0}>
+meth public abstract {org.netbeans.api.project.ProjectActionContext$ProjectCallback%0} call() throws {org.netbeans.api.project.ProjectActionContext$ProjectCallback%1}
 
 CLSS public abstract interface org.netbeans.api.project.ProjectInformation
 fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
@@ -109,6 +172,11 @@ supr java.lang.Object
 hfds displayName,icon,projectType
 
 CLSS public org.netbeans.api.project.ProjectUtils
+meth public <%0 extends org.netbeans.spi.project.ProjectConfiguration> boolean setActiveConfiguration(org.netbeans.api.project.Project,{%%0}) throws java.io.IOException
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.project.ProjectConfiguration getActiveConfiguration(org.netbeans.api.project.Project)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static boolean hasSubprojectCycles(org.netbeans.api.project.Project,org.netbeans.api.project.Project)
 meth public static java.util.Set<org.netbeans.api.project.Project> getContainedProjects(org.netbeans.api.project.Project,boolean)
  anno 1 org.netbeans.api.annotations.common.NonNull()

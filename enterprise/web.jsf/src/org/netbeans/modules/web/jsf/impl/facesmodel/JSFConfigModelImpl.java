@@ -28,8 +28,9 @@ import org.netbeans.modules.web.jsf.api.facesmodel.FacesConfig;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigComponent;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigComponentFactory;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigModel;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.metamodel.JsfModel;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.xml.xam.ComponentUpdater;
 import org.netbeans.modules.xml.xam.ModelSource;
 import org.netbeans.modules.xml.xam.dom.AbstractDocumentModel;
@@ -87,41 +88,47 @@ public class JSFConfigModelImpl extends AbstractDocumentModel<JSFConfigComponent
         return componentFactory;
     }
 
-    public JSFVersion getVersion() {
+    public JsfVersion getVersion() {
         String namespaceURI = getRootComponent().getPeer().getNamespaceURI();
-        JSFVersion version = JSFVersion.JSF_1_1;
-        if (JSFConfigQNames.JSF_3_0_NS.equals(namespaceURI)
+        JsfVersion version = JsfVersion.JSF_1_1;
+        if (JSFConfigQNames.JSF_4_0_NS.equals(namespaceURI)
+                && (getRootComponent().getVersion().equals("4.0") //NOI18N
+                || checkSchemaLocation(
+                    getRootComponent().getPeer(),
+                    "https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd"))) { //NOI18N
+            version = JsfVersion.JSF_4_0;
+        } else if (JSFConfigQNames.JSF_3_0_NS.equals(namespaceURI)
                 && (getRootComponent().getVersion().equals("3.0") //NOI18N
                 || checkSchemaLocation(
                     getRootComponent().getPeer(),
                     "https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_3_0.xsd"))) { //NOI18N
-            version = JSFVersion.JSF_3_0;
+            version = JsfVersion.JSF_3_0;
         } else if (JSFConfigQNames.JSF_2_3_NS.equals(namespaceURI)
                 && (getRootComponent().getVersion().equals("2.3") //NOI18N
                 || checkSchemaLocation(
                     getRootComponent().getPeer(),
                     "http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"))) { //NOI18N
-            version = JSFVersion.JSF_2_3;
+            version = JsfVersion.JSF_2_3;
         } else if (JSFConfigQNames.JSF_2_2_NS.equals(namespaceURI)
                 && (getRootComponent().getVersion().equals("2.2") //NOI18N
                 || checkSchemaLocation(
                     getRootComponent().getPeer(),
                     "http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"))) { //NOI18N
-            version = JSFVersion.JSF_2_2;
+            version = JsfVersion.JSF_2_2;
         } else if (JSFConfigQNames.JSF_2_1_NS.equals(namespaceURI)
                 && (getRootComponent().getVersion().equals("2.1") //NOI18N
                 || checkSchemaLocation(
                     getRootComponent().getPeer(),
                     "http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"))) { //NOI18N
-            version = JSFVersion.JSF_2_1;
+            version = JsfVersion.JSF_2_1;
         } else if (JSFConfigQNames.JSF_2_0_NS.equals(namespaceURI)
                 && (getRootComponent().getVersion().equals("2.0") //NOI18N
                 || checkSchemaLocation(
                     getRootComponent().getPeer(),
                     "http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"))) { //NOI18N
-            version = JSFVersion.JSF_2_0;
+            version = JsfVersion.JSF_2_0;
         } else if (JSFConfigQNames.JSF_1_2_NS.equals(namespaceURI)) {
-            version = JSFVersion.JSF_1_2;
+            version = JsfVersion.JSF_1_2;
         }
         return version;
     }

@@ -62,7 +62,7 @@ public class StructureTypeTreeNode extends AbstractParameterTreeNode {
          * If this node is a member of a structure type, update it's parent.
          */
         DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) this.getParent();
-        if (parentNode != null && parentNode instanceof ParameterTreeNode) {
+        if (parentNode instanceof ParameterTreeNode) {
             ((ParameterTreeNode)parentNode).updateValueFromChildren(data);
             
         }

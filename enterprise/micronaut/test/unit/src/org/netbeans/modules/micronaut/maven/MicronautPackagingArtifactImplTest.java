@@ -19,20 +19,35 @@
 package org.netbeans.modules.micronaut.maven;
 
 import java.io.File;
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+import javax.swing.text.Document;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.maven.api.MavenConfiguration;
+import org.netbeans.modules.parsing.impl.indexing.implspi.ActiveDocumentProvider;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.ProjectArtifactsQuery;
+import org.netbeans.spi.project.ActionProgress;
+import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.ProjectConfiguration;
+import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.DummyInstalledFileLocator;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.IOProvider;
 
 /**
@@ -40,6 +55,31 @@ import org.openide.windows.IOProvider;
  * @author sdedic
  */
 public class MicronautPackagingArtifactImplTest extends NbTestCase {
+    
+    // must register ADP: otherwise maven fails at the start and will not even run 
+    // Prime command.
+    @ServiceProvider(service = ActiveDocumentProvider.class)
+    public static class ActiveDocumentProviderImpl implements ActiveDocumentProvider {
+
+        @Override
+        public Document getActiveDocument() {
+            return null;
+        }
+
+        @Override
+        public Set<? extends Document> getActiveDocuments() {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public void addActiveDocumentListener(ActiveDocumentListener listener) {
+        }
+
+        @Override
+        public void removeActiveDocumentListener(ActiveDocumentListener listener) {
+        }
+        
+    }
 
     public MicronautPackagingArtifactImplTest(String name) {
         super(name);
@@ -54,10 +94,15 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
     
     FileObject d;
     FileObject dataFO;
+    
+    Logger l1;
+    Logger l2;
+    
+    private List<Logger> loggers  = new ArrayList<>(); 
 
     protected @Override void setUp() throws Exception {
         clearWorkDir();
-        
+
         // This is needed, otherwose the core window's startup code will redirect
         // System.out/err to the IOProvider, and its Trivial implementation will redirect
         // it back to System.err - loop is formed. Initialize IOProvider first, it gets
@@ -72,8 +117,38 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
         DummyInstalledFileLocator.registerDestDir(destDirF);
     }
     
-    @Override
-    protected void tearDown() throws Exception {
+    /**
+     * Will open and prime project. On CI with a pristine repository, the micronaut build plugin (see test data)
+     * must be downloaded in order to properly parse the pom with {@code native-image} packaging that is otherwise
+     * not recognized. For that we need to prime the project before it is used in the test - this populates maven
+     * local repo with appropriate dependencies.
+     * 
+     * @param prjCopy
+     * @return
+     * @throws Exception 
+     */
+    private Project openAndPrimeProject(FileObject prjCopy) throws Exception {
+        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        assertNotNull(p);
+        OpenProjects.getDefault().open(new Project[] { p }, true);
+        ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
+        assertNotNull(ap);
+        
+        CountDownLatch latch = new CountDownLatch(1);
+        ActionProgress progress = new ActionProgress() {
+            @Override
+            protected void started() {
+            }
+
+            @Override
+            public void finished(boolean success) {
+                latch.countDown();
+            }
+            
+        };
+        ap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(progress));
+        latch.await(10, TimeUnit.MINUTES);
+        return p;
     }
     
     /**
@@ -86,10 +161,10 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
         FileObject testApp = dataFO.getFileObject("maven/artifacts/simple");
         FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "simple");
         
-        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        Project p = openAndPrimeProject(prjCopy);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, ProjectArtifactsQuery.newQuery(null));
         
-        assertNotNull(ar);
+        assertNotNull(ar);  
         assertEquals(1, ar.getArtifacts().size());
         ArtifactSpec spec = ar.getArtifacts().get(0);
         assertEquals("jar", spec.getType());
@@ -104,7 +179,7 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
         FileObject testApp = dataFO.getFileObject("maven/artifacts/simple");
         FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "simple");
         
-        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        Project p = openAndPrimeProject(prjCopy);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
                 ProjectArtifactsQuery.newQuery(null, null, 
                         ProjectActionContext.newBuilder(p).forProjectAction("native-build").context())
@@ -123,7 +198,7 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
         FileObject testApp = dataFO.getFileObject("maven/artifacts/native-optional");
         FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "native-optional");
         
-        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        Project p = openAndPrimeProject(prjCopy);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, ProjectArtifactsQuery.newQuery(null));
         
         assertNotNull(ar);
@@ -141,7 +216,7 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
         FileObject testApp = dataFO.getFileObject("maven/artifacts/native-optional");
         FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "native-optional");
         
-        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        Project p = openAndPrimeProject(prjCopy);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, ProjectArtifactsQuery.newQuery(ProjectArtifactsQuery.Filter.TYPE_ALL));
         
         assertNotNull(ar);
@@ -159,7 +234,7 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
         FileObject testApp = dataFO.getFileObject("maven/artifacts/native-optional");
         FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "native-optional");
         
-        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        Project p = openAndPrimeProject(prjCopy);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
                 ProjectArtifactsQuery.newQuery(null, null, 
                         ProjectActionContext.newBuilder(p).forProjectAction("native-build").context())
@@ -181,7 +256,7 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
         FileObject testApp = dataFO.getFileObject("maven/artifacts/native-default");
         FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "native-default");
         
-        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        Project p = openAndPrimeProject(prjCopy);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, ProjectArtifactsQuery.newQuery(null));
         
         assertNotNull(ar);
@@ -200,7 +275,7 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
         FileObject testApp = dataFO.getFileObject("maven/artifacts/native-default");
         FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "native-default");
         
-        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        Project p = openAndPrimeProject(prjCopy);
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, 
                 ProjectArtifactsQuery.newQuery("jar"));
         
@@ -221,12 +296,12 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
         FileObject testApp = dataFO.getFileObject("maven/artifacts/native-default");
         FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "native-default");
         
-        Project p = ProjectManager.getDefault().findProject(prjCopy);
+        Project p = openAndPrimeProject(prjCopy);
 
         ProjectArtifactsQuery.ArtifactsResult ar = ProjectArtifactsQuery.findArtifacts(p, ProjectArtifactsQuery.newQuery(ProjectArtifactsQuery.Filter.TYPE_ALL));
         Collection<ArtifactSpec> arts = ar.getArtifacts();
         assertEquals("All query should produce BOTH jar and exe ", 2, arts.size());
-        
+            
         ArtifactSpec jar = null;
         ArtifactSpec exe = null;
         for (ArtifactSpec a : arts) {
@@ -239,5 +314,57 @@ public class MicronautPackagingArtifactImplTest extends NbTestCase {
         assertNotNull("Jar should be present", jar);
         assertNotNull("Exe should be present", jar);
         assertFalse("Exe should not contain the version",exe.getLocation().toString().contains("0.1"));
+    }
+    
+    /**
+     * Checks that non-Micronaut project does not provide 'micronaut-auto' profile.
+     * @throws Exception 
+     */
+    public void testNoMicronautNodevModeConfiguration() throws Exception {
+        FileUtil.toFileObject(getWorkDir()).refresh();
+        
+        FileObject testApp = dataFO.getFileObject("maven/artifacts/simple");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "simple");
+
+        Project p = openAndPrimeProject(prjCopy);
+        assertFalse(findMicronautProfile(p));
+    }
+    
+    /**
+     * Checks that Micronaut 3.x style projects (with io.micronaut.build: plugin) is recognized.
+     */
+    public void testMicronaut3DevModeConfiguration() throws Exception {
+        FileUtil.toFileObject(getWorkDir()).refresh();
+        
+        FileObject testApp = dataFO.getFileObject("maven/artifacts/native-optional");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "mn-simple");
+
+        Project p = openAndPrimeProject(prjCopy);
+        assertTrue(findMicronautProfile(p));
+    }
+    
+    boolean findMicronautProfile(Project p) {
+        ProjectConfigurationProvider<MavenConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
+        assertNotNull(pcp);
+        
+        for (MavenConfiguration cfg : pcp.getConfigurations()) {
+            if (cfg.getDisplayName().toLowerCase().contains("micronaut")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks that Micronaut 4.x style projects (with io.micronaut.maven: plugin) is recognized.
+     */
+    public void testMicronaut4DevModeConfiguration() throws Exception {
+        FileUtil.toFileObject(getWorkDir()).refresh();
+        
+        FileObject testApp = dataFO.getFileObject("maven/micronaut4/simple");
+        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "mn4-simple");
+
+        Project p = openAndPrimeProject(prjCopy);
+        assertTrue(findMicronautProfile(p));
     }
 }

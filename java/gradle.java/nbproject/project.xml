@@ -31,7 +31,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.27</specification-version>
+                        <specification-version>2.28</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -375,6 +375,13 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
                         <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <!-- Because otherwise data systems and their services will not materialize -->
+                        <code-name-base>org.netbeans.modules.settings</code-name-base>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.editor.mimelookup.impl</code-name-base>
                     </test-dependency>
                 </test-type>
             </test-dependencies>

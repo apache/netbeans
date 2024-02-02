@@ -49,6 +49,11 @@
                         </folder>
                     </folder>
                 </folder>
+                
+                <file name="settings.xml" url="settings.template.xml">
+                    <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                    <attr name="template.openFile" boolvalue="false"/>
+                </file>
             </folder>
         </folder>
     </folder>
@@ -177,6 +182,14 @@
                 </folder>
             </folder>
             <file name="nbactions.xml" url="nbactions.xml"/>
+            <folder name="RunGoals">
+                <file name="exec">
+                    <attr name="alias" stringvalue="org.codehaus.mojo:exec-maven-plugin"/>
+                </file>
+                <file name="org.codehaus.mojo:exec-maven-plugin">
+                    <attr name="goals" stringvalue="exec"/>
+                </file>
+            </folder>
         </folder>
     </folder>
     <folder name="OptionsExport">

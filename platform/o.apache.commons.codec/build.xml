@@ -22,13 +22,13 @@
 <project name="platform/o.apache.commons.codec" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar" depends="-define-FileCRC32Calculator">
-        <FileCRC32Calculator file="external/commons-codec-1.15.jar" property="o.apache.commons.codec.crc32" />
+        <FileCRC32Calculator file="external/commons-codec-1.16.0.jar" property="o.apache.commons.codec.crc32" />
         <jar jarfile="${cluster}/${module.jar}">
-            <zipfileset src="external/commons-codec-1.15.jar"/>
+            <zipfileset src="external/commons-codec-1.16.0.jar"/>
             <manifest>
                 <attribute name="Bundle-SymbolicName" value="org.apache.commons.codec"/>
-                <attribute name="Bundle-Version" value="1.15.0"/>
-                <attribute name="Export-Package" value="org.apache.commons.codec;version=&quot;1.15.0&quot;,org.apache.commons.codec.binary;version=&quot;1.15.0&quot;,org.apache.commons.codec.digest;version=&quot;1.15.0&quot;,org.apache.commons.codec.language;version=&quot;1.15.0&quot;,org.apache.commons.codec.net;version=&quot;1.15.0&quot;"/>
+                <attribute name="Bundle-Version" value="1.16.0"/>
+                <attribute name="Export-Package" value="org.apache.commons.codec;version=&quot;1.16.0&quot;,org.apache.commons.codec.binary;version=&quot;1.16.0&quot;,org.apache.commons.codec.digest;version=&quot;1.16.0&quot;,org.apache.commons.codec.language;version=&quot;1.16.0&quot;,org.apache.commons.codec.net;version=&quot;1.16.0&quot;"/>
                 <attribute name="NB-Original-CRC" value="${o.apache.commons.codec.crc32}"/>
             </manifest>
         </jar>

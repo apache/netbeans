@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.2
+#Version 3.3
 
 CLSS public abstract com.oracle.js.parser.AbstractParser
 cons protected init(com.oracle.js.parser.Source,com.oracle.js.parser.ErrorManager,boolean,int)
@@ -583,6 +583,8 @@ meth public static com.oracle.js.parser.TokenType[] values()
 meth public void setNext(com.oracle.js.parser.TokenType)
 supr java.lang.Enum<com.oracle.js.parser.TokenType>
 hfds ecmascriptEdition,isLeftAssociative,kind,name,next,precedence,values
+
+CLSS abstract interface com.oracle.js.parser.package-info
 
 CLSS public abstract interface java.io.Serializable
 

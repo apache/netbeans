@@ -82,8 +82,8 @@ public abstract class AntlrParser extends org.netbeans.modules.parsing.spi.Parse
         }
     }
 
-    public static AntlrParserResult getParserResult(FileObject fo) {
-        AntlrParserResult result = null;
+    public static AntlrParserResult<?> getParserResult(FileObject fo) {
+        AntlrParserResult<?> result = null;
         java.lang.ref.Reference<AntlrParserResult> ceReference;
         synchronized (CACHE) {
             ceReference = CACHE.get(fo);
@@ -94,7 +94,7 @@ public abstract class AntlrParser extends org.netbeans.modules.parsing.spi.Parse
 
         if (result == null) {
             try {
-                AntlrParserResult[] parserResult = new AntlrParserResult[1];
+                AntlrParserResult<?>[] parserResult = new AntlrParserResult<?>[1];
                 ParserManager.parse(Collections.singleton(Source.create(fo)), new UserTask() {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {

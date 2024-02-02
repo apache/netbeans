@@ -69,26 +69,25 @@ export function launch(
     if (info.verbose) {
         ideArgs.push('-J-Dnetbeans.logger.console=true');
     }
+    ideArgs.push(`-J-Dnetbeans.extra.dirs=${clusterPath}`)
     if (env['netbeans.extra.options']) {
-        ideArgs.push(env['netbeans.extra.options']);
+        ideArgs.push(...env['netbeans.extra.options'].split(' '));
     }
     ideArgs.push(...extraArgs);
-    
-    if (env['netbeans.debug'] && extraArgs && extraArgs.find(s => s.includes("--list"))) {
-        ideArgs.push(...['-J-Xdebug', '-J-Dnetbeans.logger.console=true', '-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000']);
+    if (env['netbeans_debug'] && extraArgs && extraArgs.find(s => s.includes("--list"))) {
+        ideArgs.push(...['-J-Dnetbeans.logger.console=true', '-J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000']);
     }
+
+    console.log(`Launching NBLS with arguments: ` + ideArgs);
 
     let process: ChildProcessByStdio<any, Readable, Readable> = spawn(nbcodePath, ideArgs, {
         cwd : userDir,
         stdio : ["ignore", "pipe", "pipe"],
-        env : Object.assign({
-            'extra_clusters' : clusterPath
-        }, global.process.env)
     });
     return process;
 }
 
-if (typeof process === 'object' && process.argv0 === 'node') {
+if (typeof process === 'object' && typeof process.argv0 ==='string' && process.argv0.startsWith('node')) {
     let extension = path.join(process.argv[1], '..', '..');
     let nbcode = path.join(extension, 'nbcode');
     if (!fs.existsSync(nbcode)) {

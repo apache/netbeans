@@ -19,6 +19,7 @@
 
 package org.netbeans;
 
+import java.awt.GraphicsEnvironment;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
@@ -57,6 +58,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.modules.Dependency;
 import org.openide.modules.ModuleInfo;
 import org.openide.modules.Modules;
@@ -80,6 +82,11 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Jesse Glick
  */
 public final class ModuleManager extends Modules {
+    /**
+     * Used for dependency logging. Use -J-Dorg.netbeans.ModuleManager.deps.level=500 to enable. For brute-force extractions from the log,
+     * use {@code grep DEP: messages.log | cut -d : -f3- | sort | uniq}. The output is in "dot" format, just enclose in digraph block.
+     */
+    private static final Logger DEPLOG = Logger.getLogger(ModuleManager.class.getName() + ".deps");
 
     public static final String PROP_MODULES = "modules"; // NOI18N
     public static final String PROP_ENABLED_MODULES = "enabledModules"; // NOI18N
@@ -114,6 +121,11 @@ public final class ModuleManager extends Modules {
 
     // modules providing a given requires token; set may never be empty
     private final ProvidersOf providersOf = new ProvidersOf();
+    
+    /**
+     * Generic tokens provided "by the environment". Initially only one token is defined, <code>"netbeans:gui.swing"</code>
+     */
+    private final Set<String> environmentTokens = new HashSet<>();
 
     private final ModuleInstaller installer;
     private ModuleFactory moduleFactory;
@@ -165,6 +177,13 @@ public final class ModuleManager extends Modules {
             classLoader.setSystemClassLoader(
                 moduleFactory.getClasspathDelegateClassLoader(this, 
                     ModuleManager.class.getClassLoader()));
+        }
+        initializeEnvTokens();
+    }
+    
+    private void initializeEnvTokens() {
+        if (!GraphicsEnvironment.isHeadless()) {
+            environmentTokens.add("netbeans:gui.swing");
         }
     }
 
@@ -954,7 +973,7 @@ public final class ModuleManager extends Modules {
      * `parent'. The parent is identified either by module specification (parent) or by a classloader
      * which should load the package. For system or bootstrap classes, `parent' may be {@code null}, since
      * boostrap classloaders load more modules together.
-     * <p/>
+     * <p>
      * If <b>both</b> `parent' and `ldr' are {@code null}, access to system/application classpath will be checked.
      * 
      * @param m module that attempts to load resources.
@@ -1090,19 +1109,21 @@ public final class ModuleManager extends Modules {
     }
     
     /**
-     * Attaches a fragment to an existing module. The hosting module must NOT
-     * be already enabled, otherwise an exception will be thrown. Enabled module
-     * may have some classes already loaded, and they cannot be patched.
+     * Finds the host module for a given fragment.
      * 
+     * If assertNotEnabled, the hosting module must NOT be already enabled,
+     * otherwise an exception will be thrown. Enabled module may have some
+     * classes already loaded, and they cannot be patched.
+     *
      * @param m module to attach if it is a fragment
      */
-    private Module attachModuleFragment(Module m) {
+    private Module findHostModule(Module m, boolean assertNotEnabled) {
         String codeNameBase = m.getFragmentHostCodeName();
         if (codeNameBase == null) {
             return null;
         }
         Module host = modulesByName.get(codeNameBase);
-        if (host != null && host.isEnabled() && host.getClassLoader() != null) {
+        if (assertNotEnabled && host != null && host.isEnabled() && host.getClassLoader() != null) {
             throw new IllegalStateException("Host module " + host + " was enabled before, will not accept fragment " + m);
         }
         return host;
@@ -1130,7 +1151,7 @@ public final class ModuleManager extends Modules {
      * Removes a fragment module. Throws an exception if the fragment's
      * host is already enabled and its classloader may have loaded fragment's
      * contents.
-     * <p/>
+     * <p>
      * The method does nothing for non-fragment modules
      * 
      * @param m the module to remove
@@ -1275,7 +1296,7 @@ public final class ModuleManager extends Modules {
      * @param m module to check
      * @return true, if the module is/will enable.
      */
-    boolean isOrWillEnable(Module m) {
+    public boolean isOrWillEnable(Module m) {
         if (m.isEnabled()) {
             return true;
         }
@@ -1286,7 +1307,7 @@ public final class ModuleManager extends Modules {
     private void enable(Set<Module> modules, boolean honorAutoloadEager) throws IllegalArgumentException, InvalidException {
         assertWritable();
         Util.err.log(Level.FINE, "enable: {0}", modules);
-        /* Consider eager modules:
+        /* Consider eager modules: 
         if (modules.isEmpty()) {
             return;
         }
@@ -1312,9 +1333,11 @@ public final class ModuleManager extends Modules {
                 throw new IllegalModuleException(IllegalModuleException.Reason.ENABLE_MISSING, errors);
             }
             for (Module m : testing) {
+                //lookup host here, to ensure enablement fails in the host is already enabled:
+                Module maybeHost =  findHostModule(m, true);
+
                 if (!modules.contains(m) && !m.isAutoload() && !m.isEager()) {
                     // it is acceptable if the module is a non-autoload host fragment, and its host enabled (thus enabled the fragment):
-                    Module maybeHost =  attachModuleFragment(m);
                     if (maybeHost == null && !testing.contains(maybeHost)) {
                         throw new IllegalModuleException(IllegalModuleException.Reason.ENABLE_TESTING, m);
                     }
@@ -1680,7 +1703,8 @@ public final class ModuleManager extends Modules {
             }
             if (m.isEnabled()) throw new IllegalModuleException(IllegalModuleException.Reason.SIMULATE_ENABLE_ALREADY, m);
             if (!m.isValid()) throw new IllegalModuleException(IllegalModuleException.Reason.SIMULATE_ENABLE_INVALID, m);
-            maybeAddToEnableList(willEnable, modules, m, true);
+            addedBecauseOfDependent = null;
+            maybeAddToEnableList(willEnable, modules, m, true, null);
         }
         // XXX clumsy but should work:
         Set<Module> stillDisabled = new HashSet<Module>(this.modules);
@@ -1742,7 +1766,12 @@ public final class ModuleManager extends Modules {
         return false;
     }
     
-    private void maybeAddToEnableList(Set<Module> willEnable, Set<Module> mightEnable, Module m, boolean okToFail) {
+    private Module addedBecauseOfDependent;
+    private boolean eagerActivation;
+    private Set<Module> reported = new HashSet<>();
+    private Set<Module> reportedProblems = new HashSet<>();
+    
+    private void maybeAddToEnableList(Set<Module> willEnable, Set<Module> mightEnable, Module m, boolean okToFail, String reason) {
         if (! missingDependencies(m).isEmpty()) {
             if (!okToFail) {
                 Util.err.warning("Module " + m + " had unexpected problems: " + missingDependencies(m));
@@ -1751,74 +1780,113 @@ public final class ModuleManager extends Modules {
             // Cannot satisfy its dependencies, exclude it.
             return;
         }
+        if (reported.add(m)) {
+            if (addedBecauseOfDependent == null) {
+                DEPLOG.log(Level.FINE, "DEP: \"" + m.getCodeNameBase() + '"' + (eagerActivation ? "[color=cornsilk]" : ""));
+            } else if (!addedBecauseOfDependent.getCodeNameBase().equals(m.getCodeNameBase())) {
+                DEPLOG.log(Level.FINE, "DEP: \"" + addedBecauseOfDependent.getCodeNameBase() + "\" "+ "->\""  
+                        + (reason != null ? "[label=\"" + reason + "\"]" : "")
+                        + " " + m.getCodeNameBase() + '"');
+            }
+        }
+        
         if (!willEnable.add(m)) {
             // Already there, done.
             return;
         }
-        // need to register fragments eagerly, so they are available during
-        // dependency sort
-        Module host = attachModuleFragment(m);
-        if (host != null && !host.isEnabled()) {
-            maybeAddToEnableList(willEnable, mightEnable, host, okToFail);
-        }
-        // Also add anything it depends on, if not already there,
-        // or already enabled.
-        for (Dependency dep : m.getDependenciesArray()) {
-            if (dep.getType() == Dependency.TYPE_MODULE) {
-                String codeNameBase = (String)Util.parseCodeName(dep.getName())[0];
-                Module other = get(codeNameBase);
-                // Should never happen:
-                if (other == null) throw new IllegalStateException("Should have found module: " + codeNameBase); // NOI18N
-                if (! other.isEnabled()) {
-                    maybeAddToEnableList(willEnable, mightEnable, other, false);
-                }
-            } else if (
-                dep.getType() == Dependency.TYPE_REQUIRES || 
-                dep.getType() == Dependency.TYPE_NEEDS ||
-                dep.getType() == Dependency.TYPE_RECOMMENDS
-            ) {
-                Set<Module> providers = getProvidersOf().get(dep.getName());
-                if (providers == null) {
-                    assert dep.getType() == Dependency.TYPE_RECOMMENDS : "Should have found a provider of " + dep;
-                    continue;
-                }
-                // First check if >= 1 is already enabled or will be soon. If so, great.
-                boolean foundOne = false;
-                for (Module other : providers) {
-                    if (other.isEnabled() ||
-                            (other.getProblems().isEmpty() && mightEnable.contains(other))) {
-                        foundOne = true;
-                        break;
+        Module outer = addedBecauseOfDependent;
+        boolean outerEagerActivatioon = eagerActivation;
+        Set<Module> outerReported = reported;
+        try {
+            reported = new HashSet<>();
+            addedBecauseOfDependent = m;
+            // need to register fragments eagerly, so they are available during
+            // dependency sort
+            Module host = findHostModule(m, false);
+            if (host != null && !host.isEnabled()) {
+                maybeAddToEnableList(willEnable, mightEnable, host, okToFail, "Fragment host");
+            }
+            
+            // Also add anything it depends on, if not already there,
+            // or already enabled.
+            for (Dependency dep : m.getDependenciesArray()) {
+                if (dep.getType() == Dependency.TYPE_MODULE) {
+                    String codeNameBase = (String)Util.parseCodeName(dep.getName())[0];
+                    Module other = get(codeNameBase);
+                    // Should never happen:
+                    if (other == null) throw new IllegalStateException("Should have found module: " + codeNameBase); // NOI18N
+                    if (! other.isEnabled()) {
+                        maybeAddToEnableList(willEnable, mightEnable, other, false, null);
+                    }
+                } else if (
+                    dep.getType() == Dependency.TYPE_REQUIRES || 
+                    dep.getType() == Dependency.TYPE_NEEDS ||
+                    dep.getType() == Dependency.TYPE_RECOMMENDS
+                ) {
+                    Set<Module> providers = getProvidersOf().get(dep.getName());
+                    if (providers == null) {
+                        assert dep.getType() == Dependency.TYPE_RECOMMENDS : "Should have found a provider of " + dep;
+                        continue;
+                    }
+                    // First check if >= 1 is already enabled or will be soon. If so, great.
+                    boolean foundOne = false;
+                    for (Module other : providers) {
+                        if (other.isEnabled() ||
+                                (other.getProblems().isEmpty() && mightEnable.contains(other))) {
+                            foundOne = true;
+                            break;
+                        }
+                    }
+                    if (foundOne) {
+                        // OK, we are satisfied.
+                        continue;
+                    }
+                    // All disabled. So add them all to the enable list.
+                    for (Module other : providers) {
+                        // do not include providing autoloads with problems. This check is possibly done in maybeAddToEnableList, but also checks package dependency
+                        if (!other.getProblems().isEmpty() && other.isAutoload()) {
+                            if (reportedProblems.add(other)) {
+                                Util.err.log(Level.FINE, "Not enabling {0} providing {2} because of unsatisfied requirement: {1}", new Object[] { other.getCodeNameBase(), other.getProblems(), dep.getName() });
+                            }
+                            continue;
+                        }
+                        // It is OK if one of them fails.
+                        maybeAddToEnableList(willEnable, mightEnable, other, true, (dep.getName().startsWith("cnb.") ? null : "Provides " + dep.getName()));
+                        // But we still check to ensure that at least one did not!
+                        if (!foundOne && willEnable.contains(other)) {
+                            foundOne = true;
+                            // and continue with the others, try to add them too...
+                        }
+                    }
+                    // Logic is that missingDependencies(m) should contain dep in this case.
+                    assert foundOne || dep.getType() == Dependency.TYPE_RECOMMENDS : "Should have found a nonproblematic provider of " + dep + " among " + providers + " with willEnable=" + willEnable + " mightEnable=" + mightEnable;
+                } else if (dep.getType() == Dependency.TYPE_JAVA) {
+                    if (okToFail && !Util.checkJavaDependency(dep)) {
+                        return;
+                    }
+                } else if (dep.getType() == Dependency.TYPE_PACKAGE) {
+                    // eager modules check only appclassloader
+                    if (okToFail && !Util.checkPackageDependency(dep, classLoader)) {
+                        return;
                     }
                 }
-                if (foundOne) {
-                    // OK, we are satisfied.
-                    continue;
-                }
-                // All disabled. So add them all to the enable list.
-                for (Module other : providers) {
-                    // It is OK if one of them fails.
-                    maybeAddToEnableList(willEnable, mightEnable, other, true);
-                    // But we still check to ensure that at least one did not!
-                    if (!foundOne && willEnable.contains(other)) {
-                        foundOne = true;
-                        // and continue with the others, try to add them too...
-                    }
-                }
-                // Logic is that missingDependencies(m) should contain dep in this case.
-                assert foundOne || dep.getType() == Dependency.TYPE_RECOMMENDS : "Should have found a nonproblematic provider of " + dep + " among " + providers + " with willEnable=" + willEnable + " mightEnable=" + mightEnable;
+                // else some other kind of dependency that does not concern us
             }
-            // else some other kind of dependency that does not concern us
-        }
-        Collection<Module> frags = getAttachedFragments(m);
-        for (Module fragMod : frags) {
-            // do not enable regular fragments unless eager: if something depends on a fragment, it will 
-            // enable the fragment along with normal dependencies.
-            if (fragMod.isEager()) {
-                maybeAddToEnableList(willEnable, mightEnable, fragMod, fragMod.isAutoload() || fragMod.isEager());
+            Collection<Module> frags = getAttachedFragments(m);
+            for (Module fragMod : frags) {
+                // do not enable regular fragments unless eager: if something depends on a fragment, it will 
+                // enable the fragment along with normal dependencies.
+                if (fragMod.isEager()) {
+                    maybeAddToEnableList(willEnable, mightEnable, fragMod, fragMod.isAutoload() || fragMod.isEager(), "Fragment");
+                }
             }
+        } finally {
+            reported = outerReported;
+            addedBecauseOfDependent = outer;
+            eagerActivation = outerEagerActivatioon;
         }
     }
+    
     private boolean searchForPossibleEager(Set<Module> willEnable, Set<Module> stillDisabled, Set<Module> mightEnable) {
         // Check for any eagers in stillDisabled which could be enabled based
         // on currently enabled modules and willEnable. For any such, remove from
@@ -1849,7 +1917,12 @@ public final class ModuleManager extends Modules {
                     // Go for it!
                     found = true;
                     it.remove();
-                    maybeAddToEnableList(willEnable, mightEnable, m, false);
+                    eagerActivation = true;
+                    try {
+                        maybeAddToEnableList(willEnable, mightEnable, m, false, "Eager");
+                    } finally {
+                        eagerActivation = false;
+                    }
                 }
             }
         }
@@ -1888,6 +1961,15 @@ public final class ModuleManager extends Modules {
                     }
                 }
                 if (!foundOne) return false;
+            } else if (dep.getType() == Dependency.TYPE_JAVA) {
+                if (! Util.checkJavaDependency(dep)) {
+                    return false;
+                }
+            } else if (dep.getType() == Dependency.TYPE_PACKAGE) {
+                // eager modules check only appclassloader
+                if (!Util.checkPackageDependency(dep, classLoader)) {
+                    return false;
+                }
             }
             // else some other dep type
         }
@@ -2100,11 +2182,28 @@ public final class ModuleManager extends Modules {
                 }
                 probs.add(PROBING_IN_PROCESS);
                 mP.put(probed, probs);
+                
                 for (Dependency dep : probed.getDependenciesArray()) {
-                    if (dep.getType() == Dependency.TYPE_PACKAGE) {
+                    if ((dep.getType() == Dependency.TYPE_PACKAGE || dep.getType() == Dependency.TYPE_JAVA) && !withNeeds) {
                         // Can't check it in advance. Assume it is OK; if not
                         // a problem will be indicated during an actual installation
                         // attempt.
+                        // Note the failures with optional modules, that enable themselves based on
+                        // external requirements: eagers and autoloading providers.
+                        boolean optional = probed.isEager();
+                        if (!optional && probed.isAutoload()) {
+                            String[] p = probed.getProvides();
+                            if (p != null) {
+                                String cnbToken = "cnb." + probed.getCodeNameBase();
+                                // provides more than its codenamebase
+                                optional = p.length > (Arrays.asList(p).indexOf(cnbToken) != -1 ? 1 : 0);
+                            }
+                        }
+                        // check with the default classloader:
+                        if (optional && !(dep.getType() == Dependency.TYPE_PACKAGE ? Util.checkPackageDependency(dep, classLoader) : Util.checkJavaDependency(dep))) {
+                            // but check at least with autoload and eager modules. that conditionally enable themselves
+                            probs.add(Union2.<Dependency,InvalidException>createFirst(dep));
+                        }
                     } else if (dep.getType() == Dependency.TYPE_MODULE) {
                         // Look for the corresponding module.
                         Object[] depParse = Util.parseCodeName(dep.getName());

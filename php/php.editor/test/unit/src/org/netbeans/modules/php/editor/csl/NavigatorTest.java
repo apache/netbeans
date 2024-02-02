@@ -44,6 +44,10 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/php53/bracketed_multiple_namespaces_with_default_one");
     }
 
+    public void testBracketedMultipleNamespacesWithMultipleDefault() throws Exception {
+        performTest("structure/php53/bracketed_multiple_namespaces_with_multiple_default");
+    }
+
     public void testScan() throws Exception {
         performTest("structure/interface_001");
     }
@@ -120,4 +124,39 @@ public class NavigatorTest extends PhpNavigatorTestBase {
         performTest("structure/enumerations");
     }
 
+    public void testEnumCasesWithError01() throws Exception {
+        performTest("structure/enumCasesWithError01");
+    }
+
+    public void testEnumCasesWithError02() throws Exception {
+        performTest("structure/enumCasesWithError02");
+    }
+
+    public void testStandAloneTrueType() throws Exception {
+        performTest("structure/standAloneTrueType");
+    }
+
+    public void testConstantsInTraits() throws Exception {
+        performTest("structure/php82/constantsInTraits");
+    }
+
+    public void testDNFReturnTypes() throws Exception {
+        performTest("structure/php82/dnfReturnTypes");
+    }
+
+    public void testDNFParameterTypes() throws Exception {
+        performTest("structure/php82/dnfParameterTypes");
+    }
+
+    public void testDNFFieldTypes() throws Exception {
+        performTest("structure/php82/dnfFieldTypes");
+    }
+
+    public void testFunctionGuessingArrayReturnType() throws Exception {
+        performTest("structure/functionGuessingArrayReturnType");
+    }
+
+    public void testTypedClassConstants() throws Exception {
+        performTest("structure/php83/typedClassConstants");
+    }
 }

@@ -1,0 +1,9 @@
+Display text: public static function <b>publicStaticMethod</b>(): string { // EnumB
+File name: index.php
+Name: publicStaticMethod
+Position: BEGIN: 1529 END: 1547
+
+Display text: EnumB::A::<b>publicStaticMethod</b>();
+File name: index.php
+Name: publicStaticMethod
+Position: BEGIN: 1653 END: 1671

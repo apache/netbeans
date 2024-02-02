@@ -29,6 +29,7 @@ import java.util.function.Supplier;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.lsp.Command;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.TextEdit;
 import org.netbeans.modules.lsp.CompletionAccessor;
@@ -89,6 +90,8 @@ public interface CompletionCollector {
     public static final class Builder {
 
         private String label;
+        private String labelDetail;
+        private String labelDescription;
         private Completion.Kind kind;
         private List<Completion.Tag> tags;
         private CompletableFuture<String> detail;
@@ -99,6 +102,7 @@ public interface CompletionCollector {
         private String insertText;
         private Completion.TextFormat insertTextFormat;
         private TextEdit textEdit;
+        private Command command;
         private CompletableFuture<List<TextEdit>> additionalTextEdits;
         private List<Character> commitCharacters;
 
@@ -115,6 +119,32 @@ public interface CompletionCollector {
         @NonNull
         public Builder label(@NonNull String label) {
             this.label = label;
+            return this;
+        }
+
+        /**
+         * An optional string which is rendered less prominently directly after
+         * {@link Completion#getLabel() label}, without any spacing. Should be
+         * used for function signatures or type annotations.
+         *
+         * @since 1.24
+         */
+        @NonNull
+        public Builder labelDetail(@NonNull String labelDetail) {
+            this.labelDetail = labelDetail;
+            return this;
+        }
+
+        /**
+         * An optional string which is rendered less prominently after
+         * {@link Completion#getLabelDetail() label detail}. Should be used for fully qualified
+         * names or file path.
+         *
+         * @since 1.24
+         */
+        @NonNull
+        public Builder labelDescription(@NonNull String labelDescription) {
+            this.labelDescription = labelDescription;
             return this;
         }
 
@@ -248,7 +278,7 @@ public interface CompletionCollector {
         /**
          * The format of the insert text. The format applies to both the
          * {@code insertText} property and the {@code newText} property of a provided
-         * {@code textEdit}. If omitted defaults to {@link TextFormat#PlainText}.
+         * {@code textEdit}. If omitted defaults to {@link org.netbeans.api.lsp.Completion.TextFormat#PlainText}.
          *
          * @since 1.0
          */
@@ -273,6 +303,16 @@ public interface CompletionCollector {
             return this;
         }
 
+        /**
+	 * An optional command that is executed after inserting this completion.
+         *
+         * @since 1.17
+	 */
+        @NonNull
+        public Builder command(@NonNull Command command) {
+            this.command = command;
+            return this;
+        }
         /**
          * A list of additional text edits that are applied when selecting this
          * completion. Edits must not overlap (including the same insert position)
@@ -332,10 +372,10 @@ public interface CompletionCollector {
          */
         @NonNull
         public Completion build() {
-            return CompletionAccessor.getDefault().createCompletion(label, kind,
-                    tags, detail, documentation, preselect, sortText, filterText,
-                    insertText, insertTextFormat, textEdit, additionalTextEdits,
-                    commitCharacters);
+            return CompletionAccessor.getDefault().createCompletion(label, labelDetail,
+                    labelDescription, kind, tags, detail, documentation, preselect, sortText,
+                    filterText, insertText, insertTextFormat, textEdit, command,
+                    additionalTextEdits, commitCharacters);
         }
 
         private static class LazyCompletableFuture<T> extends CompletableFuture<T> {

@@ -111,7 +111,7 @@ public abstract class SourceFileMap {
         Project owner = FileOwnerQuery.getOwner(source);
         if (owner != null) {
             Lookup l = owner.getLookup();
-            J2eeModuleProvider projectModule = (J2eeModuleProvider) l.lookup(J2eeModuleProvider.class);
+            J2eeModuleProvider projectModule = l.lookup(J2eeModuleProvider.class);
             if (projectModule != null) {
                 return projectModule.getSourceFileMap();
             }

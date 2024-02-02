@@ -35,50 +35,69 @@ public final class J2EEVersion extends J2EEBaseVersion {
      * Represents J2EE version 1.3
      */
     public static final J2EEVersion J2EE_1_3 = new J2EEVersion(
-            "1.3", 1300, // NOI18N
+            "1.3", 1300,    // NOI18N
             "1.3", 1300);   // NOI18N
 
     /**
      * Represents J2EE version 1.4
      */
     public static final J2EEVersion J2EE_1_4 = new J2EEVersion(
-            "1.4", 1400, // NOI18N
+            "1.4", 1400,    // NOI18N
             "1.4", 1400);   // NOI18N	
 
     /**
      * Represents JavaEE version 5.0
      */
     public static final J2EEVersion JAVAEE_5_0 = new J2EEVersion(
-            "5.0", 5000, // NOI18N
+            "5.0", 5000,    // NOI18N
             "5.0", 5000);   // NOI18N	
 
     /**
      * Represents JavaEE version 6.0
      */
     public static final J2EEVersion JAVAEE_6_0 = new J2EEVersion(
-            "6.0", 6000, // NOI18N
+            "6.0", 6000,    // NOI18N
             "6.0", 6000);   // NOI18N
 
     /**
      * Represents JavaEE version 7.0
      */
     public static final J2EEVersion JAVAEE_7_0 = new J2EEVersion(
-            "7.0", 7000, // NOI18N
+            "7.0", 7000,    // NOI18N
             "7.0", 7000);   // NOI18N
 
     /**
      * Represents JavaEE version 8.0
      */
     public static final J2EEVersion JAVAEE_8_0 = new J2EEVersion(
-            "8.0", 8000, // NOI18N
+            "8.0", 8000,    // NOI18N
             "8.0", 8000);   // NOI18N
 
-    /** Represents Jakarta EE version 8.0.0
+    /** 
+     * Represents Jakarta EE version 8.0.0
      */
     public static final J2EEVersion JAKARTAEE_8_0 = new J2EEVersion(
             "8.0.0", 80000,    // NOI18N
             "8.0.0", 80000);   // NOI18N
 
+    /** Represents Jakarta EE version 9.0.0
+     */
+    public static final J2EEVersion JAKARTAEE_9_0 = new J2EEVersion(
+            "9.0.0", 90000,    // NOI18N
+            "9.0.0", 90000);   // NOI18N
+
+    /** Represents Jakarta EE version 9.1.0
+     */
+    public static final J2EEVersion JAKARTAEE_9_1 = new J2EEVersion(
+            "9.1.0", 91000,    // NOI18N
+            "9.1.0", 91000);   // NOI18N
+
+    /** Represents Jakarta EE version 10.0.0
+     */
+    public static final J2EEVersion JAKARTAEE_10_0 = new J2EEVersion(
+            "10.0.0", 100000,    // NOI18N
+            "10.0.0", 100000);   // NOI18N
+    
     /**
      * -----------------------------------------------------------------------
      * Implementation
@@ -114,12 +133,18 @@ public final class J2EEVersion extends J2EEBaseVersion {
             result = JAVAEE_5_0;
         } else if (JAVAEE_6_0.toString().equals(version)) {
             result = JAVAEE_6_0;
-        } else if(JAVAEE_7_0.toString().equals(version)) {
+        } else if (JAVAEE_7_0.toString().equals(version)) {
             result = JAVAEE_7_0;
-        } else if(JAVAEE_8_0.toString().equals(version)) {
+        } else if (JAVAEE_8_0.toString().equals(version)) {
             result = JAVAEE_8_0;
-        } else if(JAKARTAEE_8_0.toString().equals(version)) {
+        } else if (JAKARTAEE_8_0.toString().equals(version)) {
             result = JAKARTAEE_8_0;
+        } else if (JAKARTAEE_9_0.toString().equals(version)) {
+            result = JAKARTAEE_9_0;
+        } else if (JAKARTAEE_9_1.toString().equals(version)) {
+            result = JAKARTAEE_9_1;
+        } else if (JAKARTAEE_10_0.toString().equals(version)) {
+            result = JAKARTAEE_10_0;
         }
 
         return result;

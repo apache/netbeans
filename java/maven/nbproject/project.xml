@@ -109,11 +109,11 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.modules.autoupdate.ui</code-name-base>
+                    <code-name-base>org.netbeans.modules.autoupdate.services</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.35</specification-version>
+                        <specification-version>1.76</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -219,7 +219,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.71</specification-version>
+                        <specification-version>2.77</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -605,6 +605,9 @@
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.api.maven</code-name-base>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <friend-packages>
@@ -648,6 +651,7 @@
                 <!-- danis@netbeans.org -->
                 <friend>org.vaadin.netbeans.maven</friend>
                 <friend>org.netbeans.modules.payara.micro</friend>
+                <friend>org.netbeans.modules.jakarta.transformer</friend>
                 <!-- NetBeans support for Google App Engine -->
                 <friend>org.netbeans.modules.j2ee.appengine</friend>
                 <friend>org.netbeans.modules.maven.util</friend>
@@ -664,6 +668,7 @@
                 <package>org.netbeans.modules.maven.api.output</package>
                 <package>org.netbeans.modules.maven.api.problem</package>
                 <package>org.netbeans.modules.maven.execute</package>
+                <package>org.netbeans.modules.maven.options</package>
                 <package>org.netbeans.modules.maven.execute.model</package>
                 <package>org.netbeans.modules.maven.execute.model.io.jdom</package>
                 <package>org.netbeans.modules.maven.execute.model.io.xpp3</package>

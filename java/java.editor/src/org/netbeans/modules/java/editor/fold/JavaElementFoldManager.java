@@ -76,7 +76,11 @@ public class JavaElementFoldManager implements FoldManager {
 	     new org.netbeans.api.editor.fold.FoldTemplate(3, 2, "/**...*/")); // NOI18N
 
     @NbBundle.Messages("FoldType_Methods=Methods")
-    public static final FoldType CODE_BLOCK_FOLD_TYPE = FoldType.MEMBER.derive("method", Bundle.FoldType_Methods(), 
+    public static final FoldType METHOD_BLOCK_FOLD_TYPE = FoldType.MEMBER.derive("method", Bundle.FoldType_Methods(), 
+            new org.netbeans.api.editor.fold.FoldTemplate(1, 1, "{...}")); // NOI18N
+
+    @NbBundle.Messages("FoldType_CodeBlocks=Code Blocks")
+    public static final FoldType CODE_BLOCK_FOLD_TYPE = FoldType.CODE_BLOCK.derive("code-block", Bundle.FoldType_CodeBlocks(), 
 	     new org.netbeans.api.editor.fold.FoldTemplate(1, 1, "{...}")); // NOI18N
     
     @NbBundle.Messages("FoldType_InnerClasses=Inner Classes")
@@ -271,6 +275,11 @@ public class JavaElementFoldManager implements FoldManager {
                 @Override
                 public FoldInfo createInnerClassFold(int start, int end) {
                     return FoldInfo.range(start, end, INNERCLASS_TYPE);
+                }
+
+                @Override
+                public FoldInfo createMethodFold(int start, int end) {
+                    return FoldInfo.range(start, end, METHOD_BLOCK_FOLD_TYPE);
                 }
 
                 @Override

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.17
+#Version 2.22
 
 CLSS public abstract interface !annotation groovy.beans.Bindable
  anno 0 java.lang.annotation.Documented()
@@ -6679,6 +6679,141 @@ meth public abstract void setFirstChild(groovyjarjarantlr.collections.AST)
 meth public abstract void setNextSibling(groovyjarjarantlr.collections.AST)
 meth public abstract void setText(java.lang.String)
 meth public abstract void setType(int)
+
+CLSS public abstract interface groovyjarjarantlr.collections.ASTEnumeration
+meth public abstract boolean hasMoreNodes()
+meth public abstract groovyjarjarantlr.collections.AST nextNode()
+
+CLSS public abstract interface groovyjarjarantlr.collections.List
+meth public abstract boolean includes(java.lang.Object)
+meth public abstract int length()
+meth public abstract java.lang.Object elementAt(int)
+meth public abstract java.util.Enumeration elements()
+meth public abstract void add(java.lang.Object)
+meth public abstract void append(java.lang.Object)
+
+CLSS public abstract interface groovyjarjarantlr.collections.Stack
+meth public abstract int height()
+meth public abstract java.lang.Object pop()
+meth public abstract java.lang.Object top()
+meth public abstract void push(java.lang.Object)
+
+CLSS public groovyjarjarantlr.collections.impl.ASTArray
+cons public init(int)
+fld public groovyjarjarantlr.collections.AST[] array
+fld public int size
+meth public groovyjarjarantlr.collections.impl.ASTArray add(groovyjarjarantlr.collections.AST)
+supr java.lang.Object
+
+CLSS public groovyjarjarantlr.collections.impl.ASTEnumerator
+cons public init(groovyjarjarantlr.collections.impl.Vector)
+intf groovyjarjarantlr.collections.ASTEnumeration
+meth public boolean hasMoreNodes()
+meth public groovyjarjarantlr.collections.AST nextNode()
+supr java.lang.Object
+hfds i,nodes
+
+CLSS public groovyjarjarantlr.collections.impl.BitSet
+cons public init()
+cons public init(int)
+cons public init(long[])
+fld protected final static int BITS = 64
+fld protected final static int LOG_BITS = 6
+fld protected final static int MOD_MASK = 63
+fld protected final static int NIBBLE = 4
+fld protected long[] bits
+intf java.lang.Cloneable
+meth public boolean equals(java.lang.Object)
+meth public boolean member(int)
+meth public boolean nil()
+meth public boolean subset(groovyjarjarantlr.collections.impl.BitSet)
+meth public groovyjarjarantlr.collections.impl.BitSet and(groovyjarjarantlr.collections.impl.BitSet)
+meth public groovyjarjarantlr.collections.impl.BitSet not()
+meth public groovyjarjarantlr.collections.impl.BitSet or(groovyjarjarantlr.collections.impl.BitSet)
+meth public int degree()
+meth public int lengthInLongWords()
+meth public int size()
+meth public int[] toArray()
+meth public java.lang.Object clone()
+meth public java.lang.String toString()
+meth public java.lang.String toString(java.lang.String)
+meth public java.lang.String toString(java.lang.String,groovyjarjarantlr.CharFormatter)
+meth public java.lang.String toString(java.lang.String,groovyjarjarantlr.collections.impl.Vector)
+meth public java.lang.String toStringOfHalfWords()
+meth public java.lang.String toStringOfWords()
+meth public java.lang.String toStringWithRanges(java.lang.String,groovyjarjarantlr.CharFormatter)
+meth public long[] toPackedArray()
+meth public static groovyjarjarantlr.collections.impl.BitSet of(int)
+meth public static groovyjarjarantlr.collections.impl.Vector getRanges(int[])
+meth public void add(int)
+meth public void andInPlace(groovyjarjarantlr.collections.impl.BitSet)
+meth public void clear()
+meth public void clear(int)
+meth public void growToInclude(int)
+meth public void notInPlace()
+meth public void notInPlace(int)
+meth public void notInPlace(int,int)
+meth public void orInPlace(groovyjarjarantlr.collections.impl.BitSet)
+meth public void remove(int)
+meth public void subtractInPlace(groovyjarjarantlr.collections.impl.BitSet)
+supr java.lang.Object
+
+CLSS public groovyjarjarantlr.collections.impl.IndexedVector
+cons public init()
+cons public init(int)
+fld protected groovyjarjarantlr.collections.impl.Vector elements
+fld protected java.util.Hashtable index
+meth public boolean removeElement(java.lang.Object)
+meth public int size()
+meth public java.lang.Object elementAt(int)
+meth public java.lang.Object getElement(java.lang.Object)
+meth public java.util.Enumeration elements()
+meth public void appendElement(java.lang.Object,java.lang.Object)
+supr java.lang.Object
+
+CLSS public groovyjarjarantlr.collections.impl.IntRange
+cons public init(int,int)
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds begin,end
+
+CLSS public groovyjarjarantlr.collections.impl.LList
+cons public init()
+fld protected int length
+fld protected java.lang.Object head
+fld protected java.lang.Object tail
+intf groovyjarjarantlr.collections.List
+intf groovyjarjarantlr.collections.Stack
+meth protected java.lang.Object deleteHead()
+meth protected void insertHead(java.lang.Object)
+meth public boolean includes(java.lang.Object)
+meth public int height()
+meth public int length()
+meth public java.lang.Object elementAt(int)
+meth public java.lang.Object pop()
+meth public java.lang.Object top()
+meth public java.util.Enumeration elements()
+meth public void add(java.lang.Object)
+meth public void append(java.lang.Object)
+meth public void push(java.lang.Object)
+supr java.lang.Object
+
+CLSS public groovyjarjarantlr.collections.impl.Vector
+cons public init()
+cons public init(int)
+fld protected int lastElement
+fld protected java.lang.Object[] data
+intf java.lang.Cloneable
+meth public boolean removeElement(java.lang.Object)
+meth public int capacity()
+meth public int size()
+meth public java.lang.Object clone()
+meth public java.lang.Object elementAt(int)
+meth public java.util.Enumeration elements()
+meth public void appendElement(java.lang.Object)
+meth public void ensureCapacity(int)
+meth public void setElementAt(java.lang.Object,int)
+supr java.lang.Object
 
 CLSS public abstract groovyjarjarasm.asm.AnnotationVisitor
 cons public init(int)

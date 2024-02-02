@@ -18,40 +18,25 @@
  */
 package org.netbeans.modules.nbcode.integration.commands;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.TypeAdapter;
-import com.google.gson.TypeAdapterFactory;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import org.eclipse.lsp4j.CodeAction;
-import org.eclipse.lsp4j.CodeActionParams;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectActionContext;
-import org.netbeans.modules.java.lsp.server.protocol.CodeActionsProvider;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.project.dependency.ArtifactSpec;
+import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.project.dependency.ProjectArtifactsQuery;
 import org.netbeans.modules.project.dependency.ProjectArtifactsQuery.ArtifactsResult;
+import org.netbeans.spi.lsp.CommandProvider;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -59,12 +44,17 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author sdedic
  */
-@ServiceProvider(service = CodeActionsProvider.class)
-public class ProjectMetadataCommand extends CodeActionsProvider {
-    private static final String COMMAND_ARTIFACTS = "nbls.gcn.project.artifacts"; // NOI18N
+@ServiceProvider(service = CommandProvider.class)
+public class ProjectMetadataCommand implements CommandProvider {
+    private static final String COMMAND_ARTIFACTS = "nbls.project.artifacts"; // NOI18N
+    /**
+     * @deprecated will be removed in NB 19
+     */
+    private static final String COMMAND_ARTIFACTS_OLD = "nbls.gcn.project.artifacts"; // NOI18N
 
     private static final Set<String> COMMANDS = new HashSet<>(Arrays.asList(
-            COMMAND_ARTIFACTS
+            COMMAND_ARTIFACTS,
+            COMMAND_ARTIFACTS_OLD
     ));
     private static final Set<String> ARTIFACT_BLOCK_FIELDS = new HashSet<>(Arrays.asList(
         "data" // NOI18N
@@ -75,68 +65,16 @@ public class ProjectMetadataCommand extends CodeActionsProvider {
     private final Gson gson;
     
     public ProjectMetadataCommand() {
-        gson = new GsonBuilder()
-             // block the opaque 'data' field 
-            .addSerializationExclusionStrategy(new ExclusionStrategy() {
-                    @Override
-                    public boolean shouldSkipField(FieldAttributes fa) {
-                        if (fa.getDeclaringClass() == ArtifactSpec.class) {
-                          return ARTIFACT_BLOCK_FIELDS.contains(fa.getName());
-                        }
-                        return false;
-                    }
-
-                    @Override
-                    public boolean shouldSkipClass(Class<?> type) {
-                        return false;
-                    }
-            })
-            // serialize FileObject as null|path
-            .registerTypeAdapterFactory(new TypeAdapterFactory() {
-                @Override
-                public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> tt) {
-                    if (tt.getRawType() != FileObject.class) {
-                        return null;
-                    }
-                    return new TypeAdapter<T>() {
-                        @Override
-                        public void write(JsonWriter writer, T t) throws IOException {
-                            FileObject f = (FileObject)t;
-                            writer.value(f == null ? null : f.getPath());
-                        }
-
-                        @Override
-                        public T read(JsonReader reader) throws IOException {
-                            if (reader.peek() == JsonToken.NULL) {
-                                reader.nextNull();
-                                return null;
-                            } else {
-                                String s = reader.nextString();
-                                if (s == null) {
-                                    return null;
-                                }
-                                FileObject fo = FileUtil.toFileObject(Paths.get(s).toFile());
-                                return (T)fo;
-                            }
-                        }
-                    };
-                }
-            })
-            .create();
+        gson = new GsonBuilder().create();
     }
     
-    @Override
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
-        return Collections.emptyList();
-    }
-
     @Override
     public Set<String> getCommands() {
         return COMMANDS;
     }
-    
+
     @Override
-    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+    public CompletableFuture<Object> runCommand(String command, List<Object> arguments) {
         if (arguments.size() < 1) {
             throw new IllegalArgumentException("Expected at least project URI/path");
         }
@@ -215,18 +153,10 @@ public class ProjectMetadataCommand extends CodeActionsProvider {
             artifactType = ((JsonPrimitive)o).getAsString();
         }
         ProjectArtifactsQuery.Filter filter = ProjectArtifactsQuery.newQuery(artifactType, classifier, ctx, tags);
-        CompletableFuture result = new CompletableFuture();
-        METADATA_PROCESSOR.post(() -> {
-            try {
-                ArtifactsResult arts = ProjectArtifactsQuery.findArtifacts(p, filter);
-                // must serialize in advance, since we cannot configure gson instance in lsp4j
-                Object o = gson.toJsonTree(arts.getArtifacts());
-                result.complete(o);
-            } catch (Exception | Error ex) {
-                result.completeExceptionally(ex);
-            }
-        });
-        
-        return result;
+        return Lookup.getDefault().lookup(LspServerState.class).asyncOpenFileOwner(f).thenApplyAsync((project) -> {
+            ArtifactsResult arts = ProjectArtifactsQuery.findArtifacts(p, filter);
+            // must serialize in advance, since we cannot configure gson instance in lsp4j
+            return arts.getArtifacts();
+        }, METADATA_PROCESSOR);
     }
 }

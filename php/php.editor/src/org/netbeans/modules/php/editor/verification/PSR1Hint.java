@@ -34,6 +34,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.EmptyStatement;
+import org.netbeans.modules.php.editor.parser.astnodes.EnumDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Identifier;
@@ -233,6 +234,14 @@ public abstract class PSR1Hint extends HintRule {
 
             @Override
             public void visit(TraitDeclaration node) {
+                if (CancelSupport.getDefault().isCancelled()) {
+                    return;
+                }
+                processTypeDeclaration(node);
+            }
+
+            @Override
+            public void visit(EnumDeclaration node) {
                 if (CancelSupport.getDefault().isCancelled()) {
                     return;
                 }

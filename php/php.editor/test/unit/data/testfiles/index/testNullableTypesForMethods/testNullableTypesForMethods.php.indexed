@@ -8,11 +8,11 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : nullabletypes;NullableTypes;12;;;;1;;0;<TESTURL>/testNullableTypesForMethods.php;;
-  method : parametertype;parameterType;49;$param:?string:1::1:0:0:0:0:0;;1;0;<TESTURL>/testNullableTypesForMethods.php;0;0;
-  method : parametertypestatic;parameterTypeStatic;115;$param:?string:1::1:0:0:0:0:0;;9;0;<TESTURL>/testNullableTypesForMethods.php;0;0;
-  method : returntype;returnType;180;$num:int:1::1:0:0:0:0:0;?\Foo;1;0;<TESTURL>/testNullableTypesForMethods.php;0;0;
-  method : returntypestatic;returnTypeStatic;245;$num:int:1::1:0:0:0:0:0;?\Foo;9;0;<TESTURL>/testNullableTypesForMethods.php;0;0;
+  clz : nullabletypes;NullableTypes;12;;;;1;;0;<TESTURL>/testNullableTypesForMethods.php;;0;
+  method : parametertype;parameterType;49;$param:?string:1::1:0:0:0:0:0:?string:;;1;0;<TESTURL>/testNullableTypesForMethods.php;0;0;;
+  method : parametertypestatic;parameterTypeStatic;115;$param:?string:1::1:0:0:0:0:0:?string:;;9;0;<TESTURL>/testNullableTypesForMethods.php;0;0;;
+  method : returntype;returnType;180;$num:int:1::1:0:0:0:0:0:int:;?\Foo;1;0;<TESTURL>/testNullableTypesForMethods.php;0;0;?\Foo;
+  method : returntypestatic;returnTypeStatic;245;$num:int:1::1:0:0:0:0:0:int:;?\Foo;9;0;<TESTURL>/testNullableTypesForMethods.php;0;0;?Foo;
   top : nullabletypes
 
 Not Searchable Keys:

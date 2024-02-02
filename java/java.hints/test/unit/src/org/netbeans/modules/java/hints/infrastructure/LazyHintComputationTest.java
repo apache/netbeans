@@ -128,7 +128,7 @@ public class LazyHintComputationTest extends NbTestCase {
         private final Runnable cancelCallback;
         
         public CreatorBasedLazyFixListImpl(FileObject file, boolean[] marker, Runnable callback, Runnable cancelCallback) {
-            super(file, null, -1, null, null);
+            super(file, null, null, -1, null, null);
             this.marker = marker;
             this.callback = callback;
             this.cancelCallback = cancelCallback;

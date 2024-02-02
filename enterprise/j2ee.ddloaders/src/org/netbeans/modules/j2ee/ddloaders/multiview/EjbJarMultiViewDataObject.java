@@ -761,7 +761,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
     }
     
     public EntityHelper getEntityHelper(Entity entity) {
-        EntityHelper entityHelper = (EntityHelper) entityHelperMap.get(entity);
+        EntityHelper entityHelper = entityHelperMap.get(entity);
         if (entityHelper == null) {
             entityHelper = new EntityHelper(this, entity);
             entityHelperMap.put(entity, entityHelper);
@@ -770,7 +770,7 @@ public class EjbJarMultiViewDataObject extends DDMultiViewDataObject
     }
     
     public SessionHelper getSessionHelper(Session session) {
-        SessionHelper sessionHelper = (SessionHelper) sessionHelperMap.get(session);
+        SessionHelper sessionHelper = sessionHelperMap.get(session);
         if (sessionHelper == null) {
             sessionHelper = new SessionHelper(this, session);
             sessionHelperMap.put(session, sessionHelper);

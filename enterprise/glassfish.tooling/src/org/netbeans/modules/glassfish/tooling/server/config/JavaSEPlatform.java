@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * JavaSE platforms supported by Glassfish.
+ * JavaSE platforms supported by GlassFish.
  * <p/>
  * @author Tomas Kraus, Peter Benedikovic
  */
@@ -67,7 +67,13 @@ public enum JavaSEPlatform {
     /** JavaSE 19. */
     v19,
     /** JavaSE 20. */
-    v20;
+    v20,
+    /** JavaSE 21. */
+    v21,
+    /** JavaSE 22. */
+    v22,
+    /** JavaSE 23. */
+    v23;
 
     ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
@@ -78,60 +84,6 @@ public enum JavaSEPlatform {
 
     /** JavaEE platform version elements separator character. */
     public static final char SEPARATOR = '.';
-
-    /**  A <code>String</code> representation of v1_1 value. */
-    static final String V1_1_STR = "1.1";
-
-    /**  A <code>String</code> representation of v1_2 value. */
-    static final String V1_2_STR = "1.2";
-
-    /**  A <code>String</code> representation of v1_3 value. */
-    static final String V1_3_STR = "1.3";
-
-    /**  A <code>String</code> representation of v1_4 value. */
-    static final String V1_4_STR = "1.4";
-
-    /**  A <code>String</code> representation of v1_5 value. */
-    static final String V1_5_STR = "1.5";
-
-    /**  A <code>String</code> representation of v1_6 value. */
-    static final String V1_6_STR = "1.6";
-
-    /**  A <code>String</code> representation of v1_7 value. */
-    static final String V1_7_STR = "1.7";
-
-    /**  A <code>String</code> representation of v1_8 value. */
-    static final String V1_8_STR = "1.8";
-
-    /**  A <code>String</code> representation of v11 value. */
-    static final String V11_STR = "11";
-    
-    /**  A <code>String</code> representation of v12 value. */
-    static final String V12_STR = "12";
-    
-    /**  A <code>String</code> representation of v13 value. */
-    static final String V13_STR = "13";
-    
-    /**  A <code>String</code> representation of v14 value. */
-    static final String V14_STR = "14";
-    
-    /**  A <code>String</code> representation of v15 value. */
-    static final String V15_STR = "15";
-
-    /**  A <code>String</code> representation of v16 value. */
-    static final String V16_STR = "16";
-
-    /**  A <code>String</code> representation of v17 value. */
-    static final String V17_STR = "17";
-    
-    /**  A <code>String</code> representation of v18 value. */
-    static final String V18_STR = "18";
-    
-    /**  A <code>String</code> representation of v19 value. */
-    static final String V19_STR = "19";
-    
-    /**  A <code>String</code> representation of v20 value. */
-    static final String V20_STR = "20";
 
     /**
      * Stored <code>String</code> values for backward <code>String</code>
@@ -183,30 +135,7 @@ public enum JavaSEPlatform {
      */
     @Override
     public String toString() {
-        switch (this) {
-            case v1_1:     return V1_1_STR;
-            case v1_2:     return V1_2_STR;
-            case v1_3:     return V1_3_STR;
-            case v1_4:     return V1_4_STR;
-            case v1_5:     return V1_5_STR;
-            case v1_6:     return V1_6_STR;
-            case v1_7:     return V1_7_STR;
-            case v1_8:     return V1_8_STR;
-            case v11:      return V11_STR;
-            case v12:      return V12_STR;
-            case v13:      return V13_STR;
-            case v14:      return V14_STR;
-            case v15:      return V15_STR;
-            case v16:      return V16_STR;
-            case v17:      return V17_STR;
-            case v18:      return V18_STR;
-            case v19:      return V19_STR;
-            case v20:      return V20_STR;
-
-            // This is unrecheable. Being here means this class does not handle
-            // all possible values correctly.
-            default:   throw new ServerConfigException(
-                        ServerConfigException.INVALID_SE_PLATFORM_VERSION);
-        }
+        String n = name();
+        return n.startsWith("v1_") ? "1." + n.substring(3) : n.substring(1);
     }
 }

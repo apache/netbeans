@@ -1,0 +1,13 @@
+Code completion result for source line:
+$vardoc1::|$publicStaticXField; // (ClassX&ClassY)|null
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticXMethod()           [STATIC]   ClassX
+METHOD     publicStaticYMethod()           [STATIC]   ClassY
+VARIABLE   (ClassY&ClassZ)|ClassX $public  [STATIC]   ClassX
+VARIABLE   (ClassY&ClassZ)|ClassX $public  [STATIC]   ClassY
+CONSTANT   IMPLICIT_X_CONSTANT "implicit   [PUBLIC]   ClassX
+CONSTANT   IMPLICIT_Y_CONSTANT "implicit   [PUBLIC]   ClassY
+CONSTANT   PUBLIC_X_CONSTANT "public cons  [PUBLIC]   ClassX
+CONSTANT   PUBLIC_Y_CONSTANT "public cons  [PUBLIC]   ClassY
+CONSTANT   class \ClassX                   [PUBLIC]   Magic Constant
+CONSTANT   class \ClassY                   [PUBLIC]   Magic Constant

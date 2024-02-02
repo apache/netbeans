@@ -22,6 +22,7 @@ package org.netbeans.modules.php.editor.api.elements;
 import java.util.Set;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.php.api.PhpVersion;
 
 /**
  * @author Radek Matous
@@ -30,12 +31,17 @@ public interface ParameterElement {
     String getName();
     String asString(OutputType outputType);
     String asString(OutputType outputType, TypeNameResolver typeNameResolver);
+    String asString(OutputType outputType, TypeNameResolver typeNameResolver, PhpVersion phpVersion);
     boolean isReference();
     boolean isVariadic();
     boolean isUnionType();
     boolean isIntersectionType();
     int getModifier();
     Set<TypeResolver> getTypes();
+    @CheckForNull
+    String getDeclaredType();
+    @CheckForNull
+    String getPhpdocType();
     @CheckForNull
     String getDefaultValue();
     /**

@@ -23,7 +23,7 @@ import java.util.Collection;
 import javax.swing.text.AttributeSet;
 
 /**
- * Getters and setters for font & color editor profiles. Instances of this 
+ * Getters and setters for font &amp; color editor profiles. Instances of this 
  * class should be registered in <code>MimeLookup</code> for particular mime types.
  *
  * @author Jan Jancura
@@ -41,12 +41,12 @@ public abstract class FontColorSettingsFactory {
     public abstract Collection<AttributeSet> getAllFontColors (String profile);
     
     /**
-     * Gets default values for all font & colors for given profile, or null
+     * Gets default values for all font &amp; colors for given profile, or null
      * if profile does not exist or if it does not have any defaults. 
      * 
      * @param profile the name of profile
      *
-     * @return default values for all font & colors
+     * @return default values for all font &amp; colors
      */
     public abstract Collection<AttributeSet> getAllFontColorDefaults 
         (String profile);

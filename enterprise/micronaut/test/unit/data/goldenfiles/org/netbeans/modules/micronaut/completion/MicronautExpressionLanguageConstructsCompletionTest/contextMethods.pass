@@ -1,0 +1,4 @@
+user : String
+firstValue() : String
+getUser() : String
+secondValue() : String

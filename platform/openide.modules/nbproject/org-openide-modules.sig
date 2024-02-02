@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.65
+#Version 7.70
 
 CLSS public abstract interface java.io.Externalizable
 intf java.io.Serializable
@@ -182,9 +182,9 @@ hfds LOG
 
 CLSS public final org.openide.modules.SpecificationVersion
 cons public init(java.lang.String)
-intf java.lang.Comparable
+intf java.lang.Comparable<org.openide.modules.SpecificationVersion>
 meth public boolean equals(java.lang.Object)
-meth public int compareTo(java.lang.Object)
+meth public int compareTo(org.openide.modules.SpecificationVersion)
 meth public int hashCode()
 meth public java.lang.String toString()
 supr java.lang.Object

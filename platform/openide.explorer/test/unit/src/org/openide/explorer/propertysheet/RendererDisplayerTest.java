@@ -266,7 +266,8 @@ public class RendererDisplayerTest extends NbTestCase {
                 }
             }
         }
-        
+
+        @Override
         public void windowOpened(WindowEvent e) {
             shown = true;
             synchronized(this) {
@@ -507,15 +508,18 @@ public class RendererDisplayerTest extends NbTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public String getAsText() {
             return getValue() == null ? "null" : getValue().toString();
         }
@@ -528,7 +532,8 @@ public class RendererDisplayerTest extends NbTestCase {
         public TagsEditor(String[] tags) {
             this.tags = tags;
         }
-        
+
+        @Override
         public String[] getTags() {
             return tags;
         }
@@ -536,11 +541,13 @@ public class RendererDisplayerTest extends NbTestCase {
         public void attachEnv(PropertyEnv env) {
             this.env = env;
         }
-        
+
+        @Override
         public boolean supportsCustomEditor() {
             return false;
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
@@ -644,6 +651,8 @@ public class RendererDisplayerTest extends NbTestCase {
     public static class ExEditor extends PropertyEditorSupport {
         private Object myVal="Value";
         public ExEditor() {}
+
+        @Override
         public void setAsText(String val) {
             //System.err.println("SetAsText");
             if (val.equals("Value")) {
@@ -654,12 +663,14 @@ public class RendererDisplayerTest extends NbTestCase {
                 throw iae;
             }
         }
-        
+
+        @Override
         public void setValue(Object newValue) {
             myVal = newValue;
             firePropertyChange();
         }
-        
+
+        @Override
         public Object getValue() {
             return "Value";
         }
@@ -683,19 +694,23 @@ public class RendererDisplayerTest extends NbTestCase {
         }
         
         // Set that this Editor doesn't support custom Editor
+        @Override
         public boolean supportsCustomEditor() {
             return true;
         }
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             super.setValue(newValue);
         }
-        
+
+        @Override
         public String getAsText() {
             return getValue() == null ? "null" : getValue().toString();
         }
-        
+
+        @Override
         public Component getCustomEditor() {
             return new JPanel();
         }
@@ -730,7 +745,8 @@ public class RendererDisplayerTest extends NbTestCase {
         public EditableNumProperty(String name, boolean isWriteable) {
             super(name, isWriteable, new String[]{"boo"});
         }
-        
+
+        @Override
         public PropertyEditor getPropertyEditor() {
             return new RendererDisplayerTest.EditableTagsEditor();
         }
@@ -743,22 +759,26 @@ public class RendererDisplayerTest extends NbTestCase {
         // Create new BasicEditor
         public NumberedTagsEditor() {
         }
-        
+
+        @Override
         public String[] getTags() {
             return new String[] {"zero","one","two","three","four","five","six","seven"};
         }
         
         
         // Set the Property value threw the Editor
+        @Override
         public void setValue(Object newValue) {
             val = ((Integer) newValue).intValue();
             firePropertyChange();
         }
-        
+
+        @Override
         public String getAsText() {
             return getTags()[((Integer) getValue()).intValue()];
         }
-        
+
+        @Override
         public void setAsText(String txt) {
             String[] t = getTags();
             for (int i=0; i < t.length; i++) {
@@ -770,11 +790,13 @@ public class RendererDisplayerTest extends NbTestCase {
             IllegalArgumentException iae = new IllegalArgumentException(txt);
             Exceptions.attachLocalizedMessage(iae, txt + " is not a valid value");
         }
-        
+
+        @Override
         public Object getValue() {
             return new Integer(val);
         }
-        
+
+        @Override
         public Component getCustomEditor() {
             return new JPanel();
         }
@@ -788,21 +810,33 @@ public class RendererDisplayerTest extends NbTestCase {
         public void attachEnv(PropertyEnv env) {
             env.getFeatureDescriptor().setValue("canEditAsText", Boolean.TRUE);
         }
+
+        @Override
         public void setAsText(String s) {
             setValue(s);
         }
+
+        @Override
         public void setValue(Object val) {
             this.val = val;
         }
+
+        @Override
         public Object getValue() {
             return val;
         }
+
+        @Override
         public String getAsText() {
             return val.toString();
         }
+
+        @Override
         public boolean supportsCustomEditor() {
             return true;
         }
+
+        @Override
         public Component getCustomEditor() {
             return new JLabel("You called?");
         }

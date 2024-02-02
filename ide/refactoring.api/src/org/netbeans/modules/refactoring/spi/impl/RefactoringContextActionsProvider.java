@@ -79,6 +79,7 @@ public final class RefactoringContextActionsProvider
     /**
       * @deprecated use @see #getMenuItems(boolean,Lookup)
       */
+    @Deprecated
     public JComponent[] getMenuItems(boolean reset) {
         return getMenuItems(reset, null);
     }

@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.project.MavenProject;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.spi.java.classpath.ClassPathImplementation;
@@ -54,13 +55,18 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
     
     protected AbstractProjectClassPathImpl(NbMavenProjectImpl proj) {
         project = proj;
+        LOGGER.log(Level.FINER, "Creating {0} for project {1}, with original {2}", new Object[] { getClass(), proj, proj.getOriginalMavenProjectOrNull() });
         //TODO make weak or remove the listeners as well??
         NbMavenProject.addPropertyChangeListener(proj, new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 //explicitly listing both RESOURCE and PROJECT properties, it's unclear if both are required but since some other places call addWatchedPath but don't listen it's likely required
                 if (NbMavenProject.PROP_RESOURCE.equals(evt.getPropertyName()) || NbMavenProject.PROP_PROJECT.equals(evt.getPropertyName())) {
+                    MavenProject mp = project.getOriginalMavenProjectOrNull();
+                    LOGGER.log(Level.FINE, "{0} got change {1} from project: {2} with maven project {3}", new Object[] { getClass(), evt.getPropertyName(), project,
+                        System.identityHashCode(mp == null ? this : mp) });
                     if (project.getProjectWatcher().isUnloadable()) {
+                        LOGGER.log(Level.FINER, "{0} is not loadable, exiting", project);
                         return; //let's just continue with the old value, stripping classpath for broken project and re-creating it later serves no greater good.
                     }
                     List<PathResourceImplementation> newValues = getPath();
@@ -69,6 +75,9 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
                     synchronized (AbstractProjectClassPathImpl.this) {
                         oldvalue = resources;
                         hasChanged = hasChanged(oldvalue, newValues);
+                        LOGGER.log(Level.FINER, "{0}: {1} classpath is: {2}, {3} entries", new Object[] {
+                            getClass(), project, newValues, newValues.size()
+                        });
 //                        System.out.println("checking=" + AbstractProjectClassPathImpl.this.getClass());
                         if (hasChanged) {
                             resources = newValues;
@@ -94,11 +103,8 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
         if (oldValues == null) {
             return (newValues != null);
         }
-        Iterator<PathResourceImplementation> it = oldValues.iterator();
-        ArrayList<PathResourceImplementation> nl = new ArrayList<PathResourceImplementation>();
-        nl.addAll(newValues);
-        while (it.hasNext()) {
-            PathResourceImplementation res = it.next();
+        ArrayList<PathResourceImplementation> nl = new ArrayList<>(newValues);
+        for (PathResourceImplementation res : oldValues) {
             URL oldUrl = res.getRoots()[0];
             boolean found = false;
             if (nl.isEmpty()) {
@@ -144,12 +150,7 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
     abstract URI[] createPath();
     
     private List<PathResourceImplementation> getPath() {
-        List<PathResourceImplementation> base = getPath(createPath(), new Includer() {
-            @Override public boolean includes(URL root, String resource) {
-                return AbstractProjectClassPathImpl.this.includes(root, resource);
-            }
-        });
-        return Collections.<PathResourceImplementation>unmodifiableList(base);
+        return Collections.unmodifiableList(getPath(createPath(), AbstractProjectClassPathImpl.this::includes));
     }
 
     protected boolean includes(URL root, String resource) {
@@ -160,12 +161,12 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
         boolean includes(URL root, String resource);
     }
     
-    public static  List<PathResourceImplementation> getPath(URI[] pieces, final Includer includer) {
-        List<PathResourceImplementation> result = new ArrayList<PathResourceImplementation>();
-        for (int i = 0; i < pieces.length; i++) {
+    public static List<PathResourceImplementation> getPath(URI[] pieces, final Includer includer) {
+        List<PathResourceImplementation> result = new ArrayList<>();
+        for (URI piece : pieces) {
             try {
                 // XXX would be cleaner to take a File[] if that is what these all are anyway!
-                final URL entry = FileUtil.urlForArchiveOrDir(Utilities.toFile(pieces[i]));
+                final URL entry = FileUtil.urlForArchiveOrDir(Utilities.toFile(piece));
                 if (entry != null) {
                     result.add(new FilteringPathResourceImplementation() {
                         @Override public boolean includes(URL root, String resource) {
@@ -182,7 +183,7 @@ public abstract class AbstractProjectClassPathImpl implements ClassPathImplement
                     });
                 }
             } catch (IllegalArgumentException exc) {
-                Logger.getLogger(AbstractProjectClassPathImpl.class.getName()).log(Level.INFO, "Cannot use uri " + pieces[i] + " for classpath", exc);
+                Logger.getLogger(AbstractProjectClassPathImpl.class.getName()).log(Level.INFO, "Cannot use uri " + piece + " for classpath", exc);
             }
         }
         return result;

@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,6 +86,7 @@ import org.netbeans.modules.maven.runjar.MavenExecuteUtils;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
 import org.openide.LifecycleManager;
 import org.openide.awt.HtmlBrowser;
+import org.openide.awt.NotificationDisplayer;
 import org.openide.execution.ExecutionEngine;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileObject;
@@ -92,7 +95,9 @@ import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.Places;
 import org.openide.modules.SpecificationVersion;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
 import org.openide.util.TaskListener;
@@ -137,12 +142,15 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private String processUUID;
     private Process preProcess;
     private String preProcessUUID;
-    private static final SpecificationVersion VER17 = new SpecificationVersion("1.7"); //NOI18N
+    private static final SpecificationVersion VER18 = new SpecificationVersion("1.8"); //NOI18N
     private static final Logger LOGGER = Logger.getLogger(MavenCommandLineExecutor.class.getName());
 
     private static final RequestProcessor RP = new RequestProcessor(MavenCommandLineExecutor.class.getName(),1);
 
     private static final RequestProcessor UPDATE_INDEX_RP = new RequestProcessor(RunUtils.class.getName(), 5);
+
+    private static final String ICON_MAVEN_PROJECT = "org/netbeans/modules/maven/resources/Maven2Icon.gif"; // NOI18N
+
     /**
      * Execute maven build in NetBeans execution engine.
      * Most callers should rather use {@link #run} as this variant does no (non-late-bound) prerequisite checks.
@@ -165,9 +173,14 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
      * Hooks for tests to mock the Maven execution.
      */
     public static class ExecuteMaven {
+        // tests only
+        MavenExecutor createCommandLineExecutor(RunConfig config, InputOutput io, TabContext tc) {
+            return new MavenCommandLineExecutor(config, io, tc);
+        }
+        
         public ExecutorTask execute(RunConfig config, InputOutput io, TabContext tc) {
             LifecycleManager.getDefault().saveAll();
-            MavenExecutor exec = new MavenCommandLineExecutor(config, io, tc);
+            MavenExecutor exec = createCommandLineExecutor(config, io, tc);
             ExecutorTask task = ExecutionEngine.getDefault().execute(config.getTaskDisplayName(), exec, new ProxyNonSelectableInputOutput(exec.getInputOutput()));
             exec.setTask(task);
             task.addTaskListener(new TaskListener() {
@@ -200,6 +213,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         this.io = io;
     }
 
+    @NbBundle.Messages({
+        "# {0} - original message",
+        "ERR_CannotOverrideProxy=Could not override the proxy: {0}",
+        "ERR_BuildCancelled=Build cancelled by the user"
+    })
     /**
      * not to be called directly.. use execute();
      */
@@ -225,6 +243,49 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         int executionresult = -10;
         final InputOutput ioput = getInputOutput();
 
+        // TODO: maybe global instance for project-less operation ?
+        MavenProxySupport mps = (clonedConfig.getProject() == null) ? null : clonedConfig.getProject().getLookup().lookup(MavenProxySupport.class);
+        if (mps != null) {
+            boolean ok = false;
+            try {
+                MavenProxySupport.ProxyResult res = mps.checkProxySettings().get();
+                
+                if (res != null) {
+                    res.configure(clonedConfig);
+                }
+                if (res.getStatus() == MavenProxySupport.Status.ABORT) {
+                    IOException ex = res.getException();
+                    
+                    if (ex == null) {
+                        ioput.getErr().append(Bundle.ERR_BuildCancelled());
+                    } else {
+                        throw ex;
+                    }
+                    
+                } else {
+                    ok = true;
+                }
+            } catch (IOException ex) {
+                NotificationDisplayer.getDefault().notify(Bundle.TITLE_ProxyUpdateFailed(),
+                        ImageUtilities.loadImageIcon(ICON_MAVEN_PROJECT, false),
+                        ex.getLocalizedMessage(), null, NotificationDisplayer.Priority.NORMAL, NotificationDisplayer.Category.ERROR);
+                ioput.getErr().append(Bundle.ERR_CannotOverrideProxy(ex.getLocalizedMessage()));
+                // FIXME: log exception
+            } catch (ExecutionException ex) {
+                // FIXME: log exception
+            } catch (InterruptedException ex) {
+                // FIXME: log exception
+            } finally {
+                if (!ok) {
+                    ioput.getOut().close();
+                    ioput.getErr().close();
+                    actionStatesAtFinish(null, null);
+                    markFreeTab();
+                    return;
+                }
+            }
+        }
+        
         final ProgressHandle handle = ProgressHandle.createHandle(clonedConfig.getTaskDisplayName(), this, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -334,6 +395,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 if (prj != null) {
                     NbMavenProjectImpl impl = prj.getLookup().lookup(NbMavenProjectImpl.class);
                     if (impl != null) {
+                        // this reload must not wait for blockers.
                         RequestProcessor.Task reloadTask = impl.fireProjectReload();
                         reloadTask.waitFinished();
                     }
@@ -343,11 +405,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
 
     private boolean isEventSpyCompatible(final BeanRunConfig clonedConfig) {
-        // EventSpy cannot work on jdk < 7
+        // EventSpy cannot work on jdk < 8
         if (clonedConfig.getProject() != null) {
             ActiveJ2SEPlatformProvider javaprov = clonedConfig.getProject().getLookup().lookup(ActiveJ2SEPlatformProvider.class);
             JavaPlatform platform = javaprov.getJavaPlatform();
-            return (platform.getSpecification().getVersion().compareTo(VER17) >= 0);
+            return (platform.getSpecification().getVersion().compareTo(VER18) >= 0);
         } else {
             return true;
         }
@@ -460,8 +522,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         }
         if (config.getReactorStyle() != RunConfig.ReactorStyle.NONE) {
             File basedir = config.getExecutionDirectory();
-            MavenProject mp = config.getMavenProject();
-            File projdir = NbMavenProject.isErrorPlaceholder(mp) ? basedir : mp.getBasedir();
+            MavenProject mp = NbMavenProject.getPartialProject(config.getMavenProject());
+            File projdir = mp == null || NbMavenProject.isErrorPlaceholder(mp) ? basedir : mp.getBasedir();
             String rel = basedir != null && projdir != null ? FileUtilities.relativizeFile(basedir, projdir) : null;
             if (!".".equals(rel)) {
                 toRet.add(config.getReactorStyle() == RunConfig.ReactorStyle.ALSO_MAKE ? "--also-make" : "--also-make-dependents");
@@ -469,7 +531,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
                 toRet.add(rel != null ? rel : mp.getGroupId() + ':' + mp.getArtifactId());
             }
         }
-
+        Object o = config.getInternalProperties().get("NbIde.configOverride"); // NOI18N
+        if (o instanceof String) {
+            toRet.add("--settings");
+            toRet.add(o.toString());
+        }
         String opts = MavenSettings.getDefault().getDefaultOptions();
         if (opts != null) {
             try {
@@ -567,7 +633,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         return sb.toString();
     }
 
-    private ProcessBuilder constructBuilder(final RunConfig clonedConfig, InputOutput ioput) {
+    // tests only
+    ProcessBuilder constructBuilder(final RunConfig clonedConfig, InputOutput ioput) {
         File javaHome = null;
         Map<String, String> envMap = new LinkedHashMap<String, String>();
         for (Map.Entry<? extends String,? extends String> entry : clonedConfig.getProperties().entrySet()) {
@@ -797,6 +864,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         return version != null && version.startsWith("2");
     }
 
+    private boolean isMavenDaemon() {
+        File mvnHome = EmbedderFactory.getEffectiveMavenHome();
+        return MavenSettings.isMavenDaemon(Paths.get(mvnHome.getPath()));
+    }
+
     private void injectEventSpy(final BeanRunConfig clonedConfig) {
         //TEMP 
         String mavenPath = clonedConfig.getProperties().get(CosChecker.MAVENEXTCLASSPATH);
@@ -820,16 +892,48 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
 
     private boolean isMultiThreaded(BeanRunConfig clonedConfig) {
-        String list = MavenSettings.getDefault().getDefaultOptions();
-        for (String s : clonedConfig.getGoals()) {
-            list = list + " " + s;
-        }
+
+        List<String> params = new ArrayList<>();
+        params.addAll(Arrays.asList(MavenSettings.getDefault().getDefaultOptions().split(" ")));
+        params.addAll(clonedConfig.getGoals());
         if (clonedConfig.getPreExecution() != null) {
-            for (String s : clonedConfig.getPreExecution().getGoals()) {
-                list = list + " " + s;
+            params.addAll(clonedConfig.getPreExecution().getGoals());
+        }
+
+        return isMavenDaemon() ? isMultiThreadedMvnd(params)
+                               : isMultiThreadedMaven(params);
+    }
+
+    // mvnd is MT by default
+    static boolean isMultiThreadedMvnd(List<String> params) {
+        for (int i = 0; i < params.size(); i++) {
+            String p = params.get(i);
+            if (p.equals("-1") || p.equals("--serial") || p.equals("-Dmvnd.serial")) { // "behave like standard maven" mode
+                return false;
+            }
+            if (i + 1 < params.size() && (p.equals("-T") || p.equals("--threads"))) {
+                if (params.get(i+1).equals("1")) {
+                    return false;
+                }
+            }
+            try {
+                if (p.startsWith("-Dmvnd.threads=") && Integer.parseInt(p.substring(15)) == 1)  {
+                    return false;
+                }
+            } catch (NumberFormatException ignored) {} 
+        }
+        return true;
+    }
+
+    // mvn is ST by default
+    static boolean isMultiThreadedMaven(List<String> params) {
+        for (int i = 0; i < params.size() - 1; i++) {
+            String p = params.get(i);
+            if ((p.equals("-T") || p.equals("--threads")) && !params.get(i+1).equals("1")) {
+                return true;
             }
         }
-        return list.contains("-T") || list.contains("--threads");
+        return false;
     }
 
     private File guessBestMaven(RunConfig clonedConfig, InputOutput ioput) {
@@ -877,7 +981,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     }
 
     private File checkAvailability(String ver, VersionRange vr, InputOutput ioput) {
-        ArrayList<String> all = new ArrayList(MavenSettings.getDefault().getUserDefinedMavenRuntimes());
+        ArrayList<String> all = new ArrayList<>(MavenSettings.getDefault().getUserDefinedMavenRuntimes());
         //TODO this could be slow? but is it slower than downloading stuff?
         //is there a faster way? or can we somehow log the findings after first attempt?
         DefaultArtifactVersion candidate = null;
@@ -1003,7 +1107,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     
     private File searchMavenWrapper(RunConfig config) {
         String fileName = Utilities.isWindows() ? "mvnw.cmd" : "mvnw"; //NOI18N
-        MavenProject project = config.getMavenProject();
+        MavenProject project = NbMavenProject.getPartialProject(config.getMavenProject());
         while (project != null) {
             File baseDir = project.getBasedir();
             if (baseDir != null) {

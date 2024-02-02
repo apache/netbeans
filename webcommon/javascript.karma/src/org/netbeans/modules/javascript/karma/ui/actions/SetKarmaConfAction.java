@@ -41,8 +41,8 @@ import org.openide.util.NbBundle;
 @ActionID(id = "org.netbeans.modules.javascript.karma.ui.actions.SetKarmaConfAction", category = "Unit Tests")
 @ActionRegistration(displayName = "#SetKarmaConfAction.name", lazy = false)
 @ActionReferences({
-    @ActionReference(path = "Editors/text/karmaconf+javascript/Popup", position = 907),
-    @ActionReference(path = "Loaders/text/karmaconf+javascript/Actions", position = 157),
+    @ActionReference(path = "Editors/text/javascript/Popup", position = 907),
+    @ActionReference(path = "Loaders/text/javascript/Actions", position = 157),
 })
 public final class SetKarmaConfAction extends AbstractAction implements ContextAwareAction {
 
@@ -59,7 +59,11 @@ public final class SetKarmaConfAction extends AbstractAction implements ContextA
     public SetKarmaConfAction(Project project, FileObject karmaConfJs) {
         this.project = project;
         this.karmaConfJs = karmaConfJs;
-        setEnabled(karmaConfJs != null);
+        setEnabled(
+                karmaConfJs != null
+                && karmaConfJs.getName().startsWith("karma")
+                && karmaConfJs.getName().endsWith(".conf")
+        );
         putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
         putValue(Action.NAME, Bundle.SetKarmaConfAction_name());
     }

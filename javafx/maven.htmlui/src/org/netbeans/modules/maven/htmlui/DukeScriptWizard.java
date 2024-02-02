@@ -34,6 +34,7 @@ import net.java.html.json.OnPropertyChange;
 import net.java.html.json.OnReceive;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 
 @Model(className = "WizardData", properties = {
     @Property(name = "current", type = String.class),
@@ -56,7 +57,7 @@ import org.openide.util.RequestProcessor;
 })
 public class DukeScriptWizard {
     @TemplateRegistration(
-            position = 120,
+            position = 955,
             page = "dukeScriptWizard.html",
             content = "dukescript.archetype",
             folder = "Project/Maven2",
@@ -65,7 +66,7 @@ public class DukeScriptWizard {
             description = "description.html"
     )
     
-    @Messages("DukeScriptWizard_displayName=Java Frontend Application")
+    @Messages("DukeScriptWizard_displayName=DukeScript Frontend Application")
     public static WizardData javafxWebViewAppWizard() {
         WizardData data = new WizardData();
         data.init(Boolean.TRUE, Boolean.TRUE, Boolean.TRUE, Boolean.TRUE);
@@ -247,7 +248,7 @@ public class DukeScriptWizard {
                     b.setDefaultWorkingDirectory(new File(data.getAndroidSdkPath()));
                 }
                 JFileChooser fc = b.createFileChooser();
-                int res = fc.showOpenDialog(null);
+                int res = fc.showOpenDialog(Utilities.findDialogParent());
                 if (res == JFileChooser.APPROVE_OPTION) {
                     data.setAndroidSdkPath(fc.getSelectedFile().getPath());
                     MavenUtilities.getDefault().writeAndroidSdkPath(fc.getSelectedFile().getPath());
@@ -322,7 +323,7 @@ public class DukeScriptWizard {
                 JFileChooser fc = b.createFileChooser();
                 File f = new File(System.getProperty("netbeans.home"));
                 fc.setCurrentDirectory(f);
-                int res = fc.showOpenDialog(null);
+                int res = fc.showOpenDialog(Utilities.findDialogParent());
                 if (res == JFileChooser.APPROVE_OPTION) {
                     MavenUtilities.getDefault().writeNetBeansInstallation(f.getParent());
                     if (MavenUtilities.getDefault().readNetBeansInstallation() != null) {

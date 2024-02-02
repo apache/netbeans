@@ -43,7 +43,7 @@ import org.w3c.dom.Node;
  * {@code SyntaxElement} to a {@link TagElement} and use extended interface.
  * 
  * @author sdedic
- * @sice 1.60
+ * @since 1.60
  */
 public interface SyntaxElement {
     /**

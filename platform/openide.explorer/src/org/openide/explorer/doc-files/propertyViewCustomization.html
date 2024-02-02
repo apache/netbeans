@@ -82,13 +82,13 @@ value of the property edited by the property editor.
         return s;
     }
 </PRE>
-
+<!-- (too old not relevant)
 <p class="nonnormative"><a href="http://www.netbeans.org/source/browse/~checkout~/jarpackager/src/org/netbeans/modules/jarpackager/JarDataObject.java"><code>JarDataObject</code></a>
 is an example from NetBeans sources, though this module is now obsolete.</p>
 
 <p class="nonnormative"><a href="http://www.netbeans.org/source/browse/~checkout~/core/src/org/netbeans/core/ui/MountIterator.java"><code>MountIterator</code></a>
 is an example from NetBeans sources.</p>
-
+-->
 <H3><A name="disabling_ok"> When do you want to disable/enable OK when displaying custom property editor </a></H3>
 If you provide your own property editor implementation which supplies a GUI custom editor, that
 component will be displayed in a separate window with OK and Cancel buttons.
@@ -219,7 +219,7 @@ type) the custom parameter is ignored.
             bold, ... font. Be aware that due to the performance reason, the
             given <em>html</em> longer than 511 bytes will not be interpretted
             as html.
-            See <a href="http://www.netbeans.org/issues/show_bug.cgi?id=44152">issue 44152</a> for details.
+            See <a href="https://bz.apache.org/netbeans/show_bug.cgi?id=44152">issue 44152</a> for details.
           </TD>
         </TR>
 	<TR> 
@@ -410,11 +410,10 @@ such an editor exists when creating JavaBean-related code; most
 commonly, this means that
 
 <a href="@org-openide-nodes@/org/openide/nodes/Node.Property.html#getPropertyEditor--">node properties</a>
-
+<!-- deprecated
 and
-
 <a href="@org-openide-options@/org/openide/options/SystemOption.html">system options</a>
-
+-->
 may declare a property to be of a certain type without explicitly
 specifying a property editor for it, and rely on the search path to
 provide a usable property editor so that the UI will function

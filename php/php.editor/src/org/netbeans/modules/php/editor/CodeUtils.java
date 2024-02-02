@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
@@ -87,6 +88,16 @@ public final class CodeUtils {
     public static final String STATIC_METHOD_TYPE_PREFIX = "@static.mtd:"; // NOI18N
     public static final String NULLABLE_TYPE_PREFIX = "?"; // NOI18N
     public static final String ELLIPSIS = "..."; // NOI18N
+    public static final String VAR_TAG = "@var"; // NOI18N
+    public static final String EMPTY_STRING = ""; // NOI18N
+    public static final String NEW_LINE = "\n"; // NOI18N
+    public static final String THIS_VARIABLE = "$this"; // NOI18N
+
+    public static final Pattern WHITE_SPACES_PATTERN = Pattern.compile("\\s+"); // NOI18N
+    public static final Pattern SPLIT_TYPES_PATTERN = Pattern.compile("[()|&]+"); // NOI18N
+    public static final Pattern TYPE_NAMES_IN_TYPE_DECLARATION_PATTERN = Pattern.compile("[^?()|&]+"); // NOI18N
+    public static final Pattern COMMA_PATTERN = Pattern.compile(","); // NOI18N
+
     private static final Logger LOGGER = Logger.getLogger(CodeUtils.class.getName());
 
     private CodeUtils() {
@@ -254,20 +265,43 @@ public final class CodeUtils {
         } else if (typeName instanceof NullableType) {
             return NULLABLE_TYPE_PREFIX + extractUnqualifiedName(((NullableType) typeName).getType());
         } else if (typeName instanceof UnionType) {
-            UnionType unionType = (UnionType) typeName;
-            StringBuilder sb = new StringBuilder();
-            for (Expression type : unionType.getTypes()) {
-                if (sb.length() > 0) {
-                    sb.append(Type.SEPARATOR);
-                }
-                sb.append(extractUnqualifiedName(type));
-            }
-            return sb.toString();
+            return extractUnqualifiedName((UnionType) typeName);
+        } else if (typeName instanceof IntersectionType) {
+            return extractUnqualifiedName((IntersectionType) typeName);
         }
 
         //TODO: php5.3 !!!
         //assert false : "[php5.3] className Expression instead of Identifier"; //NOI18N
         return null;
+    }
+
+    private static String extractUnqualifiedName(UnionType unionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : unionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR);
+            }
+            boolean isIntersectionType = type instanceof IntersectionType;
+            if (isIntersectionType) {
+                sb.append("("); // NOI18N
+            }
+            sb.append(extractUnqualifiedName(type));
+            if (isIntersectionType) {
+                sb.append(")"); // NOI18N
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String extractUnqualifiedName(IntersectionType intersectionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : intersectionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR_INTERSECTION);
+            }
+            sb.append(extractUnqualifiedName(type));
+        }
+        return sb.toString();
     }
 
     /**
@@ -292,34 +326,51 @@ public final class CodeUtils {
         } else if (typeName instanceof ExpressionArrayAccess) {
             return extractQualifiedName(((ExpressionArrayAccess) typeName).getExpression());
         } else if (typeName instanceof UnionType) {
-            UnionType unionType = (UnionType) typeName;
-            StringBuilder sb = new StringBuilder();
-            for (Expression type : unionType.getTypes()) {
-                if (sb.length() > 0) {
-                    sb.append(Type.SEPARATOR);
-                }
-                sb.append(extractQualifiedName(type));
-            }
-            return sb.toString();
+            return extractQualifiedName((UnionType) typeName);
         } else if (typeName instanceof IntersectionType) {
-            IntersectionType intersectionType = (IntersectionType) typeName;
-            StringBuilder sb = new StringBuilder();
-            for (Expression type : intersectionType.getTypes()) {
-                if (sb.length() > 0) {
-                    sb.append(Type.SEPARATOR_INTERSECTION);
-                }
-                sb.append(extractQualifiedName(type));
-            }
-            return sb.toString();
+            return extractQualifiedName((IntersectionType) typeName);
         }
         assert false : typeName.getClass();
         return null;
+    }
+
+    private static String extractQualifiedName(UnionType unionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : unionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR);
+            }
+            boolean isIntersectionType = type instanceof IntersectionType;
+            if (isIntersectionType) {
+                sb.append("("); // NOI18N
+            }
+            sb.append(extractQualifiedName(type));
+            if (isIntersectionType) {
+                sb.append(")"); // NOI18N
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String extractQualifiedName(IntersectionType intersectionType) {
+        StringBuilder sb = new StringBuilder();
+        for (Expression type : intersectionType.getTypes()) {
+            if (sb.length() > 0) {
+                sb.append(Type.SEPARATOR_INTERSECTION);
+            }
+            sb.append(extractQualifiedName(type));
+        }
+        return sb.toString();
     }
 
     // XXX not only class name anymore in php7+
     public static String extractUnqualifiedClassName(StaticDispatch dispatch) {
         Parameters.notNull("dispatch", dispatch);
         Expression dispatcher = dispatch.getDispatcher();
+        if (dispatcher instanceof StaticConstantAccess) {
+            // e.g. EnumName::Case::staticMethod();
+            dispatcher = ((StaticConstantAccess) dispatcher).getDispatcher();
+        }
         return extractUnqualifiedName(dispatcher);
     }
 
@@ -623,7 +674,7 @@ public final class CodeUtils {
         }
         return expr == null ? null : " "; //NOI18N
     }
-    
+
     private static String getParamDefaultValue(ArrayCreation param) {
         StringBuilder sb = new StringBuilder("["); //NOI18N
         List<ArrayElement> arrayElements = param.getElements();
@@ -684,6 +735,15 @@ public final class CodeUtils {
 
     public static boolean isConstructor(MethodDeclaration node) {
         return "__construct".equals(extractMethodName(node)); //NOI18N
+    }
+
+    public static boolean isDollaredName(ClassName className) {
+        Expression name = className.getName();
+        if (name instanceof Variable) {
+            Variable variable = (Variable) name;
+            return variable.isDollared();
+        }
+        return false;
     }
 
     /**
@@ -825,5 +885,16 @@ public final class CodeUtils {
      */
     public static OffsetRange getOffsetRagne(@NonNull ASTNode node) {
         return new OffsetRange(node.getStartOffset(), node.getEndOffset());
+    }
+
+    public static boolean isDnfType(UnionType unionType) {
+        if (unionType != null) {
+            for (Expression type : unionType.getTypes()) {
+                if (type instanceof IntersectionType) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

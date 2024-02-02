@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.editor.model.nodes;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo.Kind;
+import org.netbeans.modules.php.editor.parser.astnodes.Attribute;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
@@ -77,12 +79,12 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
     }
 
     public List<? extends Expression> getInterfaces() {
-        return getOriginalNode().getInterfaes();
+        return getOriginalNode().getInterfaces();
     }
 
     public Set<QualifiedName> getInterfaceNames() {
         final Set<QualifiedName> retval = new HashSet<>();
-        final List<Expression> interfaes = getOriginalNode().getInterfaes();
+        final List<Expression> interfaes = getOriginalNode().getInterfaces();
         for (Expression iface : interfaes) {
             QualifiedName ifaceName = QualifiedName.create(iface);
             if (ifaceName != null) {
@@ -93,20 +95,38 @@ public class ClassDeclarationInfo extends ASTNodeInfo<ClassDeclaration> {
     }
 
     public PhpModifiers getAccessModifiers() {
-        Modifier modifier = getOriginalNode().getModifier();
-
-        if (modifier.equals(Modifier.ABSTRACT)) {
-            return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC, PhpModifiers.ABSTRACT);
-        } else if (modifier.equals(Modifier.FINAL)) {
-            return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC, PhpModifiers.FINAL);
+        List<Integer> phpModifiers = new ArrayList<>(getOriginalNode().getModifiers().keySet().size());
+        phpModifiers.add(PhpModifiers.PUBLIC);
+        for (Modifier modifier : getOriginalNode().getModifiers().keySet()) {
+            switch (modifier) {
+                case ABSTRACT:
+                    phpModifiers.add(PhpModifiers.ABSTRACT);
+                    break;
+                case FINAL:
+                    phpModifiers.add(PhpModifiers.FINAL);
+                    break;
+                case READONLY:
+                    phpModifiers.add(PhpModifiers.READONLY);
+                    break;
+                case NONE:
+                    // no-op
+                    break;
+                default:
+                    assert false : "Handle " + modifier + " modifier"; // NOI18N
+                    break;
+            }
         }
-        return PhpModifiers.fromBitMask(PhpModifiers.PUBLIC);
+        return PhpModifiers.fromBitMask(phpModifiers.stream().mapToInt(i->i).toArray());
     }
 
     public Collection<QualifiedName> getUsedTraits() {
         final UsedTraitsVisitor visitor = new UsedTraitsVisitor();
         getOriginalNode().getBody().accept(visitor);
         return visitor.getUsedTraits();
+    }
+
+    public List<Attribute> getAttributes() {
+        return getOriginalNode().getAttributes();
     }
 
 }

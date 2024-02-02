@@ -68,6 +68,9 @@ public class GradleCliCompletionProvider implements CompletionProvider {
     private static final Pattern PROP_INPUT = Pattern.compile("\\$\\{([\\w.]*)$"); //NOI18N
     private static final String INPUT_TOKEN = "input:"; //NOI18N
     private static final Set<GradleCommandLine.GradleOptionItem> GRADLE_OPTIONS;
+
+    //TODO: Move this one to GradleCommandLine in NetBeans 17
+    public static final String GRADLE_PROJECT_PROPERTY = "gradle-project"; //NOI18N
     
     static {
         Set<GradleCommandLine.GradleOptionItem> all = new HashSet<>();
@@ -105,8 +108,8 @@ public class GradleCliCompletionProvider implements CompletionProvider {
                 }
 
                 Project project = null;
-                Object prop = doc.getProperty(Document.StreamDescriptionProperty);
-                if (prop != null && prop instanceof Project) {
+                Object prop = doc.getProperty(GRADLE_PROJECT_PROPERTY);
+                if (prop instanceof Project) {
                     project = (Project) prop;
                 }
                 Matcher tokenMatcher = PROP_INPUT.matcher(filter);

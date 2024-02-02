@@ -87,7 +87,7 @@ public final class ProjectArtifactsQuery {
         } else {
             delegates = buckets.values().stream().flatMap(l -> l.stream()).collect(Collectors.toList());
         }
-        return new ArtifactsResult(delegates);
+        return new ArtifactsResult(filter, delegates);
     }
     
     private static final class E<T> {
@@ -123,6 +123,7 @@ public final class ProjectArtifactsQuery {
     public static final class ArtifactsResult {
         private final List<E<?>> delegates;
 
+        private final Filter filter;
         // @GuardedBy(this)
         private final List<ChangeListener> listeners = new ArrayList<>();
         // @GuardedBy(this)
@@ -132,7 +133,8 @@ public final class ProjectArtifactsQuery {
         // @GuardedBy(this)
         private Boolean supportsChanges;
 
-        ArtifactsResult(List<E<?>> delegates) {
+        ArtifactsResult(Filter filter, List<E<?>> delegates) {
+            this.filter = filter;
             this.delegates = delegates;
         }
         
@@ -154,14 +156,21 @@ public final class ProjectArtifactsQuery {
             boolean changes = false;
             // accept only first matching artifact.
             Collection<ArtifactSpec> specs = new LinkedHashSet<>();
+            boolean single = filter.getArtifactType() == null && filter.getClassifier() == null;
+            boolean shouldAdd = true;
             for (E<?> e : delegates) {
                 Collection<ArtifactSpec> ex = e.findExcludedArtifacts();
                 if (ex != null) {
                     specs.removeAll(ex);
                 }
-                Collection<ArtifactSpec> add = e.findArtifacts();
-                if (add != null) {
-                    specs.addAll(add);
+                if (shouldAdd) {
+                    Collection<ArtifactSpec> add = e.findArtifacts();
+                    if (add != null && !add.isEmpty()) {
+                        specs.addAll(add);
+                        if (single) {
+                            shouldAdd = false;
+                        }
+                    }
                 }
                 changes |= e.computeSupportsChanges();
             }
@@ -173,6 +182,11 @@ public final class ProjectArtifactsQuery {
                     this.supportsChanges = changes;
                 }
                 if (this.artifacts != null && this.artifacts.equals(specs)) {
+                    return copy;
+                }
+                if (this.artifacts == null) {
+                    // still unitialized, will not fire events
+                    this.artifacts = copy;
                     return copy;
                 }
                 this.artifacts = copy;

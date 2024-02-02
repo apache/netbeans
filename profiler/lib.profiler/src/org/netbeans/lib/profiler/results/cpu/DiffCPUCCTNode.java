@@ -89,7 +89,7 @@ class DiffCPUCCTNode extends PrestimeCPUCCTNodeBacked {
     }
     
     private static PrestimeCPUCCTNode[] computeChildren(PrestimeCPUCCTNode[] children1, PrestimeCPUCCTNode[] children2, PrestimeCPUCCTNode parent) {        
-        Map<String, PrestimeCPUCCTNode> nodes1 = new HashMap();
+        Map<String, PrestimeCPUCCTNode> nodes1 = new HashMap<>();
         for (PrestimeCPUCCTNode node : children1) {
             String name = node.getNodeName();
             PrestimeCPUCCTNode sameNode = nodes1.get(name);
@@ -97,7 +97,7 @@ class DiffCPUCCTNode extends PrestimeCPUCCTNodeBacked {
             else sameNode.merge(node); // Merge same-named items
         }
         
-        Map<String, PrestimeCPUCCTNode> nodes2 = new HashMap();
+        Map<String, PrestimeCPUCCTNode> nodes2 = new HashMap<>();
         for (PrestimeCPUCCTNode node : children2) {
             String name = node.getNodeName();
             PrestimeCPUCCTNode sameNode = nodes2.get(name);
@@ -105,7 +105,7 @@ class DiffCPUCCTNode extends PrestimeCPUCCTNodeBacked {
             else sameNode.merge(node); // Merge same-named items
         }
         
-        List<PrestimeCPUCCTNode> children = new ArrayList();
+        List<PrestimeCPUCCTNode> children = new ArrayList<>();
         for (PrestimeCPUCCTNode node1 : nodes1.values()) {
             PrestimeCPUCCTNode node2 = nodes2.get(node1.getNodeName());
             if (node2 != null) children.add(new DiffCPUCCTNode(node1, node2));

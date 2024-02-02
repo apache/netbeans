@@ -133,7 +133,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
-import static javax.lang.model.type.TypeKind.VOID;
 
 /**
  *
@@ -187,7 +186,7 @@ public final class GeneratorUtilities {
 
     /**
      * Inserts a member to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for the member and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for the member and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the member to
      * @param member the member to add
@@ -317,7 +316,7 @@ public final class GeneratorUtilities {
 
     /**
      * Inserts members to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for each of the members and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for each of the members and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the members to
      * @param members the members to insert
@@ -378,7 +377,7 @@ public final class GeneratorUtilities {
     
     /**
      * Inserts a member to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for the member and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for the member and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the member to
      * @param member the member to add
@@ -496,7 +495,7 @@ public final class GeneratorUtilities {
      * if 'collectNames' is set, it collects field names from the class definition. If
      * 'insertedName' is not null, it also collects references to that name in 
      * 'revDependencies'.
-     * <p/>
+     * <p>
      * For the secondPass, set 'collectNames' to false: the visitor will collect
      * dependencies of the scanned node into 'dependencies'. After 2 passes,
      * the revDependencies and dependencies can be used to determine partial order
@@ -665,7 +664,7 @@ public final class GeneratorUtilities {
     
     /**
      * Inserts members to a class. Using the rules specified in the {@link CodeStyle}
-     * it finds the proper place for each of the members and calls {@link TreeMaker.insertClassMember}
+     * it finds the proper place for each of the members and calls {@link TreeMaker#insertClassMember}
      *
      * @param clazz the class to insert the members to
      * @param members the members to insert
@@ -752,7 +751,7 @@ public final class GeneratorUtilities {
         return createMethod(method, clazz, false);
     }
 
-    /**Create a new method tree for the given method element. The method will be created as if it were member of {@link asMemberOf} type
+    /**Create a new method tree for the given method element. The method will be created as if it were member of {@code asMemberOf} type
      * (see also {@link Types#asMemberOf(javax.lang.model.type.DeclaredType,javax.lang.model.element.Element)}).
      * The new method will have an empty body.
      *
@@ -1102,8 +1101,12 @@ public final class GeneratorUtilities {
                 case METHOD:
                 case ENUM_CONSTANT:
                 case FIELD:
-                    StringBuilder name = new StringBuilder(((TypeElement)e.getEnclosingElement()).getQualifiedName()).append('.').append(e.getSimpleName());
-                    if (!staticImportNames.add(name.toString()))
+                    String name = new StringBuilder(((TypeElement)e.getEnclosingElement()).getQualifiedName()).append('.').append(e.getSimpleName()).toString();
+                    // skip default static imports
+                    if ("java.lang.StringTemplate.STR".equals(name)) {
+                        break;
+                    }
+                    if (!staticImportNames.add(name))
                         break;
                 default:
                     elementsToImport.add(e);
@@ -1346,6 +1349,7 @@ public final class GeneratorUtilities {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     if (currentToImportElement.getEnclosingElement().getKind() == ElementKind.PACKAGE)
                         el = currentToImportElement.getEnclosingElement();
                     break;
@@ -1449,7 +1453,7 @@ public final class GeneratorUtilities {
                         break;
                     }
                    switch (p2.getLeaf().getKind()) {
-                       case CLASS: case INTERFACE: case ENUM:
+                       case CLASS: case INTERFACE: case ENUM: case RECORD:
                        case METHOD:
                        case BLOCK:
                        case VARIABLE:
@@ -1517,7 +1521,8 @@ public final class GeneratorUtilities {
      * converted from a single value into an array.
      *
      * The typical trees passed as {@code attributeValuesToAdd} are:
-     * <table border="1">
+     * <table>
+     * <caption>Typical tree</caption>
      *     <tr>
      *         <th>attribute type</th>
      *         <th>expected tree type</th>
@@ -1570,7 +1575,8 @@ public final class GeneratorUtilities {
      * {@link CompilationUnitTree} from {@code package-info.java}.
      *
      * The typical trees passed as {@code attributeValuesToAdd} are:
-     * <table border="1">
+     * <table>
+     * <caption>Typical tree</caption>
      *     <tr>
      *         <th>attribute type</th>
      *         <th>expected tree type</th>

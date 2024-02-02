@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.102
+#Version 2.107
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -747,7 +747,7 @@ meth protected boolean store()
 meth protected void initTabsPanel(javax.swing.JPanel)
 meth protected void load()
 supr javax.swing.JPanel
-hfds buttonGroup1,checkMultiRow,defMultiRow,defTabPlacement,filler,isAquaLaF,isCloseActivatesMostRecentDocument,isNewDocumentOpensNextToActiveTab,jLabel1,panelDocTabs,panelTabs,prefs,radioBottom,radioLeft,radioRight,radioSortFileName,radioSortFileNameWithParent,radioSortFullFilePath,radioSortNothing,radioTop,sortButtonGroup,sortTabsLabel
+hfds buttonGroup1,checkMultiRow,defMultiRow,defTabPlacement,isAquaLaF,isCloseActivatesMostRecentDocument,isNewDocumentOpensNextToActiveTab,jLabel1,panelDocTabs,panelTabs,prefs,radioBottom,radioLeft,radioRight,radioSortFileName,radioSortFileNameWithParent,radioSortFullFilePath,radioSortNothing,radioTop,sortButtonGroup,sortTabsLabel
 
 CLSS public final static !enum org.netbeans.core.windows.options.TabsPanel$EditorSortType
  outer org.netbeans.core.windows.options.TabsPanel

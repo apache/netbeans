@@ -24,7 +24,6 @@ package org.netbeans.modules.maven.api;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -121,7 +120,7 @@ public final class ModelUtils {
                 }
             }
         };
-        Utilities.performPOMModelOperations(pom, Collections.singletonList(operation));
+        Utilities.performPOMModelOperations(pom, List.of(operation));
     }
 
     public static Dependency checkModelDependency(POMModel pom, String groupId, String artifactId, boolean add) {
@@ -247,7 +246,6 @@ public final class ModelUtils {
      *
      * @param mdl
      * @param url of the repository
-     * @param add true == add to model, will not add if the repo is in project but not in model (eg. central repo)
      * @return null if repository with given url exists, otherwise a returned newly created item.
      */
     public static Repository addModelRepository(MavenProject project, POMModel mdl, String url) {
@@ -306,13 +304,13 @@ public final class ModelUtils {
     }
     
     /**
-     * Sets the Java source level of a project.
-     * Use {@link PluginPropertyUtils#getPluginProperty(Project,String,String,String,String)} first
+     * Sets the Java source and target level of a project (will set release if previously set).
+     * Use {@link PluginPropertyUtils#getPluginProperty(org.netbeans.api.project.Project,String,String,String,String,String)} first
      * ({@link Constants#GROUP_APACHE_PLUGINS}, {@link Constants#PLUGIN_COMPILER}, {@link Constants#SOURCE_PARAM}, {@code "compile"})
      * to make sure that the current level is actually not what you want.
      * 
-     * Please Note: THis method will not take existing configuration into account, especially the use of property (maven.compiler.source, maven.compiler.target)
-     * instead of plugin configuration is ignored.
+     * Please Note: This method will not take existing properties into account (maven.compiler.source, maven.compiler.target or maven.compiler.release),
+     * it is only updating the plugin configuration itself.
      * @param mdl a POM model
      * @param sourceLevel the desired source level
      * @since 2.19
@@ -332,7 +330,7 @@ public final class ModelUtils {
             plugin = mdl.getFactory().createPlugin();
             plugin.setGroupId(Constants.GROUP_APACHE_PLUGINS);
             plugin.setArtifactId(Constants.PLUGIN_COMPILER);
-            plugin.setVersion(MavenVersionSettings.getDefault().getVersion(MavenVersionSettings.VERSION_COMPILER));
+            plugin.setVersion(MavenVersionSettings.getDefault().getVersion(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER));
             mdl.getProject().getBuild().addPlugin(plugin);
         }
         Configuration conf = plugin.getConfiguration();
@@ -340,8 +338,15 @@ public final class ModelUtils {
             conf = mdl.getFactory().createConfiguration();
             plugin.setConfiguration(conf);
         }
-        conf.setSimpleParameter(Constants.SOURCE_PARAM, sourceLevel);
-        conf.setSimpleParameter(Constants.TARGET_PARAM, sourceLevel);
+        if (conf.getSimpleParameter(Constants.RELEASE_PARAM) != null) {
+            conf.setSimpleParameter(Constants.RELEASE_PARAM, sourceLevel);
+            conf.setSimpleParameter(Constants.SOURCE_PARAM, null);
+            conf.setSimpleParameter(Constants.TARGET_PARAM, null);
+        } else {
+            conf.setSimpleParameter(Constants.SOURCE_PARAM, sourceLevel);
+            conf.setSimpleParameter(Constants.TARGET_PARAM, sourceLevel);
+        }
+        
     }
 
     /**
@@ -429,8 +434,8 @@ public final class ModelUtils {
     }
     //for tests
     static Descriptor checkLibraries(Map<String, String> properties) {
-        List<LibraryDescriptor> libs = new ArrayList<LibraryDescriptor>();
-        List<RepositoryDescriptor> reps = new ArrayList<RepositoryDescriptor>();
+        List<LibraryDescriptor> libs = new ArrayList<>();
+        List<RepositoryDescriptor> reps = new ArrayList<>();
                 
         String dependencies = properties.get(LIBRARY_PROP_DEPENDENCIES);
         if (dependencies != null) {

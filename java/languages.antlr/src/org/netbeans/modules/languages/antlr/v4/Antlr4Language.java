@@ -23,6 +23,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.DeclarationFinder;
+import org.netbeans.modules.csl.api.Formatter;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
@@ -132,6 +133,16 @@ public final class Antlr4Language extends DefaultLanguageConfig {
     }
 
     @Override
+    public Formatter getFormatter() {
+        return new Antlr4Formatter();
+    }
+
+    @Override
+    public boolean hasFormatter() {
+        return true;
+    }
+
+    @Override
     public String getPreferredExtension() {
         return "g4";
     }
@@ -168,7 +179,7 @@ public final class Antlr4Language extends DefaultLanguageConfig {
 
     @Override
     public OccurrencesFinder getOccurrencesFinder() {
-        return new AntlrOccurancesFinder();
+        return new AntlrOccurrencesFinder();
     }
 
     @Override

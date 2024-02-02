@@ -182,6 +182,10 @@ public String addService(String name, String serviceImpl, String wsdlUrl, String
                 return JAKARTA_EE_VERSION_91;
             } else if (Profile.JAKARTA_EE_9_1_FULL.equals(ejbModule.getJ2eeProfile())) {
                 return JAKARTA_EE_VERSION_91;
+            } else if (Profile.JAKARTA_EE_10_WEB.equals(ejbModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_10;
+            } else if (Profile.JAKARTA_EE_10_FULL.equals(ejbModule.getJ2eeProfile())) {
+                return JAKARTA_EE_VERSION_10;
             } else if (Profile.JAVA_EE_5.equals(ejbModule.getJ2eeProfile())) {
                 return JAVA_EE_VERSION_15;
             }

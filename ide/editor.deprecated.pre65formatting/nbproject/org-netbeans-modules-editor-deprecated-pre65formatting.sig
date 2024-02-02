@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.48.0
+#Version 1.53.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1870,6 +1870,7 @@ intf java.util.EventListener
 meth public abstract void foldHierarchyChanged(org.netbeans.api.editor.fold.FoldHierarchyEvent)
 
 CLSS public org.netbeans.editor.Abbrev
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.editor.EditorUI,boolean,boolean)
 fld protected org.netbeans.editor.EditorUI editorUI
 intf java.beans.PropertyChangeListener
@@ -1961,6 +1962,7 @@ hcls DeprecatedFoldAction
 
 CLSS public static org.netbeans.editor.ActionFactory$AbbrevExpandAction
  outer org.netbeans.editor.ActionFactory
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -1969,6 +1971,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.ActionFactory$AbbrevResetAction
  outer org.netbeans.editor.ActionFactory
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -2070,6 +2073,7 @@ supr org.netbeans.editor.BaseAction
 
 CLSS public static org.netbeans.editor.ActionFactory$ExpandFold
  outer org.netbeans.editor.ActionFactory
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -2216,6 +2220,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.ActionFactory$RemoveWordNextAction
  outer org.netbeans.editor.ActionFactory
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -2223,6 +2228,7 @@ supr org.netbeans.editor.BaseAction
 
 CLSS public static org.netbeans.editor.ActionFactory$RemoveWordPreviousAction
  outer org.netbeans.editor.ActionFactory
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -2230,6 +2236,7 @@ supr org.netbeans.editor.BaseAction
 
 CLSS public static org.netbeans.editor.ActionFactory$RunMacroAction
  outer org.netbeans.editor.ActionFactory
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String)
 meth protected void error(javax.swing.text.JTextComponent,java.lang.String)
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -2277,6 +2284,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.ActionFactory$StartMacroRecordingAction
  outer org.netbeans.editor.ActionFactory
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -2292,6 +2300,7 @@ supr org.netbeans.editor.BaseAction
 
 CLSS public static org.netbeans.editor.ActionFactory$StopMacroRecordingAction
  outer org.netbeans.editor.ActionFactory
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth protected org.netbeans.editor.MacroDialogSupport getMacroDialogSupport(java.lang.Class)
@@ -2301,6 +2310,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.ActionFactory$ToggleLineNumbersAction
  outer org.netbeans.editor.ActionFactory
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected boolean isLineNumbersVisible()
 meth protected java.lang.Class getShortDescriptionBundleClass()
@@ -2330,6 +2340,7 @@ hfds paneRef,serialVersionUID,toggleButtonRef
 
 CLSS public static org.netbeans.editor.ActionFactory$ToggleTypingModeAction
  outer org.netbeans.editor.ActionFactory
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -2371,6 +2382,7 @@ meth public static boolean startsWith(char[],char[])
 meth public static char[] concat(char[],char[])
 meth public static char[] createSpacesBuffer(int)
 meth public static char[] createWhiteSpaceFillBuffer(int,int,int)
+ anno 0 java.lang.Deprecated()
 meth public static char[] createWhitespaceFillBuffer(int,int,int)
 meth public static char[] extract(char[],int,int)
 meth public static char[] getSpacesBuffer(int)
@@ -2617,6 +2629,7 @@ meth public org.netbeans.editor.AnnotationDesc getActiveAnnotation(int)
 meth public org.netbeans.editor.AnnotationDesc getActiveAnnotation(org.netbeans.editor.Mark)
 meth public org.netbeans.editor.AnnotationDesc getAnnotation(int,java.lang.String)
 meth public org.netbeans.editor.AnnotationDesc[] getPasiveAnnotations(int)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.editor.AnnotationDesc[] getPassiveAnnotations(int)
 meth public org.netbeans.editor.AnnotationDesc[] getPassiveAnnotationsForLine(int)
 meth public void addAnnotation(org.netbeans.editor.AnnotationDesc)
@@ -2648,6 +2661,7 @@ meth public java.util.Iterator<org.netbeans.editor.AnnotationDesc> getAnnotation
 meth public org.netbeans.editor.AnnotationDesc activateNext()
 meth public org.netbeans.editor.AnnotationDesc getActive()
 meth public org.netbeans.editor.AnnotationDesc[] getPasive()
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.editor.AnnotationDesc[] getPassive()
 meth public void addAnnotation(org.netbeans.editor.AnnotationDesc)
 meth public void refreshAnnotations()
@@ -2689,6 +2703,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,int)
 fld protected int updateMask
 fld public final static int ABBREV_RESET = 4
+ anno 0 java.lang.Deprecated()
 fld public final static int CLEAR_STATUS_TEXT = 32
 fld public final static int MAGIC_POSITION_RESET = 2
 fld public final static int NO_RECORDING = 64
@@ -2705,6 +2720,7 @@ meth protected boolean asynchonous()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth protected java.lang.Object createDefaultValue(java.lang.String)
 meth protected java.lang.Object findValue(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth protected java.lang.Object getDefaultShortDescription()
 meth protected void actionNameUpdate(java.lang.String)
 meth public abstract void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -2778,6 +2794,7 @@ meth public void mousePressed(java.awt.event.MouseEvent)
 meth public void mouseReleased(java.awt.event.MouseEvent)
 meth public void moveDot(int)
 meth public void moveDot(int,java.awt.Rectangle,int)
+ anno 0 java.lang.Deprecated()
 meth public void paint(java.awt.Graphics)
 meth public void propertyChange(java.beans.PropertyChangeEvent)
 meth public void refresh(boolean)
@@ -2787,7 +2804,9 @@ meth public void setBlinkRate(int)
 meth public void setDot(int)
 meth public void setDot(int,boolean)
 meth public void setDot(int,java.awt.Rectangle,int)
+ anno 0 java.lang.Deprecated()
 meth public void setDot(int,java.awt.Rectangle,int,boolean)
+ anno 0 java.lang.Deprecated()
 meth public void setMagicCaretPosition(java.awt.Point)
 meth public void setSelectionVisible(boolean)
 meth public void setVisible(boolean)
@@ -2799,6 +2818,7 @@ hcls ListenerImpl,MouseState
 CLSS public org.netbeans.editor.BaseDocument
 cons public init(boolean,java.lang.String)
 cons public init(java.lang.Class,boolean)
+ anno 0 java.lang.Deprecated()
 fld protected boolean inited
 fld protected boolean modified
 fld protected javax.swing.text.Element defaultRootElem
@@ -2808,7 +2828,9 @@ fld public final static java.lang.String FORMATTER = "formatter"
 fld public final static java.lang.String ID_PROP = "id"
 fld public final static java.lang.String KIT_CLASS_PROP = "kit-class"
 fld public final static java.lang.String LINE_BATCH_SIZE = "line-batch-size"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String LINE_LIMIT_PROP = "line-limit"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String LS_CR = "\r"
 fld public final static java.lang.String LS_CRLF = "\r\n"
 fld public final static java.lang.String LS_LF = "\n"
@@ -2845,13 +2867,17 @@ meth public char[] getChars(int,int) throws javax.swing.text.BadLocationExceptio
 meth public char[] getChars(int[]) throws javax.swing.text.BadLocationException
 meth public final boolean isAtomicLock()
 meth public final java.lang.Class getKitClass()
+ anno 0 java.lang.Deprecated()
 meth public final void atomicLock()
+ anno 0 java.lang.Deprecated()
 meth public final void atomicUnlock()
+ anno 0 java.lang.Deprecated()
 meth public final void breakAtomicLock()
 meth public final void extWriteLock()
 meth public final void extWriteUnlock()
 meth public int find(org.netbeans.editor.Finder,int,int) throws javax.swing.text.BadLocationException
 meth public int getShiftWidth()
+ anno 0 java.lang.Deprecated()
 meth public int getTabSize()
 meth public int processText(org.netbeans.editor.TextBatchProcessor,int,int) throws javax.swing.text.BadLocationException
 meth public java.lang.String getText(int[]) throws javax.swing.text.BadLocationException
@@ -2864,6 +2890,7 @@ meth public javax.swing.text.Position createPosition(int,javax.swing.text.Positi
 meth public org.netbeans.editor.Annotations getAnnotations()
 meth public org.netbeans.editor.CharSeq getText()
 meth public org.netbeans.editor.SyntaxSupport getSyntaxSupport()
+ anno 0 java.lang.Deprecated()
 meth public void addAtomicLockListener(org.netbeans.api.editor.document.AtomicLockListener)
 meth public void addAtomicLockListener(org.netbeans.editor.AtomicLockListener)
  anno 0 java.lang.Deprecated()
@@ -2890,11 +2917,13 @@ meth public void removePostModificationDocumentListener(javax.swing.event.Docume
 meth public void removeUpdateDocumentListener(javax.swing.event.DocumentListener)
 meth public void render(java.lang.Runnable)
 meth public void repaintBlock(int,int)
+ anno 0 java.lang.Deprecated()
 meth public void replace(int,int,java.lang.String,javax.swing.text.AttributeSet) throws javax.swing.text.BadLocationException
 meth public void resetUndoMerge()
 meth public void runAtomic(java.lang.Runnable)
 meth public void runAtomicAsUser(java.lang.Runnable)
 meth public void setPostModificationDocumentListener(javax.swing.event.DocumentListener)
+ anno 0 java.lang.Deprecated()
 meth public void write(java.io.Writer,int,int) throws java.io.IOException,javax.swing.text.BadLocationException
 supr javax.swing.text.AbstractDocument
 hfds DEACTIVATE_LEXER_THRESHOLD,EDITABLE_PROP,LAST_MODIFICATION_TIMESTAMP_PROP,LOG,LOG_LISTENER,MODIFICATION_LISTENER_PROP,SUPPORTS_MODIFICATION_LISTENER_PROP,VERSION_PROP,annotations,annotationsLock,atomicDepth,atomicEdits,atomicLockEventInstance,atomicLockListenerList,composedText,debugNoText,debugRead,debugStack,deprecatedKitClass,filterBypass,fixLineSyntaxState,identifierAcceptor,lastModifyUndoEdit,lastPositionEditedByTyping,lineRootElement,mimeType,modifiable,postModificationDepth,postModificationDocumentListener,postModificationDocumentListenerList,prefs,prefsListener,removeUpdateLineUndo,runExclusiveDepth,shiftWidth,syntaxSupport,tabSize,text,undoEditWrappers,undoMergeReset,updateDocumentListenerList,weakPrefsListener,whitespaceAcceptor
@@ -2924,9 +2953,11 @@ meth public boolean isInRedo()
 meth public boolean isInUndo()
 meth public boolean replaceEdit(javax.swing.undo.UndoableEdit)
 meth public char[] getChars()
+ anno 0 java.lang.Deprecated()
 meth public final javax.swing.text.AttributeSet getChangeAttributes()
 meth public int getLFCount()
 meth public int getLine()
+ anno 0 java.lang.Deprecated()
 meth public int getSyntaxUpdateOffset()
 meth public java.lang.String getRedoPresentationName()
 meth public java.lang.String getText()
@@ -3086,9 +3117,11 @@ meth protected javax.swing.Action[] createActions()
 meth protected javax.swing.Action[] getCustomActions()
 meth protected javax.swing.Action[] getDeclaredActions()
 meth protected javax.swing.Action[] getMacroActions()
+ anno 0 java.lang.Deprecated()
 meth protected org.netbeans.editor.BaseTextUI createTextUI()
 meth protected org.netbeans.editor.EditorUI createEditorUI()
 meth protected org.netbeans.editor.EditorUI createPrintEditorUI(org.netbeans.editor.BaseDocument)
+ anno 0 java.lang.Deprecated()
 meth protected org.netbeans.editor.EditorUI createPrintEditorUI(org.netbeans.editor.BaseDocument,boolean,boolean)
 meth protected void executeDeinstallActions(javax.swing.JEditorPane)
 meth protected void executeInstallActions(javax.swing.JEditorPane)
@@ -3103,10 +3136,14 @@ meth public javax.swing.text.Document createDefaultDocument()
 meth public javax.swing.text.ViewFactory getViewFactory()
 meth public org.netbeans.editor.MultiKeymap getKeymap()
 meth public org.netbeans.editor.Syntax createFormatSyntax(javax.swing.text.Document)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.editor.Syntax createSyntax(javax.swing.text.Document)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.editor.SyntaxSupport createSyntaxSupport(org.netbeans.editor.BaseDocument)
+ anno 0 java.lang.Deprecated()
 meth public static javax.swing.Action[] mapToActions(java.util.Map)
 meth public static org.netbeans.editor.BaseKit getKit(java.lang.Class)
+ anno 0 java.lang.Deprecated()
 meth public static void addActionsToMap(java.util.Map<java.lang.String,javax.swing.Action>,javax.swing.Action[],java.lang.String)
 meth public void deinstall(javax.swing.JEditorPane)
 meth public void install(javax.swing.JEditorPane)
@@ -3186,6 +3223,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.BaseKit$DefaultKeyTypedAction
  outer org.netbeans.editor.BaseKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth protected void checkIndent(javax.swing.text.JTextComponent,java.lang.String)
@@ -3197,6 +3235,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.BaseKit$DeleteCharAction
  outer org.netbeans.editor.BaseKit
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,boolean)
 fld protected boolean nextChar
 meth protected java.lang.Class getShortDescriptionBundleClass()
@@ -3248,6 +3287,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.BaseKit$InsertBreakAction
  outer org.netbeans.editor.BaseKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth protected java.lang.Object beforeBreak(javax.swing.text.JTextComponent,org.netbeans.editor.BaseDocument,javax.swing.text.Caret)
@@ -3295,6 +3335,7 @@ hfds actionNames,serialVersionUID
 
 CLSS public static org.netbeans.editor.BaseKit$NextWordAction
  outer org.netbeans.editor.BaseKit
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String)
 meth protected int getNextWordOffset(javax.swing.text.JTextComponent) throws javax.swing.text.BadLocationException
 meth protected java.lang.Class getShortDescriptionBundleClass()
@@ -3328,6 +3369,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.BaseKit$PreviousWordAction
  outer org.netbeans.editor.BaseKit
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String)
 meth protected int getPreviousWordOffset(javax.swing.text.JTextComponent) throws javax.swing.text.BadLocationException
 meth protected java.lang.Class getShortDescriptionBundleClass()
@@ -3488,6 +3530,7 @@ supr javax.swing.text.View
 hfds component,startY
 
 CLSS public abstract interface org.netbeans.editor.CharSeq
+ anno 0 java.lang.Deprecated()
 meth public abstract char charAt(int)
 meth public abstract int length()
 
@@ -3598,6 +3641,7 @@ supr javax.swing.AbstractAction
 hfds pcl
 
 CLSS public org.netbeans.editor.DialogSupport
+ anno 0 java.lang.Deprecated()
 innr public abstract interface static DialogFactory
 meth public static java.awt.Dialog createDialog(java.lang.String,javax.swing.JPanel,boolean,javax.swing.JButton[],boolean,int,int,java.awt.event.ActionListener)
 meth public static void setDialogFactory(org.netbeans.editor.DialogSupport$DialogFactory)
@@ -3614,6 +3658,7 @@ meth public static void copyText(javax.swing.text.Document,int,int,char[],int) t
 supr java.lang.Object
 
 CLSS public org.netbeans.editor.EditorDebug
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String debugArray(int[])
 meth public static java.lang.String debugArray(java.lang.Object[])
 meth public static java.lang.String debugBlocks(org.netbeans.editor.BaseDocument,int[])
@@ -3632,6 +3677,7 @@ meth public static void test(javax.swing.text.JTextComponent)
 supr java.lang.Object
 
 CLSS public org.netbeans.editor.EditorState
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.Object get(java.lang.Object)
 meth public static java.util.HashMap getStateObject()
 meth public static void put(java.lang.Object,java.lang.Object)
@@ -3658,9 +3704,11 @@ intf javax.swing.event.ChangeListener
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected int textLimitWidth()
 meth protected java.util.Map createColoringMap()
+ anno 0 java.lang.Deprecated()
 meth protected javax.swing.JComponent createExtComponent()
 meth protected javax.swing.JToolBar createToolBarComponent()
 meth protected static java.util.Map<java.lang.String,org.netbeans.editor.Coloring> getSharedColoringMap(java.lang.Class)
+ anno 0 java.lang.Deprecated()
 meth protected void initGlyphCorner(javax.swing.JScrollPane)
 meth protected void installUI(javax.swing.text.JTextComponent)
 meth protected void modelChanged(org.netbeans.editor.BaseDocument,org.netbeans.editor.BaseDocument)
@@ -3674,7 +3722,9 @@ meth public boolean hasExtComponent()
 meth public boolean isGlyphGutterVisible()
 meth public boolean isLineNumberEnabled()
 meth public boolean updateVirtualHeight(int)
+ anno 0 java.lang.Deprecated()
 meth public boolean updateVirtualWidth(int)
+ anno 0 java.lang.Deprecated()
 meth public final int getSideBarWidth()
 meth public final javax.swing.text.JTextComponent getComponent()
 meth public final org.netbeans.editor.BaseDocument getDocument()
@@ -3689,13 +3739,17 @@ meth public java.awt.Rectangle getExtentBounds(java.awt.Rectangle)
 meth public java.lang.Object getComponentLock()
 meth public java.lang.Object getProperty(java.lang.Object)
 meth public java.util.Map<java.lang.String,org.netbeans.editor.Coloring> getColoringMap()
+ anno 0 java.lang.Deprecated()
 meth public javax.swing.JComponent getExtComponent()
 meth public javax.swing.JPopupMenu getPopupMenu()
 meth public javax.swing.JToolBar getToolBarComponent()
 meth public org.netbeans.api.editor.StickyWindowSupport getStickyWindowSupport()
 meth public org.netbeans.editor.Abbrev getAbbrev()
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.editor.Coloring getColoring(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.editor.Coloring getDefaultColoring()
+ anno 0 java.lang.Deprecated()
 meth public org.netbeans.editor.PopupManager getPopupManager()
 meth public org.netbeans.editor.StatusBar getStatusBar()
 meth public org.netbeans.editor.WordMatch getWordMatch()
@@ -3706,7 +3760,9 @@ meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyC
 meth public void adjustCaret(int)
 meth public void adjustWindow(int)
 meth public void caretMoveDot(int,java.awt.Rectangle,int)
+ anno 0 java.lang.Deprecated()
 meth public void caretSetDot(int,java.awt.Rectangle,int)
+ anno 0 java.lang.Deprecated()
 meth public void hidePopupMenu()
 meth public void mouseClicked(java.awt.event.MouseEvent)
 meth public void mouseEntered(java.awt.event.MouseEvent)
@@ -3722,6 +3778,7 @@ meth public void repaint(int,int)
 meth public void repaintBlock(int,int) throws javax.swing.text.BadLocationException
 meth public void repaintOffset(int) throws javax.swing.text.BadLocationException
 meth public void scrollRectToVisible(java.awt.Rectangle,int)
+ anno 0 java.lang.Deprecated()
 meth public void setLineNumberEnabled(boolean)
 meth public void setPopupMenu(javax.swing.JPopupMenu)
 meth public void showPopupMenu(int,int)
@@ -4113,6 +4170,7 @@ CLSS public abstract interface static org.netbeans.editor.GapObjectArray$RemoveU
 meth public abstract void removeUpdate(java.lang.Object)
 
 CLSS public abstract interface org.netbeans.editor.GapStart
+ anno 0 java.lang.Deprecated()
 meth public abstract int getGapStart()
 
 CLSS public org.netbeans.editor.GlyphGutter
@@ -4142,7 +4200,9 @@ hcls EditorUIListener,GutterMouseListener
 
 CLSS public org.netbeans.editor.GuardedDocument
 cons public init(java.lang.Class)
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Class,boolean,javax.swing.text.StyleContext)
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String)
 cons public init(java.lang.String,boolean,javax.swing.text.StyleContext)
 fld protected java.lang.String normalStyleName
@@ -4194,6 +4254,7 @@ intf org.netbeans.editor.TokenID
 meth public abstract java.lang.String getImage()
 
 CLSS public abstract org.netbeans.editor.ImplementationProvider
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth public abstract java.util.ResourceBundle getResourceBundle(java.lang.String)
 meth public abstract javax.swing.Action[] getGlyphGutterActions(javax.swing.text.JTextComponent)
@@ -4213,10 +4274,12 @@ innr public final static Entry
 meth public static boolean hasNext()
 meth public static boolean hasPrev()
 meth public static java.lang.String dump()
+ anno 0 java.lang.Deprecated()
 meth public static void addEntry(javax.swing.text.JTextComponent,int)
 meth public static void checkAddEntry()
 meth public static void checkAddEntry(javax.swing.text.JTextComponent)
 meth public static void checkAddEntry(javax.swing.text.JTextComponent,int)
+ anno 0 java.lang.Deprecated()
 meth public static void jumpNext(javax.swing.text.JTextComponent)
 meth public static void jumpNextComponent(javax.swing.text.JTextComponent)
 meth public static void jumpPrev(javax.swing.text.JTextComponent)
@@ -4291,6 +4354,7 @@ hfds modelToViewDG,viewToModelDG
 hcls ModelToViewDG,ViewToModelDG
 
 CLSS public org.netbeans.editor.LineSeparatorConversion
+ anno 0 java.lang.Deprecated()
 fld public final static char LS = '\u2028'
 fld public final static char PS = '\u2029'
 fld public final static java.lang.String LS_LS
@@ -4335,6 +4399,7 @@ supr java.lang.Object
 hfds convertedText,lastCharCR,readWholeBuffer,reader
 
 CLSS public org.netbeans.editor.LocaleSupport
+ anno 0 java.lang.Deprecated()
 cons public init()
 innr public abstract interface static Localizer
 meth public static char getChar(java.lang.String,char)
@@ -4350,6 +4415,7 @@ CLSS public abstract interface static org.netbeans.editor.LocaleSupport$Localize
 meth public abstract java.lang.String getString(java.lang.String)
 
 CLSS public org.netbeans.editor.MacroDialogSupport
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Class)
 intf java.awt.event.ActionListener
 meth protected int showConfirmDialog(java.lang.String)
@@ -4360,6 +4426,7 @@ supr java.lang.Object
 hfds cancelButton,kitClass,macroDialog,okButton,panel
 
 CLSS public org.netbeans.editor.MacroSavePanel
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.Class)
 fld public javax.swing.JButton addButton
 fld public javax.swing.JButton removeButton
@@ -4385,6 +4452,7 @@ hfds bindings,bundle,kitClass
 hcls KeySequenceCellRenderer,KeySequenceRequester
 
 CLSS public org.netbeans.editor.Mark
+ anno 0 java.lang.Deprecated()
 cons public init()
 cons public init(boolean)
 cons public init(javax.swing.text.Position$Bias)
@@ -4497,6 +4565,7 @@ supr org.netbeans.editor.Mark
 
 CLSS public static org.netbeans.editor.MarkFactory$SyntaxMark
  outer org.netbeans.editor.MarkFactory
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected void removeUpdateAction(int,int)
 meth public org.netbeans.editor.Syntax$StateInfo getStateInfo()
@@ -4626,6 +4695,7 @@ meth public abstract void add(char[],java.awt.Font,java.awt.Color,java.awt.Color
 meth public abstract void eol()
 
 CLSS public org.netbeans.editor.Registry
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth public static java.lang.String registryToString()
 meth public static java.util.Iterator<? extends javax.swing.text.Document> getDocumentIterator()
@@ -4640,6 +4710,7 @@ supr java.lang.Object
 hfds editorRegistryListener,listenerList
 
 CLSS public org.netbeans.editor.SegmentCache
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth public javax.swing.text.Segment getSegment()
 meth public static org.netbeans.editor.SegmentCache getSharedInstance()
@@ -4905,29 +4976,42 @@ fld public final static int CASE_UPPER = 0
 meth public static <%0 extends java.lang.Object> {%%0} runWithOnSaveTasksDisabled(org.openide.util.Mutex$Action<{%%0}>)
 meth public static boolean changeCase(org.netbeans.editor.BaseDocument,int,int,int) throws javax.swing.text.BadLocationException
 meth public static boolean isRowEmpty(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static boolean isRowWhite(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static boolean isSelectionShowing(javax.swing.text.Caret)
 meth public static boolean isSelectionShowing(javax.swing.text.JTextComponent)
 meth public static int getFirstNonEmptyRow(org.netbeans.editor.BaseDocument,int,boolean) throws javax.swing.text.BadLocationException
  anno 0 java.lang.Deprecated()
 meth public static int getFirstNonWhiteBwd(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getFirstNonWhiteBwd(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getFirstNonWhiteFwd(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getFirstNonWhiteFwd(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getFirstNonWhiteRow(org.netbeans.editor.BaseDocument,int,boolean) throws javax.swing.text.BadLocationException
  anno 0 java.lang.Deprecated()
 meth public static int getFirstWhiteBwd(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getFirstWhiteBwd(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getFirstWhiteFwd(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getFirstWhiteFwd(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getLineOffset(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getNextTabColumn(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
 meth public static int getNextWord(javax.swing.text.JTextComponent,int) throws javax.swing.text.BadLocationException
  anno 0 java.lang.Deprecated()
 meth public static int getNextWord(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
  anno 0 java.lang.Deprecated()
 meth public static int getPositionAbove(javax.swing.text.JTextComponent,int,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getPositionBelow(javax.swing.text.JTextComponent,int,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getPreviousWord(javax.swing.text.JTextComponent,int) throws javax.swing.text.BadLocationException
  anno 0 java.lang.Deprecated()
 meth public static int getPreviousWord(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
@@ -4937,21 +5021,28 @@ meth public static int getRowCount(org.netbeans.editor.BaseDocument)
 meth public static int getRowCount(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
  anno 0 java.lang.Deprecated()
 meth public static int getRowEnd(javax.swing.text.JTextComponent,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getRowEnd(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getRowFirstNonWhite(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
 meth public static int getRowIndent(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
 meth public static int getRowIndent(org.netbeans.editor.BaseDocument,int,boolean) throws javax.swing.text.BadLocationException
 meth public static int getRowLastNonWhite(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getRowStart(javax.swing.text.JTextComponent,int) throws javax.swing.text.BadLocationException
 meth public static int getRowStart(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getRowStart(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getRowStartFromLineOffset(org.netbeans.editor.BaseDocument,int)
+ anno 0 java.lang.Deprecated()
 meth public static int getVisualColumn(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
 meth public static int getWordEnd(javax.swing.text.JTextComponent,int) throws javax.swing.text.BadLocationException
  anno 0 java.lang.Deprecated()
 meth public static int getWordEnd(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
  anno 0 java.lang.Deprecated()
 meth public static int getWordStart(javax.swing.text.JTextComponent,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getWordStart(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
  anno 0 java.lang.Deprecated()
 meth public static int reformat(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
@@ -4969,6 +5060,7 @@ meth public static java.lang.String getSelectionOrIdentifier(javax.swing.text.JT
 meth public static java.lang.String getSelectionOrIdentifier(javax.swing.text.JTextComponent,int) throws javax.swing.text.BadLocationException
 meth public static java.lang.String getStatusText(javax.swing.text.JTextComponent)
 meth public static java.lang.String getTabInsertString(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static java.lang.String getWord(javax.swing.text.JTextComponent,int) throws javax.swing.text.BadLocationException
 meth public static java.lang.String getWord(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
 meth public static java.lang.String keySequenceToString(javax.swing.KeyStroke[])
@@ -4984,6 +5076,7 @@ meth public static org.netbeans.editor.BaseKit getKit(javax.swing.text.JTextComp
 meth public static org.netbeans.editor.EditorUI getEditorUI(javax.swing.text.JTextComponent)
 meth public static org.netbeans.editor.SyntaxSupport getSyntaxSupport(javax.swing.text.JTextComponent)
 meth public static void annotateLoggable(java.lang.Throwable)
+ anno 0 java.lang.Deprecated()
 meth public static void clearStatusText(javax.swing.text.JTextComponent)
 meth public static void insertMark(org.netbeans.editor.BaseDocument,org.netbeans.editor.Mark,int) throws javax.swing.text.BadLocationException,org.netbeans.editor.InvalidMarkException
 meth public static void moveMark(org.netbeans.editor.BaseDocument,org.netbeans.editor.Mark,int) throws javax.swing.text.BadLocationException,org.netbeans.editor.InvalidMarkException
@@ -5079,7 +5172,9 @@ meth public abstract void seek(long) throws java.io.IOException
 CLSS public org.netbeans.editor.ext.ExtCaret
 cons public init()
 meth protected void updateMatchBrace()
+ anno 0 java.lang.Deprecated()
 meth public void requestMatchBraceUpdateSync()
+ anno 0 java.lang.Deprecated()
 supr org.netbeans.editor.BaseCaret
 hfds serialVersionUID
 
@@ -5184,12 +5279,15 @@ fld public final static java.lang.String allCompletionShowAction = "all-completi
 fld public final static java.lang.String buildPopupMenuAction = "build-popup-menu"
 fld public final static java.lang.String buildToolTipAction = "build-tool-tip"
 fld public final static java.lang.String codeSelectAction = "code-select"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String commentAction = "comment"
 fld public final static java.lang.String completionShowAction = "completion-show"
 fld public final static java.lang.String completionTooltipShowAction = "tooltip-show"
 fld public final static java.lang.String documentationShowAction = "documentation-show"
 fld public final static java.lang.String escapeAction = "escape"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String findAction = "find"
+ anno 0 java.lang.Deprecated()
 fld public final static java.lang.String gotoAction = "goto"
 fld public final static java.lang.String gotoDeclarationAction = "goto-declaration"
 fld public final static java.lang.String gotoHelpAction = "goto-help"
@@ -5231,6 +5329,7 @@ hcls BaseKitLocalizedAction
 
 CLSS public static org.netbeans.editor.ext.ExtKit$AllCompletionShowAction
  outer org.netbeans.editor.ext.ExtKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -5261,6 +5360,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.ext.ExtKit$CodeSelectAction
  outer org.netbeans.editor.ext.ExtKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -5277,6 +5377,7 @@ hfds delegateAction,serialVersionUID
 
 CLSS public static org.netbeans.editor.ext.ExtKit$CompletionShowAction
  outer org.netbeans.editor.ext.ExtKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -5285,6 +5386,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.ext.ExtKit$CompletionTooltipShowAction
  outer org.netbeans.editor.ext.ExtKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -5292,6 +5394,7 @@ supr org.netbeans.editor.BaseAction
 
 CLSS public static org.netbeans.editor.ext.ExtKit$DocumentationShowAction
  outer org.netbeans.editor.ext.ExtKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -5306,6 +5409,7 @@ supr org.netbeans.editor.BaseAction
 
 CLSS public static org.netbeans.editor.ext.ExtKit$ExtDefaultKeyTypedAction
  outer org.netbeans.editor.ext.ExtKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected void checkCompletion(javax.swing.text.JTextComponent,java.lang.String)
 meth protected void checkIndentHotChars(javax.swing.text.JTextComponent,java.lang.String)
@@ -5315,6 +5419,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.ext.ExtKit$ExtDeleteCharAction
  outer org.netbeans.editor.ext.ExtKit
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,boolean)
 supr org.netbeans.editor.BaseKit$DeleteCharAction
 
@@ -5329,6 +5434,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.ext.ExtKit$GotoDeclarationAction
  outer org.netbeans.editor.ext.ExtKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public boolean gotoDeclaration(javax.swing.text.JTextComponent)
@@ -5338,6 +5444,7 @@ hfds serialVersionUID
 
 CLSS public static org.netbeans.editor.ext.ExtKit$MatchBraceAction
  outer org.netbeans.editor.ext.ExtKit
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String,boolean)
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public void actionPerformed(java.awt.event.ActionEvent,javax.swing.text.JTextComponent)
@@ -6105,12 +6212,14 @@ meth public javax.swing.JPopupMenu getPopupMenu()
 supr javax.swing.JMenu
 
 CLSS public org.netbeans.modules.editor.NbDialogSupport
+ anno 0 java.lang.Deprecated()
 cons public init()
 intf org.netbeans.editor.DialogSupport$DialogFactory
 supr org.netbeans.modules.editor.impl.NbDialogFactory
 
 CLSS public org.netbeans.modules.editor.NbEditorDocument
 cons public init(java.lang.Class)
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String)
 fld public final static java.lang.String INDENT_ENGINE = "indentEngine"
 intf org.openide.text.NbDocument$Annotatable
@@ -6207,12 +6316,14 @@ supr org.netbeans.editor.ActionFactory$RedoAction
 
 CLSS public org.netbeans.modules.editor.NbEditorKit$NbStopMacroRecordingAction
  outer org.netbeans.modules.editor.NbEditorKit
+ anno 0 java.lang.Deprecated()
 cons public init(org.netbeans.modules.editor.NbEditorKit)
 meth protected org.netbeans.editor.MacroDialogSupport getMacroDialogSupport(java.lang.Class)
 supr org.netbeans.editor.ActionFactory$StopMacroRecordingAction
 
 CLSS public final static org.netbeans.modules.editor.NbEditorKit$NbToggleLineNumbersAction
  outer org.netbeans.modules.editor.NbEditorKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected boolean isLineNumbersVisible()
 meth protected void toggleLineNumbers()
@@ -6226,6 +6337,7 @@ supr org.netbeans.editor.ActionFactory$UndoAction
 
 CLSS public static org.netbeans.modules.editor.NbEditorKit$ToggleToolbarAction
  outer org.netbeans.modules.editor.NbEditorKit
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth protected java.lang.Class getShortDescriptionBundleClass()
 meth public javax.swing.JMenuItem getPopupMenuItem(javax.swing.text.JTextComponent)
@@ -6239,6 +6351,7 @@ meth protected int textLimitWidth()
 meth protected javax.swing.JComponent createExtComponent()
 meth protected javax.swing.JToolBar createToolBarComponent()
 meth protected org.netbeans.modules.editor.NbEditorUI$SystemActionUpdater createSystemActionUpdater(java.lang.String,boolean,boolean)
+ anno 0 java.lang.Deprecated()
 meth protected void attachSystemActionPerformer(java.lang.String)
 meth protected void installUI(javax.swing.text.JTextComponent)
 meth protected void uninstallUI(javax.swing.text.JTextComponent)
@@ -6250,6 +6363,7 @@ hcls EnabledPropertySyncListener,LayeredEditorPane,SideBarsListener,SystemAction
 
 CLSS public final org.netbeans.modules.editor.NbEditorUI$SystemActionUpdater
  outer org.netbeans.modules.editor.NbEditorUI
+ anno 0 java.lang.Deprecated()
 intf java.beans.PropertyChangeListener
 intf org.openide.util.actions.ActionPerformer
 meth protected void finalize() throws java.lang.Throwable
@@ -6272,6 +6386,7 @@ meth public static org.openide.loaders.DataObject getDataObject(javax.swing.text
 meth public static org.openide.text.Line getLine(javax.swing.text.Document,int,boolean)
 meth public static org.openide.text.Line getLine(javax.swing.text.JTextComponent,boolean)
 meth public static org.openide.text.Line getLine(org.netbeans.editor.BaseDocument,int,boolean)
+ anno 0 java.lang.Deprecated()
 meth public static org.openide.windows.TopComponent getOuterTopComponent(javax.swing.text.JTextComponent)
 meth public static org.openide.windows.TopComponent getTopComponent(javax.swing.text.JTextComponent)
 meth public static void addJumpListEntry(org.openide.loaders.DataObject)
@@ -6279,6 +6394,7 @@ meth public static void invalidArgument(java.lang.String)
 supr java.lang.Object
 
 CLSS public org.netbeans.modules.editor.NbImplementationProvider
+ anno 0 java.lang.Deprecated()
 cons public init()
 fld public final static java.lang.String GLYPH_GUTTER_ACTIONS_FOLDER_NAME = "GlyphGutterActions"
 meth public boolean activateComponent(javax.swing.text.JTextComponent)

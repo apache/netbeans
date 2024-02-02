@@ -553,6 +553,7 @@ public class ExplorerActions {
         OwnPaste() {
         }
 
+        @Override
         public boolean isEnabled() {
             updateActionsState();
 
@@ -578,6 +579,7 @@ public class ExplorerActions {
             }
         }
 
+        @Override
         public Object getValue(String s) {
             updateActionsState();
 
@@ -600,6 +602,7 @@ public class ExplorerActions {
             copyCut = b;
         }
 
+        @Override
         public boolean isEnabled() {
             updateActionsState();
 
@@ -654,6 +657,7 @@ public class ExplorerActions {
         DeleteActionPerformer() {
         }
 
+        @Override
         public boolean isEnabled() {
             updateActionsState();
 
@@ -831,16 +835,19 @@ public class ExplorerActions {
             super(delay, l);
         }
 
+        @Override
         public void restart() {
             super.restart();
             running = true;
         }
 
+        @Override
         public void stop() {
             running = false;
             super.stop();
         }
 
+        @Override
         public boolean isRunning() {
             return running;
         }

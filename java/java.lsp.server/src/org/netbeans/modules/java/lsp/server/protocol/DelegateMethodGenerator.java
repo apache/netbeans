@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
@@ -73,6 +74,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 60)
 public final class DelegateMethodGenerator extends CodeActionsProvider {
 
+    private static final String GENERATE_DELEGATE_METHOD = "nbls.java.generate.delegate";
     private static final String URI =  "uri";
     private static final String OFFSET =  "offset";
     private static final String TYPE =  "type";
@@ -85,12 +87,12 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
     @NbBundle.Messages({
         "DN_GenerateDelegateMethod=Generate Delegate Method...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Source)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null) {
             return Collections.emptyList();
         }
@@ -135,7 +137,12 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
         data.put(OFFSET, offset);
         data.put(TYPE, typeItem);
         data.put(FIELDS, fields);
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateDelegateMethod(), CODE_GENERATOR_KIND, data, "workbench.action.focusActiveEditorGroup"));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateDelegateMethod(), CODE_GENERATOR_KIND, null, "nbls.generate.code", GENERATE_DELEGATE_METHOD, data));
+    }
+
+    @Override
+    public Set<String> getCommands() {
+        return Collections.singleton(GENERATE_DELEGATE_METHOD);
     }
 
     @Override
@@ -143,13 +150,17 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
         "DN_SelectDelegateMethodField=Select target field to generate delegates for",
         "DN_SelectDelegateMethods=Select methods to generate delegates for",
     })
-    public CompletableFuture<CodeAction> resolve(NbCodeLanguageClient client, CodeAction codeAction, Object data) {
-        CompletableFuture<CodeAction> future = new CompletableFuture<>();
+    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+        if (arguments.isEmpty()) {
+            return CompletableFuture.completedFuture(null);
+        }
+        JsonObject data = (JsonObject) arguments.get(0);
+        CompletableFuture<Object> future = new CompletableFuture<>();
         try {
-            String uri = ((JsonObject) data).getAsJsonPrimitive(URI).getAsString();
-            int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
-            QuickPickItem type = gson.fromJson(gson.toJson(((JsonObject) data).get(TYPE)), QuickPickItem.class);
-            List<QuickPickItem> fields = Arrays.asList(gson.fromJson(((JsonObject) data).get(FIELDS), QuickPickItem[].class));
+            String uri = data.getAsJsonPrimitive(URI).getAsString();
+            int offset = data.getAsJsonPrimitive(OFFSET).getAsInt();
+            QuickPickItem type = gson.fromJson(gson.toJson(data.get(TYPE)), QuickPickItem.class);
+            List<QuickPickItem> fields = Arrays.asList(gson.fromJson(data.get(FIELDS), QuickPickItem[].class));
             InputService.Registry inputServiceRegistry = Lookup.getDefault().lookup(InputService.Registry.class);
             if (inputServiceRegistry != null) {
                 int totalSteps = fields.size() > 1 ? 2 : 1;
@@ -220,18 +231,10 @@ public final class DelegateMethodGenerator extends CodeActionsProvider {
                     Either<List<QuickPickItem>, String> selectedFields = result.get(FIELDS);
                     QuickPickItem selectedField = (selectedFields != null ? selectedFields.getLeft() : fields).get(0);
                     Either<List<QuickPickItem>, String> selectedMethods = result.get(METHODS);
-                    if (selectedField != null && selectedMethods != null) {
-                        try {
-                            WorkspaceEdit edit = generate(uri, offset, selectedField, selectedMethods.getLeft());
-                            if (edit != null) {
-                                codeAction.setEdit(edit);
-                            }
-                            future.complete(codeAction);
-                        } catch (IOException | IllegalArgumentException ex) {
-                            future.completeExceptionally(ex);
-                        }
-                    } else {
-                        future.complete(codeAction);
+                    try {
+                        future.complete(selectedField != null && selectedMethods != null ? generate(uri, offset, selectedField, selectedMethods.getLeft()) : null);
+                    } catch (IOException | IllegalArgumentException ex) {
+                        future.completeExceptionally(ex);
                     }
                 });
             }

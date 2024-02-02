@@ -20,6 +20,7 @@
 package org.netbeans.modules.java.source.parsing;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
 import javax.tools.JavaFileObject;
@@ -66,6 +67,15 @@ public interface Archive {
     public JavaFileObject getFile(final @NonNull String name) throws IOException;
 
     /**
+     * Returns a {@link URI} for a directory of the given name, or null if it does
+     * not exist.
+     *
+     * @param dirName the name of the directory
+     * @return a URI if the given directory is in this archive, {@code null} otherwise.
+     */
+    public URI getDirectory(final @NonNull String dirName) throws IOException;
+
+    /**
      * Checks if the {@link Archive} is represents a multi release archive.
      * @return true if the {@link Archive} is supports multiple releases.
      */
@@ -88,6 +98,11 @@ public interface Archive {
 
         @Override
         public JavaFileObject getFile(String name) throws IOException {
+            return null;
+        }
+
+        @Override
+        public URI getDirectory(String name) throws IOException {
             return null;
         }
 

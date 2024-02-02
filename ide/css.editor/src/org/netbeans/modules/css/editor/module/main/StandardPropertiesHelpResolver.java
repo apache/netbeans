@@ -105,10 +105,15 @@ public class StandardPropertiesHelpResolver extends HelpResolver {
                 
                 String elementName = "dfn";
                 
-                String patternImg = String.format("(?s)<%s[^>]*id=['\"]?\\w*-??propdef-%s\\d?['\"]?[^>]*>", elementName, propertyName);
+                String patternImg = String.format("(?s)<%s[^>]*id=(['\"])propdef-%s\\d?\\1[^>]*>", elementName, propertyName);
                 
                 Pattern pattern = Pattern.compile(patternImg); //DOTALL mode
                 Matcher matcher = pattern.matcher(urlContent);
+                if (!matcher.find(0)){
+                    patternImg = String.format("(?s)<%s[^>]*id=['\"]?\\w*-??propdef-%s\\d?['\"]?[^>]*>", elementName, propertyName);
+                    pattern = Pattern.compile(patternImg); //DOTALL mode
+                    matcher = pattern.matcher(urlContent);
+                }
                 if (!matcher.find(0)){
                     patternImg = String.format("(?s)<%s[^>]*id=['\"]?\\w*-??%s\\d?['\"]?>", elementName, propertyName);
                     pattern = Pattern.compile(patternImg); //DOTALL mode

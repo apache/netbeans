@@ -5,9 +5,9 @@
 ###### to you under the Apache License, Version 2.0 (the
 ###### "License"); you may not use this file except in compliance
 ###### with the License.  You may obtain a copy of the License at
-###### 
+######
 ######   http://www.apache.org/licenses/LICENSE-2.0
-###### 
+######
 ###### Unless required by applicable law or agreed to in writing,
 ###### software distributed under the License is distributed on an
 ###### "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,7 +16,7 @@
 ###### under the License.
 
 ###### BEGIN OF EXCLUSIONS (Do not remove this marker!)
-###### build artifacts 
+###### build artifacts
 **/build/**
 licenses/**
 nbbuild/licenses/**
@@ -33,12 +33,14 @@ enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_6/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_7/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_8/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_9/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/application/model_10/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_1_4/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_5_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_6_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_7_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_8_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_9_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/client/model_10_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_2_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/ejb/model_3_1/*
@@ -50,12 +52,17 @@ enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_1/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_4_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_5_0/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_6_0/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_0_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_3_1_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_4_0_frag/*
 enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_5_0_frag/*
+enterprise/j2ee.dd/src/org/netbeans/modules/j2ee/dd/impl/web/model_6_0_frag/*
+extide/gradle/netbeans-gradle-tooling/.gradle/**
+profiler/lib.profiler/release/BUILDINFO.txt
+webcommon/javascript2.jquery/external/jquery-api.xml
 
-###### user-specific files  
+###### user-specific files
 **/nbproject/private/**
 
 ###### no degree of creativity: https://www.apache.org/legal/src-headers.html#faq-exceptions
@@ -84,10 +91,10 @@ ide/options.editor/src/org/netbeans/modules/options/colors/HighlightingExample
 ide/options.editor/src/org/netbeans/modules/options/indentation/indentationExample
 platform/templates/src/org/netbeans/modules/templates/resources/userprop.txt
 ### limited degreed of creativity
-## the files do not reach a level of creativity 
+## the files do not reach a level of creativity
 java/maven.checkstyle/src/org/netbeans/modules/maven/format/checkstyle/config/configuration*.dtd
 
-###### test data: https://www.apache.org/legal/src-headers.html#faq-exceptions 
+###### test data: https://www.apache.org/legal/src-headers.html#faq-exceptions
 platform/api.search/test/unit/src/org/netbeans/modules/search/data/**
 platform/api.templates/test/unit/src/org/netbeans/modules/templates/utf8.xml
 platform/autoupdate.services/test/unit/**/data/**
@@ -155,7 +162,7 @@ java/selenium2.java/src/org/netbeans/modules/selenium2/java/SeleneseIT.java.temp
 java/testng.ui/src/org/netbeans/modules/testng/ui/resources/*.template
 websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.template
 
-###### do not natively support comments 
+###### do not natively support comments
 **/*.mf
 **/*.MF
 **/*.nib
@@ -164,7 +171,7 @@ websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/oauth/*.templa
 harness/jellytools.platform/src/org/netbeans/jellytools/version_info
 **/*.npss
 
-######  generated test files 
+######  generated test files
 **/*.pass
 **/*.pass2
 **/*.pbxproj
@@ -179,14 +186,14 @@ harness/jellytools.platform/src/org/netbeans/jellytools/version_info
 platform/openide.util.ui/test/unit/src/org/openide/util/UtilitiesTranslateEmpty.txt
 platform/openide.util/test/unit/src/org/openide/util/LookupUsesRequestProcessorTest.resource
 
-######  external dependencies licences and notices 
+######  external dependencies licences and notices
 **/external/*-license.txt
 **/external/*-notice.txt
 
 ###### generated
-### signatures for past versions 
+### signatures for past versions
 **/nbproject/*.sig
-### generated, no degree of creativity 
+### generated, no degree of creativity
 **/nbproject/build-impl.xml
 **/nbproject/genfiles.properties
 **/nbproject/groovy-build.xml
@@ -197,8 +204,19 @@ websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/*
 websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/*
 ### generated ANTLR
 java/java.api.common/src/org/netbeans/modules/java/api/common/project/ui/customizer/vmo/gen/CommandLine.tokens
+### generated by ANTLR at ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/g4/*
+ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/TerraformLexer.java
+ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/HCLExpressionParser.java
+ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/HCLExpressionParserBaseListener.java
+ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/HCLExpressionParserListener.java
+ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/HCLLexer.java
+ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/HCLParser.java
+ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/HCLParserBaseListener.java
+ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/HCLParserListener.java
 
-###### license files 
+
+
+###### license files
 apisupport/apisupport.installer/src/org/netbeans/modules/apisupport/installer/resources/licenses/**
 ### companion files for CDDL licensed binaries
 profiler/lib.profiler/release/lib/deployed/**/*.map

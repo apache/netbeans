@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.47.0
+#Version 1.52.0
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -66,6 +66,12 @@ CLSS public abstract interface java.lang.Cloneable
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
@@ -192,8 +198,6 @@ hfds isReadOnly
 CLSS public javax.el.BeanELResolver
 cons public init()
 cons public init(boolean)
-innr protected final static BeanProperties
-innr protected final static BeanProperty
 meth public boolean isReadOnly(javax.el.ELContext,java.lang.Object,java.lang.Object)
 meth public java.lang.Class<?> getCommonPropertyType(javax.el.ELContext,java.lang.Object)
 meth public java.lang.Class<?> getType(javax.el.ELContext,java.lang.Object,java.lang.Object)
@@ -202,57 +206,81 @@ meth public java.lang.Object invoke(javax.el.ELContext,java.lang.Object,java.lan
 meth public java.util.Iterator<java.beans.FeatureDescriptor> getFeatureDescriptors(javax.el.ELContext,java.lang.Object)
 meth public void setValue(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
 supr javax.el.ELResolver
-hfds CACHE_SIZE,isReadOnly,properties
+hfds isReadOnly,properties
+hcls BPSoftReference,BeanProperties,BeanProperty,SoftConcurrentHashMap
 
-CLSS protected final static javax.el.BeanELResolver$BeanProperties
- outer javax.el.BeanELResolver
-cons public init(java.lang.Class<?>)
-meth public javax.el.BeanELResolver$BeanProperty getBeanProperty(java.lang.String)
-supr java.lang.Object
-hfds propertyMap
+CLSS public javax.el.BeanNameELResolver
+cons public init(javax.el.BeanNameResolver)
+meth public boolean isReadOnly(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.lang.Class<?> getCommonPropertyType(javax.el.ELContext,java.lang.Object)
+meth public java.lang.Class<?> getType(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.lang.Object getValue(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.util.Iterator<java.beans.FeatureDescriptor> getFeatureDescriptors(javax.el.ELContext,java.lang.Object)
+meth public void setValue(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
+supr javax.el.ELResolver
+hfds beanNameResolver
 
-CLSS protected final static javax.el.BeanELResolver$BeanProperty
- outer javax.el.BeanELResolver
-cons public init(java.lang.Class<?>,java.beans.PropertyDescriptor)
-meth public boolean isReadOnly()
-meth public java.lang.Class getPropertyType()
-meth public java.lang.reflect.Method getReadMethod()
-meth public java.lang.reflect.Method getWriteMethod()
+CLSS public abstract javax.el.BeanNameResolver
+cons public init()
+meth public boolean canCreateBean(java.lang.String)
+meth public boolean isNameResolved(java.lang.String)
+meth public boolean isReadOnly(java.lang.String)
+meth public java.lang.Object getBean(java.lang.String)
+meth public void setBeanValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds descriptor,readMethod,writeMethod
 
 CLSS public javax.el.CompositeELResolver
 cons public init()
 meth public boolean isReadOnly(javax.el.ELContext,java.lang.Object,java.lang.Object)
 meth public java.lang.Class<?> getCommonPropertyType(javax.el.ELContext,java.lang.Object)
 meth public java.lang.Class<?> getType(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.lang.Object convertToType(javax.el.ELContext,java.lang.Object,java.lang.Class<?>)
 meth public java.lang.Object getValue(javax.el.ELContext,java.lang.Object,java.lang.Object)
 meth public java.lang.Object invoke(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Class<?>[],java.lang.Object[])
 meth public java.util.Iterator<java.beans.FeatureDescriptor> getFeatureDescriptors(javax.el.ELContext,java.lang.Object)
 meth public void add(javax.el.ELResolver)
 meth public void setValue(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
 supr javax.el.ELResolver
-hfds elResolvers
+hfds elResolvers,size
 hcls CompositeIterator
+
+CLSS public javax.el.ELClass
+cons public init(java.lang.Class<?>)
+meth public java.lang.Class<?> getKlass()
+supr java.lang.Object
+hfds klass
 
 CLSS public abstract javax.el.ELContext
 cons public init()
 meth public abstract javax.el.ELResolver getELResolver()
 meth public abstract javax.el.FunctionMapper getFunctionMapper()
 meth public abstract javax.el.VariableMapper getVariableMapper()
+meth public boolean isLambdaArgument(java.lang.String)
 meth public boolean isPropertyResolved()
+meth public java.lang.Object convertToType(java.lang.Object,java.lang.Class<?>)
 meth public java.lang.Object getContext(java.lang.Class)
+meth public java.lang.Object getLambdaArgument(java.lang.String)
+meth public java.util.List<javax.el.EvaluationListener> getEvaluationListeners()
 meth public java.util.Locale getLocale()
+meth public javax.el.ImportHandler getImportHandler()
+meth public void addEvaluationListener(javax.el.EvaluationListener)
+meth public void enterLambdaScope(java.util.Map<java.lang.String,java.lang.Object>)
+meth public void exitLambdaScope()
+meth public void notifyAfterEvaluation(java.lang.String)
+meth public void notifyBeforeEvaluation(java.lang.String)
+meth public void notifyPropertyResolved(java.lang.Object,java.lang.Object)
 meth public void putContext(java.lang.Class,java.lang.Object)
 meth public void setLocale(java.util.Locale)
 meth public void setPropertyResolved(boolean)
+meth public void setPropertyResolved(java.lang.Object,java.lang.Object)
 supr java.lang.Object
-hfds locale,map,resolved
+hfds importHandler,lambdaArgs,listeners,locale,map,resolved
 
 CLSS public javax.el.ELContextEvent
 cons public init(javax.el.ELContext)
 meth public javax.el.ELContext getELContext()
 supr java.util.EventObject
+hfds serialVersionUID
 
 CLSS public abstract interface javax.el.ELContextListener
 intf java.util.EventListener
@@ -264,6 +292,37 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.RuntimeException
+hfds serialVersionUID
+
+CLSS public javax.el.ELManager
+cons public init()
+meth public java.lang.Object defineBean(java.lang.String,java.lang.Object)
+meth public javax.el.ELContext setELContext(javax.el.ELContext)
+meth public javax.el.StandardELContext getELContext()
+meth public static javax.el.ExpressionFactory getExpressionFactory()
+meth public void addBeanNameResolver(javax.el.BeanNameResolver)
+meth public void addELResolver(javax.el.ELResolver)
+meth public void addEvaluationListener(javax.el.EvaluationListener)
+meth public void importClass(java.lang.String)
+meth public void importPackage(java.lang.String)
+meth public void importStatic(java.lang.String)
+meth public void mapFunction(java.lang.String,java.lang.String,java.lang.reflect.Method)
+meth public void setVariable(java.lang.String,javax.el.ValueExpression)
+supr java.lang.Object
+hfds elContext
+
+CLSS public javax.el.ELProcessor
+cons public init()
+meth public java.lang.Object eval(java.lang.String)
+meth public java.lang.Object getValue(java.lang.String,java.lang.Class<?>)
+meth public javax.el.ELManager getELManager()
+meth public void defineBean(java.lang.String,java.lang.Object)
+meth public void defineFunction(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws java.lang.ClassNotFoundException,java.lang.NoSuchMethodException
+meth public void defineFunction(java.lang.String,java.lang.String,java.lang.reflect.Method) throws java.lang.NoSuchMethodException
+meth public void setValue(java.lang.String,java.lang.Object)
+meth public void setVariable(java.lang.String,java.lang.String)
+supr java.lang.Object
+hfds elManager,factory
 
 CLSS public abstract javax.el.ELResolver
 cons public init()
@@ -275,7 +334,15 @@ meth public abstract java.lang.Class<?> getType(javax.el.ELContext,java.lang.Obj
 meth public abstract java.lang.Object getValue(javax.el.ELContext,java.lang.Object,java.lang.Object)
 meth public abstract java.util.Iterator<java.beans.FeatureDescriptor> getFeatureDescriptors(javax.el.ELContext,java.lang.Object)
 meth public abstract void setValue(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
+meth public java.lang.Object convertToType(javax.el.ELContext,java.lang.Object,java.lang.Class<?>)
 meth public java.lang.Object invoke(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Class<?>[],java.lang.Object[])
+supr java.lang.Object
+
+CLSS public abstract javax.el.EvaluationListener
+cons public init()
+meth public void afterEvaluation(javax.el.ELContext,java.lang.String)
+meth public void beforeEvaluation(javax.el.ELContext,java.lang.String)
+meth public void propertyResolved(javax.el.ELContext,java.lang.Object,java.lang.Object)
 supr java.lang.Object
 
 CLSS public abstract javax.el.Expression
@@ -286,6 +353,7 @@ meth public abstract boolean isLiteralText()
 meth public abstract int hashCode()
 meth public abstract java.lang.String getExpressionString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public abstract javax.el.ExpressionFactory
 cons public init()
@@ -293,6 +361,8 @@ meth public abstract java.lang.Object coerceToType(java.lang.Object,java.lang.Cl
 meth public abstract javax.el.MethodExpression createMethodExpression(javax.el.ELContext,java.lang.String,java.lang.Class<?>,java.lang.Class<?>[])
 meth public abstract javax.el.ValueExpression createValueExpression(java.lang.Object,java.lang.Class<?>)
 meth public abstract javax.el.ValueExpression createValueExpression(javax.el.ELContext,java.lang.String,java.lang.Class<?>)
+meth public java.util.Map<java.lang.String,java.lang.reflect.Method> getInitFunctionMap()
+meth public javax.el.ELResolver getStreamELResolver()
 meth public static javax.el.ExpressionFactory newInstance()
 meth public static javax.el.ExpressionFactory newInstance(java.util.Properties)
 supr java.lang.Object
@@ -300,7 +370,26 @@ supr java.lang.Object
 CLSS public abstract javax.el.FunctionMapper
 cons public init()
 meth public abstract java.lang.reflect.Method resolveFunction(java.lang.String,java.lang.String)
+meth public void mapFunction(java.lang.String,java.lang.String,java.lang.reflect.Method)
 supr java.lang.Object
+
+CLSS public javax.el.ImportHandler
+cons public init()
+meth public java.lang.Class<?> resolveClass(java.lang.String)
+meth public java.lang.Class<?> resolveStatic(java.lang.String)
+meth public void importClass(java.lang.String)
+meth public void importPackage(java.lang.String)
+meth public void importStatic(java.lang.String)
+supr java.lang.Object
+hfds classMap,classNameMap,notAClass,packages,staticNameMap
+
+CLSS public javax.el.LambdaExpression
+cons public init(java.util.List<java.lang.String>,javax.el.ValueExpression)
+meth public !varargs java.lang.Object invoke(java.lang.Object[])
+meth public !varargs java.lang.Object invoke(javax.el.ELContext,java.lang.Object[])
+meth public void setELContext(javax.el.ELContext)
+supr java.lang.Object
+hfds context,envirArgs,expression,formalParameters
 
 CLSS public javax.el.ListELResolver
 cons public init()
@@ -330,8 +419,11 @@ CLSS public abstract javax.el.MethodExpression
 cons public init()
 meth public abstract java.lang.Object invoke(javax.el.ELContext,java.lang.Object[])
 meth public abstract javax.el.MethodInfo getMethodInfo(javax.el.ELContext)
+meth public boolean isParametersProvided()
 meth public boolean isParmetersProvided()
+ anno 0 java.lang.Deprecated()
 supr javax.el.Expression
+hfds serialVersionUID
 
 CLSS public javax.el.MethodInfo
 cons public init(java.lang.String,java.lang.Class<?>,java.lang.Class<?>[])
@@ -347,6 +439,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr javax.el.ELException
+hfds serialVersionUID
 
 CLSS public javax.el.PropertyNotFoundException
 cons public init()
@@ -354,6 +447,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr javax.el.ELException
+hfds serialVersionUID
 
 CLSS public javax.el.PropertyNotWritableException
 cons public init()
@@ -361,6 +455,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr javax.el.ELException
+hfds serialVersionUID
 
 CLSS public javax.el.ResourceBundleELResolver
 cons public init()
@@ -368,7 +463,42 @@ meth public boolean isReadOnly(javax.el.ELContext,java.lang.Object,java.lang.Obj
 meth public java.lang.Class<?> getCommonPropertyType(javax.el.ELContext,java.lang.Object)
 meth public java.lang.Class<?> getType(javax.el.ELContext,java.lang.Object,java.lang.Object)
 meth public java.lang.Object getValue(javax.el.ELContext,java.lang.Object,java.lang.Object)
-meth public java.util.Iterator getFeatureDescriptors(javax.el.ELContext,java.lang.Object)
+meth public java.util.Iterator<java.beans.FeatureDescriptor> getFeatureDescriptors(javax.el.ELContext,java.lang.Object)
+meth public void setValue(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
+supr javax.el.ELResolver
+
+CLSS public javax.el.StandardELContext
+cons public init(javax.el.ELContext)
+cons public init(javax.el.ExpressionFactory)
+meth public java.lang.Object getContext(java.lang.Class)
+meth public javax.el.ELResolver getELResolver()
+meth public javax.el.FunctionMapper getFunctionMapper()
+meth public javax.el.VariableMapper getVariableMapper()
+meth public void addELResolver(javax.el.ELResolver)
+meth public void putContext(java.lang.Class,java.lang.Object)
+supr javax.el.ELContext
+hfds beans,customResolvers,delegate,elResolver,functionMapper,initFunctionMap,streamELResolver,variableMapper
+hcls DefaultFunctionMapper,DefaultVariableMapper,LocalBeanNameResolver
+
+CLSS public javax.el.StaticFieldELResolver
+cons public init()
+meth public boolean isReadOnly(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.lang.Class<?> getCommonPropertyType(javax.el.ELContext,java.lang.Object)
+meth public java.lang.Class<?> getType(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.lang.Object getValue(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.lang.Object invoke(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Class<?>[],java.lang.Object[])
+meth public java.util.Iterator<java.beans.FeatureDescriptor> getFeatureDescriptors(javax.el.ELContext,java.lang.Object)
+meth public void setValue(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
+supr javax.el.ELResolver
+
+CLSS public abstract javax.el.TypeConverter
+cons public init()
+meth public abstract java.lang.Object convertToType(javax.el.ELContext,java.lang.Object,java.lang.Class<?>)
+meth public boolean isReadOnly(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.lang.Class<?> getCommonPropertyType(javax.el.ELContext,java.lang.Object)
+meth public java.lang.Class<?> getType(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.lang.Object getValue(javax.el.ELContext,java.lang.Object,java.lang.Object)
+meth public java.util.Iterator<java.beans.FeatureDescriptor> getFeatureDescriptors(javax.el.ELContext,java.lang.Object)
 meth public void setValue(javax.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
 supr javax.el.ELResolver
 
@@ -381,6 +511,7 @@ meth public abstract java.lang.Object getValue(javax.el.ELContext)
 meth public abstract void setValue(javax.el.ELContext,java.lang.Object)
 meth public javax.el.ValueReference getValueReference(javax.el.ELContext)
 supr javax.el.Expression
+hfds serialVersionUID
 
 CLSS public javax.el.ValueReference
 cons public init(java.lang.Object,java.lang.Object)
@@ -388,7 +519,7 @@ intf java.io.Serializable
 meth public java.lang.Object getBase()
 meth public java.lang.Object getProperty()
 supr java.lang.Object
-hfds base,property
+hfds base,property,serialVersionUID
 
 CLSS public abstract javax.el.VariableMapper
 cons public init()
@@ -398,6 +529,7 @@ supr java.lang.Object
 
 CLSS public abstract interface javax.servlet.AsyncContext
 fld public final static java.lang.String ASYNC_CONTEXT_PATH = "javax.servlet.async.context_path"
+fld public final static java.lang.String ASYNC_MAPPING = "javax.servlet.async.mapping"
 fld public final static java.lang.String ASYNC_PATH_INFO = "javax.servlet.async.path_info"
 fld public final static java.lang.String ASYNC_QUERY_STRING = "javax.servlet.async.query_string"
 fld public final static java.lang.String ASYNC_REQUEST_URI = "javax.servlet.async.request_uri"
@@ -446,9 +578,9 @@ meth public static javax.servlet.DispatcherType[] values()
 supr java.lang.Enum<javax.servlet.DispatcherType>
 
 CLSS public abstract interface javax.servlet.Filter
-meth public abstract void destroy()
 meth public abstract void doFilter(javax.servlet.ServletRequest,javax.servlet.ServletResponse,javax.servlet.FilterChain) throws java.io.IOException,javax.servlet.ServletException
-meth public abstract void init(javax.servlet.FilterConfig) throws javax.servlet.ServletException
+meth public void destroy()
+meth public void init(javax.servlet.FilterConfig) throws javax.servlet.ServletException
 
 CLSS public abstract interface javax.servlet.FilterChain
 meth public abstract void doFilter(javax.servlet.ServletRequest,javax.servlet.ServletResponse) throws java.io.IOException,javax.servlet.ServletException
@@ -472,6 +604,21 @@ CLSS public abstract interface static javax.servlet.FilterRegistration$Dynamic
 intf javax.servlet.FilterRegistration
 intf javax.servlet.Registration$Dynamic
 
+CLSS public abstract javax.servlet.GenericFilter
+cons public init()
+intf java.io.Serializable
+intf javax.servlet.Filter
+intf javax.servlet.FilterConfig
+meth public java.lang.String getFilterName()
+meth public java.lang.String getInitParameter(java.lang.String)
+meth public java.util.Enumeration<java.lang.String> getInitParameterNames()
+meth public javax.servlet.FilterConfig getFilterConfig()
+meth public javax.servlet.ServletContext getServletContext()
+meth public void init() throws javax.servlet.ServletException
+meth public void init(javax.servlet.FilterConfig) throws javax.servlet.ServletException
+supr java.lang.Object
+hfds LSTRING_FILE,config,lStrings,serialVersionUID
+
 CLSS public abstract javax.servlet.GenericServlet
 cons public init()
 intf java.io.Serializable
@@ -490,7 +637,7 @@ meth public void init(javax.servlet.ServletConfig) throws javax.servlet.ServletE
 meth public void log(java.lang.String)
 meth public void log(java.lang.String,java.lang.Throwable)
 supr java.lang.Object
-hfds LSTRING_FILE,config,lStrings
+hfds LSTRING_FILE,config,lStrings,serialVersionUID
 
 CLSS public javax.servlet.HttpConstraintElement
 cons public !varargs init(javax.servlet.annotation.ServletSecurity$EmptyRoleSemantic,javax.servlet.annotation.ServletSecurity$TransportGuarantee,java.lang.String[])
@@ -549,11 +696,13 @@ fld public final static java.lang.String ERROR_REQUEST_URI = "javax.servlet.erro
 fld public final static java.lang.String ERROR_SERVLET_NAME = "javax.servlet.error.servlet_name"
 fld public final static java.lang.String ERROR_STATUS_CODE = "javax.servlet.error.status_code"
 fld public final static java.lang.String FORWARD_CONTEXT_PATH = "javax.servlet.forward.context_path"
+fld public final static java.lang.String FORWARD_MAPPING = "javax.servlet.forward.mapping"
 fld public final static java.lang.String FORWARD_PATH_INFO = "javax.servlet.forward.path_info"
 fld public final static java.lang.String FORWARD_QUERY_STRING = "javax.servlet.forward.query_string"
 fld public final static java.lang.String FORWARD_REQUEST_URI = "javax.servlet.forward.request_uri"
 fld public final static java.lang.String FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path"
 fld public final static java.lang.String INCLUDE_CONTEXT_PATH = "javax.servlet.include.context_path"
+fld public final static java.lang.String INCLUDE_MAPPING = "javax.servlet.include.mapping"
 fld public final static java.lang.String INCLUDE_PATH_INFO = "javax.servlet.include.path_info"
 fld public final static java.lang.String INCLUDE_QUERY_STRING = "javax.servlet.include.query_string"
 fld public final static java.lang.String INCLUDE_REQUEST_URI = "javax.servlet.include.request_uri"
@@ -590,6 +739,7 @@ meth public abstract int getEffectiveMajorVersion()
 meth public abstract int getEffectiveMinorVersion()
 meth public abstract int getMajorVersion()
 meth public abstract int getMinorVersion()
+meth public abstract int getSessionTimeout()
 meth public abstract java.io.InputStream getResourceAsStream(java.lang.String)
 meth public abstract java.lang.ClassLoader getClassLoader()
 meth public abstract java.lang.Object getAttribute(java.lang.String)
@@ -597,6 +747,8 @@ meth public abstract java.lang.String getContextPath()
 meth public abstract java.lang.String getInitParameter(java.lang.String)
 meth public abstract java.lang.String getMimeType(java.lang.String)
 meth public abstract java.lang.String getRealPath(java.lang.String)
+meth public abstract java.lang.String getRequestCharacterEncoding()
+meth public abstract java.lang.String getResponseCharacterEncoding()
 meth public abstract java.lang.String getServerInfo()
 meth public abstract java.lang.String getServletContextName()
 meth public abstract java.lang.String getVirtualServerName()
@@ -604,7 +756,9 @@ meth public abstract java.net.URL getResource(java.lang.String) throws java.net.
 meth public abstract java.util.Enumeration<java.lang.String> getAttributeNames()
 meth public abstract java.util.Enumeration<java.lang.String> getInitParameterNames()
 meth public abstract java.util.Enumeration<java.lang.String> getServletNames()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Enumeration<javax.servlet.Servlet> getServlets()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Map<java.lang.String,? extends javax.servlet.FilterRegistration> getFilterRegistrations()
 meth public abstract java.util.Map<java.lang.String,? extends javax.servlet.ServletRegistration> getServletRegistrations()
 meth public abstract java.util.Set<java.lang.String> getResourcePaths(java.lang.String)
@@ -617,8 +771,10 @@ meth public abstract javax.servlet.FilterRegistration$Dynamic addFilter(java.lan
 meth public abstract javax.servlet.RequestDispatcher getNamedDispatcher(java.lang.String)
 meth public abstract javax.servlet.RequestDispatcher getRequestDispatcher(java.lang.String)
 meth public abstract javax.servlet.Servlet getServlet(java.lang.String) throws javax.servlet.ServletException
+ anno 0 java.lang.Deprecated()
 meth public abstract javax.servlet.ServletContext getContext(java.lang.String)
 meth public abstract javax.servlet.ServletRegistration getServletRegistration(java.lang.String)
+meth public abstract javax.servlet.ServletRegistration$Dynamic addJspFile(java.lang.String,java.lang.String)
 meth public abstract javax.servlet.ServletRegistration$Dynamic addServlet(java.lang.String,java.lang.Class<? extends javax.servlet.Servlet>)
 meth public abstract javax.servlet.ServletRegistration$Dynamic addServlet(java.lang.String,java.lang.String)
 meth public abstract javax.servlet.ServletRegistration$Dynamic addServlet(java.lang.String,javax.servlet.Servlet)
@@ -627,10 +783,14 @@ meth public abstract javax.servlet.descriptor.JspConfigDescriptor getJspConfigDe
 meth public abstract void addListener(java.lang.Class<? extends java.util.EventListener>)
 meth public abstract void addListener(java.lang.String)
 meth public abstract void log(java.lang.Exception,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract void log(java.lang.String)
 meth public abstract void log(java.lang.String,java.lang.Throwable)
 meth public abstract void removeAttribute(java.lang.String)
 meth public abstract void setAttribute(java.lang.String,java.lang.Object)
+meth public abstract void setRequestCharacterEncoding(java.lang.String)
+meth public abstract void setResponseCharacterEncoding(java.lang.String)
+meth public abstract void setSessionTimeout(int)
 meth public abstract void setSessionTrackingModes(java.util.Set<javax.servlet.SessionTrackingMode>)
 
 CLSS public javax.servlet.ServletContextAttributeEvent
@@ -642,9 +802,9 @@ hfds name,serialVersionUID,value
 
 CLSS public abstract interface javax.servlet.ServletContextAttributeListener
 intf java.util.EventListener
-meth public abstract void attributeAdded(javax.servlet.ServletContextAttributeEvent)
-meth public abstract void attributeRemoved(javax.servlet.ServletContextAttributeEvent)
-meth public abstract void attributeReplaced(javax.servlet.ServletContextAttributeEvent)
+meth public void attributeAdded(javax.servlet.ServletContextAttributeEvent)
+meth public void attributeRemoved(javax.servlet.ServletContextAttributeEvent)
+meth public void attributeReplaced(javax.servlet.ServletContextAttributeEvent)
 
 CLSS public javax.servlet.ServletContextEvent
 cons public init(javax.servlet.ServletContext)
@@ -654,8 +814,8 @@ hfds serialVersionUID
 
 CLSS public abstract interface javax.servlet.ServletContextListener
 intf java.util.EventListener
-meth public abstract void contextDestroyed(javax.servlet.ServletContextEvent)
-meth public abstract void contextInitialized(javax.servlet.ServletContextEvent)
+meth public void contextDestroyed(javax.servlet.ServletContextEvent)
+meth public void contextInitialized(javax.servlet.ServletContextEvent)
 
 CLSS public javax.servlet.ServletException
 cons public init()
@@ -664,7 +824,7 @@ cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 meth public java.lang.Throwable getRootCause()
 supr java.lang.Exception
-hfds rootCause
+hfds rootCause,serialVersionUID
 
 CLSS public abstract javax.servlet.ServletInputStream
 cons protected init()
@@ -760,9 +920,9 @@ hfds name,serialVersionUID,value
 
 CLSS public abstract interface javax.servlet.ServletRequestAttributeListener
 intf java.util.EventListener
-meth public abstract void attributeAdded(javax.servlet.ServletRequestAttributeEvent)
-meth public abstract void attributeRemoved(javax.servlet.ServletRequestAttributeEvent)
-meth public abstract void attributeReplaced(javax.servlet.ServletRequestAttributeEvent)
+meth public void attributeAdded(javax.servlet.ServletRequestAttributeEvent)
+meth public void attributeRemoved(javax.servlet.ServletRequestAttributeEvent)
+meth public void attributeReplaced(javax.servlet.ServletRequestAttributeEvent)
 
 CLSS public javax.servlet.ServletRequestEvent
 cons public init(javax.servlet.ServletContext,javax.servlet.ServletRequest)
@@ -773,8 +933,8 @@ hfds request,serialVersionUID
 
 CLSS public abstract interface javax.servlet.ServletRequestListener
 intf java.util.EventListener
-meth public abstract void requestDestroyed(javax.servlet.ServletRequestEvent)
-meth public abstract void requestInitialized(javax.servlet.ServletRequestEvent)
+meth public void requestDestroyed(javax.servlet.ServletRequestEvent)
+meth public void requestInitialized(javax.servlet.ServletRequestEvent)
 
 CLSS public javax.servlet.ServletRequestWrapper
 cons public init(javax.servlet.ServletRequest)
@@ -797,6 +957,7 @@ meth public java.lang.String getLocalName()
 meth public java.lang.String getParameter(java.lang.String)
 meth public java.lang.String getProtocol()
 meth public java.lang.String getRealPath(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getRemoteAddr()
 meth public java.lang.String getRemoteHost()
 meth public java.lang.String getScheme()
@@ -903,17 +1064,21 @@ meth public static javax.servlet.SessionTrackingMode[] values()
 supr java.lang.Enum<javax.servlet.SessionTrackingMode>
 
 CLSS public abstract interface javax.servlet.SingleThreadModel
+ anno 0 java.lang.Deprecated()
 
 CLSS public javax.servlet.UnavailableException
 cons public init(int,javax.servlet.Servlet,java.lang.String)
+ anno 0 java.lang.Deprecated()
 cons public init(java.lang.String)
 cons public init(java.lang.String,int)
 cons public init(javax.servlet.Servlet,java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public boolean isPermanent()
 meth public int getUnavailableSeconds()
 meth public javax.servlet.Servlet getServlet()
+ anno 0 java.lang.Deprecated()
 supr javax.servlet.ServletException
-hfds permanent,seconds,servlet
+hfds permanent,seconds,serialVersionUID,servlet
 
 CLSS public abstract interface javax.servlet.WriteListener
 intf java.util.EventListener
@@ -1075,6 +1240,13 @@ meth public void setVersion(int)
 supr java.lang.Object
 hfds LSTRING_FILE,TSPECIALS,comment,domain,isHttpOnly,lStrings,maxAge,name,path,secure,serialVersionUID,value,version
 
+CLSS public abstract javax.servlet.http.HttpFilter
+cons public init()
+meth protected void doFilter(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse,javax.servlet.FilterChain) throws java.io.IOException,javax.servlet.ServletException
+meth public void doFilter(javax.servlet.ServletRequest,javax.servlet.ServletResponse,javax.servlet.FilterChain) throws java.io.IOException,javax.servlet.ServletException
+supr javax.servlet.GenericFilter
+hfds serialVersionUID
+
 CLSS public abstract javax.servlet.http.HttpServlet
 cons public init()
 meth protected long getLastModified(javax.servlet.http.HttpServletRequest)
@@ -1088,7 +1260,13 @@ meth protected void doTrace(javax.servlet.http.HttpServletRequest,javax.servlet.
 meth protected void service(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
 meth public void service(javax.servlet.ServletRequest,javax.servlet.ServletResponse) throws java.io.IOException,javax.servlet.ServletException
 supr javax.servlet.GenericServlet
-hfds HEADER_IFMODSINCE,HEADER_LASTMOD,LSTRING_FILE,METHOD_DELETE,METHOD_GET,METHOD_HEAD,METHOD_OPTIONS,METHOD_POST,METHOD_PUT,METHOD_TRACE,lStrings
+hfds HEADER_IFMODSINCE,HEADER_LASTMOD,LSTRING_FILE,METHOD_DELETE,METHOD_GET,METHOD_HEAD,METHOD_OPTIONS,METHOD_POST,METHOD_PUT,METHOD_TRACE,lStrings,serialVersionUID
+
+CLSS public abstract interface javax.servlet.http.HttpServletMapping
+meth public abstract java.lang.String getMatchValue()
+meth public abstract java.lang.String getPattern()
+meth public abstract java.lang.String getServletName()
+meth public abstract javax.servlet.http.MappingMatch getMappingMatch()
 
 CLSS public abstract interface javax.servlet.http.HttpServletRequest
 fld public final static java.lang.String BASIC_AUTH = "BASIC"
@@ -1101,6 +1279,7 @@ meth public abstract boolean authenticate(javax.servlet.http.HttpServletResponse
 meth public abstract boolean isRequestedSessionIdFromCookie()
 meth public abstract boolean isRequestedSessionIdFromURL()
 meth public abstract boolean isRequestedSessionIdFromUrl()
+ anno 0 java.lang.Deprecated()
 meth public abstract boolean isRequestedSessionIdValid()
 meth public abstract boolean isUserInRole(java.lang.String)
 meth public abstract int getIntHeader(java.lang.String)
@@ -1128,6 +1307,10 @@ meth public abstract javax.servlet.http.Part getPart(java.lang.String) throws ja
 meth public abstract long getDateHeader(java.lang.String)
 meth public abstract void login(java.lang.String,java.lang.String) throws javax.servlet.ServletException
 meth public abstract void logout() throws javax.servlet.ServletException
+meth public boolean isTrailerFieldsReady()
+meth public java.util.Map<java.lang.String,java.lang.String> getTrailerFields()
+meth public javax.servlet.http.HttpServletMapping getHttpServletMapping()
+meth public javax.servlet.http.PushBuilder newPushBuilder()
 
 CLSS public javax.servlet.http.HttpServletRequestWrapper
 cons public init(javax.servlet.http.HttpServletRequest)
@@ -1137,7 +1320,9 @@ meth public boolean authenticate(javax.servlet.http.HttpServletResponse) throws 
 meth public boolean isRequestedSessionIdFromCookie()
 meth public boolean isRequestedSessionIdFromURL()
 meth public boolean isRequestedSessionIdFromUrl()
+ anno 0 java.lang.Deprecated()
 meth public boolean isRequestedSessionIdValid()
+meth public boolean isTrailerFieldsReady()
 meth public boolean isUserInRole(java.lang.String)
 meth public int getIntHeader(java.lang.String)
 meth public java.lang.String changeSessionId()
@@ -1157,10 +1342,13 @@ meth public java.security.Principal getUserPrincipal()
 meth public java.util.Collection<javax.servlet.http.Part> getParts() throws java.io.IOException,javax.servlet.ServletException
 meth public java.util.Enumeration<java.lang.String> getHeaderNames()
 meth public java.util.Enumeration<java.lang.String> getHeaders(java.lang.String)
+meth public java.util.Map<java.lang.String,java.lang.String> getTrailerFields()
 meth public javax.servlet.http.Cookie[] getCookies()
+meth public javax.servlet.http.HttpServletMapping getHttpServletMapping()
 meth public javax.servlet.http.HttpSession getSession()
 meth public javax.servlet.http.HttpSession getSession(boolean)
 meth public javax.servlet.http.Part getPart(java.lang.String) throws java.io.IOException,javax.servlet.ServletException
+meth public javax.servlet.http.PushBuilder newPushBuilder()
 meth public long getDateHeader(java.lang.String)
 meth public void login(java.lang.String,java.lang.String) throws javax.servlet.ServletException
 meth public void logout() throws javax.servlet.ServletException
@@ -1213,8 +1401,10 @@ meth public abstract boolean containsHeader(java.lang.String)
 meth public abstract int getStatus()
 meth public abstract java.lang.String encodeRedirectURL(java.lang.String)
 meth public abstract java.lang.String encodeRedirectUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.String encodeURL(java.lang.String)
 meth public abstract java.lang.String encodeUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.String getHeader(java.lang.String)
 meth public abstract java.util.Collection<java.lang.String> getHeaderNames()
 meth public abstract java.util.Collection<java.lang.String> getHeaders(java.lang.String)
@@ -1230,6 +1420,9 @@ meth public abstract void setHeader(java.lang.String,java.lang.String)
 meth public abstract void setIntHeader(java.lang.String,int)
 meth public abstract void setStatus(int)
 meth public abstract void setStatus(int,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>> getTrailerFields()
+meth public void setTrailerFields(java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>>)
 
 CLSS public javax.servlet.http.HttpServletResponseWrapper
 cons public init(javax.servlet.http.HttpServletResponse)
@@ -1238,11 +1431,14 @@ meth public boolean containsHeader(java.lang.String)
 meth public int getStatus()
 meth public java.lang.String encodeRedirectURL(java.lang.String)
 meth public java.lang.String encodeRedirectUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String encodeURL(java.lang.String)
 meth public java.lang.String encodeUrl(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getHeader(java.lang.String)
 meth public java.util.Collection<java.lang.String> getHeaderNames()
 meth public java.util.Collection<java.lang.String> getHeaders(java.lang.String)
+meth public java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>> getTrailerFields()
 meth public void addCookie(javax.servlet.http.Cookie)
 meth public void addDateHeader(java.lang.String,long)
 meth public void addHeader(java.lang.String,java.lang.String)
@@ -1255,6 +1451,8 @@ meth public void setHeader(java.lang.String,java.lang.String)
 meth public void setIntHeader(java.lang.String,int)
 meth public void setStatus(int)
 meth public void setStatus(int,java.lang.String)
+ anno 0 java.lang.Deprecated()
+meth public void setTrailerFields(java.util.function.Supplier<java.util.Map<java.lang.String,java.lang.String>>)
 supr javax.servlet.ServletResponseWrapper
 
 CLSS public abstract interface javax.servlet.http.HttpSession
@@ -1262,30 +1460,35 @@ meth public abstract boolean isNew()
 meth public abstract int getMaxInactiveInterval()
 meth public abstract java.lang.Object getAttribute(java.lang.String)
 meth public abstract java.lang.Object getValue(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract java.lang.String getId()
 meth public abstract java.lang.String[] getValueNames()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Enumeration<java.lang.String> getAttributeNames()
 meth public abstract javax.servlet.ServletContext getServletContext()
 meth public abstract javax.servlet.http.HttpSessionContext getSessionContext()
+ anno 0 java.lang.Deprecated()
 meth public abstract long getCreationTime()
 meth public abstract long getLastAccessedTime()
 meth public abstract void invalidate()
 meth public abstract void putValue(java.lang.String,java.lang.Object)
+ anno 0 java.lang.Deprecated()
 meth public abstract void removeAttribute(java.lang.String)
 meth public abstract void removeValue(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public abstract void setAttribute(java.lang.String,java.lang.Object)
 meth public abstract void setMaxInactiveInterval(int)
 
 CLSS public abstract interface javax.servlet.http.HttpSessionActivationListener
 intf java.util.EventListener
-meth public abstract void sessionDidActivate(javax.servlet.http.HttpSessionEvent)
-meth public abstract void sessionWillPassivate(javax.servlet.http.HttpSessionEvent)
+meth public void sessionDidActivate(javax.servlet.http.HttpSessionEvent)
+meth public void sessionWillPassivate(javax.servlet.http.HttpSessionEvent)
 
 CLSS public abstract interface javax.servlet.http.HttpSessionAttributeListener
 intf java.util.EventListener
-meth public abstract void attributeAdded(javax.servlet.http.HttpSessionBindingEvent)
-meth public abstract void attributeRemoved(javax.servlet.http.HttpSessionBindingEvent)
-meth public abstract void attributeReplaced(javax.servlet.http.HttpSessionBindingEvent)
+meth public void attributeAdded(javax.servlet.http.HttpSessionBindingEvent)
+meth public void attributeRemoved(javax.servlet.http.HttpSessionBindingEvent)
+meth public void attributeReplaced(javax.servlet.http.HttpSessionBindingEvent)
 
 CLSS public javax.servlet.http.HttpSessionBindingEvent
 cons public init(javax.servlet.http.HttpSession,java.lang.String)
@@ -1298,12 +1501,15 @@ hfds name,serialVersionUID,value
 
 CLSS public abstract interface javax.servlet.http.HttpSessionBindingListener
 intf java.util.EventListener
-meth public abstract void valueBound(javax.servlet.http.HttpSessionBindingEvent)
-meth public abstract void valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
+meth public void valueBound(javax.servlet.http.HttpSessionBindingEvent)
+meth public void valueUnbound(javax.servlet.http.HttpSessionBindingEvent)
 
 CLSS public abstract interface javax.servlet.http.HttpSessionContext
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Enumeration<java.lang.String> getIds()
+ anno 0 java.lang.Deprecated()
 meth public abstract javax.servlet.http.HttpSession getSession(java.lang.String)
+ anno 0 java.lang.Deprecated()
 
 CLSS public javax.servlet.http.HttpSessionEvent
 cons public init(javax.servlet.http.HttpSession)
@@ -1317,20 +1523,31 @@ meth public abstract void sessionIdChanged(javax.servlet.http.HttpSessionEvent,j
 
 CLSS public abstract interface javax.servlet.http.HttpSessionListener
 intf java.util.EventListener
-meth public abstract void sessionCreated(javax.servlet.http.HttpSessionEvent)
-meth public abstract void sessionDestroyed(javax.servlet.http.HttpSessionEvent)
+meth public void sessionCreated(javax.servlet.http.HttpSessionEvent)
+meth public void sessionDestroyed(javax.servlet.http.HttpSessionEvent)
 
 CLSS public abstract interface javax.servlet.http.HttpUpgradeHandler
 meth public abstract void destroy()
 meth public abstract void init(javax.servlet.http.WebConnection)
 
 CLSS public javax.servlet.http.HttpUtils
+ anno 0 java.lang.Deprecated()
 cons public init()
 meth public static java.lang.StringBuffer getRequestURL(javax.servlet.http.HttpServletRequest)
 meth public static java.util.Hashtable<java.lang.String,java.lang.String[]> parsePostData(int,javax.servlet.ServletInputStream)
 meth public static java.util.Hashtable<java.lang.String,java.lang.String[]> parseQueryString(java.lang.String)
 supr java.lang.Object
 hfds LSTRING_FILE,lStrings
+
+CLSS public final !enum javax.servlet.http.MappingMatch
+fld public final static javax.servlet.http.MappingMatch CONTEXT_ROOT
+fld public final static javax.servlet.http.MappingMatch DEFAULT
+fld public final static javax.servlet.http.MappingMatch EXACT
+fld public final static javax.servlet.http.MappingMatch EXTENSION
+fld public final static javax.servlet.http.MappingMatch PATH
+meth public static javax.servlet.http.MappingMatch valueOf(java.lang.String)
+meth public static javax.servlet.http.MappingMatch[] values()
+supr java.lang.Enum<javax.servlet.http.MappingMatch>
 
 CLSS public abstract interface javax.servlet.http.Part
 meth public abstract java.io.InputStream getInputStream() throws java.io.IOException
@@ -1343,6 +1560,22 @@ meth public abstract java.util.Collection<java.lang.String> getHeaders(java.lang
 meth public abstract long getSize()
 meth public abstract void delete() throws java.io.IOException
 meth public abstract void write(java.lang.String) throws java.io.IOException
+
+CLSS public abstract interface javax.servlet.http.PushBuilder
+meth public abstract java.lang.String getHeader(java.lang.String)
+meth public abstract java.lang.String getMethod()
+meth public abstract java.lang.String getPath()
+meth public abstract java.lang.String getQueryString()
+meth public abstract java.lang.String getSessionId()
+meth public abstract java.util.Set<java.lang.String> getHeaderNames()
+meth public abstract javax.servlet.http.PushBuilder addHeader(java.lang.String,java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder method(java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder path(java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder queryString(java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder removeHeader(java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder sessionId(java.lang.String)
+meth public abstract javax.servlet.http.PushBuilder setHeader(java.lang.String,java.lang.String)
+meth public abstract void push()
 
 CLSS public abstract interface javax.servlet.http.WebConnection
 intf java.lang.AutoCloseable
@@ -1398,6 +1631,7 @@ cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 meth public java.lang.Throwable getRootCause()
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public abstract javax.servlet.jsp.JspFactory
 cons public init()
@@ -1421,6 +1655,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr javax.servlet.jsp.JspException
+hfds serialVersionUID
 
 CLSS public abstract javax.servlet.jsp.JspWriter
 cons protected init(int,boolean)
@@ -1497,6 +1732,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr javax.servlet.jsp.JspException
+hfds serialVersionUID
 
 CLSS public javax.servlet.jsp.el.ELException
 cons public init()
@@ -1505,12 +1741,13 @@ cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 meth public java.lang.Throwable getRootCause()
 supr java.lang.Exception
-hfds mRootCause
+hfds mRootCause,serialVersionUID
 
 CLSS public javax.servlet.jsp.el.ELParseException
 cons public init()
 cons public init(java.lang.String)
 supr javax.servlet.jsp.el.ELException
+hfds serialVersionUID
 
 CLSS public abstract javax.servlet.jsp.el.Expression
 cons public init()
@@ -1581,6 +1818,7 @@ meth public void doInitBody() throws javax.servlet.jsp.JspException
 meth public void release()
 meth public void setBodyContent(javax.servlet.jsp.tagext.BodyContent)
 supr javax.servlet.jsp.tagext.TagSupport
+hfds serialVersionUID
 
 CLSS public abstract interface javax.servlet.jsp.tagext.DynamicAttributes
 meth public abstract void setDynamicAttribute(java.lang.String,java.lang.String,java.lang.Object) throws javax.servlet.jsp.JspException
@@ -1798,7 +2036,7 @@ meth public void setPageContext(javax.servlet.jsp.PageContext)
 meth public void setParent(javax.servlet.jsp.tagext.Tag)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds parent,values
+hfds parent,serialVersionUID,values
 
 CLSS public javax.servlet.jsp.tagext.TagVariableInfo
 cons public init(java.lang.String,java.lang.String,java.lang.String,boolean,int)

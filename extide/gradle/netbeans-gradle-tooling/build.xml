@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="netbeans-gradle-tooling">
+    <description>Builds, tests, and runs the project org.netbeans.modules.gradle</description>
+
+    <property name="tooling" value="netbeans-gradle-tooling"/>
+    <property name="gradle.version" value="7.4" />
+
+    <available property="has.gradle-libs" file="build/gradle-libs" type="dir"/>
+    
+    <path id="compile.classpath">
+        <fileset dir="build/gradle-libs" includes="*.jar"/>
+    </path>
+    
+    <target name="prepare-libs" unless="has.gradle-libs">
+        <mkdir dir="build/gradle-libs"/>
+        <unzip src="../external/gradle-${gradle.version}-bin.zip" dest="build/gradle-libs">
+            <patternset>
+                <include name="gradle-${gradle.version}/lib/**/*.jar"/>
+            </patternset>
+            <mapper type="flatten"/>
+        </unzip>    
+    </target>
+    <target name="compile" depends="prepare-libs">
+        <mkdir dir="build/classes/java/main"/>
+        <javac srcdir="src/main/java" destdir="build/classes/java/main" classpathref="compile.classpath" release="8" includeantruntime="false"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="build/libs"/>
+        <jar destfile="build/libs/${tooling}.jar" basedir="build/classes/java/main">
+            <fileset dir="src/main/resources"/>
+        </jar>
+    </target>
+    
+    <target name="build" depends="jar"/>
+    
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+</project>
+

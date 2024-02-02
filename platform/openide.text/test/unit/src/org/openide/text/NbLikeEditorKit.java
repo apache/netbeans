@@ -32,6 +32,7 @@ import javax.swing.undo.UndoManager;
  * @author  Jaroslav Tulach
  */
 class NbLikeEditorKit extends DefaultEditorKit implements Callable<Void> {
+    @Override
     public javax.swing.text.Document createDefaultDocument() {
         return new Doc ();
     }
@@ -102,10 +103,12 @@ class NbLikeEditorKit extends DefaultEditorKit implements Callable<Void> {
 
         private int changes;
         private boolean modifiable;
+        @Override
         public void insertString (int offs, String str, AttributeSet a) throws BadLocationException {
             insOrRemoveOrRunnable (offs, str, a, 0, true, null);
         }
 
+        @Override
         public void remove (int offs, int len) throws BadLocationException {
             insOrRemoveOrRunnable (offs, null, null, len, false, null);
         }
@@ -208,16 +211,19 @@ class NbLikeEditorKit extends DefaultEditorKit implements Callable<Void> {
             return canBeModified;
         }
 
+        @Override
         protected void fireRemoveUpdate (javax.swing.event.DocumentEvent e) {
             super.fireRemoveUpdate(e);
             changes++;
         }
 
+        @Override
         protected void fireInsertUpdate (javax.swing.event.DocumentEvent e) {
             super.fireInsertUpdate(e);
             changes++;
         }
 
+        @Override
         protected void fireChangedUpdate (javax.swing.event.DocumentEvent e) {
             super.fireChangedUpdate(e);
             changes++;

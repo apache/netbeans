@@ -768,7 +768,7 @@ implements Serializable, AbstractLookup.Storage<ArrayList<Class>> {
             Map.Entry entry = (Map.Entry) it.next();
             Object value = entry.getValue();
 
-            HashMap<?,?> retain = new HashMap(retainItems);
+            HashMap<?,?> retain = new HashMap<>(retainItems);
 
             Iterator elems;
             boolean multi = value instanceof Collection;

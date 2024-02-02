@@ -1,0 +1,10 @@
+$|>MARK_OCCURRENCES:test<| = "Test";
+$|>MARK_OCCURRENCES:test<|::{"TEST"};
+$|>MARK_OCCURRENCES:test<|::{$variable};
+$|>MARK_OCCURRENCES:test<|::{$variable . $e};
+$|>MARK_OCCURRENCES:test<|::{strtoupper("test")};
+$|>MARK_OCCURRENCES:test<|::{'$variablee'};
+$|>MARK_OCCURRENCES:test<|::{strtolower("CLASS")};
+$|>MARK_OCCURRENCES:test<|::{1000};
+$|>MARK_OCCURRENCES:test<|::{[]};
+$|>MARK_OCCURRENCES:tes^t<| = new Test();

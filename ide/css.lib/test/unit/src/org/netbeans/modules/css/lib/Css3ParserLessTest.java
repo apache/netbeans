@@ -62,6 +62,7 @@ public class Css3ParserLessTest extends CssTestBase {
                     + "}";
 
             CssParserResult result = TestUtil.parse(source);
+            NodeUtil.dumpTree(result.getParseTree());
 
             //there must be some css parsing errors as the less support is disabled
             assertTrue(result.getDiagnostics().size() > 0);
@@ -942,5 +943,39 @@ public class Css3ParserLessTest extends CssTestBase {
                 + ".bg-gd{\n"
                 + "  #gradient > .vertical(rgba(40,50,60,0), rgba(40,50,60,0.075), 0, 100%);\n"
                 + "}");
+    }
+
+    public void testScssUseForward() {
+        assertParses("@use: blue;\n");
+        assertParses("@forward: darken(@demo, 10%);");
+        assertParses("a { color: @use }");
+        assertParses("a { color: @forward }");
+        assertParses(".@{my-selector} { font-weight: bold }", true);
+    }
+
+    public void testParseLayer() {
+        assertParses("@layer layer1;");
+        assertParses("@layer layer1, layer2;");
+        assertParses("@layer layer1 {}");
+        assertParses("@layer layer1 {h1 {font-weight: bold}}");
+        assertParses("@layer layer1 {h1 {font-weight: bold}} @layer layer2 {}");
+        assertParses("@layer layer1.sublayer1 {h1 {font-weight: bold}}");
+        assertParses("@layer layer1 { @layer sublayer1 {}}");
+        assertParses("@layer layer1 { @layer sublayer1 {h1 {font-weight: bold}}}");
+        assertParses("@layer layer1 { @layer sublayer1, sublayer2; @layer sublayer1 {} @layer sublayer2{}}");
+        assertParses("@layer {}");
+        assertParses("@layer {h1 {font-weight: bold}}");
+        assertParses("@layer {h1 {font-weight: bold}} @layer layer2 {}");
+        assertParses("@import \"test.css\" layer;");
+        assertParses("@import \"test.css\" layer(test);");
+        assertParses("@import \"test.css\" layer(test.test2);");
+        assertParses("@layer default;\n"
+                + "@import url(theme.css) layer(theme);\n"
+                + "@layer components;\n"
+                + "@layer default {}");
+    }
+
+    public void testIssueGH6447() {
+        assertParses("@import (optional) \"user.less\";");
     }
 }

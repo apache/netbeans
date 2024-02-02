@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.33.0
+#Version 1.39.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -117,6 +117,15 @@ CLSS public abstract interface org.netbeans.modules.java.hints.spi.TreeRule
 intf org.netbeans.modules.java.hints.spi.Rule
 meth public abstract java.util.List<org.netbeans.spi.editor.hints.ErrorDescription> run(org.netbeans.api.java.source.CompilationInfo,com.sun.source.util.TreePath)
 meth public abstract java.util.Set<com.sun.source.tree.Tree$Kind> getTreeKinds()
+
+CLSS public abstract interface org.netbeans.modules.java.hints.spi.preview.PreviewEnabler
+innr public abstract interface static Factory
+meth public abstract void enablePreview(java.lang.String) throws java.lang.Exception
+meth public boolean canChangeSourceLevel()
+
+CLSS public abstract interface static org.netbeans.modules.java.hints.spi.preview.PreviewEnabler$Factory
+ outer org.netbeans.modules.java.hints.spi.preview.PreviewEnabler
+meth public abstract org.netbeans.modules.java.hints.spi.preview.PreviewEnabler enablerFor(org.openide.filesystems.FileObject)
 
 CLSS public final org.netbeans.modules.java.hints.spi.support.FixFactory
 meth public !varargs static java.util.List<org.netbeans.spi.editor.hints.Fix> createSuppressWarnings(org.netbeans.api.java.source.CompilationInfo,com.sun.source.util.TreePath,java.lang.String[])

@@ -85,8 +85,8 @@ public class ThreadsPanel extends DataView {
     
     private Filter filter = Filter.ALL;
     
-    private final Set<Integer> selected = new HashSet();
-    private final Set<Integer> selectedApplied = new HashSet();
+    private final Set<Integer> selected = new HashSet<>();
+    private final Set<Integer> selectedApplied = new HashSet<>();
     
     private Component zoomInAction;
     private Component zoomOutAction;
@@ -121,7 +121,7 @@ public class ThreadsPanel extends DataView {
     
     public void setFilter(Filter filter) {
         selectedApplied.clear();
-        if (Filter.SELECTED.equals(filter)) selectedApplied.addAll(selected);
+        if (Filter.SELECTED == filter) selectedApplied.addAll(selected);
         
         this.filter = filter;
         threadsTable.addRowFilter(new ThreadsFilter());

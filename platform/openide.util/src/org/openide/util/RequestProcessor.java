@@ -21,18 +21,19 @@ package org.openide.util;
 
 import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.Stack;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.concurrent.Callable;
@@ -61,9 +62,9 @@ import org.openide.util.lookup.Lookups;
  * <A name="use_cases">There are several use cases for RequestProcessor</A>,
  * most of them start with creating own <code>RequestProcessor</code>
  * instance (which by itself is quite lightweight).
- *
- * <h5>Do something later</h5>
- *
+ * <p>
+ * <strong>Do something later</strong>
+ * <p>
  * In case you want something to be done later in some background thread,
  * create an instance of <code>RequestProcessor</code> and post tasks to it.
  * <pre>
@@ -94,9 +95,9 @@ import org.openide.util.lookup.Lookups;
  * // later wait
  * last.{@link RequestProcessor.Task#waitFinished waitFinished()}
  * </pre>
- *
- * <h5>Periodic task</h5>
- *
+ * <p>
+ * <strong>Periodic task</strong>
+ * <p>
  * It is also possible to do something periodically. Use the {@link RequestProcessor.Task#schedule schedule} method:
  * <pre>
  * class Periodic implements Runnable {
@@ -112,9 +113,9 @@ import org.openide.util.lookup.Lookups;
  *  background activity. It is generally considered evil if some code runs
  *  without any user action. Your code shall respect  the application's state,
  *  and for example when the application is minimized, do nothing.
- *
- * <h5>Sliding task</h5>
- *
+ * <p>
+ * <strong>Sliding task</strong>
+ * <p>
  * Often you want to perform an update of your object internals
  * based on changes in some model. However your update may be costly
  * and you want to do it just once, regardless of how many changes are
@@ -136,9 +137,9 @@ import org.openide.util.lookup.Lookups;
  * The above code coalesces all events that arrive in 1s and for all of them
  * does <code>doTheWork</code> just once.
  *
- *
- * <h5>Interruption of tasks</h5>
- *
+ * <p>
+ * <strong>Interruption of tasks</strong>
+ * <p>
  * Since version 6.3 there is a conditional support for interruption of long running tasks.
  * There always was a way to cancel not yet running task using {@link RequestProcessor.Task#cancel }
  * but if the task's run() method was already running, one was out of luck.
@@ -157,7 +158,7 @@ import org.openide.util.lookup.Lookups;
  *     }
  * }
  * </pre>
- * <p/>
+ * <p>
  * Since <code>org.openide.util</code>, implements
  * {@link java.util.concurrent.ScheduledExecutorService}
  * @author Petr Nejedly, Jaroslav Tulach, Tim Boudreau
@@ -183,8 +184,8 @@ public final class RequestProcessor implements ScheduledExecutorService {
         boolean slow = false;
         assert slow = true;
         SLOW = slow;
-        // 50: a conservative value, just for case of misuse
-        UNLIMITED = new RequestProcessor("Default RequestProcessor", 50, false, SLOW, SLOW ? 3 : 0); // NOI18N
+        // 55: a conservative value, just for case of misuse
+        UNLIMITED = new RequestProcessor("Default RequestProcessor", 55, false, SLOW, SLOW ? 3 : 0); // NOI18N
     }
 
     /** The name of the RequestProcessor instance */
@@ -506,7 +507,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
      *
      * @deprecated Sharing of one singlethreaded <CODE>RequestProcessor</CODE>
      * among different users and posting even blocking requests is inherently
-     * deadlock-prone. See <A href="#use_cases">use cases</A>. */
+     * deadlock-prone. See {@link RequestProcessor use cases}. */
     @Deprecated
     public static Task postRequest(Runnable run) {
         return DEFAULT.post(run);
@@ -522,7 +523,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
      *
      * @deprecated Sharing of one singlethreaded <CODE>RequestProcessor</CODE>
      * among different users and posting even blocking requests is inherently
-     * deadlock-prone. See <A href="#use_cases">use cases</A>. */
+     * deadlock-prone. See {@link RequestProcessor use cases}. */
     @Deprecated
     public static Task postRequest(final Runnable run, int timeToWait) {
         return DEFAULT.post(run, timeToWait);
@@ -538,7 +539,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
      *
      * @deprecated Sharing of one singlethreaded <CODE>RequestProcessor</CODE>
      * among different users and posting even blocking requests is inherently
-     * deadlock-prone. See <A href="#use_cases">use cases</A>. */
+     * deadlock-prone. See {@link RequestProcessor use cases}. */
     @Deprecated
     public static Task postRequest(final Runnable run, int timeToWait, int priority) {
         return DEFAULT.post(run, timeToWait, priority);
@@ -552,7 +553,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
      *
      * @deprecated Sharing of one singlethreaded <CODE>RequestProcessor</CODE>
      * among different users and posting even blocking requests is inherently
-     * deadlock-prone. See <A href="#use_cases">use cases</A>. */
+     * deadlock-prone. See {@link RequestProcessor use cases}. */
     @Deprecated
     public static Task createRequest(Runnable run) {
         return DEFAULT.create(run);
@@ -642,7 +643,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
 
     /**
      * {@inheritDoc}
-     * @throws an IllegalStateException if called on the
+     * @throws IllegalStateException if called on the
      * {@linkplain #getDefault default request processor}
      * @since org.openide.util 8.2
      */
@@ -658,7 +659,7 @@ public final class RequestProcessor implements ScheduledExecutorService {
 
     /**
      * {@inheritDoc}
-     * @throws an IllegalStateException if called on the
+     * @throws IllegalStateException if called on the
      * {@linkplain #getDefault default request processor}
      * @since org.openide.util 8.2
      */
@@ -759,7 +760,7 @@ outer:  do {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * <b>Note:</b> If the passed {@link java.util.concurrent.Callable} implements
      * {@link org.openide.util.Cancellable}, then that object's {@link org.openide.util.Cancellable#cancel()}
      * method will be called if {@link java.util.concurrent.Future#cancel(boolean)} is invoked.
@@ -805,7 +806,7 @@ outer:  do {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * <b>Note:</b> If the passed {@link java.lang.Runnable} implements
      * {@link org.openide.util.Cancellable}, then that object's {@link org.openide.util.Cancellable#cancel()}
      * method will be called if {@link java.util.concurrent.Future#cancel(boolean)} is invoked.
@@ -841,7 +842,7 @@ outer:  do {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Executes the given tasks, returning a list of Futures holding their
      * status and results when all complete or the timeout expires, whichever
      * happens first.
@@ -870,7 +871,7 @@ outer:  do {
     }
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Executes the given tasks, returning the result of one which has
      * completed and cancelling any incomplete tasks.
      * @since org.openide.util 8.2
@@ -901,7 +902,7 @@ outer:  do {
     }
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Executes the given tasks, returning a list of Futures holding their
      * status and results when all complete or the timeout expires, whichever
      * happens first.
@@ -985,7 +986,7 @@ outer:  do {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Schedules a runnable which will run with a given frequency, regardless
      * of how long execution takes, with the exception that if execution takes
      * longer than the specified delay, execution will be delayed but will
@@ -999,7 +1000,7 @@ outer:  do {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * Schedules a runnable which will run repeatedly after the specified initial
      * delay, with the specified delay between the completion of one run and
      * the start of the next.
@@ -1380,13 +1381,14 @@ outer:  do {
         private AtomicBoolean cancelled;
 
         /** @param run runnable to start
-        * @param delay amount of millis to wait
-        * @param priority the priorty of the task
         */
         Task(Runnable run) {
             super(run);
         }
 
+        /** @param run runnable to start
+         * @param priority the priorty of the task
+         */
         Task(Runnable run, int priority) {
             super(run);
 
@@ -1862,7 +1864,7 @@ outer:  do {
      */
     private static class Processor extends Thread {
         /** A stack containing all the inactive Processors */
-        private static final Stack<Processor> pool = new Stack<Processor>();
+        private static final Deque<Processor> POOL = new ArrayDeque<>();
 
         /* One minute of inactivity and the Thread will die if not assigned */
         private static final int INACTIVE_TIMEOUT = Integer.getInteger("org.openide.util.RequestProcessor.inactiveTime", 60000); // NOI18N
@@ -1885,7 +1887,7 @@ outer:  do {
         public Processor() {
             super(TOP_GROUP.getTopLevelThreadGroup(), "Inactive RequestProcessor thread"); // NOI18N
             setDaemon(true);
-            assert !Thread.holdsLock(pool); // new Thread may lead to huge classloading
+            assert !Thread.holdsLock(POOL); // new Thread may lead to huge classloading
         }
 
         /** Provide an inactive Processor instance. It will return either
@@ -1897,8 +1899,8 @@ outer:  do {
         static Processor get() {
             Processor newP = null;
             for (;;) {
-                synchronized (pool) {
-                    if (pool.isEmpty()) {
+                synchronized (POOL) {
+                    if (POOL.isEmpty()) {
                         if (newP != null) {
                             Processor proc = newP;
                             proc.idle = false;
@@ -1908,7 +1910,7 @@ outer:  do {
                         }
                     } else {
                         assert checkAccess(TOP_GROUP.getTopLevelThreadGroup());
-                        Processor proc = pool.pop();
+                        Processor proc = POOL.pop();
                         proc.idle = false;
 
                         return proc;
@@ -1928,10 +1930,10 @@ outer:  do {
          * @param last the debugging string identifying the last client.
          */
         static void put(Processor proc, String last) {
-            synchronized (pool) {
+            synchronized (POOL) {
                 proc.setName("Inactive RequestProcessor thread [Was:" + proc.getName() + "/" + last + "]"); // NOI18N
                 proc.idle = true;
-                pool.push(proc);
+                POOL.push(proc);
             }
         }
 
@@ -1985,9 +1987,9 @@ outer:  do {
 
                     if (current == null) { // We've timeouted
 
-                        synchronized (pool) {
+                        synchronized (POOL) {
                             if (idle) { // and we're idle
-                                pool.remove(this);
+                                POOL.remove(this);
 
                                 break; // exit the thread
                             } else { // this will happen if we've been just

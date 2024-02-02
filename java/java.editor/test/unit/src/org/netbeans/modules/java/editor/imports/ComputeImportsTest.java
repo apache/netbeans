@@ -58,7 +58,6 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.test.support.MemoryValidator;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.editor.imports.ComputeImports.Pair;
-import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -91,12 +90,14 @@ public class ComputeImportsTest extends NbTestCase {
         "sunw.io.Serializable",
         "sun.rmi.transport.Target",
         "com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Element",
-        "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections"
+        "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections",
+        "com.azul.crs.client.service.JarLoadMonitor.ProcessedJarFiles.LRU.Element"
     }));
     
     private static final List<Pattern> IGNORE_PATTERNS = Collections.unmodifiableList(Arrays.asList(
         Pattern.compile("jdk\\..*\\.internal\\..*"),
-        Pattern.compile("org\\.graalvm\\..*")
+        Pattern.compile("org\\.graalvm\\..*"),
+        Pattern.compile("com\\.azul\\.crs\\..*") // https://docs.azul.com/vulnerability-detection/detailed-information/configuration-options
     ));
 
     private FileObject testSource;

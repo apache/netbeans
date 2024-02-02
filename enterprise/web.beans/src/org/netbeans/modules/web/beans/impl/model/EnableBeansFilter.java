@@ -59,6 +59,7 @@ import org.openide.util.NbBundle;
  * @author ads
  *
  */
+// @todo: Support JakartaEE
 class EnableBeansFilter {
 
     static final String DECORATOR = "javax.decorator.Decorator";            // NOI18N
@@ -471,7 +472,7 @@ class EnableBeansFilter {
     private boolean hasModifier ( Element element , Modifier mod){
         Set<Modifier> modifiers = element.getModifiers();
         for (Modifier modifier : modifiers) {
-            if ( modifier.equals( mod )){
+            if (modifier == mod) {
                 return true;
             }
         }

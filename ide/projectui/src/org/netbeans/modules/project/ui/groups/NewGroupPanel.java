@@ -201,14 +201,14 @@ public class NewGroupPanel extends JPanel {
     
 
     public static Group create(Type type, String name, boolean autoSync, boolean useOpen, String masterProject, String directory) {
-        if (Type.ADHOC.equals(type)) {
+        if (Type.ADHOC == type) {
             AdHocGroup g = AdHocGroup.create(name, autoSync);
             if (useOpen) {
                 g.setProjects(new HashSet<Project>(Arrays.asList(OpenProjects.getDefault().getOpenProjects())));
                 g.setMainProject(OpenProjects.getDefault().getMainProject());
             }
             return g;
-        } else if (Type.SUB.equals(type)) {
+        } else if (Type.SUB == type) {
             FileObject fo = FileUtil.toFileObject(new File(masterProject));
             try {
                 return SubprojectsGroup.create(name, ProjectManager.getDefault().findProject(fo));
@@ -216,7 +216,7 @@ public class NewGroupPanel extends JPanel {
                 throw new AssertionError(x);
             }
         } else {
-            assert Type.DIR.equals(type);
+            assert Type.DIR == type;
             FileObject f = FileUtil.toFileObject(FileUtil.normalizeFile(new File(directory)));
             return DirectoryGroup.create(name, f);
         }
@@ -340,36 +340,30 @@ public class NewGroupPanel extends JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(nameLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameField, javax.swing.GroupLayout.DEFAULT_SIZE, 684, Short.MAX_VALUE))
+                        .addComponent(nameField))
                     .addComponent(directoryKindRadio)
                     .addComponent(adHocKindRadio)
+                    .addComponent(subprojectsKindRadio)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(17, 17, 17)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(directoryLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(directoryField, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
+                                .addComponent(directoryField)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(directoryButton))
-                            .addComponent(directoryKindLabel)))
-                    .addComponent(subprojectsKindRadio)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(directoryKindLabel)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(masterProjectLabel)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(masterProjectLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(masterProjectField))
+                                    .addComponent(subprojectsKindLabel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(masterProjectField, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE))
-                            .addComponent(subprojectsKindLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(masterProjectButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(adHocKindLabel))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(masterProjectButton))
+                            .addComponent(adHocKindLabel)
                             .addComponent(autoSynchCheckbox)
                             .addComponent(useOpenCheckbox))))
                 .addContainerGap())
@@ -389,7 +383,7 @@ public class NewGroupPanel extends JPanel {
                 .addComponent(useOpenCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(autoSynchCheckbox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(subprojectsKindRadio)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(subprojectsKindLabel)
@@ -398,7 +392,7 @@ public class NewGroupPanel extends JPanel {
                     .addComponent(masterProjectLabel)
                     .addComponent(masterProjectButton)
                     .addComponent(masterProjectField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(directoryKindRadio)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(directoryKindLabel)

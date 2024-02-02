@@ -395,7 +395,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
     private final Map<RepositoryInfo, Set<File>> filesWithRepositoryAnnotations = new WeakHashMap<RepositoryInfo, Set<File>>(3);
     
     private String annotateFolderNameHtml (String name, VCSContext context, FileInformation mostImportantInfo, File mostImportantFile) {
-        boolean annotationsVisible = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        boolean annotationsVisible = VersioningSupport.isTextAnnotationVisible();
         String nameHtml = htmlEncode(name);
         File repository = Git.getInstance().getRepositoryRoot(mostImportantFile);
         if (!mostImportantFile.equals(repository) && mostImportantInfo.containsStatus(Status.NOTVERSIONED_EXCLUDED)) {
@@ -512,7 +512,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
         name = htmlEncode(name);
 
         String textAnnotation;
-        boolean annotationsVisible = VersioningSupport.getPreferences().getBoolean(VersioningSupport.PREF_BOOLEAN_TEXT_ANNOTATIONS_VISIBLE, false);
+        boolean annotationsVisible = VersioningSupport.isTextAnnotationVisible();
 
         if (annotationsVisible && mostImportantFile != null && mostImportantInfo.containsStatus(STATUS_IS_IMPORTANT)) {
             String statusText = mostImportantInfo.getShortStatusText();

@@ -66,6 +66,7 @@ public class CompositeComponentWizardPanel implements WizardDescriptor.Panel, Ch
     SourceGroup[] folders;
     private final ChangeSupport changeSupport = new ChangeSupport(this);
     private static final String WEBAPP_RESOURCES_DIRECTORY = "javax.faces.WEBAPP_RESOURCES_DIRECTORY";
+    private static final String WEBAPP_RESOURCES_DIRECTORY_JAKARTA = "jakarta.faces.WEBAPP_RESOURCES_DIRECTORY";
     private static final String RESOURCES_FOLDER = "resources"; //NOI18N
     //TODO how to add [,] to the regular expression?
     private static final Pattern INVALID_FILENAME_CHARACTERS = Pattern.compile("[`~!@#$%^&*()=+\\|{};:'\",<>/?]"); // NOI18N
@@ -182,7 +183,7 @@ public class CompositeComponentWizardPanel implements WizardDescriptor.Panel, Ch
                 String ccLibNamespace = component.getCompositeComponentURI();
                 //warning if the current library namespace is not already declared, but the prefix is used for
                 //another library
-                if (declaredPrefixes != null && !prefix.equals(declaredPrefixes.get(ccLibNamespace)) && declaredPrefixes.values().contains(prefix)) {
+                if (declaredPrefixes != null && !prefix.equals(declaredPrefixes.get(ccLibNamespace)) && declaredPrefixes.containsValue(prefix)) {
                     //the selected prefix is already in use, show warning, but let the user finish the wizard
                     wizard.putProperty(WizardDescriptor.PROP_WARNING_MESSAGE, NbBundle.getMessage(CompositeComponentVisualPanel.class, "MSG_Already_Used_Prefix", component.getPrefix()));//NOI18N
                     return true;
@@ -309,7 +310,8 @@ public class CompositeComponentWizardPanel implements WizardDescriptor.Panel, Ch
                 if (ddRoot != null) {
                     InitParam[] parameters = ddRoot.getContextParam();
                     for (InitParam param : parameters) {
-                        if (param.getParamName().contains(WEBAPP_RESOURCES_DIRECTORY)) {
+                        if (param.getParamName().contains(WEBAPP_RESOURCES_DIRECTORY)
+                                || param.getParamName().contains(WEBAPP_RESOURCES_DIRECTORY_JAKARTA)) {
                             relPath = param.getParamValue().trim();
                         }
                     }

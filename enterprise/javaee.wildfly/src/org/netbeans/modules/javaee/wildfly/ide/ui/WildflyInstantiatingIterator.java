@@ -20,12 +20,13 @@ package org.netbeans.modules.javaee.wildfly.ide.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -65,19 +66,15 @@ public class WildflyInstantiatingIterator implements WizardDescriptor.Instantiat
 
 
     // private InstallPanel panel;
-    private final transient Set listeners = new HashSet(1);
+    private final transient Set<ChangeListener> listeners = ConcurrentHashMap.newKeySet(2);
     @Override
     public void removeChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.remove(l);
-        }
+        listeners.remove(l);
     }
 
     @Override
     public void addChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
-        }
+        listeners.add(l);
     }
 
     @Override
@@ -106,13 +103,10 @@ public class WildflyInstantiatingIterator implements WizardDescriptor.Instantiat
     }
 
     public static void showInformation(final String msg,  final String title) {
-        Runnable info = new Runnable() {
-            @Override
-            public void run() {
-                NotifyDescriptor d = new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE);
-                d.setTitle(title);
-                DialogDisplayer.getDefault().notify(d);
-            }
+        Runnable info = () -> {
+            NotifyDescriptor d = new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE);
+            d.setTitle(title);
+            DialogDisplayer.getDefault().notify(d);
         };
 
         if (SwingUtilities.isEventDispatchThread()) {
@@ -139,13 +133,14 @@ public class WildflyInstantiatingIterator implements WizardDescriptor.Instantiat
         url += "&"+ installLocation;                                        // NOI18N
 
         try {
-            Map<String, String> initialProperties = new HashMap<String, String>();
+            Map<String, String> initialProperties = new HashMap<>();
             initialProperties.put(WildflyPluginProperties.PROPERTY_SERVER, server);
             initialProperties.put(WildflyPluginProperties.PROPERTY_DEPLOY_DIR, deployDir);
             initialProperties.put(WildflyPluginProperties.PROPERTY_SERVER_DIR, serverPath);
             initialProperties.put(WildflyPluginProperties.PROPERTY_ROOT_DIR, installLocation);
             initialProperties.put(WildflyPluginProperties.PROPERTY_HOST, host);
             initialProperties.put(WildflyPluginProperties.PROPERTY_PORT, port);
+            initialProperties.put(WildflyPluginProperties.PROPERTY_PORT_OFFSET, portOffset);
             initialProperties.put(WildflyPluginProperties.PROPERTY_CONFIG_FILE, configFile);
             initialProperties.put(WildflyPluginProperties.PROPERTY_ADMIN_PORT, adminPort);
             initialProperties.put(WildflyPluginProperties.PROPERTY_JAVA_OPTS, WILDFLY_JAVA_OPTS);
@@ -248,19 +243,14 @@ public class WildflyInstantiatingIterator implements WizardDescriptor.Instantiat
     }
 
     protected final void fireChangeEvent() {
-        Iterator it;
-        synchronized (listeners) {
-            it = new HashSet(listeners).iterator();
-        }
         ChangeEvent ev = new ChangeEvent(this);
-        while (it.hasNext()) {
-            ((ChangeListener) it.next()).stateChanged(ev);
-        }
+        new ArrayList<>(listeners).forEach(l -> l.stateChanged(ev));
     }
 
     private String host;
     private String port;
     private String adminPort;
+    private String portOffset;
     private String userName="";
     private String password="";
     private String server;
@@ -291,6 +281,10 @@ public class WildflyInstantiatingIterator implements WizardDescriptor.Instantiat
 
     public void setAdminPort(String port){
         this.adminPort = port.trim();
+    }
+
+    public void setPortOffset(String portOffset){
+        this.portOffset = portOffset;
     }
 
     public void setServer(String server){

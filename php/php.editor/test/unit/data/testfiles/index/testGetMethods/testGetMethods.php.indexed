@@ -8,8 +8,8 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : testmethoddeclaration;testMethodDeclaration;12;;;;1;;0;<TESTURL>/testGetMethods.php;;
-  method : testmethoddeclaration;testMethodDeclaration;56;;;1;0;<TESTURL>/testGetMethods.php;0;0;
+  clz : testmethoddeclaration;testMethodDeclaration;12;;;;1;;0;<TESTURL>/testGetMethods.php;;0;
+  method : testmethoddeclaration;testMethodDeclaration;56;;;1;0;<TESTURL>/testGetMethods.php;0;0;;
   top : testmethoddeclaration
 
 Not Searchable Keys:

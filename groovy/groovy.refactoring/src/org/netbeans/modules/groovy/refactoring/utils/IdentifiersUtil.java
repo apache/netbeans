@@ -70,7 +70,7 @@ public final class IdentifiersUtil {
         String oldName = buildName(prefix, folder.getName());
         String newName = buildName(prefix, rename.getNewName());
         int oldNameIndex = fqn.lastIndexOf(oldName) + oldName.length();
-        return newName + fqn.substring(oldNameIndex, fqn.length());
+        return newName + fqn.substring(oldNameIndex);
 
     }
 

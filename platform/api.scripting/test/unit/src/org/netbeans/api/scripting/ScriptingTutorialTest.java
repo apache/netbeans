@@ -19,6 +19,7 @@
 package org.netbeans.api.scripting;
 
 import javax.script.ScriptEngine;
+import static org.junit.Assume.assumeTrue;
 import org.netbeans.junit.NbTestCase;
 
 public class ScriptingTutorialTest extends NbTestCase {
@@ -29,7 +30,7 @@ public class ScriptingTutorialTest extends NbTestCase {
     public void testFourtyTwo() throws Exception {
         // @start region="testFourtyTwo"
         ScriptEngine js = Scripting.createManager().getEngineByMimeType("text/javascript");
-        assert js != null;
+        assumeTrue(js != null || System.getProperty("java.vendor.version").contains("Graal"));
 
         Number x = (Number) js.eval("6 * 7");
 

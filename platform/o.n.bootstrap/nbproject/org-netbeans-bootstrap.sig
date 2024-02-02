@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.95
+#Version 2.101
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -287,7 +287,7 @@ meth public static boolean isArchivePopulated()
 meth public static void saveArchive()
 meth public void destroy()
 supr org.netbeans.ProxyClassLoader
-hfds LOGGER,archive,cache,module,patchingBytecode,sources
+hfds BASE_VERSION,LOGGER,META_INF,MULTI_RELEASE,RUNTIME_VERSION,archive,cache,module,patchingBytecode,sources
 hcls DirSource,JarSource,JarURLStreamHandler,NbJarURLConnection,Source
 
 CLSS public final org.netbeans.JaveleonModule
@@ -456,8 +456,8 @@ meth public void releaseModuleManifests()
 meth public void reload(org.netbeans.Module) throws java.io.IOException
 meth public void replaceJaveleonModule(org.netbeans.Module,org.netbeans.Module)
 supr org.openide.modules.Modules
-hfds EMPTY_COLLECTION,MODULE_PROBLEMS_LOCK,MUTEX,MUTEX_PRIVILEGED,PRINT_TOPOLOGICAL_EXCEPTION_STACK_TRACES,PROBING_IN_PROCESS,bootstrapModules,changeSupport,classLoader,classLoaderLock,classLoaderPatches,completeLookup,ev,firer,fragmentModules,installer,lookup,mdc,moduleFactory,moduleProblemsWithNeeds,moduleProblemsWithoutNeeds,modules,modulesByName,netigso,providersOf,readOnly
-hcls CodeNameBaseComparator,ModuleDataCache,ProvidersOf,SystemClassLoader
+hfds DEPLOG,EMPTY_COLLECTION,MODULE_PROBLEMS_LOCK,MUTEX,MUTEX_PRIVILEGED,PRINT_TOPOLOGICAL_EXCEPTION_STACK_TRACES,PROBING_IN_PROCESS,addedBecauseOfDependent,bootstrapModules,changeSupport,classLoader,classLoaderLock,classLoaderPatches,completeLookup,eagerActivation,enableContext,environmentTokens,ev,firer,fragmentModules,installer,lookup,mdc,moduleFactory,moduleProblemsWithNeeds,moduleProblemsWithoutNeeds,modules,modulesByName,netigso,providersOf,readOnly,reported,reportedProblems
+hcls CodeNameBaseComparator,EnableContext,ModuleDataCache,ProvidersOf,SystemClassLoader
 
 CLSS public final org.netbeans.NbClipboard
 cons public init()
@@ -507,6 +507,7 @@ hfds CONSTRUCTOR_NAME,DESC_CTOR_ANNOTATION,DESC_DEFAULT_CTOR,DESC_PATCHED_PUBLIC
 
 CLSS public org.netbeans.ProxyClassLoader
 cons public init(java.lang.ClassLoader[],boolean)
+cons public init(java.lang.ClassLoader[],boolean,java.util.function.BiFunction<java.lang.String,java.lang.ClassLoader,java.lang.Boolean>)
 meth protected boolean shouldDelegateResource(java.lang.String,java.lang.ClassLoader)
 meth protected final void addCoveredPackages(java.lang.Iterable<java.lang.String>)
 meth protected final void setSystemClassLoader(java.lang.ClassLoader)
@@ -524,7 +525,7 @@ meth public java.util.Enumeration<java.net.URL> findResources(java.lang.String) 
 meth public void append(java.lang.ClassLoader[])
 meth public void destroy()
 supr java.lang.ClassLoader
-hfds LOGGER,LOG_LOADING,TOP_CL,arbitraryLoadWarnings,packages,parents,sclPackages
+hfds LOGGER,LOG_LOADING,TOP_CL,arbitraryLoadWarnings,delegatingPredicate,packages,parents,sclPackages
 
 CLSS public org.netbeans.ProxyURLStreamHandlerFactory
 intf java.net.URLStreamHandlerFactory

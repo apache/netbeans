@@ -19,51 +19,56 @@
 package org.netbeans.modules.micronaut.hyperlink;
 
 import java.awt.Toolkit;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.util.ElementFilter;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
-import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.api.progress.BaseProgressUtils;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
+import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.micronaut.MicronautConfigProperties;
 import org.netbeans.modules.micronaut.MicronautConfigUtilities;
+import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.spi.IndexingAwareParserResultTask;
+import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.parsing.spi.Scheduler;
+import org.netbeans.modules.parsing.spi.SchedulerEvent;
+import org.netbeans.modules.parsing.spi.SchedulerTask;
+import org.netbeans.modules.parsing.spi.TaskFactory;
+import org.netbeans.modules.parsing.spi.TaskIndexingMode;
 import org.netbeans.spi.lsp.HyperlinkLocationProvider;
+import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataProperty;
 import org.springframework.boot.configurationmetadata.ConfigurationMetadataSource;
 
 /**
- * CURRENTLY NOT ACTIVE - @MimeRegistration DISABLED to work around 
- * <a href="https://github.com/apache/netbeans/issues/3913">GITHUB-3913</a>
- *
+ * 
  * @author Dusan Balek
  */
 public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
 
-    //@MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkProviderExt.class, position = 1250)
+    private static final String SPANS_PROPERTY_NAME = "MicronautConfigHyperlinkSpans";
+
+    @MimeRegistration(mimeType = MicronautConfigUtilities.YAML_MIME, service = HyperlinkProviderExt.class, position = 1250)
     public static MicronautConfigHyperlinkProvider createYamlProvider() {
         return new MicronautConfigHyperlinkProvider();
     }
 
-    //@MimeRegistration(mimeType = "text/x-properties", service = HyperlinkProviderExt.class, position = 1250)
+    @MimeRegistration(mimeType = MicronautConfigUtilities.PROPERTIES_MIME, service = HyperlinkProviderExt.class, position = 1250)
     public static MicronautConfigHyperlinkProvider createPropertiesProvider() {
         return new MicronautConfigHyperlinkProvider();
     }
@@ -80,10 +85,26 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override
     public int[] getHyperlinkSpan(Document doc, int offset, HyperlinkType type) {
-        int[] span = new int[2];
-        List<ConfigurationMetadataSource> sources = new ArrayList<>();
-        ConfigurationMetadataProperty property = MicronautConfigUtilities.resolveProperty(doc, offset, span, sources);
-        return property != null || !sources.isEmpty() ? span : null;
+        String mimeType = DocumentUtilities.getMimeType(doc);
+        if (MicronautConfigUtilities.YAML_MIME.equals(mimeType)) {
+            List<int[]> spans = null;
+            synchronized (doc) {
+                spans = (List<int[]>) doc.getProperty(SPANS_PROPERTY_NAME);
+            }
+            if (spans != null) {
+                for (int[] span : spans) {
+                    if (span.length == 2 && span[0] <= offset && offset <= span[1]) {
+                        return span;
+                    }
+                }
+            }
+            return null;
+        } else {
+            int[] span = new int[2];
+            List<ConfigurationMetadataSource> sources = new ArrayList<>();
+            ConfigurationMetadataProperty property = MicronautConfigUtilities.resolveProperty(doc, offset, span, sources);
+            return property != null || !sources.isEmpty() ? span : null;
+        }
     }
 
     @Override
@@ -97,7 +118,7 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
                 ClasspathInfo cpInfo = ClasspathInfo.create(doc);
                 for (ConfigurationMetadataSource source : sources) {
                     if (property == null || source.getProperties().get(property.getId()) == property) {
-                        ElementHandle handle = getElementHandle(cpInfo, source.getType(), property != null ? property.getName() : null, cancel);
+                        ElementHandle handle = MicronautConfigUtilities.getElementHandle(cpInfo, source.getType(), property != null ? property.getName() : null, cancel);
                         if (handle != null && ElementOpen.open(cpInfo, handle)) {
                             return;
                         }
@@ -123,60 +144,70 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
         return null;
     }
 
-    private static ElementHandle getElementHandle(ClasspathInfo cpInfo, String typeName, String propertyName, AtomicBoolean cancel) {
-        ElementHandle[] handle = new ElementHandle[1];
-        if (typeName != null) {
-            handle[0] = ElementHandle.createTypeElementHandle(ElementKind.CLASS, typeName);
-            if (cpInfo != null && propertyName != null) {
-                try {
-                    JavaSource.create(cpInfo).runUserActionTask(controller -> {
-                        if (cancel != null && cancel.get()) {
-                            return;
-                        }
-                        TypeElement te = (TypeElement) handle[0].resolve(controller);
-                        if (te != null) {
-                            ElementHandle found = null;
-                            String name = "set" + propertyName.replace("-", "");
-                            for (ExecutableElement executableElement : ElementFilter.methodsIn(te.getEnclosedElements())) {
-                                if (name.equalsIgnoreCase(executableElement.getSimpleName().toString())) {
-                                    found = ElementHandle.create(executableElement);
-                                    break;
-                                }
-                            }
-                            if (found == null) {
-                                TypeElement typeElement = controller.getElements().getTypeElement("io.micronaut.context.annotation.Property");
-                                for (VariableElement variableElement : ElementFilter.fieldsIn(te.getEnclosedElements())) {
-                                    for (AnnotationMirror annotationMirror : variableElement.getAnnotationMirrors()) {
-                                        if (typeElement == annotationMirror.getAnnotationType().asElement()) {
-                                            for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : annotationMirror.getElementValues().entrySet()) {
-                                                if ("name".contentEquals(entry.getKey().getSimpleName()) && propertyName.equals(entry.getValue().getValue())) {
-                                                    found = ElementHandle.create(variableElement);
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (found != null) {
-                                handle[0] = found;
-                            }
-                        }
-                    }, true);
-                } catch (IOException ex) {}
+    public static final class Task extends IndexingAwareParserResultTask<Parser.Result> {
+    
+        private final AtomicBoolean cancel = new AtomicBoolean();
+        private final Project project;
+
+        public Task(Project project) {
+            super(TaskIndexingMode.ALLOWED_DURING_SCAN);
+            this.project = project;
+        }
+
+        @Override
+        public void run(Parser.Result result, SchedulerEvent event) {
+            if (cancel.get()) {
+                return;
+            }
+            Document doc = result.getSnapshot().getSource().getDocument(false);
+            if (doc != null) {
+                List<int[]> spans = MicronautConfigUtilities.getPropertySpans(project, result);
+                synchronized (doc) {
+                    doc.putProperty(SPANS_PROPERTY_NAME, spans);
+                }
             }
         }
-        return handle[0];
+
+        @Override
+        public int getPriority() {
+            return 200;
+        }
+
+        @Override
+        public Class<? extends Scheduler> getSchedulerClass() {
+            return Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER;
+        }
+
+        @Override
+        public void cancel() {
+            cancel.set(true);
+        }
+
+        @MimeRegistration(mimeType = MicronautConfigUtilities.YAML_MIME, service = TaskFactory.class)
+        public static final class Factory extends TaskFactory {
+
+            @Override
+            public Collection<? extends SchedulerTask> create(Snapshot snapshot) {
+                FileObject fo = snapshot.getSource().getFileObject();
+                if (MicronautConfigUtilities.isMicronautConfigFile(fo)) {
+                    Project project = FileOwnerQuery.getOwner(fo);
+                    if (project != null && MicronautConfigProperties.hasConfigMetadata(project)) {
+                        return Collections.singleton(new Task(project));
+                    }
+                }
+                return Collections.emptySet();
+            }
+        }
     }
 
     public static class LocationProvider implements HyperlinkLocationProvider {
 
-        //@MimeRegistration(mimeType = "text/x-yaml", service = HyperlinkLocationProvider.class)
+        @MimeRegistration(mimeType = MicronautConfigUtilities.YAML_MIME, service = HyperlinkLocationProvider.class)
         public static LocationProvider createYamlProvider() {
             return new LocationProvider();
         }
 
-        //@MimeRegistration(mimeType = "text/x-properties", service = HyperlinkLocationProvider.class)
+        @MimeRegistration(mimeType = MicronautConfigUtilities.PROPERTIES_MIME, service = HyperlinkLocationProvider.class)
         public static LocationProvider createPropertiesProvider() {
             return new LocationProvider();
         }
@@ -191,7 +222,7 @@ public class MicronautConfigHyperlinkProvider implements HyperlinkProviderExt {
                 for (ConfigurationMetadataSource source : sources) {
                     if (property == null || source.getProperties().get(property.getId()) == property) {
                         String typeName = source.getType();
-                        ElementHandle handle = getElementHandle(cpInfo, typeName, property != null ? property.getName() : null, cancel);
+                        ElementHandle handle = MicronautConfigUtilities.getElementHandle(cpInfo, typeName, property != null ? property.getName() : null, cancel);
                         if (handle != null) {
                             CompletableFuture<ElementOpen.Location> future = ElementOpen.getLocation(cpInfo, handle, typeName.replace('.', '/') + ".class");
                             return future.thenApply(location -> {

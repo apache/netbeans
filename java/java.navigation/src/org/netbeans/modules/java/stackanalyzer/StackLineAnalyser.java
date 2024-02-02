@@ -27,11 +27,9 @@ import java.util.regex.Pattern;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
-
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
@@ -57,11 +55,12 @@ class StackLineAnalyser {
     private static final String IDENTIFIER =
         "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";    // NOI18N
     private static final Pattern LINE_PATTERN = Pattern.compile(
-        "at\\s" +                                       //  initial at // NOI18N
+        "at\\s+" +                                       //  initial at // NOI18N
         "("+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" + // optional module name // NOI18N
         "(("+IDENTIFIER+"(\\."+IDENTIFIER+")*)\\.)?("+IDENTIFIER+")" + // class name // NOI18N
-        "\\.("+IDENTIFIER+"|\\<init\\>|\\<clinit\\>)\\((?:"+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" +IDENTIFIER+"\\.java" + // method and file name // NOI18N
-        "\\:([0-9]*)\\)");                              // line number // NOI18N
+        "\\.("+IDENTIFIER+"|\\<init\\>|\\<clinit\\>)\\s*"+ // method name
+        "\\((?:"+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?"+IDENTIFIER+"(\\.(?:\\p{javaJavaIdentifierPart}+))?"+ // '(File.java' // NOI18N
+        "\\:([0-9]*)\\)");                              // ':123)' // NOI18N
 
     static boolean matches(String line) {
         Matcher matcher = LINE_PATTERN.matcher(line);
@@ -71,9 +70,9 @@ class StackLineAnalyser {
     static Link analyse(String line) {
         Matcher matcher = LINE_PATTERN.matcher(line);
         if (matcher.find()) {
-            int lineNumber = -1;
+            int lineNumber;
             try {
-                lineNumber = Integer.parseInt(matcher.group(7));
+                lineNumber = Integer.parseInt(matcher.group(8));
             } catch (NumberFormatException nfe) {
                 return null;
             }
@@ -81,40 +80,43 @@ class StackLineAnalyser {
             if (matcher.group(1) != null) {
                 moduleStart = matcher.start(1);
             }
+            String ext = matcher.group(7);       
             if (matcher.group(2)==null ) {
                 return new Link(matcher.group(5),
                             lineNumber,
                             moduleStart != (-1) ? moduleStart : matcher.start(5),
-                            matcher.end(7)+1
+                            matcher.end(8)+1, ext
                             );
-                
+
             }
             return new Link(matcher.group(2) + matcher.group(5),
                             lineNumber,
                             moduleStart != (-1) ? moduleStart : matcher.start(2),
-                            matcher.end(7)+1
+                            matcher.end(8)+1, ext
                             );
         }
         return null;
     }
 
-    static class Link {
+    static final class Link {
+        private final String className;
+        private final int lineNumber;
+        private final int startOffset;
+        private final int endOffset;
+        private final String extension;
 
-        private String          className;
-        private int             lineNumber;
-        private int             startOffset;
-        private int             endOffset;
-        
-        private  Link (
-            String              className,
-            int                 lineNumber,
-            int                 startOffset,
-            int                 endOffset
+        private Link(
+            String className,
+            int lineNumber,
+            int startOffset,
+            int endOffset,
+            String extension
         ) {
             this.className = className;
             this.lineNumber = lineNumber;
             this.startOffset = startOffset;
             this.endOffset = endOffset;
+            this.extension = extension;
         }
 
         int getStartOffset () {
@@ -125,85 +127,83 @@ class StackLineAnalyser {
             return endOffset;
         }
 
+        String getExtension() {
+            return extension;
+        }
+
         void show () {
             String name = className.replace('.', '/');
             final List<String> resources = new ArrayList<>();
+            resources.add(name + getExtension()); //NOI18N
             resources.add(name + ".java"); //NOI18N
             int idx = name.lastIndexOf('$');
             while (idx >= 0) {
                 name = name.substring(0, idx);
+                resources.add(name + getExtension()); //NOI18N
                 resources.add(name + ".java"); //NOI18N
                 idx = name.lastIndexOf('$');
             }
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(
+            final ProgressHandle handle = ProgressHandle.createHandle(
                 NbBundle.getMessage(StackLineAnalyser.class, "TXT_OpeningSource", resources.get(0)));
             handle.start();
-            RP.execute(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        DataObject dobj = null;
-                        try {
-                            final ClassPath classPath = ClassPathSupport.createClassPath(
+            RP.execute(() -> {
+                DataObject dobj = null;
+                try {
+                    final ClassPath classPath = ClassPathSupport.createClassPath(
                             GlobalPathRegistry.getDefault().getSourceRoots().toArray(new FileObject[0]));
-                            for (String resource : resources) {
-                                dobj = findDataObject(classPath.findResource(resource));
-                                if (dobj != null)
-                                    break;
+                    for (String resource : resources) {
+                        dobj = findDataObject(classPath.findResource(resource));
+                        if (dobj != null)
+                            break;
+                    }
+                } finally {
+                    final DataObject dataObject = dobj;
+                    Mutex.EVENT.readAccess(() -> {
+                        try {
+                            if (dataObject == null) {
+                                StatusDisplayer.getDefault().setStatusText(
+                                        NbBundle.getMessage(StackLineAnalyser.class,
+                                                "AnalyzeStackTopComponent.sourceNotFound",
+                                                new Object[]{resources.get(0)}));
+                                return;
                             }
-                        } finally {
-                            final DataObject dataObject = dobj;
-                            Mutex.EVENT.readAccess(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        if (dataObject == null) {
-                                            StatusDisplayer.getDefault().setStatusText(
-                                            NbBundle.getMessage(StackLineAnalyser.class,
-                                            "AnalyzeStackTopComponent.sourceNotFound",
-                                            new Object[]{resources.get(0)}));
-                                            return;
-                                        }
-                                        try {
-                                            EditorCookie editorCookie = (EditorCookie) dataObject.getCookie(EditorCookie.class);
-                                            LineCookie lineCookie = (LineCookie) dataObject.getCookie(LineCookie.class);
-                                            if (editorCookie != null && lineCookie != null && lineNumber != -1) {
-                                                StyledDocument doc = editorCookie.openDocument();
-                                                if (doc != null) {
-                                                    if (lineNumber != -1) {
-                                                        try {
-                                                            Line l = lineCookie.getLineSet().getCurrent(lineNumber - 1);
-
-                                                            if (l != null) {
-                                                                l.show(Line.SHOW_GOTO);
-                                                                return;
-                                                            }
-                                                        } catch (IndexOutOfBoundsException oob) {
-                                                            //line number is no more valid, do not report as an error
-                                                            StatusDisplayer.getDefault().setStatusText(
-                                                            NbBundle.getMessage(StackLineAnalyser.class,
-                                                            "AnalyzeStackTopComponent.lineNotFound",
-                                                            new Object[]{lineNumber}));
-                                                        }
-                                                    }
+                            try {
+                                EditorCookie editorCookie = dataObject.getLookup().lookup(EditorCookie.class);
+                                LineCookie lineCookie = dataObject.getLookup().lookup(LineCookie.class);
+                                if (editorCookie != null && lineCookie != null && lineNumber != -1) {
+                                    StyledDocument doc = editorCookie.openDocument();
+                                    if (doc != null) {
+                                        if (lineNumber != -1) {
+                                            try {
+                                                Line l = lineCookie.getLineSet().getCurrent(lineNumber - 1);
+                                                if (l != null) {
+                                                    l.show(Line.ShowOpenType.OPEN, Line.ShowVisibilityType.FRONT);
+                                                    return;
                                                 }
+                                            } catch (IndexOutOfBoundsException oob) {
+                                                //line number is no more valid, do not report as an error
+                                                StatusDisplayer.getDefault().setStatusText(
+                                                        NbBundle.getMessage(StackLineAnalyser.class,
+                                                                "AnalyzeStackTopComponent.lineNotFound",
+                                                                new Object[]{lineNumber}));
                                             }
-                                            OpenCookie openCookie = (OpenCookie) dataObject.getCookie(OpenCookie.class);
-                                            if (openCookie != null) {
-                                                openCookie.open();
-                                                return;
-                                            }
-                                        } catch (IOException e) {
-                                            Exceptions.printStackTrace(e);
                                         }
-                                    } finally {
-                                        handle.finish();
                                     }
                                 }
-                            });
+                                OpenCookie openCookie = dataObject.getLookup().lookup(OpenCookie.class);
+                                if (openCookie != null) {
+                                    openCookie.open();
+                                    return;
+                                }
+                            } catch (IOException e) {
+                                Exceptions.printStackTrace(e);
+                            }
+                        } finally {
+                            handle.finish();
                         }
-                    }
-                });
+                    });
+                }
+            });
         }
     }
 

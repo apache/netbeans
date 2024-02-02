@@ -36,9 +36,11 @@
               </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/jaxb/activation.jar</runtime-relative-path>
+                <binary-origin>external/jakarta.activation-1.2.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/jaxb/api/jaxb-api.jar</runtime-relative-path>
+                <binary-origin>external/jakarta.xml.bind-api-2.3.3.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

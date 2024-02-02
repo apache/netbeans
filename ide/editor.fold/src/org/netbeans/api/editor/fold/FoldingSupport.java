@@ -40,16 +40,16 @@ public final class FoldingSupport {
      * The manager tries to find start/end markers within the token text. If found,
      * a Fold is created. The manager only looks in tokens, whose {@code primaryCategory}
      * starts with a String, which is stored under 'tokenId' key in the params map.
-     * <p/>
+     * <p>
      * The method is designed to be called from the filesystem layer as follows:
-     * <code><pre>
+     * <pre>{@code
      * &lt;file name="my-custom-foldmanager.instance">
      * &lt;attr name="instanceCreate" methodvalue="org.netbeans.api.editor.fold.FoldUtilities.createUserFoldManager"/>
      * &lt;attr name="tokenid" stringvalue="comment"/>
      * &lt;/file>
-     * </pre></code>
+     * }</pre>
      *
-     * @param map the configuration parameters.
+     * @param params the configuration parameters.
      * @return FoldManagerFactory instance
      */
     public static FoldManagerFactory userFoldManagerFactory(Map params) {
@@ -67,7 +67,7 @@ public final class FoldingSupport {
      * The manager tries to find start/end markers within the token text. If found,
      * a Fold is created. The manager only looks in tokens, whose {@code primaryCategory}
      * starts with tokenId string.
-     * <p/>
+     * <p>
      * {@code Null} value of 'tokenId' means the default "comment" will be used.
      *
      * @param tokenId filter for prefix of the token's primaryCategory.
@@ -89,10 +89,10 @@ public final class FoldingSupport {
      * encounters the 'stop' regex pattern, it stops scanning and returns {@code null}. Typically
      * some tags are placed at the end of the doc comment, and they are not informative enough
      * to put them into folded preview.
-     * <p/>
+     * <p>
      * Finally, if a suitable content is found, and it contains the 'terminator' pattern,
      * the content is only returned up to (excluding) the terminator.
-     * <p/>
+     * <p>
      * Javadoc (PHPdoc) reader can be constructed as <code>defaultReader("*", "\\.", "@");</code>
      *
      * @param start character sequence, which will be ignored at the beginning of the line. Can be {@code null}
@@ -104,8 +104,8 @@ public final class FoldingSupport {
     }
 
     /**
-     * A variant of {@link #defaultReader} usable from FS layer.
-     * See {@link #defaultReader} documentation for parameter explanation. The 
+     * A variant of {@code defaultReader} usable from FS layer.
+     * See {@code defaultReader} documentation for parameter explanation. The 
      * method expects those parameters as keys in the Map (values are all Strings).
      * An additional entry (key: 'type') is required in the map, it identifies the
      * FoldType for which the reader should work.

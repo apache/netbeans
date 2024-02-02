@@ -2130,6 +2130,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
             case LOCAL_VARIABLE:
             case EXCEPTION_PARAMETER:
             case RESOURCE_VARIABLE:
+            case BINDING_VARIABLE:
                 ve = (VariableElement) elm;
                 String varName = ve.getSimpleName().toString();
                 ScriptVariable var = evaluationContext.getScriptVariableByName(varName);
@@ -2621,7 +2622,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                     throw iex; // re-throw the original
                 }
             }
-            if (enclosing != null && enclosing instanceof ObjectReference) {
+            if (enclosing instanceof ObjectReference) {
                 ObjectReference enclosingObject = (ObjectReference) enclosing;
                 argVals.add(0, enclosingObject);
                 firstParamSignature = enclosingObject.referenceType().signature();
@@ -2705,7 +2706,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
                     throw iex; // re-throw the original
                 }
             }
-            if (enclosing != null && enclosing instanceof ObjectReference) {
+            if (enclosing instanceof ObjectReference) {
                 ObjectReference enclosingObject = (ObjectReference) enclosing;
                 argVals.add(0, enclosingObject);
                 argTypes.add(0, enclosingObject.referenceType());
@@ -3602,7 +3603,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
         ScriptVariable var = evaluationContext.createScriptLocalVariable(name, type);
         ExpressionTree initializer = arg0.getInitializer();
         if (initializer != null) {
-            if (Tree.Kind.NEW_ARRAY.equals(initializer.getKind())) {
+            if (Tree.Kind.NEW_ARRAY == initializer.getKind()) {
                 try {
                     newArrayType = ArrayTypeWrapper.componentType((ArrayType) type);
                 } catch (ClassNotLoadedException cnlex) {

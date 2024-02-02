@@ -311,7 +311,7 @@ public class LookupNode extends DataFolder.FolderNode implements NewTemplateActi
     * LookupItemNodes as filter subnodes...
     */
     private static final class Ch extends FilterNode.Children {
-        /** @param or original node to take children from */
+        /** @param folder original node to take children from */
         public Ch (DataFolder folder) {
             super(folder.getNodeDelegate ());
         }

@@ -2,5 +2,4 @@ Code completion result for source line:
 #[AnAttribute(n|ew Foo(x: 1))]
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
-KEYWORD    namespace                                  null
 KEYWORD    new                                        null

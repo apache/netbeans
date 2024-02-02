@@ -71,18 +71,22 @@ import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.View;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.lib.editor.util.CharSequenceUtilities;
 import org.netbeans.lib.editor.util.swing.DocumentListenerPriority;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.editor.indent.api.IndentUtils;
 import org.netbeans.modules.editor.indent.api.Reformat;
 import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.netbeans.modules.editor.lib.BeforeSaveTasks;
+import org.netbeans.modules.editor.lib.WcwdithUtil;
 import org.netbeans.modules.editor.lib2.EditorPreferencesDefaults;
 import org.netbeans.modules.editor.lib2.view.DocumentView;
 import org.netbeans.modules.editor.lib2.view.EditorView;
+import org.openide.awt.Actions;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
@@ -151,13 +155,47 @@ public class Utilities {
         }
         return -1;
     }
-
+    
+    /** Get visual column from position. This method can be used
+    * only for superfixed font i.e. all characters of all font styles
+    * have the same width.
+    * @param offset position for which the visual column should be returned
+    *   the function itself computes the begining of the line first
+    */
+    static int getVisColFromPos(LineDocument doc, int offset) throws BadLocationException {
+        if (offset < 0 || offset > doc.getLength()) {
+            throw new BadLocationException("Invalid offset", offset); // NOI18N
+        }
+        int startLineOffset =  LineDocumentUtils.getLineStart(doc, offset);
+        int tabSize = IndentUtils.tabSize(doc);
+        CharSequence docText = org.netbeans.lib.editor.util.swing.DocumentUtilities.getText(doc);
+        int visCol = 0;
+        for (int i = startLineOffset; i < offset; i++) {
+            char ch = docText.charAt(i);
+            if (ch == '\t') {
+                visCol = (visCol + tabSize) / tabSize * tabSize;
+            } else {
+                // #17356
+                int codePoint;
+                if (Character.isHighSurrogate(ch) && i + 1 < docText.length()) {
+                    codePoint = Character.toCodePoint(ch, docText.charAt(++i));
+                } else {
+                    codePoint = ch;
+                }
+                int w = WcwdithUtil.wcwidth(codePoint);
+                visCol += w > 0 ? w : 0;
+            }
+        }
+        return visCol;
+    }
+    
     /** Get the starting position of the row.
     * @param doc document to operate on
     * @param offset position in document where to start searching
     * @return position of the start of the row or -1 for invalid position
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getRowStart(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getLineStart(doc, offset);
@@ -175,6 +213,7 @@ public class Utilities {
     * @return position of the start of the row or -1 for invalid position
     * @deprecated Deprecated without replacement
     */
+    @Deprecated
     public static int getRowStart(BaseDocument doc, int offset, int lineShift)
     throws BadLocationException {
         checkOffsetValid(doc, offset);
@@ -214,6 +253,7 @@ public class Utilities {
     *   if there's no non-white character on that line.
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getRowLastNonWhite(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getLineLastNonWhitespace(doc, offset);
@@ -264,10 +304,10 @@ public class Utilities {
     /** Get the end position of the row right before the new-line character.
     * @param c text component to operate on
     * @param offset position in document where to start searching
-    * @param relLine shift offset forward/back by some amount of lines
     * @return position of the end of the row or -1 for invalid position
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getRowEnd(JTextComponent c, int offset)
     throws BadLocationException {
         Rectangle2D r = modelToView(c, offset);
@@ -285,6 +325,7 @@ public class Utilities {
      * @throws BadLocationException
      * @deprecated use {@link LineDocumentUtils}
      */
+    @Deprecated
     public static int getRowEnd(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getLineEnd(doc, offset);
@@ -328,13 +369,14 @@ public class Utilities {
 
     /** Get the position that is one line above and visually at some
     * x-coordinate value.
-    * @param doc document to operate on
+    * @param c component to operate on
     * @param offset position in document from which the current line is determined
     * @param x float x-coordinate value
     * @return position of the character that is at the one line above at
     *   the required x-coordinate value
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getPositionAbove(JTextComponent c, int offset, int x)
     throws BadLocationException {
         // Ignore returned bias
@@ -352,6 +394,7 @@ public class Utilities {
     *   the required x-coordinate value
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getPositionBelow(JTextComponent c, int offset, int x)
     throws BadLocationException {
         // Ignore returned bias
@@ -366,6 +409,7 @@ public class Utilities {
     * @param offset position in document from which the current line is determined
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getWordStart(JTextComponent c, int offset)
     throws BadLocationException {
         return getWordStart((BaseDocument)c.getDocument(), offset);
@@ -434,6 +478,7 @@ public class Utilities {
     * @return position of the first white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstWhiteFwd(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getNextWhitespace(doc, offset);
@@ -447,6 +492,7 @@ public class Utilities {
     * @return position of the first non-white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstWhiteFwd(BaseDocument doc, int offset, int limitPos)
     throws BadLocationException {
         return LineDocumentUtils.getNextWhitespace(doc, offset, limitPos);
@@ -458,6 +504,7 @@ public class Utilities {
     * @return position of the first non-white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstNonWhiteFwd(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getNextNonWhitespace(doc, offset);
@@ -471,6 +518,7 @@ public class Utilities {
     * @return position of the first non-white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstNonWhiteFwd(BaseDocument doc, int offset, int limitPos)
     throws BadLocationException {
         return LineDocumentUtils.getNextNonWhitespace(doc, offset, limitPos);
@@ -484,6 +532,7 @@ public class Utilities {
     * @return position of the first white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstWhiteBwd(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getPreviousWhitespace(doc, offset);
@@ -499,6 +548,7 @@ public class Utilities {
     * @return position of the first white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstWhiteBwd(BaseDocument doc, int offset, int limitPos)
     throws BadLocationException {
         return LineDocumentUtils.getPreviousWhitespace(doc, offset, limitPos);
@@ -512,6 +562,7 @@ public class Utilities {
     * @return position of the first non-white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstNonWhiteBwd(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getPreviousNonWhitespace(doc, offset);
@@ -527,6 +578,7 @@ public class Utilities {
     * @return position of the first non-white character or -1
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getFirstNonWhiteBwd(BaseDocument doc, int offset, int limitPos)
     throws BadLocationException {
         return LineDocumentUtils.getPreviousNonWhitespace(doc, offset, limitPos);
@@ -537,6 +589,7 @@ public class Utilities {
     * @param offset position in document where to start searching
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getLineOffset(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getLineIndex(doc, offset);
@@ -547,6 +600,7 @@ public class Utilities {
     * @return start position of the line or -1 if lineIndex was invalid
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static int getRowStartFromLineOffset(BaseDocument doc, int lineIndex) {
         return LineDocumentUtils.getLineStartFromIndex(doc, lineIndex);
     }
@@ -566,9 +620,25 @@ public class Utilities {
 
         return doc.getVisColFromPos(offset);
     }
+    
+    /** Return visual column (with expanded tabs) on the line.
+    * @param doc document to operate on
+    * @param offset position in document for which the visual column should be found
+    * @return visual column on the line determined by position
+    */
+    public static int getVisualColumn(LineDocument doc, int offset)
+    throws BadLocationException {
+        
+        int docLen = doc.getLength();
+        if (offset == docLen + 1) { // at ending extra '\n' => make docLen to proceed without BLE
+            offset = docLen;
+        }
+
+        return getVisColFromPos(doc,offset);
+    }
 
     /** Get the identifier around the given position or null if there's no identifier
-    * @see getIdentifierBlock()
+    * @see #getIdentifierBlock(BaseDocument,int)
     */
     public static String getIdentifier(BaseDocument doc, int offset)
     throws BadLocationException {
@@ -684,7 +754,7 @@ public class Utilities {
     }
 
     /** Get the selection or identifier at the current caret position
-     * @see getSelectionOrIdentifierBlock(JTextComponent, int)
+     * @see #getSelectionOrIdentifierBlock(JTextComponent, int)
      */
     public static int[] getSelectionOrIdentifierBlock(JTextComponent c) {
         try {
@@ -808,6 +878,7 @@ public class Utilities {
     * @return whether the line is empty or not
     * @deprecated use {@link LineDocumentUtils#isLineEmpty(org.netbeans.api.editor.document.LineDocument, int)}.
     */
+    @Deprecated
     public static boolean isRowEmpty(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.isLineEmpty(doc, offset);
@@ -829,6 +900,7 @@ public class Utilities {
     * @return whether the line is empty or not
     * @deprecated use {@link LineDocumentUtils}
     */
+    @Deprecated
     public static boolean isRowWhite(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.isLineWhitespace(doc, offset);
@@ -846,9 +918,9 @@ public class Utilities {
 
     /**
      * Reformat a block of code.
-     * <br/>
+     * <br>
      * The document should not be locked prior entering of this method.
-     * <br/>
+     * <br>
      * The method should be called from AWT thread so that the given offsets are more stable.
      * 
      * @param doc document to work with
@@ -884,9 +956,9 @@ public class Utilities {
 
     /**
      * Reformat the line around the given position.
-     * <br/>
+     * <br>
      * The document should not be locked prior entering of this method.
-     * <br/>
+     * <br>
      * The method should be called from AWT thread so that the given offsets are more stable.
      * 
      */
@@ -911,8 +983,9 @@ public class Utilities {
     }
 
     /** @deprecated
-     * @see Formatter.insertTabString()
+     * {@code Formatter#insertTabString()} editor.deprecated.pre65formatting
      */
+    @Deprecated
     public static String getTabInsertString(BaseDocument doc, int offset)
     throws BadLocationException {
         int col = getVisualColumn(doc, offset);
@@ -1232,7 +1305,7 @@ public class Utilities {
      * @param readLockDocument if true lock the document before locking the view hierarchy.
      *  This parameter should only be false if it's known that the document was already read/write-locked
      *  prior calling this method.
-     * @r non-null runnable to execute.
+     * @param r  non-null runnable to execute.
      */
     public static void runViewHierarchyTransaction(final JTextComponent component,
             boolean readLockDocument, final Runnable r)
@@ -1258,7 +1331,7 @@ public class Utilities {
     /**
      * Creates nice textual description of sequence of KeyStrokes. Usable for
      * displaying MultiKeyBindings. The keyStrokes are delimited by space.
-     * @param Array of KeyStrokes representing the actual sequence.
+     * @param seq Array of KeyStrokes representing the actual sequence.
      * @return String describing the KeyStroke sequence.
      */
     public static String keySequenceToString( KeyStroke[] seq ) {
@@ -1272,47 +1345,14 @@ public class Utilities {
 
     /**
      * Creates nice textual representation of KeyStroke.
-     * Modifiers and an actual key label are concated by plus signs
-     * @param the KeyStroke to get description of
+     * Modifiers and an actual key label are concated per the platform-specific convention
+     * @param stroke the KeyStroke to get description of
      * @return String describing the KeyStroke
      */
     public static String keyStrokeToString( KeyStroke stroke ) {
-        String modifText = KeyEvent.getKeyModifiersText( stroke.getModifiers() );
-        String keyText = (stroke.getKeyCode() == KeyEvent.VK_UNDEFINED) ? 
-            String.valueOf(stroke.getKeyChar()) : getKeyText(stroke.getKeyCode());
-        if( modifText.length() > 0 ) return modifText + '+' + keyText;
-        else return keyText;
-    }
-    
-    /** @return slight modification of what KeyEvent.getKeyText() returns.
-     *  The numpad Left, Right, Down, Up get extra result.
-     */
-    private static String getKeyText(int keyCode) {
-        String ret = KeyEvent.getKeyText(keyCode);
-        if (ret != null) {
-            switch (keyCode) {
-                case KeyEvent.VK_KP_DOWN:
-                    ret = prefixNumpad(ret, KeyEvent.VK_DOWN);
-                    break;
-                case KeyEvent.VK_KP_LEFT:
-                    ret = prefixNumpad(ret, KeyEvent.VK_LEFT);
-                    break;
-                case KeyEvent.VK_KP_RIGHT:
-                    ret = prefixNumpad(ret, KeyEvent.VK_RIGHT);
-                    break;
-                case KeyEvent.VK_KP_UP:
-                    ret = prefixNumpad(ret, KeyEvent.VK_UP);
-                    break;
-            }
-        }
-        return ret;
-    }
-    
-    private static String prefixNumpad(String key, int testKeyCode) {
-        if (key.equals(KeyEvent.getKeyText(testKeyCode))) {
-            key = NbBundle.getBundle(BaseKit.class).getString("key-prefix-numpad") + key;
-        }
-        return key;
+        /* The related logic has now been moved into org.openide.awt.Actions, so that it can be used
+        by modules that do not depend on the editor infrastructure. */
+        return Actions.keyStrokeToString(stroke);
     }
 
     private static void checkOffsetValid(Document doc, int offset) throws BadLocationException {
@@ -1337,6 +1377,7 @@ public class Utilities {
      * @deprecated Use java.util.logging.Logger instead with the proper name,
      * log level and message.
      */
+    @Deprecated
     public static void annotateLoggable(Throwable t) {
         Logger.getLogger("org.netbeans.editor").log(Level.INFO, null, t); //NOI18N
     }
@@ -1353,7 +1394,7 @@ public class Utilities {
     }
     
     /**
-     * @see isSelectionShowing(Caret)
+     * @see #isSelectionShowing(Caret)
      * @param component non-null component.
      * @return if selection is showing for component's caret.
      */

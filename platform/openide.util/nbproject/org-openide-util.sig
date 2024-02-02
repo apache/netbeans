@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.25
+#Version 9.30
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -669,7 +669,7 @@ intf java.util.EventListener
 meth public abstract void resultChanged(org.openide.util.LookupEvent)
 
 CLSS public org.openide.util.MapFormat
-cons public init(java.util.Map)
+cons public init(java.util.Map<java.lang.String,?>)
 meth protected java.lang.Object processKey(java.lang.String)
 meth public boolean isExactMatch()
 meth public boolean willThrowExceptionIfKeyWasNotFound()
@@ -683,7 +683,7 @@ meth public java.util.Map getMap()
 meth public static java.lang.String format(java.lang.String,java.util.Map)
 meth public void setExactMatch(boolean)
 meth public void setLeftBrace(java.lang.String)
-meth public void setMap(java.util.Map)
+meth public void setMap(java.util.Map<java.lang.String,?>)
 meth public void setRightBrace(java.lang.String)
 meth public void setThrowExceptionIfKeyWasNotFound(boolean)
 supr java.text.Format

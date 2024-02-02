@@ -89,7 +89,7 @@ public abstract class JavaRefactoringPlugin extends ProgressProviderAdapter impl
     }
 
     private static Collection<org.netbeans.modules.refactoring.spi.ModificationResult> createJavaModifications(Collection<ModificationResult> modifications) {
-        LinkedList<org.netbeans.modules.refactoring.spi.ModificationResult> result = new LinkedList();
+        LinkedList<org.netbeans.modules.refactoring.spi.ModificationResult> result = new LinkedList<>();
         for (ModificationResult r:modifications) {
             result.add(new JavaModificationResult(r));
         }

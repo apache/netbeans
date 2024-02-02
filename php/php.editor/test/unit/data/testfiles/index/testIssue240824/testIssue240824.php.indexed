@@ -8,8 +8,8 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : myconfig;MyConfig;13;;;;1;;0;<TESTURL>/testIssue240824.php;;
-  method : functionname;functionName;109;$param::0::1:0:0:0:0:0;;1;0;<TESTURL>/testIssue240824.php;0;0;
+  clz : myconfig;MyConfig;13;;;;1;;0;<TESTURL>/testIssue240824.php;;0;
+  method : functionname;functionName;109;$param::0::1:0:0:0:0:0::Ty\u003bp\u003be;;1;0;<TESTURL>/testIssue240824.php;0;0;;
   top : myconfig
 
 Not Searchable Keys:

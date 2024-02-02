@@ -34,6 +34,7 @@ import org.netbeans.modules.php.editor.model.EnumScope;
 import org.netbeans.modules.php.editor.model.FileScope;
 import org.netbeans.modules.php.editor.model.InterfaceScope;
 import org.netbeans.modules.php.editor.model.ModelUtils;
+import org.netbeans.modules.php.editor.model.TraitScope;
 import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.openide.filesystems.FileObject;
@@ -67,6 +68,10 @@ public class ConstantRedeclarationHintError extends HintErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
+            checkTypeScopes(ModelUtils.getDeclaredTraits(fileScope), hints, fileObject);
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
             checkTypeScopes(ModelUtils.getDeclaredEnums(fileScope), hints, fileObject);
         }
     }
@@ -88,7 +93,7 @@ public class ConstantRedeclarationHintError extends HintErrorRule {
 
     private Set<ClassMemberElement> getRedeclaredConstants(TypeScope typeScope) {
         List<ClassMemberElement> declaredConstants = new ArrayList<>();
-        if (typeScope instanceof ClassScope || typeScope instanceof InterfaceScope) {
+        if (canDeclareConstants(typeScope)) {
             declaredConstants.addAll(typeScope.getDeclaredConstants());
         } else if (typeScope instanceof EnumScope) {
             declaredConstants.addAll(((EnumScope) typeScope).getDeclaredEnumCases());
@@ -115,4 +120,9 @@ public class ConstantRedeclarationHintError extends HintErrorRule {
         return redeclaredConstants;
     }
 
+    private boolean canDeclareConstants(TypeScope typeScope) {
+        return typeScope instanceof ClassScope
+                || typeScope instanceof InterfaceScope
+                || typeScope instanceof TraitScope;
+    }
 }

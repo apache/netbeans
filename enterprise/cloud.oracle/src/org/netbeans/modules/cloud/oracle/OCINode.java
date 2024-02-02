@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.cloud.oracle;
 
+import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
@@ -27,6 +28,7 @@ import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
+import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
@@ -40,54 +42,78 @@ public class OCINode extends AbstractNode {
 
     private final OCIItem item;
     private final CloudChildFactory factory;
+    private final OCISessionInitiator session;
 
     public OCINode(OCIItem item) {
-        this(new CloudChildFactory(item), item, Lookups.fixed(item));
+        this(new CloudChildFactory(item), item, OCIManager.getDefault().getActiveSession(), Lookups.fixed(item));
     }
     
-    private OCINode(CloudChildFactory factory, OCIItem item, Lookup lookup) {
+    public OCINode(OCIItem item, OCISessionInitiator session) {
+        this(new CloudChildFactory(session, item), item, session, Lookups.fixed(item, session));
+    }
+    
+    private OCINode(CloudChildFactory factory, OCIItem item, OCISessionInitiator session, Lookup lookup) {
         super(Children.create(factory, true), lookup);
         setName(item.getName());
         this.item = item;
         this.factory = factory;
+        this.session = session;
         refreshListener = new RefreshListener();
         item.addChangeListener(refreshListener);
     }
     
     public OCINode(OCIItem item, Children children) {
-        super(children, Lookups.fixed(item));
+        super(children, Lookups.fixed(item, OCIManager.getDefault().getActiveSession()));
         setName(item.getName());
         this.item = item;
         this.factory = null;
+        this.session = OCIManager.getDefault().getActiveSession();
         refreshListener = new RefreshListener();
         item.addChangeListener(refreshListener);
+    }
+    
+    protected BasicAuthenticationDetailsProvider getAuthProvider() {
+        return session.getAuthenticationProvider();
     }
 
     @Override
     public Action[] getActions(boolean context) {
         List<Action> result = new ArrayList<>();
         
-        String path = item.getKey().getPath();
-        String provider = path.substring(0, path.indexOf("/"));
-        
-        
-        List<? extends Action> commonActions = Utilities.actionsForPath(
-                String.format("Cloud/%s/Common/Actions", provider));
+        List<? extends Action> commonActions = actionsForPath(
+                "Cloud/Oracle/Common/Actions", getLookup());
         for (Action commonAction : commonActions) {
             if (commonAction.isEnabled()) {
                 result.add(commonAction);
             }
         }
         
-        result.addAll(Utilities.actionsForPath(
-                String.format("Cloud/%s/Actions",
-                        item.getKey().getPath())));
+        result.addAll(actionsForPath(
+                String.format("Cloud/Oracle/%s/Actions",
+                        item.getKey().getPath()), getLookup()));
 
         return result.toArray(new Action[0]); // NOI18N
     }
     
+    public static final List<? extends Action> actionsForPath(String path, Lookup lkp) {
+        List<? extends Action> actions = Utilities.actionsForPath(path);
+        List<Action> ret = new ArrayList<>(actions.size());
+        for (Action a : actions) {
+            if (a instanceof ContextAwareAction) {
+                a = ((ContextAwareAction)a).createContextAwareInstance(lkp);
+                if (a == null) {
+                    continue;
+                }
+            }
+            ret.add(a);
+        }
+        return ret;
+    }
+    
     public void refresh() {
-        factory.refreshKeys();
+        if (factory != null) {
+            factory.refreshKeys();
+        }
     }
 
     @Override

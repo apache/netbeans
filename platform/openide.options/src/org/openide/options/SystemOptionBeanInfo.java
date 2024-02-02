@@ -32,6 +32,7 @@ public class SystemOptionBeanInfo extends SimpleBeanInfo {
     /** No properties.
     * @return array of hidden properties
     */
+    @Override
     public PropertyDescriptor[] getPropertyDescriptors () {
         try {
             PropertyDescriptor name = new PropertyDescriptor ("name", SystemOption.class, "getName", null);

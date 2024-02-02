@@ -3,7 +3,7 @@ Version: 1.3
 Description: Tag Library Documentation Generator is a utility for automatically generating javadoc-style documentation for JavaServer Pages (JSP) Technology Tag Libraries.
 License: BSD-tlddoc
 Origin: Sun Microsystems, Inc.
-Source: https://repo1.maven.org/maven2/taglibrarydoc/tlddoc/1.3/
+Source: https://repo.maven.apache.org/maven2/taglibrarydoc/tlddoc/1.3/
 Type: compile-time
 
 Copyright (c) 2003-2004, Sun Microsystems, Inc.

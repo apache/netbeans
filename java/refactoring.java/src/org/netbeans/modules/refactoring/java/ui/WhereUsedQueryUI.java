@@ -213,6 +213,7 @@ public class WhereUsedQueryUI implements RefactoringUI, Openable, JavaRefactorin
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                 case ANNOTATION_TYPE: {
                     if (!panel.isClassFindUsages()) {
                         if (!panel.isClassSubTypesDirectOnly()) {

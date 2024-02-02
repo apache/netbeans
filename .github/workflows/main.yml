@@ -19,7 +19,18 @@ name: NetBeans
 
 on:
   push:
+    branches:
+      - 'master'
+      - 'delivery'
+      - 'release*'
+
   pull_request:
+    # unlocked event is used as super secret restart button
+    types: [opened, synchronize, unlocked]
+
+  # Allows you to run this workflow manually from the Actions tab in GitHub UI
+  # keep in mind this will have ALL tests enabled
+  workflow_dispatch:
 
 # cancel other PR workflow run in the same head-base group if it exists (e.g. during PR syncs)
 # if this is not a PR run (no github.head_ref and github.base_ref defined), use an UID as group
@@ -27,110 +38,237 @@ concurrency:
   group: ${{ github.head_ref || github.run_id }}-${{ github.base_ref }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash
+
+env:
+
+  # note to self: don't remove the minus again
+  OPTS: >-
+    -Dtest-unit-sys-prop.ignore.random.failures=true
+
+  # what to build and test, see nbbuild/cluster.properties
+  CLUSTER_CONFIG: 'full'
+
+  # flags for conditional, long running steps or jobs configurable with labels. If this is not a PR, everything will run.
+  # 'Java' label
+  test_java: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'JavaDoc' or 'API Change' labels
+  test_javadoc: ${{ contains(github.event.pull_request.labels.*.name, 'JavaDoc') || contains(github.event.pull_request.labels.*.name, 'API Change') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'JavaScript' label
+  test_javascript: ${{ contains(github.event.pull_request.labels.*.name, 'JavaScript') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'PHP' label
+  test_php: ${{ contains(github.event.pull_request.labels.*.name, 'PHP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'Groovy' label
+  test_groovy: ${{ contains(github.event.pull_request.labels.*.name, 'Groovy') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'Rust' label
+  test_rust: ${{ contains(github.event.pull_request.labels.*.name, 'Rust') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'Platform' label
+  test_platform: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'tests' label for building all tests
+  test_tests: ${{ contains(github.event.pull_request.labels.*.name, 'tests') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'LSP' label for enabling Language Server Protocol tests
+  test_lsp: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'GraalVM' label for tests requirering GraalVM
+  test_graalvm: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'VSCode Extension' label for building and testing the VSCode Extension
+  test_vscode_extension: ${{ contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+
+  # 'Ant', 'Gradle', 'Maven' and 'MX' labels trigger build-tools job
+  # see job condition (env vars don't work for job conditions https://github.com/actions/runner/issues/1189 )
+
+  # special commands:
+  # 'ci:all-tests' enables everything
+  # 'ci:no-build' disables the build job (and test jobs too)
+  # 'ci:dev-build' produces an artifact containing a runnable NetBeans zip distribution
+  
+  # default java distribution used by the setup-java action
+  # see https://github.com/actions/setup-java#supported-distributions
+  default_java_distribution: 'zulu'
+
+
 jobs:
-    
-# primary build job, most other jobs use the artifact produced here
-# artifact is only produced once in the matrix
+
+  # primary build job, most other jobs use the artifact produced here
+  # artifact is only produced once in the matrix
   base-build:
-    name: Build Clusters on JDK ${{ matrix.java }} 
+    name: Build Clusters on JDK ${{ matrix.java }}
+    if: contains(github.event.pull_request.labels.*.name, 'ci:no-build') == false
     runs-on: ubuntu-latest
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '11', '17' ]
+        java: [ '11', '21' ]
       fail-fast: false
     steps:
         
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: 'zulu'
+          distribution: ${{ env.default_java_distribution }}
+          
+      - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          submodules: false
+          show-progress: false
 
       - name: Caching dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
           restore-keys: ${{ runner.os }}-
-          
-      - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
-        uses: actions/checkout@v3
 
       - name: Build NetBeans
-        run: ant -Dcluster.config=release build-nozip
+        run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG build-nozip
 
       - name: Prepare Artifact
         if: ${{ matrix.java == '11' }}
         run: tar -I 'zstd -9 -T0' -cf /tmp/build.tar.zst --exclude ".git" .
 
-      - name: Upload Build
+      - name: Upload Workspace
         if: ${{ (matrix.java == '11') && success() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: /tmp/build.tar.zst
-          retention-days: 1
+          compression-level: 0
+          retention-days: 2
+          if-no-files-found: error
+          
+      - name: Create Dev Build
+        if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
+        run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG zip-cluster-config
+
+      - name: Upload Dev Build
+        if: ${{ matrix.java == '11' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-build
+          path: nbbuild/NetBeans-*.zip
+          compression-level: 0
+          retention-days: 7
           if-no-files-found: error
 
+  nb-javac-smokecheck:
+    name: "NetBeans on nb-javac"
+    # Run test job only when the 'nb-javac' label is added
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'nb-javac') }}
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          submodules: false
+          show-progress: false
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+            distribution: ${{ env.default_java_distribution }}
+            java-version: 11
+      - name: Caching dependencies
+        uses: actions/cache/restore@v3
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+      - name: Download External Binaries
+        run: ant $OPTS download-all-extbins
+      - name: Build NetBeans with nb-javac
+        run: ant $OPTS build -Dnbjavac.class.path=java/libs.javacapi/external/*.jar
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+      - name: Test with Commit Validation
+        run: ant $OPTS commit-validation -Dnbjavac.class.path=java/libs.javacapi/external/*.jar
 
 # secondary jobs
   linux-commit-validation:
+    name: CV on ${{ matrix.os }}/JDK ${{ matrix.java }}
     needs: base-build
-    name: Commit Validation on Linux/JDK ${{ matrix.java }} 
-    runs-on: ubuntu-latest
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    runs-on: ${{ matrix.os }} 
+    timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '8', '11', '17', '19-ea' ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        java: [ 11 ]
+        include:
+          - os: ubuntu-latest
+            java: 21
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: 'zulu'
-
-      - name: Download Build
-        uses: actions/download-artifact@v3
-        with:
-          name: build
-
-      - name: Extract
-        run: tar --zstd -xf build.tar.zst
+          distribution: ${{ env.default_java_distribution }}
 
       - name: Setup Xvfb
-        if: ${{ matrix.java != '20-ea' }}  # see #4299
+        if: contains(matrix.os, 'ubuntu') && success()
         run: |
           echo "DISPLAY=:99.0" >> $GITHUB_ENV
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      # tar on MacOS is not aware of zstd "tar --zstd -xf build.tar.zst" doesn't work
+      - name: Extract on MacOS
+        if: contains(matrix.os, 'macos') && success()
+        run: unzstd -c build.tar.zst | tar -x
+
+      - name: Extract on Linux/Windows
+        if: contains(matrix.os, 'macos') == false && success()
+        run: tar --zstd -xf build.tar.zst
+
+      - name: platform/masterfs.macosx
+        if: contains(matrix.os, 'macos') && success()
+        run: ant $OPTS -f platform/masterfs.macosx test
+
+      # fails on 17+
+      - name: platform/core.network
+        if: matrix.java == 11 && success()
+        run: ant $OPTS -f platform/core.network test
+
       - name: Commit Validation tests
-        run: ant -Dcluster.config=release commit-validation
+        run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG commit-validation
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
-          paths: "./nbbuild/build/test/commit-validation/results/*.xml"
+          paths: |
+            ./*/*/build/test/*/results/TEST-*.xml
+            ./nbbuild/build/test/commit-validation/results/TEST-*.xml
 
-# the test-summary action above is currently only looking for failures and ignores errors,
-# this step can be removed as soon this is fixed upstream
-      - name: Upload Test Results
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: validation-log-linux-${{ matrix.java }}
-          path: /home/runner/work/netbeans/netbeans/nbbuild/build/test/commit-validation/results/
-          retention-days: 1
-
-  linux-build-system-test:
+  # commit related checks - some steps run even when the build is dissabled
+  paperwork:
+    name: Check Paperwork on Linux/JDK ${{ matrix.java }}
     needs: base-build
-    name: Build-System Test on Linux/JDK ${{ matrix.java }} 
+    if: always()
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     env:
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     strategy:
@@ -139,13 +277,78 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: 'zulu'
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
+        if: ${{ !cancelled() }}
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          submodules: false
+          show-progress: false
+          fetch-depth: 10
+
+      - name: Print last 10 Commits
+        if: ${{ github.event_name == 'pull_request' && !cancelled() }}
+        run: git log --oneline -n10 --pretty=format:'%h %an [%ae] %s'
+
+      - name: Check line endings and verify RAT report
+        if: ${{ !cancelled() }}
+        run: |
+          nbbuild/travis/check-line-endings.sh
+          ant $OPTS -quiet build-source-config
+          mkdir scratch && cd scratch
+          unzip -qq ../nbbuild/build/release-src*
+          ant $OPTS -quiet rat -Drat-report.haltonfailure=true
+
+      - name: Clean Workspace
+        if: ${{ !cancelled() }}
+        run: cd ..; rm -Rf netbeans; mkdir netbeans
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        if: ${{ needs.base-build.result == 'success' && !cancelled() }}
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        if: ${{ needs.base-build.result == 'success' && !cancelled() }}
+        run: tar --zstd -xf build.tar.zst
+
+      - name: Verify libs and licenses
+        if: ${{ needs.base-build.result == 'success' && !cancelled() }}
+        run: ant $OPTS verify-libs-and-licenses -Dverify-libs-and-licenses.haltonfailure=true
+
+      - name: Run check-sigtests-release
+        if: ${{ needs.base-build.result == 'success' && !cancelled() }}
+        run: ant $OPTS -quiet check-sigtests-release -Dfail.on.error=true
+
+      - name: Run gen-sigtests-release
+        if: ${{ needs.base-build.result == 'success' && !cancelled() }}
+        run: ant $OPTS -quiet gen-sigtests-release
+
+
+  build-system-test:
+    name: Build-System Test on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -153,27 +356,32 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Test Netbeans Build System
-        run: ant -Dcluster.config=release localtest
+        run: ant $OPTS -Dcluster.config=$CLUSTER_CONFIG localtest
 
-  linux-javadoc:
+      - name: Build all Tests
+        # runs only in PRs if requested, nowhere else (~18 min)
+        if: env.test_tests == 'true' && github.event_name == 'pull_request' && success()
+        run: ant -quiet -Dcluster.config=$CLUSTER_CONFIG test -Dtest.includes=NoTestsJustBuild
+
+
+  build-nbms:
+    name: Build NBMs and Javadoc on JDK ${{ matrix.java }}
     needs: base-build
-    name: Build NBMs, Source zips and Javadoc on JDK ${{ matrix.java }} 
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     strategy:
       matrix:
         java: [ '11' ]
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: 'zulu'
+          distribution: ${{ env.default_java_distribution }}
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
@@ -181,91 +389,2011 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Build nbms
-        run: ant build-nbms
-
-      - name: Build source zips
-        run: ant build-source-zips
+        run: ant $OPTS build-nbms
 
       - name: Build javadoc
-        run: ant build-javadoc
+        if: env.test_javadoc == 'true' && success()
+        run: ant $OPTS build-javadoc
 
-  macos:
+
+  build-from-src-zip:
+    name: Build ${{ matrix.config }} from src.zip on JDK ${{ matrix.java }}
+    # equals env.test_platform == 'true' || test_vscode_extension == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
-    name: Tests on MacOS/JDK ${{ matrix.java }} 
-    runs-on: macos-11
-    env:
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+        config: [ 'platform', 'release' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: Restoring Cache
+        uses: actions/cache/restore@v3
+        with:
+          path: ~/.hgexternalcache
+          key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
+          restore-keys: ${{ runner.os }}-
+
+      - name: Create ${{ matrix.config }}-src zip
+        run: ant $OPTS -quiet build-source-config -Dcluster.config=${{ matrix.config }}
+
+      - name: Extract ${{ matrix.config }}-src zip
+        run: |
+          mkdir tmpbuild && cd tmpbuild
+          unzip -qq ../nbbuild/build/${{ matrix.config }}-src*
+
+      - name: Build from ${{ matrix.config }}-src zip
+        run: |
+          cd tmpbuild
+          ant $OPTS -quiet build -Dcluster.config=${{ matrix.config }}
+
+      # extra round for VSCodeExt which is built with 'release' config
+      - name: Set up node
+        if: ${{ (matrix.config == 'release') && success() }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Build NBVSCodeExt from ${{ matrix.config }}-src zip
+        if: ${{ (matrix.config == 'release') && success() }}
+        run: |
+          cd tmpbuild/java/java.lsp.server
+          ant $OPTS build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*
+
+
+  ide-modules-test:
+    name: IDE Modules on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: ide/api.xml
+        run: ant $OPTS -f ide/api.xml test
+
+      - name: ide/api.xml.ui
+        run: ant $OPTS -f ide/api.xml.ui test
+
+      - name: ide/bugtracking
+        run: .github/retry.sh ant $OPTS -f ide/bugtracking test
+
+      - name: ide/bugtracking.bridge
+        run: .github/retry.sh ant $OPTS -f ide/bugtracking.bridge test
+
+      - name: ide/bugtracking.commons
+        run: ant $OPTS -f ide/bugtracking.commons test
+
+#      - name: ide/bugzilla
+#        run: ant $OPTS -f ide/bugzilla test
+
+      - name: ide/code.analysis
+        run: ant $OPTS -f ide/code.analysis test
+
+      - name: ide/core.ide
+        run: ant $OPTS -f ide/core.ide test
+
+      - name: ide/csl.api
+        run: ant $OPTS -f ide/csl.api test
+
+      - name: ide/csl.types
+        run: ant $OPTS -f ide/csl.types test
+
+      - name: ide/css.editor
+        run: ant $OPTS -f ide/css.editor test
+
+      - name: ide/css.lib
+        run: ant $OPTS -f ide/css.lib test
+
+      - name: ide/css.model
+        run: ant $OPTS -f ide/css.model test
+
+      - name: ide/db
+        run: .github/retry.sh ant $OPTS -f ide/db test
+
+      - name: ide/db.dataview
+        run: ant $OPTS -f ide/db.dataview test
+
+      - name: ide/db.sql.editor
+        run: ant $OPTS -f ide/db.sql.editor test
+
+      - name: ide/docker.api
+        run: ant $OPTS -f ide/docker.api test
+
+      - name: ide/docker.ui
+        run: ant $OPTS -f ide/docker.ui test
+
+      - name: ide/editor.bookmarks
+        run: ant $OPTS -f ide/editor.bookmarks test
+
+#      - name: ide/editor.bracesmatching
+#        run: ant $OPTS -f ide/editor.bracesmatching test
+
+      - name: ide/editor.document
+        run: ant $OPTS -f ide/editor.document test
+
+      - name: ide/editor.fold
+        run: ant $OPTS -f ide/editor.fold test
+
+      - name: ide/editor.fold.nbui
+        run: ant $OPTS -f ide/editor.fold.nbui test
+
+      - name: ide/editor.guards
+        run: ant $OPTS -f ide/editor.guards test
+
+      - name: ide/editor.indent
+        run: ant $OPTS -f ide/editor.indent test
+
+      - name: ide/editor.indent.project
+        run: ant $OPTS -f ide/editor.indent.project test
+
+      - name: ide/editor.macros
+        run: ant $OPTS -f ide/editor.macros test
+
+      - name: ide/editor.search
+        run: ant $OPTS -f ide/editor.search test
+
+      - name: ide/editor.settings
+        run: ant $OPTS -f ide/editor.settings test
+
+      - name: ide/editor.settings.storage
+        run: .github/retry.sh ant $OPTS -f ide/editor.settings.storage test
+
+      - name: ide/editor.structure
+        run: ant $OPTS -f ide/editor.structure test
+
+      - name: ide/editor.tools.storage
+        run: ant $OPTS -f ide/editor.tools.storage test
+
+      - name: ide/editor.util
+        run: ant $OPTS -f ide/editor.util test
+
+      - name: ide/extbrowser
+        run: ant $OPTS -f ide/extbrowser test
+
+      - name: ide/extexecution.base
+        run: ant $OPTS -f ide/extexecution.base test
+
+      - name: ide/gsf.testrunner.ui
+        run: ant $OPTS -f ide/gsf.testrunner.ui test
+
+      - name: ide/html
+        run: .github/retry.sh ant $OPTS -f ide/html test
+
+      - name: ide/html.custom
+        run: ant $OPTS -f ide/html.custom test
+
+      - name: ide/html.editor
+        run: ant $OPTS -f ide/html.editor test
+
+      - name: ide/html.editor
+        run: ant $OPTS -f ide/html.editor.lib test
+
+      - name: ide/html.lexer
+        run: ant $OPTS -f ide/html.lexer test
+
+      - name: ide/html.parser
+        run: ant $OPTS -f ide/html.parser test
+
+      - name: ide/html.validation
+        run: ant $OPTS -f ide/html.validation test
+
+      - name: ide/httpserver
+        run: ant $OPTS -f ide/httpserver test
+
+      - name: ide/hudson
+        run: ant $OPTS -f ide/hudson test
+
+      - name: ide/hudson.git
+        run: ant $OPTS -f ide/hudson.git test
+
+      - name: ide/hudson.mercurial
+        run: ant $OPTS -f ide/hudson.mercurial test
+
+      - name: ide/hudson.subversion
+        run: ant $OPTS -f ide/hudson.subversion test
+
+      - name: ide/hudson.tasklist
+        run: ant $OPTS -f ide/hudson.tasklist test
+
+      - name: ide/hudson.ui
+        run: ant $OPTS -f ide/hudson.ui test
+
+      - name: ide/javascript2.debug
+        run: ant $OPTS -f ide/javascript2.debug test
+
+      - name: ide/languages.hcl
+        run: ant $OPTS -f ide/languages.hcl test
+
+      - name: ide/languages.toml
+        run: ant $OPTS -f ide/languages.toml test
+
+      - name: ide/languages.yaml
+        run: ant $OPTS -f ide/languages.yaml test
+
+      - name: ide/lexer
+        run: ant $OPTS -f ide/lexer test
+
+      - name: ide/lexer.antlr4
+        run: ant $OPTS -f ide/lexer.antlr4 test
+
+      - name: ide/lib.terminalemulator
+        run: ant $OPTS -f ide/lib.terminalemulator test
+
+      - name: ide/libs.freemarker
+        run: ant $OPTS -f ide/libs.freemarker test
+
+      - name: ide/libs.git
+        run: ant $OPTS -f ide/libs.git test
+
+      - name: ide/libs.graalsdk
+        run: ant $OPTS -f ide/libs.graalsdk test
+
+#      - name: ide/localhistory
+#        run: ant $OPTS -f ide/localhistory test
+
+      - name: ide/libs.truffleapi
+        run: ant $OPTS -f ide/libs.truffleapi test
+
+      - name: ide/lsp.client
+        run: ant $OPTS -f ide/lsp.client test
+
+      - name: ide/notifications
+        run: ant $OPTS -f ide/notifications test
+
+      - name: ide/o.openidex.util
+        run: ant $OPTS -f ide/o.openidex.util test
+
+      - name: ide/options.editor
+        run: .github/retry.sh ant $OPTS -f ide/options.editor test
+
+#      - name: ide/parsing.api
+#        run: ant $OPTS -f ide/parsing.api test
+
+#      - name: ide/parsing.indexing
+#        run: ant $OPTS -f ide/parsing.indexing test
+
+      - name: ide/parsing.lucene
+        run: ant $OPTS -f ide/parsing.lucene test
+
+      - name: ide/project.libraries
+        run: ant $OPTS -f ide/project.libraries test
+
+      - name: ide/project.libraries.ui
+        run: ant $OPTS -f ide/project.libraries.ui test
+
+      - name: ide/projectapi
+        run: ant $OPTS -f ide/projectapi test
+
+      - name: ide/projectapi.nb
+        run: ant $OPTS -f ide/projectapi.nb test
+
+      - name: ide/projectuiapi.base
+        run: ant $OPTS -f ide/projectuiapi.base test
+
+      - name: ide/refactoring.api
+        run: ant $OPTS -f ide/refactoring.api test
+
+      - name: ide/schema2beans
+        run: ant $OPTS -f ide/schema2beans test
+
+      - name: ide/server
+        run: ant $OPTS -f ide/server test
+
+      - name: ide/spellchecker
+        run: ant $OPTS -f ide/spellchecker test
+
+      - name: ide/spi.editor.hints
+        run: ant $OPTS -f ide/spi.editor.hints test
+
+#      - name: ide/spi.palette
+#        run: ant $OPTS -f ide/spi.palette test
+
+      - name: ide/spi.tasklist
+        run: ant $OPTS -f ide/spi.tasklist test
+
+      - name: ide/tasklist.ui
+        run: ant $OPTS -f ide/tasklist.ui test
+
+      - name: ide/team.commons
+        run: ant $OPTS -f ide/team.commons test
+
+      - name: ide/terminal.nb
+        run: ant $OPTS -f ide/terminal.nb test
+
+      - name: ide/utilities
+        run: ant $OPTS -f ide/utilities test
+
+      - name: ide/versioning.masterfs
+        run: ant $OPTS -f ide/versioning.masterfs test
+
+      - name: ide/versioning.ui
+        run: ant $OPTS -f ide/versioning.ui test
+
+      - name: ide/versioning.util
+        run: ant $OPTS -f ide/versioning.util test
+
+      - name: ide/web.common
+        run: ant $OPTS -f ide/web.common test
+
+      - name: ide/web.common.ui
+        run: ant $OPTS -f ide/web.common.ui test
+
+      - name: ide/web.webkit.debugging
+        run: ant $OPTS -f ide/web.webkit.debugging test
+
+      - name: ide/xml
+        run: ant $OPTS -f ide/xml test
+
+      - name: ide/xml.axi
+        run: ant $OPTS -f ide/xml.axi test
+
+      - name: ide/xml.catalog
+        run: ant $OPTS -f ide/xml.catalog test-unit
+
+      - name: ide/xml.core
+        run: ant $OPTS -f ide/xml.core test
+
+      - name: ide/xml.lexer
+        run: ant $OPTS -f ide/xml.lexer test
+
+      - name: ide/xml.multiview
+        run: ant $OPTS -f ide/xml.multiview test
+
+      - name: ide/xml.retriever
+        run: ant $OPTS -f ide/xml.retriever test
+
+      - name: ide/xml.schema.completion
+        run: ant $OPTS -f ide/xml.schema.completion test
+
+      - name: ide/xml.schema.model
+        run: ant $OPTS -f ide/xml.schema.model test
+
+      - name: ide/xml.text
+        run: ant $OPTS -f ide/xml.text test
+
+      - name: ide/xml.text.obsolete90
+        run: ant $OPTS -f ide/xml.text.obsolete90 test
+
+      - name: ide/xml.wsdl.model
+        run: .github/retry.sh ant $OPTS -f ide/xml.wsdl.model test
+
+      - name: ide/xml.xam
+        run: ant $OPTS -f ide/xml.xam test
+
+      - name: ide/xml.xdm
+        run: ant $OPTS -f ide/xml.xdm test
+
+      - name: ide/xsl
+        run: ant $OPTS -f ide/xsl test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  build-tools:
+    name: Build Tools on Linux/JDK ${{ matrix.java }} (some on 17)
+    # label triggers: Ant, Gradle, Maven, MX
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Ant') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'MX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11', '17', '21' ]
+      fail-fast: false
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: java/maven
+        run: ant $OPTS -f java/maven test
+
+      - name: java/maven.embedder
+        run: ant $OPTS -f java/maven.embedder test
+
+      - name: java/maven.grammar
+        run: ant $OPTS -f java/maven.grammar test
+
+      - name: java/maven.hints
+        run: ant $OPTS -f java/maven.hints test
+
+#      - name: java/maven.htmlui
+#        run: ant $OPTS -f java/maven.htmlui test
+
+      - name: java/maven.indexer
+        run: ant $OPTS -f java/maven.indexer test
+
+      - name: java/maven.refactoring
+        run: ant $OPTS -f java/maven.refactoring test
+
+      - name: java/maven.junit
+        run: ant $OPTS -f java/maven.junit test
+
+      - name: java/maven.model
+        run: ant $OPTS -f java/maven.model test
+
+      - name: java/maven.osgi
+        run: ant $OPTS -f java/maven.osgi test
+
+      - name: java/api.maven
+        run: ant $OPTS -f java/api.maven test
+
+      - name: maven.apisupport
+        run: ant $OPTS -f apisupport/maven.apisupport test
+
+      - name: java/hudson.maven
+        run: ant $OPTS -f java/hudson.maven test
+
+      - name: ide/project.ant
+        run: ant $OPTS -f ide/project.ant test
+
+      - name: ide/project.ant.compat8
+        run: ant $OPTS -f ide/project.ant.compat8 test
+
+      - name: ide/project.ant.ui
+        run: ant $OPTS -f ide/project.ant.ui test
+
+#      - name: java/ant.debugger
+#        run: ant $OPTS -f java/ant.debugger test
+
+      - name: java/ant.freeform
+        run: ant $OPTS -f java/ant.freeform test
+
+#      - name: java/ant.grammar
+#        run: ant $OPTS -f java/ant.grammar test
+
+      - name: Set up JDK 17 for JDK 21 incompatible tests
+        if: ${{ matrix.java == '21' }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: ${{ env.default_java_distribution }}
+
+      # TODO fix JDK 21 incompatibilites
+      - name: java/java.mx.project
+        continue-on-error: ${{ github.event_name != 'pull_request' }}
+        run: .github/retry.sh ant $OPTS -f java/java.mx.project test
+
+      - name: java/gradle.java
+        run: .github/retry.sh ant $OPTS -f java/gradle.java test
+
+      - name: extide/gradle
+        run: ant $OPTS -f extide/gradle test
+
+      - name: java/gradle.dependencies
+        run: ant $OPTS -f java/gradle.dependencies test
+
+      - name: extide/o.apache.tools.ant.module
+        run: ant $OPTS -f extide/o.apache.tools.ant.module test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  platform-modules-test1:
+    name: Platform Modules batch1 on Linux/JDK ${{ matrix.java }} (some on 8)
+    # equals env.test_platform == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: platform/api.htmlui
+        run: .github/retry.sh ant $OPTS -f platform/api.htmlui test
+  
+      - name: platform/htmlui
+        run: .github/retry.sh ant $OPTS -f platform/htmlui test
+
+      - name: platform/api.intent
+        run: ant $OPTS -f platform/api.intent test
+
+      - name: platform/api.io
+        run: ant $OPTS -f platform/api.io test
+
+      - name: platform/api.progress
+        run: ant $OPTS -f platform/api.progress test
+
+      - name: platform/api.progress.nb
+        run: ant $OPTS -f platform/api.progress.nb test
+
+      - name: platform/api.scripting
+        run: ant $OPTS -f platform/api.scripting test
+
+      - name: platform/api.search
+        run: ant $OPTS -f platform/api.search test
+
+      - name: platform/api.templates
+        run: ant $OPTS -f platform/api.templates test
+
+      - name: platform/api.visual
+        run: ant $OPTS -f platform/api.visual test
+
+      - name: platform/applemenu
+        run: ant $OPTS -f platform/applemenu test
+
+      - name: platform/autoupdate.cli
+        run: ant $OPTS -f platform/autoupdate.cli test
+
+      - name: platform/autoupdate.services
+        run: ant $OPTS -f platform/autoupdate.services test
+
+      - name: platform/autoupdate.ui
+        run: ant $OPTS -f platform/autoupdate.ui test
+
+      - name: platform/core.execution
+        run: ant $OPTS -f platform/core.execution test
+
+      - name: platform/core.io.ui
+        run: ant $OPTS -f platform/core.io.ui test
+
+      - name: platform/core.kit
+        run: ant $OPTS -f platform/core.kit test
+
+      - name: platform/core.multiview
+        run: ant $OPTS -f platform/core.multiview test
+
+      - name: platform/core.netigso
+        run: ant $OPTS -f platform/core.netigso test
+
+      - name: platform/core.osgi
+        run: ant $OPTS -f platform/core.osgi test
+
+      - name: platform/core.output2
+        run: ant $OPTS -f platform/core.output2 test
+
+      - name: platform/core.startup
+        run: .github/retry.sh ant $OPTS -f platform/core.startup test
+
+      - name: platform/core.startup.base
+        run: ant $OPTS -f platform/core.startup.base test
+
+      - name: platform/core.ui
+        run: ant $OPTS -f platform/core.ui test
+
+      - name: platform/core.windows
+        run: .github/retry.sh ant $OPTS -f platform/core.windows test
+
+      - name: platform/editor.mimelookup
+        run: ant $OPTS -f platform/editor.mimelookup test
+
+      - name: platform/editor.mimelookup.impl
+        run: ant $OPTS -f platform/editor.mimelookup.impl test
+
+      - name: platform/favorites
+        run: .github/retry.sh ant $OPTS -f platform/favorites test
+
+      - name: platform/javahelp
+        run: ant $OPTS -f platform/javahelp test-unit
+
+      - name: platform/keyring.fallback
+        run: ant $OPTS -f platform/keyring.fallback test
+
+      - name: platform/keyring.impl
+        run: ant $OPTS -f platform/keyring.impl test
+
+      - name: platform/libs.javafx
+        run: ant $OPTS -f platform/libs.javafx test
+
+      - name: platform/libs.junit4
+        run: ant $OPTS -f platform/libs.junit4 test
+
+      - name: platform/masterfs
+        run: .github/retry.sh ant $OPTS -f platform/masterfs test
+
+      - name: platform/masterfs.linux
+        run: ant $OPTS -f platform/masterfs.linux test
+
+      - name: platform/o.n.core
+        run: ant $OPTS -f platform/o.n.core test-unit
+
+      - name: platform/o.n.swing.outline
+        run: ant $OPTS -f platform/o.n.swing.outline test
+
+      - name: platform/o.n.swing.tabcontrol
+        run: ant $OPTS -f platform/o.n.swing.tabcontrol test
+
+      - name: Set up JDK 8 for incompatibe tests
+        uses: actions/setup-java@v4
+        with:
+          java-version: 8
+          distribution: ${{ env.default_java_distribution }}
+
+      # TODO fix JDK 11 incompatibilities
+      - name: platform/lib.uihandler
+        run: ant $OPTS -f platform/lib.uihandler test
+
+      - name: platform/openide.text
+        run: .github/retry.sh ant $OPTS -f platform/openide.text test
+
+      - name: platform/openide.util.ui
+        run: ant $OPTS -f platform/openide.util.ui test
+
+      # isolation required by netbinox tests
+      - name: isolate platform build
+        run: |
+          cp -r platform/ _platform/ && cp -r harness/ _harness/ && cp nbbuild/build/nbantext.jar .
+          cp -r nbbuild/netbeans/platform/ _nb_platform/ && cp -r nbbuild/netbeans/harness/ _nb_harness/
+          ant $OPTS -quiet clean && rm -Rf platform/ && rm -Rf harness/
+          mkdir nbbuild/build && mkdir nbbuild/netbeans
+          mv _platform/ platform/ && mv _harness/ harness/ && mv nbantext.jar nbbuild/build/
+          mv _nb_platform/ nbbuild/netbeans/platform/ && mv _nb_harness/ nbbuild/netbeans/harness/
+
+      - name: platform/netbinox
+        run: ant $OPTS -f platform/netbinox test -Dtest.config=stableBTD
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  platform-modules-test2:
+    name: Platform Modules batch2 on Linux/JDK ${{ matrix.java }}
+    # equals env.test_platform == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: 11
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: platform/openide.actions
+        run: ant $OPTS -f platform/openide.actions test
+
+      - name: platform/openide.awt
+        run: ant $OPTS -f platform/openide.awt test
+
+      - name: platform/openide.compat
+        run: ant $OPTS -f platform/openide.compat test
+
+      - name: platform/openide.dialogs
+        run: ant $OPTS -f platform/openide.dialogs test
+
+      - name: platform/openide.execution
+        run: ant $OPTS -f platform/openide.execution test
+
+      - name: platform/openide.execution.compat8
+        run: ant $OPTS -f platform/openide.execution.compat8 test
+
+      - name: platform/openide.explorer
+        run: .github/retry.sh ant $OPTS -f platform/openide.explorer test
+
+      - name: platform/openide.filesystems
+        run: ant $OPTS -f platform/openide.filesystems test
+
+      - name: platform/openide.filesystems.compat8
+        run: ant $OPTS -f platform/openide.filesystems.compat8 test
+
+      - name: platform/openide.filesystems.nb
+        run: ant $OPTS -f platform/openide.filesystems.nb test
+
+      - name: platform/openide.io
+        run: ant $OPTS -f platform/openide.io test
+
+      - name: platform/openide.loaders
+        run: ant $OPTS -f platform/openide.loaders test
+
+      - name: platform/openide.modules
+        run: ant $OPTS -f platform/openide.modules test
+
+      - name: platform/openide.nodes
+        run: ant $OPTS -f platform/openide.nodes test
+
+      - name: platform/openide.options
+        run: ant $OPTS -f platform/openide.options test
+
+      - name: platform/openide.util
+        run: ant $OPTS -f platform/openide.util test
+
+      - name: platform/openide.util.lookup
+        run: ant $OPTS -f platform/openide.util.lookup test
+
+      - name: platform/openide.windows
+        run: ant $OPTS -f platform/openide.windows test
+
+      - name: platform/options.api
+        run: ant $OPTS -f platform/options.api test-unit
+
+      - name: platform/options.keymap
+        run: ant $OPTS -f platform/options.keymap test
+
+      - name: platform/print
+        run: ant $OPTS -f platform/print test
+
+      - name: platform/progress.ui
+        run: ant $OPTS -f platform/progress.ui test
+
+      - name: platform/queries
+        run: ant $OPTS -f platform/queries test
+
+      - name: platform/sampler
+        run: ant $OPTS -f platform/sampler test
+
+      - name: platform/sendopts
+        run: ant $OPTS -f platform/sendopts test
+
+      - name: platform/settings
+        run: .github/retry.sh ant $OPTS -f platform/settings test
+
+      - name: platform/spi.actions
+        run: ant $OPTS -f platform/spi.actions test
+
+      - name: platform/spi.quicksearch
+        run: ant $OPTS -f platform/spi.quicksearch test
+
+      - name: platform/templates
+        run: ant $OPTS -f platform/templates test
+
+      - name: platform/templatesui
+        run: ant $OPTS -f platform/templatesui test
+
+      - name: platform/uihandler
+        run: ant $OPTS -f platform/uihandler test
+
+      - name: platform/o.n.bootstrap
+        run: ant $OPTS -f platform/o.n.bootstrap test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  harness-modules-test:
+    name: Harness, NB and Ergonomics on Linux/JDK ${{ matrix.java }}
+    # equals env.test_platform == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Platform') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: harness/o.n.insane
+        run: ant $OPTS -f harness/o.n.insane test
+
+      - name: harness/apisupport.harness
+        run: ant $OPTS -f harness/apisupport.harness test
+
+      - name: harness/harness/nbjunit
+        run: ant $OPTS -f harness/nbjunit test
+
+      - name: harness/jellytools.platform
+        run: ant $OPTS -f harness/jellytools.platform test -Dtest.config=stable
+
+      - name: ergonomics/ide.ergonomics
+        run: ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
+
+      - name: nb/deadlock.detector
+        run: ant $OPTS -f nb/deadlock.detector test
+
+      - name: nb/ide.branding
+        run: ant $OPTS -f nb/ide.branding test
+
+      - name: nb/o.n.upgrader
+        run: ant $OPTS -f nb/o.n.upgrader test
+
+#      - name: nb/updatecenters
+#        run: ant $OPTS -f nb/updatecenters test
+
+      - name: nb/welcome
+        run: ant $OPTS -f nb/welcome test
+        
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  java-modules-test:
+    name: Java Modules on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
     strategy:
       matrix:
         java: [ '11' ]
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: 'zulu'
+          distribution: ${{ env.default_java_distribution }}
 
-      - uses: actions/cache@v2
-        with:
-          path: ~/Library/Caches/Homebrew
-          key: ${{ runner.os }}-homebrew
-          restore-keys: ${{ runner.os }}-homebrew
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
-      # tar on MacOS is not aware of zstd "tar --zstd -xf build.tar.zst" isn't working
       - name: Extract
-        run: unzstd -c build.tar.zst | tar -x
+        run: tar --zstd -xf build.tar.zst
 
-      - run: brew install ant
+      - name: api.java
+        run: ant $OPTS -f java/api.java test
 
-      - name: Test platform/masterfs.macosx
-        run: ant -f platform/masterfs.macosx test
+#      - name: beans
+#        run: ant $OPTS -f java/beans test
 
-      - name: Test platform/core.network
-        run: ant -f platform/core.network test
+      - name: classfile
+        run: ant $OPTS -f java/classfile test
 
-      - name: Commit Validation tests
-        run: ant -Dcluster.config=release commit-validation
+      - name: dbschema
+        run: ant $OPTS -f java/dbschema test -Dtest.config=stable
+
+      - name: editor.htmlui
+        run: ant $OPTS -f java/editor.htmlui test
+
+      - name: java.completion
+        if: env.test_java == 'true' && success()
+        run: ant $OPTS -f java/java.completion test
+
+      - name: java.editor.base
+        if: env.test_java == 'true' && success()
+        run: ant $OPTS -f java/java.editor.base test
+
+      - name: java.editor
+        if: env.test_java == 'true' && success()
+        run: .github/retry.sh ant $OPTS -f java/java.editor test-unit
+
+      - name: java.freeform
+        run: ant $OPTS -f java/java.freeform test
+
+#      - name: java.kit
+#        run: ant $OPTS -f java/java.kit test
+
+#      - name: java.metrics
+#        run: ant $OPTS -f java/java.metrics test
+
+      - name: java.module.graph
+        run: ant $OPTS -f java/java.module.graph test
+
+      - name: java.navigation
+        run: ant $OPTS -f java/java.navigation test
+
+      - name: java.openjdk.project
+        run: ant $OPTS -f java/java.openjdk.project test
+
+      - name: java.platform
+        run: ant $OPTS -f java/java.platform test
+
+      - name: java.platform.ui
+        run: ant $OPTS -f java/java.platform.ui test
+
+      - name: java.preprocessorbridge
+        run: ant $OPTS -f java/java.preprocessorbridge test
+
+      - name: java.project
+        run: ant $OPTS -f java/java.project test
+
+#      - name: java.project.ui
+#        run: ant $OPTS -f java/java.project.ui test
+
+      - name: java.source
+        run: ant $OPTS -f java/java.source test-unit
+
+#      - name: java.source.ant
+#        run: ant $OPTS -f java/java.source.ant test
+
+      - name: java.source.base
+        if: env.test_java == 'true' && success()
+        run: ant $OPTS -f java/java.source.base test
+
+      - name: java.source.compat8
+        run: ant $OPTS -f java/java.source.compat8 test
+
+      - name: java.source.queriesimpl
+        run: ant $OPTS -f java/java.source.queriesimpl test
+
+      - name: java.sourceui
+        if: env.test_java == 'true' && success()
+        run: ant $OPTS -f java/java.sourceui test
+
+      - name: java.testrunner
+        run: ant $OPTS -f java/java.testrunner test
+
+      - name: java.testrunner.ant
+        run: ant $OPTS -f java/java.testrunner.ant test
+
+#      - name: javawebstart
+#        run: ant $OPTS -f java/javawebstart test
+
+#      - name: jellytools.java
+#        run: ant $OPTS -f java/jellytools.java test
+
+      - name: jshell.support
+        run: ant $OPTS -f java/jshell.support test
+
+      - name: junit
+        run: ant $OPTS -f java/junit test-unit
+
+      - name: junit.ant.ui
+        run: ant $OPTS -f java/junit.ant.ui test
+
+      - name: lib.nbjavac
+        run: ant $OPTS -f java/lib.nbjavac test
+
+      - name: libs.nbjavacapi
+        run: ant $OPTS -f java/libs.nbjavacapi test
+
+#      - name: performance
+#        run: ant $OPTS -f java/performance test
+
+#      - name: performance.java
+#        run: ant $OPTS -f java/performance.java test
+
+#      - name: projectimport.eclipse.core
+#        run: ant $OPTS -f java/projectimport.eclipse.core test
+
+      - name: spellchecker.bindings.java
+        run: ant $OPTS -f java/spellchecker.bindings.java test
+
+      - name: spring.beans
+        run: ant $OPTS -f java/spring.beans test
+
+      - name: testng
+        run: ant $OPTS -f java/testng test
+
+#      - name: testng.ant
+#        run: ant $OPTS -f java/testng.ant test
+
+#      - name: testng.ui
+#        run: ant $OPTS -f java/testng.ui test
+
+      - name: whitelist
+        run: ant $OPTS -f java/whitelist test
+
+      - name: xml.jaxb
+        run: ant $OPTS -f java/xml.jaxb test
+
+      - name: java.lexer
+        run: ant $OPTS -f java/java.lexer test
+
+      - name: refactoring.java
+        if: env.test_java == 'true' && success()
+        run: ant $OPTS -f java/refactoring.java test-unit
+
+      - name: form
+        if: env.test_java == 'true' && success()
+        run: ant $OPTS -f java/form test-unit
+        
+      - name: javadoc
+        if: env.test_javadoc == 'true' && success()
+        run: ant $OPTS -f java/javadoc test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/*.xml"
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
 
-  php:
+
+  apisupport-modules-test:
+    name: APISupport Modules on Linux/JDK ${{ matrix.java }}
     needs: base-build
-    name: PHP on ${{ matrix.os }}/JDK ${{ matrix.java }} 
-    runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash
-    env:
-      DISPLAY: ":99.0"
-      ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
-      OPTS: -Dtest-unit-sys-prop.ignore.random.failures=true
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
     strategy:
       matrix:
         java: [ '8' ]
-        os: [ 'windows-2022', 'ubuntu-20.04' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: apisupport.ant
+        run: ant $OPTS -f apisupport/apisupport.ant test
+
+      - name: apisupport.project
+        run: ant $OPTS -f apisupport/apisupport.project test
+
+      - name: apisupport.refactoring
+        run: ant $OPTS -f apisupport/apisupport.refactoring test
+
+      - name: apisupport.wizards
+        run: ant $OPTS -f apisupport/apisupport.wizards test
+
+      - name: timers
+        run: ant $OPTS -f apisupport/timers test -Dtest.config=stable
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  java-hints-test:
+    name: Java Hints ${{ matrix.config }} on Linux/JDK ${{ matrix.java }}
+    # equals env.test_java == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+        config: [ 'batch1', 'batch2' ]
       fail-fast: false
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java }} 
-          distribution: 'zulu'
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: java.hints ${{ matrix.config }}
+        run: ant $OPTS -Dtest.config=${{ matrix.config }} -f java/java.hints test
+
+      - name: java.hints.declarative
+        if: ${{ (matrix.config == 'batch2') && success() }}
+        run: ant $OPTS -f java/java.hints.declarative test
+
+      - name: spi.java.hints
+        if: ${{ (matrix.config == 'batch2') && success() }}
+        run: ant $OPTS -f java/spi.java.hints test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  java-debugger-test:
+    name: Java Debugger tests on Linux/JDK ${{ matrix.java }}
+    # equals env.test_java == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11', '21' ]
+      fail-fast: false
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: api.debugger.jpda
+        run: ant $OPTS -f java/api.debugger.jpda test
+
+      - name: debugger.jpda
+        run: .github/retry.sh ant $OPTS -f java/debugger.jpda test
+
+      - name: debugger.jpda.js
+        run: ant $OPTS -f java/debugger.jpda.js test
+
+      - name: debugger.jpda.projects
+        run: ant $OPTS -f java/debugger.jpda.projects test
+
+      - name: debugger.jpda.projectsui
+        run: ant $OPTS -f java/debugger.jpda.projectsui test
+
+#      - name: debugger.jpda.truffle
+#        run: ant $OPTS -f java/debugger.jpda.truffle test
+
+#      - name: debugger.jpda.ui
+#        run: ant $OPTS -f java/debugger.jpda.ui test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  profiler-test:
+    name: Profiler on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: profiler
+        run: ant $OPTS -f profiler/profiler test-unit
+
+      - name: profiler.oql
+        run: ant $OPTS -f profiler/profiler.oql test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  webcommon-test:
+    name: Webcommon Modules on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: webcommon/api.knockout
+        run: ant $OPTS -f webcommon/api.knockout test
+
+#      - name: webcommon/cordova
+#        run: ant $OPTS -f webcommon/cordova test
+
+      - name: webcommon/html.angular
+        run: ant $OPTS -f webcommon/html.angular test-unit
+
+      - name: webcommon/html.knockout
+        run: ant $OPTS -f webcommon/html.knockout test-unit
+
+      - name: webcommon/javascript.bower
+        run: ant $OPTS -f webcommon/javascript.bower test
+
+      - name: webcommon/javascript.cdnjs
+        run: ant $OPTS -f webcommon/javascript.cdnjs test
+
+      - name: webcommon/javascript.grunt
+        run: ant $OPTS -f webcommon/javascript.grunt test
+
+      - name: webcommon/javascript.karma
+        run: ant $OPTS -f webcommon/javascript.karma test
+
+      - name: webcommon/javascript.nodejs
+        run: ant $OPTS -f webcommon/javascript.nodejs test
+
+      - name: webcommon/javascript.v8debug
+        run: ant $OPTS -f webcommon/javascript.v8debug test
+
+      - name: webcommon/javascript2.doc
+        run: ant $OPTS -f webcommon/javascript2.doc test
+
+      - name: webcommon/javascript2.editor
+        if: env.test_javascript == 'true' && success()
+        run: ant $OPTS -f webcommon/javascript2.editor test-unit
+
+      - name: webcommon/javascript2.extdoc
+        run: ant $OPTS -f webcommon/javascript2.extdoc test
+
+      - name: webcommon/javascript2.extjs
+        run: ant $OPTS -f webcommon/javascript2.extjs test
+
+      - name: webcommon/javascript2.jade
+        run: ant $OPTS -f webcommon/javascript2.jade test
+
+      - name: webcommon/javascript2.jquery
+        run: .github/retry.sh ant $OPTS -f webcommon/javascript2.jquery test
+
+      - name: webcommon/javascript2.jsdoc
+        run: ant $OPTS -f webcommon/javascript2.jsdoc test
+
+      - name: webcommon/javascript2.json
+        run: ant $OPTS -f webcommon/javascript2.json test
+
+      - name: webcommon/javascript2.knockout
+        run: ant $OPTS -f webcommon/javascript2.knockout test
+
+      - name: webcommon/javascript2.lexer
+        run: ant $OPTS -f webcommon/javascript2.lexer test
+
+      - name: webcommon/javascript2.model
+        run: ant $OPTS -f webcommon/javascript2.model test
+
+      - name: webcommon/javascript2.nodejs
+        run: ant $OPTS -f webcommon/javascript2.nodejs test-unit
+
+      - name: webcommon/javascript2.prototypejs
+        run: ant $OPTS -f webcommon/javascript2.prototypejs test
+
+      - name: webcommon/javascript2.requirejs
+        run: ant $OPTS -f webcommon/javascript2.requirejs test-unit
+
+      - name: webcommon/javascript2.sdoc
+        run: ant $OPTS -f webcommon/javascript2.sdoc test
+
+      - name: webcommon/languages.apacheconf
+        run: ant $OPTS -f webcommon/languages.apacheconf test
+
+      - name: webcommon/languages.ini
+        run: ant $OPTS -f webcommon/languages.ini test
+
+#      - name: webcommon/lib.v8debug
+#        run: ant $OPTS -f webcommon/lib.v8debug test
+
+      - name: webcommon/libs.graaljs
+        run: ant $OPTS -f webcommon/libs.graaljs test
+
+      - name: webcommon/selenium2.webclient
+        run: ant $OPTS -f webcommon/selenium2.webclient test
+
+      - name: webcommon/web.clientproject
+        run: ant $OPTS -f webcommon/web.clientproject test-unit
+
+      - name: webcommon/web.clientproject.api
+        run: ant $OPTS -f webcommon/web.clientproject.api test
+
+      - name: webcommon/web.inspect
+        run: ant $OPTS -f webcommon/web.inspect test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  javafx-test:
+    name: JavaFX on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: javafx2.editor
+        run: ant $OPTS -f javafx/javafx2.editor test -Dtest.config=stable
+
+#      - name: javafx2.project
+#        run: ant $OPTS -f javafx/javafx2.project test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  groovy-test:
+    name: Groovy on Linux/JDK ${{ matrix.java }}
+    # equals env.test_groovy == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Groovy') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '8' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: groovy/groovy.editor
+        run: ant $OPTS -f groovy/groovy.editor test
+
+      - name: groovy/groovy.gsp
+        run: ant $OPTS -f groovy/groovy.gsp test
+
+      - name: groovy/groovy.support
+        run: ant $OPTS -f groovy/groovy.support test
+
+#      - name: groovy/groovy
+#        run: ant $OPTS -f groovy/groovy test
+
+#      - name: groovy/groovy.java
+#        run: ant $OPTS -f groovy/groovy.java test
+
+#      - name: groovy/groovy.kit
+#        run: ant $OPTS -f groovy/groovy.kit test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  rust-test:
+    name: Rust on Linux/JDK ${{ matrix.java }}
+    # equals env.test_rust == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Rust') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: rust/rust.cargo
+        run: ant $OPTS -f rust/rust.cargo test
+
+      - name: rust/rust.grammar
+        run: ant $OPTS -f rust/rust.grammar test
+
+      - name: rust/rust.options
+        run: ant $OPTS -f rust/rust.options test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  enterprise-test:
+    name: Enterprise on Linux/JDK ${{ matrix.java }} (some on 8 and 17)
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: api.web.webmodule
+        run: ant $OPTS -f enterprise/api.web.webmodule test
+
+      - name: cloud.amazon
+        run: ant $OPTS -f enterprise/cloud.amazon test
+
+      - name: cloud.oracle
+        run: ant $OPTS -f enterprise/cloud.oracle test
+
+      - name: el.lexer
+        run: ant $OPTS -f enterprise/el.lexer test
+
+      - name: glassfish.common
+        run: ant $OPTS -f enterprise/glassfish.common test
+
+# Fails
+#      - name: glassfish.javaee
+#        run: ant $OPTS -f enterprise/glassfish.javaee test
+
+# Fails
+#      - name: glassfish.tooling
+#        run: ant $OPTS -f enterprise/glassfish.tooling test
+
+      - name: j2ee.api.ejbmodule
+        run: ant $OPTS -f enterprise/j2ee.api.ejbmodule test
+
+      - name: j2ee.clientproject
+        run: ant $OPTS -f enterprise/j2ee.clientproject test
+
+      - name: j2ee.common
+        run: ant $OPTS -f enterprise/j2ee.common test
+
+      - name: j2ee.core
+        run: ant $OPTS -f enterprise/j2ee.core test
+
+# Fails
+#      - name: j2ee.dd
+#        run: ant $OPTS -f enterprise/j2ee.dd test
+
+      - name: j2ee.ddloaders
+        run: ant $OPTS -f enterprise/j2ee.ddloaders test
+
+# Fails + Slow
+#      - name: j2ee.ejbjarproject
+#        run: ant $OPTS -f enterprise/j2ee.ejbjarproject test
+
+# Fails
+#      - name: j2ee.ejbverification
+#        run: ant $OPTS -f enterprise/j2ee.ejbverification test
+
+# Fails
+#      - name: j2eeserver
+#        run: ant $OPTS -f enterprise/j2eeserver test
+
+      - name: j2ee.sun.appsrv
+        run: ant $OPTS -f enterprise/j2ee.sun.appsrv test
+
+      - name: j2ee.sun.dd
+        run: ant $OPTS -f enterprise/j2ee.sun.dd test
+
+# Fails
+#      - name: j2ee.sun.ddui
+#        run: ant $OPTS -f enterprise/j2ee.sun.ddui test
+
+# Fails + Slow
+#      - name: jakarta.web.beans
+#        run: ant $OPTS -f enterprise/jakarta.web.beans test
+
+      - name: javaee.wildfly
+        run: .github/retry.sh ant $OPTS -f enterprise/javaee.wildfly test
+
+# Fails + Slow
+#      - name: jellytools.enterprise
+#        run: ant $OPTS -f enterprise/jellytools.enterprise test
+
+      - name: jsp.lexer
+        run: ant $OPTS -f enterprise/jsp.lexer test
+
+      - name: maven.j2ee
+        run: ant $OPTS -f enterprise/maven.j2ee test
+
+# Fails
+#      - name: enterpirse/payara.common
+#        run: ant $OPTS -f enterprise/payara.common test
+
+# Fails
+#      - name: enterpirse/payara.eecommon
+#        run: ant $OPTS -f enterprise/payara.eecommon test
+
+# Fails
+#      - name: enterpirse/payara.jakartaee
+#        run: ant $OPTS -f enterprise/payara.jakartaee test
+
+# Fails
+#      - name: enterpirse/payara.tooling
+#        run: ant $OPTS -f enterprise/payara.tooling test
+
+      - name: profiler.j2ee
+        run: ant $OPTS -f enterprise/profiler.j2ee test
+
+      - name: spring.webmvc
+        run: ant $OPTS -f enterprise/spring.webmvc test
+
+      - name: tomcat5
+        run: ant $OPTS -f enterprise/tomcat5 test
+
+# Fails
+#      - name: web.beans
+#        run: ant $OPTS -f enterprise/web.beans test
+
+# Fails + Slow
+#      - name: web.core.syntax
+#        run: ant $OPTS -f enterprise/web.core.syntax test
+
+# Fails + Slow
+#      - name: web.debug
+#        run: ant $OPTS -f enterprise/web.debug test
+
+# Fails
+#      - name: web.el
+#        run: ant $OPTS -f enterprise/web.el test
+
+# Fails
+#      - name: web.freeform
+#        run: ant $OPTS -f enterprise/web.freeform test
+
+# Fails
+#      - name: web.jsf.editor
+#        run: ant $OPTS -f enterprise/web.jsf.editor test
+
+# Fails
+#      - name: web.jsf.navigation
+#        run: ant $OPTS -f enterprise/web.jsf.navigation test
+
+      - name: web.jsf
+        run: ant $OPTS -f enterprise/web.jsf test
+
+      - name: web.jsfapi
+        run: ant $OPTS -f enterprise/web.jsfapi test
+
+# Fails
+#      - name: web.jspparser
+#        run: ant $OPTS -f enterprise/web.jspparser test
+
+# Fails
+#      - name: web.project
+#        run: ant $OPTS -f enterprise/web.project test
+
+# Fails
+#      - name: web.struts
+#        run: ant $OPTS -f enterprise/web.struts test
+
+      - name: websvc.clientapi
+        run: ant $OPTS -f enterprise/websvc.clientapi test
+
+# Fails
+#      - name: websvc.customization
+#        run: ant $OPTS -f enterprise/websvc.customization test
+
+# Fails
+#      - name: websvc.design
+#        run: ant $OPTS -f enterprise/websvc.design test
+
+      - name: websvc.jaxwsapi
+        run: ant $OPTS -f enterprise/websvc.jaxwsapi test
+
+# Fails
+#      - name: websvc.jaxwsmodel
+#        run: ant $OPTS -f enterprise/websvc.jaxwsmodel test
+
+# Fails + Slow
+#      - name: websvc.kit
+#        run: ant $OPTS -f enterprise/websvc.kit test
+
+# Fails
+#      - name: websvc.manager
+#        run: ant $OPTS -f enterprise/websvc.manager test
+
+      - name: websvc.projectapi
+        run: ant $OPTS -f enterprise/websvc.projectapi test
+
+      - name: websvc.rest
+        run: ant $OPTS -f enterprise/websvc.rest test
+
+# Fails + Slow
+#      - name: websvc.restkit
+#        run: ant $OPTS -f enterprise/websvc.restkit test
+
+# Fails
+#      - name: websvc.utilities
+#        run: ant $OPTS -f enterprise/websvc.utilities test
+
+      - name: websvc.websvcapi
+        run: ant $OPTS -f enterprise/websvc.websvcapi test
+
+      - name: websvc.wsstackapi
+        run: ant $OPTS -f enterprise/websvc.wsstackapi test
+
+      - name: Set up JDK 8 for incompatible tests
+        uses: actions/setup-java@v4
+        with:
+          java-version: 8
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: websvc.editor.hints
+        run: ant $OPTS -f enterprise/websvc.editor.hints test
+
+      - name: j2ee.dd.webservice
+        run: ant $OPTS -f enterprise/j2ee.dd.webservice test
+
+      - name: Set up JDK 17 for tests that are not compatible with JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: micronaut
+        run: .github/retry.sh ant $OPTS -f enterprise/micronaut test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  versioning-test:
+    name: Versioning Modules on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+
+    steps:
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+        
+      - name: Setup Env
+        run: echo "GIT_TEST_REPO=$HOME/git_test_repo" >> $GITHUB_ENV
+
+      - name: ide/versioning.core
+        run: ant $OPTS -f ide/versioning.core test-unit
+
+      - name: ide/versioning
+        run: ant $OPTS -f ide/versioning test-unit
+
+      - name: ide/versioning.core test-qa-functional
+        run: |
+          #Prepare git repo for tests
+          git init $GIT_TEST_REPO
+          # Prepare config file for ide/versioning.core module
+          touch ide/versioning.core/test/qa-functional/data/tck.properties
+          echo "test.root = $GIT_TEST_REPO" > ide/versioning.core/test/qa-functional/data/tck.properties
+          echo "test.vcs = org.netbeans.modules.versioning.DelegatingVCS" >> ide/versioning.core/test/qa-functional/data/tck.properties
+          # Run functional tests for ide/versioning.core module
+          ant $OPTS -f ide/versioning.core test-qa-functional
+        
+      - name: ide/versioning test-qa-functional
+        run: |
+          # Prepare config file for ide/versioning module
+          touch ide/versioning/test/qa-functional/data/tck.properties
+          echo "test.root = $GIT_TEST_REPO" > ide/versioning/test/qa-functional/data/tck.properties
+          echo "test.vcs = org.netbeans.modules.git.GitVCS" >> ide/versioning/test/qa-functional/data/tck.properties
+          # Run functional tests for ide/versioning module
+          ant $OPTS -f ide/versioning test-qa-functional
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  mysql-db-test:
+    name: DB Tests with MySQL on Linux/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: test
+          MYSQL_DATABASE: test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+        
+      - name: Setup Env
+        run: |
+          echo "OPTS_TEST=-Dtest-unit-sys-prop.mysql.user=root -Dtest-unit-sys-prop.mysql.password=test -Dtest-unit-sys-prop.mysql.host=127.0.0.1" >> $GITHUB_ENV
+          echo "ALTER USER 'root'@'localhost' IDENTIFIED BY 'test';\nFLUSH PRIVILEGES;\n" | mysql -h 127.0.0.1 --port 3306 -u root -ptest
+
+      - name: ide/db.metadata.model
+        run: .github/retry.sh ant $OPTS $OPTS_TEST -f ide/db.metadata.model test
+
+      - name: ide/db.mysql
+        run: .github/retry.sh ant $OPTS $OPTS_TEST -f ide/db.mysql test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  php:
+    name: PHP on ${{ matrix.os }}/JDK ${{ matrix.java }}
+    needs: base-build
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    env:
+      DISPLAY: ":99.0"
+    strategy:
+      matrix:
+        java: [ '11' ]
+        os: [ 'windows-latest', 'ubuntu-latest' ]
+      fail-fast: false
+    steps:
+
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
 
       # linux specific setup
       - name: Setup PHP
         if: contains(matrix.os, 'ubuntu')
-        uses: shivammathur/setup-php@2.8.0
+        uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
           tools: pecl
@@ -278,127 +2406,320 @@ jobs:
       # - - -
 
       - name: Download Build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
-      - name: Test Platform Core Network
-        run: ant $OPTS -f platform/core.network test
-
-      - name: Test PHP Hudson
+      - name: hudson.php
         run: ant $OPTS -f php/hudson.php test
 
-      - name: Test PHP Neon
+      - name: languages.neon
         run: ant $OPTS -f php/languages.neon test
 
-      - name: Test PHP API Annotation
+      - name: php.api.annotation
         run: ant $OPTS -f php/php.api.annotation test
 
-      - name: Test PHP API Documentation
+      - name: php.api.documentation
         run: ant $OPTS -f php/php.api.documentation test
 
-      - name: Test PHP API Executable
+      - name: php.api.executable
         run: ant $OPTS -f php/php.api.executable test
 
-      - name: Test PHP API Framework
+      - name: php.api.framework
         run: ant $OPTS -f php/php.api.framework test
 
-      - name: Test PHP API Module
+      - name: php.api.phpmodule
         run: ant $OPTS -f php/php.api.phpmodule test
 
-      - name: Test PHP API Testing
+      - name: php.api.testing
         run: ant $OPTS -f php/php.api.testing test
 
-      - name: Test PHP ApiGen
+      - name: php.apigen
         run: ant $OPTS -f php/php.apigen test
 
-      - name: Test PHP Atoum
+      - name: php.atoum
         run: ant $OPTS -f php/php.atoum test
 
-      - name: Test PHP Code Analysis
+      - name: php.code.analysis
         run: ant $OPTS -f php/php.code.analysis test
 
-      - name: Test PHP Codeception
+      - name: php.codeception
         run: ant $OPTS -f php/php.codeception test
 
-      - name: Test PHP Composer
+      - name: php.composer
         run: ant $OPTS -f php/php.composer test
 
       # needs X fails on Windows
-      - name: Test PHP Debugger
+      - name: php.dbgp
         if: contains(matrix.os, 'ubuntu')
         run: ant $OPTS -f php/php.dbgp test
 
-      - name: Test PHP Doctrine2
+      - name: php.doctrine2
         run: ant $OPTS -f php/php.doctrine2 test
 
-      - name: Test PHP Editor
-        run: ant $OPTS -f php/php.editor test
+      # longest step (~40min)
+      - name: php.editor
+        if: env.test_php == 'true' && success()
+        run: ant $OPTS -Dtest.config=stable -f php/php.editor test
 
-      - name: Test PHP Latte
+      - name: php.editor (unreliable tests)
+        if: env.test_php == 'true' && success()
+        run: .github/retry.sh ant $OPTS -Dtest.config=unreliable -f php/php.editor test
+
+      - name: php.latte
         run: ant $OPTS -f php/php.latte test
 
-      - name: Test PHP Nette Tester
+      - name: php.nette.tester
         run: ant $OPTS -f php/php.nette.tester test
 
-      - name: Test PHPUnit
+      - name: php.phpunit
         run: ant $OPTS -f php/php.phpunit test
 
-      - name: Test PHP Project
+      - name: php.project
         run: ant $OPTS -f php/php.project test
 
-      - name: Test PHP Refactoring
+      - name: php.refactoring
         run: ant $OPTS -f php/php.refactoring test
 
-      - name: Test PHP Smarty
+      - name: php.smarty
         run: ant $OPTS -f php/php.smarty test
 
-      - name: Test PHP Symfony
+      - name: php.symfony
         run: ant $OPTS -f php/php.symfony test
 
-      - name: Test PHP Symfony 2
+      - name: php.symfony2
         run: ant $OPTS -f php/php.symfony2 test
 
-      - name: Test PHP Twig
+      - name: php.twig
         run: ant $OPTS -f php/php.twig test
 
-      - name: Test PHP Zend
+      - name: php.zend
         run: ant $OPTS -f php/php.zend test
 
-      - name: Test PHP Zend 2
+      - name: php.zend2
         run: ant $OPTS -f php/php.zend2 test
 
-      - name: Test PHP Spellchecker Bindings
+      - name: spellchecker.bindings.php
         run: ant $OPTS -f php/spellchecker.bindings.php test
 
       - name: Create Test Summary
-        uses: test-summary/action@v1
+        uses: test-summary/action@v2
         if: failure()
         with:
-          paths: "./*/*/build/test/*/results/*.xml"
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  lsp-test:
+    name: LSP tests on Linux/JDK ${{ matrix.java }}
+    # equals env.test_lsp == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+
+    steps:
+      - name: Set up JDK ${{ matrix.java }} 
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }} 
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: java/java.lsp.server
+        run: .github/retry.sh ant $OPTS -f java/java.lsp.server test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  graalvm-test:
+    name: GraalVM ${{ matrix.graal }} Tests
+    # equals env.test_graalvm == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        graal: [ '22.3.1' ]
+      fail-fast: false
+
+    steps:
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: Setup GraalVM
+        run: |
+          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java11-linux-amd64-${{ matrix.graal }}.tar.gz
+          curl -L $URL | tar -xz
+          GRAALVM=`pwd`/graalvm-ce-java11-${{ matrix.graal }}
+          echo "JAVA_HOME=$GRAALVM" >> $GITHUB_ENV
+
+      - name: Setup GraalVM Languages
+        run: $JAVA_HOME/bin/gu install --no-progress python R ruby js
+
+      - name: platform/core.network
+        run: ant $OPTS -f platform/core.network test
+
+      - name: platform/api.scripting
+        run: ant $OPTS -f platform/api.scripting test
+
+      - name: ide/libs.graalsdk
+        run: ant $OPTS -f ide/libs.graalsdk test
+
+      - name: webcommon/libs.graaljs
+        run: ant $OPTS -f webcommon/libs.graaljs test
+
+      - name: profiler/profiler.oql
+        run: ant $OPTS -f profiler/profiler.oql test
+
+      - name: java/nashorn.execution
+        run: ant $OPTS -f java/nashorn.execution test
+
+      - name: java/debugger.jpda.truffle
+        run: .github/retry.sh ant $OPTS -f java/debugger.jpda.truffle test
+
+      - name: Create Test Summary
+        uses: test-summary/action@v2
+        if: failure()
+        with:
+          paths: "./*/*/build/test/*/results/TEST-*.xml"
+
+
+  vscode-extension-test:
+    name: VSCode Extension Tests on JDK ${{ matrix.java }}
+    # equals env.test_vscode_extension == 'true'
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'VSCode Extension') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    needs: base-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        java: [ '11' ]
+
+    steps:
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.default_java_distribution }}
+
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Setup Xvfb
+        run: |
+          echo "DISPLAY=:99.0" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+
+      - name: Extract
+        run: tar --zstd -xf build.tar.zst
+
+      - name: build-vscode-ext
+        run: |
+          cd java/java.lsp.server
+          ant $OPTS build-vscode-ext -D3rdparty.modules=.*externalcodeformatter.*
+
+      - name: test-vscode-ext
+        run: |
+          cd java/java.lsp.server
+          env "netbeans.extra.options=-J-Dnetbeans.logger.console=true" ant $OPTS test-vscode-ext
  
 
 # last job depends on everything so that it is forced to run last even if a long job fails early
   cleanup:
     name: Cleanup Workflow Artifacts
-    needs: [base-build, linux-commit-validation, linux-build-system-test, linux-javadoc, macos, php]
-    # don't cleanup on failure() or always(), because someone might want to restart an unreliable secondary job
-    # if primary jobs fail there won't be anything to cleanup anyway.
-    if: success() || cancelled()
+    needs:
+      - base-build
+      - linux-commit-validation
+      - paperwork
+      - build-system-test
+      - build-nbms
+      - build-from-src-zip
+      - ide-modules-test
+      - platform-modules-test1
+      - platform-modules-test2
+      - harness-modules-test
+      - java-modules-test
+      - java-hints-test
+      - java-debugger-test
+      - profiler-test
+      - apisupport-modules-test
+      - build-tools
+      - webcommon-test
+      - php
+      - javafx-test
+      - groovy-test
+      - rust-test
+      - enterprise-test
+      - versioning-test
+      - lsp-test
+      - mysql-db-test
+      - graalvm-test
+      - vscode-extension-test
+
+    # cleanup if the primary build job succeeded and
+    #  * nothing else failed (allows manual restarts)
+    #  * the workflow got cancelled
+    if: ${{ always() && needs.base-build.result == 'success' && (!contains(needs.*.result, 'failure') || cancelled()) }}
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
           submodules: true
+          show-progress: false
 
-      - name: Delete build Artifact
+      - name: Delete Workspace Artifact
         uses: ./.github/actions/delete-artifact/
         with:
           name: build
+          failOnError: true
+
+      - name: Delete Dev Build Artifact
+        uses: ./.github/actions/delete-artifact/
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && cancelled() }}
+        with:
+          name: dev-build
           failOnError: true

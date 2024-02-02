@@ -664,6 +664,14 @@ rn
 ${no-indent}return null;
 null
 -----------------------
+rt
+${no-indent}return true;
+null
+-----------------------
+rf
+${no-indent}return false;
+null
+-----------------------
 rp
 ${rp type="org.openide.util.RequestProcessor" default="RequestProcessor" editable="false"}.getDefault().post(${toRun instanceof="java.lang.Runnable" default="new Runnable() {
         public void run() {

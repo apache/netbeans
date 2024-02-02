@@ -2,7 +2,7 @@
 
 Document 0
 Searchable Keys:
-  base : mixedreturntype;mixedReturnType;824;;mixed;;0;<TESTURL>/testPHP80MixedReturnType.php;0;0;
+  base : mixedreturntype;mixedReturnType;824;;mixed;;0;<TESTURL>/testPHP80MixedReturnType.php;0;0;mixed;
   top : mixedreturntype
 
 Not Searchable Keys:
@@ -10,8 +10,8 @@ Not Searchable Keys:
 
 Document 1
 Searchable Keys:
-  clz : mixedtype;MixedType;877;;;;1;;0;<TESTURL>/testPHP80MixedReturnType.php;;
-  method : mixedreturntype;mixedReturnType;909;;mixed;1;0;<TESTURL>/testPHP80MixedReturnType.php;0;0;
+  clz : mixedtype;MixedType;877;;;;1;;0;<TESTURL>/testPHP80MixedReturnType.php;;0;
+  method : mixedreturntype;mixedReturnType;909;;mixed;1;0;<TESTURL>/testPHP80MixedReturnType.php;0;0;mixed;
   top : mixedtype
 
 Not Searchable Keys:

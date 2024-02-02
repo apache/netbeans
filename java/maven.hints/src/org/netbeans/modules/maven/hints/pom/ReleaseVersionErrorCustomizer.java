@@ -37,7 +37,7 @@ import org.openide.util.NbBundle;
  */
 public class ReleaseVersionErrorCustomizer extends javax.swing.JPanel {
     private final Preferences preferences;
-    private final Map<String, Object> id2Saved = new HashMap<String, Object>();
+    private final Map<String, Object> id2Saved = new HashMap<>();
 
     /** Creates new form ReleaseVersionErrorCustomizer */
     public ReleaseVersionErrorCustomizer(Preferences prefs) {
@@ -68,19 +68,22 @@ public class ReleaseVersionErrorCustomizer extends javax.swing.JPanel {
         cbRelease = new JCheckBox();
         cbLatest = new JCheckBox();
         cbSnapshot = new JCheckBox();
-        Mnemonics.setLocalizedText(cbRelease, NbBundle.getMessage(ReleaseVersionErrorCustomizer.class, "ReleaseVersionErrorCustomizer.cbRelease.text"));
+
+        Mnemonics.setLocalizedText(cbRelease, NbBundle.getMessage(ReleaseVersionErrorCustomizer.class, "ReleaseVersionErrorCustomizer.cbRelease.text")); // NOI18N
         cbRelease.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 cbReleaseActionPerformed(evt);
             }
         });
-        Mnemonics.setLocalizedText(cbLatest, NbBundle.getMessage(ReleaseVersionErrorCustomizer.class, "ReleaseVersionErrorCustomizer.cbLatest.text"));
+
+        Mnemonics.setLocalizedText(cbLatest, NbBundle.getMessage(ReleaseVersionErrorCustomizer.class, "ReleaseVersionErrorCustomizer.cbLatest.text")); // NOI18N
         cbLatest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 cbLatestActionPerformed(evt);
             }
         });
-        Mnemonics.setLocalizedText(cbSnapshot, NbBundle.getMessage(ReleaseVersionErrorCustomizer.class, "ReleaseVersionErrorCustomizer.cbSnapshot.text"));
+
+        Mnemonics.setLocalizedText(cbSnapshot, NbBundle.getMessage(ReleaseVersionErrorCustomizer.class, "ReleaseVersionErrorCustomizer.cbSnapshot.text")); // NOI18N
         cbSnapshot.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 cbSnapshotActionPerformed(evt);
@@ -89,18 +92,16 @@ public class ReleaseVersionErrorCustomizer extends javax.swing.JPanel {
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addComponent(cbRelease)
                     .addComponent(cbLatest)
                     .addComponent(cbSnapshot))
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cbRelease)
@@ -108,7 +109,7 @@ public class ReleaseVersionErrorCustomizer extends javax.swing.JPanel {
                 .addComponent(cbLatest)
                 .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addComponent(cbSnapshot)
-                .addContainerGap(215, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

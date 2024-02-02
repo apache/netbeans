@@ -85,11 +85,13 @@ public class MultiProgressObjectWrapper implements ProgressObject, ProgressListe
     }
 
     /** JSR88 method. */
+    @Override
     public ClientConfiguration getClientConfiguration(TargetModuleID targetModuleID) {
         return null; // PENDING
     }
 
     /** JSR88 method. */
+    @Override
     public synchronized DeploymentStatus getDeploymentStatus() {
         DeploymentStatus ds = progressObjects[0].getDeploymentStatus();
         // all deployment objects are supposed to be of the same action and command type
@@ -97,43 +99,50 @@ public class MultiProgressObjectWrapper implements ProgressObject, ProgressListe
     }
 
     /** JSR88 method. */
+    @Override
     public TargetModuleID[] getResultTargetModuleIDs() {
-        List<TargetModuleID> returnVal = new ArrayList<TargetModuleID>();
+        List<TargetModuleID> returnVal = new ArrayList<>();
         for (int i = 0; i < progressObjects.length; i++) {
             ProgressObject po = progressObjects[i];
             if (po.getDeploymentStatus().isCompleted()) {
                 returnVal.addAll(Arrays.asList(po.getResultTargetModuleIDs()));
             }
         }
-        return returnVal.toArray(new TargetModuleID[returnVal.size()]);
+        return returnVal.toArray(new TargetModuleID[0]);
     }
 
     /** JSR88 method. */
+    @Override
     public boolean isCancelSupported() {
         return false;
     }
 
     /** JSR88 method. */
+    @Override
     public void cancel() throws OperationUnsupportedException {
         throw new OperationUnsupportedException("cancel not supported in Tomcat deployment"); // NOI18N
     }
 
     /** JSR88 method. */
+    @Override
     public boolean isStopSupported() {
         return false;
     }
 
     /** JSR88 method. */
+    @Override
     public void stop() throws OperationUnsupportedException {
         throw new OperationUnsupportedException("stop not supported in Tomcat deployment"); // NOI18N
     }
 
     /** JSR88 method. */
+    @Override
     public void addProgressListener(ProgressListener l) {
         pes.addProgressListener(l);
     }
 
     /** JSR88 method. */
+    @Override
     public void removeProgressListener(ProgressListener l) {
         pes.removeProgressListener(l);
     }
@@ -141,6 +150,7 @@ public class MultiProgressObjectWrapper implements ProgressObject, ProgressListe
     /**
      * Handles the progress events from wrapped objects.
      */
+    @Override
     public void handleProgressEvent(ProgressEvent progressEvent) {
         updateState(progressEvent.getDeploymentStatus().getMessage());
 

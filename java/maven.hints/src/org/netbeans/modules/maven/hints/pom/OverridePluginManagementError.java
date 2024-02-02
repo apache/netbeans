@@ -99,7 +99,7 @@ public class OverridePluginManagementError implements POMErrorFixProvider {
                     String gr = plg.getGroupId();
                     gr = gr != null ? gr : Constants.GROUP_APACHE_PLUGINS;
                     String key = gr + ":" + art; //NOI18N
-                    if (managed.keySet().contains(key)) {
+                    if (managed.containsKey(key)) {
                         int position = plg.findChildElementPosition(model.getPOMQNames().VERSION.getQName());
                         Line line = NbEditorUtilities.getLine(model.getBaseDocument(), position, false);
                         String managedver = managed.get(key);

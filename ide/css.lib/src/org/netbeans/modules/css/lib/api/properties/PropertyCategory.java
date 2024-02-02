@@ -43,6 +43,7 @@ public enum PropertyCategory {
     BACKGROUND,
     COLORS,
     CONTENT, //generated & repl. content
+    CONTAIN,
     FLEXIBLE_BOX_LAYOUT,
     FONTS,
     FRAGMENTATION,
@@ -54,7 +55,8 @@ public enum PropertyCategory {
     MARQUEE,
     MULTI_COLUMN_LAYOUT,
     PAGED_MEDIA,
-    POSITIONING,    
+    POSITIONING,
+    SIZING,
     RUBY,
     SPEECH,
     TEXT,

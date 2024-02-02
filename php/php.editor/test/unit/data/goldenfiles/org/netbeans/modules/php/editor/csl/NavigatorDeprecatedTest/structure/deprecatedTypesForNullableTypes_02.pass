@@ -1,4 +1,4 @@
 |-DeprecatedForNullableTypes2 [196, 565] : DEPRECATED{ESCAPED{DeprecatedForNullableTypes2}}
 |--testMethod2 [51, 62] : DEPRECATED{ESCAPED{testMethod2}}ESCAPED{(}<font color="#999999">ESCAPED{?}DEPRECATED{ESCAPED{DeprecatedForNullableTypes2}}ESCAPED{ }</font>ESCAPED{$tags}ESCAPED{)}<font color="#999999">:ESCAPED{?}DEPRECATED{ESCAPED{\DeprecatedForNullableTypes2}}</font>
 |--$test [154, 158] : DEPRECATED{ESCAPED{$test}}<font color="#999999">:ESCAPED{?}DEPRECATED{ESCAPED{DeprecatedForNullableTypes2}}</font>
-|--testMethod [356, 562] : ESCAPED{testMethod}ESCAPED{(}<font color="#999999">ESCAPED{?}DEPRECATED{ESCAPED{DeprecatedForNullableTypes2}}ESCAPED{ }</font>ESCAPED{$tags}ESCAPED{, }ESCAPED{$isNull}ESCAPED{)}<font color="#999999">:ESCAPED{?}DEPRECATED{ESCAPED{\DeprecatedForNullableTypes2}}</font>
+|--testMethod [356, 562] : ESCAPED{testMethod}ESCAPED{(}<font color="#999999">ESCAPED{?}DEPRECATED{ESCAPED{DeprecatedForNullableTypes2}}ESCAPED{ }</font>ESCAPED{$tags}ESCAPED{, }<font color="#999999">ESCAPED{bool}ESCAPED{ }</font>ESCAPED{$isNull}ESCAPED{)}<font color="#999999">:ESCAPED{?}DEPRECATED{ESCAPED{DeprecatedForNullableTypes2}}</font>

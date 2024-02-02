@@ -25,7 +25,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.util.NbBundle;
-import org.netbeans.modules.j2ee.deployment.common.api.J2eeLibraryTypeProvider;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformImpl;
 
 
@@ -35,10 +34,6 @@ import org.netbeans.modules.j2ee.deployment.plugins.spi.J2eePlatformImpl;
  *
  */
 public class Customizer extends JTabbedPane {
-
-    private static final String CLASSPATH = J2eeLibraryTypeProvider.VOLUME_TYPE_CLASSPATH;
-    private static final String SOURCES = J2eeLibraryTypeProvider.VOLUME_TYPE_SRC;
-    private static final String JAVADOC = J2eeLibraryTypeProvider.VOLUME_TYPE_JAVADOC;
 
     private final J2eePlatformImpl platform;
     private final CustomizerDataSupport custData;
@@ -75,8 +70,8 @@ public class Customizer extends JTabbedPane {
                 putClientProperty("HelpID", helpID); // NOI18N
             }
         });
-        addTab(NbBundle.getMessage(Customizer.class,"TXT_Platform"), new WildflyTabVisualPanel(this.dmp));
-        addTab(NbBundle.getMessage(Customizer.class,"TXT_Platform"), new CustomizerJVM(custData));
+        addTab(NbBundle.getMessage(Customizer.class,"TXT_Tab_Common"), new WildflyTabVisualPanel(this.dmp));
+        addTab(NbBundle.getMessage(Customizer.class,"TXT_Tab_Platform"), new CustomizerJVM(custData));
         addTab(NbBundle.getMessage(Customizer.class,"TXT_Tab_Classes"),
                CustomizerSupport.createClassesCustomizer(custData.getClassModel()));
         addTab(NbBundle.getMessage(Customizer.class,"TXT_Tab_Sources"),

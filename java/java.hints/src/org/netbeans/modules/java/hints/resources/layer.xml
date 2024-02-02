@@ -184,7 +184,7 @@
                 <file name="org-netbeans-modules-java-hints-errors-TypeErroneous.instance"/>
                 <file name="org-netbeans-modules-java-hints-project-IncompleteClassPath.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-ConvertInvalidVarToExplicitArrayType.instance"/>
-                <file name="org-netbeans-modules-java-hints-errors-EnablePreviewSingleSourceFile.instance"/>
+                <file name="org-netbeans-modules-java-hints-errors-EnablePreview.instance"/>
                 <folder name="text">
                     <folder name="x-jsp">
                         <file name="org-netbeans-modules-java-hints-errors-ImportClass.instance"/>

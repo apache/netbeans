@@ -35,7 +35,7 @@
   <p>
    <api name="HTMLUI" category="official" group="java" type="export">
    NetBeans Platform specific bindings over
-   standard <a href="http://bits.netbeans.org/html+java/" onclick="target='_blank'">HTML for Java</a> API.
+   standard <a href="https://bits.netbeans.org/html+java/dev" >HTML for Java</a> API.
    </api>
   </p>
  </answer>
@@ -58,7 +58,7 @@
    in NetBeans Platform. To achieve that it provides specific annotatations
    like <a href="@TOP@/org/netbeans/api/htmlui/OpenHTMLRegistration.html">@OpenHTMLRegistration</a>,
    but otherwise it builds on the same usecases as the
-   <a onclick="target='_blank'" href="http://bits.netbeans.org/html+java/">HTML for Java</a> API.
+   <a href="https://bits.netbeans.org/html+java/dev">HTML for Java</a> API.
   </p>
   <usecase id="window" name="Portable HTML based Window">
       <a name="use-window"></a>
@@ -110,7 +110,7 @@
  <answer id="arch-what">
   <p>
   NetBeans Platform specific bindings over
-   standard <a onclick="target='_blank'" href="http://bits.netbeans.org/html+java/">HTML for Java</a> API.
+   standard <a href="https://bits.netbeans.org/html+java/dev">HTML for Java</a> API.
   </p>
  </answer>
 
@@ -337,7 +337,7 @@
   <p>
   The HTML for Java &amp; NetBeans API is a classical NetBeans module. However 
   it depends on other modules provided by the 
-  <a onclick="target='_blank'" href="http://bits.netbeans.org/html+java/">HTML for Java</a>
+  <a href="https://bits.netbeans.org/html+java/dev">HTML for Java</a>
   project and those are OSGi bundles. As such, when one decides to use this 
   module, one needs to turn on an OSGi container inside of the NetBeans Platform.
   It can be either <a onclick="target='_blank'" href="http://felix.apache.org">Felix</a> or 

@@ -415,6 +415,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
 
             /** Throws exception to signal the kind of class found.
             */
+            @Override
             public Class resolveClass (ObjectStreamClass osc)
             throws IOException, ClassNotFoundException {
                 Class c = findClass (osc.getName (), null);

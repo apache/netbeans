@@ -30,6 +30,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 import javax.lang.model.element.Modifier;
@@ -63,6 +64,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = CodeActionsProvider.class, position = 20)
 public final class LoggerGenerator extends CodeActionsProvider {
 
+    private static final String GENERATE_LOGGER = "nbls.java.generate.logger";
     private static final String URI =  "uri";
     private static final String OFFSET =  "offset";
 
@@ -75,12 +77,12 @@ public final class LoggerGenerator extends CodeActionsProvider {
     @NbBundle.Messages({
         "DN_GenerateLogger=Generate Logger...",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Source)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null) {
             return Collections.emptyList();
         }
@@ -106,18 +108,27 @@ public final class LoggerGenerator extends CodeActionsProvider {
         Map<String, Object> data = new HashMap<>();
         data.put(URI, uri);
         data.put(OFFSET, offset);
-        return Collections.singletonList(createCodeAction(Bundle.DN_GenerateLogger(), CODE_GENERATOR_KIND, data, "workbench.action.focusActiveEditorGroup"));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_GenerateLogger(), CODE_GENERATOR_KIND, null, "nbls.generate.code", GENERATE_LOGGER, data));
+    }
+
+    @Override
+    public Set<String> getCommands() {
+        return Collections.singleton(GENERATE_LOGGER);
     }
 
     @Override
     @NbBundle.Messages({
         "DN_SelectLoggerName=Logger field name",
     })
-    public CompletableFuture<CodeAction> resolve(NbCodeLanguageClient client, CodeAction codeAction, Object data) {
-        CompletableFuture<CodeAction> future = new CompletableFuture<>();
+    public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+        if (arguments.isEmpty()) {
+            return CompletableFuture.completedFuture(null);
+        }
+        JsonObject data = (JsonObject) arguments.get(0);
+        CompletableFuture<Object> future = new CompletableFuture<>();
         try {
-            String uri = ((JsonObject) data).getAsJsonPrimitive(URI).getAsString();
-            int offset = ((JsonObject) data).getAsJsonPrimitive(OFFSET).getAsInt();
+            String uri = data.getAsJsonPrimitive(URI).getAsString();
+            int offset = data.getAsJsonPrimitive(OFFSET).getAsInt();
             client.showInputBox(new ShowInputBoxParams(Bundle.DN_GenerateLogger(), Bundle.DN_SelectLoggerName(), "LOG", false)).thenAccept(value -> {
                 try {
                     if (value != null && BaseUtilities.isJavaIdentifier(value)) {
@@ -136,11 +147,10 @@ public final class LoggerGenerator extends CodeActionsProvider {
                                 wc.rewrite(cls, GeneratorUtilities.get(wc).insertClassMember(cls, field));
                             }
                         });
-                        if (!edits.isEmpty()) {
-                            codeAction.setEdit(new WorkspaceEdit(Collections.singletonMap(uri, edits)));
-                        }
+                        future.complete(edits.isEmpty() ? null : new WorkspaceEdit(Collections.singletonMap(uri, edits)));
+                    } else {
+                        future.complete(null);
                     }
-                    future.complete(codeAction);
                 } catch (IOException | IllegalArgumentException ex) {
                     future.completeExceptionally(ex);
                 }

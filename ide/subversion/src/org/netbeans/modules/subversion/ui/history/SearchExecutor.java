@@ -211,7 +211,7 @@ class SearchExecutor extends SvnProgressSupport {
                     ISVNInfo info = client.getInfoFromWorkingCopy(file);
                     String p = SvnUtils.getRelativePath(file);
                     if(p != null && p.startsWith("/")) {
-                        p = p.substring(1, p.length());
+                        p = p.substring(1);
                     }
                     paths[idx++] = p;
                     if (info != null && info.getRevision() != null) {

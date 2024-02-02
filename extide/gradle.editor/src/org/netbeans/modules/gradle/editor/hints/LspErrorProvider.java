@@ -61,12 +61,14 @@ public class LspErrorProvider implements ErrorProvider {
         }
         
         List<Diagnostic> diags = new ArrayList<>();
-        for (LineDocument doc : documentReports.keySet()) {
+        for (Map.Entry<LineDocument, List<GradleReport>> it : documentReports.entrySet()) {
+            LineDocument doc = it.getKey();
+
             // let's get document location from the linedoc
             FileObject f = EditorDocumentUtils.getFileObject(doc);
             int[] idx = new int[] { 1 };
             doc.render(() -> {
-                for (GradleReport r : documentReports.get(doc)) {
+                for (GradleReport r : it.getValue()) {
                     int l = r.getLine();
                     // report non-locations at line 1 for now, later we might add some string matching to guess the correct line 
                     // if Gradle does not report it

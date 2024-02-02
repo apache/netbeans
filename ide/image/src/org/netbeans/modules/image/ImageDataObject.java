@@ -26,20 +26,17 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorSupport;
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import org.openide.actions.OpenAction;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.loaders.*;
 import org.openide.nodes.*;
-import org.openide.ErrorManager;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.util.Lookup;
 import org.openide.util.actions.SystemAction;
@@ -48,13 +45,13 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 
-/** 
+/**
  * Object that represents one file containing an image.
  * @author Petr Hamernik, Jaroslav Tulach, Ian Formanek, Michael Wever
  * @author  Marian Petras
  */
 public class ImageDataObject extends MultiDataObject implements CookieSet.Factory {
-    
+
     @MIMEResolver.ExtensionRegistration(
         displayName="#ImageMimeResolverJPG",
         mimeType=ImageDataLoader.JPEG_MIME_TYPE,
@@ -76,7 +73,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
     @Messages("ImageMimeResolverGIF=GIF Image Files")
     /** Base for image resource. */
     private static final String IMAGE_ICON_BASE = "org/netbeans/modules/image/imageObject.png"; // NOI18N
-    
+
     @MIMEResolver.ExtensionRegistration(
         displayName="#ImageMimeResolverPNG",
         mimeType=ImageDataLoader.PNG_MIME_TYPE,
@@ -97,34 +94,37 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
     @Messages("ImageMimeResolverBMP=BMP Image Files")
     /** Print support for this image data object **/
     private transient ImagePrintSupport printSupport;
- 
+
     /** Constructor.
      * @param pf primary file object for this data object
      * @param loader the data loader creating it
-     * @exception DataObjectExistsException if there was already a data object for it 
+     * @exception DataObjectExistsException if there was already a data object for it
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public ImageDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException {
         super(pf, loader);
-        
+
         getCookieSet().add(ImageOpenSupport.class, this);
         getCookieSet().add(ImagePrintSupport.class, this);
     }
 
 
     /** Implements <code>CookieSet.Factory</code> interface. */
-    public Node.Cookie createCookie(Class clazz) {
+    @Override
+    public <T extends Node.Cookie> T createCookie(Class<T> clazz) {
         if(clazz.isAssignableFrom(ImageOpenSupport.class))
-            return getOpenSupport();
+            return clazz.cast(getOpenSupport());
         else if( clazz.isAssignableFrom(ImagePrintSupport.class))
-            return getPrintSupport();        
+            return clazz.cast(getPrintSupport());
         else
             return null;
     }
 
+    @Override
     public Lookup getLookup() {
         return getCookieSet().getLookup();
     }
-    
+
     /** Gets image open support. */
     private synchronized ImageOpenSupport getOpenSupport() {
         if(openSupport == null) {
@@ -139,63 +139,36 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
         }
         return printSupport;
     }
-    
+
     /** Help context for this object.
      * @return the help context
      */
+    @Override
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
-    /** Get a URL for the image.
-     * @return the image url
-     */
-    URL getImageURL() {
-        return getPrimaryFile().toURL();
-    }
-
-    /** Gets image data for the image object.
-     * @return the image data
-     * @deprecated use getImage() instead
-     */
-    @Deprecated
-    private byte[] getImageData() {
-        try {
-            FileObject fo = getPrimaryFile();
-            byte[] imageData = new byte[(int)fo.getSize()];
-            BufferedInputStream in = new BufferedInputStream(fo.getInputStream());
-            in.read(imageData, 0, (int)fo.getSize());
-            in.close();
-            return imageData; 
-        } catch(IOException ioe) {
-            return new byte[0];
-        }
-    }
-
     // Michael Wever 26/09/2001
-    /** Gets image for the image data 
+    /** Gets image for the image data
      * @return the image or <code>null</code> if image could not be created
      * @return  java.io.IOException  if an error occurs during reading
      */
     public Image getImage() throws IOException {
-        InputStream input = getPrimaryFile().getInputStream();
-        try {
+        try (InputStream input = getPrimaryFile().getInputStream()) {
             return javax.imageio.ImageIO.read(input);
         } catch (IndexOutOfBoundsException ioobe) {
             return null;
-        } finally {
-            input.close();
         }
     }
 
-
     /** Create a node to represent the image. Overrides superclass method.
      * @return node delegate */
+    @Override
     protected Node createNodeDelegate () {
         return new ImageNode(this);
     }
-    
-    
+
+
     /** Node representing <code>ImageDataObject</code>. */
     private static final class ImageNode extends DataNode {
         /** Constructs image node. */
@@ -203,10 +176,15 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
             super(obj, Children.LEAF);
             //setIconBase(IMAGE_ICON_BASE);
             setIconBaseWithExtension(IMAGE_ICON_BASE);
-            setDefaultAction (SystemAction.get (OpenAction.class));
         }
-        
+
+        @Override
+        public Action getPreferredAction() {
+            return SystemAction.get(OpenAction.class);
+        }
+
         /** Creates property sheet. Ovrrides superclass method. */
+        @Override
         protected Sheet createSheet() {
             Sheet s = super.createSheet();
             Sheet.Set ss = s.get(Sheet.PROPERTIES);
@@ -219,13 +197,13 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
             ss.put(new ThumbnailProperty(getDataObject()));
             return s;
         }
-        
+
 
         /** Property representing for thumbanil property in the sheet. */
         private static final class ThumbnailProperty extends PropertySupport.ReadOnly<Icon> {
             /** (Image) data object associated with. */
             private final DataObject obj;
-            
+
             /** Constructs property. */
             public ThumbnailProperty(DataObject obj) {
                 super("thumbnail", Icon.class, // NOI18N
@@ -233,39 +211,41 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
                     NbBundle.getMessage(ImageDataObject.class, "HINT_Thumbnail"));
                 this.obj = obj;
             }
-            
+
             /** Gets value of property. Overrides superclass method. */
+            @Override
             public Icon getValue() {
                 return new ImageIcon(obj.getPrimaryFile().toURL());
             }
-            
+
             /** Gets property editor. */
+            @Override
             public PropertyEditor getPropertyEditor() {
                 return new ThumbnailPropertyEditor();
             }
-            
-            
+
+
             /** Property editor for thumbnail property. */
             private final class ThumbnailPropertyEditor extends PropertyEditorSupport {
                 /** Overrides superclass method.
                  * @return <code>true</code> */
+                @Override
                 public boolean isPaintable() {
                     return true;
                 }
-                
+
                 /** Patins thumbanil of the image. Overrides superclass method. */
+                @Override
                 public void paintValue(Graphics g, Rectangle r) {
-                    ImageIcon icon = null;
-                    
-                    icon = (ImageIcon)ThumbnailProperty.this.getValue();
+                    ImageIcon icon = (ImageIcon)ThumbnailProperty.this.getValue();
                     if (icon != null) {
                         int iconWidth = icon.getIconWidth();
                         int iconHeight = icon.getIconHeight();
-                        
+
 
                         // Shrink image if necessary.
                         double scale = (double)iconWidth / iconHeight;
-                        
+
                         if(iconWidth > r.width) {
                             iconWidth = r.width;
                             iconHeight = (int) (iconWidth / scale);
@@ -275,7 +255,7 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
                             iconHeight = r.height;
                             iconWidth = (int) (iconHeight * scale);
                         }
-                        
+
                         // Try to center it if it fits, else paint as much as possible.
                         int x;
                         if(iconWidth < r.x) {
@@ -283,21 +263,21 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
                         } else {
                             x = 5; // XXX Indent.
                         }
-                        
+
                         int y;
                         if(iconHeight < r.y) {
                             y = (r.y - iconHeight) / 2;
                         } else {
                             y = 0;
                         }
-                        
-                        Graphics g2 = g.create(r.x, r.y, r.width, r.height);
+
                         g.drawImage(icon.getImage(), x, y, iconWidth, iconHeight, null);
                     }
                 }
 
                 /** Overrides superclass method.
                  * @return <code>null</code> */
+                @Override
                 public String getAsText() {
                     return null;
                 }
@@ -314,9 +294,10 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
           }
 
           /** Gets value of property. Overrides superclass method. */
+          @Override
           public Integer getValue() throws InvocationTargetException {
               final Icon icon = new ImageIcon(getDataObject().getPrimaryFile().toURL());
-              return Integer.valueOf(icon.getIconWidth());
+              return icon.getIconWidth();
           }
        } // End of class ImageWidthProperty.
 
@@ -332,9 +313,10 @@ public class ImageDataObject extends MultiDataObject implements CookieSet.Factor
           }
 
           /** Gets value of property. Overrides superclass method. */
+          @Override
           public Integer getValue() throws InvocationTargetException {
               final Icon icon = new ImageIcon(getDataObject().getPrimaryFile().toURL());
-              return Integer.valueOf(icon.getIconHeight());
+              return icon.getIconHeight();
           }
        } // End of class ImageHeightProperty.
     } // End of class ImageNode.

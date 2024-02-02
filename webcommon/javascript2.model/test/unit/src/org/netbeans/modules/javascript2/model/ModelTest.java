@@ -230,6 +230,19 @@ public class ModelTest extends ModelTestBase {
         checkModel("testfiles/model/issue251911.js");
     }
 
+    public void testIssueGH5184_02() throws Exception {
+        checkModel("testfiles/structure/issueGH5184_02.js");
+    }
+
+    public void testIssueGH5184_03() throws Exception {
+        checkModel("testfiles/structure/issueGH5184_03.js");
+    }
+
+    public void testBogusGlobalThis() throws Exception {
+        checkModel("testfiles/structure/bogusGlobalThis_01.js");
+        checkModel("testfiles/structure/bogusGlobalThis_02.js");
+    }
+
     public void testPersonRevert() throws Exception {
         FileObject fo = getTestFile("testfiles/model/person.js.model");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(fo.getInputStream()))) {
@@ -276,5 +289,21 @@ public class ModelTest extends ModelTestBase {
         // cases are better supported, the extracted model needs to be rechecked
         // and regenerated.
         checkModel("testfiles/model/complexPrototype.js");
+    }
+
+    public void testObjectNameMatchingNestedFunction() throws Exception {
+        checkModel("testfiles/model/objectNameMatchingNestedFunction.js");
+    }
+
+    public void testClassConstructor() throws Exception {
+        checkModel("testfiles/model/classConstructor.js");
+    }
+
+    public void testClassInAnonymousFunction() throws Exception {
+        checkModel("testfiles/model/classInAnonymousFunction.js");
+    }
+
+    public void testClassInAnonymousFunction2() throws Exception {
+        checkModel("testfiles/model/classInAnonymousFunction2.js");
     }
 }

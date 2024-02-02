@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.lsp.server.debugging.breakpoints;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -27,6 +28,8 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.lsp4j.debug.BreakpointEventArguments;
 import org.eclipse.lsp4j.debug.Source;
@@ -37,6 +40,9 @@ import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
 import org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleLineBreakpoint;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -102,8 +108,32 @@ public final class NbBreakpoint {
         Breakpoint breakpoint;
         String sourceURLLower = sourceURL.toLowerCase();
         boolean isJava = sourceURLLower.endsWith(".java");      // NOI18N
+        boolean isScala = sourceURLLower.endsWith(".scala");      // NOI18N
         boolean isGroovy = sourceURLLower.endsWith(".groovy");  // NOI18N
-        if (isJava || isGroovy) {
+        if (isScala) {
+          final Pattern PACKAGE = Pattern.compile("package *([\\p{Alnum}+\\.$]+) *");
+          try {
+              LineBreakpoint b = LineBreakpoint.create(sourceURL, line);
+
+              FileObject fo = URLMapper.findFileObject(new URL(sourceURL));
+              for (String code : fo.asLines()) {
+                  Matcher match = PACKAGE.matcher(code);
+                  if (match.matches()) {
+                      String pkg = match.group(1);
+                      int slash = sourceURL.lastIndexOf("/");
+                      int dot = sourceURL.indexOf('.', slash + 1);
+                      if (dot >= 0) {
+                          String filter = pkg + "." + sourceURL.substring(slash + 1, dot) + "*";
+                          b.setPreferredClassName(filter);
+                      }
+                      break;
+                  }
+              }
+              breakpoint = b;
+          } catch (IOException ex) {
+              throw new IllegalStateException(ex);
+          }
+        } else if (isJava || isGroovy) {
             LineBreakpoint b = LineBreakpoint.create(sourceURL, line);
             if (condition != null && !condition.isEmpty()) {
                 b.setCondition(condition);

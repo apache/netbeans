@@ -48,6 +48,7 @@ import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.editor.CodeUtils;
+import static org.netbeans.modules.php.editor.PredefinedSymbols.Attributes.OVERRIDE;
 import org.netbeans.modules.php.editor.api.ElementQuery.Index;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.elements.BaseFunctionElement.PrintAs;
@@ -192,7 +193,10 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
                             }
                             TypeNameResolver typeNameResolver = TypeNameResolverImpl.forChainOf(typeNameResolvers);
                             String skeleton = methodElement.asString(PrintAs.DeclarationWithEmptyBody, typeNameResolver, phpVersion);
-                            skeleton = skeleton.replace(ABSTRACT_PREFIX, ""); //NOI18N
+                            if (phpVersion.hasOverrideAttribute()) {
+                                skeleton = OVERRIDE.asAttributeExpression() + CodeUtils.NEW_LINE + skeleton; // PHP 8.3
+                            }
+                            skeleton = skeleton.replace(ABSTRACT_PREFIX, CodeUtils.EMPTY_STRING);
                             methodSkeletons.add(skeleton);
                             lastMethodElement = methodElement;
                         }

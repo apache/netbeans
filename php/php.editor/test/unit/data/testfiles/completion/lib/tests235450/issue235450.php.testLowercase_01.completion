@@ -2,7 +2,7 @@ Code completion result for source line:
 $a = |true;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 CLASS      ConstantClass                   [PUBLIC]   issue235450.php
-VARIABLE   boolean $a                      [PUBLIC]   issue235450.php
+VARIABLE   bool $a                         [PUBLIC]   issue235450.php
 ------------------------------------
 VARIABLE   $GLOBALS                                   PHP Platform
 VARIABLE   $HTTP_RAW_POST_DATA                        PHP Platform
@@ -20,7 +20,7 @@ VARIABLE   $http_response_header                      PHP Platform
 VARIABLE   $php_errormsg                              PHP Platform
 CONSTANT   DUMMY 'DUMMY'                   [PUBLIC]   constants.php
 CONSTANT   FALSE false                     [PUBLIC]   constants.php
-CONSTANT   NULL ?                          [PUBLIC]   constants.php
+CONSTANT   NULL null                       [PUBLIC]   constants.php
 CONSTANT   TRUE true                       [PUBLIC]   constants.php
 KEYWORD    abstract                                   null
 KEYWORD    and                                        null

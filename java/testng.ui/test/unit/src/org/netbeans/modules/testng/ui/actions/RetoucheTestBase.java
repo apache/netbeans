@@ -74,16 +74,6 @@ public class RetoucheTestBase extends NbTestCase {
                 new String[]{},
                 new Object[]{loader, cpp});
         testFO = FileUtil.createFolder(src, "sample/pkg/").createData("Test.java");
-        TestUtilities.copyStringToFile(testFO,
-                "package sample.pkg;\n" +
-                "\n" +
-                "public class Test {\n" +
-                "\n" +
-                "    @Deprecated\n" +
-                "    void method() {\n" +
-                "    }\n" +
-                "\n" +
-                "}\n");
     }
 
     protected FileObject getTestFO() {

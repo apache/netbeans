@@ -31,6 +31,7 @@
     <fontcolor name="operator" default="operator"/>
     <fontcolor name="separator" default="separator"/>
     <fontcolor name="string" default="string"/>
+    <fontcolor name="string-quote" default="string"/>
     <fontcolor name="string-escape" default="string">
         <font style="bold" />
     </fontcolor>

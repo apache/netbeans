@@ -103,7 +103,6 @@ public class CreateKnowledgeBaseAction implements ActionListener {
                         ErrorUtils.processError(response, Bundle.MSG_KBNotCreated(result.get()));
                     }
                 } catch (BmcException e) {
-                    System.out.println("Proces exception");
                     ErrorUtils.processError(e, Bundle.MSG_KBNotCreated(result.get()));
                 } finally {
                     progressHandle.finish();

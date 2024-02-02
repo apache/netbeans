@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.86
+#Version 1.91
 
 CLSS public abstract interface java.io.Serializable
 
@@ -379,8 +379,11 @@ meth public abstract java.lang.String getLineCommentPrefix()
 meth public abstract java.lang.String getPreferredExtension()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public abstract java.util.Set<java.lang.String> getBinaryLibraryPathIds()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Set<java.lang.String> getLibraryPathIds()
+ anno 0 java.lang.Deprecated()
 meth public abstract java.util.Set<java.lang.String> getSourcePathIds()
+ anno 0 java.lang.Deprecated()
 meth public abstract org.netbeans.api.lexer.Language getLexerLanguage()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 
@@ -449,8 +452,10 @@ meth public boolean hasFormatter()
 meth public boolean hasHintsProvider()
 meth public boolean hasOccurrencesFinder()
 meth public boolean hasStructureScanner()
+ anno 0 java.lang.Deprecated()
 meth public boolean isIdentifierChar(char)
 meth public boolean isUsingCustomEditorKit()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getLineCommentPrefix()
 meth public java.lang.String getPreferredExtension()
 meth public java.util.Set<java.lang.String> getBinaryLibraryPathIds()

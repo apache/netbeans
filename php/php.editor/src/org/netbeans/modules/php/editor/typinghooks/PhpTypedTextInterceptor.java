@@ -183,7 +183,7 @@ public class PhpTypedTextInterceptor implements TypedTextInterceptor {
                 if (ts != null) {
                     ts.move(dotPos);
                     if (ts.moveNext() && (ts.offset() < dotPos)) {
-                        GsfUtilities.setLineIndentation(doc, dotPos, previousAdjustmentIndent);
+                        GsfUtilities.setLineIndentation((Document) doc, dotPos, previousAdjustmentIndent);
                     }
                 }
             }
@@ -450,29 +450,38 @@ public class PhpTypedTextInterceptor implements TypedTextInterceptor {
                     int currentIndent = Utilities.getRowIndent(doc, offset);
                     int newIndent = IndentUtils.countIndent(doc, offset, previousIndent);
                     if (newIndent != currentIndent) {
-                        GsfUtilities.setLineIndentation(doc, offset, Math.max(newIndent, 0));
+                        GsfUtilities.setLineIndentation((Document) doc, offset, Math.max(newIndent, 0));
                     }
                 } else if (id == PHPTokenId.WHITESPACE || (id == PHPTokenId.PHP_TOKEN && token.text().charAt(0) == ':')) { // ":" handles "default:"
+                    Token<? extends PHPTokenId> previousToken = null;
                     if (id == PHPTokenId.WHITESPACE) {
-                        LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_CASE));
+                        previousToken = LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_CASE, PHPTokenId.PHP_TOKEN));
                     } else {
-                        LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_DEFAULT));
+                        if (ts.movePrevious()) { // ":"
+                            previousToken = LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_DEFAULT, PHPTokenId.PHP_TOKEN));
+                        }
                     }
-                    if (ts.offset() >= rowFirstNonWhite) { //previous "case" or "default" on one line with typed char
-                        LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_SWITCH));
-                        Token<? extends PHPTokenId> firstCaseInSwitch = LexUtilities.findNextToken(ts, Arrays.asList(PHPTokenId.PHP_CASE));
-                        if (firstCaseInSwitch != null && firstCaseInSwitch.id() == PHPTokenId.PHP_CASE) {
-                            int indentOfFirstCase = GsfUtilities.getLineIndent(doc, ts.offset());
-                            GsfUtilities.setLineIndentation(doc, offset, indentOfFirstCase);
+                    if (ts.offset() >= rowFirstNonWhite
+                            && previousToken != null
+                            && (previousToken.id() == PHPTokenId.PHP_CASE
+                            || previousToken.id() == PHPTokenId.PHP_DEFAULT)) {
+                        // previous "case" or "default" on one line with typed char
+                        previousToken = LexUtilities.findPreviousToken(ts, Arrays.asList(PHPTokenId.PHP_SWITCH));
+                        if (previousToken != null && previousToken.id() == PHPTokenId.PHP_SWITCH) {
+                            Token<? extends PHPTokenId> firstCaseInSwitch = LexUtilities.findNextToken(ts, Arrays.asList(PHPTokenId.PHP_CASE));
+                            if (firstCaseInSwitch != null && firstCaseInSwitch.id() == PHPTokenId.PHP_CASE) {
+                                int indentOfFirstCase = GsfUtilities.getLineIndent((Document) doc, ts.offset());
+                                GsfUtilities.setLineIndentation((Document) doc, offset, indentOfFirstCase);
+                            }
                         }
                     }
                 } else if (id == PHPTokenId.PHP_CURLY_CLOSE) {
                     OffsetRange begin = LexUtilities.findBwd(doc, ts, PHPTokenId.PHP_CURLY_OPEN, '{', PHPTokenId.PHP_CURLY_CLOSE, '}');
                     if (begin != OffsetRange.NONE) {
                         int beginOffset = begin.getStart();
-                        int indent = GsfUtilities.getLineIndent(doc, beginOffset);
-                        previousAdjustmentIndent = GsfUtilities.getLineIndent(doc, offset);
-                        GsfUtilities.setLineIndentation(doc, offset, indent);
+                        int indent = GsfUtilities.getLineIndent((Document) doc, beginOffset);
+                        previousAdjustmentIndent = GsfUtilities.getLineIndent((Document) doc, offset);
+                        GsfUtilities.setLineIndentation((Document) doc, offset, indent);
                         previousAdjustmentOffset = caret.getDot();
                     }
                 }
@@ -530,13 +539,16 @@ public class PhpTypedTextInterceptor implements TypedTextInterceptor {
             }
             token = ts.token();
             while (token != null) {
-                if ((LexUtilities.textEquals(token.text(), '(')) || (LexUtilities.textEquals(token.text(), '['))) {
-                    if (LexUtilities.textEquals(token.text(), leftBracket)) {
-                        bracketBalanceWithNewBracket++;
-                    }
-                } else if ((LexUtilities.textEquals(token.text(), ')')) || (LexUtilities.textEquals(token.text(), ']'))) {
-                    if (LexUtilities.textEquals(token.text(), bracket)) {
-                        bracketBalanceWithNewBracket--;
+                // GH-6706 we can get "[" as PHP_ENCAPSED_AND_WHITESPACE token e.g. $x = "[$y example]"
+                if (token.id() == PHPTokenId.PHP_TOKEN) {
+                    if ((LexUtilities.textEquals(token.text(), '(')) || (LexUtilities.textEquals(token.text(), '['))) {
+                        if (LexUtilities.textEquals(token.text(), leftBracket)) {
+                            bracketBalanceWithNewBracket++;
+                        }
+                    } else if ((LexUtilities.textEquals(token.text(), ')')) || (LexUtilities.textEquals(token.text(), ']'))) {
+                        if (LexUtilities.textEquals(token.text(), bracket)) {
+                            bracketBalanceWithNewBracket--;
+                        }
                     }
                 }
                 if (!ts.moveNext()) {
@@ -544,11 +556,7 @@ public class PhpTypedTextInterceptor implements TypedTextInterceptor {
                 }
                 token = ts.token();
             }
-            if (bracketBalanceWithNewBracket == 0) {
-                skipClosingBracket = false;
-            } else {
-                skipClosingBracket = true;
-            }
+            skipClosingBracket = bracketBalanceWithNewBracket != 0;
         }
 
         return skipClosingBracket;

@@ -46,6 +46,7 @@ import com.oracle.js.parser.ir.WhileNode;
 import com.oracle.js.parser.ir.WithNode;
 import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import com.oracle.js.parser.TokenType;
+import com.oracle.js.parser.ir.ClassElement;
 import com.oracle.js.parser.ir.ClassNode;
 import com.oracle.js.parser.ir.ExportNode;
 import com.oracle.js.parser.ir.ExpressionStatement;
@@ -965,6 +966,20 @@ public class JsFormatVisitor extends NodeVisitor {
         return super.enterVarNode(varNode);
     }
 
+    @Override
+    public boolean enterClassElement(ClassElement propertyNode) {
+        FormatToken colon = tokenUtils.getNextToken(getFinish(propertyNode.getKey()),
+                JsTokenId.OPERATOR_COLON, getFinish(propertyNode));
+        if (colon != null) {
+            TokenUtils.appendToken(colon, FormatToken.forFormat(FormatToken.Kind.AFTER_PROPERTY_OPERATOR));
+            FormatToken before = colon.previous();
+            if (before != null) {
+                TokenUtils.appendTokenAfterLastVirtual(before, FormatToken.forFormat(FormatToken.Kind.BEFORE_PROPERTY_OPERATOR));
+            }
+        }
+        return super.enterPropertyNode(propertyNode);
+    }
+
     // handles both standard and arrow functions
     private void handleFunctionParameters(FunctionNode functionNode, FormatToken leftParen) {
         if (leftParen != null) {
@@ -1482,7 +1497,7 @@ public class JsFormatVisitor extends NodeVisitor {
             }
         } else if (node instanceof VarNode) {
             VarNode var = (VarNode) node;
-            if (var.getInit() != null && (var.getInit() instanceof ClassNode)) {
+            if (var.getInit() instanceof ClassNode) {
                 return getFinish(var.getInit());
             }
             Token token = tokenUtils.getNextNonEmptyToken(getFinishFixed(node) - 1);

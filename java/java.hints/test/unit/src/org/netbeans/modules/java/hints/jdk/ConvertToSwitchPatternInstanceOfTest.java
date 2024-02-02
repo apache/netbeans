@@ -20,7 +20,6 @@ package org.netbeans.modules.java.hints.jdk;
 
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
-import javax.lang.model.SourceVersion;
 import org.testng.annotations.Test;
 
 /**
@@ -35,12 +34,6 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
     
     @Test
     public void testSimple() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_17, skip tests
-            return;
-        }
         HintTest.create()
                 .input("package test;\n"
                         + "public class Test {\n"
@@ -58,8 +51,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "    }\n"
                         + "}\n"
                 )
-                .sourceLevel("17")
-                .options("--enable-preview")
+                .sourceLevel("21")
                 .run(ConvertToSwitchPatternInstanceOf.class)
                 .findWarning("3:8-3:10:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf())
                 .applyFix()
@@ -70,7 +62,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "        switch (o) {\n"
                         + "            case String s -> System.out.println(s);\n"
                         + "            case Integer i -> System.out.println(i);\n"
-                        + "            case default -> System.out.println(\"else\");\n"
+                        + "            default -> System.out.println(\"else\");\n"
                         + "        }\n"
                         + "        return -1;\n"
                         + "    }\n"
@@ -79,12 +71,6 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
     
     @Test
     public void testSimpleNoHint() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17"); //NOI18N
-        } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_17, skip tests
-            return;
-        }
         HintTest.create()
                 .input("package test;\n"
                         + "public class Test {\n"
@@ -103,19 +89,12 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "}\n"
                 )
                 .sourceLevel("17")
-                .options("--enable-preview")
                 .run(ConvertToSwitchPatternInstanceOf.class)
-                .assertNotContainsWarnings("3:8-3:10:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf());
+                .assertNotContainsWarnings(Bundle.ERR_ConvertToSwitchPatternInstanceOf());
     }
     
     @Test
     public void testSimplePatternMatch() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package test;\n"
                         + "public class Test {\n"
@@ -133,8 +112,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "        return formatted;\n"
                         + "    }"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("21")
                 .run(ConvertToSwitchPatternInstanceOf.class)
                 .findWarning("4:8-4:10:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf())
                 .applyFix()
@@ -148,7 +126,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "            case Long l -> formatted = String.format(\"long %d\", l);\n"
                         + "            case Double d -> formatted = String.format(\"double %f\", d);\n"
                         + "            case String s -> formatted = String.format(\"String %s\", s);\n"
-                        + "            case default -> {\n"
+                        + "            default -> {\n"
                         + "            }\n"
                         + "        }\n"
                         + "        return formatted;\n"
@@ -158,12 +136,6 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
     
     @Test
     public void testSimplePatternMatchNoHint() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package test;\n"
                         + "public class Test {\n"
@@ -181,20 +153,13 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "        return formatted;\n"
                         + "    }"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("21")
                 .run(ConvertToSwitchPatternInstanceOf.class)
-                .assertNotContainsWarnings("4:8-4:10:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf());
+                .assertNotContainsWarnings(Bundle.ERR_ConvertToSwitchPatternInstanceOf());
     }
 
     @Test
     public void testSimpleSwitchWithNull() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package test;\n"
                         + "public class Test {\n"
@@ -212,13 +177,12 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "                formatted = String.format(\"double %f\", d);\n"
                         + "            case String s ->\n"
                         + "                formatted = String.format(\"String %s\", s);\n"
-                        + "            case default -> formatted = \"unknown\";\n"
+                        + "            default -> formatted = \"unknown\";\n"
                         + "        }\n"
                         + "        return formatted;\n"
                         + "    }"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("21")
                 .run(ConvertToSwitchPatternInstanceOf.class)
                 .findWarning("4:8-4:24:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf())
                 .applyFix()
@@ -237,7 +201,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "                formatted = String.format(\"double %f\", d);\n"
                         + "            case String s ->\n"
                         + "                formatted = String.format(\"String %s\", s);\n"
-                        + "            case default -> \n"
+                        + "            default -> \n"
                         + "                formatted = \"unknown\";\n"
                         + "        }\n"
                         + "        return formatted;\n"
@@ -247,12 +211,6 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
     
     @Test
     public void testSimpleSwitchWithNullNoHint() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package test;\n"
                         + "public class Test {\n"
@@ -270,25 +228,18 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "                formatted = String.format(\"double %f\", d);\n"
                         + "            case String s ->\n"
                         + "                formatted = String.format(\"String %s\", s);\n"
-                        + "            case default -> formatted = \"unknown\";\n"
+                        + "            default -> formatted = \"unknown\";\n"
                         + "        }\n"
                         + "        return formatted;\n"
                         + "    }"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("21")
                 .run(ConvertToSwitchPatternInstanceOf.class)
-                .assertNotContainsWarnings("4:8-4:24:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf());
+                .assertNotContainsWarnings(Bundle.ERR_ConvertToSwitchPatternInstanceOf());
     }
 
     @Test
     public void testSingleStatementsStaticVariable() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package test;\n"
                         + "public class Test {\n"
@@ -312,8 +263,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "class Test2{\n"
                         + "     public static Object a;\n"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("21")
                 .run(ConvertToSwitchPatternInstanceOf.class)
                 .findWarning("4:8-4:10:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf())
                 .applyFix()
@@ -328,7 +278,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "            case Character c -> {\n"
                         + "                return 1;\n"
                         + "            }\n"
-                        + "            case default -> {\n"
+                        + "            default -> {\n"
                         + "                return 1;\n"
                         + "            }\n"
                         + "        }\n"
@@ -342,12 +292,6 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
 
     @Test
     public void testMultipleStatements() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package test;\n"
                         + "public class Test {\n"
@@ -372,8 +316,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "        return -1;\n"
                         + "    }"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("21")
                 .run(ConvertToSwitchPatternInstanceOf.class)
                 .findWarning("4:8-4:10:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf())
                 .applyFix()
@@ -395,7 +338,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "                formatted = \"Character\";\n"
                         + "                return 1;\n"
                         + "            }\n"
-                        + "            case default -> {\n"
+                        + "            default -> {\n"
                         + "                formatted = \"else\";\n"
                         + "                return 1;   \n"
                         + "            }\n"
@@ -407,12 +350,6 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
 
     @Test
     public void testEmptyStatementsMethodInvocation() throws Exception {
-        try {
-            SourceVersion.valueOf("RELEASE_17");
-        } catch (IllegalArgumentException ex) {
-            //OK, skip test
-            return;
-        }
         HintTest.create()
                 .input("package test;\n"
                         + "public class Test {\n"
@@ -436,8 +373,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "         return \"method invocation\";\n"
                         + "     }"
                         + "}")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel("21")
                 .run(ConvertToSwitchPatternInstanceOf.class)
                 .findWarning("4:8-4:10:verifier:" + Bundle.ERR_ConvertToSwitchPatternInstanceOf())
                 .applyFix()
@@ -451,7 +387,7 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
                         + "            case Integer i -> System.out.println(i);\n"
                         + "            case Character c -> {\n"
                         + "            }\n"
-                        + "            case default -> {\n"
+                        + "            default -> {\n"
                         + "            }\n"
                         + "        }\n"
                         + "        return -1;\n"

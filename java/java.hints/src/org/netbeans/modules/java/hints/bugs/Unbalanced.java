@@ -152,7 +152,7 @@ public class Unbalanced {
                 if (secondAccess != null) {
                     record(ctx.getInfo(), var, secondAccess);
                 }
-            } else if (!var.getModifiers().contains(Modifier.FINAL)) {
+            } else {
                 record(ctx.getInfo(), var, State.WRITE, State.READ);
             }
 
@@ -199,8 +199,10 @@ public class Unbalanced {
         private static final Set<String> READ_METHODS = new HashSet<>(Arrays.asList(
                 "get", "getOrDefault", "contains", "remove", "containsAll", "removeAll", "removeIf", "retain", "retainAll", "containsKey",
                 "containsValue", "iterator", "listIterator", "isEmpty", "size", "toArray", "entrySet", "keySet", "values", "indexOf", "lastIndexOf",
-                "stream", "parallelStream", "spliterator", "forEach"));
-        private static final Set<String> WRITE_METHODS = new HashSet<>(Arrays.asList("add", "addAll", "set", "put", "putAll", "putIfAbsent"));
+                "stream", "parallelStream", "spliterator", "reversed", "getFirst", "getLast", "removeFirst", "removeLast"));
+        private static final Set<String> STANDALONE_READ_METHODS = new HashSet<>(Arrays.asList(
+                "forEach"));
+        private static final Set<String> WRITE_METHODS = new HashSet<>(Arrays.asList("add", "addAll", "set", "put", "putAll", "putIfAbsent", "addFirst", "addLast"));
 
         private static boolean testType(CompilationInfo info, TypeMirror actualType, String superClass) {
             TypeElement juCollection = info.getElements().getTypeElement(superClass);
@@ -244,6 +246,9 @@ public class Unbalanced {
                         record(ctx.getInfo(), var, State.READ);
                     }
                     return null;
+                } else if (STANDALONE_READ_METHODS.contains(methodName)) {
+                    record(ctx.getInfo(), var, State.READ);
+                    return null;
                 } else if (WRITE_METHODS.contains(methodName)) {
                     if (tp.getParentPath().getParentPath().getParentPath().getLeaf().getKind() != Kind.EXPRESSION_STATEMENT) {
                         record(ctx.getInfo(), var, State.WRITE, State.READ);
@@ -254,9 +259,7 @@ public class Unbalanced {
                 }
             }
 
-            if (!var.getModifiers().contains(Modifier.FINAL)) {
-                record(ctx.getInfo(), var, State.WRITE, State.READ);
-            }
+            record(ctx.getInfo(), var, State.WRITE, State.READ);
 
             return null;
         }

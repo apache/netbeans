@@ -31,6 +31,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.Enumerations;
@@ -61,10 +64,12 @@ public class ProxyClassLoader extends ClassLoader {
     /** All known packages 
      * @GuardedBy("packages")
      */
-    private final Map<String, Package> packages = new HashMap<String, Package>();
+    private final ConcurrentMap<String, Package> packages = new ConcurrentHashMap<>();
 
     /** keeps information about parent classloaders, system classloader, etc.*/
     volatile ProxyClassParents parents;
+    
+    private BiFunction<String, ClassLoader, Boolean> delegatingPredicate;
 
     /** Create a multi-parented classloader.
      * @param parents all direct parents of this classloader, except system one.
@@ -74,6 +79,17 @@ public class ProxyClassLoader extends ClassLoader {
     public ProxyClassLoader(ClassLoader[] parents, boolean transitive) {
         super(TOP_CL);
         this.parents = ProxyClassParents.coalesceParents(this, parents, TOP_CL, transitive);
+    }
+    
+    /** Create a multi-parented classloader.
+     * @param parents all direct parents of this classloader, except system one.
+     * @param transitive whether other PCLs depending on this one will
+     *                   automatically search through its parent list
+     */
+    public ProxyClassLoader(ClassLoader[] parents, boolean transitive, BiFunction<String, ClassLoader, Boolean> delegatingPredicate) {
+        super(TOP_CL);
+        this.parents = ProxyClassParents.coalesceParents(this, parents, TOP_CL, transitive);
+        this.delegatingPredicate = delegatingPredicate;
     }
     
     protected final void addCoveredPackages(Iterable<String> coveredPackages) {
@@ -93,7 +109,6 @@ public class ProxyClassLoader extends ClassLoader {
             if (cl == null) throw new IllegalArgumentException("null parent: " + Arrays.asList(nueparents)); // NOI18N
         }
         
-        ProxyClassLoader[] resParents = null;
         ModuleFactory moduleFactory = Lookup.getDefault().lookup(ModuleFactory.class);
         if (moduleFactory != null && moduleFactory.removeBaseClassLoader()) {
             // this hack is here to prevent having the application classloader
@@ -106,7 +121,7 @@ public class ProxyClassLoader extends ClassLoader {
          
     /**
      * Loads the class with the specified name.  The implementation of
-     * this method searches for classes in the following order:<p>
+     * this method searches for classes in the following order:
      * <ol>
      * <li> Looks for a known package and pass the loading to the ClassLoader 
             for that package. 
@@ -218,7 +233,6 @@ public class ProxyClassLoader extends ClassLoader {
     }
     
     private String diagnosticCNFEMessage(String base, Set<ProxyClassLoader> del) {
-        String parentSetS;
         int size = parents.size();
         // Too big to show in its entirety - overwhelms the log file.
         StringBuilder b = new StringBuilder();
@@ -236,7 +250,7 @@ public class ProxyClassLoader extends ClassLoader {
         b.append(']');
         return b.toString();
     }
-    private static final Set<String> arbitraryLoadWarnings = Collections.synchronizedSet(new HashSet<String>());
+    private static final Set<String> arbitraryLoadWarnings = ConcurrentHashMap.newKeySet();
 
     /** May return null */ 
     private synchronized Class<?> selfLoadClass(String pkg, String name) { 
@@ -252,7 +266,7 @@ public class ProxyClassLoader extends ClassLoader {
             }
             if (LOG_LOADING && !name.startsWith("java.")) LOGGER.log(Level.FINEST, "{0} loaded {1}",
                         new Object[] {this, name});
-        }
+            }
         return cls; 
     }
 
@@ -450,25 +464,28 @@ public class ProxyClassLoader extends ClassLoader {
     /**
      * Faster way to find a package.
      * @param name package name in org.netbeans.modules.foo format
-     * @param sname package name in org/netbeans/modules/foo/ format
      * @param recurse whether to also ask parents
      * @return located package, or null
      */
     protected Package getPackageFast(String name, boolean recurse) {
-        synchronized (packages) {
-            Package pkg = packages.get(name);
-            if (pkg != null) {
-                return pkg;
-            }
-            if (!recurse) {
-                return null;
-            }
+        Package pkg = packages.get(name);
+        if (pkg != null) {
+            return pkg;
+        }
+        if (!recurse) {
+            return null;
+        }
+        synchronized(packages) {
+            pkg = packages.get(name);
             String path = name.replace('.', '/');
             for (ProxyClassLoader par : this.parents.loaders()) {
-                if (!shouldDelegateResource(path, par))
+                if (!shouldDelegateResource(path, par)) {
                     continue;
+                }
                 pkg = par.getPackageFast(name, false);
-                if (pkg != null) break;
+                if (pkg != null) {
+                    break;
+                }
             }
             // pretend the resource ends with "/". This works better with hidden package and
             // prefix-based checks.
@@ -476,7 +493,7 @@ public class ProxyClassLoader extends ClassLoader {
                 // Cannot access either Package.getSystemPackages nor ClassLoader.getPackage
                 // from here, so do the best we can though it will cause unnecessary
                 // duplication of the package cache (PCL.packages vs. CL.packages):
-                pkg = super.getPackage(name);
+                    pkg = super.getPackage(name);
             }
             if (pkg != null) {
                 packages.put(name, pkg);
@@ -495,12 +512,10 @@ public class ProxyClassLoader extends ClassLoader {
                 String specVersion, String specVendor, String implTitle,
 		String implVersion, String implVendor, URL sealBase )
 		throws IllegalArgumentException {
-        synchronized (packages) {
-            Package pkg = super.definePackage(name, specTitle, specVersion, specVendor, implTitle,
+        Package pkg = super.definePackage(name, specTitle, specVersion, specVendor, implTitle,
                 implVersion, implVendor, sealBase);
-            packages.put(name, pkg);
-            return pkg;
-        }
+        packages.put(name, pkg);
+        return pkg;
     }
 
     /**
@@ -550,7 +565,11 @@ public class ProxyClassLoader extends ClassLoader {
     }
     
     protected boolean shouldDelegateResource(String pkg, ClassLoader parent) {
-         return true;
+         if (delegatingPredicate != null) {
+             return delegatingPredicate.apply(pkg, parent);
+         } else {
+             return true;
+         }
     }
 
     /** Called before releasing the classloader so it can itself unregister
@@ -568,7 +587,7 @@ public class ProxyClassLoader extends ClassLoader {
     // System Class Loader Packages Support
     //
     
-    private static Map<String,Boolean> sclPackages = Collections.synchronizedMap(new HashMap<String,Boolean>());  
+    private static ConcurrentMap<String,Boolean> sclPackages = new ConcurrentHashMap<>();
     private static Boolean isSystemPackage(String pkg) {
         return sclPackages.get(pkg);
     }

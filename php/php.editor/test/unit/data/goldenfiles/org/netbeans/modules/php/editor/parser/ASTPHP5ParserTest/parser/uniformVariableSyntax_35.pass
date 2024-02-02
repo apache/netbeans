@@ -1363,7 +1363,7 @@
                 </DereferencedArrayAccess>
             </ExpressionStatement>
             <ExpressionStatement start='390' end='417'>
-                <StaticConstantAccess start='390' end='416'>
+                <StaticConstantAccess start='390' end='416' isDynamicName='false'>
                     <StaticFieldAccess start='390' end='406'>
                         <Variable start='390' end='395' isDollared='true'>
                             <Identifier start='391' end='395' name='test'/>
@@ -1388,7 +1388,7 @@
                 </StaticConstantAccess>
             </ExpressionStatement>
             <ExpressionStatement start='418' end='454'>
-                <StaticConstantAccess start='418' end='453'>
+                <StaticConstantAccess start='418' end='453' isDynamicName='false'>
                     <StaticFieldAccess start='418' end='435'>
                         <FunctionInvocation start='418' end='424'>
                             <FucntionName start='418' end='422'>
@@ -1732,7 +1732,7 @@
                 </DereferencedArrayAccess>
             </ExpressionStatement>
             <ExpressionStatement start='703' end='732'>
-                <StaticConstantAccess start='703' end='731'>
+                <StaticConstantAccess start='703' end='731' isDynamicName='false'>
                     <StaticFieldAccess start='703' end='721'>
                         <DereferencableVariable start='703' end='710'>
                             <Variable start='704' end='709' isDollared='true'>
@@ -1759,7 +1759,7 @@
                 </StaticConstantAccess>
             </ExpressionStatement>
             <ExpressionStatement start='733' end='771'>
-                <StaticConstantAccess start='733' end='770'>
+                <StaticConstantAccess start='733' end='770' isDynamicName='false'>
                     <StaticFieldAccess start='733' end='752'>
                         <DereferencableVariable start='733' end='741'>
                             <FunctionInvocation start='734' end='740'>

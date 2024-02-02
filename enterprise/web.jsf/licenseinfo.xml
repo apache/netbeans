@@ -49,8 +49,11 @@
         <file>src/org/netbeans/modules/web/jsf/facelets/resources/templates/template-table-8.template</file>
         <file>src/org/netbeans/modules/web/jsf/resources/AjaxScripts.jspf</file>
         <file>src/org/netbeans/modules/web/jsf/resources/JsfCrudELResolver.java.txt</file>
+        <file>src/org/netbeans/modules/web/jsf/resources/JsfCrudELResolver.jakarta.java.txt</file>
         <file>src/org/netbeans/modules/web/jsf/resources/JsfUtil.java.txt</file>
+        <file>src/org/netbeans/modules/web/jsf/resources/JsfUtil.jakarta.java.txt</file>
         <file>src/org/netbeans/modules/web/jsf/resources/PagingInfo.java.txt</file>
+        <file>src/org/netbeans/modules/web/jsf/resources/PagingInfo.jakarta.java.txt</file>
         <file>src/org/netbeans/modules/web/jsf/resources/jsfcrud.css</file>
         <file>src/org/netbeans/modules/web/jsf/resources/jsfcrud.js</file>
         <file>src/org/netbeans/modules/web/jsf/resources/templates/JSFManagedBean.template</file>
@@ -99,6 +102,8 @@
     <fileset>
         <file>src/org/netbeans/modules/web/jsf/resources/web-facelettaglibrary_3_0.xsd</file>
         <file>src/org/netbeans/modules/web/jsf/resources/web-facesconfig_3_0.xsd</file>
+        <file>src/org/netbeans/modules/web/jsf/resources/web-facelettaglibrary_4_0.xsd</file>
+        <file>src/org/netbeans/modules/web/jsf/resources/web-facesconfig_4_0.xsd</file>
         <license ref="EPL-v20" />
         <comment type="CATEGORY_B" />
     </fileset>

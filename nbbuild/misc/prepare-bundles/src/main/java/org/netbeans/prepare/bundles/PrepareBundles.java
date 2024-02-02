@@ -105,6 +105,8 @@ public class PrepareBundles {
                 if (".bin".equals(module.getFileName().toString())) continue;
                 if (".package-lock.json".equals(module.getFileName().toString())) continue;
                 if ("@types".equals(module.getFileName().toString())) continue;
+                if ("@esbuild".equals(module.getFileName().toString())) continue;
+                if ("@microsoft".equals(module.getFileName().toString())) continue;
                 if ("@vscode".equals(module.getFileName().toString())) {
                     try (DirectoryStream<Path> sds = Files.newDirectoryStream(module)) {
                         for (Path sModule : sds) {

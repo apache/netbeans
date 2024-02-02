@@ -75,9 +75,9 @@ public class LauncherResource {
             }
         }
         public String getPathString(String path) {
-            if(this.equals(Type.ABSOLUTE)) {
+            if(this == Type.ABSOLUTE) {
                 return path;
-            } else if (this.equals(Type.BUNDLED)) {
+            } else if (this == Type.BUNDLED) {
                 return "$L{" + Type.BUNDLED.toString()+ "}/" +
                         new File(path).getName();
             } else {
@@ -116,7 +116,7 @@ public class LauncherResource {
         return type;
     }
     public boolean isBundled() {
-        return type.equals(Type.BUNDLED);
+        return type == Type.BUNDLED;
     }
     public String getPath() {
         return path;

@@ -97,6 +97,7 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
         EditorCookie ec = lookup.lookup(EditorCookie.class);
         if (ec != null) {
             Document doc = ec.getDocument();
+            if(doc == null) return ret;
             FileObject file = NbEditorUtilities.getFileObject(doc);
             ret = Antlr3Language.MIME_TYPE.equals(file.getMIMEType())
                     || Antlr4Language.MIME_TYPE.equals(file.getMIMEType());

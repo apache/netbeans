@@ -22,6 +22,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,6 +34,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import javax.lang.model.SourceVersion;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.modules.java.j2seplatform.spi.J2SEPlatformDefaultJavadoc;
@@ -39,56 +43,30 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Default Javadoc for J2SE.
+ * Default Javadoc for Java.
  * @author Tomas Zezula
  */
-@ServiceProvider(service =J2SEPlatformDefaultJavadoc.class, position = 100, path = "org-netbeans-api-java/platform/j2seplatform/defaultJavadocProviders")
+@ServiceProvider(service = J2SEPlatformDefaultJavadoc.class, position = 100, path = "org-netbeans-api-java/platform/j2seplatform/defaultJavadocProviders")
 public final class J2SEPlatformDefaultJavadocImpl implements J2SEPlatformDefaultJavadoc {
 
     private static final Logger LOG = Logger.getLogger(J2SEPlatformDefaultJavadocImpl.class.getName());
-    private static final Map<String,String> OFFICIAL_JAVADOC = new HashMap<>();
-    static {
-        OFFICIAL_JAVADOC.put("1.0", null); // NOI18N
-        OFFICIAL_JAVADOC.put("1.1", null); // NOI18N
-        OFFICIAL_JAVADOC.put("1.2", null); // NOI18N
-        OFFICIAL_JAVADOC.put("1.3", null); // NOI18N
-        OFFICIAL_JAVADOC.put("1.4", null); // NOI18N
-        OFFICIAL_JAVADOC.put("1.5", "https://docs.oracle.com/javase/1.5.0/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("1.6", "https://docs.oracle.com/javase/6/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("1.7", "https://docs.oracle.com/javase/7/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("1.8", "https://docs.oracle.com/javase/8/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("9", "https://docs.oracle.com/javase/9/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("10", "https://docs.oracle.com/javase/10/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("11", "https://docs.oracle.com/en/java/javase/11/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("12", "https://docs.oracle.com/en/java/javase/12/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("13", "https://docs.oracle.com/en/java/javase/13/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("14", "https://docs.oracle.com/en/java/javase/14/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("15", "https://docs.oracle.com/en/java/javase/15/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("16", "https://docs.oracle.com/en/java/javase/16/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("17", "https://docs.oracle.com/en/java/javase/17/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("18", "https://docs.oracle.com/en/java/javase/18/docs/api/"); // NOI18N
-        OFFICIAL_JAVADOC.put("19", "https://download.java.net/java/early_access/jdk19/docs/api/"); // NOI18N Early access
-        OFFICIAL_JAVADOC.put("20", "https://download.java.net/java/early_access/jdk20/docs/api/"); // NOI18N Early access
-    }
 
     @Override
     public Collection<URI> getDefaultJavadoc(@NonNull final JavaPlatform platform) {
+        // local
         final List<URI> result = new ArrayList<>();
         final JavadocFilter filter = new JavadocFilter();
         for (FileObject folder : platform.getInstallFolders()) {
             for (FileObject file : folder.getChildren()) {
-                final Collection<? extends URI> roots = filter.accept(file);
-                result.addAll(roots);
+                result.addAll(filter.accept(file));
             }
         }
         if (!result.isEmpty()) {
             return Collections.unmodifiableList(result);
         }
+        // remote
         String version = platform.getSpecification().getVersion().toString();
-        if (!OFFICIAL_JAVADOC.containsKey(version)) {
-            LOG.log(Level.WARNING, "unrecognized Java spec version: {0}", version);
-        }
-        String location = OFFICIAL_JAVADOC.get(version);
+        String location = computeJavaDocURL(version);
         if (location != null) {
             try {
                 return Collections.singletonList(new URI(location));
@@ -97,6 +75,43 @@ public final class J2SEPlatformDefaultJavadocImpl implements J2SEPlatformDefault
             }
         }
         return Collections.emptyList();
+    }
+
+    private static String computeJavaDocURL(String version) {
+        switch (version) {
+            case "1.0": // NOI18N
+            case "1.1": // NOI18N
+            case "1.2": // NOI18N
+            case "1.3": // NOI18N
+            case "1.4": return null; // NOI18N
+            case "1.5": return "https://docs.oracle.com/javase/1.5.0/docs/api/"; // NOI18N
+            case "1.6": return "https://docs.oracle.com/javase/6/docs/api/"; // NOI18N
+            case "1.7": return "https://docs.oracle.com/javase/7/docs/api/"; // NOI18N
+            case "1.8": return "https://docs.oracle.com/javase/8/docs/api/"; // NOI18N
+        }
+        try {
+            int feature = Integer.parseInt(version);
+            if (feature >= 9) {
+                int latestGA = computeLatestGAVersion();
+                if (feature <= latestGA) {
+                    return "https://docs.oracle.com/en/java/javase/" + feature + "/docs/api/"; // NOI18N
+                } else if (feature <= latestGA + 3) {
+                    return "https://download.java.net/java/early_access/jdk" + feature + "/docs/api/"; // NOI18N
+                }
+            }
+        } catch (IllegalArgumentException ignore) {}
+        LOG.log(Level.WARNING, "unrecognized Java spec version: {0}", version); // NOI18N
+        return null;
+    }
+
+    /**
+     * Computes the feature version of the latest generally available JDK release.
+     */
+    private static int computeLatestGAVersion() {
+        // timezone shouldn't matter since the accuracy is worse than a day
+        LocalDate jdk9 = LocalDate.of(2017, Month.SEPTEMBER, 21); // start of 6 month schedule
+        int latest = 9 + (int) (ChronoUnit.MONTHS.between(jdk9, LocalDate.now()) / 6);
+        return Math.max(latest, SourceVersion.latest().ordinal()); // in case system time is wrong, use nb-javac version as lower bound
     }
 
     private static final class JavadocFilter {

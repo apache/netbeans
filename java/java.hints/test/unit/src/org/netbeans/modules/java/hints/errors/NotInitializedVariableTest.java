@@ -42,7 +42,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "public class Test {\n" +
                        "    public final String |s;" +
                        "}\n",
-                       "FIX_InitializeVariable", "FIX_InitializeVariableInCtor", "FIX_AddConstructorParameter");
+                       "Initialize variable s", "Initialize variable s in constructor(s)", "Add parameter to constructor Test()");
     }
 
     public void testNotInitializedInDefaultConstructorInitialize() throws Exception {
@@ -52,7 +52,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "public class Test {\n" +
                        "    public final String |s;" +
                        "}\n",
-                       "FIX_InitializeVariable",
+                       "Initialize variable s",
                        "package test; public class Test { public final String s = null;} ");
     }
 
@@ -63,7 +63,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "public class Test {\n" +
                        "    public final String |s;" +
                        "}\n",
-                       "FIX_InitializeVariableInCtor",
+                       "Initialize variable s in constructor(s)",
                        "package test; public class Test { public final String s; public Test() { this.s = null; } } ");
     }
 
@@ -76,7 +76,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "    public Test() {" +
                        "    }" +
                        "}\n",
-                       "FIX_InitializeVariable", "FIX_InitializeVariableInCtor", "FIX_AddConstructorParameter");
+                       "Initialize variable s", "Initialize variable s in constructor(s)", "Add parameter to constructor Test()");
     }
 
     public void testNotInitializedInConstructorInitialize() throws Exception {
@@ -88,7 +88,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "    public Test() {" +
                        "    }" +
                        "}\n",
-                       "FIX_InitializeVariable",
+                       "Initialize variable s",
                        "package test; public class Test { public final String s = null; public Test() { }} ");
     }
 
@@ -101,7 +101,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "    public Test() {" +
                        "    }" +
                        "}\n",
-                       "FIX_InitializeVariableInCtor",
+                       "Initialize variable s in constructor(s)",
                        "package test; public class Test { public final String s; public Test() {this.s = null; }} ");
     }
 
@@ -116,7 +116,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "    public Test(int i) {" +
                        "    }" +
                        "}\n",
-                       "FIX_InitializeVariable", "FIX_InitializeVariableInCtor", "FIX_AddConstructorParameter", "FIX_AddConstructorParameter");
+                       "Initialize variable s", "Initialize variable s in constructor(s)", "Add parameter to constructor Test()", "Add parameter to constructor Test(int i)");
     }
 
     public void testNotInitializedInMultipleConstructorsInitialize() throws Exception {
@@ -130,7 +130,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "    public Test(int i) {" +
                        "    }" +
                        "}\n",
-                       "FIX_InitializeVariable",
+                       "Initialize variable s",
                        "package test; public class Test { public final String s = null; public Test() { } public Test(int i) { }} ");
     }
 
@@ -145,7 +145,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "    public Test(int i) {" +
                        "    }" +
                        "}\n",
-                       "FIX_InitializeVariableInCtor",
+                       "Initialize variable s in constructor(s)",
                        "package test; public class Test { public final String s; public Test() {this.s = null; } public Test(int i) {this.s = null; }} ");
     }
 
@@ -161,7 +161,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "    public Test(int i) {" +
                        "    }" +
                        "}\n",
-                       "FIX_InitializeVariable", "FIX_InitializeVariableInCtor", "FIX_AddConstructorParameter");
+                       "Initialize variable s", "Initialize variable s in constructor(s)", "Add parameter to constructor Test(int i)");
     }
 
     public void testNotInitializedInMultipleConstructors2Initialize() throws Exception {
@@ -176,7 +176,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "    public Test(int i) {" +
                        "    }" +
                        "}\n",
-                       "FIX_InitializeVariable",
+                       "Initialize variable s",
                        "package test; public class Test { public final String s = null; public Test() { this.s = \"test\"; } public Test(int i) { }} ");
     }
 
@@ -192,7 +192,7 @@ public class NotInitializedVariableTest extends ErrorHintsTestBase {
                        "    public Test(int i) {" +
                        "    }" +
                        "}\n",
-                       "FIX_InitializeVariableInCtor",
+                       "Initialize variable s in constructor(s)",
                        "package test; public class Test { public final String s; public Test() { this.s = \"test\"; } public Test(int i) {this.s = null; }} ");
     }
 

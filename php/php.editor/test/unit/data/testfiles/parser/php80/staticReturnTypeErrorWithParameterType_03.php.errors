@@ -1,10 +1,10 @@
 [[870,876]-Syntax error
  unexpected:	static
  after:	|
- expected:	identifier, array, callable, define] 870-876:Syntax error
+ expected:	identifier, array, callable, define, (] 870-876:Syntax error
  unexpected:	static
  after:	|
- expected:	identifier, array, callable, define
+ expected:	identifier, array, callable, define, (
 [[876,877]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	|] 876-877:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	|

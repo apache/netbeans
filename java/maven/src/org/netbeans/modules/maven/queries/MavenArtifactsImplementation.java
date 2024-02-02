@@ -606,7 +606,6 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
             if (!NbMavenProject.PROP_PROJECT.equals(evt.getPropertyName())) {
                 return;
             }
-            ChangeListener[] ll;
             final List<ArtifactSpec> copy;
 
             synchronized (this) {
@@ -619,14 +618,9 @@ public class MavenArtifactsImplementation implements ProjectArtifactsImplementat
                 }
                 copy = artifacts == null ? Collections.emptyList() : new ArrayList<>(this.artifacts);
                 RequestProcessor.Task[] arr = new RequestProcessor.Task[1];
+                artifacts = null;
 
                 arr[0] = refreshTask = MAVEN_ARTIFACTS_RP.create(() -> update(copy, arr[0]));
-
-                ll = listeners.toArray(new ChangeListener[listeners.size()]);
-            }
-            ChangeEvent e = new ChangeEvent(this);
-            for (ChangeListener l : ll) {
-                l.stateChanged(e);
             }
         }
 

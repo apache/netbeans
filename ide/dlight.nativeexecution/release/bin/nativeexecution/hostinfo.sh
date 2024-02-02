@@ -76,6 +76,10 @@ CPUFAMILY=`(echo ${CPUTYPE} | egrep "^i|x86_64|athlon|Intel" >/dev/null && echo 
 if [ "${CPUFAMILY}" = "sparc64" ]; then
    CPUFAMILY="sparc"
 fi
+# New check if ARM64 then return ARM so Java code will stop returning “UNKNOWN”
+if [ "${CPUFAMILY}" = "arm64" ]; then
+   CPUFAMILY="arm"
+fi
 
 USERDIRBASE=${HOME}
 

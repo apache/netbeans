@@ -2021,7 +2021,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             // #89393: GTK needs name to render cell renderer "natively"
             setName("ComboBox.listRenderer"); // NOI18N
             
-            if (value != null && value instanceof FileFilter) {
+            if (value instanceof FileFilter) {
                 setText(((FileFilter)value).getDescription());
             }
             

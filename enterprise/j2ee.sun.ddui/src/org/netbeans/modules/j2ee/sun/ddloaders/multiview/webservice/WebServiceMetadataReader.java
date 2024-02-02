@@ -113,11 +113,7 @@ public class WebServiceMetadataReader extends CommonBeanReader {
             }
         }
         
-        for(String serviceKey: servicesToRemove) {
-            annotationMap.remove(serviceKey);
-        }
-        
-        return;
+        annotationMap.keySet().removeAll(servicesToRemove);
     }
     
     /** Maps interesting fields from service-ref descriptor to a multi-level property map.

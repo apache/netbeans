@@ -23,23 +23,24 @@ package org.netbeans.modules.db.explorer.action;
 
 import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.lib.ddl.DDLException;
@@ -50,11 +51,9 @@ import org.netbeans.modules.db.explorer.DatabaseConnection.State;
 import org.netbeans.modules.db.explorer.DbUtilities;
 import org.netbeans.modules.db.explorer.dlg.ConnectPanel;
 import org.netbeans.modules.db.explorer.dlg.ConnectProgressDialog;
-import org.openide.nodes.Node;
 import org.netbeans.modules.db.explorer.dlg.ConnectionDialog;
 import org.netbeans.modules.db.explorer.dlg.ConnectionDialogMediator;
 import org.netbeans.modules.db.explorer.dlg.SchemaPanel;
-import org.netbeans.modules.db.explorer.node.ConnectionNode;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -62,63 +61,63 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionState;
-import org.openide.awt.StatusDisplayer;
+import org.openide.util.ContextAwareAction;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
+import org.openide.util.WeakListeners;
 
 @ActionRegistration(
         displayName = "#Connect", 
-        lazy = false,
+        lazy = true,
+        asynchronous = true,
         enabledOn = @ActionState(type = DatabaseConnection.class, useActionInstance = true)
 )
 @ActionID(category = "Database", id = "netbeans.db.explorer.action.Connect")
 @ActionReference(path = "Databases/Explorer/Connection/Actions", position = 100)
-public class ConnectAction extends BaseAction {
+public class ConnectAction extends AbstractAction implements ContextAwareAction, PropertyChangeListener {
     private static final Logger LOGGER = Logger.getLogger(ConnectAction.class.getName());
-
-    ConnectionDialog dlg;
-    boolean advancedPanel = false;
-
-    @Override
-    public String getName() {
-        return NbBundle.getMessage (ConnectAction.class, "Connect"); // NOI18N
-    }
-
-    @Override
-    public HelpCtx getHelpCtx() {
-        return new HelpCtx(ConnectAction.class);
-    }
-
-    @Override
-    protected boolean enable(Node[] activatedNodes) {
-        boolean enabled = false;
-        if (activatedNodes.length == 1) {
-            Lookup lookup = activatedNodes[0].getLookup();
-            ConnectionNode node = lookup.lookup(ConnectionNode.class);
-            if (node != null) {
-                DatabaseConnection dbconn = lookup.lookup(DatabaseConnection.class);
-                enabled = ! dbconn.isConnected();
-            }
+    private final DatabaseConnection connection;
+    
+    public ConnectAction(DatabaseConnection connection) {
+        super(NbBundle.getMessage (ConnectAction.class, "Connect")); // NOI18N
+        this.connection = connection;
+        if (connection != null) {
+            connection.addPropertyChangeListener(WeakListeners.propertyChange(this, connection));
         }
-
-        return enabled;
     }
 
     @Override
-    public void performAction(Node[] activatedNodes) {
-        
-        ConnectionNode node = activatedNodes[0].getLookup().lookup(ConnectionNode.class);
-        DatabaseConnection dbconn = node.getLookup().lookup(DatabaseConnection.class);
-        if (dbconn.isConnected()) {
+    public void actionPerformed(ActionEvent e) {
+        if (connection == null || connection.isConnected()) {
             return;
         }
         // Don't show the dialog if all information is already available, 
         // just make the connection
-        new ConnectionDialogDisplayer().showDialog(node, false);
+        new ConnectionDialogDisplayer().showDialog(connection, false);
     }
 
+    @Override
+    public boolean isEnabled() {
+        return connection != null && !connection.isConnected();
+    }
+
+    @Override
+    public Action createContextAwareInstance(Lookup actionContext) {
+        return new ConnectAction(actionContext.lookup(DatabaseConnection.class));
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> propertyChange(evt));
+        } else {
+            setEnabled(connection != null && !connection.isConnected());
+        }
+    }
    
     public static final class ConnectionDialogDisplayer extends ConnectionDialogMediator {
         
@@ -161,15 +160,9 @@ public class ConnectAction extends BaseAction {
 
         private static HelpCtx CONNECT_ACTION_HELPCTX = new HelpCtx(ConnectAction.class);
 
-        public void showDialog(final ConnectionNode model, boolean showDialog) {
-            DatabaseConnection dbcon = model.getLookup().lookup(DatabaseConnection.class);
-            showDialog(dbcon, showDialog);
-        }
-
         @NbBundle.Messages({
             "# {0} - connection name",
             "Progress_ConnectingDB=Connecting to {0}",
-            "CannotConnectHeadless=Required connection properties missing or incorrect, cannot connect."
         })
         public void showDialog(final DatabaseConnection dbcon, boolean showDialog) {
             String user = dbcon.getUser();
@@ -188,12 +181,13 @@ public class ConnectAction extends BaseAction {
             if (((!supportsConnectWithoutUsername(dbcon))
                     && (user == null || !remember)) || showDialog) {
                 
+                final Credentials input;
                 if (headless) {
-                    DialogDisplayer.getDefault().notifyLater(
-                            new NotifyDescriptor.Message(Bundle.CannotConnectHeadless(), NotifyDescriptor.ERROR_MESSAGE));
-                    return;
+                    input = new CredetialsLine(dbcon);
+                } else {
+                    ConnectPanel basePanel = new ConnectPanel(this, dbcon);
+                    input = new CredetialsUI(basePanel);
                 }
-                final ConnectPanel basePanel = new ConnectPanel(this, dbcon);
 
                 final PropertyChangeListener connectionListener = new PropertyChangeListener() {
                     @Override
@@ -213,10 +207,14 @@ public class ConnectAction extends BaseAction {
                                 realDbcon.setRememberPassword(dbcon.rememberPassword());
                             }
                             
-                            dbcon.setRememberPassword(basePanel.rememberPassword());
+                            dbcon.setRememberPassword(input.rememberPassword());
 
-                            if (dlg != null) {
-                                dlg.close();
+                            if (!headless) {
+                                SwingUtilities.invokeLater(() -> {
+                                    if (dlg != null) {
+                                        dlg.close();
+                                    }
+                                });
                             }
                         }
                     }
@@ -225,37 +223,26 @@ public class ConnectAction extends BaseAction {
 
                 dbcon.addPropertyChangeListener(connectionListener);
 
-                ActionListener actionListener = new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent event) {
-                        if (event.getSource() == DialogDescriptor.OK_OPTION) {
-                            dbcon.setUser(basePanel.getUser());
-                            dbcon.setPassword(basePanel.getPassword());
-                            dbcon.setUser(basePanel.getUser());
-                            dbcon.setPassword(basePanel.getPassword());
-                            dbcon.setRememberPassword(basePanel.rememberPassword());
-
-                            if (! dbcon.isVitalConnection()) {
-                                dbcon.connectAsync();
-                            } else {
-                                DatabaseConnection realDbcon = ConnectionList.getDefault().getConnection(dbcon);
-                                if (realDbcon != null) {
-                                    realDbcon.setPassword(dbcon.getPassword());
-                                    realDbcon.setRememberPassword(
-                                            basePanel.rememberPassword());
-                                }
-                                dbcon.setRememberPassword(basePanel.rememberPassword());
-
-                                if (dlg != null) {
-                                    dlg.close();
-                                }
+                if (headless) {
+                    connectWithNewInfo(dbcon, input);
+                } else {
+                    ActionListener actionListener = new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent event) {
+                            if (event.getSource() == DialogDescriptor.OK_OPTION) {
+                                connectWithNewInfo(dbcon, input);
                             }
                         }
-                    }
-                };
+                    };
 
-                dlg = new ConnectionDialog(this, basePanel, basePanel.getTitle(), CONNECT_ACTION_HELPCTX, actionListener);
-                dlg.setVisible(true);
+                    Mutex.EVENT.writeAccess((Mutex.Action<Void>) () -> {
+                        ConnectPanel basePanel = input.getConnectPanel();
+                        dlg = new ConnectionDialog(this, basePanel, basePanel.getTitle(), CONNECT_ACTION_HELPCTX, actionListener);
+                        dlg.setVisible(true);
+                        return null;
+                    });
+                }
+                dbcon.removeExceptionListener(excListener);
             } else { // without dialog with connection data (username, password), just with progress dlg
                 try {
                     DialogDescriptor descriptor = null;
@@ -263,7 +250,6 @@ public class ConnectAction extends BaseAction {
                     
                     progress = ProgressHandle.createHandle(Bundle.Progress_ConnectingDB(dbcon.getDisplayName()));
                     
-                    final CountDownLatch connected = new CountDownLatch(1);
                     final Dialog dialog;
                     
                     if (headless) {
@@ -296,7 +282,6 @@ public class ConnectAction extends BaseAction {
                         private void handlePropertyChange(PropertyChangeEvent event) {
                             if ("state".equals(event.getPropertyName())) {
                                 if (event.getNewValue() == State.connected) { //NOI18N
-                                    connected.countDown();
                                     if (dialog != null) {
                                         dialog.setVisible(false);
                                     }
@@ -310,7 +295,6 @@ public class ConnectAction extends BaseAction {
                                     // to fully complete, and *then* raise the Connect
                                     // dialog.
                                     failed = true;
-                                    connected.countDown();
                                     if (dialog != null) {
                                         dialog.setVisible(false);
                                     }
@@ -322,34 +306,33 @@ public class ConnectAction extends BaseAction {
                     failed = false;
 
                     dbcon.addPropertyChangeListener(connectionListener);
-                    dbcon.connectAsync();
+                    try {
+                        RequestProcessor.Task connectTask = dbcon.connectAsync();
 
-                    progress.start();
-                    progress.switchToIndeterminate();
-                    
-                    if (dialog == null) {
-                        connected.await();
-                    } else {
-                        dialog.setVisible(true);
-                    }
-                    progress.finish();                    
-                    
-                    if (dialog != null) {
-                        dialog.dispose();
-                    }
-                    
+                        progress.start();
+                        progress.switchToIndeterminate();
 
-                    if ( failed ) {
-                        // If the connection fails with a progress bar only, then 
-                        // display the full Connect dialog so the user can give it
-                        // another shot after changing some values, like the username
-                        // or password.
-                        showDialog(dbcon, true);
+                        if (dialog == null) {
+                            connectTask.waitFinished();
+                        } else {
+                            dialog.setVisible(true);
+                        }
+                        progress.finish();                    
+
+                        if (dialog != null) {
+                            dialog.dispose();
+                        }
+                    } finally {                        
+                        dbcon.removePropertyChangeListener(connectionListener);
                     }
                 } catch (Exception exc) {
                     String message = MessageFormat.format(NbBundle.getMessage (ConnectAction.class, "ERR_UnableToConnect"), exc.getMessage()); // NOI18N
                     DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE));
                     
+                    failed = true;
+                }
+                dbcon.removeExceptionListener(excListener);
+                if ( failed ) {
                     // If the connection fails with a progress bar only, then 
                     // display the full Connect dialog so the user can give it
                     // another shot after changing some values, like the username
@@ -357,8 +340,6 @@ public class ConnectAction extends BaseAction {
                     showDialog(dbcon, true);
                 }
             }
-
-            dbcon.removeExceptionListener(excListener);
         }
 
         @Override
@@ -392,6 +373,146 @@ public class ConnectAction extends BaseAction {
                 return false;
             }
         }
+
+        private void connectWithNewInfo(DatabaseConnection dbcon, Credentials input) {
+            dbcon.setUser(input.getUser());
+            dbcon.setPassword(input.getPassword());
+            dbcon.setUser(input.getUser());
+            dbcon.setPassword(input.getPassword());
+            dbcon.setRememberPassword(input.rememberPassword());
+
+            if (!dbcon.isVitalConnection()) {
+                dbcon.connectAsync();
+            } else {
+                DatabaseConnection realDbcon = ConnectionList.getDefault().getConnection(dbcon);
+                if (realDbcon != null) {
+                    realDbcon.setPassword(dbcon.getPassword());
+                    realDbcon.setRememberPassword(
+                            input.rememberPassword());
+                }
+                dbcon.setRememberPassword(input.rememberPassword());
+
+                if (dlg != null) {
+                    dlg.close();
+                }
+            }
+        }
     }
 
+    private static abstract class Credentials {
+
+        abstract String getUser();
+
+        abstract String getPassword();
+
+        abstract boolean rememberPassword();
+
+        abstract ConnectPanel getConnectPanel();
+    }
+
+    private static class CredetialsLine extends Credentials {
+
+        final private DatabaseConnection dbconnection;
+        private String user;
+        private String password;
+        private boolean initialized;
+
+        private CredetialsLine(DatabaseConnection dbconn) {
+            dbconnection = dbconn;
+        }
+
+        private void init() {
+            if (!initialized) {
+                initialized = true;
+                setUsernameAndPassword();
+            }
+        }
+
+        @Override
+        String getUser() {
+            init();
+            return user;
+        }
+
+        @Override
+        String getPassword() {
+            init();
+            return password;
+        }
+
+        @Override
+        boolean rememberPassword() {
+            return dbconnection.rememberPassword();
+        }
+
+        @Override
+        ConnectPanel getConnectPanel() {
+            throw new IllegalStateException();
+        }
+
+        private boolean setUsernameAndPassword() {
+            CredentialsCallback callback = new CredentialsCallback(dbconnection.getUser());
+            NotifyDescriptor.ComposedInput userPassword = new NotifyDescriptor.ComposedInput(dbconnection.getDisplayName(), 2, callback);
+            if (DialogDescriptor.OK_OPTION == DialogDisplayer.getDefault().notify(userPassword)) {
+                NotifyDescriptor[] inputs = userPassword.getInputs();
+                user = ((NotifyDescriptor.InputLine)inputs[0]).getInputText();
+                password = ((NotifyDescriptor.InputLine)inputs[1]).getInputText();
+                return true;
+            }
+            return false;
+        }
+    }
+
+    private static class CredetialsUI extends Credentials {
+
+        private final ConnectPanel connectPanel;
+
+        private CredetialsUI(ConnectPanel cp) {
+            connectPanel = cp;
+        }
+
+        @Override
+        String getPassword() {
+            return connectPanel.getPassword();
+        }
+
+        @Override
+        String getUser() {
+            return connectPanel.getUser();
+        }
+
+        @Override
+        boolean rememberPassword() {
+            return connectPanel.rememberPassword();
+        }
+
+        @Override
+        ConnectPanel getConnectPanel() {
+            return connectPanel;
+        }
+    }
+
+    @NbBundle.Messages({
+        "MSG_EnterUsername=Enter Username",
+        "MSG_EnterPassword=Enter Password",})
+    private static class CredentialsCallback implements NotifyDescriptor.ComposedInput.Callback {
+
+        private final String initialUser;
+
+        public CredentialsCallback(String user) {
+            initialUser = user;
+        }
+
+        @Override
+        public NotifyDescriptor createInput(NotifyDescriptor.ComposedInput input, int number) {
+            if (number == 1) {
+                NotifyDescriptor.InputLine inputLine = new NotifyDescriptor.InputLine(Bundle.MSG_EnterUsername(), Bundle.MSG_EnterUsername());
+                inputLine.setInputText(initialUser);
+                return inputLine;
+            } else if (number == 2) {
+                return  new NotifyDescriptor.PasswordLine(Bundle.MSG_EnterPassword(),Bundle.MSG_EnterPassword());
+            }
+            return null;
+        }
+    }
 }

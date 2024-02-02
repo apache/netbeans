@@ -21,7 +21,9 @@ package org.netbeans.modules.web.struts.editor;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.lang.model.element.TypeElement;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
@@ -55,14 +57,14 @@ import org.openide.util.NbBundle;
 public class StrutsConfigHyperlinkProvider implements HyperlinkProvider {
     
     private static boolean debug = false;
-    private static Hashtable hyperlinkTable;
+    private static Map<String, Integer> hyperlinkTable;
     
     private final int JAVA_CLASS = 0;
     private final int FORM_NAME = 1;
     private final int RESOURCE_PATH = 2;
     
     {
-        hyperlinkTable = new Hashtable();
+        hyperlinkTable = new Hashtable<>();
         hyperlinkTable.put("data-source#className", new Integer(JAVA_CLASS));   //NOI18N
         hyperlinkTable.put("data-source#type", new Integer(JAVA_CLASS));        //NOI18N
         hyperlinkTable.put("form-beans#type", new Integer(JAVA_CLASS));         //NOI18N
@@ -264,7 +266,7 @@ public class StrutsConfigHyperlinkProvider implements HyperlinkProvider {
                         servletMapping = servletMapping.trim();
                         String prefix = servletMapping.substring(0, servletMapping.length()-2);
                         if (path.startsWith(prefix))
-                            actionPath = path.substring(prefix.length(), path.length());
+                            actionPath = path.substring(prefix.length());
                         else
                             actionPath = path;
                     }

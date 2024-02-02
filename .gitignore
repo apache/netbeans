@@ -1,9 +1,7 @@
 /*/build/
-/*/nbproject/private/
-/*/*/nbproject/private/
+**/nbproject/private/
 /*/*/build/
 /*/*/dist/
-/*/*/*/nbproject/private/
 /*/*/*/build/
 /*/*/*/dist/
 /*/external/*.zip
@@ -35,7 +33,6 @@
 /nbbuild/netbeansrelease.json
 /nbi/engine/native/*/*/dist/
 /nb-javac/
-/java.source.nbjavac/test/test-nb-javac/nbproject/private/
 /java/java.lsp.server/vscode/.vscode-test/
 /harness/apisupport.harness/windows-launcher-src/*.exe
 /harness/apisupport.harness/windows-launcher-src/*.res
@@ -49,13 +46,10 @@
 # Various files that may be generated if the launcher projects are opened in NetBeans 8.2.
 /harness/apisupport.harness/windows-launcher-src/nbproject/Makefile-*.mk
 /harness/apisupport.harness/windows-launcher-src/nbproject/Package-*.bash
-/harness/apisupport.harness/windows-launcher-src/nbproject/private/
 /nb/ide.launcher/windows/nbproject/Makefile-*.mk
 /nb/ide.launcher/windows/nbproject/Package-*.bash
-/nb/ide.launcher/windows/nbproject/private/
 /platform/o.n.bootstrap/launcher/windows/nbproject/Makefile-*.mk
 /platform/o.n.bootstrap/launcher/windows/nbproject/Package-*.bash
-/platform/o.n.bootstrap/launcher/windows/nbproject/private/
 
 # Database logs
 derby.log
@@ -74,20 +68,13 @@ derby.log
 /ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/Token.java
 /ide/db.sql.visualeditor/src/org/netbeans/modules/db/sql/visualeditor/parser/TokenMgrError.java
 /profiler/lib.profiler/release/lib/
-/profiler/lib.profiler/release/BUILDINFO.txt
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/jaxb/
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/oauth/
 /websvccommon/websvc.saas.api/src/org/netbeans/modules/websvc/saas/model/wadl/
-/javafx2.samples/FXML-LoginDemo/nbproject/private/
 
 # OS generated files - test related #
 #####################################
-/debugger.jpda.ui/test/qa-functional/data/debugTestProject/nbproject/private/
-/debugger.jpda.ui/test/qa-functional/data/debugTestProjectAnt/nbproject/private/
 /platform/o.n.bootstrap/test/unit/data/jars
-/xml/test/qa-functional/data/DTDActionsTestProject/nbproject/private/
-/xml/test/qa-functional/data/ActionsTestProject/nbproject/private/
-/xml/test/qa-functional/data/CoreTemplatesTestProject/nbproject/private/
 
 # Snapcraft Generated files #
 #######################
@@ -106,11 +93,24 @@ derby.log
 ##################################
 /extide/gradle/netbeans-gradle-tooling/.gradle/
 /extide/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
+/extide/gradle/netbeans-gradle-tooling/bin/
 /extide/gradle/release/modules/gradle/daemon-loader/.gradle/
 /nbbuild/misc/prepare-bundles/target/
+
+# Gradle Unittest Data
+/extide/gradle/test/unit/data/**/build/
+/extide/gradle/test/unit/data/**/.gradle/
+/java/gradle.java/test/unit/data/**/build/
+/java/gradle.java/test/unit/data/**/.gradle/
+/enterprise/micronaut/test/unit/data/**/build/
+/enterprise/micronaut/test/unit/data/**/.gradle/
 
 # ANTLR v4 Grammar
 ##################################
 /java/languages.antlr/external/*.g4
 /java/languages.antlr/external/LexerAdaptor.java
 
+/ide/languages.hcl/src/org/netbeans/modules/languages/hcl/grammar/*.java
+
+# idea
+.idea

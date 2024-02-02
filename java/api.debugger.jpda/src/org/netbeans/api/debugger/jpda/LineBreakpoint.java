@@ -397,7 +397,7 @@ public class LineBreakpoint extends JPDABreakpoint {
     
     /**
      * Gets the binary class name that is used to submit the breakpoint.
-     * @return The binary class name, if previously set by {@link setPreferedClassName}
+     * @return The binary class name, if previously set by {@link #setPreferredClassName}
      * method, or <code>null</code> if the class name should be retrieved
      * automatically from the URL and line number.
      * @since 2.8

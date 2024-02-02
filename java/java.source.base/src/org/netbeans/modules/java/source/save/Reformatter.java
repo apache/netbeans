@@ -419,6 +419,7 @@ public class Reformatter implements ReformatTask {
         private static final String JDOC_THROWS_TAG = "@throws"; //NOI18N
         private static final String JDOC_VALUE_TAG = "@value"; //NOI18N
         private static final String JDOC_SNIPPET_TAG = "@snippet"; //NOI18N
+        private static final String JDOC_SUMMARY_TAG = "@summary"; //NOI18N
         private static final String ERROR = "<error>"; //NOI18N
 
         private final String fText;
@@ -1151,7 +1152,7 @@ public class Reformatter implements ReformatTask {
                                 newline();
                             else
                                 space();
-                        } else if (sp.getStartPosition(root, mods) != sp.getStartPosition(root, node.getType())) {
+                        } else {
                             space();
                         }
                     } else if (afterAnnotation) {
@@ -1278,11 +1279,10 @@ public class Reformatter implements ReformatTask {
             boolean old = continuationIndent;
             int oldIndent = indent;
             try {
-                continuationIndent = true;
                 ModifiersTree mods = node.getModifiers();
                 if (mods != null) {
                     if (scan(mods, p)) {
-
+                        continuationIndent = true;
                         if (cs.placeNewLineAfterModifiers()) {
                             newline();
                         } else {
@@ -1294,6 +1294,7 @@ public class Reformatter implements ReformatTask {
                     afterAnnotation = false;
                 }
                 accept(IDENTIFIER);
+                continuationIndent = true;
                 space();
 
                 if (!ERROR.contentEquals(node.getSimpleName())) {
@@ -1825,6 +1826,7 @@ public class Reformatter implements ReformatTask {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     bracePlacement = cs.getOtherBracePlacement();
                     if (node.isStatic())
                         spaceBeforeLeftBrace = cs.spaceBeforeStaticInitLeftBrace();
@@ -2815,32 +2817,16 @@ public class Reformatter implements ReformatTask {
         @Override
         public Boolean visitPatternCaseLabel(PatternCaseLabelTree node, Void p) {
             scan(node.getPattern(), p);
-            space();
-            accept(IDENTIFIER);
-            space();
-            scan(node.getGuard(), p);
             return true;
         }
 
         @Override
         public Boolean visitDeconstructionPattern(DeconstructionPatternTree node, Void p) {
             scan(node.getDeconstructor(), p);
-            accept(LPAREN);
-            scan(node.getNestedPatterns(), p);
-            accept(RPAREN);
-            if (node.getVariable() != null) {
-                space();
-                accept(IDENTIFIER);
-            }
-            return true;
-        }
-
-        @Override
-        public Boolean visitParenthesizedPattern(ParenthesizedPatternTree node, Void p) {
-            accept(LPAREN);
             spaces(0);
-            scan(node.getPattern(), p);
-            spaces(0);
+            accept(LPAREN);
+            spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
+            wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, node.getNestedPatterns());
             accept(RPAREN);
             return true;
         }
@@ -2975,6 +2961,12 @@ public class Reformatter implements ReformatTask {
                             space();
                         }
                     }
+                    if (node.getGuard() != null) {
+                        space();
+                        accept(IDENTIFIER);
+                        space();
+                        scan(node.getGuard(), p);
+                    }
                 }
             } else if (!node.getExpressions().isEmpty()) {
                 List<? extends ExpressionTree> exprs = node.getExpressions();
@@ -3007,7 +2999,11 @@ public class Reformatter implements ReformatTask {
                         if (stat.getKind() == Tree.Kind.BLOCK) {
                             indent = lastIndent;
                         }
-                        wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
+                        if (stat.getKind() == Tree.Kind.TRY) {
+                            wrapTree(cs.wrapCaseStatements(), -1, 1, stat);
+                        } else {
+                            wrapStatement(cs.wrapCaseStatements(), CodeStyle.BracesGenerationStyle.LEAVE_ALONE, 1, stat);
+                        }
                     } else {
                         newline();
                         scan(stat, p);
@@ -3557,6 +3553,18 @@ public class Reformatter implements ReformatTask {
             lastBlankLines = -1;
             lastBlankLinesTokenIndex = -1;
             lastBlankLinesDiff = null;
+            return true;
+        }
+
+        @Override
+        public Boolean visitStringTemplate(StringTemplateTree node, Void p) {
+            scan(node.getProcessor(), p);
+            accept(DOT);
+            for (ExpressionTree expression : node.getExpressions()) {
+                accept(STRING_LITERAL);
+                scan(expression, p);
+            }
+            accept(STRING_LITERAL);
             return true;
         }
 
@@ -4833,6 +4841,7 @@ public class Reformatter implements ReformatTask {
                                     || JDOC_DOCROOT_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_INHERITDOC_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_VALUE_TAG.equalsIgnoreCase(tokenText)
+                                    || JDOC_SUMMARY_TAG.equalsIgnoreCase(tokenText)
                                     || JDOC_LITERAL_TAG.equalsIgnoreCase(tokenText)) {
                                 insideTag = true;
                                 addMark(Pair.of(currWSOffset >= 0 ? currWSOffset : javadocTokens.offset() - offset, 5), marks, state);
@@ -5508,6 +5517,7 @@ public class Reformatter implements ReformatTask {
                 case CLASS:
                 case ENUM:
                 case INTERFACE:
+                case RECORD:
                     for (Tree tree : ((ClassTree)path.getLeaf()).getMembers()) {
                         if (tree == lastTree) {
                             indent += tabSize;

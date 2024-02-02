@@ -20,8 +20,6 @@
 package org.netbeans.modules.maven.customizer;
 
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -76,8 +74,10 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
         @Override
         public void performOperation(POMModel model) {
             String s = PluginPropertyUtils.getPluginProperty(handle.getProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "source", null, null);
-            String t = PluginPropertyUtils.getPluginProperty(handle.getProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "source", null, null);
-            if (s == null && t == null) {
+            String t = PluginPropertyUtils.getPluginProperty(handle.getProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "target", null, null);
+            String r = PluginPropertyUtils.getPluginProperty(handle.getProject(), Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "release", null, null);
+            if (s == null && t == null && r == null) {
+                // set in project properties
                 Project p = model.getProject();
                 if (p != null) {
                     Properties prop = p.getProperties();
@@ -85,11 +85,25 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
                         prop = model.getFactory().createProperties();
                         p.setProperties(prop);
                     }
-                    prop.setProperty("maven.compiler.source", sourceLevel);
-                    prop.setProperty("maven.compiler.target", sourceLevel);
+                    if (prop.getProperty("maven.compiler.release") != null) {
+                        prop.setProperty("maven.compiler.release", sourceLevel);
+                        prop.setProperty("maven.compiler.source", null);
+                        prop.setProperty("maven.compiler.target", null);
+                    } else {
+                        prop.setProperty("maven.compiler.source", sourceLevel);
+                        prop.setProperty("maven.compiler.target", sourceLevel);
+                    }
                 }
             } else {
+                // set in plugin config
                 ModelUtils.setSourceLevel(model, sourceLevel);
+                // clear props, just in case
+                if (model.getProject() != null && model.getProject().getProperties() != null) {
+                    Properties prop = model.getProject().getProperties();
+                    prop.setProperty("maven.compiler.source", null);
+                    prop.setProperty("maven.compiler.target", null);
+                    prop.setProperty("maven.compiler.release", null);
+                }
             }
         }
     };
@@ -134,7 +148,7 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
             plugin = fact.createPlugin();
             plugin.setGroupId(Constants.GROUP_APACHE_PLUGINS);
             plugin.setArtifactId(Constants.PLUGIN_COMPILER);
-            plugin.setVersion(MavenVersionSettings.getDefault().getVersion(MavenVersionSettings.VERSION_COMPILER));
+            plugin.setVersion(MavenVersionSettings.getDefault().getVersion(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER));
             bld.addPlugin(plugin);
         }
         if (plugin != null) {
@@ -153,7 +167,7 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
             plugin2 = fact.createPlugin();
             plugin2.setGroupId(Constants.GROUP_APACHE_PLUGINS);
             plugin2.setArtifactId(Constants.PLUGIN_RESOURCES);
-            plugin2.setVersion(MavenVersionSettings.getDefault().getVersion(MavenVersionSettings.VERSION_RESOURCES));
+            plugin2.setVersion(MavenVersionSettings.getDefault().getVersion(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_RESOURCES));
             bld.addPlugin(plugin2);
         }
         if (plugin2 != null) {
@@ -209,20 +223,10 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
         
         comEncoding.setModel(ProjectCustomizer.encodingModel(oldEncoding));
         comEncoding.setRenderer(ProjectCustomizer.encodingRenderer());
-        
-        comSourceLevel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleSourceLevelChange();
-            }
-        });
-        
-        comEncoding.addActionListener(new ActionListener () {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleEncodingChange();
-            }            
-        });
+
+        comSourceLevel.addActionListener(e -> handleSourceLevelChange());
+        comEncoding.addActionListener(e -> handleEncodingChange());
+
         txtSrc.setText(handle.getProject().getBuild().getSourceDirectory());
         txtTestSrc.setText(handle.getProject().getBuild().getTestSourceDirectory());
     }
@@ -486,7 +490,7 @@ public class SourcesPanel extends JPanel implements HelpCtx.Provider {
                         current = incJavaSpecVersion(current);
                     }
                 }
-                sourceLevelCache = sourceLevels.toArray(new String[sourceLevels.size()]);
+                sourceLevelCache = sourceLevels.toArray(String[]::new);
             }
             return sourceLevelCache;
         }

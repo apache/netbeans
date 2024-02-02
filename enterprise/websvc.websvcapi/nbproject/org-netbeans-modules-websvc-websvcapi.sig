@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.48
+#Version 1.53
 
 CLSS public java.lang.Object
 cons public init()
@@ -31,7 +31,7 @@ meth public boolean isFromWSDL(java.lang.String)
 meth public java.lang.String generateImplementationBean(java.lang.String,org.openide.filesystems.FileObject,org.netbeans.api.project.Project,java.lang.String) throws java.io.IOException
 meth public java.lang.String getArchiveDDFolderName()
 meth public java.lang.String getImplementationBean(java.lang.String)
-meth public java.util.List getServices()
+meth public java.util.List<org.netbeans.modules.websvc.api.webservices.WsCompileEditorSupport$ServiceSettings> getServices()
 meth public org.netbeans.spi.project.support.ant.AntProjectHelper getAntProjectHelper()
 meth public org.netbeans.spi.project.support.ant.ReferenceHelper getReferenceHelper()
 meth public org.openide.filesystems.FileObject getWebservicesDD()
@@ -127,7 +127,7 @@ meth public abstract boolean isFromWSDL(java.lang.String)
 meth public abstract java.lang.String generateImplementationBean(java.lang.String,org.openide.filesystems.FileObject,org.netbeans.api.project.Project,java.lang.String) throws java.io.IOException
 meth public abstract java.lang.String getArchiveDDFolderName()
 meth public abstract java.lang.String getImplementationBean(java.lang.String)
-meth public abstract java.util.List getServices()
+meth public abstract java.util.List<org.netbeans.modules.websvc.api.webservices.WsCompileEditorSupport$ServiceSettings> getServices()
 meth public abstract org.netbeans.api.java.classpath.ClassPath getClassPath()
 meth public abstract org.netbeans.spi.project.support.ant.AntProjectHelper getAntProjectHelper()
 meth public abstract org.netbeans.spi.project.support.ant.ReferenceHelper getReferenceHelper()

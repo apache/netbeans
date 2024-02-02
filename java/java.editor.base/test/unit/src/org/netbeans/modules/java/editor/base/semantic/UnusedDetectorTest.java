@@ -302,7 +302,246 @@ public class UnusedDetectorTest extends NbTestCase {
                     "3:<init>:NOT_USED");
     }
 
+    @Test
+    public void testNoUnusedWhenLookup() throws Exception {
+        performTest("test/Test.java",
+                    "package test;\n" +
+                    "import java.lang.invoke.MethodHandles.Lookup;\n" +
+                    "public class Test implements I {\n" +
+                    "    public void lookup(Lookup l) {\n" +
+                    "        l.findConstructor(T1.class, null);\n" +
+                    "        l.findSpecial(Test.class, \"test1\", null, null);\n" +
+                    "        l.findStatic(Test.class, \"test3\", null);\n" +
+                    "        l.findVirtual(Test.class, \"test5\", null);\n" +
+                    "        l.findStaticGetter(Test.class, \"f1\", null);\n" +
+                    "        l.findStaticSetter(Test.class, \"f2\", null);\n" +
+                    "        l.findStaticVarHandle(Test.class, \"f3\", null);\n" +
+                    "        l.findGetter(Test.class, \"f5\", null);\n" +
+                    "        l.findSetter(Test.class, \"f6\", null);\n" +
+                    "        l.findVarHandle(Test.class, \"f7\", null);\n" +
+                    "    }\n" +
+                    "    private static void test1() {\n" +
+                    "    }\n" +
+                    "    private static void test2() {\n" +
+                    "    }\n" +
+                    "    private static void test3() {\n" +
+                    "    }\n" +
+                    "    private static void test4() {\n" +
+                    "    }\n" +
+                    "    private void test5() {\n" +
+                    "    }\n" +
+                    "    private void test6() {\n" +
+                    "    }\n" +
+                    "    public class T1 {\n" +
+                    "        private T1(int i) { System.err.println(i); }\n" +
+                    "    }\n" +
+                    "    public class T2 {\n" +
+                    "        private T2(int i) { System.err.println(i); }\n" +
+                    "    }\n" +
+                    "    private static int f1;\n" +
+                    "    private static int f2;\n" +
+                    "    private static int f3;\n" +
+                    "    private static int f4;\n" +
+                    "    private int f5;\n" +
+                    "    private int f6;\n" +
+                    "    private int f7;\n" +
+                    "    private int f8;\n" +
+                    "}\n" +
+                    "interface I {}\n" +
+                    "}\n",
+                    "18:test2:NOT_USED",
+                    "22:test4:NOT_USED",
+                    "26:test6:NOT_USED",
+                    "32:<init>:NOT_USED",
+                    "37:f4:NOT_READ",
+                    "41:f8:NOT_READ");
+    }
+
+    @Test
+    public void testNoUnusedWhenLookupNoLiterals() throws Exception {
+        performTest("test/Test.java",
+                    "package test;\n" +
+                    "import java.lang.invoke.MethodHandles.Lookup;\n" +
+                    "public class Test implements I {\n" +
+                    "    public void lookup(Lookup l, String name) {\n" +
+                    "        doLookup(l, \"test1\");\n" +
+                    "        doLookup(l, \"test3\");\n" +
+                    "        doLookup(l, \"test5\");\n" +
+                    "        doLookup(l, \"f1\");\n" +
+                    "        doLookup(l, \"f2\");\n" +
+                    "        doLookup(l, \"f3\");\n" +
+                    "        doLookup(l, \"f5\");\n" +
+                    "        doLookup(l, \"f6\");\n" +
+                    "        doLookup(l, \"f7\");\n" +
+                    "    }\n" +
+                    "    public void doLookup(Lookup l, String name) {\n" +
+                    "        l.findSpecial(Test.class, name, null, null);\n" +
+                    "        l.findStatic(Test.class, name, null);\n" +
+                    "        l.findVirtual(Test.class, name, null);\n" +
+                    "        l.findStaticGetter(Test.class, name, null);\n" +
+                    "        l.findStaticSetter(Test.class, name, null);\n" +
+                    "        l.findStaticVarHandle(Test.class, name, null);\n" +
+                    "        l.findGetter(Test.class, name, null);\n" +
+                    "        l.findSetter(Test.class, name, null);\n" +
+                    "        l.findVarHandle(Test.class, name, null);\n" +
+                    "    }\n" +
+                    "    private static void test1() {\n" +
+                    "    }\n" +
+                    "    private static void test2() {\n" +
+                    "    }\n" +
+                    "    private static void test3() {\n" +
+                    "    }\n" +
+                    "    private static void test4() {\n" +
+                    "    }\n" +
+                    "    private void test5() {\n" +
+                    "    }\n" +
+                    "    private void test6() {\n" +
+                    "    }\n" +
+                    "    private static int f1;\n" +
+                    "    private static int f2;\n" +
+                    "    private static int f3;\n" +
+                    "    private static int f4;\n" +
+                    "    private int f5;\n" +
+                    "    private int f6;\n" +
+                    "    private int f7;\n" +
+                    "    private int f8;\n" +
+                    "}\n" +
+                    "interface I {}\n" +
+                    "}\n",
+                    "28:test2:NOT_USED",
+                    "32:test4:NOT_USED",
+                    "36:test6:NOT_USED",
+                    "41:f4:NOT_READ",
+                    "45:f8:NOT_READ");
+    }
+
+    @Test
+    public void testNoUnusedWhenLookupNoClass() throws Exception {
+        performTest("test/Test.java",
+                    "package test;\n" +
+                    "import java.lang.invoke.MethodHandles.Lookup;\n" +
+                    "public class Test implements I {\n" +
+                    "    public void lookup(Lookup l, Class<?> c) {\n" +
+                    "        l.findConstructor(c, null);\n" +
+                    "        l.findSpecial(c, \"test1\", null, null);\n" +
+                    "        l.findStatic(c, \"test3\", null);\n" +
+                    "        l.findVirtual(c, \"test5\", null);\n" +
+                    "        l.findStaticGetter(c, \"f1\", null);\n" +
+                    "        l.findStaticSetter(c, \"f2\", null);\n" +
+                    "        l.findStaticVarHandle(c, \"f3\", null);\n" +
+                    "        l.findGetter(c, \"f5\", null);\n" +
+                    "        l.findSetter(c, \"f6\", null);\n" +
+                    "        l.findVarHandle(c, \"f7\", null);\n" +
+                    "    }\n" +
+                    "    private static void test1() {\n" +
+                    "    }\n" +
+                    "    private static void test2() {\n" +
+                    "    }\n" +
+                    "    private static void test3() {\n" +
+                    "    }\n" +
+                    "    private static void test4() {\n" +
+                    "    }\n" +
+                    "    private void test5() {\n" +
+                    "    }\n" +
+                    "    private void test6() {\n" +
+                    "    }\n" +
+                    "    public class T1 {\n" +
+                    "        private T1(int i) { System.err.println(i); }\n" +
+                    "    }\n" +
+                    "    public class T2 {\n" +
+                    "        private T2(int i) { System.err.println(i); }\n" +
+                    "    }\n" +
+                    "    private static int f1;\n" +
+                    "    private static int f2;\n" +
+                    "    private static int f3;\n" +
+                    "    private static int f4;\n" +
+                    "    private int f5;\n" +
+                    "    private int f6;\n" +
+                    "    private int f7;\n" +
+                    "    private int f8;\n" +
+                    "}\n" +
+                    "interface I {}\n" +
+                    "}\n",
+                    "18:test2:NOT_USED",
+                    "22:test4:NOT_USED",
+                    "26:test6:NOT_USED",
+                    "37:f4:NOT_READ",
+                    "41:f8:NOT_READ");
+    }
+
+    @Test
+    public void testUnusedWhenNoLookup() throws Exception {
+        performTest("test/Test.java",
+                    "package test;\n" +
+                    "public class Test implements I {\n" +
+                    "    public void lookup() {\n" +
+                    "        String[] s = new String[] {\n" +
+                    "            \"test1\",\n" +
+                    "            \"test3\",\n" +
+                    "            \"test5\",\n" +
+                    "            \"f1\",\n" +
+                    "            \"f5\",\n" +
+                    "        };\n" +
+                    "    }\n" +
+                    "    private static void test1() {\n" +
+                    "    }\n" +
+                    "    private static void test3() {\n" +
+                    "    }\n" +
+                    "    private void test5() {\n" +
+                    "    }\n" +
+                    "    public class T1 {\n" +
+                    "        private T1(int i) { System.err.println(i); }\n" +
+                    "    }\n" +
+                    "    private static int f1;\n" +
+                    "    private int f5;\n" +
+                    "}\n" +
+                    "interface I {}\n" +
+                    "}\n",
+                    "4:s:NOT_READ",
+                    "12:test1:NOT_USED",
+                    "14:test3:NOT_USED",
+                    "16:test5:NOT_USED",
+                    "19:<init>:NOT_USED",
+                    "21:f1:NOT_READ",
+                    "22:f5:NOT_READ");
+    }
+
+    @Test
+    public void testUnusedWhenDifferentClass() throws Exception {
+        performTest("test/Test.java",
+                    "package test;\n" +
+                    "import java.lang.invoke.MethodHandles.Lookup;\n" +
+                    "public class Test implements I {\n" +
+                    "    public void lookup(Lookup l) {\n" +
+                    "        l.findStatic(T1.class, \"test1\", null);\n" +
+                    "    }\n" +
+                    "    private static void test1() {\n" +
+                    "    }\n" +
+                    "    public class T1 {\n" +
+                    "        private static void test1() {\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "}\n" +
+                    "interface I {}\n" +
+                    "}\n",
+                    "7:test1:NOT_USED");
+    }
+
+
+    @Test
+    public void testNoUnusedForMainMethod() throws Exception {
+        sourceLevel = "21";
+        options = Arrays.asList("--enable-preview");
+        performTest("Test.java",
+                    "package test;\n" +
+                    "public class Test {\n" +
+                    "    void main() {\n" +
+                    "    }\n" +
+                    "}\n");
+    }
+
     protected String sourceLevel = "1.8";
+    protected List<String> options = null;
 
     protected void performTest(String fileName, String code, String... expected) throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[] {}, new Object[] {new TestBase.MIMEResolverImpl()});
@@ -311,7 +550,8 @@ public class UnusedDetectorTest extends NbTestCase {
 	FileObject cache   = scratch.createFolder("cache");
 
         File wd         = getWorkDir();
-        File testSource = new File(wd, "test/" + fileName + ".java");
+        File srcDir     = new File(wd, "src");
+        File testSource = new File(srcDir, fileName + ".java");
 
         testSource.getParentFile().mkdirs();
         TestUtilities.copyStringToFile(testSource, code);
@@ -322,6 +562,13 @@ public class UnusedDetectorTest extends NbTestCase {
 
         if (sourceLevel != null) {
             SourceUtilsTestUtil.setSourceLevel(testSourceFO, sourceLevel);
+        }
+
+        if (options != null) {
+            FileObject srcDirFO = FileUtil.toFileObject(srcDir);
+
+            assertNotNull(srcDirFO);
+            SourceUtilsTestUtil.setCompilerOptions(srcDirFO, options);
         }
 
         File testBuildTo = new File(wd, "test-build");

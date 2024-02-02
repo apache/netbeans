@@ -20,7 +20,7 @@ package org.netbeans.api.actions;
 
 /** A context interface representing ability of an object to be printed.
  *
- * @author Jaroslav Tulach <jtulach@netbeans.org>
+ * @author Jaroslav Tulach &lt;jtulach@netbeans.org&gt;
  * @since 7.10
  */
 public interface Printable {

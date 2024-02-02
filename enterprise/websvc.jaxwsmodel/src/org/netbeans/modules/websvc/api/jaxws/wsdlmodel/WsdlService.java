@@ -19,9 +19,11 @@
 
 package org.netbeans.modules.websvc.api.jaxws.wsdlmodel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.sun.tools.ws.processor.model.Port;
 import com.sun.tools.ws.processor.model.Service;
-import java.util.*;
 import org.netbeans.modules.websvc.jaxwsmodelapi.WSService;
 
 /**

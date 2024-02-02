@@ -109,7 +109,7 @@ public interface IconInterface {
      */
     public org.netbeans.modules.j2ee.dd.api.common.Icon getDefaultIcon();
     /**
-     * Returns all icon elements in the form of <@link java.util.Map>. 
+     * Returns all icon elements in the form of {@link java.util.Map}. 
      *
      * @return map of all icons in the form of [locale:String[]{smallIcon, largeIcon}]
      */

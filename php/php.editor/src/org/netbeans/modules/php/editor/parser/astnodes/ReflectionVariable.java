@@ -20,8 +20,12 @@ package org.netbeans.modules.php.editor.parser.astnodes;
 
 /**
  * Represents an indirect reference to a variable.
- * <pre>e.g.<pre> $$a
+ * e.g.
+ * <pre>
+ * $$a
  * $$foo()
+ * {$var} // e.g. $a->{$var}, Foo::{$var}
+ * </pre>
  */
 public class ReflectionVariable extends Variable {
 

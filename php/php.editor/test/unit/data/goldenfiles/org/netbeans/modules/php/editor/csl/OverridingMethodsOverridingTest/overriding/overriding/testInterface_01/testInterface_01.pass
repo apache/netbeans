@@ -1,0 +1,15 @@
+[Overrides]
+[Method]
+interfaceMethod1 : ExtendingClass (from ImplementingClass)
+interfaceMethod1 : ImplementingClass (from I)
+interfaceMethod1 : ImplementingEnum (from I)
+interfaceStaticMethod1 : ExtendingClass (from ImplementingClass)
+interfaceStaticMethod1 : ImplementingClass (from I)
+interfaceStaticMethod1 : ImplementingEnum (from I)
+
+[Overridden]
+[Method]
+interfaceMethod1 : ImplementingClass (by ExtendingClass)
+interfaceStaticMethod1 : ImplementingClass (by ExtendingClass)
+[Type]
+ImplementingClass (by ExtendingClass)

@@ -189,6 +189,22 @@ public class YamlKeystrokeHandlerTest extends YamlTestBase {
         insertChar("foo: '^'", '\'', "foo: ''^");
     }
 
+    public void  testStepCurly1() throws Exception {
+        insertChar("foo: {^}", '}', "foo: {}^");
+    }
+
+    public void  testStepCurly2() throws Exception {
+        insertChar("foo: {{^}}", '}', "foo: {{}^}");
+    }
+
+    public void  testStepBracket1() throws Exception {
+        insertChar("foo: [^]", ']', "foo: []^");
+    }
+
+    public void  testStepBracket2() throws Exception {
+        insertChar("foo: [[^]]", ']', "foo: [[]^]");
+    }
+
     public void testDeleteSingle1() throws Exception {
         deleteChar("foo: '^'", "foo: ^");
     }

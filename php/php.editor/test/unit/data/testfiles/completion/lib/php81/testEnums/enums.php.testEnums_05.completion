@@ -1,8 +1,8 @@
 Code completion result for source line:
 Simple::C|ASE2;
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-CONSTANT   CASE1 ?                         [PUBLIC]   \Enum1\Simple
-CONSTANT   CASE2 ?                         [PUBLIC]   \Enum1\Simple
+CONSTANT   CASE1                           [PUBLIC]   \Enum1\Simple
+CONSTANT   CASE2                           [PUBLIC]   \Enum1\Simple
 CONSTANT   CONSTANT1 "CONSTANT1"           [PUBLIC]   \Enum1\Simple
 CONSTANT   CONSTANT2 ?                     [PUBLIC]   \Enum1\Simple
 CONSTANT   class \Enum1\Simple             [PUBLIC]   Magic Constant

@@ -58,7 +58,7 @@ public abstract class AsynchronousNode<T> extends TreeListNode {
     private Loader loader;
     private final Object LOCK = new Object();
     private JLabel lblFill;
-    private boolean expandAfterRefresh;;
+    private boolean expandAfterRefresh;
     private final String title;
     private final Icon icon;
     private static final RequestProcessor RP = new RequestProcessor("Asynchronous Tree List Node - Loader", 5); // NOI18N

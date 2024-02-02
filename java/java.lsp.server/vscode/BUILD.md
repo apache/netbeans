@@ -23,14 +23,11 @@
 
 ## Prerequisities
 
-- JDK, version 11
+- JDK, version 11 or later
 - Ant, latest version
 - Maven, latest version
 - node.js, latest LTS (to build VSIX)
 
-It is currently possible to use JDK 8 for the build and execution.
-However, as the Apache NetBeans project is slowly moving towards JDK 11,
-using JDK 11 may be the safest bet.
 
 ## Getting the Code
 
@@ -132,6 +129,11 @@ and specify suitable debug arguments to start _standalone NBLS_ instance:
 
 ```bash
 vscode$ npm run nbcode -- --jdkhome /jdk -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000
+```
+
+To add extra modules while debugging the NetBeans part
+```bash
+vscode$ npm run nbcode -- -J-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000 -J-Dnetbeans.extra.dirs=/path/to/extension
 ```
 
 Connect to the process with Java debugger, setup all breakpoints. Then launch

@@ -156,6 +156,7 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
      * Scrolls the pane to the bottom, invokeLatered to ensure all state has
      * been updated, so the bottom really *is* the bottom.
      */
+    @Override
     public void run() {
         enqueued = false;
         if (locked) {
@@ -384,12 +385,18 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
     }
 
     public final void sendCaretToPos(int startPos, int endPos, boolean select) {
+        sendCaretToPos(startPos, endPos, select, true);
+    }
+
+    public final void sendCaretToPos(int startPos, int endPos, boolean select, boolean scroll) {
         inSendCaretToLine = true;
         try {
             getCaret().setVisible(true);
             getCaret().setSelectionVisible(true);
             if (select) {
-                scrollTo(endPos);
+                if (scroll) {
+                    scrollTo(endPos);
+                }
                 getCaret().setDot(endPos);
                 getCaret().moveDot(startPos);
                 textView.repaint();
@@ -409,7 +416,12 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
 
     private boolean inSendCaretToLine = false;
     private int lineToScroll = -1;
+
     public final boolean sendCaretToLine(int idx, boolean select) {
+        return sendCaretToLine(idx, select, true);
+    }
+
+    public final boolean sendCaretToLine(int idx, boolean select, boolean scroll) {
         int lastLine = getLineCount() - 1;
         if (idx > lastLine) {
             idx = lastLine;
@@ -428,7 +440,7 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
                 getCaret().setDot(position);
             }
 
-            if (!scrollToLine(idx + 3) && isScrollLocked()) {
+            if (scroll && !scrollToLine(idx + 3) && isScrollLocked()) {
                 lineToScroll = idx + 3;
             }
         } catch (Error sie) {
@@ -462,25 +474,6 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
 
         Rectangle visRect = textView.getVisibleRect();
         return line == lineIdx && visRect.y + visRect.height == rect.y + rect.height;
-    }
-
-    boolean scrollToPos(int pos) {
-        Rectangle rect = null;
-        try {
-            rect = textView.modelToView(pos);
-        } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
-        if (rect == null) {
-            return false;
-        }
-
-        boolean oldLocked = locked;
-        textView.scrollRectToVisible(rect);
-        locked = oldLocked;
-
-        return true;
     }
 
     public final void lockScroll() {
@@ -543,6 +536,7 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
 
 //***********************Listener implementations*****************************
 
+    @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == getVerticalScrollBar().getModel()) {
             if (!locked) { //XXX check if doc is still being written?
@@ -594,6 +588,7 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
         }
     }
 
+    @Override
     public final void changedUpdate(DocumentEvent e) {
         //Ensure it is consumed
         e.getLength();
@@ -609,6 +604,7 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
         }
     }
 
+    @Override
     public final void insertUpdate(DocumentEvent e) {
         //Ensure it is consumed
         e.getLength();
@@ -624,12 +620,14 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
         }
     }
 
+    @Override
     public final void removeUpdate(DocumentEvent e) {
         //Ensure it is consumed
         e.getLength();
         documentChanged();
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
         if (e.isAltDown() || e.isAltGraphDown() || e.isControlDown()
                 && SwingUtilities.isMiddleMouseButton(e)) {
@@ -639,9 +637,11 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
         }
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
         resetCursor();
     }
@@ -675,6 +675,7 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
         }
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         if (e.getSource() == textView) {
             if (isOnHyperlink(e.getPoint())) {
@@ -688,6 +689,7 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
         }
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
         if (e.getSource() == getVerticalScrollBar()) {
             int y = e.getY();
@@ -700,6 +702,7 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
     /** last pressed position for hyperlink test */
     private int lastPressedPos = -1;
 
+    @Override
     public void mousePressed(MouseEvent e) {
         if (e.getSource() == textView && SwingUtilities.isLeftMouseButton(e)) {
             lastPressedPos = textView.viewToModel(e.getPoint());
@@ -725,6 +728,7 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
         }
     }
 
+    @Override
     public final void mouseReleased(MouseEvent e) {
         if (e.getSource() == textView && SwingUtilities.isLeftMouseButton(e)) {
             int pos = textView.viewToModel(e.getPoint());
@@ -748,6 +752,7 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
         }
     }
 
+    @Override
     public void keyPressed(KeyEvent keyEvent) {
         switch (keyEvent.getKeyCode()) {
             case KeyEvent.VK_END:
@@ -805,14 +810,17 @@ public abstract class AbstractOutputPane extends JScrollPane implements Document
         }
     }
 
+    @Override
     public void keyReleased(KeyEvent keyEvent) {
     }
 
+    @Override
     public void keyTyped(KeyEvent keyEvent) {
     }
 
     protected abstract void changeFontSizeBy(int change);
 
+    @Override
     public final void mouseWheelMoved(MouseWheelEvent e) {
         if (e.isAltDown() || e.isAltGraphDown() || e.isControlDown()) {
             int change = -e.getWheelRotation();

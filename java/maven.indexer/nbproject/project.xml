@@ -58,7 +58,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.54</specification-version>
+                        <specification-version>2.77</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -154,6 +154,7 @@
                 <friend>org.netbeans.modules.maven.search</friend>
                 <friend>ro.emilianbold.modules.maven.search.remote</friend>
                 <friend>org.netbeans.modules.payara.tooling</friend>
+                <friend>org.netbeans.modules.jakarta.transformer</friend>
                 <package>org.apache.lucene</package>
                 <package>org.apache.lucene.analysis</package>
                 <package>org.apache.lucene.analysis.standard</package>
@@ -175,28 +176,44 @@
                 <package>org.netbeans.modules.maven.indexer.spi.impl</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/indexer-core-6.2.2.jar</runtime-relative-path>
-                <binary-origin>external/indexer-core-6.2.2.jar</binary-origin>
+                <runtime-relative-path>ext/maven/indexer-core-7.1.2.jar</runtime-relative-path>
+                <binary-origin>external/indexer-core-7.1.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-core-8.11.1.jar</runtime-relative-path>
-                <binary-origin>external/lucene-core-8.11.1.jar</binary-origin>
+                <runtime-relative-path>ext/maven/search-api-7.1.2.jar</runtime-relative-path>
+                <binary-origin>external/search-api-7.1.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-highlighter-8.11.1.jar</runtime-relative-path>
-                <binary-origin>external/lucene-highlighter-8.11.1.jar</binary-origin>
+                <runtime-relative-path>ext/maven/search-backend-smo-7.1.2.jar</runtime-relative-path>
+                <binary-origin>external/search-backend-smo-7.1.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-queryparser-8.11.1.jar</runtime-relative-path>
-                <binary-origin>external/lucene-queryparser-8.11.1.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-core-9.9.1.jar</runtime-relative-path>
+                <binary-origin>external/lucene-core-9.9.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/maven/lucene-analyzers-common-8.11.1.jar</runtime-relative-path>
-                <binary-origin>external/lucene-analyzers-common-8.11.1.jar</binary-origin>
+                <runtime-relative-path>ext/maven/lucene-backward-codecs-9.9.1.jar</runtime-relative-path>
+                <binary-origin>external/lucene-backward-codecs-9.9.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/lucene-highlighter-9.9.1.jar</runtime-relative-path>
+                <binary-origin>external/lucene-highlighter-9.9.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/lucene-queryparser-9.9.1.jar</runtime-relative-path>
+                <binary-origin>external/lucene-queryparser-9.9.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/lucene-analysis-common-9.9.1.jar</runtime-relative-path>
+                <binary-origin>external/lucene-analysis-common-9.9.1.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/maven/javax.annotation-api-1.2.jar</runtime-relative-path>
                 <binary-origin>external/javax.annotation-api-1.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/maven/gson-2.10.1.jar</runtime-relative-path>
+                <binary-origin>external/gson-2.10.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

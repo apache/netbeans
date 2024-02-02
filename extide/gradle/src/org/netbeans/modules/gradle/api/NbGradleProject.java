@@ -47,7 +47,9 @@ import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.Utilities;
+import org.openide.util.lookup.Lookups;
 
 /**
  * Facade object for NetBeans Gradle project internals, with some convenience
@@ -68,7 +70,7 @@ public final class NbGradleProject {
      * E.g. If we just need to know if the project is a Gradle project, there
      * is no need to go and fetch all the dependencies.
      * <p>
-     * <img src="doc-files/gradle-quality.png" alt="Quality States"/>
+     * <img src="doc-files/gradle-quality.png" alt="Quality States">
      * </p>
      * <p>
      * Gradle project is associated with the quality of the
@@ -182,8 +184,9 @@ public final class NbGradleProject {
         }
 
         @Override
-        public GradleReport createReport(String errorClass, String location, int line, String message, GradleReport causedBy) {
-            return new GradleReport(errorClass, location, line, message, causedBy);
+        public GradleReport createReport(GradleReport.Severity severity, String errorClass, String location, int line, String message, 
+                GradleReport causedBy, String[] traceLines) {
+            return new GradleReport(severity, errorClass, location, line, message, causedBy, traceLines);
         }
 
         @Override
@@ -202,7 +205,32 @@ public final class NbGradleProject {
     public <T> T projectLookup(Class<T> clazz) {
         return project.getGradleProject().getLookup().lookup(clazz);
     }
-
+    
+    private transient volatile Lookup lookupProxy;
+    
+    /**
+     * Returns a Lookup that tracks potential project reloads. Always delegates to the latest
+     * loaded model and project Lookup adjusted for applied plugins etc. 
+     * <p>
+     * Use this Lookup in preference to {@link #projectLookup}, if you need to adapt for changes
+     * e.g. after script reload.
+     * 
+     * @return Lookup instance.
+     * @since 2.28
+     */
+    public Lookup refreshableProjectLookup() {
+        Lookup l = lookupProxy;
+        if (l != null) {
+            return l;
+        }
+        synchronized (this) {
+            if (lookupProxy != null) {
+                return lookupProxy;
+            }
+            return lookupProxy = Lookups.proxy(() -> project.getGradleProject().getLookup());
+        }
+    }
+    
     /**
      * Return the actual Quality information on the currently loaded Project.
      *
@@ -235,9 +263,9 @@ public final class NbGradleProject {
      * the current {@link #getQuality()} level. Reason for the reload may be specified: if the reload
      * takes some time (i.e. executing Gradle build), the IDE may use the {@code reason} text to annotate
      * the ongoing progress.
-     * <p/>
+     * <p>
      * The returned {@link CompletionStage} may complete in this thread, or asynchronously in an unspecified thread.
-     * <p/>
+     * <p>
      * Note that the loading may fail, so the returned Quality may be <b>less than requested</b>. For example
      * if the project is not trusted, its Gradle build will not be executed, so the returned quality can be {@link Quality#EVALUATED}.
      * 
@@ -369,7 +397,7 @@ public final class NbGradleProject {
      * @param l
      */
     public static void addPropertyChangeListener(Project project, PropertyChangeListener l) {
-        if (project != null && project instanceof NbGradleProjectImpl) {
+        if (project instanceof NbGradleProjectImpl) {
             ((NbGradleProjectImpl) project).getProjectWatcher().addPropertyChangeListener(l);
         } else {
             assert false : "Attempted to add PropertyChangeListener to project " + project; //NOI18N
@@ -383,7 +411,7 @@ public final class NbGradleProject {
      * @param l
      */
     public static void removePropertyChangeListener(Project project, PropertyChangeListener l) {
-        if (project != null && project instanceof NbGradleProjectImpl) {
+        if (project instanceof NbGradleProjectImpl) {
             ((NbGradleProjectImpl) project).getProjectWatcher().removePropertyChangeListener(l);
         } else {
             assert false : "Attempted to remove PropertyChangeListener to project " + project; //NOI18N

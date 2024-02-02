@@ -1,0 +1,3447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:jakartaee="https://jakarta.ee/xml/ns/jakartaee"
+            attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="https://jakarta.ee/xml/ns/jakartaee"
+            version="4.0"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:include schemaLocation="jakartaee_10.xsd"/>
+
+  <xsd:annotation>
+    <xsd:documentation>
+
+      Copyright (c) 2009, 2021 Oracle and/or its affiliates. All rights reserved.
+
+      This program and the accompanying materials are made available under the
+      terms of the Eclipse Public License v. 2.0, which is available at
+      http://www.eclipse.org/legal/epl-2.0.
+
+      This Source Code may also be made available under the following Secondary
+      Licenses when the conditions for such availability set forth in the
+      Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+      version 2 with the GNU Classpath Exception, which is available at
+      https://www.gnu.org/software/classpath/license.html.
+
+      SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:annotation>
+    <xsd:documentation>
+      <![CDATA[
+      <p>The XML Schema for the Jakarta Faces Application
+      Configuration File (Version 4.0).</p>
+
+      <p>All Jakarta Faces configuration files must indicate
+      the Jakarta Faces schema by indicating the
+      Jakarta Faces namespace:</p>
+
+      <p>https://jakarta.ee/xml/ns/jakartaee</p>
+
+      <p>and by indicating the version of the schema by
+      using the version element as shown below:</p>
+
+      <pre>&lt;faces-config xmlns="https://jakarta.ee/xml/ns/jakartaee"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="..."
+      version="4.0"&gt;
+      ...
+      &lt;/faces-config&gt;</pre>
+
+      <p>The instance documents may indicate the published
+      version of the schema using xsi:schemaLocation attribute
+      for jakartaee namespace with the following location:</p>
+
+      <p>https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd</p>
+
+      ]]>
+    </xsd:documentation>
+  </xsd:annotation>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:element name="faces-config"
+               type="jakartaee:faces-configType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p>The "faces-config" element is the root of the configuration
+        information hierarchy, and contains nested elements for all
+        of the other configuration settings.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:unique name="faces-config-behavior-ID-uniqueness">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[
+          <p>Behavior IDs must be unique within a document.</p>
+
+          ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:selector xpath="jakartaee:behavior"/>
+      <xsd:field xpath="jakartaee:behavior-id"/>
+    </xsd:unique>
+    <xsd:unique name="faces-config-converter-ID-uniqueness">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[
+          <p>Converter IDs must be unique within a document.</p>
+
+          ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:selector xpath="jakartaee:converter"/>
+      <xsd:field xpath="jakartaee:converter-id"/>
+    </xsd:unique>
+    <xsd:unique name="faces-config-converter-for-class-uniqueness">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[
+          <p>'converter-for-class' element values must be unique
+          within a document.</p>
+
+          ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:selector xpath="jakartaee:converter"/>
+      <xsd:field xpath="jakartaee:converter-for-class"/>
+    </xsd:unique>
+    <xsd:unique name="faces-config-validator-ID-uniqueness">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[
+          <p> Validator IDs must be unique within a document.</p>
+
+          ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:selector xpath="jakartaee:validator"/>
+      <xsd:field xpath="jakartaee:validator-id"/>
+    </xsd:unique>
+  </xsd:element>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-configType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "faces-config" element is the root of the configuration
+        information hierarchy, and contains nested elements for all
+        of the other configuration settings.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0"
+                maxOccurs="unbounded">
+      <xsd:element name="application"
+                   type="jakartaee:faces-config-applicationType"/>
+      <xsd:element name="ordering"
+                   type="jakartaee:faces-config-orderingType"/>
+      <xsd:element name="absolute-ordering"
+                   type="jakartaee:faces-config-absoluteOrderingType"
+                   minOccurs="0"/>
+      <xsd:element name="factory"
+                   type="jakartaee:faces-config-factoryType"/>
+      <xsd:element name="component"
+                   type="jakartaee:faces-config-componentType"/>
+      <xsd:element name="converter"
+                   type="jakartaee:faces-config-converterType"/>
+      <xsd:element name="flow-definition"
+                   type="jakartaee:faces-config-flow-definitionType"/>
+      <xsd:element name="name"
+                   type="jakartaee:java-identifierType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> <span class="changed_modified_2_2">The</span> "name" element
+            within the top level "faces-config"
+            element declares the name of this application
+            configuration resource.  Such names are used
+            in the document ordering scheme specified in section
+            11.3.8 "Ordering of Artifacts" of the Jakarta Faces Specification Document.</p>
+
+            <p class="changed_added_2_2">This value is taken to be the
+            defining document id of any &lt;flow-definition&gt; elements
+            defined in this Application Configuration Resource file.  If this
+            element is not specified, the runtime must take the empty string
+            as its value.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="navigation-rule"
+                   type="jakartaee:faces-config-navigation-ruleType"/>
+      <xsd:element name="protected-views"
+                   type="jakartaee:faces-config-protected-viewsType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="referenced-bean"
+                   type="jakartaee:faces-config-referenced-beanType"/>
+      <xsd:element name="render-kit"
+                   type="jakartaee:faces-config-render-kitType"/>
+      <xsd:element name="lifecycle"
+                   type="jakartaee:faces-config-lifecycleType"/>
+      <xsd:element name="validator"
+                   type="jakartaee:faces-config-validatorType"/>
+      <xsd:element name="behavior"
+                   type="jakartaee:faces-config-behaviorType"/>
+      <xsd:element name="faces-config-extension"
+                   type="jakartaee:faces-config-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:choice>
+    <xsd:attribute name="metadata-complete"
+                   type="xsd:boolean"
+                   use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+
+          The metadata-complete attribute defines whether this
+          Faces application is complete, or whether
+          the class files available to this module and packaged with
+          this application should be examined for annotations
+          that specify configuration information.
+
+          This attribute is only inspected on the application
+          configuration resource file located at "WEB-INF/faces-config.xml".
+          The presence of this attribute on any application configuration
+          resource other than the one located at "WEB-INF/faces-config.xml",
+          including any files named using the jakarta.faces.CONFIG_FILES
+          attribute, must be ignored.
+
+          If metadata-complete is set to "true", the Faces
+          runtime must ignore any annotations that specify configuration
+          information, which might be present in the class files
+          of the application.
+
+          If metadata-complete is not specified or is set to
+          "false", the Faces runtime must examine the class
+          files of the application for annotations, as specified by
+          the specification.
+
+          If "WEB-INF/faces-config.xml" is not present, the
+          Faces runtime will assume metadata-complete to be "false".
+
+          The value of this attribute will have no impact on
+          runtime annotations such as @ResourceDependency or
+          @ListenerFor.
+
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+    <xsd:attribute name="version"
+                   type="jakartaee:faces-config-versionType"
+                   use="required"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for faces-config.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-orderingType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Please see section
+        11.3.8 "Ordering of Artifacts" of the Jakarta Faces Specification Document
+        for the specification of this element.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="after"
+                   type="jakartaee:faces-config-ordering-orderingType"
+                   minOccurs="0"/>
+      <xsd:element name="before"
+                   type="jakartaee:faces-config-ordering-orderingType"
+                   minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-ordering-orderingType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> This element contains a sequence of "id" elements, each of which
+        refers to an application configuration resource by the "id"
+        declared on its faces-config element.  This element can also contain
+        a single "others" element which specifies that this document comes
+        before or after other documents within the application.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name"
+                   type="jakartaee:java-identifierType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="others"
+                   type="jakartaee:faces-config-ordering-othersType"
+                   minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-ordering-othersType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> This element indicates that the ordering sub-element in which
+        it was placed should take special action regarding the ordering
+        of this application resource relative to other
+        application configuration resources.
+        See section 11.3.8 "Ordering of Artifacts" of the Jakarta Faces Specification Document
+        for the complete specification.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-absoluteOrderingType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Only relevant if this is placed within the /WEB-INF/faces-config.xml.
+        Please see
+        section 11.3.8 "Ordering of Artifacts" of the Jakarta Faces Specification Document
+        for the specification for details.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0"
+                maxOccurs="unbounded">
+      <xsd:element name="name"
+                   type="jakartaee:java-identifierType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="others"
+                   type="jakartaee:faces-config-ordering-othersType"
+                   minOccurs="0"/>
+    </xsd:choice>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-applicationType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "application" element provides a mechanism to define the
+        various per-application-singleton implementation artifacts for
+        a particular web application that is utilizing
+        Jakarta Faces.  For nested elements that are not specified,
+        the Jakarta Faces implementation must provide a suitable
+        default.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0"
+                maxOccurs="unbounded">
+      <xsd:element name="action-listener"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "action-listener" element contains the fully
+            qualified class name of the concrete
+            ActionListener implementation class that will be
+            called during the Invoke Application phase of the
+            request processing lifecycle.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="default-render-kit-id"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "default-render-kit-id" element allows the
+            application to define a renderkit to be used other
+            than the standard one.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="message-bundle"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The base name of a resource bundle representing
+            the message resources for this application.  See
+            the JavaDocs for the "java.util.ResourceBundle"
+            class for more information on the syntax of
+            resource bundle names.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="navigation-handler"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "navigation-handler" element contains the
+            fully qualified class name of the concrete
+            NavigationHandler implementation class that will
+            be called during the Invoke Application phase
+            of the request processing lifecycle, if the
+            default ActionListener (provided by the Jakarta Faces
+            implementation) is used.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="view-handler"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "view-handler" element contains the fully
+            qualified class name of the concrete ViewHandler
+            implementation class that will be called during
+            the Restore View and Render Response phases of the
+            request processing lifecycle.  The faces
+            implementation must provide a default
+            implementation of this class.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="state-manager"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "state-manager" element contains the fully
+            qualified class name of the concrete StateManager
+            implementation class that will be called during
+            the Restore View and Render Response phases of the
+            request processing lifecycle.  The faces
+            implementation must provide a default
+            implementation of this class.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="el-resolver"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "el-resolver" element contains the fully
+            qualified class name of the concrete
+            jakarta.el.ELResolver implementation class
+            that will be used during the processing of
+            EL expressions.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="resource-handler"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "resource-handler" element contains the
+            fully qualified class name of the concrete
+            ResourceHandler implementation class that
+            will be used during rendering and decoding
+            of resource requests The standard
+            constructor based decorator pattern used for
+            other application singletons will be
+            honored.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="resource-library-contracts"
+                   type="jakartaee:faces-config-application-resource-library-contractsType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">The "resource-library-contracts" element
+            specifies the mappings between views in the application and resource
+            library contracts that, if present in the application, must be made
+            available for use as templates of the specified views.
+            </p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="search-expression-handler"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_3">The "search-expression-handler"
+            element contains the fully qualified class name of the
+            concrete jakarta.faces.component.search.SearchExpressionHandler
+            implementation class that will be used for processing of a
+            search expression.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="search-keyword-resolver"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_3"> The "search-keyword-resolver"
+            element contains the fully qualified class name of the
+            concrete jakarta.faces.component.search.SearchKeywordResolver
+            implementation class that will be used during the processing
+            of a search expression keyword.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="system-event-listener"
+                   type="jakartaee:faces-config-system-event-listenerType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="locale-config"
+                   type="jakartaee:faces-config-locale-configType"/>
+      <xsd:element name="resource-bundle"
+                   type="jakartaee:faces-config-application-resource-bundleType"/>
+      <xsd:element name="application-extension"
+                   type="jakartaee:faces-config-application-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="default-validators"
+                   type="jakartaee:faces-config-default-validatorsType"/>
+    </xsd:choice>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-application-resource-bundleType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The resource-bundle element inside the application element
+        references a java.util.ResourceBundle instance by name
+        using the var element.  ResourceBundles referenced in this
+        manner may be returned by a call to
+        Application.getResourceBundle() passing the current
+        FacesContext for this request and the value of the var
+        element below.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="base-name"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The fully qualified class name of the
+            java.util.ResourceBundle instance.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="var"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The name by which this ResourceBundle instance
+            is retrieved by a call to
+            Application.getResourceBundle().</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-application-resource-library-contractsType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">The "resource-library-contracts" element
+        specifies the mappings between views in the application and resource
+        library contracts that, if present in the application, must be made
+        available for use as templates of the specified views.
+        </p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="contract-mapping"
+                   type="jakartaee:faces-config-application-resource-library-contracts-contract-mappingType"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p classes="changed_added_2_2">Declare a mapping between a collection
+            of views in the application and the list of contracts (if present in the application)
+            that may be used as a source for templates and resources for those views.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-application-resource-library-contracts-contract-mappingType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">The "contract-mapping" element
+        specifies the mappings between a collection of views in the application and resource
+        library contracts that, if present in the application, must be made
+        available for use as templates of the specified views.
+        </p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="url-pattern"
+                   type="jakartaee:url-patternType"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">The "url-pattern" element
+            specifies the collection of views in this application that
+            are allowed to use the corresponding contracts.
+            </p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="contracts"
+                   type="jakartaee:string"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">The "contracts" element
+            is a comma separated list of resource library contracts that,
+            if available to the application, may be used by the views
+            matched by the corresponding "url-pattern"
+            </p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-application-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for application.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-factoryType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "factory" element provides a mechanism to define the
+        various Factories that comprise parts of the implementation
+        of Jakarta Faces.  For nested elements that are not
+        specified, the Jakarta Faces implementation must provide a
+        suitable default.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0"
+                maxOccurs="unbounded">
+      <xsd:element name="application-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "application-factory" element contains the
+            fully qualified class name of the concrete
+            ApplicationFactory implementation class that will
+            be called when
+            FactoryFinder.getFactory(APPLICATION_FACTORY) is
+            called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="exception-handler-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "exception-handler-factory" element contains the
+            fully qualified class name of the concrete
+            ExceptionHandlerFactory implementation class that will
+            be called when
+            FactoryFinder.getFactory(EXCEPTION_HANDLER_FACTORY)
+            is called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="external-context-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "external-context-factory" element contains the
+            fully qualified class name of the concrete
+            ExternalContextFactory implementation class that will
+            be called when
+            FactoryFinder.getFactory(EXTERNAL_CONTEXT_FACTORY)
+            is called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="faces-context-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "faces-context-factory" element contains the
+            fully qualified class name of the concrete
+            FacesContextFactory implementation class that will
+            be called when
+            FactoryFinder.getFactory(FACES_CONTEXT_FACTORY)
+            is called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="facelet-cache-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "facelet-cache-factory" element contains the
+            fully qualified class name of the concrete
+            FaceletCacheFactory implementation class that will
+            be called when
+            FactoryFinder.getFactory(FACELET_CACHE_FACTORY)
+            is called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="partial-view-context-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "partial-view-context-factory" element contains the
+            fully qualified class name of the concrete
+            PartialViewContextFactory implementation class that will
+            be called when FactoryFinder.getFactory
+            (FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY) is called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="lifecycle-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "lifecycle-factory" element contains the fully
+            qualified class name of the concrete LifecycleFactory
+            implementation class that will be called when
+            FactoryFinder.getFactory(LIFECYCLE_FACTORY) is called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="view-declaration-language-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "view-declaration-language-factory" element contains
+            the fully qualified class name of the concrete
+            ViewDeclarationLanguageFactory
+            implementation class that will be called when
+            FactoryFinder.getFactory(VIEW_DECLARATION_FACTORY) is called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="tag-handler-delegate-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "tag-handler-delegate-factory" element contains
+            the fully qualified class name of the concrete
+            ViewDeclarationLanguageFactory
+            implementation class that will be called when
+            FactoryFinder.getFactory(TAG_HANDLER_DELEGATE_FACTORY) is called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="render-kit-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "render-kit-factory" element contains the fully
+            qualified class name of the concrete RenderKitFactory
+            implementation class that will be called when
+            FactoryFinder.getFactory(RENDER_KIT_FACTORY) is
+            called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="visit-context-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "visit-context-factory" element contains the fully
+            qualified class name of the concrete VisitContextFactory
+            implementation class that will be called when
+            FactoryFinder.getFactory(VISIT_CONTEXT_FACTORY) is
+            called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="flash-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2"> The "flash-factory" element contains the
+            fully qualified class name of the concrete
+            FaceletFactory implementation class that will
+            be called when
+            FactoryFinder.getFactory(FLASH_FACTORY) is
+            called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="flow-handler-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "flow-handler-factory" element contains the
+            fully qualified class name of the concrete
+            FlowHandlerFactory implementation class that will
+            be called when
+            FactoryFinder.getFactory(FLOW_HANDLER_FACTORY) is
+            called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="client-window-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_3"> The "client-window-factory" element contains the fully
+            qualified class name of the concrete ClientWindowFactory implementation class that
+            will be called when FactoryFinder.getFactory(CLIENT_WINDOW_FACTORY) is called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="search-expression-context-factory"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_3"> The
+            "search-expression-context-factory" element contains the
+            fully qualified class name of the concrete
+            SearchExpressionContextFactory implementation class that will
+            be called when
+            FactoryFinder.getFactory(SEARCH_EXPRESSION_CONTEXT_FACTORY)
+            is called.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="factory-extension"
+                   type="jakartaee:faces-config-factory-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:choice>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-factory-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for factory.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-attributeType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "attribute" element represents a named, typed, value
+        associated with the parent UIComponent via the generic
+        attributes mechanism.</p>
+
+        <p>Attribute names must be unique within the scope of the parent
+        (or related) component.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="attribute-name"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "attribute-name" element represents the name under
+            which the corresponding value will be stored, in the
+            generic attributes of the UIComponent we are related
+            to.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="attribute-class"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "attribute-class" element represents the Java type
+            of the value associated with this attribute name.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="default-value"
+                   type="jakartaee:faces-config-default-valueType"
+                   minOccurs="0"/>
+      <xsd:element name="suggested-value"
+                   type="jakartaee:faces-config-suggested-valueType"
+                   minOccurs="0"/>
+      <xsd:element name="attribute-extension"
+                   type="jakartaee:faces-config-attribute-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-attribute-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for attribute.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-componentType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "component" element represents a concrete UIComponent
+        implementation class that should be registered under the
+        specified type identifier, along with its associated
+        properties and attributes.  Component types must be unique
+        within the entire web application.</p>
+
+        <p>Nested "attribute" elements identify generic attributes that
+        are recognized by the implementation logic of this component.
+        Nested "property" elements identify JavaBeans properties of
+        the component class that may be exposed for manipulation
+        via tools.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="component-type"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "component-type" element represents the name under
+            which the corresponding UIComponent class should be
+            registered.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="component-class"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "component-class" element represents the fully
+            qualified class name of a concrete UIComponent
+            implementation class.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="facet"
+                   type="jakartaee:faces-config-facetType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="attribute"
+                   type="jakartaee:faces-config-attributeType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="property"
+                   type="jakartaee:faces-config-propertyType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="component-extension"
+                   type="jakartaee:faces-config-component-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-component-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for component.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-default-localeType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "default-locale" element declares the default locale
+        for this application instance.</p>
+
+        <p class="modified_added_2_3">
+        To facilitate BCP 47 this element first needs to be parsed by the
+        Locale.forLanguageTag method. If it does not return a Locale with
+        a language the old specification below needs to take effect.
+        </p>
+
+        <p>It must be specified as :language:[_:country:[_:variant:]]
+        without the colons, for example "ja_JP_SJIS".  The
+        separators between the segments may be '-' or '_'.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="jakartaee:faces-config-localeType">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-default-valueType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "default-value" contains the value for the property or
+        attribute in which this element resides.  This value differs
+        from the "suggested-value" in that the property or attribute
+        must take the value, whereas in "suggested-value" taking the
+        value is optional.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="jakartaee:string">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:simpleType name="faces-config-el-expressionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> EL expressions present within a faces config file
+        must start with the character sequence of '#{' and
+        end with '}'.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="#\{.*\}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-facetType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Define the name and other design-time information for a facet
+        that is associated with a renderer or a component.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="facet-name"
+                   type="jakartaee:java-identifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "facet-name" element represents the facet name
+            under which a UIComponent will be added to its parent.
+            It must be of type "Identifier".</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="facet-extension"
+                   type="jakartaee:faces-config-facet-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-facet-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for facet.  It may contain implementation
+        specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-from-view-idType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p><span class="changed_modified_2_2">The</span>
+        value of from-view-id must contain one of the following
+        values:</p>
+
+        <ul>
+
+        <li><p>The exact match for a view identifier that is recognized
+        by the the ViewHandler implementation being used (such as
+        "/index.jsp" if you are using the default ViewHandler).</p></li>
+
+        <li><p class="changed_added_2_2">The exact match of a flow node id
+        in the current flow, or a flow id of another flow.</p></li>
+
+        <li><p> A proper prefix of a view identifier, plus a trailing
+        "*" character.  This pattern indicates that all view
+        identifiers that match the portion of the pattern up to the
+        asterisk will match the surrounding rule.  When more than one
+        match exists, the match with the longest pattern is selected.
+        </p></li>
+
+        <li><p>An "*" character, which means that this pattern applies
+        to all view identifiers.  </p></li>
+
+        </ul>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="jakartaee:string">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:restriction>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-from-actionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "from-action" element contains an action reference
+        expression that must have been executed (by the default
+        ActionListener for handling application level events)
+        in order to select the navigation rule.  If not specified,
+        this rule will be relevant no matter which action reference
+        was executed (or if no action reference was executed).</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="jakartaee:faces-config-el-expressionType">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-ifType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p>The "if" element defines a condition that must resolve
+        to true in order for the navigation case on which it is
+        defined to be matched, with the existing match criteria
+        (action method and outcome) as a prerequiste, if present.
+        The condition is defined declaratively using a value
+        expression in the body of this element. The expression is
+        evaluated at the time the navigation case is being matched.
+        If the "from-outcome" is omitted and this element is
+        present, the navigation handler will match a null outcome
+        and use the condition return value to determine if the
+        case should be considered a match.</p>
+
+        <div class="changed_added_2_2">
+
+        <p>When used in a <code>&lt;switch&gt;</code> within a flow, if the
+        expresion returns <code>true</code>, the
+        <code>&lt;from-outcome&gt;</code> sibling element's outcome is used as
+        the id of the node in the flow graph to which control must be
+        passed.</p>
+
+        </div>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="jakartaee:faces-config-el-expressionType">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-parameter-valueType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2"></p>
+
+        <div class="changed_added_2_2">
+
+        </div>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="jakartaee:faces-config-el-expressionType">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-converterType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "converter" element represents a concrete Converter
+        implementation class that should be registered under the
+        specified converter identifier.  Converter identifiers must
+        be unique within the entire web application.</p>
+
+        <p>Nested "attribute" elements identify generic attributes that
+        may be configured on the corresponding UIComponent in order
+        to affect the operation of the Converter.  Nested "property"
+        elements identify JavaBeans properties of the Converter
+        implementation class that may be configured to affect the
+        operation of the Converter.  "attribute" and "property"
+        elements are intended to allow component developers to
+        more completely describe their components to tools and users.
+        These elements have no required runtime semantics.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:choice>
+        <xsd:element name="converter-id"
+                     type="jakartaee:string">
+          <xsd:annotation>
+            <xsd:documentation>
+              <![CDATA[
+              <p> The "converter-id" element represents the
+              identifier under which the corresponding
+              Converter class should be registered.</p>
+
+              ]]>
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="converter-for-class"
+                     type="jakartaee:fully-qualified-classType">
+          <xsd:annotation>
+            <xsd:documentation>
+              <![CDATA[
+              <p> The "converter-for-class" element represents the
+              fully qualified class name for which a Converter
+              class will be registered.</p>
+
+              ]]>
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+      <xsd:element name="converter-class"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "converter-class" element represents the fully
+            qualified class name of a concrete Converter
+            implementation class.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="attribute"
+                   type="jakartaee:faces-config-attributeType"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> Nested "attribute" elements identify generic
+            attributes that may be configured on the
+            corresponding UIComponent in order to affect the
+            operation of the Converter.  This attribute is
+            primarily for design-time tools and is not
+            specified to have any meaning at runtime.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="property"
+                   type="jakartaee:faces-config-propertyType"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> Nested "property" elements identify JavaBeans
+            properties of the Converter implementation class
+            that may be configured to affect the operation of
+            the Converter.  This attribute is primarily for
+            design-time tools and is not specified to have
+            any meaning at runtime.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="converter-extension"
+                   type="jakartaee:faces-config-converter-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-converter-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for converter.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-lifecycleType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "lifecycle" element provides a mechanism to specify
+        modifications to the behaviour of the default Lifecycle
+        implementation for this web application.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="phase-listener"
+                   type="jakartaee:fully-qualified-classType"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "phase-listener" element contains the fully
+            qualified class name of the concrete PhaseListener
+            implementation class that will be registered on
+            the Lifecycle.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="lifecycle-extension"
+                   type="jakartaee:faces-config-lifecycle-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-lifecycle-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for lifecycle.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+  <xsd:simpleType name="faces-config-localeType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The localeType defines valid locale defined by ISO-639-1
+        and ISO-3166.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([a-z]{2})[_|\-]?([\p{L}]{2})?[_|\-]?(\w+)?"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-locale-configType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "locale-config" element allows the app developer to
+        declare the supported locales for this application.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="default-locale"
+                   type="jakartaee:faces-config-default-localeType"
+                   minOccurs="0"/>
+      <xsd:element name="supported-locale"
+                   type="jakartaee:faces-config-supported-localeType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-default-validatorsType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "default-validators" element allows the app developer to
+        register a set of validators, referenced by identifier, that
+        are automatically assigned to any EditableValueHolder component
+        in the application, unless overridden or disabled locally.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="validator-id"
+                   type="jakartaee:string"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "validator-id" element represents the identifier
+            of a registered validator.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definitionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">Top level element for a flow
+        definition.</p>
+
+        <div class="changed_added_2_2">
+
+        <p>If there is no <code>&lt;start-node&gt;</code> element declared, it
+        is assumed to be <code>&lt;flowName&gt;.xhtml</code>.</p>
+
+        </div>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="start-node"
+                   type="jakartaee:java-identifierType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">Declare the id of the starting node in the
+            flow graph.  The start node may be any of the node types mentioned in
+            the class javadocs for <code><a target="_"
+            href="jakarta/faces/flow/FlowHandler.html">FlowHandler</a></code>.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="view"
+                   type="jakartaee:faces-config-flow-definition-viewType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="switch"
+                   type="jakartaee:faces-config-flow-definition-switchType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="flow-return"
+                   type="jakartaee:faces-config-flow-definition-flow-returnType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="navigation-rule"
+                   type="jakartaee:faces-config-navigation-ruleType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="flow-call"
+                   type="jakartaee:faces-config-flow-definition-flow-callType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="method-call"
+                   type="jakartaee:faces-config-flow-definition-faces-method-callType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="initializer"
+                   type="jakartaee:faces-config-flow-definition-initializerType"
+                   minOccurs="0"/>
+      <xsd:element name="finalizer"
+                   type="jakartaee:faces-config-flow-definition-finalizerType"
+                   minOccurs="0"/>
+      <xsd:element name="inbound-parameter"
+                   type="jakartaee:faces-config-flow-definition-inbound-parameterType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"
+                   use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[
+          <p class="changed_added_2_2">The id of this flow.  The id
+          must be unique within the Application configuration Resource
+          file in which this flow is defined.  The value of this attribute,
+          combined with the value of the &lt;faces-config&gt;&lt;name&gt; element
+          must globally identify the flow within the application.<p>
+
+          ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-faces-method-callType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">Invoke a method, passing parameters if necessary.
+        The return from the method is used as the outcome for where to go next in the
+        flow.  If the method is a void method, the default outcome is used.<p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="method"
+                   type="jakartaee:faces-config-flow-definition-faces-method-call-methodType"/>
+      <xsd:element name="default-outcome"
+                   type="jakartaee:string"/>
+      <xsd:element name="parameter"
+                   type="jakartaee:faces-config-flow-definition-flow-call-parameterType"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">A parameter to pass when calling the method
+            identified in the "method" element that is a sibling of this element.<p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-faces-method-call-methodType">
+    <xsd:simpleContent>
+      <xsd:extension base="jakartaee:faces-config-el-expressionType">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-flow-call-parameterType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">A parameter to pass when calling the method
+        identified in the "method" element that is a sibling of this element.<p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="class"
+                   type="jakartaee:string"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2"> The optional "class" element within a "parameter" element
+            will be interpreted as the fully qualified class name for the type
+            of the "value" element.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="value"
+                   type="jakartaee:faces-config-flow-definition-parameter-valueType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2"> The "value" element within an "parameter"
+            must be a literal string or an EL Expression whose "get" will be called when the "method"
+            associated with this element is invoked.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-viewType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">Define a view node in a flow graph.</p>
+
+        <p>This element must contain exactly one
+        <code>&lt;vdl-document&gt;</code> element.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="vdl-document"
+                   type="jakartaee:pathType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2 changed_modified_2_3">
+            Define the path to the vdl-document for the enclosing view.
+            <p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"
+                   use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[
+          <p class="changed_added_2_2">The id of this view.  It must be
+          unique within the flow.</p>
+
+          ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-switchType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">Define a switch node in a flow graph.</p>
+
+        <div class="changed_added_2_2">
+
+        <p>This element must contain one or more
+        <code>&lt;case&gt;</code> elements.  When control passes to the
+        <code>&lt;switch&gt;</code> node, each of the cases must be considered
+        in order and control must past to the <code>&lt;from-outcome&gt;</code>
+        of the first one whose <code>&lt;if&gt;</code> expression evaluates to
+        <code>true</code>.</p>
+
+        </div>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="case"
+                   type="jakartaee:faces-config-flow-definition-switch-caseType"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">Defines a case that must be
+            considered in the list of cases in the
+            <code>&lt;switch&gt;</code>.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="default-outcome"
+                   type="jakartaee:string"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">Defines the default case that will
+            be taken if none of the other cases in the
+            <code>&lt;switch&gt;</code> are taken.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"
+                   use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[
+          <p class="changed_added_2_2">The id of this switch.  It must be
+          unique within the flow.</p>
+
+          ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-switch-caseType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">Defines a case that will
+        be considered in the <code>&lt;switch&gt;</code>.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="if"
+                   type="jakartaee:faces-config-ifType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">If this EL expression evaluates to
+            <code>true</code>, the corresponding <code>from-outcome</code> will
+            be the outcome taken by the enclosing <code>&lt;switch&gt;</code></p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="from-outcome"
+                   type="jakartaee:string"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p>The "from-outcome" element contains a logical outcome
+            string returned by the execution of an application
+            action method selected via an "actionRef" property
+            (or a literal value specified by an "action" property)
+            of a UICommand component.  If specified, this rule
+            will be relevant only if the outcome value matches
+            this element's value.  If not specified, this rule
+            will be relevant if the outcome value is non-null
+            or, if the "if" element is present, will be relevant
+            for any outcome value, with the assumption that the
+            condition specified in the "if" element ultimately
+            determines if this rule is a match.</p>
+
+            <p class="changed_added_2_2">If used in a faces flow, this element
+            represents the node id to which control will be passed.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID">
+    </xsd:attribute>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-flow-returnType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">Define a return node in a flow graph.</p>
+
+        <div class="changed_added_2_2">
+
+        <p>This element must contain exactly one <code>&lt;from-outcome&gt;</code> element.</p>
+        </div>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="from-outcome"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">This element
+            represents the node id to which control will be passed.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"
+                   use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[
+          <p class="changed_added_2_2">The id of this flow-return.</p>
+
+          ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-flow-callType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">Define a call node in a flow graph.</p>
+
+        <div class="changed_added_2_2">
+
+        <p>This element must contain exactly one <code>&lt;flow-reference&gt;</code> element,
+        which must contain exactly one <code>&lt;flow-id&gt;</code> element.</p>
+        </div>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="flow-reference"
+                   type="jakartaee:faces-config-flow-definition-flow-call-flow-referenceType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">The flow id of the called flow.<p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="outbound-parameter"
+                   type="jakartaee:faces-config-flow-definition-flow-call-outbound-parameterType"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">A parameter to pass when calling the flow
+            identified in the "flow-reference" element that is a sibling of this element.<p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"
+                   use="required">
+      <xsd:annotation>
+        <xsd:documentation>
+          <![CDATA[
+          <p class="changed_added_2_2">The id of this flow-return.</p>
+
+          ]]>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-flow-call-flow-referenceType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">Identifiy the called flow.</p>
+
+        <div class="changed_added_2_2">
+
+        </div>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="flow-document-id"
+                   type="jakartaee:java-identifierType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p>The document id of the called flow.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="flow-id"
+                   type="jakartaee:java-identifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p>The id of the called flow.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-initializerType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">A <code>MethodExpression</code> that will be invoked when the flow is entered.<p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="jakartaee:faces-config-el-expressionType">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-finalizerType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">A <code>MethodExpression</code> that will be invoked when the flow is exited.<p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="jakartaee:faces-config-el-expressionType">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-inbound-parameterType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">A named parameter whose value will be populated
+        with a correspondingly named parameter within an "outbound-parameter" element.<p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name"
+                   type="jakartaee:java-identifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2"> The "name" element within an "inbound-parameter"
+            element declares the name of this parameter
+            to be passed into a flow.  There must be
+            a sibling "value" element in the same parent as this element.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="value"
+                   type="jakartaee:faces-config-flow-definition-parameter-valueType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2"> The "value" element within an "inbound-parameter"
+            must be an EL Expression whose value will be set with the correspondingly
+            named "outbound-parameter" when this flow is entered, if such a
+            parameter exists.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-flow-definition-flow-call-outbound-parameterType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">A named parameter whose value will be
+        passed to a correspondingly named parameter within an "inbound-parameter" element
+        on the target flow.<p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name"
+                   type="jakartaee:java-identifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2"> The "name" element within an "outbound-parameter" element
+            declares the name of this parameter to be passed out of a flow.  There must be
+            a sibling "value" element in the same parent as this element.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="value"
+                   type="jakartaee:faces-config-flow-definition-parameter-valueType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2"> The "value" element within an "outbound-parameter"
+            must be a literal string or an EL Expression whose "get" will be called when the "flow-call"
+            containing this element is traversed to go to a new flow.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-navigation-caseType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> <span class="changed_modified_2_2">The</span>
+        "navigation-case" element describes a particular
+        combination of conditions that must match for this case to
+        be executed, and the view id of the component tree that
+        should be selected next.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="from-action"
+                   type="jakartaee:faces-config-from-actionType"
+                   minOccurs="0"/>
+      <xsd:element name="from-outcome"
+                   type="jakartaee:string"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p>The "from-outcome" element contains a logical outcome
+            string returned by the execution of an application
+            action method selected via an "actionRef" property
+            (or a literal value specified by an "action" property)
+            of a UICommand component.  If specified, this rule
+            will be relevant only if the outcome value matches
+            this element's value.  If not specified, this rule
+            will be relevant if the outcome value is non-null
+            or, if the "if" element is present, will be relevant
+            for any outcome value, with the assumption that the
+            condition specified in the "if" element ultimately
+            determines if this rule is a match.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="if"
+                   type="jakartaee:faces-config-ifType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> Please see section 7.4.2 "Default NavigationHandler Algorithm" of the Jakarta Faces Specification Document
+            for the specification of this element.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="to-view-id"
+                   type="jakartaee:faces-config-valueType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p><span class="changed_modified_2_2">The "to-view-id" element
+            contains the view identifier (<span class="changed_added_2_2">or
+            flow node id, or flow id</span>)
+            of the next view (<span class="changed_added_2_2">or flow node or
+            flow</span>) that should be displayed if this
+            navigation rule is matched. If the contents is a
+            value expression, it should be resolved by the
+            navigation handler to obtain the view (
+            <span class="changed_added_2_2">or flow node or flow</span>)
+            identifier.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="to-flow-document-id"
+                   type="jakartaee:java-identifierType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p class="changed_added_2_2">The document id of the called flow.
+            If this element appears in a &lt;navigation-case&gt; nested within
+            a &lt;flow-definition&gt;, it must be ignored because navigation
+            cases within flows may only navigate among the view nodes of that
+            flow.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="redirect"
+                   type="jakartaee:faces-config-redirectType"
+                   minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-navigation-ruleType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "navigation-rule" element represents an individual
+        decision rule that will be utilized by the default
+        NavigationHandler implementation to make decisions on
+        what view should be displayed next, based on the
+        view id being processed.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="from-view-id"
+                   type="jakartaee:faces-config-from-view-idType"/>
+      <xsd:element name="navigation-case"
+                   type="jakartaee:faces-config-navigation-caseType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="navigation-rule-extension"
+                   type="jakartaee:faces-config-navigation-rule-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-navigation-rule-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for navigation-rule.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-null-valueType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "null-value" element indicates that the managed
+        property in which we are nested will be explicitly
+        set to null if our managed bean is automatically
+        created.  This is different from omitting the managed
+        property element entirely, which will cause no
+        property setter to be called for this property.</p>
+
+        <p>The "null-value" element can only be used when the
+        associated "property-class" identifies a Java class,
+        not a Java primitive.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-propertyType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "property" element represents a JavaBean property of the
+        Java class represented by our parent element.</p>
+
+        <p>Property names must be unique within the scope of the Java
+        class that is represented by the parent element, and must
+        correspond to property names that will be recognized when
+        performing introspection against that class via
+        java.beans.Introspector.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="property-name"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "property-name" element represents the JavaBeans
+            property name under which the corresponding value
+            may be stored.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="property-class"
+                   type="jakartaee:java-typeType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "property-class" element represents the Java type
+            of the value associated with this property name.
+            If not specified, it can be inferred from existing
+            classes; however, this element should be specified if
+            the configuration file is going to be the source for
+            generating the corresponding classes.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="default-value"
+                   type="jakartaee:faces-config-default-valueType"
+                   minOccurs="0"/>
+      <xsd:element name="suggested-value"
+                   type="jakartaee:faces-config-suggested-valueType"
+                   minOccurs="0"/>
+      <xsd:element name="property-extension"
+                   type="jakartaee:faces-config-property-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-protected-viewsType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p class="changed_added_2_2">Any view that matches any of the
+        url-patterns in this element may only be reached from another Jakarta Faces
+        view in the same web application. Because the runtime is aware of
+        which views are protected, any navigation from an unprotected
+        view to a protected view is automatically subject to
+        protection.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="url-pattern"
+                   type="jakartaee:url-patternType"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-property-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for property.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-redirectType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "redirect" element indicates that navigation to the
+        specified "to-view-id" should be accomplished by
+        performing an HTTP redirect rather than the usual
+        ViewHandler mechanisms.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="redirect-param"
+                   type="jakartaee:faces-config-redirect-redirectParamType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+    <xsd:attribute name="include-view-params"
+                   type="xsd:boolean"
+                   use="optional"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-redirect-viewParamType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> This element was introduced due to a specification
+        error, and is now deprecated.  The correct name for
+        this element is "redirect-param" and its meaning is
+        documented therein.  The "view-param" element is
+        maintained to preserve backwards compatibility.
+        Implementations must treat this element the same as
+        "redirect-param".</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name"
+                   type="jakartaee:string"/>
+      <xsd:element name="value"
+                   type="jakartaee:string"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-redirect-redirectParamType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "redirect-param" element, only valid within
+        a "redirect" element, contains child "name"
+        and "value" elements that must be included in the
+        redirect url when the redirect is performed.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name"
+                   type="jakartaee:string"/>
+      <xsd:element name="value"
+                   type="jakartaee:string"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-referenced-beanType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "referenced-bean" element represents at design time the
+        promise that a Java object of the specified type will exist at
+        runtime in some scope, under the specified key.  This can be
+        used by design time tools to construct user interface dialogs
+        based on the properties of the specified class.  The presence
+        or absence of a referenced bean element has no impact on the
+        Jakarta Faces runtime environment inside a web application.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="referenced-bean-name"
+                   type="jakartaee:java-identifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "referenced-bean-name" element represents the
+            attribute name under which the corresponding
+            referenced bean may be assumed to be stored, in one
+            of 'request', 'session', 'view', 'application'
+            or a custom scope.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="referenced-bean-class"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "referenced-bean-class" element represents the
+            fully qualified class name of the Java class
+            (either abstract or concrete) or Java interface
+            implemented by the corresponding referenced bean.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-render-kitType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "render-kit" element represents a concrete RenderKit
+        implementation that should be registered under the specified
+        render-kit-id.  If no render-kit-id is specified, the
+        identifier of the default RenderKit
+        (RenderKitFactory.DEFAULT_RENDER_KIT) is assumed.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="render-kit-id"
+                   type="jakartaee:string"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "render-kit-id" element represents an identifier
+            for the RenderKit represented by the parent
+            "render-kit" element.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="render-kit-class"
+                   type="jakartaee:fully-qualified-classType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "render-kit-class" element represents the fully
+            qualified class name of a concrete RenderKit
+            implementation class.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="renderer"
+                   type="jakartaee:faces-config-rendererType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="client-behavior-renderer"
+                   type="jakartaee:faces-config-client-behavior-rendererType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="render-kit-extension"
+                   type="jakartaee:faces-config-render-kit-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-client-behavior-rendererType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "client-behavior-renderer" element represents a concrete
+        ClientBehaviorRenderer implementation class that should be
+        registered under the specified behavior renderer type identifier,
+        in the RenderKit associated with the parent "render-kit"
+        element.  Client Behavior renderer type must be unique within the RenderKit
+        associated with the parent "render-kit" element.</p>
+
+        <p>Nested "attribute" elements identify generic component
+        attributes that are recognized by this renderer.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="client-behavior-renderer-type"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "client-behavior-renderer-type" element represents a renderer type
+            identifier for the Client Behavior Renderer represented by the parent
+            "client-behavior-renderer" element.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="client-behavior-renderer-class"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "client-behavior-renderer-class" element represents the fully
+            qualified class name of a concrete Client Behavior Renderer
+            implementation class.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-rendererType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "renderer" element represents a concrete Renderer
+        implementation class that should be registered under the
+        specified component family and renderer type identifiers,
+        in the RenderKit associated with the parent "render-kit"
+        element.  Combinations of component family and
+        renderer type must be unique within the RenderKit
+        associated with the parent "render-kit" element.</p>
+
+        <p>Nested "attribute" elements identify generic component
+        attributes that are recognized by this renderer.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="component-family"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "component-family" element represents the
+            component family for which the Renderer represented
+            by the parent "renderer" element will be used.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="renderer-type"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "renderer-type" element represents a renderer type
+            identifier for the Renderer represented by the parent
+            "renderer" element.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="renderer-class"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "renderer-class" element represents the fully
+            qualified class name of a concrete Renderer
+            implementation class.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="facet"
+                   type="jakartaee:faces-config-facetType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="attribute"
+                   type="jakartaee:faces-config-attributeType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+      <xsd:element name="renderer-extension"
+                   type="jakartaee:faces-config-renderer-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-renderer-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for renderer.  It may contain implementation
+        specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-render-kit-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for render-kit.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-suggested-valueType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "suggested-value" contains the value for the property or
+        attribute in which this element resides.  This value is
+        advisory only and is intended for tools to use when
+        populating pallettes.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:restriction base="jakartaee:string"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-supported-localeType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "supported-locale" element allows authors to declare
+        which locales are supported in this application instance.</p>
+
+        <p class="modified_added_2_3">
+        To facilitate BCP 47 this element first needs to be parsed by the
+        Locale.forLanguageTag method. If it does not return a Locale with
+        a language the old specification below needs to take effect.
+        </p>
+
+        <p>It must be specified as :language:[_:country:[_:variant:]]
+        without the colons, for example "ja_JP_SJIS".  The
+        separators between the segments may be '-' or '_'.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="jakartaee:faces-config-localeType">
+        <xsd:attribute name="id"
+                       type="xsd:ID"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-behaviorType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "behavior" element represents a concrete Behavior
+        implementation class that should be registered under the
+        specified behavior identifier.  Behavior identifiers must
+        be unique within the entire web application.</p>
+
+        <p>Nested "attribute" elements identify generic attributes that
+        may be configured on the corresponding UIComponent in order
+        to affect the operation of the Behavior.  Nested "property"
+        elements identify JavaBeans properties of the Behavior
+        implementation class that may be configured to affect the
+        operation of the Behavior.  "attribute" and "property"
+        elements are intended to allow component developers to
+        more completely describe their components to tools and users.
+        These elements have no required runtime semantics.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="behavior-id"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "behavior-id" element represents the identifier
+            under which the corresponding Behavior class should
+            be registered.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="behavior-class"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "behavior-class" element represents the fully
+            qualified class name of a concrete Behavior
+            implementation class.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="attribute"
+                   type="jakartaee:faces-config-attributeType"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> Nested "attribute" elements identify generic
+            attributes that may be configured on the
+            corresponding UIComponent in order to affect the
+            operation of the Behavior.  This attribute is
+            primarily for design-time tools and is not
+            specified to have any meaning at runtime.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="property"
+                   type="jakartaee:faces-config-propertyType"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> Nested "property" elements identify JavaBeans
+            properties of the Behavior implementation class
+            that may be configured to affect the operation of
+            the Behavior.  This attribute is primarily for
+            design-time tools and is not specified to have
+            any meaning at runtime.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="behavior-extension"
+                   type="jakartaee:faces-config-behavior-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-behavior-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for behavior.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-validatorType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "validator" element represents a concrete Validator
+        implementation class that should be registered under the
+        specified validator identifier.  Validator identifiers must
+        be unique within the entire web application.</p>
+
+        <p>Nested "attribute" elements identify generic attributes that
+        may be configured on the corresponding UIComponent in order
+        to affect the operation of the Validator.  Nested "property"
+        elements identify JavaBeans properties of the Validator
+        implementation class that may be configured to affect the
+        operation of the Validator.  "attribute" and "property"
+        elements are intended to allow component developers to
+        more completely describe their components to tools and users.
+        These elements have no required runtime semantics.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:group ref="jakartaee:descriptionGroup"/>
+      <xsd:element name="validator-id"
+                   type="jakartaee:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "validator-id" element represents the identifier
+            under which the corresponding Validator class should
+            be registered.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="validator-class"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "validator-class" element represents the fully
+            qualified class name of a concrete Validator
+            implementation class.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="attribute"
+                   type="jakartaee:faces-config-attributeType"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> Nested "attribute" elements identify generic
+            attributes that may be configured on the
+            corresponding UIComponent in order to affect the
+            operation of the Validator.  This attribute is
+            primarily for design-time tools and is not
+            specified to have any meaning at runtime.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="property"
+                   type="jakartaee:faces-config-propertyType"
+                   minOccurs="0"
+                   maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> Nested "property" elements identify JavaBeans
+            properties of the Validator implementation class
+            that may be configured to affect the operation of
+            the Validator.  This attribute is primarily for
+            design-time tools and is not specified to have
+            any meaning at runtime.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="validator-extension"
+                   type="jakartaee:faces-config-validator-extensionType"
+                   minOccurs="0"
+                   maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-validator-extensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> Extension element for validator.  It may contain
+        implementation specific content.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:any minOccurs="0"
+               maxOccurs="unbounded"
+               namespace="##any"
+               processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+  <xsd:simpleType name="faces-config-valueType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The "value" element is the String representation of
+        a literal value to which a scalar managed property
+        will be set, or a value binding expression ("#{...}")
+        that will be used to calculate the required value.
+        It will be converted as specified for the actual
+        property type.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:union memberTypes="jakartaee:faces-config-el-expressionType xsd:string"/>
+  </xsd:simpleType>
+
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="faces-config-system-event-listenerType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> The presence of this element within the "application" element in
+        an application configuration resource file indicates the
+        developer wants to add an SystemEventListener to this
+        application instance.  Elements nested within this element allow
+        selecting the kinds of events that will be delivered to the
+        listener instance, and allow selecting the kinds of classes that
+        can be the source of events that are delivered to the listener
+        instance.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="system-event-listener-class"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "system-event-listener-class" element contains
+            the fully qualified class name of the concrete
+            SystemEventListener implementation class that will be
+            called when events of the type specified by the
+            "system-event-class" are sent by the runtime.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="system-event-class"
+                   type="jakartaee:fully-qualified-classType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "system-event-class" element contains the fully
+            qualified class name of the SystemEvent subclass for
+            which events will be delivered to the class whose fully
+            qualified class name is given by the
+            "system-event-listener-class" element.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="source-class"
+                   type="jakartaee:fully-qualified-classType"
+                   minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <![CDATA[
+            <p> The "source-class" element, if present, contains the
+            fully qualified class name of the class that will be the
+            source for the event to be delivered to the class whose
+            fully qualified class name is given by the
+            "system-event-listener-class" element.</p>
+
+            ]]>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id"
+                   type="xsd:ID"/>
+  </xsd:complexType>
+
+  <xsd:simpleType name="faces-config-versionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <![CDATA[
+        <p> This type contains the recognized versions of
+        faces-config supported.</p>
+
+        ]]>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="4.0"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>

@@ -1,0 +1,210 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# ----------------------
+#
+#  This workflow builds the native Windows launchers for the IDE and platform.
+#
+#  The result of the build are files 'launcher-external-sources.zip'
+#  and 'launcher-external-binaries.zip' which can be downloaded from
+#  the GitHub Actions UI and prepared for release to be used by the Ant build
+#  scripts for the NetBeans distribution.
+#
+# ----------------------
+
+
+name: NetBeans Native Launcher
+
+
+on:
+  push:
+    # Triggers the workflow on push or pull request events but only for
+    # relevant paths
+    paths:
+      - .github/workflows/native-binary-build-launcher.y*
+      - platform/o.n.bootstrap/launcher/windows/**
+      - harness/apisupport.harness/windows-launcher-src/**
+      - nb/ide.launcher/windows/**
+
+  pull_request:
+    paths:
+      - .github/workflows/native-binary-build-launcher.y*
+      - platform/o.n.bootstrap/launcher/windows/**
+      - harness/apisupport.harness/windows-launcher-src/**
+      - nb/ide.launcher/windows/**
+
+  # Allows you to run this workflow manually from the Actions tab in GitHub UI
+  workflow_dispatch:
+
+# cancel other PR workflow run in the same head-base group if it exists (e.g. during PR syncs)
+# if this is not a PR run (no github.head_ref and github.base_ref defined), use an UID as group
+concurrency:
+  group: launcher-${{ github.head_ref || github.run_id }}-${{ github.base_ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  source:
+
+    name: Package Sources
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          submodules: false
+          show-progress: false
+
+      - name: Generate source bundle
+        run: |
+          SOURCES="nbbuild/build/native/launcher/sources"
+          mkdir -p ${SOURCES}/platform/o.n.bootstrap/launcher/
+          cp -r platform/o.n.bootstrap/launcher/windows/ ${SOURCES}/platform/o.n.bootstrap/launcher/
+          mkdir -p ${SOURCES}/harness/apisupport.harness/
+          cp -r harness/apisupport.harness/windows-launcher-src/ ${SOURCES}/harness/apisupport.harness/
+          mkdir -p ${SOURCES}/nb/ide.launcher/
+          cp -r nb/ide.launcher/windows/ ${SOURCES}/nb/ide.launcher/
+          cp LICENSE ${SOURCES}/LICENSE
+          cp NOTICE ${SOURCES}/NOTICE
+          ls -l -R ${SOURCES}
+
+      - name: Upload native sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: launcher-external-sources
+          path: nbbuild/build/native/launcher/sources/
+          if-no-files-found: error
+
+
+  build-linux:
+
+    name: Build with MinGW
+    runs-on: ubuntu-latest
+    needs: source
+
+    steps:
+
+      - name: Install MinGW
+        run: sudo apt install mingw-w64 mingw-w64-tools
+
+      - name: Download sources
+        uses: actions/download-artifact@v4
+        with:
+          name: launcher-external-sources
+
+      - name: Build bootstrap binaries
+        run: |
+          echo "Building bootstrap binaries"
+          rm -rf ./build/
+          make -f Makefile.mingw
+          ls -l -R ./build/
+          echo "done"
+        working-directory: platform/o.n.bootstrap/launcher/windows/
+
+      - name: Upload bootstrap artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: launcher-bootstrap-bin
+          path: platform/o.n.bootstrap/launcher/windows/build/
+          if-no-files-found: error
+
+      - name: Build harness binaries
+        run: |
+          echo "Building harness binaries"
+          rm -rf ./build/
+          make -f Makefile.mingw
+          ls -l -R ./build/
+          echo "done"
+        working-directory: harness/apisupport.harness/windows-launcher-src
+
+      - name: Upload harness artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: launcher-harness-bin
+          path: harness/apisupport.harness/windows-launcher-src/build/
+          if-no-files-found: error
+
+      - name: Build IDE binaries
+        run: |
+          echo "Building IDE binaries"
+          rm -rf ./build/
+          make -f Makefile.mingw
+          ls -l -R ./build/
+          echo "done"
+        working-directory: nb/ide.launcher/windows
+
+      - name: Upload IDE artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: launcher-ide-bin
+          path: nb/ide.launcher/windows/build/
+          if-no-files-found: error
+
+  build-zip-with-build-artifacts:
+
+    name: Package Binaries
+    runs-on: ubuntu-latest
+
+    # Only run when the platform specific builds are finished
+    needs: [build-linux]
+
+    steps:
+
+    - name: Create dir structure
+      run: mkdir -p myfiles/
+
+    - name: Download artifacts from predecessor jobs
+      uses: actions/download-artifact@v4
+      with:
+        path: myfiles/
+
+    - name: Tidy up and display artifacts
+      run: |
+        cp myfiles/launcher-external-sources/LICENSE myfiles/LICENSE
+        cp myfiles/launcher-external-sources/NOTICE myfiles/NOTICE
+        cp myfiles/*bin/*.exe myfiles/
+        cp myfiles/*bin/*.dll myfiles/
+        rm -rf myfiles/*-sources/
+        rm -rf myfiles/*-bin/
+        ls -l -R
+
+    - name: Create BUILDINFO
+      run: |
+         BUILDINFO="myfiles/BUILDINFO.txt"
+         touch "$BUILDINFO"
+         echo "Apache NetBeans"                                                >> "$BUILDINFO"
+         echo ""                                                               >> "$BUILDINFO"
+         echo "Binaries in this ZIP are..."                                    >> "$BUILDINFO"
+         echo "Build by GitHub Actions Workflow: ${GITHUB_WORKFLOW}"           >> "$BUILDINFO"
+         echo ""                                                               >> "$BUILDINFO"
+         echo "Build from:"                                                    >> "$BUILDINFO"
+         echo "   Git repo       : ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"  >> "$BUILDINFO"
+         echo "   Git commit SHA : ${GITHUB_SHA}"                              >> "$BUILDINFO"
+         echo "   Git ref        : ${GITHUB_REF}"                              >> "$BUILDINFO"
+         echo ""                                                               >> "$BUILDINFO"
+         echo "Build time UTC : $(date --rfc-3339=seconds --utc)"              >> "$BUILDINFO"
+         echo ""                                                               >> "$BUILDINFO"
+
+    - name: Upload bundle
+      uses: actions/upload-artifact@v4
+      with:
+        name: launcher-external-binaries
+        path: myfiles/
+        if-no-files-found: error

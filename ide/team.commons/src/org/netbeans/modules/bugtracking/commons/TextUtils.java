@@ -19,6 +19,10 @@
 
 package org.netbeans.modules.bugtracking.commons;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -184,24 +188,17 @@ public class TextUtils {
      * Encodes URL by encoding to %XX escape sequences.
      *
      * @param url url to decode
-     * @return decoded url
+     * @return encoded url
      */
     public static String encodeURL(String url) {
         if (url == null) {
             return null;
         }
-        StringBuffer sb = new StringBuffer(url.length());
-
-        for (int i = 0; i < url.length(); i++) {
-            char c = url.charAt(i);
-            if (!isAlowedChar(c)) {
-                sb.append('%');                                                 // NOI18N
-                sb.append(Integer.toHexString(c).toUpperCase());
-            } else {
-                sb.append(c);
-            }
+        try {
+            return URLEncoder.encode(url, StandardCharsets.UTF_8.name()).replace("+", "%20");
+        } catch (UnsupportedEncodingException ignored) {
+            return null;
         }
-        return sb.toString();
     }
 
     /**
@@ -214,30 +211,13 @@ public class TextUtils {
         if (encoded == null) {
             return null;
         }
-        StringBuilder sb = new StringBuilder(encoded.length());
-
-        for (int i = 0; i < encoded.length(); i++) {
-            char c = encoded.charAt(i);
-            if (c == '%') {
-                String code = encoded.substring(i + 1, i + 3);
-                char decode = (char) Integer.parseInt(code, 16);
-                sb.append(decode);
-                i += 2;
-            } else {
-                sb.append(c);
-            }
+        try {
+            return URLDecoder.decode(encoded, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException ignored) {
+            return null;
         }
-        return sb.toString();
     }
 
-    private static boolean isAlowedChar(char c) {
-        return c >= '0' && c <= '9' ||                                          // NOI18N
-               c >= 'A' && c <= 'Z' ||                                          // NOI18N
-               c >= 'a' && c <= 'z' ||                                          // NOI18N
-               c == '.' ||                                                      // NOI18N
-               c == '_';                                                        // NOI18N
-    }
-    
     public static String getMD5(String name) {
         MessageDigest digest;
         try {

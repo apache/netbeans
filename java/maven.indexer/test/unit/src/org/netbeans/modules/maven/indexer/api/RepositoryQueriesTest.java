@@ -42,11 +42,7 @@ public class RepositoryQueriesTest extends NbTestCase {
     protected void setUp() throws Exception {
         super.setUp();
     }
-    
-    public void testAlternativeQueryProvider() throws URISyntaxException {
-        
-    }
-    
+
     public void testAlternativeResult() throws URISyntaxException {
         MockServices.setServices(TestIndexer1.class);
         
@@ -59,7 +55,7 @@ public class RepositoryQueriesTest extends NbTestCase {
     public void testTwoReposTwoQueryProviders() throws URISyntaxException {
         MockServices.setServices(TestIndexer1.class, TestIndexer2.class);
 
-        RepositoryQueries.Result<NBVersionInfo> result = RepositoryQueries.findArchetypesResult(Arrays.asList(TestIndexer1.REPO, TestIndexer2.REPO));
+        RepositoryQueries.Result<NBVersionInfo> result = RepositoryQueries.findArchetypesResult(List.of(TestIndexer1.REPO, TestIndexer2.REPO));
         assertEquals(2, result.getTotalResultCount());
         assertEquals(2, result.getReturnedResultCount());
         assertArtefactIds(result.getResults(), new String[] {TestIndexer1.ID, TestIndexer2.ID});
@@ -68,7 +64,7 @@ public class RepositoryQueriesTest extends NbTestCase {
     public void testTwoReposOneAccepted() throws URISyntaxException {
         MockServices.setServices(TestIndexer1.class);
         
-        RepositoryQueries.Result<NBVersionInfo> result = RepositoryQueries.findArchetypesResult(Arrays.asList(TestIndexer1.REPO, TestIndexer2.REPO));
+        RepositoryQueries.Result<NBVersionInfo> result = RepositoryQueries.findArchetypesResult(List.of(TestIndexer1.REPO, TestIndexer2.REPO));
         assertEquals(1, result.getTotalResultCount());
         assertEquals(1, result.getReturnedResultCount());
         assertArtefactIds(result.getResults(), new String[] {TestIndexer1.ID});

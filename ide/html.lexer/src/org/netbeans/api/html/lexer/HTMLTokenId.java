@@ -208,14 +208,20 @@ public enum HTMLTokenId implements TokenId {
                     break;
 
                 case VALUE_CSS:
-                    mimeType = STYLE_MIMETYPE;
+                    //the VALUE_CSS_TOKEN_TYPE_PROPERTY property is null for the contents
+                    //of style attributes and tags. These should be treated as embedded
+                    //CSS and passed to the CSS lexer, while class and id attributes
+                    //are treated as normal constructs
+                    if ((String) token.getProperty(HTMLTokenId.VALUE_CSS_TOKEN_TYPE_PROPERTY) == null) {
+                        mimeType = STYLE_MIMETYPE;
 
-                    ptype = token.partType();
-                    startSkipLen = ptype == PartType.COMPLETE || ptype == PartType.START ? 1 : 0;
-                    endSkipLen = ptype == PartType.COMPLETE || ptype == PartType.END ? 1 : 0;
-                    //do not join css code sections in attribute value between each other, only token parts inside one value
-                    joinSections = !(ptype == PartType.END || ptype == PartType.COMPLETE);
-                    break;
+                        ptype = token.partType();
+                        startSkipLen = ptype == PartType.COMPLETE || ptype == PartType.START ? 1 : 0;
+                        endSkipLen = ptype == PartType.COMPLETE || ptype == PartType.END ? 1 : 0;
+                        //do not join css code sections in attribute value between each other, only token parts inside one value
+                        joinSections = !(ptype == PartType.END || ptype == PartType.COMPLETE);
+                        break;
+                    }
 
                 case VALUE:
                     //HtmlLexerPlugin can inject a custom embdedding to html tag attributes,

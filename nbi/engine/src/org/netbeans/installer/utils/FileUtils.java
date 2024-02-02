@@ -321,7 +321,7 @@ public final class FileUtils {
     
     public static Set<File> getRecursiveFileSet(
             final File file) throws IOException {
-        Set<File> fileSet = new HashSet();
+        Set<File> fileSet = new HashSet<>();
 
         if (file != null && exists(file)) {
             computeRecursiveFileSet(file,fileSet);
@@ -742,11 +742,12 @@ public final class FileUtils {
             }
             
             final String original = readFile(file, charset);
-            
+
             String modified = new String(original);
-            for(String token : map.keySet()) {
-                final Object object = map.get(token);
-                
+            for(Map.Entry<String, Object> entry : map.entrySet()) {
+                final Object object = entry.getValue();
+                String token = entry.getKey();
+
                 final String replacement;
                 if (object instanceof File) {
                     replacement = ((File) object).getAbsolutePath();
@@ -760,7 +761,7 @@ public final class FileUtils {
                             matcher(modified).
                             replaceAll(replacement);
                 }  else {
-                    modified = modified.toString().replace(token, replacement);
+                    modified = modified.replace(token, replacement);
                 }
             }
             

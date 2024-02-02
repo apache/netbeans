@@ -316,6 +316,9 @@ public class PrintASTVisitor implements Visitor {
         if (node.isAttributed()) {
             printNode.addChildrenGroup("Attributes", node.getAttributes());
         }
+        if (node.getConstType() != null) {
+            printNode.addChild("ConstType", node.getConstType());
+        }
         printNode.addChildrenGroup("Names", node.getNames());
         printNode.addChildrenGroup("Initializers", node.getInitializers());
         printNode.print(this);
@@ -323,14 +326,21 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(ClassDeclaration classDeclaration) {
+        StringBuilder modifiers = new StringBuilder();
+        for (ClassDeclaration.Modifier modifier : classDeclaration.getModifiers().keySet()) {
+            if (modifiers.length() != 0) {
+                modifiers.append(" "); // NOI18N
+            }
+            modifiers.append(modifier.name());
+        }
         XMLPrintNode printNode = new XMLPrintNode(classDeclaration, "ClassDeclaration",
-                new String[]{"modifier", classDeclaration.getModifier().name()});
+                new String[]{"modifier", modifiers.toString()});
         if (classDeclaration.isAttributed()) {
             printNode.addChildrenGroup("Attributes", classDeclaration.getAttributes());
         }
         printNode.addChildrenGroup("ClassName", new ASTNode[]{classDeclaration.getName()});
         printNode.addChildrenGroup("SuperClassName", new ASTNode[]{classDeclaration.getSuperClass()});
-        printNode.addChildrenGroup("Interfaces", classDeclaration.getInterfaes());
+        printNode.addChildrenGroup("Interfaces", classDeclaration.getInterfaces());
         printNode.addChild(classDeclaration.getBody());
         printNode.print(this);
     }
@@ -379,6 +389,13 @@ public class PrintASTVisitor implements Visitor {
         printNode.addChild("Condition", node.getCondition());
         printNode.addChild("Then", node.getIfTrue());
         printNode.addChild("Else", node.getIfFalse());
+        printNode.print(this);
+    }
+
+    @Override
+    public void visit(ConstantVariable node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "ConstantVariable");
+        printNode.addChild(node.getName());
         printNode.print(this);
     }
 
@@ -433,7 +450,7 @@ public class PrintASTVisitor implements Visitor {
         }
         printNode.addChildrenGroup("EnumName", new ASTNode[]{enumDeclaration.getName()});
         printNode.addChildrenGroup("BackingType", new ASTNode[]{enumDeclaration.getBackingType()});
-        printNode.addChildrenGroup("Interfaces", enumDeclaration.getInterfaes());
+        printNode.addChildrenGroup("Interfaces", enumDeclaration.getInterfaces());
         printNode.addChild(enumDeclaration.getBody());
         printNode.print(this);
     }
@@ -839,7 +856,8 @@ public class PrintASTVisitor implements Visitor {
 
     @Override
     public void visit(StaticConstantAccess node) {
-        XMLPrintNode printNode = new XMLPrintNode(node, "StaticConstantAccess");
+        XMLPrintNode printNode = new XMLPrintNode(node, "StaticConstantAccess",
+                new String[]{"isDynamicName", (node.isDynamicName() ? "true" : "false")});
         printNode.addChild(node.getDispatcher());
         printNode.addChild("Constant", node.getConstant());
         printNode.addChild("Member", node.getMember());

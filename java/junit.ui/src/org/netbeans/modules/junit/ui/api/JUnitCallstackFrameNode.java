@@ -19,10 +19,10 @@
 
 package org.netbeans.modules.junit.ui.api;
 
+import java.awt.Color;
 import org.netbeans.modules.java.testrunner.ui.api.JumpAction;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.Action;
+import javax.swing.UIManager;
 import org.netbeans.modules.gsf.testrunner.ui.api.CallstackFrameNode;
 
 /**
@@ -41,12 +41,40 @@ public class JUnitCallstackFrameNode extends CallstackFrameNode{
 
     @Override
     public Action[] getActions(boolean context) {
-        List<Action> actions = new ArrayList<Action>();
         Action preferred = getPreferredAction();
-        if (preferred != null){
-            actions.add(preferred);
+        if (preferred != null) {
+            return new Action[] { preferred };
         }
-        return actions.toArray(new Action[actions.size()]);
+        return new Action[0];
+    }
+
+    @Override
+    public String getDisplayName() {
+        String line = super.getDisplayName();
+        String trimmed = line.trim();
+        if (trimmed.startsWith("at ") && line.endsWith(")")) {
+            return isRelevant(trimmed) ?
+                    "<html>    <a href=\"\">"+line+"</a></html>" 
+                  : "<html>    <font color="+hiddenColor()+">"+line+"</font></html>";
+        }
+        return line;
+    }
+
+    private static String hiddenColor() {
+        // note: the tree adjusts the color automatically if the contrast is too low
+        // which would have the opposite effect of what we are trying to achieve here
+        float a = 0.6f;
+        Color f = UIManager.getColor("Tree.foreground");
+        Color b = UIManager.getColor("Tree.background");
+        return String.format("#%02x%02x%02x", 
+                (int)(b.getRed()   + a * (f.getRed()   - b.getRed())),
+                (int)(b.getGreen() + a * (f.getGreen() - b.getGreen())),
+                (int)(b.getBlue()  + a * (f.getBlue()  - b.getBlue())));
+    }
+
+    private boolean isRelevant(String stackFrame) {
+        return !stackFrame.startsWith("at org.junit.Ass")
+            && !stackFrame.startsWith("at org.junit.jupiter.api.Ass");
     }
 
     @Override

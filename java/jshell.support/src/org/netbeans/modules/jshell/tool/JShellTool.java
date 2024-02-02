@@ -28,6 +28,9 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.nio.charset.Charset;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.FileSystems;
@@ -57,7 +60,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import jdk.internal.jshell.debug.InternalDebugControl;
 import org.netbeans.modules.jshell.tool.IOContext.InputInterruptedException;
 import jdk.jshell.DeclarationSnippet;
 import jdk.jshell.Diag;
@@ -80,27 +82,28 @@ import jdk.jshell.VarSnippet;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.nio.file.StandardOpenOption.WRITE;
+
 import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
 import static java.util.stream.Collectors.toList;
 import static jdk.jshell.Snippet.SubKind.VAR_VALUE_SUBKIND;
-import static jdk.internal.jshell.debug.InternalDebugControl.DBG_COMPA;
-import static jdk.internal.jshell.debug.InternalDebugControl.DBG_DEP;
-import static jdk.internal.jshell.debug.InternalDebugControl.DBG_EVNT;
-import static jdk.internal.jshell.debug.InternalDebugControl.DBG_FMGR;
-import static jdk.internal.jshell.debug.InternalDebugControl.DBG_GEN;
 import static org.netbeans.modules.jshell.tool.ContinuousCompletionProvider.STARTSWITH_MATCHER;
+
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.modules.jshell.tool.Feedback.FormatAction;
 import org.netbeans.modules.jshell.tool.Feedback.FormatCase;
 import org.netbeans.modules.jshell.tool.Feedback.FormatErrors;
 import org.netbeans.modules.jshell.tool.Feedback.FormatResolve;
 import org.netbeans.modules.jshell.tool.Feedback.FormatUnresolved;
 import org.netbeans.modules.jshell.tool.Feedback.FormatWhen;
+
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 
@@ -110,12 +113,73 @@ import static java.util.stream.Collectors.toMap;
  */
 public class JShellTool implements MessageHandler {
 
+    private static final Logger LOG = Logger.getLogger(JShellTool.class.getName());
+
     private static final String LINE_SEP = System.getProperty("line.separator");
     private static final Pattern LINEBREAK = Pattern.compile("\\R");
     private static final String RECORD_SEPARATOR = "\u241E";
     private static final String RB_NAME_PREFIX  = "org.netbeans.modules.jshell.tool";
     private static final String VERSION_RB_NAME = RB_NAME_PREFIX + ".version";
     private static final String L10N_RB_NAME    = RB_NAME_PREFIX + ".l10n";
+
+    private static final int DBG_COMPA;
+    private static final int DBG_DEP;
+    private static final int DBG_EVNT;
+    private static final int DBG_FMGR;
+    private static final int DBG_GEN;
+    private static final MethodHandle MH_SET_DEBUG_FLAGS;
+
+    static {
+        int dbgCompaBuilder = -1;
+        int dbgDepBuilder = -1;
+        int dbgEvntBuilder = -1;
+        int dbgFmgrBuilder = -1;
+        int dbgGenBuilder = -1;
+        MethodHandle setDebugFlagsBuilder = null;
+
+        try {
+            Class<?> internalDebugControl = Class.forName("jdk.internal.jshell.debug.InternalDebugControl");
+            try {
+                dbgCompaBuilder = internalDebugControl.getField("DBG_COMPA").getInt(null);
+            } catch (NoSuchFieldException | SecurityException | IllegalAccessException ex) {
+                LOG.log(Level.WARNING, "Failed to fetch value jdk.internal.jshell.debug.InternalDebugControl#DBG_COMPA", ex);
+            }
+            try {
+                dbgDepBuilder = internalDebugControl.getField("DBG_DEP").getInt(null);
+            } catch (NoSuchFieldException | SecurityException | IllegalAccessException  ex) {
+                LOG.log(Level.WARNING, "Failed to fetch value jdk.internal.jshell.debug.InternalDebugControl#DBG_DEP", ex);
+            }
+            try {
+                dbgEvntBuilder = internalDebugControl.getField("DBG_EVNT").getInt(null);
+            } catch (NoSuchFieldException | SecurityException | IllegalAccessException  ex) {
+                LOG.log(Level.WARNING, "Failed to fetch value jdk.internal.jshell.debug.InternalDebugControl#DBG_EVNT", ex);
+            }
+            try {
+                dbgFmgrBuilder = internalDebugControl.getField("DBG_FMGR").getInt(null);
+            } catch (NoSuchFieldException | SecurityException | IllegalAccessException  ex) {
+                LOG.log(Level.WARNING, "Failed to fetch value jdk.internal.jshell.debug.InternalDebugControl#DBG_FMGR", ex);
+            }
+            try {
+                dbgGenBuilder = internalDebugControl.getField("DBG_GEN").getInt(null);
+            } catch (NoSuchFieldException | SecurityException | IllegalAccessException  ex) {
+                LOG.log(Level.WARNING, "Failed to fetch value jdk.internal.jshell.debug.InternalDebugControl#DBG_GEN", ex);
+            }
+            try {
+                setDebugFlagsBuilder = MethodHandles.lookup().findStatic(internalDebugControl, "setDebugFlags", MethodType.methodType(void.class, JShell.class, int.class));
+            } catch (NoSuchMethodException | IllegalAccessException ex) {
+                LOG.log(Level.WARNING, "Failed to fetch method jdk.internal.jshell.debug.InternalDebugControl#setDebugFlags(JShell,int): void", ex);
+            }
+        } catch (ClassNotFoundException ex) {
+            LOG.log(Level.WARNING, "Failed to find jdk.internal.jshell.debug.InternalDebugControl", ex);
+        }
+
+        DBG_COMPA = dbgCompaBuilder;
+        DBG_DEP = dbgDepBuilder;
+        DBG_EVNT = dbgEvntBuilder;
+        DBG_FMGR = dbgFmgrBuilder;
+        DBG_GEN = dbgGenBuilder;
+        MH_SET_DEBUG_FLAGS = setDebugFlagsBuilder;
+    }
 
     final InputStream cmdin;
     final PrintStream cmdout;
@@ -363,7 +427,7 @@ public class JShellTool implements MessageHandler {
         }
         return leading
                 + s.substring(0, s.length() - 1).replaceAll("\\R", System.getProperty("line.separator") + feedback.getPre())
-                + s.substring(s.length() - 1, s.length());
+                + s.substring(s.length() - 1);
     }
 
     /**
@@ -1691,50 +1755,66 @@ public class JShellTool implements MessageHandler {
     protected void classpathAdded(String s) {}
 
     boolean cmdDebug(String arg) {
-        if (arg.isEmpty()) {
-            debug = !debug;
-            InternalDebugControl.setDebugFlags(state, debug ? DBG_GEN : 0);
-            fluff("Debugging %s", debug ? "on" : "off");
-        } else {
-            int flags = 0;
-            for (char ch : arg.toCharArray()) {
-                switch (ch) {
-                    case '0':
-                        flags = 0;
-                        debug = false;
-                        fluff("Debugging off");
-                        break;
-                    case 'r':
-                        debug = true;
-                        fluff("REPL tool debugging on");
-                        break;
-                    case 'g':
-                        flags |= DBG_GEN;
-                        fluff("General debugging on");
-                        break;
-                    case 'f':
-                        flags |= DBG_FMGR;
-                        fluff("File manager debugging on");
-                        break;
-                    case 'c':
-                        flags |= DBG_COMPA;
-                        fluff("Completion analysis debugging on");
-                        break;
-                    case 'd':
-                        flags |= DBG_DEP;
-                        fluff("Dependency debugging on");
-                        break;
-                    case 'e':
-                        flags |= DBG_EVNT;
-                        fluff("Event debugging on");
-                        break;
-                    default:
-                        hard("Unknown debugging option: %c", ch);
-                        fluff("Use: 0 r g f c d");
-                        return false;
+        if(MH_SET_DEBUG_FLAGS == null) {
+             // Swallow silently - warning is genered in static initializer
+             // block
+            fluffmsg("jshell.msg.debugNotAvailable");
+            return false;
+        }
+        try {
+            if (arg.isEmpty()) {
+                debug = !debug;
+                MH_SET_DEBUG_FLAGS.invoke(state, debug ? DBG_GEN : 0);
+                fluff("Debugging %s", debug ? "on" : "off");
+            } else {
+                int flags = 0;
+                for (char ch : arg.toCharArray()) {
+                    switch (ch) {
+                        case '0':
+                            flags = 0;
+                            debug = false;
+                            fluff("Debugging off");
+                            break;
+                        case 'r':
+                            debug = true;
+                            fluff("REPL tool debugging on");
+                            break;
+                        case 'g':
+                            flags |= DBG_GEN;
+                            fluff("General debugging on");
+                            break;
+                        case 'f':
+                            flags |= DBG_FMGR;
+                            fluff("File manager debugging on");
+                            break;
+                        case 'c':
+                            flags |= DBG_COMPA;
+                            fluff("Completion analysis debugging on");
+                            break;
+                        case 'd':
+                            flags |= DBG_DEP;
+                            fluff("Dependency debugging on");
+                            break;
+                        case 'e':
+                            flags |= DBG_EVNT;
+                            fluff("Event debugging on");
+                            break;
+                        default:
+                            hard("Unknown debugging option: %c", ch);
+                            fluff("Use: 0 r g f c d");
+                            return false;
+                    }
                 }
+                MH_SET_DEBUG_FLAGS.invoke(state, flags);
             }
-            InternalDebugControl.setDebugFlags(state, flags);
+        } catch (Throwable ex) {
+            if(ex instanceof Error) {
+                throw (Error) ex;
+            } else if (ex instanceof RuntimeException) {
+                throw (RuntimeException) ex;
+            } else {
+                throw new IllegalStateException(ex);
+            }
         }
         return true;
     }

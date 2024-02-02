@@ -1,0 +1,5 @@
+Code completion result for source line:
+#[Attr1(Attr2::|)]
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTANT   CONST_ATTRI2 "const"            [PUBLIC]   Attr2
+CONSTANT   class \Attr2                    [PUBLIC]   Magic Constant

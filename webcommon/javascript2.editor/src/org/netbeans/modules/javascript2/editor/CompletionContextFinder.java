@@ -255,7 +255,7 @@ public class CompletionContextFinder {
         tokenId = token.id();
         boolean commaFirst = false;
         if (tokenId == JsTokenId.OPERATOR_COMMA && ts.movePrevious()) {
-            List<JsTokenId> checkParentList = new ArrayList(listIds);
+            List<JsTokenId> checkParentList = new ArrayList<>(listIds);
             List<JsTokenId> parentList = Arrays.asList(JsTokenId.BRACKET_LEFT_PAREN, JsTokenId.BRACKET_RIGHT_PAREN, JsTokenId.BRACKET_RIGHT_CURLY);
             checkParentList.addAll(parentList);
             token = LexUtilities.findPreviousToken(ts, checkParentList);

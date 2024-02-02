@@ -39,22 +39,19 @@ public class JavaFXWizardIterator {
 //        return ArchetypeWizards.definedArchetype("org.codehaus.mojo.archetypes", "sample-javafx", "0.5", null, LBL_Maven_JavaFx_Sample_Archetype());
 //    }
     @TemplateRegistration(folder = ArchetypeWizards.TEMPLATE_FOLDER, position = 925, displayName = "#LBL_Maven_FXML_Archetype", iconBase = "org/netbeans/modules/javafx2/kit/resources/jaricon.png", description = "javafx.html")
-    @Messages("LBL_Maven_FXML_Archetype=FXML JavaFX Maven Archetype (Gluon)")
+    @Messages("LBL_Maven_FXML_Archetype=FXML JavaFX Maven Archetype")
     public static WizardDescriptor.InstantiatingIterator<?> openJFXFML() {
         return definedFXArchetype("com.raelity.jfx", "javafx-archetype-fxml-netbeans", "0.0.4", Bundle.LBL_Maven_FXML_Archetype());
     }
 
     @TemplateRegistration(folder = ArchetypeWizards.TEMPLATE_FOLDER, position = 926, displayName = "#LBL_Maven_Simple_Archetype", iconBase = "org/netbeans/modules/javafx2/kit/resources/jaricon.png", description = "javafx.html")
-    @Messages("LBL_Maven_Simple_Archetype=Simple JavaFX Maven Archetype (Gluon)")
+    @Messages("LBL_Maven_Simple_Archetype=Simple JavaFX Maven Archetype")
     public static WizardDescriptor.InstantiatingIterator<?> openJFXSimple() {
         return definedFXArchetype("com.raelity.jfx", "javafx-archetype-simple-netbeans", "0.0.4", Bundle.LBL_Maven_Simple_Archetype());
     }
 
     private static WizardDescriptor.InstantiatingIterator<?> definedFXArchetype(String g, String a, String v, String name) {
         Map<String, String> props = new HashMap<>();
-        if (System.getProperty("java.version").startsWith("1.8")) {
-            props.put("javafx-version", "1.8");
-        }
         props.put("add-debug-configuration", "Y");
         return ArchetypeWizards.definedArchetype(g, a, v, null, name, props);
     }

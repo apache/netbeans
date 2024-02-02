@@ -246,6 +246,7 @@ public class XDMListener implements PropertyChangeListener {
      * This implementaion do nothing. The correct location of the method is
      * {@link org.netbeans.modules.xml.xam.dom.AbstractDocumentModel#prepareChangeInfo(java.util.List, java.util.List)}
      */
+    @Deprecated
     protected ChangeInfo prepareChangeInfo(List<? extends Node> pathToRoot,
             List<? extends Node> nsContextPathToRoot) {
         return null;

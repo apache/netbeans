@@ -135,6 +135,9 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
         this.root = root;
         bootPath = ClassPath.getClassPath(root, ClassPath.BOOT);
         compilePath = ClassPath.getClassPath(root, ClassPath.COMPILE);
+        if (compilePath != null) {
+            compilePath.addPropertyChangeListener(this);
+        }
         processorPath = new AtomicReference<>(ClassPath.getClassPath(root, JavaClassPathConstants.PROCESSOR_PATH));
         processorModulePath = new AtomicReference<>(ClassPath.getClassPath(root, JavaClassPathConstants.MODULE_PROCESSOR_PATH));
         aptOptions = AnnotationProcessingQuery.getAnnotationProcessingOptions(root);
@@ -209,9 +212,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
     }
 
     public static void sourceRootUnregistered(Iterable<? extends URL> roots) {
-        for (URL root : roots) {
-            knownSourceRootsMap.remove(root);
-        }
+        roots.forEach(knownSourceRootsMap::remove);
         //XXX hack make sure we are not holding APTUtils for any unknown roots
         //just in case something goes wrong:
         for (URL unknown : PathRegistry.getDefault().getUnknownRoots()) {
@@ -311,12 +312,16 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (ClassPath.PROP_ROOTS.equals(evt.getPropertyName())) {
-            classLoaderCache = null;
-            ROOT_CHANGE_RP.execute(()-> {
-                if (verifyProcessorPath(root, usedRoots, PROCESSOR_MODULE_PATH) || verifyProcessorPath(root, usedRoots, PROCESSOR_PATH)) {
-                    slidingRefresh.schedule(SLIDING_WINDOW);
-                }
-            });
+            if (evt.getSource() == compilePath) {
+                stateChanged(null);
+            } else {
+                classLoaderCache = null;
+                ROOT_CHANGE_RP.execute(()-> {
+                    if (verifyProcessorPath(root, usedRoots, PROCESSOR_MODULE_PATH) || verifyProcessorPath(root, usedRoots, PROCESSOR_PATH)) {
+                        slidingRefresh.schedule(SLIDING_WINDOW);
+                    }
+                });
+            }
         }
     }
 
@@ -353,7 +358,13 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
             pp = ClassPath.getClassPath(root, JavaClassPathConstants.PROCESSOR_PATH);
             if (pp != null && processorPath.compareAndSet(null, pp)) {
                 bootPath = ClassPath.getClassPath(root, ClassPath.BOOT);
+                if (compilePath != null) {
+                    compilePath.removePropertyChangeListener(this);
+                }
                 compilePath = ClassPath.getClassPath(root, ClassPath.COMPILE);
+                if (compilePath != null) {
+                    compilePath.addPropertyChangeListener(this);
+                }
                 listenOnProcessorPath(pp, this);
                 classLoaderCache = null;
             }
@@ -955,22 +966,44 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
 
         @Override
         public Set<String> getSupportedOptions() {
+            if (!valid) {
+                return Collections.emptySet();
+            }
             return delegate.getSupportedOptions();
         }
 
         @Override
         public Set<String> getSupportedAnnotationTypes() {
+            if (!valid) {
+                return Collections.emptySet();
+            }
             return delegate.getSupportedAnnotationTypes();
         }
 
         @Override
         public SourceVersion getSupportedSourceVersion() {
+            if (!valid) {
+                return SourceVersion.latest();
+            }
             return delegate.getSupportedSourceVersion();
         }
 
         @Override
         public void init(ProcessingEnvironment processingEnv) {
-            delegate.init(processingEnv);
+            try {
+                delegate.init(processingEnv);
+            } catch (ClientCodeException | ThreadDeath | Abort err) {
+                valid = false;
+                throw err;
+            } catch (Throwable t) {
+                valid = false;
+                StringBuilder exception = new StringBuilder();
+                exception.append(t.getMessage()).append("\n");
+                for (StackTraceElement ste : t.getStackTrace()) {
+                    exception.append(ste).append("\n");
+                }
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, Bundle.ERR_ProcessorException(delegate.getClass().getName(), exception.toString()));
+            }
             this.processingEnv = processingEnv;
         }
 
@@ -1000,6 +1033,9 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
 
         @Override
         public Iterable<? extends Completion> getCompletions(Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
+            if (!valid) {
+                return Collections.emptySet();
+            }
             return delegate.getCompletions(element, annotation, member, userText);
         }
 

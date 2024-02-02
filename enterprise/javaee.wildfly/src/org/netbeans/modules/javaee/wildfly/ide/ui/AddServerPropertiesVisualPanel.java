@@ -20,18 +20,16 @@ package org.netbeans.modules.javaee.wildfly.ide.ui;
 
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -47,7 +45,7 @@ import org.openide.util.NbBundle;
  */
 public class AddServerPropertiesVisualPanel extends JPanel {
 
-    private final Set listeners = new HashSet();
+    private final Set<ChangeListener> listeners = ConcurrentHashMap.newKeySet();
 
     private javax.swing.JComboBox  domainField;  // Domain name (list of registered domains) can be edited
     private javax.swing.JTextField domainPathField;  //
@@ -61,6 +59,8 @@ public class AddServerPropertiesVisualPanel extends JPanel {
     private javax.swing.JTextField portField;
     private javax.swing.JLabel     managementPortLabel;
     private javax.swing.JTextField managementPortField;
+    private javax.swing.JLabel     portOffsetLabel;
+    private javax.swing.JTextField portOffsetField;
     private javax.swing.JLabel     userLabel;
     private javax.swing.JTextField userField;
     private javax.swing.JLabel     passwordLabel;
@@ -75,15 +75,11 @@ public class AddServerPropertiesVisualPanel extends JPanel {
     }
 
     public void addChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
-        }
+        listeners.add(l);
     }
 
     public void removeChangeListener(ChangeListener l ) {
-        synchronized (listeners) {
-            listeners.remove(l);
-        }
+        listeners.remove(l);
     }
 
     private void somethingChanged() {
@@ -91,14 +87,8 @@ public class AddServerPropertiesVisualPanel extends JPanel {
     }
 
     private void fireChangeEvent() {
-        Iterator it;
-        synchronized (listeners) {
-            it = new HashSet(listeners).iterator();
-        }
         ChangeEvent ev = new ChangeEvent(this);
-        while (it.hasNext()) {
-            ((ChangeListener)it.next()).stateChanged(ev);
-        }
+        new ArrayList<>(listeners).forEach(l -> l.stateChanged(ev));
     }
 
     public boolean isLocalServer(){
@@ -111,6 +101,10 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
     public String getPort(){
         return portField.getText().trim();
+    }
+ 
+    public String getPortOffSet(){
+        return portOffsetField.getText().trim();
     }
 
     public String getManagementPort(){
@@ -194,12 +188,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         label1 = new JLabel(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "TXT_PROPERTY_TEXT")); //NOI18N
 
         serverType = new JComboBox(new String[]{"Local","Remote"});//NOI18N
-        serverType.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                serverTypeChanged();
-            }
-        });
+        serverType.addActionListener((ActionEvent e) -> serverTypeChanged());
 
 
         domainPathLabel = new JLabel(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_DomainPath"));//NOI18N
@@ -218,11 +207,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         domainField.getAccessibleContext().setAccessibleName(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Domain"));
         domainField.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Domain"));
 
-        domainField.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                domainChanged();
-            }
-        });
+        domainField.addActionListener((ActionEvent e) -> domainChanged());
 
         domainLabel.setLabelFor(domainField);
         org.openide.awt.Mnemonics.setLocalizedText(domainLabel, org.openide.util.NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Domain")); // NOI18N
@@ -260,6 +245,17 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         managementPortField.addKeyListener(new SomeChangesListener());
 
         managementPortLabel.setLabelFor(managementPortField);
+
+        portOffsetLabel = new JLabel();
+        org.openide.awt.Mnemonics.setLocalizedText(portOffsetLabel, NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Port_Offset")); // NOI18N
+
+        portOffsetField = new JTextField();
+        portOffsetField.setColumns(20);
+        portOffsetField.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Port_Offset"));
+        portOffsetField.getAccessibleContext().setAccessibleName(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_Port_Offset"));
+        portOffsetField.addKeyListener(new SomeChangesListener());
+
+        portOffsetLabel.setLabelFor(portOffsetField);
 
         userLabel = new JLabel(NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_User"));//NOI18N
         userField = new JTextField();
@@ -374,6 +370,21 @@ public class AddServerPropertiesVisualPanel extends JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 0);
         add(managementPortField, gridBagConstraints);
 
+        //-------------- port offset ---------------
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 6);
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        add(portOffsetLabel, gridBagConstraints);
+
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 0);
+        add(portOffsetField, gridBagConstraints);
+
 
         //-------------- User ---------------
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -384,7 +395,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 0);
@@ -401,7 +412,7 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 12, 0);
@@ -430,12 +441,13 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
         hostField.setText("localhost");//NOI18N
         portField.setText(WildflyPluginUtils.getHTTPConnectorPort(domainPathField.getText()));//NOI18N
+        portOffsetField.setText("0");//NOI18N
         domainChanged();
 
     }
 
 
-    class SomeChangesListener implements KeyListener{
+    private class SomeChangesListener implements KeyListener{
 
         @Override
         public void keyTyped(KeyEvent e){}
@@ -445,54 +457,6 @@ public class AddServerPropertiesVisualPanel extends JPanel {
 
         @Override
         public void keyReleased(KeyEvent e){ somethingChanged();}
-
-    }
-
-    private String browseDomainLocation(){
-        String insLocation = null;
-        JFileChooser chooser = getJFileChooser();
-        int returnValue = chooser.showDialog(this, NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_ChooseButton")); //NOI18N
-
-        if(returnValue == JFileChooser.APPROVE_OPTION){
-            insLocation = chooser.getSelectedFile().getAbsolutePath();
-        }
-        return insLocation;
-    }
-
-    private JFileChooser getJFileChooser(){
-        JFileChooser chooser = new JFileChooser();
-
-        chooser.setDialogTitle("LBL_Chooser_Name"); //NOI18N
-        chooser.setDialogType(JFileChooser.CUSTOM_DIALOG);
-
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        chooser.setApproveButtonMnemonic("Choose_Button_Mnemonic".charAt(0)); //NOI18N
-        chooser.setMultiSelectionEnabled(false);
-        chooser.addChoosableFileFilter(new dirFilter());
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setApproveButtonToolTipText("LBL_Chooser_Name"); //NOI18N
-
-        chooser.getAccessibleContext().setAccessibleName("LBL_Chooser_Name"); //NOI18N
-        chooser.getAccessibleContext().setAccessibleDescription("LBL_Chooser_Name"); //NOI18N
-
-        return chooser;
-    }
-
-    private static class dirFilter extends javax.swing.filechooser.FileFilter {
-
-        @Override
-        public boolean accept(File f) {
-            if(!f.exists() || !f.canRead() || !f.isDirectory() ) {
-                return false;
-            }else{
-                return true;
-            }
-        }
-
-        @Override
-        public String getDescription() {
-            return NbBundle.getMessage(AddServerPropertiesVisualPanel.class, "LBL_DirType"); //NOI18N
-        }
 
     }
 

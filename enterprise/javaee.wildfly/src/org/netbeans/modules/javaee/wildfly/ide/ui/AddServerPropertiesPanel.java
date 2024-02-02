@@ -20,9 +20,9 @@ package org.netbeans.modules.javaee.wildfly.ide.ui;
 
 import java.awt.Component;
 import java.io.File;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.modules.j2ee.deployment.plugins.api.InstanceProperties;
@@ -50,6 +50,7 @@ public class AddServerPropertiesPanel implements WizardDescriptor.Panel, ChangeL
         AddServerPropertiesVisualPanel panel = (AddServerPropertiesVisualPanel)getComponent();
 
         String host = panel.getHost();
+        String portoffSet = panel.getPortOffSet();
         String port = panel.getPort();
         String adminPort = panel.getManagementPort();
 
@@ -113,6 +114,11 @@ public class AddServerPropertiesPanel implements WizardDescriptor.Panel, ChangeL
                         NbBundle.getMessage(AddServerPropertiesPanel.class, "MSG_InvalidPort"));  //NOI18N
                 return false;
             }
+            try{
+                Integer.parseInt(portoffSet);
+            } catch(Exception e) {
+                portoffSet = "0";
+            }
 
             try{
                 Integer.parseInt(adminPort);
@@ -142,6 +148,7 @@ public class AddServerPropertiesPanel implements WizardDescriptor.Panel, ChangeL
         instantiatingIterator.setHost(host);
         instantiatingIterator.setPort(port);
         instantiatingIterator.setAdminPort(adminPort);
+        instantiatingIterator.setPortOffset(portoffSet);
         instantiatingIterator.setServer(panel.getDomain());
         instantiatingIterator.setServerPath(panel.getDomainPath());
         instantiatingIterator.setDeployDir(WildflyPluginUtils.getDeployDir( panel.getDomainPath()));
@@ -161,32 +168,18 @@ public class AddServerPropertiesPanel implements WizardDescriptor.Panel, ChangeL
 
     @Override
     public void stateChanged(ChangeEvent ev) {
-        fireChangeEvent(ev);
+        new ArrayList<>(listeners).forEach(l -> l.stateChanged(ev));
     }
 
-    private void fireChangeEvent(ChangeEvent ev) {
-        Iterator it;
-        synchronized (listeners) {
-            it = new HashSet(listeners).iterator();
-        }
-        while (it.hasNext()) {
-            ((ChangeListener)it.next()).stateChanged(ev);
-        }
-    }
-
-    private final transient Set listeners = new HashSet(1);
+    private final transient Set<ChangeListener> listeners = ConcurrentHashMap.newKeySet(2);
     @Override
     public void removeChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.remove(l);
-        }
+        listeners.remove(l);
     }
 
     @Override
     public void addChangeListener(ChangeListener l) {
-        synchronized (listeners) {
-            listeners.add(l);
-        }
+        listeners.add(l);
     }
 
     @Override

@@ -93,12 +93,14 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
         button.setRolloverIcon(PropUtils.getCustomButtonIcon());
     }
 
+    @Override
     public void setOpaque(boolean b) {
         if (getInplaceEditor() != null) {
             getInplaceEditor().getComponent().setOpaque(true);
         }
     }
 
+    @Override
     public void setFont(Font f) {
         if (comp != null) {
             comp.setFont(f);
@@ -139,6 +141,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
         }
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Dimension result;
 
@@ -156,6 +159,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
     /** Overridden to forward the setEnabled call to the contained
      *   component - the custom editor button should always be
      *   enabled if present */
+    @Override
     public void setEnabled(boolean val) {
         super.setEnabled(val);
 
@@ -200,6 +204,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
         needLayout = true;
     }
 
+    @Override
     public void setBackground(Color c) {
         super.setBackground(c);
 
@@ -216,6 +221,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
         }
     }
 
+    @Override
     public void setForeground(Color c) {
         super.setForeground(c);
 
@@ -228,6 +234,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
         }
     }
 
+    @Override
     public void paint(Graphics g) {
         if (isShowing()) {
             super.paint(g);
@@ -279,6 +286,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
      * needed since the component may be painted without a parent, so
      * invalidate will not do anything */
     @SuppressWarnings("deprecation")
+    @Override
     public void reshape(int x, int y, int w, int h) {
         super.reshape(x, y, w, h);
         needLayout = true;
@@ -287,6 +295,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
     /** Overridden to force focus requests to the contained editor
      *  component - setting focus to this component directly will
      *  never be desirable. */
+    @Override
     public void requestFocus() {
         if (comp != null) {
             comp.requestFocus();
@@ -296,6 +305,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
     /** Overridden to force focus requests to the contained editor
      *  component - setting focus to this component directly will
      *  never be desirable. */
+    @Override
     public boolean requestFocusInWindow() {
         if (comp != null) {
             return comp.requestFocusInWindow();
@@ -306,6 +316,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
 
     /** Overridden to proxy adds to the custom editor button and the
      * installed component */
+    @Override
     public void addFocusListener(FocusListener l) {
         if (comp != null) {
             button.addFocusListener(l);
@@ -315,6 +326,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
 
     /** Overridden to proxy removes to the custom editor button and the
      * installed component */
+    @Override
     public void removeFocusListener(FocusListener l) {
         if (comp != null) {
             button.removeFocusListener(l);
@@ -409,6 +421,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
         return inplace.supportsTextEntry();
     }
 
+    @Override
     public void doLayout() {
         if (comp != null) {
             comp.setBounds(0, 0, getWidth() - PropUtils.getCustomButtonWidth(), getHeight());
@@ -430,6 +443,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
         needLayout = false;
     }
 
+    @Override
     public Dimension getMinimumSize() {
         return getPreferredSize();
     }
@@ -443,7 +457,7 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
      * custom editor button.
      * <p>
      * This class also contains the ability to create an image buffer of itself
-     * and use it for its lifetime.  On XP and Aqua L&Fs, button painting is
+     * and use it for its lifetime.  On XP and Aqua L&amp;Fs, button painting is
      * expensive, and a huge amount of a treetable or property sheet's painting
      * cycle gets spent scaling the backing bitmap for a button that will
      * always be painted exactly the same size.
@@ -455,10 +469,12 @@ class ButtonPanel extends javax.swing.JComponent implements InplaceEditor {
         public ConditionallyFocusableButton() {
         }
 
+        @Override
         public boolean isFocusable() {
             return (ButtonPanel.this.getParent() != null) && !clearing;
         }
 
+        @Override
         public void paint(Graphics g) {
             if (PropUtils.useOptimizedCustomButtonPainting() && !hasFocus()) {
                 if (log) {

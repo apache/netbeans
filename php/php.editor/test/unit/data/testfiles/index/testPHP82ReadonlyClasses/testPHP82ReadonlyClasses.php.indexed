@@ -1,0 +1,142 @@
+
+
+Document 0
+Searchable Keys:
+
+Not Searchable Keys:
+
+
+Document 1
+Searchable Keys:
+  clz : abstractfinalclass;AbstractFinalClass;1253;;;;1041;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : abstractfinalclass
+
+Not Searchable Keys:
+
+
+Document 2
+Searchable Keys:
+  clz : abstractreadonlyclass;AbstractReadonlyClass;912;;;;1089;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : abstractreadonlyclass
+
+Not Searchable Keys:
+
+
+Document 3
+Searchable Keys:
+  clz : childclass;ChildClass;1088;ParentClass|\ParentClass;;;65;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  superclz : parentclass;ParentClass;
+  top : childclass
+
+Not Searchable Keys:
+
+
+Document 4
+Searchable Keys:
+  clz : duplicatedabstractclass;DuplicatedAbstractClass;1544;;;;1025;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : duplicatedabstractclass
+
+Not Searchable Keys:
+
+
+Document 5
+Searchable Keys:
+  clz : duplicatedfinalclass;DuplicatedFinalClass;1496;;;;17;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : duplicatedfinalclass
+
+Not Searchable Keys:
+
+
+Document 6
+Searchable Keys:
+  clz : duplicatedreadonlyclass;DuplicatedReadonlyClass;1451;;;;65;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : duplicatedreadonlyclass
+
+Not Searchable Keys:
+
+
+Document 7
+Searchable Keys:
+  clz : finalabstractclass;FinalAbstractClass;1350;;;;1041;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : finalabstractclass
+
+Not Searchable Keys:
+
+
+Document 8
+Searchable Keys:
+  clz : finalreadonlyclass;FinalReadonlyClass;1007;;;;81;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : finalreadonlyclass
+
+Not Searchable Keys:
+
+
+Document 9
+Searchable Keys:
+  clz : ifaceimpl;IfaceImpl;1137;;;Iface|\Iface;65;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  superiface : iface;Iface;
+  top : ifaceimpl
+
+Not Searchable Keys:
+
+
+Document 10
+Searchable Keys:
+  clz : parentclass;ParentClass;821;;;;1;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : parentclass
+
+Not Searchable Keys:
+
+
+Document 11
+Searchable Keys:
+  clz : readonlyabstractclass;ReadonlyAbstractClass;961;;;;1089;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : readonlyabstractclass
+
+Not Searchable Keys:
+
+
+Document 12
+Searchable Keys:
+  clz : readonlyclass;ReadonlyClass;871;;;;65;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : readonlyclass
+
+Not Searchable Keys:
+
+
+Document 13
+Searchable Keys:
+  clz : readonlyfinalclass;ReadonlyFinalClass;1050;;;;81;;0;<TESTURL>/testPHP82ReadonlyClasses.php;;0;
+  top : readonlyfinalclass
+
+Not Searchable Keys:
+
+
+Document 14
+Searchable Keys:
+  identifier_used : abstractfinalclass;
+  identifier_used : abstractreadonlyclass;
+  identifier_used : childclass;
+  identifier_used : duplicatedabstractclass;
+  identifier_used : duplicatedfinalclass;
+  identifier_used : duplicatedreadonlyclass;
+  identifier_used : finalabstractclass;
+  identifier_used : finalreadonlyclass;
+  identifier_used : iface;
+  identifier_used : iface;
+  identifier_used : ifaceimpl;
+  identifier_used : parentclass;
+  identifier_used : parentclass;
+  identifier_used : readonlyabstractclass;
+  identifier_used : readonlyclass;
+  identifier_used : readonlyfinalclass;
+
+Not Searchable Keys:
+
+
+Document 15
+Searchable Keys:
+  iface : iface;Iface;846;;;0;<TESTURL>/testPHP82ReadonlyClasses.php;
+  top : iface
+
+Not Searchable Keys:

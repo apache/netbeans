@@ -85,7 +85,7 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
    
     private final Project proj;
     private TransientRepositories transRepos;
-    private final List<URI> uriReferences = new ArrayList<URI>();
+    private final List<URI> uriReferences = new ArrayList<>();
 
     // ui logging
     static final String UI_LOGGER_NAME = "org.netbeans.ui.maven.project"; //NOI18N
@@ -106,7 +106,7 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
                 NbMavenProjectImpl project = proj.getLookup().lookup(NbMavenProjectImpl.class);
                 Set<URI> newuris = getProjectExternalSourceRoots(project);
                 synchronized (uriReferences) {
-                    Set<URI> olduris = new HashSet<URI>(uriReferences);
+                    Set<URI> olduris = new HashSet<>(uriReferences);
                     olduris.removeAll(newuris);
                     newuris.removeAll(uriReferences);
                     for (URI old : olduris) {
@@ -135,7 +135,7 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
         checkSourceDownloads();
         checkJavadocDownloads();
         project.attachUpdater();
-        registerWithSubmodules(FileUtil.toFile(proj.getProjectDirectory()), new HashSet<File>());
+        registerWithSubmodules(FileUtil.toFile(proj.getProjectDirectory()), new HashSet<>());
         //manually register the listener for this project, we know it's loaded and should be listening on changes.
         //registerCoordinates() doesn't attach listeners
         MavenFileOwnerQueryImpl.getInstance().attachProjectListener(project);
@@ -179,43 +179,39 @@ public class ProjectOpenedHookImpl extends ProjectOpenedHook {
         project.getCopyOnSaveResources().opened();
 
         //only check for the updates of index, if the indexing was already used.
-        if (checkedIndices.compareAndSet(false, true) && existsDefaultIndexLocation() && RepositoryPreferences.isIndexRepositories()) {
+        if (checkedIndices.compareAndSet(false, true) && existsDefaultIndexLocation() && RepositoryPreferences.isIndexDownloadEnabledEffective()) {
             final int freq = RepositoryPreferences.getIndexUpdateFrequency();
-            if (freq != RepositoryPreferences.FREQ_NEVER) {
-                new RequestProcessor("Maven Repo Index Transfer/Scan").post(new Runnable() { // #138102
-                    public @Override void run() {
-                        List<RepositoryInfo> ris = RepositoryPreferences.getInstance().getRepositoryInfos();
-                        Set<String> doNotIndexRepos = getDoNotIndexRepos();
-                        for (final RepositoryInfo ri : ris) {
-                            //check this repo can be indexed
-                            if ( (!ri.isRemoteDownloadable() && !ri.isLocal()) || doNotIndexRepos.contains(ri.getId())) {
-                                LOGGER.log(Level.FINER, "Skipping Index At Startup for :{0}", ri.getId());//NOI18N
-                                continue;
-                            }
-                            boolean run = false;
-                            if (freq == RepositoryPreferences.FREQ_STARTUP) {
-                                LOGGER.log(Level.FINER, "Index At Startup :{0}", ri.getId());//NOI18N
-                                run = true;
-                            } else if (freq == RepositoryPreferences.FREQ_ONCE_DAY && checkDiff(ri.getId(), 86400000L)) {
-                                LOGGER.log(Level.FINER, "Index Once a Day :{0}", ri.getId());//NOI18N
-                                run = true;
-                            } else if (freq == RepositoryPreferences.FREQ_ONCE_WEEK && checkDiff(ri.getId(), 604800000L)) {
-                                LOGGER.log(Level.FINER, "Index once a Week :{0}", ri.getId());//NOI18N
-                                run = true;
-                            }
-                            if (run && ri.isRemoteDownloadable()) {
-                                RepositoryIndexer.indexRepo(ri);
-                            }
-                        }
+            new RequestProcessor("Maven Repo Index Transfer/Scan").post(() -> {
+                Set<String> doNotIndexRepos = getDoNotIndexRepos();
+                for (final RepositoryInfo ri : RepositoryPreferences.getInstance().getRepositoryInfos()) {
+                    //check this repo can be indexed
+                    if (!ri.isRemoteDownloadable() || doNotIndexRepos.contains(ri.getId())) {
+                        LOGGER.log(Level.FINER, "Skipping Index At Startup for :{0}", ri.getId());//NOI18N
+                        continue;
                     }
-                }, 1000 * 60 * 2);
-            }
+                    boolean run = false;
+                    if (freq == RepositoryPreferences.FREQ_STARTUP) {
+                        LOGGER.log(Level.FINER, "Index At Startup :{0}", ri.getId());//NOI18N
+                        run = true;
+                    } else if (freq == RepositoryPreferences.FREQ_ONCE_DAY && checkDiff(ri.getId(), 86400000L)) {
+                        LOGGER.log(Level.FINER, "Index Once a Day :{0}", ri.getId());//NOI18N
+                        run = true;
+                    } else if (freq == RepositoryPreferences.FREQ_ONCE_WEEK && checkDiff(ri.getId(), 604800000L)) {
+                        LOGGER.log(Level.FINER, "Index once a Week :{0}", ri.getId());//NOI18N
+                        run = true;
+                    }
+                    if (run) {
+                        RepositoryIndexer.indexRepo(ri); // permissions are handled in the indexer
+                    }
+                }
+            } // #138102
+            , 1000 * 60 * 2);
         }
     }
 
     private Set<URI> getProjectExternalSourceRoots(NbMavenProjectImpl project) throws IllegalArgumentException {
-        Set<URI> uris = new HashSet<URI>();
-        Set<URI> toRet = new HashSet<URI>();
+        Set<URI> uris = new HashSet<>();
+        Set<URI> toRet = new HashSet<>();
         uris.addAll(Arrays.asList(project.getSourceRoots(false)));
         uris.addAll(Arrays.asList(project.getSourceRoots(true)));
         //#167572 in the unlikely event that generated sources are located outside of

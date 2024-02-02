@@ -20,6 +20,7 @@ package org.netbeans.modules.java.editor.javadoc;
 
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import com.sun.source.doctree.DocTree.Kind;
 import com.sun.source.doctree.ParamTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.Scope;
@@ -101,7 +102,10 @@ public class JavadocCompletionTask<T> extends UserTask {
         T createPackageItem(String pkgFQN, int startOffset);
     }
 
-    private static final Set<ElementKind> EXECUTABLE = EnumSet.of(ElementKind.METHOD, ElementKind.CONSTRUCTOR);
+    private static final EnumSet<ElementKind> EXECUTABLE = EnumSet.of(ElementKind.METHOD, ElementKind.CONSTRUCTOR);
+    private static final EnumSet<ElementKind> TYPE_KINDS = EnumSet.of(
+            ElementKind.CLASS, ElementKind.INTERFACE, ElementKind.ENUM, ElementKind.RECORD, ElementKind.ANNOTATION_TYPE);
+
     private static final String CLASS_KEYWORD = "class"; //NOI18N
 
     private final List<T> items = new ArrayList<>();
@@ -285,7 +289,15 @@ public class JavadocCompletionTask<T> extends UserTask {
         new DocTreePathScanner<Void, Void>() {
             @Override
             public Void scan(DocTree node, Void p) {
-                if (node != null && jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, node) <= normalizedOffset && jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, node) >= normalizedOffset) {
+                long endPos = jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, node);
+                long startPos = jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, node);
+                if (node.getKind() == Kind.ERRONEOUS && getCurrentPath() != null) {
+                    String text = jdctx.javac.getText().substring((int) startPos, (int) endPos);
+                    if (text.length() > 0 && text.charAt(0) == '{' && text.charAt(text.length() - 1) != '}') {
+                        endPos = jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, getCurrentPath().getLeaf());
+                    }
+                }
+                if (node != null && startPos <= normalizedOffset && endPos >= normalizedOffset) {
                     final DocTreePath docTreePath = new DocTreePath(getCurrentPath(), node);
                     if (JavadocCompletionUtils.isBlockTag(docTreePath) || JavadocCompletionUtils.isInlineTag(docTreePath)) {
                         result[0] = docTreePath;
@@ -373,6 +385,9 @@ public class JavadocCompletionTask<T> extends UserTask {
                 break;
             case REFERENCE:
                 insideReference(tag, jdctx);
+                break;
+            case SNIPPET:
+                insideSnippet(tag, jdctx);
                 break;
         }
     }
@@ -557,7 +572,7 @@ public class JavadocCompletionTask<T> extends UserTask {
     private void completeTypeVarName(Element forElement, String prefix, int substitutionOffset) {
         if (prefix.length() > 0) {
             if (prefix.charAt(0) == '<') {
-                prefix = prefix.substring(1, prefix.length());
+                prefix = prefix.substring(1);
             } else {
                 // not type param
                 return;
@@ -576,17 +591,17 @@ public class JavadocCompletionTask<T> extends UserTask {
         String pkgPrefix;
         if (fqn == null) {
             pkgPrefix = prefix;
-            addTypes(EnumSet.<ElementKind>of(ElementKind.CLASS, ElementKind.INTERFACE, ElementKind.ENUM, ElementKind.ANNOTATION_TYPE), null, null, prefix, substitutionOffset, jdctx);
+            addTypes(TYPE_KINDS, null, null, prefix, substitutionOffset, jdctx);
         } else {
             pkgPrefix = fqn + '.' + prefix;
             PackageElement pkgElm = jdctx.javac.getElements().getPackageElement(fqn);
             if (pkgElm != null) {
-                addPackageContent(pkgElm, EnumSet.<ElementKind>of(ElementKind.CLASS, ElementKind.INTERFACE, ElementKind.ENUM, ElementKind.ANNOTATION_TYPE), null, null, prefix, substitutionOffset, jdctx);
+                addPackageContent(pkgElm, TYPE_KINDS, null, null, prefix, substitutionOffset, jdctx);
             }
             TypeElement typeElm = jdctx.javac.getElements().getTypeElement(fqn);
             if (typeElm != null) {
                 // inner classes
-                addInnerClasses(typeElm, EnumSet.<ElementKind>of(ElementKind.CLASS, ElementKind.INTERFACE, ElementKind.ENUM, ElementKind.ANNOTATION_TYPE), null, null, prefix, substitutionOffset, jdctx);
+                addInnerClasses(typeElm, TYPE_KINDS, null, null, prefix, substitutionOffset, jdctx);
             }
         }
         for (String pkgName : jdctx.javac.getClasspathInfo().getClassIndex().getPackageNames(pkgPrefix, true, EnumSet.allOf(ClassIndex.SearchScope.class))) {
@@ -1216,11 +1231,6 @@ public class JavadocCompletionTask<T> extends UserTask {
         CharSequence text = token.text();
         int pos = caretOffset - jdts.offset();
         DocTreePath tag = getTag(jdctx, caretOffset);
-        int startPos = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
-        String subStr = JavadocCompletionUtils.getCharSequence(jdctx.doc, startPos, caretOffset).toString();
-        int index = subStr.lastIndexOf("\n");
-        String markupLine = JavadocCompletionUtils.getCharSequence(jdctx.doc, (index + startPos), caretOffset).toString();
-        insideInlineSnippet(markupLine);
 
         if (pos > 0 && pos <= text.length() && text.charAt(pos - 1) == '{') {
             if (tag != null && !JavadocCompletionUtils.isBlockTag(tag)) {
@@ -1242,26 +1252,43 @@ public class JavadocCompletionTask<T> extends UserTask {
         }
     }
 
+    void insideSnippet(DocTreePath tag, JavadocContext jdctx) {
+        int startPos = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+        String subStr = JavadocCompletionUtils.getCharSequence(jdctx.doc, startPos, caretOffset).toString();
+        int index = subStr.lastIndexOf("\n");
+        String markupLine = JavadocCompletionUtils.getCharSequence(jdctx.doc, (index + startPos), caretOffset).toString();
+        insideInlineSnippet(markupLine);
+    }
+
+    private static final List<String> SNIPPET_TAGS = Collections.unmodifiableList(Arrays.asList(
+            "@highlight",
+            "@replace",
+            "@link",
+            "@start",
+            "@end"
+    ));
+
+    private static final Pattern TAG_PATTERN = Pattern.compile("@\\b\\w{1,}\\b\\s+(?!.*@\\b\\w{1,}\\b\\s+)");
+
     void insideInlineSnippet(String subStr) {
         if (subStr.contains("//")) {
-            if (subStr.endsWith("@")) {
-                List<String> inlineAttr = new ArrayList() {
-                    {
-                        add("highlight");
-                        add("replace");
-                        add("link");
-                        add("start");
-                        add("end");
+            int lastAt = subStr.lastIndexOf('@');
+            if (lastAt != (-1)) {
+                String suffix = subStr.substring(lastAt);
+                if (!suffix.contains(" ")) {
+                    for (String str : SNIPPET_TAGS) {
+                        if (str.startsWith(suffix)) {
+                            items.add(factory.createNameItem(str.substring(1), this.caretOffset));
+                        }
                     }
-                };
-                for (String str : inlineAttr) {
-                    items.add(factory.createNameItem(str, this.caretOffset));
+                    return ;
                 }
-            } else {
-                String[] tags = {"@highlight", "@replace", "@link", "@start", "@end"};
-                Matcher match = Pattern.compile("@\\b\\w{1,}\\b\\s+(?!.*@\\b\\w{1,}\\b\\s+)").matcher(subStr);
-                if (match.find() && Arrays.asList(tags).contains(match.group(0).trim())) {
-                    completeInlineMarkupTag(match.group(0).trim(), new ArrayList() {
+            }
+            Matcher match = TAG_PATTERN.matcher(subStr);
+            if (match.find()) {
+                String tag = match.group(0);
+                if (SNIPPET_TAGS.contains(tag.trim())) {
+                    completeInlineMarkupTag(tag.trim(), new ArrayList() {
                         {
                             add("substring");
                             add("regex");

@@ -80,7 +80,7 @@ import org.openide.util.Lookup;
  * contains several consecutive mime types that are the same.
  * 
  * <p>The format of a valid mime type string is described in
- * <a href="http://tools.ietf.org/html/rfc4288#section-4.2">RFC 4288</a>.
+ * <a href="https://www.rfc-editor.org/rfc/rfc4288.html#section-4.2">RFC 4288</a>.
  * <code>MimePath</code> performs internall checks according to this specification.
  * 
  * <p><b>Identity:</b> By definition two <code>MimePath</code> instances are equal
@@ -98,7 +98,7 @@ import org.openide.util.Lookup;
  *
  * @author Miloslav Metelka, Vita Stejskal
  * @see MimeLookup
- * @see <a href="http://tools.ietf.org/html/rfc4288#section-4.2">RFC 4288</a>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc4288.html#section-4.2">RFC 4288</a>
  */
 public final class MimePath {
     
@@ -226,14 +226,14 @@ public final class MimePath {
      * Validates components of a mime type. Each mime types is compound from
      * two components - <i>type</i> and <i>subtype</i>. There are rules that
      * both components must obey. For details see 
-     * <a href="http://tools.ietf.org/html/rfc4288#section-4.2">RFC 4288</a>.
+     * <a href="https://www.rfc-editor.org/rfc/rfc4288.html#section-4.2">RFC 4288</a>.
      * 
      * @param type The type component of a mime type to validate. If <code>null</code>
      *   the type component will not be validated.
      * @param subtype The subtype component of a mime type to validate. If <code>null</code>
      *   the subtype component will not be validated.
      * 
-     * @return <code>true</code> if non-</code>null</code> components passed in
+     * @return <code>true</code> if non-<code>null</code> components passed in
      *   are valid mime type components, otherwise <code>false</code>.
      * @since 1.7
      */
@@ -339,7 +339,7 @@ public final class MimePath {
     
     /**
      * Get string path represented by this mime-path.
-     * <br/>
+     * <br>
      * For example <code>"text/x-jsp/text/x-java"</code>.
      *
      * @return non-null string path.
@@ -370,7 +370,7 @@ public final class MimePath {
      * <code>getMimeType(0)</code> returns <code>"text/x-jsp"</code>
      * and <code>getMimeType(1)</code> returns <code>"text/x-java"</code>.
      *
-     * @param index >=0 && < {@link #size()}.
+     * @param index &gt;=0 &amp;&amp; &lt; {@link #size()}.
      * @return non-null mime-type at the given index.
      * @throws IndexOutOfBoundsException in case the index is not within
      *   required bounds.
@@ -383,7 +383,7 @@ public final class MimePath {
      * Return prefix mime-path with the given number of mime-type components
      * ranging from zero till the size of this mime-path.
      *
-     * @param size >=0 && <= {@link #size()}.
+     * @param size &gt;=0 &amp;&amp; &lt;= {@link #size()}.
      *  <br>
      *  For zero size the {@link #EMPTY} will be returned.
      *  <br>
@@ -524,7 +524,7 @@ public final class MimePath {
      * For {@link #EMPTY}, returns {@code null}. For most other mime types, returns
      * {@code ""}. If the mime type derives from another one, such as text/ant+xml derives
      * from xml, the return value will be the base mime type (text/xml in the example case).
-     * <p/>
+     * <p>
      * For MimePaths that identified embedded content (more components on the MimePath),
      * the method returns the parent MIME of the last MIME type on the path
      * 
@@ -555,7 +555,7 @@ public final class MimePath {
      * <li>text/css -- the mime type of the identified content itself
      * <li> (empty string)
      * </ol>
-     * <p/>
+     * <p>
      * If a MIME type on the path has a generic MIME type (i.e. text/x-ant+xml 
      * has a generic MIME type text/xml), that generic type will be inserted. For example,
      * for text/java/text/x-ant+xml/text/javascript, the result will list:
@@ -569,17 +569,17 @@ public final class MimePath {
      * For all but {@link #EMPTY} MimePaths, the list contains at least one entry, and the last
      * entry is the {@link #EMPTY}. Note also, that the complete MimePath is always returned
      * as the 1st member of the list.
-     * <p/>
+     * <p>
      * The returned sequence of MimePaths is suitable for searching settings or services
      * for the (embedded) content whose type is described by MimePath as it is ordered from the
      * most specific to the least specific paths (including generalization) and always contains
-     * the mime type of the identified contents. The last component ({@link ""}) represents 
+     * the mime type of the identified contents. The last component ({@code ""}) represents 
      * default settings (services).
-     * <p/>
+     * <p>
      * Note that for MimePaths created from a mime type (not empty!) string, the 
      * <code>getInheritedPaths().get(1)</code> is a parent mime type. Either empty,
      * or the generalized MIME.
-     * <p/>
+     * <p>
      * The caller should not modify the returned List.
      * 
      * @return list of inherited Mime paths

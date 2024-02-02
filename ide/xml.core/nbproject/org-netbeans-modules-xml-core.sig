@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.60.0
+#Version 1.65.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -90,7 +90,7 @@ meth public abstract org.netbeans.modules.xml.api.model.DescriptionSource resolv
 
 CLSS public abstract interface org.netbeans.modules.xml.api.model.ExtendedGrammarQuery
 intf org.netbeans.modules.xml.api.model.GrammarQuery
-meth public abstract java.util.List getResolvedEntities()
+meth public abstract java.util.List<java.lang.String> getResolvedEntities()
 
 CLSS public final org.netbeans.modules.xml.api.model.GrammarEnvironment
 cons public init(java.util.Enumeration,org.xml.sax.InputSource,org.openide.filesystems.FileObject)

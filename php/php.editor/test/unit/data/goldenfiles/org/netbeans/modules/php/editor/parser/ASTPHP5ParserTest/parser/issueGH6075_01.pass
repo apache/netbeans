@@ -1,0 +1,250 @@
+<testresult testFile='issueGH6075_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='814' end='819'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='820' end='824'>
+            <text>User</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='825' end='826'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='831' end='837'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='838' end='841'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='842' end='845'>
+            <text>$id</text>
+        </token>
+        <token id='T_SEMICOLON' start='845' end='846'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='851' end='857'>
+            <text>public</text>
+        </token>
+        <token id='T_FUNCTION' start='858' end='866'>
+            <text>function</text>
+        </token>
+        <token id='T_STRING' start='867' end='872'>
+            <text>getId</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='872' end='873'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='873' end='874'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='874' end='875'>
+            <text>:</text>
+        </token>
+        <token id='T_STRING' start='876' end='879'>
+            <text>int</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='880' end='881'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='890' end='896'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='897' end='902'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='902' end='904'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='904' end='906'>
+            <text>id</text>
+        </token>
+        <token id='T_SEMICOLON' start='906' end='907'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='912' end='913'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='914' end='915'>
+            <text>}</text>
+        </token>
+        <token id='T_VARIABLE' start='941' end='946'>
+            <text>$user</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='946' end='948'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='948' end='953'>
+            <text>getId</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='953' end='954'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='954' end='955'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='955' end='956'>
+            <text>;</text>
+        </token>
+        <token id='T_VARIABLE' start='982' end='988'>
+            <text>$user2</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='988' end='990'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='990' end='995'>
+            <text>getId</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='995' end='996'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='996' end='997'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='997' end='998'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='999' end='999'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='999'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <PHPVarComment start='917' end='940'>
+                <Variable>
+                    <PHPDocVarTypeTag start='921' end='931' kind='var'>
+                        <Variable>
+                            <PHPDocNode start='932' end='937' value='$user'/>
+                        </Variable>
+                        <Types>
+                            <PHPDocTypeNode start='926' end='931' value='?User' isArray='false'/>
+                        </Types>
+                    </PHPDocVarTypeTag>
+                </Variable>
+            </PHPVarComment>
+            <PHPVarComment start='958' end='981'>
+                <Variable>
+                    <PHPDocVarTypeTag start='961' end='978' kind='var'>
+                        <Variable>
+                            <PHPDocNode start='966' end='972' value='$user2'/>
+                        </Variable>
+                        <Types>
+                            <PHPDocTypeNode start='973' end='978' value='?User' isArray='false'/>
+                        </Types>
+                    </PHPDocVarTypeTag>
+                </Variable>
+            </PHPVarComment>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <PHPVarComment start='917' end='940'>
+                <Variable>
+                    <PHPDocVarTypeTag start='921' end='931' kind='var'>
+                        <Variable>
+                            <PHPDocNode start='932' end='937' value='$user'/>
+                        </Variable>
+                        <Types>
+                            <PHPDocTypeNode start='926' end='931' value='?User' isArray='false'/>
+                        </Types>
+                    </PHPDocVarTypeTag>
+                </Variable>
+            </PHPVarComment>
+            <PHPVarComment start='958' end='981'>
+                <Variable>
+                    <PHPDocVarTypeTag start='961' end='978' kind='var'>
+                        <Variable>
+                            <PHPDocNode start='966' end='972' value='$user2'/>
+                        </Variable>
+                        <Types>
+                            <PHPDocTypeNode start='973' end='978' value='?User' isArray='false'/>
+                        </Types>
+                    </PHPDocVarTypeTag>
+                </Variable>
+            </PHPVarComment>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='814' end='915' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='820' end='824' name='User'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='825' end='915' isCurly='true'>
+                    <FieldsDeclaration start='831' end='846' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='838' end='841' isCurrent='false' isGlobal='false'>
+                                <Identifier start='838' end='841' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='842' end='845' isDollared='true'>
+                                <Identifier start='843' end='845' name='id'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <MethodDeclaration start='851' end='913' modifiers='public'>
+                        <FunctionDeclaration start='858' end='913' isReference='false'>
+                            <Identifier start='867' end='872' name='getId'/>
+                            <FormalParameters>
+                            </FormalParameters>
+                            <NamespaceName start='876' end='879' isCurrent='false' isGlobal='false'>
+                                <Identifier start='876' end='879' name='int'/>
+                            </NamespaceName>
+                            <Block start='880' end='913' isCurly='true'>
+                                <ReturnStatement start='890' end='907'>
+                                    <FieldAccess start='897' end='906' isNullsafe='false'>
+                                        <Variable start='897' end='902' isDollared='true'>
+                                            <Identifier start='898' end='902' name='this'/>
+                                        </Variable>
+                                        <Field>
+                                            <Variable start='904' end='906' isDollared='false'>
+                                                <Identifier start='904' end='906' name='id'/>
+                                            </Variable>
+                                        </Field>
+                                    </FieldAccess>
+                                </ReturnStatement>
+                            </Block>
+                        </FunctionDeclaration>
+                    </MethodDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ExpressionStatement start='941' end='956'>
+                <MethodInvocation start='941' end='955' isNullsafe='false'>
+                    <Variable start='941' end='946' isDollared='true'>
+                        <Identifier start='942' end='946' name='user'/>
+                    </Variable>
+                    <Method>
+                        <FunctionInvocation start='948' end='955'>
+                            <FucntionName start='948' end='953'>
+                                <Variable start='948' end='953' isDollared='false'>
+                                    <Identifier start='948' end='953' name='getId'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+            <ExpressionStatement start='982' end='998'>
+                <MethodInvocation start='982' end='997' isNullsafe='false'>
+                    <Variable start='982' end='988' isDollared='true'>
+                        <Identifier start='983' end='988' name='user2'/>
+                    </Variable>
+                    <Method>
+                        <FunctionInvocation start='990' end='997'>
+                            <FucntionName start='990' end='995'>
+                                <Variable start='990' end='995' isDollared='false'>
+                                    <Identifier start='990' end='995' name='getId'/>
+                                </Variable>
+                            </FucntionName>
+                            <Parameters>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </Method>
+                </MethodInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

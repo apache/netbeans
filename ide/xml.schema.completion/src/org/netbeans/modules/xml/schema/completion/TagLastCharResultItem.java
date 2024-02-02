@@ -28,7 +28,7 @@ import org.netbeans.modules.xml.schema.completion.util.CompletionUtil;
 
 /**
  *
- * @Alex Petrov (Alexey.Petrov@Sun.com)
+ * @author Alex Petrov (Alexey.Petrov@Sun.com)
  */
 public class TagLastCharResultItem extends CompletionResultItem {
     private static final Logger _logger = Logger.getLogger(TagLastCharResultItem.class.getName());

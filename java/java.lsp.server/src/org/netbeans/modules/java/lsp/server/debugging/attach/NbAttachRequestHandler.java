@@ -19,7 +19,9 @@
 package org.netbeans.modules.java.lsp.server.debugging.attach;
 
 import com.sun.jdi.connect.AttachingConnector;
+import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.Connector.Argument;
+import com.sun.jdi.connect.ListeningConnector;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -44,10 +46,12 @@ import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.AttachingDICookie;
 import org.netbeans.api.debugger.jpda.DebuggerStartException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
+import org.netbeans.api.debugger.jpda.ListeningDICookie;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.launch.NbDebugSession;
 import org.netbeans.modules.java.lsp.server.debugging.ni.NILocationVisualizer;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
+import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
 import org.netbeans.modules.java.nativeimage.debugger.api.NIDebugRunner;
 import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
@@ -160,9 +164,11 @@ public final class NbAttachRequestHandler {
     @Messages({"# {0} - connector name", "MSG_InvalidConnector=Invalid connector name: {0}"})
     private CompletableFuture<Void> attachToJVM(Map<String, Object> attachArguments, DebugAdapterContext context) {
         CompletableFuture<Void> resultFuture = new CompletableFuture<>();
-        ConfigurationAttributes configurationAttributes = AttachConfigurations.get().findConfiguration(attachArguments);
+        NbCodeLanguageClient client = context.getLspSession().getLookup().lookup(NbCodeLanguageClient.class);
+        NbCodeClientCapabilities clientCapa = client != null ? client.getNbCodeCapabilities() : null;
+        ConfigurationAttributes configurationAttributes = AttachConfigurations.get(clientCapa).findConfiguration(attachArguments);
         if (configurationAttributes != null) {
-            AttachingConnector connector = configurationAttributes.getConnector();
+            Connector connector = configurationAttributes.getConnector();
             RP.post(() -> attachTo(connector, attachArguments, context, resultFuture));
         } else {
             context.setDebugMode(true);
@@ -175,7 +181,7 @@ public final class NbAttachRequestHandler {
     }
 
     @Messages({"# {0} - argument name", "# {1} - value", "MSG_ConnectorInvalidValue=Invalid value of {0}: {1}"})
-    private void attachTo(AttachingConnector connector, Map<String, Object> arguments, DebugAdapterContext context, CompletableFuture<Void> resultFuture) {
+    private void attachTo(Connector connector, Map<String, Object> arguments, DebugAdapterContext context, CompletableFuture<Void> resultFuture) {
         Map<String, Argument> args = connector.defaultArguments();
         for (String argName : arguments.keySet()) {
             String argNameTranslated = ATTR_CONFIG_TO_CONNECTOR.getOrDefault(argName, argName);
@@ -192,16 +198,22 @@ public final class NbAttachRequestHandler {
             }
             arg.setValue(value);
         }
-        AttachingDICookie attachingCookie = AttachingDICookie.create(connector, args);
-        resultFuture.complete(null);
-        startAttaching(attachingCookie, context);
+        DebuggerInfo debuggerInfo;
+        if (connector instanceof AttachingConnector) {
+            AttachingDICookie attachingCookie = AttachingDICookie.create((AttachingConnector) connector, args);
+            resultFuture.complete(null);
+            debuggerInfo = DebuggerInfo.create(AttachingDICookie.ID, new Object [] { attachingCookie });
+        } else {
+            assert connector instanceof ListeningConnector : connector;
+            ListeningDICookie listeningCookie = ListeningDICookie.create((ListeningConnector) connector, args);
+            debuggerInfo = DebuggerInfo.create(ListeningDICookie.ID, new Object [] { listeningCookie });
+        }
+        startAttaching(debuggerInfo, context);
     }
 
     @Messages("MSG_FailedToAttach=Failed to attach.")
-    private void startAttaching(AttachingDICookie attachingCookie, DebugAdapterContext context) {
-        DebuggerEngine[] es = DebuggerManager.getDebuggerManager ().startDebugging(
-            DebuggerInfo.create(AttachingDICookie.ID, new Object [] { attachingCookie })
-        );
+    private void startAttaching(DebuggerInfo debuggerInfo, DebugAdapterContext context) {
+        DebuggerEngine[] es = DebuggerManager.getDebuggerManager ().startDebugging(debuggerInfo);
         if (es.length > 0) {
             JPDADebugger debugger = es[0].lookupFirst(null, JPDADebugger.class);
             if (debugger != null) {

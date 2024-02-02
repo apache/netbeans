@@ -48,17 +48,17 @@ public final class OrganizeImportsCodeAction extends CodeActionsProvider {
     @NbBundle.Messages({
         "DN_OrganizeImports=Organize Imports",
     })
-    public List<CodeAction> getCodeActions(ResultIterator resultIterator, CodeActionParams params) throws Exception {
+    public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         List<String> only = params.getContext().getOnly();
         if (only == null || !only.contains(CodeActionKind.Source) && !only.contains(CodeActionKind.SourceOrganizeImports)) {
             return Collections.emptyList();
         }
-        CompilationController info = CompilationController.get(resultIterator.getParserResult());
+        CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null) {
             return Collections.emptyList();
         }
         String uri = Utils.toUri(info.getFileObject());
-        return Collections.singletonList(createCodeAction(Bundle.DN_OrganizeImports(), CodeActionKind.SourceOrganizeImports, uri, null));
+        return Collections.singletonList(createCodeAction(client, Bundle.DN_OrganizeImports(), CodeActionKind.SourceOrganizeImports, uri, null));
     }
 
     @Override

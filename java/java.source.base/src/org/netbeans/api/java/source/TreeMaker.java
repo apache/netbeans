@@ -92,7 +92,7 @@ import org.openide.util.Parameters;
  * You can obtain appropriate instance of this class by getting it from working
  * copy:
  *
- * <pre>
+ * <pre>{@code
  * CancellableTask task = new CancellableTask<WorkingCopy>() {
  *
  *        public void run(WorkingCopy workingCopy) throws Exception {
@@ -101,9 +101,9 @@ import org.openide.util.Parameters;
  *        }
  *        ...
  *    }; 
- * </pre>
+ * }</pre>
  *
- * @see <a href="http://wiki.netbeans.org/wiki/view/JavaHT_Modification">How do I do modification to a source file?</a> 
+ * @see <a href="https://netbeans.apache.org/wiki/JavaHT_Modification">How do I do modification to a source file?</a>
  *
  * @author Tom Ball
  * @author Pavel Flaska
@@ -276,9 +276,22 @@ public final class TreeMaker {
      * @since 2.39
      */
     public CaseTree CasePatterns(List<? extends Tree> patterns, Tree body) {
-        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), body);
+        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), null, body);
     }
     
+    /**
+     * Creates a new CaseTree for a rule case (case &lt;constants&gt; -> &lt;body&gt;).
+     *
+     * @param patterns the labels for this case statement.
+     * @param guard the case's guard
+     * @param body the case's body
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.63
+     */
+    public CaseTree CasePatterns(List<? extends Tree> patterns, ExpressionTree guard, Tree body) {
+        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), guard, body);
+    }
+
     /**
      * Creates a new CaseTree.
      *
@@ -288,7 +301,20 @@ public final class TreeMaker {
      * @since 2.39
      */
     public CaseTree CasePatterns(List<? extends Tree> patterns, List<? extends StatementTree> statements) {
-        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), statements);
+        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), null, statements);
+    }
+
+    /**
+     * Creates a new CaseTree.
+     *
+     * @param patterns the labels for this case statement.
+     * @param guard the case's guard
+     * @param statements the list of statements.
+     * @see com.sun.source.tree.CaseTree
+     * @since 2.63
+     */
+    public CaseTree CasePatterns(List<? extends Tree> patterns, ExpressionTree guard, List<? extends StatementTree> statements) {
+        return delegate.CaseMultiplePatterns(toCaseLabelTrees(patterns), guard, statements);
     }
 
     private List<? extends CaseLabelTree> toCaseLabelTrees(List<? extends Tree> patterns) {
@@ -300,7 +326,7 @@ public final class TreeMaker {
                 return delegate.ConstantCaseLabel((ExpressionTree) p);
             }
             if (p instanceof PatternTree) {
-                return delegate.PatternCaseLabel((PatternTree) p, null);
+                return delegate.PatternCaseLabel((PatternTree) p);
             }
             throw new IllegalArgumentException("Invalid pattern kind: " + p.getKind()); //NOI18N
         }).collect(Collectors.toList());
@@ -1134,7 +1160,7 @@ public final class TreeMaker {
     /**
      * Creates a new TryTree.
      *
-     * @param resource     the resources of the try clause. The elements of the list
+     * @param resources     the resources of the try clause. The elements of the list
      *                     should either be {@link VariableTree}s or {@link ExpressionTree}s.
      * @param tryBlock     the statement block in the try clause.
      * @param catches      the list of catch clauses, or an empty list.
@@ -1257,8 +1283,6 @@ public final class TreeMaker {
      * @param name name of the binding variable
      * @param type the type of the pattern
      * @return the newly created BindingPatternTree
-     * @throws NoSuchMethodException if the used javac does not support
-     *                               BindingPatternTree.
      */
     @Deprecated
     public Tree BindingPattern(CharSequence name,
@@ -1268,7 +1292,7 @@ public final class TreeMaker {
     
       /**
      * Creates a new Tree for a given VariableTree
-     * @specication : 15.20.2
+     * specication : 15.20.2
      * @param vt the VariableTree of the pattern
      * @see com.sun.source.tree.BindingPatternTree
      * @return the newly created BindingPatternTree
@@ -1276,6 +1300,20 @@ public final class TreeMaker {
      */
     public Tree BindingPattern(VariableTree vt) {
         return delegate.BindingPattern(vt);
+    }
+
+      /**
+     * Creates a new Tree for a given DeconstructionPatternTree
+     * @param deconstructor deconstructor of record pattern
+     * @param nested list of nested patterns
+     * @param vt the variable of record pattern. This parameter is currently ignored.
+     * @see com.sun.source.tree.DeconstructionPatternTree
+     * @return the newly created RecordPatternTree
+     * @since 19
+     */
+    //TODO: overload without VariableTree?
+    public DeconstructionPatternTree RecordPattern(ExpressionTree deconstructor, List<PatternTree> nested, VariableTree vt) {
+        return delegate.DeconstructionPattern(deconstructor, nested);
     }
 
     /**
@@ -1555,7 +1593,7 @@ public final class TreeMaker {
      * </pre>
      *
      * You can get it e.g. with this code:
-     * <pre>
+     * <pre>{@code
      *   TreeMaker make = workingCopy.getTreeMaker();
      *   ClassTree node = ...;
      *   // create method modifiers
@@ -1582,7 +1620,7 @@ public final class TreeMaker {
      *   );
      *   // rewrite the original class node with the new one containing newMethod
      *   workingCopy.rewrite(node, <b>make.addClassMember(node, newMethod)</b>);
-     * </pre>
+     * }</pre>
      *
      * @param   clazz    class tree containing members list.
      * @param   member   element to be appended to members list.
@@ -3291,7 +3329,7 @@ public final class TreeMaker {
      * Marks a tree as a replacement of some old one. The hint may cause surrounding whitespace to be 
      * carried over to the new tree and comments to be attached to the same (similar) positions
      * as in the old tree. 
-     * <p/>
+     * <p>
      * If 'defaultOnly' is true, the hint is only added if no previous hint exists. You generally want
      * to force the hint, in code manipulation operations. Bulk tree transformers should preserve existing
      * hints - the {@link TreeUtilities#translate} preserves existing relationships.
@@ -3520,6 +3558,17 @@ public final class TreeMaker {
      */
     public DeprecatedTree Deprecated(List<? extends DocTree> text) {
         return delegate.Deprecated(text);
+    }
+
+    /**Creates a new javadoc comment.
+     *
+     * @param fullBody the entire body of the comment
+     * @param tags the block tags of the comment (after the main body)
+     * @return newly created DocCommentTree
+     * @since 2.62
+     */
+    public DocCommentTree DocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
+        return delegate.DocComment(fullBody, tags);
     }
 
     /**Creates a new javadoc comment.
@@ -3867,4 +3916,17 @@ public final class TreeMaker {
     public LambdaExpressionTree setLambdaBody(LambdaExpressionTree method, Tree newBody) {
         return delegate.setLambdaBody(method, newBody);
     }
+
+    /**Creates a new string template expression from the given parameters.
+     *
+     * @param processor the processor of the string template
+     * @param fragments the template fragments
+     * @param expressions the template expressions
+     * @return the string template instance
+     * @since 2.65
+     */
+    public StringTemplateTree StringTemplate(ExpressionTree processor, List<String> fragments, List<? extends ExpressionTree> expressions) {
+        return delegate.StringTemplate(processor, fragments, expressions);
+    }
+
 }

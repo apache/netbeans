@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.91.0
+#Version 1.96.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -27,6 +27,7 @@ meth public java.io.File[] getTestFolders()
 meth public java.lang.String getBuildfile()
 meth public java.lang.String getContextPath()
 meth public java.lang.String getJavaEEVersion()
+ anno 0 java.lang.Deprecated()
 meth public java.lang.String getJavaPlatformName()
 meth public java.lang.String getLibrariesDefinition()
 meth public java.lang.String getName()
@@ -44,6 +45,7 @@ meth public void setContextPath(java.lang.String)
 meth public void setDocBase(org.openide.filesystems.FileObject)
 meth public void setJavaEEProfile(org.netbeans.api.j2ee.core.Profile)
 meth public void setJavaEEVersion(java.lang.String)
+ anno 0 java.lang.Deprecated()
 meth public void setJavaPlatformName(java.lang.String)
 meth public void setJavaSourceBased(boolean)
 meth public void setLibFolder(org.openide.filesystems.FileObject)

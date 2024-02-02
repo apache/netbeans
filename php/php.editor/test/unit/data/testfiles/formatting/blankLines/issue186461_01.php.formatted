@@ -8,7 +8,6 @@ class myClass {
     function __construct() {
         
     }
-
 }
 
 ?>

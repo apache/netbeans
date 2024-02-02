@@ -53,6 +53,14 @@ class ErrorUtils {
         } 
     }
     
+    public static void processError(AuditException exc, String errorMessage) {
+        StringBuilder sb = new StringBuilder(errorMessage);
+        sb.append('\n').append(Bundle.MSG_Error_Code(exc.getStatusCode()));
+        sb.append(getErrorDescription(exc.getStatusCode()));
+        sb.append('\n').append(exc.getMessage());
+        DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(sb.toString()));
+    }
+    
     public static void processError(BmcResponse reqest, String errorMessage) {
         StringBuilder sb = new StringBuilder(errorMessage);
         sb.append('\n').append(Bundle.MSG_Error_Code(reqest.get__httpStatusCode__()));
@@ -64,7 +72,7 @@ class ErrorUtils {
        StringBuilder sb = new StringBuilder(errorMessage);
         sb.append('\n').append(Bundle.MSG_Error_Code(exc.getStatusCode()));
         sb.append(getErrorDescription(exc.getStatusCode()));
-        sb.append('n').append(exc.getMessage());
+        sb.append('\n').append(exc.getMessage());
         DialogDisplayer.getDefault().notifyLater(new NotifyDescriptor.Message(sb.toString()));
    }
 }

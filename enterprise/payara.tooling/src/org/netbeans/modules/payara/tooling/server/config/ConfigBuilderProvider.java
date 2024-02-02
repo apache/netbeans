@@ -55,11 +55,16 @@ public class ConfigBuilderProvider {
     private static final Config.Next CONFIG_V5
             = new Config.Next((short)5,
             ConfigBuilderProvider.class.getResource("PayaraV5.xml"));
+    
+    /** Library builder configuration since Payara 6.x */
+    private static final Config.Next CONFIG_V6
+            = new Config.Next((short)6,
+            ConfigBuilderProvider.class.getResource("PayaraV6.xml"));
 
     /** Library builder configuration for Payara. */
     private static final Config config
-            = new Config(CONFIG_V4, CONFIG_V5);
-    
+            = new Config(CONFIG_V4, CONFIG_V5, CONFIG_V6);
+
     /** Builders array for each server instance. */
     private static final Map<PayaraServer, ConfigBuilder> builders
             = new HashMap<>();

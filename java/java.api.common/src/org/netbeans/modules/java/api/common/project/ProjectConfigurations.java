@@ -422,7 +422,7 @@ public class ProjectConfigurations {
         @Override
         public void setActiveConfiguration(@NonNull final Configuration c) throws IllegalArgumentException, IOException {
             final Map<String,Configuration> cfgs = getConfigs();
-            if (c != DEFAULT && !cfgs.values().contains(c)) {
+            if (c != DEFAULT && !cfgs.containsValue(c)) {
                 throw new IllegalArgumentException(String.format("Configuration: %s, Known Configurations: %s",
                         c,
                         cfgs.values()));

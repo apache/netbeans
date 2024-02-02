@@ -31,7 +31,6 @@ class FileProcessor extends PropertyProcessor {
     }
 
     void processPropertyImpl(String propertyName, Object value) {
-        StringBuffer sb = new StringBuffer();
         if ("antHome".equals(propertyName) || "projectsFolder".equals(propertyName)) {//NOI18N
             List l = ((SerParser.ObjectWrapper)value).data;
             for (Iterator it = l.iterator(); it.hasNext();) {

@@ -90,12 +90,13 @@ import org.netbeans.modules.j2ee.deployment.plugins.api.ServerLibraryDependency;
 import org.netbeans.modules.web.api.webmodule.ExtenderController;
 import org.netbeans.modules.web.api.webmodule.ExtenderController.Properties;
 import org.netbeans.modules.web.jsf.JSFUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JSFVersion;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.spi.components.JsfComponentCustomizer;
 import org.netbeans.modules.web.jsf.spi.components.JsfComponentImplementation;
 import org.netbeans.modules.web.jsf.spi.components.JsfComponentProvider;
 import org.netbeans.modules.web.jsf.wizards.JSFConfigurationPanel.LibraryType;
 import org.netbeans.modules.web.jsf.wizards.JSFConfigurationPanel.PreferredLanguage;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -122,11 +123,11 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
 
     private final List<LibraryItem> jsfLibraries = new ArrayList<LibraryItem>();
     //    private final List<JsfComponentDescriptor> componentsLibraries = new ArrayList<JsfComponentDescriptor>();
-    private final Map<JSFVersion, List<JsfComponentImplementation>> componentsMap = new HashMap<JSFVersion, List<JsfComponentImplementation>>();
+    private final Map<JsfVersion, List<JsfComponentImplementation>> componentsMap = new HashMap<>();
     /**
      * Do not modify it directly, use setJsfVersion method
      */
-    private JSFVersion currentJSFVersion = null;
+    private JsfVersion currentJSFVersion = null;
     private final Set<ServerLibraryItem> serverJsfLibraries = new TreeSet<ServerLibraryItem>();
     private volatile boolean libsInitialized;
     private volatile boolean jsfComponentsInitialized;
@@ -339,7 +340,7 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
             jsfComponentDescriptors.addAll(provider.getJsfComponents());
         }
 
-        for (JSFVersion jsfVersion : JSFVersion.values()) {
+        for (JsfVersion jsfVersion : JsfVersion.values()) {
             List<JsfComponentImplementation> list = componentsMap.get(jsfVersion);
             if (list == null) {
                 list = new ArrayList<JsfComponentImplementation>();
@@ -450,13 +451,13 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
         } else if (libraryType == LibraryType.SERVER) {
             if (serverLibraries.getSelectedItem() instanceof ServerLibraryItem) {
                 ServerLibraryItem item = (ServerLibraryItem) serverLibraries.getSelectedItem();
-                if (item != null && item.getVersion().isAtLeast(JSFVersion.JSF_2_0)) {
+                if (item != null && item.getVersion().isAtLeast(JsfVersion.JSF_2_0)) {
                     faceletsPresent = true;
                 }
             }
         }
         if (jsfLibrary != null) {
-            if (jsfLibraries.get(cbLibraries.getSelectedIndex()).getVersion().isAtLeast(JSFVersion.JSF_2_0)) {
+            if (jsfLibraries.get(cbLibraries.getSelectedIndex()).getVersion().isAtLeast(JsfVersion.JSF_2_0)) {
                 faceletsPresent = true;
             } else {
                 List<URL> content = jsfLibrary.getContent("classpath"); //NOI18N
@@ -1090,7 +1091,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
         }
     }
 
-    void setJsfVersion(JSFVersion version) {
+    void setJsfVersion(JsfVersion version) {
         if (version != currentJSFVersion) {
             currentJSFVersion = version;
             updateJsfComponentsModel(version);
@@ -1232,7 +1233,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
         }
         updatePreferredLanguages();
     }
-    private void updateJsfComponentsModel(JSFVersion version) {
+    private void updateJsfComponentsModel(JsfVersion version) {
         List<JsfComponentImplementation> descriptors = componentsMap.get(version);
         jsfComponentsTableModel.removeAllItems();
         if (descriptors != null) {
@@ -1308,9 +1309,9 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
     private static class LibraryItem {
 
         private Library library;
-        private JSFVersion version;
+        private JsfVersion version;
 
-        public LibraryItem(Library library, JSFVersion version) {
+        public LibraryItem(Library library, JsfVersion version) {
             this.library = library;
             this.version = version;
         }
@@ -1319,7 +1320,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
             return library;
         }
 
-        public JSFVersion getVersion() {
+        public JsfVersion getVersion() {
             return version;
         }
 
@@ -1332,11 +1333,11 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
 
         private final ServerLibrary library;
 
-        private final JSFVersion version;
+        private final JsfVersion version;
 
         private String name;
 
-        public ServerLibraryItem(ServerLibrary library, JSFVersion version) {
+        public ServerLibraryItem(ServerLibrary library, JsfVersion version) {
             this.library = library;
             this.version = version;
         }
@@ -1345,7 +1346,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
             return library;
         }
 
-        public JSFVersion getVersion() {
+        public JsfVersion getVersion() {
             return version;
         }
 
@@ -1408,7 +1409,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
 
     }
 
-    private void initJsfComponentLibraries(JSFVersion version) {
+    private void initJsfComponentLibraries(JsfVersion version) {
         List<JsfComponentImplementation> descriptors = componentsMap.get(version);
         if (descriptors == null) {
             return;
@@ -1757,7 +1758,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
         @Override
         public void run() {
             long time = System.currentTimeMillis();
-            Set<JSFVersion> found = EnumSet.noneOf(JSFVersion.class);
+            Set<JsfVersion> found = EnumSet.noneOf(JsfVersion.class);
             if (isServerRegistered(serverInstanceID)) {
                 try {
                     ServerInstance.LibraryManager libManager = Deployment.getDefault().getServerInstance(serverInstanceID).getLibraryManager();
@@ -1766,7 +1767,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                         libs.addAll(libManager.getDeployedLibraries());
                         libs.addAll(libManager.getDeployableLibraries());
                         for (ServerLibrary lib : libs) {
-                            JSFVersion jsfVersion = JSFVersion.forServerLibrary(lib);
+                            JsfVersion jsfVersion = JsfVersionUtils.forServerLibrary(lib);
                             if (jsfVersion != null) {
                                 serverJsfLibraries.add(new JSFConfigurationPanelVisual.ServerLibraryItem(lib, jsfVersion));
                                 found.add(jsfVersion);
@@ -1796,7 +1797,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                 cp = new File[0];
             }
 
-            JSFVersion jsfVersion = JSFVersion.forClasspath(Arrays.asList(cp));
+            JsfVersion jsfVersion = JsfVersionUtils.forClasspath(Arrays.asList(cp));
             if (jsfVersion != null && !found.contains(jsfVersion)) {
                 serverJsfLibraries.add(new JSFConfigurationPanelVisual.ServerLibraryItem(null, jsfVersion));
             }
@@ -1807,7 +1808,9 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                     setServerLibraryModel(serverJsfLibraries);
                     if (serverJsfLibraries.isEmpty()) {
                         Library preferredLibrary;
-                        if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+                        if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_4_0_NAME);
+                        } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
                             preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_3_0_NAME);
                         } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAVA_EE_5)) {
                             preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_2_0_NAME);
@@ -1856,8 +1859,8 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                 long time = System.currentTimeMillis();
                 for (Library library : getOrCacheJsfLibraries()) {
                     List<URL> content = library.getContent("classpath"); //NOI18N
-                    JSFVersion jsfVersion = JSFVersion.forClasspath(content);
-                    LibraryItem item = jsfVersion != null ? new LibraryItem(library, jsfVersion) : new LibraryItem(library, JSFVersion.JSF_1_1);
+                    JsfVersion jsfVersion = JsfVersionUtils.forClasspath(content);
+                    LibraryItem item = jsfVersion != null ? new LibraryItem(library, jsfVersion) : new LibraryItem(library, JsfVersion.JSF_1_1);
                     jsfLibraries.add(item);
                     Collections.sort(jsfLibraries, new Comparator<LibraryItem>() {
                         @Override

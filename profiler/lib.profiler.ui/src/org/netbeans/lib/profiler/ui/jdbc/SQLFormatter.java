@@ -129,7 +129,7 @@ final class SQLFormatter {
             }
             offset = m.end();
         }
-        s.append(command.substring(offset,command.length()));
+        s.append(command.substring(offset));
         s.append(checkPingSQL(command));
         s.append("</html>"); // NOI18N
 

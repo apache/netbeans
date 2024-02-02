@@ -17,4 +17,5 @@ KEYWORD    never                                      null
 KEYWORD    null                                       null
 KEYWORD    object                                     null
 KEYWORD    string                                     null
+KEYWORD    true                                       null
 KEYWORD    void                                       null

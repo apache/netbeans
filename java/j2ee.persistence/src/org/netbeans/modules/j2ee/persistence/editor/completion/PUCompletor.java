@@ -31,15 +31,15 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.NbEditorUtilities;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
 import org.netbeans.modules.j2ee.persistence.api.EntityClassScope;
 import org.netbeans.modules.j2ee.persistence.api.metadata.orm.Entity;
-import org.netbeans.modules.j2ee.persistence.api.metadata.orm.EntityMappingsMetadata;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
+import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
+import static org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit.JAKARTA_NAMESPACE;
+import static org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit.JAVAX_NAMESPACE;
 import org.netbeans.modules.j2ee.persistence.editor.CompletionContext;
 import org.netbeans.modules.j2ee.persistence.editor.JPAEditorUtil;
 import org.netbeans.modules.j2ee.persistence.provider.Provider;
@@ -65,7 +65,7 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
             Project project = FileOwnerQuery.getOwner(
@@ -89,10 +89,10 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
-            HashSet<String> providers = new HashSet<String>();
+            HashSet<String> providers = new HashSet<>();
             Project project = FileOwnerQuery.getOwner(
                     NbEditorUtilities.getFileObject(context.getDocument()));
             for(Provider provider: Util.getProviders(project)){
@@ -118,7 +118,7 @@ public abstract class PUCompletor {
         
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
             for (String val : new String[]{"true", "false"}) {//NOI18N
@@ -164,7 +164,7 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
 
@@ -188,7 +188,7 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(final CompletionContext context) {
-            final List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            final List<JPACompletionItem> results = new ArrayList<>();
             try {
                 Document doc = context.getDocument();
                 final String typedChars = context.getTypedPrefix();
@@ -208,34 +208,25 @@ public abstract class PUCompletor {
 
         private void doJavaCompletion(final FileObject fo, final JavaSource js, final List<JPACompletionItem> results,
                 final String typedPrefix, final int substitutionOffset) throws IOException {
-            js.runUserActionTask(new Task<CompilationController>() {
-
-                @Override
-                public void run(CompilationController cc) throws Exception {
-                    cc.toPhase(Phase.ELEMENTS_RESOLVED);
-                    Project project = FileOwnerQuery.getOwner(fo);
-                    EntityClassScopeProvider provider = project.getLookup().lookup(EntityClassScopeProvider.class);
-                    EntityClassScope ecs = null;
-                    Entity[] entities = null;
-                    if (provider != null) {
-                        ecs = provider.findEntityClassScope(fo);
-                    }
-                    if (ecs != null) {
-                        entities = ecs.getEntityMappingsModel(false).runReadAction(new MetadataModelAction<EntityMappingsMetadata, Entity[]>() {
-
-                            @Override
-                            public Entity[] run(EntityMappingsMetadata metadata) throws Exception {
-                                return metadata.getRoot().getEntity();
-                            }
-                        });
-                    }
-                    // add classes 
-                    if(entities != null) {
-                        for (Entity entity : entities) {
-                            if (typedPrefix.length() == 0 || entity.getClass2().toLowerCase().startsWith(typedPrefix.toLowerCase()) || entity.getName().toLowerCase().startsWith(typedPrefix.toLowerCase())) {
-                                JPACompletionItem item = JPACompletionItem.createAttribValueItem(substitutionOffset, entity.getClass2());
-                                results.add(item);
-                            }
+            js.runUserActionTask( (CompilationController cc) -> {
+                cc.toPhase(Phase.ELEMENTS_RESOLVED);
+                Project project = FileOwnerQuery.getOwner(fo);
+                EntityClassScopeProvider provider = project.getLookup().lookup(EntityClassScopeProvider.class);
+                EntityClassScope ecs = null;
+                Entity[] entities = null;
+                if (provider != null) {
+                    ecs = provider.findEntityClassScope(fo);
+                }
+                if (ecs != null) {
+                    entities = ecs.getEntityMappingsModel(false).runReadAction( metadata -> metadata.getRoot().getEntity() );
+                }
+                // add classes
+                if(entities != null) {
+                    for (Entity entity : entities) {
+                        if (typedPrefix.length() == 0 || entity.getClass2().toLowerCase().startsWith(typedPrefix.toLowerCase()) 
+                                || entity.getName().toLowerCase().startsWith(typedPrefix.toLowerCase())) {
+                            JPACompletionItem item = JPACompletionItem.createAttribValueItem(substitutionOffset, entity.getClass2());
+                            results.add(item);
                         }
                     }
                 }
@@ -256,7 +247,7 @@ public abstract class PUCompletor {
         @Override
         public List<JPACompletionItem> doCompletion(final CompletionContext context) {
 
-            final List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            final List<JPACompletionItem> results = new ArrayList<>();
             final int caretOffset = context.getCaretOffset();
             final String typedChars = context.getTypedPrefix();
 
@@ -268,24 +259,20 @@ public abstract class PUCompletor {
             try {
                 // Compile the class and find the fiels
                 JavaSource classJavaSrc = JPAEditorUtil.getJavaSource(context.getDocument());
-                classJavaSrc.runUserActionTask(new Task<CompilationController>() {
-
-                    @Override
-                    public void run(CompilationController cc) throws Exception {
-                        cc.toPhase(Phase.ELEMENTS_RESOLVED);
-                        TypeElement typeElem = cc.getElements().getTypeElement(className);
-
-                        if (typeElem == null) {
-                            return;
-                        }
-
-                        List<? extends Element> clsChildren = typeElem.getEnclosedElements();
-                        for (Element clsChild : clsChildren) {
-                            if (clsChild.getKind() == ElementKind.FIELD) {
-                                VariableElement elem = (VariableElement) clsChild;
-                                JPACompletionItem item = JPACompletionItem.createClassPropertyItem(caretOffset - typedChars.length(), elem, ElementHandle.create(elem), cc.getElements().isDeprecated(clsChild));
-                                results.add(item);
-                            }
+                classJavaSrc.runUserActionTask( (CompilationController cc) -> {
+                    cc.toPhase(Phase.ELEMENTS_RESOLVED);
+                    TypeElement typeElem = cc.getElements().getTypeElement(className);
+                    
+                    if (typeElem == null) {
+                        return;
+                    }
+                    
+                    List<? extends Element> clsChildren = typeElem.getEnclosedElements();
+                    for (Element clsChild : clsChildren) {
+                        if (clsChild.getKind() == ElementKind.FIELD) {
+                            VariableElement elem = (VariableElement) clsChild;
+                            JPACompletionItem item = JPACompletionItem.createClassPropertyItem(caretOffset - typedChars.length(), elem, ElementHandle.create(elem), cc.getElements().isDeprecated(clsChild));
+                            results.add(item);
                         }
                     }
                 }, true);
@@ -316,17 +303,23 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
             String providerClass = getProviderClass(context.getTag());
             Project enclosingProject = FileOwnerQuery.getOwner(
                     NbEditorUtilities.getFileObject(context.getDocument()));
             Provider provider = ProviderUtil.getProvider(providerClass, enclosingProject);
-            ArrayList<String> keys = new ArrayList<String>();
+            ArrayList<String> keys = new ArrayList<>();
             String ver = provider == null ? context.getDocumentContext().getVersion() : ProviderUtil.getVersion(provider);
             if (provider == null || (ver!=null && !Persistence.VERSION_1_0.equals(ver))) {
-                keys.addAll(allKeyAndValues.get(null).keySet());
+                if (Float.parseFloat(ver) < Float.parseFloat(Persistence.VERSION_3_0)) {
+                    keys.addAll(allKeyAndValues.get(null).keySet());
+                } else {
+                    for (String key : allKeyAndValues.get(null).keySet()) {
+                        keys.add(key.replace(JAVAX_NAMESPACE, JAKARTA_NAMESPACE));
+                    }
+                }
             }
             if (provider != null && allKeyAndValues.get(provider) != null) {
                 keys.addAll(allKeyAndValues.get(provider).keySet());
@@ -334,7 +327,8 @@ public abstract class PUCompletor {
             String itemTexts[] = keys.toArray(new String[]{});
             for (int i = 0; i < itemTexts.length; i++) {
                 if (itemTexts[i].startsWith(typedChars.trim())
-                        || itemTexts[i].startsWith("javax.persistence." + typedChars.trim())) { // NOI18N
+                        || itemTexts[i].startsWith(PersistenceUnit.JAVAX_NAMESPACE + typedChars.trim())
+                        || itemTexts[i].startsWith(PersistenceUnit.JAKARTA_NAMESPACE + typedChars.trim())) { // NOI18N
                     JPACompletionItem item = JPACompletionItem.createAttribValueItem(caretOffset - typedChars.length(),
                             itemTexts[i]);
                     results.add(item);
@@ -361,11 +355,11 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
             String propertyName = getPropertyName(context.getTag());
-            if (propertyName == null || propertyName.equals("")) {
+            if (propertyName == null || propertyName.isEmpty()) {
                 return results;
             }
             String providerClass = getProviderClass(context.getTag());
@@ -417,7 +411,7 @@ public abstract class PUCompletor {
 
         @Override
         public List<JPACompletionItem> doCompletion(CompletionContext context) {
-            List<JPACompletionItem> results = new ArrayList<JPACompletionItem>();
+            List<JPACompletionItem> results = new ArrayList<>();
             int caretOffset = context.getCaretOffset();
             String typedChars = context.getTypedPrefix();
 

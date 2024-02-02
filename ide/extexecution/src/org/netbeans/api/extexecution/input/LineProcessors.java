@@ -38,6 +38,7 @@ import org.openide.windows.OutputWriter;
  * @deprecated use {@link org.netbeans.api.extexecution.base.input.LineProcessors}
  *             and {@link org.netbeans.api.extexecution.print.LineProcessors}
  */
+@Deprecated
 public final class LineProcessors {
 
     private LineProcessors() {

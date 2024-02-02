@@ -134,7 +134,8 @@ public final class NbGradleProjectImpl implements Project {
 
         public abstract void passivate(NbGradleProject watcher);
 
-        public abstract GradleReport createReport(String errorClass, String location, int line, String message, GradleReport causedBy);
+        public abstract GradleReport createReport(GradleReport.Severity severity, String errorClass, String location, int line, String message, 
+                GradleReport causedBy, String[] traceLines);
 
         public abstract void setProblems(GradleBaseProject baseProject, Set<GradleReport> problems);
     }
@@ -270,7 +271,7 @@ public final class NbGradleProjectImpl implements Project {
        synchronized (this) {
             GradleProject c = project;
             if (c != null) {
-                if (c.getQuality().atLeast(aim)) {
+                if (! force && c.getQuality().atLeast(aim)) {
                     LOG.log(Level.FINER, "Asked for {0}, got {1} already: ", new Object[] { aim, c.getQuality() });
                     return c;
                 }
@@ -311,7 +312,7 @@ public final class NbGradleProjectImpl implements Project {
         synchronized (this) {
             GradleProject c = project;
             if (c != null) {
-                if (c.getQuality().atLeast(aim)) {
+                if (!force && c.getQuality().atLeast(aim)) {
                     return CompletableFuture.completedFuture(c);
                 }
                 if (!force && attemptedQuality.atLeast(aim)) {

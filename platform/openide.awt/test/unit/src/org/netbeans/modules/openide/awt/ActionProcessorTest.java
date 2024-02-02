@@ -863,10 +863,6 @@ public class ActionProcessorTest extends NbTestCase {
 
     public void testWrongPointerToIcon() throws IOException {
         clearWorkDir();
-        if (AnnotationProcessorTestUtils.searchClasspathBroken()) {
-            System.err.println("#196933: testWrongPointerToIcon will only pass when using JDK 7 javac, skipping");
-            return;
-        }
         AnnotationProcessorTestUtils.makeSource(getWorkDir(), "test.A", 
             "import org.openide.awt.ActionRegistration;\n" +
             "import org.openide.awt.ActionReference;\n" +

@@ -48,6 +48,38 @@ public class StackLineAnalyserTest extends NbTestCase {
         assertTrue(StackLineAnalyser.matches("             [exec]     at org.openide.filesystems.FileUtil.normalizeFileOnMac(FileUtil.java:1714)"));
         assertTrue(StackLineAnalyser.matches("at java.base/java.lang.String.lastIndexOf(String.java:1627)"));
         assertTrue(StackLineAnalyser.matches(" at java.base/java.lang.String.lastIndexOf(String.java:1627)"));
+        // some loggers (e.g. MavenSimpleLogger until MNG-7970/#1342 which is maven's default logger) seem to add a space before the '('
+        assertTrue(StackLineAnalyser.matches("    at java.util.zip.ZipFile$CleanableResource.<init> (ZipFile.java:742)"));
+    }
+
+    @Test
+    public void testMatchesScalaLines() throws Exception {
+        String line = "at org.enso.compiler.core.ir.MetadataStorage.$anonfun$getUnsafe$1(MetadataStorage.scala:80)";
+        assertTrue(StackLineAnalyser.matches(line));
+        StackLineAnalyser.Link l = StackLineAnalyser.analyse(line);
+        assertEquals(3, l.getStartOffset());
+        assertEquals(91, l.getEndOffset());
+        assertEquals(".scala", l.getExtension());
+    }
+
+    @Test
+    public void testMatchesUnknownFileLines() throws Exception {
+        String line = "at org.Unknown(Unknown:80)";
+        assertTrue(StackLineAnalyser.matches(line));
+        StackLineAnalyser.Link l = StackLineAnalyser.analyse(line);
+        assertEquals(3, l.getStartOffset());
+        assertEquals(26, l.getEndOffset());
+        assertEquals(null, l.getExtension());
+    }
+
+    @Test
+    public void testMatchesWithNoPackage() throws Exception {
+        String line = "\tat NewClass.main(NewClass.java:12)";
+        assertTrue(StackLineAnalyser.matches(line));
+        StackLineAnalyser.Link l = StackLineAnalyser.analyse(line);
+        assertEquals(4, l.getStartOffset());
+        assertEquals(35, l.getEndOffset());
+        assertEquals(".java", l.getExtension());
     }
 
     @Test
@@ -76,6 +108,9 @@ public class StackLineAnalyserTest extends NbTestCase {
         l = StackLineAnalyser.analyse(" at java.base/java.lang.String.lastIndexOf(String.java:1627)");
         assertEquals(4, l.getStartOffset());
         assertEquals(60, l.getEndOffset());
+        l = StackLineAnalyser.analyse("    at java.util.zip.ZipFile$CleanableResource.<init> (ZipFile.java:742)");
+        assertEquals(7, l.getStartOffset());
+        assertEquals(72, l.getEndOffset());
     }
 
     @Test

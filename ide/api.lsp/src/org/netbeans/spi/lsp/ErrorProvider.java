@@ -50,6 +50,7 @@ public interface ErrorProvider {
         private final Kind errorKind;
         private final AtomicBoolean cancel = new AtomicBoolean();
         private final List<Runnable> cancelCallbacks = new ArrayList<>();
+        private final FileObject hintsConfigFile;
 
         /**
          * Construct a new {@code Context}.
@@ -71,9 +72,38 @@ public interface ErrorProvider {
          * @since 1.4
          */
         public Context(FileObject file, int offset, Kind errorKind) {
+            this(file, offset, errorKind, null);
+        }
+
+        /**
+         * Construct a new {@code Context}.
+         *
+         * @param file file for which the errors/warnings should be computed
+         * @param offset offset for which the errors/warnings should be computed
+         * @param errorKind the type of errors/warnings that should be computed
+         * @param hintsConfigFile file which contains preferences for the the errors/warnings to be computed
+         *
+         * @since 1.25
+         * 
+         */
+        public Context(FileObject file, int offset, Kind errorKind, FileObject hintsConfigFile) {
             this.file = file;
             this.offset = offset;
             this.errorKind = errorKind;
+            this.hintsConfigFile = hintsConfigFile;
+        }
+
+        /**
+         *
+         * The file which contains preferences for the the errors/warnings to be computed.
+         *
+         * @return the file which contains preferences for the the errors/warnings to be computed
+         *
+         * @since 1.25
+         * 
+         */
+        public FileObject getHintsConfigFile() {
+            return hintsConfigFile;
         }
 
         /**
@@ -143,7 +173,8 @@ public interface ErrorProvider {
      * The kind of errors/warnings that should be computed. {@code ERRORS} is
      * intended to compute more significant diagnostics quicker, {@code HINTS}
      * is inteded to compute less significant diagnostics at the cost of taking
-     * longer. The {@link Severity} of {@link ErrorDescription} reported for neither
+     * longer. The <a href="@org-netbeans-spi-editor-hints@/org/netbeans/spi/editor/hints/Severity.html">Severity</a> 
+     * of <a href="@org-netbeans-spi-editor-hints@/org/netbeans/spi/editor/hints/ErrorDescription.html">ErrorDescription</a> reported for neither
      * of these is limited.
      */
     public enum Kind {

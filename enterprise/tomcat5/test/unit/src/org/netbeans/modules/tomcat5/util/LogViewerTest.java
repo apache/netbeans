@@ -44,6 +44,7 @@ public class LogViewerTest extends NbTestCase {
         return suite;
     }
     
+    @Override
     protected void setUp() throws Exception {
         super.setUp ();
         datadir = getDataDir();

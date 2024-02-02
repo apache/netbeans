@@ -224,7 +224,7 @@ public final class ServerConnection {
             sb.append(prop.getValue());
             sb.append(EOL_STR);
         }
-        if (!properties.keySet().contains(HeaderProperties.PROTOCOL_VERSION)) {
+        if (!properties.containsKey(HeaderProperties.PROTOCOL_VERSION)) {
             sb.append(HeaderProperties.PROTOCOL_VERSION +
                       ": "+SERVER_PROTOCOL_VERSION +
                       EOL_STR);

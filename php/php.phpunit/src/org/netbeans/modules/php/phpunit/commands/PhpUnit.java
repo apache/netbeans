@@ -34,12 +34,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.base.input.InputProcessor;
 import org.netbeans.api.extexecution.base.input.InputProcessors;
@@ -54,6 +57,7 @@ import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.util.UiUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
+import org.netbeans.modules.php.phpunit.PhpUnitVersion;
 import org.netbeans.modules.php.phpunit.options.PhpUnitOptions;
 import org.netbeans.modules.php.phpunit.options.PhpUnitOptionsValidator;
 import org.netbeans.modules.php.phpunit.preferences.PhpUnitPreferences;
@@ -74,6 +78,7 @@ import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.NbBundle;
+import org.openide.windows.InputOutput;
 
 /**
  * PHPUnit 3.4+ support.
@@ -105,6 +110,7 @@ public final class PhpUnit {
     private static final String LIST_GROUPS_PARAM = "--list-groups"; // NOI18N
     private static final String GROUP_PARAM = "--group"; // NOI18N
     private static final String PARAM_SEPARATOR = "--"; // NOI18N
+    private static final String VERSION_PARAM = "--version"; // NOI18N
     // bootstrap & config
     private static final String BOOTSTRAP_PARAM = "--bootstrap"; // NOI18N
     private static final String BOOTSTRAP_FILENAME = "bootstrap%s.php"; // NOI18N
@@ -136,6 +142,8 @@ public final class PhpUnit {
 
     // #200489
     private static volatile File suite; // ok if it is fetched more times
+
+    private static final ConcurrentMap<PhpModule, PhpUnitVersion> VERSIONS = new ConcurrentHashMap<>();
 
     private final String phpUnitPath;
 
@@ -199,6 +207,15 @@ public final class PhpUnit {
         return new PhpUnit(path);
     }
 
+    public static void resetVersions() {
+        VERSIONS.clear();
+    }
+
+    public static String getVersionLine(String path) {
+        PhpUnit phpUnit = new PhpUnit(path);
+        return phpUnit.getVersionLine((PhpModule) null);
+    }
+
     @CheckForNull
     private static String validateDefault() {
         ValidationResult result = new PhpUnitOptionsValidator()
@@ -232,6 +249,51 @@ public final class PhpUnit {
             assert suite != null : "Cannot find NB test suite?!";
         }
         return suite;
+    }
+
+    @NbBundle.Messages({
+        "PhpUnit.getting.phpUnit.version=Getting the version...",
+        "PhpUnit.notFound.phpUnit.version=PHPUnit version not found",
+    })
+    public String getVersionLine(@NullAllowed PhpModule phpModule) {
+        PhpExecutable phpUnit = phpModule != null ? getExecutable(phpModule) : new PhpExecutable(phpUnitPath);
+        if (phpUnit != null) {
+            phpUnit.additionalParameters(Arrays.asList(VERSION_PARAM));
+            final PhpUnitLineProcessor lineProcessor = new PhpUnitLineProcessor();
+            ExecutionDescriptor silentDescriptor = getSilentDescriptor();
+            PhpUnitOutputProcessorFactory outputProcessorFactory = new PhpUnitOutputProcessorFactory(lineProcessor);
+            try {
+                phpUnit.runAndWait(silentDescriptor, outputProcessorFactory, Bundle.PhpUnit_getting_phpUnit_version());
+                String version = lineProcessor.getLinesAsText();
+                return !version.isEmpty() ? version : Bundle.PhpUnit_notFound_phpUnit_version();
+            } catch (ExecutionException ex) {
+                LOGGER.log(Level.INFO, null, ex);
+            }
+        }
+        return Bundle.PhpUnit_notFound_phpUnit_version();
+    }
+
+    private PhpUnitVersion getVersion(PhpModule phpModule) {
+        return getVersion(phpModule, false);
+    }
+
+    private PhpUnitVersion getVersion(PhpModule phpModule, boolean force) {
+        PhpUnitVersion phpUnitVersion = VERSIONS.get(phpModule);
+        if (phpUnitVersion != null && !force) {
+            return phpUnitVersion;
+        }
+        String versionLine = getVersionLine(phpModule);
+        phpUnitVersion = getVersion(versionLine);
+        VERSIONS.putIfAbsent(phpModule, phpUnitVersion);
+        return phpUnitVersion;
+    }
+
+    private PhpUnitVersion getVersion(String versionLine) {
+        String[] versionParts = versionLine.split(" "); // NOI18N e.g. PHPUnit 10.0.1 by ...
+        if (versionParts.length >= 2) {
+            return PhpUnitVersion.fromString(versionParts[1]);
+        }
+        return PhpUnitVersion.getDefault();
     }
 
     @CheckForNull
@@ -402,11 +464,17 @@ public final class PhpUnit {
                 // only test dir and use 'phpunit' command only
                 useNbSuite = false;
             }
+            PhpUnitVersion version = getVersion(phpModule);
             if (useNbSuite) {
                 // standard suite
                 // #218607 - hotfix
                 //params.add(SUITE_NAME)
-                params.add(getNbSuite().getAbsolutePath());
+                if (version.useNetBeansSuite()) {
+                    params.add(getNbSuite().getAbsolutePath());
+                } else {
+                    // GH-5790 we can use NetBeansSuite.php no longer with PHPUnit 10
+                    params.add(FileUtil.toFile(startFiles.get(0)).getAbsolutePath());
+                }
                 // #254276
                 //params.add(PARAM_SEPARATOR);
                 //params.add(String.format(SUITE_RUN, joinPaths(startFiles, SUITE_PATH_DELIMITER)));
@@ -449,6 +517,11 @@ public final class PhpUnit {
         // #236397 - cannot be controllable
         return new ExecutionDescriptor()
                 .optionsPath(PhpUnitOptionsPanelController.OPTIONS_PATH);
+    }
+
+    private ExecutionDescriptor getSilentDescriptor() {
+        return new ExecutionDescriptor()
+                .inputOutput(InputOutput.NULL);
     }
 
     // #170120
@@ -784,6 +857,50 @@ public final class PhpUnit {
             return hasOutput;
         }
 
+    }
+
+    private static final class PhpUnitOutputProcessorFactory implements ExecutionDescriptor.InputProcessorFactory2 {
+
+        private final LineProcessor lineProcessor;
+
+        public PhpUnitOutputProcessorFactory(LineProcessor lineProcessor) {
+            this.lineProcessor = lineProcessor;
+        }
+
+        @Override
+        public InputProcessor newInputProcessor(InputProcessor defaultProcessor) {
+            return InputProcessors.ansiStripping(InputProcessors.bridge(lineProcessor));
+        }
+    }
+
+    private static final class PhpUnitLineProcessor implements LineProcessor {
+
+        private final List<String> lines = new ArrayList<>();
+
+        @Override
+        public void processLine(String line) {
+            lines.add(line);
+        }
+
+        @Override
+        public void reset() {
+        }
+
+        @Override
+        public void close() {
+        }
+
+        public List<String> getLines() {
+            return Collections.unmodifiableList(lines);
+        }
+
+        public String getLinesAsText() {
+            StringBuilder sb = new StringBuilder();
+            for (String string : lines) {
+                sb.append(string).append("\n"); // NOI18N
+            }
+            return sb.toString().trim();
+        }
     }
 
     private static final class TestParams {

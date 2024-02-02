@@ -34,14 +34,23 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
+            <test-dependencies>
+                <test-type>
+                    <name>unit</name>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.libs.junit4</code-name-base>
+                        <compile-dependency/>
+                    </test-dependency>
+                </test-type>
+            </test-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/nb-javac-jdk-19-api.jar</runtime-relative-path>
-                <binary-origin>external/nb-javac-jdk-19+33-api.jar</binary-origin>
+                <runtime-relative-path>ext/nb-javac-jdk-21u-api.jar</runtime-relative-path>
+                <binary-origin>external/nb-javac-jdk-21u-api.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/nb-javac-jdk-19.jar</runtime-relative-path>
-                <binary-origin>external/nb-javac-jdk-19+33.jar</binary-origin>
+                <runtime-relative-path>ext/nb-javac-jdk-21u.jar</runtime-relative-path>
+                <binary-origin>external/nb-javac-jdk-21u.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

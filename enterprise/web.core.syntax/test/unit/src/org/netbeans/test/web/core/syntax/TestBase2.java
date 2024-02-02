@@ -74,7 +74,7 @@ public class TestBase2 extends CslTestBase {
     public final void initParserJARs() throws MalformedURLException {
         String path = System.getProperty("jsp.parser.jars");
         String[] paths = PropertyUtils.tokenizePath(path);
-        List<URL> list = new ArrayList();
+        List<URL> list = new ArrayList<>();
         for (int i = 0; i< paths.length; i++) {
             String token = paths[i];
             File f = new File(token);

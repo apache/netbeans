@@ -36,6 +36,7 @@ import java.util.logging.LogRecord;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import java.util.stream.Collectors;
+import javax.lang.model.SourceVersion;
 import junit.framework.Test;
 
 import static junit.framework.TestCase.assertFalse;
@@ -1383,6 +1384,9 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    \n" +
                 "    void $$anonymousClasses() {\n" +
                 "        new Prop(0){\n" +
+                "            static {\n" +
+                "                throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
+                "            }\n" +
                 "            \n" +
                 "            (int i) {\n" +
                 "                throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
@@ -1918,6 +1922,511 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    static {\n" +
                 "        System.err.println();\n" +
                 "    }\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
+    public void testRecordPatterns() throws Exception {
+        setSourceLevel(SourceVersion.latest().name().substring("RELEASE_".length()));
+        setCompilerOptions(Arrays.asList("--enable-preview"));
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test;\n"
+                        + "record Rect(ColoredPoint upperLeft) {}\n"
+                        + "record ColoredPoint(Point p) {}\n"
+                        + "record Point(int x){}\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        if (o instanceof Rect(ColoredPoint(Point p) ul)) {\n"
+                        + "            int x = p.x();\n"
+                        + "            System.out.println(\"Hello\");\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")), Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+                                                       "cache/s1/java/15/classes/test/ColoredPoint.sig",
+                                                       "cache/s1/java/15/classes/test/Point.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
+    }
+
+    public void testEnhancedSwitch1() throws Exception {
+        setSourceLevel(SourceVersion.latest().name().substring("RELEASE_".length()));
+        setCompilerOptions(Arrays.asList("--enable-preview"));
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test;\n"
+                        + "record Rect(ColoredPoint upperLeft) {}\n"
+                        + "record ColoredPoint(Point p) {}\n"
+                        + "record Point(int x){}\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        switch (o) {\n"
+                        + "            case Rect r: \n"
+                        + "                System.out.println(\"Hello\");\n"
+                        + "                break;\n"
+                        + "            default:\n"
+                        + "                break;\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")), Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+                                                       "cache/s1/java/15/classes/test/ColoredPoint.sig",
+                                                       "cache/s1/java/15/classes/test/Point.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
+    }
+
+    public void testEnhancedSwitch2() throws Exception {
+        setSourceLevel(SourceVersion.latest().name().substring("RELEASE_".length()));
+        setCompilerOptions(Arrays.asList("--enable-preview"));
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test;\n"
+                        + "record Rect(ColoredPoint upperLeft) {}\n"
+                        + "record ColoredPoint(Point p) {}\n"
+                        + "record Point(int x){}\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        switch (o) {\n"
+                        + "            case null: \n"
+                        + "                System.out.println(\"Hello\");\n"
+                        + "                break;\n"
+                        + "            default:\n"
+                        + "                break;\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")), Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+                                                       "cache/s1/java/15/classes/test/ColoredPoint.sig",
+                                                       "cache/s1/java/15/classes/test/Point.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
+    }
+
+    public void testEnhancedSwitch3() throws Exception {
+        setSourceLevel(SourceVersion.latest().name().substring("RELEASE_".length()));
+        setCompilerOptions(Arrays.asList("--enable-preview"));
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test;\n"
+                        + "record Rect(ColoredPoint upperLeft) {}\n"
+                        + "record ColoredPoint(Point p) {}\n"
+                        + "record Point(int x){}\n"
+                        + "public class Test {\n"
+                        + "    private void test(Object o) {\n"
+                        + "        switch (o) {\n"
+                        + "            case (String s): \n"
+                        + "                System.out.println(\"Hello\");\n"
+                        + "                break;\n"
+                        + "            default:\n"
+                        + "                break;\n"
+                        + "        }\n"
+                        + "    }\n"
+                        + "}\n")), Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Rect.sig",
+                                                       "cache/s1/java/15/classes/test/ColoredPoint.sig",
+                                                       "cache/s1/java/15/classes/test/Point.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")), createdFiles);
+    }
+
+    public void testRecordErroneousComponent() throws Exception {
+        setSourceLevel(SourceVersion.latest().name().substring("RELEASE_".length()));
+
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      "package test;\n" +
+                                                                      "public record Test(Unknown unknown) {\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+    }
+
+    public void testMethodWithErroneousInMemberRef() throws Exception {
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      "package test;\n" +
+                                                                      "public class Test {\n" +
+                                                                      "    public void testA() {\n" +
+                                                                      "        r().map(this::test1);\n" +
+                                                                      "    }\n" +
+                                                                      "    public void testB() {\n" +
+                                                                      "        r().map(x -> test1(x));\n" +
+                                                                      "    }\n" +
+                                                                      "    public Object test1(Unknown u) {\n" +
+                                                                      "        return null;\n" +
+                                                                      "    }\n" +
+                                                                      "    public static void doTest(I i) {\n" +
+                                                                      "    }\n" +
+                                                                      "    private static java.util.Optional<Unknown> r() {\n" +
+                                                                      "        return null;\n" +
+                                                                      "    }\n" +
+                                                                      "}\n" +
+                                                                      "interface I {\n" +
+                                                                      "    public Object test(Object o);\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/I.sig",
+                                                       "cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "public class Test {\n" +
+                "    static {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.cant.resolve.location\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    public Test() {\n" +
+                "        super();\n" +
+                "    }\n" +
+                "    \n" +
+                "    public void testA() {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    public void testB() {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    public Object test1(Unknown u) {\n" +
+                "        return null;\n" +
+                "    }\n" +
+                "    \n" +
+                "    public static void doTest(I i) {\n" +
+                "    }\n" +
+                "    \n" +
+                "    private static java.util.Optional<Unknown> r() {\n" +
+                "        return null;\n" +
+                "    }\n" +
+                "}\n" +
+                "interface I {\n" +
+                "    \n" +
+                "    public Object test(Object o);\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
+    public void testComplexDesugaringSupertypes() throws Exception {
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test4.java", "package test; public class Test4 extends extra.Extra { }")),
+                                           Arrays.asList(),
+                                           Arrays.asList(compileTuple("extra/Extra.java", "package extra; public class Extra { private void get() { Extra2.extra(); } }"),
+                                                         compileTuple("extra/Extra2.java", "package extra; public class Extra2 { private void get() { Unknown unknown; } }")));
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test4.sig")),
+                     createdFiles);
+        //TODO: check file content!!!
+    }
+
+    public void testPatternSwitch() throws Exception {
+        setSourceLevel("20");
+
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      "package test;\n" +
+                                                                      "public class Test {\n" +
+                                                                      "    public void test1(Object o) {\n" +
+                                                                      "        switch (o) {\n" +
+                                                                      "            case String s -> {}\n" +
+                                                                      "            case Object oo -> {}\n" +
+                                                                      "        }\n" +
+                                                                      "    }\n" +
+                                                                      "    public void test2(Object o) {\n" +
+                                                                      "        switch (o) {\n" +
+                                                                      "            case String s -> {}\n" +
+                                                                      "            case Object oo -> {}\n" +
+                                                                      "        }\n" +
+                                                                      "    }\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "public class Test {\n" +
+                "    \n" +
+                "    public Test() {\n" +
+                "        super();\n" +
+                "    }\n" +
+                "    \n" +
+                "    public void test1(Object o) {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.feature.not.supported.in.source.plural\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    public void test2(Object o) {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
+                "    }\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
+    public void testTypeTest() throws Exception {
+        setSourceLevel("17");
+
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      "package test;\n" +
+                                                                      "public class Test {\n" +
+                                                                      "    public void test1(Object o) {\n" +
+                                                                      "        if (o instanceof String s) {\n" +
+                                                                      "            System.err.println();\n" +
+                                                                      "        }\n" +
+                                                                      "    }\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "public class Test {\n" +
+                "    \n" +
+                "    public Test() {\n" +
+                "        super();\n" +
+                "    }\n" +
+                "    \n" +
+                "    public void test1(Object o) {\n" +
+                "        if (o instanceof String s) {\n" +
+                "            System.err.println();\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
+    public void testWrongRecordComponent() throws Exception {
+        setSourceLevel("17");
+
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java",
+                                                                      "package test;\n" +
+                                                                      "public record Test(int wait) {\n" +
+                                                                      "}\n")),
+                                           Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+                     createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "public class Test {\n" +
+                "    static {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.illegal.record.component.name\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    public Test(int wait) {\n" +
+                "        super();\n" +
+                "    }\n" +
+                "    private final int wait;\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
+    public void testRecord1() throws Exception {
+        setSourceLevel("11");
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test;\n"
+                        + "record Test(int i) {}\n")), Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")), createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "class Test {\n" +
+                "    static {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.feature.not.supported.in.source.plural\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    public final java.lang.String toString() {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - java.lang.runtime.ObjectMethods does not exist!\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    public final int hashCode() {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - java.lang.runtime.ObjectMethods does not exist!\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    public final boolean equals(java.lang.Object o) {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code - java.lang.runtime.ObjectMethods does not exist!\");\n" +
+                "    }\n" +
+                "    \n" +
+                "    Test(int i) {\n" +
+                "        throw new java.lang.RuntimeException(\"Uncompilable code\");\n" +
+                "    }\n" +
+                "    private final int i;\n" +
+                "}");
+        assertEquals(expected, file2Fixed);
+    }
+
+    public void testRecord2() throws Exception {
+        setSourceLevel("17");
+        Map<String, String> file2Fixed = new HashMap<>();
+        VanillaCompileWorker.fixedListener = (file, cut) -> {
+            try {
+                FileObject source = URLMapper.findFileObject(file.toUri().toURL());
+                file2Fixed.put(FileUtil.getRelativePath(getRoot(), source), cut.toString());
+            } catch (MalformedURLException ex) {
+                throw new IllegalStateException(ex);
+            }
+        };
+        ParsingOutput result = runIndexing(Arrays.asList(compileTuple("test/Test.java", "package test;\n"
+                        + "record Test(int i) {}\n")), Arrays.asList());
+
+        assertFalse(result.lowMemory);
+        assertTrue(result.success);
+
+        Set<String> createdFiles = new HashSet<String>();
+
+        for (File created : result.createdFiles) {
+            createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
+        }
+
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")), createdFiles);
+        Map<String, String> expected = Collections.singletonMap("test/Test.java",
+                "package test;\n" +
+                "\n" +
+                "class Test {\n" +
+                "    \n" +
+                "    Test(int i) {\n" +
+                "        super();\n" +
+                "    }\n" +
+                "    private final int i;\n" +
                 "}");
         assertEquals(expected, file2Fixed);
     }

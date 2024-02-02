@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.49.0
+#Version 1.52.0
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -304,6 +304,7 @@ fld public final static org.netbeans.api.editor.fold.FoldType IMPORTS_FOLD_TYPE
 fld public final static org.netbeans.api.editor.fold.FoldType INITIAL_COMMENT_FOLD_TYPE
 fld public final static org.netbeans.api.editor.fold.FoldType INNERCLASS_TYPE
 fld public final static org.netbeans.api.editor.fold.FoldType JAVADOC_FOLD_TYPE
+fld public final static org.netbeans.api.editor.fold.FoldType METHOD_BLOCK_FOLD_TYPE
 fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate CODE_BLOCK_FOLD_TEMPLATE
  anno 0 java.lang.Deprecated()
 fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate IMPORTS_FOLD_TEMPLATE
@@ -313,6 +314,8 @@ fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplat
 fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate INNER_CLASS_FOLD_TEMPLATE
  anno 0 java.lang.Deprecated()
 fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate JAVADOC_FOLD_TEMPLATE
+ anno 0 java.lang.Deprecated()
+fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate METHOD_BLOCK_FOLD_TEMPLATE
  anno 0 java.lang.Deprecated()
 innr protected final static FoldTemplate
 intf org.netbeans.spi.editor.fold.FoldManager

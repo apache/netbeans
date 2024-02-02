@@ -79,12 +79,9 @@ public final class MoveToDependencyManagementPanel extends javax.swing.JPanel im
      *
      */
     public void showWaitNode() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-               treeView.setRootVisible(true);
-               explorerManager.setRootContext(createWaitNode());
-            }
+        SwingUtilities.invokeLater(() -> {
+            treeView.setRootVisible(true);
+            explorerManager.setRootContext(createWaitNode());
         });
     }
     private static Node createWaitNode() {
@@ -103,21 +100,18 @@ public final class MoveToDependencyManagementPanel extends javax.swing.JPanel im
             lin = MavenEmbedder.getModelDescriptors(nbprj.getMavenProject());
         }
         if (lin != null) {
-                    final Children ch = new PomChildren(lin);
-                    SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                        public void run() {
-                           treeView.setRootVisible(false);
-                           explorerManager.setRootContext(new AbstractNode(ch));
-                            try {
-                                explorerManager.setSelectedNodes(new Node[]{
-                                    explorerManager.getRootContext().getChildren().getNodes()[0]
-                                });
-                            } catch (PropertyVetoException ex) {
-                                Exceptions.printStackTrace(ex);
-                            }
-                        }
+            final Children ch = new PomChildren(lin);
+            SwingUtilities.invokeLater(() -> {
+                treeView.setRootVisible(false);
+                explorerManager.setRootContext(new AbstractNode(ch));
+                try {
+                    explorerManager.setSelectedNodes(new Node[]{
+                        explorerManager.getRootContext().getChildren().getNodes()[0]
                     });
+                } catch (PropertyVetoException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            });
         }
     }
 
@@ -140,7 +134,7 @@ public final class MoveToDependencyManagementPanel extends javax.swing.JPanel im
 
         @Override
         protected Node[] createNodes(List<MavenEmbedder.ModelDescription> key) {
-            List<POMNode> nds = new ArrayList<POMNode>();
+            List<POMNode> nds = new ArrayList<>();
             for (MavenEmbedder.ModelDescription mdl : key) {
                 if(mdl.getLocation() != null ) {
                     File fl = mdl.getLocation();
@@ -247,7 +241,7 @@ public final class MoveToDependencyManagementPanel extends javax.swing.JPanel im
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

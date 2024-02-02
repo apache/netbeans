@@ -1173,7 +1173,7 @@ public class FormDesigner {
             return;
         }
         Node[] nodes = getSelectedNodes();
-        List<RADComponent> components = new ArrayList(nodes.length);
+        List<RADComponent> components = new ArrayList<>(nodes.length);
         for (Node n : nodes) {
             FormCookie formCookie = n.getCookie(FormCookie.class);
             if (formCookie != null) {
@@ -2690,7 +2690,7 @@ public class FormDesigner {
         }
         
         private FormModelEvent[] sortEvents(FormModelEvent[] events) {
-            LinkedList<FormModelEvent> l = new LinkedList();
+            LinkedList<FormModelEvent> l = new LinkedList<>();
             for (FormModelEvent event : events) {
                 l.add(event);
                 if (event.getContainer() instanceof RADVisualContainer) {

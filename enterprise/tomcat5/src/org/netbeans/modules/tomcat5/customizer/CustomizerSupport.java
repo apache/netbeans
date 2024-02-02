@@ -131,7 +131,7 @@ public final class CustomizerSupport {
      */
     public static String buildPath(List<URL> path) {
         String PATH_SEPARATOR = System.getProperty("path.separator"); // NOI18N
-        StringBuffer sb = new StringBuffer(path.size() * 16);
+        StringBuilder sb = new StringBuilder(path.size() * 16);
         for (Iterator<URL> i = path.iterator(); i.hasNext(); ) {
             sb.append(urlToString(i.next()));
             if (i.hasNext()) {
@@ -151,7 +151,7 @@ public final class CustomizerSupport {
      * @return A tokenization of the specified path into the list of URLs.
      */
     public static List<URL> tokenizePath(String path) {
-            List<URL> l = new ArrayList();
+            List<URL> l = new ArrayList<>();
             StringTokenizer tok = new StringTokenizer(path, ":;", true); // NOI18N
             char dosHack = '\0';
             char lastDelim = '\0';
@@ -261,6 +261,7 @@ public final class CustomizerSupport {
          *
          * return The number of URL entries in the list.
          */
+        @Override
         public int getSize() {
             return data.size();
         }
@@ -272,6 +273,7 @@ public final class CustomizerSupport {
          *
          * @return The element at the specified position in this list.
          */
+        @Override
         public Object getElementAt(int index) {
             URL url = data.get(index);
             if ("jar".equals(url.getProtocol())) { // NOI18N
@@ -421,10 +423,8 @@ public final class CustomizerSupport {
             resources = new JList(model);
             label.setLabelFor(resources);
             resources.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerSupport.class,ad));
-            resources.addListSelectionListener(new ListSelectionListener() {
-                public void valueChanged(ListSelectionEvent e) {
-                    selectionChanged ();
-                }
+            resources.addListSelectionListener( (ListSelectionEvent e) -> {
+                selectionChanged ();
             });
             JScrollPane spane = new JScrollPane (this.resources);            
             // set the preferred size so that the size won't be set according to
@@ -454,10 +454,8 @@ public final class CustomizerSupport {
                 }
                 org.openide.awt.Mnemonics.setLocalizedText(addButton, text);
                 this.addButton.getAccessibleContext().setAccessibleDescription (ad);
-                addButton.addActionListener( new ActionListener () {
-                    public void actionPerformed(ActionEvent e) {
-                        addPathElement ();
-                    }
+                addButton.addActionListener( (ActionEvent e) -> {
+                    addPathElement ();
                 });
                 c = new GridBagConstraints();
                 c.gridx = 1;
@@ -489,10 +487,8 @@ public final class CustomizerSupport {
                 removeButton = new JButton();
                 org.openide.awt.Mnemonics.setLocalizedText(removeButton, NbBundle.getMessage(CustomizerStartup.class, "CTL_Remove")); // NOI18N
                 removeButton.getAccessibleContext().setAccessibleDescription (NbBundle.getMessage(CustomizerSupport.class,"AD_Remove"));
-                removeButton.addActionListener( new ActionListener () {
-                    public void actionPerformed(ActionEvent e) {
-                        removePathElement ();
-                    }
+                removeButton.addActionListener( (ActionEvent e) -> {
+                    removePathElement ();
                 });
                 removeButton.setEnabled(false);
                 c = new GridBagConstraints();
@@ -507,10 +503,8 @@ public final class CustomizerSupport {
                 moveUpButton = new JButton();
                 org.openide.awt.Mnemonics.setLocalizedText(moveUpButton, NbBundle.getMessage(CustomizerSupport.class, "CTL_Up")); // NOI18N
                 moveUpButton.getAccessibleContext().setAccessibleDescription (NbBundle.getMessage(CustomizerSupport.class,"AD_Up"));
-                moveUpButton.addActionListener( new ActionListener () {
-                    public void actionPerformed(ActionEvent e) {
-                        moveUpPathElement ();
-                    }
+                moveUpButton.addActionListener( (ActionEvent e) -> {
+                    moveUpPathElement ();
                 });
                 moveUpButton.setEnabled(false);
                 c = new GridBagConstraints();
@@ -525,10 +519,8 @@ public final class CustomizerSupport {
                 moveDownButton = new JButton();
                 org.openide.awt.Mnemonics.setLocalizedText(moveDownButton, NbBundle.getMessage(CustomizerSupport.class, "CTL_Down")); // NOI18N
                 moveDownButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(CustomizerSupport.class,"AD_Down"));
-                moveDownButton.addActionListener( new ActionListener () {
-                    public void actionPerformed(ActionEvent e) {
-                        moveDownPathElement ();
-                    }
+                moveDownButton.addActionListener( (ActionEvent e) -> {
+                    moveDownPathElement ();
                 });
                 moveDownButton.setEnabled(false);
                 c = new GridBagConstraints();
@@ -721,17 +713,21 @@ public final class CustomizerSupport {
             this.extensions = Arrays.asList(extensions);
         }
 
+        @Override
         public boolean accept(File f) {
-            if (f.isDirectory())
+            if (f.isDirectory()) {
                 return true;
+            }
             String name = f.getName();
-            int index = name.lastIndexOf('.');   //NOI18N
-            if (index <= 0 || index==name.length()-1)
+            int index = name.lastIndexOf(".");   //NOI18N
+            if (index <= 0 || index==name.length()-1) {
                 return false;
+            }
             String extension = name.substring (index+1).toUpperCase();
             return this.extensions.contains(extension);
         }
 
+        @Override
         public String getDescription() {
             return this.description;
         }

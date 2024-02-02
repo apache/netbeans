@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.70
+#Version 1.75
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -739,7 +739,7 @@ meth public void setURL(java.net.URL)
 meth public void showHistory()
 meth public void stopLoading()
 supr org.openide.awt.HtmlBrowser$Impl
-hfds RP,lookup,url
+hfds RP,url
 
 CLSS public org.netbeans.modules.extbrowser.ExtWebBrowser
 cons public init()
@@ -963,8 +963,8 @@ meth public org.openide.awt.HtmlBrowser$Impl createHtmlBrowserImpl()
 meth public static java.lang.Boolean isHidden()
 meth public void setName(java.lang.String)
 supr org.netbeans.modules.extbrowser.ExtWebBrowser
-hfds ACTIVE,RP,detected,logger,serialVersionUID
-hcls Jdk6BrowserImpl
+hfds RP,USE_JDK_BROWSER,detected,logger,serialVersionUID
+hcls JdkBrowserImpl
 
 CLSS public org.netbeans.modules.extbrowser.SystemDefaultBrowserBeanInfo
 cons public init()
@@ -1061,7 +1061,7 @@ supr java.lang.Object
 hfds serialVersionUID
 
 CLSS public org.openide.util.MapFormat
-cons public init(java.util.Map)
+cons public init(java.util.Map<java.lang.String,?>)
 meth protected java.lang.Object processKey(java.lang.String)
 meth public boolean isExactMatch()
 meth public boolean willThrowExceptionIfKeyWasNotFound()
@@ -1075,7 +1075,7 @@ meth public java.util.Map getMap()
 meth public static java.lang.String format(java.lang.String,java.util.Map)
 meth public void setExactMatch(boolean)
 meth public void setLeftBrace(java.lang.String)
-meth public void setMap(java.util.Map)
+meth public void setMap(java.util.Map<java.lang.String,?>)
 meth public void setRightBrace(java.lang.String)
 meth public void setThrowExceptionIfKeyWasNotFound(boolean)
 supr java.text.Format

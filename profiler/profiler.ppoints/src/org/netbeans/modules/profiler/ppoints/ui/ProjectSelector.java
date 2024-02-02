@@ -93,7 +93,7 @@ class ProjectSelector extends LazyComboBox<Lookup.Provider> {
         }
         
         protected final Lookup.Provider[] populate() {
-            Set<Lookup.Provider> s = new HashSet();
+            Set<Lookup.Provider> s = new HashSet<>();
             
             for (Lookup.Provider project : ProjectUtilities.getOpenedProjects())
                 if (ProjectProfilingSupport.get(project).areProfilingPointsSupported())
@@ -103,7 +103,7 @@ class ProjectSelector extends LazyComboBox<Lookup.Provider> {
                 if (ProjectProfilingSupport.get(project).areProfilingPointsSupported())
                     s.add(project);
 
-            List<Lookup.Provider> l = new ArrayList();
+            List<Lookup.Provider> l = new ArrayList<>();
             Lookup.Provider[] pa = s.toArray(new Lookup.Provider[0]);
             l.add(EXTRA_ITEM);
             l.addAll(Arrays.asList(ProjectUtilities.getSortedProjects(pa)));

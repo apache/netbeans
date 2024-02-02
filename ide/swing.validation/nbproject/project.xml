@@ -68,6 +68,7 @@
                 <friend>org.netbeans.modules.maven.j2ee</friend>
                 <friend>org.netbeans.modules.nodejs</friend>
                 <friend>org.netbeans.modules.payara.micro</friend>
+                <friend>org.netbeans.modules.jakarta.transformer</friend>
                 <package>org.netbeans.api.validation.adapters</package>
                 <package>org.netbeans.validation.api</package>
                 <package>org.netbeans.validation.api.builtin.indexvalidation</package>
@@ -78,8 +79,12 @@
                 <package>org.netbeans.validation.spi.accessibility</package>
             </friend-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/ValidationAPI.jar</runtime-relative-path>
-                <binary-origin>external/ValidationAPI-b26b94cc001a41ab9138496b11e2ae256a159ffd.jar</binary-origin>
+                <runtime-relative-path>ext/simplevalidation-swing.jar</runtime-relative-path>
+                <binary-origin>external/simplevalidation-swing-1.14.1.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/simplevalidation.jar</runtime-relative-path>
+                <binary-origin>external/simplevalidation-1.14.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

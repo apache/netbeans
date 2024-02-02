@@ -174,7 +174,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a
    NetBeans handles this situation by letting you use the <code>Class-Path</code>
    manifest attribute defined by the
 
-   <a href="http://java.sun.com/j2se/1.5.0/docs/guide/extensions/spec.html#bundled">Java Extension Mechanism</a>.
+   <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/extensions/spec.html#bundled">Java Extension Mechanism</a>.
 
    The value of the attribute consists of one or more relative paths to library
    JARs, in the same directory as the module or (normally) beneath it.
@@ -586,7 +586,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
 
   <p>Loading classes from the default (root) package is disabled. You can load resources from
      that package but a warning is printed. It is strongly discouraged to use the default package.
-     Please see the <a href="http://java.sun.com/docs/books/jls/second_edition/html/packages.doc.html#40169">
+     Please see the <a href="https://docs.oracle.com/javase/specs/jls/se6/html/packages.html#40169">
      Java Language Specification </a> for more details.
      You can suppress the warning using <code>-J-Dorg.netbeans.ProxyClassLoader.level=1000</code> command
      line switch.
@@ -606,8 +606,8 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.modules.a = 1.0-alpha-2
   <h2>Using <samp>lib/*.jar</samp> or <samp>-cp</samp> sounds much easier but someone told me not to do it</h2>
 
   <p>The reason is similar to why JDK documentation about setting the class path for
-     <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/classpath.html">Windows</a> or
-     <a href="http://java.sun.com/j2se/1.5.0/docs/tooldocs/solaris/classpath.html">Solaris</a>
+     <a href="https://docs.oracle.com/javase/1.5.0/docs/tooldocs/windows/classpath.html">Windows</a> or
+     <a href="https://docs.oracle.com/javase/1.5.0/docs/tooldocs/solaris/classpath.html">Solaris</a>
      states that <code>-classpath</code> is prefered over environment variables.
      Adding classes (resources) to <samp>lib/ext/</samp> affects all Java applications
      running using this Java installation. 

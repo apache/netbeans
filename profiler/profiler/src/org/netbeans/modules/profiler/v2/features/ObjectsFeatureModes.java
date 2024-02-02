@@ -177,7 +177,7 @@ final class ObjectsFeatureModes {
         private static final String PROJECTS_FLAG = "PROJECTS_FLAG"; // NOI18N
         
         ProjectClassesMode() {
-            selectedProjects = new HashSet();
+            selectedProjects = new HashSet<>();
             
             Collection<File> files = createFilesFromStorage();
             if (files.isEmpty()) {
@@ -262,7 +262,7 @@ final class ObjectsFeatureModes {
         }
         
         private Collection<File> createFilesFromStorage() {
-            Set<File> files = new HashSet();
+            Set<File> files = new HashSet<>();
             
             String s = readFlag(PROJECTS_FLAG, null);
             if (s != null) {
@@ -274,7 +274,7 @@ final class ObjectsFeatureModes {
         }
         
         private Collection<File> createFilesFromSelection() {
-            Set<File> files = new HashSet();
+            Set<File> files = new HashSet<>();
             
             if (selectedProjects.size() > 1 || !selectedProjects.contains(getProject()))
                 for (Lookup.Provider project : selectedProjects)

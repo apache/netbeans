@@ -895,7 +895,7 @@ public final class WebProject implements Project {
         protected void projectOpened() {
             evaluator().addPropertyChangeListener(WebProject.this.webModule);
 
-            WebLogicalViewProvider logicalViewProvider = (WebLogicalViewProvider) WebProject.this.getLookup().lookup (WebLogicalViewProvider.class);
+            WebLogicalViewProvider logicalViewProvider = WebProject.this.getLookup().lookup(WebLogicalViewProvider.class);
             if (logicalViewProvider != null) {
                 logicalViewProvider.initialize();
             }
@@ -1586,8 +1586,9 @@ public final class WebProject implements Project {
                         ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL) ||
                         ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_8_FULL) ||
                         ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_8_FULL);
-                serverSupportsEJB40 = ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_FULL) ||
-                        ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_1_FULL);
+                serverSupportsEJB40 = ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_FULL)
+                        || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_1_FULL)
+                        || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_10_FULL);
                 checked = true;
             }
         }
@@ -2432,12 +2433,13 @@ public final class WebProject implements Project {
             List<Lookup> lookups = new ArrayList<>();
             lookups.add(base);
             Profile profile = Profile.fromPropertiesString(project.evaluator().getProperty(WebProjectProperties.J2EE_PLATFORM));
-            if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_6_WEB.equals(profile) ||
-                    Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile) ||
-                    Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile) ||
-                    Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile) ||
-                    Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_9_WEB.equals(profile) ||
-                    Profile.JAKARTA_EE_9_1_FULL.equals(profile) || Profile.JAKARTA_EE_9_1_WEB.equals(profile)){
+            if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_6_WEB.equals(profile)
+                    || Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile)
+                    || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile)
+                    || Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile)
+                    || Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_9_WEB.equals(profile)
+                    || Profile.JAKARTA_EE_9_1_FULL.equals(profile) || Profile.JAKARTA_EE_9_1_WEB.equals(profile)
+                    || Profile.JAKARTA_EE_10_FULL.equals(profile) || Profile.JAKARTA_EE_10_WEB.equals(profile)) {
                 lookups.add(ee6);
             }
             if ("true".equals(project.evaluator().getProperty(WebProjectProperties.DISPLAY_BROWSER))) {

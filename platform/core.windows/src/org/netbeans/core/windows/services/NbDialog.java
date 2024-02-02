@@ -50,7 +50,7 @@ final class NbDialog extends NbPresenter {
         super (d, owner, d.isModal ());
     }
 
-    /** Geter for help.
+    /** Getter for help.
     */
     @Override
     protected HelpCtx getHelpCtx () {

@@ -33,6 +33,7 @@ import org.netbeans.modules.tomcat5.ui.nodes.TomcatInstanceNode;
  */
 public class ServerLogAction extends NodeAction {
 
+    @Override
     protected void performAction(Node[] nodes) {
         for (int i = 0; i < nodes.length; i++) {
             TomcatInstanceNode cookie = (TomcatInstanceNode)nodes[i].getCookie(TomcatInstanceNode.class);
@@ -47,6 +48,7 @@ public class ServerLogAction extends NodeAction {
         }
     }
 
+    @Override
     protected boolean enable(Node[] nodes) {
         for (int i = 0; i < nodes.length; i++) {
             TomcatInstanceNode cookie = (TomcatInstanceNode)nodes[i].getCookie(TomcatInstanceNode.class);
@@ -61,14 +63,17 @@ public class ServerLogAction extends NodeAction {
         return true;
     }
 
+    @Override
     public String getName() {
         return NbBundle.getMessage(SharedContextLogAction.class, "LBL_ServerLogAction");
     }
     
+    @Override
     protected boolean asynchronous() {
         return false;
     }
 
+    @Override
     public HelpCtx getHelpCtx () {
         return HelpCtx.DEFAULT_HELP;
     }

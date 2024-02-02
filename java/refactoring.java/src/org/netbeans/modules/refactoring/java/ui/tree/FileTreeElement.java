@@ -96,7 +96,7 @@ public class FileTreeElement implements TreeElement, Openable {
                 return TreeElementFactory.getTreeElement(p);
             }
             Object orig = fo.getAttribute("orig-file");
-            if(orig != null && orig instanceof URL) {
+            if(orig instanceof URL) {
                 URL root = FileUtil.getArchiveFile((URL) orig);
                 try {
                     FileObject arch = FileUtil.toFileObject(Utilities.toFile(root.toURI()));

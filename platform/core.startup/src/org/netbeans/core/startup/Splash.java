@@ -27,7 +27,9 @@ import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -643,8 +645,7 @@ public final class Splash implements Stamps.Updater {
                 image.paintIcon(comp, graphics, 0, 0);
             }
             // turn anti-aliasing on for the splash text
-            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+            configureDefaultRenderingHints(graphics);
 
             if (versionBox != null) {
                 String buildNumber = System.getProperty("netbeans.buildnumber");
@@ -674,6 +675,18 @@ public final class Splash implements Stamps.Updater {
                 barLength = 0;
             }
         }
+    }
+
+    /* A simplified version of org.openide.awt.GraphicsUtils.configureDefaultRenderingHints. (We
+    can't use the org.openide.awt module here.) */
+    public static void configureDefaultRenderingHints(Graphics2D graphics) {
+        Map<Object,Object> ret =
+                (Map) (Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints"));
+        if (ret == null) {
+            ret = new HashMap<Object,Object>();
+            ret.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        }
+        graphics.addRenderingHints(ret);
     }
 
     private static class SplashDialog extends JDialog implements ActionListener {

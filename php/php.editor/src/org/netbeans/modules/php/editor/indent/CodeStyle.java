@@ -172,8 +172,16 @@ public final class CodeStyle {
         return preferences.getInt(BLANK_LINES_BEFORE_USE_TRAIT, getDefaultAsInt(BLANK_LINES_BEFORE_USE_TRAIT));
     }
 
+    public int getBlankLinesAfterUseTrait() {
+        return preferences.getInt(BLANK_LINES_AFTER_USE_TRAIT, getDefaultAsInt(BLANK_LINES_AFTER_USE_TRAIT));
+    }
+
     public int getBlankLinesAfterUse() {
         return preferences.getInt(BLANK_LINES_AFTER_USE, getDefaultAsInt(BLANK_LINES_AFTER_USE));
+    }
+
+    public int getBlankLinesBetweenUseTypes() {
+        return preferences.getInt(BLANK_LINES_BETWEEN_USE_TYPES, getDefaultAsInt(BLANK_LINES_BETWEEN_USE_TYPES));
     }
 
     public int getBlankLinesBeforeClass() {
@@ -202,6 +210,10 @@ public final class CodeStyle {
 
     public int getBlankLinesAfterFields() {
         return preferences.getInt(BLANK_LINES_AFTER_FIELDS, getDefaultAsInt(BLANK_LINES_AFTER_FIELDS));
+    }
+
+    public boolean getBlankLinesEOF() {
+        return preferences.getBoolean(BLANK_LINES_EOF, getDefaultAsBoolean(BLANK_LINES_EOF));
     }
 
     /**
@@ -322,12 +334,20 @@ public final class CodeStyle {
         return preferences.getBoolean(SPACE_AROUND_TERNARY_OPS, getDefaultAsBoolean(SPACE_AROUND_TERNARY_OPS));
     }
 
+    public boolean spaceAroundCoalescingOps() {
+        return preferences.getBoolean(SPACE_AROUND_COALESCING_OPS, getDefaultAsBoolean(SPACE_AROUND_COALESCING_OPS));
+    }
+
     public boolean spaceAroundKeyValueOps() {
         return preferences.getBoolean(SPACE_AROUND_KEY_VALUE_OPS, getDefaultAsBoolean(SPACE_AROUND_KEY_VALUE_OPS));
     }
 
     public boolean spaceAroundAssignOps() {
         return preferences.getBoolean(SPACE_AROUND_ASSIGN_OPS, getDefaultAsBoolean(SPACE_AROUND_ASSIGN_OPS));
+    }
+
+    public boolean spaceAroundScopeResolutionOps() {
+        return preferences.getBoolean(SPACE_AROUND_SCOPE_RESOLUTION_OPS, getDefaultAsBoolean(SPACE_AROUND_SCOPE_RESOLUTION_OPS));
     }
 
     public boolean spaceAroundObjectOps() {
@@ -556,12 +576,16 @@ public final class CodeStyle {
         return preferences.getBoolean(PLACE_NEW_LINE_AFTER_MODIFIERS, getDefaultAsBoolean(PLACE_NEW_LINE_AFTER_MODIFIERS));
     }
 
-    public boolean groupMulitlineAssignment() {
+    public boolean groupMultilineAssignment() {
         return preferences.getBoolean(GROUP_ALIGNMENT_ASSIGNMENT, getDefaultAsBoolean(GROUP_ALIGNMENT_ASSIGNMENT));
     }
 
-    public boolean groupMulitlineArrayInit() {
+    public boolean groupMultilineArrayInit() {
         return preferences.getBoolean(GROUP_ALIGNMENT_ARRAY_INIT, getDefaultAsBoolean(GROUP_ALIGNMENT_ARRAY_INIT));
+    }
+
+    public boolean groupMultilineMatchArmArrow() {
+        return preferences.getBoolean(GROUP_ALIGNMENT_MATCH_ARM_ARROW, getDefaultAsBoolean(GROUP_ALIGNMENT_MATCH_ARM_ARROW));
     }
 
     // Wrapping ----------------------------------------------------------------
@@ -685,6 +709,11 @@ public final class CodeStyle {
         return WrapStyle.valueOf(wrap);
     }
 
+    public WrapStyle wrapCoalescingOps() {
+        String wrap = preferences.get(WRAP_COALESCING_OPS, getDefaultAsString(WRAP_COALESCING_OPS));
+        return WrapStyle.valueOf(wrap);
+    }
+
     public WrapStyle wrapAssignOps() {
         String wrap = preferences.get(WRAP_ASSIGN_OPS, getDefaultAsString(WRAP_ASSIGN_OPS));
         return WrapStyle.valueOf(wrap);
@@ -730,6 +759,14 @@ public final class CodeStyle {
 
     public boolean aliasesFromCapitalsOfNamespaces() {
         return preferences.getBoolean(ALIASES_CAPITALS_OF_NAMESPACES, getDefaultAsBoolean(ALIASES_CAPITALS_OF_NAMESPACES));
+    }
+
+    public boolean putInPSR12Order() {
+        return preferences.getBoolean(PUT_IN_PSR12_ORDER, getDefaultAsBoolean(PUT_IN_PSR12_ORDER));
+    }
+
+    public boolean usesKeepExistingTypeOrder() {
+        return preferences.getBoolean(USES_KEEP_EXISTING_TYPE_ORDER, getDefaultAsBoolean(USES_KEEP_EXISTING_TYPE_ORDER));
     }
 
     private static class Producer implements FmtOptions.CodeStyleProducer {

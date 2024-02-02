@@ -22,8 +22,8 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.netbeans.modules.web.jsfapi.api.LibraryType;
-import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
@@ -42,17 +42,18 @@ public class FaceletsLibrary extends AbstractFaceletsLibrary {
     /** 
      * The namespace declared in the facelets library descriptor
      */
-    private final String declaredNamespace;
+    private final Set<String> validNamespaces;
     
-    private final Map<String, NamedComponent> components = new HashMap<String, NamedComponent>();
+    private final Map<String, NamedComponent> components = new HashMap<>();
     private LibraryDescriptor libraryDescriptor, faceletsLibraryDescriptor;
     private String defaultPrefix;
     private final URL libraryDescriptorSource;
 
-    public FaceletsLibrary(FaceletsLibrarySupport support, String namespace, URL libraryDescriptorSourceURL) {
-        super(support, namespace);
-        declaredNamespace = namespace;
-        libraryDescriptorSource = libraryDescriptorSourceURL;
+    public FaceletsLibrary(FaceletsLibrarySupport support, Set<String> allValidNamespaces, URL libraryDescriptorSourceURL) {
+        super(support, allValidNamespaces.iterator().next());
+
+        this.validNamespaces = allValidNamespaces;
+        this.libraryDescriptorSource = libraryDescriptorSourceURL;
     }
     
     protected synchronized LibraryDescriptor getFaceletsLibraryDescriptor() throws LibraryDescriptorException {
@@ -70,7 +71,7 @@ public class FaceletsLibrary extends AbstractFaceletsLibrary {
 
     @Override
     public String getNamespace() {
-        return declaredNamespace;
+        return validNamespaces.iterator().next();
     }
 
     @Override
@@ -201,9 +202,7 @@ public class FaceletsLibrary extends AbstractFaceletsLibrary {
     }
 
     @Override
-    public String getLegacyNamespace() {
-        return NamespaceUtils.NS_MAPPING.get(declaredNamespace);
+    public Set<String> getValidNamespaces() {
+        return validNamespaces;
     }
-
-
 }

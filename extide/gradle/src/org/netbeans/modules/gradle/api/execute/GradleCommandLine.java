@@ -60,6 +60,7 @@ import org.openide.util.Utilities;
  */
 public final class GradleCommandLine implements Serializable {
 
+    private static final String GRADLE_PROJECT_PROPERTY = "gradle-project"; //NOI18N
     private static final Logger LOGGER = Logger.getLogger(GradleCommandLine.class.getName());
     private static final String PROP_JVMARGS = "org.gradle.jvmargs"; // NOI18N
     /**
@@ -134,7 +135,7 @@ public final class GradleCommandLine implements Serializable {
         NO_CONFIGURE_ON_DEMAND(PARAM, "--no-configure-on-demand"),
         NO_DAEMON(UNSUPPORTED, "--no-daemon"),
         NO_PARALLEL(PARAM, "--no-parallel"),
-        NO_REBUILD(PARAM, "-a", "--no-rebuild"),
+        NO_REBUILD(PARAM, GradleVersionRange.until("8.0"), "-a", "--no-rebuild"),
         NO_SCAN(PARAM, GradleVersionRange.from("4.3"), "--no-scan"),
         NO_SEARCH_UPWARD(UNSUPPORTED, GradleVersionRange.until("5.0"), "--no-search-upward", "-u"),
         NO_WATCH_FS(PARAM, GradleVersionRange.from("6.7"), "--no-watch-fs"),
@@ -1125,7 +1126,6 @@ public final class GradleCommandLine implements Serializable {
 
         ret.setFlag(Flag.OFFLINE, settings.isOffline());
         ret.setFlag(Flag.CONFIGURE_ON_DEMAND, settings.isConfigureOnDemand());
-        ret.setFlag(Flag.NO_REBUILD, settings.getNoRebuild());
         ret.setFlag(Flag.CONFIGURATION_CACHE, settings.getUseConfigCache());
 
         ret.setLogLevel(settings.getDefaultLogLevel());

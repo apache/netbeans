@@ -21,7 +21,6 @@ package org.netbeans.modules.java.hints.jdk;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionStatementTree;
-import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -31,8 +30,6 @@ import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.tree.JCTree;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -40,12 +37,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.modules.java.source.TreeShims;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
@@ -56,7 +51,6 @@ import org.netbeans.spi.java.hints.MatcherUtilities;
 import org.netbeans.spi.java.hints.TriggerPattern;
 import org.netbeans.spi.java.hints.TriggerPatterns;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -161,15 +155,13 @@ public class ConvertToSwitchPatternInstanceOf {
                 CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseBindPattern, statementTree);
                 ctl.add(caseMultipleSwitchPatterns);
             }
-            List<Tree> caseDefaultLabel = new LinkedList<>();
-            caseDefaultLabel.add(wc.getTreeMaker().Identifier("default"));
             BlockTree elseTree = (BlockTree) ifPath;
             if (elseTree == null) {
                 elseTree = wc.getTreeMaker().Block(new ArrayList<>(), false);
             }
             
             Tree defaultTree = elseTree.getStatements().size() == 1 && isValidCaseTree(elseTree.getStatements().get(0))? elseTree.getStatements().get(0) : elseTree;
-            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseDefaultLabel, defaultTree);
+            CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().Case(Collections.emptyList(), defaultTree);
             ctl.add(caseMultipleSwitchPatterns);
             wc.rewrite((IfTree) main.getLeaf(), wc.getTreeMaker().Switch(iot.getExpression(), ctl));
         }
@@ -257,15 +249,13 @@ public class ConvertToSwitchPatternInstanceOf {
                 CaseTree caseMultipleSwitchPatterns = wc.getTreeMaker().CasePatterns(caseBindPattern, statementTree);
                 ctl.add(caseMultipleSwitchPatterns);
             }
-            List<Tree> caseDefaultLabel = new LinkedList<>();
-            caseDefaultLabel.add(wc.getTreeMaker().Identifier("default"));
             BlockTree elseTree = (BlockTree) ifPath;
             if (elseTree == null) {
                 elseTree = wc.getTreeMaker().Block(new ArrayList<>(), false);
             }
 
             Tree defaultTree = elseTree.getStatements().size() == 1 && isValidCaseTree(elseTree.getStatements().get(0))? elseTree.getStatements().get(0) : elseTree;
-            CaseTree casePatterns = wc.getTreeMaker().CasePatterns(caseDefaultLabel, defaultTree);
+            CaseTree casePatterns = wc.getTreeMaker().Case(Collections.emptyList(), defaultTree);
             ctl.add(casePatterns);
             wc.rewrite((IfTree) main.getLeaf(), wc.getTreeMaker().Switch(iot.getExpression(), ctl));
         }
@@ -277,9 +267,7 @@ public class ConvertToSwitchPatternInstanceOf {
     public static ErrorDescription switchPatternMatchToSwitchNull(HintContext ctx) {
 
         SwitchTree switchTree = (SwitchTree) ctx.getPath().getLeaf();
-        boolean isPatternMatch = false;
-        isPatternMatch = TreeShims.isPatternMatch(switchTree);
-        if (!isPatternMatch) {
+        if (!isPatternMatch(switchTree)) {
             return null;
         }
         Tree expression = ((ParenthesizedTree) switchTree.getExpression()).getExpression();
@@ -298,6 +286,16 @@ public class ConvertToSwitchPatternInstanceOf {
         Fix fix = new FixSwitchPatternMatchToSwitchNull(ctx.getInfo(), ctx.getPath().getParentPath(), indexOf).toEditorFix();
         return ErrorDescriptionFactory.forTree(ctx, ifTree, Bundle.ERR_ConvertToSwitchPatternInstanceOf(), fix);
 
+    }
+
+    public static boolean isPatternMatch(Tree node) {
+        try {
+            return node.getClass().getField("patternSwitch").getBoolean(node);
+        } catch (NoSuchFieldException e){
+            return false;
+        } catch (IllegalArgumentException | IllegalAccessException | SecurityException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private static final class FixSwitchPatternMatchToSwitchNull extends JavaFix {

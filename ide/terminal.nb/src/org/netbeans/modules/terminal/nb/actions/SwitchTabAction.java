@@ -65,7 +65,7 @@ public class SwitchTabAction extends TerminalAction {
     @Override
     protected void performAction() {
         Container container = SwingUtilities.getAncestorOfClass(TerminalContainer.class, getTerminal());
-        if (container != null && container instanceof TerminalContainer) {
+        if (container instanceof TerminalContainer) {
             TerminalContainer tc = (TerminalContainer) container;
             List<? extends Component> allTabs = tc.getAllTabs();
             try {

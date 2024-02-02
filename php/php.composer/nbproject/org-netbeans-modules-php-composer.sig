@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.47
+#Version 0.52
 
 CLSS public java.lang.Object
 cons public init()

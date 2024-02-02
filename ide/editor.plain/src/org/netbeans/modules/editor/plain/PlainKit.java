@@ -34,6 +34,7 @@ import org.netbeans.modules.editor.NbEditorKit;
  * @deprecated If you need this class you are doing something wrong, 
  *   please ask on nbdev@netbeans.org.
  */
+@Deprecated
 public class PlainKit extends NbEditorKit {
 
     public static final String PLAIN_MIME_TYPE = "text/plain"; // NOI18N

@@ -828,6 +828,90 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
         );
     }
 
+    public void testFunctionGuessingBoolReturnType() throws Exception {
+        insertBreak( "<?php\n" +
+                            "/**^\n" +
+                            "function foo() {\n" +
+                            "    return true;\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "/**\n" +
+                            " * \n" +
+                            " * @return bool^\n" +
+                            " */\n" +
+                            "function foo() {\n" +
+                            "    return true;\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
+    public void testFunctionGuessingNullReturnType() throws Exception {
+        insertBreak( "<?php\n" +
+                            "/**^\n" +
+                            "function testFunction() {\n" +
+                            "    if ($a) {\n" +
+                            "        return 1;\n" +
+                            "    }\n" +
+                            "    return null;\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "/**\n" +
+                            " * \n" +
+                            " * @return null|int^\n" +
+                            " */\n" +
+                             "function testFunction() {\n" +
+                            "    if ($a) {\n" +
+                            "        return 1;\n" +
+                            "    }\n" +
+                            "    return null;\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
+    public void testFunctionGuessingArrayReturnType() throws Exception {
+        insertBreak( "<?php\n" +
+                            "/**^\n" +
+                            "function foo() {\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "/**\n" +
+                            " * \n" +
+                            " * @return array^\n" +
+                            " */\n" +
+                            "function foo() {\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
+    public void testFunctionGuessingArrayReturnTypeWithUnionType() throws Exception {
+        insertBreak( "<?php\n" +
+                            "/**^\n" +
+                            "function foo() {\n" +
+                            "    if (true) {\n" +
+                            "       return 'str';\n" +
+                            "    }\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "/**\n" +
+                            " * \n" +
+                            " * @return string|array^\n" +
+                            " */\n" +
+                            "function foo() {\n" +
+                            "    if (true) {\n" +
+                            "       return 'str';\n" +
+                            "    }\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
     @Override
     public void insertNewline(String source, String reformatted, IndentPrefs preferences) throws Exception {
         int sourcePos = source.indexOf('^');

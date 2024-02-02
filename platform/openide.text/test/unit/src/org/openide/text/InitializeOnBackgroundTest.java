@@ -254,6 +254,7 @@ public class InitializeOnBackgroundTest extends NbTestCase implements CloneableE
     }
     public java.io.OutputStream outputStream() throws java.io.IOException {
         class ContentStream extends java.io.ByteArrayOutputStream {
+            @Override
             public void close () throws java.io.IOException {
                 super.close ();
                 content = new String (toByteArray ());

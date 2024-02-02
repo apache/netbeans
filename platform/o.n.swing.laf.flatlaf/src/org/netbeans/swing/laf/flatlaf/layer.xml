@@ -248,4 +248,13 @@
             </folder>
         </folder>
     </folder>
+
+    <folder name="OptionsExport">
+        <folder name="Advanced">
+            <file name="LookAndFeel">
+                <attr name="include" stringvalue="config/LookAndFeel/.*"/>
+                <attr name="displayName" bundlevalue="org.netbeans.swing.laf.flatlaf.Bundle#LookAndFeel.Config.displayName"/>
+            </file>
+        </folder>
+    </folder>
 </filesystem>

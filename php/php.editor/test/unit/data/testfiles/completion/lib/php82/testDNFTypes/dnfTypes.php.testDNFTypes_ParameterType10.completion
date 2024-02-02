@@ -1,0 +1,18 @@
+Code completion result for source line:
+$protectedPromotedFiled::|$publicStaticZField(); // ClassZ|(ClassZ&ClassY)|ClassX
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticXMethod()           [STATIC]   ClassX
+METHOD     publicStaticYMethod()           [STATIC]   ClassY
+METHOD     publicStaticZMethod()           [STATIC]   ClassZ
+VARIABLE   (ClassY&ClassZ)|ClassX $public  [STATIC]   ClassX
+VARIABLE   (ClassY&ClassZ)|ClassX $public  [STATIC]   ClassY
+VARIABLE   (ClassY&ClassZ)|ClassX $public  [STATIC]   ClassZ
+CONSTANT   IMPLICIT_X_CONSTANT "implicit   [PUBLIC]   ClassX
+CONSTANT   IMPLICIT_Y_CONSTANT "implicit   [PUBLIC]   ClassY
+CONSTANT   IMPLICIT_Z_CONSTANT "implicit   [PUBLIC]   ClassZ
+CONSTANT   PUBLIC_X_CONSTANT "public cons  [PUBLIC]   ClassX
+CONSTANT   PUBLIC_Y_CONSTANT "public cons  [PUBLIC]   ClassY
+CONSTANT   PUBLIC_Z_CONSTANT "public cons  [PUBLIC]   ClassZ
+CONSTANT   class \ClassX                   [PUBLIC]   Magic Constant
+CONSTANT   class \ClassY                   [PUBLIC]   Magic Constant
+CONSTANT   class \ClassZ                   [PUBLIC]   Magic Constant

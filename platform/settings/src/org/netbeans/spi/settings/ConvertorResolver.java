@@ -66,7 +66,7 @@ final class ConvertorResolver {
             
             fo = org.netbeans.modules.settings.Env.findEntityRegistration(fo);
             Object attrib = fo.getAttribute(org.netbeans.modules.settings.Env.EA_PUBLICID);
-            return (attrib == null || !(attrib instanceof String))? null: (String) attrib;
+            return (!(attrib instanceof String))? null: (String) attrib;
         } catch (IOException ex) {
             Logger.getLogger(ConvertorResolver.class.getName()).log(Level.WARNING, null, ex);
             return null;
@@ -90,7 +90,7 @@ final class ConvertorResolver {
     /** extract convertor from file attributes */
     private Convertor getConvertor(FileObject fo) {
         Object attrb = fo.getAttribute(org.netbeans.modules.settings.Env.EA_CONVERTOR);
-        return (attrb == null || !(attrb instanceof Convertor))? null: (Convertor) attrb;
+        return (!(attrb instanceof Convertor))? null: (Convertor) attrb;
     }
     
     /** Converts the publicID into filesystem friendly name.

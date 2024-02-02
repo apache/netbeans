@@ -21,18 +21,25 @@ package org.netbeans.modules.php.editor.indent.ui;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.GroupLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.LayoutStyle;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
 import org.netbeans.modules.php.editor.indent.FmtOptions;
 import org.netbeans.modules.php.editor.indent.FmtOptions.CategorySupport;
 import static org.netbeans.modules.php.editor.indent.FmtOptions.CategorySupport.OPTION_ID;
+import org.openide.awt.Mnemonics;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
-public class FmtUses extends javax.swing.JPanel {
+public class FmtUses extends JPanel {
 
     private static final Logger LOGGER = Logger.getLogger(FmtUses.class.getName());
+    private static final long serialVersionUID = -3146487319808745793L;
 
     public FmtUses() {
         initComponents();
@@ -41,16 +48,18 @@ public class FmtUses extends javax.swing.JPanel {
         preferGroupUsesCheckBox.putClientProperty(OPTION_ID, FmtOptions.PREFER_GROUP_USES);
         startUseWithNamespaceSeparatorCheckBox.putClientProperty(OPTION_ID, FmtOptions.START_USE_WITH_NAMESPACE_SEPARATOR);
         aliasesCapitalsOfNamespacesCheckBox.putClientProperty(OPTION_ID, FmtOptions.ALIASES_CAPITALS_OF_NAMESPACES);
+        putInPSR12OrderCheckBox.putClientProperty(OPTION_ID, FmtOptions.PUT_IN_PSR12_ORDER);
+        keepExistingUseTypeOrderCheckBox.putClientProperty(OPTION_ID, FmtOptions.USES_KEEP_EXISTING_TYPE_ORDER);
     }
 
     public static PreferencesCustomizer.Factory getController() {
-        String preview = "";
+        String preview = ""; // NOI18N
         try {
-            preview = Utils.loadPreviewText(FmtUses.class.getClassLoader().getResourceAsStream("org/netbeans/modules/php/editor/indent/ui/Uses.php"));
+            preview = Utils.loadPreviewText(FmtUses.class.getClassLoader().getResourceAsStream("org/netbeans/modules/php/editor/indent/ui/Uses.php")); // NOI18N
         } catch (IOException ex) {
             LOGGER.log(Level.WARNING, null, ex);
         }
-        return new CategorySupport.Factory("uses", FmtUses.class, preview);
+        return new CategorySupport.Factory("uses", FmtUses.class, preview); // NOI18N
     }
 
     /**
@@ -62,64 +71,76 @@ public class FmtUses extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        preferFullyQualifiedNamesCheckBox = new javax.swing.JCheckBox();
-        preferMultipleUseStatementsCombinedCheckBox = new javax.swing.JCheckBox();
-        preferGroupUsesCheckBox = new javax.swing.JCheckBox();
-        startUseWithNamespaceSeparatorCheckBox = new javax.swing.JCheckBox();
-        aliasesCapitalsOfNamespacesCheckBox = new javax.swing.JCheckBox();
+        preferFullyQualifiedNamesCheckBox = new JCheckBox();
+        preferMultipleUseStatementsCombinedCheckBox = new JCheckBox();
+        preferGroupUsesCheckBox = new JCheckBox();
+        startUseWithNamespaceSeparatorCheckBox = new JCheckBox();
+        aliasesCapitalsOfNamespacesCheckBox = new JCheckBox();
+        putInPSR12OrderCheckBox = new JCheckBox();
+        keepExistingUseTypeOrderCheckBox = new JCheckBox();
 
-        setName(org.openide.util.NbBundle.getMessage(FmtUses.class, "LBL_Uses")); // NOI18N
+        setName(NbBundle.getMessage(FmtUses.class, "LBL_Uses")); // NOI18N
         setOpaque(false);
 
         preferFullyQualifiedNamesCheckBox.setMnemonic('F');
-        org.openide.awt.Mnemonics.setLocalizedText(preferFullyQualifiedNamesCheckBox, org.openide.util.NbBundle.getMessage(FmtUses.class, "FmtUses.preferFullyQualifiedNamesCheckBox.text")); // NOI18N
+        Mnemonics.setLocalizedText(preferFullyQualifiedNamesCheckBox, NbBundle.getMessage(FmtUses.class, "FmtUses.preferFullyQualifiedNamesCheckBox.text")); // NOI18N
 
         preferMultipleUseStatementsCombinedCheckBox.setMnemonic('M');
-        org.openide.awt.Mnemonics.setLocalizedText(preferMultipleUseStatementsCombinedCheckBox, org.openide.util.NbBundle.getMessage(FmtUses.class, "FmtUses.preferMultipleUseStatementsCombinedCheckBox.text")); // NOI18N
+        Mnemonics.setLocalizedText(preferMultipleUseStatementsCombinedCheckBox, NbBundle.getMessage(FmtUses.class, "FmtUses.preferMultipleUseStatementsCombinedCheckBox.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(preferGroupUsesCheckBox, org.openide.util.NbBundle.getMessage(FmtUses.class, "FmtUses.preferGroupUsesCheckBox.text")); // NOI18N
+        Mnemonics.setLocalizedText(preferGroupUsesCheckBox, NbBundle.getMessage(FmtUses.class, "FmtUses.preferGroupUsesCheckBox.text")); // NOI18N
 
         startUseWithNamespaceSeparatorCheckBox.setMnemonic('S');
-        org.openide.awt.Mnemonics.setLocalizedText(startUseWithNamespaceSeparatorCheckBox, org.openide.util.NbBundle.getMessage(FmtUses.class, "FmtUses.startUseWithNamespaceSeparatorCheckBox.text")); // NOI18N
+        Mnemonics.setLocalizedText(startUseWithNamespaceSeparatorCheckBox, NbBundle.getMessage(FmtUses.class, "FmtUses.startUseWithNamespaceSeparatorCheckBox.text")); // NOI18N
 
         aliasesCapitalsOfNamespacesCheckBox.setMnemonic('g');
-        org.openide.awt.Mnemonics.setLocalizedText(aliasesCapitalsOfNamespacesCheckBox, org.openide.util.NbBundle.getMessage(FmtUses.class, "FmtUses.aliasesCapitalsOfNamespacesCheckBox.text")); // NOI18N
+        Mnemonics.setLocalizedText(aliasesCapitalsOfNamespacesCheckBox, NbBundle.getMessage(FmtUses.class, "FmtUses.aliasesCapitalsOfNamespacesCheckBox.text")); // NOI18N
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        Mnemonics.setLocalizedText(putInPSR12OrderCheckBox, NbBundle.getMessage(FmtUses.class, "FmtUses.putInPSR12OrderCheckBox.text")); // NOI18N
+
+        Mnemonics.setLocalizedText(keepExistingUseTypeOrderCheckBox, NbBundle.getMessage(FmtUses.class, "FmtUses.keepExistingUseTypeOrderCheckBox.text")); // NOI18N
+
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(preferFullyQualifiedNamesCheckBox)
                     .addComponent(preferMultipleUseStatementsCombinedCheckBox)
                     .addComponent(startUseWithNamespaceSeparatorCheckBox)
                     .addComponent(aliasesCapitalsOfNamespacesCheckBox)
-                    .addComponent(preferGroupUsesCheckBox))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(preferGroupUsesCheckBox)
+                    .addComponent(putInPSR12OrderCheckBox)
+                    .addComponent(keepExistingUseTypeOrderCheckBox))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(preferFullyQualifiedNamesCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(preferMultipleUseStatementsCombinedCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(preferGroupUsesCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(startUseWithNamespaceSeparatorCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(aliasesCapitalsOfNamespacesCheckBox)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(putInPSR12OrderCheckBox)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(keepExistingUseTypeOrderCheckBox)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox aliasesCapitalsOfNamespacesCheckBox;
-    private javax.swing.JCheckBox preferFullyQualifiedNamesCheckBox;
-    private javax.swing.JCheckBox preferGroupUsesCheckBox;
-    private javax.swing.JCheckBox preferMultipleUseStatementsCombinedCheckBox;
-    private javax.swing.JCheckBox startUseWithNamespaceSeparatorCheckBox;
+    private JCheckBox aliasesCapitalsOfNamespacesCheckBox;
+    private JCheckBox keepExistingUseTypeOrderCheckBox;
+    private JCheckBox preferFullyQualifiedNamesCheckBox;
+    private JCheckBox preferGroupUsesCheckBox;
+    private JCheckBox preferMultipleUseStatementsCombinedCheckBox;
+    private JCheckBox putInPSR12OrderCheckBox;
+    private JCheckBox startUseWithNamespaceSeparatorCheckBox;
     // End of variables declaration//GEN-END:variables
 }

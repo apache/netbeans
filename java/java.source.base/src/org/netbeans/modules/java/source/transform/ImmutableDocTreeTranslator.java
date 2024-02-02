@@ -62,7 +62,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.modules.java.source.TreeShims;
 
 /**
  *

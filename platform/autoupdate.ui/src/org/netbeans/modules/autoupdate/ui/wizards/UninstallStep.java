@@ -278,11 +278,17 @@ public class UninstallStep implements WizardDescriptor.FinishablePanel<WizardDes
     @NbBundle.Messages({
         "UninstallStep_Header_Restart_Head=Restart application to complete deactivation",
         "UninstallStep_Header_Restart_Content=Restart application to finish plugin deactivation.",
+        "UninstallStep_Activate_Header_Restart_Head=Restart application to complete activation",
+        "UninstallStep_Activate_Header_Restart_Content=Restart application to finish plugin activation.",
         "UninstallStep_ActivateLater_Text=The Plugin Installer has successfully activated the following plugins:",
         "UninstallStep_UninstallLater_Text=The Plugin Installer has successfully uninstalled the following plugins:",
         "UninstallStep_DeactivateLater_Text=The Plugin Installer has successfully deactivated the following plugins:"})
     private void presentActionNeedsRestart (Restarter r) {
-        component.setHeadAndContent (UninstallStep_Header_Restart_Head(), UninstallStep_Header_Restart_Content());
+        if (model.getOperation() == OperationWizardModel.OperationType.ENABLE) {
+            component.setHeadAndContent (UninstallStep_Activate_Header_Restart_Head(), UninstallStep_Activate_Header_Restart_Content());
+        } else {
+            component.setHeadAndContent (UninstallStep_Header_Restart_Head(), UninstallStep_Header_Restart_Content());
+        }
         model.modifyOptionsForDoClose (wd, true);
         restarter = r;
         panel.setRestartButtonsVisible (true);

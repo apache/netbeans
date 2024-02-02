@@ -1,0 +1,6 @@
+Code completion result for source line:
+$this->Type()::|EXAMPLE;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     staticMethod()                  [STATIC]   ExampleClass
+CONSTANT   EXAMPLE 1                       [PUBLIC]   ExampleClass
+CONSTANT   class \ExampleClass             [PUBLIC]   Magic Constant

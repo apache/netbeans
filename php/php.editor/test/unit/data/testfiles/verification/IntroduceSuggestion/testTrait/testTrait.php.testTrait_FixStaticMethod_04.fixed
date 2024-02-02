@@ -1,0 +1,39 @@
+<?php
+trait BaseTrait {
+}
+
+trait TraitA {
+
+    use BaseTrait;
+
+    public function test() {
+        $this->field;
+        self::$staticField1;
+        $this->method();
+        self::staticMethod1();
+    }
+
+}
+
+trait TraitB {
+
+    use BaseTrait;
+
+}
+
+trait TraitC {
+
+    public static function staticTraitCMethod() {
+        
+    }
+}
+
+TraitA::$staticField2;
+TraitA::staticMethod2();
+TraitA::CONSTANT;
+
+TraitB::$staticTraitBField;
+TraitB::staticTraitBMethod();
+
+TraitC::$staticTraitCField;
+TraitC::staticTraitCMethod();

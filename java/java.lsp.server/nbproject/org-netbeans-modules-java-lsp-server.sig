@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.0.0
+#Version 2.5.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -28,7 +28,7 @@ meth public java.awt.Dialog createDialog(org.openide.DialogDescriptor)
 meth public java.lang.Object notify(org.openide.NotifyDescriptor)
 meth public void notifyLater(org.openide.NotifyDescriptor)
 supr org.openide.DialogDisplayer
-hfds context
+hfds LOG
 
 CLSS public org.netbeans.modules.java.lsp.server.ui.AbstractGlobalActionContext
 cons public init()
@@ -60,7 +60,6 @@ meth public void runLater(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtm
 meth public void setEnabled(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Object,boolean)
 meth public void setText(org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View,java.lang.Object,java.lang.String)
 supr java.lang.Object
-hfds initial
 
 CLSS protected final org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer$View
  outer org.netbeans.modules.java.lsp.server.ui.AbstractLspHtmlViewer

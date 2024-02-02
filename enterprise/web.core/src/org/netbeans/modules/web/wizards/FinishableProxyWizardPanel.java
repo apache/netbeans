@@ -53,22 +53,27 @@ public class FinishableProxyWizardPanel implements WizardDescriptor.Panel, Wizar
         this(original, null);
     }
 
+    @Override
     public void addChangeListener(javax.swing.event.ChangeListener l) {
         original.addChangeListener(l);
     }
 
+    @Override
     public void removeChangeListener(javax.swing.event.ChangeListener l) {
         original.removeChangeListener(l);
     }
 
+    @Override
     public void storeSettings(Object settings) {
         original.storeSettings(settings);
     }
 
+    @Override
     public void readSettings(Object settings) {
         original.readSettings(settings);
     }
 
+    @Override
     public boolean isValid() {
         if ( !isOriginallyValid ){
             return false;
@@ -76,14 +81,17 @@ public class FinishableProxyWizardPanel implements WizardDescriptor.Panel, Wizar
         return original.isValid();
     }
 
+    @Override
     public boolean isFinishPanel() {
         return true;
     }
 
+    @Override
     public java.awt.Component getComponent() {
         return original.getComponent();
     }
 
+    @Override
     public org.openide.util.HelpCtx getHelp() {
         if (helpCtx != null) {
             return helpCtx;

@@ -144,7 +144,7 @@ public class ProvidedConfigurationsTest extends NbTestCase {
         RunConfig cfg = ActionToGoalUtils.createRunConfig("run", pimpl, Lookup.EMPTY);
         assertEquals(Arrays.asList(
                 "process-classes",
-                "org.codehaus.mojo:exec-maven-plugin:3.0.0:exec"), cfg.getGoals());
+                "org.codehaus.mojo:exec-maven-plugin:3.1.0:exec"), cfg.getGoals());
         
         ProjectConfigurationProvider<MavenConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
         MavenConfiguration c = pcp.getConfigurations().stream().filter(x -> "Micronaut: dev mode".equals(x.getDisplayName())).findAny().get();
@@ -241,6 +241,7 @@ public class ProvidedConfigurationsTest extends NbTestCase {
      */
     public void testExampleProviderConfigurationUsage() throws Exception {
         MockMavenExec mme = new MockMavenExec();
+        MockMavenExec.Reporter r = new MockMavenExec.Reporter();
         MockLookup.setLayersAndInstances(mme);
         
         setupOKProject();
@@ -252,15 +253,15 @@ public class ProvidedConfigurationsTest extends NbTestCase {
         ProjectConfigurationProvider<MavenConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
         ProjectConfiguration configToUse = pcp.getConfigurations().stream().
                 filter(x -> "Micronaut: dev mode".equals(x.getDisplayName())).findAny().get();
-        Lookup ctx = Lookups.fixed(theFile, configToUse);
+        Lookup ctx = Lookups.fixed(theFile, configToUse, r);
         if (!ap.isActionEnabled(ActionProvider.COMMAND_RUN, ctx)) {
             // action not enabled
             return;
         }
         ap.invokeAction(ActionProvider.COMMAND_RUN, ctx);
         
-        mme.executedLatch.await();
-        assertEquals(Arrays.asList("mn:run"), mme.executedConfig.getGoals());
+        r.executedLatch.await();
+        assertEquals(Arrays.asList("mn:run"), r.executedConfig.getGoals());
     }
     
     @ProjectServiceProvider(service = MavenActionsProvider.class, projectType = NbMavenProject.TYPE)

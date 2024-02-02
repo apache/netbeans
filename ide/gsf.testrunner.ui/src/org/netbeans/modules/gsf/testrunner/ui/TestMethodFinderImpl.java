@@ -56,7 +56,7 @@ import org.openide.util.WeakSet;
 public final class TestMethodFinderImpl extends EmbeddingIndexer {
 
     public static final String NAME = "tests"; // NOI18N
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
     public static final TestMethodFinderImpl INSTANCE = new TestMethodFinderImpl();
 
     private final WeakSet<BiConsumer<FileObject, Collection<TestMethodController.TestMethod>>> listeners = new WeakSet<>();

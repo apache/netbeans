@@ -37,15 +37,10 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="tpDetails" max="32767" attributes="0"/>
-                  <Group type="102" attributes="0">
-                      <Component id="jLabel3" min="-2" pref="169" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tfSourceLevel" pref="402" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="tpDetails" pref="580" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="jLabel1" max="32767" attributes="0"/>
@@ -55,6 +50,20 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="tfOutputResources" alignment="0" max="32767" attributes="0"/>
                           <Component id="tfOutputClasses" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jLabel3" pref="157" max="32767" attributes="0"/>
+                          <Component id="lbPlatform" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="tfSourceLevel" min="-2" pref="39" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="jtPlatform" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -67,11 +76,16 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lbPlatform" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtPlatform" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="tfSourceLevel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="tpDetails" pref="232" max="32767" attributes="0"/>
+              <Component id="tpDetails" pref="202" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
@@ -253,6 +267,21 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="tfOutputClasses">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lbPlatform">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="jtPlatform"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/gradle/java/customizer/Bundle.properties" key="SourceSetPanel.lbPlatform.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtPlatform">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
       </Properties>

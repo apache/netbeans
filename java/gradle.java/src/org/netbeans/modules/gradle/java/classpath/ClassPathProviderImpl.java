@@ -311,7 +311,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
 
         private synchronized ClassPath getBootClassPath() {
             if (boot == null) {
-                boot = ClassPathFactory.createClassPath(new BootClassPathImpl(project, false));
+                boot = ClassPathFactory.createClassPath(new BootClassPathImpl(project, group, false));
             }
             return boot;
         }
@@ -339,7 +339,7 @@ public final class ClassPathProviderImpl extends ProjectOpenedHook implements Cl
 
         private synchronized ClassPath getPlatformModulesPath() {
             if (platformModules == null) {
-                platformModules = ClassPathFactory.createClassPath(new BootClassPathImpl(project, true));
+                platformModules = ClassPathFactory.createClassPath(new BootClassPathImpl(project, group, true));
             }
             return platformModules;
         }

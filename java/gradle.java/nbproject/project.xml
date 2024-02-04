@@ -389,6 +389,7 @@
                 <package>org.netbeans.modules.gradle.java.api</package>
                 <package>org.netbeans.modules.gradle.java.api.output</package>
                 <package>org.netbeans.modules.gradle.java.spi.debug</package>
+                <package>org.netbeans.modules.gradle.java.spi.support</package>
             </public-packages>
         </data>
     </configuration>

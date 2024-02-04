@@ -19,39 +19,33 @@
 package org.netbeans.modules.gradle.java.nodes;
 
 import org.netbeans.modules.gradle.api.NbGradleProject;
-import org.netbeans.modules.gradle.api.execute.RunUtils;
-import org.netbeans.modules.gradle.java.api.ProjectSourcesClassPathProvider;
 import static org.netbeans.modules.gradle.java.nodes.Bundle.BootCPNode_displayName;
 import org.netbeans.modules.gradle.spi.nodes.AbstractGradleNodeList;
 import org.netbeans.modules.gradle.spi.nodes.NodeUtils;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.CharConversionException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
-import java.util.prefs.Preferences;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.netbeans.api.annotations.common.CheckForNull;
-import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.StaticResource;
-import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatform;
-import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.modules.gradle.java.api.GradleJavaProject;
+import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet;
+import org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType;
 import org.netbeans.modules.gradle.java.execute.JavaRunUtils;
+import org.netbeans.modules.gradle.java.spi.support.JavaToolchainSupport;
 import org.netbeans.spi.project.ui.PathFinder;
 import org.netbeans.spi.java.project.support.ui.PackageView;
 import org.netbeans.spi.project.ui.support.NodeFactory;
@@ -63,17 +57,12 @@ import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
-import org.openide.util.ChangeSupport;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
-import org.openide.util.Pair;
-import org.openide.util.RequestProcessor;
-import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
-import org.openide.xml.XMLUtil;
 
 @NodeFactory.Registration(projectType = NbGradleProject.GRADLE_PROJECT_TYPE, position = 520)
 public class BootCPNodeFactory implements NodeFactory {
@@ -101,7 +90,7 @@ public class BootCPNodeFactory implements NodeFactory {
 
             @Override
             public Node node(Void key) {
-                return new BootCPNode(new PlatformProvider(p, null));
+                return new BootCPNode(p);
             }
 
             @Override
@@ -123,8 +112,8 @@ public class BootCPNodeFactory implements NodeFactory {
 
         @Messages("BootCPNode_displayName=Java Dependencies")
         @SuppressWarnings("OverridableMethodCallInConstructor")
-        BootCPNode(PlatformProvider pp) {
-            super(Children.create(new BootCPChildren(pp), false), Lookups.singleton(PathFinders.createPathFinder()));
+        BootCPNode(Project p) {
+            super(Children.create(new BootCPChildren(p), false), Lookups.singleton(PathFinders.createPathFinder()));
             setName("BootCPNode");
             setDisplayName(BootCPNode_displayName());
         }
@@ -142,59 +131,49 @@ public class BootCPNodeFactory implements NodeFactory {
     }
 
     // XXX PlatformNode and ActionFilterNode does some of what we want, but cannot be reused
-    private static class BootCPChildren extends ChildFactory.Detachable<FileObject> implements ChangeListener, PropertyChangeListener {
+    private record PlatformSourceSet(JavaPlatform platform, Set<GradleJavaSourceSet> sourceSets) {}
+    private static class BootCPChildren extends ChildFactory.Detachable<PlatformSourceSet> {
 
-        private final PlatformProvider pp;
-        private ClassPath[] endorsed;
-        private static final FileObject BOOT = FileUtil.createMemoryFileSystem().getRoot();
+        private final Project project;
 
-        BootCPChildren(PlatformProvider pp) {
-            this.pp = pp;
+        BootCPChildren(Project project) {
+            this.project = project;
         }
 
         @Override
         protected void addNotify() {
-            pp.addChangeListener(this);
-            ProjectSourcesClassPathProvider pvd = pp.project.getLookup().lookup(ProjectSourcesClassPathProvider.class);
-            endorsed = pvd != null ? pvd.getProjectClassPath(ENDORSED) : new ClassPath[0];
-            for (ClassPath cp : endorsed) {
-                cp.addPropertyChangeListener(this);
-            }
+            NbGradleProject.addPropertyChangeListener(project, this::projectChange);
         }
 
         @Override
         protected void removeNotify() {
-            pp.removeChangeListener(this);
-            for (ClassPath cp : endorsed) {
-                cp.removePropertyChangeListener(this);
-            }
-            endorsed = null;
+            NbGradleProject.removePropertyChangeListener(project, this::projectChange);
         }
 
         @Override
-        protected boolean createKeys(List<FileObject> roots) {
-            roots.add(BOOT);
-            for (ClassPath cp : endorsed) {
-                roots.addAll(Arrays.asList(cp.getRoots()));
+        protected boolean createKeys(List<PlatformSourceSet> keys) {
+            var toolchains = JavaToolchainSupport.getDefault();
+            var pss = new HashMap<JavaPlatform, Set<GradleJavaSourceSet>>();
+            var ss = GradleJavaProject.get(project).getSourceSets().values();
+            for (GradleJavaSourceSet s : ss) {
+                var home = s.getCompilerJavaHome(SourceType.JAVA);
+                var platform = home != null ? toolchains.platformByHome(home) : JavaRunUtils.getActivePlatform(project).second();
+                var groups = pss.computeIfAbsent(platform, (k) -> new TreeSet<GradleJavaSourceSet>((s1, s2) -> s1.getName().compareTo(s2.getName())));
+                groups.add(s);
             }
+            pss.forEach((platform, groups) -> keys.add(new PlatformSourceSet(platform, groups)));
             return true;
         }
 
         @Override
-        protected Node createNodeForKey(FileObject root) {
-            return  root == BOOT ? new JRENode(pp) : jarNode(new LibrariesSourceGroup(root, root.getNameExt()));
+        protected Node createNodeForKey(PlatformSourceSet platform) {
+            return  new JRENode(platform);
         }
 
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(ClassPath.PROP_ROOTS)) {
+        private void projectChange(PropertyChangeEvent evt) {
+            if (NbGradleProject.PROP_PROJECT_INFO.equals(evt.getPropertyName())) {
                 refresh(false);
             }
-        }
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            refresh(false);
         }
 
     }
@@ -202,70 +181,33 @@ public class BootCPNodeFactory implements NodeFactory {
     @NbBundle.Messages({
         "# {0} - Platform Display name",
         "FMT_BrokenPlatform=Broken platform ''{0}''",
-        "TXT_BrokenPlatform=Broken platform",
-        "TXT_UnknownPlatform=Loading..."
     })
-    private static class JRENode extends AbstractNode implements ChangeListener {
+    private static class JRENode extends AbstractNode {
 
-        private final PlatformProvider pp;
+        private final PlatformSourceSet pss;
 
         @SuppressWarnings("OverridableMethodCallInConstructor")
-        private JRENode(PlatformProvider pp) {
+        private JRENode(PlatformSourceSet pss) {
             super(new CPChildren(), Lookups.singleton(PathFinders.createPathFinder()));
-            this.pp = pp;
-            pp.addChangeListener(this);
+            this.pss = pss;
             setIconBaseWithExtension(PLATFORM_ICON);
         }
 
         @Override
         public String getName() {
-            return this.getDisplayName();
+            return pss.platform().getDisplayName();
         }
 
         @Override
         public String getDisplayName() {
-            final Pair<String, JavaPlatform> platHolder = pp.getPlatform();
-            if (platHolder == null) {
-                return Bundle.TXT_UnknownPlatform();
-            }
-            String name;
-            final JavaPlatform jp = platHolder.second();
-            if (jp != null) {
-                if (jp.isValid()) {
-                    name = jp.getDisplayName();
-                } else {
-                    name = Bundle.FMT_BrokenPlatform(jp.getDisplayName());
-                }
-            } else {
-                String platformId = platHolder.first();
-                if (platformId == null) {
-                    name = Bundle.TXT_BrokenPlatform();
-                } else {
-                    name = Bundle.FMT_BrokenPlatform(platformId);
-                }
-            }
-            return name;
+            String name = pss.platform.isValid() ? pss.platform.getDisplayName(): Bundle.FMT_BrokenPlatform(pss.platform.getDisplayName());
+            String groups = pss.sourceSets.stream().map(GradleJavaSourceSet::getName).collect(Collectors.joining(", ", "[", "]"));
+            return name + " " + groups;
         }
 
         @Override
         public String getHtmlDisplayName() {
-            final Pair<String, JavaPlatform> platHolder = pp.getPlatform();
-            if (platHolder == null) {
-                return null;
-            }
-            final JavaPlatform jp = platHolder.second();
-            if (jp == null || !jp.isValid()) {
-                String displayName = this.getDisplayName();
-                try {
-                    displayName = XMLUtil.toElementContent(displayName);
-                } catch (CharConversionException ex) {
-                    // OK, no annotation in this case
-                    return null;
-                }
-                return "<font color=\"#A40000\">" + displayName + "</font>"; //NOI18N
-            } else {
-                return null;
-            }
+            return null;
         }
 
         @Override
@@ -274,24 +216,21 @@ public class BootCPNodeFactory implements NodeFactory {
         }
         
         @Override
+        @Messages({
+                "# {0} - The path of the Java Platform home",
+                "# {1} - The list of the sourcesets wher the platform is used",
+                "TOOLTIP_Platform=<html>Home: {0}<br/>Used in: {1}"
+        })
         public String getShortDescription() {
-            final Pair<String,JavaPlatform> platHolder = pp.getPlatform();
-            if (platHolder != null && platHolder.second() != null && !platHolder.second().getInstallFolders().isEmpty()) {
-                final FileObject installFolder = platHolder.second().getInstallFolders().iterator().next();
-                return FileUtil.getFileDisplayName(installFolder);
+            if (pss.platform.isValid()) {
+                FileObject installFolder = pss.platform.getInstallFolders().iterator().next();
+                String groups = pss.sourceSets.stream().map(GradleJavaSourceSet::getName).collect(Collectors.joining(", "));
+
+                return Bundle.TOOLTIP_Platform(FileUtil.getFileDisplayName(installFolder), groups);
             } else {
                 return super.getShortDescription();
             }
         }
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            this.fireNameChange(null,null);
-            this.fireDisplayNameChange(null,null);
-            ((CPChildren) getChildren()).addNotify();
-        }
-
-
     }
 
     private static class CPChildren extends Children.Keys<SourceGroup> {
@@ -315,31 +254,19 @@ public class BootCPNodeFactory implements NodeFactory {
         }
 
         private List<SourceGroup> getKeys () {
-            final FileObject[] roots = ((JRENode)this.getNode()).pp.getBootstrapLibraries();
-            if (roots.length == 0) {
-                return Collections.<SourceGroup>emptyList();
-            }
+            final FileObject[] roots = ((JRENode)this.getNode()).pss.platform.getBootstrapLibraries().getRoots();
             final List<SourceGroup> result = new ArrayList<>(roots.length);
             for (FileObject root : roots) {
-                    FileObject file;
-                    Icon icon;
-                    Icon openedIcon;
-                    switch (root.toURL().getProtocol()) {
-                        case "jar":
-                            file = FileUtil.getArchiveFile (root);
-                            icon = openedIcon = ImageUtilities.loadImageIcon(ARCHIVE_ICON, false);
-                            break;
-                        case "nbjrt":
-                            file = root;
-                            icon = openedIcon = ImageUtilities.loadImageIcon(MODULE_ICON, false);
-                            break;
-                        default:
-                            file = root;
-                            icon = openedIcon = null;
-                    }
-                    if (file.isValid()) {
-                        result.add (new LibrariesSourceGroup(root,file.getNameExt(),icon, openedIcon));
-                    }
+                var protocol = root.toURL().getProtocol();
+                FileObject file = "jar".equals(protocol) ? FileUtil.getArchiveRoot(root) : root;
+                if (file.isValid()) {
+                    Icon icon = switch (protocol) {
+                        case "jar" -> ImageUtilities.loadImageIcon(ARCHIVE_ICON, false);
+                        case "nbjrt" -> ImageUtilities.loadImageIcon(MODULE_ICON, false);
+                        default -> null;
+                    };
+                    result.add (new LibrariesSourceGroup(root,file.getNameExt(), icon, icon));
+                }
             }
             return result;
         }
@@ -363,87 +290,4 @@ public class BootCPNodeFactory implements NodeFactory {
         };
 
     }
-    
-    private static final class PlatformProvider implements PropertyChangeListener, PreferenceChangeListener {
-
-        private static final Pair<String,JavaPlatform> BUSY = Pair.<String,JavaPlatform>of(null,null);
-        private static final RequestProcessor RP = new RequestProcessor(PlatformProvider.class);
-
-        private final Project project;
-        private final ClassPath boot;
-        private final AtomicReference<Pair<String,JavaPlatform>> platformCache = new AtomicReference<Pair<String,JavaPlatform>>();
-        private final ChangeSupport changeSupport = new ChangeSupport(this);
-        
-        public PlatformProvider (
-                @NonNull final Project project,
-                @NonNull final ClassPath boot) {
-            this.project = project;
-            this.boot = boot;
-            final JavaPlatformManager jps = JavaPlatformManager.getDefault();
-            jps.addPropertyChangeListener(WeakListeners.propertyChange(this, jps));
-            Preferences prefs = NbGradleProject.getPreferences(project, false);
-            prefs.addPreferenceChangeListener(
-                    WeakListeners.create(PreferenceChangeListener.class, this, prefs));
-            NbGradleProject.addPropertyChangeListener(project, WeakListeners.propertyChange(this, NbGradleProject.get(project)));
-            
-            if (this.boot != null) {
-                this.boot.addPropertyChangeListener(WeakListeners.propertyChange(this, this.boot));
-            }
-        }
-                
-        @CheckForNull
-        public Pair<String,JavaPlatform> getPlatform () {
-            if (platformCache.compareAndSet(null, BUSY)) {
-                RP.execute(() -> {
-                    platformCache.set(JavaRunUtils.getActivePlatform(project));
-                    changeSupport.fireChange ();
-                });
-            }
-            Pair<String,JavaPlatform> res = platformCache.get();
-            return res == BUSY ? null : res;
-        }
-
-        @NonNull
-        public FileObject[] getBootstrapLibraries() {
-            final Pair<String, JavaPlatform> jp = getPlatform();
-            if (jp == null || jp.second() == null) {
-                return new FileObject[0];
-            }
-            ClassPath cp = boot;
-            if (cp == null) {
-                cp = jp.second().getBootstrapLibraries();
-            }
-            return cp.getRoots();
-        }
-        
-        public void addChangeListener (ChangeListener l) {
-            changeSupport.addChangeListener(l);
-        }
-        
-        public void removeChangeListener (ChangeListener l) {
-            changeSupport.removeChangeListener(l);
-        }
-        
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            final String propName = evt.getPropertyName();
-            if (NbGradleProject.PROP_PROJECT_INFO.equals(propName) ||
-                ClassPath.PROP_ROOTS.equals(propName) ||
-                JavaPlatformManager.PROP_INSTALLED_PLATFORMS.equals(propName)) {
-                platformCache.set(null);
-                getPlatform();
-            }
-        }
-
-        @Override
-        public void preferenceChange(PreferenceChangeEvent evt) {
-            String prefName = evt.getKey();
-            if (RunUtils.PROP_JDK_PLATFORM.equals(prefName)) {
-                platformCache.set(null);
-                getPlatform();
-            }
-        }
-        
-    }
-
 }

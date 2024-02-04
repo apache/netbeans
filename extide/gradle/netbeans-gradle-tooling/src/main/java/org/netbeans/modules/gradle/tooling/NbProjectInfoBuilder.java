@@ -105,9 +105,13 @@ import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.api.tasks.testing.Test;
 import org.gradle.internal.resolve.ArtifactResolveException;
 import org.gradle.jvm.JvmLibrary;
+import org.gradle.jvm.toolchain.JavaCompiler;
 import org.gradle.language.base.artifact.SourcesArtifact;
 import org.gradle.language.java.artifact.JavadocArtifact;
 import org.gradle.plugin.use.PluginId;
+import org.gradle.api.provider.Property;
+import org.gradle.jvm.toolchain.JavaInstallationMetadata;
+import org.gradle.jvm.toolchain.JavaLauncher;
 import org.gradle.util.GradleVersion;
 import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo;
 import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo.Report;
@@ -1205,6 +1209,13 @@ class NbProjectInfoBuilder {
                                         o.toString()
                                 );
                             }
+                            
+                            sinceGradle("6.7", () -> {
+                                fetchJavaInstallationMetadata(compileTask).ifPresent(
+                                        (meta) -> model.getInfo().put(propBase + lang + "_compiler_java_home", meta.getInstallationPath().getAsFile())
+                                );
+                            });
+                            
                             List<String> compilerArgs;
 
                             compilerArgs = (List<String>) getProperty(compileTask, "options", "allCompilerArgs");
@@ -1311,6 +1322,18 @@ class NbProjectInfoBuilder {
         }
     }
 
+    private Optional<JavaInstallationMetadata> fetchJavaInstallationMetadata(Task task) {
+        Property<JavaLauncher> launcherProperty = (Property<JavaLauncher>) getProperty(task, "javaLauncher");
+        if (launcherProperty != null && launcherProperty.isPresent()) {
+            return Optional.of(launcherProperty.get().getMetadata());
+        }
+        Property<JavaCompiler> compilerProperty = (Property<JavaCompiler>) getProperty(task, "javaCompiler");
+        if (compilerProperty != null && compilerProperty.isPresent()) {
+            return Optional.of(compilerProperty.get().getMetadata());
+        }
+        return Optional.empty();
+    }
+    
     private void detectArtifacts(NbProjectInfoModel model) {
         if (project.getPlugins().hasPlugin("java")) {
             model.getInfo().put("main_jar", getProperty(project, "jar", "archivePath"));

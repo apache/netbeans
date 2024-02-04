@@ -30,6 +30,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.lookup.ServiceProvider;
 import static org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType;
@@ -47,7 +48,7 @@ final class GradleJavaProjectBuilder implements ProjectInfoExtractor.Result {
     final GradleJavaProject prj = new GradleJavaProject();
 
     GradleJavaProjectBuilder(Map<String, Object> info) {
-        this.info = info;
+        this.info = new TreeMap<>(info);
     }
 
     GradleJavaProjectBuilder build() {
@@ -85,6 +86,7 @@ final class GradleJavaProjectBuilder implements ProjectInfoExtractor.Result {
 
                 Map<SourceType, String> sourceComp = new EnumMap<>(SourceType.class);
                 Map<SourceType, String> targetComp = new EnumMap<>(SourceType.class);
+                Map<SourceType, File> javaHomes = new EnumMap<>(SourceType.class);
                 Map<SourceType, List<String>> compilerArgs = new EnumMap<>(SourceType.class);
                 for (SourceType lang : Arrays.asList(JAVA, GROOVY, SCALA, KOTLIN)) {
                     String sc = (String) info.get("sourceset_" + name + "_" + lang.name() + "_source_compatibility");
@@ -94,6 +96,10 @@ final class GradleJavaProjectBuilder implements ProjectInfoExtractor.Result {
                     }
                     if (tc != null) {
                         targetComp.put(lang, tc);
+                    }
+                    File javaHome = (File) info.get("sourceset_" + name + "_" + lang.name() + "_compiler_java_home");
+                    if (javaHome != null) {
+                        javaHomes.put(lang, javaHome);
                     }
                     List<String> compArgs = (List<String>) info.get("sourceset_" + name + "_" + lang.name() + "_compiler_args");
                     if (compArgs != null) {
@@ -107,6 +113,7 @@ final class GradleJavaProjectBuilder implements ProjectInfoExtractor.Result {
                 }
                 sourceSet.sourcesCompatibility = Collections.unmodifiableMap(sourceComp);
                 sourceSet.targetCompatibility = Collections.unmodifiableMap(targetComp);
+                sourceSet.compilerJavaHomes = Collections.unmodifiableMap(javaHomes);
                 sourceSet.compilerArgs = Collections.unmodifiableMap(compilerArgs);
                 
                 for (File out : sourceSet.getOutputClassDirs()) {

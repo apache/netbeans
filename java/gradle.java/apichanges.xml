@@ -83,6 +83,28 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="sourceset-compiler-javahome">
+            <api name="gradle.java.api"/>
+            <summary>Support for per-language output directories</summary>
+            <version major="1" minor="26"/>
+            <date day="4" month="1" year="2024"/>
+            <author login="lkishalmi"/>
+            <compatibility semantic="compatible" addition="yes" deprecation="no"/>
+            <description>
+                <p>
+                    Gradle 6.7 introduced Java Toolchains to separate Gradle Java Runtime
+                    and the Java used for compilation (and other Java execution).
+                    <code><a href="@TOP@/org/netbeans/modules/gradle/java/api/GradleJavaSourceSet.html#getCompilerJavaHome-org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType-">GradleJavaSourceSet.getCompilerJavaHome</a></code> has been added to
+                    return the Java Home of the JDK in use for compilation.
+                </p>
+                <p>
+                    In addition <code><a href="@TOP@/org/netbeans/modules/gradle/java/spi/support/JavaToolchainSupport.html">JavaToolchainSsupport</a></code>
+                    is provided in order to be easily work with the JDK home directories.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.gradle.java.api" name="GradleJavaSourceSet"/>
+            <class package="org.netbeans.modules.gradle.java.spi.support" name="JavaToolchainSupport"/>
+        </change>
         <change id="sourceset-lang-output">
             <api name="gradle.java.api"/>
             <summary>Support for per-language output directories</summary>

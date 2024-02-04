@@ -19,12 +19,16 @@
 package org.netbeans.modules.php.dbgp.packets;
 
 import org.netbeans.modules.php.dbgp.DebugSession;
+import org.netbeans.modules.php.dbgp.breakpoints.AbstractBreakpoint;
 import org.netbeans.modules.php.dbgp.breakpoints.BreakpointModel;
+import org.netbeans.modules.php.dbgp.breakpoints.ExceptionBreakpoint;
 import org.w3c.dom.Node;
 
 public class RunResponse extends StatusResponse {
     private static final String BREAKPOINT = "breakpoint"; //NOI18N
     private static final String BREAKPOINT_ID = "id"; //NOI18N
+    private static final String MESSAGE = "xdebug:message"; //NOI18N
+    private static final String CODE = "code"; //NOI18N
 
     RunResponse(Node node) {
         super(node);
@@ -38,21 +42,44 @@ public class RunResponse extends StatusResponse {
             dbgSession.processStatus(status, reason, command);
         }
 
+        Node message = getChild(getNode(), MESSAGE);
+        String code = null;
+        if (message != null) {
+            code = getAttribute(message, CODE);
+        }
+
         Node breakpoint = getChild(getNode(), BREAKPOINT);
         if (breakpoint != null) {
             String id = DbgpMessage.getAttribute(breakpoint, BREAKPOINT_ID);
             if (id != null) {
-                updateBreakpointsView(dbgSession, id);
+                setCurrentBreakpoint(dbgSession, id);
+                if (message != null) {
+                    setCurrentBreakpointText(dbgSession, message.getTextContent(), code);
+                }
             }
         }
     }
 
-    private void updateBreakpointsView(DebugSession session, String id) {
+    private void setCurrentBreakpoint(DebugSession session, String id) {
         DebugSession.IDESessionBridge bridge = session.getBridge();
         if (bridge != null) {
             BreakpointModel breakpointModel = bridge.getBreakpointModel();
             if (breakpointModel != null && breakpointModel.isSearchCurrentBreakpointById()) {
                 breakpointModel.setCurrentBreakpoint(session, id);
+            }
+        }
+    }
+
+    private void setCurrentBreakpointText(DebugSession session, String message, String code) {
+        DebugSession.IDESessionBridge bridge = session.getBridge();
+        if (bridge != null) {
+            BreakpointModel breakpointModel = bridge.getBreakpointModel();
+            if (breakpointModel != null && breakpointModel.isSearchCurrentBreakpointById()) {
+                AbstractBreakpoint bp = breakpointModel.getCurrentBreakpoint(session);
+                if (bp instanceof ExceptionBreakpoint) {
+                    ((ExceptionBreakpoint) bp).setExceptionMessage(message);
+                    ((ExceptionBreakpoint) bp).setExceptionCode(code);
+                }
             }
         }
     }

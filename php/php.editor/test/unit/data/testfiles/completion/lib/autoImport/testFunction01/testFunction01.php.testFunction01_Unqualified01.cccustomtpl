@@ -1,0 +1,2 @@
+Name: exampleFunction
+exampleFunction${php-auto-import default="" fqName=AutoImport\exampleFunction aliasName="" useType=function editable=false}()

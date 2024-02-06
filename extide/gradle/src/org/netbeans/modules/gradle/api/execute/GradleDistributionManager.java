@@ -86,7 +86,7 @@ public final class GradleDistributionManager {
     private static final Pattern DIST_VERSION_PATTERN = Pattern.compile(".*(gradle-(\\d+\\.\\d+.*))-(bin|all)\\.zip"); //NOI18N
     private static final Set<String> VERSION_BLACKLIST = new HashSet<>(Arrays.asList("2.3", "2.13")); //NOI18N
     private static final Map<File, GradleDistributionManager> CACHE = new WeakHashMap<>();
-    private static final GradleVersion MINIMUM_SUPPORTED_VERSION = GradleVersion.version("2.0"); //NOI18N
+    private static final GradleVersion MINIMUM_SUPPORTED_VERSION = GradleVersion.version("3.0"); //NOI18N
     private static final GradleVersion[] JDK_COMPAT = new GradleVersion[]{
         GradleVersion.version("4.2.1"), // JDK-9
         GradleVersion.version("4.7"), // JDK-10
@@ -102,6 +102,8 @@ public final class GradleDistributionManager {
         GradleVersion.version("8.3"), // JDK-20
         GradleVersion.version("8.5"), // JDK-21
     };
+
+    private static final GradleVersion LAST_KNOWN_GRADLE = GradleVersion.version("8.6"); //NOI18N
 
     final File gradleUserHome;
 
@@ -496,10 +498,9 @@ public final class GradleDistributionManager {
          */
         public boolean isCompatibleWithJava(int jdkMajorVersion) {
             
-            GradleVersion lastKnown = JDK_COMPAT[JDK_COMPAT.length - 1];
             // Optimistic bias, if the GradleVersion is newer than the last NB
             // knows, we say it's compatible with any JDK
-            return lastKnown.compareTo(version.getBaseVersion()) < 0 
+            return LAST_KNOWN_GRADLE.compareTo(version.getBaseVersion()) < 0
                     || jdkMajorVersion <= lastSupportedJava();
         }
 

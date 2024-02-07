@@ -6,6 +6,8 @@
 --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED
 --add-opens=java.desktop/javax.swing.plaf.synth=ALL-UNNAMED
 --add-opens=java.desktop/com.sun.java.swing.plaf.gtk=ALL-UNNAMED
+--add-opens=java.desktop/com.sun.java.swing.plaf.windows=ALL-UNNAMED
+--add-opens=java.desktop/com.apple.laf=ALL-UNNAMED
 --add-opens=java.desktop/sun.awt.shell=ALL-UNNAMED
 --add-opens=java.desktop/sun.awt.im=ALL-UNNAMED
 --add-exports=java.desktop/sun.awt=ALL-UNNAMED

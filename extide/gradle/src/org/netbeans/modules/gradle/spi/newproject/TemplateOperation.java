@@ -57,6 +57,7 @@ import org.netbeans.modules.gradle.GradleProjectLoader;
 import org.netbeans.modules.gradle.ProjectTrust;
 import org.netbeans.modules.gradle.api.GradleProjects;
 import org.netbeans.modules.gradle.api.NbGradleProject.Quality;
+import org.netbeans.modules.gradle.spi.GradleSettings;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
@@ -314,7 +315,11 @@ public final class TemplateOperation implements Runnable {
                     args.add(projectName);
                 }
 
-                pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
+                if (GradleSettings.getDefault().isOffline()) {
+                    pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
+                } else {
+                    pconn.newBuild().forTasks(args.toArray(new String[0])).run();
+                }
             } catch (GradleConnectionException | IllegalStateException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -488,7 +493,11 @@ public final class TemplateOperation implements Runnable {
                     args.add("--gradle-version"); //NOI18N
                     args.add(version);
                 }
-                pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
+                if (GradleSettings.getDefault().isOffline()) {
+                    pconn.newBuild().withArguments("--offline").forTasks(args.toArray(new String[0])).run(); //NOI18N
+                } else {
+                    pconn.newBuild().forTasks(args.toArray(new String[0])).run();
+                }
             } catch (GradleConnectionException | IllegalStateException ex) {
                 // Well for some reason we were  not able to load Gradle.
                 // Ignoring that for now

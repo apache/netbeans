@@ -63,13 +63,15 @@ final class Parse {
                 if (line == null) {
                     break;
                 }
-                sb.append(jsonify(line)).append("\n");
+                line = line.replaceAll("(\\s*)#.*", "$1");
+                sb.append(line).append("\n");
             }
         }
+        String text = jsonify(sb.toString());
         Object value;
         try {
             final JSONParser p = new JSONParser();
-            value = p.parse(sb.toString());
+            value = p.parse(text);
         } catch (ParseException ex) {
             throw new IOException("Cannot parse " + u, ex);
         }
@@ -78,9 +80,8 @@ final class Parse {
     }
 
     private static String jsonify(String content) {
-        String text = content.replaceFirst("^suite *= *\\{", "{");
+        String text = content.replaceFirst("\\s*suite *= *\\{", "{");
         text = text.replace("True", "true").replace("False", "false");
-        text = text.replaceAll("(\\s*)#.*", "$1");
         text = text.replaceAll(",\\s*(\\]|\\})", "$1");
         text = replaceQuotes("\"\"\"", text);
         text = replaceQuotes("'''", text);

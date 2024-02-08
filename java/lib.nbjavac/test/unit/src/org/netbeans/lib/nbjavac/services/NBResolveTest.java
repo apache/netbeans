@@ -19,24 +19,14 @@
 package org.netbeans.lib.nbjavac.services;
 
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Scope;
 import com.sun.source.util.JavacTask;
-import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
-import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
-import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.util.Context;
 import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import javax.lang.model.element.Element;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
@@ -45,41 +35,22 @@ import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 import org.netbeans.junit.NbTestCase;
 
-import static org.netbeans.lib.nbjavac.services.Utilities.DEV_NULL;
 import org.openide.util.Pair;
 
 /**
  *
  * @author lahvac
  */
-public class NBJavacTreesTest extends NbTestCase {
+public class NBResolveTest extends NbTestCase {
 
-    public NBJavacTreesTest(String testName) {
+    public NBResolveTest(String testName) {
         super(testName);
     }
 
-    public void testEffectivellyFinalVariablesPreserved() throws Exception {
-        String code = "package test; public class Test { void t() { int i = 0; int j = 0; t(); j = 1; } }";
-        Pair<JavacTask, CompilationUnitTree> parsed = compile(code);
+    public void testStringTemplateProcessMissing() throws Exception {
+        String code = "package test; public class Test { String t() { return STR.\"\"; } }";
 
-        new TreePathScanner<Void, Void>() {
-            @Override
-            public Void visitMethod(MethodTree node, Void p) {
-                if (node.getName().contentEquals("t")) {
-                    TreePath scopePath = new TreePath(new TreePath(getCurrentPath(), node.getBody()), node.getBody().getStatements().get(2));
-                    Scope scope = Trees.instance(parsed.first()).getScope(scopePath);
-                    Set<String> elements = new HashSet<>();
-                    scope.getLocalElements().forEach(e -> {
-                        elements.add(e.getSimpleName().toString() + effectivellyFinal(e));
-                    });
-                }
-                return super.visitMethod(node, p);
-            }
-        }.scan(parsed.second(), null);
-    }
-
-    private static boolean effectivellyFinal(Element el) {
-        return (((Symbol) el).flags_field & Flags.EFFECTIVELY_FINAL) != 0;
+        compile(code, "21");
     }
 
     //<editor-fold defaultstate="collapsed" desc=" Test Infrastructure ">
@@ -104,7 +75,7 @@ public class NBJavacTreesTest extends NbTestCase {
         workingDir = getWorkDir();
     }
 
-    private Pair<JavacTask, CompilationUnitTree> compile(String code) throws Exception {
+    private Pair<JavacTask, CompilationUnitTree> compile(String code, String release) throws Exception {
         final JavaCompiler tool = ToolProvider.getSystemJavaCompiler();
         assert tool != null;
 
@@ -113,11 +84,10 @@ public class NBJavacTreesTest extends NbTestCase {
         std.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(workingDir));
 
         Context context = new Context();
-        NBLog.preRegister(context, DEV_NULL);
         NBAttr.preRegister(context);
+        NBJavaCompiler.preRegister(context);
         NBResolve.preRegister(context);
-        NBJavacTrees.preRegister(context);
-        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("-source", "1.8", "-target", "1.8"), null, Arrays.asList(new MyFileObject(code)), context);
+        final JavacTaskImpl ct = (JavacTaskImpl) ((JavacTool)tool).getTask(null, std, null, Arrays.asList("--release", release, "-XDshould-stop.at=FLOW"), null, Arrays.asList(new MyFileObject(code)), context);
 
         CompilationUnitTree cut = ct.parse().iterator().next();
 

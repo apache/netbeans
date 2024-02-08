@@ -267,7 +267,7 @@ public class ErrorHintsProviderTest extends NbTestCase {
                                "}\n",
                                "21",
                                //TODO: needs to be adjusted when the error in javac is fixed:
-                               "0:0-0:13::Test.java:1:1: compiler.err.preview.feature.disabled.plural: (compiler.misc.feature.unnamed.classes)");
+                               "0:0-0:13::Test.java:1:1: compiler.err.preview.feature.disabled.plural: (compiler.misc.feature.implicit.classes)");
     }
 
     private void performInlinedTest(String name, String code) throws Exception {

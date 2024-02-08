@@ -949,9 +949,9 @@ public class CasualDiff {
         int insertHint = localPointer;
         List<JCTree> filteredOldTDefs = filterHidden(oldT.defs);
         List<JCTree> filteredNewTDefs = filterHidden(newT.defs);
-        boolean unnamed = (oldT.mods.flags & Flags.UNNAMED_CLASS) != 0;
-        // skip the section when printing anonymous or unnamed class
-        if (anonClass == false && !unnamed) {
+        boolean implicit = (oldT.mods.flags & Flags.IMPLICIT_CLASS) != 0;
+        // skip the section when printing anonymous or implicit class
+        if (anonClass == false && !implicit) {
         tokenSequence.move(oldT.pos);
         tokenSequence.moveNext(); // First skip as move() does not position to token directly
         tokenSequence.moveNext();
@@ -1070,7 +1070,7 @@ public class CasualDiff {
         tokenSequence.move(insertHint);
         tokenSequence.moveNext();
         insertHint = moveBackToToken(tokenSequence, insertHint, JavaTokenId.LBRACE) + 1;
-        } else if (!unnamed) {
+        } else if (!implicit) {
             insertHint = moveFwdToToken(tokenSequence, oldT.getKind() == Kind.ENUM ? localPointer : getOldPos(oldT), JavaTokenId.LBRACE);
             tokenSequence.moveNext();
             insertHint = tokenSequence.offset();

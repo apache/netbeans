@@ -1079,8 +1079,8 @@ public class JavacParser extends Parser {
         NBJavacTrees.preRegister(context);
         if (!backgroundCompilation) {
             JavacFlowListener.preRegister(context, task);
-            NBResolve.preRegister(context);
         }
+        NBResolve.preRegister(context);
         NBEnter.preRegister(context);
         NBMemberEnter.preRegister(context, backgroundCompilation);
         TIME_LOGGER.log(Level.FINE, "JavaC", context);

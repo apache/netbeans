@@ -424,7 +424,7 @@ public class VanillaPartialReparser implements PartialReparser {
         final Symbol.ClassSymbol owner = env.enclClass.sym;
         if (tree.name == names.init && !owner.type.isErroneous() && owner.type != syms.objectType) {
             JCTree.JCBlock body = tree.body;
-            if (body.stats.isEmpty() || !TreeInfo.isSelfCall(body.stats.head)) {
+            if (!TreeInfo.hasAnyConstructorCall(tree)) {
                 body.stats = body.stats.
                 prepend(make.at(body.pos).Exec(make.Apply(com.sun.tools.javac.util.List.nil(), make.Ident(names._super), com.sun.tools.javac.util.List.nil())));
             } else if ((env.enclClass.sym.flags() & Flags.ENUM) != 0 &&

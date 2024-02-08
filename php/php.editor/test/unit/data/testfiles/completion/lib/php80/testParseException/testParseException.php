@@ -1,3 +1,4 @@
+<?php
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,34 +18,11 @@
  * under the License.
  */
 
-apply plugin: 'application'
+namespace TestA;
 
-mainClassName = 'org.netbeans.modules.gradle.DebugTooling'
-
-sourceCompatibility = '1.8'
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-[compileJava, compileTestJava]*.options*.debug = true
-
-repositories {
-    mavenCentral()
+function myFunction(): void {
 }
 
-dependencies {
-    implementation gradleApi()
-    implementation localGroovy()
-}
+namespace TestB;
 
-testClasses.dependsOn('jar')
-
-test {
-    systemProperty 'project.dir', projectDir
-    if (project.hasProperty('debugDaemon')) {
-        systemProperty 'debugDaemon', 'true'
-    }
-}
-
-run {
-    args = ["$projectDir/src/test/data/simple-with-tests", "-PdownloadSourcesAndJavadoc=ALL"]
-}
-
-[startScripts, distTar, distZip]*.enabled = false
+use function TestA\myFunction

@@ -1662,6 +1662,7 @@ final class CompletionContextFinder {
     }
 
     static boolean isInAttribute(final int caretOffset, final TokenSequence ts, boolean allowInArgs) {
+        final int originalOffset = ts.offset();
         // e.g. #[MyAttr^ibute] ("^": caret)
         boolean result = false;
         int bracketBalance = 0;
@@ -1693,7 +1694,7 @@ final class CompletionContextFinder {
                 break;
             }
         }
-        ts.move(caretOffset);
+        ts.move(originalOffset);
         ts.moveNext();
         return result;
     }

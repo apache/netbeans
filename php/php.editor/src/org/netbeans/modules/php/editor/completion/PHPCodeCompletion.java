@@ -1671,6 +1671,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         if (tokenSequence == null) {
             return;
         }
+        if (!tokenSequence.moveNext()) {
+            return;
+        }
         if (CompletionContextFinder.isInAttribute(request.anchor, tokenSequence, true)) {
             autoCompleteAttributeExpression(completionResult, request);
         } else {

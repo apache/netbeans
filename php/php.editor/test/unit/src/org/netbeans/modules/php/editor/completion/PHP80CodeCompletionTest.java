@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.editor.completion;
 
 import java.io.File;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -1672,4 +1673,11 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath(), "    #[^]", false);
     }
 
+    public void testParseException() throws Exception {
+        try {
+            checkCompletion(getTestPath(), "use function TestA\\myFunction^", false);
+        } catch (ParseException e) {
+            fail("Must not throw ParseException.");
+        }
+    }
 }

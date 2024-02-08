@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -265,7 +266,7 @@ public abstract class SvnCommand implements CommandNotificationListener {
     }
     
     protected String createTempCommandFile(String[] lines) throws IOException {
-        File targetFile = File.createTempFile("svn_", "", getTempCommandFolder(true));
+        File targetFile = Files.createTempFile(getTempCommandFolder(true).toPath(), "svn_", "").toFile();
         targetFile.deleteOnExit();
 
         PrintWriter writer = null; 

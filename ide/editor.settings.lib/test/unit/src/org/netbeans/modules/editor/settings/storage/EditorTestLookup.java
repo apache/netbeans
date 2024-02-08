@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -294,7 +295,7 @@ public class EditorTestLookup extends ProxyLookup {
         public ZipFileSystem(URL zipURL) throws IOException {
             this.zipPath = zipURL.toString();
             
-            File zipFile = File.createTempFile("ZipFileSystem", ".zip");
+            File zipFile = Files.createTempFile("ZipFileSystem", ".zip").toFile();
             zipFile.deleteOnExit();
             
             OutputStream os = new FileOutputStream(zipFile);

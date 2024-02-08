@@ -22,6 +22,7 @@ package org.netbeans.api.diff;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+import java.nio.file.Files;
 
 import org.openide.util.io.ReaderInputStream;
 import org.openide.util.Lookup;
@@ -164,7 +165,7 @@ public abstract class StreamSource extends Object {
         
         private File createReaderSource(Reader r) throws IOException {
             File tmp = null;
-            tmp = FileUtil.normalizeFile(File.createTempFile("sss", "tmp"));
+            tmp = FileUtil.normalizeFile(Files.createTempFile("sss", "tmp").toFile());
             tmp.deleteOnExit();
             tmp.createNewFile();
             InputStream in = null;

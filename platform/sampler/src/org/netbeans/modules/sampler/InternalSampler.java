@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
+
 import static org.netbeans.modules.sampler.Bundle.*;
 
 /**
@@ -123,7 +125,7 @@ final class InternalSampler extends Sampler {
         "SelfSamplerAction_SavedFile=Snapshot was saved to {0}"
     })
     protected void saveSnapshot(byte[] arr) throws IOException { // save snapshot
-        File outFile = File.createTempFile(SAMPLER_NAME, SamplesOutputStream.FILE_EXT);
+        File outFile = Files.createTempFile(SAMPLER_NAME, SamplesOutputStream.FILE_EXT).toFile();
         File userDir = Places.getUserDirectory();
         File gestures = null;
         SelfSampleVFS fs;

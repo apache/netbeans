@@ -37,6 +37,7 @@ import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2372,7 +2373,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 commitMessage = HG_COMMIT_DEFAULT_MESSAGE;
             }
             // Create temporary file.
-            tempfile = File.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX);
+            tempfile = Files.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX).toFile();
 
             // Write to temp file
             BufferedWriter out = new BufferedWriter(ENCODING == null 
@@ -3614,7 +3615,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 commitMessage = HG_COMMIT_DEFAULT_MESSAGE;
             }
             // Create temporary file.
-            tempfile = File.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX);
+            tempfile = Files.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX).toFile();
 
             // Write to temp file
             BufferedWriter out = new BufferedWriter(ENCODING == null 
@@ -3944,9 +3945,8 @@ public abstract class HgCommand<T> implements Callable<T> {
 
                     String template = str.substring("--template=".length()); //NOI18N
 
-                    File tempFile = File.createTempFile(
-                                                "hg-output-style",      //NOI18N
-                                                null);    //extension (default)
+                    File tempFile = Files.createTempFile("hg-output-style", //NOI18N
+                            null).toFile();    //extension (default)
                     Writer writer = ENCODING == null 
                             ? new OutputStreamWriter(new FileOutputStream(tempFile)) 
                             : new OutputStreamWriter(new FileOutputStream(tempFile), ENCODING);

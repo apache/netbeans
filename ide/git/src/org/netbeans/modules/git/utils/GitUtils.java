@@ -27,6 +27,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -742,7 +743,7 @@ public final class GitUtils {
             String revisionToOpen, boolean showAnnotations, ProgressMonitor pm) throws IOException {
         File file1 = VersionsCache.getInstance().getFileRevision(originalFile, revision1, pm);
         if (file1 == null) { // can be null if the file does not exist or is empty in the given revision
-            file1 = File.createTempFile("tmp", "-" + originalFile.getName(), Utils.getTempFolder()); //NOI18N
+            file1 = Files.createTempFile(Utils.getTempFolder().toPath(), "tmp", "-" + originalFile.getName()).toFile(); //NOI18N
             file1.deleteOnExit();
         }
         if (pm.isCanceled()) {
@@ -750,7 +751,7 @@ public final class GitUtils {
         }
         File file = VersionsCache.getInstance().getFileRevision(originalFile, revisionToOpen, pm);
         if (file == null) { // can be null if the file does not exist or is empty in the given revision
-            file = File.createTempFile("tmp", "-" + originalFile.getName(), Utils.getTempFolder()); //NOI18N
+            file = Files.createTempFile(Utils.getTempFolder().toPath(), "tmp", "-" + originalFile.getName()).toFile(); //NOI18N
             file.deleteOnExit();
         }
         if (pm.isCanceled()) {
@@ -767,7 +768,7 @@ public final class GitUtils {
             return;
         }
         if (file == null) { // can be null if the file does not exist or is empty in the given revision
-            file = File.createTempFile("tmp", "-" + originalFile.getName(), Utils.getTempFolder()); //NOI18N
+            file = Files.createTempFile(Utils.getTempFolder().toPath(), "tmp", "-" + originalFile.getName()).toFile(); //NOI18N
             file.deleteOnExit();
         }
         openInRevision(file, originalFile, lineNumber, revision, showAnnotations, pm);

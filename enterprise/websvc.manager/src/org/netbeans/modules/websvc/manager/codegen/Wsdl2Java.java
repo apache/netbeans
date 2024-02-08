@@ -43,6 +43,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ProxySelector;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.websvc.manager.util.ManagerUtil;
@@ -299,7 +300,7 @@ public class Wsdl2Java {
     
     private void createJaxrpcConfigFile(String wsdlFileName, Properties properties){
         try {
-            File cf = File.createTempFile("jaxrpcconfigfile", ".xml"); // NOI81N
+            File cf = Files.createTempFile("jaxrpcconfigfile", ".xml").toFile(); // NOI81N
             cf.deleteOnExit();
             OutputStream out = new FileOutputStream(cf);
             String packageName = webServiceData.getEffectivePackageName();

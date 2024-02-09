@@ -441,11 +441,7 @@ public final class ModuleActions implements ActionProvider, ExecProject {
                     doRun();
                 } finally {
                     if (task != null) {
-                        task.addTaskListener(new TaskListener() {
-                            @Override public void taskFinished(Task _) {
-                                listener.finished(task.result() == 0);
-                            }
-                        });
+                        task.addTaskListener((Task t) -> listener.finished(task.result() == 0));
                     } else {
                         listener.finished(false);
                     }

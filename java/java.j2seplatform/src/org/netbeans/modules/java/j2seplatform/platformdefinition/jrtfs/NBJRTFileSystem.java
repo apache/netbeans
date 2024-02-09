@@ -245,7 +245,7 @@ public class NBJRTFileSystem extends AbstractFileSystem implements AbstractFileS
             try {
                 e = clz.getDeclaredConstructor(String.class).newInstance(message);
             } catch (NoSuchMethodException nsm) {
-                e = clz.newInstance();
+                e = clz.getDeclaredConstructor().newInstance();
             }
         } catch (ReflectiveOperationException roe) {
             throw  new IllegalStateException(message);

@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.prefs.PreferenceChangeEvent;
 import javax.swing.Action;
 import javax.swing.InputMap;
@@ -73,10 +72,6 @@ import static javax.swing.text.DefaultEditorKit.selectionUpAction;
 import javax.swing.text.EditorKit;
 import javax.swing.text.Position;
 import javax.swing.text.View;
-import javax.swing.undo.AbstractUndoableEdit;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoableEdit;
 import org.netbeans.api.editor.caret.CaretInfo;
 import org.netbeans.api.editor.EditorActionRegistration;
 import org.netbeans.api.editor.EditorActionRegistrations;
@@ -102,7 +97,6 @@ import org.netbeans.api.editor.caret.MoveCaretsOrigin;
 import org.netbeans.spi.editor.caret.CaretMoveHandler;
 import org.netbeans.lib.editor.util.swing.PositionRegion;
 import org.netbeans.modules.editor.lib.SettingsConversions;
-import org.netbeans.modules.editor.lib2.CaretUndo;
 import org.netbeans.modules.editor.lib2.RectangularSelectionCaretAccessor;
 import org.netbeans.modules.editor.lib2.RectangularSelectionUtils;
 import org.netbeans.modules.editor.lib2.actions.KeyBindingsUpdater;
@@ -116,7 +110,6 @@ import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
-import org.openide.util.Pair;
 import org.openide.util.WeakListeners;
 import org.openide.util.WeakSet;
 
@@ -469,14 +462,13 @@ public class BaseKit extends DefaultEditorKit {
                 BaseKit kit = (BaseKit)kits.get(classToTry);
                 if (kit == null) {
                     try {
-                        kit = (BaseKit)classToTry.newInstance();
+                        kit = (BaseKit)classToTry.getDeclaredConstructor().newInstance();
                         kits.put(classToTry, kit);
                         return kit;
-                    } catch (IllegalAccessException e) {
-                        LOG.log(Level.WARNING, "Can't instantiate editor kit from: " + classToTry, e); //NOI18N
-                    } catch (InstantiationException e) {
+                    } catch (ReflectiveOperationException e) {
                         LOG.log(Level.WARNING, "Can't instantiate editor kit from: " + classToTry, e); //NOI18N
                     }
+                    //NOI18N
                     
                     if (classToTry != BaseKit.class) {
                         classToTry = BaseKit.class;

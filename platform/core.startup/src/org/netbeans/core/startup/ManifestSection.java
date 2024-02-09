@@ -175,7 +175,7 @@ public abstract class ManifestSection<T> {
             if (SharedClassObject.class.isAssignableFrom(clazz)) {
                 return SharedClassObject.findObject(clazz.asSubclass(SharedClassObject.class), true);
             } else {
-                return clazz.newInstance();
+                return clazz.getDeclaredConstructor().newInstance();
             }
         }
     }

@@ -393,7 +393,7 @@ public class LibrariesTestUtil {
     public static void registerLibraryTypeProvider (final Class<? extends LibraryTypeProvider> provider) throws Exception {
         final MockLibraryTypeRegistry mr = Lookup.getDefault().lookup(MockLibraryTypeRegistry.class);
         if (mr != null) {
-            mr.register(provider.newInstance());
+            mr.register(provider.getDeclaredConstructor().newInstance());
             return;
         }
         FileObject root = FileUtil.getConfigRoot();

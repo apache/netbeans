@@ -97,22 +97,18 @@ public class LayoutSupportRegistry {
     // creation methods
 
     public LayoutSupportDelegate createSupportForContainer(Class containerClass)
-        throws ClassNotFoundException,
-               InstantiationException,
-               IllegalAccessException
+        throws ReflectiveOperationException
     {
         String delegateClassName = getContainersMap().get(containerClass.getName());
         if (delegateClassName == null) {
             return createLayoutSupportForSuperClass(getContainersMap(), containerClass);
         } else {
-            return (LayoutSupportDelegate) loadClass(delegateClassName).newInstance();
+            return (LayoutSupportDelegate) loadClass(delegateClassName).getDeclaredConstructor().newInstance();
         }
     }
 
     public LayoutSupportDelegate createSupportForLayout(Class layoutClass)
-        throws ClassNotFoundException,
-               InstantiationException,
-               IllegalAccessException
+        throws ReflectiveOperationException
     {
         String layoutClassName = layoutClass.getName();
         String delegateClassName = getLayoutsMap().get(layoutClassName);
@@ -125,7 +121,7 @@ public class LayoutSupportRegistry {
         if (DEFAULT_SUPPORT.equals(delegateClassName)) {
             return new DefaultLayoutSupport(layoutClass);
         } else if (delegateClassName != null) {
-            return (LayoutSupportDelegate) loadClass(delegateClassName).newInstance();
+            return (LayoutSupportDelegate) loadClass(delegateClassName).getDeclaredConstructor().newInstance();
         } else {
             return null;
         }
@@ -133,9 +129,9 @@ public class LayoutSupportRegistry {
 
     public static LayoutSupportDelegate createSupportInstance(
                                             Class layoutDelegateClass)
-        throws InstantiationException, IllegalAccessException
+        throws ReflectiveOperationException
     {
-        return (LayoutSupportDelegate) layoutDelegateClass.newInstance();
+        return (LayoutSupportDelegate) layoutDelegateClass.getDeclaredConstructor().newInstance();
     }
 
     // -----------
@@ -155,7 +151,7 @@ public class LayoutSupportRegistry {
     }
 
     private LayoutSupportDelegate createLayoutSupportForSuperClass(Map<String,String> map, Class subClass)
-            throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+            throws ReflectiveOperationException {
         // We don't ask if the loaded registered class is assignable from 'subClass'
         // because it would not work for custom classes when the project classloader changes.
         for (Map.Entry<String,String> en : map.entrySet()) {
@@ -166,7 +162,7 @@ public class LayoutSupportRegistry {
                     if (DEFAULT_SUPPORT.equals(delegateClassName)) {
                         return new DefaultLayoutSupport(superClass);
                     } else {
-                        return (LayoutSupportDelegate) loadClass(delegateClassName).newInstance();
+                        return (LayoutSupportDelegate) loadClass(delegateClassName).getDeclaredConstructor().newInstance();
                     }
                 }
             }
@@ -236,7 +232,7 @@ public class LayoutSupportRegistry {
                     delegateClass = itemClass;
                     try {
                         LayoutSupportDelegate delegate =
-                            (LayoutSupportDelegate) delegateClass.newInstance();
+                            (LayoutSupportDelegate) delegateClass.getDeclaredConstructor().newInstance();
                         supportedClass = delegate.getSupportedClass();
                     }
                     catch (Exception ex) {

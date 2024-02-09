@@ -602,7 +602,7 @@ public class NbBundle extends Object {
         for (String suffix : suffixes) {
             try {
                 Class<? extends ResourceBundle> c = Class.forName(name + suffix, true, l).asSubclass(ResourceBundle.class);
-                ResourceBundle b = c.newInstance();
+                ResourceBundle b = c.getDeclaredConstructor().newInstance();
 
                 if (master == null) {
                     master = b;

@@ -127,7 +127,7 @@ public final class ActionProcessor extends LayerGeneratingProcessor {
                             l = ActionProcessor.class.getClassLoader();
                         }
                         try {
-                            COMPLETIONS = (Processor)Class.forName(pathCompletions, true, l).newInstance();
+                            COMPLETIONS = (Processor)Class.forName(pathCompletions, true, l).getDeclaredConstructor().newInstance();
                         } catch (Exception ex) {
                             Exceptions.printStackTrace(ex);
                             // no completions, OK

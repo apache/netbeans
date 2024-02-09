@@ -4606,8 +4606,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
     private PropertyEditor createPropertyEditor(Class editorClass,
                                                 Class propertyType,
                                                 FormProperty property)
-        throws InstantiationException,
-               IllegalAccessException
+        throws ReflectiveOperationException
     {
         PropertyEditor ed = null;
         if (editorClass.equals(RADConnectionPropertyEditor.class)) {
@@ -4623,7 +4622,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
                 ed = RADProperty.createDefaultEnumEditor(propertyType);
             }
         } else {
-            ed = (PropertyEditor) editorClass.newInstance();
+            ed = (PropertyEditor) editorClass.getDeclaredConstructor().newInstance();
         }
 
         if (property != null)
@@ -5575,10 +5574,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
             try {
                 prEd = createPropertyEditor(editorClass, propertyType, null);
             }
-            catch (Exception ex) {
-                t = ex;
-            }
-            catch (LinkageError ex) {
+            catch (Exception | LinkageError ex) {
                 t = ex;
             }
             if (t != null) {

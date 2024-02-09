@@ -929,7 +929,7 @@ public class NbModuleSuite {
                     }else{
                         Class<? extends Test> sndClazz =
                             testLoader.loadClass(item.clazz.getName()).asSubclass(Test.class);
-                        toRun.addTest(sndClazz.newInstance());
+                        toRun.addTest(sndClazz.getDeclaredConstructor().newInstance());
                     }
                 }
 

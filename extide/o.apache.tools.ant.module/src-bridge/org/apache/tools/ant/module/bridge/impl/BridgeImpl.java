@@ -120,7 +120,7 @@ public class BridgeImpl implements BridgeInterface {
     public String[] getEnumeratedValues(Class<?> c) {
         if (EnumeratedAttribute.class.isAssignableFrom(c)) {
             try {
-                return ((EnumeratedAttribute)c.newInstance()).getValues();
+                return ((EnumeratedAttribute)c.getDeclaredConstructor().newInstance()).getValues();
             } catch (Exception e) {
                 AntModule.err.notify(ErrorManager.INFORMATIONAL, e);
             }

@@ -122,7 +122,7 @@ public abstract class Lookup {
         LOG.log(Level.FINER, "Searching in classloader {0}", l);
         try {
             if (className != null) {
-                Object o = Class.forName(className, true, l).newInstance();
+                Object o = Class.forName(className, true, l).getDeclaredConstructor().newInstance();
                 defaultLookup = (Lookup)o;
                 // set the global global Lookuo
                 GlobalLookup.setSystemLookup(defaultLookup);

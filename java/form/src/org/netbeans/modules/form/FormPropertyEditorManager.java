@@ -304,7 +304,7 @@ public final class FormPropertyEditorManager {
 
     private static PropertyEditor createEditorInstance(Class cls) {
         try {
-            return (PropertyEditor) cls.newInstance();
+            return (PropertyEditor) cls.getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             log(ex, "Error instantiating property editor: "+cls.getName()); // NOI18N
         } catch (LinkageError ex) {

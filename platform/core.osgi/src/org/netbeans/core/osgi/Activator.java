@@ -315,7 +315,7 @@ public class Activator implements BundleActivator, SynchronousBundleListener {
                                     class Svc extends AbstractURLStreamHandlerService {
                                         public @Override URLConnection openConnection(final URL u) throws IOException {
                                             try {
-                                                URLStreamHandler handler = (URLStreamHandler) bundle.loadClass(fqn).newInstance();
+                                                URLStreamHandler handler = (URLStreamHandler) bundle.loadClass(fqn).getDeclaredConstructor().newInstance();
                                                 Method openConnection = URLStreamHandler.class.getDeclaredMethod("openConnection", URL.class);
                                                 openConnection.setAccessible(true);
                                                 return (URLConnection) openConnection.invoke(handler, u);

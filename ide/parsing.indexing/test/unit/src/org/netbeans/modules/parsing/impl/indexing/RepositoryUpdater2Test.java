@@ -596,7 +596,7 @@ public class RepositoryUpdater2Test extends IndexingTestBase {
                 return customIndexerInstance;
             } else {
                 try {
-                    return customIndexerClass.newInstance();
+                    return customIndexerClass.getDeclaredConstructor().newInstance();
                 } catch (Exception ex) {
                     throw new IllegalStateException(ex);
                 }
@@ -652,7 +652,7 @@ public class RepositoryUpdater2Test extends IndexingTestBase {
                 return parserInstance;
             } else {
                 try {
-                    return parserClass.newInstance();
+                    return parserClass.getDeclaredConstructor().newInstance();
                 } catch (Exception ex) {
                     throw new IllegalStateException(ex);
                 }

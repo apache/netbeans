@@ -102,11 +102,8 @@ public class SwitchLookup extends Lookup {
         if (loc.instanceProviderClass() != null && loc.instanceProviderClass() != InstanceProvider.class) {
             try {
                 // Get a lookup for the new instance provider
-                lookup = getLookupForProvider(paths, loc.instanceProviderClass().newInstance());
-            } catch (InstantiationException ex) {
-                Exceptions.printStackTrace(ex);
-                lookup = Lookup.EMPTY;
-            } catch (IllegalAccessException ex) {
+                lookup = getLookupForProvider(paths, loc.instanceProviderClass().getDeclaredConstructor().newInstance());
+            } catch (ReflectiveOperationException ex) {
                 Exceptions.printStackTrace(ex);
                 lookup = Lookup.EMPTY;
             }

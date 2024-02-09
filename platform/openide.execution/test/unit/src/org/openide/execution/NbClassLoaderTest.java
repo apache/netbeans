@@ -72,7 +72,7 @@ public class NbClassLoaderTest extends NbTestCase {
         Class c = cl.loadClass("org.openide.execution.NbClassLoaderTest$User");
         assertEquals(cl, c.getClassLoader());
         try {
-            c.newInstance();
+            c.getDeclaredConstructor().newInstance();
         } catch (ExceptionInInitializerError eiie) {
             Throwable t = eiie.getException();
             if (t instanceof IllegalStateException) {

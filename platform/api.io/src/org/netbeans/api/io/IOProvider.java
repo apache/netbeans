@@ -120,7 +120,7 @@ public abstract class IOProvider {
         if (cl != null) {
             try {
                 Class<? extends Object> c = Class.forName(className, true, cl);
-                Object instance = c.newInstance();
+                Object instance = c.getDeclaredConstructor().newInstance();
                 Method m = c.getDeclaredMethod(methodName, paramTypes);
                 Object result = m.invoke(instance, params);
                 if (result instanceof InputOutputProvider) {

@@ -1182,7 +1182,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 if (propertyEditorClass == null)
                     return null;
                 try {
-                    return propertyEditorClass.newInstance();
+                    return propertyEditorClass.getDeclaredConstructor().newInstance();
                 }
                 catch (Exception ex) { //should not happen
                     ex.printStackTrace();

@@ -75,7 +75,7 @@ public class FormLAF {
                 !MetalLookAndFeel.class.equals(lafClass) && (lafToTheme.get(MetalLookAndFeel.class) == null)) {
                 lafToTheme.put(MetalLookAndFeel.class, MetalLookAndFeel.getCurrentTheme());
             }
-            LookAndFeel previewLookAndFeel = (LookAndFeel)lafClass.newInstance();
+            LookAndFeel previewLookAndFeel = (LookAndFeel)lafClass.getDeclaredConstructor().newInstance();
             if (previewLafIsMetal) {
                 MetalTheme theme = lafToTheme.get(lafClass);
                 if (theme == null) {
@@ -203,7 +203,7 @@ public class FormLAF {
         }
         LookAndFeel original = laf;
         try {
-            original = laf.getClass().newInstance();
+            original = laf.getClass().getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             Logger.getLogger(FormLAF.class.getName()).log(Level.INFO, ex.getMessage(), ex);
         }

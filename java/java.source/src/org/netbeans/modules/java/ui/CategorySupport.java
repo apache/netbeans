@@ -319,7 +319,7 @@ public class CategorySupport implements ActionListener, ChangeListener, ListData
 
         public PreferencesCustomizer create(Preferences preferences) {
             try {
-                CategorySupport categorySupport = new CategorySupport(preferences, id, panelClass.newInstance(), previewText, forcedOptions);
+                CategorySupport categorySupport = new CategorySupport(preferences, id, panelClass.getDeclaredConstructor().newInstance(), previewText, forcedOptions);
                 if (categorySupport.panel instanceof Runnable)
                     ((Runnable)categorySupport.panel).run();
                 return categorySupport;

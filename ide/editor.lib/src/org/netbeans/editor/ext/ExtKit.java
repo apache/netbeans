@@ -176,7 +176,7 @@ public class ExtKit extends BaseKit {
             try {
                 ClassLoader loader = Lookup.getDefault().lookup(ClassLoader.class);
                 Class extEditorUIClass = loader.loadClass("org.netbeans.editor.ext.ExtEditorUI"); //NOI18N
-                return (EditorUI) extEditorUIClass.newInstance();
+                return (EditorUI) extEditorUIClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 noExtEditorUIClass = true;
             }

@@ -1085,7 +1085,7 @@ class JsCodeCompletion implements CodeCompletionHandler2 {
         FileObject fo = snapshot.getSource().getFileObject();
         try {
             List<CompletionProposal> relativeFiles = FileUtils.computeRelativeItems(Collections.singletonList(fo), writtenPath, offset, false, false, (FileObject file) -> {
-                return file.isFolder() || ("js".equals(file.getExt().toLowerCase()) && file.getName().startsWith(prefix)); //NOI18N
+                return file.isFolder() || ("js".equalsIgnoreCase(file.getExt()) && file.getName().startsWith(prefix)); //NOI18N
             });
             resultList.addAll(relativeFiles);
         } catch (IOException ex) {

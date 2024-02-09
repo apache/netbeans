@@ -378,7 +378,7 @@ public final class CodeTemplateParameterImpl {
     
     private boolean isHintValueFalse(String hintName) {
         String hintValue = getHints().get(hintName);
-        return (hintValue != null) && "false".equals(hintValue.toLowerCase()); // NOI18N
+        return (hintValue != null) && "false".equalsIgnoreCase(hintValue); // NOI18N
     }
     
     /**

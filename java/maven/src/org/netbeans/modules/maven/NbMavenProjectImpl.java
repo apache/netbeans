@@ -313,10 +313,11 @@ public final class NbMavenProjectImpl implements Project {
     public @NonNull MavenProject loadMavenProject(MavenEmbedder embedder, List<String> activeProfiles, Properties properties) {
         ProjectActionContext.Builder b = ProjectActionContext.newBuilder(this).
                 withProfiles(activeProfiles);
-        for (String pn : properties.stringPropertyNames()) {
-            b.withProperty(pn, properties.getProperty(pn));
+        if (properties != null) {
+            for (String pn : properties.stringPropertyNames()) {
+                b.withProperty(pn, properties.getProperty(pn));
+            }
         }
-        
         return MavenProjectCache.loadMavenProject(projectFile, 
                 b.context(), null);
         /*

@@ -20,14 +20,21 @@ package org.netbeans.modules.java.mx.project;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import org.netbeans.api.java.queries.BinaryForSourceQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
@@ -50,31 +57,27 @@ public class SdkSuiteTest extends SuiteCheck {
         FileObject fo = FileUtil.toFileObject(sdkSibling);
         assertNotNull("project directory found", fo);
 
-        FileObject graalSdkJar = FileUtil.createData(fo, "mxbuild/dists/jdk1.8/graal-sdk.jar");
-        assertNotNull(graalSdkJar);
-
         Project p = ProjectManager.getDefault().findProject(fo);
         assertNotNull("project found", p);
         assertEquals("It is suite project: " + p, "SuiteProject", p.getClass().getSimpleName());
+        Sources src = ProjectUtils.getSources(p);
+        List<FileObject> resultRoots = new ArrayList<>();
+        for (SourceGroup sourceGroup : src.getSourceGroups("java")) {
+            BinaryForSourceQuery.Result binaryResult = BinaryForSourceQuery.findBinaryRoots(sourceGroup.getRootFolder().toURL());
+            for (URL r : binaryResult.getRoots()) {
+                SourceForBinaryQuery.Result2 result2 = SourceForBinaryQuery.findSourceRoots2(r);
+                final FileObject[] rr = result2.getRoots();
+                resultRoots.addAll(Arrays.asList(rr));
+            }
+        }
 
-        final URL archiveURL = new URL("jar:" + graalSdkJar.toURL() + "!/");
-
-        SourceForBinaryQuery.Result2 result2 = SourceForBinaryQuery.findSourceRoots2(archiveURL);
-        final FileObject[] resultRoots = result2.getRoots();
-        assertTrue("There should be some roots", resultRoots.length > 0);
+        assertTrue("There should be some roots", !resultRoots.isEmpty());
 
         Set<FileObject> expected = new HashSet<>();
         for (FileObject ch : fo.getFileObject("src").getChildren()) {
-            if (ch.getNameExt().endsWith(".test")) {
-                // tests are not in graal-sdk.jar
-                continue;
-            }
-            if (ch.getNameExt().endsWith(".tck")) {
-                // TCK is not in graal-sdk.jar
-                continue;
-            }
-            if (ch.getNameExt().contains("org.graalvm.launcher")) {
-                // launcher is not in graal-sdk.jar
+            String name = ch.getNameExt();
+            if (name.equals("org.graalvm.launcher.native") || name.equals("org.graalvm.toolchain.test")) {
+                // Not a Java code
                 continue;
             }
             expected.add(ch);

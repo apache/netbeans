@@ -21,6 +21,7 @@ package org.netbeans.modules.java.mx.project;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public final class CoreSuiteTest {
 
     public static void main(String... args) throws Exception {
         // mx version "5.279.0"
-        URL u = new URL("https://raw.githubusercontent.com/graalvm/mx/dcfad27487a5d13d406febc92976cf3c026e50dd/mx.mx/suite.py");
+        URL u = new URI("https://raw.githubusercontent.com/graalvm/mx/dcfad27487a5d13d406febc92976cf3c026e50dd/mx.mx/suite.py").toURL();
         assert u != null : "mx suite found";
         MxSuite mxSuite = MxSuite.parse(u);
 

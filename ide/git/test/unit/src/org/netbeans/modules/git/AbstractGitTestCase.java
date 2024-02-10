@@ -25,8 +25,13 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.channels.Channels;
+import java.lang.ProcessBuilder.Redirect;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,6 +45,9 @@ import org.netbeans.libs.git.GitException;
 import org.netbeans.modules.git.utils.GitUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.NbPreferences;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  *
@@ -47,8 +55,13 @@ import org.openide.filesystems.FileUtil;
  */
 public abstract class AbstractGitTestCase extends NbTestCase {
 
+    @SuppressWarnings("ProtectedField")
+    protected File testBase;
+    @SuppressWarnings("ProtectedField")
+    protected File userdir;
+    @SuppressWarnings("ProtectedField")
     protected File repositoryLocation;
-    
+
     protected static final String NULL_OBJECT_ID = "0000000000000000000000000000000000000000";
 
     public AbstractGitTestCase (String name) {
@@ -57,17 +70,42 @@ public abstract class AbstractGitTestCase extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        File userdir = new File(getWorkDir().getParentFile(), "userdir");
+        testBase = Files.createTempDirectory("NBGitTest").toFile();
+        userdir = new File(getWorkDir().getParentFile(), "userdir");
         userdir.mkdirs();
         System.setProperty("netbeans.user", userdir.getAbsolutePath());
         super.setUp();
-        repositoryLocation = new File(getWorkDir(), "work");
+        repositoryLocation = new File(testBase, "work");
         clearWorkDir();
         getClient(repositoryLocation).init(GitUtils.NULL_PROGRESS_MONITOR);
         File repositoryMetadata = new File(repositoryLocation, ".git");
         assertTrue(repositoryMetadata.exists());
     }
-    
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        NbPreferences.root().flush();
+        NbPreferences.root().sync();
+        Files.walkFileTree(testBase.toPath(), new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+                if (e == null) {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                } else {
+                    throw e;
+                }
+            }
+        });
+    }
+
     protected File getRepositoryLocation() {
         return repositoryLocation;
     }
@@ -95,15 +133,9 @@ public abstract class AbstractGitTestCase extends NbTestCase {
     }
 
     protected void write(File file, String str) throws IOException {
-        FileWriter w = null;
-        try {
-            w = new FileWriter(file);
+        try (FileWriter w = new FileWriter(file)) {
             w.write(str);
             w.flush();
-        } finally {
-            if (w != null) {
-                w.close();
-            }
         }
     }
 
@@ -153,13 +185,14 @@ public abstract class AbstractGitTestCase extends NbTestCase {
         return secondRepositoryFolder;
     }
 
+    @SuppressWarnings("ProtectedInnerClass")
     protected class StatusRefreshLogHandler extends Handler {
         private Set<File> filesToRefresh;
         private boolean filesRefreshed;
-        private final HashSet<File> refreshedFiles = new HashSet<File>();
+        private final HashSet<File> refreshedFiles = new HashSet<>();
         private final File topFolder;
-        private final Set<String> interestingFiles = new HashSet<String>();
-        boolean active;
+        private final Set<String> interestingFiles = new HashSet<>();
+        private boolean active;
 
         public StatusRefreshLogHandler (File topFolder) {
             this.topFolder = topFolder;
@@ -198,6 +231,7 @@ public abstract class AbstractGitTestCase extends NbTestCase {
         public void close() throws SecurityException {
         }
 
+        @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
         public void setFilesToRefresh (Set<File> files) {
             active = false;
             filesRefreshed = false;
@@ -224,50 +258,32 @@ public abstract class AbstractGitTestCase extends NbTestCase {
         }
 
         Set<String> getInterestingFiles () {
-            return new HashSet<String>(interestingFiles);
+            return new HashSet<>(interestingFiles);
         }
 
     }
 
     protected final void runExternally (File workdir, List<String> command) throws Exception {
         ProcessBuilder pb = new ProcessBuilder(command);
+        pb.redirectOutput(Redirect.DISCARD);
         pb.directory(workdir);
         Process p = pb.start();
-        final BufferedReader outReader = new BufferedReader(Channels.newReader(Channels.newChannel(p.getInputStream()), "UTF-8"));
-        final BufferedReader errReader = new BufferedReader(Channels.newReader(Channels.newChannel(p.getErrorStream()), "UTF-8"));
-        final List<String> output = new LinkedList<String>();
-        final List<String> err = new LinkedList<String>();
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run () {
-                try {
-                    for (String line = outReader.readLine(); line != null; line = outReader.readLine()) {
-                        output.add(line);
-                    }
-                } catch (IOException ex) {
-                    
-                }
-            }
-        });
-        Thread t2 = new Thread(new Runnable() {
-            @Override
-            public void run () {
+        final List<String> err;
+        try (BufferedReader errReader = new BufferedReader(new InputStreamReader(p.getErrorStream(), UTF_8))) {
+            err = new LinkedList<>();
+            Thread t2 = new Thread(() -> {
                 try {
                     for (String line = errReader.readLine(); line != null; line = errReader.readLine()) {
                         err.add(line);
                     }
                 } catch (IOException ex) {
-                    
+                    throw new RuntimeException(ex);
                 }
-            }
-        });
-        t1.start();
-        t2.start();
-        t1.join();
-        t2.join();
-        p.waitFor();
-        outReader.close();
-        errReader.close();
+            });
+            t2.start();
+            t2.join();
+            p.waitFor();
+        }
         if (!err.isEmpty()) {
             throw new Exception(err.toString());
         }

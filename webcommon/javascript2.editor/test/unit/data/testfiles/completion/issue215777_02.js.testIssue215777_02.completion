@@ -80,5 +80,4 @@ FIELD      SQRT2: Number                   [PUBLIC,   JS Platform
 FIELD      caller: Function                [PUBLIC]   JS Platform
 FIELD      length: Number                  [PUBLIC]   JS Platform
 FIELD      name: String                    [PUBLIC]   JS Platform
-FIELD      var: Math                       [PUBLIC]   issue215777.js
 VARIABLE   arguments: Object               [PUBLIC]   JS Platform

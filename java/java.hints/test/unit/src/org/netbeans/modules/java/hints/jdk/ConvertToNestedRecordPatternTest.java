@@ -22,6 +22,8 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 import javax.lang.model.SourceVersion;
 
+import static org.junit.Assume.assumeTrue;
+
 /**
  *
  * @author mjayan
@@ -33,9 +35,8 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
     }
 
     public void testSimple() throws Exception {
-        if (!isRecordClassPresent()) {
-            return;
-        }
+        assumeTrue(isRecordClassPresent());
+        assumeTrue(SourceVersion.latest().ordinal() >= 21);
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft,ColoredPoint lr) {}\n"
@@ -50,8 +51,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                         + "        }\n"
                         + "    }\n"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToNestedRecordPattern.class)
                 .findWarning("7:25-7:63:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
                 .applyFix()
@@ -71,9 +71,8 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
     }
 
     public void testRecordNameUsed() throws Exception {
-        if (!isRecordClassPresent()) {
-            return;
-        }
+        assumeTrue(isRecordClassPresent());
+        assumeTrue(SourceVersion.latest().ordinal() >= 21);
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft,ColoredPoint lr) {}\n"
@@ -88,16 +87,14 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                         + "        }\n"
                         + "    }\n"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToNestedRecordPattern.class)
                 .assertWarnings();
     }
 
     public void testNameClash() throws Exception {
-        if (!isRecordClassPresent()) {
-            return;
-        }
+        assumeTrue(isRecordClassPresent());
+        assumeTrue(SourceVersion.latest().ordinal() >= 21);
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft,ColoredPoint lr) {}\n"
@@ -119,8 +116,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                         + "        }\n"
                         + "    }\n"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToNestedRecordPattern.class)
                 .findWarning("7:25-7:63:verifier:Convert to nested record pattern")
                 .applyFix()
@@ -147,9 +143,8 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
     }
 
     public void testMultipleNested() throws Exception {
-        if (!isRecordClassPresent()) {
-            return;
-        }
+        assumeTrue(isRecordClassPresent());
+        assumeTrue(SourceVersion.latest().ordinal() >= 21);
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft) {}\n"
@@ -164,8 +159,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                         + "        }\n"
                         + "    }\n"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToNestedRecordPattern.class)
                 .findWarning("7:25-7:61:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
                 .applyFix()
@@ -185,9 +179,8 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
     }
 
     public void testUserVar() throws Exception {
-        if (!isRecordClassPresent()) {
-            return;
-        }
+        assumeTrue(isRecordClassPresent());
+        assumeTrue(SourceVersion.latest().ordinal() >= 21);
         HintTest.create()
                 .input("package test;\n"
                         + "record Rect(ColoredPoint upperLeft,ColoredPoint lr,ColoredPoint ur) {}\n"
@@ -204,8 +197,7 @@ public class ConvertToNestedRecordPatternTest extends NbTestCase {
                         + "        }\n"
                         + "    }\n"
                         + "}\n")
-                .sourceLevel(SourceVersion.latest().name())
-                .options("--enable-preview")
+                .sourceLevel(SourceVersion.latest().ordinal())
                 .run(ConvertToNestedRecordPattern.class)
                 .findWarning("7:25-7:112:verifier:" + Bundle.ERR_ConvertToNestedRecordPattern())
                 .applyFix()

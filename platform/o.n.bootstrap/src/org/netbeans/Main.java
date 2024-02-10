@@ -37,7 +37,7 @@ public final class Main extends Object {
     public static void main (String args[]) throws Exception {
         // following code has to execute on java 8 - e.g. do not use
         // NbBundle or any other library
-        int required = 11;
+        int required = 17;
 
         if (Boolean.getBoolean("bootstrap.disableJDKCheck")) {
             System.err.println(getMessage("MSG_WarnJavaCheckDisabled"));

@@ -1044,6 +1044,39 @@ public class FilesystemInterceptorTest extends AbstractGitTestCase {
         assertFalse(info.isCopied());
     }
 
+    public void testCopyVersionedFile_DO_IgnoreNewFiles() throws Exception {
+        try {
+            GitModuleConfig.getDefault().setExcludeNewFiles(true);
+
+            // init
+            File fromFile = new File(repositoryLocation, "file");
+            fromFile.createNewFile();
+            File toFolder = new File(repositoryLocation, "toFolder");
+            toFolder.mkdirs();
+            add();
+            commit();
+            File toFile = new File(toFolder, fromFile.getName());
+
+            // copy
+            h.setFilesToRefresh(Collections.singleton(toFile));
+            copyDO(fromFile, toFile);
+            assertTrue(h.waitForFilesToRefresh());
+            getCache().refreshAllRoots(Collections.singleton(fromFile));
+
+            // test
+            assertTrue(fromFile.exists());
+            assertTrue(toFile.exists());
+
+            assertEquals(EnumSet.of(Status.UPTODATE), getCache().getStatus(fromFile).getStatus());
+            FileInformation info = getCache().getStatus(toFile);
+            assertEquals(EnumSet.of(Status.NEW_INDEX_WORKING_TREE, Status.NEW_HEAD_WORKING_TREE), info.getStatus());
+            // sadly does not work in jgit
+            assertFalse(info.isCopied());
+        } finally {
+            GitModuleConfig.getDefault().setExcludeNewFiles(false);
+        }
+    }
+
     public void testCopyUnversionedFile_DO() throws Exception {
         // init
         File fromFile = new File(repositoryLocation, "file");

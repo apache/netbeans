@@ -530,7 +530,6 @@
                 <friend>org.netbeans.modules.web.jsf.richfaces</friend>
                 <friend>org.netbeans.modules.web.primefaces</friend>
                 <friend>org.netbeans.modules.web.project</friend>
-                <friend>org.netbeans.modules.web.struts</friend>
                 <friend>org.netbeans.modules.websvc.core</friend>
                 <friend>org.netbeans.modules.websvc.jaxrpc</friend>
                 <friend>org.netbeans.modules.websvc.restapi</friend>

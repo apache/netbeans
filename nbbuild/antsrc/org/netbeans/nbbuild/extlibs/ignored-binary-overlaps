@@ -26,10 +26,6 @@ enterprise*/modules/ext/rest/jdom-1.0.jar mobility*/modules/ext/jdom-1.0.jar
 enterprise*/modules/ext/rest/jdom-1.0.jar java*/modules/ext/maven/jdom-1.0.jar
 java*/modules/ext/maven/jdom-1.0.jar mobility*/modules/ext/jdom-1.0.jar
 
-# Struts framework needs to bundle the official Struts release together
-# for well maintained and assure the compatibility issue. 
-enterprise*/modules/ext/struts/oro-2.0.8.jar ide*/modules/ext/jakarta-oro-2.0.8.jar
-
 # Hibernate needs cglib internally
 java*/modules/ext/cglib-2.2.jar java*/modules/ext/hibernate4/cglib-2.2.jar
 

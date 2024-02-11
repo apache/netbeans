@@ -156,6 +156,17 @@ public interface ElementQuery {
 
         Set<EnumElement> getEnums(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
 
+        /**
+         * Get traits.
+         *
+         * @param query the query
+         * @param aliases aliased names
+         * @param trait the trait
+         * @return traits
+         * @since 2.38.0
+         */
+        Set<TraitElement> getTraits(NameKind query, Set<AliasedName> aliases, AliasedElement.Trait trait);
+
         Set<TraitElement> getTraits(final NameKind query);
 
         Set<EnumElement> getEnums(final NameKind query);

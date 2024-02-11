@@ -1,0 +1,5 @@
+Code completion result for source line:
+Aliased| // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    AliasedNameTest                 [PUBLIC]   null
+CLASS      AliasedEnum                     [PUBLIC]   AliasedNameTest

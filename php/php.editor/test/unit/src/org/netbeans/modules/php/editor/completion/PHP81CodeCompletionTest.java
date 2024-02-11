@@ -1146,6 +1146,10 @@ public class PHP81CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("enumsSpecialVariablesWithinInstanceContextGH5100", "        stat^ic::class;");
     }
 
+    public void testEnumsAliasedName_01() throws Exception {
+        checkCompletion("enumsAliasedName", "Aliased^ // test");
+    }
+
     public void testFirstClassCallableSyntax_01() throws Exception {
         checkCompletionForFirstClassCallable("firstClassCallableSyntax", "tes^t(...);");
     }

@@ -81,6 +81,15 @@ public abstract class PHPCodeCompletionTestBase extends PHPTestBase {
         return null;
     }
 
+    protected String getTestDirName() {
+        String name = getName();
+        int indexOf = name.indexOf("_");
+        if (indexOf != -1) {
+            name = name.substring(0, indexOf);
+        }
+        return name;
+    }
+
     protected void checkCompletionCustomTemplateResult(final String file, final String caretLine, CompletionProposalFilter filter, boolean checkAllItems) throws Exception {
         checkCompletionCustomTemplateResult(file, caretLine, filter, checkAllItems, null);
     }

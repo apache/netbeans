@@ -561,6 +561,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
         if (request.insertOnlyMethodsName != null) {
             return request.insertOnlyMethodsName;
         }
+        if (isUseFunctionContext(request.context)) {
+            // GH-7041
+            // e.g. use function Vendor\Package\myFunction;
+            return true;
+        }
         boolean result = false;
         TokenHierarchy<?> tokenHierarchy = request.result.getSnapshot().getTokenHierarchy();
         TokenSequence<PHPTokenId> tokenSequence = (TokenSequence<PHPTokenId>) tokenHierarchy.tokenSequence();
@@ -593,6 +598,11 @@ public abstract class PHPCompletionItem implements CompletionProposal {
             }
         }
         return result;
+    }
+
+    private static boolean isUseFunctionContext(CompletionContext context) {
+        return context == CompletionContext.USE_FUNCTION_KEYWORD
+                || context == CompletionContext.GROUP_USE_FUNCTION_KEYWORD;
     }
 
     private boolean isNewClassContext(CompletionContext context) {

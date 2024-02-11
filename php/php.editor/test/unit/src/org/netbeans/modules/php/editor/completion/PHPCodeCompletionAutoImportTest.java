@@ -34,15 +34,6 @@ public class PHPCodeCompletionAutoImportTest extends PHPCodeCompletionTestBase {
         return new FileObject[]{FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/lib/autoImport/" + getTestDirName()))};
     }
 
-    private String getTestDirName() {
-        String name = getName();
-        int indexOf = name.indexOf("_");
-        if (indexOf != -1) {
-            name = name.substring(0, indexOf);
-        }
-        return name;
-    }
-
     private String getTestPath() {
         return String.format("testfiles/completion/lib/autoImport/%s/%s.php", getTestDirName(), getTestDirName());
     }

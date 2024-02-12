@@ -61,7 +61,7 @@ public final class GradleJavaDebuggerImpl implements GradleJavaDebugger {
         ClassPath sourcePath = getSources();
         ClassPath jdkSourcePath = getJdkSources();
 
-        final Map properties = new HashMap();
+        final Map properties = new HashMap<>();
         properties.put("sourcepath", sourcePath); //NOI18N
         properties.put("name", name); //NOI18N
         properties.put("jdksources", jdkSourcePath); //NOI18N

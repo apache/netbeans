@@ -122,19 +122,21 @@ public class DTDParser {
      */
     private class Handler extends DefaultHandler implements DeclHandler {
         
-        private Map attrs, elements, models, enums, attrDefaults;
+        private Map<String, Set> attrs, elements;
+        private Map<String, String> models, attrDefaults;
+        private Map<String, List> enums;
         private Set<String> notations, entities, anys, emptyElements;
         private DTDGrammar dtd;
         
         Handler() {
-            attrs = new HashMap();
-            elements = new HashMap();
-            models = new HashMap();
+            attrs = new HashMap<>();
+            elements = new HashMap<>();
+            models = new HashMap<>();
             notations = new TreeSet<>();
             entities  = new TreeSet<>();
             anys = new HashSet<>();
-            enums = new HashMap();
-            attrDefaults = new HashMap();
+            enums = new HashMap<>();
+            attrDefaults = new HashMap<>();
             emptyElements = new HashSet<>();
             dtd = new DTDGrammar(elements, models, attrs, attrDefaults, enums, entities, notations, emptyElements);
         }

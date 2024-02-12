@@ -127,7 +127,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
     private ProgressEventSupport pes;
     private int currentServerPort; // current server port Tomcat is running on
     
-    private static Map isDebugModeUri = Collections.synchronizedMap((Map)new HashMap(2,1));
+    private static Map<String, Object> isDebugModeUri = Collections.synchronizedMap(new HashMap<>(2,1));
     
     public StartTomcat (DeploymentManager manager) {
         assert manager instanceof TomcatManager : 
@@ -929,7 +929,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
         private static final long serialVersionUID = 992972967554321415L;
         
         public TomcatFormat(File startupScript, File homeDir) {
-            super(new HashMap());
+            super(new HashMap<String, Object>());
             Map<String, String> map = getMap();
             String scriptPath = startupScript.getAbsolutePath();
             map.put(TAG_EXEC_CMD,       scriptPath);

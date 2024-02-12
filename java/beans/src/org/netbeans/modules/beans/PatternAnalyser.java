@@ -214,8 +214,8 @@ public final class PatternAnalyser {
         List<? extends ExecutableElement> methods = methodsIn(p.element, p.ci);
                 
         // Temporary structures for analysing EventSets
-        Map<String,ExecutableElement> adds = new HashMap<String, ExecutableElement>();
-        Map<String,ExecutableElement> removes = new HashMap<String, ExecutableElement>();
+        Map<String, ExecutableElement> adds = new HashMap<>();
+        Map<String, ExecutableElement> removes = new HashMap<>();
 
         // Analyze each method
         for ( ExecutableElement method : methods ) {            
@@ -401,7 +401,7 @@ public final class PatternAnalyser {
     @SuppressWarnings("unchecked")
     private void addProperty( Parameters p, Property property ) {
         boolean isIndexed = property instanceof IdxProperty;
-        HashMap hm = isIndexed ? p.idxPropertyPatterns : p.propertyPatterns;
+        Map hm = isIndexed ? p.idxPropertyPatterns : p.propertyPatterns;
         String name = property.name;
 
         Property old = p.propertyPatterns.get(name);
@@ -473,16 +473,16 @@ public final class PatternAnalyser {
         
         private CompilationInfo ci;
         private TypeElement element;
-        private HashMap<String, Property> propertyPatterns;
-        private HashMap<String, IdxProperty> idxPropertyPatterns;
-        private HashMap<String, EventSet> eventSetPatterns;
+        private Map<String, Property> propertyPatterns;
+        private Map<String, IdxProperty> idxPropertyPatterns;
+        private Map<String, EventSet> eventSetPatterns;
         
         Parameters( CompilationInfo ci, TypeElement element ) {
             this.ci = ci;
             this.element = element;
-            propertyPatterns = new HashMap<String, Property>();
-            idxPropertyPatterns = new HashMap<String, IdxProperty>();
-            eventSetPatterns = new HashMap<String, EventSet>();
+            propertyPatterns = new HashMap<>();
+            idxPropertyPatterns = new HashMap<>();
+            eventSetPatterns = new HashMap<>();
         }
         
     }

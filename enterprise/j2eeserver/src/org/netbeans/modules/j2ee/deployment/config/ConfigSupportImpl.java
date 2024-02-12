@@ -61,7 +61,6 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.j2ee.dd.api.ejb.EnterpriseBeans;
 import org.netbeans.modules.j2ee.deployment.common.api.MessageDestination;
-import org.netbeans.modules.j2ee.deployment.devmodules.spi.ArtifactListener;
 import org.netbeans.modules.j2ee.deployment.impl.DeployOnSaveManager;
 import org.netbeans.modules.j2ee.deployment.execution.ModuleConfigurationProvider;
 import org.netbeans.modules.j2ee.deployment.plugins.spi.config.DeploymentDescriptorConfiguration;
@@ -95,8 +94,8 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
     private static final String GENERIC_EXTENSION = ".dpf"; // NOI18N
     
     private String configurationPrimaryFileName = null;
-    private Map relativePaths = null;
-    private Map allRelativePaths = null;
+    private Map<String, String> relativePaths = null;
+    private Map<String, String> allRelativePaths = null;
     
     private final J2eeModuleProvider provider;
     private final J2eeModule j2eeModule;
@@ -944,11 +943,11 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
         return provider;
     }
     
-    private Map getRelativePaths() {
+    private Map<String, String> getRelativePaths() {
         if (relativePaths != null) 
             return relativePaths;
         
-        relativePaths = new HashMap();
+        relativePaths = new HashMap<>();
         if (hasCustomSupport()) {
             String [] paths = server.getDeploymentPlanFiles(getModuleType());
             configurationPrimaryFileName = paths[0].substring(paths[0].lastIndexOf("/")+1);
@@ -971,11 +970,11 @@ public final class ConfigSupportImpl implements J2eeModuleProvider.ConfigSupport
         }        
     }
     
-    private Map getAllRelativePaths() {
+    private Map<String, String> getAllRelativePaths() {
         if (allRelativePaths != null)
             return allRelativePaths;
         
-        allRelativePaths = new HashMap();
+        allRelativePaths = new HashMap<>();
         Collection servers = ServerRegistry.getInstance().getServers();
         for (Iterator i=servers.iterator(); i.hasNext();) {
             Server server = (Server) i.next();

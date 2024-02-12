@@ -868,7 +868,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
             XMLMapAttr m = (XMLMapAttr) get(fileName);
 
             if (m == null) {
-                m = new XMLMapAttr(); //HashMap (7);//XMLMapAttr();
+                m = new XMLMapAttr();
                 put(fileName, m);
             }
 
@@ -906,7 +906,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
                     private final String[] MANDAT_ATTR_KEYS = { "VERSION" }; // NOI18N
 
                     @Override
-                    public void internalStartElement(String elemName, HashMap mapMandatory, HashMap mapAllowed)
+                    public void internalStartElement(String elemName, Map mapMandatory, Map mapAllowed)
                     throws SAXException {
                         // later can check version
                     }
@@ -935,8 +935,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
                     private final String[] ELM_KEYS = { "FILEOBJECT" }; // NOI18N
                     private final String[] MANDAT_ATTR_KEYS = { "NAME" }; // NOI18N
 
-                    @Override
-                    public void internalStartElement(String elemName, HashMap mapMandatory, HashMap mapAllowed)
+                    public void internalStartElement(String elemName, Map mapMandatory, Map mapAllowed)
                     throws SAXException {
                         String temp;
                         fileName.delete(0, fileName.length());
@@ -980,8 +979,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
                     private final String[] ELM_KEYS = { "ATTR" }; // NOI18N
                     private final String[] MANDAT_ATTR_KEYS = { "NAME" }; // NOI18N
 
-                    @Override
-                    public void internalStartElement(String elemName, HashMap mapMandatory, HashMap mapAllowed)
+                    public void internalStartElement(String elemName, Map mapMandatory, Map mapAllowed)
                     throws SAXException {
                         String attrName;
 
@@ -1165,8 +1163,8 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
 
         public void startElement(String elemName, Attributes attrs)
         throws SAXException {
-            HashMap<String, String> mapAllowed   = new HashMap<>();
-            HashMap<String, String> mapMandatory = new HashMap<>();
+            Map<String, String> mapAllowed   = new HashMap<>();
+            Map<String, String> mapMandatory = new HashMap<>();
 
             if (checkAttributes(attrs, mapMandatory, mapAllowed) == false) {
                 throw new SAXException(
@@ -1183,7 +1181,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
          * @param mapAllowed map(String attributeName,String attributeValue) which holds pairs attributeName and attributeValue, which are optional for this element
          * @throws SAXException
          */
-        protected void internalStartElement(String elemName, HashMap mapMandatory, HashMap mapAllowed)
+        protected void internalStartElement(String elemName, Map mapMandatory, Map mapAllowed)
         throws SAXException {
         }
 
@@ -1260,7 +1258,7 @@ public class DefaultAttributes extends Object implements AbstractFileSystem.Attr
             return -1;
         }
 
-        private boolean checkAttributes(Attributes attrList,HashMap<String, String> mapMandatory, HashMap<String, String> mapAllowed) {
+        private boolean checkAttributes(Attributes attrList, Map<String, String> mapMandatory, Map<String, String> mapAllowed) {
             String temp;
             mandatAttrCount = 0;
 

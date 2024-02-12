@@ -589,7 +589,7 @@ public class AntDebugger extends ActionsProviderSupport {
         return false;
     }
     
-    private Map watches = new HashMap ();
+    private Map watches = new HashMap();
     
     private boolean onBreakpoint () {
         // 1) stop on watch value change

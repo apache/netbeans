@@ -545,7 +545,7 @@ public final class ExternalBrowserPlugin {
         }
 
         private void handleLoadResizeOptions(SelectionKey key) {
-            Map<String, String> map = new HashMap<String, String>();
+            Map<String, String> map = new HashMap<>();
             map.put("resizeOptions", createLoadResizeOptionsMessage(ResizeOptions.getDefault().loadAll())); // NOI18N
             Message msg = new Message(Message.MessageType.LOAD_RESIZE_OPTIONS, map);
             server.sendMessage(key, msg.toStringValue());
@@ -679,7 +679,7 @@ public final class ExternalBrowserPlugin {
 
     private WebSocketServer server;
 
-    private final Map<String,Pair> awaitingBrowserResponse = new HashMap<String,Pair>();
+    private final Map<String, Pair> awaitingBrowserResponse = new HashMap<>();
 
     private static class Pair {
         ChromeBrowserImpl impl;
@@ -699,7 +699,7 @@ public final class ExternalBrowserPlugin {
      */
     public static class BrowserTabDescriptor {
         /** Maps IDs of features (related to this tab) to their corresponding sockets. */
-        private final Map<String,SelectionKey> keyMap = new HashMap<String,SelectionKey>();
+        private final Map<String,SelectionKey> keyMap = new HashMap<>();
         private int tabID;
         private ChromeBrowserImpl browserImpl;
         private ResponseCallback callback;

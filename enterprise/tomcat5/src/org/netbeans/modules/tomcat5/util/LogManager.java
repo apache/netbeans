@@ -45,8 +45,8 @@ public class LogManager {
     private ServerLog serverLog;    
     private LogViewer sharedContextLogViewer;
     private LogViewer juliLogViewer;
-    private Map<TomcatModule, TomcatModuleConfig> tomcatModuleConfigs = Collections.synchronizedMap(new WeakHashMap());
-    private Map<String, LogViewer> contextLogViewers = Collections.synchronizedMap(new HashMap());
+    private Map<TomcatModule, TomcatModuleConfig> tomcatModuleConfigs = Collections.synchronizedMap(new WeakHashMap<>());
+    private Map<String, LogViewer> contextLogViewers = Collections.synchronizedMap(new HashMap<>());
     private TomcatManager manager;
     
     private final Object serverLogLock = new Object();

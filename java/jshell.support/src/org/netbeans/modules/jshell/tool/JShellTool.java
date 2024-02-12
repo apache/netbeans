@@ -1285,7 +1285,7 @@ public class JShellTool implements MessageHandler {
     }
     
     private static <K, V> Map<K,V> Mapof(Object... arr) {
-        Map m = new HashMap();
+        Map<Object, Object> m = new HashMap<>();
         for (int i = 0; i< arr.length; i++) {
             Object k = arr[i];
             i++;

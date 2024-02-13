@@ -287,6 +287,7 @@ public final class MavenProjectCache {
                     LOG.log(Level.FINE, "Maven reported:", t);
                 }
             }
+            LOG.log(Level.FINE, "Loaded project flags - incomplete {0}, fake count {1}", new Object[] { isIncompleteProject(newproject), fakes.size() });
             if (!fakes.isEmpty() && !isIncompleteProject(newproject)) {
                 LOG.log(Level.FINE, "Incomplete artifact encountered during loading the project: {0}", fakes);
                 newproject.setContextValue(CONTEXT_PARTIAL_PROJECT, Boolean.TRUE);

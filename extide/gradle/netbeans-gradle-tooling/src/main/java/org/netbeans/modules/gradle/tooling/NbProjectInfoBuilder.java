@@ -661,6 +661,9 @@ class NbProjectInfoBuilder {
                 // MultipleSetter is probably for an overloaded setter
                 if (mp instanceof MultipleSetterProperty) {
                     MultipleSetterProperty msp = (MultipleSetterProperty)mp;
+                    if (msp.getGetter() == null) {
+                        continue;
+                    }
                     t = msp.getGetter().getReturnType();
                 }
             }
@@ -687,6 +690,7 @@ class NbProjectInfoBuilder {
                         // just ignore - the value cannot be obtained
                         continue;
                     }
+                    
                     if (!isMutableType(potentialValue)) {
                         continue;
                     }

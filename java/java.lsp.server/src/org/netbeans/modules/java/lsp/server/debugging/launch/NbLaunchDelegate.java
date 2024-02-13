@@ -550,7 +550,7 @@ public abstract class NbLaunchDelegate {
         ActionProvider provider = null;
         String command = null;
         Collection<ActionProvider> actionProviders = findActionProviders(prj);
-        Lookup testLookup = createTargetLookup(preferProjActions ? prj : null, singleMethod, toRun);
+        Lookup testLookup = preferProjActions && prj != null ? Lookups.singleton(prj) : (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
         String[] actions;
         if (!mainSource && singleMethod != null) {
             actions = debug ? new String[] {SingleMethod.COMMAND_DEBUG_SINGLE_METHOD}
@@ -564,7 +564,7 @@ public abstract class NbLaunchDelegate {
                 if (debug && !mainSource) {
                     // We are calling COMMAND_DEBUG_TEST_SINGLE instead of a missing COMMAND_DEBUG_TEST
                     // This is why we need to add the file to the lookup
-                    testLookup = createTargetLookup(null, singleMethod, toRun);
+                    testLookup = (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
                 }
             } else {
                 actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
@@ -623,18 +623,6 @@ public abstract class NbLaunchDelegate {
             return null;
         }
         return Pair.of(provider, command);
-    }
-
-    static Lookup createTargetLookup(Project prj, SingleMethod singleMethod, FileObject toRun) {
-        if (prj != null) {
-            return prj.getLookup();
-        }
-        if (singleMethod != null) {
-            Lookup methodLookup = Lookups.singleton(singleMethod);
-            return new ProxyLookup(toRun.getLookup(), methodLookup);
-        } else {
-            return toRun.getLookup();
-        }
     }
 
     private static Collection<ActionProvider> findActionProviders(Project prj) {

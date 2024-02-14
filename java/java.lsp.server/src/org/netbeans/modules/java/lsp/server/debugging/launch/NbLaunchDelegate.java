@@ -218,14 +218,16 @@ public abstract class NbLaunchDelegate {
                 runContext.add(params);
                 runContext.add(ioContext);
                 runContext.add(progress);
+
+                Lookup lookup;
+                if (singleMethod != null) {
+                    runContext.add(singleMethod);
+                }
                 if (selectConfiguration != null) {
                     runContext.add(selectConfiguration);
                 }
 
-                Lookup lookup = new ProxyLookup(
-                    createTargetLookup(prj, singleMethod, toRun),
-                    Lookups.fixed(runContext.toArray(new Object[runContext.size()]))
-                );
+                lookup = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
                 // the execution Lookup is fully populated now. If the Project supports Configurations,
                 // check if the action is actually enabled in the prescribed configuration. If it is not,
                 if (pcp != null) {
@@ -623,11 +625,26 @@ public abstract class NbLaunchDelegate {
         return Pair.of(provider, command);
     }
 
-    private static Collection<ActionProvider> findActionProviders(Project prj) {
+    static Lookup createTargetLookup(Project prj, SingleMethod singleMethod, FileObject toRun) {
+        List<Lookup> arr = new ArrayList<>();
+        if (prj != null) {
+            arr.add(prj.getLookup());
+        }
+        if (singleMethod != null) {
+            Lookup methodLookup = Lookups.singleton(singleMethod);
+            arr.add(methodLookup);
+        }
+        if (toRun != null) {
+            arr.add(toRun.getLookup());
+        }
+        return new ProxyLookup(arr.toArray(new Lookup[0]));
+    }
+
+    static Collection<ActionProvider> findActionProviders(Project prj) {
         Collection<ActionProvider> actionProviders = new ArrayList<>();
         if (prj != null) {
-            ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
-            actionProviders.add(ap);
+            Collection<? extends ActionProvider> ap = prj.getLookup().lookupAll(ActionProvider.class);
+            actionProviders.addAll(ap);
         }
         actionProviders.addAll(Lookup.getDefault().lookupAll(ActionProvider.class));
         return actionProviders;

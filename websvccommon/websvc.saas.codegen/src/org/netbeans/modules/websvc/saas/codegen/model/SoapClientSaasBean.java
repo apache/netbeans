@@ -70,7 +70,7 @@ public class SoapClientSaasBean extends SaasBean {
         List<SoapClientOperationInfo> infos = new ArrayList<SoapClientOperationInfo>();
         infos.add(new SoapClientOperationInfo(m, project));
         
-        return infos.toArray(new SoapClientOperationInfo[infos.size()]);
+        return infos.toArray(new SoapClientOperationInfo[0]);
     }
     
     protected List<ParameterInfo> initInputParameters() {

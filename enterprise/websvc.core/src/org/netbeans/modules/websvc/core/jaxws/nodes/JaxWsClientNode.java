@@ -243,7 +243,7 @@ public class JaxWsClientNode extends AbstractNode implements OpenCookie, JaxWsRe
             null,
             SystemAction.get(PropertiesAction.class)));
         addFromLayers(actions, "WebServices/Clients/Actions");
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     private void addFromLayers(ArrayList<Action> actions, String path) {

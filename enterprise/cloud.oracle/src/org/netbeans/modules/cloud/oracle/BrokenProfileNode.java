@@ -55,7 +55,7 @@ public class BrokenProfileNode extends AbstractNode {
                 result.add(commonAction);
             }
         }
-        return result.toArray(new Action[result.size()]);
+        return result.toArray(new Action[0]);
     }
     
     @Override

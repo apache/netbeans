@@ -134,7 +134,7 @@ public class BrowseFolders extends javax.swing.JPanel implements ExplorerManager
         for (SourceGroup sourceGroup : folders) {
             roots.add(sourceGroup.getRootFolder());
         }
-        return showDialog(roots.toArray(new FileObject[roots.size()]));
+        return showDialog(roots.toArray(new FileObject[0]));
     }
 
     public static FileObject showDialog(FileObject[] folders) {

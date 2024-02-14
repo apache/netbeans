@@ -497,7 +497,7 @@ public class J2eeTestCase extends JellyTestCase {
         for(File file : getJars(server)) {
             urls.add(file.toURI().toURL());
         }        
-        URLClassLoader loader = new URLClassLoader(urls.toArray(new URL[urls.size()]));
+        URLClassLoader loader = new URLClassLoader(urls.toArray(new URL[0]));
         return loader;
     }
     
@@ -628,6 +628,6 @@ public class J2eeTestCase extends JellyTestCase {
             //Fix for issue #57304
             l.add(Character.toString(dosHack));
         }
-        return l.toArray(new String[l.size()]);
+        return l.toArray(new String[0]);
     }
 }

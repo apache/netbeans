@@ -107,7 +107,7 @@ public class Hk2JaxRpcStack implements WSStackImplementation<JaxRpc> {
                     }
                 }
             }
-            return cPath.toArray(new URL[cPath.size()]);
+            return cPath.toArray(URL[]::new);
         }
       
     }

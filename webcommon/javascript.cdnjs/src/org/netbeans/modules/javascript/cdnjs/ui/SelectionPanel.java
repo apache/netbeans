@@ -104,7 +104,7 @@ public class SelectionPanel extends JPanel implements HelpCtx.Provider {
      * @return selected libraries.
      */
     public Library.Version[] getSelectedLibraries() {
-        return libraries.toArray(new Library.Version[libraries.size()]);
+        return libraries.toArray(new Library.Version[0]);
     }
 
     /**

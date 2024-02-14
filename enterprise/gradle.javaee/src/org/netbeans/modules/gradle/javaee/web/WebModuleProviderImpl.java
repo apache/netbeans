@@ -99,7 +99,7 @@ public class WebModuleProviderImpl extends BaseEEModuleProvider implements WebMo
                     fos.add(fo);
                 }
             }
-            return fos.toArray(new FileObject[fos.size()]);
+            return fos.toArray(new FileObject[0]);
         }
         return super.getSourceRoots();
     }

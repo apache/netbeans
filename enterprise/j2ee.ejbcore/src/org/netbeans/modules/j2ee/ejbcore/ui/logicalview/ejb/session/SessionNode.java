@@ -126,7 +126,7 @@ public final class SessionNode extends AbstractNode implements OpenCookie, Prope
             list.add(null);
             list.add(SystemAction.get(GoToSourceActionGroup.class));
         }
-        return list.toArray(new SystemAction[list.size()]);
+        return list.toArray(new SystemAction[0]);
     }
     
     public HelpCtx getHelpCtx() {

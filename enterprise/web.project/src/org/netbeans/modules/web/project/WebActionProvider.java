@@ -808,7 +808,7 @@ public class WebActionProvider extends BaseActionProvider {
         if (files.isEmpty()) {
             return null;
         }
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
     }
 
     private FileObject[] findHtml(Lookup context) {

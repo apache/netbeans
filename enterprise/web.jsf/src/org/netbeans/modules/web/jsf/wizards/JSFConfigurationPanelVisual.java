@@ -1883,7 +1883,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                         for (LibraryItem libraryItem : jsfLibraries) {
                             registeredItems.add(libraryItem.getLibrary().getDisplayName());
                         }
-                        setRegisteredLibraryModel(registeredItems.toArray(new String[registeredItems.size()]));
+                        setRegisteredLibraryModel(registeredItems.toArray(new String[0]));
                         updatePreferredLanguages();
                         updateJsfComponents();
                     }

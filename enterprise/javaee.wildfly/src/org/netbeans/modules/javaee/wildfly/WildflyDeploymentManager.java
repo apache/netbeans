@@ -233,7 +233,7 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
             LOGGER.log(Level.INFO, null, ex);
             return new TargetModuleID[]{};
         }
-        return result.toArray(new TargetModuleID[result.size()]);
+        return result.toArray(new TargetModuleID[0]);
     }
 
     @Override
@@ -274,7 +274,7 @@ public class WildflyDeploymentManager implements DeploymentManager2 {
             LOGGER.log(Level.INFO, null, ex);
             return new TargetModuleID[]{};
         }
-        return result.toArray(new TargetModuleID[result.size()]);
+        return result.toArray(new TargetModuleID[0]);
     }
 
     @Override

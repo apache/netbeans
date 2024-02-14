@@ -116,7 +116,7 @@ public class RestServicesImpl implements RestServices {
 
     public RestServiceDescription[] getRestServiceDescription() {
         Collection<RestServiceDescriptionImpl> restServices = restServiceManager.getObjects();
-        return restServices.toArray(new RestServiceDescriptionImpl[restServices.size()]);
+        return restServices.toArray(new RestServiceDescriptionImpl[0]);
     }
     
     public RestServiceDescription getRestServiceDescription(String name) {

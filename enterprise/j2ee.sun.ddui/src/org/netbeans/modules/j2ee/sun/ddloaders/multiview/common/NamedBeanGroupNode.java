@@ -316,7 +316,7 @@ public abstract class NamedBeanGroupNode extends BaseSectionNode implements Bean
         }
         
         if (dirty) {
-            Node [] newNodes = newNodeList.toArray(new Node[newNodeList.size()]);
+            Node [] newNodes = newNodeList.toArray(new Node[0]);
             children.remove(nodes);
             children.add(newNodes);
             populateBoxPanel();

@@ -117,7 +117,7 @@ public class InstanceNodeDecorator extends FilterNode
         actions.addAll(Arrays.asList(getOriginal().getActions(context)));
         actions.add(null);
         actions.add(SystemAction.get(CustomizerAction.class));
-        return (Action[])actions.toArray(new Action[actions.size()]);
+        return (Action[])actions.toArray(new Action[0]);
     }
     
     public Image getIcon(int type) {

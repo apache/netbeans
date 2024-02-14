@@ -505,7 +505,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                         cPath.add(f);
                     }
                 }
-                return cPath.toArray(new File[cPath.size()]);
+                return cPath.toArray(new File[0]);
             }
 
             if (TOOL_WSCOMPILE.equals(toolName)) {
@@ -518,7 +518,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                         cPath.add(f);
                     }
                 }
-                return cPath.toArray(new File[cPath.size()]);
+                return cPath.toArray(new File[0]);
             }
 
             File domainDir;
@@ -1004,8 +1004,7 @@ public class Hk2JavaEEPlatformImpl extends J2eePlatformImpl2 {
                 else {
                     classPathType = ClassPath.COMPILE;
                 }
-                ProjectClassPathModifier.addRoots(urls.toArray( new URL[ urls.size()]),
-                        sourceRoot, classPathType );
+                ProjectClassPathModifier.addRoots(urls.toArray(new URL[0]), sourceRoot, classPathType);
             }
             catch (UnsupportedOperationException | IOException ex) {
                 return false;

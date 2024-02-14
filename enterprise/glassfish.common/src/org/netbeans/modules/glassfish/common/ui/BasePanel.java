@@ -231,7 +231,7 @@ public abstract class BasePanel extends JPanel {
                 }
             }
             if (l.size() > 0) {
-                table.setModel(new AttributedPropertyTableModel(l.toArray(new String[l.size()][]), specComp, pushPrefix));
+                table.setModel(new AttributedPropertyTableModel(l.toArray(String[][]::new), specComp, pushPrefix));
             } else {
                 // this data is from a post beta build...
                 pattern = Pattern.compile(".*\\." + name + "\\." + specComp[0] + "\\..*");
@@ -252,7 +252,7 @@ public abstract class BasePanel extends JPanel {
                     }
                 }
                 if (l.size() > 0) {
-                    table.setModel(new NameValueTableModel(l.toArray(new String[l.size()][]), specComp, pushPrefix));
+                    table.setModel(new NameValueTableModel(l.toArray(String[][]::new), specComp, pushPrefix));
                 }
             }
         }

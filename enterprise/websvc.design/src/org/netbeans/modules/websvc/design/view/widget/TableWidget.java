@@ -169,7 +169,7 @@ public class TableWidget extends Widget{
                     scene.removeObject(userObject);
                     widgets = new ArrayList<Widget>(widgets);
                     widgets.add(this);
-                    scene.addObject(userObject, widgets.toArray(new Widget[widgets.size()]));
+                    scene.addObject(userObject, widgets.toArray(new Widget[0]));
                 }
             }
         }
@@ -185,7 +185,7 @@ public class TableWidget extends Widget{
                         widgets = new ArrayList<Widget>(widgets);
                         widgets.remove(this);
                         scene.removeObject(userObject);
-                        scene.addObject(userObject, widgets.toArray(new Widget[widgets.size()]));
+                        scene.addObject(userObject, widgets.toArray(new Widget[0]));
                     }
                 }
             }

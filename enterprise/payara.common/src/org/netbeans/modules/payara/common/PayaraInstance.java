@@ -1742,7 +1742,7 @@ public class PayaraInstance implements ServerInstanceImplementation,
             }
 
             if (!proxies.isEmpty()) {
-                full = new ProxyLookup(proxies.toArray(new Lookup[proxies.size()]));
+                full = new ProxyLookup(proxies.toArray(new Lookup[0]));
             }
         }
 

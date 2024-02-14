@@ -539,7 +539,7 @@ public final class TestUtil extends ProxyLookup {
             // get layer for the AS/GlassFish
 //            addLayer(layers, "org/netbeans/modules/j2ee/sun/ide/j2ee/layer.xml");
 //            addLayer(layers, "org/netbeans/modules/tomcat5/resources/layer.xml");
-            MultiFileSystem mfs = new MultiFileSystem((FileSystem[]) layers.toArray(new FileSystem[layers.size()]));
+            MultiFileSystem mfs = new MultiFileSystem((FileSystem[]) layers.toArray(new FileSystem[0]));
             return mfs;
         }
         

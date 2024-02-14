@@ -212,7 +212,7 @@ public final class TestUtil extends ProxyLookup {
     
     public static void initParserJARs() throws MalformedURLException {
         List<URL> list = getJARs("jsp.parser.jars");
-        JspParserImpl.setParserJARs(list.toArray(new URL[list.size()]));
+        JspParserImpl.setParserJARs(list.toArray(new URL[0]));
     }
 
     public static List<URL> getJARs(String propertyName) throws MalformedURLException {

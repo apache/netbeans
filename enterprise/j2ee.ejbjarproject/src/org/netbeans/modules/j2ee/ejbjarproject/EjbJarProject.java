@@ -791,7 +791,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                             libs.add(FileUtil.getArchiveRoot(children[i].toURL()));
                         }
                     }
-                    classPathModifier.addRoots(libs.toArray(new URL[libs.size()]), ProjectProperties.JAVAC_CLASSPATH);
+                    classPathModifier.addRoots(libs.toArray(new URL[0]), ProjectProperties.JAVAC_CLASSPATH);
                     libFolder.addFileChangeListener (EjbJarProject.this);
                 }
                 
@@ -1563,7 +1563,7 @@ public class EjbJarProject implements Project, FileChangeListener {
             } else {
                 privileged.addAll(Arrays.asList(PRIVILEGED_NAMES));
             } 
-            return privileged.toArray(new String[privileged.size()]);
+            return privileged.toArray(new String[0]);
         }
         
         private void checkEnvironment() {

@@ -60,7 +60,7 @@ public class RepositoryImpl extends Repository {
         addLayer(layers, "org/netbeans/modules/websvc/core/resources/mf-layer.xml");
         // get layer for the java support (for Main class template)
 //        addLayer(layers, "org/netbeans/modules/java/resources/mf-layer.xml");
-        MultiFileSystem mfs = new MultiFileSystem((FileSystem[]) layers.toArray(new FileSystem[layers.size()]));
+        MultiFileSystem mfs = new MultiFileSystem((FileSystem[]) layers.toArray(new FileSystem[0]));
         return mfs;
     }
     

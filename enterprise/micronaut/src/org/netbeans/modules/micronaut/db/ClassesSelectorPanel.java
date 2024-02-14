@@ -248,8 +248,8 @@ public class ClassesSelectorPanel extends javax.swing.JPanel {
     private void removeAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAllButtonActionPerformed
         available.addAll(selected);
         selected.clear();
-        availableList.setListData(available.toArray(new String[available.size()]));
-        selectedList.setListData(selected.toArray(new String[selected.size()]));
+        availableList.setListData(available.toArray(new String[0]));
+        selectedList.setListData(selected.toArray(new String[0]));
         updateButtons();
         changeSupport.fireChange();
     }//GEN-LAST:event_removeAllButtonActionPerformed
@@ -257,8 +257,8 @@ public class ClassesSelectorPanel extends javax.swing.JPanel {
     private void addAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAllButtonActionPerformed
         selected.addAll(available);
         available.clear();
-        availableList.setListData(available.toArray(new String[available.size()]));
-        selectedList.setListData(selected.toArray(new String[selected.size()]));
+        availableList.setListData(available.toArray(new String[0]));
+        selectedList.setListData(selected.toArray(new String[0]));
         updateButtons();
         changeSupport.fireChange();
     }//GEN-LAST:event_addAllButtonActionPerformed
@@ -266,8 +266,8 @@ public class ClassesSelectorPanel extends javax.swing.JPanel {
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         available.addAll(selectedList.getSelectedValuesList());
         selected.removeAll(selectedList.getSelectedValuesList());
-        availableList.setListData(available.toArray(new String[available.size()]));
-        selectedList.setListData(selected.toArray(new String[selected.size()]));
+        availableList.setListData(available.toArray(new String[0]));
+        selectedList.setListData(selected.toArray(new String[0]));
         updateButtons();
         changeSupport.fireChange();
     }//GEN-LAST:event_removeButtonActionPerformed
@@ -275,8 +275,8 @@ public class ClassesSelectorPanel extends javax.swing.JPanel {
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         selected.addAll(availableList.getSelectedValuesList());
         available.removeAll(availableList.getSelectedValuesList());
-        availableList.setListData(available.toArray(new String[available.size()]));
-        selectedList.setListData(selected.toArray(new String[selected.size()]));
+        availableList.setListData(available.toArray(new String[0]));
+        selectedList.setListData(selected.toArray(new String[0]));
         updateButtons();
         changeSupport.fireChange();
     }//GEN-LAST:event_addButtonActionPerformed

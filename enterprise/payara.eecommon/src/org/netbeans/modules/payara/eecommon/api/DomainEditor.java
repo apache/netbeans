@@ -238,7 +238,7 @@ public class DomainEditor {
         Document domainDoc = getDomainDocument();
         NodeList javaConfigNodeList = domainDoc.getElementsByTagName("java-config");
         if (javaConfigNodeList == null || javaConfigNodeList.getLength() == 0) {
-            return httpProxyOptions.toArray(new String[httpProxyOptions.size()]);
+            return httpProxyOptions.toArray(new String[0]);
         }
         
         NodeList jvmOptionNodeList = domainDoc.getElementsByTagName(CONST_JVM_OPTIONS);

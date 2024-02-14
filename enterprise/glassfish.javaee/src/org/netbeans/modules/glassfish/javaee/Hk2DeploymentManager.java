@@ -426,7 +426,7 @@ public class Hk2DeploymentManager implements DeploymentManager2 {
                 }
             }
         }
-        return moduleList.size() > 0 ? moduleList.toArray(new TargetModuleID[moduleList.size()]) :
+        return moduleList.size() > 0 ? moduleList.toArray(TargetModuleID[]::new) :
             new TargetModuleID[0];
     }
 

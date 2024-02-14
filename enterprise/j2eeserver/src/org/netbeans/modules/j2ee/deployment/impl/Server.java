@@ -257,7 +257,7 @@ public class Server implements Node.Cookie {
                 ret.add(inst);
             }
         }
-        return (ServerInstance[]) ret.toArray(new ServerInstance[ret.size()]);
+        return (ServerInstance[]) ret.toArray(new ServerInstance[0]);
     }
 
     public WebContextRoot getWebContextRoot() {
@@ -320,7 +320,7 @@ public class Server implements Node.Cookie {
                     String fname = allNames[i].getNameExt();
                     filepaths.add(fname.replace('\\', '/')); //just in case..
                 }
-                deployConfigDescriptorMap.put(mTypeName, filepaths.toArray(new String[filepaths.size()]));
+                deployConfigDescriptorMap.put(mTypeName, filepaths.toArray(new String[0]));
             }
         }
     }

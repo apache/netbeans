@@ -89,7 +89,7 @@ public final class Ejb extends AbstractJ2eeFile {
                 l.add(MESSAGE.replaceAll("\\$0", "Remote home interface class"));
             }
         }
-        return l.toArray(new String[l.size()]);
+        return l.toArray(new String[0]);
     }
     
     private boolean implClassExists() {

@@ -83,7 +83,7 @@ public class TestBase2 extends CslTestBase {
             }
             list.add(f.toURI().toURL());
         }
-        JspParserImpl.setParserJARs(list.toArray(new URL[list.size()]));
+        JspParserImpl.setParserJARs(list.toArray(new URL[0]));
     }
 
     public final ClassPath createServletAPIClassPath() throws MalformedURLException, IOException {
@@ -108,7 +108,7 @@ public class TestBase2 extends CslTestBase {
             FileObject fo = FileUtil.toFileObject(f);
             fos.add(FileUtil.getArchiveRoot(fo));
         }
-        return ClassPathSupport.createClassPath(fos.toArray(new FileObject[fos.size()]));
+        return ClassPathSupport.createClassPath(fos.toArray(new FileObject[0]));
     }
     
     protected void assertFileContentsMatches(String relFilePath, String newFileName,

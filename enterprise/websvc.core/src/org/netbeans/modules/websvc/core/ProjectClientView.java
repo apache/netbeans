@@ -46,7 +46,7 @@ public class ProjectClientView {
                 views.add(view);
             }
         }
-        return views.toArray(new Node[views.size()]);
+        return views.toArray(new Node[0]);
     }
     
 }

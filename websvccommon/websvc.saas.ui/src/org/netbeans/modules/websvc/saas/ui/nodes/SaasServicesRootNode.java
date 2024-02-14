@@ -79,7 +79,7 @@ public class SaasServicesRootNode extends AbstractNode {
         List<Action> actions = SaasNode.getActions(getLookup());
         actions.add(SystemAction.get(AddServiceAction.class));
         actions.add(SystemAction.get(AddGroupAction.class));
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     static final java.awt.Image ICON =

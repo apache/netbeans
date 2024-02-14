@@ -1568,7 +1568,7 @@ public final class WebProject implements Project {
                 } else {
                     set.addAll(WebProject.this.getPrivilegedTemplates());
                 }
-                return set.toArray(new String[set.size()]);
+                return set.toArray(new String[0]);
             }
         }
 
@@ -2445,7 +2445,7 @@ public final class WebProject implements Project {
             if ("true".equals(project.evaluator().getProperty(WebProjectProperties.DISPLAY_BROWSER))) {
                 lookups.add(Lookups.singleton(browserProvider));
             }
-            setLookups(lookups.toArray(new Lookup[lookups.size()]));
+            setLookups(lookups.toArray(new Lookup[0]));
         }
 
         public void propertyChange(PropertyChangeEvent evt) {

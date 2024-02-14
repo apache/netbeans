@@ -98,7 +98,7 @@ final class NoSelectedServerWarning extends JPanel {
                 types.add(type);
             }
         }
-        return selectServerDialog(types.toArray(new J2eeModule.Type[types.size()]),
+        return selectServerDialog(types.toArray(new J2eeModule.Type[0]),
                 Profile.fromPropertiesString(j2eeSpec), title, description);
     }
 

@@ -152,7 +152,7 @@ public final class ProjectWebServiceView {
                 result.addAll(Arrays.<Node>asList(view.createView(viewType)));
             }
         }
-        return result.toArray(new Node[result.size()]);
+        return result.toArray(new Node[0]);
     }
 
     /** 
@@ -345,6 +345,6 @@ public final class ProjectWebServiceView {
                 result.addAll(Arrays.<Node>asList(view.createView(viewType)));
             }
         }
-        return result.toArray(new Node[result.size()]);
+        return result.toArray(new Node[0]);
     }
 }

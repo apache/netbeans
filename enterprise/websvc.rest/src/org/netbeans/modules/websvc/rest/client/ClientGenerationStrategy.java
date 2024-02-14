@@ -550,7 +550,7 @@ abstract class ClientGenerationStrategy {
         }
 
         pathFormat.setPattern(buf.toString().trim());
-        pathFormat.setArguments(arguments.toArray(new String[arguments.size()]));
+        pathFormat.setArguments(arguments.toArray(new String[0]));
         return pathFormat;
     }
     

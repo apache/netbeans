@@ -581,7 +581,7 @@ public class ConfigManager {
                 list.add(new DocumentOrderingWrapper(facesDocuments[i]));
             }
             DocumentOrderingWrapper[] ordering =
-                  list.toArray(new DocumentOrderingWrapper[list.size()]);
+                  list.toArray(new DocumentOrderingWrapper[0]);
             if (absoluteOrdering == null) {
                 DocumentOrderingWrapper.sort(ordering);
                 // sorting complete, now update the appropriate locations within
@@ -796,7 +796,7 @@ public class ConfigManager {
             } catch (InterruptedException ignored) { }
         }
 
-        return docs.toArray(new DocumentInfo[docs.size()]);
+        return docs.toArray(new DocumentInfo[0]);
 
     }
 

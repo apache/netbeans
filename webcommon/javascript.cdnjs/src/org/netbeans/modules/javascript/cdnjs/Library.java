@@ -228,7 +228,7 @@ public final class Library {
                     fileList.add(file);
                 }
             }
-            clone.setFileInfo(fileList.toArray(new String[fileList.size()]), null);
+            clone.setFileInfo(fileList.toArray(new String[0]), null);
             return clone;
         }
 

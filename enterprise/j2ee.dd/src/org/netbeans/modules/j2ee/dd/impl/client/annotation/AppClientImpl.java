@@ -113,7 +113,7 @@ public class AppClientImpl implements AppClient {
         
         EjbRefHelper.setEjbRefs(helper, resultEjbRefs, null);
         
-        ejbRefs = resultEjbRefs.toArray(new EjbRef[resultEjbRefs.size()]);
+        ejbRefs = resultEjbRefs.toArray(new EjbRef[0]);
                 
     }
 

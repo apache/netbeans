@@ -678,8 +678,7 @@ public class WSUtils {
             }
         }
         
-        ClassPath classPath = ClassPathSupport.createClassPath(cpItems.toArray(
-                new FileObject[cpItems.size()]));
+        ClassPath classPath = ClassPathSupport.createClassPath(cpItems.toArray(new FileObject[0]));
         FileObject wsImport = classPath.findResource(
                     "com/sun/tools/ws/ant/WsImport.class");                         // NOI18N
         if ( wsImport == null ){

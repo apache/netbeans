@@ -130,7 +130,7 @@ public class CommonAnnotationHelper {
         } catch (InterruptedException e) {
             return new SecurityRole[0];
         }
-        return result.toArray(new SecurityRole[result.size()]);
+        return result.toArray(new SecurityRole[0]);
     }
     
     /**
@@ -259,7 +259,7 @@ public class CommonAnnotationHelper {
         List<ResourceImpl> resources = getResources(helper, typeElement);
         serviceRefs.addAll(getServiceRefs(resources));
         
-        return serviceRefs.toArray(new ServiceRef[serviceRefs.size()]);
+        return serviceRefs.toArray(new ServiceRef[0]);
     }
     
     /**
@@ -279,7 +279,7 @@ public class CommonAnnotationHelper {
         List<ResourceImpl> resources = getResources(helper);
         serviceRefs.addAll(getServiceRefs(resources));
         
-        return serviceRefs.toArray(new ServiceRef[serviceRefs.size()]);
+        return serviceRefs.toArray(new ServiceRef[0]);
     }
 
     /**
@@ -414,7 +414,7 @@ public class CommonAnnotationHelper {
                 elements.add(new ResourceRefImpl(resource));
             }
         }
-        return elements.toArray(new ResourceRef[elements.size()]);
+        return elements.toArray(new ResourceRef[0]);
     }
     
     private static EnvEntry[] getEnvEntries(final List<ResourceImpl> resources) {
@@ -425,7 +425,7 @@ public class CommonAnnotationHelper {
                 elements.add(new EnvEntryImpl(resource));
             }
         }
-        return elements.toArray(new EnvEntry[elements.size()]);
+        return elements.toArray(new EnvEntry[0]);
     }
     
     private static MessageDestinationRef[] getMessageDestinationRefs(final List<ResourceImpl> resources) {
@@ -436,7 +436,7 @@ public class CommonAnnotationHelper {
                 elements.add(new MessageDestinationRefImpl(resource));
             }
         }
-        return elements.toArray(new MessageDestinationRef[elements.size()]);
+        return elements.toArray(new MessageDestinationRef[0]);
     }
     
     private static List<ServiceRef> getServiceRefs(final List<ResourceImpl> resources) {
@@ -461,7 +461,7 @@ public class CommonAnnotationHelper {
                 elements.add(new ResourceEnvRefImpl(resource));
             }
         }
-        return elements.toArray(new ResourceEnvRef[elements.size()]);
+        return elements.toArray(new ResourceEnvRef[0]);
     }
     
     private static void addServiceReference(final List<ServiceRef> serviceRefs, final Element element, TypeElement parentElement, final AnnotationModelHelper helper) {

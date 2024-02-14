@@ -111,7 +111,7 @@ public class Hk2TargetModuleID implements TargetModuleID {
     }
     
     public TargetModuleID [] getChildTargetModuleID() {
-        return children.toArray(new TargetModuleID[children.size()]);
+        return children.toArray(new TargetModuleID[0]);
     }
     
     public void setParent(Hk2TargetModuleID parent) {

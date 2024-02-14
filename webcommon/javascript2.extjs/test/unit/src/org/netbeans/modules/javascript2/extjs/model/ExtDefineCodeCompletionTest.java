@@ -75,7 +75,7 @@ public class ExtDefineCodeCompletionTest extends JsCodeCompletionBase {
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/defineMethod")));
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

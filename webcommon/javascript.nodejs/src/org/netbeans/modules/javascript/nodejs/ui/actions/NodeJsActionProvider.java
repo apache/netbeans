@@ -58,7 +58,7 @@ public final class NodeJsActionProvider implements ActionProvider {
 
     @Override
     public String[] getSupportedActions() {
-        return supportedActions.toArray(new String[supportedActions.size()]);
+        return supportedActions.toArray(new String[0]);
     }
 
     @Override

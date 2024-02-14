@@ -308,7 +308,7 @@ public class MacrosPanel extends JPanel {
             Macro m = it.next();
             if (m.getShortcuts().size() > 0) {
                 List<KeyStroke> l2 = m.getShortcuts().get(0).getKeyStrokeList();
-                KeyStroke[] arr = l2.toArray(new KeyStroke[l2.size()]);
+                KeyStroke[] arr = l2.toArray(new KeyStroke[0]);
                 String sc = KeyStrokeUtils.getKeyStrokesAsText(arr, " "); // NOI18N
                 if (sc.equals(shortcut)) {
                     m.setShortcuts(Collections.<String>emptySet());

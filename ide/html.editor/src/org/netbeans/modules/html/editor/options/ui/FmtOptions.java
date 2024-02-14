@@ -904,7 +904,7 @@ public class FmtOptions {
             for(Preferences p : delegates) {
                 keys.addAll(Arrays.asList(p.keys()));
             }
-            return keys.toArray(new String[ keys.size() ]);
+            return keys.toArray(new String[ 0 ]);
         }
 
         @Override

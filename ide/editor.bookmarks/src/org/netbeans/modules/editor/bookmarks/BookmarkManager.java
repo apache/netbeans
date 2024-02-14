@@ -182,7 +182,7 @@ public class BookmarkManager {
                 return pb1.getProjectDisplayName().compareTo(pb2.getProjectDisplayName());
             }
         });
-        return sortedProjectBookmarks.toArray(new ProjectBookmarks[sortedProjectBookmarks.size()]);
+        return sortedProjectBookmarks.toArray(new ProjectBookmarks[0]);
     }
         
     /**
@@ -217,7 +217,7 @@ public class BookmarkManager {
         } else {
             fbList = Collections.emptyList();
         }
-        return fbList.toArray(new FileBookmarks[fbList.size()]);
+        return fbList.toArray(new FileBookmarks[0]);
     }
         
     public BookmarkInfo[] getSortedBookmarks(FileBookmarks fileBookmarks) {
@@ -228,7 +228,7 @@ public class BookmarkManager {
                 return b1.getCurrentLineIndex() - b2.getCurrentLineIndex();
             }
         });
-        return sortedBookmarks.toArray(new BookmarkInfo[sortedBookmarks.size()]);
+        return sortedBookmarks.toArray(new BookmarkInfo[0]);
     }
         
     /**

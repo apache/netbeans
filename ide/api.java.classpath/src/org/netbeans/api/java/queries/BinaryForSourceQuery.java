@@ -175,7 +175,7 @@ public final class BinaryForSourceQuery {
                         }
                 }
             }
-            return result.toArray(new URL[result.size()]);
+            return result.toArray(new URL[0]);
         }
 
         @Override

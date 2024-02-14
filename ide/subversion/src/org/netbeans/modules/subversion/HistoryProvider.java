@@ -122,7 +122,7 @@ public class HistoryProvider implements VCSHistoryProvider {
 
             for(ISVNLogMessage m : rev2LMMap.values()) {
                 Set<File> s = rev2FileMap.get(m.getRevision().toString());
-                File[] involvedFiles = s.toArray(new File[s.size()]);
+                File[] involvedFiles = s.toArray(new File[0]);
                 HistoryEntry e = new HistoryEntry(
                     involvedFiles, 
                     m.getDate(), 
@@ -137,7 +137,7 @@ public class HistoryProvider implements VCSHistoryProvider {
                 
             }
 
-            return ret.toArray(new HistoryEntry[ret.size()]);
+            return ret.toArray(new HistoryEntry[0]);
         } catch (SVNClientException e) {
             if (SvnClientExceptionHandler.isCancelledAction(e.getMessage())) {
                 Subversion.LOG.log(Level.FINE, null, e);
@@ -156,7 +156,7 @@ public class HistoryProvider implements VCSHistoryProvider {
     public void fireHistoryChange(final File[] files) {
         final HistoryChangeListener[] la;
         synchronized(listeners) {
-            la = listeners.toArray(new HistoryChangeListener[listeners.size()]);
+            la = listeners.toArray(new HistoryChangeListener[0]);
         }
         Subversion.getInstance().getParallelRequestProcessor().post(new Runnable() {
             @Override
@@ -253,7 +253,7 @@ public class HistoryProvider implements VCSHistoryProvider {
             @Override
         protected void perform(HistoryEntry entry, Set<File> files) {
             SVNRevision.Number svnRevision = new SVNRevision.Number(Long.parseLong(entry.getRevision()));
-            view(svnRevision, false, files.toArray(new File[files.size()]));
+            view(svnRevision, false, files.toArray(new File[0]));
         }
     }
 
@@ -264,7 +264,7 @@ public class HistoryProvider implements VCSHistoryProvider {
         @Override
         protected void perform(HistoryEntry entry, Set<File> files) {
             SVNRevision.Number svnRevision = new SVNRevision.Number(Long.parseLong(entry.getRevision()));
-            view(svnRevision, true, files.toArray(new File[files.size()]));
+            view(svnRevision, true, files.toArray(new File[0]));
         }
     }
     

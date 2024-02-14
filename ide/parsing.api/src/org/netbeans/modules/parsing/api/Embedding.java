@@ -128,8 +128,8 @@ public final class Embedding {
             null,
             source,
             mimePath,
-            currentToOriginal.toArray (new int [currentToOriginal.size ()] []),
-            originalToCurrent.toArray (new int [originalToCurrent.size ()] [])
+            currentToOriginal.toArray (new int [0] []),
+            originalToCurrent.toArray (new int [0] [])
         );
         return new Embedding (
             snapshot, 

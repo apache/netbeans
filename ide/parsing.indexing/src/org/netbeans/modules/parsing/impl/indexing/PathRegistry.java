@@ -746,7 +746,7 @@ public final class PathRegistry implements Runnable {
                         libraryResult.addAll(srcRoots);
                         updateTranslatedPathIds(srcRoots, tcp, pathIdsResult, pathIdToRootsResult);
                     }
-                    translatedRoots.put(binRoot, cacheURLs.toArray(new URL[cacheURLs.size()]));
+                    translatedRoots.put(binRoot, cacheURLs.toArray(new URL[0]));
                     if (LOGGER.isLoggable(Level.FINE)) {
                         LOGGER.log(Level.FINE, "T: {0} -> {1}", new Object[]{binRoot, cacheURLs}); //NOI18N
                     }

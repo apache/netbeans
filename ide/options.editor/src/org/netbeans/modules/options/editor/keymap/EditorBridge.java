@@ -557,7 +557,7 @@ public final class EditorBridge extends KeymapManager {
             result.add(keyStroke);
         }
 
-        return result.toArray(new KeyStroke[result.size()]);
+        return result.toArray(new KeyStroke[0]);
     }
 
     private static final class EditorAction implements ShortcutAction {

@@ -121,7 +121,7 @@ public final class ZOrder {
      */
     /* package */ static HighlightsLayer[] sort(HighlightsLayer[] layers) throws TopologicalSortException {
         List<? extends HighlightsLayer> list = sort(Arrays.asList(layers));
-        return list.toArray(new HighlightsLayer [list.size()]);
+        return list.toArray(new HighlightsLayer[0]);
     }
 
     /* package */ int getRack() {

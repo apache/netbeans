@@ -448,7 +448,7 @@ public final class ContextualPatch {
                 }
             }
         }
-        patch.hunks = (Hunk[]) hunks.toArray(new Hunk[hunks.size()]);
+        patch.hunks = (Hunk[]) hunks.toArray(new Hunk[0]);
     }
     
     /**
@@ -488,7 +488,7 @@ public final class ContextualPatch {
                 }
             }
         }
-        patch.hunks = (Hunk[]) hunks.toArray(new Hunk[hunks.size()]);
+        patch.hunks = (Hunk[]) hunks.toArray(new Hunk[0]);
     }
 
     private void parseNormalRange(Hunk hunk, Matcher m) {
@@ -561,7 +561,7 @@ public final class ContextualPatch {
                 }
             }
         }
-        patch.hunks = (Hunk[]) hunks.toArray(new Hunk[hunks.size()]);
+        patch.hunks = (Hunk[]) hunks.toArray(new Hunk[0]);
         convertContextToUnified(patch);
     }
 
@@ -669,7 +669,7 @@ public final class ContextualPatch {
                 break;
             }
         }
-        patch.hunks = (Hunk[]) hunks.toArray(new Hunk[hunks.size()]);
+        patch.hunks = (Hunk[]) hunks.toArray(new Hunk[0]);
     }
 
     private void computeTargetPath(String base, String modified, SinglePatch patch) {

@@ -328,7 +328,7 @@ public final class QuerySupport {
         for (FileObject root : roots) {
             rootsURL.add(root.toURL());
         }
-        return new QuerySupport(indexerName, indexerVersion, rootsURL.toArray(new URL[rootsURL.size()]));
+        return new QuerySupport(indexerName, indexerVersion, rootsURL.toArray(new URL[0]));
     }
 
     public Collection<? extends IndexResult> query(

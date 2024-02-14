@@ -487,7 +487,7 @@ public final class AntProjectHelper {
             if (listeners.isEmpty()) {
                 return;
             }
-            _listeners = listeners.toArray(new AntProjectListener[listeners.size()]);
+            _listeners = listeners.toArray(new AntProjectListener[0]);
         }
         final AntProjectEvent ev = new AntProjectEvent(this, path, expected);
         final boolean xml = path.equals(PROJECT_XML_PATH) || path.equals(PRIVATE_XML_PATH);

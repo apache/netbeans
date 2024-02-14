@@ -1015,7 +1015,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                                 message = cannotDelete + " " + getBundle().getString("MSG_Plur_Delete");
                             }
                             
-                            setSelected((File[])list.toArray(new File[list.size()]));
+                            setSelected((File[])list.toArray(new File[0]));
                             
                             JOptionPane.showConfirmDialog(fileChooser, message , getBundle().getString("MSG_Confirm"), JOptionPane.OK_OPTION);
                         } else {
@@ -1116,7 +1116,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             }
             synchronized (this) {
                 lastDir = dir;
-                lastChildren = files.toArray(new File[files.size()]);
+                lastChildren = files.toArray(new File[0]);
             }
             if (lastChildren.length > 0) {
                 EventQueue.invokeLater(new Runnable() {
@@ -2250,7 +2250,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                 }
                 files.add(file);
             }
-            return files.toArray(new File[files.size()]);
+            return files.toArray(new File[0]);
         }
         
         /********* impl of MouseListener ***********/

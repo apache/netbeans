@@ -174,7 +174,7 @@ final class SummaryView extends AbstractSummaryView implements DiffSetupSource {
                 });
             }
             actions.addAll(Arrays.asList(revision.getActions()));
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -279,7 +279,7 @@ final class SummaryView extends AbstractSummaryView implements DiffSetupSource {
                 });
                 actions.addAll(Arrays.asList(event.getActions()));
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -347,7 +347,7 @@ final class SummaryView extends AbstractSummaryView implements DiffSetupSource {
         Node [] nodes = TopComponent.getRegistry().getActivatedNodes();
         if (nodes.length == 0) {
             List<RepositoryRevision> results = master.getResults();
-            return master.getSetups(results.toArray(new RepositoryRevision[results.size()]), new RepositoryRevision.Event[0]);
+            return master.getSetups(results.toArray(new RepositoryRevision[0]), new RepositoryRevision.Event[0]);
         }
     
         Set<RepositoryRevision.Event> events = new HashSet<RepositoryRevision.Event>();
@@ -361,7 +361,7 @@ final class SummaryView extends AbstractSummaryView implements DiffSetupSource {
                 events.add((RepositoryRevision.Event) revCon);
             }
         }
-        return master.getSetups(revisions.toArray(new RepositoryRevision[revisions.size()]), events.toArray(new RepositoryRevision.Event[events.size()]));
+        return master.getSetups(revisions.toArray(new RepositoryRevision[0]), events.toArray(new RepositoryRevision.Event[0]));
     }
 
     @Override
@@ -470,7 +470,7 @@ final class SummaryView extends AbstractSummaryView implements DiffSetupSource {
                             SystemAction.get(DiffAction.class).diff(master.getRoots(),
                                     info2.getHgRevision(),
                                     info1.getHgRevision(),
-                                    Utils.getContextDisplayName(VCSContext.forNodes(nodes.toArray(new Node[nodes.size()]))),
+                                    Utils.getContextDisplayName(VCSContext.forNodes(nodes.toArray(new Node[0]))),
                                     false, true);
                         }
                     }));
@@ -565,7 +565,7 @@ final class SummaryView extends AbstractSummaryView implements DiffSetupSource {
                 events.add((RepositoryRevision.Event) o);
             }
         }
-        revert(revisions.toArray(new RepositoryRevision[revisions.size()]), (RepositoryRevision.Event[]) events.toArray(new RepositoryRevision.Event[events.size()]));
+        revert(revisions.toArray(new RepositoryRevision[0]), (RepositoryRevision.Event[]) events.toArray(new RepositoryRevision.Event[0]));
     }
 
     static void revert(final RepositoryRevision [] revisions, final RepositoryRevision.Event [] events) {

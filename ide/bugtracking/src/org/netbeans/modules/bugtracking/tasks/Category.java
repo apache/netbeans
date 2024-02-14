@@ -131,7 +131,7 @@ public class Category {
         Set<RepositoryImpl> repositoryKeys = map.keySet();
         for (RepositoryImpl repository : repositoryKeys) {
             List<String> ids = map.get(repository);
-            repository.getIssueImpls(ids.toArray(new String[ids.size()]));
+            repository.getIssueImpls(ids.toArray(new String[0]));
         }
     }
 

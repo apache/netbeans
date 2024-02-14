@@ -982,13 +982,13 @@ public class Actions {
                 List<TreeListNode> value = entry.getValue();
                 Action action = null;
                 if (key.equals(RepositoryNode.class.getName()) || key.equals(ClosedRepositoryNode.class.getName())) {
-                    action = new Actions.RemoveRepositoryAction(value.toArray(new RepositoryNode[value.size()]));
+                    action = new Actions.RemoveRepositoryAction(value.toArray(new RepositoryNode[0]));
                 } else if (key.equals(CategoryNode.class.getName()) || key.equals(ClosedCategoryNode.class.getName())) {
-                    action = new Actions.DeleteCategoryAction(value.toArray(new CategoryNode[value.size()]));
+                    action = new Actions.DeleteCategoryAction(value.toArray(new CategoryNode[0]));
                 } else if (key.equals(QueryNode.class.getName())) {
-                    action = new Actions.DeleteQueryAction(value.toArray(new QueryNode[value.size()]));
+                    action = new Actions.DeleteQueryAction(value.toArray(new QueryNode[0]));
                 } else if (key.equals(TaskNode.class.getName())) {
-                    action = new Actions.DeleteLocalTaskAction(value.toArray(new TaskNode[value.size()]));
+                    action = new Actions.DeleteLocalTaskAction(value.toArray(new TaskNode[0]));
                 }
                 if (action != null && action.isEnabled()) {
                     action.actionPerformed(e);
@@ -1013,7 +1013,7 @@ public class Actions {
         @Override
         public void actionPerformed(ActionEvent e) {
             List<TreeListNode> selectedNodes = DashboardViewer.getInstance().getSelectedNodes();
-            RefreshAction refresh = RefreshAction.createAction(selectedNodes.toArray(new TreeListNode[selectedNodes.size()]));
+            RefreshAction refresh = RefreshAction.createAction(selectedNodes.toArray(new TreeListNode[0]));
             if (refresh != null) {
                 refresh.actionPerformed(e);
             }

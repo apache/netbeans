@@ -732,7 +732,7 @@ CaretListener, KeyListener, FocusListener, ListSelectionListener, PropertyChange
         }
         currentMimePath = mimePathString;
         CompletionProvider[] ret;
-        providersCache.put(mimePathString, ret = allProviders.toArray(new CompletionProvider[allProviders.size()]));
+        providersCache.put(mimePathString, ret = allProviders.toArray(new CompletionProvider[0]));
         return ret;
     }
     

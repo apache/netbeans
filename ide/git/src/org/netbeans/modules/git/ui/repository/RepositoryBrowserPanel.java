@@ -1353,7 +1353,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     }
                 }
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -1780,7 +1780,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 a.putValue(PROP_DELETE_ACTION, Boolean.TRUE);
                 actions.add(a);
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -2032,7 +2032,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 actions.add(null);
                 actions.add(a);
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -2213,7 +2213,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     });
                 }
             });
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
     }
 
@@ -2321,7 +2321,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     }
                 });
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
     }
     //</editor-fold>

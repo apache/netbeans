@@ -70,7 +70,7 @@ public final class DockerNode extends AbstractNode {
         ret.addAll(Utilities.actionsForPath("Docker/Wizard")); // NOI18N
         ret.add(null);
         ret.addAll(Utilities.actionsForPath("Docker/Credentials")); // NOI18N
-        return ret.toArray(new Action[ret.size()]);
+        return ret.toArray(new Action[0]);
     }
 
 }

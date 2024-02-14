@@ -124,7 +124,7 @@ public class ProjectServicesImpl implements ProjectServices {
                 }
             }
         }
-        return ret.toArray(new FileObject[ret.size()]);
+        return ret.toArray(new FileObject[0]);
     }
 
     public FileObject[] getProjectDirectories(Lookup lookup) {
@@ -136,7 +136,7 @@ public class ProjectServicesImpl implements ProjectServices {
         for (Project project : projects) {
             ret.add(project.getProjectDirectory());
         }
-        return ret.toArray(new FileObject[ret.size()]);
+        return ret.toArray(new FileObject[0]);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class ProjectServicesImpl implements ProjectServices {
                 }
 
                 if (!projects.isEmpty()) {
-                    OpenProjects.getDefault().open(projects.toArray(new Project[projects.size()]), false);
+                    OpenProjects.getDefault().open(projects.toArray(new Project[0]), false);
                 }
                 WindowManager.getDefault().findTopComponent("projectTabLogical_tc").requestActive(); // NOI18N
             }
@@ -252,8 +252,8 @@ public class ProjectServicesImpl implements ProjectServices {
         }
         projectsToClose.remove(null);
         projectsToOpen.remove(null);
-        OpenProjects.getDefault().close(projectsToClose.toArray(new Project[projectsToClose.size()]));
-        OpenProjects.getDefault().open(projectsToOpen.toArray(new Project[projectsToOpen.size()]), false);
+        OpenProjects.getDefault().close(projectsToClose.toArray(new Project[0]));
+        OpenProjects.getDefault().open(projectsToOpen.toArray(new Project[0]), false);
     }
 
     @Override
@@ -361,7 +361,7 @@ public class ProjectServicesImpl implements ProjectServices {
             }
             return null;
         }
-        return listenerList.toArray(new IDEProject.OpenListener[listenerList.size()]);
+        return listenerList.toArray(new IDEProject.OpenListener[0]);
     }
 
     private static class NbProject extends IDEProject {

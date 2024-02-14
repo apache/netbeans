@@ -591,7 +591,7 @@ public class SvnClientExceptionHandler {
                 ret.add(failure);
             }
         }
-        return ret.toArray(new CertificateFailure[ret.size()]);
+        return ret.toArray(new CertificateFailure[0]);
     }
    
     private int getFailuresMask() {

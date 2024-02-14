@@ -150,7 +150,7 @@ public class BugzillaConfig {
                 ret.add(key.substring(prefix.length()));
             }
         }
-        return ret.toArray(new String[ret.size()]);
+        return ret.toArray(new String[0]);
     }
 
     private String getQueryKey(String repositoryID, String queryName) {

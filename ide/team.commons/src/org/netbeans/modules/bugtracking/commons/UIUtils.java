@@ -359,7 +359,7 @@ public class UIUtils {
     }
 
     public static int getLongestWordWidth(String header, List<String> values, JComponent comp, boolean regardIcon) {
-        String[] valuesArray = values.toArray(new String[values.size()]);
+        String[] valuesArray = values.toArray(new String[0]);
         return getLongestWordWidth(header, valuesArray, comp, regardIcon);
     }
 

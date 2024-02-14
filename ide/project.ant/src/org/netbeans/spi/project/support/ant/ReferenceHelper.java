@@ -853,7 +853,7 @@ public final class ReferenceHelper {
         for (Element subEl : subEls) {
             refs.add(RawReference.create(subEl));
         }
-        return refs.toArray(new RawReference[refs.size()]);
+        return refs.toArray(new RawReference[0]);
     }
     
     /**

@@ -357,7 +357,7 @@ public class RepositoryRegistry {
                 ret.add(key);
             }
         }
-        return ret.toArray(new String[ret.size()]);
+        return ret.toArray(new String[0]);
     }
     
     /**
@@ -438,7 +438,7 @@ public class RepositoryRegistry {
                 ret.add(key.substring(repoId.length()));
             }
         }
-        return ret.toArray(new String[ret.size()]);
+        return ret.toArray(new String[0]);
     }    
     private void migrateBugzillaRepository(Preferences preferences, String repoID) {
         String[] values = getRepositoryValues(preferences, BUGZILLA_REPO_ID, repoID);

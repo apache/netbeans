@@ -337,7 +337,7 @@ public final class MasterMatcher {
             if (matchListeners.isEmpty()) {
                 return;
             }
-            ll = matchListeners.toArray(new MatchListener[matchListeners.size()]);
+            ll = matchListeners.toArray(new MatchListener[0]);
         }
         if (ll.length == 0) {
             return;
@@ -356,7 +356,7 @@ public final class MasterMatcher {
             if (matchListeners.isEmpty()) {
                 return;
             }
-            ll = matchListeners.toArray(new MatchListener[matchListeners.size()]);
+            ll = matchListeners.toArray(new MatchListener[0]);
         }
         MatchEvent evt = new MatchEvent(component, null, this);
         for (int i = 0; i < ll.length; i++) {

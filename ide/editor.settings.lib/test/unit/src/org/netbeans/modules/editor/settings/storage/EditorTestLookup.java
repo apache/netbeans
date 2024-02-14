@@ -141,7 +141,7 @@ public class EditorTestLookup extends ProxyLookup {
             } else if (layer.getPath().endsWith(".zip")) {
                 if (!xmlLayers.isEmpty()) {
                     XMLFileSystem layersFs = new XMLFileSystem();
-                    layersFs.setXmlUrls(xmlLayers.toArray(new URL [xmlLayers.size()]));
+                    layersFs.setXmlUrls(xmlLayers.toArray(new URL [0]));
                     fs.add(layersFs);
                     xmlLayers.clear();
                 }
@@ -159,11 +159,11 @@ public class EditorTestLookup extends ProxyLookup {
         
         if (!xmlLayers.isEmpty()) {
             XMLFileSystem layersFs = new XMLFileSystem();
-            layersFs.setXmlUrls(xmlLayers.toArray(new URL [xmlLayers.size()]));
+            layersFs.setXmlUrls(xmlLayers.toArray(new URL [0]));
             fs.add(layersFs);
         }
         
-        setLookup(fs.toArray(new FileSystem [fs.size()]), instances, cl, exclude);
+        setLookup(fs.toArray(new FileSystem [0]), instances, cl, exclude);
     }
     
     @SuppressWarnings("deprecation")

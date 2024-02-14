@@ -228,7 +228,7 @@ public class CmdlineDiffProvider extends DiffProvider implements java.io.Seriali
                     if (outBuffer.length() > 0) outputLine(outBuffer.toString(), pattern, differences,
                                                            firstText, secondText);
                     setTextOnLastDifference(differences, firstText, secondText);
-                    ret[0] =  differences.toArray(new Difference[differences.size()]);
+                    ret[0] =  differences.toArray(new Difference[0]);
                 } catch (IOException ioex) {
                     ret[0] = (IOException) ErrorManager.getDefault().annotate(ioex,
                             NbBundle.getMessage(CmdlineDiffProvider.class, "runtimeError", cmd));

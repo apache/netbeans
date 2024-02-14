@@ -81,7 +81,7 @@ public class SvnClientRefreshHandler implements ISVNNotifyListener {
     public void refresh() {
         File[] fileArray;
         synchronized(filesToRefresh) {
-            fileArray = filesToRefresh.toArray(new File[filesToRefresh.size()]);
+            fileArray = filesToRefresh.toArray(new File[0]);
             filesToRefresh.clear();
         }
         refresh(fileArray);

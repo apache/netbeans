@@ -198,7 +198,7 @@ public final class GlobalPathRegistry {
                 LOG.log(Level.FINER, "now have {0} paths of type {1}", new Object[] {l.size(), id});
             }
             if (!listeners.isEmpty() && !added.isEmpty()) {
-                _listeners = listeners.toArray(new GlobalPathRegistryListener[listeners.size()]);
+                _listeners = listeners.toArray(new GlobalPathRegistryListener[0]);
             }
         }
         if (_listeners != null) {
@@ -231,7 +231,7 @@ public final class GlobalPathRegistry {
                 LOG.log(Level.FINER, "now have {0} paths of type {1}", new Object[] {l.size(), id});
             }
             if (!listeners.isEmpty() && !removed.isEmpty()) {
-                _listeners = listeners.toArray(new GlobalPathRegistryListener[listeners.size()]);
+                _listeners = listeners.toArray(new GlobalPathRegistryListener[0]);
             }
         }
         if (_listeners != null) {

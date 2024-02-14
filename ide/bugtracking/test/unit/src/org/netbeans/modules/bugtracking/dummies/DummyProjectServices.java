@@ -70,7 +70,7 @@ public class DummyProjectServices implements ProjectServices {
                 }
             }
         }
-        return ret.toArray(new FileObject[ret.size()]);
+        return ret.toArray(new FileObject[0]);
     }
     
     @Override

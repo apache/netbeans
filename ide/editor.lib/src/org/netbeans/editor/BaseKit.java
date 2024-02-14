@@ -639,12 +639,12 @@ public class BaseKit extends DefaultEditorKit {
                 
                 for(org.netbeans.api.editor.settings.MultiKeyBinding mkb : mkbList) {
                     List<KeyStroke> keyStrokes = mkb.getKeyStrokeList();
-                    MultiKeyBinding editorMkb = new MultiKeyBinding(keyStrokes.toArray(new KeyStroke[keyStrokes.size()]), mkb.getActionName());
+                    MultiKeyBinding editorMkb = new MultiKeyBinding(keyStrokes.toArray(new KeyStroke[0]), mkb.getActionName());
                     editorMkbList.add(editorMkb);
                 }
                 
                 // go through all levels and collect key bindings
-                km.load(editorMkbList.toArray(new JTextComponent.KeyBinding[editorMkbList.size()]), getActionMap());
+                km.load(editorMkbList.toArray(new JTextComponent.KeyBinding[0]), getActionMap());
                 km.setDefaultAction(getActionMap().get(defaultKeyTypedAction));
 
                 kitKeymaps.put(mimePath, km);
@@ -905,7 +905,7 @@ public class BaseKit extends DefaultEditorKit {
             LOG.fine("} End of " + EditorPreferencesKeys.CUSTOM_ACTION_LIST + " for '" + getContentType() + "'"); //NOI18N
         }
         
-        return customActions == null ? null : customActions.toArray(new Action[customActions.size()]);
+        return customActions == null ? null : customActions.toArray(new Action[0]);
     }
     
     /**
@@ -4120,7 +4120,7 @@ public class BaseKit extends DefaultEditorKit {
                 kitKeymaps.remove(mimePath);
                 
                 keymap = getKeymap();
-                arr = components.toArray(new JTextComponent[components.size()]);
+                arr = components.toArray(new JTextComponent[0]);
             }
             
             Runnable pushKeymapChange = () -> {

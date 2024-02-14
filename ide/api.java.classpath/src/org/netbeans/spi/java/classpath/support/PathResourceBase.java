@@ -66,7 +66,7 @@ public abstract class PathResourceBase implements PathResourceImplementation {
         synchronized (this) {
             if (this.pListeners == null)
                 return;
-            _listeners = this.pListeners.toArray(new PropertyChangeListener[this.pListeners.size()]);
+            _listeners = this.pListeners.toArray(new PropertyChangeListener[0]);
         }
         PropertyChangeEvent event = new PropertyChangeEvent (this, propName, oldValue, newValue);
         for (PropertyChangeListener l : _listeners) {

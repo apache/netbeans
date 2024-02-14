@@ -122,7 +122,7 @@ class MultiBundleStructure extends BundleStructure implements Serializable {
                 files = new FileObject[] {obj.getPrimaryFile()};
                 return;
             }
-            files = listFileObjects.toArray(new FileObject[listFileObjects.size()]);
+            files = listFileObjects.toArray(new FileObject[0]);
             if (primaryEntry != getNthEntry(0)) {
                 //TODO XXX This means that primaryEntry has changed, so need to notify openSupport
                 primaryEntry = getNthEntry(0);
@@ -361,7 +361,7 @@ class MultiBundleStructure extends BundleStructure implements Serializable {
                 if(entries.isEmpty()){
                     return new PropertiesFileEntry[0];
                 } else {
-                    return entries.toArray(new PropertiesFileEntry[entries.size()]);
+                    return entries.toArray(new PropertiesFileEntry[0]);
                 }
             }
         }

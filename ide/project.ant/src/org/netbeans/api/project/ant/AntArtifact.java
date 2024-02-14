@@ -207,7 +207,7 @@ public abstract class AntArtifact {
                 l.add(fo);
             }
         }
-        return l.toArray(new FileObject[l.size()]);
+        return l.toArray(new FileObject[0]);
     }
     
     /**

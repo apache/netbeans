@@ -134,7 +134,7 @@ public class TokenContext {
     public TokenID[] getTokenIDs() {
         if (tokenIDs == null) {
             synchronized (tokenIDList) {
-                tokenIDs = (TokenID[])tokenIDList.toArray(new TokenID[tokenIDList.size()]);
+                tokenIDs = (TokenID[])tokenIDList.toArray(new TokenID[0]);
             }
         }
 
@@ -147,8 +147,7 @@ public class TokenContext {
     public TokenCategory[] getTokenCategories() {
         if (tokenCategories == null) {
             synchronized (tokenCategoryList) {
-                tokenCategories = (TokenCategory[])tokenCategoryList.toArray(
-                                      new TokenCategory[tokenCategoryList.size()]);
+                tokenCategories = (TokenCategory[])tokenCategoryList.toArray(new TokenCategory[0]);
             }
         }
 

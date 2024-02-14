@@ -154,7 +154,7 @@ class CategoryNode extends FilterNode {
             actionList.add( new Utils.SortCategoriesAction( n ) );
             actionList.add( null );
             actionList.add( new Utils.RefreshPaletteAction() );
-            actions = actionList.toArray( new Action[actionList.size()] );
+            actions = actionList.toArray(new Action[0]);
         }
         PaletteActions customActions = (PaletteActions)getParentNode().getLookup().lookup( PaletteActions.class );
         if( null != customActions ) {

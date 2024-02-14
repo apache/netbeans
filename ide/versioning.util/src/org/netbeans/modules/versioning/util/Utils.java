@@ -511,8 +511,8 @@ public final class Utils {
             Set<File> allFiles = new HashSet<File>(Arrays.asList(files));
             allFiles.removeAll(flat);
             return new File[][] {
-                flat.toArray(new File[flat.size()]),
-                allFiles.toArray(new File[allFiles.size()])
+                flat.toArray(new File[0]),
+                allFiles.toArray(new File[0])
             };
         }
     }
@@ -1492,7 +1492,7 @@ public final class Utils {
                 owners.add(vs);
             }
         }
-        return (VersioningSystem[]) owners.toArray(new VersioningSystem[owners.size()]);
+        return (VersioningSystem[]) owners.toArray(new VersioningSystem[0]);
     }
 
     private static class LogTask implements Runnable {
@@ -1500,7 +1500,7 @@ public final class Utils {
         public void run() {
             File[] folders;
             synchronized (foldersToCheck) {
-                folders = foldersToCheck.toArray(new File[foldersToCheck.size()]);
+                folders = foldersToCheck.toArray(new File[0]);
                 foldersToCheck.clear();
                 loggingTask = null;
             }
@@ -1697,7 +1697,7 @@ public final class Utils {
             File rootFile = FileUtil.toFile(srcRootFo);
             set.add(rootFile);
         }
-        return set.toArray(new File[set.size()]);
+        return set.toArray(new File[0]);
     }    
     
     public static void setAcceleratorBindings(String pathPrefix, Action... actions) {

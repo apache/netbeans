@@ -293,7 +293,7 @@ public class LibrariesTestUtil {
         @Override
         public LibraryTypeProvider[] getLibraryTypeProviders() {
             synchronized (providers) {
-                return providers.toArray(new LibraryTypeProvider[providers.size()]);
+                return providers.toArray(new LibraryTypeProvider[0]);
             }
         }
     }

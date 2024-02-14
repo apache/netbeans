@@ -85,7 +85,7 @@ class DiskMapTurboProvider implements TurboProvider {
         } else {
             Set<File> merged = new HashSet<>(Arrays.asList(arr2));
             merged.addAll(Arrays.asList(arr1));
-            return merged.toArray(new File[merged.size()]);
+            return merged.toArray(new File[0]);
         }
     }
 

@@ -57,7 +57,7 @@ public class SvnWcParser {
      */ 
     public ISVNStatus[] getStatus(File path, boolean descend, boolean getAll) throws LocalSubversionException {        
         List<ISVNStatus> l = getStatus(path, descend);
-        return l.toArray(new ISVNStatus[l.size()]);
+        return l.toArray(new ISVNStatus[0]);
     }
 
     private List<ISVNStatus> getStatus(File path, boolean descend) throws LocalSubversionException {
@@ -92,7 +92,7 @@ public class SvnWcParser {
                 for (String name : entries) {
                     childSet.add(new File(file, name));
                 }
-                children = childSet.toArray(new File[childSet.size()]);
+                children = childSet.toArray(new File[0]);
             } catch (IOException ex) {
                 throw new LocalSubversionException(ex);
             } catch (SAXException ex) {

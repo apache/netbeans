@@ -247,7 +247,7 @@ public class ProjectTestBase extends CssTestBase {
         } else {
             roots = Collections.EMPTY_LIST;
         }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        return ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
     }
 
     protected FileObject getSourcesFolder() {

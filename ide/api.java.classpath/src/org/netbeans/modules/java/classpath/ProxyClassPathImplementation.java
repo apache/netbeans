@@ -52,7 +52,7 @@ public class ProxyClassPathImplementation implements ClassPathImplementation {
             cpImpl.addPropertyChangeListener (WeakListeners.propertyChange(classPathsListener,cpImpl));
             impls.add (cpImpl);
         }
-        this.classPaths = impls.toArray(new ClassPathImplementation[impls.size()]);
+        this.classPaths = impls.toArray(new ClassPathImplementation[0]);
     }
 
 
@@ -114,7 +114,7 @@ public class ProxyClassPathImplementation implements ClassPathImplementation {
                 ProxyClassPathImplementation.this.resourcesCache = null;    //Clean the cache
                 if (ProxyClassPathImplementation.this.listeners == null)
                     return;
-                _listeners = ProxyClassPathImplementation.this.listeners.toArray(new PropertyChangeListener[ProxyClassPathImplementation.this.listeners.size()]);
+                _listeners = ProxyClassPathImplementation.this.listeners.toArray(new PropertyChangeListener[0]);
             }
             PropertyChangeEvent event = new PropertyChangeEvent (ProxyClassPathImplementation.this, evt.getPropertyName(),null,null);
             for (PropertyChangeListener l : _listeners) {

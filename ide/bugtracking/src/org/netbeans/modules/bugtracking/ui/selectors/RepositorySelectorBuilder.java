@@ -181,7 +181,7 @@ public final class RepositorySelectorBuilder implements ItemListener,
             }
         }
         
-        this.existingRepositories = l.toArray(new RepositoryImpl[l.size()]);
+        this.existingRepositories = l.toArray(new RepositoryImpl[0]);
     }
 
     public void setBugtrackingConnectors(DelegatingConnector[] connectors) {
@@ -443,7 +443,7 @@ public final class RepositorySelectorBuilder implements ItemListener,
                 result.add(new NewRepositoryInfo(connectors[i]));
             }
         }
-        return result.toArray(new NewRepositoryInfo[result.size()]);
+        return result.toArray(new NewRepositoryInfo[0]);
     }
 
     public RepositoryImpl getSelectedRepository() {

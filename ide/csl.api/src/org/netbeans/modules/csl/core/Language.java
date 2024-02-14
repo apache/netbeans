@@ -208,7 +208,7 @@ public final class Language {
      */
     public Action[] getEditorActions() {
         if (actions != null) {
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         } else {
             return new Action[0];
         }

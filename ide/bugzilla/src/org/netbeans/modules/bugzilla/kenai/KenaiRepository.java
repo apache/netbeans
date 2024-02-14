@@ -297,7 +297,7 @@ public class KenaiRepository extends BugzillaRepository implements PropertyChang
             }
         }
 
-        return ret.toArray(new QueryParameter[ret.size()]);
+        return ret.toArray(new QueryParameter[0]);
     }
 
     @Override

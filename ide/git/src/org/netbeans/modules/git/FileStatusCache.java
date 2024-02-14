@@ -343,7 +343,7 @@ public class FileStatusCache {
         }
         // check also the root files for status and add them eventually
         set.addAll(listFilesIntern(roots, includeStatus, false, repositories));
-        return set.toArray(new File[set.size()]);
+        return set.toArray(new File[0]);
     }
     
     /**

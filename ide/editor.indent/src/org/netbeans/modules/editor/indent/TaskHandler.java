@@ -240,7 +240,7 @@ public final class TaskHandler {
                 }
             }
             if (lookups.size() > 0) {
-                lookup = new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+                lookup = new ProxyLookup(lookups.toArray(new Lookup[0]));
             }
         }
 

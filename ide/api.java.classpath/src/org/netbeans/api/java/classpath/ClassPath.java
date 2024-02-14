@@ -1188,7 +1188,7 @@ public final class ClassPath {
             System.err.println("parsed size is not even!!");
             System.err.println("input = " + name);
         }
-        return parsed.toArray(new String[parsed.size()]);
+        return parsed.toArray(new String[0]);
     }
 
     /**

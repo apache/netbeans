@@ -864,7 +864,7 @@ class FilesystemInterceptor extends VCSInterceptor {
                     repositories = new HashSet<>(refreshedRepositories);
                     refreshedRepositories.clear();
                 }
-                GitUtils.headChanged(repositories.toArray(new File[repositories.size()]));
+                GitUtils.headChanged(repositories.toArray(new File[0]));
             }
         });
         private final GitRepositories gitRepositories = GitRepositories.getInstance();

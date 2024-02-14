@@ -235,7 +235,7 @@ public abstract class SvnCommand implements CommandNotificationListener {
         for (String arg : arguments.toArray()) {
             l.add(arg);
         }
-        return l.toArray(new String[l.size()]);
+        return l.toArray(new String[0]);
     }        
     
     private static StringBuilder toString(Arguments args, boolean scramble) {
@@ -443,7 +443,7 @@ public abstract class SvnCommand implements CommandNotificationListener {
         }
         
         String[] toArray() {
-            return args.toArray(new String[args.size()]);
+            return args.toArray(new String[0]);
         }
         
         int size() {

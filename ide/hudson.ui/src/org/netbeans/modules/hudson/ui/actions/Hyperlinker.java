@@ -43,7 +43,7 @@ public final class Hyperlinker {
         for (HudsonLogger logger : Lookup.getDefault().lookupAll(HudsonLogger.class)) {
             _sessions.add(logger.createSession(job));
         }
-        sessions = _sessions.toArray(new HudsonLogSession[_sessions.size()]);
+        sessions = _sessions.toArray(new HudsonLogSession[0]);
     }
 
     public void handleLine(String line, OutputWriter stream) {

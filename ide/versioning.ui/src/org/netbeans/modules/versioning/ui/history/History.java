@@ -101,7 +101,7 @@ public class History {
                 l.add(proxy);
             }
         }
-        return l.toArray(new VCSFileProxy[l.size()]);
+        return l.toArray(new VCSFileProxy[0]);
     }
 
 }

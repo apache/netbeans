@@ -344,6 +344,6 @@ public class ExportDiffChangesAction extends ContextAction {
                 roots.add(f);
             }
         }
-        return roots.toArray(new File[roots.size()]);
+        return roots.toArray(new File[0]);
     }
 }

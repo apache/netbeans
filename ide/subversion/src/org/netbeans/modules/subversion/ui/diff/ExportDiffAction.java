@@ -177,7 +177,7 @@ public class ExportDiffAction extends ContextAction {
                 Setup setup = (Setup) i.next();
                 setupFiles.add(setup.getBaseFile()); 
             }
-            root = getCommonParent(setupFiles.toArray(new File[setupFiles.size()]));
+            root = getCommonParent(setupFiles.toArray(new File[0]));
         } else {
             Context context = getContext(nodes);
             File [] files = SvnUtils.getModifiedFiles(context, FileInformation.STATUS_LOCAL_CHANGE);

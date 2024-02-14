@@ -376,7 +376,7 @@ public class ResolveConflictsExecutor extends SvnProgressSupport {
             }
         }
         if (generateDiffs) {
-            return diffList.toArray(new Difference[diffList.size()]);
+            return diffList.toArray(new Difference[0]);
         } else {
             return null;
         }

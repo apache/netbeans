@@ -629,7 +629,7 @@ public class EditorOperator extends TopComponentOperator {
                 return result;
             }
         });
-        return result.toArray(new Annotation[result.size()]);
+        return result.toArray(new Annotation[0]);
     }
 
     /**Gets all annotations for current editor (Document).
@@ -661,7 +661,7 @@ public class EditorOperator extends TopComponentOperator {
                 return result;
             }
         });
-        return result.toArray(new Annotation[result.size()]);
+        return result.toArray(new Annotation[0]);
     }
 
     /** Returns instance of org.netbeans.editor.Annotations object for this

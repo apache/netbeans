@@ -369,7 +369,7 @@ public class BundleStructure {
                 }
             }
         }
-        return list != null ? list.toArray(new String[list.size()]) : null;
+        return list != null ? list.toArray(new String[0]) : null;
     }
 
     public void setAllData(String key, String[] data) {

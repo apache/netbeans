@@ -395,7 +395,7 @@ class LibraryChooserGUI extends JPanel implements ExplorerManager.Provider, Help
             }
         }
         try {
-            explorer.setSelectedNodes(selection.toArray(new Node[selection.size()]));
+            explorer.setSelectedNodes(selection.toArray(new Node[0]));
         } catch (PropertyVetoException e) {
             //Ignore it
         }

@@ -186,7 +186,7 @@ public final class CslEditorKit extends NbEditorKit {
         }
 
         return TextAction.augmentList(superActions,
-            actions.toArray(new Action[actions.size()]));
+            actions.toArray(new Action[0]));
     }
 
     // -----------------------------------------------------------------------

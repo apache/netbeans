@@ -90,12 +90,10 @@ public class PositionsBagRandomTest extends NbTestCase {
                 }
                 
                 if (!leftHighlights.isEmpty()) {
-                    highestPair[0] = new Highlight(pointer, pointer, AttributesUtilities.createComposite(
-                        leftHighlights.toArray(new AttributeSet[leftHighlights.size()])));
+                    highestPair[0] = new Highlight(pointer, pointer, AttributesUtilities.createComposite(leftHighlights.toArray(new AttributeSet[0])));
                 }
                 if (!rightHighlights.isEmpty()) {
-                    highestPair[1] = new Highlight(pointer, pointer, AttributesUtilities.createComposite(
-                        rightHighlights.toArray(new AttributeSet[rightHighlights.size()])));
+                    highestPair[1] = new Highlight(pointer, pointer, AttributesUtilities.createComposite(rightHighlights.toArray(new AttributeSet[0])));
                 }
                 
                 // Find the composite container highlight at the position

@@ -411,7 +411,7 @@ public class BugzillaQuery {
         List<QueryNotifyListener> list = getNotifyListeners();
         QueryNotifyListener[] listeners;
         synchronized (list) {
-            listeners = list.toArray(new QueryNotifyListener[list.size()]);
+            listeners = list.toArray(new QueryNotifyListener[0]);
         }
         return listeners;
     }

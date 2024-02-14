@@ -221,7 +221,7 @@ public class TextSearchHighlighting extends AbstractHighlightsContainer implemen
                     true,
                     new SearchBlockHighlighting(INC_SEARCH_LAYER, context.getComponent())));
 
-            return layers.toArray(new HighlightsLayer[layers.size()]);
+            return layers.toArray(new HighlightsLayer[0]);
         }
 
     } // End of FactoryImpl class

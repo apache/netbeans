@@ -230,8 +230,8 @@ public class RepositoryNode extends AsynchronousNode<Collection<QueryImpl>> impl
             }
         }
         actions.add(null);
-        actions.addAll(Actions.getDefaultActions(selectedNodes.toArray(new TreeListNode[selectedNodes.size()])));
-        return actions.toArray(new Action[actions.size()]);
+        actions.addAll(Actions.getDefaultActions(selectedNodes.toArray(new TreeListNode[0])));
+        return actions.toArray(new Action[0]);
     }
 
     private Action getRepositoryAction(RepositoryNode... repositoryNodes) {

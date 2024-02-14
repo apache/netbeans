@@ -269,7 +269,7 @@ public final class ProxyPreferences extends Preferences implements PreferenceCha
             if (noEvents) {
                 return;
             }
-            listeners = prefListeners.toArray(new PreferenceChangeListener[prefListeners.size()]);
+            listeners = prefListeners.toArray(new PreferenceChangeListener[0]);
         }
 
         PreferenceChangeEvent myEvt = null;
@@ -309,7 +309,7 @@ public final class ProxyPreferences extends Preferences implements PreferenceCha
             if (noEvents) {
                 return;
             }
-            listeners = nodeListeners.toArray(new NodeChangeListener[nodeListeners.size()]);
+            listeners = nodeListeners.toArray(new NodeChangeListener[0]);
         }
 
         NodeChangeEvent myEvt = null;
@@ -337,7 +337,7 @@ public final class ProxyPreferences extends Preferences implements PreferenceCha
             if (noEvents) {
                 return;
             }
-            listeners = nodeListeners.toArray(new NodeChangeListener[nodeListeners.size()]);
+            listeners = nodeListeners.toArray(new NodeChangeListener[0]);
         }
 
         NodeChangeEvent myEvt = null;

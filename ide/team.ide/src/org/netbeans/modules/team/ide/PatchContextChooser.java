@@ -77,7 +77,7 @@ public class PatchContextChooser extends javax.swing.JPanel implements ExplorerM
             }
         });
         Children.Array children = new Children.Array();
-        children.add(nodes.toArray(new Node[nodes.size()]));
+        children.add(nodes.toArray(new Node[0]));
         AbstractNode root = new AbstractNode(children);
         manager.setRootContext(root);
         manager.addPropertyChangeListener(new PropertyChangeListener() {

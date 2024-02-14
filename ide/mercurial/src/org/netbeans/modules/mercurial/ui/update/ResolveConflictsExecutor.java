@@ -369,7 +369,7 @@ public class ResolveConflictsExecutor extends HgProgressSupport {
             }
         }
         if (generateDiffs) {
-            return diffList.toArray(new Difference[diffList.size()]);
+            return diffList.toArray(new Difference[0]);
         } else {
             return null;
         }

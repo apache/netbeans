@@ -97,7 +97,7 @@ public abstract class BackupFacility {
      * @throws java.io.IOException 
      */
     public final Handle backup(Collection<? extends FileObject> fileObjects) throws IOException {
-        return backup(fileObjects.toArray(new FileObject[fileObjects.size()]));
+        return backup(fileObjects.toArray(new FileObject[0]));
     }
     
     /**

@@ -2982,7 +2982,7 @@ public class RepositoryUpdaterTest extends IndexingTestBase {
             private void fireChange () {
                 ChangeListener[] _listeners;
                 synchronized (this) {
-                    _listeners = this.listeners.toArray(new ChangeListener[this.listeners.size()]);
+                    _listeners = this.listeners.toArray(new ChangeListener[0]);
                 }
                 ChangeEvent event = new ChangeEvent (this);
                 for (ChangeListener l : _listeners) {

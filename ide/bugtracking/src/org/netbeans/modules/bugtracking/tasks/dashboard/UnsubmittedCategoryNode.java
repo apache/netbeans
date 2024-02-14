@@ -56,7 +56,7 @@ public class UnsubmittedCategoryNode extends CategoryNode implements Submitable 
     @Override
     List<Action> getCategoryActions(List<TreeListNode> selectedNodes) {
         List<Action> actions = new ArrayList<Action>();
-        actions.addAll(Actions.getSubmitablePopupActions(selectedNodes.toArray(new TreeListNode[selectedNodes.size()])));
+        actions.addAll(Actions.getSubmitablePopupActions(selectedNodes.toArray(new TreeListNode[0])));
         return actions;
     }
 

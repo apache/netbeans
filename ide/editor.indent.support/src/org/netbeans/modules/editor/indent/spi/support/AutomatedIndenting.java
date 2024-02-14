@@ -127,7 +127,7 @@ public final class AutomatedIndenting {
 
         return new TypedTextInterceptor.Factory() {
             public TypedTextInterceptor createTypedTextInterceptor(MimePath mimePath) {
-                return createHotCharsIndenter(linePatterns.toArray(new Pattern [linePatterns.size()]));
+                return createHotCharsIndenter(linePatterns.toArray(new Pattern [0]));
             }
         };
     }

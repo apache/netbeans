@@ -253,7 +253,7 @@ public class NotificationsManager {
                     SvnClient client = Subversion.getInstance().getClient(repositoryUrl);
                     if (client != null) {
                         HashSet<File> files = entry.getValue();
-                        ISVNStatus[] statuses = client.getStatus(files.toArray(new File[files.size()]));
+                        ISVNStatus[] statuses = client.getStatus(files.toArray(new File[0]));
                         for (ISVNStatus status : statuses) {
                             if ((SVNStatusKind.UNVERSIONED.equals(status.getTextStatus())
                                     || SVNStatusKind.IGNORED.equals(status.getTextStatus()))) {
@@ -337,7 +337,7 @@ public class NotificationsManager {
             }
 
             File[] getFiles () {
-                return files.toArray(new File[files.size()]);
+                return files.toArray(new File[0]);
             }
 
             Long getRevision() {

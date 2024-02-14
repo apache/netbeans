@@ -169,13 +169,13 @@ public class VcsVisibilityQueryImplementation implements VisibilityQueryImplemen
                 LOG.log(Level.WARNING, "VCS visibility did not fire because of {0} which returns no FileObject", proxy); // NOI18N
             }
         }
-        fireVisibilityChanged(fileObjects.toArray(new FileObject[fileObjects.size()]));
+        fireVisibilityChanged(fileObjects.toArray(new FileObject[0]));
     }
     
     private void fireVisibilityChanged(FileObject[] files) {
         ChangeListener[] ls;
         synchronized(this) {
-            ls = listeners.toArray(new ChangeListener[listeners.size()]);
+            ls = listeners.toArray(new ChangeListener[0]);
         }
         ChangeEvent event = files == null ? new ChangeEvent(this) : new VisibilityQueryChangeEvent(this, files);
         for (ChangeListener l : ls) {
@@ -226,7 +226,7 @@ public class VcsVisibilityQueryImplementation implements VisibilityQueryImplemen
         public void run() {
             VCSFileProxy[] filesArray;
             synchronized(files) {
-                filesArray = files.toArray(new VCSFileProxy[files.size()]);
+                filesArray = files.toArray(new VCSFileProxy[0]);
                 files.clear();
             }
             fireVisibilityChanged(filesArray);            

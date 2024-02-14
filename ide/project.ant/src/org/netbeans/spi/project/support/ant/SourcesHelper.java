@@ -1019,7 +1019,7 @@ public final class SourcesHelper {
                 rootURLs.add(g.getRootFolder().toURL());
             }
             lastComputedRoots.put(type, rootURLs);
-            return groups.toArray(new SourceGroup[groups.size()]);
+            return groups.toArray(new SourceGroup[0]);
         }
         
         private synchronized void listen(File rootLocation) {

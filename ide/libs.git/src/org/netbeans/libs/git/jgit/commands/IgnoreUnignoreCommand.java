@@ -190,7 +190,7 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
     }
 
     public File[] getModifiedIgnoreFiles () {
-        return ignoreFiles.toArray(new File[ignoreFiles.size()]);
+        return ignoreFiles.toArray(new File[0]);
     }
 
     protected abstract MatchResult addStatement (List<IgnoreRule> ignoreRules, File gitIgnore, String path, boolean isDirectory, boolean forceWrite, boolean writable) throws IOException;

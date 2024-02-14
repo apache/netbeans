@@ -283,7 +283,7 @@ public class AnnotationsPanel extends JPanel implements ActionListener,
             v = getAnnotations (currentScheme);
         }
         toBeSaved.add(currentScheme);
-        lCategories.setListData (v.toArray(new AttributeSet[v.size()]));
+        lCategories.setListData (v.toArray(new AttributeSet[0]));
         if (lCategories.getModel ().getSize () > 0)
             lCategories.setSelectedIndex (0);
         refreshUI ();

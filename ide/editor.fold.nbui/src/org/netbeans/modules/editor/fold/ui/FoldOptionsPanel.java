@@ -245,7 +245,7 @@ final class FoldOptionsPanel extends javax.swing.JPanel implements ActionListene
         langMimes.sort(LANG_COMPARATOR);
         languageMimeTypes = langMimes;
         int idx = langSelect.getSelectedIndex();
-        langSelect.setModel(new DefaultComboBoxModel(languageMimeTypes.toArray(new Object[languageMimeTypes.size()])));
+        langSelect.setModel(new DefaultComboBoxModel(languageMimeTypes.toArray(new Object[0])));
         langSelect.setSelectedIndex(idx >= 0 && idx < langSelect.getItemCount() ? idx : 0);
     }
     

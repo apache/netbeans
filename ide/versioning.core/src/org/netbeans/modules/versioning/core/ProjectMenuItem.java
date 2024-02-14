@@ -91,7 +91,7 @@ public class ProjectMenuItem extends AbstractAction implements Presenter.Popup {
                 }
             }
         }
-        return popups.toArray(new JComponent[popups.size()]);        
+        return popups.toArray(new JComponent[0]);        
     }
 
     private VersioningSystem getLocalHistory (Set<VCSFileProxy> rootFiles) {
@@ -307,7 +307,7 @@ public class ProjectMenuItem extends AbstractAction implements Presenter.Popup {
                         allvsActions.addAll(Arrays.asList(vsActions));
                     }
                 }
-                actions = allvsActions.toArray(new Action[allvsActions.size()]);
+                actions = allvsActions.toArray(new Action[0]);
             } else {
                 // specific versioning system menu
                 actions = createVersioningSystemActions(owner, nodes, false);

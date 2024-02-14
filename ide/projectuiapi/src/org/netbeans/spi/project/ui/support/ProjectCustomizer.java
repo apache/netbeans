@@ -659,7 +659,7 @@ public final class ProjectCustomizer {
                     }
                 }
             }
-            return toRet.toArray(new ProjectCustomizer.Category[toRet.size()]);
+            return toRet.toArray(new ProjectCustomizer.Category[0]);
         }
         
         private void includeSubcats(ProjectCustomizer.Category[] cats, ProjectCustomizer.CompositeCategoryProvider provider) {

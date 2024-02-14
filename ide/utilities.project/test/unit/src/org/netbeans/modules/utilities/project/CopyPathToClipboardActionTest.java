@@ -169,7 +169,7 @@ public class CopyPathToClipboardActionTest extends NbTestCase {
         Collection<String> paths = action.getSelectedPathsForDataObjects();
         assertEquals("Duplicate shadow file should be ignored",
                 3, paths.size());
-        String[] pathsArray = paths.toArray(new String[paths.size()]);
+        String[] pathsArray = paths.toArray(new String[0]);
         // check that collection is sorted
         assertTrue(pathsArray[0].contains("test1")); //test1/A/TestClass.java
         assertTrue(pathsArray[1].contains("archive.zip")); //test2/archive.zip?

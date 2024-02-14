@@ -139,7 +139,7 @@ public final class ScopePanel extends javax.swing.JPanel {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    scopeCombobox.setModel(new DefaultComboBoxModel(scopes.toArray(new ScopeProvider[scopes.size()])));
+                    scopeCombobox.setModel(new DefaultComboBoxModel(scopes.toArray(new ScopeProvider[0])));
                     ScopePanel.this.btnCustomScope.setVisible(customizable.get());
                     String preselectId = preferences.get(preferencesKey, null);
                     if (preselectId == null || isNumeric(preselectId)) { // Needed for the old preferences of Java's Where Used Panel.

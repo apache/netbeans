@@ -233,8 +233,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, PhpSource
             cp = cache.get(ClassPathCache.PLATFORM);
             if (cp == null) {
                 List<FileObject> internalFolders = CommonPhpSourcePath.getInternalPath();
-                ClassPath internalClassPath = ClassPathSupport.createClassPath(
-                        internalFolders.toArray(new FileObject[internalFolders.size()]));
+                ClassPath internalClassPath = ClassPathSupport.createClassPath(internalFolders.toArray(new FileObject[0]));
                 ClassPath includePath = ClassPathFactory.createClassPath(
                         ProjectClassPathSupport.createPropertyBasedClassPathImplementation(projectDirectory, evaluator,
                         new String[] {PhpProjectProperties.INCLUDE_PATH, PhpProjectProperties.PRIVATE_INCLUDE_PATH}));

@@ -222,7 +222,7 @@ public final class CommandUtils {
     public static FileObject[] filesForContext(Lookup context) {
         assert context != null;
         Collection<? extends FileObject> files = context.lookupAll(FileObject.class);
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
     }
 
     /**
@@ -248,7 +248,7 @@ public final class CommandUtils {
             return new FileObject[0];
         }
         List<FileObject> fileObjects = getFileObjects(nodes);
-        return fileObjects.toArray(new FileObject[fileObjects.size()]);
+        return fileObjects.toArray(new FileObject[0]);
     }
 
     /**
@@ -547,7 +547,7 @@ public final class CommandUtils {
             }
             retval.add(file);
         }
-        return (!retval.isEmpty()) ? retval.toArray(new FileObject[retval.size()]) : null;
+        return (!retval.isEmpty()) ? retval.toArray(new FileObject[0]) : null;
     }
 
 }

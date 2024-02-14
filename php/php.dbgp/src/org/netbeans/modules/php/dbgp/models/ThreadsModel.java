@@ -125,7 +125,7 @@ public class ThreadsModel extends ViewModelSupport
             ArrayList<DebugSession> list = new ArrayList<>();
             if (debugSession != null) {list.add(debugSession);}
             List<DebugSession> result = list.subList( from , end );
-            return result.toArray( new Object[ result.size() ] );
+            return result.toArray(new Object[0]);
         }
 
         throw new UnknownTypeException(parent);

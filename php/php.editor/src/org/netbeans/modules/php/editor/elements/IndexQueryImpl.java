@@ -1142,7 +1142,7 @@ public final class IndexQueryImpl implements ElementQuery.Index {
                         }
                     }
                 }
-                return filters.toArray(new ElementFilter[filters.size()]);
+                return filters.toArray(new ElementFilter[0]);
             }
         };
     }

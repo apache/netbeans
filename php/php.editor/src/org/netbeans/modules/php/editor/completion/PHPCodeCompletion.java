@@ -1942,7 +1942,7 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
             }
         }
         if (enclosingTypeNameKind != null && enclosingTypes == null) {
-            final ElementFilter forFiles = ElementFilter.forFiles(preferedFileObjects.toArray(new FileObject[preferedFileObjects.size()]));
+            final ElementFilter forFiles = ElementFilter.forFiles(preferedFileObjects.toArray(new FileObject[0]));
             Set<TypeElement> indexTypes = forFiles.prefer(request.index.getTypes(enclosingTypeNameKind));
             if (!indexTypes.isEmpty()) {
                 enclosingTypes = new HashSet<>(indexTypes);

@@ -129,7 +129,7 @@ public class VariablesModel extends ViewModelSupport implements TreeModel, Table
                 }
                 int end = Math.min(list.size(), to);
                 List<ModelNode> contexts = list.subList(from, end);
-                return contexts.toArray(new Object[contexts.size()]);
+                return contexts.toArray(new Object[0]);
             } else if (parent instanceof ModelNode) {
                 usedParent = (ModelNode) parent;
             }

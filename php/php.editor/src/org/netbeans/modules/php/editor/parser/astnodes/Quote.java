@@ -52,7 +52,7 @@ public class Quote extends Expression {
     }
 
     public Quote(int start, int end, List<Exception> expressions, Quote.Type type) {
-        this(start, end, expressions == null ? new Expression[0] : expressions.toArray(new Expression[expressions.size()]), type);
+        this(start, end, expressions == null ? new Expression[0] : expressions.toArray(new Expression[0]), type);
     }
 
     /**

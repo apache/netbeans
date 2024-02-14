@@ -46,7 +46,7 @@ public class StaticStatement extends Statement {
     }
 
     public StaticStatement(int start, int end, List<Exception> expressions) {
-        this(start, end, expressions == null ? null : expressions.toArray(new Expression[expressions.size()]));
+        this(start, end, expressions == null ? null : expressions.toArray(new Expression[0]));
     }
 
     /**
@@ -63,7 +63,7 @@ public class StaticStatement extends Statement {
                 vars.add((Variable) ass.getLeftHandSide());
             }
         }
-        return vars.toArray(new Variable[vars.size()]);
+        return vars.toArray(new Variable[0]);
     }
 
     /**

@@ -150,7 +150,7 @@ public class CompositePanelProviderImpl implements ProjectCustomizer.CompositeCa
                     FRAMEWORKS,
                     NbBundle.getMessage(CustomizerProviderImpl.class, "LBL_Config_Frameworks"),
                     null,
-                    subcategories.toArray(new ProjectCustomizer.Category[subcategories.size()]));
+                    subcategories.toArray(new ProjectCustomizer.Category[0]));
         } else if (TESTING.equals(name)) {
             fillTestingProviderPanels(uiProps, context);
             List<ProjectCustomizer.Category> subcategories = sortCategories(testingProviderPanels.keySet());
@@ -158,9 +158,10 @@ public class CompositePanelProviderImpl implements ProjectCustomizer.CompositeCa
                     TESTING,
                     Bundle.CompositePanelProviderImpl_category_testing_title(),
                     null,
-                    subcategories.toArray(new ProjectCustomizer.Category[subcategories.size()]));
+                    subcategories.toArray(new ProjectCustomizer.Category[0]));
         } else if (TESTING_SELENIUM.equals(name)) {
-            toReturn = ProjectCustomizer.Category.create(TESTING_SELENIUM,
+            toReturn = ProjectCustomizer.Category.create(
+                    TESTING_SELENIUM,
                     Bundle.CompositePanelProviderImpl_category_selenium_testing_title(),
                     null);
         } else if (LICENSE.equals(name)) {

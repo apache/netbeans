@@ -289,7 +289,7 @@ public class EntityMappingsImpl implements EntityMappings {
 
     public MappedSuperclass[] getMappedSuperclass() {
         Collection<MappedSuperclassImpl> mappedSuperclasses = mappedSuperclassManager.getObjects();
-        return mappedSuperclasses.toArray(new MappedSuperclass[mappedSuperclasses.size()]);
+        return mappedSuperclasses.toArray(new MappedSuperclass[0]);
     }
 
     public int addMappedSuperclass(MappedSuperclass value) {
@@ -322,7 +322,7 @@ public class EntityMappingsImpl implements EntityMappings {
 
     public Entity[] getEntity() {
         Collection<EntityImpl> entities = entityManager.getObjects();
-        return entities.toArray(new Entity[entities.size()]);
+        return entities.toArray(new Entity[0]);
     }
 
     public int addEntity(Entity value) {
@@ -355,7 +355,7 @@ public class EntityMappingsImpl implements EntityMappings {
 
     public Embeddable[] getEmbeddable() {
         Collection<EmbeddableImpl> embeddables = embeddableManager.getObjects();
-        return embeddables.toArray(new Embeddable[embeddables.size()]);
+        return embeddables.toArray(new Embeddable[0]);
     }
 
     public int addEmbeddable(Embeddable value) {

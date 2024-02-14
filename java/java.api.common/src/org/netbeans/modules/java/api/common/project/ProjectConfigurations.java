@@ -132,7 +132,7 @@ public class ProjectConfigurations {
         Collections.addAll(providers, additionalPropertyProviders);
         return PropertyUtils.sequentialPropertyEvaluator(
             helper.getStockPropertyPreprovider(),
-            providers.toArray(new PropertyProvider[providers.size()]));
+            providers.toArray(new PropertyProvider[0]));
     }
 
     /**

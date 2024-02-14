@@ -249,7 +249,7 @@ public final class EncapsulateFieldUI implements RefactoringUI {
             if (h.isEmpty()) {
                 return create(info, startOffset, handles[0]);
             }
-            return create(info, -1, h.toArray(new TreePathHandle[h.size()]));
+            return create(info, -1, h.toArray(new TreePathHandle[0]));
         }
     }
 }

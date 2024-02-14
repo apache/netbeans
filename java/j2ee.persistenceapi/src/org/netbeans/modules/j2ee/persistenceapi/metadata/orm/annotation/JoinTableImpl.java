@@ -101,7 +101,7 @@ public class JoinTableImpl implements JoinTable {
     public JoinColumn[] getJoinColumn() {
         @SuppressWarnings("unchecked") // can this be avoided?
         List<JoinColumn> result = parseResult.get("joinColumn", List.class); // NOI18N
-        return result.toArray(new JoinColumn[result.size()]);
+        return result.toArray(new JoinColumn[0]);
     }
 
     public int addJoinColumn(JoinColumn value) {
@@ -137,7 +137,7 @@ public class JoinTableImpl implements JoinTable {
     public JoinColumn[] getInverseJoinColumn() {
         @SuppressWarnings("unchecked") // can this be avoided?
         List<JoinColumn> result = parseResult.get("inverseJoinColumn", List.class); // NOI18N
-        return result.toArray(new JoinColumn[result.size()]);
+        return result.toArray(new JoinColumn[0]);
     }
 
     public int addInverseJoinColumn(JoinColumn value) {

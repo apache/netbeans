@@ -321,7 +321,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         public void indexingComplete(Set<URL> indexedRoots) {
             TextDocumentServiceImpl[] delegates;
             synchronized (this) {
-                delegates = this.delegates.toArray(new TextDocumentServiceImpl[this.delegates.size()]);
+                delegates = this.delegates.toArray(new TextDocumentServiceImpl[0]);
             }
             for (TextDocumentServiceImpl delegate : delegates) {
                 //augmenting the lookup with NbCodeLanguageClient, so that the

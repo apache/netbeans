@@ -166,7 +166,7 @@ public class FakeLayoutMapper implements VisualMapper {
         if (metacomp instanceof RADVisualContainer) {
             List<String> l = collectRootLayoutSubComponents((RADVisualContainer)metacomp, null);
             if (l != null) {
-                return l.toArray(new String[l.size()]);
+                return l.toArray(new String[0]);
             }
         }
         return null;

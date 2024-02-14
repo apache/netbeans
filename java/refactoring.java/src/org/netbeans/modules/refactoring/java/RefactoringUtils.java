@@ -696,11 +696,11 @@ public class RefactoringUtils {
             }
         }
 
-        ClassPath rcp = ClassPathSupport.createClassPath(dependentSourceRoots.toArray(new URL[dependentSourceRoots.size()]));
+        ClassPath rcp = ClassPathSupport.createClassPath(dependentSourceRoots.toArray(new URL[0]));
         if (compile == null) {
             compile = nullPath;
         }
-        compile = merge(compile, ClassPathSupport.createClassPath(dependentCompileRoots.toArray(new URL[dependentCompileRoots.size()])));
+        compile = merge(compile, ClassPathSupport.createClassPath(dependentCompileRoots.toArray(new URL[0])));
         if (boot == null) {
             boot = JavaPlatform.getDefault().getBootstrapLibraries();
         }
@@ -1093,7 +1093,7 @@ public class RefactoringUtils {
                 }
             }
         }
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        return ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
     }
 
     public static boolean isFromEditor(EditorCookie ec) {

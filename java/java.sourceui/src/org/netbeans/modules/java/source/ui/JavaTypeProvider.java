@@ -714,7 +714,7 @@ public class JavaTypeProvider implements TypeProvider {
                 final Set<String> allPackages = new HashSet<>();
                 index.getPackageNames("", false, allPackages);  //NOI18N
                 final Set<? extends String> packages = filterPackages(packageName, allPackages);
-                searchScope = ClassIndex.createPackageSearchScope(baseSearchScope, packages.toArray(new String[packages.size()]));
+                searchScope = ClassIndex.createPackageSearchScope(baseSearchScope, packages.toArray(new String[0]));
                 kind = translateSearchType(typeName, kind);
             } else {
                 //simple name

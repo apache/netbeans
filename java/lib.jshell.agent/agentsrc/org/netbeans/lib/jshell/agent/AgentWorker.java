@@ -219,7 +219,7 @@ public class AgentWorker extends RemoteExecutionControl implements Executor, Run
     private void installNewClassLoader(ClassLoader delegate) {
         lastClassLoader = delegate;
         loader = new NbRemoteLoader(delegate, loader, 
-                additionalClasspath.toArray(new URL[additionalClasspath.size()]));
+                additionalClasspath.toArray(new URL[0]));
     }
 
     @Override

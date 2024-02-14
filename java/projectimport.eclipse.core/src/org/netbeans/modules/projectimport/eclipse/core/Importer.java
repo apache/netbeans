@@ -121,7 +121,7 @@ final class Importer {
      * Gets imported projects. Call after the importing <code>isDone()</code>.
      */
     Project[] getProjects() {
-        return nbProjects.toArray(new Project[nbProjects.size()]);
+        return nbProjects.toArray(new Project[0]);
     }
     
     private Project importProject(final EclipseProject eclProject, final List<String> importProblems) {

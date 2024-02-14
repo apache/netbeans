@@ -1247,7 +1247,7 @@ public class ElementJavadoc {
             if (cp != null) {
                 cps.add(cp);
             }
-            cp = ClassPathSupport.createProxyClassPath(cps.toArray(new ClassPath[cps.size()]));
+            cp = ClassPathSupport.createProxyClassPath(cps.toArray(new ClassPath[0]));
             String toSearch = SourceUtils.getJVMSignature(handle)[0].replace('.', '/');
             if (handle.getKind() != ElementKind.PACKAGE) {
                 toSearch += ".class"; //NOI18N

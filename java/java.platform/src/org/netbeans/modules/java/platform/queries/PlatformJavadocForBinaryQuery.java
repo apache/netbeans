@@ -140,7 +140,7 @@ public class PlatformJavadocForBinaryQuery implements JavadocForBinaryQueryImple
                         break;
                     }
                 }
-                this.cachedRoots = l.toArray(new URL[l.size()]);
+                this.cachedRoots = l.toArray(new URL[0]);
             }
             return this.cachedRoots;
         }

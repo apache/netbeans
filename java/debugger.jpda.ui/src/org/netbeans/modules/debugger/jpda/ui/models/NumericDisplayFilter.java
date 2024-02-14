@@ -187,7 +187,7 @@ NodeActionsProviderFilter, Constants {
             }
         }
         myActions.addAll(Arrays.asList(actions));
-        return (Action[]) myActions.toArray(new Action[myActions.size()]);
+        return (Action[]) myActions.toArray(new Action[0]);
     }
 
     

@@ -155,7 +155,7 @@ public class ElementNode extends AbstractNode implements Iterable<ElementNode> {
                 actions.add(null);
             }
             actions.addAll(Arrays.asList(panelActions));
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
     }
     

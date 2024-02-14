@@ -320,7 +320,7 @@ final class FixPlatform extends javax.swing.JPanel {
                 }
                 return p1.getDisplayName().compareTo(p2.getDisplayName());
             });
-            platforms  = newPlatfs.toArray(new JavaPlatform[newPlatfs.size()]);
+            platforms  = newPlatfs.toArray(new JavaPlatform[0]);
             setSelectedItem(toSelect);
         }
 

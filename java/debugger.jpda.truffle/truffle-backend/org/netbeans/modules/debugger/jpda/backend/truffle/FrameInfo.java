@@ -57,7 +57,7 @@ final class FrameInfo {
             stackFramesArray.add(sf);
         }
         frame = topStackFrame;
-        stackTrace = stackFramesArray.toArray(new DebugStackFrame[stackFramesArray.size()]);
+        stackTrace = stackFramesArray.toArray(new DebugStackFrame[0]);
         LanguageInfo sfLang = topStackFrame.getLanguage();
         boolean isHost = supportsJavaFrames && isHost(topStackFrame);
         topFrame = topStackFrame.getName() + "\n" + isHost + "\n" +

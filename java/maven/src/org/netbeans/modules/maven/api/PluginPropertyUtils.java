@@ -353,7 +353,7 @@ public class PluginPropertyUtils {
                             String chvalue = ch.getValue() == null ? "" : ch.getValue().trim();  //NOI18N
                             toRet.add(chvalue);  //NOI18N
                         }
-                        return toRet.toArray(new String[toRet.size()]);
+                        return toRet.toArray(new String[0]);
                     }
                 }
                 return null;

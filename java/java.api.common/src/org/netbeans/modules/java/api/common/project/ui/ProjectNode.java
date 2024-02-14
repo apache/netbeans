@@ -220,7 +220,7 @@ class ProjectNode extends AbstractNode {
         @Override
         public void showJavadoc() {
             Set<URL> us = findJavadoc();
-            URL[] urls = us.toArray(new URL[us.size()]);
+            URL[] urls = us.toArray(new URL[0]);
             URL pageURL = ShowJavadocAction.findJavadoc("overview-summary.html",urls);
             if (pageURL == null) {
                 pageURL = ShowJavadocAction.findJavadoc("index.html",urls);

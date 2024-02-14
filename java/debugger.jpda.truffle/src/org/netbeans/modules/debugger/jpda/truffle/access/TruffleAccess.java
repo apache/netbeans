@@ -569,7 +569,7 @@ public class TruffleAccess implements JPDABreakpointListener {
             i = fillVars(debugger, variables, varsArr, hasReceiver, i);
             scopes.add(new TruffleScope(scopeName, variables));
         }
-        return scopes.toArray(new TruffleScope[scopes.size()]);
+        return scopes.toArray(new TruffleScope[0]);
     }
     
     private static int fillVars(JPDADebugger debugger, TruffleVariable[] vars, Field[] varsArr, boolean hasReceiver, int i) {

@@ -358,6 +358,6 @@ public final class SourceJavadocAttacherUtil {
                 result.add(file);
             }
         }
-        return result.toArray(new File[result.size()]);
+        return result.toArray(new File[0]);
     }
 }

@@ -101,8 +101,8 @@ final class TestQuery implements MultipleRootsUnitTestForSourceQueryImplementati
             }
         }
         return new URL[][] {
-            sources.toArray(new URL[sources.size()]),
-            tests.toArray(new URL[tests.size()]),
+            sources.toArray(new URL[0]),
+            tests.toArray(new URL[0]),
         };
     }
 

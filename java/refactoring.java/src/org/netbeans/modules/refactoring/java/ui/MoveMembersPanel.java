@@ -350,7 +350,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                                 return COLLATOR.compare(p1.getDisplayName(), p2.getDisplayName());
                             }
                         });
-                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[items.size()]));
+                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[0]));
                     } else {
                         model = new DefaultComboBoxModel();
                     }

@@ -231,7 +231,7 @@ public class ExtractSuperclassPanel extends JPanel implements CustomRefactoringP
             }
         }
         // return the array of selected members
-        return (MemberInfo[]) list.toArray(new MemberInfo[list.size()]);
+        return (MemberInfo[]) list.toArray(new MemberInfo[0]);
     }
     
     // --- GENERATED CODE ------------------------------------------------------

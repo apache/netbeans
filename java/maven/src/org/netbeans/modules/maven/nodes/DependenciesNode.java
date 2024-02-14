@@ -135,7 +135,7 @@ public class DependenciesNode extends AbstractNode {
         toRet.addAll(Utilities.actionsForPath("Projects/org-netbeans-modules-maven/DependenciesActions")); //NOI18N
         toRet.add(null);
         toRet.add(new DependencyNode.ShowManagedStateAction());
-        return toRet.toArray(new Action[toRet.size()]);
+        return toRet.toArray(new Action[0]);
     }
     
     private static class DependenciesChildren extends ChildFactory<DependencyWrapper> implements ChangeListener {

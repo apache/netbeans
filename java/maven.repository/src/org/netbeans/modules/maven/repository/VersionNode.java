@@ -180,7 +180,7 @@ public class VersionNode extends AbstractNode {
         actions.add(new DownloadAction(artifact, false));
         actions.add(new DownloadAction(artifact, true));
         actions.add(CopyAction.get(CopyAction.class));
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     @Override

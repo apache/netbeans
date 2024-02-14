@@ -118,7 +118,7 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
             }
         });
         platforms.addAll(Arrays.asList(JavaPlatformManager.getDefault().getInstalledPlatforms()));
-        javaPlatform.setModel(new DefaultComboBoxModel(platforms.toArray(new JavaPlatform[platforms.size()])));
+        javaPlatform.setModel(new DefaultComboBoxModel(platforms.toArray(new JavaPlatform[0])));
         JavaPlatform pf = jdkConf.getSelectedPlatform();
         if (pf == null) {
             pf = JavaPlatformManager.getDefault().getDefaultPlatform();

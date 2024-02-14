@@ -240,7 +240,7 @@ public class InspectAndRefactorPanel extends javax.swing.JPanel implements Popup
             if (o!=null)
                 a.add(o);
         }
-        return a.toArray(new Object[a.size()]);
+        return a.toArray(new Object[0]);
     }
 
     /** This method is called from within the constructor to

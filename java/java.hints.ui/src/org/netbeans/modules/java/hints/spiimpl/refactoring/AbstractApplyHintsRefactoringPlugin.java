@@ -608,7 +608,7 @@ public abstract class AbstractApplyHintsRefactoringPlugin extends ProgressProvid
             }
 
             private synchronized ProgressListener[] getListenersCopy() {
-                return progressListenerList.toArray(new ProgressListener[progressListenerList.size()]);
+                return progressListenerList.toArray(new ProgressListener[0]);
             }
 
             private void log(Exception e) {

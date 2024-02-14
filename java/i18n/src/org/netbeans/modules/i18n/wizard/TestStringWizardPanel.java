@@ -400,7 +400,7 @@ final class TestStringWizardPanel extends JPanel {
             
             if (columnIndex == COLUMN_INDEX_VALUE) {
                 Collection<I18nString> i18nStrings = getStringMap().values();
-                I18nString i18nString = i18nStrings.toArray(new I18nString[i18nStrings.size()])[rowIndex];
+                I18nString i18nString = i18nStrings.toArray(new I18nString[0])[rowIndex];
 
                 i18nString.setValue(value.toString());
             }

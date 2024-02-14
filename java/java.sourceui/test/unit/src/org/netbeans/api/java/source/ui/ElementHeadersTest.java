@@ -91,12 +91,11 @@ public class ElementHeadersTest extends NbTestCase {
         List<Object> extras = new ArrayList<>();
         extras.add(JavaDataLoader.class);
         extras.addAll(extraServicesInLookup);
-        SourceUtilsTestUtil.prepareTest(
-                new String[] { 
+        SourceUtilsTestUtil.prepareTest(new String[] { 
                     "org/netbeans/modules/java/platform/resources/layer.xml",
                     "org/netbeans/modules/java/j2seplatform/resources/layer.xml" 
                 }, 
-                extras.toArray(new Object[extras.size()])
+                extras.toArray(new Object[0])
         );
 
         clearWorkDir();

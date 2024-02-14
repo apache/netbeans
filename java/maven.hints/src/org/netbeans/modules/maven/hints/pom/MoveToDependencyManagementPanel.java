@@ -149,7 +149,7 @@ public final class MoveToDependencyManagementPanel extends javax.swing.JPanel im
                     nds.add(new POMNode(fl, mdl, lookup));
                 }
             }
-            return nds.toArray(new Node[0]);
+            return nds.toArray(Node[]::new);
         }
 
     }

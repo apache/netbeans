@@ -409,7 +409,7 @@ public final class JavaReference {
             if (typeId.length() > 0) {
                 paramList.add(typeId.toString());
             }
-            return paramList.toArray(new String[paramList.size()]);
+            return paramList.toArray(new String[0]);
         }
 
         void addTypeToParamList() {

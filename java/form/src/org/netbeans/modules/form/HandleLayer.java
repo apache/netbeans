@@ -993,7 +993,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
         if (compList == null) { // just one component
             return new Component[] { deepestComp };
         } else {
-            return compList.toArray(new Component[compList.size()]);
+            return compList.toArray(new Component[0]);
         }
     }
 
@@ -1331,7 +1331,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
         }
 
         return workingComps.isEmpty() ? null :
-            workingComps.toArray(new RADVisualComponent[workingComps.size()]);
+            workingComps.toArray(new RADVisualComponent[0]);
     }
 
     boolean endDragging(MouseEvent e) {

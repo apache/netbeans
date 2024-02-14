@@ -190,7 +190,7 @@ public class NonVisualTray extends JPanel implements ExplorerManager.Provider {
                 }
                 try {
                     updating = true;
-                    manager.setSelectedNodes(list.toArray(new Node[list.size()]));
+                    manager.setSelectedNodes(list.toArray(new Node[0]));
                 } catch (PropertyVetoException pvex) {
                 } finally {
                     updating = false;
@@ -308,7 +308,7 @@ public class NonVisualTray extends JPanel implements ExplorerManager.Provider {
                     actionList.remove(action);
                 }
             }
-            return actionList.toArray(new Action[actionList.size()]);
+            return actionList.toArray(new Action[0]);
         }
         
     }

@@ -207,7 +207,7 @@ final class EclipseWizardIterator implements
                 names.add(comp.getName());
             }
         }
-        return names.toArray(new String[names.size()]);
+        return names.toArray(new String[0]);
     }
     
     void updateErrorMessage() {

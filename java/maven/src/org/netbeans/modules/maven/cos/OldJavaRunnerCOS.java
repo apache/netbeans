@@ -315,7 +315,7 @@ public class OldJavaRunnerCOS {
                     Logger.getLogger(CosChecker.class.getName()).log(Level.INFO, "Cannot convert ''{0}'' to URL.", add);
                 }
             }
-            ClassPath addCp = ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+            ClassPath addCp = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
             cp = ClassPathSupport.createProxyClassPath(cp, addCp);
         }
         params.put(JavaRunner.PROP_EXECUTE_CLASSPATH, cp);

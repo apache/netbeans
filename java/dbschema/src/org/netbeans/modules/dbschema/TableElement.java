@@ -428,7 +428,7 @@ public final class TableElement extends DBElement implements ColumnElementHolder
 		if (keys == null)
             return null;
 
-		return (keys.toArray(new UniqueKeyElement[keys.size()]));
+		return (keys.toArray(new UniqueKeyElement[0]));
 	}
 
 	/** Finds a unique key by name.

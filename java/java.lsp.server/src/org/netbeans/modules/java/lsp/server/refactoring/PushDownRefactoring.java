@@ -187,7 +187,7 @@ public final class PushDownRefactoring extends CodeRefactoring {
                 }
             }, true);
             org.netbeans.modules.refactoring.java.api.PushDownRefactoring refactoring = new org.netbeans.modules.refactoring.java.api.PushDownRefactoring(TreePathHandle.from(sourceHandle, info));
-            refactoring.setMembers(memberHandles.toArray(new MemberInfo[memberHandles.size()]));
+            refactoring.setMembers(memberHandles.toArray(new MemberInfo[0]));
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
             client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "PushDown")));
         } catch (Exception ex) {

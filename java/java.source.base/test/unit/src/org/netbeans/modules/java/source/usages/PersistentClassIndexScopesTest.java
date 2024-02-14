@@ -94,9 +94,7 @@ public class PersistentClassIndexScopesTest extends NbTestCase {
         final Set<String> pkgs = new HashSet<>();
         index.getPackageNames("", true, pkgs);
         assertEquals(PKG_COUNT, pkgs.size());
-        scopes.add(ClassIndex.createPackageSearchScope(
-            ClassIndex.SearchScope.SOURCE,
-            pkgs.toArray(new String[pkgs.size()])));
+        scopes.add(ClassIndex.createPackageSearchScope(ClassIndex.SearchScope.SOURCE, pkgs.toArray(new String[0])));
         index.getDeclaredElements(
                 "", //NOI18N
                 ClassIndex.NameKind.PREFIX,
@@ -125,9 +123,7 @@ public class PersistentClassIndexScopesTest extends NbTestCase {
         scopes.clear();
         final Set<String> pkgs = new HashSet<>();
         pkgs.add(String.format(PKG_FORMAT, PKG_NAME, 0));
-        scopes.add(ClassIndex.createPackageSearchScope(
-            ClassIndex.SearchScope.SOURCE,
-            pkgs.toArray(new String[pkgs.size()])));
+        scopes.add(ClassIndex.createPackageSearchScope(ClassIndex.SearchScope.SOURCE, pkgs.toArray(new String[0])));
         index.getDeclaredElements(
                 "", //NOI18N
                 ClassIndex.NameKind.PREFIX,
@@ -142,9 +138,7 @@ public class PersistentClassIndexScopesTest extends NbTestCase {
         pkgs.add(String.format(PKG_FORMAT, PKG_NAME, 0));
         pkgs.add(String.format(PKG_FORMAT, PKG_NAME, 1));
         pkgs.add(String.format(PKG_FORMAT, PKG_NAME, 2));
-        scopes.add(ClassIndex.createPackageSearchScope(
-            ClassIndex.SearchScope.SOURCE,
-            pkgs.toArray(new String[pkgs.size()])));
+        scopes.add(ClassIndex.createPackageSearchScope(ClassIndex.SearchScope.SOURCE, pkgs.toArray(new String[0])));
         index.getDeclaredElements(
                 "", //NOI18N
                 ClassIndex.NameKind.PREFIX,

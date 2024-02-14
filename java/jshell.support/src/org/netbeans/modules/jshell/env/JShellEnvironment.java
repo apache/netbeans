@@ -260,7 +260,7 @@ public class JShellEnvironment {
             }
             // extra options to include the modules:
             List<String> opts = ShellProjectUtils.launchVMOptions(project);
-            b.remoteVMOptions(opts.toArray(new String[opts.size()]));
+            b.remoteVMOptions(opts.toArray(String[]::new));
             
             String modPath = addRoots("", ShellProjectUtils.projectRuntimeModulePath(project));
             if (!modPath.isEmpty()) {
@@ -330,7 +330,7 @@ public class JShellEnvironment {
             ClasspathInfo.Builder bld = new ClasspathInfo.Builder(
                     projectInfo.getClassPath(ClasspathInfo.PathKind.BOOT)
             );
-            ClassPath classesFromProject = ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+            ClassPath classesFromProject = ClassPathSupport.createClassPath(roots.toArray(URL[]::new));
             ClassPath modBoot = projectInfo.getClassPath(ClasspathInfo.PathKind.MODULE_BOOT);
             ClassPath modClassRaw = projectInfo.getClassPath(ClasspathInfo.PathKind.MODULE_CLASS);
             ClassPath modCompileRaw = projectInfo.getClassPath(ClasspathInfo.PathKind.MODULE_COMPILE);

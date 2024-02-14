@@ -168,7 +168,7 @@ public class GradleSourceAttacherImpl implements SourceJavadocAttacherImplementa
             }
         }
         result.addAll(fallbacks);
-        c = new Cached(u, result.toArray(new E[result.size()]));
+        c = new Cached(u, result.toArray(new E[0]));
         lastChecked = new WeakReference<>(c);
         return c.projectsAndModules;
     }

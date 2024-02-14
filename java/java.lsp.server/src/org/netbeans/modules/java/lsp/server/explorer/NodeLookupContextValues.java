@@ -140,7 +140,7 @@ public class NodeLookupContextValues implements TreeDataProvider {
                 }
             }
         }
-        return res.toArray(new String[res.size()]);
+        return res.toArray(new String[0]);
         
     }
 

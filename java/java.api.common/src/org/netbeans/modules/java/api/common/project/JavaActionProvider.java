@@ -1409,7 +1409,7 @@ public final class JavaActionProvider implements ActionProvider {
                 if (specs.isEmpty()) {
                     return null;
                 }
-                return specs.toArray(new SingleMethod[specs.size()]);
+                return specs.toArray(new SingleMethod[0]);
             }
         };
     }
@@ -1637,7 +1637,7 @@ public final class JavaActionProvider implements ActionProvider {
                 .forEach(fos::add);
         context.lookupAll(FileObject.class).stream()
                 .forEach(fos::add);
-        return asPath(fos.toArray(new FileObject[fos.size()]));
+        return asPath(fos.toArray(new FileObject[0]));
     }
 
     @NonNull

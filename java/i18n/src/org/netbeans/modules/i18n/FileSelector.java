@@ -142,7 +142,7 @@ public class FileSelector extends JPanel implements PropertyChangeListener, Expl
         path.addAll(Arrays.<String>asList(packageName.split("/"))); //NOI18N
         path.add("Bundle"); // NOI18N
         try {
-            manager.setSelectedNodes(new Node[] {NodeOp.findPath(root, path.toArray(new String[path.size()]))});
+            manager.setSelectedNodes(new Node[] {NodeOp.findPath(root, path.toArray(new String[0]))});
             return;
         } catch (PropertyVetoException ex) {
             Exceptions.printStackTrace(ex);
@@ -152,7 +152,7 @@ public class FileSelector extends JPanel implements PropertyChangeListener, Expl
         // removes Bundle and selects package:
         path = path.subList(0, path.size()-1);
         try {
-            Node found = NodeOp.findPath(root,path.toArray(new String[path.size()]));
+            Node found = NodeOp.findPath(root,path.toArray(new String[0]));
             manager.setExploredContext(found);
             manager.setSelectedNodes(new Node[] {found});
             return;

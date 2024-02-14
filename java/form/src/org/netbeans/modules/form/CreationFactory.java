@@ -148,7 +148,7 @@ public class CreationFactory {
         if (uiCl != null) {
             loaders.add(uiCl);
         }
-        ClassLoader newCl = new MultiClassLoader(loaders.toArray(new ClassLoader[loaders.size()]));
+        ClassLoader newCl = new MultiClassLoader(loaders.toArray(new ClassLoader[0]));
         UIManager.put("ClassLoader", newCl); // NOI18N
         Object instance = cd != null ?
                               cd.createDefaultInstance() :

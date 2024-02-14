@@ -212,7 +212,7 @@ final class QueriesCache<T extends QueriesCache.ResultBase> {
 
         @Override
         protected void updateImpl(final Collection<? extends URL> roots) {
-            this.roots = roots.toArray(new URL[roots.size()]);
+            this.roots = roots.toArray(new URL[0]);
         }
 
         @NonNull
@@ -257,7 +257,7 @@ final class QueriesCache<T extends QueriesCache.ResultBase> {
                     fos.add(fo);
                 }
             }
-            this.roots = fos.toArray(new FileObject[fos.size()]);
+            this.roots = fos.toArray(new FileObject[0]);
         }
 
         @NonNull

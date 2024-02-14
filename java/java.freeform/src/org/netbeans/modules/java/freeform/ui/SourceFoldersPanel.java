@@ -518,7 +518,7 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
                 roots.add(f);
             }
         }
-        v.setRoots(roots.toArray(new File[roots.size()]));
+        v.setRoots(roots.toArray(new File[0]));
         DialogDescriptor dd = new DialogDescriptor(v.getVisualizerPanel(),
                 NbBundle.getMessage(SourceFoldersPanel.class, "SourceFoldersPanel.title.includeExclude"));
         dd.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);

@@ -246,7 +246,7 @@ public class M2Configuration extends AbstractMavenActionsProvider implements Mav
                     toRet.add(mapp);
                 }
             }
-            return toRet.toArray(new NetbeansActionMapping[toRet.size()]);
+            return toRet.toArray(new NetbeansActionMapping[0]);
         } catch (XmlPullParserException ex) {
             LOG.log(Level.WARNING, null, ex);
         } catch (IOException ex) {

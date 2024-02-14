@@ -923,7 +923,7 @@ final class JavaActions implements ActionProvider {
                 outputs.add(builts.item(i).getTextContent());
             }
         }
-        return outputs.toArray(new String[outputs.size()]);
+        return outputs.toArray(new String[0]);
     }
 
     //The order of the root elements as specified in the schema.
@@ -1190,7 +1190,7 @@ final class JavaActions implements ActionProvider {
                         }
                     }
                 }
-                return scriptPlusTargetNames.toArray(new String[scriptPlusTargetNames.size()]);
+                return scriptPlusTargetNames.toArray(new String[0]);
             }
         }
         return null;

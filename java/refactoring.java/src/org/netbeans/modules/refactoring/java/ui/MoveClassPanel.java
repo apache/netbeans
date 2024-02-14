@@ -553,7 +553,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
                                 return COLLATOR.compare(p1.getDisplayName(), p2.getDisplayName());
                             }
                         });
-                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[items.size()]));
+                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[0]));
                     } else {
                         model = new DefaultComboBoxModel();
                     }

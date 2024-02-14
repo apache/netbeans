@@ -109,7 +109,7 @@ public class GradleBinaryForSource implements BinaryForSourceQueryImplementation
                     urls.add(FileUtil.urlForArchiveOrDir(target));
                 }
             }
-            return urls.toArray(new URL[urls.size()]);
+            return urls.toArray(new URL[0]);
         }
 
         @Override

@@ -80,7 +80,7 @@ public class AssistantMessages {
             Map.Entry<String,Set<String>> entry = iter.next();
             String key = entry.getKey();
             Set<String> value = entry.getValue();
-            String[] messages = value.toArray(new String[value.size()]);
+            String[] messages = value.toArray(new String[0]);
             contextToMessages.put(key, messages);
         }
         

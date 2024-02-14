@@ -320,7 +320,7 @@ public final class ActionToGoalUtils {
             }
             
         }
-        return toRet.toArray(new NetbeansActionMapping[toRet.size()]);
+        return toRet.toArray(new NetbeansActionMapping[0]);
     }
         
 

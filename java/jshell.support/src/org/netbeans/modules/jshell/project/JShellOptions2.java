@@ -365,7 +365,7 @@ public class JShellOptions2 extends javax.swing.JPanel implements ItemListener {
         return cpi = ClasspathInfo.create(
                 ClassPath.getClassPath(fileObject, ClassPath.BOOT), // JDK classes
                 ClassPath.EMPTY,
-                ClassPathSupport.createClassPath(roots.toArray(new FileObject[roots.size()]))
+                ClassPathSupport.createClassPath(roots.toArray(FileObject[]::new))
         );
     }
     
@@ -468,7 +468,7 @@ public class JShellOptions2 extends javax.swing.JPanel implements ItemListener {
                 this.message = Bundle.ERR_NoSuitableMembers();
             }
         }
-        DefaultComboBoxModel mdl = new DefaultComboBoxModel(descs.toArray(new MemberDescription[descs.size()]));
+        DefaultComboBoxModel mdl = new DefaultComboBoxModel(descs.toArray(MemberDescription[]::new));
         cbMember.setModel(mdl);
         cbMember.setSelectedItem(old);
         if (cbMember.getItemCount() == 0) {

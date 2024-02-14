@@ -184,8 +184,8 @@ public class RefactoringPluginFactoryImpl implements RefactoringPluginFactory {
         }
 
         if (changeType != null) {
-            FileObject[] originalFiles = fileList.toArray(new FileObject[fileList.size()]);
-            String[] oldNames = nameList.toArray(new String[nameList.size()]);
+            FileObject[] originalFiles = fileList.toArray(new FileObject[0]);
+            String[] oldNames = nameList.toArray(new String[0]);
             RefactoringInfo refInfo = new RefactoringInfo(refactoring, changeType, originalFiles, oldNames);
             refactoring.getContext().add(refInfo); // to be accessible to the GuardedBlockHandlerFactoryImpl
             return new RefactoringPluginImpl(refInfo);

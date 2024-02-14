@@ -1003,7 +1003,7 @@ public class J2SEModularProjectProperties {
                 }
             }
         }
-        v.setRoots(roots.toArray(new File[roots.size()]));
+        v.setRoots(roots.toArray(new File[0]));
         v.setIncludePattern(includes);
         v.setExcludePattern(excludes);
     }

@@ -1654,8 +1654,7 @@ public final class DefaultPlugin extends JUnitPlugin {
             libsToAdd = null;
         }
         if (librariesToRemove != null) {
-            libsToRemove = librariesToRemove.toArray(
-                                        new Library[librariesToRemove.size()]);
+            libsToRemove = librariesToRemove.toArray(new Library[0]);
         } else {
             libsToRemove = null;
         }

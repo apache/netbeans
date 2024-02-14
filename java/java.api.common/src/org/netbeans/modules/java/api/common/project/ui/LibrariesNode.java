@@ -469,7 +469,7 @@ public final class LibrariesNode extends AbstractNode {
                 _boot,
                 modulePath,
                 modulePathIgnoreRef,
-                librariesNodeActions.toArray(new Action[librariesNodeActions.size()]),
+                librariesNodeActions.toArray(new Action[0]),
                 webModuleElementName,
                 cs,
                 extraNodes != null ? new CallBackImpl(extraNodes) : null,
@@ -1359,7 +1359,7 @@ public final class LibrariesNode extends AbstractNode {
                         }
                     }
                 }
-                return res.toArray(new FileObject[res.size()][]);
+                return res.toArray(new FileObject[0][]);
             }
         }
     }
@@ -1701,7 +1701,7 @@ public final class LibrariesNode extends AbstractNode {
                     filter,
                     CustomizerUtilities.getLibraryChooserImportHandler(refHelper));
             if (added != null) {
-                addLibraries(added.toArray(new Library[added.size()]));
+                addLibraries(added.toArray(new Library[0]));
             }
         }
 
@@ -1876,7 +1876,7 @@ public final class LibrariesNode extends AbstractNode {
                     final String cpType =  moduleInfo != null ?
                         JavaClassPathConstants.MODULE_COMPILE_PATH :
                         ClassPath.COMPILE;
-                    modifierImpl.addRoots(toAdd.toArray(new URI[toAdd.size()]),
+                    modifierImpl.addRoots(toAdd.toArray(new URI[0]),
                         findSourceGroup(projectSourcesArtifact, modifierImpl),
                         cpType,
                         ClassPathModifier.ADD_NO_HEURISTICS);
@@ -1923,7 +1923,7 @@ public final class LibrariesNode extends AbstractNode {
         for (Library library : libraries) {
             res.addAll(library.getContent("classpath"));    //NOI18N
         }
-        return res.toArray(new URL[res.size()]);
+        return res.toArray(new URL[0]);
     }
     
     @NonNull
@@ -1935,7 +1935,7 @@ public final class LibrariesNode extends AbstractNode {
                 res.add(resolved);
             }
         }
-        return res.toArray(new URL[res.size()]);
+        return res.toArray(new URL[0]);
     }
     
     private static SourceGroup findSourceGroup(FileObject fo, ClassPathModifier modifierImpl) {

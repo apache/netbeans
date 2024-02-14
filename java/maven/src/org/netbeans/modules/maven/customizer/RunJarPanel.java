@@ -133,7 +133,7 @@ public class RunJarPanel extends javax.swing.JPanel implements HelpCtx.Provider 
             roots.add(sourceGroup.getRootFolder());
         }
 
-        btnMainClass.addActionListener(new MainClassListener(roots.toArray(new FileObject[roots.size()]), txtMainClass));
+        btnMainClass.addActionListener(new MainClassListener(roots.toArray(new FileObject[0]), txtMainClass));
         docListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent arg0) {

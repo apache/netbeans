@@ -72,7 +72,7 @@ public final class FormPropertyEditorManager {
         Class type = property.getValueType();
         FormModel form = property.getPropertyContext().getFormModel();
         List<PropertyEditor> list = findEditors(type, form, true);
-        return list.toArray(new PropertyEditor[list.size()]);
+        return list.toArray(new PropertyEditor[0]);
     }
 
     public static synchronized void registerEditor(Class propertyType, Class editorClass) {

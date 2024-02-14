@@ -816,7 +816,7 @@ public final class ProjectXMLManager {
     public String[] getBinaryOrigins() {
         Set<String> origins = new LinkedHashSet<String>(getClassPathExtensions().values());
         origins.remove(null);
-        return origins.toArray(new String[origins.size()]);
+        return origins.toArray(new String[0]);
     }
 
     /**
@@ -981,7 +981,7 @@ public final class ProjectXMLManager {
         if (ppEl != null) {
             pps.addAll(findAllPackages(ppEl));
         }
-        return pps.isEmpty() ? ManifestManager.EMPTY_EXPORTED_PACKAGES : pps.toArray(new ManifestManager.PackageExport[pps.size()]);
+        return pps.isEmpty() ? ManifestManager.EMPTY_EXPORTED_PACKAGES : pps.toArray(new ManifestManager.PackageExport[0]);
     }
 
     /** Utility method for finding friend. */
@@ -994,7 +994,7 @@ public final class ProjectXMLManager {
                     friends.add(XMLUtil.findText(friendEl));
                 }
             }
-            return friends.toArray(new String[friends.size()]);
+            return friends.toArray(new String[0]);
         }
         return null;
     }

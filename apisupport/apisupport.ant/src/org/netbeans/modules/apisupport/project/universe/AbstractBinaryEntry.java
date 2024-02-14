@@ -78,7 +78,7 @@ abstract class AbstractBinaryEntry extends AbstractEntry {
                 deps.add(codename.substring(0, slash));
             }
         }
-        runDependencies = deps.toArray(new String[deps.size()]);
+        runDependencies = deps.toArray(new String[0]);
     }
 
     public String getNetBeansOrgPath() {

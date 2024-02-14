@@ -604,7 +604,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider {
                 paths.add(ClassPathSupport.createClassPath(new FileObject[] {root}));
             }
         }
-        return paths.toArray(new ClassPath[paths.size()]);
+        return paths.toArray(new ClassPath[0]);
     }
 
     private static final class FilteredClassPathImplementation implements ClassPathImplementation, PropertyChangeListener {

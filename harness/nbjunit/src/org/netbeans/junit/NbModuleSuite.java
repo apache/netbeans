@@ -740,7 +740,7 @@ public class NbModuleSuite {
                 //Fix for issue #57304
                 l.add(Character.toString(dosHack));
             }
-            return l.toArray(new String[l.size()]);
+            return l.toArray(new String[0]);
         }
 
         static void findClusters(Collection<File> clusters, List<String> regExps) throws IOException {

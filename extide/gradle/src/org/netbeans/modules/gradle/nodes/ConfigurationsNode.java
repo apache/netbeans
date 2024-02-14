@@ -278,7 +278,7 @@ public class ConfigurationsNode extends AbstractNode {
                 }
 
             }
-            return ret.toArray(new Node[ret.size()]);
+            return ret.toArray(new Node[0]);
         }
 
         @Override
@@ -345,7 +345,7 @@ public class ConfigurationsNode extends AbstractNode {
                         ActionProviderImpl.COMMAND_DL_JAVADOC, Lookups.singleton(RunUtils.simpleReplaceTokenProvider(REQUESTED_COMPONENT, module.getId())));
                 actions.add(download);
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -497,7 +497,7 @@ public class ConfigurationsNode extends AbstractNode {
         public Action[] getActions(boolean context) {
             List<Action> actions = new ArrayList<>(3);
             actions.add(new OpenJavadocAction(mainJar));
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override

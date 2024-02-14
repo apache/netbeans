@@ -48,7 +48,7 @@ public class CopyFilesTest extends org.netbeans.junit.NbTestCase {
 	fileList.addAll(Arrays.asList(new java.lang.String[]{"source/foo/X.txt",
 		    "source/foo/A.txt", "source/foo/B.txt", "source/foo/foo2/C.txt"}));
 
-	FileSystem fs = createLocalFileSystem(fileList.toArray(new String[fileList.size()]));
+	FileSystem fs = createLocalFileSystem(fileList.toArray(new String[0]));
 
 	FileObject path = fs.findResource("source");
 	assertNotNull(path);

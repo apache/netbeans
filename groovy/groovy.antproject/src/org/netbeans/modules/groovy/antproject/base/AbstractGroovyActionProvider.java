@@ -305,7 +305,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
                 result.add(root);
             }
         }
-        return result.toArray(new FileObject[result.size()]);
+        return result.toArray(new FileObject[0]);
     }
 
     private static List<String> getTestRootsNames(Project project) {
@@ -418,7 +418,7 @@ public abstract class AbstractGroovyActionProvider implements ActionProvider {
                     while (stok.hasMoreTokens()) {
                         targetNames.add(stok.nextToken());
                     }
-                    targets.put(cmdNameKey, targetNames.toArray(new String[targetNames.size()]));
+                    targets.put(cmdNameKey, targetNames.toArray(new String[0]));
                 }
             }
         }

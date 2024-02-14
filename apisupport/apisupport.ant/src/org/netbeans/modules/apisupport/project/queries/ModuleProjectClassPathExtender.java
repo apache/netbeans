@@ -69,7 +69,7 @@ public final class ModuleProjectClassPathExtender extends ProjectClassPathModifi
                 sgs.add(g);
             }
         }
-        return sgs.toArray(new SourceGroup[sgs.size()]);
+        return sgs.toArray(new SourceGroup[0]);
     }
 
     protected String[] getExtensibleClassPathTypes(SourceGroup sourceGroup) {

@@ -148,7 +148,7 @@ public final class AntBridge {
             }
             if (modules == null) {
                 Collection<? extends ModuleInfo> c = modulesResult.allInstances();
-                modules = c.toArray(new ModuleInfo[c.size()]);
+                modules = c.toArray(new ModuleInfo[0]);
                 for (ModuleInfo module : modules) {
                     module.addPropertyChangeListener(this);
                 }
@@ -159,7 +159,7 @@ public final class AntBridge {
                     enabledModules.add(module);
                 }
             }
-            return enabledModules.toArray(new ModuleInfo[enabledModules.size()]);
+            return enabledModules.toArray(new ModuleInfo[0]);
         }
     }
     private static MiscListener miscListener = new MiscListener();

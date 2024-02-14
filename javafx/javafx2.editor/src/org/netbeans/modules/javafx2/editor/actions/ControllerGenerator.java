@@ -462,7 +462,7 @@ public class ControllerGenerator implements Task<WorkingCopy> {
             return p.getTypes().getDeclaredType(
                 (DeclaredType)enclosing,
                 (TypeElement)t.asElement(), 
-                newArgs.toArray(new TypeMirror[newArgs.size()]));
+                newArgs.toArray(new TypeMirror[0]));
         }
 
         @Override

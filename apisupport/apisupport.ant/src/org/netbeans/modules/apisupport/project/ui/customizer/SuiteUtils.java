@@ -105,7 +105,7 @@ public final class SuiteUtils {
                             }
                         }
                     }
-                    return result.toArray(new NbModuleProject[result.size()]);
+                    return result.toArray(new NbModuleProject[0]);
                 }
             });
         } catch (MutexException e) {
@@ -431,7 +431,7 @@ public final class SuiteUtils {
             String piece = it.next() + (it.hasNext() ? ":" : ""); // NOI18N
             l.add(piece);
         }
-        return l.toArray(new String[l.size()]);
+        return l.toArray(new String[0]);
     }
     
     /**

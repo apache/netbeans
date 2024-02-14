@@ -730,7 +730,7 @@ public class WLJ2eePlatformFactory extends J2eePlatformFactory {
             // issues like #188753
             serverImpl.addAll(Arrays.asList(getLibraries()));
 
-            return serverImpl.toArray(new LibraryImplementation[serverImpl.size()]);
+            return serverImpl.toArray(new LibraryImplementation[0]);
         }
         
         public void notifyLibrariesChange() {

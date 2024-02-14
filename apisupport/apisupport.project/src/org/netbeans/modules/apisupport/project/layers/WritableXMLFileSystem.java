@@ -261,7 +261,7 @@ public final class WritableXMLFileSystem extends AbstractFileSystem
             }
         }
         //System.err.println("children <" + f + ">: " + kids);
-        return kids.toArray(new String[kids.size()]);
+        return kids.toArray(new String[0]);
     }
     
     /** retrieve byte contents of a named resource */

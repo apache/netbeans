@@ -141,7 +141,7 @@ public class GrailsLogicalViewProvider implements LogicalViewProvider {
             actions.add(null);
             actions.add(CommonProjectActions.customizeProjectAction());
 
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         private Action getCommandAction(String commandName, String localizationName) {

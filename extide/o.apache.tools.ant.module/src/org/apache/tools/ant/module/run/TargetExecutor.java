@@ -288,7 +288,7 @@ public final class TargetExecutor implements Runnable {
                     }
                 } else {
                     TargetExecutor exec = new TargetExecutor(pcookie,
-                            targetNames != null ? targetNames.toArray(new String[targetNames.size()]) : null);
+                            targetNames != null ? targetNames.toArray(new String[0]) : null);
                     //exec.setVerbosity(verbosity);
                     exec.setProperties(properties);
                     exec.setConcealedProperties(concealedProperties);
@@ -499,7 +499,7 @@ public final class TargetExecutor implements Runnable {
         // #139185: do not record verbosity level; always pick it up from Ant Settings.
         thisExec[0] = LastTargetExecuted.record(
                 buildFile, /*verbosity,*/
-                targetNames != null ? targetNames.toArray(new String[targetNames.size()]) : null,
+                targetNames != null ? targetNames.toArray(new String[0]) : null,
                 properties,
                 concealedProperties,
                 suggestedDisplayName != null ? suggestedDisplayName : getProcessDisplayName(pcookie, targetNames),

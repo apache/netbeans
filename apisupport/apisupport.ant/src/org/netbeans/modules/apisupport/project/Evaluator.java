@@ -353,7 +353,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
         String codeNameBase = project.getCodeNameBase();
         PropertyEvaluator suiteEval = null;
         if (type == NbModuleType.SUITE_COMPONENT) {
-            suiteEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+            suiteEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
         }
 
         if (type == NbModuleType.SUITE_COMPONENT) {
@@ -368,9 +368,9 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             providers.add(project.getHelper().getPropertyProvider("nbproject/platform.properties")); // NOI18N
         }
         if (type == NbModuleType.SUITE_COMPONENT || type == NbModuleType.STANDALONE) {
-            PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+            PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
             providers.add(new ApisupportAntUtils.UserPropertiesFileProvider(baseEval, dir));
-            baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+            baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
             providers.add(new DestDirProvider(baseEval));
         }
         if (type == NbModuleType.NETBEANS_ORG) {
@@ -380,7 +380,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             providers.add(PropertyUtils.propertiesFilePropertyProvider(new File(nbbuild, "site.build.properties"))); // NOI18N
             providers.add(PropertyUtils.propertiesFilePropertyProvider(new File(System.getProperty("user.home"), ".nbbuild.properties"))); // NOI18N
         }
-        PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+        PropertyEvaluator baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
         providers.add(new NbJdkProvider(baseEval));
         providers.add(privateProperties);
         providers.add(projectProperties);
@@ -445,7 +445,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
                 }
             }
             
-            baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+            baseEval = PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
 
             Map<String,TestClasspath> testsCPs = computeTestingClassPaths(ml, baseEval, testTypes);
             testTypes.addAll(testsCPs.keySet());
@@ -463,7 +463,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
             providers.add(PropertyUtils.fixedPropertyProvider(buildDefaults));
         }
         // skip a bunch of properties irrelevant here - NBM stuff, etc.
-        return PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[providers.size()]));
+        return PropertyUtils.sequentialPropertyEvaluator(predefs, providers.toArray(new PropertyProvider[0]));
     }
     
     private static final RequestProcessor RP = new RequestProcessor(Evaluator.class.getName());

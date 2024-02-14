@@ -228,8 +228,8 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
             for (TypeMirror interfaceType : typeElement.getInterfaces()) {
                 interfaces.add(new ClassNode(Utilities.getClassName(interfaceType).toString(), Opcodes.ACC_INTERFACE, null));
             }
-            node.setInterfaces(interfaces.toArray(new ClassNode[interfaces.size()]));
-            node.setGenericsTypes(generics.toArray(new GenericsType[generics.size()]));
+            node.setInterfaces(interfaces.toArray(new ClassNode[0]));
+            node.setGenericsTypes(generics.toArray(new GenericsType[0]));
         }
 
         private void initInterfaceKind(ClassNode node, TypeElement typeElement) {
@@ -286,13 +286,13 @@ public class CompilationUnit extends org.codehaus.groovy.control.CompilationUnit
             }
 
             node.setSuperClass(superClass);
-            node.setGenericsTypes(generics.toArray(new GenericsType[generics.size()]));
+            node.setGenericsTypes(generics.toArray(new GenericsType[0]));
         }
 
         private ClassNode createClassNode(String name, int modifiers, ClassNode superClass, ClassNode[] interfaces, Set<GenericsType> generics) {
             ClassNode classNode = new ClassNode(name, modifiers, superClass, interfaces, MixinNode.EMPTY_ARRAY);
             if (generics != null) {
-                classNode.setGenericsTypes(generics.toArray(new GenericsType[generics.size()]));
+                classNode.setGenericsTypes(generics.toArray(new GenericsType[0]));
             }
             return classNode;
         }

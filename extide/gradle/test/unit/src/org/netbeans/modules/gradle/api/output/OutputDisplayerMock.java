@@ -35,7 +35,7 @@ public class OutputDisplayerMock extends OutputDisplayer {
     }
 
     public OutputItem[] getOutputs() {
-        return items.toArray(new OutputItem[items.size()]);
+        return items.toArray(new OutputItem[0]);
     }
 
     public String getOutput() {

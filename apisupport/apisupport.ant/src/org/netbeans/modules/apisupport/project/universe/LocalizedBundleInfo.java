@@ -268,7 +268,7 @@ public final class LocalizedBundleInfo {
             sentences.add(text.substring(start, end));
             start = end;
         }
-        return sentences.toArray(new String[sentences.size()]);
+        return sentences.toArray(new String[0]);
     }
     
     public void addPropertyChangeListener(PropertyChangeListener pchl) {

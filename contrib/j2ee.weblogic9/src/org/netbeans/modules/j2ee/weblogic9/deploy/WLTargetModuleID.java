@@ -83,7 +83,7 @@ public class WLTargetModuleID implements WebTargetModuleID {
     }
 
     public synchronized TargetModuleID[] getChildTargetModuleID(){
-        return (TargetModuleID[]) children.toArray(new TargetModuleID[children.size()]);
+        return (TargetModuleID[]) children.toArray(new TargetModuleID[0]);
     }
     
     public synchronized void addUrl(URL url) {

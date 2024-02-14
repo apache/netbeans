@@ -171,7 +171,7 @@ public final class ActionUtils {
         if (files.isEmpty()) {
             return null;
         }
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
     }
     
     /**
@@ -233,7 +233,7 @@ public final class ActionUtils {
             }
             files.add(target);
         }
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
     }
     
     /**

@@ -270,7 +270,7 @@ final class LibrariesNode extends AbstractNode {
                     nodes.add(createLibraryPackageViewNode(jar));
                 }
             }
-            return nodes.toArray(new Node[nodes.size()]);
+            return nodes.toArray(new Node[0]);
         }
 
         private Node createLibraryPackageViewNode(FileObject jfo) {

@@ -138,7 +138,7 @@ public class FXMLCompletionTestBase extends NbTestCase {
                 allUrls.add(en.nextElement());
             }
         }
-        system.setXmlUrls(allUrls.toArray(new URL[allUrls.size()]));
+        system.setXmlUrls(allUrls.toArray(new URL[0]));
         Repository repository = new Repository(new MultiFileSystem(new FileSystem[] {FileUtil.createMemoryFileSystem(), system}));
         final ClassPath bootPath = createClassPath(System.getProperty("sun.boot.class.path"));
         final ClassPath fxPath = ClassPathSupport.createClassPath(getFxrtJarURL());

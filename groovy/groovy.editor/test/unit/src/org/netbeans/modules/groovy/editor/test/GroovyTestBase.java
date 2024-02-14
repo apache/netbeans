@@ -151,7 +151,7 @@ public class GroovyTestBase extends CslTestBase {
         List<FileObject> classPathSources = new ArrayList<FileObject>();
         classPathSources.addAll(additionalSources());
 
-        return ClassPathSupport.createClassPath(classPathSources.toArray(new FileObject[classPathSources.size()]));
+        return ClassPathSupport.createClassPath(classPathSources.toArray(new FileObject[0]));
     }
 
     private Set<FileObject> additionalSources() {

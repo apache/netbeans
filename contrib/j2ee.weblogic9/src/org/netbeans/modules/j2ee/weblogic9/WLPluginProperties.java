@@ -257,7 +257,7 @@ public final class WLPluginProperties {
         if (result.isEmpty()) {
             result.addAll(getDomainsFromNodeManager(serverRoot));
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
     
     @CheckForNull

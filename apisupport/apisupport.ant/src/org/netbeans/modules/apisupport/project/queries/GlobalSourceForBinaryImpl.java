@@ -188,7 +188,7 @@ public final class GlobalSourceForBinaryImpl implements SourceForBinaryQueryImpl
             } catch (IOException ex) {
                 throw new AssertionError(ex);
             }
-            return candidates.toArray(new FileObject[candidates.size()]);
+            return candidates.toArray(new FileObject[0]);
         }
 
         protected abstract String resolveRelativePath(URL sourceRoot) throws IOException;

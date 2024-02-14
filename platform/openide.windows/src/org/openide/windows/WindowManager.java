@@ -610,7 +610,7 @@ public abstract class WindowManager extends Object implements Serializable {
                 openedTcs.add(tc);
             }
         }
-        return openedTcs.toArray(new TopComponent[openedTcs.size()]);
+        return openedTcs.toArray(new TopComponent[0]);
     }
 
     /**

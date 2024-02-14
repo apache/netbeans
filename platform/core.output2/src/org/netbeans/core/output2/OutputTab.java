@@ -951,7 +951,7 @@ final class OutputTab extends AbstractOutputTab implements IOContainer.CallBacks
                     }
                     if (l.size() > 0) {
                         putValue(ACCELERATORS_KEY,
-                                l.toArray(new KeyStroke[l.size()]));
+                                l.toArray(new KeyStroke[0]));
                         putValue(ACCELERATOR_KEY, l.get(0));
                     }
                 }

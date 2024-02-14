@@ -495,7 +495,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
             addList.removeAll(exclude.keySet());
         }
 
-        String[] res = addList.toArray(new String[addList.size()]);
+        String[] res = addList.toArray(new String[0]);
 
         return res;
     }

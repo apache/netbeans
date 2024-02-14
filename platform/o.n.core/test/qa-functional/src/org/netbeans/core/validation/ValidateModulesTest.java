@@ -239,7 +239,7 @@ public class ValidateModulesTest extends NbTestCase {
             urls.add(kid.toURL());
         }
         StringBuilder problems = new StringBuilder();
-        AutomaticDependencies ad = AutomaticDependencies.parse(urls.toArray(new URL[urls.size()]));
+        AutomaticDependencies ad = AutomaticDependencies.parse(urls.toArray(new URL[0]));
         for (Manifest m : loadManifests()) {
             String cnb = findCNB(m);
             AutomaticDependencies.Report r = ad.refineDependenciesAndReport(cnb,

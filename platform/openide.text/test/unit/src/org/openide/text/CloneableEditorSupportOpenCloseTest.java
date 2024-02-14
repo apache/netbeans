@@ -73,7 +73,7 @@ implements CloneableEditorSupport.Env {
             includeTests.add(new Filter.IncludeExclude(testName, ""));
         }
         Filter filter = new Filter();
-        filter.setIncludes(includeTests.toArray(new Filter.IncludeExclude[includeTests.size()]));
+        filter.setIncludes(includeTests.toArray(new Filter.IncludeExclude[0]));
         setFilter(filter);
     }
 

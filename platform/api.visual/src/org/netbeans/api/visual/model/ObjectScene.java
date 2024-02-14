@@ -556,7 +556,7 @@ public class ObjectScene extends Scene {
         List<ObjectSceneListener> listeners = this.listeners.get (type);
         if (listeners == null)
             return EMPTY_LISTENERS;
-        return listeners.toArray (new ObjectSceneListener[listeners.size ()]);
+        return listeners.toArray (new ObjectSceneListener[0]);
     }
 
     private class ObjectSelectProvider implements SelectProvider {

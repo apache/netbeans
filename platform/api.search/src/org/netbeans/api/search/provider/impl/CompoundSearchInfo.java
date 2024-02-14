@@ -91,8 +91,7 @@ public class CompoundSearchInfo extends SearchInfo {
             }
         }
         return new AbstractCompoundIterator<SearchInfo, FileObject>(
-                searchableElements.toArray(
-                new SearchInfo[searchableElements.size()]),
+                searchableElements.toArray(new SearchInfo[0]),
                 options, listener, terminated) {
             @Override
             protected Iterator<FileObject> getIteratorFor(SearchInfo element,
@@ -120,8 +119,7 @@ public class CompoundSearchInfo extends SearchInfo {
             }
         }
         return new AbstractCompoundIterator<SearchInfo, URI>(
-                searchableElements.toArray(
-                new SearchInfo[searchableElements.size()]),
+                searchableElements.toArray(new SearchInfo[0]),
                 options, listener, terminated) {
             @Override
             protected Iterator<URI> getIteratorFor(SearchInfo element,

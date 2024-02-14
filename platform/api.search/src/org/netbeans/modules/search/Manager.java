@@ -399,7 +399,7 @@ public final class Manager {
         assert EventQueue.isDispatchThread();
         
         searchWindowOpen = false;
-        Runnable[] tasks = currentTasks.toArray(new Runnable[currentTasks.size()]);
+        Runnable[] tasks = currentTasks.toArray(new Runnable[0]);
         for (Runnable task : tasks) {
             if (task instanceof SearchTask) {
                 SearchTask sTask = (SearchTask) task;
@@ -416,7 +416,7 @@ public final class Manager {
     /**
      */
     private synchronized void processNextPendingTask() {
-        Runnable[] pTasks = pendingTasks.toArray(new Runnable[pendingTasks.size()]);
+        Runnable[] pTasks = pendingTasks.toArray(new Runnable[0]);
         for (Runnable pTask : pTasks) {
             boolean haveReplaceRunning = haveRunningReplaceTask();
             if (pTask instanceof SearchTask) {

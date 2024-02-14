@@ -139,7 +139,7 @@ public class NbBundleProcessor extends AbstractProcessor {
                     pairs.put(key, value);
                     compilationUnits.put(key, simplename);
                     if (!runningComments.isEmpty()) {
-                        comments.put(key, runningComments.toArray(new String[runningComments.size()]));
+                        comments.put(key, runningComments.toArray(new String[0]));
                         runningComments.clear();
                     }
                 }

@@ -815,7 +815,7 @@ public class ValidateLayerConsistencyTest extends NbTestCase {
                         });
                     }
                 }
-                loadChildren(new MultiFileSystem(layers.toArray(new FileSystem[layers.size()])).getRoot());
+                loadChildren(new MultiFileSystem(layers.toArray(new FileSystem[0])).getRoot());
                 appendFailure("\nNo warnings relating to folder ordering in " + multiPath + 
                         "; cf: http://deadlock.netbeans.org/job/nbms-and-javadoc/lastSuccessfulBuild/artifact/nbbuild/build/generated/layers.txt",
                         h.errors());

@@ -200,7 +200,7 @@ class OSGiProcess {
             if (newModule.manifest != null) {
                 TestFileUtils.writeFile(new File(workDir, "custom" + newModule.counter + ".mf"), newModule.manifest);
             }
-            SetupHid.createTestJAR(workDir, extra, "custom" + newModule.counter, null, cp.toArray(new File[cp.size()]));
+            SetupHid.createTestJAR(workDir, extra, "custom" + newModule.counter, null, cp.toArray(new File[0]));
             File jar = new File(extra, "custom" + newModule.counter + ".jar");
             cp.add(jar); // for use in subsequent modules
             makeosgi.add(new FileResource(jar));

@@ -183,7 +183,7 @@ public class IpAddressUtils {
             if (resultList.isEmpty()) {
                 throw new UnknownHostException("A positive result was returned from name lookup for \"" + host + "\" but none that matched a filter of " + ipTypePref);
             }
-            return resultList.toArray(new InetAddress[resultList.size()]);
+            return resultList.toArray(new InetAddress[0]);
 
         } catch (ExecutionException ex) {
             Throwable cause = ex.getCause();

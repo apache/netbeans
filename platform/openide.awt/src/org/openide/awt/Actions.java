@@ -1690,7 +1690,7 @@ public class Actions {
                 }
                 multi.setEnabled(true);
             }
-            return currentOnes.toArray(new JMenuItem[currentOnes.size()]);
+            return currentOnes.toArray(new JMenuItem[0]);
             
         }
 

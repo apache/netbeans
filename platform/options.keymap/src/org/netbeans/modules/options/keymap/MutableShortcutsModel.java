@@ -169,7 +169,7 @@ class MutableShortcutsModel extends ShortcutsFinderImpl implements ShortcutsFind
         if (chListeners == null || chListeners.isEmpty()) {
             return;
         }
-        ChangeListener[] ll = chListeners.toArray(new ChangeListener[chListeners.size()]);
+        ChangeListener[] ll = chListeners.toArray(new ChangeListener[0]);
         ChangeEvent e = new ChangeEvent(this);
         for (ChangeListener l : ll) {
             l.stateChanged(e);
@@ -386,7 +386,7 @@ class MutableShortcutsModel extends ShortcutsFinderImpl implements ShortcutsFind
             Map<ShortcutAction, Set<String>> actionToShortcuts = p;
             if (actionToShortcuts.containsKey (action)) {
                 Set<String> s = actionToShortcuts.get (action);
-                return s.toArray (new String [s.size ()]);
+                return s.toArray (new String [0]);
             }
         }
         return super.getShortcuts(action);
@@ -652,7 +652,7 @@ class MutableShortcutsModel extends ShortcutsFinderImpl implements ShortcutsFind
             if (keyStroke == null) return null; // text is not parsable 
             result.add (keyStroke);
         }
-        return result.toArray (new KeyStroke [result.size ()]);
+        return result.toArray (new KeyStroke [0]);
     }
     
     public Set<String> getCategories() {

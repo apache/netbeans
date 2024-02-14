@@ -942,7 +942,7 @@ public class AbstractLookup extends Lookup implements Serializable {
                 return;
             }
 
-            setReferences(2, c.toArray(new Pair[c.size()]));
+            setReferences(2, c.toArray(new Pair[0]));
         }
         
         private void setReferences(int index, Object value) {
@@ -1000,7 +1000,7 @@ public class AbstractLookup extends Lookup implements Serializable {
                     arr = new LookupListener[] { (LookupListener) listeners };
                 } else {
                     ArrayList<?> l = (ArrayList<?>) listeners;
-                    arr = l.toArray(new LookupListener[l.size()]);
+                    arr = l.toArray(new LookupListener[0]);
                 }
             }
 

@@ -99,7 +99,7 @@ public final class AutomaticDependencies {
                 }
             }
             try {
-                INSTANCE = AutomaticDependencies.parse(urls.toArray(new URL[urls.size()]));
+                INSTANCE = AutomaticDependencies.parse(urls.toArray(new URL[0]));
             } catch (IOException e) {
                 Util.err.log(Level.WARNING, null, e);
             } catch (SAXException e) {

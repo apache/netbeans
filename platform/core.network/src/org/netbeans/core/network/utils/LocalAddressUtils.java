@@ -273,7 +273,7 @@ public class LocalAddressUtils {
                 } else {
                     List<InetAddress> list = Arrays.asList(arr);
                     List<InetAddress> filteredList = IpAddressUtilsFilter.filterInetAddresses(list, ipTypePref);
-                    return filteredList.toArray(new InetAddress[filteredList.size()]);
+                    return filteredList.toArray(new InetAddress[0]);
                 }
             } catch (ExecutionException ex) {
                 if (ex.getCause() instanceof UnknownHostException) {
@@ -444,12 +444,12 @@ public class LocalAddressUtils {
                 
                 // #1 
                 if (!tmpList.isEmpty()) {
-                    return tmpList.toArray(new InetAddress[tmpList.size()]);
+                    return tmpList.toArray(new InetAddress[0]);
                 }
 
                 // #2
                 if (!localHostAddresses.isEmpty()) {
-                    return localHostAddresses.toArray(new InetAddress[localHostAddresses.size()]);
+                    return localHostAddresses.toArray(new InetAddress[0]);
                 }
             }
         } catch (UnknownHostException ex) {
@@ -457,7 +457,7 @@ public class LocalAddressUtils {
          
         // #3
         if (!filteredList.isEmpty()) {
-            return filteredList.toArray(new InetAddress[filteredList.size()]);
+            return filteredList.toArray(new InetAddress[0]);
         }
             
             
@@ -473,7 +473,7 @@ public class LocalAddressUtils {
         // #5 - nearly last resort
         List<InetAddress> datagramLocalInetAddress = getDatagramLocalInetAddress(ipTypePref);
         if (datagramLocalInetAddress != null && (!datagramLocalInetAddress.isEmpty())) {
-            return datagramLocalInetAddress.toArray(new InetAddress[datagramLocalInetAddress.size()]);
+            return datagramLocalInetAddress.toArray(new InetAddress[0]);
         }
         
         // #6 - last resort

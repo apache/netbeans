@@ -103,7 +103,7 @@ public abstract class GraphLayout<N,E> {
     private <N,E> GraphLayoutListener<N,E>[] createListenersCopy () {
         GraphLayoutListener<N,E>[] listeners;
         synchronized (this.listeners) {
-            listeners = this.listeners.toArray (new GraphLayoutListener[this.listeners.size ()]);
+            listeners = this.listeners.toArray (new GraphLayoutListener[0]);
         }
         return listeners;
     }

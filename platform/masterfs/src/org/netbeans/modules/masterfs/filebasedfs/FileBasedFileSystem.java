@@ -315,7 +315,7 @@ public class FileBasedFileSystem extends FileSystem {
                     arr.add(lkp);
                 }
             }
-            return new ProxyLookup(arr.toArray(new Lookup[arr.size()]));
+            return new ProxyLookup(arr.toArray(new Lookup[0]));
         }
 
         @Override

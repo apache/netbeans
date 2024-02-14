@@ -245,7 +245,7 @@ class Model extends AbstractTableModel {
             }
         }
 
-        return items.toArray( new Item[items.size()] );
+        return items.toArray(new Item[0] );
     }
 
     private static boolean isEditorTCActive() {

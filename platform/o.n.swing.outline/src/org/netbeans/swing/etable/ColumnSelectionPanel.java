@@ -434,7 +434,7 @@ class ColumnSelectionPanel extends JPanel {
             displayNames.add(dName);
         }
         displayNames.sort(Collator.getInstance());
-        return displayNames.toArray(new String[displayNames.size()]);
+        return displayNames.toArray(new String[0]);
     }
     
     private static class ETableColumnComparator implements Comparator<TableColumn> {

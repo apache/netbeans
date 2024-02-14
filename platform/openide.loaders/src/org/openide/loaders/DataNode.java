@@ -1076,13 +1076,13 @@ public class DataNode extends AbstractNode {
             DataNode[] _refreshNameNodes, _refreshIconNodes;
             synchronized (refreshNameIconLock) {
                 if (refreshNameNodes != null) {
-                    _refreshNameNodes = refreshNameNodes.toArray(new DataNode[refreshNameNodes.size()]);
+                    _refreshNameNodes = refreshNameNodes.toArray(new DataNode[0]);
                     refreshNameNodes.clear();
                 } else {
                     _refreshNameNodes = new DataNode[0];
                 }
                 if (refreshIconNodes != null) {
-                    _refreshIconNodes = refreshIconNodes.toArray(new DataNode[refreshIconNodes.size()]);
+                    _refreshIconNodes = refreshIconNodes.toArray(new DataNode[0]);
                     refreshIconNodes.clear();
                 } else {
                     _refreshIconNodes = new DataNode[0];

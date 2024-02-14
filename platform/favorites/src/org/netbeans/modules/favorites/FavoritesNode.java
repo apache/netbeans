@@ -580,7 +580,7 @@ public final class FavoritesNode extends FilterNode implements Index {
                     newArr.add(null);
                 }
                 newArr.add(Actions.remove());
-                return newArr.toArray(new Action[newArr.size()]);
+                return newArr.toArray(new Action[0]);
             } else {
                 return arr;
             }
@@ -608,7 +608,7 @@ public final class FavoritesNode extends FilterNode implements Index {
                 newArr.add(Actions.remove());
             }
             
-            return newArr.toArray (new Action[newArr.size()]);
+            return newArr.toArray (new Action[0]);
         }
         
         /** Add action 'Remove from Favorites'. */
@@ -632,7 +632,7 @@ public final class FavoritesNode extends FilterNode implements Index {
                 newArr.add(null);
                 newArr.add(Actions.remove());
             }
-            return newArr.toArray (new Action[newArr.size()]);
+            return newArr.toArray (new Action[0]);
         }
         
         /** Add action 'Add to Favorites'. */
@@ -653,7 +653,7 @@ public final class FavoritesNode extends FilterNode implements Index {
                 newArr.add(null);
                 newArr.add(Actions.add());
             }
-            return newArr.toArray (new Action[newArr.size()]);
+            return newArr.toArray (new Action[0]);
         }
         
         /** Add action 'Add to Favorites'. */
@@ -674,7 +674,7 @@ public final class FavoritesNode extends FilterNode implements Index {
                 newArr.add(null);
                 newArr.add(Actions.add());
             }
-            return newArr.toArray (new Action[newArr.size()]);
+            return newArr.toArray (new Action[0]);
         }
 
         @Override
@@ -736,7 +736,7 @@ public final class FavoritesNode extends FilterNode implements Index {
                 }
                 if (!fos.isEmpty()) {
                     try {
-                        Favorites.getDefault().add(fos.toArray(new FileObject[fos.size()]));
+                        Favorites.getDefault().add(fos.toArray(new FileObject[0]));
                     } catch (DataObjectNotFoundException ex) {
                         Logger.getLogger(FavoritesNode.class.getName()).log(Level.INFO, null, ex);
                     }

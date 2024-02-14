@@ -421,7 +421,7 @@ implements WizardDescriptor.InstantiatingIterator<WizardDescriptor> {
             EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    p.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, names.toArray(new String[names.size()]));
+                    p.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, names.toArray(new String[0]));
                 }
             });
             fireChange();

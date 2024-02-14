@@ -173,7 +173,7 @@ public class JarClassLoader extends ProxyClassLoader {
         } catch (IOException exc) {
             throw new IllegalArgumentException(exc.getMessage());
         }
-        sources = l.toArray(new Source[l.size()]);
+        sources = l.toArray(new Source[0]);
         // overlaps with old packages doesn't matter,PCL uses sets.
         addCoveredPackages(getCoveredPackages(module, sources));
     }
@@ -186,7 +186,7 @@ public class JarClassLoader extends ProxyClassLoader {
         arr.add(new JarSource(f));
 
         synchronized (sources) {
-            sources = arr.toArray(new Source[arr.size()]);
+            sources = arr.toArray(new Source[0]);
         }
 
         // overlaps with old packages doesn't matter,PCL uses sets.

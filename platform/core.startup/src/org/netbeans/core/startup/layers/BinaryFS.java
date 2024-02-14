@@ -605,7 +605,7 @@ final class BinaryFS extends FileSystem implements DataInput {
                     }
                 }
             }
-            return ret.toArray(new URL[ret.size()]);
+            return ret.toArray(new URL[0]);
         }
     }
 

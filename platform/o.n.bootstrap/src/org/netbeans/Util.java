@@ -521,7 +521,7 @@ public final class Util {
                     if (listeners.isEmpty()) {
                         return;
                     }
-                    _listeners = listeners.toArray(new LookupListener[listeners.size()]);
+                    _listeners = listeners.toArray(new LookupListener[0]);
                 }
                 LookupEvent ev = new LookupEvent(this);
                 for (int i = 0; i < _listeners.length; i++) {

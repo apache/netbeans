@@ -319,7 +319,7 @@ public class NbPacHelperMethods extends PacHelperMethods {
                 domsList.add(dom);
             }
         }
-        return domsList.toArray(new String[domsList.size()]);
+        return domsList.toArray(new String[0]);
     }
 
     

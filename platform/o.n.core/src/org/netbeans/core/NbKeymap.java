@@ -274,7 +274,7 @@ public final class NbKeymap implements Keymap, Comparator<KeyStroke> {
     }
 
     public static KeyStroke[] getContext() { // called from ShortcutAndMenuKeyEventProcessor
-        return context.toArray(new KeyStroke[context.size()]);
+        return context.toArray(new KeyStroke[0]);
     }
 
     private static void shiftContext(KeyStroke stroke) {

@@ -118,7 +118,7 @@ public class SwitchLookup extends Lookup {
     private Lookup getLookupForPaths(List<String> paths) {
         Lookup lookup = pathsLookups.get(paths);
         if (lookup == null) {
-            lookup = new FolderPathLookup(paths.toArray(new String[paths.size()]));
+            lookup = new FolderPathLookup(paths.toArray(new String[0]));
             pathsLookups.put(paths, lookup);
         }
         
@@ -126,7 +126,7 @@ public class SwitchLookup extends Lookup {
     }
 
     private Lookup getLookupForProvider(List<String> paths, InstanceProvider instanceProvider) {
-        return new InstanceProviderLookup(paths.toArray(new String[paths.size()]), instanceProvider);
+        return new InstanceProviderLookup(paths.toArray(new String[0]), instanceProvider);
     }
     
     private static List<String> computePaths(MimePath mimePath, String prefixPath, String suffixPath) {

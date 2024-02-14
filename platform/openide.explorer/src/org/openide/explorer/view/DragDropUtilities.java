@@ -192,7 +192,7 @@ final class DragDropUtilities extends Object {
                 }
             }
 
-            return diff.toArray(new Node[diff.size()]);
+            return diff.toArray(new Node[0]);
 
             /*Clipboard clipboard = T opManager.getDefault().getClipboard();
             if (trans != null) {

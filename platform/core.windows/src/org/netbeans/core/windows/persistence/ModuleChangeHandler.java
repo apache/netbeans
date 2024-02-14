@@ -450,7 +450,7 @@ class ModuleChangeHandler implements FileChangeListener {
             Logger.getLogger(ModuleChangeHandler.class.getName()).log(Level.FINER, null, ioE);
         }
         if (tcRefConfig != null) {
-            final String [] tcRefNameArray = tcRefNameList.toArray(new String[tcRefNameList.size()]);
+            final String [] tcRefNameArray = tcRefNameList.toArray(new String[0]);
             // #37529 WindowsAPI to be called from AWT thread only.
             SwingUtilities.invokeLater(new Runnable() {
                 @Override

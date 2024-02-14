@@ -379,7 +379,7 @@ final class Asm {
                     break;
             }
         }
-        return arr.toArray(new String[arr.size()]);
+        return arr.toArray(new String[0]);
     }
     
     private static void delegateToFactory(
@@ -395,7 +395,7 @@ final class Asm {
                 targetMethod.access & (~Opcodes.ACC_STATIC), CONSTRUCTOR_NAME,
                 desc,
                 targetMethod.signature,
-                targetMethod.exceptions.toArray(new String[targetMethod.exceptions.size()]));
+                targetMethod.exceptions.toArray(new String[0]));
 
         mn.visibleAnnotations = targetMethod.visibleAnnotations;
         mn.visibleParameterAnnotations = targetMethod.visibleParameterAnnotations;

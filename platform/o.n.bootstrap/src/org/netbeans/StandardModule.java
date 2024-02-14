@@ -542,7 +542,7 @@ class StandardModule extends Module {
      * class loaders.
      */
     protected ClassLoader createNewClassLoader(List<File> classp, List<ClassLoader> parents) {
-        return new OneModuleClassLoader(classp, parents.toArray(new ClassLoader[parents.size()]));
+        return new OneModuleClassLoader(classp, parents.toArray(new ClassLoader[0]));
     }
 
     /** Get the class loader of a particular parent module. */

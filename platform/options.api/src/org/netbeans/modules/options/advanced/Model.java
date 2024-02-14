@@ -220,7 +220,7 @@ public final class Model extends TabbedPanelModel {
         while (it.hasNext ())
             lookups.add (it.next ().getLookup ());
         return new ProxyLookup 
-            (lookups.toArray (new Lookup [lookups.size ()]));
+            (lookups.toArray (new Lookup [0]));
     }
     
     HelpCtx getHelpCtx (JComponent panel) {

@@ -406,7 +406,7 @@ public final class MatchingObject implements Comparable<MatchingObject>,
             detailNodes.add(new TextDetail.DetailNode(txtDetail, false, this));
         }
 
-        return detailNodes.toArray(new Node[detailNodes.size()]);
+        return detailNodes.toArray(new Node[0]);
     }
 
     public Children getDetailsChildren(boolean replacing) {

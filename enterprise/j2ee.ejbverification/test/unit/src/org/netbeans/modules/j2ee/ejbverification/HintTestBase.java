@@ -473,7 +473,7 @@ public class HintTestBase {
             result.addAll(e.getValue());
         }
 
-        Collections.sort(result, ERRORS_COMPARATOR);
+        result.sort(ERRORS_COMPARATOR);
         
         Reference<CompilationInfo> infoRef = new WeakReference<CompilationInfo>(info);
         Reference<CompilationUnitTree> cut = new WeakReference<CompilationUnitTree>(info.getCompilationUnit());

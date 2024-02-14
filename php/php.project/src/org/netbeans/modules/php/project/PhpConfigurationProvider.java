@@ -209,7 +209,7 @@ public final class PhpConfigurationProvider implements ProjectConfigurationProvi
         calculateConfigs();
         List<Config> l = new ArrayList<>();
         l.addAll(configs.values());
-        Collections.sort(l, new Comparator<Config>() {
+        l.sort(new Comparator<Config>() {
 
             Collator c = Collator.getInstance();
 

@@ -209,7 +209,7 @@ public class DependenciesNode extends AbstractNode {
             }
             //#200927 do not use comparator in treeset, comparator not equivalent to equals/hashcode
             ArrayList<DependencyWrapper> l = new ArrayList<>(lst);
-            Collections.sort(l, new DependenciesComparator());
+            l.sort(new DependenciesComparator());
             return l;
         }
 

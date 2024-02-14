@@ -328,7 +328,7 @@ public class ELTestBase extends CslTestBase {
         sb.append("\n");
 
         // Sort to make test more stable
-        Collections.sort(proposals, new Comparator<CompletionProposal>() {
+        proposals.sort(new Comparator<CompletionProposal>() {
 
             public int compare(CompletionProposal p1, CompletionProposal p2) {
                 // Smart items first

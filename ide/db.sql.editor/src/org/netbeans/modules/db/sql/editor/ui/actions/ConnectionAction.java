@@ -30,7 +30,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.AbstractListModel;
@@ -273,7 +272,7 @@ public class ConnectionAction extends SQLExecutionBaseAction {
             public void run() {
                 final ArrayList<DatabaseConnection> newList = new ArrayList<>(
                         Arrays.asList(ConnectionManager.getDefault().getConnections()));
-                Collections.sort(newList, dbconComparator);
+                newList.sort(dbconComparator);
 
                 Mutex.EVENT.readAccess(new Runnable() {
                     @Override

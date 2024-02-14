@@ -1318,7 +1318,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             Arrays.sort(indexedRoots, cmp);
         } else if (!indexed.isEmpty()) {
             // Sort only the elements with index != null
-            Collections.sort(indexed, cmp);
+            indexed.sort(cmp);
             // and merge them in in the correct order:
             int indexedi = 0;
             for (int i = 0; i < n; i++) {

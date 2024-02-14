@@ -839,7 +839,7 @@ public final class IntroduceMethodFix extends IntroduceFixBase implements Fix {
                 }
                 Pattern p = Pattern.createPatternWithRemappableVariables(statementsPaths, parameters, true);
                 List<? extends Occurrence> occurrences = new ArrayList<Occurrence>(Matcher.create(copy).setSearchRoot(pathToClass).setCancel(new AtomicBoolean()).match(p));
-                Collections.sort(occurrences, new OccurrencePositionComparator(copy.getCompilationUnit(), copy.getTrees().getSourcePositions()));
+                occurrences.sort(new OccurrencePositionComparator(copy.getCompilationUnit(), copy.getTrees().getSourcePositions()));
                 for (Occurrence desc :occurrences ) {
                     TreePath firstLeaf = desc.getOccurrenceRoot();
                     if (!isDuplicateValid(firstLeaf)) {

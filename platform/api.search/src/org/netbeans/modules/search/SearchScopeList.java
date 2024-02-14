@@ -18,11 +18,9 @@
  */
 package org.netbeans.modules.search;
 
-import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
@@ -100,7 +98,7 @@ public class SearchScopeList {
             scopeList.addAll(provider.createSearchScopeDefinitions());
         }
         scopeList.addAll(Arrays.asList(extraSearchScopes));
-        Collections.sort(scopeList, new ScopePriorityComparator());
+        scopeList.sort(new ScopePriorityComparator());
         for (SearchScopeDefinition scope : scopeList) {
             scope.addChangeListener(proxyChangeListener);
         }

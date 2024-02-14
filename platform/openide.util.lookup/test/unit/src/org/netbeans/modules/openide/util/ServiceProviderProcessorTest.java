@@ -55,7 +55,7 @@ public class ServiceProviderProcessorTest extends NbTestCase {
 
     private static List<Class<?>> sortClassList(List<Class<?>> classes) {
         List<Class<?>> sorted = new ArrayList<Class<?>>(classes);
-        Collections.sort(sorted, new Comparator<Class<?>>() {
+        sorted.sort(new Comparator<Class<?>>() {
             public int compare(Class<?> c1, Class<?> c2) {
                 return c1.getName().compareTo(c2.getName());
             }

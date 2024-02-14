@@ -1862,7 +1862,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                     JsfVersion jsfVersion = JsfVersionUtils.forClasspath(content);
                     LibraryItem item = jsfVersion != null ? new LibraryItem(library, jsfVersion) : new LibraryItem(library, JsfVersion.JSF_1_1);
                     jsfLibraries.add(item);
-                    Collections.sort(jsfLibraries, new Comparator<LibraryItem>() {
+                    jsfLibraries.sort(new Comparator<LibraryItem>() {
                         @Override
                         public int compare(LibraryItem li1, LibraryItem li2) {
                             return li1.getLibrary().getDisplayName().compareTo(li2.getLibrary().getDisplayName());

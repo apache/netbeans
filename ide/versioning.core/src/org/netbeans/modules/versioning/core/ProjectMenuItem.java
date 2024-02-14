@@ -296,7 +296,7 @@ public class ProjectMenuItem extends AbstractAction implements Presenter.Popup {
             if (owner == null) {
                 // default Versioning menu (Import into...)
                 List<VersioningSystem> vcs = new ArrayList<VersioningSystem>(Arrays.asList(VersioningManager.getInstance().getVersioningSystems()));
-                Collections.sort(vcs, new VersioningMainMenu.ByDisplayNameComparator());
+                vcs.sort(new VersioningMainMenu.ByDisplayNameComparator());
                 List<Action> allvsActions = new ArrayList<Action>(50);
                 for (VersioningSystem vs : vcs) {
                     if (vs.isLocalHistory()) {

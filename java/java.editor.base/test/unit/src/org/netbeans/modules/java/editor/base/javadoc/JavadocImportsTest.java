@@ -138,7 +138,7 @@ public class JavadocImportsTest extends JavadocTestSupport {
         Set<TypeElement> result = JavadocImports.computeReferencedElements(info, member);
         assertNotNull(result);
         List<TypeElement> sortedResult = new ArrayList<TypeElement>(result);
-        Collections.sort(sortedResult, new ElementComparator());
+        sortedResult.sort(new ElementComparator());
         assertEquals(exp, sortedResult);
 
         // C.field
@@ -151,7 +151,7 @@ public class JavadocImportsTest extends JavadocTestSupport {
         result = JavadocImports.computeReferencedElements(info, member);
         assertNotNull(result);
         sortedResult = new ArrayList<TypeElement>(result);
-        Collections.sort(sortedResult, new ElementComparator());
+        sortedResult.sort(new ElementComparator());
         assertEquals(exp, sortedResult);
 
         // C.InnerInterface
@@ -164,7 +164,7 @@ public class JavadocImportsTest extends JavadocTestSupport {
         result = JavadocImports.computeReferencedElements(info, member);
         assertNotNull(result);
         sortedResult = new ArrayList<TypeElement>(result);
-        Collections.sort(sortedResult, new ElementComparator());
+        sortedResult.sort(new ElementComparator());
         assertEquals(exp, sortedResult);
 
         // C.InnerAnnotationType
@@ -177,7 +177,7 @@ public class JavadocImportsTest extends JavadocTestSupport {
         result = JavadocImports.computeReferencedElements(info, member);
         assertNotNull(result);
         sortedResult = new ArrayList<TypeElement>(result);
-        Collections.sort(sortedResult, new ElementComparator());
+        sortedResult.sort(new ElementComparator());
         assertEquals(exp, sortedResult);
 
         // TopLevelEnum
@@ -190,7 +190,7 @@ public class JavadocImportsTest extends JavadocTestSupport {
         result = JavadocImports.computeReferencedElements(info, member);
         assertNotNull(result);
         sortedResult = new ArrayList<TypeElement>(result);
-        Collections.sort(sortedResult, new ElementComparator());
+        sortedResult.sort(new ElementComparator());
         assertEquals(exp, sortedResult);
 
         // TopLevelEnum.E1
@@ -203,7 +203,7 @@ public class JavadocImportsTest extends JavadocTestSupport {
         result = JavadocImports.computeReferencedElements(info, member);
         assertNotNull(result);
         sortedResult = new ArrayList<TypeElement>(result);
-        Collections.sort(sortedResult, new ElementComparator());
+        sortedResult.sort(new ElementComparator());
         assertEquals(exp, sortedResult);
     }
     

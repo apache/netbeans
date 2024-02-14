@@ -22,7 +22,6 @@ import java.awt.EventQueue;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -136,7 +135,7 @@ public class FolderComparatorTest {
             list.add(DataObject.find(fo));
         }
 
-        Collections.sort(list, c);
+        list.sort(c);
         for (int i = 0; i < expectedOrder.length; i++) {
             assertEquals(expectedOrder[i], list.get(i).getName());
         }

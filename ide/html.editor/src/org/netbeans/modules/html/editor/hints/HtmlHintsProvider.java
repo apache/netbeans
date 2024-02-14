@@ -334,7 +334,7 @@ public class HtmlHintsProvider implements HintsProvider {
         if (ids == null) {
             return Collections.<org.netbeans.modules.html.editor.hints.HtmlRule>emptyList();
         }
-        Collections.sort(ids, HTML_RULES_COMPARATOR);
+        ids.sort(HTML_RULES_COMPARATOR);
         return ids;
     }
 

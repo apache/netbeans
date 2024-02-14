@@ -31,7 +31,6 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -311,7 +310,7 @@ public class HintsTestBase extends NbTestCase {
                 }
             }
             
-            Collections.sort(sortableFixes, new FixComparator());
+            sortableFixes.sort(new FixComparator());
             
             List<Fix> result = new ArrayList<Fix>();
             

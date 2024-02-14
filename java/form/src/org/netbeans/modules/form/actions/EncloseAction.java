@@ -23,7 +23,6 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.awt.event.*;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.swing.*;
@@ -153,7 +152,7 @@ public class EncloseAction extends NodeAction {
             }
         }
         // sort the PaletteItems alphabetically
-        Collections.sort(list, new Comparator<PaletteItem>() {
+        list.sort(new Comparator<PaletteItem>() {
             @Override
             public int compare(PaletteItem o1, PaletteItem o2) {
                 return o1.getNode().getDisplayName().compareTo(o2.getNode().getDisplayName());

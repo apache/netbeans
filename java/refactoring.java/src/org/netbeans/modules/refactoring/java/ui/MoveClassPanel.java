@@ -534,7 +534,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
                         } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);
                         }
-                        Collections.sort(items, new Comparator() {
+                        items.sort(new Comparator() {
                             private Comparator COLLATOR = Collator.getInstance();
 
                             @Override

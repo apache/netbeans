@@ -1035,7 +1035,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             }
             if (branchMergeWith != null) {
                 keys = new ArrayList<GitBranchInfo>(keys);
-                Collections.sort(keys, new Comparator<GitBranchInfo>() {
+                keys.sort(new Comparator<GitBranchInfo>() {
                     @Override
                     public int compare (GitBranchInfo i1, GitBranchInfo i2) {
                         assert i1.mergedStatus != null;
@@ -2248,7 +2248,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     urls.add(new RemoteUri(s, true));
                 }
             }
-            Collections.sort(urls, new Comparator<RemoteUri>() {
+            urls.sort(new Comparator<RemoteUri>() {
                 @Override
                 public int compare (RemoteUri o1, RemoteUri o2) {
                     return o1.uri.compareTo(o2.uri);

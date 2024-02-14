@@ -5934,7 +5934,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
             // sort the attributes by attribute name
             // probably not necessary, but there is no guarantee that
             // the order of attributes will remain the same in DOM
-            Collections.sort(attribList, new Comparator<org.w3c.dom.Node>() {
+            attribList.sort(new Comparator<org.w3c.dom.Node>() {
                 @Override
                 public int compare(org.w3c.dom.Node n1, org.w3c.dom.Node n2) {
                     return n1.getNodeName().compareTo(n2.getNodeName());

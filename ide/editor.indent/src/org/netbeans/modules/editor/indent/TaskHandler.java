@@ -128,7 +128,7 @@ public final class TaskHandler {
             try {
                 languagePathSet = th.languagePaths();
                 List<LanguagePath> languagePaths = new ArrayList<LanguagePath>(languagePathSet);
-                Collections.sort(languagePaths, LanguagePathSizeComparator.ASCENDING);
+                languagePaths.sort(LanguagePathSizeComparator.ASCENDING);
                 for (LanguagePath lp : languagePaths) {
                     addItem(MimePath.parse(lp.mimePath()), lp);
                 }

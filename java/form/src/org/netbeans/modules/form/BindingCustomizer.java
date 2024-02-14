@@ -495,8 +495,8 @@ public class BindingCustomizer extends JPanel {
         }
 
         Comparator<RADComponent> c = new RADComponentComparator();
-        Collections.sort(nonvisualList, c);
-        Collections.sort(visualList, c);
+        nonvisualList.sort(c);
+        visualList.sort(c);
 
         allComponents = new ArrayList<RADComponent>(nonvisualList.size() + visualList.size() + 1);
         allComponents.addAll(nonvisualList);

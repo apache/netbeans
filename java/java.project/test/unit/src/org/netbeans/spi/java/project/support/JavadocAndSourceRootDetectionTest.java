@@ -20,14 +20,12 @@
 package org.netbeans.spi.java.project.support;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -146,8 +144,8 @@ public class JavadocAndSourceRootDetectionTest extends NbTestCase {
                 return o1.getNameExt().compareToIgnoreCase(o2.getNameExt());
             }
         };
-        Collections.sort(expected,c);
-        Collections.sort(result,c);
+        expected.sort(c);
+        result.sort(c);
         assertEquals (expected.toString(), result.toString());
     }
     

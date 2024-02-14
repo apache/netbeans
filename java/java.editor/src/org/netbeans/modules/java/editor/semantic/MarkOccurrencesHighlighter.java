@@ -106,7 +106,7 @@ public class MarkOccurrencesHighlighter extends MarkOccurrencesHighlighterBase {
             bag = new ArrayList<int[]>();
         }
 
-        Collections.sort(bag, new Comparator<int[]>() {
+        bag.sort(new Comparator<int[]>() {
             public int compare(int[] o1, int[] o2) {
                 return o1[0] - o2[0];
             }

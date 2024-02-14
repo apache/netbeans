@@ -592,7 +592,7 @@ public class PluginPropertyUtils {
                 exes.add(exe);
             }
         }
-        Collections.sort(exes, new Comparator<PluginExecution>() {
+        exes.sort(new Comparator<PluginExecution>() {
             @Override public int compare(PluginExecution e1, PluginExecution e2) {
                 return e2.getPriority() - e1.getPriority();
             }

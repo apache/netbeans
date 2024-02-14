@@ -176,7 +176,7 @@ public class BookmarkManager {
                 it.remove();
             }
         }
-        Collections.sort(sortedProjectBookmarks, new Comparator<ProjectBookmarks>() {
+        sortedProjectBookmarks.sort(new Comparator<ProjectBookmarks>() {
             @Override
             public int compare(ProjectBookmarks pb1, ProjectBookmarks pb2) {
                 return pb1.getProjectDisplayName().compareTo(pb2.getProjectDisplayName());
@@ -200,7 +200,7 @@ public class BookmarkManager {
                     fbList.add(fileBookmarks);
                 } // else: could be obsolete URL of a removed file
             }
-            Collections.sort(fbList, new Comparator<FileBookmarks>() {
+            fbList.sort(new Comparator<FileBookmarks>() {
                 @Override
                 public int compare(FileBookmarks fb1, FileBookmarks fb2) {
                     FileObject fo1 = fb1.getFileObject();
@@ -222,7 +222,7 @@ public class BookmarkManager {
         
     public BookmarkInfo[] getSortedBookmarks(FileBookmarks fileBookmarks) {
         List<BookmarkInfo> sortedBookmarks = new ArrayList<BookmarkInfo>(fileBookmarks.getBookmarks());
-        Collections.sort(sortedBookmarks, new Comparator<BookmarkInfo>() {
+        sortedBookmarks.sort(new Comparator<BookmarkInfo>() {
             @Override
             public int compare(BookmarkInfo b1, BookmarkInfo b2) {
                 return b1.getCurrentLineIndex() - b2.getCurrentLineIndex();

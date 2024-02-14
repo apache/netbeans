@@ -48,7 +48,6 @@ import org.netbeans.modules.javafx2.editor.JavaFXEditorUtils;
 import org.netbeans.modules.javafx2.editor.completion.beans.FxDefinitionKind;
 import org.netbeans.modules.javafx2.editor.completion.beans.FxProperty;
 import org.netbeans.modules.javafx2.editor.completion.model.FxClassUtils;
-import org.netbeans.modules.javafx2.editor.completion.model.FxInstance;
 import org.netbeans.modules.javafx2.editor.completion.model.FxNode;
 import org.netbeans.modules.javafx2.editor.completion.model.ImportDecl;
 import org.netbeans.spi.editor.completion.CompletionItem;
@@ -369,7 +368,7 @@ public final class ClassCompleter implements Completer, Completer.Factory {
     
     private List<CompletionItem> createItems(Collection<? extends ElementHandle<TypeElement>> elems, int priority) {
         List<ElementHandle<TypeElement>> sorted = new ArrayList<ElementHandle<TypeElement>>(elems);
-        Collections.sort(sorted, CLASS_SORTER);
+        sorted.sort(CLASS_SORTER);
         List<CompletionItem> items = new ArrayList<CompletionItem>();
         for (ElementHandle<TypeElement> tel : sorted) {
             CompletionItem item = createItem(tel, priority);

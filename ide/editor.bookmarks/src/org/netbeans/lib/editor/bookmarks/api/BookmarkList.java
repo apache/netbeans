@@ -431,7 +431,7 @@ public final class BookmarkList {
             }
             bookmark = new Bookmark (this, bookmarkInfo, offset);
             bookmarks.add (bookmark);
-            Collections.sort (bookmarks, bookmarksComparator);
+            bookmarks.sort (bookmarksComparator);
             info2bookmark.put(bookmarkInfo, bookmark);
         }
         return bookmark;

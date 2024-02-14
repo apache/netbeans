@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import static java.util.function.Predicate.not;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -491,7 +490,7 @@ public class JsfAttributesCompletionHelper {
 
             //xml namespace completion for facelets namespaces
             List<String> otherNamespaces = new ArrayList<>(jsfs.getLibraries().keySet());
-            Collections.sort(otherNamespaces, JsfNamespaceComparator.getInstance());
+            otherNamespaces.sort(JsfNamespaceComparator.getInstance());
 
             int otherNamespaceSortPriority = 20;
             for (String namespace : otherNamespaces) {

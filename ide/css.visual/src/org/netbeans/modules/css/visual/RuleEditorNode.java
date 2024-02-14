@@ -358,7 +358,7 @@ public class RuleEditorNode extends AbstractNode {
                 }
                 
                 //sort alpha
-                Collections.sort(categoryDeclarations, PropertyUtils.getDeclarationsComparator());
+                categoryDeclarations.sort(PropertyUtils.getDeclarationsComparator());
 
                 PropertyCategoryPropertySet propertyCategoryPropertySet = new PropertyCategoryPropertySet(entry.getKey());
                 propertyCategoryPropertySet.addAll(categoryDeclarations);
@@ -375,7 +375,7 @@ public class RuleEditorNode extends AbstractNode {
                     if (allInCat.isEmpty()) {
                         continue; //skip empty categories (when filtering)
                     }
-                    Collections.sort(allInCat, PropertyUtils.getPropertyDefinitionsComparator());
+                    allInCat.sort(PropertyUtils.getPropertyDefinitionsComparator());
 
                     PropertyCategoryPropertySet propertySet = propertySetsMap.get(cat);
                     if (propertySet == null) {
@@ -435,7 +435,7 @@ public class RuleEditorNode extends AbstractNode {
                 }
                 //sort aplha
                 Comparator<PropertyDeclaration> comparator = PropertyUtils.createDeclarationsComparator(getRule(), panel.getCreatedDeclarationsIdsList());
-                Collections.sort(filtered, comparator);
+                filtered.sort(comparator);
                 set.addAll(filtered);
                 
                 //do NOT show all properties
@@ -471,7 +471,7 @@ public class RuleEditorNode extends AbstractNode {
                 set.addAll(filteredExisting);
                 
                 List<PropertyDefinition> all = new ArrayList<>(filterByPrefix(Properties.getPropertyDefinitions(file, true)));
-                Collections.sort(all, PropertyUtils.getPropertyDefinitionsComparator());
+                all.sort(PropertyUtils.getPropertyDefinitionsComparator());
 
                 //remove already used
                 for (PropertyDeclaration d : set.getDeclarations()) {

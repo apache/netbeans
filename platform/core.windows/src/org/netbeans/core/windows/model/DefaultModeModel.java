@@ -172,7 +172,7 @@ final class DefaultModeModel implements ModeModel {
             if (prevModes.isEmpty()) {
                 return; //nothing to sort by (shouldn't really happen)
             }
-            Collections.sort(opened, new Comparator<TopComponent>() {
+            opened.sort(new Comparator<TopComponent>() {
                 @Override
                 public int compare(TopComponent o1, TopComponent o2) {
                     String mode1 = tc2modeName.get(o1);
@@ -204,7 +204,7 @@ final class DefaultModeModel implements ModeModel {
             return;
         }
         List<TopComponent> openedComponents = topComponentSubModel.getOpenedTopComponents();
-        Collections.sort(openedComponents, new Comparator<TopComponent>() {
+        openedComponents.sort(new Comparator<TopComponent>() {
             @Override
             public int compare(TopComponent tc1, TopComponent tc2) {
                 FileObject f1 = tc1.getLookup().lookup(FileObject.class);

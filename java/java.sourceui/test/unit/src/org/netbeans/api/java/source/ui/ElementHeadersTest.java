@@ -28,7 +28,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -305,7 +304,7 @@ public class ElementHeadersTest extends NbTestCase {
     
     private List<StructureElement> sortChildren(StructureElement parent) {
         List<StructureElement> ch = new ArrayList<>(parent.getChildren());
-        Collections.sort(ch, new Comparator<StructureElement>() {
+        ch.sort(new Comparator<StructureElement>() {
             @Override
             public int compare(StructureElement o1, StructureElement o2) {
                 return o1.getSelectionStartOffset() - o2.getSelectionStartOffset();

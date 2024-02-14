@@ -533,7 +533,7 @@ public final class RunUtils {
             );
         }
         List<Object> ordered = new ArrayList<>(options.keySet());
-        Collections.sort(ordered, (a, b) -> options.get(a) - options.get(b));
+        ordered.sort((a, b) -> options.get(a) - options.get(b));
         ordered.add(DialogDescriptor.CANCEL_OPTION);
         return Pair.of(ordered.toArray(new Object[ordered.size()]), def);
     };

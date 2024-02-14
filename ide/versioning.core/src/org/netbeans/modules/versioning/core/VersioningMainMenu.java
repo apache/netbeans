@@ -98,7 +98,7 @@ public class VersioningMainMenu extends AbstractAction implements DynamicMenuCon
             }
             items.add(Utils.createJSeparator());
 
-            Collections.sort(systems, new ByDisplayNameComparator());
+            systems.sort(new ByDisplayNameComparator());
 
             VersioningSystem localHistory = null;
             boolean accepted = false;

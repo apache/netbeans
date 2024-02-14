@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -224,7 +223,7 @@ class OSGiProcess {
         for (File bundle : bundles.listFiles()) {
             installed.add(f.getBundleContext().installBundle(Utilities.toURI(bundle).toString()));
         }
-        Collections.sort(installed, new Comparator<Bundle>() {
+        installed.sort(new Comparator<Bundle>() {
             public @Override int compare(Bundle b1, Bundle b2) {
                 return b1.getSymbolicName().compareTo(b2.getSymbolicName()) * backwards;
             }

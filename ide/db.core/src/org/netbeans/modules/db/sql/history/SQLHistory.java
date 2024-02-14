@@ -128,7 +128,7 @@ public class SQLHistory implements Set<SQLHistoryEntry> {
     private void enforceLimit() {
         if(size() > historyLimit) {
             List<SQLHistoryEntry> list = new ArrayList<>(history);
-            Collections.sort(list, new Comparator<SQLHistoryEntry>() {
+            list.sort(new Comparator<SQLHistoryEntry>() {
                 @Override
                 public int compare(SQLHistoryEntry o1, SQLHistoryEntry o2) {
                     return o2.getDate().compareTo(o1.getDate());

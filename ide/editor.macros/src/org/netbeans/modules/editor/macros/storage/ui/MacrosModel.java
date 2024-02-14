@@ -110,7 +110,7 @@ public final class MacrosModel {
             }
         }
         
-        Collections.sort(allMacrosList, MACRO_COMPARATOR);
+        allMacrosList.sort(MACRO_COMPARATOR);
 
         loaded = true;
         tableModel.fireTableDataChanged();

@@ -21,7 +21,6 @@ package org.netbeans.modules.project.dependency.impl;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -161,7 +160,7 @@ public class TextDocumentEditProcessor {
     
     public void performEdits() throws BadLocationException {
         List<TextEdit> newEdits = new ArrayList<>(edits.getEdits());
-        Collections.sort(newEdits, ProjectModificationResultImpl.textEditComparator(edits.getEdits()).reversed());
+        newEdits.sort(ProjectModificationResultImpl.textEditComparator(edits.getEdits()).reversed());
         
         for (TextEdit te : edits.getEdits()) {
             int s = te.getStartOffset();

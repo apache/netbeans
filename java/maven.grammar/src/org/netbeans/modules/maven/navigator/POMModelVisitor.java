@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -1654,9 +1653,8 @@ public class POMModelVisitor implements org.netbeans.modules.maven.model.pom.POM
             
             this.keys = toSet; //keys is the unsorted, natural order stuff..
             if (configuration.isSortLists()) {
-                toSet = new ArrayList<Lookup>();
-                toSet.addAll(keys);
-                Collections.sort(toSet, lkpComparator);
+                toSet = new ArrayList<>(keys);
+                toSet.sort(lkpComparator);
             }
             setKeys(toSet);
         }
@@ -1671,9 +1669,8 @@ public class POMModelVisitor implements org.netbeans.modules.maven.model.pom.POM
         public void resort() {
             if (keys != null) {
                 if (configuration.isSortLists()) {
-                    ArrayList<Lookup> toSet = new ArrayList<Lookup>();
-                    toSet.addAll(keys);
-                    Collections.sort(toSet, lkpComparator);
+                    ArrayList<Lookup> toSet = new ArrayList<>(keys);
+                    toSet.sort(lkpComparator);
                     setKeys(toSet);
                 } else {
                     setKeys(keys);

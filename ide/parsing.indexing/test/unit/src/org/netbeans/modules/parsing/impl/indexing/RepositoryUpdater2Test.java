@@ -433,7 +433,7 @@ public class RepositoryUpdater2Test extends IndexingTestBase {
 
             assertEquals("All roots should be indexed: " + indexer.indexedRoots, 3, indexer.indexedRoots.size());
             ArrayList<URL> expectedSourceRoots = new ArrayList<URL>(indexer.indexedRoots);
-            Collections.sort(expectedSourceRoots, new RepositoryUpdater.LexicographicComparator(true));
+            expectedSourceRoots.sort(new RepositoryUpdater.LexicographicComparator(true));
             assertEquals("Wrong scanned sources", expectedSourceRoots, RepositoryUpdater.getDefault().getScannedSources());
             assertEquals("Wrong scanned binaries", 0, RepositoryUpdater.getDefault().getScannedBinaries().size());
             assertEquals("Wrong scanned unknowns", 0, RepositoryUpdater.getDefault().getScannedUnknowns().size());

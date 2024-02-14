@@ -24,7 +24,6 @@ import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.awt.event.*;
 import java.awt.geom.Area;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import javax.swing.*;
@@ -585,7 +584,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
                             Rectangle bound = compBounds.get(button);
                             cutOrder.add(new int[] {columns ? bound.x : bound.y, j});
                         }
-                        Collections.sort(cutOrder, new Comparator<int[]>() {
+                        cutOrder.sort(new Comparator<int[]>() {
                             @Override
                             public int compare(int[] i1, int[] i2) {
                                 return (i1[0] == i2[0]) ? (i1[1] - i2[1]) : (i1[0] - i2[0]);

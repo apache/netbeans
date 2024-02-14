@@ -414,7 +414,7 @@ public class CompositePanelProviderImpl implements ProjectCustomizer.CompositeCa
     private static List<ProjectCustomizer.Category> sortCategories(Collection<ProjectCustomizer.Category> categories) {
         final Collator collator = Collator.getInstance();
         List<ProjectCustomizer.Category> sortedCategories = new ArrayList<>(categories);
-        Collections.sort(sortedCategories, new Comparator<ProjectCustomizer.Category>() {
+        sortedCategories.sort(new Comparator<ProjectCustomizer.Category>() {
             @Override
             public int compare(ProjectCustomizer.Category category1, ProjectCustomizer.Category category2) {
                 return collator.compare(category1.getDisplayName(), category2.getDisplayName());

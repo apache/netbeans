@@ -23,11 +23,9 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.netbeans.api.core.ide.ServicesTabNodeRegistration;
@@ -129,7 +127,7 @@ public class BugtrackingRootNode extends AbstractNode {
                 }
             }
             
-            Collections.sort(toPopulate, new RepositoryComparator());
+            toPopulate.sort(new RepositoryComparator());
             return true;
         }
     }

@@ -253,7 +253,7 @@ public final class RemoteConnections {
             }
             configs.add(cfg);
         }
-        Collections.sort(configs, ConfigManager.getConfigurationComparator());
+        configs.sort(ConfigManager.getConfigurationComparator());
         return configs;
     }
 

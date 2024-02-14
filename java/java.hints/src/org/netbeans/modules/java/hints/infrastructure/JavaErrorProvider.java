@@ -315,7 +315,7 @@ public class JavaErrorProvider implements ErrorProvider {
     private static List<Fix> sortFixes(Collection<Fix> fixes) {
         List<Fix> result = new ArrayList<Fix>(fixes);
 
-        Collections.sort(result, new FixComparator());
+        result.sort(new FixComparator());
 
         return result;
     }

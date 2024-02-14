@@ -118,7 +118,7 @@ final class RepositoryRevision {
         if (events == null) {
             return;
         }
-        Collections.sort(events, comparator);
+        events.sort(comparator);
     }
 
     boolean expandEvents () {
@@ -532,7 +532,7 @@ final class RepositoryRevision {
                     }
                     events.add(event);
                 }
-                Collections.sort(events, new EventFullNameComparator());
+                events.sort(new EventFullNameComparator());
                 return events;
             }
         }

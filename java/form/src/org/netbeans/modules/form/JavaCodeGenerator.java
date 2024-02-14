@@ -2756,7 +2756,7 @@ class JavaCodeGenerator extends CodeGenerator {
             if ((var.getType() &  typeMask) == (type & typeMask))
                 variables.add(var);
         }
-        Collections.sort(variables, new Comparator<CodeVariable>() {
+        variables.sort(new Comparator<CodeVariable>() {
             @Override
             public int compare(CodeVariable o1, CodeVariable o2) {
                 return o1.getName().compareTo(o2.getName());

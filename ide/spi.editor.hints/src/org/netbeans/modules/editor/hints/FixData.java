@@ -22,7 +22,6 @@ package org.netbeans.modules.editor.hints;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -56,7 +55,7 @@ public class FixData extends CompoundLazyFixList {
     private List<Fix> sortFixes(Collection<Fix> fixes) {
         List<Fix> result = new ArrayList<Fix>(fixes);
 
-        Collections.sort(result, new FixComparator());
+        result.sort(new FixComparator());
 
         return result;
     }

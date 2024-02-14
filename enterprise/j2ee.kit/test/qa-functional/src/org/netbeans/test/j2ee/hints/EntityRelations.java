@@ -23,7 +23,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Handler;
@@ -278,7 +277,7 @@ public class EntityRelations extends J2eeTestCase {
 
     private List<ErrorDescription> getProblems(FileObject fileToTest) {
         problems = AnnotationHolder.getInstance(fileToTest).getErrors();
-        Collections.sort(problems, new Comparator<ErrorDescription>() {
+        problems.sort(new Comparator<ErrorDescription>() {
 
             @Override
             public int compare(ErrorDescription o1, ErrorDescription o2) {
@@ -360,7 +359,7 @@ public class EntityRelations extends J2eeTestCase {
         for (ErrorDescription errorDescription : getProblems(fileToTest)) {
             fixes.addAll(errorDescription.getFixes().getFixes());
         }
-        Collections.sort(fixes, new Comparator<Fix>() {
+        fixes.sort(new Comparator<Fix>() {
 
             @Override
             public int compare(Fix o1, Fix o2) {

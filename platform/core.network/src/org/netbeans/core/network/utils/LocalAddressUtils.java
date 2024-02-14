@@ -590,7 +590,7 @@ public class LocalAddressUtils {
         List<InetAddress> list = new ArrayList<>(mapWithScores.keySet());
         
         // Sort descending according to the scores 
-        Collections.sort( list, new Comparator<InetAddress>(){
+        list.sort(new Comparator<InetAddress>(){
             @Override
             public int compare(InetAddress o1, InetAddress o2) {
                 return mapWithScores.get(o2).compareTo(mapWithScores.get(o1));

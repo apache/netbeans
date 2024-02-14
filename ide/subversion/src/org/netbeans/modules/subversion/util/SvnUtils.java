@@ -1529,7 +1529,7 @@ public class SvnUtils {
             }
         }
         if (!sorted) {
-            Collections.sort(ret, new Comparator<ISVNLogMessage>() {
+            ret.sort(new Comparator<ISVNLogMessage>() {
                 @Override
                 public int compare(ISVNLogMessage m1, ISVNLogMessage m2) {
                     long revNum1 = m1.getRevision().getNumber();

@@ -1093,7 +1093,7 @@ outer:      for (Iterator it = localCompletionResult.getResultSets().iterator();
         final ArrayList<CompletionItem> sortedResultItems = new ArrayList<CompletionItem>(size = resultItems.size());
         if (size > 0) {
             try {
-                Collections.sort(resultItems, CompletionItemComparator.get(getSortType()));
+                resultItems.sort(CompletionItemComparator.get(getSortType()));
             } catch (IllegalArgumentException iae) {
                 LOG.warning("Unable to sort: " + resultItems); //NOI18N
             }

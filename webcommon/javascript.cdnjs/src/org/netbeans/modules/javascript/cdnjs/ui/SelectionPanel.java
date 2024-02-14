@@ -23,7 +23,6 @@ import java.awt.Dialog;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +79,7 @@ public class SelectionPanel extends JPanel implements HelpCtx.Provider {
     public SelectionPanel(Project project, Library.Version[] existingLibraries, File webRoot, String libraryFolder) {
         assert project != null;
         libraries = new ArrayList<>(Arrays.asList(existingLibraries));
-        Collections.sort(libraries, new LibraryVersionComparator());
+        libraries.sort(new LibraryVersionComparator());
         this.webRoot = webRoot;
         tableModel = new LibraryTableModel();
         initComponents();
@@ -209,7 +208,7 @@ public class SelectionPanel extends JPanel implements HelpCtx.Provider {
             libraries.remove(versionToReplace);
         }
         libraries.add(libraryVersion);
-        Collections.sort(libraries, new LibraryVersionComparator());
+        libraries.sort(new LibraryVersionComparator());
         libraryInfo.put(newLibraryName, libraryVersion.getLibrary());
         tableModel.fireTableDataChanged();
     }

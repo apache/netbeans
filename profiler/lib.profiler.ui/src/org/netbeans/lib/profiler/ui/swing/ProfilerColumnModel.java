@@ -21,7 +21,6 @@ package org.netbeans.lib.profiler.ui.swing;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -365,7 +364,7 @@ class ProfilerColumnModel extends DefaultTableColumnModel {
                 }
             } catch (NumberFormatException e) {}
         }
-        Collections.sort(tableColumns, new Comparator<TableColumn>() {
+        tableColumns.sort(new Comparator<TableColumn>() {
             public int compare(TableColumn c1, TableColumn c2) {
                 Integer index1 = (Integer)c1.getIdentifier();
                 Integer index2 = (Integer)c2.getIdentifier();

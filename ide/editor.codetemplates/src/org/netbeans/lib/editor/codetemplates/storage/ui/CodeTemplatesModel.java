@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +103,7 @@ final class CodeTemplatesModel {
                 line.add(ctd.getDescription());
                 table.add(line);
             }
-            Collections.sort(table, new MComparator());
+            table.sort(new MComparator());
             
             List<String> supportedContexts = new ArrayList<>();
             for (CodeTemplateFilter.ContextBasedFactory factory : MimeLookup.getLookup(mimeType).lookupAll(CodeTemplateFilter.ContextBasedFactory.class)) {

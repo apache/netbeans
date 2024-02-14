@@ -116,7 +116,7 @@ public final class ContextualPatch {
     }
 
     private void resortPatches (List<SinglePatch> patches) {
-        Collections.sort(patches, new Comparator<SinglePatch>() {
+        patches.sort(new Comparator<SinglePatch>() {
             
             @Override
             public int compare (SinglePatch p1, SinglePatch p2) {

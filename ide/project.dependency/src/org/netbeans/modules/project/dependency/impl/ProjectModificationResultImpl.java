@@ -221,7 +221,7 @@ public class ProjectModificationResultImpl {
         }
         TextDocumentEdit tde = fileModifications.get(fo);
         List<TextEdit> newEdits = new ArrayList<>(edit.getEdits());
-        Collections.sort(newEdits,  textEditComparator(edit.getEdits()));
+        newEdits.sort(textEditComparator(edit.getEdits()));
         if (tde != null) {
             List<TextEdit> existing = tde.getEdits();
             int pos = 0;

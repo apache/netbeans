@@ -22,7 +22,6 @@ package org.netbeans.modules.team.ide;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,7 +62,7 @@ public class PatchContextChooser extends javax.swing.JPanel implements ExplorerM
                 nodes.add(node);
             }
         }
-        Collections.sort(nodes, new Comparator<Node>() {
+        nodes.sort(new Comparator<Node>() {
             @Override public int compare(Node n1, Node n2) {
                 if(n1 == null && n2 == null) {
                     return 0;

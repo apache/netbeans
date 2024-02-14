@@ -21,7 +21,6 @@ package org.netbeans.modules.editor.fold;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -430,7 +429,7 @@ public final class FoldOperationImpl {
                 blockedSorted.addAll(blocked);
                 // enumerate together with blocked ones
                 blockedSorted.add(f);
-                Collections.sort(blockedSorted, FOLD_COMPARATOR);
+                blockedSorted.sort(FOLD_COMPARATOR);
                 blockStack.push(new Object[] { blockedFolds, blocker});
                 blockedFolds = blockedSorted.iterator();
                 blocker = f;
@@ -698,7 +697,7 @@ public final class FoldOperationImpl {
         public void run() throws BadLocationException {
             // first order the supplied folds:
             List ll = new ArrayList<FoldInfo>(foldInfos);
-            Collections.sort(ll, this);
+            ll.sort(this);
             
             foldIt = foldIterator();
             infoIt = ll.iterator();

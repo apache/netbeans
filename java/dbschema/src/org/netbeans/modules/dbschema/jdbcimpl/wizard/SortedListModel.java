@@ -84,7 +84,7 @@ public class SortedListModel extends AbstractListModel
     public SortedListModel(Collection c)
     {
         elements = new ArrayList(c);
-        Collections.sort(elements, comp);
+        elements.sort(comp);
     }
 
     /**
@@ -130,7 +130,7 @@ public class SortedListModel extends AbstractListModel
             return;
 
         comp = newComp;
-        Collections.sort(elements, comp);
+        elements.sort(comp);
 
         int last = elements.size() - 1;
 

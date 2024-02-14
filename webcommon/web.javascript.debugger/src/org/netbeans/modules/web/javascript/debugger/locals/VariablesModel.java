@@ -25,7 +25,6 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -158,7 +157,7 @@ public class VariablesModel extends ViewModelSupport implements TreeModel, Exten
     }
 
     private List<ScopedRemoteObject> sortVariables(List<ScopedRemoteObject> vars) {
-        Collections.sort(vars, new Comparator<ScopedRemoteObject>() {
+        vars.sort(new Comparator<ScopedRemoteObject>() {
             @Override
             public int compare(ScopedRemoteObject o1, ScopedRemoteObject o2) {
                 int i = o1.getScope().compareTo(o2.getScope());

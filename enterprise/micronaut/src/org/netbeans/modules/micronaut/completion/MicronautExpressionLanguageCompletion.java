@@ -376,7 +376,7 @@ public class MicronautExpressionLanguageCompletion {
                             }
                             String propertyName = element.getKind() == ElementKind.METHOD ? ExpressionTree.getPropertyName((ExecutableElement) element) : null;
                             if (Utils.startsWith(propertyName, prefix) && info.getTrees().isAccessible(ctx.getScope(), element, (DeclaredType) enclType)) {
-                                String returnType = MicronautDataCompletionTask.getTypeName(info, ((ExecutableElement)element).getReturnType(), false, false).toString();
+                                String returnType = Utils.getTypeName(info, ((ExecutableElement)element).getReturnType(), false, false).toString();
                                 items.add(factory.createBeanPropertyItem(propertyName, returnType, anchorOffset));
                             }
                         }

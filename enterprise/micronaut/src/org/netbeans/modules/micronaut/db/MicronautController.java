@@ -304,15 +304,15 @@ public class MicronautController implements TemplateWizard.Iterator {
                         if (origTree.getKind() == Tree.Kind.CLASS) {
                             GenerationUtils gu = GenerationUtils.newInstance(copy);
                             TreeMaker tm = copy.getTreeMaker();
-                            List<ExpressionTree> annArgs = Collections.singletonList(gu.createAnnotationArgument(null, "/" + name.toLowerCase())); //NOI18N
-                            ClassTree cls = gu.addAnnotation((ClassTree) origTree, gu.createAnnotation("io.micronaut.http.annotation.Controller", annArgs)); //NOI18N
+                            String controllerId = "/" + name.toLowerCase();
+                            ClassTree cls = gu.addAnnotation((ClassTree) origTree, gu.createAnnotation("io.micronaut.http.annotation.Controller", List.of(tm.Literal(controllerId)))); //NOI18N
                             if (repositoryFQN != null) {
                                 String repositoryFieldName = name.substring(0, 1).toLowerCase() + name.substring(1) + "Repository"; //NOI18N
                                 VariableTree repositoryField = tm.Variable(tm.Modifiers(EnumSet.of(Modifier.PRIVATE, Modifier.FINAL)), repositoryFieldName, tm.QualIdent(repositoryFQN), null);
                                 cls = tm.addClassMember(cls, repositoryField);
                                 cls = tm.addClassMember(cls, GeneratorUtilities.get(copy).createConstructor(cls, Collections.singleton(repositoryField)));
                                 TypeElement te = copy.getElements().getTypeElement(repositoryFQN);
-                                MethodTree mt = te != null ? Utils.createControllerDataEndpointMethod(copy, te, repositoryFieldName, "findAll", null) : null;
+                                MethodTree mt = te != null ? Utils.createControllerFindAllDataEndpointMethod(copy, te, repositoryFieldName, controllerId, null) : null;
                                 if (mt != null) {
                                     cls = tm.addClassMember(cls, mt);
                                 }

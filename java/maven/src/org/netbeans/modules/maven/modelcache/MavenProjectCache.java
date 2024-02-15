@@ -208,7 +208,7 @@ public final class MavenProjectCache {
             res = NbArtifactFixer.collectFallbackArtifacts(() -> projectEmbedder.readProjectWithDependencies(req, true), (c) -> 
                 c.forEach(a -> {
                     // artifact fixer only fakes POMs.
-                    fakes.add(projectEmbedder.createArtifactWithClassifier(a.getGroupId(), a.getArtifactId(), a.getVersion(), "pom", a.getClassifier())); // NOI18N
+                    fakes.add(projectEmbedder.createArtifactWithClassifier(a.getGroupId(), a.getArtifactId(), a.getVersion(), a.getExtension(), a.getClassifier())); // NOI18N
                 }
             ));
             newproject = res.getProject();

@@ -2542,7 +2542,7 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: java/java.lsp.server
-        run: .github/retry.sh ant $OPTS -f java/java.lsp.server test
+        run: .github/retry.sh ant $OPTS -f java/java.lsp.server clean test
 
       - name: Create Test Summary
         uses: test-summary/action@v2

@@ -31,12 +31,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
@@ -321,6 +324,11 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
         problemReporter.addMissingArtifact(a, checkMissing);
     }
     
+    private static String artifactId(Artifact a) {
+        return a.getGroupId() + ":" + a.getArtifactId() + ":" + a.getVersion() + ":" + 
+                (a.getClassifier() == null ? "" : a.getClassifier()) + "/" + a.getType();
+    }
+    
     @NbBundle.Messages({
         "ERR_SystemScope=A 'system' scope dependency was not found. Code completion is affected.",
         "MSG_SystemScope=There is a 'system' scoped dependency in the project but the path to the binary is not valid.\n"
@@ -368,7 +376,9 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
         
         Collection<Artifact> toCheck = new HashSet<>(project.getArtifacts());
         if (fakes != null) {
-            toCheck.addAll(fakes);
+            // the fake artifacts are typically without a scope, so ignore scope when merging with other reported pieces.
+            Set<String> ids = toCheck.stream().map(MavenModelProblemsProvider::artifactId).collect(Collectors.toSet());
+            fakes.stream().filter(a -> !ids.contains(artifactId(a))).forEach(toCheck::add);
         }
         
         for (Artifact art : toCheck) {

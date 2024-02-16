@@ -89,10 +89,10 @@ public final class AppServerValidationPanel extends DelegatingWizardDescriptorPa
         ClassPath classpath = ClassPath.getClassPath(project.getProjectDirectory(), ClassPath.COMPILE);
         return !(classpath.findResource("jakarta/ejb/Stateless.class") == null //NOI18N
                 || classpath.findResource("jakarta/ejb/Stateful.class") == null //NOI18N
-                || classpath.findResource("jakarta/ejb/Singleton.class") == null //NOI18N
+                || classpath.findResource("jakarta/ejb/Singleton.class") == null) //NOI18N
                 || //NOI18N
                 !(classpath.findResource("javax/ejb/Stateless.class") == null //NOI18N
                 || classpath.findResource("javax/ejb/Stateful.class") == null //NOI18N
-                || classpath.findResource("javax/ejb/Singleton.class") == null)); //NOI18N
+                || classpath.findResource("javax/ejb/Singleton.class") == null); //NOI18N
     }
 }

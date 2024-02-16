@@ -62,8 +62,8 @@ public class AddFinderMethodStrategy extends AbstractAddMethodStrategy {
         super (NbBundle.getMessage(AddFinderMethodStrategy.class, "LBL_AddFinderMethodAction"));
     }
 
-    protected MethodModel getPrototypeMethod() {
-        return getFinderPrototypeMethod();
+    protected MethodModel getPrototypeMethod(boolean jakartaVariant) {
+        return getFinderPrototypeMethod(jakartaVariant);
     }
 
     protected MethodCustomizer createDialog(FileObject fileObject, final MethodModel methodModel) throws IOException {
@@ -127,13 +127,13 @@ public class AddFinderMethodStrategy extends AbstractAddMethodStrategy {
         return isEntity.get();
     }
 
-    private static MethodModel getFinderPrototypeMethod() {
+    private static MethodModel getFinderPrototypeMethod(boolean jakartaVariant) {
         return MethodModel.create(
                 "findBy",
                 "void",
                 "",
                 Collections.<MethodModel.Variable>emptyList(),
-                Collections.singletonList("javax.ejb.FinderException"),
+                Collections.singletonList(jakartaVariant ? "jakarta.ejb.FinderException" : "javax.ejb.FinderException"),
                 Collections.<Modifier>emptySet()
                 );
     }

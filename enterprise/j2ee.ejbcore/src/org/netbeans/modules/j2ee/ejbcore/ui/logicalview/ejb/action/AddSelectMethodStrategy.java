@@ -65,14 +65,14 @@ public class AddSelectMethodStrategy extends AbstractAddMethodStrategy {
     }
 
     @Override
-    public MethodModel getPrototypeMethod() {
+    public MethodModel getPrototypeMethod(boolean jakartaVariant) {
         Set<Modifier> modifiers = EnumSet.of(Modifier.PUBLIC, Modifier.ABSTRACT);
         return MethodModel.create(
                 "ejbSelectBy",
                 "int",
                 "",
                 Collections.<MethodModel.Variable>emptyList(),
-                Collections.singletonList("javax.ejb.FinderException"),
+                Collections.singletonList(jakartaVariant ? "jakarta.ejb.FinderException" : "javax.ejb.FinderException"),
                 modifiers
                 );
     }

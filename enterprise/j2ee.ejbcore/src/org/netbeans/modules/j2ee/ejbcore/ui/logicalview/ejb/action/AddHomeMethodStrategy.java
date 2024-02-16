@@ -63,7 +63,7 @@ public class AddHomeMethodStrategy extends AbstractAddMethodStrategy {
         super(NbBundle.getMessage(AddHomeMethodStrategy.class, "LBL_AddHomeMethodAction"));
     }
 
-    protected MethodModel getPrototypeMethod() {
+    protected MethodModel getPrototypeMethod(boolean jakartaVariant) {
         return MethodModel.create(
                 "homeMethod",
                 "void",

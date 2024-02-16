@@ -18,21 +18,12 @@
  */
 package org.netbeans.modules.java.lsp.server.debugging.launch;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
@@ -41,7 +32,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
-import org.openide.util.Pair;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -128,7 +118,11 @@ public class NbLaunchDelegateTest {
 
         @Override
         public Project loadProject(FileObject projectDirectory, ProjectState state) throws IOException {
-            return new MockProject(projectDirectory);
+            if (isProject(projectDirectory)) {
+                return new MockProject(projectDirectory);
+            } else {
+                return null;
+            }
         }
 
         @Override
